@@ -5113,21 +5113,21 @@ namespace Meta
 					Map expression;
 
 
-					if (condition == null)
-					{
+					//if (condition == null)
+					//{
 						expression = parseFunction(parser);
-					}
-					else
-					{
-						if (condition.Test(parser))
-						{
-							expression = parseFunction(parser);
-						}
-						else
-						{
-							expression = null;
-						}
-					}
+					//}
+					//else
+					//{
+					//    if (condition.Test(parser))
+					//    {
+					//        expression = parseFunction(parser);
+					//    }
+					//    else
+					//    {
+					//        expression = null;
+					//    }
+					//}
 					if (expression != null)
 					{
 						extent.End.Line = parser.Line;
@@ -5147,19 +5147,19 @@ namespace Meta
 				}
 				public Parser parser;
 				private Map identifier;
-				private Condition condition;
+				//private Condition condition;
 				public Expression(ParseFunction parseFunction)
 					: this(null, parseFunction)
 				{
 				}
+				//public Expression(Map identifier, ParseFunction parseFunction)
+				//    : this(identifier, null, parseFunction)
+				//{
+				//}
 				public Expression(Map identifier, ParseFunction parseFunction)
-					: this(identifier, null, parseFunction)
-				{
-				}
-				public Expression(Map identifier, Condition condition, ParseFunction parseFunction)
 				{
 					this.identifier = identifier;
-					this.condition = condition;
+					//this.condition = condition;
 					this.parseFunction = parseFunction;
 				}
 				protected Expression()
@@ -5247,18 +5247,18 @@ namespace Meta
 					}
 				}
 			}
-			public class Condition
-			{
-				public Condition(char c)
-				{
-					this.c = c;
-				}
-				private char c;
-				public bool Test(Parser parser)
-				{
-					return parser.TryConsume(c);
-				}
-			}
+			//public class Condition
+			//{
+			//    public Condition(char c)
+			//    {
+			//        this.c = c;
+			//    }
+			//    private char c;
+			//    public bool Test(Parser parser)
+			//    {
+			//        return parser.TryConsume(c);
+			//    }
+			//}
 			public class DelegateRule : Rule
 			{
 
@@ -5641,31 +5641,6 @@ namespace Meta
 					return Map.Empty;
 				}
 			}
-			public Expression Call = new Expression(delegate(Parser parser)
-			{
-				return new Sequence(
-					new Assignment(
-						CodeKeys.Call,
-						new Sequence(
-							new Assignment(CodeKeys.Callable, parser.Select),
-							new Assignment(CodeKeys.Argument, new Or(
-								new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
-								parser.Program
-							)), new Match(new DelegateRule(delegate(Parser p)
-				{
-					if (parser.functions == 0)
-					{
-						return null;
-					}
-					else
-					{
-						return Map.Empty;
-					}
-				}))))).Match(parser);
-			});
-
-
-
 
 			public Expression Program = new Expression(CodeKeys.Program, delegate(Parser parser)
 			{
@@ -5850,79 +5825,29 @@ namespace Meta
 				}
 				return @string;
 			});
-			//private Expression String = new Expression(CodeKeys.Literal, delegate(Parser parser)
-			//{
-			//    try
-			//    {
-			//        Map @string;
-			//        if (parser.Look(stringChar) || parser.Look(stringEscapeChar))
-			//        {
-			//            int escapeCharCount = 0;
-			//            while (parser.TryConsume(stringEscapeChar))
-			//            {
-			//                escapeCharCount++;
-			//            }
-			//            new CharRule(stringChar).Match(parser);
-			//            string stringText = "";
-			//            new Loop(
-			//                new Sequence(
-			//                    new Match(new DelegateRule(delegate(Parser p)
-			//                    {
-			//                        if (parser.Look(stringChar))
-			//                        {
-			//                            int foundEscapeCharCount = 0;
-			//                            while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, stringEscapeChar))
-			//                            {
-			//                                foundEscapeCharCount++;
-			//                            }
-			//                            if (foundEscapeCharCount == escapeCharCount)
-			//                            {
-			//                                return null;
-			//                            }
-			//                        }
-			//                        return Map.Empty;
-			//                    })),
-								
-			//                    new Match(new DelegateRule(delegate(Parser p)
-			//                    {
-			//                        stringText += new CharRule(parser.Look()).Match(parser).GetString();
-			//                        return Map.Empty;
-			//                    }
-			//                    ))
-			//            )).Match(parser);
-			//            new CharRule(stringChar).Match(parser);
-			//            new StringRule("".PadLeft(escapeCharCount, stringEscapeChar)).Match(parser);
 
-			//            List<string> realLines = new List<string>();
-			//            string[] lines = stringText.Replace(windowsNewLine, unixNewLine.ToString()).Split(unixNewLine);
-			//            for (int i = 0; i < lines.Length; i++)
-			//            {
-			//                if (i == 0)
-			//                {
-			//                    realLines.Add(lines[i]);
-			//                }
-			//                else
-			//                {
-			//                    realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(indentation).Length)));
-			//                }
-			//            }
-			//            string realText = string.Join("\n", realLines.ToArray());
-			//            realText = realText.TrimStart('\n');
-
-			//            @string = realText;
-			//        }
-			//        else
-			//        {
-			//            @string = null;
-			//        }
-			//        return @string;
-			//    }
-			//    catch (Exception e)
-			//    {
-			//        return null;
-			//    }
-			//});
-
+			public Expression Call = new Expression(delegate(Parser parser)
+			{
+				return new Sequence(
+					new Assignment(
+						CodeKeys.Call,
+						new Sequence(
+							new Assignment(CodeKeys.Callable, parser.Select),
+							new Assignment(CodeKeys.Argument, new Or(
+								new Sequence(new Match(new CharRule(callChar)), new SingleAssignment(parser.GetExpression)),
+								parser.Program
+							)), new Match(new DelegateRule(delegate(Parser p)
+				{
+					if (parser.functions == 0)
+					{
+						return null;
+					}
+					else
+					{
+						return Map.Empty;
+					}
+				}))))).Match(parser);
+			});
 			public Expression Function = new Expression(delegate(Parser parser)
 			{
 				parser.functions++;
