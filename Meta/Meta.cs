@@ -388,6 +388,21 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Sort(Map arg)
+		{
+			List<Map> array=arg["array"].Array;
+			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+			{
+				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetInteger().GetInt32();
+				return x!=0?-1:0;
+			}));
+			return new StrategyMap(array);
+			//arg.Array.Sort(new Comparison<Map>(delegate(Map a, Map b) 
+			//{ 
+			//    return a["sort"].GetInteger().GetInt32().CompareTo(b["sort"].GetInteger());
+			//}));
+			//return new StrategyMap(arg);
+		}
 		public static Map Pop(Map arg)
 		{
 			Map count=new StrategyMap(arg.Array.Count);
@@ -3329,10 +3344,6 @@ namespace Meta
 				Map parsed = ParseFile(reader,filePath);
 				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
-				// why does this map have a parent?
-				//parsed.Parent = GacStrategy.Gac;
-				//parsed.Scope = GacStrategy.Gac;
-				//parsed.Parent = null;
 				parsed.Scope = null;
 				return parsed;
 			}
@@ -3381,56 +3392,6 @@ namespace Meta
 			}
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
-		//private class Guesser
-		//{
-		//    private int guessing;
-		//    private bool Guess(char c)
-		//    {
-		//        return parser.text[guessing] == c;
-		//    }
-		//    private bool Look()
-		//    {
-		//    }
-		//    private bool Guess(string text)
-		//    {
-
-		//    }
-		//    public void Whitespace()
-		//    {
-		//        for (int i = 0; Guess(space) || Guess(tab); i++)
-		//        {
-		//        }
-		//    }
-		//    public bool NewLine()
-		//    {
-		//        return Guess(unixNewLine) || Guess(windowsNewLine);
-		//    }
-		//    private Parser parser;
-		//    public Guesser(Parser parser)
-		//    {
-		//        this.parser = parser;
-		//        this.guessing = parser.index;
-		//    }
-		//}
-
-		//public class XParse : Tester
-		//{
-		//}
-		public class ParseFunction
-		{
-			protected Parse parse;
-			private Parser parser;
-			public ParseFunction(Parser parser,Parse parse)
-			{
-				this.parse = parse;
-			}
-			public Map Get()
-			{
-				return parse(parser);
-			}
-
-		}
-		public delegate Map Parse(Parser parser);
 		public class Syntax
 		{
 			static Syntax()
@@ -3612,14 +3573,6 @@ namespace Meta
 					return index - text.LastIndexOf('\n', startPos);
 				}
 			}
-			//private bool Look(int lookAhead, char character)
-			//{
-			//    return Look(lookAhead) == character;
-			//}
-			//private bool Look(char character)
-			//{
-			//    return Look(0, character);
-			//}
 			private char Look()
 			{
 				return Look(0);
@@ -3638,12 +3591,6 @@ namespace Meta
 				}
 				return character;
 			}
-			//private char ConsumeGet()
-			//{
-			//    char character = Look();
-			//    Consume(character);
-			//    return character;
-			//}
 			public Parser(string text, string filePath)
 			{
 				this.index = 0;
@@ -3879,6 +3826,9 @@ namespace Meta
 				return new Or(EmptyMap, Integer, String, Program, Call, Select).Match(parser);
 			});
 
+
+
+
 			public static Rule Program = new DelegateRule(delegate(Parser parser)
 			{
 				Map program;
@@ -3977,9 +3927,9 @@ namespace Meta
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
 				Map map;
-				// refactor
-				if (parser.Look()==Syntax.@string || parser.Look()==Syntax.stringEscape)
+				if (new Or(new CharRule(Syntax.@string),new CharRule(Syntax.stringEscape)).Match(parser)!=null)
 				{
+					parser.index--;
 					int escapeCharCount = 0;
 					while (new CharRule(Syntax.stringEscape).Match(parser)!=null)
 					{
@@ -4047,7 +3997,8 @@ namespace Meta
 					return null;
 				}
 			});
-			public static DelegateRule Function = new DelegateRule(delegate(Parser parser)
+
+			public static Rule Function = new DelegateRule(delegate(Parser parser)
 			{
 				parser.functions++;
 				Map result = new Sequence(
@@ -4580,6 +4531,10 @@ namespace Meta
 		public static Integer operator +(Integer a, Integer b)
 		{
 			return new Integer(a.integer + b.integer);
+		}
+		public static Integer operator /(Integer a, Integer b)
+		{
+			return new Integer(Math.Floor(a.integer / b.integer));
 		}
 		public static Integer operator -(Integer a, Integer b)
 		{

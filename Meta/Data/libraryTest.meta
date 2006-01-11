@@ -43,6 +43,9 @@
 			smaller=smaller
 				23
 				2
+			divide=divide
+				1000
+				7
 		bitwiseTest=
 			or=bitwise.or
 				8
@@ -108,6 +111,24 @@
 					function=
 						|SetCounter increment counter
 				this=counter
+			sort=sort
+				array=
+					=
+						x=12
+						y=234
+					=
+						x=123
+						y=3245
+					=
+						x=12
+						y=234
+					=
+						x=245
+						y=98834
+				compare=
+					|math.greater
+						arg.a.x
+						arg.b.x
 		bitwiseTest=bitwise.or
 			20
 			["System.Windows.Forms"].Keys.Tab

@@ -73,6 +73,11 @@ Entry (KeyValuePair`2)
 				"smaller"
 			Value (StrategyMap):
 				""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"divide"
+			Value (ObjectMap):
+				142
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"bitwiseTest"
@@ -153,3 +158,63 @@ Entry (KeyValuePair`2)
 				"while"
 			Value (StrategyMap):
 				10
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"sort"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						1
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								245
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"y"
+							Value (StrategyMap):
+								98834
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						2
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								123
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"y"
+							Value (StrategyMap):
+								3245
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						3
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								12
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"y"
+							Value (StrategyMap):
+								234
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						4
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								12
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"y"
+							Value (StrategyMap):
+								234

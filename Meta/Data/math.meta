@@ -21,6 +21,11 @@ multiply=
 				Meta.Integer.[Meta.Integer] arg.previous
 				Meta.Integer.[Meta.Map] arg.present
 		start=Meta.Integer.[Meta.Map] 1
+divide=
+	documentation="Divides one integer by another."
+	|Meta.Integer.op_Division
+		Meta.Integer.[Meta.Map] arg.[1]
+		Meta.Integer.[Meta.Map] arg.[2]
 greater=
 	documentation="Determines whether the first integer is greater than the second integer."
 	|Meta.StrategyMap.[mscorlib.Boolean] Meta.Integer.op_GreaterThan

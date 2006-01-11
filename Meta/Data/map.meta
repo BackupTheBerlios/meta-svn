@@ -1,3 +1,5 @@
+sort=
+	|Meta.Library.Sort arg
 pop=
 	|Meta.Library.Pop arg
 isInteger=

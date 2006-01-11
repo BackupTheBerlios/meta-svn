@@ -79,6 +79,8 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
@@ -91,10 +93,13 @@
   <ItemGroup>
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwise.meta" />
+    <None Include="Data\console.meta" />
+    <None Include="Data\features.meta" />
     <None Include="Data\libraryTest.meta" />
     <None Include="Data\logic.meta" />
     <None Include="Data\map.meta" />
     <None Include="Data\math.meta" />
+    <None Include="Data\meta.meta" />
     <None Include="Data\testSubDir\testLib.meta" />
     <None Include="Data\testSubDir\x.meta" />
   </ItemGroup>
