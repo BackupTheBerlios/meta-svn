@@ -3817,11 +3817,6 @@ namespace Meta
 					}
 				}
 			}
-			public static Rule GetExpression = new ContainerRule(delegate(Parser parser)
-			{
-				return new Or(parser.EmptyMap, parser.Integer, parser.String, parser.Program, parser.Call, Select).Match(parser);
-			});
-
 			public class Literal : Rule
 			{
 				private Map literal;
@@ -3909,6 +3904,11 @@ namespace Meta
 			}
 
 			public delegate Map CustomActionDelegate(Map map);
+			
+			public static Rule GetExpression = new ContainerRule(delegate(Parser parser)
+			{
+				return new Or(parser.EmptyMap, parser.Integer, parser.String, parser.Program, parser.Call, Select).Match(parser);
+			});
 
 			public ContainerRule Program = new ContainerRule(delegate(Parser parser)
 			{
@@ -3942,13 +3942,13 @@ namespace Meta
 										new Match(new DelegateRule(delegate(Parser p)
 										{
 											counter++;
-											if (parser.EndOfLine.Match(parser) == null && !parser.Look(Syntax.endOfFile))
+											if (EndOfLine.Match(parser) == null && !parser.Look(Syntax.endOfFile))
 											{
 												parser.index -= 1;
-												if (parser.EndOfLine.Match(parser) == null)
+												if (EndOfLine.Match(parser) == null)
 												{
 													parser.index -= 1;
-													if (parser.EndOfLine.Match(parser) == null)
+													if (EndOfLine.Match(parser) == null)
 													{
 														parser.index += 2;
 														throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
@@ -4114,9 +4114,7 @@ namespace Meta
 				return result;
 			});
 
-			private ContainerRule Indentation = new ContainerRule(delegate(Parser parser)
-			{
-				return new Or(
+			private Rule Indentation = new Or(
 					new DelegateRule(delegate(Parser p)
 						{
 							if (p.isStartOfFile)
@@ -4134,23 +4132,17 @@ namespace Meta
 					new Sequence(
 						new Match(
 							new Sequence(
-								new Match(parser.EndOfLine),
-								new Match(new StringRule("".PadLeft(parser.indentationCount + 1, Syntax.indentation))))),
+								new Match(EndOfLine),
+								new Match(new DelegateRule(delegate(Parser p) { return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p); })))),
 						new Match(new DelegateRule(delegate(Parser p)
 							{
-								parser.indentationCount++;
+								p.indentationCount++;
 								return Map.Empty;
 							})))
 
-					).Match(parser);
+					);
 
-			});
-
-
-
-			private ContainerRule EndOfLine = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(
+			private static Rule EndOfLine = new Sequence(
 					new Match(new ZeroOrMore(
 						new Or(
 							new CharRule(Syntax.space),
@@ -4159,9 +4151,8 @@ namespace Meta
 					)),
 					new Match(new Or(
 						new CharRule(Syntax.unixNewLine),
-						new StringRule(Syntax.windowsNewLine)))).Match(parser);
+						new StringRule(Syntax.windowsNewLine))));
 
-			});
 			private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
 
 
@@ -4174,13 +4165,7 @@ namespace Meta
 					new SingleAssignment(GetExpression),
 					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd)));
-			//private static ContainerRule LookupAnything = new ContainerRule(delegate(Parser parser)
-			//{
-			//    return new Sequence(new Match(new CharRule(Syntax.lookupStart)),
-			//        new SingleAssignment(parser.GetExpression),
-			//        new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
-			//        new Match(new CharRule(Syntax.lookupEnd))).Match(parser);
-			//});
+
 			private Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
 					new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
 					new CustomAction(
