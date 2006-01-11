@@ -3347,7 +3347,7 @@ namespace Meta
 		public static Map Compile(TextReader textReader,string fileName)
 		{
 			Parser parser=new Parser(textReader.ReadToEnd(), fileName);
-			return parser.Program.Match(parser);
+			return Parser.Program.Match(parser);
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -3716,6 +3716,9 @@ namespace Meta
 				}
 				public bool Execute(Parser parser, ref Map result)
 				{
+					if (rule == null)
+					{
+					}
 					Map matched = rule.Match(parser);
 					if (matched != null)
 					{
@@ -3907,10 +3910,11 @@ namespace Meta
 			
 			public static Rule GetExpression = new ContainerRule(delegate(Parser parser)
 			{
-				return new Or(parser.EmptyMap, parser.Integer, parser.String, parser.Program, parser.Call, Select).Match(parser);
+				// refactor
+				return new Or(EmptyMap, Integer, String, Program, Call, Select).Match(parser);
 			});
 
-			public ContainerRule Program = new ContainerRule(delegate(Parser parser)
+			public static ContainerRule Program = new ContainerRule(delegate(Parser parser)
 			{
 				Map program;
 				Map statements;
@@ -3919,10 +3923,9 @@ namespace Meta
 					program = new StrategyMap();
 					int counter = 0;
 					int defaultKey = 1;
-
 					Rule Statement=new Sequence(
 							new SingleAssignment(
-								new Or(parser.Function,
+								new Or(Function,
 									new Or(
 										new Sequence(
 											new Assignment(CodeKeys.Key, Keys),
@@ -4005,7 +4008,7 @@ namespace Meta
 					return null;
 				}
 			});
-			private ContainerRule String = new ContainerRule(delegate(Parser parser)
+			private static ContainerRule String = new ContainerRule(delegate(Parser parser)
 			{
 				Map map;
 				if (parser.Look(Syntax.@string) || parser.Look(Syntax.stringEscape))
@@ -4079,30 +4082,29 @@ namespace Meta
 				}
 				return map;
 			});
-
-			public ContainerRule Call = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(
-					new Assignment(
-						CodeKeys.Call,
-						new Sequence(
-							new Assignment(CodeKeys.Callable, Select),
-							new Assignment(CodeKeys.Argument, new Or(
-								new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
-								parser.Program
-							)), new Match(new DelegateRule(delegate(Parser p)
-				{
-					if (parser.functions == 0)
-					{
-						return null;
-					}
-					else
-					{
-						return Map.Empty;
-					}
-				}))))).Match(parser);
-			});
-			public ContainerRule Function = new ContainerRule(delegate(Parser parser)
+			//public static ContainerRule Call = new ContainerRule(delegate(Parser parser)
+			//{
+			//    return new Sequence(
+			//        new Assignment(
+			//            CodeKeys.Call,
+			//            new Sequence(
+			//                new Assignment(CodeKeys.Callable, Select),
+			//                new Assignment(CodeKeys.Argument, new Or(
+			//                    new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
+			//                    Program
+			//                )), new Match(new DelegateRule(delegate(Parser p)
+			//    {
+			//        if (parser.functions == 0)
+			//        {
+			//            return null;
+			//        }
+			//        else
+			//        {
+			//            return Map.Empty;
+			//        }
+			//    }))))).Match(parser);
+			//});
+			public static ContainerRule Function = new ContainerRule(delegate(Parser parser)
 			{
 				parser.functions++;
 				Map result = new Sequence(
@@ -4156,7 +4158,7 @@ namespace Meta
 			private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
 
 
-			private Rule EmptyMap = new Sequence(
+			private static Rule EmptyMap = new Sequence(
 				new Assignment(CodeKeys.Literal,new Sequence(
 					new Match(new CharRule(Syntax.emptyMap)),
 					new SingleAssignment(new Literal(Map.Empty)))));
@@ -4166,7 +4168,7 @@ namespace Meta
 					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd)));
 
-			private Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
+			private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
 					new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
 					new CustomAction(
 						delegate(Map map){return Meta.Integer.ParseInteger(map.GetString());},
@@ -4188,6 +4190,25 @@ namespace Meta
 
 			public delegate Map ParseFunction(Parser parser);
 
+			public static Rule Call = new Sequence(
+					new Assignment(
+						CodeKeys.Call,
+						new Sequence(
+							new Assignment(CodeKeys.Callable, Select),
+							new Assignment(CodeKeys.Argument, new Or(
+								new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
+								Program
+							)), new Match(new DelegateRule(delegate(Parser p)
+				{
+					if (p.functions == 0)
+					{
+						return null;
+					}
+					else
+					{
+						return Map.Empty;
+					}
+				})))));
 		}
 		public class Serialize
 		{
