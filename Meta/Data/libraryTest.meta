@@ -129,6 +129,12 @@
 					|math.greater
 						arg.a.x
 						arg.b.x
+			integerToString=integerToString 5
+		stringTest=
+			padLeft=string.padLeft
+				string="hello"
+				character=" "
+				count=10
 		bitwiseTest=bitwise.or
 			20
 			["System.Windows.Forms"].Keys.Tab

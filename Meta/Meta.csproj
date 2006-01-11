@@ -100,6 +100,7 @@
     <None Include="Data\map.meta" />
     <None Include="Data\math.meta" />
     <None Include="Data\meta.meta" />
+    <None Include="Data\string.meta" />
     <None Include="Data\testSubDir\testLib.meta" />
     <None Include="Data\testSubDir\x.meta" />
   </ItemGroup>

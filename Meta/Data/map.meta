@@ -1,3 +1,8 @@
+integerToString=
+	documentation="Converts an integer to a string."
+	|
+		int=Meta.Integer.[Meta.Map] arg
+		this=Meta.StrategyMap.[mscorlib.String] int.ToString *
 sort=
 	|Meta.Library.Sort arg
 pop=

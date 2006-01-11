@@ -23,7 +23,7 @@ multiply=
 		start=Meta.Integer.[Meta.Map] 1
 divide=
 	documentation="Divides one integer by another."
-	|Meta.Integer.op_Division
+	|Meta.StrategyMap.[Meta.Integer] Meta.Integer.op_Division
 		Meta.Integer.[Meta.Map] arg.[1]
 		Meta.Integer.[Meta.Map] arg.[2]
 greater=

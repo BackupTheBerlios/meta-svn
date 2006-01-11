@@ -76,7 +76,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"divide"
-			Value (ObjectMap):
+			Value (StrategyMap):
 				142
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -218,3 +218,17 @@ Entry (KeyValuePair`2)
 								"y"
 							Value (StrategyMap):
 								234
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"integerToString"
+			Value (StrategyMap):
+				"5"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"stringTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"padLeft"
+			Value (ObjectMap):
+				     hello

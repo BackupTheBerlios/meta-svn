@@ -1930,6 +1930,9 @@ namespace Meta
 			//    //value = this.Constructor;
 
 			//}
+			if (key is TypeMap && ((TypeMap)key).type == typeof(Map) && this.type==typeof(ObjectMap))
+			{
+			}
 			if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
 			{
 				List<Type> types;
@@ -3407,7 +3410,7 @@ namespace Meta
 			public const char function = '|';
 			public const char @string = '\"';
 			public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public static char[] integerStart = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			//public static char[] integerStart = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 			public const char lookupStart = '[';
 			public const char lookupEnd = ']';
 			public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap };
@@ -3432,15 +3435,15 @@ namespace Meta
 			{
 				public Map Match(Parser parser)
 				{
-					//Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 					//Map expression = parseFunction(parser);
 					//if (expression != null)
 					//{
-					//    extent.End.Line = parser.Line;
-					//    extent.End.Column = parser.Column;
-					//    expression.Extent = extent;
+					//extent.End.Line = parser.Line;
+					//extent.End.Column = parser.Column;
+					//expression.Extent = extent;
 					//}
 					//return expression;
+					Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 					int oldIndex = parser.index;
 					int oldLine = parser.line;
 					Map result = DoMatch(parser);
@@ -3448,6 +3451,12 @@ namespace Meta
 					{
 						parser.index = oldIndex;
 						parser.line = oldLine;
+					}
+					else
+					{
+						extent.End.Line = parser.Line;
+						extent.End.Column = parser.Column;
+						result.Extent = extent;
 					}
 					return result;
 				}
@@ -4062,11 +4071,16 @@ namespace Meta
 					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd)));
 
-			private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
-					new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
+			private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
 					new CustomAction(
-						delegate(Map map){return Meta.Integer.ParseInteger(map.GetString());},
+						delegate(Map map) { return Meta.Integer.ParseInteger(map.GetString()); },
 						new Nothing()))));
+
+			//private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
+			//        new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
+			//        new CustomAction(
+			//            delegate(Map map){return Meta.Integer.ParseInteger(map.GetString());},
+			//            new Nothing()))));
 			private static Rule LookupString = new Sequence(new Assignment(
 				CodeKeys.Literal,
 				new OneOrMore(new CharactersExcept(Syntax.lookupStringForbidden))));
