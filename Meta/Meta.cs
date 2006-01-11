@@ -3463,6 +3463,7 @@ namespace Meta
 		}
 		public class Parser
 		{
+			// refactor
 			public bool isStartOfFile = true;
 			private int functions = 0;
 			public int indentationCount = -1;
@@ -3470,6 +3471,15 @@ namespace Meta
 			{
 				public Map Match(Parser parser)
 				{
+					//Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
+					//Map expression = parseFunction(parser);
+					//if (expression != null)
+					//{
+					//    extent.End.Line = parser.Line;
+					//    extent.End.Column = parser.Column;
+					//    expression.Extent = extent;
+					//}
+					//return expression;
 					int oldIndex = parser.index;
 					int oldLine = parser.line;
 					Map result = DoMatch(parser);
@@ -3481,30 +3491,6 @@ namespace Meta
 					return result;
 				}
 				protected abstract Map DoMatch(Parser parser);
-			}
-			public class ContainerRule:Rule
-			{
-				protected override Map DoMatch(Parser parser)
-				{
-					Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
-					Map expression = parseFunction(parser);
-					if (expression != null)
-					{
-						extent.End.Line = parser.Line;
-						extent.End.Column = parser.Column;
-						expression.Extent = extent;
-					}
-					return expression;
-				}
-				public Parser parser;
-				public ContainerRule(ParseFunction parseFunction)
-				{
-					this.parseFunction = parseFunction;
-				}
-				protected ContainerRule()
-				{
-				}
-				private ParseFunction parseFunction;
 			}
 			public class CharRule : Rule
 			{
@@ -3542,7 +3528,14 @@ namespace Meta
 					list.Add(Syntax.endOfFile);
 					if(parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
 					{
-						matched = parser.ConsumeGet().ToString();
+						// refactor
+						char c = parser.Look();
+						matched = c.ToString();
+						if (c == Syntax.unixNewLine)
+						{
+							parser.line++;
+						}
+						parser.index++;
 					}
 					else
 					{
@@ -3619,29 +3612,14 @@ namespace Meta
 					return index - text.LastIndexOf('\n', startPos);
 				}
 			}
-
-			private void Consume(string characters)
-			{
-				foreach (char character in characters)
-				{
-					Consume(character);
-				}
-			}
-			private void Consume(char character)
-			{
-				if (new CharRule(character).Match(this)==null)
-				{
-					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
-				}
-			}
-			private bool Look(int lookAhead, char character)
-			{
-				return Look(lookAhead) == character;
-			}
-			private bool Look(char character)
-			{
-				return Look(0, character);
-			}
+			//private bool Look(int lookAhead, char character)
+			//{
+			//    return Look(lookAhead) == character;
+			//}
+			//private bool Look(char character)
+			//{
+			//    return Look(0, character);
+			//}
 			private char Look()
 			{
 				return Look(0);
@@ -3660,31 +3638,17 @@ namespace Meta
 				}
 				return character;
 			}
-			private char ConsumeGet()
-			{
-				char character = Look();
-				Consume(character);
-				return character;
-			}
-			//static Parser()
+			//private char ConsumeGet()
 			//{
-				//GetExpression = new Or(EmptyMap, Integer, String, Program, Call, Select);
-
+			//    char character = Look();
+			//    Consume(character);
+			//    return character;
 			//}
 			public Parser(string text, string filePath)
 			{
 				this.index = 0;
 				this.text = text;
 				this.file = filePath;
-
-
-				foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static|BindingFlags.Instance))
-				{
-					if (field.FieldType == typeof(ContainerRule))
-					{
-						((ContainerRule)field.GetValue(this)).parser = this;
-					}
-				}
 			}
 			public class Or : Rule
 			{
@@ -3885,6 +3849,7 @@ namespace Meta
 					this.rule = rule;
 				}
 			}
+			// refactor
 			public class Optional : Rule
 			{
 				private Rule rule;
@@ -3898,6 +3863,7 @@ namespace Meta
 					return Map.Empty;
 				}
 			}
+			// refactor?
 			public class Nothing : Rule
 			{
 				protected override Map DoMatch(Parser parser)
@@ -3908,13 +3874,12 @@ namespace Meta
 
 			public delegate Map CustomActionDelegate(Map map);
 			
-			public static Rule GetExpression = new ContainerRule(delegate(Parser parser)
+			public static Rule GetExpression = new DelegateRule(delegate(Parser parser)
 			{
-				// refactor
 				return new Or(EmptyMap, Integer, String, Program, Call, Select).Match(parser);
 			});
 
-			public static ContainerRule Program = new ContainerRule(delegate(Parser parser)
+			public static Rule Program = new DelegateRule(delegate(Parser parser)
 			{
 				Map program;
 				Map statements;
@@ -3932,6 +3897,7 @@ namespace Meta
 											new Match(new CharRule(Syntax.statement)),
 											new Assignment(CodeKeys.Value, GetExpression)),
 										new Sequence(
+											// remove this
 											new Match(new Optional(new CharRule(Syntax.statement))),
 											new Assignment(CodeKeys.Value, GetExpression),
 											new Assignment(CodeKeys.Key,
@@ -3945,7 +3911,7 @@ namespace Meta
 										new Match(new DelegateRule(delegate(Parser p)
 										{
 											counter++;
-											if (EndOfLine.Match(parser) == null && !parser.Look(Syntax.endOfFile))
+											if (EndOfLine.Match(parser) == null && parser.Look()!=Syntax.endOfFile)
 											{
 												parser.index -= 1;
 												if (EndOfLine.Match(parser) == null)
@@ -3973,7 +3939,7 @@ namespace Meta
 
 					Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser p)
 					{
-						if (!parser.Look(Syntax.endOfFile))
+						if (parser.Look()!=Syntax.endOfFile)
 						{
 							return Map.Empty;
 						}
@@ -4008,14 +3974,14 @@ namespace Meta
 					return null;
 				}
 			});
-			private static ContainerRule String = new ContainerRule(delegate(Parser parser)
+			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
 				Map map;
-				if (parser.Look(Syntax.@string) || parser.Look(Syntax.stringEscape))
+				// refactor
+				if (parser.Look()==Syntax.@string || parser.Look()==Syntax.stringEscape)
 				{
 					int escapeCharCount = 0;
 					while (new CharRule(Syntax.stringEscape).Match(parser)!=null)
-					//while (parser.TryConsume(Syntax.stringEscape))
 					{
 						escapeCharCount++;
 					}
@@ -4027,10 +3993,10 @@ namespace Meta
 							new Sequence(
 								new Match(new DelegateRule(delegate(Parser p)
 								{
-									if (parser.Look(Syntax.@string))
+									if (parser.Look()==Syntax.@string)
 									{
 										int foundEscapeCharCount = 0;
-										while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1, Syntax.stringEscape))
+										while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1)==Syntax.stringEscape)
 										{
 											foundEscapeCharCount++;
 										}
@@ -4080,31 +4046,8 @@ namespace Meta
 				{
 					return null;
 				}
-				return map;
 			});
-			//public static ContainerRule Call = new ContainerRule(delegate(Parser parser)
-			//{
-			//    return new Sequence(
-			//        new Assignment(
-			//            CodeKeys.Call,
-			//            new Sequence(
-			//                new Assignment(CodeKeys.Callable, Select),
-			//                new Assignment(CodeKeys.Argument, new Or(
-			//                    new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
-			//                    Program
-			//                )), new Match(new DelegateRule(delegate(Parser p)
-			//    {
-			//        if (parser.functions == 0)
-			//        {
-			//            return null;
-			//        }
-			//        else
-			//        {
-			//            return Map.Empty;
-			//        }
-			//    }))))).Match(parser);
-			//});
-			public static ContainerRule Function = new ContainerRule(delegate(Parser parser)
+			public static DelegateRule Function = new DelegateRule(delegate(Parser parser)
 			{
 				parser.functions++;
 				Map result = new Sequence(
