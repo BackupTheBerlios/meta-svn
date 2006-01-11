@@ -3728,15 +3728,6 @@ namespace Meta
 				{
 					this.key = key;
 				}
-				//public override bool Execute(Parser parser, ref Map result)
-				//{
-				//    Map matched=rule.Match(parser);
-				//    if (matched!=null && key!=null)
-				//    {
-				//        result[key] = matched;
-				//    }
-				//    return matched != null;
-				//}
 				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
 					if (key!=null)
@@ -3753,10 +3744,6 @@ namespace Meta
 				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
 				}
-				//public override bool Execute(Parser parser, ref Map result)
-				//{
-				//    return rule.Match(parser)!=null;
-				//}
 			}
 			public class SingleAssignment : Action
 			{
@@ -3764,16 +3751,6 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				//public override bool Execute(Parser parser, ref Map result)
-				//{
-				//    Map map = rule.Match(parser);
-
-				//    if (map != null)
-				//    {
-				//        result = map;
-				//    }
-				//    return map != null;
-				//}
 				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
 					result = map;
@@ -3785,18 +3762,6 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				//public override bool Execute(Parser parser, ref Map result)
-				//{
-				//    Map matched = rule.Match(parser);
-				//    if (matched != null)
-				//    {
-				//        foreach (Map map in matched.Array)
-				//        {
-				//            result.Append(map);
-				//        }
-				//    }
-				//    return matched != null;
-				//}
 				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
 					foreach (Map m in map.Array)
@@ -3817,16 +3782,6 @@ namespace Meta
 				{
 					result = this.action(result);
 				}
-				//public override bool Execute(Parser parser, ref Map result)
-				//{
-				//    Map map = rule.Match(parser);
-				//    if (map != null)
-				//    {
-				//        result = this.action(result);
-				//    }
-				//    // TODO: refactor
-				//    return map != null;
-				//}
 			}
 			public class Sequence : Rule
 			{
@@ -3872,7 +3827,7 @@ namespace Meta
 					return literal;
 				}
 			}
-			public class Loop : Rule
+			public class ZeroOrMore : Rule
 			{
 				protected override Map DoMatch(Parser parser)
 				{
@@ -3880,6 +3835,7 @@ namespace Meta
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
+						// refactor
 						if (result.IsString && result.GetString().Length==1)
 						{
 							result = Convert.ToChar(result.GetString());
@@ -3889,7 +3845,7 @@ namespace Meta
 					return list;
 				}
 				private Rule rule;
-				public Loop(Rule rule)
+				public ZeroOrMore(Rule rule)
 				{
 					this.rule = rule;
 				}
@@ -3902,6 +3858,7 @@ namespace Meta
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
+						// refactor
 						if (result.IsString && result.GetString().Length==1)
 						{
 							result = Convert.ToChar(result.GetString());
@@ -3936,10 +3893,6 @@ namespace Meta
 					return Map.Empty;
 				}
 			}
-
-
-			public delegate Map CustomActionDelegate(Map map);
-
 			public class Nothing : Rule
 			{
 				protected override Map DoMatch(Parser parser)
@@ -3947,6 +3900,8 @@ namespace Meta
 					return Map.Empty;
 				}
 			}
+
+			public delegate Map CustomActionDelegate(Map map);
 
 			public ContainerRule Program = new ContainerRule(delegate(Parser parser)
 			{
@@ -3963,7 +3918,7 @@ namespace Meta
 								new Or(parser.Function,
 									new Or(
 										new Sequence(
-											new Assignment(CodeKeys.Key, parser.Keys),
+											new Assignment(CodeKeys.Key, Keys),
 											new Match(new CharRule(Syntax.statement)),
 											new Assignment(CodeKeys.Value, parser.GetExpression)),
 										new Sequence(
@@ -4006,7 +3961,7 @@ namespace Meta
 
 					statements = new StrategyMap(1, Statement.Match(parser));
 
-					Map maps = new Loop(new Sequence(new Match(new DelegateRule(delegate(Parser p)
+					Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser p)
 					{
 						if (!parser.Look(Syntax.endOfFile))
 						{
@@ -4058,7 +4013,7 @@ namespace Meta
 					string stringText = "";
 					Map textMap = new Sequence(
 						new SingleAssignment(
-							new Loop(
+							new ZeroOrMore(
 							new Sequence(
 								new Match(new DelegateRule(delegate(Parser p)
 								{
@@ -4124,7 +4079,7 @@ namespace Meta
 					new Assignment(
 						CodeKeys.Call,
 						new Sequence(
-							new Assignment(CodeKeys.Callable, parser.Select),
+							new Assignment(CodeKeys.Callable, Select),
 							new Assignment(CodeKeys.Argument, new Or(
 								new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(parser.GetExpression)),
 								parser.Program
@@ -4189,7 +4144,7 @@ namespace Meta
 			private ContainerRule EndOfLine = new ContainerRule(delegate(Parser parser)
 			{
 				return new Sequence(
-					new Match(new Loop(
+					new Match(new ZeroOrMore(
 						new Or(
 							new CharRule(Syntax.space),
 							new CharRule(Syntax.tab)
@@ -4200,54 +4155,49 @@ namespace Meta
 						new StringRule(Syntax.windowsNewLine)))).Match(parser);
 
 			});
+			private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
 
-			private ContainerRule Whitespace = new ContainerRule(delegate(Parser parser)
-			{
-				return new Loop(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space))).Match(parser);
-			});
-			private ContainerRule EmptyMap = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(new Assignment(CodeKeys.Literal,
-					new Sequence(new Match(new CharRule(Syntax.emptyMap)),new SingleAssignment(new Literal(Map.Empty))))).Match(parser);
-			});
 
+			private Rule EmptyMap = new Sequence(
+				new Assignment(CodeKeys.Literal,new Sequence(
+					new Match(new CharRule(Syntax.emptyMap)),
+					new SingleAssignment(new Literal(Map.Empty)))));
 
 			private ContainerRule LookupAnything = new ContainerRule(delegate(Parser parser)
 			{
 				return new Sequence(new Match(new CharRule(Syntax.lookupStart)),
 					new SingleAssignment(parser.GetExpression),
-					new Match(new Loop(new CharRule(Syntax.indentation))),
+					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd))).Match(parser);
 			});
 			private ContainerRule Integer = new ContainerRule(delegate(Parser parser)
 			{
 				return new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
-					new Flatten(new Loop(new CharRule(Syntax.integer))),
+					new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
 					new CustomAction(delegate(Map map)
 						{
 							return Meta.Integer.ParseInteger(map.GetString());
 						},new Nothing())))).Match(parser);
 			});
-			private ContainerRule LookupString = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(
-					new Assignment(CodeKeys.Literal,new OneOrMore(new CharExceptRule(Syntax.lookupStringForbidden))
-					)).Match(parser);
-			});
-			private ContainerRule Lookup = new ContainerRule(delegate(Parser parser)
+			private Rule LookupString = new Sequence(
+					new Assignment(CodeKeys.Literal, new OneOrMore(new CharExceptRule(Syntax.lookupStringForbidden))));
+
+			private static ContainerRule Lookup = new ContainerRule(delegate(Parser parser)
 			{
 				return (Map)new Or(parser.LookupString,parser.LookupAnything).Match(parser);
 			});
-			private ContainerRule Select = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(new Assignment(CodeKeys.Select, parser.Keys)).Match(parser);
-			});
-			private ContainerRule Keys = new ContainerRule(delegate(Parser parser)
-			{
-				return new Sequence(new Assignment(1,parser.Lookup),
-					new Flatten(new Loop(new Sequence(new Match(new CharRule(Syntax.select)),new SingleAssignment(parser.Lookup)
-					)))).Match(parser);
-			});
+			private static Rule Keys = new Sequence(
+				new Assignment(
+					1,
+					Lookup),
+				new Flatten(
+					new ZeroOrMore(
+						new Sequence(
+							new Match(
+								new CharRule(Syntax.select)),
+							new SingleAssignment(Lookup)))));
+			private static Rule Select = new Sequence(new Assignment(CodeKeys.Select, Keys));
+
 			public delegate Map ParseFunction(Parser parser);
 
 		}
