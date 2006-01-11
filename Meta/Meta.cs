@@ -3520,7 +3520,6 @@ namespace Meta
 							parser.line++;
 						}
 						parser.index++;
-						//matched = parser.ConsumeGet().ToString();
 					}
 					else
 					{
@@ -3534,45 +3533,6 @@ namespace Meta
 				}
 				private char[] chars;
 			}
-			//private bool TryConsume(char character)
-			//{
-			//    bool consumed;
-			//    if (index < text.Length && text[index] == character)
-			//    {
-			//        if (character == Syntax.unixNewLine)
-			//        {
-			//            line++;
-			//        }
-			//        index++;
-			//        consumed = true;
-			//    }
-			//    else
-			//    {
-			//        consumed = false;
-			//    }
-			//    return consumed;
-			//}
-			//public class CharRule : Rule
-			//{
-			//    protected override Map DoMatch(Parser parser)
-			//    {
-			//        Map matched;
-			//        if(parser.Look().ToString().IndexOfAny(chars) != -1)
-			//        {
-			//            matched = parser.ConsumeGet().ToString();
-			//        }
-			//        else
-			//        {
-			//            matched=null;
-			//        }
-			//        return matched;
-			//    }
-			//    public CharRule(params char[] chars)
-			//    {
-			//        this.chars = chars;
-			//    }
-			//    private char[] chars;
-			//}
 			public class CharExceptRule : Rule
 			{
 				protected override Map DoMatch(Parser parser)
@@ -3670,29 +3630,10 @@ namespace Meta
 			private void Consume(char character)
 			{
 				if (new CharRule(character).Match(this)==null)
-				//if (!TryConsume(character))
 				{
 					throw new ApplicationException("Unexpected token " + Look() + " ,expected " + character);
 				}
 			}
-			//private bool TryConsume(char character)
-			//{
-			//    bool consumed;
-			//    if (index < text.Length && text[index] == character)
-			//    {
-			//        if (character == Syntax.unixNewLine)
-			//        {
-			//            line++;
-			//        }
-			//        index++;
-			//        consumed = true;
-			//    }
-			//    else
-			//    {
-			//        consumed = false;
-			//    }
-			//    return consumed;
-			//}
 			private bool Look(int lookAhead, char character)
 			{
 				return Look(lookAhead) == character;
@@ -3725,21 +3666,11 @@ namespace Meta
 				Consume(character);
 				return character;
 			}
-			//private bool LookExcept(char[] exceptions)
-			//{
-			//    List<char> list = new List<char>(exceptions);
-			//    list.Add(Syntax.endOfFile);
-			//    return Look().ToString().IndexOfAny(list.ToArray()) == -1;
-			//}
 			public Parser(string text, string filePath)
 			{
 				this.index = 0;
 				this.text = text;
 				this.file = filePath;
-				//
-				//List<char> list = new List<char>(Syntax.lookupStringForbidden);
-				//list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
-				//Syntax.lookupStringFirstForbidden = list.ToArray();
 
 				GetExpression=new Or(EmptyMap,Integer,String,Program,Call,Select);
 
@@ -3754,9 +3685,9 @@ namespace Meta
 			public class Or : Rule
 			{
 				private Rule[] cases;
-				public Or(params Rule[] expressions)
+				public Or(params Rule[] cases)
 				{
-					this.cases = expressions;
+					this.cases = cases;
 				}
 				protected override Map DoMatch(Parser parser)
 				{
@@ -3779,8 +3710,16 @@ namespace Meta
 				{
 					this.rule = rule;
 				}
-
-				public abstract bool Execute(Parser parser, ref Map result);
+				public bool Execute(Parser parser, ref Map result)
+				{
+					Map matched = rule.Match(parser);
+					if (matched != null)
+					{
+						ExecuteImplementation(matched, ref result);
+					}
+					return matched != null;
+				}
+				protected abstract void ExecuteImplementation(Map map, ref Map result);
 			}
 			public class Assignment:Action
 			{
@@ -3789,14 +3728,21 @@ namespace Meta
 				{
 					this.key = key;
 				}
-				public override bool Execute(Parser parser, ref Map result)
+				//public override bool Execute(Parser parser, ref Map result)
+				//{
+				//    Map matched=rule.Match(parser);
+				//    if (matched!=null && key!=null)
+				//    {
+				//        result[key] = matched;
+				//    }
+				//    return matched != null;
+				//}
+				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
-					Map matched=rule.Match(parser);
-					if (matched!=null && key!=null)
+					if (key!=null)
 					{
-						result[key] = matched;
+						result[key] = map;
 					}
-					return matched != null;
 				}
 			}
 			public class Match : Action
@@ -3804,10 +3750,83 @@ namespace Meta
 				public Match(Rule rule):base(rule)
 				{
 				}
-				public override bool Execute(Parser parser, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result)
 				{
-					return rule.Match(parser)!=null;
 				}
+				//public override bool Execute(Parser parser, ref Map result)
+				//{
+				//    return rule.Match(parser)!=null;
+				//}
+			}
+			public class SingleAssignment : Action
+			{
+				public SingleAssignment(Rule rule)
+					: base(rule)
+				{
+				}
+				//public override bool Execute(Parser parser, ref Map result)
+				//{
+				//    Map map = rule.Match(parser);
+
+				//    if (map != null)
+				//    {
+				//        result = map;
+				//    }
+				//    return map != null;
+				//}
+				protected override void ExecuteImplementation(Map map, ref Map result)
+				{
+					result = map;
+				}
+			}
+			public class Flatten : Action
+			{
+				public Flatten(Rule rule)
+					: base(rule)
+				{
+				}
+				//public override bool Execute(Parser parser, ref Map result)
+				//{
+				//    Map matched = rule.Match(parser);
+				//    if (matched != null)
+				//    {
+				//        foreach (Map map in matched.Array)
+				//        {
+				//            result.Append(map);
+				//        }
+				//    }
+				//    return matched != null;
+				//}
+				protected override void ExecuteImplementation(Map map, ref Map result)
+				{
+					foreach (Map m in map.Array)
+					{
+						result.Append(m);
+					}
+				}
+			}
+			public class CustomAction : Action
+			{
+				private CustomActionDelegate action;
+				public CustomAction(CustomActionDelegate action, Rule rule)
+					: base(rule)
+				{
+					this.action = action;
+				}
+				protected override void ExecuteImplementation(Map map, ref Map result)
+				{
+					result = this.action(result);
+				}
+				//public override bool Execute(Parser parser, ref Map result)
+				//{
+				//    Map map = rule.Match(parser);
+				//    if (map != null)
+				//    {
+				//        result = this.action(result);
+				//    }
+				//    // TODO: refactor
+				//    return map != null;
+				//}
 			}
 			public class Sequence : Rule
 			{
@@ -3840,22 +3859,7 @@ namespace Meta
 				}
 			}
 			public Rule GetExpression;
-			public class SingleAssignment : Action
-			{
-				public SingleAssignment(Rule rule):base(rule)
-				{
-				}
-				public override bool Execute(Parser parser, ref Map result)
-				{
-					Map map = rule.Match(parser);
 
-					if (map != null)
-					{
-						result = map;
-					}
-					return map!=null;
-				}
-			}
 			public class Literal : Rule
 			{
 				private Map literal;
@@ -3933,45 +3937,9 @@ namespace Meta
 				}
 			}
 
-			public class Flatten : Action
-			{
-				public Flatten(Rule rule)
-					: base(rule)
-				{
-				}
-				public override bool Execute(Parser parser, ref Map result)
-				{
-					Map matched = rule.Match(parser);
-					if (matched != null)
-					{
-						foreach (Map map in matched.Array)
-						{
-							result.Append(map);
-						}
-					}
-					return matched != null;
-				}
-			}
+
 			public delegate Map CustomActionDelegate(Map map);
-			public class CustomAction : Action
-			{
-				private CustomActionDelegate action;
-				public CustomAction(CustomActionDelegate action, Rule rule)
-					: base(rule)
-				{
-					this.action = action;
-				}
-				public override bool Execute(Parser parser, ref Map result)
-				{
-					Map map = rule.Match(parser);
-					if (map != null)
-					{
-						result = this.action(result);
-					}
-					// TODO: refactor
-					return map != null;
-				}
-			}
+
 			public class Nothing : Rule
 			{
 				protected override Map DoMatch(Parser parser)
