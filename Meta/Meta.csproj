@@ -93,7 +93,7 @@
   <ItemGroup>
     <None Include="Data\add.meta" />
     <None Include="Data\basicTest.meta" />
-    <None Include="Data\bitwise.meta" />
+    <None Include="Data\bitwiseOr.meta" />
     <None Include="Data\console.meta" />
     <None Include="Data\subtract.meta" />
     <None Include="Data\divide.meta" />

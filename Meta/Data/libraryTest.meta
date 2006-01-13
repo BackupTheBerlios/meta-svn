@@ -45,7 +45,7 @@
 				1000
 				7
 		bitwiseTest=
-			or=bitwise.or
+			or=bitwiseOr
 				8
 				20
 		mapTest=
@@ -133,7 +133,7 @@
 				string="hello"
 				character=" "
 				count=10
-		bitwiseTest=bitwise.or
+		bitwiseTest=bitwiseOr
 			20
 			["System.Windows.Forms"].Keys.Tab
 	this=test

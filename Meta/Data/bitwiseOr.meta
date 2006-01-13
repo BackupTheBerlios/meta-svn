@@ -1,0 +1,8 @@
+documentation="Performs a bitwise or operation on integers."
+|Meta.StrategyMap.[Meta.Integer] map.sum
+	array=arg
+	function=
+		|Meta.Integer.op_BitwiseOr
+			Meta.Integer.[Meta.Integer] arg.previous
+			Meta.Integer.[Meta.Map] Meta.Transform.ToMeta arg.present
+	start=Meta.Integer.[Meta.Map] *
