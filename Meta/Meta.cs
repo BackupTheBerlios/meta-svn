@@ -3888,86 +3888,226 @@ namespace Meta
 			private Stack<int> defaultKeys = new Stack<int>();
 			private int escapeCharCount=0;
 
-
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
-			{
-				return new Sequence(new Assignment(CodeKeys.Literal, new DelegateRule(delegate(Parser u)
 				{
-					Map map = null;
-					if (new Sequence(new Match(new ZeroOrMore(new Sequence(
-							new Match(new CharRule(Syntax.stringEscape)),
-							new Match(new DelegateRule(delegate(Parser p)
-								{
-									p.escapeCharCount++;
-									return Map.Empty;
-								}))))), new Match(new CharRule(Syntax.@string))).Match(parser) != null)
+					return new Sequence(new Assignment(CodeKeys.Literal, new DelegateRule(delegate(Parser u)
 					{
-
-						string stringText = "";
-						Map textMap = new Sequence(
-							new SingleAssignment(
-								new ZeroOrMore(
-								new Sequence(
-									new Match(new DelegateRule(delegate(Parser p)
+						Map map = null;
+						Map textMap=new Sequence(
+							new Match(new ZeroOrMore(new Sequence(
+								new Match(new CharRule(Syntax.stringEscape)),
+								new Match(new DelegateRule(delegate(Parser p)
 									{
-										if (parser.Look() == Syntax.@string)
-										{
-											int foundEscapeCharCount = 0;
-											while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
-											{
-												foundEscapeCharCount++;
-											}
-											if (foundEscapeCharCount == p.escapeCharCount)
-											{
-												return null;
-											}
-										}
+										p.escapeCharCount++;
 										return Map.Empty;
-									})),
-									new SingleAssignment(new CharactersExcept())
-						))),
-						new Match(new CharRule(Syntax.@string)),
-						new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
-						stringText = textMap.GetString();
+									}))))),
+							new Match(new CharRule(Syntax.@string)),
+							new SingleAssignment(new Sequence(
+								new SingleAssignment(
+									new ZeroOrMore(
+									new Sequence(
+										new Match(new DelegateRule(delegate(Parser p)
+										{
+											if (parser.Look() == Syntax.@string)
+											{
+												int foundEscapeCharCount = 0;
+												while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
+												{
+													foundEscapeCharCount++;
+												}
+												if (foundEscapeCharCount == p.escapeCharCount)
+												{
+													return null;
+												}
+											}
+											return Map.Empty;
+										})),
+										new SingleAssignment(new CharactersExcept())
+								)))))//,
+						//new Match(new CharRule(Syntax.@string)),
+						//new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))
+						).Match(parser);
+						new CharRule(Syntax.@string).Match(parser);
+						new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)).Match(parser);
 
-						// get rid of those stupid lines
-
-						List<string> realLines = new List<string>();
-						string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
-						for (int i = 0; i < lines.Length; i++)
+						if(textMap!=null)
 						{
-							if (i == 0)
-							{
-								realLines.Add(lines[i]);
-							}
-							else
-							{
-								realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
-							}
-						}
-						string realText = string.Join("\n", realLines.ToArray());
-						realText = realText.TrimStart('\n');
+							string stringText = textMap.GetString();
 
-						map = realText;
-						parser.escapeCharCount = 0;
+							// get rid of those stupid lines
+
+							List<string> realLines = new List<string>();
+							string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
+							for (int i = 0; i < lines.Length; i++)
+							{
+								if (i == 0)
+								{
+									realLines.Add(lines[i]);
+								}
+								else
+								{
+									realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
+								}
+							}
+							string realText = string.Join("\n", realLines.ToArray());
+							realText = realText.TrimStart('\n');
+
+							map = realText;
+							parser.escapeCharCount = 0;
+						}
+						return map;
 					}
-					return map;
-				}
-				))).Match(parser);
-				//else
-				//{
-				//    map = null;
-				//}
-				// rename
-				//if (map != null)
-				//{
-				//    return new StrategyMap(CodeKeys.Literal, map);
-				//}
-				//else
-				//{
-				//    return null;
-				//}
-			});
+					))).Match(parser);
+				});
+			//private static DelegateRule String = new DelegateRule(delegate(Parser parser)
+			//{
+			//    return new Sequence(new Assignment(CodeKeys.Literal, new DelegateRule(delegate(Parser u)
+			//    {
+			//        Map map = null;
+			//        if (new Sequence(new Match(new ZeroOrMore(new Sequence(
+			//                new Match(new CharRule(Syntax.stringEscape)),
+			//                new Match(new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        p.escapeCharCount++;
+			//                        return Map.Empty;
+			//                    }))))), new Match(new CharRule(Syntax.@string))).Match(parser) != null)
+			//        {
+
+			//            string stringText = "";
+			//            Map textMap = new Sequence(
+			//                new SingleAssignment(
+			//                    new ZeroOrMore(
+			//                    new Sequence(
+			//                        new Match(new DelegateRule(delegate(Parser p)
+			//                        {
+			//                            if (parser.Look() == Syntax.@string)
+			//                            {
+			//                                int foundEscapeCharCount = 0;
+			//                                while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
+			//                                {
+			//                                    foundEscapeCharCount++;
+			//                                }
+			//                                if (foundEscapeCharCount == p.escapeCharCount)
+			//                                {
+			//                                    return null;
+			//                                }
+			//                            }
+			//                            return Map.Empty;
+			//                        })),
+			//                        new SingleAssignment(new CharactersExcept())
+			//            ))),
+			//            new Match(new CharRule(Syntax.@string)),
+			//            new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
+
+
+
+			//            stringText = textMap.GetString();
+
+			//            // get rid of those stupid lines
+
+			//            List<string> realLines = new List<string>();
+			//            string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
+			//            for (int i = 0; i < lines.Length; i++)
+			//            {
+			//                if (i == 0)
+			//                {
+			//                    realLines.Add(lines[i]);
+			//                }
+			//                else
+			//                {
+			//                    realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
+			//                }
+			//            }
+			//            string realText = string.Join("\n", realLines.ToArray());
+			//            realText = realText.TrimStart('\n');
+
+			//            map = realText;
+			//            parser.escapeCharCount = 0;
+			//        }
+			//        return map;
+			//    }
+			//    ))).Match(parser);
+			//});
+
+			//private static DelegateRule String = new DelegateRule(delegate(Parser parser)
+			//{
+			//    return new Sequence(new Assignment(CodeKeys.Literal, new DelegateRule(delegate(Parser u)
+			//    {
+			//        Map map = null;
+			//        if (new Sequence(new Match(new ZeroOrMore(new Sequence(
+			//                new Match(new CharRule(Syntax.stringEscape)),
+			//                new Match(new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        p.escapeCharCount++;
+			//                        return Map.Empty;
+			//                    }))))), new Match(new CharRule(Syntax.@string))).Match(parser) != null)
+			//        {
+
+			//            string stringText = "";
+			//            Map textMap = new Sequence(
+			//                new SingleAssignment(
+			//                    new ZeroOrMore(
+			//                    new Sequence(
+			//                        new Match(new DelegateRule(delegate(Parser p)
+			//                        {
+			//                            if (parser.Look() == Syntax.@string)
+			//                            {
+			//                                int foundEscapeCharCount = 0;
+			//                                while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
+			//                                {
+			//                                    foundEscapeCharCount++;
+			//                                }
+			//                                if (foundEscapeCharCount == p.escapeCharCount)
+			//                                {
+			//                                    return null;
+			//                                }
+			//                            }
+			//                            return Map.Empty;
+			//                        })),
+			//                        new SingleAssignment(new CharactersExcept())
+			//            ))),
+			//            new Match(new CharRule(Syntax.@string)),
+			//            new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
+			//            stringText = textMap.GetString();
+
+			//            // get rid of those stupid lines
+
+			//            List<string> realLines = new List<string>();
+			//            string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
+			//            for (int i = 0; i < lines.Length; i++)
+			//            {
+			//                if (i == 0)
+			//                {
+			//                    realLines.Add(lines[i]);
+			//                }
+			//                else
+			//                {
+			//                    realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
+			//                }
+			//            }
+			//            string realText = string.Join("\n", realLines.ToArray());
+			//            realText = realText.TrimStart('\n');
+
+			//            map = realText;
+			//            parser.escapeCharCount = 0;
+			//        }
+			//        return map;
+			//    }
+			//    ))).Match(parser);
+			//    //else
+			//    //{
+			//    //    map = null;
+			//    //}
+			//    // rename
+			//    //if (map != null)
+			//    //{
+			//    //    return new StrategyMap(CodeKeys.Literal, map);
+			//    //}
+			//    //else
+			//    //{
+			//    //    return null;
+			//    //}
+			//});
 			//private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			//{
 			//    Map map;
