@@ -103,6 +103,7 @@
     <None Include="Data\string.meta" />
     <None Include="Data\testSubDir\testLib.meta" />
     <None Include="Data\testSubDir\x.meta" />
+    <None Include="Data\tutorial.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -85,8 +85,28 @@ namespace Meta
 			: base(message, new Extent(line, column, line, column,fileName))
 		{
 		}
+		public override string Message
+		{
+			get
+			{
+				return "Syntax error: "+base.Message;
+			}
+		}
 	}
-	public class MetaException:ApplicationException
+	public class ExecutionException : MetaException
+	{
+		public ExecutionException(string message, Extent extent):base(message,extent)
+		{
+		}
+		public override string Message
+		{
+			get
+			{
+				return "Unhandled exception: "+base.Message;
+			}
+		}
+	}
+	public abstract class MetaException:ApplicationException
 	{
 		public List<string> InvocationList
 		{
@@ -113,7 +133,7 @@ namespace Meta
 				{
 					text = "Line ";
 				}
-				text += extent.Start.Line + ", column " + extent.Start.Column + ": ";
+				text += extent.Start.Line + ", column " + extent.Start.Column + ".";
 			}
 			else
 			{
@@ -130,16 +150,16 @@ namespace Meta
         {
             get
             {
-				string text;
-				if (extent != null)
-				{
-					text = GetExtentText(extent);
-				}
-				else
-				{
-					text = "Unknown location: ";
-				}
-				text += message;
+				string text=message+"\n";
+				//if (extent != null)
+				//{
+				text += GetExtentText(extent);
+				//}
+				//else
+				//{
+				//    text += "Unknown location.";
+				//}
+				//text += message;
 				return text;
             }
         }
@@ -150,11 +170,11 @@ namespace Meta
 	{
 		public static void KeyDoesNotExist(Map key,Extent extent)
 		{
-			throw new MetaException("The key "+FileSystem.Serialize.Value(key)+" does not exist.",extent);
+			throw new ExecutionException("The key "+FileSystem.Serialize.Value(key)+" does not exist.",extent);
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
-			throw new MetaException("The key "+FileSystem.Serialize.Value(key)+" cannot be found.",extent);
+			throw new ExecutionException("The key "+FileSystem.Serialize.Value(key)+" could not be found.",extent);
 		}
 	}
 	public abstract class Expression
@@ -187,7 +207,7 @@ namespace Meta
 			if (!function.IsFunction)
 			{
 				object x=function.IsFunction;
-				throw new MetaException("Called map is not a function.", callable.Extent);
+				throw new ExecutionException("Called map is not a function.", callable.Extent);
 			}
 			Map argument = parameter.GetExpression().Evaluate(current);
 			Map result;
@@ -202,7 +222,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw new MetaException(e.ToString(), callable.Extent);
+				throw new ExecutionException(e.ToString(), callable.Extent);
 			}
 			if (result == null)
 			{
@@ -3361,7 +3381,12 @@ namespace Meta
 		public static Map Compile(TextReader textReader,string fileName)
 		{
 			Parser parser=new Parser(textReader.ReadToEnd(), fileName);
-			return Parser.Program.Match(parser);
+			Map result=Parser.Program.Match(parser);
+			if (parser.index != parser.text.Length)
+			{
+				throw new SyntaxException("Expected end of file.", parser);
+			}
+			return result;
 		}
 		public static Map fileSystem;
 		private static Map LoadDirectory(string path)
@@ -3435,14 +3460,6 @@ namespace Meta
 			{
 				public Map Match(Parser parser)
 				{
-					//Map expression = parseFunction(parser);
-					//if (expression != null)
-					//{
-					//extent.End.Line = parser.Line;
-					//extent.End.Column = parser.Column;
-					//expression.Extent = extent;
-					//}
-					//return expression;
 					Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 					int oldIndex = parser.index;
 					int oldLine = parser.line;
@@ -3488,6 +3505,26 @@ namespace Meta
 					this.chars = chars;
 				}
 				private char[] chars;
+			}
+			public delegate void Test(Parser parser);
+			public class PrePostRule : Rule
+			{
+				private Test pre;
+				private Test post;
+				private Rule rule;
+				public PrePostRule(Test pre, Rule rule, Test post)
+				{
+					this.pre = pre;
+					this.rule = rule;
+					this.post = post;
+				}
+				protected override Map DoMatch(Parser parser)
+				{
+					pre(parser);
+					Map result = rule.Match(parser);
+					post(parser);
+					return result;
+				}
 			}
 			public class CharactersExcept : Rule
 			{
@@ -3555,8 +3592,8 @@ namespace Meta
 					return parseFunction(parser);
 				}
 			}
-			private string text;
-			private int index;
+			public string text;
+			public int index;
 			public string file;
 
 			private int line = 1;
@@ -3836,7 +3873,7 @@ namespace Meta
 			});
 
 
-
+			private Stack<int> defaultKeys = new Stack<int>();
 
 			public static Rule Program = new DelegateRule(delegate(Parser parser)
 			{
@@ -3846,7 +3883,8 @@ namespace Meta
 				{
 					program = new StrategyMap();
 					int counter = 0;
-					int defaultKey = 1;
+					//int defaultKey = 1;
+					parser.defaultKeys.Push(1);
 					Rule Statement=new Sequence(
 							new SingleAssignment(
 								new Or(Function,
@@ -3862,8 +3900,8 @@ namespace Meta
 											new Assignment(CodeKeys.Key,
 												new DelegateRule(delegate(Parser p)
 												{
-													Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, defaultKey));
-													defaultKey++;
+													Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, parser.defaultKeys.Peek()));
+													parser.defaultKeys.Push(parser.defaultKeys.Pop()+1);
 													return map;
 												}
 												)))))),
@@ -3919,6 +3957,7 @@ namespace Meta
 					{
 						statements.Append(map);
 					}
+					parser.defaultKeys.Pop();
 				}
 				else
 				{
@@ -4007,17 +4046,12 @@ namespace Meta
 				}
 			});
 
-			public static Rule Function = new DelegateRule(delegate(Parser parser)
-			{
-				parser.functions++;
-				Map result = new Sequence(
+			public static Rule Function = new PrePostRule(delegate(Parser parser) {parser.functions++;}, new Sequence(
 					new Match(new CharRule(Syntax.function)),
 					new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
 					new Assignment(CodeKeys.Value,
-						new Sequence(new Assignment(CodeKeys.Literal, GetExpression)))).Match(parser);
-				parser.functions--;
-				return result;
-			});
+						new Sequence(new Assignment(CodeKeys.Literal, GetExpression)))),delegate(Parser parser) {parser.functions--;});
+
 
 			private Rule Indentation = new Or(
 					new DelegateRule(delegate(Parser p)
@@ -4076,11 +4110,6 @@ namespace Meta
 						delegate(Map map) { return Meta.Integer.ParseInteger(map.GetString()); },
 						new Nothing()))));
 
-			//private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new CharRule(Syntax.integerStart)),
-			//        new Flatten(new ZeroOrMore(new CharRule(Syntax.integer))),
-			//        new CustomAction(
-			//            delegate(Map map){return Meta.Integer.ParseInteger(map.GetString());},
-			//            new Nothing()))));
 			private static Rule LookupString = new Sequence(new Assignment(
 				CodeKeys.Literal,
 				new OneOrMore(new CharactersExcept(Syntax.lookupStringForbidden))));
@@ -4127,21 +4156,28 @@ namespace Meta
 			private static string Value(Map val, string indentation)
 			{
 				string text;
-				if (val.Equals(Map.Empty))
+				if (val is StrategyMap)
 				{
-					text = Syntax.emptyMap.ToString();
-				}
-				else if (val.IsString)
-				{
-					text = StringValue(val, indentation);
-				}
-				else if (val.IsInteger)
-				{
-					text = IntegerValue(val);
+					if (val.Equals(Map.Empty))
+					{
+						text = Syntax.emptyMap.ToString();
+					}
+					else if (val.IsString)
+					{
+						text = StringValue(val, indentation);
+					}
+					else if (val.IsInteger)
+					{
+						text = IntegerValue(val);
+					}
+					else
+					{
+						text = MapValue(val, indentation);
+					}
 				}
 				else
 				{
-					text = MapValue(val, indentation);
+					text = val.ToString();
 				}
 				return text;
 			}

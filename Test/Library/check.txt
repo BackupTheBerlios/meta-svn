@@ -230,5 +230,5 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"padLeft"
-			Value (ObjectMap):
-				     hello
+			Value (StrategyMap):
+				"     hello"

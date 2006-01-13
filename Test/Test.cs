@@ -59,6 +59,8 @@ namespace Test
 		{
 			try
 			{
+				//object x = null;
+				//x.ToString();
 				//Map map=FileSystem.Parse(@"C:\Projects\Meta\Meta\Data\basicTest.meta");
 				//if (args.Length == 1)
 				//{
