@@ -3923,12 +3923,18 @@ namespace Meta
 											return Map.Empty;
 										})),
 										new SingleAssignment(new CharactersExcept())
-								)))))//,
+								))))),//,
+							new Match(new CharRule(Syntax.@string)),
+							new Match(new DelegateRule(delegate(Parser p) {return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p);}))
 						//new Match(new CharRule(Syntax.@string)),
 						//new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))
 						).Match(parser);
-						new CharRule(Syntax.@string).Match(parser);
-						new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)).Match(parser);
+						//if (textMap!=null && new CharRule(Syntax.@string).Match(parser) == null)
+						//{
+						//}
+						//if (textMap!=null && new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)).Match(parser) == null)
+						//{
+						//}
 
 						if(textMap!=null)
 						{
