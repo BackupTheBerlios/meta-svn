@@ -226,17 +226,6 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
-		public class Extents : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map argument = Map.Empty;
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"];
-			}
-		}
 		public class Basic : Test
 		{
 			public override object GetResult(out int level)
@@ -245,7 +234,9 @@ namespace Test
 				Map argument = new StrategyMap();
 				argument[1] = "first arg";
 				argument[2] = "second=arg";
+				//object x=FileSystem.fileSystem["basicTest"];//.Call(argument);//, Map.Empty);
 				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+				//return Map.Empty;
 			}
 		}
 
@@ -257,49 +248,28 @@ namespace Test
 				return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
 			}
 		}
-
 		public class Serialization : Test
 		{
-			public override object  GetResult(out int level)
+			public override object GetResult(out int level)
 			{
-				level=1;
+				level = 1;
 				Map map = FileSystem.fileSystem["basicTest"];
 				return FileSystem.Serialize.Value(map).TrimStart();
 			}
 		}
-
-
-		//[Test]
-		//public object Serialization()
-		//{
-		//    Map map = FileSystem.fileSystem["basicTest"];
-		//    return FileSystem.Serialize.Value(map).TrimStart();
-		//}
-		//[Test(2)]
-		//public object Basic()
-		//{
-		//    Map argument = new StrategyMap();
-		//    argument[1] = "first arg";
-		//    argument[2] = "second=arg";
-		//    return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
-		//}
-		//[Test(2)]
-		//public object Library()
-		//{
-		//    return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
-		//}
-		//[Test]
-		//public object Extents()
-		//{
-		//    Map argument = Map.Empty;
-		//    argument[1] = "first arg";
-		//    argument[2] = "second=arg";
-		//    return FileSystem.fileSystem["basicTest"];
-		//}
-
+		public class Extents : Test
+		{
+			public override object GetResult(out int level)
+			{
+				level = 1;
+				Map argument = Map.Empty;
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				return FileSystem.fileSystem["basicTest"];
+			}
+		}
 	}
 }
-// move to Meta
 namespace testClasses
 {
 	[Serializable]
