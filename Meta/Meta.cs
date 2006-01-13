@@ -3669,6 +3669,9 @@ namespace Meta
 				protected Rule rule;
 				public Action(Rule rule)
 				{
+					if (rule == null)
+					{
+					}
 					this.rule = rule;
 				}
 				public bool Execute(Parser parser, ref Map result)
@@ -3874,103 +3877,157 @@ namespace Meta
 
 
 			private Stack<int> defaultKeys = new Stack<int>();
-
-
 			public static Rule Program = new DelegateRule(delegate(Parser parser)
 			{
-				Map program;
-				Map statements;
-				if (parser.Indentation.Match(parser) != null)
-				{
-					program = new StrategyMap();
-					parser.defaultKeys.Push(1);
-					//Rule Statement=new Sequence(
-					//        new SingleAssignment(
-					//            new Or(Function,
-					//                new Or(
-					//                    new Sequence(
-					//                        new Assignment(CodeKeys.Key, Keys),
-					//                        new Match(new CharRule(Syntax.statement)),
-					//                        new Assignment(CodeKeys.Value, GetExpression)),
-					//                    new Sequence(
-					//                        // remove this
-					//                        new Match(new Optional(new CharRule(Syntax.statement))),
-					//                        new Assignment(CodeKeys.Value, GetExpression),
-					//                        new Assignment(CodeKeys.Key,
-					//                            new DelegateRule(delegate(Parser p)
-					//                            {
-					//                                Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, parser.defaultKeys.Peek()));
-					//                                parser.defaultKeys.Push(parser.defaultKeys.Pop()+1);
-					//                                return map;
-					//                            }
-					//                            )))))),
-					//                    new Match(new DelegateRule(delegate(Parser p)
-					//                    {
-					//                        //counter++;
-					//                        if (EndOfLine.Match(parser) == null && parser.Look()!=Syntax.endOfFile)
-					//                        {
-					//                            parser.index -= 1;
-					//                            if (EndOfLine.Match(parser) == null)
-					//                            {
-					//                                parser.index -= 1;
-					//                                if (EndOfLine.Match(parser) == null)
-					//                                {
-					//                                    parser.index += 2;
-					//                                    throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
-					//                                }
-					//                                else
-					//                                {
-					//                                    parser.line--;
-					//                                }
-					//                            }
-					//                            else
-					//                            {
-					//                                parser.line--;
-					//                            }
-					//                        }
-					//                        return Map.Empty;
-					//                    })));
-
-					statements = new StrategyMap(1, Statement.Match(parser));
-
-					Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser p)
+				return new Sequence(
+					new Match(Indentation),
+					new Assignment(CodeKeys.Program, new DelegateRule(delegate(Parser p1)
 					{
-						if (parser.Look()!=Syntax.endOfFile)
+						return new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
 						{
-							return Map.Empty;
-						}
-						else
-						{
-							return null;
-						}
-					})),
-					new Match(new Or(
-								new StringRule("".PadLeft(parser.indentationCount, Syntax.indentation)),
-								new DelegateRule(delegate(Parser p)
+							//program = new StrategyMap();
+
+							Map statements = new StrategyMap(1, Statement.Match(parser));
+
+							Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
+							{
+								if (parser.Look() != Syntax.endOfFile)
 								{
-									parser.indentationCount--;
+									return Map.Empty;
+								}
+								else
+								{
 									return null;
-								}))),
-						new SingleAssignment(Statement))).Match(parser);
-					foreach (Map map in maps.Array)
-					{
-						statements.Append(map);
-					}
-					parser.defaultKeys.Pop();
-				}
-				else
-				{
-					statements = null;
-				}
-				if (statements != null)
-				{
-					return new StrategyMap(CodeKeys.Program, statements);
-				}
-				else
-				{
-					return null;
-				}
+								}
+							})),
+							new Match(new Or(
+										new StringRule("".PadLeft(parser.indentationCount, Syntax.indentation)),
+										new DelegateRule(delegate(Parser pa)
+										{
+											pa.indentationCount--;
+											return null;
+										}))),
+								new SingleAssignment(Statement))).Match(parser);
+							foreach (Map map in maps.Array)
+							{
+								statements.Append(map);
+							}
+							return statements;
+						}), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(parser);
+					}))).Match(parser);
 			});
+				//else
+				//{
+				//    statements = null;
+				//}
+				//if (statements != null)
+				//{
+					//return new StrategyMap(CodeKeys.Program, statements);
+				//}
+				//else
+				//{
+				//    return null;
+				//}
+			//});
+			//public static Rule Program = new DelegateRule(delegate(Parser parser)
+			//{
+			//    Map statements;
+			//    if (parser.Indentation.Match(parser) != null)
+			//    {
+			//        statements = new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
+			//        {
+			//            //program = new StrategyMap();
+
+			//            statements = new StrategyMap(1, Statement.Match(parser));
+
+			//            Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
+			//            {
+			//                if (parser.Look() != Syntax.endOfFile)
+			//                {
+			//                    return Map.Empty;
+			//                }
+			//                else
+			//                {
+			//                    return null;
+			//                }
+			//            })),
+			//            new Match(new Or(
+			//                        new StringRule("".PadLeft(parser.indentationCount, Syntax.indentation)),
+			//                        new DelegateRule(delegate(Parser pa)
+			//                        {
+			//                            pa.indentationCount--;
+			//                            return null;
+			//                        }))),
+			//                new SingleAssignment(Statement))).Match(parser);
+			//            foreach (Map map in maps.Array)
+			//            {
+			//                statements.Append(map);
+			//            }
+			//            return statements;
+			//        }), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(parser);
+			//    }
+			//    else
+			//    {
+			//        statements = null;
+			//    }
+			//    if (statements != null)
+			//    {
+			//        return new StrategyMap(CodeKeys.Program, statements);
+			//    }
+			//    else
+			//    {
+			//        return null;
+			//    }
+			//});
+			//public static Rule Program = new DelegateRule(delegate(Parser parser)
+			//{
+			//    Map program;
+			//    Map statements;
+			//    if (parser.Indentation.Match(parser) != null)
+			//    {
+			//        parser.defaultKeys.Push(1);
+			//        program = new StrategyMap();
+
+			//        statements = new StrategyMap(1, Statement.Match(parser));
+
+			//        Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser p)
+			//        {
+			//            if (parser.Look()!=Syntax.endOfFile)
+			//            {
+			//                return Map.Empty;
+			//            }
+			//            else
+			//            {
+			//                return null;
+			//            }
+			//        })),
+			//        new Match(new Or(
+			//                    new StringRule("".PadLeft(parser.indentationCount, Syntax.indentation)),
+			//                    new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        parser.indentationCount--;
+			//                        return null;
+			//                    }))),
+			//            new SingleAssignment(Statement))).Match(parser);
+			//        foreach (Map map in maps.Array)
+			//        {
+			//            statements.Append(map);
+			//        }
+			//        parser.defaultKeys.Pop();
+			//    }
+			//    else
+			//    {
+			//        statements = null;
+			//    }
+			//    if (statements != null)
+			//    {
+			//        return new StrategyMap(CodeKeys.Program, statements);
+			//    }
+			//    else
+			//    {
+			//        return null;
+			//    }
+			//});
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
 				Map map;
@@ -4052,7 +4109,18 @@ namespace Meta
 						new Sequence(new Assignment(CodeKeys.Literal, GetExpression)))),delegate(Parser parser) {parser.functions--;});
 
 
-			private Rule Indentation = new Or(
+			private static Rule EndOfLine = new Sequence(
+					new Match(new ZeroOrMore(
+						new Or(
+							new CharRule(Syntax.space),
+							new CharRule(Syntax.tab)
+						)
+					)),
+					new Match(new Or(
+						new CharRule(Syntax.unixNewLine),
+						new StringRule(Syntax.windowsNewLine))));
+
+			private static Rule Indentation = new Or(
 					new DelegateRule(delegate(Parser p)
 						{
 							if (p.isStartOfFile)
@@ -4079,17 +4147,6 @@ namespace Meta
 							})))
 
 					);
-
-			private static Rule EndOfLine = new Sequence(
-					new Match(new ZeroOrMore(
-						new Or(
-							new CharRule(Syntax.space),
-							new CharRule(Syntax.tab)
-						)
-					)),
-					new Match(new Or(
-						new CharRule(Syntax.unixNewLine),
-						new StringRule(Syntax.windowsNewLine))));
 
 			private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
 
