@@ -41,18 +41,18 @@ range=
 	|
 		array=*
 		counter=1
-		limit=math.add
+		limit=add
 			arg
 			1
 		count=
 			|
 				scope.scope.array.[counter]=counter
-				scope.scope.counter=math.add
+				scope.scope.counter=add
 					counter
 					1
 		while
 			condition=
-				|math.smaller
+				|smaller
 					counter
 					limit
 			function=
@@ -98,7 +98,7 @@ apply=
 		result=*
 	applyImplementation=
 		|
-			stop=math.greater
+			stop=greater
 				arg.index
 				length arg.array
 			next=
@@ -108,7 +108,7 @@ apply=
 					|applyImplementation
 						array=arg.array
 						function=arg.function
-						index=math.add
+						index=add
 							arg.index
 							1
 						object=Meta.ObjectMap.[mscorlib.Object] arg.result
@@ -175,7 +175,7 @@ sum=
 		result=arg.start
 	sumImplementation=
 		|
-			stop=math.greater
+			stop=greater
 				arg.index
 				length arg.array
 			next=
@@ -183,7 +183,7 @@ sum=
 					|arg.result
 				[*]=
 					|sumImplementation
-						index=math.increment arg.index
+						index=increment arg.index
 						result=arg.function
 							previous=arg.result
 							present=arg.array.[arg.index]

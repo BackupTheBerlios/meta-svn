@@ -320,7 +320,7 @@ license='"
 				10
 			whileBranches=
 				
-					|loop math.add
+					|loop add
 						arg
 						1
 				[*]=

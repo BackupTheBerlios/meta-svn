@@ -91,9 +91,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\add.meta" />
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwise.meta" />
     <None Include="Data\console.meta" />
+    <None Include="Data\subtract.meta" />
+    <None Include="Data\divide.meta" />
+    <None Include="Data\multiply.meta" />
+    <None Include="Data\greater.meta" />
+    <None Include="Data\smaller.meta" />
+    <None Include="Data\increment.meta" />
+    <None Include="Data\Copy %287%29 of add.meta" />
+    <None Include="Data\Copy %288%29 of add.meta" />
+    <None Include="Data\Copy %289%29 of add.meta" />
+    <None Include="Data\Copy of add.meta" />
     <None Include="Data\features.meta" />
     <None Include="Data\libraryTest.meta" />
     <None Include="Data\logic.meta" />

@@ -2409,15 +2409,6 @@ Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						"literal"
 																																					Value (StrategyMap):
-																																						"math"
-																																		Entry (KeyValuePair`2)
-																																			Key (StrategyMap):
-																																				2
-																																			Value (StrategyMap):
-																																				Entry (KeyValuePair`2)
-																																					Key (StrategyMap):
-																																						"literal"
-																																					Value (StrategyMap):
 																																						"add"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):

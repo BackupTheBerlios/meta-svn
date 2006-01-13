@@ -126,7 +126,7 @@
 						x=245
 						y=98834
 				compare=
-					|math.greater
+					|greater
 						arg.a.x
 						arg.b.x
 			integerToString=integerToString 5
