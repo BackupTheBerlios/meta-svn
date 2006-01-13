@@ -2,8 +2,6 @@
 	this=map.merge
 		scope
 		map
-		logic
-		math
 	test=
 		booleanTest=
 			not=

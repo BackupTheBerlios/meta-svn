@@ -315,7 +315,7 @@ license='"
 	whileCounter=*
 	loop=
 		|
-			whileDecision=logic.not map.equal
+			whileDecision=not map.equal
 				arg
 				10
 			whileBranches=

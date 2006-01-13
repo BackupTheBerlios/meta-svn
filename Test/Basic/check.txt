@@ -2190,15 +2190,6 @@ Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				"literal"
 																			Value (StrategyMap):
-																				"logic"
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		2
-																	Value (StrategyMap):
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				"literal"
-																			Value (StrategyMap):
 																				"not"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
