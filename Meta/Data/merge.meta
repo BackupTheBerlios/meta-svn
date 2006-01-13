@@ -1,0 +1,15 @@
+documentation="Combines several maps into one."
+|sum
+	array=arg
+	function=
+		|
+			overwrite=arg.present
+			this=sum
+				array=keys arg.present
+				function=
+					|
+						result=arg.previous
+						result.[arg.present]=overwrite.[arg.present]
+						this=result
+				start=arg.previous
+	start=*

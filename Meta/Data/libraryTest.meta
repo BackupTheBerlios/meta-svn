@@ -1,7 +1,4 @@
 |
-	this=map.merge
-		scope
-		map
 	test=
 		booleanTest=
 			not=
@@ -128,11 +125,6 @@
 						arg.a.x
 						arg.b.x
 			integerToString=integerToString 5
-		stringTest=
-			padLeft=string.padLeft
-				string="hello"
-				character=" "
-				count=10
 		bitwiseTest=bitwiseOr
 			20
 			["System.Windows.Forms"].Keys.Tab

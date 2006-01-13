@@ -1,5 +1,5 @@
 documentation="Multiplies integers."
-|Meta.StrategyMap.[Meta.Integer] map.sum
+|Meta.StrategyMap.[Meta.Integer] sum
 	array=arg
 	function=
 		|Meta.Integer.op_Multiply

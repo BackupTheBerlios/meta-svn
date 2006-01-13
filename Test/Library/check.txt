@@ -223,12 +223,3 @@ Entry (KeyValuePair`2)
 				"integerToString"
 			Value (StrategyMap):
 				"5"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"stringTest"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"padLeft"
-			Value (StrategyMap):
-				"     hello"

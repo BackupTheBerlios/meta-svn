@@ -1,5 +1,5 @@
 documentation="Returns whether all booleans are true."
-|map.sum
+|sum
 	array=arg
 	function=
 		|table.[arg]

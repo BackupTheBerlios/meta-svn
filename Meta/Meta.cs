@@ -102,7 +102,7 @@ namespace Meta
 		{
 			get
 			{
-				return "Unhandled exception: "+base.Message;
+				return "Exception: "+base.Message;
 			}
 		}
 	}

@@ -21,7 +21,7 @@ license='"
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE."'
 |
-	this=map.merge
+	this=merge
 		scope
 		=
 			"AssignedToCurrent"
@@ -255,7 +255,7 @@ license='"
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=map.equal
+	firstIfCondition=equal
 		1
 		one
 	firstIfBranches=
@@ -315,7 +315,7 @@ license='"
 	whileCounter=*
 	loop=
 		|
-			whileDecision=not map.equal
+			whileDecision=not equal
 				arg
 				10
 			whileBranches=
