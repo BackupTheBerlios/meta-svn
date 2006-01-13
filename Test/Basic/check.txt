@@ -2066,9 +2066,10 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"aLongText"
 			Value (StrategyMap):
-				"hello world!
-hello!
-"
+				"
+			hello world!
+			hello!
+			"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"arrayList"
@@ -2088,8 +2089,9 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"textBox"
 	Value (ObjectMap):
-		System.Windows.Forms.TextBox, Text: Alle meine Entchen,
-schwimmen auf dem Se...
+		System.Windows.Forms.TextBox, Text: 
+		Alle meine Entchen,
+		schwimmen auf...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		12
@@ -2104,7 +2106,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"alleMeineText"
 	Value (ObjectMap):
-		schwimmen auf dem See,
+				Alle meine Entchen,
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"form"
