@@ -3891,82 +3891,82 @@ namespace Meta
 
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
-				Map map=null;
-				//if (new Or(new CharRule(Syntax.@string), new CharRule(Syntax.stringEscape)).Match(parser) != null)
-				//{
-				//    parser.index--;
-				//    parser.escapeCharCount = 0;
-
-					if(new ZeroOrMore(new Sequence(
-						new Match(new CharRule(Syntax.stringEscape)),
-						new Match(new DelegateRule(delegate(Parser p)
-							{
-								p.escapeCharCount++;
-								return Map.Empty;
-							})))).Match(parser)!=null && new CharRule(Syntax.@string).Match(parser)!=null)
-					{
-
-					string stringText = "";
-					Map textMap = new Sequence(
-						new SingleAssignment(
-							new ZeroOrMore(
-							new Sequence(
-								new Match(new DelegateRule(delegate(Parser p)
+				return new Sequence(new Assignment(CodeKeys.Literal, new DelegateRule(delegate(Parser u)
+				{
+					Map map = null;
+					if (new Sequence(new Match(new ZeroOrMore(new Sequence(
+							new Match(new CharRule(Syntax.stringEscape)),
+							new Match(new DelegateRule(delegate(Parser p)
 								{
-									if (parser.Look() == Syntax.@string)
-									{
-										int foundEscapeCharCount = 0;
-										while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
-										{
-											foundEscapeCharCount++;
-										}
-										if (foundEscapeCharCount == p.escapeCharCount)
-										{
-											return null;
-										}
-									}
+									p.escapeCharCount++;
 									return Map.Empty;
-								})),
-								new SingleAssignment(new CharactersExcept())
-					))),
-					new Match(new CharRule(Syntax.@string)),
-					new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
-					stringText = textMap.GetString();
-
-					// get rid of those stupid lines
-
-					List<string> realLines = new List<string>();
-					string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
-					for (int i = 0; i < lines.Length; i++)
+								}))))), new Match(new CharRule(Syntax.@string))).Match(parser) != null)
 					{
-						if (i == 0)
-						{
-							realLines.Add(lines[i]);
-						}
-						else
-						{
-							realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
-						}
-					}
-					string realText = string.Join("\n", realLines.ToArray());
-					realText = realText.TrimStart('\n');
 
-					map = realText;
-					parser.escapeCharCount = 0;
+						string stringText = "";
+						Map textMap = new Sequence(
+							new SingleAssignment(
+								new ZeroOrMore(
+								new Sequence(
+									new Match(new DelegateRule(delegate(Parser p)
+									{
+										if (parser.Look() == Syntax.@string)
+										{
+											int foundEscapeCharCount = 0;
+											while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
+											{
+												foundEscapeCharCount++;
+											}
+											if (foundEscapeCharCount == p.escapeCharCount)
+											{
+												return null;
+											}
+										}
+										return Map.Empty;
+									})),
+									new SingleAssignment(new CharactersExcept())
+						))),
+						new Match(new CharRule(Syntax.@string)),
+						new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
+						stringText = textMap.GetString();
+
+						// get rid of those stupid lines
+
+						List<string> realLines = new List<string>();
+						string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
+						for (int i = 0; i < lines.Length; i++)
+						{
+							if (i == 0)
+							{
+								realLines.Add(lines[i]);
+							}
+							else
+							{
+								realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
+							}
+						}
+						string realText = string.Join("\n", realLines.ToArray());
+						realText = realText.TrimStart('\n');
+
+						map = realText;
+						parser.escapeCharCount = 0;
+					}
+					return map;
 				}
+				))).Match(parser);
 				//else
 				//{
 				//    map = null;
 				//}
 				// rename
-				if (map != null)
-				{
-					return new StrategyMap(CodeKeys.Literal, map);
-				}
-				else
-				{
-					return null;
-				}
+				//if (map != null)
+				//{
+				//    return new StrategyMap(CodeKeys.Literal, map);
+				//}
+				//else
+				//{
+				//    return null;
+				//}
 			});
 			//private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			//{
