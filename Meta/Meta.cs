@@ -3875,6 +3875,7 @@ namespace Meta
 
 			private Stack<int> defaultKeys = new Stack<int>();
 
+
 			public static Rule Program = new DelegateRule(delegate(Parser parser)
 			{
 				Map program;
@@ -3882,55 +3883,53 @@ namespace Meta
 				if (parser.Indentation.Match(parser) != null)
 				{
 					program = new StrategyMap();
-					int counter = 0;
-					//int defaultKey = 1;
 					parser.defaultKeys.Push(1);
-					Rule Statement=new Sequence(
-							new SingleAssignment(
-								new Or(Function,
-									new Or(
-										new Sequence(
-											new Assignment(CodeKeys.Key, Keys),
-											new Match(new CharRule(Syntax.statement)),
-											new Assignment(CodeKeys.Value, GetExpression)),
-										new Sequence(
-											// remove this
-											new Match(new Optional(new CharRule(Syntax.statement))),
-											new Assignment(CodeKeys.Value, GetExpression),
-											new Assignment(CodeKeys.Key,
-												new DelegateRule(delegate(Parser p)
-												{
-													Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, parser.defaultKeys.Peek()));
-													parser.defaultKeys.Push(parser.defaultKeys.Pop()+1);
-													return map;
-												}
-												)))))),
-										new Match(new DelegateRule(delegate(Parser p)
-										{
-											counter++;
-											if (EndOfLine.Match(parser) == null && parser.Look()!=Syntax.endOfFile)
-											{
-												parser.index -= 1;
-												if (EndOfLine.Match(parser) == null)
-												{
-													parser.index -= 1;
-													if (EndOfLine.Match(parser) == null)
-													{
-														parser.index += 2;
-														throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
-													}
-													else
-													{
-														parser.line--;
-													}
-												}
-												else
-												{
-													parser.line--;
-												}
-											}
-											return Map.Empty;
-										})));
+					//Rule Statement=new Sequence(
+					//        new SingleAssignment(
+					//            new Or(Function,
+					//                new Or(
+					//                    new Sequence(
+					//                        new Assignment(CodeKeys.Key, Keys),
+					//                        new Match(new CharRule(Syntax.statement)),
+					//                        new Assignment(CodeKeys.Value, GetExpression)),
+					//                    new Sequence(
+					//                        // remove this
+					//                        new Match(new Optional(new CharRule(Syntax.statement))),
+					//                        new Assignment(CodeKeys.Value, GetExpression),
+					//                        new Assignment(CodeKeys.Key,
+					//                            new DelegateRule(delegate(Parser p)
+					//                            {
+					//                                Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, parser.defaultKeys.Peek()));
+					//                                parser.defaultKeys.Push(parser.defaultKeys.Pop()+1);
+					//                                return map;
+					//                            }
+					//                            )))))),
+					//                    new Match(new DelegateRule(delegate(Parser p)
+					//                    {
+					//                        //counter++;
+					//                        if (EndOfLine.Match(parser) == null && parser.Look()!=Syntax.endOfFile)
+					//                        {
+					//                            parser.index -= 1;
+					//                            if (EndOfLine.Match(parser) == null)
+					//                            {
+					//                                parser.index -= 1;
+					//                                if (EndOfLine.Match(parser) == null)
+					//                                {
+					//                                    parser.index += 2;
+					//                                    throw new SyntaxException("Expected newline.", parser);//new Extent(parser.Position, parser.Position, parser.file));
+					//                                }
+					//                                else
+					//                                {
+					//                                    parser.line--;
+					//                                }
+					//                            }
+					//                            else
+					//                            {
+					//                                parser.line--;
+					//                            }
+					//                        }
+					//                        return Map.Empty;
+					//                    })));
 
 					statements = new StrategyMap(1, Statement.Match(parser));
 
@@ -4124,6 +4123,54 @@ namespace Meta
 					new Match(new CharRule(Syntax.select)),
 					new SingleAssignment(Lookup)))));
 			private static Rule Select = new Sequence(new Assignment(CodeKeys.Select, Keys));
+
+
+			private static Rule Statement = new Sequence(
+					new SingleAssignment(
+						new Or(Function,
+							new Or(
+								new Sequence(
+									new Assignment(CodeKeys.Key, Keys),
+									new Match(new CharRule(Syntax.statement)),
+									new Assignment(CodeKeys.Value, GetExpression)),
+								new Sequence(
+				// remove this
+									new Match(new Optional(new CharRule(Syntax.statement))),
+									new Assignment(CodeKeys.Value, GetExpression),
+									new Assignment(CodeKeys.Key,
+										new DelegateRule(delegate(Parser p)
+										{
+											Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+											p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+											return map;
+										}
+										)))))),
+								new Match(new DelegateRule(delegate(Parser p)
+								{
+									//counter++;
+									if (EndOfLine.Match(p) == null && p.Look() != Syntax.endOfFile)
+									{
+										p.index -= 1;
+										if (EndOfLine.Match(p) == null)
+										{
+											p.index -= 1;
+											if (EndOfLine.Match(p) == null)
+											{
+												p.index += 2;
+												throw new SyntaxException("Expected newline.", p);//new Extent(parser.Position, parser.Position, parser.file));
+											}
+											else
+											{
+												p.line--;
+											}
+										}
+										else
+										{
+											p.line--;
+										}
+									}
+									return Map.Empty;
+								})));
 
 			public delegate Map ParseFunction(Parser parser);
 
