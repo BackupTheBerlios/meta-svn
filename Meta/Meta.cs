@@ -3886,17 +3886,23 @@ namespace Meta
 
 
 			private Stack<int> defaultKeys = new Stack<int>();
+			private int escapeCharCount=0;
+
+
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
 				Map map;
-				if (new Or(new CharRule(Syntax.@string),new CharRule(Syntax.stringEscape)).Match(parser)!=null)
+				if (new Or(new CharRule(Syntax.@string), new CharRule(Syntax.stringEscape)).Match(parser) != null)
 				{
 					parser.index--;
-					int escapeCharCount = 0;
-					while (new CharRule(Syntax.stringEscape).Match(parser)!=null)
-					{
-						escapeCharCount++;
-					}
+					parser.escapeCharCount = 0;
+					new ZeroOrMore(new Sequence(
+						new Match(new CharRule(Syntax.stringEscape)),
+						new Match(new DelegateRule(delegate(Parser p)
+							{
+								p.escapeCharCount++;
+								return Map.Empty;
+							})))).Match(parser);
 					new CharRule(Syntax.@string).Match(parser);
 					string stringText = "";
 					Map textMap = new Sequence(
@@ -3905,14 +3911,14 @@ namespace Meta
 							new Sequence(
 								new Match(new DelegateRule(delegate(Parser p)
 								{
-									if (parser.Look()==Syntax.@string)
+									if (parser.Look() == Syntax.@string)
 									{
 										int foundEscapeCharCount = 0;
-										while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1)==Syntax.stringEscape)
+										while (foundEscapeCharCount < p.escapeCharCount && parser.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
 										{
 											foundEscapeCharCount++;
 										}
-										if (foundEscapeCharCount == escapeCharCount)
+										if (foundEscapeCharCount == p.escapeCharCount)
 										{
 											return null;
 										}
@@ -3922,7 +3928,7 @@ namespace Meta
 								new SingleAssignment(new CharactersExcept())
 					))),
 					new Match(new CharRule(Syntax.@string)),
-					new Match(new StringRule("".PadLeft(escapeCharCount, Syntax.stringEscape)))).Match(parser);
+					new Match(new StringRule("".PadLeft(parser.escapeCharCount, Syntax.stringEscape)))).Match(parser);
 					stringText = textMap.GetString();
 
 					// get rid of those stupid lines
@@ -3944,6 +3950,7 @@ namespace Meta
 					realText = realText.TrimStart('\n');
 
 					map = realText;
+					parser.escapeCharCount = 0;
 				}
 				else
 				{
@@ -3959,6 +3966,79 @@ namespace Meta
 					return null;
 				}
 			});
+			//private static DelegateRule String = new DelegateRule(delegate(Parser parser)
+			//{
+			//    Map map;
+			//    if (new Or(new CharRule(Syntax.@string),new CharRule(Syntax.stringEscape)).Match(parser)!=null)
+			//    {
+			//        parser.index--;
+			//        int escapeCharCount = 0;
+			//        while (new CharRule(Syntax.stringEscape).Match(parser)!=null)
+			//        {
+			//            escapeCharCount++;
+			//        }
+			//        new CharRule(Syntax.@string).Match(parser);
+			//        string stringText = "";
+			//        Map textMap = new Sequence(
+			//            new SingleAssignment(
+			//                new ZeroOrMore(
+			//                new Sequence(
+			//                    new Match(new DelegateRule(delegate(Parser p)
+			//                    {
+			//                        if (parser.Look()==Syntax.@string)
+			//                        {
+			//                            int foundEscapeCharCount = 0;
+			//                            while (foundEscapeCharCount < escapeCharCount && parser.Look(foundEscapeCharCount + 1)==Syntax.stringEscape)
+			//                            {
+			//                                foundEscapeCharCount++;
+			//                            }
+			//                            if (foundEscapeCharCount == escapeCharCount)
+			//                            {
+			//                                return null;
+			//                            }
+			//                        }
+			//                        return Map.Empty;
+			//                    })),
+			//                    new SingleAssignment(new CharactersExcept())
+			//        ))),
+			//        new Match(new CharRule(Syntax.@string)),
+			//        new Match(new StringRule("".PadLeft(escapeCharCount, Syntax.stringEscape)))).Match(parser);
+			//        stringText = textMap.GetString();
+
+			//        // get rid of those stupid lines
+
+			//        List<string> realLines = new List<string>();
+			//        string[] lines = stringText.Replace(Syntax.windowsNewLine, Syntax.unixNewLine.ToString()).Split(Syntax.unixNewLine);
+			//        for (int i = 0; i < lines.Length; i++)
+			//        {
+			//            if (i == 0)
+			//            {
+			//                realLines.Add(lines[i]);
+			//            }
+			//            else
+			//            {
+			//                realLines.Add(lines[i].Remove(0, Math.Min(parser.indentationCount + 1, lines[i].Length - lines[i].TrimStart(Syntax.indentation).Length)));
+			//            }
+			//        }
+			//        string realText = string.Join("\n", realLines.ToArray());
+			//        realText = realText.TrimStart('\n');
+
+			//        map = realText;
+			//    }
+			//    else
+			//    {
+			//        map = null;
+			//    }
+			//    // rename
+			//    if (map != null)
+			//    {
+			//        return new StrategyMap(CodeKeys.Literal, map);
+			//    }
+			//    else
+			//    {
+			//        return null;
+			//    }
+			//});
 
 			public static Rule Function = new PrePostRule(delegate(Parser parser) {parser.functions++;}, new Sequence(
 					new Match(new CharRule(Syntax.function)),
@@ -4061,6 +4141,7 @@ namespace Meta
 								new Match(new DelegateRule(delegate(Parser p)
 								{
 									//counter++;
+									// i dont understand this
 									if (EndOfLine.Match(p) == null && p.Look() != Syntax.endOfFile)
 									{
 										p.index -= 1;
@@ -4091,24 +4172,16 @@ namespace Meta
 				new Sequence(
 							new Assignment(1, Statement),
 							new Flatten(new ZeroOrMore(new Sequence(
-								new Match(new DelegateRule(delegate(Parser pa)
-								{
-									if (pa.Look() != Syntax.endOfFile)
-									{
-										return Map.Empty;
-									}
-									else
-									{
-										return null;
-									}
-								})),
 								new Match(new Or(
-									new DelegateRule(delegate(Parser pa) { return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa); }),
 									new DelegateRule(delegate(Parser pa)
-									{
-										pa.indentationCount--;
-										return null;
-									}))),
+										{
+											return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa); 
+										}),
+									new DelegateRule(delegate(Parser pa)
+										{
+											pa.indentationCount--;
+											return null;
+										}))),
 								new SingleAssignment(Statement))))), delegate(Parser p) { p.defaultKeys.Pop(); })));
 
 			public delegate Map ParseFunction(Parser parser);
