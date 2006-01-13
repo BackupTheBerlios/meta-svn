@@ -3886,75 +3886,6 @@ namespace Meta
 
 
 			private Stack<int> defaultKeys = new Stack<int>();
-			//public static Rule Program = new Sequence(
-			//        new Match(Indentation),
-			//        new Assignment(CodeKeys.Program, new DelegateRule(delegate(Parser p1)
-			//        {
-			//            return new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
-			//            {
-			//                Map statements = new StrategyMap(1, Statement.Match(p));
-			//                Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
-			//                {
-			//                    if (p.Look() != Syntax.endOfFile)
-			//                    {
-			//                        return Map.Empty;
-			//                    }
-			//                    else
-			//                    {
-			//                        return null;
-			//                    }
-			//                })),
-			//                new Match(new Or(
-			//                            new StringRule("".PadLeft(p.indentationCount, Syntax.indentation)),
-			//                            new DelegateRule(delegate(Parser pa)
-			//                            {
-			//                                pa.indentationCount--;
-			//                                return null;
-			//                            }))),
-			//                    new SingleAssignment(Statement))).Match(p);
-			//                foreach (Map map in maps.Array)
-			//                {
-			//                    statements.Append(map);
-			//                }
-			//                return statements;
-			//            }), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(p1);
-			//        })));
-			//public static Rule Program = new DelegateRule(delegate(Parser parser)
-			//{
-			//    return new Sequence(
-			//        new Match(Indentation),
-			//        new Assignment(CodeKeys.Program, new DelegateRule(delegate(Parser p1)
-			//        {
-			//            return new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
-			//            {
-			//                Map statements = new StrategyMap(1, Statement.Match(parser));
-			//                Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
-			//                {
-			//                    if (parser.Look() != Syntax.endOfFile)
-			//                    {
-			//                        return Map.Empty;
-			//                    }
-			//                    else
-			//                    {
-			//                        return null;
-			//                    }
-			//                })),
-			//                new Match(new Or(
-			//                            new StringRule("".PadLeft(parser.indentationCount, Syntax.indentation)),
-			//                            new DelegateRule(delegate(Parser pa)
-			//                            {
-			//                                pa.indentationCount--;
-			//                                return null;
-			//                            }))),
-			//                    new SingleAssignment(Statement))).Match(parser);
-			//                foreach (Map map in maps.Array)
-			//                {
-			//                    statements.Append(map);
-			//                }
-			//                return statements;
-			//            }), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(parser);
-			//        }))).Match(parser);
-			//});
 			private static DelegateRule String = new DelegateRule(delegate(Parser parser)
 			{
 				Map map;
@@ -4074,104 +4005,6 @@ namespace Meta
 							})))
 
 					);
-			public static Rule Program = new Sequence(
-					new Match(Indentation),
-					new Assignment(CodeKeys.Program, new DelegateRule(delegate(Parser p1)
-					{
-						if (p1.text == "") 
-						{
-							}
-						return new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
-						{
-							//Map statements = new StrategyMap(1, Statement.Match(p));
-							Map maps = new Sequence(
-								new Assignment(1, Statement),
-								new Flatten(new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
-							{
-								if (p.Look() != Syntax.endOfFile)
-								{
-									return Map.Empty;
-								}
-								else
-								{
-									return null;
-								}
-							})),
-							new Match(new Or(
-										new StringRule("".PadLeft(p.indentationCount, Syntax.indentation)),
-										new DelegateRule(delegate(Parser pa)
-										{
-											pa.indentationCount--;
-											return null;
-										}))),
-								new SingleAssignment(Statement))))).Match(p);
-
-							//foreach (Map map in maps.Array)
-							//{
-							//    statements.Append(map);
-							//}
-							//Map statements = new StrategyMap(1, Statement.Match(p));
-							//Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
-							//{
-							//    if (p.Look() != Syntax.endOfFile)
-							//    {
-							//        return Map.Empty;
-							//    }
-							//    else
-							//    {
-							//        return null;
-							//    }
-							//})),
-							//new Match(new Or(
-							//            new StringRule("".PadLeft(p.indentationCount, Syntax.indentation)),
-							//            new DelegateRule(delegate(Parser pa)
-							//            {
-							//                pa.indentationCount--;
-							//                return null;
-							//            }))),
-							//    new SingleAssignment(Statement))).Match(p);
-
-							//foreach (Map map in maps.Array)
-							//{
-							//    statements.Append(map);
-							//}
-
-							return maps;
-						}), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(p1);
-					})));
-			//public static Rule Program = new Sequence(
-			//        new Match(Indentation),
-			//        new Assignment(CodeKeys.Program, new DelegateRule(delegate(Parser p1)
-			//        {
-			//            return new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); }, new DelegateRule(delegate(Parser p)
-			//            {
-			//                Map statements = new StrategyMap(1, Statement.Match(p));
-			//                Map maps = new ZeroOrMore(new Sequence(new Match(new DelegateRule(delegate(Parser pa)
-			//                {
-			//                    if (p.Look() != Syntax.endOfFile)
-			//                    {
-			//                        return Map.Empty;
-			//                    }
-			//                    else
-			//                    {
-			//                        return null;
-			//                    }
-			//                })),
-			//                new Match(new Or(
-			//                            new StringRule("".PadLeft(p.indentationCount, Syntax.indentation)),
-			//                            new DelegateRule(delegate(Parser pa)
-			//                            {
-			//                                pa.indentationCount--;
-			//                                return null;
-			//                            }))),
-			//                    new SingleAssignment(Statement))).Match(p);
-			//                foreach (Map map in maps.Array)
-			//                {
-			//                    statements.Append(map);
-			//                }
-			//                return statements;
-			//            }), delegate(Parser p) { p.defaultKeys.Pop(); }).Match(p1);
-			//        })));
 			private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
 
 
@@ -4215,7 +4048,6 @@ namespace Meta
 									new Match(new CharRule(Syntax.statement)),
 									new Assignment(CodeKeys.Value, GetExpression)),
 								new Sequence(
-				// remove this
 									new Match(new Optional(new CharRule(Syntax.statement))),
 									new Assignment(CodeKeys.Value, GetExpression),
 									new Assignment(CodeKeys.Key,
@@ -4252,6 +4084,32 @@ namespace Meta
 									}
 									return Map.Empty;
 								})));
+
+			public static Rule Program = new Sequence(
+				new Match(Indentation),
+				new Assignment(CodeKeys.Program, new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); },
+				new Sequence(
+							new Assignment(1, Statement),
+							new Flatten(new ZeroOrMore(new Sequence(
+								new Match(new DelegateRule(delegate(Parser pa)
+								{
+									if (pa.Look() != Syntax.endOfFile)
+									{
+										return Map.Empty;
+									}
+									else
+									{
+										return null;
+									}
+								})),
+								new Match(new Or(
+									new DelegateRule(delegate(Parser pa) { return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa); }),
+									new DelegateRule(delegate(Parser pa)
+									{
+										pa.indentationCount--;
+										return null;
+									}))),
+								new SingleAssignment(Statement))))), delegate(Parser p) { p.defaultKeys.Pop(); })));
 
 			public delegate Map ParseFunction(Parser parser);
 
