@@ -82,7 +82,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"divide"
 			Value (StrategyMap):
-				142
+				1000/7
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"bitwiseTest"

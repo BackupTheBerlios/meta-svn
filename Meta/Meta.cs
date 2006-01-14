@@ -958,7 +958,8 @@ namespace Meta
 		{
 			if (IsInteger)
 			{
-				return (int)(GetInteger().integer % int.MaxValue);
+				//refactor, this is  totally wrong
+				return (int)(GetInteger().Numerator % int.MaxValue);
 			}
 			else
 			{
@@ -5277,25 +5278,28 @@ namespace Meta
 	}
 	public class Number
 	{
-		public static Number operator | (Number a, Number b)
+		public Number(double numerator, double denominator)
 		{
-			return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
+			//this.numerator = numerator;
+			//this.denominator = denominator;
+
+			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+			// refactor: also normalize the sign
+			if (denominator < 0)
+			{
+				numerator = -numerator;
+				denominator = -denominator;
+			}
+			this.numerator=numerator/greatestCommonDivisor;
+			this.denominator = denominator / greatestCommonDivisor;
+
+			//Normalize();
 		}
-		public Number(Number i)
+		public Number(Number i):this(i.numerator,i.denominator)
 		{
-			this.integer = i.integer;
 		}
-		public override string ToString()
+		public Number(Map map):this(map.GetInteger())
 		{
-			return integer.ToString();
-		}
-		public Number(Map map)
-		{
-			this.integer = map.GetInteger().integer;
-		}
-		public Number Clone()
-		{
-			return new Number(integer);
 		}
 		public Number(int integer)
 			: this((double)integer)
@@ -5305,15 +5309,57 @@ namespace Meta
 			: this((double)integer)
 		{
 		}
-		public Number(double integer)
+		public Number(double integer):this(integer,1)
 		{
-			this.integer = integer;
 		}
-		public Number(ulong integer)
+		public Number(ulong integer):this((double)integer)
 		{
-			this.integer = integer;
 		}
-		public readonly double integer;
+		public double Numerator
+		{
+			get
+			{
+				return numerator;
+			}
+		}
+		private readonly double numerator;
+		private readonly double denominator;
+
+
+
+		public static Number operator |(Number a, Number b)
+		{
+			// not quite correct
+			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
+			//return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
+		}
+		//public static Number operator | (Number a, Number b)
+		//{
+		//    return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
+		//}
+		public override string ToString()
+		{
+			if (denominator == 1)
+			{
+				return numerator.ToString();
+			}
+			else
+			{
+				return numerator.ToString() + Syntax.fraction + denominator.ToString();
+			}
+		}
+		//public override string ToString()
+		//{
+		//    return integer.ToString();
+		//}
+
+		public Number Clone()
+		{
+			return new Number(this);
+			//return new Number(numerator,denominator);
+			//return new Number(integer);
+		}
+
 
 		public static implicit operator Number(int integer)
 		{
@@ -5321,43 +5367,132 @@ namespace Meta
 		}
 		public static bool operator ==(Number a, Number b)
 		{
-			return !ReferenceEquals(b,null) && a.integer == b.integer;
+			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator==b.denominator;
 		}
+		//public static bool operator ==(Number a, Number b)
+		//{
+		//    return !ReferenceEquals(b,null) && a.integer == b.integer;
+		//}
 		public static bool operator !=(Number a, Number b)
 		{
 			return !(a == b);
 		}
+		private static double GreatestCommonDivisor(double a, double b)
+		{
+			a = Math.Abs(a);
+			b = Math.Abs(b);
+			   while (a!=0 && b!=0) {
+					   if(a > b)
+							   a = a % b;
+					   else
+							   b = b % a;
+			   }
+			   if(a == 0)
+					   return b;
+			   else
+					   return a;
+		}
+		private static double LeastCommonMultiple(Number a, Number b)
+		{
+			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
+		}
 		public static Number operator +(Number a, Number b)
 		{
-			return new Number(a.integer + b.integer);
+			//double lcd = LowestCommonMultiple(a.denominator, b.denominator);
+			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a,b));
 		}
+		//public static Number operator +(Number a, Number b)
+		//{
+		//    double lcd = LowestCommonMultiple(a.denominator, b.denominator);
+		//    return new Number( a.numerator * ( a.denominator / lcd ) + b.numerator * ( b.denominator / lcd), lcd);
+		//}
+		//public static Number operator +(Number a, Number b)
+		//{
+		//    double lowestCommonMultiple=LowestCommonMultiple(a.denominator,b.denominator);
+		//    Number number=new Number(
+		//        a.numerator * lowestCommonMultiple + b.numerator * lowestCommonMultiple,
+		//        a.denominator * lowestCommonMultiple + b.denominator * lowestCommonMultiple);
+		//    //number.Normalize();
+		//    return number;
+		//    //return new Number(a.integer + b.integer);
+		//}
+		// refactor, this should be done in the constructor, too, maybe
+		//private void Normalize()
+		//{
+		//    double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+		//    numerator=numerator/greatestCommonDivisor;
+		//    denominator = denominator / greatestCommonDivisor;
+		//}
+
 		public static Number operator /(Number a, Number b)
 		{
-			return new Number(Math.Floor(a.integer / b.integer));
+			return new Number(a.numerator*b.denominator,a.denominator*b.numerator);
 		}
+		//public static Number operator /(Number a, Number b)
+		//{
+		//    return new Number(Math.Floor(a.integer / b.integer));
+		//}
+		//public static Number operator /(Number a, Number b)
+		//{
+		//    return new Number(Math.Floor(a.integer / b.integer));
+		//}
+
 		public static Number operator -(Number a, Number b)
 		{
-			return new Number(a.integer - b.integer);
+			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a,b));
 		}
+		//public static Number operator -(Number a, Number b)
+		//{
+		//    //double lcd = LeastCommonMultiple(a.denominator, b.denominator);
+		//    return new Number(a.numerator * (a.denominator/lcd) - b.numerator * (b.denominator/lcd), lcd);
+		//}
+		//public static Number operator -(Number a, Number b)
+		//{
+		//    double gcd = LowestCommonMultiple(a.denominator, b.denominator);
+		//    Number number = new Number(
+		//        a.numerator * gcd + b.numerator * gcd,
+		//        a.denominator * gcd + b.denominator * gcd);
+		//    return new Number(a.integer - b.integer);
+		//}
+
+		//public static Number operator -(Number a, Number b)
+		//{
+		//    return new Number(a.integer - b.integer);
+		//}
 		public static Number operator *(Number a, Number b)
 		{
-			return new Number(a.integer * b.integer);
+			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);
+		}
+		//public static Number operator *(Number a, Number b)
+		//{
+		//    return new Number(a.integer * b.integer);
+		//}
+		public double Expand(Number b)
+		{
+			return numerator * (LeastCommonMultiple(this, b) / denominator);
 		}
 		public static bool operator >(Number a, Number b)
 		{
-			return a.integer > b.integer;
+			return a.Expand(b) > b.Expand(a);
 		}
+		//public static bool operator >(Number a, Number b)
+		//{
+		//    return a.integer > b.integer;
+		//}
 		public static bool operator <(Number a, Number b)
 		{
-			return a.integer < b.integer;
+			return a.Expand(b) < b.Expand(a);
+			//return a.integer < b.integer;
 		}
 		public static bool operator >=(Number a, Number b)
 		{
-			return a.integer >= b.integer;
+			return a.Expand(b) >= b.Expand(a);
+			//return a.integer >= b.integer;
 		}
 		public static bool operator <=(Number a, Number b)
 		{
-			return a.integer <= b.integer;
+			return a.Expand(b) <= b.Expand(a);
+			//return a.integer <= b.integer;
 		}
 		public override bool Equals(object o)
 		{
@@ -5365,8 +5500,8 @@ namespace Meta
 			{
 				return false;
 			}
-			Number bi = (Number)o;
-			return bi.integer == integer;
+			Number b = (Number)o;
+			return b.numerator==numerator && b.denominator==denominator;
 		}
 		public override int GetHashCode()
 		{
@@ -5379,11 +5514,17 @@ namespace Meta
 		}
 		public int GetInt32()
 		{
-			return Convert.ToInt32(integer);
+			// refactor, incorrect
+			return Convert.ToInt32(numerator);
 		}
+		//public int GetInt32()
+		//{
+		//    return Convert.ToInt32(integer);
+		//}
 		public long GetInt64()
 		{
-			return Convert.ToInt64(integer);
+			// refactor, incorrect
+			return Convert.ToInt64(numerator);
 		}
 		// refactor, integrate into parser
 		//public static Integer ParseInteger(string text)
