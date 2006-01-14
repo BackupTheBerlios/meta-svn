@@ -3429,6 +3429,7 @@ namespace Meta
 			}
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
+		// move outside of FileSystem
 		public class Syntax
 		{
 			static Syntax()
@@ -3884,7 +3885,7 @@ namespace Meta
 			});
 
 
-			private Stack<int> defaultKeys = new Stack<int>();
+			public Stack<int> defaultKeys = new Stack<int>();
 			private int escapeCharCount=0;
 
 
@@ -4005,7 +4006,7 @@ namespace Meta
 			private static Rule Select = new Sequence(new Assignment(CodeKeys.Select, Keys));
 
 
-			private static Rule Statement = new Sequence(
+			public static Rule Statement = new Sequence(
 					new SingleAssignment(
 						new Or(Function,
 							new Or(

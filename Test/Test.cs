@@ -59,14 +59,86 @@ namespace Test
 		{
 			try
 			{
-				//object x = null;
-				//x.ToString();
-				//Map map=FileSystem.Parse(@"C:\Projects\Meta\Meta\Data\basicTest.meta");
-				//if (args.Length == 1)
-				//{
+				if (args.Length != 0)
+				{
 					if (args[0] == "-test")
 					{
 						new MetaTest().Run();
+					}
+					else if (args[0] == "-i")
+					{
+					    Map context = new StrategyMap();
+					    context.Scope = FileSystem.fileSystem;
+					    //context.Parent = FileSystem.fileSystem;
+					    while (true)
+					    {
+					        string code = "";
+					        string line;
+					        Console.Write(">>> ");
+					        int lines = 0;
+					        string tabs = "";
+					        string input;
+					        do
+					        {
+					            input = Console.ReadLine();
+					            line = tabs + input;
+					            code += line;
+					            int count = 0;
+					            code += FileSystem.Syntax.unixNewLine;
+					            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
+					            if (input == "")
+					            {
+					                if (lines != 0)
+					                {
+					                    break;
+
+					                }
+					            }
+					            else
+					            {
+					                char character = line[line.Length - 1];
+					                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
+					                {
+					                    break;
+					                }
+					            }
+					            lines++;
+
+					            Console.Write("... " + tabs);
+					        }
+					        while (true);
+					        try
+					        {
+								// refactor, reuse this in Web
+					            code = code.Trim(' ', '\t', '\n', '\r');
+					            FileSystem.Parser parser = new FileSystem.Parser(code, null);
+					            parser.indentationCount = 0;
+					            int count = FileSystem.fileSystem.ArrayCount;
+					            int originalCount = count;
+					            parser.isStartOfFile = false;
+								parser.defaultKeys.Push(count + 1);
+								Map statement = FileSystem.Parser.Statement.Match(parser);
+
+					            statement.GetStatement().Assign(ref context);
+					            if (context.ArrayCount != originalCount)
+					            {
+					                Map value = context[context.ArrayCount];
+					                if (Leaves(value) < 1000)
+					                {
+					                    Console.WriteLine(FileSystem.Serialize.Value(value));
+					                }
+					                else
+					                {
+					                    Console.WriteLine("Map is too big to display.");
+					                }
+					            }
+					            Console.WriteLine();
+					        }
+					        catch (Exception e)
+					        {
+					            Console.WriteLine(e.ToString());
+					        }
+					    }
 					}
 					// refactor
 					//else if (args[0] == "-i")
@@ -195,21 +267,7 @@ namespace Test
 						}
 						function.Call(argument);
 					}
-				//}
-				//else
-				//{
-				//    try
-				//    {
-				//        DateTime start = DateTime.Now;
-				//        FileSystem.fileSystem.Call(Map.Empty);
-				//        Console.WriteLine((DateTime.Now - start).TotalSeconds.ToString());
-				//    }
-				//    catch (Exception e)
-				//    {
-				//        Console.WriteLine(e.ToString());
-				//        Console.ReadLine();
-				//    }
-				//}
+				}
 			}
 			catch (MetaException e)
 			{

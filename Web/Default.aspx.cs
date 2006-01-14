@@ -42,10 +42,10 @@ public partial class _Default : System.Web.UI.Page
 	//}
     protected void Page_Load(object sender, EventArgs e)
     {
+		input.Focus();
 		if (!IsPostBack)
 		{
 			//execute.Attributes.Add("onclick", "clicked()");
-			input.Focus();
 			string x=ClientScript.GetPostBackEventReference(new PostBackOptions(this));
 			int asdf = 0;
 			//testButton.Attributes.Add("onclick",ClientScript.GetPostBackEventReference(new PostBackOptions(
@@ -92,10 +92,10 @@ public partial class _Default : System.Web.UI.Page
 
 				Thread.Sleep(100);
 				waited += 100;
-				if ((DateTime.Now - start) > new TimeSpan(0, 0, 0, 2))
+				if ((DateTime.Now - start) > new TimeSpan(0, 0, 0, 10))
 				{
 					output.Text = "Computation could not finish.";
-					thread.Abort();
+					//thread.Abort();
 				}
 			}
 		}
@@ -124,24 +124,21 @@ public partial class _Default : System.Web.UI.Page
 			string code = input.Text;
 			code = code.Trim();
 			Map context = (Map)Session["map"];
-			//Map context = new StrategyMap();
 			FileSystem.Parser parser = new FileSystem.Parser(code, "");
 			parser.indentationCount = 0;
-			int count = FileSystem.fileSystem.ArrayCount;
-			int originalCount = count;
+			int originalCount = context.ArrayCount;
+			parser.defaultKeys.Push(originalCount+1);
 			parser.isStartOfFile = false;
 			context.Scope = FileSystem.fileSystem;
-			Map statement = parser.Statement(ref count);
+			Map statement = Meta.FileSystem.Parser.Statement.Match(parser);
 
 			statement.GetStatement().Assign(ref context);//, Map.Empty);
-			//statement.GetStatement().Assign(ref FileSystem.fileSystem, Map.Empty);
-			if (count != originalCount)
+			if (context.ArrayCount != originalCount)
 			{
-				Map value = context[originalCount];
+				Map value = context[context.ArrayCount];
 				if (Leaves(value) < 1000)
 				{
 					text = FileSystem.Serialize.Value(value);
-					//Console.WriteLine(FileSystem.Serialize.Value(value));
 				}
 				else
 				{
@@ -155,7 +152,7 @@ public partial class _Default : System.Web.UI.Page
 		}
 		catch (Exception exception)
 		{
-			text = exception.ToString().Replace(FileSystem.Parser.unixNewLine.ToString(), "<br>");
+			text = exception.ToString().Replace(FileSystem.Syntax.unixNewLine.ToString(), "<br>").Replace(FileSystem.Syntax.windowsNewLine,"<br>");
 		}
 		output.Text = text;
 	}

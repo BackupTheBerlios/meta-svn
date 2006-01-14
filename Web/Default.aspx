@@ -69,15 +69,17 @@
 	<body >
 		<form action="" id="meta"  name="frm" runat=server>
 			<p id="idP">
+				&nbsp;
 				<asp:TextBox onkeydown="if(event.keyCode==9){tab();return false;} else if(event.keyCode==13){if(!event.ctrlKey){enter();} else {submit()}}" id="input" runat=server Height="279px" TextMode="MultiLine" Width="476px"></asp:TextBox>
 			</p>
 			<p>
 				&nbsp;
 				<asp:Button AccessKey="E"
 				  ID="execute" runat="server" 
-				  OnClick="execute_Click" Text="Execute" />
+				  OnClick="execute_Click" Text="Run" />
 				</p>
 			<p>
+				&nbsp;
 				<asp:Label ID="output" runat="server" Height="220px" Width="476px"></asp:Label>&nbsp;</p>
 		</form>
 	</body>
