@@ -97,6 +97,7 @@
     <None Include="Data\console.meta" />
     <None Include="Data\features2.meta" />
     <None Include="Data\integerToString.meta" />
+    <None Include="Data\planning.meta" />
     <None Include="Data\sort.meta" />
     <None Include="Data\pop.meta" />
     <None Include="Data\isInteger.meta" />

@@ -3806,7 +3806,8 @@ namespace Meta
 			{
 				protected override Map DoMatch(Parser parser)
 				{
-					Map list = new StrategyMap();
+					Map list = new StrategyMap(new ListStrategy());
+					//Map list = new StrategyMap();
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{
@@ -3829,7 +3830,8 @@ namespace Meta
 			{
 				protected override Map DoMatch(Parser parser)
 				{
-					Map list = new StrategyMap();
+					Map list = new StrategyMap(new ListStrategy());
+					//Map list = new StrategyMap();
 					Map result;
 					while ((result = rule.Match(parser)) != null)
 					{

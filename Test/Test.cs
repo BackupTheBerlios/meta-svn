@@ -292,40 +292,40 @@ namespace Test
 				Map argument = new StrategyMap();
 				argument[1] = "first arg";
 				argument[2] = "second=arg";
-				//object x=FileSystem.fileSystem["basicTest"];//.Call(argument);//, Map.Empty);
-				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
-				//return Map.Empty;
+				object x = FileSystem.fileSystem["basicTest"];//.Call(argument);//, Map.Empty);
+				//return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
+				return Map.Empty;
 			}
 		}
 
-		public class Library : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 2;
-				return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
-			}
-		}
-		public class Serialization : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map map = FileSystem.fileSystem["basicTest"];
-				return FileSystem.Serialize.Value(map).TrimStart();
-			}
-		}
-		public class Extents : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map argument = Map.Empty;
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"];
-			}
-		}
+		//public class Library : Test
+		//{
+		//    public override object GetResult(out int level)
+		//    {
+		//        level = 2;
+		//        return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
+		//    }
+		//}
+		//public class Serialization : Test
+		//{
+		//    public override object GetResult(out int level)
+		//    {
+		//        level = 1;
+		//        Map map = FileSystem.fileSystem["basicTest"];
+		//        return FileSystem.Serialize.Value(map).TrimStart();
+		//    }
+		//}
+		//public class Extents : Test
+		//{
+		//    public override object GetResult(out int level)
+		//    {
+		//        level = 1;
+		//        Map argument = Map.Empty;
+		//        argument[1] = "first arg";
+		//        argument[2] = "second=arg";
+		//        return FileSystem.fileSystem["basicTest"];
+		//    }
+		//}
 	}
 }
 namespace testClasses
