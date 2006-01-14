@@ -55,9 +55,14 @@ Entry (KeyValuePair`2)
 				6
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"add"
+				"positiveAdd"
 			Value (StrategyMap):
 				1100
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"negativeAdd"
+			Value (StrategyMap):
+				-9
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"multiply"

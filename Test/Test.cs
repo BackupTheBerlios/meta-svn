@@ -111,13 +111,14 @@ namespace Test
 					        {
 								// refactor, reuse this in Web
 					            code = code.Trim(' ', '\t', '\n', '\r');
-					            FileSystem.Parser parser = new FileSystem.Parser(code, null);
+					            Parser parser = new Parser(code, null);
 					            parser.indentationCount = 0;
 					            int count = FileSystem.fileSystem.ArrayCount;
 					            int originalCount = count;
 					            parser.isStartOfFile = false;
 								parser.defaultKeys.Push(count + 1);
-								Map statement = FileSystem.Parser.Statement.Match(parser);
+								bool matched;
+								Map statement = Parser.Statement.Match(parser,out matched);
 
 					            statement.GetStatement().Assign(ref context);
 					            if (context.ArrayCount != originalCount)
@@ -125,7 +126,7 @@ namespace Test
 					                Map value = context[context.ArrayCount];
 					                if (Leaves(value) < 1000)
 					                {
-					                    Console.WriteLine(FileSystem.Serialize.Value(value));
+					                    Console.WriteLine(Meta.Serialize.Value(value));
 					                }
 					                else
 					                {
@@ -284,6 +285,18 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
+
+		public class Extents : Test
+		{
+			public override object GetResult(out int level)
+			{
+				level = 1;
+				Map argument = Map.Empty;
+				argument[1] = "first arg";
+				argument[2] = "second=arg";
+				return FileSystem.fileSystem["basicTest"];
+			}
+		}
 		public class Basic : Test
 		{
 			public override object GetResult(out int level)
@@ -312,20 +325,10 @@ namespace Test
 			{
 				level = 1;
 				Map map = FileSystem.fileSystem["basicTest"];
-				return FileSystem.Serialize.Value(map).TrimStart();
+				return Meta.Serialize.Value(map).TrimStart();
 			}
 		}
-		public class Extents : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map argument = Map.Empty;
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"];
-			}
-		}
+
 	}
 }
 namespace testClasses
