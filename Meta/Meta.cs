@@ -3366,26 +3366,75 @@ namespace Meta
 	}
 	public class Parser
 	{
+		public string text;
+		public int index;
+		public string file;
+
+		private int line = 1;
+		public string File
+		{
+			get
+			{
+				return file;
+			}
+		}
+		public int Line
+		{
+			get
+			{
+				return line;
+			}
+		}
+		public int Column
+		{
+			get
+			{
+				int startPos = Math.Min(index, text.Length - 1);
+				return index - text.LastIndexOf('\n', startPos);
+			}
+		}
+		private char Look()
+		{
+			return Look(0);
+		}
+		private char Look(int lookahead)
+		{
+			char character;
+			int i = index + lookahead;
+			if (i < text.Length)
+			{
+				character = text[index + lookahead];
+			}
+			else
+			{
+				character = Syntax.endOfFile;
+			}
+			return character;
+		}
+		public Parser(string text, string filePath)
+		{
+			this.index = 0;
+			this.text = text;
+			this.file = filePath;
+		}
 		public bool isStartOfFile = true;
 		private int functions = 0;
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
-			public Map Match(Parser parser,out bool matched)
+			public Map Match(Parser parser, out bool matched)
 			{
 				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
-				Map result = DoMatch(parser,out matched);
+				Map result = DoMatch(parser, out matched);
 				if (result == null)
 				{
-					//matched = false;
 					parser.index = oldIndex;
 					parser.line = oldLine;
 				}
 				else
 				{
-					//matched = true;
 					extent.End.Line = parser.Line;
 					extent.End.Column = parser.Column;
 					result.Extent = extent;
@@ -3492,7 +3541,6 @@ namespace Meta
 				}
 			}
 		}
-		// refactor, only evaluate this once??
 		public class CustomRule : Rule
 		{
 			private ParseFunction parseFunction;
@@ -3505,57 +3553,7 @@ namespace Meta
 				return parseFunction(parser,out matched);
 			}
 		}
-		public string text;
-		public int index;
-		public string file;
 
-		private int line = 1;
-		public string File
-		{
-			get
-			{
-				return file;
-			}
-		}
-		public int Line
-		{
-			get
-			{
-				return line;
-			}
-		}
-		public int Column
-		{
-			get
-			{
-				int startPos = Math.Min(index, text.Length - 1);
-				return index - text.LastIndexOf('\n', startPos);
-			}
-		}
-		private char Look()
-		{
-			return Look(0);
-		}
-		private char Look(int lookahead)
-		{
-			char character;
-			int i = index + lookahead;
-			if (i < text.Length)
-			{
-				character = text[index + lookahead];
-			}
-			else
-			{
-				character = Syntax.endOfFile;
-			}
-			return character;
-		}
-		public Parser(string text, string filePath)
-		{
-			this.index = 0;
-			this.text = text;
-			this.file = filePath;
-		}
 		public class Or : Rule
 		{
 			private Rule[] cases;

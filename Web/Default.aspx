@@ -69,7 +69,7 @@
 	<body >
 		<form action="" id="meta"  name="frm" runat=server>
 			<p id="idP">
-				&nbsp; &nbsp;
+				&nbsp;
 				<asp:TextBox onkeydown="if(event.keyCode==9){tab();return false;} else if(event.keyCode==13){if(!event.ctrlKey){enter();} else {submit()}}" id="input" runat=server Height="279px" TextMode="MultiLine" Width="476px"></asp:TextBox>
 			</p>
 			<p>
