@@ -3420,7 +3420,6 @@ namespace Meta
 				return matched;
 			}
 		}
-		// combine into one class?
 		public class Character : CharacterRule
 		{
 			public Character(params char[] characters)
@@ -3429,7 +3428,7 @@ namespace Meta
 			}
 			protected override bool MatchCharacer(char c)
 			{
-				return c.ToString().IndexOfAny(characters) != -1;
+				return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
 			}
 		}
 		public class CharacterExcept : CharacterRule
@@ -3443,67 +3442,13 @@ namespace Meta
 				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
 			}
 		}
-		//public class Character : CharacterRule
-		//{
-		//    public Character(params char[] characters):base(characters)
-		//    {
-		//    }
-		//    protected override Map DoMatch(Parser parser)
-		//    {
-		//        Map matched;
-		//        if (parser.Look().ToString().IndexOfAny(characters) != -1)
-		//        {
-		//            char character = parser.Look();
-		//            matched = character;
-		//            if (character == Syntax.unixNewLine)
-		//            {
-		//                parser.line++;
-		//            }
-		//            parser.index++;
-		//        }
-		//        else
-		//        {
-		//            matched = null;
-		//        }
-		//        return matched;
-		//    }
-		//}
-		//public class CharacterExcept : CharacterRule
-		//{
-		//    public CharacterExcept(params char[] characters)
-		//        : base(characters)
-		//    {
-		//    }
-		//    protected override Map DoMatch(Parser parser)
-		//    {
-		//        Map matched;
-		//        List<char> list = new List<char>(characters);
-		//        list.Add(Syntax.endOfFile);
-		//        if (parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
-		//        {
-		//            // refactor
-		//            char c = parser.Look();
-		//            matched = c;
-		//            if (c == Syntax.unixNewLine)
-		//            {
-		//                parser.line++;
-		//            }
-		//            parser.index++;
-		//        }
-		//        else
-		//        {
-		//            matched = null;
-		//        }
-		//        return matched;
-		//    }
-		//}
-		public delegate void Test(Parser parser);
+		public delegate void PrePostDelegate(Parser parser);
 		public class PrePostRule : Rule
 		{
-			private Test pre;
-			private Test post;
+			private PrePostDelegate pre;
+			private PrePostDelegate post;
 			private Rule rule;
-			public PrePostRule(Test pre, Rule rule, Test post)
+			public PrePostRule(PrePostDelegate pre, Rule rule, PrePostDelegate post)
 			{
 				this.pre = pre;
 				this.rule = rule;
@@ -3650,6 +3595,7 @@ namespace Meta
 				}
 				return matched != null;
 			}
+			// refactor
 			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched);
 		}
 		public class OptionalAssignment : Action
@@ -3679,11 +3625,7 @@ namespace Meta
 			}
 			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
 			{
-				// refactor
-				if (key != null)
-				{
-					result[key] = map;
-				}
+				result[key] = map;
 			}
 		}
 		public class Match : Action
@@ -3724,8 +3666,7 @@ namespace Meta
 		public class CustomAction : Action
 		{
 			private CustomActionDelegate action;
-			// reverse parameters
-			public CustomAction(CustomActionDelegate action, Rule rule)
+			public CustomAction(Rule rule,CustomActionDelegate action)
 				: base(rule)
 			{
 				this.action = action;
@@ -3734,10 +3675,6 @@ namespace Meta
 			{
 				this.action(parser, map, ref result);
 			}
-			//protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
-			//{
-			//    result = this.action(map,ref result);
-			//}
 		}
 		public class Sequence : Rule
 		{
@@ -3786,15 +3723,9 @@ namespace Meta
 			protected override Map DoMatch(Parser parser)
 			{
 				Map list = new StrategyMap(new ListStrategy());
-				//Map list = new StrategyMap();
 				Map result;
 				while ((result = rule.Match(parser)) != null)
 				{
-					// refactor
-					if (result.IsString && result.GetString().Length == 1)
-					{
-						result = Convert.ToChar(result.GetString());
-					}
 					list.Append(result);
 				}
 				return list;
@@ -3810,34 +3741,18 @@ namespace Meta
 			protected override Map DoMatch(Parser parser)
 			{
 				Map list = new StrategyMap(new ListStrategy());
-				//Map list = new StrategyMap();
 				Map result;
 				bool oneMatched = false;
 				while ((result = rule.Match(parser)) != null)
 				{
 					oneMatched = true;
-					// refactor
-					if (result.IsString && result.GetString().Length == 1)
-					{
-						result = Convert.ToChar(result.GetString());
-					}
 					list.Append(result);
 				}
-				//if (list.Count == 0)
-				//{
-				//    return null;
-				//}
-				//else
-				//{
-				if (oneMatched)
+				if (!oneMatched)
 				{
-					return list;
+					list = null;
 				}
-				else
-				{
-					return null;
-				}
-				//}
+				return list;
 			}
 			private Rule rule;
 			public OneOrMore(Rule rule)
@@ -3850,9 +3765,7 @@ namespace Meta
 		{
 			protected override Map DoMatch(Parser parser)
 			{
-				//Map list = new StrategyMap(new ListStrategy());
-				//Map list = new StrategyMap();
-				Map result = null;// = new StrategyMap(new ListStrategy());
+				Map result = null;
 				bool stop = false;
 				while (true)
 				{
@@ -3860,21 +3773,8 @@ namespace Meta
 					{
 						break;
 					}
-					// refactor
-					if (result.IsString && result.GetString().Length == 1)
-					{
-						result = Convert.ToChar(result.GetString());
-					}
-					//list.Append(result);
 				}
-				//if (result!=null && result.Count == 0)
-				//{
-				//    return null;
-				//}
-				//else
-				//{
 				return result;
-				//}
 			}
 			private Action action;
 			public OneOrMoreAction(Action action)
@@ -3899,19 +3799,7 @@ namespace Meta
 				}
 				else
 				{
-					if (matched.IsString && matched.GetString().Length == 1)
-					{
-						matched = Convert.ToChar(matched.GetString());
-					}
 					return matched;
-					//if (matched.IsString)
-					//{
-					//    return Convert.ToChar(matched.
-					//}
-					//else
-					//{
-					return matched;
-					//}
 				}
 			}
 		}
@@ -3933,7 +3821,6 @@ namespace Meta
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
-
 
 		private static Rule String = new Sequence(new Assignment(CodeKeys.Literal, new PrePostRule(delegate(Parser p) { },
 					new Sequence(
@@ -4037,20 +3924,21 @@ namespace Meta
 			CodeKeys.Literal,
 			new Sequence(
 				new CustomAction(
+					new Optional(new Character(Syntax.negative)),
 					delegate(Parser p, Map map, ref Map result)
 					{
-						// refactor
+						// refactor, make match a separate bool
 						if (!map.Equals(Map.Empty))
 						{
 							p.negative = true;
 						}
 						return Map.Empty;
-					},
-					new Optional(new Character(Syntax.negative))),
+					}
+					),
 				new SingleAssignment(new PrePostRule(delegate(Parser p) { },
 				new Sequence(
 					new SingleAssignment(
-					new OneOrMoreAction(new CustomAction(delegate(Parser p, Map map, ref Map result)
+					new OneOrMoreAction(new CustomAction( new Character(Syntax.integer),delegate(Parser p, Map map, ref Map result)
 				{
 					if (result == null)
 					{
@@ -4060,8 +3948,9 @@ namespace Meta
 					result = result.GetInteger() * 10 + (Integer)map.GetInteger().GetInt32() - '0';
 					//result = result.GetInteger() * 10 + (Integer)Convert.ToChar(map.GetString()) - '0';
 					return result;
-				}, new Character(Syntax.integer)))),
+				}))),
 				new CustomAction(
+				new Nothing(),
 				delegate(Parser p, Map map, ref Map result)
 				{
 					if (result.GetInteger() > 0 && p.negative)
@@ -4069,7 +3958,7 @@ namespace Meta
 						result = 0 - result.GetInteger();
 					}
 					return Map.Empty;
-				}, new Nothing())
+				})
 						), delegate(Parser p)
 					{
 						p.negative = false;
