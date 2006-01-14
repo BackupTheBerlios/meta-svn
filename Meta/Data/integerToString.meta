@@ -1,4 +1,4 @@
 documentation="Converts an integer to a string."
 |
-	int=Meta.Integer.[Meta.Map] arg
+	int=Meta.Number.[Meta.Map] arg
 	this=Meta.StrategyMap.[mscorlib.String] int.ToString *

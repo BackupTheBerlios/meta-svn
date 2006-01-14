@@ -456,7 +456,7 @@ namespace Meta
 		public static Map Join(Map arg)
 		{
 			Map result = Map.Empty;
-			Integer counter = 1;
+			Number counter = 1;
 			foreach (Map map in arg.Array)
 			{
 				result.AppendMap(map);
@@ -761,13 +761,13 @@ namespace Meta
 				}
 			}
 		}
-		public virtual Integer GetInteger()
+		public virtual Number GetInteger()
 		{
 			return GetIntegerDefault();
 		}
-		public Integer GetIntegerDefault()
+		public Number GetIntegerDefault()
 		{
-			Integer number;
+			Number number;
 			if(this.Equals(Map.Empty))
 			{
 				number=0;
@@ -979,45 +979,45 @@ namespace Meta
 			}
 		}
 		private Map parent;
-		public static implicit operator Map(Integer integer)
+		public static implicit operator Map(Number integer)
 		{
 			return new StrategyMap(integer);
 		}
 		public static implicit operator Map(bool boolean)
 		{
-			return new StrategyMap(new Integer((int)(boolean?1:0)));
+			return new StrategyMap(new Number((int)(boolean?1:0)));
 		}
 		public static implicit operator Map(char character)
 		{
-			return new StrategyMap(new Integer(character));
+			return new StrategyMap(new Number(character));
 		}
 		public static implicit operator Map(byte integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(sbyte integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(uint integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(ushort integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(int integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(long integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(ulong integer)
 		{
-			return new StrategyMap(new Integer(integer));
+			return new StrategyMap(new Number(integer));
 		}
 		public static implicit operator Map(string text)
 		{
@@ -1086,7 +1086,7 @@ namespace Meta
 				this[key] = clone.Get(key);
 			}
 		}
-		public override Integer GetInteger()
+		public override Number GetInteger()
 		{
 			return strategy.GetInteger();
 		}
@@ -1184,7 +1184,7 @@ namespace Meta
 		}
 		protected MapStrategy strategy;
 		public StrategyMap(bool boolean)
-			: this(new Integer(boolean))
+			: this(new Number(boolean))
 		{
 		}
 		public StrategyMap(System.Collections.Generic.ICollection<Map> list)
@@ -1207,10 +1207,10 @@ namespace Meta
 		{
 		}
 		public StrategyMap(int i)
-			: this(new Integer(i))
+			: this(new Number(i))
 		{
 		}
-		public StrategyMap(Integer number):this(new IntegerStrategy(number))
+		public StrategyMap(Number number):this(new IntegerStrategy(number))
 		{
 		}
 		public StrategyMap(string text)
@@ -1333,7 +1333,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Byte:
-						if (IsIntegerInRange(meta, new Integer(Byte.MinValue), new Integer(Byte.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(Byte.MinValue), new Number(Byte.MaxValue)))
 						{
 							dotNet = Convert.ToByte(meta.GetInteger().GetInt32());
 						}
@@ -1354,13 +1354,13 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Decimal:
-						if (IsIntegerInRange(meta, new Integer((double)decimal.MinValue), new Integer((double)decimal.MaxValue)))
+						if (IsIntegerInRange(meta, new Number((double)decimal.MinValue), new Number((double)decimal.MaxValue)))
 						{
 							dotNet = (decimal)(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Double:
-						if (IsIntegerInRange(meta, new Integer(double.MinValue), new Integer(double.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(double.MinValue), new Number(double.MaxValue)))
 						{
 							dotNet = (double)(meta.GetInteger().GetInt64());
 						}
@@ -1372,7 +1372,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Int32:
-						if (IsIntegerInRange(meta, (Integer)Int32.MinValue, Int32.MaxValue))
+						if (IsIntegerInRange(meta, (Number)Int32.MinValue, Int32.MaxValue))
 						{
 							dotNet = meta.GetInteger().GetInt32();
 						}
@@ -1383,7 +1383,7 @@ namespace Meta
 						//}
 						break;
 					case TypeCode.Int64:
-						if (IsIntegerInRange(meta, new Integer(Int64.MinValue), new Integer(Int64.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(Int64.MinValue), new Number(Int64.MaxValue)))
 						{
 							dotNet = Convert.ToInt64(meta.GetInteger().GetInt64());
 						}
@@ -1438,13 +1438,13 @@ namespace Meta
 						}
 						break;
 					case TypeCode.SByte:
-						if (IsIntegerInRange(meta, (Integer)SByte.MinValue, (Integer)SByte.MaxValue))
+						if (IsIntegerInRange(meta, (Number)SByte.MinValue, (Number)SByte.MaxValue))
 						{
 							dotNet = Convert.ToSByte(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.Single:
-						if (IsIntegerInRange(meta, new Integer(Single.MinValue), new Integer(Single.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(Single.MinValue), new Number(Single.MaxValue)))
 						{
 							dotNet = (float)meta.GetInteger().GetInt64();
 						}
@@ -1456,19 +1456,19 @@ namespace Meta
 						}
 						break;
 					case TypeCode.UInt16:
-						if (IsIntegerInRange(meta, new Integer(UInt16.MinValue), new Integer(UInt16.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(UInt16.MinValue), new Number(UInt16.MaxValue)))
 						{
 							dotNet = Convert.ToUInt16(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.UInt32:
-						if (IsIntegerInRange(meta, new Integer(UInt32.MinValue), new Integer(UInt32.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(UInt32.MinValue), new Number(UInt32.MaxValue)))
 						{
 							dotNet = Convert.ToUInt32(meta.GetInteger().GetInt64());
 						}
 						break;
 					case TypeCode.UInt64:
-						if (IsIntegerInRange(meta, new Integer(UInt64.MinValue), new Integer(UInt64.MaxValue)))
+						if (IsIntegerInRange(meta, new Number(UInt64.MinValue), new Number(UInt64.MaxValue)))
 						{
 							dotNet = Convert.ToUInt64(meta.GetInteger().GetInt64());
 						}
@@ -1486,7 +1486,7 @@ namespace Meta
 			}
 			return dotNet;
 		}
-		public static bool IsIntegerInRange(Map meta,Integer minValue,Integer maxValue)
+		public static bool IsIntegerInRange(Map meta,Number minValue,Number maxValue)
 		{
 			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
 		}
@@ -2138,7 +2138,7 @@ namespace Meta
 			return null;
 		}
 	}
-	public class IntegerStrategy : DataStrategy<Integer>
+	public class IntegerStrategy : DataStrategy<Number>
 	{
 		public override bool IsInteger
 		{
@@ -2147,17 +2147,17 @@ namespace Meta
 				return true;
 			}
 		}
-		public override Integer GetInteger()
+		public override Number GetInteger()
 		{
 			return data;
 		}
-		protected override bool SameEqual(Integer otherData)
+		protected override bool SameEqual(Number otherData)
 		{
 			return otherData == data;
 		}
-		public IntegerStrategy(Integer number)
+		public IntegerStrategy(Number number)
 		{
-			this.data = new Integer(number);
+			this.data = new Number(number);
 		}
 		public override Map CopyData()
 		{
@@ -2257,7 +2257,7 @@ namespace Meta
 			bool containsKey;
 			if (key.IsInteger)
 			{
-				Integer integer = key.GetInteger();
+				Number integer = key.GetInteger();
 				if (integer >= 1 && integer <= data.Count)
 				{
 					containsKey = true;
@@ -2406,7 +2406,7 @@ namespace Meta
 			get
 			{
 				List<Map> list=new List<Map>();
-				for(Integer iInteger=new Integer(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
+				for(Number iInteger=new Number(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
 				{
 					list.Add(this.Get(new StrategyMap(iInteger)));
 				}
@@ -2564,7 +2564,7 @@ namespace Meta
 		{
 			return map.GetStringDefault();
 		}
-		public virtual Integer GetInteger()
+		public virtual Number GetInteger()
 		{
 			return map.GetIntegerDefault();
 		}
@@ -3967,7 +3967,7 @@ namespace Meta
 						result = new StrategyMap();
 					}
 
-					result = result.GetInteger() * 10 + (Integer)map.GetInteger().GetInt32() - '0';
+					result = result.GetInteger() * 10 + (Number)map.GetInteger().GetInt32() - '0';
 					return result;
 				}))),
 				new CustomAction(
@@ -5275,13 +5275,13 @@ namespace Meta
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
-	public class Integer
+	public class Number
 	{
-		public static Integer operator | (Integer a, Integer b)
+		public static Number operator | (Number a, Number b)
 		{
 			return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
 		}
-		public Integer(Integer i)
+		public Number(Number i)
 		{
 			this.integer = i.integer;
 		}
@@ -5289,88 +5289,88 @@ namespace Meta
 		{
 			return integer.ToString();
 		}
-		public Integer(Map map)
+		public Number(Map map)
 		{
 			this.integer = map.GetInteger().integer;
 		}
-		public Integer Clone()
+		public Number Clone()
 		{
-			return new Integer(integer);
+			return new Number(integer);
 		}
-		public Integer(int integer)
+		public Number(int integer)
 			: this((double)integer)
 		{
 		}
-		public Integer(long integer)
+		public Number(long integer)
 			: this((double)integer)
 		{
 		}
-		public Integer(double integer)
+		public Number(double integer)
 		{
 			this.integer = integer;
 		}
-		public Integer(ulong integer)
+		public Number(ulong integer)
 		{
 			this.integer = integer;
 		}
 		public readonly double integer;
 
-		public static implicit operator Integer(int integer)
+		public static implicit operator Number(int integer)
 		{
-			return new Integer(integer);
+			return new Number(integer);
 		}
-		public static bool operator ==(Integer a, Integer b)
+		public static bool operator ==(Number a, Number b)
 		{
 			return !ReferenceEquals(b,null) && a.integer == b.integer;
 		}
-		public static bool operator !=(Integer a, Integer b)
+		public static bool operator !=(Number a, Number b)
 		{
 			return !(a == b);
 		}
-		public static Integer operator +(Integer a, Integer b)
+		public static Number operator +(Number a, Number b)
 		{
-			return new Integer(a.integer + b.integer);
+			return new Number(a.integer + b.integer);
 		}
-		public static Integer operator /(Integer a, Integer b)
+		public static Number operator /(Number a, Number b)
 		{
-			return new Integer(Math.Floor(a.integer / b.integer));
+			return new Number(Math.Floor(a.integer / b.integer));
 		}
-		public static Integer operator -(Integer a, Integer b)
+		public static Number operator -(Number a, Number b)
 		{
-			return new Integer(a.integer - b.integer);
+			return new Number(a.integer - b.integer);
 		}
-		public static Integer operator *(Integer a, Integer b)
+		public static Number operator *(Number a, Number b)
 		{
-			return new Integer(a.integer * b.integer);
+			return new Number(a.integer * b.integer);
 		}
-		public static bool operator >(Integer a, Integer b)
+		public static bool operator >(Number a, Number b)
 		{
 			return a.integer > b.integer;
 		}
-		public static bool operator <(Integer a, Integer b)
+		public static bool operator <(Number a, Number b)
 		{
 			return a.integer < b.integer;
 		}
-		public static bool operator >=(Integer a, Integer b)
+		public static bool operator >=(Number a, Number b)
 		{
 			return a.integer >= b.integer;
 		}
-		public static bool operator <=(Integer a, Integer b)
+		public static bool operator <=(Number a, Number b)
 		{
 			return a.integer <= b.integer;
 		}
 		public override bool Equals(object o)
 		{
-			if (!(o is Integer))
+			if (!(o is Number))
 			{
 				return false;
 			}
-			Integer bi = (Integer)o;
+			Number bi = (Number)o;
 			return bi.integer == integer;
 		}
 		public override int GetHashCode()
 		{
-			Integer x = new Integer(this);
+			Number x = new Number(this);
 			while (x > int.MaxValue)
 			{
 				x = x - int.MaxValue;

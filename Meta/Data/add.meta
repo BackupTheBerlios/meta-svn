@@ -1,8 +1,8 @@
 documentation="Adds integers."
-|Meta.StrategyMap.[Meta.Integer] sum
+|Meta.StrategyMap.[Meta.Number] sum
 	array=arg
 	function=
-		|Meta.Integer.op_Addition
-			Meta.Integer.[Meta.Integer] arg.previous
-			Meta.Integer.[Meta.Map] arg.present
-	start=Meta.Integer.[Meta.Map] *
+		|Meta.Number.op_Addition
+			Meta.Number.[Meta.Number] arg.previous
+			Meta.Number.[Meta.Map] arg.present
+	start=Meta.Number.[Meta.Map] *

@@ -1,4 +1,4 @@
 documentation="Increments an integer."
-|Meta.StrategyMap.[Meta.Integer] Meta.Integer.op_Addition
-	Meta.Integer.[Meta.Map] arg
-	Meta.Integer.[Meta.Map] 1
+|Meta.StrategyMap.[Meta.Number] Meta.Number.op_Addition
+	Meta.Number.[Meta.Map] arg
+	Meta.Number.[Meta.Map] 1
