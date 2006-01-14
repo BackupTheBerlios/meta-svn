@@ -3330,6 +3330,36 @@ namespace Meta
 	{
 		public abstract void Replace(Map value);
 	}
+	public class Syntax
+	{
+		static Syntax()
+		{
+			List<char> list = new List<char>(Syntax.lookupStringForbidden);
+			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
+			Syntax.lookupStringFirstForbidden = list.ToArray();
+		}
+		public const char negative='-';
+		public const char endOfFile = (char)65535;
+		public const char indentation = '\t';
+		public const char unixNewLine = '\n';
+		public const string windowsNewLine = "\r\n";
+		public const char function = '|';
+		public const char @string = '\"';
+		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public const char lookupStart = '[';
+		public const char lookupEnd = ']';
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap };
+		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public static char[] lookupStringFirstForbidden;
+		public const char emptyMap = '*';
+		public const char call = ' ';
+		public const char select = '.';
+
+		public const char stringEscape = '\'';
+		public const char statement = '=';
+		public const char space = ' ';
+		public const char tab = '\t';
+	}
 	public class FileSystem
 	{
 		private static bool parsing=false;
@@ -3430,36 +3460,7 @@ namespace Meta
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
 		// move outside of FileSystem
-		public class Syntax
-		{
-			static Syntax()
-			{
-				List<char> list = new List<char>(Syntax.lookupStringForbidden);
-				list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
-				Syntax.lookupStringFirstForbidden = list.ToArray();
-			}
-			public const char endOfFile = (char)65535;
-			public const char indentation = '\t';
-			public const char unixNewLine = '\n';
-			public const string windowsNewLine = "\r\n";
-			public const char function = '|';
-			public const char @string = '\"';
-			public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			//public static char[] integerStart = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public const char lookupStart = '[';
-			public const char lookupEnd = ']';
-			public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap };
-			public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-			public static char[] lookupStringFirstForbidden;
-			public const char emptyMap = '*';
-			public const char call = ' ';
-			public const char select = '.';
 
-			public const char stringEscape = '\'';
-			public const char statement = '=';
-			public const char space = ' ';
-			public const char tab = '\t';
-		}
 		public class Parser
 		{
 			// refactor
@@ -3690,13 +3691,33 @@ namespace Meta
 					{
 					}
 					Map matched = rule.Match(parser);
+					if (this is OptionalAssignment)
+					{
+					}
 					if (matched != null)
 					{
-						ExecuteImplementation(matched, ref result);
+						ExecuteImplementation(matched, ref result,ref matched);
 					}
 					return matched != null;
 				}
-				protected abstract void ExecuteImplementation(Map map, ref Map result);
+				protected abstract void ExecuteImplementation(Map map, ref Map result,ref Map matched);
+			}
+			public class OptionalAssignment : Action
+			{
+				private Map key;
+				public OptionalAssignment(Map key, Rule rule)
+					: base(rule)
+				{
+					this.key = key;
+				}
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				{
+					if (!map.Equals(Map.Empty))// unlogical
+					{
+						result[key] = map;
+						matched = Map.Empty;
+					}
+				}
 			}
 			public class Assignment:Action
 			{
@@ -3705,8 +3726,9 @@ namespace Meta
 				{
 					this.key = key;
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
 				{
+					// refactor
 					if (key!=null)
 					{
 						result[key] = map;
@@ -3718,7 +3740,7 @@ namespace Meta
 				public Match(Rule rule):base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
 				{
 				}
 			}
@@ -3728,7 +3750,7 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
 				{
 					result = map;
 				}
@@ -3739,7 +3761,7 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
 				{
 					foreach (Map m in map.Array)
 					{
@@ -3755,7 +3777,7 @@ namespace Meta
 				{
 					this.action = action;
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result)
+				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
 				{
 					result = this.action(result);
 				}
@@ -3867,8 +3889,27 @@ namespace Meta
 				}
 				protected override Map DoMatch(Parser parser)
 				{
-					rule.Match(parser);
-					return Map.Empty;
+					Map matched=rule.Match(parser);
+					if (matched == null) // unlogical
+					{
+						return Map.Empty;
+					}
+					else
+					{
+						if (matched.IsString && matched.GetString().Length == 1)
+						{
+							matched = Convert.ToChar(matched.GetString());
+						}
+						return matched;
+						//if (matched.IsString)
+						//{
+						//    return Convert.ToChar(matched.
+						//}
+						//else
+						//{
+							return matched;
+						//}
+					}
 				}
 			}
 			public class Nothing : Rule
@@ -3883,7 +3924,7 @@ namespace Meta
 			
 			public static Rule GetExpression = new DelegateRule(delegate(Parser parser)
 			{
-				return new Or(EmptyMap, Integer, String, Program, Call, Select).Match(parser);
+				return new Or(EmptyMap, Number, String, Program, Call, Select).Match(parser);
 			});
 
 
@@ -3987,10 +4028,19 @@ namespace Meta
 					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd)));
 
-			private static Rule Integer = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
+			
+			private static Rule Number = new Sequence(
+				new Assignment(CodeKeys.Literal, 
+					new Sequence(new OptionalAssignment(1,new Optional(new CharRule(Syntax.negative))), new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
 					new CustomAction(
-						delegate(Map map) { return Meta.Integer.ParseInteger(map.GetString()); },
+						delegate(Map map) { 
+							return Meta.Integer.ParseInteger(map.GetString()); },
 						new Nothing()))));
+
+			//private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
+			//        new CustomAction(
+			//            delegate(Map map) { return Meta.Integer.ParseInteger(map.GetString()); },
+			//            new Nothing()))));
 
 			private static Rule LookupString = new Sequence(new Assignment(
 				CodeKeys.Literal,
@@ -4584,6 +4634,7 @@ namespace Meta
 		{
 			return Convert.ToInt64(integer);
 		}
+		// refactor, integrate into parser
 		public static Integer ParseInteger(string text)
 		{
 			Integer result = new Integer(0);
@@ -4594,6 +4645,16 @@ namespace Meta
 			else
 			{
 				int index = 0;
+				bool negative;
+				if (text[0] == Syntax.negative)
+				{
+					negative = true;
+					index++;
+				}
+				else
+				{
+					negative = false;
+				}
 				for (; index < text.Length; index++)
 				{
 					if (char.IsDigit(text[index]))
@@ -4604,6 +4665,10 @@ namespace Meta
 					{
 						return null;
 					}
+				}
+				if (negative)
+				{
+					result *= -1;
 				}
 			}
 			return result;

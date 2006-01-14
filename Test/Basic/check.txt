@@ -129,6 +129,11 @@ Entry (KeyValuePair`2)
 		4
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"negativeNumber"
+	Value (StrategyMap):
+		-123
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"persistenceTest"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
