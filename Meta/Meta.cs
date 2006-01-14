@@ -3392,20 +3392,26 @@ namespace Meta
 			}
 			protected abstract Map DoMatch(Parser parser);
 		}
-		public class CharRule : Rule
-		{
+		public abstract class CharacterRule : Rule
+		{		
+			public CharacterRule(char[] chars)
+			{
+				this.characters = chars;
+			}
+			protected char[] characters;
+			protected abstract bool MatchCharacer(char c);
 			protected override Map DoMatch(Parser parser)
 			{
 				Map matched;
-				if (parser.Look().ToString().IndexOfAny(chars) != -1)
+				char character = parser.Look();
+				if (MatchCharacer(character))
 				{
-					char character = parser.Look();
 					matched = character;
+					parser.index++;
 					if (character == Syntax.unixNewLine)
 					{
 						parser.line++;
 					}
-					parser.index++;
 				}
 				else
 				{
@@ -3413,42 +3419,84 @@ namespace Meta
 				}
 				return matched;
 			}
-			public CharRule(params char[] chars)
-			{
-				this.chars = chars;
-			}
-			private char[] chars;
 		}
-		public class CharacterExcept : Rule
+		// combine into one class?
+		public class Character : CharacterRule
 		{
-			protected override Map DoMatch(Parser parser)
+			public Character(params char[] characters)
+				: base(characters)
 			{
-				Map matched;
-				List<char> list = new List<char>(chars);
-				list.Add(Syntax.endOfFile);
-				if (parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
-				{
-					// refactor
-					char c = parser.Look();
-					matched = c;
-					if (c == Syntax.unixNewLine)
-					{
-						parser.line++;
-					}
-					parser.index++;
-				}
-				else
-				{
-					matched = null;
-				}
-				return matched;
 			}
-			public CharacterExcept(params char[] chars)
+			protected override bool MatchCharacer(char c)
 			{
-				this.chars = chars;
+				return c.ToString().IndexOfAny(characters) != -1;
 			}
-			private char[] chars;
 		}
+		public class CharacterExcept : CharacterRule
+		{
+			public CharacterExcept(params char[] characters)
+				: base(characters)
+			{
+			}
+			protected override bool MatchCharacer(char c)
+			{
+				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
+			}
+		}
+		//public class Character : CharacterRule
+		//{
+		//    public Character(params char[] characters):base(characters)
+		//    {
+		//    }
+		//    protected override Map DoMatch(Parser parser)
+		//    {
+		//        Map matched;
+		//        if (parser.Look().ToString().IndexOfAny(characters) != -1)
+		//        {
+		//            char character = parser.Look();
+		//            matched = character;
+		//            if (character == Syntax.unixNewLine)
+		//            {
+		//                parser.line++;
+		//            }
+		//            parser.index++;
+		//        }
+		//        else
+		//        {
+		//            matched = null;
+		//        }
+		//        return matched;
+		//    }
+		//}
+		//public class CharacterExcept : CharacterRule
+		//{
+		//    public CharacterExcept(params char[] characters)
+		//        : base(characters)
+		//    {
+		//    }
+		//    protected override Map DoMatch(Parser parser)
+		//    {
+		//        Map matched;
+		//        List<char> list = new List<char>(characters);
+		//        list.Add(Syntax.endOfFile);
+		//        if (parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
+		//        {
+		//            // refactor
+		//            char c = parser.Look();
+		//            matched = c;
+		//            if (c == Syntax.unixNewLine)
+		//            {
+		//                parser.line++;
+		//            }
+		//            parser.index++;
+		//        }
+		//        else
+		//        {
+		//            matched = null;
+		//        }
+		//        return matched;
+		//    }
+		//}
 		public delegate void Test(Parser parser);
 		public class PrePostRule : Rule
 		{
@@ -3481,7 +3529,7 @@ namespace Meta
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
 				{
-					actions.Add(new Match(new CharRule(c)));
+					actions.Add(new Match(new Character(c)));
 				}
 				if (new Sequence(actions.ToArray()).Match(parser) != null)
 				{
@@ -3890,13 +3938,13 @@ namespace Meta
 		private static Rule String = new Sequence(new Assignment(CodeKeys.Literal, new PrePostRule(delegate(Parser p) { },
 					new Sequence(
 						new Match(new ZeroOrMore(new Sequence(
-							new Match(new CharRule(Syntax.stringEscape)),
+							new Match(new Character(Syntax.stringEscape)),
 							new Match(new CustomRule(delegate(Parser p)
 								{
 									p.escapeCharCount++;
 									return Map.Empty;
 								}))))),
-						new Match(new CharRule(Syntax.@string)),
+						new Match(new Character(Syntax.@string)),
 						new SingleAssignment(new Sequence(
 							new SingleAssignment(
 								new ZeroOrMore(
@@ -3919,14 +3967,14 @@ namespace Meta
 									})),
 									new SingleAssignment(new CharacterExcept())
 							))))),
-						new Match(new CharRule(Syntax.@string)),
+						new Match(new Character(Syntax.@string)),
 						new Match(new CustomRule(delegate(Parser p) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p); }))
 					),
 				delegate(Parser p) { p.escapeCharCount = 0; }
 				)));
 
 		public static Rule Function = new PrePostRule(delegate(Parser parser) { parser.functions++; }, new Sequence(
-				new Match(new CharRule(Syntax.function)),
+				new Match(new Character(Syntax.function)),
 				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
 				new Assignment(CodeKeys.Value,
 					new Sequence(new Assignment(CodeKeys.Literal, GetExpression)))), delegate(Parser parser) { parser.functions--; });
@@ -3935,12 +3983,12 @@ namespace Meta
 		private static Rule EndOfLine = new Sequence(
 				new Match(new ZeroOrMore(
 					new Or(
-						new CharRule(Syntax.space),
-						new CharRule(Syntax.tab)
+						new Character(Syntax.space),
+						new Character(Syntax.tab)
 					)
 				)),
 				new Match(new Or(
-					new CharRule(Syntax.unixNewLine),
+					new Character(Syntax.unixNewLine),
 					new StringRule(Syntax.windowsNewLine))));
 
 		private static Rule Indentation = new Or(
@@ -3970,18 +4018,18 @@ namespace Meta
 						})))
 
 				);
-		private Rule Whitespace = new ZeroOrMore(new Or(new CharRule(Syntax.tab), new CharRule(Syntax.space)));
+		private Rule Whitespace = new ZeroOrMore(new Or(new Character(Syntax.tab), new Character(Syntax.space)));
 
 
 		private static Rule EmptyMap = new Sequence(
 			new Assignment(CodeKeys.Literal, new Sequence(
-				new Match(new CharRule(Syntax.emptyMap)),
+				new Match(new Character(Syntax.emptyMap)),
 				new SingleAssignment(new Literal(Map.Empty)))));
 
-		private static Rule LookupAnything = new Sequence(new Match(new CharRule(Syntax.lookupStart)),
+		private static Rule LookupAnything = new Sequence(new Match(new Character(Syntax.lookupStart)),
 				new SingleAssignment(GetExpression),
-				new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
-				new Match(new CharRule(Syntax.lookupEnd)));
+				new Match(new ZeroOrMore(new Character(Syntax.indentation))),
+				new Match(new Character(Syntax.lookupEnd)));
 
 
 		private bool negative = false;
@@ -3998,7 +4046,7 @@ namespace Meta
 						}
 						return Map.Empty;
 					},
-					new Optional(new CharRule(Syntax.negative))),
+					new Optional(new Character(Syntax.negative))),
 				new SingleAssignment(new PrePostRule(delegate(Parser p) { },
 				new Sequence(
 					new SingleAssignment(
@@ -4012,7 +4060,7 @@ namespace Meta
 					result = result.GetInteger() * 10 + (Integer)map.GetInteger().GetInt32() - '0';
 					//result = result.GetInteger() * 10 + (Integer)Convert.ToChar(map.GetString()) - '0';
 					return result;
-				}, new CharRule(Syntax.integer)))),
+				}, new Character(Syntax.integer)))),
 				new CustomAction(
 				delegate(Parser p, Map map, ref Map result)
 				{
@@ -4038,7 +4086,7 @@ namespace Meta
 				1,
 				Lookup),
 			new Flatten(new ZeroOrMore(new Sequence(
-				new Match(new CharRule(Syntax.select)),
+				new Match(new Character(Syntax.select)),
 				new SingleAssignment(Lookup)))));
 		private static Rule Select = new Sequence(new Assignment(CodeKeys.Select, Keys));
 
@@ -4049,10 +4097,10 @@ namespace Meta
 						new Or(
 							new Sequence(
 								new Assignment(CodeKeys.Key, Keys),
-								new Match(new CharRule(Syntax.statement)),
+								new Match(new Character(Syntax.statement)),
 								new Assignment(CodeKeys.Value, GetExpression)),
 							new Sequence(
-								new Match(new Optional(new CharRule(Syntax.statement))),
+								new Match(new Optional(new Character(Syntax.statement))),
 								new Assignment(CodeKeys.Value, GetExpression),
 								new Assignment(CodeKeys.Key,
 									new CustomRule(delegate(Parser p)
@@ -4116,7 +4164,7 @@ namespace Meta
 					new Sequence(
 						new Assignment(CodeKeys.Callable, Select),
 						new Assignment(CodeKeys.Argument, new Or(
-							new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
+							new Sequence(new Match(new Character(Syntax.call)), new SingleAssignment(GetExpression)),
 							Program
 						)), new Match(new CustomRule(delegate(Parser p)
 			{
