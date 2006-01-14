@@ -52,6 +52,7 @@
 	integerIncrementTest.[*]=integerIncrementTest
 	integerDecrementTest=5
 	integerDecrementTest=integerDecrementTest.[*]
+	negativeNumber=-123
 	persistenceTest=testSubDir
 	literalEscapeTest=
 		"asdf"

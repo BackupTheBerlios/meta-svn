@@ -3339,6 +3339,7 @@ namespace Meta
 			Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
 		public const char negative='-';
+		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
 		public const char indentation = '\t';
 		public const char unixNewLine = '\n';
@@ -3591,10 +3592,10 @@ namespace Meta
 					}
 				}
 			}
-			public class DelegateRule : Rule
+			public class CustomRule : Rule
 			{
 				private ParseFunction parseFunction;
-				public DelegateRule(ParseFunction parseFunction)
+				public CustomRule(ParseFunction parseFunction)
 				{
 					this.parseFunction = parseFunction;
 				}
@@ -3696,11 +3697,11 @@ namespace Meta
 					}
 					if (matched != null)
 					{
-						ExecuteImplementation(matched, ref result,ref matched);
+						ExecuteImplementation(parser,matched, ref result,ref matched);
 					}
 					return matched != null;
 				}
-				protected abstract void ExecuteImplementation(Map map, ref Map result,ref Map matched);
+				protected abstract void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched);
 			}
 			public class OptionalAssignment : Action
 			{
@@ -3710,7 +3711,7 @@ namespace Meta
 				{
 					this.key = key;
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched)
 				{
 					if (!map.Equals(Map.Empty))// unlogical
 					{
@@ -3726,7 +3727,7 @@ namespace Meta
 				{
 					this.key = key;
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched)
 				{
 					// refactor
 					if (key!=null)
@@ -3740,7 +3741,7 @@ namespace Meta
 				public Match(Rule rule):base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched)
 				{
 				}
 			}
@@ -3750,7 +3751,7 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched)
 				{
 					result = map;
 				}
@@ -3761,7 +3762,7 @@ namespace Meta
 					: base(rule)
 				{
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result,ref Map matched)
 				{
 					foreach (Map m in map.Array)
 					{
@@ -3777,10 +3778,14 @@ namespace Meta
 				{
 					this.action = action;
 				}
-				protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				protected override void ExecuteImplementation(Parser parser,Map map, ref Map result, ref Map matched)
 				{
-					result = this.action(result);
+					this.action(parser,map, ref result);
 				}
+				//protected override void ExecuteImplementation(Map map, ref Map result,ref Map matched)
+				//{
+				//    result = this.action(map,ref result);
+				//}
 			}
 			public class Sequence : Rule
 			{
@@ -3879,6 +3884,43 @@ namespace Meta
 					this.rule = rule;
 				}
 			}
+			// refactor, return value is unlogical
+			public class OneOrMoreAction : Rule
+			{
+				protected override Map DoMatch(Parser parser)
+				{
+					//Map list = new StrategyMap(new ListStrategy());
+					//Map list = new StrategyMap();
+					Map result=null;// = new StrategyMap(new ListStrategy());
+					bool stop=false;
+					while (true)
+					{
+						if(!action.Execute(parser, ref result))
+						{
+							break;
+						}
+						// refactor
+						if (result.IsString && result.GetString().Length == 1)
+						{
+							result = Convert.ToChar(result.GetString());
+						}
+						//list.Append(result);
+					}
+					//if (result!=null && result.Count == 0)
+					//{
+					//    return null;
+					//}
+					//else
+					//{
+						return result;
+					//}
+				}
+				private Action action;
+				public OneOrMoreAction(Action action)
+				{
+					this.action = action;
+				}
+			}
 			// refactor
 			public class Optional : Rule
 			{
@@ -3920,9 +3962,9 @@ namespace Meta
 				}
 			}
 
-			public delegate Map CustomActionDelegate(Map map);
+			public delegate Map CustomActionDelegate(Parser p,Map map,ref Map result);
 			
-			public static Rule GetExpression = new DelegateRule(delegate(Parser parser)
+			public static Rule GetExpression = new CustomRule(delegate(Parser parser)
 			{
 				return new Or(EmptyMap, Number, String, Program, Call, Select).Match(parser);
 			});
@@ -3936,7 +3978,7 @@ namespace Meta
 						new Sequence(
 							new Match(new ZeroOrMore(new Sequence(
 								new Match(new CharRule(Syntax.stringEscape)),
-								new Match(new DelegateRule(delegate(Parser p)
+								new Match(new CustomRule(delegate(Parser p)
 									{
 										p.escapeCharCount++;
 										return Map.Empty;
@@ -3946,7 +3988,7 @@ namespace Meta
 								new SingleAssignment(
 									new ZeroOrMore(
 									new Sequence(
-										new Match(new DelegateRule(delegate(Parser p)
+										new Match(new CustomRule(delegate(Parser p)
 										{
 											if (p.Look() == Syntax.@string)
 											{
@@ -3965,7 +4007,7 @@ namespace Meta
 										new SingleAssignment(new CharactersExcept())
 								))))),
 							new Match(new CharRule(Syntax.@string)),
-							new Match(new DelegateRule(delegate(Parser p) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p); }))
+							new Match(new CustomRule(delegate(Parser p) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p); }))
 						),
 					delegate(Parser p) { p.escapeCharCount = 0; }
 					)));
@@ -3989,7 +4031,7 @@ namespace Meta
 						new StringRule(Syntax.windowsNewLine))));
 
 			private static Rule Indentation = new Or(
-					new DelegateRule(delegate(Parser p)
+					new CustomRule(delegate(Parser p)
 						{
 							if (p.isStartOfFile)
 							{
@@ -4007,8 +4049,8 @@ namespace Meta
 						new Match(
 							new Sequence(
 								new Match(EndOfLine),
-								new Match(new DelegateRule(delegate(Parser p) { return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p); })))),
-						new Match(new DelegateRule(delegate(Parser p)
+								new Match(new CustomRule(delegate(Parser p) { return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p); })))),
+						new Match(new CustomRule(delegate(Parser p)
 							{
 								p.indentationCount++;
 								return Map.Empty;
@@ -4028,14 +4070,57 @@ namespace Meta
 					new Match(new ZeroOrMore(new CharRule(Syntax.indentation))),
 					new Match(new CharRule(Syntax.lookupEnd)));
 
-			
-			private static Rule Number = new Sequence(
-				new Assignment(CodeKeys.Literal, 
-					new Sequence(new OptionalAssignment(1,new Optional(new CharRule(Syntax.negative))), new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
-					new CustomAction(
-						delegate(Map map) { 
-							return Meta.Integer.ParseInteger(map.GetString()); },
-						new Nothing()))));
+
+			private bool negative = false;
+			private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal,
+				new Sequence(
+				new CustomAction(delegate(Parser p, Map map, ref Map result) { 
+					if (!map.Equals(Map.Empty)) 
+					{ 
+						p.negative = true; 
+					}
+					return Map.Empty; 
+				}, new Optional(new CharRule(Syntax.negative))),
+				new SingleAssignment(new PrePostRule(delegate(Parser p){},
+				new Sequence(
+					new SingleAssignment(
+					new OneOrMoreAction(new CustomAction(delegate(Parser p,Map map,ref Map result)
+				{
+					if (result == null)
+					{
+						result = new StrategyMap();
+					}
+
+					result=result.GetInteger() * 10 + (Integer)Convert.ToChar(map.GetString()) - '0';
+					return result;
+				}, new CharRule(Syntax.integer)))),
+				new CustomAction(delegate(Parser p,Map map, ref Map result)
+			{
+				if (result.GetInteger() > 0 && p.negative)
+				{
+					result = 0-result.GetInteger();
+				}
+				return Map.Empty;
+			},new Nothing())
+				), delegate(Parser p) { 
+					p.negative = false; })))));
+						//new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
+						//new CustomAction(
+						//    delegate(Map map)
+						//    {
+						//        return Meta.Integer.ParseInteger(map.GetString());
+						//    },
+						//    new Nothing()))));
+
+									//result = result * 10 + (Integer)(text[index] - '0');
+
+			//private static Rule Number = new Sequence(
+			//    new Assignment(CodeKeys.Literal, 
+			//        new Sequence(new OptionalAssignment(1,new Optional(new CharRule(Syntax.negative))), new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
+			//        new CustomAction(
+			//            delegate(Map map) { 
+			//                return Meta.Integer.ParseInteger(map.GetString()); },
+			//            new Nothing()))));
 
 			//private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new Flatten(new OneOrMore(new CharRule(Syntax.integer))),
 			//        new CustomAction(
@@ -4070,14 +4155,14 @@ namespace Meta
 									new Match(new Optional(new CharRule(Syntax.statement))),
 									new Assignment(CodeKeys.Value, GetExpression),
 									new Assignment(CodeKeys.Key,
-										new DelegateRule(delegate(Parser p)
+										new CustomRule(delegate(Parser p)
 										{
 											Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
 											p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 											return map;
 										}
 										)))))),
-								new Match(new DelegateRule(delegate(Parser p)
+								new Match(new CustomRule(delegate(Parser p)
 								{
 									//counter++;
 									// i dont understand this
@@ -4112,11 +4197,11 @@ namespace Meta
 							new Assignment(1, Statement),
 							new Flatten(new ZeroOrMore(new Sequence(
 								new Match(new Or(
-									new DelegateRule(delegate(Parser pa)
+									new CustomRule(delegate(Parser pa)
 										{
 											return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa); 
 										}),
-									new DelegateRule(delegate(Parser pa)
+									new CustomRule(delegate(Parser pa)
 										{
 											pa.indentationCount--;
 											return null;
@@ -4133,7 +4218,7 @@ namespace Meta
 							new Assignment(CodeKeys.Argument, new Or(
 								new Sequence(new Match(new CharRule(Syntax.call)), new SingleAssignment(GetExpression)),
 								Program
-							)), new Match(new DelegateRule(delegate(Parser p)
+							)), new Match(new CustomRule(delegate(Parser p)
 				{
 					if (p.functions == 0)
 					{
@@ -4635,43 +4720,43 @@ namespace Meta
 			return Convert.ToInt64(integer);
 		}
 		// refactor, integrate into parser
-		public static Integer ParseInteger(string text)
-		{
-			Integer result = new Integer(0);
-			if (text.Equals(""))
-			{
-				result = null;
-			}
-			else
-			{
-				int index = 0;
-				bool negative;
-				if (text[0] == Syntax.negative)
-				{
-					negative = true;
-					index++;
-				}
-				else
-				{
-					negative = false;
-				}
-				for (; index < text.Length; index++)
-				{
-					if (char.IsDigit(text[index]))
-					{
-						result = result * 10 + (Integer)(text[index] - '0');
-					}
-					else
-					{
-						return null;
-					}
-				}
-				if (negative)
-				{
-					result *= -1;
-				}
-			}
-			return result;
-		}
+		//public static Integer ParseInteger(string text)
+		//{
+		//    Integer result = new Integer(0);
+		//    if (text.Equals(""))
+		//    {
+		//        result = null;
+		//    }
+		//    else
+		//    {
+		//        int index = 0;
+		//        bool negative;
+		//        if (text[0] == Syntax.negative)
+		//        {
+		//            negative = true;
+		//            index++;
+		//        }
+		//        else
+		//        {
+		//            negative = false;
+		//        }
+		//        for (; index < text.Length; index++)
+		//        {
+		//            if (char.IsDigit(text[index]))
+		//            {
+		//                result = result * 10 + (Integer)(text[index] - '0');
+		//            }
+		//            else
+		//            {
+		//                return null;
+		//            }
+		//        }
+		//        if (negative)
+		//        {
+		//            result *= -1;
+		//        }
+		//    }
+		//    return result;
+		//}
 	}
 }
