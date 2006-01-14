@@ -32,9 +32,12 @@
 			negativeAdd=add
 				-100
 				91
-			multiply=multiply
+			multiplyInteger=multiply
 				19
 				1023
+			multiplyFraction=multiply
+				3/2
+				7/3
 			greater=greater
 				4
 				1

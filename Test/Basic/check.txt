@@ -134,6 +134,11 @@ Entry (KeyValuePair`2)
 		-123
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"fraction"
+	Value (StrategyMap):
+		3/2
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"persistenceTest"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)

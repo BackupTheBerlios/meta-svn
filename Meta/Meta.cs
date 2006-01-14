@@ -58,6 +58,11 @@ namespace Meta
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
+	public class NumberKeys
+	{
+		public static readonly Map Negative="negative";
+		public static readonly Map Denominator="denominator";
+	}
 	public class Mono
 	{
 		public static string ReadAllText(string path)
@@ -1211,7 +1216,7 @@ namespace Meta
 			: this(new Number(i))
 		{
 		}
-		public StrategyMap(Number number):this(new IntegerStrategy(number))
+		public StrategyMap(Number number):this(new NumberStrategy(number))
 		{
 		}
 		public StrategyMap(string text)
@@ -2122,7 +2127,7 @@ namespace Meta
 			{
 				if (key.Equals(Map.Empty) && val.IsInteger)
 				{
-					Panic(key, val, new IntegerStrategy(0));
+					Panic(key, val, new NumberStrategy(0));
 				}
 				else
 				{
@@ -2139,7 +2144,7 @@ namespace Meta
 			return null;
 		}
 	}
-	public class IntegerStrategy : DataStrategy<Number>
+	public class NumberStrategy : DataStrategy<Number>
 	{
 		public override bool IsInteger
 		{
@@ -2156,13 +2161,13 @@ namespace Meta
 		{
 			return otherData == data;
 		}
-		public IntegerStrategy(Number number)
+		public NumberStrategy(Number number)
 		{
 			this.data = new Number(number);
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new IntegerStrategy(data));
+			return new StrategyMap(new NumberStrategy(data));
 		}
 		public override ICollection<Map> Keys
 		{
@@ -2173,19 +2178,42 @@ namespace Meta
 				{
 					keys.Add(Map.Empty);
 				}
+				if (data < 0)
+				{
+					keys.Add(NumberKeys.Negative);
+				}
+				if (data.Denominator != 1.0d)
+				{
+					keys.Add(NumberKeys.Denominator);
+				}
 				return keys;
 			}
 		}
-		public override bool ContainsKey(Map key)
-		{
-			return key.Equals(Map.Empty) && data != 0;
-		}
+		//public override bool ContainsKey(Map key)
+		//{
+		//    return key.Equals(Map.Empty) && data != 0;
+		//}
 		public override Map Get(Map key)
 		{
 			Map value;
 			if (ContainsKey(key))
 			{
-				value = data - 1;
+				if (key.Equals(Map.Empty))
+				{
+					value = data - 1;
+				}
+				else if(key.Equals(NumberKeys.Negative))
+				{
+					value=Map.Empty;
+				}
+				else if (key.Equals(NumberKeys.Denominator))
+				{
+					value = new StrategyMap(new Number(data.Denominator));
+				}
+				else
+				{
+					throw new ApplicationException("Error.");
+				}
 			}
 			else
 			{
@@ -2197,13 +2225,48 @@ namespace Meta
 		{
 			if (key.Equals(Map.Empty) && value.IsInteger)
 			{
-				this.data = value.GetInteger()+1;
+				this.data = value.GetInteger() + 1;
+			}
+			else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && data!=0)
+			{
+				if (data > 0)
+				{
+					data = 0 - data;
+				}
+			}
+			else if (key.Equals(NumberKeys.Denominator) && value.IsInteger)
+			{
+				this.data = new Number(data.Numerator, value.GetInteger().GetInt32());
 			}
 			else
 			{
 				Panic(key, value);
 			}
 		}
+		//public override Map Get(Map key)
+		//{
+		//    Map value;
+		//    if (ContainsKey(key))
+		//    {
+		//        value = data - 1;
+		//    }
+		//    else
+		//    {
+		//        value = null;
+		//    }
+		//    return value;
+		//}
+		//public override void Set(Map key, Map value)
+		//{
+		//    if (key.Equals(Map.Empty) && value.IsInteger)
+		//    {
+		//        this.data = value.GetInteger()+1;
+		//    }
+		//    else
+		//    {
+		//        Panic(key, value);
+		//    }
+		//}
 	}
 	public class ListStrategy : DataStrategy<List<Map>>
 	{
@@ -3483,6 +3546,9 @@ namespace Meta
 			}
 			protected override bool MatchCharacer(char c)
 			{
+				if (c == Syntax.fraction)
+				{
+				}
 				return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
 			}
 		}
@@ -3943,9 +4009,7 @@ namespace Meta
 
 
 		private bool negative = false;
-		private static Rule Number = new Sequence(new Assignment(
-			CodeKeys.Literal,
-			new Sequence(
+		private static Rule Integer = new Sequence(
 				new CustomAction(
 					new Optional(new Character(Syntax.negative)),
 					delegate(Parser p, Map map, ref Map result)
@@ -3984,7 +4048,102 @@ namespace Meta
 						), delegate(Parser p)
 					{
 						p.negative = false;
-					})))));
+					})));
+		//private static Rule Integer = new Sequence(new Assignment(
+		//    CodeKeys.Literal,
+		//    new Sequence(
+		//        new CustomAction(
+		//            new Optional(new Character(Syntax.negative)),
+		//            delegate(Parser p, Map map, ref Map result)
+		//            {
+		//                // refactor, make match a separate bool
+		//                if (!map.Equals(Map.Empty))
+		//                {
+		//                    p.negative = true;
+		//                }
+		//                return Map.Empty;
+		//            }
+		//            ),
+		//        new SingleAssignment(new PrePostRule(delegate(Parser p) { },
+		//        new Sequence(
+		//            new SingleAssignment(
+		//            new OneOrMoreAction(new CustomAction(new Character(Syntax.integer), delegate(Parser p, Map map, ref Map result)
+		//        {
+		//            if (result == null)
+		//            {
+		//                result = new StrategyMap();
+		//            }
+
+		//            result = result.GetInteger() * 10 + (Number)map.GetInteger().GetInt32() - '0';
+		//            return result;
+		//        }))),
+		//        new CustomAction(
+		//        new Nothing(),
+		//        delegate(Parser p, Map map, ref Map result)
+		//        {
+		//            if (result.GetInteger() > 0 && p.negative)
+		//            {
+		//                result = 0 - result.GetInteger();
+		//            }
+		//            return Map.Empty;
+		//        })
+		//                ), delegate(Parser p)
+		//            {
+		//                p.negative = false;
+		//            })))));
+		private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new SingleAssignment(Integer),
+			new OptionalAssignment(NumberKeys.Denominator, new Optional(
+				new Sequence(
+				new Match(new Character(Syntax.fraction)),
+				new SingleAssignment(Integer)))))));
+		//private static Rule Number = new Sequence(new SingleAssignment(Integer),
+		//    new OptionalAssignment(NumberKeys.Denominator, new Optional(
+		//        new Sequence(
+		//        new Match(new Character(Syntax.fraction)),
+		//        new SingleAssignment(Integer)))));
+
+		//private static Rule Number = new Sequence(new Assignment(
+		//    CodeKeys.Literal,
+		//    new Sequence(
+		//        new CustomAction(
+		//            new Optional(new Character(Syntax.negative)),
+		//            delegate(Parser p, Map map, ref Map result)
+		//            {
+		//                // refactor, make match a separate bool
+		//                if (!map.Equals(Map.Empty))
+		//                {
+		//                    p.negative = true;
+		//                }
+		//                return Map.Empty;
+		//            }
+		//            ),
+		//        new SingleAssignment(new PrePostRule(delegate(Parser p) { },
+		//        new Sequence(
+		//            new SingleAssignment(
+		//            new OneOrMoreAction(new CustomAction(new Character(Syntax.integer), delegate(Parser p, Map map, ref Map result)
+		//        {
+		//            if (result == null)
+		//            {
+		//                result = new StrategyMap();
+		//            }
+
+		//            result = result.GetInteger() * 10 + (Number)map.GetInteger().GetInt32() - '0';
+		//            return result;
+		//        }))),
+		//        new CustomAction(
+		//        new Nothing(),
+		//        delegate(Parser p, Map map, ref Map result)
+		//        {
+		//            if (result.GetInteger() > 0 && p.negative)
+		//            {
+		//                result = 0 - result.GetInteger();
+		//            }
+		//            return Map.Empty;
+		//        })
+		//                ), delegate(Parser p)
+		//            {
+		//                p.negative = false;
+		//            })))));
 
 		private static Rule LookupString = new Sequence(new Assignment(
 			CodeKeys.Literal,
@@ -5320,6 +5479,13 @@ namespace Meta
 			get
 			{
 				return numerator;
+			}
+		}
+		public double Denominator
+		{
+			get
+			{
+				return denominator;
 			}
 		}
 		private readonly double numerator;
