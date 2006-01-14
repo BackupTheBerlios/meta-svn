@@ -26,9 +26,12 @@
 					*
 		numberTest=
 			increment=increment 5
-			add=add
+			positiveAdd=add
 				100
 				1000
+			negativeAdd=add
+				-100
+				91
 			multiply=multiply
 				19
 				1023
