@@ -42,7 +42,7 @@ namespace Test
 			int count=0;
 			foreach(KeyValuePair<Map,Map> pair in map)
 			{
-				if (pair.Value.IsInteger)
+				if (pair.Value.IsNumber)
 				{
 					count++;
 				}

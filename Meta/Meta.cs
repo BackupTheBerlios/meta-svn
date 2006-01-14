@@ -421,7 +421,7 @@ namespace Meta
 			List<Map> array=arg["array"].Array;
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
-				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetInteger().GetInt32();
+				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
 				return x!=0?-1:0;
 			}));
 			return new StrategyMap(array);
@@ -710,9 +710,9 @@ namespace Meta
 			{
 				text = "\"" + this.GetString() + "\"";
 			}
-			else if (this.IsInteger)
+			else if (this.IsNumber)
 			{
-				text = this.GetInteger().ToString();
+				text = this.GetNumber().ToString();
 			}
 			else
 			{
@@ -724,17 +724,17 @@ namespace Meta
 		{
 			get
 			{
-				return IsInteger && (GetInteger()==0 || GetInteger()==1);
+				return IsNumber && (GetNumber()==0 || GetNumber()==1);
 			}
 		}
 		public virtual bool GetBoolean()
 		{
 			bool boolean;
-			if(GetInteger()==0)
+			if(GetNumber()==0)
 			{
 				boolean=false;
 			}
-			else if(GetInteger()==1)
+			else if(GetNumber()==1)
 			{
 				boolean=true;
 			}
@@ -744,42 +744,42 @@ namespace Meta
 			}
 			return boolean;
 		}
-		public virtual bool IsInteger
+		public virtual bool IsNumber
 		{
 			get
 			{
-				return IsIntegerDefault;
+				return IsNumberDefault;
 			}
 		}
-		public bool IsIntegerDefault
+		public bool IsNumberDefault
 		{
 			get
 			{
 				try
 				{
-					return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this[Map.Empty].IsInteger);
+					return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this[Map.Empty].IsNumber);
 				}
 				catch(Exception e)
 				{
 					int asfd;
-					return ContainsKey(Map.Empty) && this[Map.Empty].IsInteger;
+					return ContainsKey(Map.Empty) && this[Map.Empty].IsNumber;
 				}
 			}
 		}
-		public virtual Number GetInteger()
+		public virtual Number GetNumber()
 		{
-			return GetIntegerDefault();
+			return GetNumberDefault();
 		}
-		public Number GetIntegerDefault()
+		public Number GetNumberDefault()
 		{
 			Number number;
 			if(this.Equals(Map.Empty))
 			{
 				number=0;
 			}
-			else if(this.Count==1 && this.ContainsKey(Map.Empty) && this[Map.Empty].GetInteger()!=null)
+			else if(this.Count==1 && this.ContainsKey(Map.Empty) && this[Map.Empty].GetNumber()!=null)
 			{
-				number = 1 + this[Map.Empty].GetInteger();
+				number = 1 + this[Map.Empty].GetNumber();
 			}
 			else
 			{
@@ -823,7 +823,7 @@ namespace Meta
 			string text="";
 			foreach(Map key in Keys)
 			{
-				text+=Convert.ToChar(this[key].GetInteger().GetInt32());
+				text+=Convert.ToChar(this[key].GetNumber().GetInt32());
 			}
 			return text;
 		}
@@ -961,10 +961,10 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			if (IsInteger)
+			if (IsNumber)
 			{
 				//refactor, this is  totally wrong
-				return (int)(GetInteger().Numerator % int.MaxValue);
+				return (int)(GetNumber().Numerator % int.MaxValue);
 			}
 			else
 			{
@@ -1092,9 +1092,9 @@ namespace Meta
 				this[key] = clone.Get(key);
 			}
 		}
-		public override Number GetInteger()
+		public override Number GetNumber()
 		{
-			return strategy.GetInteger();
+			return strategy.GetNumber();
 		}
 		public override string GetString()
 		{
@@ -1107,11 +1107,11 @@ namespace Meta
 				return strategy.IsString;
 			}
 		}
-		public override bool IsInteger
+		public override bool IsNumber
 		{
 			get
 			{
-				return strategy.IsInteger;
+				return strategy.IsNumber;
 			}
 		}
 		public override int Count
@@ -1317,9 +1317,9 @@ namespace Meta
 			{
 				dotNet = ((TypeMap)meta).type;
 			}
-			else if (target.IsSubclassOf(typeof(Enum)) && meta.IsInteger)
+			else if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
 			{
-				dotNet = Enum.ToObject(target, meta.GetInteger().GetInt32());
+				dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
 			}
 			else
 			{
@@ -1328,11 +1328,11 @@ namespace Meta
 					case TypeCode.Boolean:
 						if (IsIntegerInRange(meta, 0, 1))
 						{
-							if (meta.GetInteger() == 0)
+							if (meta.GetNumber() == 0)
 							{
 								dotNet = false;
 							}
-							else if (meta.GetInteger() == 1)
+							else if (meta.GetNumber() == 1)
 							{
 								dotNet = true;
 							}
@@ -1341,20 +1341,20 @@ namespace Meta
 					case TypeCode.Byte:
 						if (IsIntegerInRange(meta, new Number(Byte.MinValue), new Number(Byte.MaxValue)))
 						{
-							dotNet = Convert.ToByte(meta.GetInteger().GetInt32());
+							dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
 						}
 						break;
 					case TypeCode.Char:
 						if (IsIntegerInRange(meta, (int)Char.MinValue, (int)Char.MaxValue))
 						{
-							dotNet = Convert.ToChar(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToChar(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.DateTime:
 						dotNet = null;
 						break;
 					case TypeCode.DBNull:
-						if (meta.IsInteger && meta.GetInteger() == 0)
+						if (meta.IsNumber && meta.GetNumber() == 0)
 						{
 							dotNet = DBNull.Value;
 						}
@@ -1362,25 +1362,25 @@ namespace Meta
 					case TypeCode.Decimal:
 						if (IsIntegerInRange(meta, new Number((double)decimal.MinValue), new Number((double)decimal.MaxValue)))
 						{
-							dotNet = (decimal)(meta.GetInteger().GetInt64());
+							dotNet = (decimal)(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Double:
 						if (IsIntegerInRange(meta, new Number(double.MinValue), new Number(double.MaxValue)))
 						{
-							dotNet = (double)(meta.GetInteger().GetInt64());
+							dotNet = (double)(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Int16:
 						if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue))
 						{
-							dotNet = Convert.ToInt16(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToInt16(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Int32:
 						if (IsIntegerInRange(meta, (Number)Int32.MinValue, Int32.MaxValue))
 						{
-							dotNet = meta.GetInteger().GetInt32();
+							dotNet = meta.GetNumber().GetInt32();
 						}
 						//// TODO: add this for all integers, and other types
 						//else if (meta is ObjectMap && ((ObjectMap)meta).Object is Int32)
@@ -1391,7 +1391,7 @@ namespace Meta
 					case TypeCode.Int64:
 						if (IsIntegerInRange(meta, new Number(Int64.MinValue), new Number(Int64.MaxValue)))
 						{
-							dotNet = Convert.ToInt64(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Object:
@@ -1446,13 +1446,13 @@ namespace Meta
 					case TypeCode.SByte:
 						if (IsIntegerInRange(meta, (Number)SByte.MinValue, (Number)SByte.MaxValue))
 						{
-							dotNet = Convert.ToSByte(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Single:
 						if (IsIntegerInRange(meta, new Number(Single.MinValue), new Number(Single.MaxValue)))
 						{
-							dotNet = (float)meta.GetInteger().GetInt64();
+							dotNet = (float)meta.GetNumber().GetInt64();
 						}
 						break;
 					case TypeCode.String:
@@ -1464,19 +1464,19 @@ namespace Meta
 					case TypeCode.UInt16:
 						if (IsIntegerInRange(meta, new Number(UInt16.MinValue), new Number(UInt16.MaxValue)))
 						{
-							dotNet = Convert.ToUInt16(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.UInt32:
 						if (IsIntegerInRange(meta, new Number(UInt32.MinValue), new Number(UInt32.MaxValue)))
 						{
-							dotNet = Convert.ToUInt32(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.UInt64:
 						if (IsIntegerInRange(meta, new Number(UInt64.MinValue), new Number(UInt64.MaxValue)))
 						{
-							dotNet = Convert.ToUInt64(meta.GetInteger().GetInt64());
+							dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());
 						}
 						break;
 					default:
@@ -1494,7 +1494,7 @@ namespace Meta
 		}
 		public static bool IsIntegerInRange(Map meta,Number minValue,Number maxValue)
 		{
-			return meta.IsInteger && meta.GetInteger()>=minValue && meta.GetInteger()<=maxValue;
+			return meta.IsNumber && meta.GetNumber()>=minValue && meta.GetNumber()<=maxValue;
 		}
 		public static Map ToSimpleMeta(object dotNet)
 		{
@@ -2123,9 +2123,9 @@ namespace Meta
 		}
 		public override void Set(Map key, Map val)
 		{
-			if (key.IsInteger)
+			if (key.IsNumber)
 			{
-				if (key.Equals(Map.Empty) && val.IsInteger)
+				if (key.Equals(Map.Empty) && val.IsNumber)
 				{
 					Panic(key, val, new NumberStrategy(0));
 				}
@@ -2146,14 +2146,14 @@ namespace Meta
 	}
 	public class NumberStrategy : DataStrategy<Number>
 	{
-		public override bool IsInteger
+		public override bool IsNumber
 		{
 			get
 			{
 				return true;
 			}
 		}
-		public override Number GetInteger()
+		public override Number GetNumber()
 		{
 			return data;
 		}
@@ -2223,9 +2223,9 @@ namespace Meta
 		}
 		public override void Set(Map key, Map value)
 		{
-			if (key.Equals(Map.Empty) && value.IsInteger)
+			if (key.Equals(Map.Empty) && value.IsNumber)
 			{
-				this.data = value.GetInteger() + 1;
+				this.data = value.GetNumber() + 1;
 			}
 			else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && data!=0)
 			{
@@ -2234,39 +2234,15 @@ namespace Meta
 					data = 0 - data;
 				}
 			}
-			else if (key.Equals(NumberKeys.Denominator) && value.IsInteger)
+			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber)
 			{
-				this.data = new Number(data.Numerator, value.GetInteger().GetInt32());
+				this.data = new Number(data.Numerator, value.GetNumber().GetInt32());
 			}
 			else
 			{
 				Panic(key, value);
 			}
 		}
-		//public override Map Get(Map key)
-		//{
-		//    Map value;
-		//    if (ContainsKey(key))
-		//    {
-		//        value = data - 1;
-		//    }
-		//    else
-		//    {
-		//        value = null;
-		//    }
-		//    return value;
-		//}
-		//public override void Set(Map key, Map value)
-		//{
-		//    if (key.Equals(Map.Empty) && value.IsInteger)
-		//    {
-		//        this.data = value.GetInteger()+1;
-		//    }
-		//    else
-		//    {
-		//        Panic(key, value);
-		//    }
-		//}
 	}
 	public class ListStrategy : DataStrategy<List<Map>>
 	{
@@ -2319,9 +2295,9 @@ namespace Meta
 		public override bool ContainsKey(Map key)
 		{
 			bool containsKey;
-			if (key.IsInteger)
+			if (key.IsNumber)
 			{
-				Number integer = key.GetInteger();
+				Number integer = key.GetNumber();
 				if (integer >= 1 && integer <= data.Count)
 				{
 					containsKey = true;
@@ -2380,9 +2356,9 @@ namespace Meta
 		public override Map Get(Map key)
 		{
 			Map value = null;
-			if (key.IsInteger)
+			if (key.IsNumber)
 			{
-				int integer = key.GetInteger().GetInt32();
+				int integer = key.GetNumber().GetInt32();
 				if (integer >= 1 && integer <= data.Count)
 				{
 					value = data[integer - 1];
@@ -2392,9 +2368,9 @@ namespace Meta
 		}
 		public override void Set(Map key, Map val)
 		{
-			if (key.IsInteger)
+			if (key.IsNumber)
 			{
-				int integer = key.GetInteger().GetInt32();
+				int integer = key.GetNumber().GetInt32();
 				if (integer >= 1 && integer <= data.Count)
 				{
 					data[integer - 1] = val;
@@ -2610,11 +2586,11 @@ namespace Meta
 			Panic(newStrategy);
 			map.Strategy.Set(key, val); // why do it like this? this wont assign the parent, which is problematic!!!
 		}
-		public virtual bool IsInteger
+		public virtual bool IsNumber
 		{
 			get
 			{
-				return map.IsIntegerDefault;
+				return map.IsNumberDefault;
 			}
 		}
 		public virtual bool IsString
@@ -2628,9 +2604,9 @@ namespace Meta
 		{
 			return map.GetStringDefault();
 		}
-		public virtual Number GetInteger()
+		public virtual Number GetNumber()
 		{
-			return map.GetIntegerDefault();
+			return map.GetNumberDefault();
 		}
 
 		public StrategyMap map;
@@ -2885,7 +2861,7 @@ namespace Meta
 		//{
 		//    return obj != null ? "object: "+obj.ToString() : "type: "+type.ToString();
 		//}
-		public override bool IsInteger
+		public override bool IsNumber
 		{
 			get
 			{
@@ -2903,7 +2879,7 @@ namespace Meta
 				List<Map> array=new List<Map>();
 				foreach(Map key in Keys)
 				{
-					if(key.IsInteger)
+					if(key.IsNumber)
 					{
 						array.Add(this[key]);
 					}
@@ -3019,12 +2995,12 @@ namespace Meta
 					throw new ApplicationException("Could not assign " + text + " .");
 				}
 			}
-			else if (obj != null && key.IsInteger && type.IsArray)
+			else if (obj != null && key.IsNumber && type.IsArray)
 			{
 				object converted = Transform.ToDotNet(value, type.GetElementType());
 				if (converted!=null)
 				{
-					((Array)obj).SetValue(converted, key.GetInteger().GetInt32());
+					((Array)obj).SetValue(converted, key.GetNumber().GetInt32());
 					return;
 				}
 			}
@@ -4032,16 +4008,16 @@ namespace Meta
 						result = new StrategyMap();
 					}
 
-					result = result.GetInteger() * 10 + (Number)map.GetInteger().GetInt32() - '0';
+					result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
 					return result;
 				}))),
 				new CustomAction(
 				new Nothing(),
 				delegate(Parser p, Map map, ref Map result)
 				{
-					if (result.GetInteger() > 0 && p.negative)
+					if (result.GetNumber() > 0 && p.negative)
 					{
-						result = 0 - result.GetInteger();
+						result = 0 - result.GetNumber();
 					}
 					return Map.Empty;
 				})
@@ -4973,7 +4949,7 @@ namespace Meta
 				{
 					text = StringValue(val, indentation);
 				}
-				else if (val.IsInteger)
+				else if (val.IsNumber)
 				{
 					text = IntegerValue(val);
 				}
@@ -5003,9 +4979,9 @@ namespace Meta
 				{
 					text += Syntax.emptyMap;
 				}
-				else if (key.IsInteger)
+				else if (key.IsNumber)
 				{
-					text += IntegerValue(key.GetInteger());
+					text += IntegerValue(key.GetNumber());
 				}
 				else
 				{
@@ -5143,7 +5119,7 @@ namespace Meta
 				Map autoKey;
 				text = indentation;
 				Map value = code[CodeKeys.Value];
-				if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsInteger && autoKey.GetInteger() == autoKeys + 1)
+				if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
 				{
 					autoKeys++;
 					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
@@ -5231,7 +5207,7 @@ namespace Meta
 		}
 		private static string IntegerValue(Map number)
 		{
-			return number.GetInteger().ToString();
+			return number.GetNumber().ToString();
 		}
 	}
 	// refactor, remove???
@@ -5457,7 +5433,7 @@ namespace Meta
 		public Number(Number i):this(i.numerator,i.denominator)
 		{
 		}
-		public Number(Map map):this(map.GetInteger())
+		public Number(Map map):this(map.GetNumber())
 		{
 		}
 		public Number(int integer)
