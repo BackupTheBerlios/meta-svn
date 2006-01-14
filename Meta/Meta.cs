@@ -3397,14 +3397,40 @@ namespace Meta
 			protected override Map DoMatch(Parser parser)
 			{
 				Map matched;
-				if (chars.Equals(new char[] { Syntax.emptyMap }))
-				{
-				}
 				if (parser.Look().ToString().IndexOfAny(chars) != -1)
 				{
+					char character = parser.Look();
+					matched = character;
+					if (character == Syntax.unixNewLine)
+					{
+						parser.line++;
+					}
+					parser.index++;
+				}
+				else
+				{
+					matched = null;
+				}
+				return matched;
+			}
+			public CharRule(params char[] chars)
+			{
+				this.chars = chars;
+			}
+			private char[] chars;
+		}
+		public class CharacterExcept : Rule
+		{
+			protected override Map DoMatch(Parser parser)
+			{
+				Map matched;
+				List<char> list = new List<char>(chars);
+				list.Add(Syntax.endOfFile);
+				if (parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
+				{
+					// refactor
 					char c = parser.Look();
 					matched = c;
-					//matched = c.ToString();
 					if (c == Syntax.unixNewLine)
 					{
 						parser.line++;
@@ -3417,26 +3443,7 @@ namespace Meta
 				}
 				return matched;
 			}
-			//protected override Map DoMatch(Parser parser)
-			//{
-			//    Map matched;
-			//    if (parser.Look().ToString().IndexOfAny(chars) != -1)
-			//    {
-			//        char c = parser.Look();
-			//        matched = c.ToString();
-			//        if (c == Syntax.unixNewLine)
-			//        {
-			//            parser.line++;
-			//        }
-			//        parser.index++;
-			//    }
-			//    else
-			//    {
-			//        matched = null;
-			//    }
-			//    return matched;
-			//}
-			public CharRule(params char[] chars)
+			public CharacterExcept(params char[] chars)
 			{
 				this.chars = chars;
 			}
@@ -3461,36 +3468,6 @@ namespace Meta
 				post(parser);
 				return result;
 			}
-		}
-		public class CharactersExcept : Rule
-		{
-			protected override Map DoMatch(Parser parser)
-			{
-				Map matched;
-				List<char> list = new List<char>(chars);
-				list.Add(Syntax.endOfFile);
-				if (parser.Look().ToString().IndexOfAny(list.ToArray()) == -1)
-				{
-					// refactor
-					char c = parser.Look();
-					matched = c.ToString();
-					if (c == Syntax.unixNewLine)
-					{
-						parser.line++;
-					}
-					parser.index++;
-				}
-				else
-				{
-					matched = null;
-				}
-				return matched;
-			}
-			public CharactersExcept(params char[] chars)
-			{
-				this.chars = chars;
-			}
-			private char[] chars;
 		}
 		public class StringRule : Rule
 		{
@@ -3940,7 +3917,7 @@ namespace Meta
 										}
 										return Map.Empty;
 									})),
-									new SingleAssignment(new CharactersExcept())
+									new SingleAssignment(new CharacterExcept())
 							))))),
 						new Match(new CharRule(Syntax.@string)),
 						new Match(new CustomRule(delegate(Parser p) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p); }))
@@ -4049,42 +4026,10 @@ namespace Meta
 					{
 						p.negative = false;
 					})))));
-		//private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal,
-		//    new Sequence(
-		//    new CustomAction(delegate(Parser p, Map map, ref Map result) { 
-		//        if (!map.Equals(Map.Empty)) 
-		//        { 
-		//            p.negative = true; 
-		//        }
-		//        return Map.Empty; 
-		//    }, new Optional(new CharRule(Syntax.negative))),
-		//    new SingleAssignment(new PrePostRule(delegate(Parser p){},
-		//    new Sequence(
-		//        new SingleAssignment(
-		//        new OneOrMoreAction(new CustomAction(delegate(Parser p,Map map,ref Map result)
-		//    {
-		//        if (result == null)
-		//        {
-		//            result = new StrategyMap();
-		//        }
-
-		//        result=result.GetInteger() * 10 + (Integer)Convert.ToChar(map.GetString()) - '0';
-		//        return result;
-		//    }, new CharRule(Syntax.integer)))),
-		//    new CustomAction(delegate(Parser p,Map map, ref Map result)
-		//{
-		//    if (result.GetInteger() > 0 && p.negative)
-		//    {
-		//        result = 0-result.GetInteger();
-		//    }
-		//    return Map.Empty;
-		//},new Nothing())
-		//    ), delegate(Parser p) { 
-		//        p.negative = false; })))));
 
 		private static Rule LookupString = new Sequence(new Assignment(
 			CodeKeys.Literal,
-			new OneOrMore(new CharactersExcept(Syntax.lookupStringForbidden))));
+			new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden))));
 
 		private static Rule Lookup = new Or(LookupString, LookupAnything);
 
