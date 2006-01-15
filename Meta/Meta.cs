@@ -3475,10 +3475,6 @@ namespace Meta
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
-			//public static implicit operator Rule(Delegate function)
-			//{
-			//    return new CustomRule((ParseFunction)function);
-			//}
 			public static implicit operator Rule(string text)
 			{
 				return new StringRule(text);
@@ -3848,12 +3844,13 @@ namespace Meta
 				Map map = rule.Match(parser, out matched);
 				if (matched)
 				{
-					ExecuteImplementation(parser, map, ref result, ref map);
+					ExecuteImplementation(parser, map, ref result);//, ref map);
 				}
 				return matched;
 			}
 			// refactor
-			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched);
+			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result);//, ref bool matched);
+			//protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched);
 		}
 		public class OptionalAssignment : Action
 		{
@@ -3863,12 +3860,11 @@ namespace Meta
 			{
 				this.key = key;
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)//, ref Map matched)
 			{
 				if (map != null)
 				{
 					result[key] = map;
-					matched = Map.Empty;
 
 				}
 				//if (!map.Equals(Map.Empty))// unlogical
@@ -3900,7 +3896,7 @@ namespace Meta
 			{
 				this.key = key;
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 				result[key] = map;
 			}
@@ -3912,7 +3908,7 @@ namespace Meta
 				: base(rule)
 			{
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 			}
 		}
@@ -3922,7 +3918,7 @@ namespace Meta
 				: base(rule)
 			{
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 				result = map;
 			}
@@ -3933,7 +3929,7 @@ namespace Meta
 				: base(rule)
 			{
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 				foreach (Map m in map.Array)
 				{
@@ -3949,7 +3945,7 @@ namespace Meta
 			{
 				this.action = action;
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 				this.action(parser, map, ref result);
 			}
