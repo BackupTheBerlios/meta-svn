@@ -3467,7 +3467,8 @@ namespace Meta
 				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
-				Map result = DoMatch(parser, out matched);
+				Map result = MatchImplementation(parser, out matched);
+
 				if (result == null)
 				{
 					parser.index = oldIndex;
@@ -3479,10 +3480,14 @@ namespace Meta
 					extent.End.Column = parser.Column;
 					result.Extent = extent;
 				}
+				if (matched!=(result != null))
+				{
+					result = MatchImplementation(parser, out matched);
+				}
 				return result;
 			}
 			// refactor, rename match to matched
-			protected abstract Map DoMatch(Parser parser,out bool match);
+			protected abstract Map MatchImplementation(Parser parser,out bool match);
 		}
 		public abstract class CharacterRule : Rule
 		{
@@ -3492,7 +3497,7 @@ namespace Meta
 			}
 			protected char[] characters;
 			protected abstract bool MatchCharacer(char c);
-			protected override Map DoMatch(Parser parser,out bool match)
+			protected override Map MatchImplementation(Parser parser,out bool match)
 			{
 				Map matched;
 				char character = parser.Look();
@@ -3552,7 +3557,7 @@ namespace Meta
 				this.post = post;
 			}
 			// pass result per ref??? instead??
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				pre(parser);
 				Map result = rule.Match(parser,out matched);
@@ -3567,7 +3572,7 @@ namespace Meta
 			{
 				this.text = text;
 			}
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
@@ -3591,7 +3596,7 @@ namespace Meta
 			{
 				this.parseFunction = parseFunction;
 			}
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				return parseFunction(parser,out matched);
 			}
@@ -3604,7 +3609,7 @@ namespace Meta
 			{
 				this.cases = cases;
 			}
-			protected override Map DoMatch(Parser parser, out bool matched)
+			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map result = null;
 				matched = false;
@@ -3616,14 +3621,7 @@ namespace Meta
 						break;
 					}
 				}
-				if (matched)
-				{
-					return result;
-				}
-				else
-				{
-					return null;
-				}
+				return result;
 			}
 			//protected override Map DoMatch(Parser parser,out bool matched)
 			//{
@@ -3724,7 +3722,7 @@ namespace Meta
 			{
 				this.rule = rule;
 			}
-			protected override Map DoMatch(Parser parser, out bool match)
+			protected override Map MatchImplementation(Parser parser, out bool match)
 			{
 				Map map = rule.Match(parser,out match);
 				Map result;
@@ -3773,7 +3771,7 @@ namespace Meta
 			{
 				this.rules = rules;
 			}
-			protected override Map DoMatch(Parser parser,out bool match)
+			protected override Map MatchImplementation(Parser parser,out bool match)
 			{
 				Map result = new StrategyMap();
 				bool success = true;
@@ -3806,7 +3804,7 @@ namespace Meta
 			{
 				this.literal = literal;
 			}
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				matched = true;
 				return literal;
@@ -3814,7 +3812,7 @@ namespace Meta
 		}
 		public class ZeroOrMore : Rule
 		{
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
 				Map result;
@@ -3822,6 +3820,7 @@ namespace Meta
 				{
 					list.Append(result);
 				}
+				matched = true;
 				return list;
 			}
 			private Rule rule;
@@ -3832,7 +3831,7 @@ namespace Meta
 		}
 		public class OneOrMore : Rule
 		{
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
 				Map result;
@@ -3844,7 +3843,12 @@ namespace Meta
 				}
 				if (!oneMatched)
 				{
+					matched = false;
 					list = null;
+				}
+				else
+				{
+					matched = true;
 				}
 				return list;
 			}
@@ -3857,7 +3861,7 @@ namespace Meta
 		// refactor, return value is unlogical
 		public class OneOrMoreAction : Rule
 		{
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				Map result = null;
 				bool stop = false;
@@ -3885,22 +3889,24 @@ namespace Meta
 			{
 				this.rule = rule;
 			}
-			protected override Map DoMatch(Parser parser,out bool match)
+			protected override Map MatchImplementation(Parser parser,out bool match)
 			{
 				Map matched = rule.Match(parser,out match);
 				if (matched == null) // unlogical
 				{
+					match = true;
 					return Map.Empty;
 				}
 				else
 				{
+					match = true;
 					return matched;
 				}
 			}
 		}
 		public class Nothing : Rule
 		{
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				matched = true;
 				return Map.Empty;
@@ -4153,6 +4159,7 @@ namespace Meta
 										p.line--;
 									}
 								}
+								matched = true;
 								return Map.Empty;
 							}))).Match(parser,out match);
 		});
