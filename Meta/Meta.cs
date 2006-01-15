@@ -3469,7 +3469,7 @@ namespace Meta
 				int oldLine = parser.line;
 				Map result = MatchImplementation(parser, out matched);
 
-				if (result == null)
+				if (!matched)
 				{
 					parser.index = oldIndex;
 					parser.line = oldLine;
@@ -3480,13 +3480,8 @@ namespace Meta
 					extent.End.Column = parser.Column;
 					result.Extent = extent;
 				}
-				if (matched!=(result != null))
-				{
-					result = MatchImplementation(parser, out matched);
-				}
 				return result;
 			}
-			// refactor, rename match to matched
 			protected abstract Map MatchImplementation(Parser parser,out bool match);
 		}
 		public abstract class CharacterRule : Rule
@@ -3497,14 +3492,14 @@ namespace Meta
 			}
 			protected char[] characters;
 			protected abstract bool MatchCharacer(char c);
-			protected override Map MatchImplementation(Parser parser,out bool match)
+			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
-				Map matched;
+				Map result;
 				char character = parser.Look();
 				if (MatchCharacer(character))
 				{
-					matched = character;
-					match = true;
+					result = character;
+					matched = true;
 					parser.index++;
 					if (character == Syntax.unixNewLine)
 					{
@@ -3513,10 +3508,10 @@ namespace Meta
 				}
 				else
 				{
-					match = false;
-					matched = null;
+					matched = false;
+					result = null;
 				}
-				return matched;
+				return result;
 			}
 		}
 		public class Character : CharacterRule
@@ -3556,7 +3551,6 @@ namespace Meta
 				this.rule = rule;
 				this.post = post;
 			}
-			// pass result per ref??? instead??
 			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				pre(parser);
@@ -3579,14 +3573,7 @@ namespace Meta
 				{
 					actions.Add(new Match(new Character(c)));
 				}
-				if (new Sequence(actions.ToArray()).Match(parser,out matched) != null)
-				{
-					return Map.Empty;
-				}
-				else
-				{
-					return null;
-				}
+				return new Sequence(actions.ToArray()).Match(parser, out matched);
 			}
 		}
 		public class CustomRule : Rule
@@ -3623,13 +3610,13 @@ namespace Meta
 				}
 				return result;
 			}
-			//protected override Map DoMatch(Parser parser,out bool matched)
+			//protected override Map MatchImplementation(Parser parser, out bool matched)
 			//{
 			//    Map result = null;
 			//    matched = false;
 			//    foreach (Rule expression in cases)
 			//    {
-			//        result = (Map)expression.Match(parser,out matched);
+			//        result = (Map)expression.Match(parser, out matched);
 			//        if (result != null)
 			//        {
 			//            break;
