@@ -3588,7 +3588,6 @@ namespace Meta
 				return parseFunction(parser,out matched);
 			}
 		}
-
 		public class Or : Rule
 		{
 			private Rule[] cases;
@@ -3603,27 +3602,13 @@ namespace Meta
 				foreach (Rule expression in cases)
 				{
 					result = (Map)expression.Match(parser, out matched);
-					if (result != null)
+					if (matched)
 					{
 						break;
 					}
 				}
 				return result;
 			}
-			//protected override Map MatchImplementation(Parser parser, out bool matched)
-			//{
-			//    Map result = null;
-			//    matched = false;
-			//    foreach (Rule expression in cases)
-			//    {
-			//        result = (Map)expression.Match(parser, out matched);
-			//        if (result != null)
-			//        {
-			//            break;
-			//        }
-			//    }
-			//    return result;
-			//}
 		}
 		public abstract class Action
 		{
