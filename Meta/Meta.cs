@@ -3743,8 +3743,13 @@ namespace Meta
 				Map list = new StrategyMap(new ListStrategy());
 				Map result;
 				bool oneMatched = false;
-				while ((result = rule.Match(parser, out matched)) != null)
+				while (true)
 				{
+					result = rule.Match(parser, out matched);
+					if(!matched)
+					{
+						break;
+					}
 					oneMatched = true;
 					list.Append(result);
 				}
