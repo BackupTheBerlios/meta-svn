@@ -3797,7 +3797,6 @@ namespace Meta
 				{
 					match = true;
 					return null;
-					//return Map.Empty; // refactor
 				}
 				else
 				{
@@ -3811,7 +3810,7 @@ namespace Meta
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				matched = true;
-				return Map.Empty;
+				return null;
 			}
 		}
 		public abstract class Action
@@ -3971,7 +3970,8 @@ namespace Meta
 											{
 												p.escapeCharCount++;
 												matched = true;
-												return Map.Empty;
+												return null;
+												//return Map.Empty;
 											}))),
 							Syntax.@string,
 						new SingleAssignment(
@@ -4028,7 +4028,8 @@ namespace Meta
 							p.isStartOfFile = false;
 							p.indentationCount++;
 							matched = true;
-							return Map.Empty;
+							return null;
+							//return Map.Empty;
 						}
 						else
 						{
@@ -4045,7 +4046,8 @@ namespace Meta
 						{
 							p.indentationCount++;
 							matched = true;
-							return Map.Empty;
+							return null;
+							//return Map.Empty;
 						}))
 
 				);
@@ -4075,13 +4077,7 @@ namespace Meta
 						{
 							p.negative = true;
 						}
-						return Map.Empty;//wrong
-
-						//if (!map.Equals(Map.Empty))
-						//{
-						//    p.negative = true;
-						//}
-						//return Map.Empty;
+						return null;
 					}
 					),
 				new SingleAssignment(new PrePostRule(delegate(Parser p) { },
@@ -4105,7 +4101,8 @@ namespace Meta
 					{
 						result = 0 - result.GetNumber();
 					}
-					return Map.Empty;
+					return null;
+					//return Map.Empty;
 				})
 						), delegate(Parser p)
 					{
@@ -4186,7 +4183,8 @@ namespace Meta
 									}
 								}
 								matched = true;
-								return Map.Empty;
+								return null;
+								//return Map.Empty;
 							})).Match(parser,out match);
 		});
 
@@ -4232,7 +4230,8 @@ namespace Meta
 				else
 				{
 					matched = true;
-					return Map.Empty;
+					return null;
+					//return Map.Empty;
 				}
 			}))));
 	}
