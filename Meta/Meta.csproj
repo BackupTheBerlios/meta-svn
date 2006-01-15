@@ -126,10 +126,8 @@
     <None Include="Data\or.meta" />
     <None Include="Data\sum.meta" />
     <None Include="Data\libraryTest.meta" />
-    <None Include="Data\meta.meta" />
     <None Include="Data\testSubDir\testLib.meta" />
     <None Include="Data\testSubDir\x.meta" />
-    <None Include="Data\tutorial.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
