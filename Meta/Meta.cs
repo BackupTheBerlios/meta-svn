@@ -3604,20 +3604,41 @@ namespace Meta
 			{
 				this.cases = cases;
 			}
-			protected override Map DoMatch(Parser parser,out bool matched)
+			protected override Map DoMatch(Parser parser, out bool matched)
 			{
 				Map result = null;
 				matched = false;
 				foreach (Rule expression in cases)
 				{
-					result = (Map)expression.Match(parser,out matched);
+					result = (Map)expression.Match(parser, out matched);
 					if (result != null)
 					{
 						break;
 					}
 				}
-				return result;
+				if (matched)
+				{
+					return result;
+				}
+				else
+				{
+					return null;
+				}
 			}
+			//protected override Map DoMatch(Parser parser,out bool matched)
+			//{
+			//    Map result = null;
+			//    matched = false;
+			//    foreach (Rule expression in cases)
+			//    {
+			//        result = (Map)expression.Match(parser,out matched);
+			//        if (result != null)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    return result;
+			//}
 		}
 		public abstract class Action
 		{
@@ -3631,9 +3652,6 @@ namespace Meta
 			}
 			public bool Execute(Parser parser, ref Map result)
 			{
-				if (rule == null)
-				{
-				}
 				bool match;
 				Map matched = rule.Match(parser,out match);
 				if (this is OptionalAssignment)
@@ -3720,13 +3738,6 @@ namespace Meta
 				}
 				return result;
 			}
-			//protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
-			//{
-			//    foreach (Map m in map.Array)
-			//    {
-			//        result.Append(m);
-			//    }
-			//}
 		}
 		public class Flatten : Action
 		{
@@ -3906,144 +3917,59 @@ namespace Meta
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
-		private static Rule String = new Sequence(new Assignment(CodeKeys.Literal, new PrePostRule(delegate(Parser p) { },
+		private static Rule String = new Sequence(
+			new Assignment(
+				CodeKeys.Literal,
+				new PrePostRule(
+					delegate(Parser p) { },
 					new Sequence(
-						new Match(new ZeroOrMore(new Sequence(
-							new Match(new Character(Syntax.stringEscape)),
-							// refactor, use PrePostRule
-							new Match(new CustomRule(delegate(Parser p,out bool matched)
-								{
-									p.escapeCharCount++;
-									matched = true;
-									return Map.Empty;
-								}))))),
+						new Match(
+							new ZeroOrMore(
+								new Sequence(
+									new Match(
+										new Character(Syntax.stringEscape)),
+									new Match(
+										new CustomRule(
+											delegate(Parser p, out bool matched)
+											{
+												p.escapeCharCount++;
+												matched = true;
+												return Map.Empty;
+											}))))),
+						new Match(
+							new Character(Syntax.@string)),
+						new SingleAssignment(
+							new Sequence(
+								new SingleAssignment(
+									new FlattenRule(
+										new ZeroOrMore(
+											new CustomRule(
+												delegate(Parser p, out bool matched)
+												{
+													Map result;
+													if (p.Look() == Syntax.@string)
+													{
+														int foundEscapeCharCount = 0;
+														Map escapeChars = new StringRule(Syntax.@string + "".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
+														if (escapeChars != null)
+														{
+															matched = false;
+															result = null;
+														}
+														else
+														{
+															result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
+														}
+													}
+													else
+													{
+														result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
+													}
+													return result;
+												})))))),
 						new Match(new Character(Syntax.@string)),
-						new SingleAssignment(new Sequence(
-							new SingleAssignment(new FlattenRule(
-								new ZeroOrMore(new CustomRule(delegate(Parser p, out bool matched)
-									{
-										Map result;
-										if (p.Look() == Syntax.@string)
-										{
-											int foundEscapeCharCount = 0;
-											Map escapeChars = new Sequence(new Assignment(1,new Character(Syntax.@string)),new Flatten(new ZeroOrMore(new Character(Syntax.stringEscape)))).Match(p, out matched);
-											if (escapeChars != null)
-											{
-												foundEscapeCharCount = escapeChars.ArrayCount-1;
-											}
-											else
-											{
-												foundEscapeCharCount = 0;
-											}
-											//while (foundEscapeCharCount < p.escapeCharCount && p.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
-											//{
-											//    foundEscapeCharCount++;
-											//}
-											if (foundEscapeCharCount == p.escapeCharCount)
-											{
-												matched = false;
-												result = null;
-												//return null;
-											}
-											else
-											{
-												result = escapeChars;
-											}
-										}
-										else
-										{
-											result=new Sequence(new Assignment(1,(new CharacterExcept()))).Match(p,out matched);
-										}
-										//matched = true;
-										return result;
-										//return Map.Empty;
-									}))
-									)
-							))),
-						new Match(new Character(Syntax.@string)),
-						// refactor, introduce loop that matches n times
-						new Match(new CustomRule(delegate(Parser p,out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p,out matched); }))
-					),
-				delegate(Parser p) { p.escapeCharCount = 0; }
-				)));
-		//private static Rule String = new Sequence(new Assignment(CodeKeys.Literal, new PrePostRule(delegate(Parser p) { },
-		//            new Sequence(
-		//                new Match(new ZeroOrMore(new Sequence(
-		//                    new Match(new Character(Syntax.stringEscape)),
-		//                    // refactor, use PrePostRule
-		//                    new Match(new CustomRule(delegate(Parser p,out bool matched)
-		//                        {
-		//                            p.escapeCharCount++;
-		//                            matched = true;
-		//                            return Map.Empty;
-		//                        }))))),
-		//                new Match(new Character(Syntax.@string)),
-		//                new SingleAssignment(new Sequence(
-		//                    new SingleAssignment(
-		//                        new ZeroOrMore(
-		//                            new Flatten(new CustomRule(delegate(Parser p, out bool matched)
-		//                            {
-		//                                if (p.Look() == Syntax.@string)
-		//                                {
-		//                                    int foundEscapeCharCount = 0;
-		//                                    Map escapeChars = new ZeroOrMore(new Character(Syntax.stringEscape)).Match(p, out matched);
-		//                                    if (escapeChars != null)
-		//                                    {
-		//                                        foundEscapeCharCount = escapeChars.ArrayCount;
-		//                                    }
-		//                                    else
-		//                                    {
-		//                                        foundEscapeCharCount = 0;
-		//                                    }
-		//                                    //while (foundEscapeCharCount < p.escapeCharCount && p.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
-		//                                    //{
-		//                                    //    foundEscapeCharCount++;
-		//                                    //}
-		//                                    if (foundEscapeCharCount == p.escapeCharCount)
-		//                                    {
-		//                                        matched = false;
-		//                                        return null;
-		//                                    }
-		//                                }
-		//                                matched = true;
-		//                                return Map.Empty;
-		//                            }))
-		//                            //new Match(new CustomRule(delegate(Parser p,out bool matched)
-		//                            //{
-		//                            //    if (p.Look() == Syntax.@string)
-		//                            //    {
-		//                            //        int foundEscapeCharCount = 0;
-		//                            //        Map escapeChars=new ZeroOrMore(new Character(Syntax.stringEscape)).Match(p, out matched);
-		//                            //        if (escapeChars != null)
-		//                            //        {
-		//                            //            foundEscapeCharCount = escapeChars.ArrayCount;
-		//                            //        }
-		//                            //        else
-		//                            //        {
-		//                            //            foundEscapeCharCount = 0;
-		//                            //        }
-		//                            //        //while (foundEscapeCharCount < p.escapeCharCount && p.Look(foundEscapeCharCount + 1) == Syntax.stringEscape)
-		//                            //        //{
-		//                            //        //    foundEscapeCharCount++;
-		//                            //        //}
-		//                            //        if (foundEscapeCharCount == p.escapeCharCount)
-		//                            //        {
-		//                            //            matched = false;
-		//                            //            return null;
-		//                            //        }
-		//                            //    }
-		//                            //    matched = true;
-		//                            //    return Map.Empty;
-		//                            //})),
-		//                            //new SingleAssignment(new CharacterExcept()
-		//                            )
-		//                    ))))),
-		//                new Match(new Character(Syntax.@string)),
-		//                // refactor, introduce loop that matches n times
-		//                new Match(new CustomRule(delegate(Parser p,out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p,out matched); }))
-		//            ),
-		//        delegate(Parser p) { p.escapeCharCount = 0; }
-		//        )));
+						new Match(new CustomRule(delegate(Parser p, out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); }))),
+					delegate(Parser p) { p.escapeCharCount = 0; })));
 
 		public static Rule Function = new PrePostRule(delegate(Parser parser) { parser.functions++; }, new Sequence(
 				new Match(new Character(Syntax.function)),
