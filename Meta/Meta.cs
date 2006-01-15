@@ -3404,8 +3404,21 @@ namespace Meta
 		public const char space = ' ';
 		public const char tab = '\t';
 	}
+	public delegate Map ParseFunction(Parser parser, out bool matched);
+
+	//partial class ParseFunction
+	//{
+	//}
+
 	public class Parser
 	{
+		private string Rest
+		{
+			get
+			{
+				return text.Substring(index);
+			}
+		}
 		public string text;
 		public int index;
 		public string file;
@@ -3462,6 +3475,10 @@ namespace Meta
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
+			//public static implicit operator Rule(Delegate function)
+			//{
+			//    return new CustomRule((ParseFunction)function);
+			//}
 			public static implicit operator Rule(string text)
 			{
 				return new StringRule(text);
@@ -3490,7 +3507,10 @@ namespace Meta
 				{
 					extent.End.Line = parser.Line;
 					extent.End.Column = parser.Column;
-					result.Extent = extent;
+					if (result != null)
+					{
+						result.Extent = extent;
+					}
 				}
 				return result;
 			}
@@ -3571,6 +3591,7 @@ namespace Meta
 				return result;
 			}
 		}
+		// refactor
 		public class StringRule : Rule
 		{
 			private string text;
@@ -3775,8 +3796,8 @@ namespace Meta
 				if (matched == null)
 				{
 					match = true;
-					//return null;
-					return Map.Empty; // refactor
+					return null;
+					//return Map.Empty; // refactor
 				}
 				else
 				{
@@ -3834,20 +3855,37 @@ namespace Meta
 			}
 			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
 			{
-				if (!map.Equals(Map.Empty))// unlogical
+				if (map != null)
 				{
 					result[key] = map;
 					matched = Map.Empty;
+
 				}
-				else
-				{
-				}
+				//if (!map.Equals(Map.Empty))// unlogical
+				//{
+				//    result[key] = map;
+				//    matched = Map.Empty;
+				//}
+				//else
+				//{
+				//}
 			}
+			//protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
+			//{
+			//    if (!map.Equals(Map.Empty))// unlogical
+			//    {
+			//        result[key] = map;
+			//        matched = Map.Empty;
+			//    }
+			//    else
+			//    {
+			//    }
+			//}
 		}
-		public class Assignment : Action
+		public class Assign : Action
 		{
 			private Map key;
-			public Assignment(Map key, Rule rule)
+			public Assign(Map key, Rule rule)
 				: base(rule)
 			{
 				this.key = key;
@@ -3920,7 +3958,7 @@ namespace Meta
 		private int escapeCharCount = 0;
 
 		private static Rule String = new Sequence(
-			new Assignment(
+			new Assign(
 				CodeKeys.Literal,
 				new PrePostRule(
 					delegate(Parser p) { },
@@ -3956,12 +3994,12 @@ namespace Meta
 														}
 														else
 														{
-															result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
+															result = new Sequence(new Assign(1, (new CharacterExcept()))).Match(p, out matched);
 														}
 													}
 													else
 													{
-														result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
+														result = new Sequence(new Assign(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
 													}
 													return result;
 												})))))),
@@ -3969,11 +4007,13 @@ namespace Meta
 						new CustomRule(delegate(Parser p, out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
 					delegate(Parser p) { p.escapeCharCount = 0; })));
 
-		public static Rule Function = new PrePostRule(delegate(Parser parser) { parser.functions++; }, new Sequence(
+		public static Rule Function = new PrePostRule(
+			delegate(Parser parser) { parser.functions++; },
+			new Sequence(
 				Syntax.function,
-				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
-				new Assignment(CodeKeys.Value,
-					new Sequence(new Assignment(CodeKeys.Literal, GetExpression)))), delegate(Parser parser) { parser.functions--; });
+				new Assign(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
+				new Assign(CodeKeys.Value,
+					new Sequence(new Assign(CodeKeys.Literal, GetExpression)))), delegate(Parser parser) { parser.functions--; });
 
 
 		private static Rule EndOfLine = new Sequence(
@@ -4000,7 +4040,6 @@ namespace Meta
 				new Sequence(
 						new Sequence(
 							EndOfLine,
-							// refactor, use loop that matches n times
 							new CustomRule(delegate(Parser p,out bool matched) { return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p,out matched); })),
 					new CustomRule(delegate(Parser p,out bool matched)
 						{
@@ -4014,7 +4053,7 @@ namespace Meta
 
 
 		private static Rule EmptyMap = new Sequence(
-			new Assignment(CodeKeys.Literal, new Sequence(
+			new Assign(CodeKeys.Literal, new Sequence(
 				Syntax.emptyMap,
 				new SingleAssignment(new Literal(Map.Empty)))));
 
@@ -4032,11 +4071,17 @@ namespace Meta
 					delegate(Parser p, Map map, ref Map result)
 					{
 						// refactor, make match a separate bool
-						if (!map.Equals(Map.Empty))
+						if (map!=null)
 						{
 							p.negative = true;
 						}
-						return Map.Empty;
+						return Map.Empty;//wrong
+
+						//if (!map.Equals(Map.Empty))
+						//{
+						//    p.negative = true;
+						//}
+						//return Map.Empty;
 					}
 					),
 				new SingleAssignment(new PrePostRule(delegate(Parser p) { },
@@ -4066,20 +4111,20 @@ namespace Meta
 					{
 						p.negative = false;
 					})));
-		private static Rule Number = new Sequence(new Assignment(CodeKeys.Literal, new Sequence(new SingleAssignment(Integer),
+		private static Rule Number = new Sequence(new Assign(CodeKeys.Literal, new Sequence(new SingleAssignment(Integer),
 			new OptionalAssignment(NumberKeys.Denominator, new Optional(
 				new Sequence(
 					Syntax.fraction,
 					new SingleAssignment(Integer)))))));
 
-		private static Rule LookupString = new Sequence(new Assignment(
+		private static Rule LookupString = new Sequence(new Assign(
 			CodeKeys.Literal,
 			new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden))));
 
 		private static Rule Lookup = new Or(LookupString, LookupAnything);
 
 		private static Rule Keys = new Sequence(
-			new Assignment(
+			new Assign(
 				1,
 				Lookup),
 			new Flatten(
@@ -4087,15 +4132,9 @@ namespace Meta
 					new Sequence(
 						Syntax.select,
 						new SingleAssignment(Lookup)))));
-		private static Rule Select = new Sequence(new Assignment(CodeKeys.Select, Keys));
+		private static Rule Select = new Sequence(new Assign(CodeKeys.Select, Keys));
 
-		private string Rest
-		{
-			get
-			{
-				return text.Substring(index);
-			}
-		}
+
 		public static Rule Statement = new CustomRule(delegate(Parser parser,out bool match)
 		{
 			if (parser.Rest.StartsWith("\n") || parser.Rest.StartsWith("\r"))
@@ -4106,13 +4145,13 @@ namespace Meta
 					new Or(Function,
 						new Or(
 							new Sequence(
-								new Assignment(CodeKeys.Key, Keys),
+								new Assign(CodeKeys.Key, Keys),
 								Syntax.statement,
-								new Assignment(CodeKeys.Value, GetExpression)),
+								new Assign(CodeKeys.Value, GetExpression)),
 							new Sequence(
 								new Optional(Syntax.statement),
-								new Assignment(CodeKeys.Value, GetExpression),
-								new Assignment(CodeKeys.Key,
+								new Assign(CodeKeys.Value, GetExpression),
+								new Assign(CodeKeys.Key,
 									new CustomRule(delegate(Parser p, out bool matched)
 									{
 										Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
@@ -4153,9 +4192,9 @@ namespace Meta
 
 		public static Rule Program = new Sequence(
 			Indentation,
-			new Assignment(CodeKeys.Program, new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); },
+			new Assign(CodeKeys.Program, new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); },
 			new Sequence(
-						new Assignment(1, Statement),
+						new Assign(1, Statement),
 						new Flatten(new ZeroOrMore(new Sequence(
 							new Or(
 								new CustomRule(delegate(Parser pa,out bool matched)
@@ -4171,14 +4210,13 @@ namespace Meta
 									})),
 							new SingleAssignment(Statement))))), delegate(Parser p) { p.defaultKeys.Pop(); })));
 
-		public delegate Map ParseFunction(Parser parser,out bool matched);
 
 		public static Rule Call = new Sequence(
-				new Assignment(
+				new Assign(
 					CodeKeys.Call,
 					new Sequence(
-						new Assignment(CodeKeys.Callable, Select),
-						new Assignment(CodeKeys.Argument, new Or(
+						new Assign(CodeKeys.Callable, Select),
+						new Assign(CodeKeys.Argument, new Or(
 							new Sequence(
 								Syntax.call, 
 								new SingleAssignment(GetExpression)),
