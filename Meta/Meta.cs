@@ -3711,14 +3711,20 @@ namespace Meta
 				return literal;
 			}
 		}
+		// this should use actions, really
 		public class ZeroOrMore : Rule
 		{
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
 				Map result;
-				while ((result = rule.Match(parser, out matched)) != null)
+				while (true)
 				{
+					result = rule.Match(parser, out matched);
+					if (!matched)
+					{
+						break;
+					}
 					list.Append(result);
 				}
 				matched = true;
@@ -4225,14 +4231,12 @@ namespace Meta
 				if (p.functions == 0)
 				{
 					matched = false;
-					return null;
 				}
 				else
 				{
 					matched = true;
-					return null;
-					//return Map.Empty;
 				}
+				return null;
 			}))));
 	}
 	public class Serialize
