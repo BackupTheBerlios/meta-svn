@@ -3588,7 +3588,6 @@ namespace Meta
 				return result;
 			}
 		}
-		// refactor
 		public class StringRule : Rule
 		{
 			private string text;
@@ -3694,7 +3693,6 @@ namespace Meta
 				}
 			}
 		}
-		// refactor, necessary?
 		public class Literal : Rule
 		{
 			private Map literal;
@@ -3708,31 +3706,56 @@ namespace Meta
 				return literal;
 			}
 		}
-		// this should use actions, really
 		public class ZeroOrMore : Rule
 		{
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
 				Map result;
+				// refactor result
 				while (true)
 				{
-					result = rule.Match(parser, out matched);
+					matched=action.Execute(parser, ref list);
+					//result = rule.Match(parser, out matched);
 					if (!matched)
 					{
 						break;
 					}
-					list.Append(result);
+					//list.Append(result);
 				}
 				matched = true;
 				return list;
 			}
-			private Rule rule;
-			public ZeroOrMore(Rule rule)
+			private Action action;
+			public ZeroOrMore(Action action)
 			{
-				this.rule = rule;
+				this.action = action;
 			}
 		}
+		//public class ZeroOrMore : Rule
+		//{
+		//    protected override Map MatchImplementation(Parser parser, out bool matched)
+		//    {
+		//        Map list = new StrategyMap(new ListStrategy());
+		//        Map result;
+		//        while (true)
+		//        {
+		//            result = rule.Match(parser, out matched);
+		//            if (!matched)
+		//            {
+		//                break;
+		//            }
+		//            list.Append(result);
+		//        }
+		//        matched = true;
+		//        return list;
+		//    }
+		//    private Rule rule;
+		//    public ZeroOrMore(Rule rule)
+		//    {
+		//        this.rule = rule;
+		//    }
+		//}
 		public class OneOrMore : Rule
 		{
 			protected override Map MatchImplementation(Parser parser, out bool matched)
@@ -3743,13 +3766,11 @@ namespace Meta
 				while (true)
 				{
 					matched=action.Execute(parser, ref list);
-					//result = rule.Match(parser, out matched);
 					if (!matched)
 					{
 						break;
 					}
 					oneMatched = true;
-					//list.Append(result);
 				}
 				if (!oneMatched)
 				{
@@ -3762,95 +3783,12 @@ namespace Meta
 				}
 				return list;
 			}
-			//protected override Map MatchImplementation(Parser parser, out bool matched)
-			//{
-			//    Map list = new StrategyMap(new ListStrategy());
-			//    Map result;
-			//    bool oneMatched = false;
-			//    while (true)
-			//    {
-			//        result = rule.Match(parser, out matched);
-			//        if (!matched)
-			//        {
-			//            break;
-			//        }
-			//        oneMatched = true;
-			//        list.Append(result);
-			//    }
-			//    if (!oneMatched)
-			//    {
-			//        matched = false;
-			//        list = null;
-			//    }
-			//    else
-			//    {
-			//        matched = true;
-			//    }
-			//    return list;
-			//}
 			private Action action;
 			public OneOrMore(Action action)
 			{
 				this.action = action;
 			}
 		}
-		//public class OneOrMore : Rule
-		//{
-		//    protected override Map MatchImplementation(Parser parser, out bool matched)
-		//    {
-		//        Map list = new StrategyMap(new ListStrategy());
-		//        Map result;
-		//        bool oneMatched = false;
-		//        while (true)
-		//        {
-		//            result = rule.Match(parser, out matched);
-		//            if(!matched)
-		//            {
-		//                break;
-		//            }
-		//            oneMatched = true;
-		//            list.Append(result);
-		//        }
-		//        if (!oneMatched)
-		//        {
-		//            matched = false;
-		//            list = null;
-		//        }
-		//        else
-		//        {
-		//            matched = true;
-		//        }
-		//        return list;
-		//    }
-		//    private Rule rule;
-		//    public OneOrMore(Rule rule)
-		//    {
-		//        this.rule = rule;
-		//    }
-		//}
-
-		//public class OneOrMoreAction : Rule
-		//{
-		//    protected override Map MatchImplementation(Parser parser, out bool matched)
-		//    {
-		//        Map result = null;
-		//        bool stop = false;
-		//        while (true)
-		//        {
-		//            if (!action.Execute(parser, ref result))
-		//            {
-		//                break;
-		//            }
-		//        }
-		//        matched = result != null;
-		//        return result;
-		//    }
-		//    private Action action;
-		//    public OneOrMoreAction(Action action)
-		//    {
-		//        this.action = action;
-		//    }
-		//}
 		public class Optional : Rule
 		{
 			private Rule rule;
@@ -3919,7 +3857,7 @@ namespace Meta
 			{
 				this.key = key;
 			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)//, ref Map matched)
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
 			{
 				if (map != null)
 				{
@@ -4005,11 +3943,8 @@ namespace Meta
 
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 
-		public static Rule Expression = new CustomRule(delegate(Parser parser,out bool matched)
-		{
-			return new Alternatives(EmptyMap, Number, String, Program, Call, Select).Match(parser,out matched);
-		});
-
+		public static Rule Expression = new CustomRule(delegate(Parser parser,out bool matched) {
+			return new Alternatives(EmptyMap, Number, String, Program, Call, Select).Match(parser,out matched); });
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
@@ -4020,48 +3955,48 @@ namespace Meta
 				new PrePost(
 					delegate(Parser p) { },
 					new Sequence(
-							new ZeroOrMore(
-								new Sequence(
-										Syntax.stringEscape,
-										new CustomRule(
-											delegate(Parser p, out bool matched)
-											{
-												p.escapeCharCount++;
-												matched = true;
-												return null;
-											}))),
-							Syntax.@string,
+						new ZeroOrMore(
+							new Sequence(
+								Syntax.stringEscape,
+								new CustomRule(
+									delegate(Parser p, out bool matched) {
+										p.escapeCharCount++;
+										matched = true;
+										return null; }))),
+						Syntax.@string,
 						new AssignReference(
 							new Sequence(
 								new AssignReference(
+									// refactor
 									new FlattenRule(
 										new ZeroOrMore(
-											new CustomRule(
-												delegate(Parser p, out bool matched)
-												{
-													Map result;
-													if (p.Look() == Syntax.@string)
-													{
-														Map escapeChars = new StringRule(Syntax.@string + "".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
-														if (escapeChars != null)
+											new Autokey(
+												new CustomRule(
+													delegate(Parser p, out bool matched) {
+														Map result;
+														if (p.Look() == Syntax.@string)
 														{
-															matched = false;
-															result = null;
+															Map escapeChars = new StringRule(Syntax.@string + "".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
+															if (escapeChars != null)
+															{
+																matched = false;
+																result = null;
+															}
+															else
+															{
+																result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
+															}
 														}
 														else
 														{
-															result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
+															result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
 														}
-													}
-													else
-													{
-														result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
-													}
-													return result;
-												})))))),
+														return result; }))))))),
 						Syntax.@string,
-						new CustomRule(delegate(Parser p, out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
-					delegate(Parser p) { p.escapeCharCount = 0; })));
+						new CustomRule(delegate(Parser p, out bool matched) { 
+							return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
+					delegate(Parser p) { 
+						p.escapeCharCount = 0; })));
 
 		public static Rule Function = new PrePost(
 			delegate(Parser parser) { parser.functions++; },
@@ -4147,7 +4082,6 @@ namespace Meta
 					new Sequence(
 						new AssignReference(
 							// why return from action
-							// use actions in loop always
 							new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result){
 								if (result == null)
 								{
@@ -4203,10 +4137,11 @@ namespace Meta
 				Lookup),
 			new Appending(
 				new ZeroOrMore(
-					new Sequence(
-						Syntax.select,
-						new AssignReference(
-							Lookup)))));
+					new Autokey(
+						new Sequence(
+							Syntax.select,
+							new AssignReference(
+								Lookup))))));
 
 		private static Rule Select = 
 			new Sequence(
@@ -4279,15 +4214,16 @@ namespace Meta
 								Statement),
 							new Appending(
 								new ZeroOrMore(
-									new Sequence(
-										new Alternatives(
-											new CustomRule(delegate(Parser pa,out bool matched) {
-													return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);}),
-											new CustomRule(delegate(Parser pa,out bool matched) {
-													pa.indentationCount--;
-													matched = false;
-													return null; })),
-										new AssignReference(Statement))))),
+									new Autokey(
+										new Sequence(
+											new Alternatives(
+												new CustomRule(delegate(Parser pa,out bool matched) {
+														return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);}),
+												new CustomRule(delegate(Parser pa,out bool matched) {
+														pa.indentationCount--;
+														matched = false;
+														return null; })),
+											new AssignReference(Statement)))))),
 						delegate(Parser p) { 
 							p.defaultKeys.Pop(); })));
 
