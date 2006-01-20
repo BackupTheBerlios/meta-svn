@@ -106,6 +106,7 @@
     <None Include="Data\repeat.meta" />
     <None Include="Data\range.meta" />
     <None Include="Data\remove.meta" />
+    <None Include="Data\values.meta" />
     <None Include="Data\while.meta" />
     <None Include="Data\foreach.meta" />
     <None Include="Data\apply.meta" />

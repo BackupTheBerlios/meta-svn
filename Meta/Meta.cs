@@ -3412,6 +3412,7 @@ namespace Meta
 
 	public class Parser
 	{
+		private bool negative = false;
 		private string Rest
 		{
 			get
@@ -3568,12 +3569,12 @@ namespace Meta
 			}
 		}
 		public delegate void PrePostDelegate(Parser parser);
-		public class PrePostRule : Rule
+		public class PrePost : Rule
 		{
 			private PrePostDelegate pre;
 			private PrePostDelegate post;
 			private Rule rule;
-			public PrePostRule(PrePostDelegate pre, Rule rule, PrePostDelegate post)
+			public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
 			{
 				this.pre = pre;
 				this.rule = rule;
@@ -3617,10 +3618,10 @@ namespace Meta
 				return parseFunction(parser,out matched);
 			}
 		}
-		public class Or : Rule
+		public class Alternatives : Rule
 		{
 			private Rule[] cases;
-			public Or(params Rule[] cases)
+			public Alternatives(params Rule[] cases)
 			{
 				this.cases = cases;
 			}
@@ -3737,17 +3738,18 @@ namespace Meta
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
-				Map result;
+				Map result=null;
 				bool oneMatched = false;
 				while (true)
 				{
-					result = rule.Match(parser, out matched);
-					if(!matched)
+					matched=action.Execute(parser, ref list);
+					//result = rule.Match(parser, out matched);
+					if (!matched)
 					{
 						break;
 					}
 					oneMatched = true;
-					list.Append(result);
+					//list.Append(result);
 				}
 				if (!oneMatched)
 				{
@@ -3760,36 +3762,95 @@ namespace Meta
 				}
 				return list;
 			}
-			private Rule rule;
-			public OneOrMore(Rule rule)
-			{
-				this.rule = rule;
-			}
-		}
-		// refactor, return value is unlogical
-		public class OneOrMoreAction : Rule
-		{
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map result = null;
-				bool stop = false;
-				while (true)
-				{
-					if (!action.Execute(parser, ref result))
-					{
-						break;
-					}
-				}
-				matched = result != null;
-				return result;
-			}
+			//protected override Map MatchImplementation(Parser parser, out bool matched)
+			//{
+			//    Map list = new StrategyMap(new ListStrategy());
+			//    Map result;
+			//    bool oneMatched = false;
+			//    while (true)
+			//    {
+			//        result = rule.Match(parser, out matched);
+			//        if (!matched)
+			//        {
+			//            break;
+			//        }
+			//        oneMatched = true;
+			//        list.Append(result);
+			//    }
+			//    if (!oneMatched)
+			//    {
+			//        matched = false;
+			//        list = null;
+			//    }
+			//    else
+			//    {
+			//        matched = true;
+			//    }
+			//    return list;
+			//}
 			private Action action;
-			public OneOrMoreAction(Action action)
+			public OneOrMore(Action action)
 			{
 				this.action = action;
 			}
 		}
-		// refactor
+		//public class OneOrMore : Rule
+		//{
+		//    protected override Map MatchImplementation(Parser parser, out bool matched)
+		//    {
+		//        Map list = new StrategyMap(new ListStrategy());
+		//        Map result;
+		//        bool oneMatched = false;
+		//        while (true)
+		//        {
+		//            result = rule.Match(parser, out matched);
+		//            if(!matched)
+		//            {
+		//                break;
+		//            }
+		//            oneMatched = true;
+		//            list.Append(result);
+		//        }
+		//        if (!oneMatched)
+		//        {
+		//            matched = false;
+		//            list = null;
+		//        }
+		//        else
+		//        {
+		//            matched = true;
+		//        }
+		//        return list;
+		//    }
+		//    private Rule rule;
+		//    public OneOrMore(Rule rule)
+		//    {
+		//        this.rule = rule;
+		//    }
+		//}
+
+		//public class OneOrMoreAction : Rule
+		//{
+		//    protected override Map MatchImplementation(Parser parser, out bool matched)
+		//    {
+		//        Map result = null;
+		//        bool stop = false;
+		//        while (true)
+		//        {
+		//            if (!action.Execute(parser, ref result))
+		//            {
+		//                break;
+		//            }
+		//        }
+		//        matched = result != null;
+		//        return result;
+		//    }
+		//    private Action action;
+		//    public OneOrMoreAction(Action action)
+		//    {
+		//        this.action = action;
+		//    }
+		//}
 		public class Optional : Rule
 		{
 			private Rule rule;
@@ -3844,13 +3905,11 @@ namespace Meta
 				Map map = rule.Match(parser, out matched);
 				if (matched)
 				{
-					ExecuteImplementation(parser, map, ref result);//, ref map);
+					ExecuteImplementation(parser, map, ref result);
 				}
 				return matched;
 			}
-			// refactor
-			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result);//, ref bool matched);
-			//protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched);
+			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result);
 		}
 		public class OptionalAssignment : Action
 		{
@@ -3867,31 +3926,23 @@ namespace Meta
 					result[key] = map;
 
 				}
-				//if (!map.Equals(Map.Empty))// unlogical
-				//{
-				//    result[key] = map;
-				//    matched = Map.Empty;
-				//}
-				//else
-				//{
-				//}
 			}
-			//protected override void ExecuteImplementation(Parser parser, Map map, ref Map result, ref Map matched)
-			//{
-			//    if (!map.Equals(Map.Empty))// unlogical
-			//    {
-			//        result[key] = map;
-			//        matched = Map.Empty;
-			//    }
-			//    else
-			//    {
-			//    }
-			//}
 		}
-		public class Assign : Action
+		public class Autokey : Action
+		{
+			public Autokey(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result.Append(map);
+			}
+		}
+		public class Assignment : Action
 		{
 			private Map key;
-			public Assign(Map key, Rule rule)
+			public Assignment(Map key, Rule rule)
 				: base(rule)
 			{
 				this.key = key;
@@ -3912,9 +3963,9 @@ namespace Meta
 			{
 			}
 		}
-		public class SingleAssignment : Action
+		public class AssignReference : Action
 		{
-			public SingleAssignment(Rule rule)
+			public AssignReference(Rule rule)
 				: base(rule)
 			{
 			}
@@ -3923,9 +3974,9 @@ namespace Meta
 				result = map;
 			}
 		}
-		public class Flatten : Action
+		public class Appending : Action
 		{
-			public Flatten(Rule rule)
+			public Appending(Rule rule)
 				: base(rule)
 			{
 			}
@@ -3937,10 +3988,10 @@ namespace Meta
 				}
 			}
 		}
-		public class CustomAction : Action
+		public class Do : Action
 		{
 			private CustomActionDelegate action;
-			public CustomAction(Rule rule, CustomActionDelegate action)
+			public Do(Rule rule, CustomActionDelegate action)
 				: base(rule)
 			{
 				this.action = action;
@@ -3954,9 +4005,9 @@ namespace Meta
 
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 
-		public static Rule GetExpression = new CustomRule(delegate(Parser parser,out bool matched)
+		public static Rule Expression = new CustomRule(delegate(Parser parser,out bool matched)
 		{
-			return new Or(EmptyMap, Number, String, Program, Call, Select).Match(parser,out matched);
+			return new Alternatives(EmptyMap, Number, String, Program, Call, Select).Match(parser,out matched);
 		});
 
 
@@ -3964,9 +4015,9 @@ namespace Meta
 		private int escapeCharCount = 0;
 
 		private static Rule String = new Sequence(
-			new Assign(
+			new Assignment(
 				CodeKeys.Literal,
-				new PrePostRule(
+				new PrePost(
 					delegate(Parser p) { },
 					new Sequence(
 							new ZeroOrMore(
@@ -3978,12 +4029,11 @@ namespace Meta
 												p.escapeCharCount++;
 												matched = true;
 												return null;
-												//return Map.Empty;
 											}))),
 							Syntax.@string,
-						new SingleAssignment(
+						new AssignReference(
 							new Sequence(
-								new SingleAssignment(
+								new AssignReference(
 									new FlattenRule(
 										new ZeroOrMore(
 											new CustomRule(
@@ -3992,7 +4042,6 @@ namespace Meta
 													Map result;
 													if (p.Look() == Syntax.@string)
 													{
-														int foundEscapeCharCount = 0;
 														Map escapeChars = new StringRule(Syntax.@string + "".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
 														if (escapeChars != null)
 														{
@@ -4001,12 +4050,12 @@ namespace Meta
 														}
 														else
 														{
-															result = new Sequence(new Assign(1, (new CharacterExcept()))).Match(p, out matched);
+															result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
 														}
 													}
 													else
 													{
-														result = new Sequence(new Assign(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
+														result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
 													}
 													return result;
 												})))))),
@@ -4014,231 +4063,251 @@ namespace Meta
 						new CustomRule(delegate(Parser p, out bool matched) { return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
 					delegate(Parser p) { p.escapeCharCount = 0; })));
 
-		public static Rule Function = new PrePostRule(
+		public static Rule Function = new PrePost(
 			delegate(Parser parser) { parser.functions++; },
 			new Sequence(
 				Syntax.function,
-				new Assign(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
-				new Assign(CodeKeys.Value,
-					new Sequence(new Assign(CodeKeys.Literal, GetExpression)))), delegate(Parser parser) { parser.functions--; });
+				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
+				new Assignment(CodeKeys.Value,
+					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
 
-		private static Rule EndOfLine = new Sequence(
-				new ZeroOrMore(new Or(Syntax.space,Syntax.tab)),
-				new Or(Syntax.unixNewLine,Syntax.windowsNewLine));
+		private static Rule EndOfLine = 
+			new Sequence(
+				new ZeroOrMore(
+					new Alternatives(
+						Syntax.space,
+						Syntax.tab)),
+				new Alternatives(
+					Syntax.unixNewLine,
+					Syntax.windowsNewLine));
 
-		private static Rule Indentation = new Or(
-				new CustomRule(delegate(Parser p,out bool matched)
+		private static Rule Indentation = 
+			new Alternatives(
+				new CustomRule(delegate(Parser p,out bool matched) {
+					if (p.isStartOfFile)
 					{
-						if (p.isStartOfFile)
-						{
-							p.isStartOfFile = false;
-							p.indentationCount++;
-							matched = true;
-							return null;
-							//return Map.Empty;
-						}
-						else
-						{
-							matched = false;
-							return null;
-						}
+						p.isStartOfFile = false;
+						p.indentationCount++;
+						matched = true;
+						return null;
 					}
-				),
+					else
+					{
+						matched = false;
+						return null;
+					}}),
 				new Sequence(
-						new Sequence(
-							EndOfLine,
-							new CustomRule(delegate(Parser p,out bool matched) { return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p,out matched); })),
-					new CustomRule(delegate(Parser p,out bool matched)
-						{
-							p.indentationCount++;
-							matched = true;
-							return null;
-							//return Map.Empty;
-						}))
+					new Sequence(
+						EndOfLine,
+						new CustomRule(delegate(Parser p,out bool matched) { 
+							return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p,out matched); })),
+					new CustomRule(delegate(Parser p,out bool matched){
+						p.indentationCount++;
+						matched = true;
+						return null;})));
 
-				);
-		private Rule Whitespace = new ZeroOrMore(new Or(Syntax.tab, Syntax.space));
-
+		private Rule Whitespace = 
+			new ZeroOrMore(
+				new Alternatives(
+					Syntax.tab,
+					Syntax.space));
 
 		private static Rule EmptyMap = new Sequence(
-			new Assign(CodeKeys.Literal, new Sequence(
-				Syntax.emptyMap,
-				new SingleAssignment(new Literal(Map.Empty)))));
+			new Assignment(
+				CodeKeys.Literal,
+				new Sequence(
+					Syntax.emptyMap,
+					new AssignReference(
+						new Literal(Map.Empty)))));
 
-		private static Rule LookupAnything = new Sequence(
+		private static Rule LookupAnything = 
+			new Sequence(
 				Syntax.lookupStart,
-				new SingleAssignment(GetExpression),
+				new AssignReference(Expression),
 				new ZeroOrMore(Syntax.indentation),
 				Syntax.lookupEnd);
 
 
-		private bool negative = false;
-		private static Rule Integer = new Sequence(
-				new CustomAction(
+		private static Rule Integer = 
+			new Sequence(
+				new Do(
 					new Optional(Syntax.negative),
-					delegate(Parser p, Map map, ref Map result)
-					{
-						// refactor, make match a separate bool
-						if (map!=null)
+					delegate(Parser p, Map map, ref Map result) {
+						if (map != null)
 						{
 							p.negative = true;
 						}
-						return null;
-					}
-					),
-				new SingleAssignment(new PrePostRule(delegate(Parser p) { },
-				new Sequence(
-					new SingleAssignment(
-					new OneOrMoreAction(new CustomAction(Syntax.integer, delegate(Parser p, Map map, ref Map result)
-				{
-					if (result == null)
-					{
-						result = new StrategyMap();
-					}
+						else
+						{
+							p.negative = false;
+						}
+						return null;}),
+				new AssignReference(
+					new Sequence(
+						new AssignReference(
+							// why return from action
+							// use actions in loop always
+							new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result){
+								if (result == null)
+								{
+									result = new StrategyMap();
+								}
+								result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+								return result;}))),
+							new Do(
+								new Nothing(),
+								delegate(Parser p, Map map, ref Map result){
+									if (result.GetNumber() > 0 && p.negative)
+									{
+										result = 0 - result.GetNumber();
+									}
+									return null;}))));
 
-					result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
-					return result;
-				}))),
-				new CustomAction(
-				new Nothing(),
-				delegate(Parser p, Map map, ref Map result)
-				{
-					if (result.GetNumber() > 0 && p.negative)
-					{
-						result = 0 - result.GetNumber();
-					}
-					return null;
-					//return Map.Empty;
-				})
-						), delegate(Parser p)
-					{
-						p.negative = false;
-					})));
-		private static Rule Number = new Sequence(new Assign(CodeKeys.Literal, new Sequence(new SingleAssignment(Integer),
-			new OptionalAssignment(NumberKeys.Denominator, new Optional(
-				new Sequence(
-					Syntax.fraction,
-					new SingleAssignment(Integer)))))));
 
-		private static Rule LookupString = new Sequence(new Assign(
-			CodeKeys.Literal,
-			new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden))));
+		private static Rule Number = 
+			new Sequence(
+				new Assignment(
+					CodeKeys.Literal,
+					new Sequence(
+						new AssignReference(
+							Integer),
+						new OptionalAssignment(
+							NumberKeys.Denominator,
+							new Optional(
+								new Sequence(
+									Syntax.fraction,
+									new AssignReference(
+										Integer)))))));
 
-		private static Rule Lookup = new Or(LookupString, LookupAnything);
+		private static Rule LookupString = 
+			new Sequence(
+				new Assignment(
+					CodeKeys.Literal,
+					new OneOrMore(
+						new Autokey(
+							new CharacterExcept(
+								Syntax.lookupStringForbidden)))));
+					//new OneOrMore(
+					//    new CharacterExcept(
+					//        Syntax.lookupStringForbidden))));
+
+		private static Rule Lookup = 
+			new Alternatives(
+				LookupString,
+				LookupAnything);
 
 		private static Rule Keys = new Sequence(
-			new Assign(
+			new Assignment(
 				1,
 				Lookup),
-			new Flatten(
+			new Appending(
 				new ZeroOrMore(
 					new Sequence(
 						Syntax.select,
-						new SingleAssignment(Lookup)))));
-		private static Rule Select = new Sequence(new Assign(CodeKeys.Select, Keys));
+						new AssignReference(
+							Lookup)))));
 
-
-		public static Rule Statement = new CustomRule(delegate(Parser parser,out bool match)
-		{
-			if (parser.Rest.StartsWith("\n") || parser.Rest.StartsWith("\r"))
-			{
-			}
-			return new Sequence(
-				new SingleAssignment(
-					new Or(Function,
-						new Or(
-							new Sequence(
-								new Assign(CodeKeys.Key, Keys),
-								Syntax.statement,
-								new Assign(CodeKeys.Value, GetExpression)),
-							new Sequence(
-								new Optional(Syntax.statement),
-								new Assign(CodeKeys.Value, GetExpression),
-								new Assign(CodeKeys.Key,
-									new CustomRule(delegate(Parser p, out bool matched)
-									{
-										Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
-										p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-										matched = true;
-										return map;
-									}
-									)))))),
-							new CustomRule(delegate(Parser p, out bool matched)
-							{
-								//counter++;
-								// i dont understand this
-								if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
-								{
-									p.index -= 1;
-									if (EndOfLine.Match(p, out matched) == null)
-									{
-										p.index -= 1;
-										if (EndOfLine.Match(p, out matched) == null)
-										{
-											p.index += 2;
-											throw new SyntaxException("Expected newline.", p);//new Extent(parser.Position, parser.Position, parser.file));
-										}
-										else
-										{
-											p.line--;
-										}
-									}
-									else
-									{
-										p.line--;
-									}
-								}
-								matched = true;
-								return null;
-								//return Map.Empty;
-							})).Match(parser,out match);
-		});
-
-		public static Rule Program = new Sequence(
-			Indentation,
-			new Assign(CodeKeys.Program, new PrePostRule(delegate(Parser p) { p.defaultKeys.Push(1); },
+		private static Rule Select = 
 			new Sequence(
-						new Assign(1, Statement),
-						new Flatten(new ZeroOrMore(new Sequence(
-							new Or(
-								new CustomRule(delegate(Parser pa,out bool matched)
-									{
-										return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);
-									}),
-								new CustomRule(delegate(Parser pa,out bool matched)
-									{
-										// refactor, this is wrong somehow
-										pa.indentationCount--;
-										matched = false;
-										return null;
-									})),
-							new SingleAssignment(Statement))))), delegate(Parser p) { p.defaultKeys.Pop(); })));
+				new Assignment(
+					CodeKeys.Select,
+					Keys));
 
+		public static Rule Statement = new Sequence(
+			new AssignReference(
+				new Alternatives(Function,
+					new Alternatives(
+						new Sequence(
+							new Assignment(
+								CodeKeys.Key,
+								Keys),
+							Syntax.statement,
+							new Assignment(
+								CodeKeys.Value,
+								Expression)),
+						new Sequence(
+							new Optional(
+								Syntax.statement),
+							new Assignment(
+								CodeKeys.Value,
+								Expression),
+							new Assignment(
+								CodeKeys.Key,
+								new CustomRule(delegate(Parser p, out bool matched){
+									Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+									p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+									matched = true;
+									return map;})))))),
+			new CustomRule(delegate(Parser p, out bool matched){
+				// i dont understand this
+				if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
+				{
+					p.index -= 1;
+					if (EndOfLine.Match(p, out matched) == null)
+					{
+						p.index -= 1;
+						if (EndOfLine.Match(p, out matched) == null)
+						{
+							p.index += 2;
+							throw new SyntaxException("Expected newline.", p);//new Extent(parser.Position, parser.Position, parser.file));
+						}
+						else
+						{
+							p.line--;
+						}
+					}
+					else
+					{
+						p.line--;
+					}
+				}
+				matched = true;
+				return null;}));
+
+		public static Rule Program = 
+			new Sequence(
+				Indentation,
+				new Assignment(
+					CodeKeys.Program,
+					new PrePost(
+						delegate(Parser p) {
+							p.defaultKeys.Push(1); },
+						new Sequence(
+							new Assignment(
+								1,
+								Statement),
+							new Appending(
+								new ZeroOrMore(
+									new Sequence(
+										new Alternatives(
+											new CustomRule(delegate(Parser pa,out bool matched) {
+													return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);}),
+											new CustomRule(delegate(Parser pa,out bool matched) {
+													pa.indentationCount--;
+													matched = false;
+													return null; })),
+										new AssignReference(Statement))))),
+						delegate(Parser p) { 
+							p.defaultKeys.Pop(); })));
 
 		public static Rule Call = new Sequence(
-				new Assign(
-					CodeKeys.Call,
-					new Sequence(
-						new Assign(CodeKeys.Callable, Select),
-						new Assign(CodeKeys.Argument, new Or(
+			new Assignment(
+				CodeKeys.Call,
+				new Sequence(
+					new Assignment(
+						CodeKeys.Callable,
+						Select),
+					new Assignment(
+						CodeKeys.Argument,
+						new Alternatives(
 							new Sequence(
 								Syntax.call, 
-								new SingleAssignment(GetExpression)),
-								Program
-						)),
-						new CustomRule(delegate(Parser p,out bool matched)
-			{
-				if (p.functions == 0)
-				{
-					matched = false;
-				}
-				else
-				{
-					matched = true;
-				}
-				return null;
-			}))));
+								new AssignReference(Expression)),
+							Program)),
+					new CustomRule(delegate(Parser p,out bool matched) {
+						matched = p.functions != 0;
+						return null; }))));
 	}
 	public class Serialize
 	{
