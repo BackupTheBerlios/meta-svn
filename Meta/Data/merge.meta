@@ -13,3 +13,4 @@ documentation="Combines several maps into one."
 						this=result
 				start=arg.previous
 	start=*
+|Meta.Library.Merge arg

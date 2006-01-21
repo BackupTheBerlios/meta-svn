@@ -173,9 +173,9 @@ namespace Meta
 	}
 	public class Throw
 	{
-		public static void KeyDoesNotExist(Map key,Extent extent)
+		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			throw new ExecutionException("The key "+Serialize.Value(key)+" does not exist.",extent);
+			throw new ExecutionException("The key "+Serialize.Value(key)+" does not exist in \n"+Serialize.Value(map),extent);
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
@@ -319,7 +319,7 @@ namespace Meta
 			for (int i = 1; i<keys.Count; i++)
 			{
 				Map key = keys[i].GetExpression().Evaluate(context);
-
+				Map oldSelected = selected;
 				if (key.Equals(SpecialKeys.Scope))
 				{
 					selected = selected.Scope;
@@ -358,7 +358,7 @@ namespace Meta
 				}
 				if (selected == null)
 				{
-					Throw.KeyDoesNotExist(key, keys[i].Extent);
+					Throw.KeyDoesNotExist(key,oldSelected, keys[i].Extent);
 				}
 			}
 			return selected;
@@ -381,6 +381,7 @@ namespace Meta
 			for (; i + 1 < keys.Count; )
 			{
 				key = keys[i].GetExpression().Evaluate(context);
+				Map oldSelection = selection;
 				if (key.Equals(SpecialKeys.Scope))
 				{
 					selection = selection.Scope;
@@ -392,7 +393,7 @@ namespace Meta
 
 				if (selection == null)
 				{
-					Throw.KeyDoesNotExist(key, keys[0].Extent);
+					Throw.KeyDoesNotExist(key,oldSelection, keys[0].Extent);
 				}
 				i++;
 			}
@@ -416,13 +417,27 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Merge(Map arg)
+		{
+			Map result=new StrategyMap();
+			foreach (Map map in arg.Array)
+			{
+				foreach (KeyValuePair<Map,Map> pair in map)
+				{
+					result[pair.Key] = pair.Value;
+				}
+			}
+			return result;
+		}
 		public static Map Sort(Map arg)
 		{
 			List<Map> array=arg["array"].Array;
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
 				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
-				return x!=0?-1:0;
+				// refactor
+				return x != 0 ? -1 : 0;
+				//return x != 0 ? -1 : 0;
 			}));
 			return new StrategyMap(array);
 			//arg.Array.Sort(new Comparison<Map>(delegate(Map a, Map b) 
@@ -914,7 +929,8 @@ namespace Meta
                 {
 					expression = null;
 					statement = null;
-                    Map val = value;//.Copy();
+					Map val = value;
+					//Map val = value;//.Copy();
 					if (val.scope == null)
 					{
 						val.scope = this;
@@ -1209,9 +1225,13 @@ namespace Meta
 			this.strategy = strategy;
 			this.strategy.map = this;
 		}
-		public StrategyMap():this(new DictionaryStrategy())
+		public StrategyMap()
+			: this(new EmptyStrategy())
 		{
 		}
+		//public StrategyMap():this(new DictionaryStrategy())
+		//{
+		//}
 		public StrategyMap(int i)
 			: this(new Number(i))
 		{
@@ -3605,6 +3625,7 @@ namespace Meta
 				return new Sequence(actions.ToArray()).Match(parser, out matched);
 			}
 		}
+		// refactor, remove
 		public class CustomRule : Rule
 		{
 			private ParseFunction parseFunction;
@@ -3615,6 +3636,24 @@ namespace Meta
 			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				return parseFunction(parser,out matched);
+			}
+		}
+		public delegate Rule RuleFunction();
+		public class DelayedRule: Rule
+		{
+			private RuleFunction ruleFunction;
+			private Rule rule;
+			public DelayedRule(RuleFunction ruleFunction)
+			{
+				this.ruleFunction = ruleFunction;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				if (rule == null)
+				{
+					rule = ruleFunction();
+				}
+				return rule.Match(parser, out matched);
 			}
 		}
 		public class Alternatives : Rule
@@ -3661,20 +3700,36 @@ namespace Meta
 				return result;
 			}
 		}
+		public class Not : Rule
+		{
+			private Rule rule;
+			public Not(Rule rule)
+			{
+				this.rule = rule;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				bool matched;
+				Map result=rule.Match(parser, out matched);
+				match = !matched;
+				return result;
+			}
+		}
 		public class Sequence : Rule
 		{
-			private Action[] rules;
+			private Action[] actions;
 			public Sequence(params Action[] rules)
 			{
-				this.rules = rules;
+				this.actions = rules;
 			}
 			protected override Map MatchImplementation(Parser parser, out bool match)
 			{
 				Map result = new StrategyMap();
 				bool success = true;
-				foreach (Action rule in rules)
+				foreach (Action action in actions)
 				{
-					bool matched = rule.Execute(parser, ref result);
+					// refactor
+					bool matched = action.Execute(parser, ref result);
 					if (!matched)
 					{
 						success = false;
@@ -3711,17 +3766,12 @@ namespace Meta
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
-				Map result;
-				// refactor result
 				while (true)
 				{
-					matched=action.Execute(parser, ref list);
-					//result = rule.Match(parser, out matched);
-					if (!matched)
+					if(!action.Execute(parser, ref list))
 					{
 						break;
 					}
-					//list.Append(result);
 				}
 				matched = true;
 				return list;
@@ -3732,53 +3782,46 @@ namespace Meta
 				this.action = action;
 			}
 		}
-		//public class ZeroOrMore : Rule
-		//{
-		//    protected override Map MatchImplementation(Parser parser, out bool matched)
-		//    {
-		//        Map list = new StrategyMap(new ListStrategy());
-		//        Map result;
-		//        while (true)
-		//        {
-		//            result = rule.Match(parser, out matched);
-		//            if (!matched)
-		//            {
-		//                break;
-		//            }
-		//            list.Append(result);
-		//        }
-		//        matched = true;
-		//        return list;
-		//    }
-		//    private Rule rule;
-		//    public ZeroOrMore(Rule rule)
-		//    {
-		//        this.rule = rule;
-		//    }
-		//}
+		public class N: Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map list = new StrategyMap(new ListStrategy());
+				int counter=0;
+				while (true)
+				{
+					if(!action.Execute(parser, ref list))
+					{
+						break;
+					}
+					else
+					{
+						counter++;
+					}
+				}
+				matched = counter == n;
+				return list;
+			}
+			private Action action;
+			private int n;
+			public N(int n,Action action)
+			{
+				this.n = n;
+				this.action = action;
+			}
+		}
 		public class OneOrMore : Rule
 		{
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
 				Map list = new StrategyMap(new ListStrategy());
-				Map result=null;
-				bool oneMatched = false;
+				matched = false;
 				while (true)
 				{
-					matched=action.Execute(parser, ref list);
-					if (!matched)
+					if(!action.Execute(parser, ref list))
 					{
 						break;
 					}
-					oneMatched = true;
-				}
-				if (!oneMatched)
-				{
-					matched = false;
-					list = null;
-				}
-				else
-				{
 					matched = true;
 				}
 				return list;
@@ -3943,8 +3986,8 @@ namespace Meta
 
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 
-		public static Rule Expression = new CustomRule(delegate(Parser parser,out bool matched) {
-			return new Alternatives(EmptyMap, Number, String, Program, Call, Select).Match(parser,out matched); });
+		public static Rule Expression = new DelayedRule(delegate(){
+			return new Alternatives(EmptyMap, Number, String, Program, Call, Select); });
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
@@ -3965,33 +4008,68 @@ namespace Meta
 										return null; }))),
 						Syntax.@string,
 						new AssignReference(
-							new Sequence(
-								new AssignReference(
-									// refactor
-									new FlattenRule(
-										new ZeroOrMore(
-											new Autokey(
-												new CustomRule(
-													delegate(Parser p, out bool matched) {
-														Map result;
-														if (p.Look() == Syntax.@string)
-														{
-															Map escapeChars = new StringRule(Syntax.@string + "".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
-															if (escapeChars != null)
-															{
-																matched = false;
-																result = null;
-															}
-															else
-															{
-																result = new Sequence(new Assignment(1, (new CharacterExcept()))).Match(p, out matched);
-															}
-														}
-														else
-														{
-															result = new Sequence(new Assignment(1, (new CharacterExcept(Syntax.@string)))).Match(p, out matched);
-														}
-														return result; }))))))),
+							new ZeroOrMore(
+								new Autokey(
+									new CustomRule(
+										delegate(Parser p, out bool matched)
+										{
+											// refactor
+											new Not(new Sequence(
+												Syntax.@string,
+												new N(
+													p.escapeCharCount,
+													Syntax.stringEscape))).Match(p, out matched);
+											Map result;
+											if (!matched)
+											{
+												matched = false;
+												result = null;
+											}
+											else
+											{
+												result = new CharacterExcept().Match(p, out matched);
+											}
+											return result;
+
+											//// refactor
+											//new Sequence(
+											//    Syntax.@string,
+											//    new N(
+											//        p.escapeCharCount,
+											//        Syntax.stringEscape)).Match(p, out matched);
+											//Map result;
+											//if (matched)
+											//{
+											//    matched = false;
+											//    result = null;
+											//}
+											//else
+											//{
+											//    result = new CharacterExcept().Match(p, out matched);
+											//}
+											//return result;
+										})))),
+									//new CustomRule(
+									//    delegate(Parser p, out bool matched)
+									//    {
+									//        // refactor
+									//        new Sequence(
+									//            Syntax.@string,
+									//            new N(
+									//                p.escapeCharCount,
+									//                Syntax.stringEscape)).Match(p, out matched);
+									//        Map result;
+									//        if (matched)
+									//        {
+									//            matched = false;
+									//            result = null;
+									//        }
+									//        else
+									//        {
+									//            result = new CharacterExcept().Match(p, out matched);
+									//        }
+									//        return result;
+									//    })))),
 						Syntax.@string,
 						new CustomRule(delegate(Parser p, out bool matched) { 
 							return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
@@ -4069,19 +4147,11 @@ namespace Meta
 				new Do(
 					new Optional(Syntax.negative),
 					delegate(Parser p, Map map, ref Map result) {
-						if (map != null)
-						{
-							p.negative = true;
-						}
-						else
-						{
-							p.negative = false;
-						}
-						return null;}),
+						p.negative = map != null;
+						return null; }),
 				new AssignReference(
 					new Sequence(
 						new AssignReference(
-							// why return from action
 							new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result){
 								if (result == null)
 								{
@@ -4122,9 +4192,6 @@ namespace Meta
 						new Autokey(
 							new CharacterExcept(
 								Syntax.lookupStringForbidden)))));
-					//new OneOrMore(
-					//    new CharacterExcept(
-					//        Syntax.lookupStringForbidden))));
 
 		private static Rule Lookup = 
 			new Alternatives(
@@ -4185,7 +4252,7 @@ namespace Meta
 						if (EndOfLine.Match(p, out matched) == null)
 						{
 							p.index += 2;
-							throw new SyntaxException("Expected newline.", p);//new Extent(parser.Position, parser.Position, parser.file));
+							throw new SyntaxException("Expected newline.", p);
 						}
 						else
 						{

@@ -95,9 +95,11 @@
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwiseOr.meta" />
     <None Include="Data\console.meta" />
+    <None Include="Data\features.meta" />
     <None Include="Data\features2.meta" />
     <None Include="Data\integerToString.meta" />
     <None Include="Data\organisation.meta" />
+    <None Include="Data\print.meta" />
     <None Include="Data\sort.meta" />
     <None Include="Data\pop.meta" />
     <None Include="Data\isInteger.meta" />

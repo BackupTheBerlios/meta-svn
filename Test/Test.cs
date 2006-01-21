@@ -141,80 +141,14 @@ namespace Test
 					        }
 					    }
 					}
-					// refactor
-					//else if (args[0] == "-i")
-					//{
-					//    Map context = new StrategyMap();
-					//    context.Scope = FileSystem.fileSystem;
-					//    //context.Parent = FileSystem.fileSystem;
-					//    while (true)
-					//    {
-					//        string code = "";
-					//        string line;
-					//        Console.Write(">>> ");
-					//        int lines = 0;
-					//        string tabs = "";
-					//        string input;
-					//        do
-					//        {
-					//            input = Console.ReadLine();
-					//            line = tabs + input;
-					//            code += line;
-					//            int count = 0;
-					//            code += FileSystem.Parser.unixNewLine;
-					//            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
-					//            if (input == "")
-					//            {
-					//                if (lines != 0)
-					//                {
-					//                    break;
-
-					//                }
-					//            }
-					//            else
-					//            {
-					//                char character = line[line.Length - 1];
-					//                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
-					//                {
-					//                    break;
-					//                }
-					//            }
-					//            lines++;
-
-					//            Console.Write("... " + tabs);
-					//        }
-					//        while (true);
-					//        try
-					//        {
-					//            code = code.Trim(' ', '\t', '\n', '\r');
-					//            FileSystem.Parser parser = new FileSystem.Parser(code, null);
-					//            parser.indentationCount = 0;
-					//            int count = FileSystem.fileSystem.ArrayCount;
-					//            int originalCount = count;
-					//            parser.isStartOfFile = false;
-					//            Map statement = parser.GetStatement(ref count);
-
-					//            statement.GetStatement().Assign(ref context);
-					//            if (count != originalCount)
-					//            {
-					//                Map value = context[originalCount];
-					//                if (Leaves(value) < 1000)
-					//                {
-					//                    Console.WriteLine(FileSystem.Serialize.Value(value));
-					//                }
-					//                else
-					//                {
-					//                    Console.WriteLine("Map is too big to display.");
-					//                }
-					//            }
-					//            Console.WriteLine();
-					//        }
-					//        catch (Exception e)
-					//        {
-					//            Console.WriteLine(e.ToString());
-					//        }
-					//    }
-					//}
+					else if(args[0]=="-profile")
+					{
+						//level = 1;
+						//Map argument = Map.Empty;
+						//argument[1] = "first arg";
+						//argument[2] = "second=arg";
+						object x = FileSystem.fileSystem["basicTest"];
+					}
 					else
 					{
 						Map function = FileSystem.ParseFile(args[0]);
@@ -270,7 +204,7 @@ namespace Test
 					}
 				}
 			}
-			catch (MetaException e)
+			catch (Exception e)
 			{
 				Console.WriteLine();
 				Console.WriteLine(e.ToString());
@@ -285,6 +219,7 @@ namespace Test
 				return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
+
 
 		public class Extents : Test
 		{
