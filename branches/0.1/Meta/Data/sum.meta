@@ -1,0 +1,22 @@
+|sumImplementation
+	index=1
+	array=arg.array
+	function=arg.function
+	result=arg.start
+sumImplementation=
+	|
+		stop=greater
+			arg.index
+			length arg.array
+		next=
+			=
+				|arg.result
+			[*]=
+				|sumImplementation
+					index=increment arg.index
+					result=arg.function
+						previous=arg.result
+						present=arg.array.[arg.index]
+					array=arg.array
+					function=arg.function
+		this=next.[stop] arg

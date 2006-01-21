@@ -1,0 +1,8 @@
+documentation="Adds numbers."
+|Meta.StrategyMap.[Meta.Number] sum
+	array=arg
+	function=
+		|Meta.Number.op_Addition
+			Meta.Number.[Meta.Number] arg.previous
+			Meta.Number.[Meta.Map] arg.present
+	start=Meta.Number.[Meta.Map] *
