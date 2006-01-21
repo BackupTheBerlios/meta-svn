@@ -3577,6 +3577,7 @@ namespace Meta
 				return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
 			}
 		}
+		// refactor, remove
 		public class CharacterExcept : CharacterRule
 		{
 			public CharacterExcept(params char[] characters)
@@ -3944,9 +3945,9 @@ namespace Meta
 			{
 			}
 		}
-		public class AssignReference : Action
+		public class ReferenceAssignment : Action
 		{
-			public AssignReference(Rule rule)
+			public ReferenceAssignment(Rule rule)
 				: base(rule)
 			{
 			}
@@ -4007,29 +4008,60 @@ namespace Meta
 										matched = true;
 										return null; }))),
 						Syntax.@string,
-						new AssignReference(
+						new ReferenceAssignment(
 							new ZeroOrMore(
 								new Autokey(
 									new CustomRule(
 										delegate(Parser p, out bool matched)
 										{
-											// refactor
-											new Not(new Sequence(
-												Syntax.@string,
-												new N(
-													p.escapeCharCount,
-													Syntax.stringEscape))).Match(p, out matched);
-											Map result;
-											if (!matched)
-											{
-												matched = false;
-												result = null;
-											}
-											else
-											{
-												result = new CharacterExcept().Match(p, out matched);
-											}
+											Map result = new Sequence(
+												new Not(
+													new Sequence(
+														Syntax.@string,
+														new N(
+															p.escapeCharCount,
+															Syntax.stringEscape))),
+												new ReferenceAssignment(new CharacterExcept())).Match(p, out matched);
 											return result;
+
+
+
+											// refactor
+											//new Not(new Sequence(
+											//    Syntax.@string,
+											//    new N(
+											//        p.escapeCharCount,
+											//        Syntax.stringEscape))).Match(p, out matched);
+											//Map result;
+											//if (!matched)
+											//{
+											//    matched = false;
+											//    result = null;
+											//}
+											//else
+											//{
+											//    result = new CharacterExcept().Match(p, out matched);
+											//}
+											//return result;
+
+
+											//// refactor
+											//new Not(new Sequence(
+											//    Syntax.@string,
+											//    new N(
+											//        p.escapeCharCount,
+											//        Syntax.stringEscape))).Match(p, out matched);
+											//Map result;
+											//if (!matched)
+											//{
+											//    matched = false;
+											//    result = null;
+											//}
+											//else
+											//{
+											//    result = new CharacterExcept().Match(p, out matched);
+											//}
+											//return result;
 
 											//// refactor
 											//new Sequence(
@@ -4131,13 +4163,13 @@ namespace Meta
 				CodeKeys.Literal,
 				new Sequence(
 					Syntax.emptyMap,
-					new AssignReference(
+					new ReferenceAssignment(
 						new Literal(Map.Empty)))));
 
 		private static Rule LookupAnything = 
 			new Sequence(
 				Syntax.lookupStart,
-				new AssignReference(Expression),
+				new ReferenceAssignment(Expression),
 				new ZeroOrMore(Syntax.indentation),
 				Syntax.lookupEnd);
 
@@ -4149,9 +4181,9 @@ namespace Meta
 					delegate(Parser p, Map map, ref Map result) {
 						p.negative = map != null;
 						return null; }),
-				new AssignReference(
+				new ReferenceAssignment(
 					new Sequence(
-						new AssignReference(
+						new ReferenceAssignment(
 							new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result){
 								if (result == null)
 								{
@@ -4174,14 +4206,14 @@ namespace Meta
 				new Assignment(
 					CodeKeys.Literal,
 					new Sequence(
-						new AssignReference(
+						new ReferenceAssignment(
 							Integer),
 						new OptionalAssignment(
 							NumberKeys.Denominator,
 							new Optional(
 								new Sequence(
 									Syntax.fraction,
-									new AssignReference(
+									new ReferenceAssignment(
 										Integer)))))));
 
 		private static Rule LookupString = 
@@ -4207,7 +4239,7 @@ namespace Meta
 					new Autokey(
 						new Sequence(
 							Syntax.select,
-							new AssignReference(
+							new ReferenceAssignment(
 								Lookup))))));
 
 		private static Rule Select = 
@@ -4217,7 +4249,7 @@ namespace Meta
 					Keys));
 
 		public static Rule Statement = new Sequence(
-			new AssignReference(
+			new ReferenceAssignment(
 				new Alternatives(Function,
 					new Alternatives(
 						new Sequence(
@@ -4290,7 +4322,7 @@ namespace Meta
 														pa.indentationCount--;
 														matched = false;
 														return null; })),
-											new AssignReference(Statement)))))),
+											new ReferenceAssignment(Statement)))))),
 						delegate(Parser p) { 
 							p.defaultKeys.Pop(); })));
 
@@ -4306,7 +4338,7 @@ namespace Meta
 						new Alternatives(
 							new Sequence(
 								Syntax.call, 
-								new AssignReference(Expression)),
+								new ReferenceAssignment(Expression)),
 							Program)),
 					new CustomRule(delegate(Parser p,out bool matched) {
 						matched = p.functions != 0;
