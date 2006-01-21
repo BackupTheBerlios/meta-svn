@@ -1,0 +1,48 @@
+|
+	default=
+		|
+			defaultArgument=arg.argument
+			func=arg.function
+			|func merge
+				defaultArgument
+				arg
+	todoness=default
+		function=
+			|if
+				condition=equal
+					length arg.dependencies
+					0
+				then=
+					|divide
+						arg.arg.[3]
+						arg.arg.[2]
+				else=
+					|subtract
+						todoness features.[arg.arg.dependencies.[1]]
+						1/100000
+		argument=
+			dependencies=*
+			*
+			1
+			0
+	apply
+		array=sort
+			array=apply
+				array=values features
+				function=
+					|merge
+						arg
+						=
+							todo=todoness arg
+			compare=
+				|greater
+					arg.a.todo
+					arg.b.todo
+		function=
+			|console.writeLine join
+				integerToString arg.[2]
+				" "
+				integerToString todoness arg
+				" "
+				arg.[1]
+	console.readLine *

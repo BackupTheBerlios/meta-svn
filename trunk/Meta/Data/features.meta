@@ -1,0 +1,265 @@
+[1]=
+	"leere Zeile ist disambiguation für folgende Map"
+	2
+	-1
+[2]=
+	"files can be saved to"
+	3
+	*
+[3]=
+	"Normale Dateien sind integriert"
+	4
+	*
+[4]=
+	"Tutorial für Meta"
+	10
+	5/2
+[5]=
+	"Tutorial für .NET Integration"
+	8
+	3
+	dependencies=
+		4		
+[6]=
+	"string lookups als normale lookups komplett verboten"
+	1
+	*
+[7]=
+	"space ist vor Programm als Argument verboten"
+	1
+	*
+[8]=
+	"nur das minimum an String-Escaping ist zulässig"
+	1
+	*
+[9]=
+	"gleichheitszeichen ohne schlüssel nur erlauben wenn es notwendig ist"
+	2
+	*
+[10]=
+	"explizite zahlen verbieten solange sie in der normalen reihenfolge sind"
+	2
+	*
+[11]=
+	"multiline-string müssen in nächster zeile beginnen"
+	4
+	1
+[12]=
+	"copying works correctly"
+	6
+	2
+	dependencies=
+		66
+[13]=
+	"es gibt einen root-key in einer root-map"
+	6
+	*
+[14]=
+	"Meta ist threadsicher"
+	100
+	*
+[15]=
+	"Meta unterstützt Threads richtig"
+	5
+	0
+[16]=
+	"Meta unterstützt unterschiedliche Prozesse richtig"
+	49
+	*
+[17]=
+	"There is an installer for Meta"
+	2
+	1/4
+	dependencies=
+		67
+[18]=
+	"meta.org or meta.com"
+	51
+	*
+[19]=
+	"Webseite ist entwickelt und designed"
+	5
+	2
+	dependencies=
+		4
+[20]=
+	"Delegates können von Events entfernt werden"
+	15
+	*
+[21]=
+	"es gibt eine funktion die merged, aber keine schlüssel überschreibt"
+	7
+	*
+[22]=
+	"Fehlermeldungen von normalen Exceptions sind übersichtlicher"
+	17
+	4
+[23]=
+	"console.writeLine funktioniert auf Webseite"
+	23
+	3
+[24]=
+	"Meta funktioniert auf Mono"
+	29
+	2
+[25]=
+	"es gibt Berechtigungen"
+	300
+	*
+[26]=
+	"Online Zugriff auf Daten via http"
+	17
+	4
+[27]=
+	"Online Aufruf von Funktionen"
+	375
+	*
+[28]=
+	"überschriebene Funktionen werden nicht wie überladene Funktionen gehandhabt"
+	11
+	2
+[29]=
+	"empty lines are disallowed completely"
+	5
+	2
+	dependencies=
+		64
+[30]=
+	"The library is implemented in Meta."
+	10
+	*
+[31]=
+	"Exceptions give hints on how to resolve them."
+	3
+	0
+[33]=
+	"Overriden .NET methods can be called."
+	8
+	0
+[34]=
+	"There is a MonoDevelop plugin for Meta that runs on Windows."
+	2000
+	5
+[35]=
+	"Meta assembly has a strong name."
+	1
+	0
+[36]=
+	"All libraries are downloaded from the Internet"
+	50
+	2
+[37]=
+	"Libraries are versioned."
+	4
+	0
+[38]=
+	"The whole file system is integrated."
+	9
+	0
+	2
+[39]=
+	"Maps trow an exception if a key does not exist and provide a TryGetValue method"
+	2
+	0
+[40]=
+	"Ich habe hosting bei einem ASP.NET hoster."
+	2
+	0
+[41]=
+	"Indentation is handled correctly in multiline strings"
+	3
+	1
+	dependencies=
+		64
+[42]=
+	"Features can have dependencies which are considered when computing their importance."
+	4
+	0
+[43]=
+	"Parser accepts whitespace at end of file."
+	1
+	0
+[44]=
+	'"Interactive mode doesnt crap out with a syntax error on "form=forms.Form *""'
+	4
+	1
+[45]=
+	"Negative numbers are implemented correctly. Non-integer strategy maps can be negative, too."
+	2
+	0
+[46]=
+	"Interactive mode works correctly."
+	2
+	0
+[47]=
+	"GetString throws an exception if the map is not a string."
+	1
+	0
+[49]=
+	"library functions are documented well"
+	1
+	1/5
+[50]=
+	"IsInteger checks whether the number is an integer and GetInt32 throws an exception otherwise."
+	1
+	1/5
+[52]=
+	"file system can be written to"
+	4
+	1/2
+	"I dont know whether it makes sense to do this before we have priviliges, it is somewhat dangerous"
+[53]=
+	"There is a stable branch"
+	2
+	1/2
+[54]=
+	"Features have default values"
+	2
+	0
+[55]=
+	"Online program executes programs not statements"
+	1
+	0
+[56]=
+	"There is a pseudo-GAC for simple deployment and extension of Meta."
+	1
+	0
+[57]=
+	"There are the function 'strictlyIncreasing' and 'increasing' instead of greater, and smaller, or something like that"
+	1
+	0
+[58]=
+	'"There is a function "minimum" and a function "maximimum""'
+	1
+	0
+	"Should be fun"
+[61]=
+	"Organisation is faster"
+	1
+	0
+[62]=
+	"Parser is faster"
+	2
+	0
+[63]=
+	"There is a profiler"
+	8
+	1
+[64]=
+	"Parser is refactored completely"
+	5
+	1
+[65]=
+	"Tasks do not have to be deleted but can be set to 'completed'"
+	1
+	1/4
+[66]=
+	"I know how to implement the scope of a map"
+	3
+	1
+[67]=
+	"Release 0.1"
+	160
+	1
+[68]=
+	"Selects are forbidden in first level, just like calls are"
