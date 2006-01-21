@@ -674,7 +674,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFromFunctionData"
 	Value (StrategyMap):
-		"right"
+		"wrong"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFunctionFunction"
@@ -683,7 +683,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"scopeFromFunctionData"
 			Value (StrategyMap):
-				"wrong"
+				"right"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"function"

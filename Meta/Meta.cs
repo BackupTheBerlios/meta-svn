@@ -255,7 +255,7 @@ namespace Meta
 			{
 				result = Map.Empty;
 			}
-			result.Scope = null;
+			//result.Scope = null;
 			return result;
 		}
 	}
@@ -965,44 +965,6 @@ namespace Meta
 		public Map Copy()
 		{
 			Map clone = CopyData();
-			/*
-			 * Das Problem ist der Scope
-			 * Der Scope kann so einfach nicht gelöst werden
-			 * er muss vollkommen unabhängig von allen referenzen funktionieren
-			 * das ist eigentlich ziemlich schwierig
-			 * eigentlich habe ich die kopierungsfunktion auch noch nie benötig
-			 * allerdings wäre ich schon einigermaßen erleichtert wenn dieses Problem gelöst wäre
-			 * allerdings wird das ganze dadurch auch ziemlich ineffizient
-			 * das ist ein bisschen ein problem
-			 * ich weiß nicht wie man das anders lösen kann
-			 * ich habe eigentlich absolut keine ahnung wie man das anders lösen kann
-			 * es ist wichtig von einem theoretischen standpunkt aus betrachtet
-			 * eigentlich geht es einfach nicht anders
-			 * es wäre gut wenn dieses problem in diesem release noch gelöst werden könnte
-			 * ich weiß einfach nicht wie ich das gebacken bekommen soll
-			 * es gibt immer und immer wieder probleme damit
-			 * ich weiß einfach nicht mehr wie ich das machen soll
-			 * das ist ein bisschen ein komplizierteres Problem
-			 * ich denke ich sollte es eskalieren und damit ein bisschen zeit gewinnen
-			 * es ist ein problem und ich muss es unbedingt lösen
-			 * ich denke grundsätzlich ist ein wirklicher scope durchaus akzeptabel
-			 * allerdings ist es noch nicht einmal unbedingt möglich überhaupt
-			 * von daher macht es auch eigentlich nicht sonderlich viel sinn denke
-			 * ich das muss ich alles nochmal genau durchdenken
-			 * ehrlich gesagt habe ich überhaupt keine ahnung wie man das handhaben soll
-			 * alles in allem muss ich einfach nochmal darüber nachdenken
-			 * der scope wird irgendwie zerstört
-			 * das ist überhaupt keine frage
-			 * die frage ist wie man die definition des scopes verändern soll und so weiter
-			 * vielleicht muss es ein eigenes objekt sein
-			 * wenn dann eine map zerstört wird dann brauchen wir einen scope der sich irgendwie anders berechnet
-			 * zum beispiel sollte er sich dann mit einem anderen key berechnen und ein level weiter oben angesiedelt
-			 * sein
-			 * alles in allem ist das also ein bisschen idiotisch
-			 * allerdings macht mir einfach auch die performance ein bisschen zu schaffen
-			 * allerdings, wenn wir das clonen verwenden sollte es eigentlich kein allzu großes problem mehr sein
-			 * nur die 
-			 */
 			clone.Scope = Scope;
 			clone.Extent = Extent;
 			return clone;

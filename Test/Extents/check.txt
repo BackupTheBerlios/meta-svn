@@ -10748,7 +10748,7 @@ Entry (KeyValuePair`2)
 													"109"
 												Column (Int32):
 													"31"
-										"right"
+										"wrong"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -10955,7 +10955,7 @@ Entry (KeyValuePair`2)
 																			"111"
 																		Column (Int32):
 																			"32"
-																"wrong"
+																"right"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
