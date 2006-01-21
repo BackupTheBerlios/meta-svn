@@ -65,6 +65,11 @@ Entry (KeyValuePair`2)
 				-9
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"subtractTest"
+			Value (StrategyMap):
+				6/25
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"multiplyInteger"
 			Value (StrategyMap):
 				19437

@@ -143,10 +143,7 @@ namespace Test
 					}
 					else if(args[0]=="-profile")
 					{
-						//level = 1;
-						//Map argument = Map.Empty;
-						//argument[1] = "first arg";
-						//argument[2] = "second=arg";
+						Console.WriteLine("profiling");
 						object x = FileSystem.fileSystem["basicTest"];
 					}
 					else

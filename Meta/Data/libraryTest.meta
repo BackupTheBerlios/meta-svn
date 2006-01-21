@@ -32,6 +32,9 @@
 			negativeAdd=add
 				-100
 				91
+			subtractTest=subtract
+				1/4
+				1/100
 			multiplyInteger=multiply
 				19
 				1023

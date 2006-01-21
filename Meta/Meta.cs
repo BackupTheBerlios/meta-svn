@@ -417,6 +417,19 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Minimum(Map arg)
+		{
+			Number minumum = arg[1].GetNumber();
+			foreach (Map map in arg.Array)
+			{
+				Number number = map.GetNumber();
+				if (number < minumum)
+				{
+					minumum = number;
+				}
+			}
+			return new StrategyMap(minumum);
+		}
 		public static Map Merge(Map arg)
 		{
 			Map result=new StrategyMap();
@@ -1229,7 +1242,8 @@ namespace Meta
 			: this(new EmptyStrategy())
 		{
 		}
-		//public StrategyMap():this(new DictionaryStrategy())
+		//public StrategyMap()
+		//    : this(new DictionaryStrategy())
 		//{
 		//}
 		public StrategyMap(int i)
@@ -3459,14 +3473,24 @@ namespace Meta
 				return line;
 			}
 		}
+		private int column = 1;
 		public int Column
 		{
 			get
 			{
-				int startPos = Math.Min(index, text.Length - 1);
-				return index - text.LastIndexOf('\n', startPos);
+				return column;
+				//int startPos = Math.Min(index, text.Length - 1);
+				//return index - text.LastIndexOf('\n', startPos);
 			}
 		}
+		//public int Column
+		//{
+		//    get
+		//    {
+		//        int startPos = Math.Min(index, text.Length - 1);
+		//        return index - text.LastIndexOf('\n', startPos);
+		//    }
+		//}
 		private char Look()
 		{
 			return Look(0);
@@ -3511,14 +3535,17 @@ namespace Meta
 			public Map Match(Parser parser, out bool matched)
 			{
 				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
+				// use an extent here, some sort of, maybe clone things instead of creating them all the time
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
+				int oldColumn = parser.column;
 				Map result = MatchImplementation(parser, out matched);
 
 				if (!matched)
 				{
 					parser.index = oldIndex;
 					parser.line = oldLine;
+					parser.column = oldColumn;
 				}
 				else
 				{
@@ -3550,9 +3577,11 @@ namespace Meta
 					result = character;
 					matched = true;
 					parser.index++;
+					parser.column++;
 					if (character == Syntax.unixNewLine)
 					{
 						parser.line++;
+						parser.column = 1;
 					}
 				}
 				else
@@ -3992,6 +4021,10 @@ namespace Meta
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
+		private int GetEscapeCharCount()
+		{
+			return escapeCharCount;
+		}
 
 		private static Rule String = new Sequence(
 			new Assignment(
@@ -4011,97 +4044,16 @@ namespace Meta
 						new ReferenceAssignment(
 							new ZeroOrMore(
 								new Autokey(
-									new CustomRule(
-										delegate(Parser p, out bool matched)
-										{
-											Map result = new Sequence(
-												new Not(
-													new Sequence(
-														Syntax.@string,
-														new N(
-															p.escapeCharCount,
-															Syntax.stringEscape))),
-												new ReferenceAssignment(new CharacterExcept())).Match(p, out matched);
-											return result;
-
-
-
-											// refactor
-											//new Not(new Sequence(
-											//    Syntax.@string,
-											//    new N(
-											//        p.escapeCharCount,
-											//        Syntax.stringEscape))).Match(p, out matched);
-											//Map result;
-											//if (!matched)
-											//{
-											//    matched = false;
-											//    result = null;
-											//}
-											//else
-											//{
-											//    result = new CharacterExcept().Match(p, out matched);
-											//}
-											//return result;
-
-
-											//// refactor
-											//new Not(new Sequence(
-											//    Syntax.@string,
-											//    new N(
-											//        p.escapeCharCount,
-											//        Syntax.stringEscape))).Match(p, out matched);
-											//Map result;
-											//if (!matched)
-											//{
-											//    matched = false;
-											//    result = null;
-											//}
-											//else
-											//{
-											//    result = new CharacterExcept().Match(p, out matched);
-											//}
-											//return result;
-
-											//// refactor
-											//new Sequence(
-											//    Syntax.@string,
-											//    new N(
-											//        p.escapeCharCount,
-											//        Syntax.stringEscape)).Match(p, out matched);
-											//Map result;
-											//if (matched)
-											//{
-											//    matched = false;
-											//    result = null;
-											//}
-											//else
-											//{
-											//    result = new CharacterExcept().Match(p, out matched);
-											//}
-											//return result;
-										})))),
-									//new CustomRule(
-									//    delegate(Parser p, out bool matched)
-									//    {
-									//        // refactor
-									//        new Sequence(
-									//            Syntax.@string,
-									//            new N(
-									//                p.escapeCharCount,
-									//                Syntax.stringEscape)).Match(p, out matched);
-									//        Map result;
-									//        if (matched)
-									//        {
-									//            matched = false;
-									//            result = null;
-									//        }
-									//        else
-									//        {
-									//            result = new CharacterExcept().Match(p, out matched);
-									//        }
-									//        return result;
-									//    })))),
+									new Sequence(
+										new Not(
+											new Sequence(
+												Syntax.@string,
+												new CustomRule(delegate(Parser p,out bool matched) {
+													return new N(
+														// use reflection to get at this? or do assignments in constructor, should be a property or a function that can be called, incremented or whatever
+														p.escapeCharCount,
+														Syntax.stringEscape).Match(p,out matched);}))),
+										new ReferenceAssignment(new CharacterExcept()))))),
 						Syntax.@string,
 						new CustomRule(delegate(Parser p, out bool matched) { 
 							return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
@@ -4995,34 +4947,15 @@ namespace Meta
 
 		public static Number operator -(Number a, Number b)
 		{
+			if (a.Denominator != 1.0)
+			{
+			}
 			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a,b));
 		}
-		//public static Number operator -(Number a, Number b)
-		//{
-		//    //double lcd = LeastCommonMultiple(a.denominator, b.denominator);
-		//    return new Number(a.numerator * (a.denominator/lcd) - b.numerator * (b.denominator/lcd), lcd);
-		//}
-		//public static Number operator -(Number a, Number b)
-		//{
-		//    double gcd = LowestCommonMultiple(a.denominator, b.denominator);
-		//    Number number = new Number(
-		//        a.numerator * gcd + b.numerator * gcd,
-		//        a.denominator * gcd + b.denominator * gcd);
-		//    return new Number(a.integer - b.integer);
-		//}
-
-		//public static Number operator -(Number a, Number b)
-		//{
-		//    return new Number(a.integer - b.integer);
-		//}
 		public static Number operator *(Number a, Number b)
 		{
 			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);
 		}
-		//public static Number operator *(Number a, Number b)
-		//{
-		//    return new Number(a.integer * b.integer);
-		//}
 		public double Expand(Number b)
 		{
 			return numerator * (LeastCommonMultiple(this, b) / denominator);
@@ -5031,14 +4964,9 @@ namespace Meta
 		{
 			return a.Expand(b) > b.Expand(a);
 		}
-		//public static bool operator >(Number a, Number b)
-		//{
-		//    return a.integer > b.integer;
-		//}
 		public static bool operator <(Number a, Number b)
 		{
 			return a.Expand(b) < b.Expand(a);
-			//return a.integer < b.integer;
 		}
 		public static bool operator >=(Number a, Number b)
 		{

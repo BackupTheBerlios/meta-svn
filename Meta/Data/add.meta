@@ -1,4 +1,4 @@
-documentation="Adds integers."
+documentation="Adds numbers."
 |Meta.StrategyMap.[Meta.Number] sum
 	array=arg
 	function=
