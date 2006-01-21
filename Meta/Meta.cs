@@ -103,13 +103,13 @@ namespace Meta
 		public ExecutionException(string message, Extent extent):base(message,extent)
 		{
 		}
-		public override string Message
-		{
-			get
-			{
-				return "Exception: "+base.Message;
-			}
-		}
+		//public override string Message
+		//{
+		//    get
+		//    {
+		//        return base.Message;
+		//    }
+		//}
 	}
 	public abstract class MetaException:ApplicationException
 	{
@@ -173,9 +173,31 @@ namespace Meta
 	}
 	public class Throw
 	{
+		public static int Leaves(Map map)
+		{
+			int count = 0;
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				if (pair.Value.IsNumber)
+				{
+					count++;
+				}
+				else
+				{
+					count += Leaves(pair.Value);
+				}
+			}
+			return count;
+
+		}
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			throw new ExecutionException("The key "+Serialize.Value(key)+" does not exist in \n"+Serialize.Value(map),extent);
+			string text = "The key " + Serialize.Value(key) + " does not exist";
+			if (Leaves(map) < 1000)
+			{
+				text+=" in \n"+Serialize.Value(map);
+			}
+			throw new ExecutionException(text,extent);
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
@@ -911,31 +933,7 @@ namespace Meta
 			get
 			{
 				return Get(key);
-				//Map result;
-				//if (value != null)
-				//{
-				//    result = value;
-				//}
-				//else
-				//{
-				//    result = null;
-				//}
-				//return result;
 			}
-			//get
-			//{
-			//    Map value=Get(key);
-			//    Map result;
-			//    if (value != null)
-			//    {
-			//        result = value;
-			//    }
-			//    else
-			//    {
-			//        result = null;
-			//    }
-			//    return result;
-			//}
             set
             {
                 if (value != null)
@@ -943,7 +941,7 @@ namespace Meta
 					expression = null;
 					statement = null;
 					Map val = value;
-					//Map val = value;//.Copy();
+					//Map val = value.Copy();//.Copy();
 					if (val.scope == null)
 					{
 						val.scope = this;
@@ -967,6 +965,44 @@ namespace Meta
 		public Map Copy()
 		{
 			Map clone = CopyData();
+			/*
+			 * Das Problem ist der Scope
+			 * Der Scope kann so einfach nicht gelöst werden
+			 * er muss vollkommen unabhängig von allen referenzen funktionieren
+			 * das ist eigentlich ziemlich schwierig
+			 * eigentlich habe ich die kopierungsfunktion auch noch nie benötig
+			 * allerdings wäre ich schon einigermaßen erleichtert wenn dieses Problem gelöst wäre
+			 * allerdings wird das ganze dadurch auch ziemlich ineffizient
+			 * das ist ein bisschen ein problem
+			 * ich weiß nicht wie man das anders lösen kann
+			 * ich habe eigentlich absolut keine ahnung wie man das anders lösen kann
+			 * es ist wichtig von einem theoretischen standpunkt aus betrachtet
+			 * eigentlich geht es einfach nicht anders
+			 * es wäre gut wenn dieses problem in diesem release noch gelöst werden könnte
+			 * ich weiß einfach nicht wie ich das gebacken bekommen soll
+			 * es gibt immer und immer wieder probleme damit
+			 * ich weiß einfach nicht mehr wie ich das machen soll
+			 * das ist ein bisschen ein komplizierteres Problem
+			 * ich denke ich sollte es eskalieren und damit ein bisschen zeit gewinnen
+			 * es ist ein problem und ich muss es unbedingt lösen
+			 * ich denke grundsätzlich ist ein wirklicher scope durchaus akzeptabel
+			 * allerdings ist es noch nicht einmal unbedingt möglich überhaupt
+			 * von daher macht es auch eigentlich nicht sonderlich viel sinn denke
+			 * ich das muss ich alles nochmal genau durchdenken
+			 * ehrlich gesagt habe ich überhaupt keine ahnung wie man das handhaben soll
+			 * alles in allem muss ich einfach nochmal darüber nachdenken
+			 * der scope wird irgendwie zerstört
+			 * das ist überhaupt keine frage
+			 * die frage ist wie man die definition des scopes verändern soll und so weiter
+			 * vielleicht muss es ein eigenes objekt sein
+			 * wenn dann eine map zerstört wird dann brauchen wir einen scope der sich irgendwie anders berechnet
+			 * zum beispiel sollte er sich dann mit einem anderen key berechnen und ein level weiter oben angesiedelt
+			 * sein
+			 * alles in allem ist das also ein bisschen idiotisch
+			 * allerdings macht mir einfach auch die performance ein bisschen zu schaffen
+			 * allerdings, wenn wir das clonen verwenden sollte es eigentlich kein allzu großes problem mehr sein
+			 * nur die 
+			 */
 			clone.Scope = Scope;
 			clone.Extent = Extent;
 			return clone;

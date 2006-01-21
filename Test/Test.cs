@@ -37,7 +37,7 @@ namespace Test
 {
 	public class MetaTest:TestRunner
 	{
-		private static int Leaves(Map map)
+		public static int Leaves(Map map)
 		{
 			int count=0;
 			foreach(KeyValuePair<Map,Map> pair in map)
