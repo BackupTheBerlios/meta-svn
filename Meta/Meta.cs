@@ -1242,10 +1242,6 @@ namespace Meta
 			: this(new EmptyStrategy())
 		{
 		}
-		//public StrategyMap()
-		//    : this(new DictionaryStrategy())
-		//{
-		//}
 		public StrategyMap(int i)
 			: this(new Number(i))
 		{
@@ -1704,8 +1700,8 @@ namespace Meta
 					throw e.InnerException;
 				}
 			}
-			return Transform.ToSimpleMeta(result);
-			//return Transform.ToMeta(result);
+			//return Transform.ToSimpleMeta(result);
+			return Transform.ToMeta(result);
 		}
 	}
 	public class Method : MethodImplementation
@@ -2874,10 +2870,6 @@ namespace Meta
 		}
 		protected override void Set(Map key,Map val)
 		{
-			if(this.property.Name=="Item")
-			{
-				int asdf=0;
-			}	
 			throw new ApplicationException("Cannot assign in property "+property.Name+".");
 		}
 	}
@@ -2890,11 +2882,6 @@ namespace Meta
 				return false;
 			}
 		}
-		// pretty incorrect, i think, remove this if possible
-		//public override string GetString()
-		//{
-		//    return obj != null ? "object: "+obj.ToString() : "type: "+type.ToString();
-		//}
 		public override bool IsNumber
 		{
 			get
@@ -2966,8 +2953,8 @@ namespace Meta
 					}
 					else if (members[0] is FieldInfo)
 					{
-						val = Transform.ToSimpleMeta(type.GetField(text).GetValue(obj));
-						//val = Transform.ToMeta(type.GetField(text).GetValue(obj));
+						//val = Transform.ToSimpleMeta(type.GetField(text).GetValue(obj));
+						val = Transform.ToMeta(type.GetField(text).GetValue(obj));
 					}
 					else if (members[0] is EventInfo)
 					{
@@ -4781,11 +4768,7 @@ namespace Meta
 	{
 		public Number(double numerator, double denominator)
 		{
-			//this.numerator = numerator;
-			//this.denominator = denominator;
-
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
-			// refactor: also normalize the sign
 			if (denominator < 0)
 			{
 				numerator = -numerator;
@@ -4793,8 +4776,6 @@ namespace Meta
 			}
 			this.numerator=numerator/greatestCommonDivisor;
 			this.denominator = denominator / greatestCommonDivisor;
-
-			//Normalize();
 		}
 		public Number(Number i):this(i.numerator,i.denominator)
 		{
@@ -4837,14 +4818,8 @@ namespace Meta
 
 		public static Number operator |(Number a, Number b)
 		{
-			// not quite correct
 			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
-			//return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
 		}
-		//public static Number operator | (Number a, Number b)
-		//{
-		//    return Convert.ToInt32(a.integer) | Convert.ToInt32(b.integer);
-		//}
 		public override string ToString()
 		{
 			if (denominator == 1)
@@ -4856,16 +4831,10 @@ namespace Meta
 				return numerator.ToString() + Syntax.fraction + denominator.ToString();
 			}
 		}
-		//public override string ToString()
-		//{
-		//    return integer.ToString();
-		//}
 
 		public Number Clone()
 		{
 			return new Number(this);
-			//return new Number(numerator,denominator);
-			//return new Number(integer);
 		}
 
 
@@ -4877,10 +4846,6 @@ namespace Meta
 		{
 			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator==b.denominator;
 		}
-		//public static bool operator ==(Number a, Number b)
-		//{
-		//    return !ReferenceEquals(b,null) && a.integer == b.integer;
-		//}
 		public static bool operator !=(Number a, Number b)
 		{
 			return !(a == b);
@@ -4906,44 +4871,13 @@ namespace Meta
 		}
 		public static Number operator +(Number a, Number b)
 		{
-			//double lcd = LowestCommonMultiple(a.denominator, b.denominator);
 			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a,b));
 		}
-		//public static Number operator +(Number a, Number b)
-		//{
-		//    double lcd = LowestCommonMultiple(a.denominator, b.denominator);
-		//    return new Number( a.numerator * ( a.denominator / lcd ) + b.numerator * ( b.denominator / lcd), lcd);
-		//}
-		//public static Number operator +(Number a, Number b)
-		//{
-		//    double lowestCommonMultiple=LowestCommonMultiple(a.denominator,b.denominator);
-		//    Number number=new Number(
-		//        a.numerator * lowestCommonMultiple + b.numerator * lowestCommonMultiple,
-		//        a.denominator * lowestCommonMultiple + b.denominator * lowestCommonMultiple);
-		//    //number.Normalize();
-		//    return number;
-		//    //return new Number(a.integer + b.integer);
-		//}
-		// refactor, this should be done in the constructor, too, maybe
-		//private void Normalize()
-		//{
-		//    double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
-		//    numerator=numerator/greatestCommonDivisor;
-		//    denominator = denominator / greatestCommonDivisor;
-		//}
 
 		public static Number operator /(Number a, Number b)
 		{
 			return new Number(a.numerator*b.denominator,a.denominator*b.numerator);
 		}
-		//public static Number operator /(Number a, Number b)
-		//{
-		//    return new Number(Math.Floor(a.integer / b.integer));
-		//}
-		//public static Number operator /(Number a, Number b)
-		//{
-		//    return new Number(Math.Floor(a.integer / b.integer));
-		//}
 
 		public static Number operator -(Number a, Number b)
 		{

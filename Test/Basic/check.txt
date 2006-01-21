@@ -1275,7 +1275,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"nestedClassTest"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1285,8 +1285,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"boolTest"
-	Value (ObjectMap):
-		True
+	Value (StrategyMap):
+		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"strongNameTest"
@@ -1305,38 +1305,38 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"stringOverload"
-	Value (ObjectMap):
-		string function, argument+hello
+	Value (StrategyMap):
+		"string function, argument+hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"integerOverload"
-	Value (ObjectMap):
-		integer function, argument+5
+	Value (StrategyMap):
+		"integer function, argument+5"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTestOverload"
-	Value (ObjectMap):
-		MemberTest function, argument+testClasses.MemberTest3247
+	Value (StrategyMap):
+		"MemberTest function, argument+testClasses.MemberTest3247"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		4
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"classPropertyValue"
-	Value (ObjectMap):
-		b
+	Value (StrategyMap):
+		"b"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		5
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instancePropertyValue"
-	Value (ObjectMap):
-		b
+	Value (StrategyMap):
+		"b"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"interceptedSymbol"
@@ -1350,8 +1350,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"positionalNoConversionConcatenated"
-	Value (ObjectMap):
-		rstmno
+	Value (StrategyMap):
+		"rstmno"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversion"
@@ -1360,8 +1360,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversionConcatenated"
-	Value (ObjectMap):
-		rnulltmnnull
+	Value (StrategyMap):
+		"rnulltmnnull"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversion"
@@ -1370,13 +1370,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		6
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversionIndexed"
-	Value (ObjectMap):
-		abchihiunchangedYunchangedZabc
+	Value (StrategyMap):
+		"abchihiunchangedYunchangedZabc"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"interceptedSymbolTwo"
@@ -1852,8 +1852,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		8
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEvent"
@@ -1866,13 +1866,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		9
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"resultFromDelegate"
-	Value (ObjectMap):
-		argumentString
+	Value (StrategyMap):
+		"argumentString"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
@@ -1886,8 +1886,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		10
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instanceEvent"
@@ -2088,8 +2088,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		11
-	Value (ObjectMap):
-		0
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"arrayListResult"
@@ -2105,8 +2105,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		12
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lines"
@@ -2115,8 +2115,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"alleMeineText"
-	Value (ObjectMap):
-				Alle meine Entchen,
+	Value (StrategyMap):
+		"		Alle meine Entchen,"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"form"
@@ -2125,8 +2125,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		13
-	Value (ObjectMap):
-		System.Object
+	Value (StrategyMap):
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"automaticConversionTest"
