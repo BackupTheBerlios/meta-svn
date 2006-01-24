@@ -65,7 +65,7 @@ public partial class _Default : System.Web.UI.Page
 		int count = 0;
 		foreach (KeyValuePair<Map, Map> pair in map)
 		{
-			if (pair.Value.IsInteger)
+			if (pair.Value.IsNumber)
 			{
 				count++;
 			}
@@ -75,7 +75,6 @@ public partial class _Default : System.Web.UI.Page
 			}
 		}
 		return count;
-
 	}
 	protected void execute_Click(object sender, EventArgs e)
 	{
@@ -124,13 +123,14 @@ public partial class _Default : System.Web.UI.Page
 			string code = input.Text;
 			code = code.Trim();
 			Map context = (Map)Session["map"];
-			FileSystem.Parser parser = new FileSystem.Parser(code, "");
+			Parser parser = new Parser(code, "");
 			parser.indentationCount = 0;
 			int originalCount = context.ArrayCount;
-			parser.defaultKeys.Push(originalCount+1);
+			parser.defaultKeys.Push(originalCount + 1);
 			parser.isStartOfFile = false;
 			context.Scope = FileSystem.fileSystem;
-			Map statement = Meta.FileSystem.Parser.Statement.Match(parser);
+			bool matched;
+			Map statement = Parser.Statement.Match(parser,out matched);
 
 			statement.GetStatement().Assign(ref context);//, Map.Empty);
 			if (context.ArrayCount != originalCount)
@@ -138,7 +138,7 @@ public partial class _Default : System.Web.UI.Page
 				Map value = context[context.ArrayCount];
 				if (Leaves(value) < 1000)
 				{
-					text = FileSystem.Serialize.Value(value);
+					text = Serialize.Value(value);
 				}
 				else
 				{
@@ -152,8 +152,48 @@ public partial class _Default : System.Web.UI.Page
 		}
 		catch (Exception exception)
 		{
-			text = exception.ToString().Replace(FileSystem.Syntax.unixNewLine.ToString(), "<br>").Replace(FileSystem.Syntax.windowsNewLine,"<br>");
+			text = exception.ToString().Replace(Syntax.unixNewLine.ToString(), "<br>").Replace(Syntax.windowsNewLine, "<br>");
 		}
 		output.Text = text;
 	}
+	//private void Worker()
+	//{
+	//    string text;
+	//    try
+	//    {
+	//        string code = input.Text;
+	//        code = code.Trim();
+	//        Map context = (Map)Session["map"];
+	//        FileSystem.Parser parser = new FileSystem.Parser(code, "");
+	//        parser.indentationCount = 0;
+	//        int originalCount = context.ArrayCount;
+	//        parser.defaultKeys.Push(originalCount+1);
+	//        parser.isStartOfFile = false;
+	//        context.Scope = FileSystem.fileSystem;
+	//        Map statement = Meta.FileSystem.Parser.Statement.Match(parser);
+
+	//        statement.GetStatement().Assign(ref context);//, Map.Empty);
+	//        if (context.ArrayCount != originalCount)
+	//        {
+	//            Map value = context[context.ArrayCount];
+	//            if (Leaves(value) < 1000)
+	//            {
+	//                text = FileSystem.Serialize.Value(value);
+	//            }
+	//            else
+	//            {
+	//                text = "Map is too big to display.";
+	//            }
+	//        }
+	//        else
+	//        {
+	//            text = "";
+	//        }
+	//    }
+	//    catch (Exception exception)
+	//    {
+	//        text = exception.ToString().Replace(FileSystem.Syntax.unixNewLine.ToString(), "<br>").Replace(FileSystem.Syntax.windowsNewLine,"<br>");
+	//    }
+	//    output.Text = text;
+	//}
 }

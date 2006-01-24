@@ -106,9 +106,9 @@
 			scope.scope.scopeTest=inScope
 	inScope="wrong"
 	scopeFunction *
-	scopeFromFunctionData="right"
+	scopeFromFunctionData="wrong"
 	scopeFunctionFunction=
-		scopeFromFunctionData="wrong"
+		scopeFromFunctionData="right"
 		|
 			|scopeFromFunctionData
 	scopeFromFunction=scopeFunctionFunction *

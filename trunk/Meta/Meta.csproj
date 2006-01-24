@@ -91,12 +91,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\0.1.meta" />
     <None Include="Data\add.meta" />
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwiseOr.meta" />
     <None Include="Data\console.meta" />
     <None Include="Data\features.meta" />
-    <None Include="Data\features2.meta" />
+    <None Include="Data\find.meta" />
     <None Include="Data\integerToString.meta" />
     <None Include="Data\minimum.meta" />
     <None Include="Data\organisation.meta" />

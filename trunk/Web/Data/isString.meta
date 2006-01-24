@@ -1,0 +1,3 @@
+|
+	object=Meta.ObjectMap.[mscorlib.Object] arg
+	this=object.IsString.get *

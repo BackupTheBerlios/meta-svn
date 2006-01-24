@@ -1,0 +1,22 @@
+documentation="Returns an array containing all numbers from 1 to the argument."
+|
+	array=*
+	counter=1
+	limit=add
+		arg
+		1
+	count=
+		|
+			scope.scope.array.[counter]=counter
+			scope.scope.counter=add
+				counter
+				1
+	while
+		condition=
+			|smaller
+				counter
+				limit
+		function=
+			|
+				this=count arg
+	this=array

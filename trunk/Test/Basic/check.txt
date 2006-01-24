@@ -143,6 +143,11 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"testLib"
+			Value (StrategyMap):
+				""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"x"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
@@ -164,11 +169,6 @@ Entry (KeyValuePair`2)
 								"y"
 							Value (StrategyMap):
 								"world"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"testLib"
-			Value (StrategyMap):
-				""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalEscapeTest"
