@@ -1271,7 +1271,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"TestClass"
 	Value (TypeMap):
-		testClasses.TestClass
+		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"nestedClassTest"
@@ -1281,7 +1281,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"testClass"
 	Value (ObjectMap):
-		testClasses.TestClass
+		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"boolTest"
@@ -1296,12 +1296,12 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"MemberTest"
 	Value (TypeMap):
-		testClasses.MemberTest
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTest"
 	Value (ObjectMap):
-		testClasses.MemberTest
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"stringOverload"
@@ -1316,7 +1316,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTestOverload"
 	Value (StrategyMap):
-		"MemberTest function, argument+testClasses.MemberTest3247"
+		"MemberTest function, argument+Meta.Test.TestClasses.MemberTest3247"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		4
@@ -1346,7 +1346,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"positionalNoConversion"
 	Value (ObjectMap):
-		testClasses.PositionalNoConversion
+		Meta.Test.TestClasses.PositionalNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"positionalNoConversionConcatenated"
@@ -1356,7 +1356,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversion"
 	Value (ObjectMap):
-		testClasses.NamedNoConversion
+		Meta.Test.TestClasses.NamedNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversionConcatenated"
@@ -1366,7 +1366,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversion"
 	Value (ObjectMap):
-		testClasses.IndexerNoConversion
+		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		6
@@ -1877,7 +1877,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
 	Value (ObjectMap):
-		testClasses.TestClass
+		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instanceEventChanged"
