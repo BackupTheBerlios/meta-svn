@@ -147,7 +147,7 @@ license='"
 		|arg
 	argTest=FirstLevel
 		a="z"
-	TestClass=MetaTest.TestClass
+	TestClass=Meta.TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass *
@@ -162,18 +162,18 @@ license='"
 		culture="Neutral"
 		name="mscorlib"
 	].Int32
-	MemberTest=MetaTest.MemberTest
+	MemberTest=Meta.MemberTest
 	memberTest=MemberTest *
 	stringOverload=MemberTest.OverloadedMethod.[mscorlib.String] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[mscorlib.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		MetaTest.MemberTest
+		Meta.MemberTest
 		mscorlib.Int32
 	]
 		memberTest
 		3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		MetaTest.MemberTest
+		Meta.MemberTest
 		mscorlib.Int32
 	]
 		memberTest
@@ -185,7 +185,7 @@ license='"
 	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
 	instancePropertyValue=memberTest.InstanceProperty.get *
 	interceptedSymbol="/hello/"
-	positionalNoConversion=MetaTest.PositionalNoConversion
+	positionalNoConversion=Meta.PositionalNoConversion
 		"m"
 		"n"
 		"o"
@@ -193,13 +193,13 @@ license='"
 		"r"
 		"s"
 		"t"
-	namedNoConversion=MetaTest.NamedNoConversion
+	namedNoConversion=Meta.NamedNoConversion
 		"m"
 		y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		c="t"
 		"r"
-	indexerNoConversion=MetaTest.IndexerNoConversion *
+	indexerNoConversion=Meta.IndexerNoConversion *
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
