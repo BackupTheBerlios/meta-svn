@@ -1,6 +1,0 @@
-writeLine=
-	|mscorlib.Console.WriteLine.[mscorlib.String] arg
-write=
-	|mscorlib.Console.Write.[mscorlib.String] arg
-readLine=
-	|mscorlib.Console.ReadLine *
