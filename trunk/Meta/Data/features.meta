@@ -94,10 +94,6 @@
 	"Fehlermeldungen von normalen Exceptions sind übersichtlicher"
 	17
 	4
-[23]=
-	"print funktioniert auf Webseite"
-	2
-	1
 [24]=
 	"Meta funktioniert auf Mono"
 	29
@@ -179,10 +175,6 @@
 	"Parser accepts whitespace at end of file."
 	1
 	0
-[44]=
-	'"Interactive mode doesnt crap out with a syntax error on "form=forms.Form *""'
-	4
-	1
 [45]=
 	"Negative numbers are implemented correctly. Non-integer strategy maps can be negative, too."
 	2
@@ -211,10 +203,6 @@
 [54]=
 	"Features have default values"
 	2
-	0
-[55]=
-	"Online program executes programs not statements"
-	1
 	0
 [56]=
 	"There is a pseudo-GAC for simple deployment and extension of Meta."
@@ -259,21 +247,22 @@
 	1
 	dependencies=
 		[69]=*
-		[23]=*
 		[29]=*
 		[19]=*
 		[5]=*
 		[12]=*
 		[66]=*
-		[44]=*
 		[4]=*
 		[22]=*
 		[17]=*
-		[55]=*
+		[76]=*
+		[79]=*
+		[80]=*
+		[83]=*
 [68]=
 	"Selects are forbidden in first level, just like calls are"
 [69]=
-	"Icon is finished"
+	"Icon is displayed on Meta files"
 [70]=
 	"MetaTest.exe is called Meta.exe"
 [71]=
@@ -291,3 +280,25 @@
 	"Organisation writes it output to a file"
 [74]=
 	"Meta consists of just one project instead of two"
+[76]=
+	"Data is called differently"
+[78]=
+	"There is an FAQ"
+[79]=
+	"Exceptions give useful hints"
+[80]=
+	"Numbers are implemented correctly"
+[81]=
+	"Web uses the same Data directory as the normal installation"
+	1
+	0
+	"
+		Maybe this is only possible by putting the library online.
+		This would be the most simple solution anyway.
+	"
+[82]=
+	"indentation works correctly under all circumstances"
+[83]=
+	"richtige Dokumentation"
+	20
+	8

@@ -440,6 +440,12 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static string writtenText = "";
+		public static void WriteLine(string text)
+		{
+			writtenText += text + Environment.NewLine;
+			Console.WriteLine(text);
+		}
 		public static Map Minimum(Map arg)
 		{
 			Number minumum = arg[1].GetNumber();
@@ -4651,7 +4657,7 @@ namespace Meta
 		}
 		static FileSystem()
 		{
-			fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Data"));
+			fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Library"));
 			fileSystem.Scope = Gac.gac;
 			Gac.gac["local"] = fileSystem;
 		}
@@ -5190,18 +5196,8 @@ namespace Meta
 			get
 			{
 				return Path.Combine(Process.InstallationPath,"Test");//).FullName, "Test");
-				//return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
 			}
 		}
-		//protected override string TestDirectory
-		//{
-		//    get 
-		//    {
-		//        return Path.Combine(Directory.GetParent(Process.InstallationPath).FullName, "Test");
-		//    }
-		//}
-
-
 		public class Extents : Test
 		{
 			public override object GetResult(out int level)
@@ -5221,12 +5217,9 @@ namespace Meta
 				Map argument = new StrategyMap();
 				argument[1] = "first arg";
 				argument[2] = "second=arg";
-				//object x = FileSystem.fileSystem["basicTest"];//.Call(argument);//, Map.Empty);
 				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
-				//return Map.Empty;
 			}
 		}
-
 		public class Library : Test
 		{
 			public override object GetResult(out int level)
