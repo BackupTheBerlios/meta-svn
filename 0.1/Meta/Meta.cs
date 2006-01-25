@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using Meta;
 using Meta.Test;
+using Microsoft.Win32;
 
 namespace Meta
 {
@@ -778,17 +779,16 @@ namespace Meta
 		{
 			get
 			{
-				string path;
 				if (installationPath == null)
 				{
-					Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-					path = Path.GetDirectoryName(uri.AbsolutePath);
+					//installationPath = (string)Registry.LocalMachine.OpenSubKey(@"Software\Meta 0.1").GetValue("InstallationPath");
+					if (installationPath == null)
+					{
+						Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
+						installationPath = Path.GetDirectoryName(uri.AbsolutePath);
+					}
 				}
-				else
-				{
-					path = installationPath;
-				}
-				return path;
+				return installationPath;
 			}
 			set
 			{

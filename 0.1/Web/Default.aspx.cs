@@ -28,7 +28,7 @@ public partial class _Default : System.Web.UI.Page
 		Thread thread = new Thread(new ThreadStart(Worker));
 		try
 		{
-			Meta.Process.InstallationPath = Path.GetDirectoryName(Page.Request.PhysicalPath);
+			Meta.Process.InstallationPath = Path.Combine(new DirectoryInfo(Path.GetDirectoryName(Page.Request.PhysicalPath)).Parent.FullName,"Meta");
 			thread.Start();
 			int waited = 0;
 			DateTime start = DateTime.Now;

@@ -134,7 +134,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy Meta.exe Meta.dll</PostBuildEvent>
   </PropertyGroup>
 </Project>
