@@ -4607,7 +4607,8 @@ namespace Meta
 				Map parsed = ParseFile(reader,filePath);
 				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
-				parsed.Scope = null;
+				parsed.Scope = FileSystem.fileSystem;
+				//parsed.Scope = null;
 				return parsed;
 			}
 		}
@@ -5017,229 +5018,240 @@ namespace Meta
 
 //namespace Test 
 //{
-	public class MetaTest:TestRunner
+public class MetaTest:TestRunner
+{
+	public static int Leaves(Map map)
 	{
-		public static int Leaves(Map map)
+		int count=0;
+		foreach(KeyValuePair<Map,Map> pair in map)
 		{
-			int count=0;
-			foreach(KeyValuePair<Map,Map> pair in map)
+			if (pair.Value.IsNumber)
 			{
-				if (pair.Value.IsNumber)
+				count++;
+			}
+			else
+			{
+				count += Leaves(pair.Value);
+			}
+		}
+		return count;
+
+	}
+	[STAThread]
+	public static void Main(string[] args)
+	{
+		try
+		{
+			if (args.Length != 0)
+			{
+				if (args[0] == "-test")
 				{
-					count++;
+					new MetaTest().Run();
+				}
+				else if (args[0] == "-i")
+				{
+				    Map context = new StrategyMap();
+				    context.Scope = FileSystem.fileSystem;
+				    //context.Parent = FileSystem.fileSystem;
+				    while (true)
+				    {
+				        string code = "";
+				        string line;
+				        Console.Write(">>> ");
+				        int lines = 0;
+				        string tabs = "";
+				        string input;
+				        do
+				        {
+				            input = Console.ReadLine();
+				            line = tabs + input;
+				            code += line;
+				            int count = 0;
+				            code += Syntax.unixNewLine;
+				            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
+				            if (input == "")
+				            {
+				                if (lines != 0)
+				                {
+				                    break;
+
+				                }
+				            }
+				            else
+				            {
+				                char character = line[line.Length - 1];
+				                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
+				                {
+				                    break;
+				                }
+				            }
+				            lines++;
+
+				            Console.Write("... " + tabs);
+				        }
+				        while (true);
+				        try
+				        {
+							// refactor, reuse this in Web
+				            code = code.Trim(' ', '\t', '\n', '\r');
+				            Parser parser = new Parser(code, null);
+				            parser.indentationCount = 0;
+				            int count = FileSystem.fileSystem.ArrayCount;
+				            int originalCount = count;
+				            parser.isStartOfFile = false;
+							parser.defaultKeys.Push(count + 1);
+							bool matched;
+							Map statement = Parser.Statement.Match(parser,out matched);
+
+				            statement.GetStatement().Assign(ref context);
+				            if (context.ArrayCount != originalCount)
+				            {
+				                Map value = context[context.ArrayCount];
+				                if (Leaves(value) < 1000)
+				                {
+				                    Console.WriteLine(Meta.Serialize.Value(value));
+				                }
+				                else
+				                {
+				                    Console.WriteLine("Map is too big to display.");
+				                }
+				            }
+				            Console.WriteLine();
+				        }
+				        catch (Exception e)
+				        {
+				            Console.WriteLine(e.ToString());
+				        }
+				    }
+				}
+				else if(args[0]=="-profile")
+				{
+					Console.WriteLine("profiling");
+					object x = FileSystem.fileSystem["basicTest"];
 				}
 				else
 				{
-					count += Leaves(pair.Value);
-				}
-			}
-			return count;
-
-		}
-		[STAThread]
-		public static void Main(string[] args)
-		{
-			try
-			{
-				if (args.Length != 0)
-				{
-					if (args[0] == "-test")
+					Map function = FileSystem.ParseFile(args[0]);
+					function.Scope = FileSystem.fileSystem;
+					int autoKeys = 0;
+					Map argument=new StrategyMap();
+					for (int i = 1; i < args.Length; i++)
 					{
-						new MetaTest().Run();
-					}
-					else if (args[0] == "-i")
-					{
-					    Map context = new StrategyMap();
-					    context.Scope = FileSystem.fileSystem;
-					    //context.Parent = FileSystem.fileSystem;
-					    while (true)
-					    {
-					        string code = "";
-					        string line;
-					        Console.Write(">>> ");
-					        int lines = 0;
-					        string tabs = "";
-					        string input;
-					        do
-					        {
-					            input = Console.ReadLine();
-					            line = tabs + input;
-					            code += line;
-					            int count = 0;
-					            code += Syntax.unixNewLine;
-					            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
-					            if (input == "")
-					            {
-					                if (lines != 0)
-					                {
-					                    break;
+						string arg=args[i];
 
-					                }
-					            }
-					            else
-					            {
-					                char character = line[line.Length - 1];
-					                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
-					                {
-					                    break;
-					                }
-					            }
-					            lines++;
-
-					            Console.Write("... " + tabs);
-					        }
-					        while (true);
-					        try
-					        {
-								// refactor, reuse this in Web
-					            code = code.Trim(' ', '\t', '\n', '\r');
-					            Parser parser = new Parser(code, null);
-					            parser.indentationCount = 0;
-					            int count = FileSystem.fileSystem.ArrayCount;
-					            int originalCount = count;
-					            parser.isStartOfFile = false;
-								parser.defaultKeys.Push(count + 1);
-								bool matched;
-								Map statement = Parser.Statement.Match(parser,out matched);
-
-					            statement.GetStatement().Assign(ref context);
-					            if (context.ArrayCount != originalCount)
-					            {
-					                Map value = context[context.ArrayCount];
-					                if (Leaves(value) < 1000)
-					                {
-					                    Console.WriteLine(Meta.Serialize.Value(value));
-					                }
-					                else
-					                {
-					                    Console.WriteLine("Map is too big to display.");
-					                }
-					            }
-					            Console.WriteLine();
-					        }
-					        catch (Exception e)
-					        {
-					            Console.WriteLine(e.ToString());
-					        }
-					    }
-					}
-					else if(args[0]=="-profile")
-					{
-						Console.WriteLine("profiling");
-						object x = FileSystem.fileSystem["basicTest"];
-					}
-					else
-					{
-						Map function = FileSystem.ParseFile(args[0]);
-						function.Scope = FileSystem.fileSystem;
-						int autoKeys = 0;
-						Map argument=new StrategyMap();
-						for (int i = 1; i < args.Length; i++)
+						Map key;
+						Map value;
+						if (arg.StartsWith("-"))
 						{
-							string arg=args[i];
-
-							Map key;
-							Map value;
-							if (arg.StartsWith("-"))
+							string nextArg;
+							// move down
+							if (i + 1 < args.Length)
 							{
-								string nextArg;
-								// move down
-								if (i + 1 < args.Length)
-								{
-									nextArg = args[i + 1];
-								}
-								else
-								{
-									nextArg = null;
-								}
-								key = arg.Remove(0,1);
-								if (nextArg != null)
-								{
-									if (nextArg.StartsWith("-"))
-									{
-										value = Map.Empty;
-									}
-									else
-									{
-										value = nextArg;
-										i++;
-
-									}
-								}
-								else
+								nextArg = args[i + 1];
+							}
+							else
+							{
+								nextArg = null;
+							}
+							key = arg.Remove(0,1);
+							if (nextArg != null)
+							{
+								if (nextArg.StartsWith("-"))
 								{
 									value = Map.Empty;
+								}
+								else
+								{
+									value = nextArg;
+									i++;
+
 								}
 							}
 							else
 							{
-								autoKeys++;
-								key = autoKeys;
-								value = arg;
+								value = Map.Empty;
 							}
-							argument[key] = value;
 						}
-						function.Call(argument);
+						else
+						{
+							autoKeys++;
+							key = autoKeys;
+							value = arg;
+						}
+						argument[key] = value;
 					}
+					function.Call(argument);
 				}
 			}
-			catch (Exception e)
-			{
-				Console.WriteLine();
-				Console.WriteLine(e.ToString());
-				Console.WriteLine();
-				Console.ReadLine();
-			}
 		}
-		protected override string TestDirectory
+		catch (Exception e)
 		{
-			get
-			{
-				return Path.Combine(Process.InstallationPath,"Test");//).FullName, "Test");
-			}
+			Console.WriteLine();
+			Console.WriteLine(e.ToString());
+			Console.WriteLine();
+			Console.ReadLine();
 		}
-		public class Extents : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map argument = Map.Empty;
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"];
-			}
-		}
-		public class Basic : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 2;
-				Map argument = new StrategyMap();
-				argument[1] = "first arg";
-				argument[2] = "second=arg";
-				return FileSystem.fileSystem["basicTest"].Call(argument);//, Map.Empty);
-			}
-		}
-		public class Library : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 2;
-				return FileSystem.fileSystem["libraryTest"].Call(Map.Empty);//, Map.Empty);
-			}
-		}
-		public class Serialization : Test
-		{
-			public override object GetResult(out int level)
-			{
-				level = 1;
-				Map map = FileSystem.fileSystem["basicTest"];
-				return Meta.Serialize.Value(map).TrimStart();
-			}
-		}
-
 	}
-//}
+	protected override string TestDirectory
+	{
+		get
+		{
+			return Path.Combine(Process.InstallationPath,"Test");//).FullName, "Test");
+		}
+	}
+	private static string BasicTest
+	{
+		get
+		{
+			return Path.Combine(Process.InstallationPath,"basicTest.meta");
+		}
+	}
+	private static string LibraryTest
+	{
+		get
+		{
+			return Path.Combine(Process.InstallationPath, "libraryTest.meta");
+		}
+	}
+	public class Extents : Test
+	{
+		public override object GetResult(out int level)
+		{
+			level = 1;
+			Map argument = Map.Empty;
+			return FileSystem.ParseFile(BasicTest);
+		}
+	}
+	public class Basic : Test
+	{
+		public override object GetResult(out int level)
+		{
+			level = 2;
+			Map argument = new StrategyMap();
+			argument[1] = "first arg";
+			argument[2] = "second=arg";
+			return FileSystem.ParseFile(BasicTest).Call(argument);
+		}
+	}
+	public class Library : Test
+	{
+		public override object GetResult(out int level)
+		{
+			level = 2;
+			return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+		}
+	}
+	public class Serialization : Test
+	{
+		public override object GetResult(out int level)
+		{
+			level = 1;
+			Map map = FileSystem.ParseFile(BasicTest);
+			return Meta.Serialize.Value(map).TrimStart();
+		}
+	}
+
+}
 namespace testClasses
 {
 	[Serializable]

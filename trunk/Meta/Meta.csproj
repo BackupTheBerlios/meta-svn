@@ -90,7 +90,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\0.1.meta" />
     <None Include="Data\add.meta" />
     <None Include="Data\basicTest.meta" />
     <None Include="Data\bitwiseOr.meta" />
