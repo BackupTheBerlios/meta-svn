@@ -25,7 +25,6 @@
 					*
 					*
 		numberTest=
-			increment=increment 5
 			positiveAdd=add
 				100
 				1000
@@ -113,7 +112,8 @@
 							counter
 							10
 					function=
-						|SetCounter increment counter
+						|SetCounter
+							[*]=counter
 				this=counter
 			sort=sort
 				array=

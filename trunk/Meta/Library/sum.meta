@@ -13,7 +13,8 @@ sumImplementation=
 				|arg.result
 			[*]=
 				|sumImplementation
-					index=increment arg.index
+					index=
+						[*]=arg.index
 					result=arg.function
 						previous=arg.result
 						present=arg.array.[arg.index]

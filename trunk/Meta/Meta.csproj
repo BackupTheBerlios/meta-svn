@@ -90,50 +90,45 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\add.meta" />
-    <None Include="Data\basicTest.meta" />
-    <None Include="Data\bitwiseOr.meta" />
-    <None Include="Data\console.meta" />
-    <None Include="Data\features.meta" />
-    <None Include="Data\find.meta" />
-    <None Include="Data\integerToString.meta" />
-    <None Include="Data\minimum.meta" />
-    <None Include="Data\organisation.meta" />
-    <None Include="Data\print.meta" />
-    <None Include="Data\sort.meta" />
-    <None Include="Data\pop.meta" />
-    <None Include="Data\isInteger.meta" />
-    <None Include="Data\isString.meta" />
-    <None Include="Data\if.meta" />
-    <None Include="Data\repeat.meta" />
-    <None Include="Data\range.meta" />
-    <None Include="Data\remove.meta" />
-    <None Include="Data\values.meta" />
-    <None Include="Data\while.meta" />
-    <None Include="Data\foreach.meta" />
-    <None Include="Data\apply.meta" />
-    <None Include="Data\join.meta" />
-    <None Include="Data\contains.meta" />
-    <None Include="Data\keys.meta" />
-    <None Include="Data\merge.meta" />
-    <None Include="Data\equal.meta" />
-    <None Include="Data\length.meta" />
-    <None Include="Data\subtract.meta" />
-    <None Include="Data\divide.meta" />
-    <None Include="Data\multiply.meta" />
-    <None Include="Data\greater.meta" />
-    <None Include="Data\smaller.meta" />
-    <None Include="Data\increment.meta" />
-    <None Include="Data\and.meta" />
-    <None Include="Data\not.meta" />
-    <None Include="Data\or.meta" />
-    <None Include="Data\sum.meta" />
-    <None Include="Data\libraryTest.meta" />
-    <None Include="Data\testSubDir\testLib.meta" />
-    <None Include="Data\testSubDir\x.meta" />
+    <Content Include="meta.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="meta.ico" />
+    <None Include="basicTest.meta" />
+    <None Include="libraryTest.meta" />
+    <None Include="Library\add.meta" />
+    <None Include="Library\and.meta" />
+    <None Include="Library\apply.meta" />
+    <None Include="Library\bitwiseOr.meta" />
+    <None Include="Library\console.meta" />
+    <None Include="Library\contains.meta" />
+    <None Include="Library\divide.meta" />
+    <None Include="Library\equal.meta" />
+    <None Include="Library\foreach.meta" />
+    <None Include="Library\greater.meta" />
+    <None Include="Library\if.meta" />
+    <None Include="Library\integerToString.meta" />
+    <None Include="Library\isInteger.meta" />
+    <None Include="Library\isString.meta" />
+    <None Include="Library\join.meta" />
+    <None Include="Library\keys.meta" />
+    <None Include="Library\length.meta" />
+    <None Include="Library\merge.meta" />
+    <None Include="Library\minimum.meta" />
+    <None Include="Library\multiply.meta" />
+    <None Include="Library\not.meta" />
+    <None Include="Library\or.meta" />
+    <None Include="Library\organisation.meta" />
+    <None Include="Library\pop.meta" />
+    <None Include="Library\print.meta" />
+    <None Include="Library\range.meta" />
+    <None Include="Library\remove.meta" />
+    <None Include="Library\repeat.meta" />
+    <None Include="Library\smaller.meta" />
+    <None Include="Library\sort.meta" />
+    <None Include="Library\subtract.meta" />
+    <None Include="Library\sum.meta" />
+    <None Include="Library\values.meta" />
+    <None Include="Library\while.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

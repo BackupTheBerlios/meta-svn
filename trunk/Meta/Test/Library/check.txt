@@ -50,11 +50,6 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"increment"
-			Value (StrategyMap):
-				6
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
 				"positiveAdd"
 			Value (StrategyMap):
 				1100
