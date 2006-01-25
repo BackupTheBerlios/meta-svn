@@ -96,7 +96,6 @@
     <None Include="Data\bitwiseOr.meta" />
     <None Include="Data\console.meta" />
     <None Include="Data\features.meta" />
-    <None Include="Data\features2.meta" />
     <None Include="Data\integerToString.meta" />
     <None Include="Data\minimum.meta" />
     <None Include="Data\organisation.meta" />
