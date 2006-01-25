@@ -15781,7 +15781,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"150"
 										Column (Int32):
-											"30"
+											"26"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
@@ -15798,7 +15798,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"150"
 												Column (Int32):
-													"30"
+													"26"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15815,7 +15815,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"150"
 														Column (Int32):
-															"20"
+															"16"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -15832,8 +15832,8 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"150"
 																Column (Int32):
-																	"20"
-														"MetaTest"
+																	"16"
+														"Meta"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -15845,12 +15845,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"150"
 														Column (Int32):
-															"20"
+															"16"
 													End (SourcePosition):
 														Line (Int32):
 															"150"
 														Column (Int32):
-															"30"
+															"26"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -15862,12 +15862,12 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"150"
 																Column (Int32):
-																	"21"
+																	"17"
 															End (SourcePosition):
 																Line (Int32):
 																	"150"
 																Column (Int32):
-																	"30"
+																	"26"
 														"TestClass"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -17860,7 +17860,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"165"
 										Column (Int32):
-											"32"
+											"28"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
@@ -17877,7 +17877,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"165"
 												Column (Int32):
-													"32"
+													"28"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -17894,7 +17894,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"165"
 														Column (Int32):
-															"21"
+															"17"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -17911,8 +17911,8 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"165"
 																Column (Int32):
-																	"21"
-														"MetaTest"
+																	"17"
+														"Meta"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -17924,12 +17924,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"165"
 														Column (Int32):
-															"21"
+															"17"
 													End (SourcePosition):
 														Line (Int32):
 															"165"
 														Column (Int32):
-															"32"
+															"28"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -17941,12 +17941,12 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"165"
 																Column (Int32):
-																	"22"
+																	"18"
 															End (SourcePosition):
 																Line (Int32):
 																	"165"
 																Column (Int32):
-																	"32"
+																	"28"
 														"MemberTest"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -19121,7 +19121,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"170"
 																								Column (Int32):
-																									"22"
+																									"18"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -19138,7 +19138,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"170"
 																										Column (Int32):
-																											"22"
+																											"18"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -19155,7 +19155,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"170"
 																												Column (Int32):
-																													"11"
+																													"7"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -19172,8 +19172,8 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"170"
 																														Column (Int32):
-																															"11"
-																												"MetaTest"
+																															"7"
+																												"Meta"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -19185,12 +19185,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"170"
 																												Column (Int32):
-																													"11"
+																													"7"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"170"
 																												Column (Int32):
-																													"22"
+																													"18"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -19202,12 +19202,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"170"
 																														Column (Int32):
-																															"12"
+																															"8"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"170"
 																														Column (Int32):
-																															"22"
+																															"18"
 																												"MemberTest"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
@@ -19220,12 +19220,12 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"170"
 																								Column (Int32):
-																									"22"
+																									"18"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"170"
 																								Column (Int32):
-																									"22"
+																									"18"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -19912,7 +19912,7 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"22"
+																									"18"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -19929,7 +19929,7 @@ Entry (KeyValuePair`2)
 																										Line (Int32):
 																											"176"
 																										Column (Int32):
-																											"22"
+																											"18"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -19946,7 +19946,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"176"
 																												Column (Int32):
-																													"11"
+																													"7"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -19963,8 +19963,8 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"176"
 																														Column (Int32):
-																															"11"
-																												"MetaTest"
+																															"7"
+																												"Meta"
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
 																										Extent:
@@ -19976,12 +19976,12 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"176"
 																												Column (Int32):
-																													"11"
+																													"7"
 																											End (SourcePosition):
 																												Line (Int32):
 																													"176"
 																												Column (Int32):
-																													"22"
+																													"18"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -19993,12 +19993,12 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"176"
 																														Column (Int32):
-																															"12"
+																															"8"
 																													End (SourcePosition):
 																														Line (Int32):
 																															"176"
 																														Column (Int32):
-																															"22"
+																															"18"
 																												"MemberTest"
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
@@ -20011,12 +20011,12 @@ Entry (KeyValuePair`2)
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"22"
+																									"18"
 																							End (SourcePosition):
 																								Line (Int32):
 																									"176"
 																								Column (Int32):
-																									"22"
+																									"18"
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								Extent:
@@ -22348,7 +22348,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"188"
 														Column (Int32):
-															"56"
+															"52"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -22365,7 +22365,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"188"
 																Column (Int32):
-																	"56"
+																	"52"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -22382,7 +22382,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"188"
 																		Column (Int32):
-																			"33"
+																			"29"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -22399,8 +22399,8 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"188"
 																				Column (Int32):
-																					"33"
-																		"MetaTest"
+																					"29"
+																		"Meta"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -22412,12 +22412,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"188"
 																		Column (Int32):
-																			"33"
+																			"29"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"188"
 																		Column (Int32):
-																			"56"
+																			"52"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -22429,12 +22429,12 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"188"
 																				Column (Int32):
-																					"34"
+																					"30"
 																			End (SourcePosition):
 																				Line (Int32):
 																					"188"
 																				Column (Int32):
-																					"56"
+																					"52"
 																		"PositionalNoConversion"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -22447,7 +22447,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"188"
 														Column (Int32):
-															"56"
+															"52"
 													End (SourcePosition):
 														Line (Int32):
 															"192"
@@ -23346,7 +23346,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"196"
 														Column (Int32):
-															"46"
+															"42"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -23363,7 +23363,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"196"
 																Column (Int32):
-																	"46"
+																	"42"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -23380,7 +23380,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"196"
 																		Column (Int32):
-																			"28"
+																			"24"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -23397,8 +23397,8 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"196"
 																				Column (Int32):
-																					"28"
-																		"MetaTest"
+																					"24"
+																		"Meta"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -23410,12 +23410,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"196"
 																		Column (Int32):
-																			"28"
+																			"24"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"196"
 																		Column (Int32):
-																			"46"
+																			"42"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -23427,12 +23427,12 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"196"
 																				Column (Int32):
-																					"29"
+																					"25"
 																			End (SourcePosition):
 																				Line (Int32):
 																					"196"
 																				Column (Int32):
-																					"46"
+																					"42"
 																		"NamedNoConversion"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -23445,7 +23445,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"196"
 														Column (Int32):
-															"46"
+															"42"
 													End (SourcePosition):
 														Line (Int32):
 															"199"
@@ -24174,7 +24174,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"202"
 										Column (Int32):
-											"52"
+											"48"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
@@ -24191,7 +24191,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"202"
 												Column (Int32):
-													"52"
+													"48"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -24208,7 +24208,7 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"202"
 														Column (Int32):
-															"50"
+															"46"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
@@ -24225,7 +24225,7 @@ Entry (KeyValuePair`2)
 																Line (Int32):
 																	"202"
 																Column (Int32):
-																	"50"
+																	"46"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -24242,7 +24242,7 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"202"
 																		Column (Int32):
-																			"30"
+																			"26"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -24259,8 +24259,8 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"202"
 																				Column (Int32):
-																					"30"
-																		"MetaTest"
+																					"26"
+																		"Meta"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
@@ -24272,12 +24272,12 @@ Entry (KeyValuePair`2)
 																		Line (Int32):
 																			"202"
 																		Column (Int32):
-																			"30"
+																			"26"
 																	End (SourcePosition):
 																		Line (Int32):
 																			"202"
 																		Column (Int32):
-																			"50"
+																			"46"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
@@ -24289,12 +24289,12 @@ Entry (KeyValuePair`2)
 																				Line (Int32):
 																					"202"
 																				Column (Int32):
-																					"31"
+																					"27"
 																			End (SourcePosition):
 																				Line (Int32):
 																					"202"
 																				Column (Int32):
-																					"50"
+																					"46"
 																		"IndexerNoConversion"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -24307,12 +24307,12 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"202"
 														Column (Int32):
-															"50"
+															"46"
 													End (SourcePosition):
 														Line (Int32):
 															"202"
 														Column (Int32):
-															"52"
+															"48"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
