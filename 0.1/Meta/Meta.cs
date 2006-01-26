@@ -31,6 +31,7 @@ using System.Reflection.Emit;
 using Meta;
 using Meta.Test;
 using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace Meta
 {
@@ -551,6 +552,7 @@ namespace Meta
 					}
 					else if (args[0] == "-i")
 					{
+						Console.WriteLine("Meta 0.1 interactive mode");
 						Map context = new StrategyMap();
 						context.Scope = FileSystem.fileSystem;
 						//context.Parent = FileSystem.fileSystem;
@@ -559,6 +561,7 @@ namespace Meta
 							string code = "";
 							string line;
 							Console.Write(">>> ");
+							//SendKeys.Send("{TAB}");
 							int lines = 0;
 							string tabs = "";
 							string input;
@@ -570,7 +573,7 @@ namespace Meta
 								int count = 0;
 								code += Syntax.unixNewLine;
 								tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
-								if (input == "")
+								if (input.Trim() == "")
 								{
 									if (lines != 0)
 									{
@@ -588,22 +591,27 @@ namespace Meta
 								}
 								lines++;
 
-								Console.Write("... " + tabs);
+								Console.Write("... ");// + tabs);
+								foreach (char c in tabs)
+								{
+									SendKeys.SendWait("{TAB}");
+								}
+								tabs = "";
 							}
 							while (true);
 							try
 							{
 								// refactor, reuse this in Web
 								code = code.Trim(' ', '\t', '\n', '\r');
-								Parser parser = new Parser(code, null);
+								Parser parser = new Parser(code, "<Interactive console>");
 								parser.indentationCount = 0;
 								int count = FileSystem.fileSystem.ArrayCount;
 								int originalCount = count;
 								parser.isStartOfFile = false;
+								parser.functions++;
 								parser.defaultKeys.Push(count + 1);
 								bool matched;
 								Map statement = Parser.Statement.Match(parser, out matched);
-
 								statement.GetStatement().Assign(ref context);
 								if (context.ArrayCount != originalCount)
 								{
@@ -625,6 +633,82 @@ namespace Meta
 							}
 						}
 					}
+					//else if (args[0] == "-i")
+					//{
+					//    Map context = new StrategyMap();
+					//    context.Scope = FileSystem.fileSystem;
+					//    //context.Parent = FileSystem.fileSystem;
+					//    while (true)
+					//    {
+					//        string code = "";
+					//        string line;
+					//        Console.Write(">>> ");
+					//        int lines = 0;
+					//        string tabs = "";
+					//        string input;
+					//        do
+					//        {
+					//            input = Console.ReadLine();
+					//            line = tabs + input;
+					//            code += line;
+					//            int count = 0;
+					//            code += Syntax.unixNewLine;
+					//            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
+					//            if (input == "")
+					//            {
+					//                if (lines != 0)
+					//                {
+					//                    break;
+
+					//                }
+					//            }
+					//            else
+					//            {
+					//                char character = line[line.Length - 1];
+					//                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
+					//                {
+					//                    break;
+					//                }
+					//            }
+					//            lines++;
+
+					//            Console.Write("... " + tabs);
+					//        }
+					//        while (true);
+					//        try
+					//        {
+					//            // refactor, reuse this in Web
+					//            code = code.Trim(' ', '\t', '\n', '\r');
+					//            Parser parser = new Parser(code, null);
+					//            parser.indentationCount = 0;
+					//            int count = FileSystem.fileSystem.ArrayCount;
+					//            int originalCount = count;
+					//            parser.isStartOfFile = false;
+					//            parser.defaultKeys.Push(count + 1);
+					//            bool matched;
+					//            Map statement = Parser.Statement.Match(parser, out matched);
+
+					//            statement.GetStatement().Assign(ref context);
+					//            if (context.ArrayCount != originalCount)
+					//            {
+					//                Map value = context[context.ArrayCount];
+					//                if (MetaTest.Leaves(value) < 1000)
+					//                {
+					//                    Console.WriteLine(Meta.Serialize.Value(value));
+					//                }
+					//                else
+					//                {
+					//                    Console.WriteLine("Map is too big to display.");
+					//                }
+					//            }
+					//            Console.WriteLine();
+					//        }
+					//        catch (Exception e)
+					//        {
+					//            Console.WriteLine(e.ToString());
+					//        }
+					//    }
+					//}
 					else if (args[0] == "-profile")
 					{
 						Console.WriteLine("profiling");
@@ -3664,7 +3748,7 @@ namespace Meta
 			this.file = filePath;
 		}
 		public bool isStartOfFile = true;
-		private int functions = 0;
+		public int functions = 0;
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
