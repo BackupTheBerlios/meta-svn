@@ -134,6 +134,30 @@ Entry (KeyValuePair`2)
 		-123
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"mapNumbers"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"integer"
+			Value (StrategyMap):
+				6
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"negative"
+			Value (StrategyMap):
+				-6
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"fraction"
+			Value (StrategyMap):
+				6/7
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"negativeFraction"
+			Value (StrategyMap):
+				-6/7
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"fraction"
 	Value (StrategyMap):
 		3/2
