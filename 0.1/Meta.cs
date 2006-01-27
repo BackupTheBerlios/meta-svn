@@ -94,13 +94,6 @@ namespace Meta
 			: base(message, new Extent(line, column, line, column,fileName))
 		{
 		}
-		//public override string Message
-		//{
-		//    get
-		//    {
-		//        return "Syntax error: "+base.Message;
-		//    }
-		//}
 	}
 	public class ExecutionException : MetaException
 	{
@@ -109,46 +102,37 @@ namespace Meta
 		{
 			this.context = context;
 		}
-		//public override string Message
-		//{
-		//    get
-		//    {
-		//        return base.Message;
-		//    }
-		//}
 	}
 	public abstract class MetaException:ApplicationException
 	{
-		public List<string> InvocationList
+		public List<Extent> InvocationList
 		{
 			get
 			{
 				return stack;
 			}
 		}
-		private List<string> stack = new List<string>();
+		private List<Extent> stack = new List<Extent>();
 		public override string ToString()
 		{
-			return Message + "\n" +string.Join("\n",stack.ToArray());
+			string message=Message + "\n\nStack trace:";
+			foreach(Extent extent in stack)
+			{
+				message+="\n" + GetExtentText(extent);
+			}
+			return message;
 		}
 		public static string GetExtentText(Extent extent)
 		{
 			string text;
 			if (extent != null)
 			{
-				if (extent.FileName != null)
-				{
-					text = extent.FileName + ", line ";
-				}
-				else
-				{
-					text = "Line ";
-				}
-				text += extent.Start.Line + ", column " + extent.Start.Column + ": ";
+				text = extent.FileName + ", line ";
+				text += extent.Start.Line + ", column " + extent.Start.Column;// +": ";
 			}
 			else
 			{
-				text = "Unknown location: ";
+				text = "Unknown location";
 			}
 			return text;
 		}
@@ -161,7 +145,7 @@ namespace Meta
 		{
 			get
 			{
-				return GetExtentText(extent) + message;
+				return GetExtentText(extent) + ": " + message;
 			}
 		}
 		//public override string Message
@@ -259,7 +243,8 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(MetaException.GetExtentText(callable.Extent) + "Function has thrown an exception.");
+				e.InvocationList.Add(callable.Extent);// + "Function has thrown an exception.");
+				//e.InvocationList.Add(MetaException.GetExtentText(callable.Extent) + "Function has thrown an exception.");
 				throw e;
 			}
 			catch (Exception e)
