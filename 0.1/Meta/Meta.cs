@@ -564,7 +564,9 @@ namespace Meta
 				while (true)
 				{
 					code = "";
-					Console.Write(">>> ");
+					Console.Write(parser.Line + "> ");
+					//Console.Write(parser.Line + " >>> ");
+					//Console.Write(">>> ");
 					int lines = 0;
 					while (true)
 					{
@@ -586,8 +588,10 @@ namespace Meta
 							}
 						}
 						lines++;
-						Console.Write("... ");
-						for (int i = 0; i<input.Length && input[i]=='\t'; i++)
+						Console.Write(parser.Line + lines + ". ");
+						//Console.Write(parser.Line + lines + " ... ");
+						//Console.Write("... ");
+						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
 						{
 							SendKeys.SendWait("{TAB}");
 						}
