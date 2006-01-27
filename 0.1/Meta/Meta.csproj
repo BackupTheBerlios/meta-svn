@@ -9,7 +9,7 @@
     <ApplicationIcon>meta.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>Meta</AssemblyName>
+    <AssemblyName>meta</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -133,6 +133,6 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy Meta.exe Meta.dll</PostBuildEvent>
+    <PostBuildEvent>copy meta.exe meta.dll</PostBuildEvent>
   </PropertyGroup>
 </Project>

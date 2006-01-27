@@ -15,25 +15,9 @@ SolidCompression=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "catalan"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "danish"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "french"; MessagesFile: "compiler:Languages\French.isl"
-Name: "german"; MessagesFile: "compiler:Languages\German.isl"
-Name: "hungarian"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
-Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+;Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
 Source: "C:\Meta\0.1\Meta\Meta.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -43,8 +27,11 @@ Source: "C:\Meta\0.1\Meta\Library\*"; DestDir: "{app}"; Flags: ignoreversion rec
 
 [Icons]
 Name: "{group}\Meta"; Filename: "{app}\Meta.exe"
-Name: "{userdesktop}\Meta"; Filename: "{app}\Meta.exe"; Tasks: desktopicon
+;Name: "{userdesktop}\Meta"; Filename: "{app}\Meta.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Meta.exe"; Description: "{cm:LaunchProgram,Meta}"; Flags: nowait postinstall skipifsilent
+;Filename: "{app}\Meta.exe"; Description: "{cm:LaunchProgram,Meta}"; Flags: nowait postinstall skipifsilent
+
+[Registry]
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Meta.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\Meta.exe"; Flags: uninsdeletekey
 

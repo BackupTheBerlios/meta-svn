@@ -550,87 +550,131 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			if (args.Length != 0)
+			if (args.Length == 0)
+			{
+				Console.WriteLine("Meta 0.1 interactive mode");
+				Map map = new StrategyMap();
+				map.Scope = FileSystem.fileSystem;
+				string code;
+
+				Parser parser = new Parser("", "Interactive console");
+				parser.indentationCount = 0;
+				parser.functions++;
+				parser.defaultKeys.Push(1);
+				while (true)
+				{
+					code = "";
+					Console.Write(">>> ");
+					int lines = 0;
+					while (true)
+					{
+						string input = Console.ReadLine();
+						if (input.Trim().Length != 0)
+						{
+							code += input + Syntax.unixNewLine;
+							char character = input[input.TrimEnd().Length - 1];
+							if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
+							{
+								break;
+							}
+						}
+						else
+						{
+							if (lines != 0)
+							{
+								break;
+							}
+						}
+						lines++;
+						Console.Write("... ");
+						for (int i = 0; i<input.Length && input[i]=='\t'; i++)
+						{
+							SendKeys.SendWait("{TAB}");
+						}
+					}
+					try
+					{
+						bool matched;
+						parser.text += code;
+						Map statement = Parser.Statement.Match(parser, out matched);
+						statement.GetStatement().Assign(ref map);
+						Console.WriteLine();
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.ToString());
+					}
+				}
+			}
+			//if (args.Length == 0)
+			//{
+			//    Console.WriteLine("Meta 0.1 interactive mode");
+			//    Map map = new StrategyMap();
+			//    map.Scope = FileSystem.fileSystem;
+			//    while (true)
+			//    {
+			//        string code = "";
+			//        Console.Write(">>> ");
+			//        int lines = 0;
+			//        string input;
+			//        do
+			//        {
+			//            input = Console.ReadLine();
+			//            code += input;
+			//            code += Syntax.unixNewLine;
+			//            int tabs = input.Length - input.TrimStart('\t').Length;
+			//            if (input.Trim() == "")
+			//            {
+			//                if (lines != 0)
+			//                {
+			//                    break;
+
+			//                }
+			//            }
+			//            else
+			//            {
+			//                char character = input[input.Length - 1];
+			//                if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
+			//                {
+			//                    break;
+			//                }
+			//            }
+			//            lines++;
+
+			//            Console.Write("... ");
+			//            for(int i=0;i<tabs;i++)
+			//            {
+			//                SendKeys.SendWait("{TAB}");
+			//            }
+			//        }
+			//        while (true);
+			//        try
+			//        {
+			//            code = code.Trim(' ', '\t', '\n', '\r');
+			//            // keep the parser working, so the lines are correct
+			//            Parser parser = new Parser(code, "Interactive console");
+			//            parser.indentationCount = 0;
+			//            int count = FileSystem.fileSystem.ArrayCount;
+			//            int originalCount = count;
+			//            parser.isStartOfFile = false;
+			//            parser.functions++;
+			//            parser.defaultKeys.Push(count + 1);
+			//            bool matched;
+			//            Map statement = Parser.Statement.Match(parser, out matched);
+			//            statement.GetStatement().Assign(ref map);
+			//            Console.WriteLine();
+			//        }
+			//        catch (Exception e)
+			//        {
+			//            Console.WriteLine(e.ToString());
+			//        }
+			//    }
+			//}
+			else
 			{
 				if (args[0] == "-test")
 				{
 					new MetaTest().Run();
-				}
-				else if (args[0] == "-i")
-				{
-					Console.WriteLine("Meta 0.1 interactive mode");
-					Map map = new StrategyMap();
-					map.Scope = FileSystem.fileSystem;
-					while (true)
-					{
-						string code = "";
-						Console.Write(">>> ");
-						int lines = 0;
-						string input;
-						do
-						{
-							input = Console.ReadLine();
-							code += input;
-							code += Syntax.unixNewLine;
-							int tabs = input.Length - input.TrimStart('\t').Length;
-							if (input.Trim() == "")
-							{
-								if (lines != 0)
-								{
-									break;
-
-								}
-							}
-							else
-							{
-								char character = input[input.Length - 1];
-								if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
-								{
-									break;
-								}
-							}
-							lines++;
-
-							Console.Write("... ");
-							for(int i=0;i<tabs;i++)
-							{
-								SendKeys.SendWait("{TAB}");
-							}
-						}
-						while (true);
-						try
-						{
-							// refactor, reuse this in Web
-							code = code.Trim(' ', '\t', '\n', '\r');
-							Parser parser = new Parser(code, "Interactive console");
-							parser.indentationCount = 0;
-							int count = FileSystem.fileSystem.ArrayCount;
-							int originalCount = count;
-							parser.isStartOfFile = false;
-							parser.functions++;
-							parser.defaultKeys.Push(count + 1);
-							bool matched;
-							Map statement = Parser.Statement.Match(parser, out matched);
-							statement.GetStatement().Assign(ref map);
-							//if (map.ArrayCount != originalCount)
-							//{
-							//    Map value = map[map.ArrayCount];
-							//    if (MetaTest.Leaves(value) < 1000)
-							//    {
-							//        Console.WriteLine(Meta.Serialize.Value(value));
-							//    }
-							//    else
-							//    {
-							//        Console.WriteLine("Map is too big to display.");
-							//    }
-							//}
-							Console.WriteLine();
-						}
-						catch (Exception e)
-						{
-							Console.WriteLine(e.ToString());
-						}
-					}
 				}
 				else if (args[0] == "-profile")
 				{
