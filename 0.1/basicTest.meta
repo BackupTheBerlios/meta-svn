@@ -22,7 +22,7 @@ license='"
 	SOFTWARE."'
 |
 	this=merge
-		scope
+		%
 		=
 			"AssignedToCurrent"
 	scoping=
@@ -33,9 +33,9 @@ license='"
 	scopingTest=scoping.test
 	lexicalScoping=scopingTest *
 	unicodeText="äaba"
-	scope.scope.testSubDir.x=*
+	%.%.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
-	scope.scope.testSubDir.x=
+	%.%.testSubDir.x=
 		a="b"
 		x=
 			x="hello"
@@ -93,18 +93,18 @@ license='"
 		b=*
 		SetA=
 			|
-				scope.scope.a="c"
-				scope.scope.autoSearch="changed"
+				%.%.a="c"
+				%.%.autoSearch="changed"
 		SetB=
 			|
-				scope.scope.b.[1]=arg.value
-				this="changed"
+				%.%.b.[1]=arg.value
+				&="changed"
 		x=
 			a="b"
 			c="d"
 		=
 			|
-				this.a="b"
+				&.a="b"
 	a="default"
 	b=*
 	aSet=object.SetA *
@@ -116,7 +116,7 @@ license='"
 	scopeFunction=
 		inScope="right"
 		|
-			scope.scope.scopeTest=inScope
+			%.%.scopeTest=inScope
 	inScope="wrong"
 	scopeFunction *
 	scopeFromFunctionData="wrong"
@@ -128,7 +128,7 @@ license='"
 	scopeFromFunctionTest=scopeFromFunction *
 	ReturnEverything=
 		|
-			this=arg
+			&=arg
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -139,18 +139,18 @@ license='"
 		"z"
 	ReturnFunction=
 		|
-			this=
+			&=
 				|
-					this=
+					&=
 						1
 						2
 						3
 	SetCurrent=
 		|
-			this=
+			&=
 				arg=arg
 				x=arg.symbol
-			this=x
+			&=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
@@ -225,7 +225,7 @@ license='"
 	literalFunctionResult=literalFunction *
 	someFunction=
 		|
-			this="simple function this"
+			&="simple function this"
 	callFunction=
 		|someFunction
 	callFunctionResult=callFunction *
@@ -241,7 +241,7 @@ license='"
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
-			scope.scope.upperLevel=arg
+			%.%.upperLevel=arg
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
@@ -249,21 +249,21 @@ license='"
 	staticEventChanged=*
 	ChangeStaticEvent=
 		|
-			scope.scope.staticEventChanged=arg
+			%.%.staticEventChanged=arg
 	TestClass.staticEvent.add
 		|
 			ChangeStaticEvent 1
-			this=arg.[1]
+			&=@.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		|arg.[1]
+		|@.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate *
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=*
 	testClass.instanceEvent.add
 		|
-			scope.scope.scope.instanceEventChanged=1
-			this=arg.[1]
+			%.%.%.instanceEventChanged=1
+			&=@.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -331,26 +331,26 @@ license='"
 	loop=
 		|
 			whileDecision=not equal
-				arg
+				@
 				10
 			whileBranches=
 				
 					|loop add
-						arg
+						@
 						1
 				[*]=
-					|arg
-			this=whileBranches.[whileDecision] arg
+					|@
+			&=whileBranches.[whileDecision] @
 	whileCounter=loop 3
 	returnInMap=
 		|
-			result=arg
+			result=@
 	literalAsArgument=returnInMap 1
 	returnFunction=
 		|
 			|"functionResult"
 	returnArg=
-		|arg
+		|@
 	myArg=
 		|
 			hello="world"

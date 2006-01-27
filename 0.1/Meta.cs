@@ -37,10 +37,16 @@ namespace Meta
 {
 	public class CodeKeys
 	{
+		public static readonly Map Current="current";
+		public static readonly Map Scope="scope";
+		public static readonly Map Arg="argument";
+
+
 		public static readonly Map Literal="literal";
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
+		// rename argument to parameter???? would be more logical an unambigous
 		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
@@ -3544,6 +3550,9 @@ namespace Meta
 			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
 			Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
+		public const char current='&';
+		public const char scope='%';
+		public const char argument='@';
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -3568,10 +3577,6 @@ namespace Meta
 		public const char tab = '\t';
 	}
 	public delegate Map ParseFunction(Parser parser, out bool matched);
-
-	//partial class ParseFunction
-	//{
-	//}
 
 	public class Parser
 	{
@@ -4306,10 +4311,45 @@ namespace Meta
 							new CharacterExcept(
 								Syntax.lookupStringForbidden)))));
 
+		private static Rule Current = new Sequence(
+			Syntax.current,
+			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
+
+
+		private static Rule Scope = new Sequence(
+			Syntax.scope,
+			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
+
+		private static Rule Argument = new Sequence(
+			Syntax.argument,
+			new ReferenceAssignment( new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
+
+
+		//private static Rule Current = new Sequence(
+		//    Syntax.current,
+		//    new Literal(new StrategyMap(CodeKeys.Current,Map.Empty)));
+
+
+		//private static Rule Scope = new Sequence(
+		//    Syntax.scope,
+		//    new Literal(new StrategyMap(CodeKeys.Scope, Map.Empty)));
+
+		//private static Rule Argument = new Sequence(
+		//    Syntax.argument,
+		//    new Literal(new StrategyMap(CodeKeys.Arg, Map.Empty)));
+
 		private static Rule Lookup = 
 			new Alternatives(
+				Current,
+				Scope,
+				Argument,
 				LookupString,
 				LookupAnything);
+
+		//private static Rule Lookup = 
+		//    new Alternatives(
+		//        LookupString,
+		//        LookupAnything);
 
 		private static Rule Keys = new Sequence(
 			new Assignment(
@@ -4322,6 +4362,18 @@ namespace Meta
 							Syntax.select,
 							new ReferenceAssignment(
 								Lookup))))));
+
+		//private static Rule Keys = new Sequence(
+		//    new Assignment(
+		//        1,
+		//        Lookup),
+		//    new Appending(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    Syntax.select,
+		//                    new ReferenceAssignment(
+		//                        Lookup))))));
 
 		private static Rule Select = 
 			new Sequence(
