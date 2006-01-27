@@ -52,8 +52,8 @@ namespace Meta
 		public static readonly Map Scope = "scope";
 		public static readonly Map Arg="arg";
 		public static readonly Map This="this";
-		public static readonly Map Net = "net";
-		public static readonly Map Local = "local";
+		//public static readonly Map Net = "net";
+		//public static readonly Map Local = "local";
 	}
 	public class DotNetKeys
 	{
@@ -94,18 +94,20 @@ namespace Meta
 			: base(message, new Extent(line, column, line, column,fileName))
 		{
 		}
-		public override string Message
-		{
-			get
-			{
-				return "Syntax error: "+base.Message;
-			}
-		}
+		//public override string Message
+		//{
+		//    get
+		//    {
+		//        return "Syntax error: "+base.Message;
+		//    }
+		//}
 	}
 	public class ExecutionException : MetaException
 	{
-		public ExecutionException(string message, Extent extent):base(message,extent)
+		private Map context;
+		public ExecutionException(string message, Extent extent,Map context):base(message,extent)
 		{
+			this.context = context;
 		}
 		//public override string Message
 		//{
@@ -207,13 +209,13 @@ namespace Meta
 			//string text = "The key " + Serialize.Value(key) + " does not exist";
 			if (Leaves(map) < 1000)
 			{
-				text+="\n in \n"+Serialize.Value(map);
+				text+="\nin: "+Serialize.Value(map);
 			}
-			throw new ExecutionException(text,extent);
+			throw new ExecutionException(text,extent,map);
 		}
-		public static void KeyNotFound(Map key,Extent extent)
+		public static void KeyNotFound(Map key,Extent extent,Map context)
 		{
-			throw new ExecutionException("Key could not be found: "+Serialize.Value(key),extent);
+			throw new ExecutionException("Key could not be found: "+Serialize.Value(key),extent,context);
 		}
 	}
 	public abstract class Expression
@@ -224,12 +226,13 @@ namespace Meta
 		}
 		public Map Evaluate(Map context,Map argument)
 		{
+			// change this, this is horrible
 			Map current = new StrategyMap();
 			current.Scope = context;
 			current.Argument = argument;
-			return EvaluateImplementation(current);
+			return EvaluateImplementation(current,argument);
 		}
-		public abstract Map EvaluateImplementation(Map context);
+		public abstract Map EvaluateImplementation(Map context,Map arg);
 	}
 	public class Call : Expression
 	{
@@ -240,13 +243,13 @@ namespace Meta
 			this.callable = code[CodeKeys.Callable];
 			this.parameter = code[CodeKeys.Argument];
 		}
-		public override Map EvaluateImplementation(Map current)
+		public override Map EvaluateImplementation(Map current,Map arg)
 		{
 			Map function = callable.GetExpression().Evaluate(current);
 			if (!function.IsFunction)
 			{
 				object x=function.IsFunction;
-				throw new ExecutionException("Called map is not a function.", callable.Extent);
+				throw new ExecutionException("Called map is not a function.", callable.Extent,current);
 			}
 			Map argument = parameter.GetExpression().Evaluate(current);
 			Map result;
@@ -261,7 +264,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw new ExecutionException(e.ToString(), callable.Extent);
+				throw new ExecutionException(e.ToString(), callable.Extent,current);
 			}
 			if (result == null)
 			{
@@ -278,7 +281,7 @@ namespace Meta
 		{
 			statements = code.Array;
 		}
-		public override Map EvaluateImplementation(Map current)
+		public override Map EvaluateImplementation(Map current,Map arg)
 		{
 			foreach (Map statement in statements)
 			{
@@ -294,7 +297,7 @@ namespace Meta
 		{
 			this.literal = code;
 		}
-		public override Map EvaluateImplementation(Map context)
+		public override Map EvaluateImplementation(Map context,Map arg)
 		{
 			return literal.Copy();
 		}
@@ -314,7 +317,7 @@ namespace Meta
 			}
 			else if (key.Equals(SpecialKeys.This))
 			{
-				val = context;
+				val = context.Scope.Scope.Scope;
 			}
 			else
 			{
@@ -325,6 +328,9 @@ namespace Meta
 		private Map FindFirstKey(Map keyExpression, Map context)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context);
+			if(key.Equals(new StrategyMap("greater")))
+			{
+			}
 			Map val=GetSpecialKey(context, key);
 			if (val==null)
 			{
@@ -335,7 +341,7 @@ namespace Meta
 
 					if (selected == null)
 					{
-						Throw.KeyNotFound(key, keyExpression.Extent);
+						Throw.KeyNotFound(key, keyExpression.Extent,context);
 					}
 				}
 				val = selected[key];
@@ -347,7 +353,7 @@ namespace Meta
 		{
 			this.keys = code.Array;
 		}
-		public override Map EvaluateImplementation(Map context)
+		public override Map EvaluateImplementation(Map context,Map arg)
 		{
 			Map selected = FindFirstKey(keys[0], context);
 			for (int i = 1; i<keys.Count; i++)
@@ -452,11 +458,16 @@ namespace Meta
 	public class Library
 	{
 		public static string writtenText = "";
-		public static void WriteLine(string text)
+		public static void Write(string text)
 		{
-			writtenText += text + Environment.NewLine;
-			Console.WriteLine(text);
+			writtenText += text;// +Environment.NewLine;
+			Console.Write(text);
 		}
+		//public static void WriteLine(string text)
+		//{
+		//    writtenText += text + Environment.NewLine;
+		//    Console.WriteLine(text);
+		//}
 		public static Map Minimum(Map arg)
 		{
 			Number minumum = arg[1].GetNumber();
@@ -565,8 +576,6 @@ namespace Meta
 				{
 					code = "";
 					Console.Write(parser.Line + "> ");
-					//Console.Write(parser.Line + " >>> ");
-					//Console.Write(">>> ");
 					int lines = 0;
 					while (true)
 					{
@@ -579,6 +588,10 @@ namespace Meta
 							{
 								break;
 							}
+							else if(lines==0)
+							{
+								SendKeys.SendWait("{TAB}");
+							}
 						}
 						else
 						{
@@ -589,8 +602,6 @@ namespace Meta
 						}
 						lines++;
 						Console.Write(parser.Line + lines + ". ");
-						//Console.Write(parser.Line + lines + " ... ");
-						//Console.Write("... ");
 						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
 						{
 							SendKeys.SendWait("{TAB}");
@@ -601,7 +612,18 @@ namespace Meta
 						bool matched;
 						parser.text += code;
 						Map statement = Parser.Statement.Match(parser, out matched);
-						statement.GetStatement().Assign(ref map);
+						if (matched)
+						{
+							if (parser.index == parser.text.Length)
+							{
+								statement.GetStatement().Assign(ref map);
+							}
+							else
+							{
+								parser.index = parser.text.Length;
+								throw new SyntaxException("Syntax error", parser);
+							}
+						}
 						Console.WriteLine();
 					}
 					catch (Exception e)
@@ -610,70 +632,6 @@ namespace Meta
 					}
 				}
 			}
-			//if (args.Length == 0)
-			//{
-			//    Console.WriteLine("Meta 0.1 interactive mode");
-			//    Map map = new StrategyMap();
-			//    map.Scope = FileSystem.fileSystem;
-			//    while (true)
-			//    {
-			//        string code = "";
-			//        Console.Write(">>> ");
-			//        int lines = 0;
-			//        string input;
-			//        do
-			//        {
-			//            input = Console.ReadLine();
-			//            code += input;
-			//            code += Syntax.unixNewLine;
-			//            int tabs = input.Length - input.TrimStart('\t').Length;
-			//            if (input.Trim() == "")
-			//            {
-			//                if (lines != 0)
-			//                {
-			//                    break;
-
-			//                }
-			//            }
-			//            else
-			//            {
-			//                char character = input[input.Length - 1];
-			//                if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
-			//                {
-			//                    break;
-			//                }
-			//            }
-			//            lines++;
-
-			//            Console.Write("... ");
-			//            for(int i=0;i<tabs;i++)
-			//            {
-			//                SendKeys.SendWait("{TAB}");
-			//            }
-			//        }
-			//        while (true);
-			//        try
-			//        {
-			//            code = code.Trim(' ', '\t', '\n', '\r');
-			//            // keep the parser working, so the lines are correct
-			//            Parser parser = new Parser(code, "Interactive console");
-			//            parser.indentationCount = 0;
-			//            int count = FileSystem.fileSystem.ArrayCount;
-			//            int originalCount = count;
-			//            parser.isStartOfFile = false;
-			//            parser.functions++;
-			//            parser.defaultKeys.Push(count + 1);
-			//            bool matched;
-			//            Map statement = Parser.Statement.Match(parser, out matched);
-			//            statement.GetStatement().Assign(ref map);
-			//            Console.WriteLine();
-			//        }
-			//        catch (Exception e)
-			//        {
-			//            Console.WriteLine(e.ToString());
-			//        }
-			//    }
-			//}
 			else
 			{
 				if (args[0] == "-test")
@@ -1164,7 +1122,13 @@ namespace Meta
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
-			Map result = function.GetExpression().Evaluate(this,arg);
+
+			//Map current = new StrategyMap();
+			//current.Scope = this;
+			//current.Argument = arg;
+
+			//Map result = function.GetExpression().Evaluate(current, arg);
+			Map result = function.GetExpression().Evaluate(this, arg);
 			return result;
 		}
 		public abstract ICollection<Map> Keys

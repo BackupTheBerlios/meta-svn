@@ -1,0 +1,8 @@
+writeLine=
+	|write join
+		arg
+		mscorlib.Environment.NewLine.get *
+write=
+	|Meta.Library.Write arg
+readLine=
+	|mscorlib.Console.ReadLine *
