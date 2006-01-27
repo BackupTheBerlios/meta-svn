@@ -115,7 +115,11 @@ namespace Meta
 		private List<Extent> stack = new List<Extent>();
 		public override string ToString()
 		{
-			string message=Message + "\n\nStack trace:";
+			string message = Message;
+			if (stack.Count != 0)
+			{
+				message+="\n\nStack trace:";
+			}
 			foreach(Extent extent in stack)
 			{
 				message+="\n" + GetExtentText(extent);
@@ -148,23 +152,6 @@ namespace Meta
 				return GetExtentText(extent) + ": " + message;
 			}
 		}
-		//public override string Message
-		//{
-		//    get
-		//    {
-		//        string text=message+"\n";
-		//        //if (extent != null)
-		//        //{
-		//        text += GetExtentText(extent);
-		//        //}
-		//        //else
-		//        //{
-		//        //    text += "Unknown location.";
-		//        //}
-		//        //text += message;
-		//        return text;
-		//    }
-		//}
         private string message;
 		private Extent extent;
 	}
@@ -210,7 +197,6 @@ namespace Meta
 		}
 		public Map Evaluate(Map context,Map argument)
 		{
-			// change this, this is horrible
 			Map current = new StrategyMap();
 			current.Scope = context;
 			current.Argument = argument;

@@ -1,7 +1,6 @@
 documentation="Adds numbers."
 |Meta.StrategyMap.[Meta.Number] sum
 	array=arg
-	asdf
 	function=
 		|Meta.Number.op_Addition
 			Meta.Number.[Meta.Number] arg.previous
