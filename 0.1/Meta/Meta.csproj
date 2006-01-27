@@ -118,12 +118,10 @@
     <None Include="Library\multiply.meta" />
     <None Include="Library\not.meta" />
     <None Include="Library\or.meta" />
-    <None Include="Library\organisation.meta" />
     <None Include="Library\pop.meta" />
     <None Include="Library\print.meta" />
     <None Include="Library\range.meta" />
     <None Include="Library\remove.meta" />
-    <None Include="Library\repeat.meta" />
     <None Include="Library\smaller.meta" />
     <None Include="Library\sort.meta" />
     <None Include="Library\subtract.meta" />

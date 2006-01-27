@@ -142,11 +142,11 @@ namespace Meta
 				{
 					text = "Line ";
 				}
-				text += extent.Start.Line + ", column " + extent.Start.Column + ".";
+				text += extent.Start.Line + ", column " + extent.Start.Column + ": ";
 			}
 			else
 			{
-				text = "Unknown location.";
+				text = "Unknown location: ";
 			}
 			return text;
 		}
@@ -155,23 +155,30 @@ namespace Meta
 			this.message = message;
 			this.extent = extent;
 		}
-        public override string Message
-        {
-            get
-            {
-				string text=message+"\n";
-				//if (extent != null)
-				//{
-				text += GetExtentText(extent);
-				//}
-				//else
-				//{
-				//    text += "Unknown location.";
-				//}
-				//text += message;
-				return text;
-            }
-        }
+		public override string Message
+		{
+			get
+			{
+				return GetExtentText(extent) + message;
+			}
+		}
+		//public override string Message
+		//{
+		//    get
+		//    {
+		//        string text=message+"\n";
+		//        //if (extent != null)
+		//        //{
+		//        text += GetExtentText(extent);
+		//        //}
+		//        //else
+		//        //{
+		//        //    text += "Unknown location.";
+		//        //}
+		//        //text += message;
+		//        return text;
+		//    }
+		//}
         private string message;
 		private Extent extent;
 	}
@@ -196,16 +203,17 @@ namespace Meta
 		}
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			string text = "The key " + Serialize.Value(key) + " does not exist";
+			string text = "Key does not exist: " + Serialize.Value(key);
+			//string text = "The key " + Serialize.Value(key) + " does not exist";
 			if (Leaves(map) < 1000)
 			{
-				text+=" in \n"+Serialize.Value(map);
+				text+="\n in \n"+Serialize.Value(map);
 			}
 			throw new ExecutionException(text,extent);
 		}
 		public static void KeyNotFound(Map key,Extent extent)
 		{
-			throw new ExecutionException("The key "+Serialize.Value(key)+" could not be found.",extent);
+			throw new ExecutionException("Key could not be found: "+Serialize.Value(key),extent);
 		}
 	}
 	public abstract class Expression
@@ -542,240 +550,146 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//try
-			//{
-				if (args.Length != 0)
+			if (args.Length != 0)
+			{
+				if (args[0] == "-test")
 				{
-					if (args[0] == "-test")
+					new MetaTest().Run();
+				}
+				else if (args[0] == "-i")
+				{
+					Console.WriteLine("Meta 0.1 interactive mode");
+					Map map = new StrategyMap();
+					map.Scope = FileSystem.fileSystem;
+					while (true)
 					{
-						new MetaTest().Run();
-					}
-					else if (args[0] == "-i")
-					{
-						Console.WriteLine("Meta 0.1 interactive mode");
-						Map context = new StrategyMap();
-						context.Scope = FileSystem.fileSystem;
-						//context.Parent = FileSystem.fileSystem;
-						while (true)
+						string code = "";
+						Console.Write(">>> ");
+						int lines = 0;
+						string input;
+						do
 						{
-							string code = "";
-							string line;
-							Console.Write(">>> ");
-							//SendKeys.Send("{TAB}");
-							int lines = 0;
-							string tabs = "";
-							string input;
-							do
+							input = Console.ReadLine();
+							code += input;
+							code += Syntax.unixNewLine;
+							int tabs = input.Length - input.TrimStart('\t').Length;
+							if (input.Trim() == "")
 							{
-								input = Console.ReadLine();
-								line = tabs + input;
-								code += line;
-								int count = 0;
-								code += Syntax.unixNewLine;
-								tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
-								if (input.Trim() == "")
+								if (lines != 0)
 								{
-									if (lines != 0)
-									{
-										break;
+									break;
 
-									}
-								}
-								else
-								{
-									char character = line[line.Length - 1];
-									if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
-									{
-										break;
-									}
-								}
-								lines++;
-
-								Console.Write("... ");// + tabs);
-								foreach (char c in tabs)
-								{
-									SendKeys.SendWait("{TAB}");
-								}
-								tabs = "";
-							}
-							while (true);
-							try
-							{
-								// refactor, reuse this in Web
-								code = code.Trim(' ', '\t', '\n', '\r');
-								Parser parser = new Parser(code, "<Interactive console>");
-								parser.indentationCount = 0;
-								int count = FileSystem.fileSystem.ArrayCount;
-								int originalCount = count;
-								parser.isStartOfFile = false;
-								parser.functions++;
-								parser.defaultKeys.Push(count + 1);
-								bool matched;
-								Map statement = Parser.Statement.Match(parser, out matched);
-								statement.GetStatement().Assign(ref context);
-								if (context.ArrayCount != originalCount)
-								{
-									Map value = context[context.ArrayCount];
-									if (MetaTest.Leaves(value) < 1000)
-									{
-										Console.WriteLine(Meta.Serialize.Value(value));
-									}
-									else
-									{
-										Console.WriteLine("Map is too big to display.");
-									}
-								}
-								Console.WriteLine();
-							}
-							catch (Exception e)
-							{
-								Console.WriteLine(e.ToString());
-							}
-						}
-					}
-					//else if (args[0] == "-i")
-					//{
-					//    Map context = new StrategyMap();
-					//    context.Scope = FileSystem.fileSystem;
-					//    //context.Parent = FileSystem.fileSystem;
-					//    while (true)
-					//    {
-					//        string code = "";
-					//        string line;
-					//        Console.Write(">>> ");
-					//        int lines = 0;
-					//        string tabs = "";
-					//        string input;
-					//        do
-					//        {
-					//            input = Console.ReadLine();
-					//            line = tabs + input;
-					//            code += line;
-					//            int count = 0;
-					//            code += Syntax.unixNewLine;
-					//            tabs = "".PadLeft(line.Length - line.TrimStart('\t').Length, '\t');
-					//            if (input == "")
-					//            {
-					//                if (lines != 0)
-					//                {
-					//                    break;
-
-					//                }
-					//            }
-					//            else
-					//            {
-					//                char character = line[line.Length - 1];
-					//                if (!(Char.IsLetter(character) || character == ']') && !line.StartsWith("\t") && character != '=')
-					//                {
-					//                    break;
-					//                }
-					//            }
-					//            lines++;
-
-					//            Console.Write("... " + tabs);
-					//        }
-					//        while (true);
-					//        try
-					//        {
-					//            // refactor, reuse this in Web
-					//            code = code.Trim(' ', '\t', '\n', '\r');
-					//            Parser parser = new Parser(code, null);
-					//            parser.indentationCount = 0;
-					//            int count = FileSystem.fileSystem.ArrayCount;
-					//            int originalCount = count;
-					//            parser.isStartOfFile = false;
-					//            parser.defaultKeys.Push(count + 1);
-					//            bool matched;
-					//            Map statement = Parser.Statement.Match(parser, out matched);
-
-					//            statement.GetStatement().Assign(ref context);
-					//            if (context.ArrayCount != originalCount)
-					//            {
-					//                Map value = context[context.ArrayCount];
-					//                if (MetaTest.Leaves(value) < 1000)
-					//                {
-					//                    Console.WriteLine(Meta.Serialize.Value(value));
-					//                }
-					//                else
-					//                {
-					//                    Console.WriteLine("Map is too big to display.");
-					//                }
-					//            }
-					//            Console.WriteLine();
-					//        }
-					//        catch (Exception e)
-					//        {
-					//            Console.WriteLine(e.ToString());
-					//        }
-					//    }
-					//}
-					else if (args[0] == "-profile")
-					{
-						Console.WriteLine("profiling");
-						object x = FileSystem.fileSystem["basicTest"];
-					}
-					else
-					{
-						Map function = FileSystem.ParseFile(args[0]);
-						function.Scope = FileSystem.fileSystem;
-						int autoKeys = 0;
-						Map argument = new StrategyMap();
-						for (int i = 1; i < args.Length; i++)
-						{
-							string arg = args[i];
-
-							Map key;
-							Map value;
-							if (arg.StartsWith("-"))
-							{
-								string nextArg;
-								// move down
-								if (i + 1 < args.Length)
-								{
-									nextArg = args[i + 1];
-								}
-								else
-								{
-									nextArg = null;
-								}
-								key = arg.Remove(0, 1);
-								if (nextArg != null)
-								{
-									if (nextArg.StartsWith("-"))
-									{
-										value = Map.Empty;
-									}
-									else
-									{
-										value = nextArg;
-										i++;
-
-									}
-								}
-								else
-								{
-									value = Map.Empty;
 								}
 							}
 							else
 							{
-								autoKeys++;
-								key = autoKeys;
-								value = arg;
+								char character = input[input.Length - 1];
+								if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
+								{
+									break;
+								}
 							}
-							argument[key] = value;
+							lines++;
+
+							Console.Write("... ");
+							for(int i=0;i<tabs;i++)
+							{
+								SendKeys.SendWait("{TAB}");
+							}
 						}
-						function.Call(argument);
+						while (true);
+						try
+						{
+							// refactor, reuse this in Web
+							code = code.Trim(' ', '\t', '\n', '\r');
+							Parser parser = new Parser(code, "Interactive console");
+							parser.indentationCount = 0;
+							int count = FileSystem.fileSystem.ArrayCount;
+							int originalCount = count;
+							parser.isStartOfFile = false;
+							parser.functions++;
+							parser.defaultKeys.Push(count + 1);
+							bool matched;
+							Map statement = Parser.Statement.Match(parser, out matched);
+							statement.GetStatement().Assign(ref map);
+							//if (map.ArrayCount != originalCount)
+							//{
+							//    Map value = map[map.ArrayCount];
+							//    if (MetaTest.Leaves(value) < 1000)
+							//    {
+							//        Console.WriteLine(Meta.Serialize.Value(value));
+							//    }
+							//    else
+							//    {
+							//        Console.WriteLine("Map is too big to display.");
+							//    }
+							//}
+							Console.WriteLine();
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e.ToString());
+						}
 					}
 				}
-			//}
-			//catch (Exception e)
-			//{
-			//    Console.WriteLine();
-			//    Console.WriteLine(e.ToString());
-			//    Console.WriteLine();
-			//    Console.ReadLine();
-			//}
+				else if (args[0] == "-profile")
+				{
+					Console.WriteLine("profiling");
+					object x = FileSystem.fileSystem["basicTest"];
+				}
+				else
+				{
+					Map function = FileSystem.ParseFile(args[0]);
+					int autoKeys = 0;
+					Map argument = new StrategyMap();
+					for (int i = 1; i < args.Length; i++)
+					{
+						string arg = args[i];
+
+						Map key;
+						Map value;
+						if (arg.StartsWith("-"))
+						{
+							string nextArg;
+							// move down
+							if (i + 1 < args.Length)
+							{
+								nextArg = args[i + 1];
+							}
+							else
+							{
+								nextArg = null;
+							}
+							key = arg.Remove(0, 1);
+							if (nextArg != null)
+							{
+								if (nextArg.StartsWith("-"))
+								{
+									value = Map.Empty;
+								}
+								else
+								{
+									value = nextArg;
+									i++;
+
+								}
+							}
+							else
+							{
+								value = Map.Empty;
+							}
+						}
+						else
+						{
+							autoKeys++;
+							key = autoKeys;
+							value = arg;
+						}
+						argument[key] = value;
+					}
+					function.Call(argument);
+				}
+			}
 		}
 		Thread thread;
 		private Map parameter;
@@ -4642,6 +4556,9 @@ namespace Meta
 		public static string Expression(Map code, string indentation)
 		{
 			string text;
+			if (code == null)
+			{
+			}
 			if (code.ContainsKey(CodeKeys.Call))
 			{
 				text = Call(code[CodeKeys.Call], indentation);
@@ -4705,7 +4622,7 @@ namespace Meta
 		{
 			Map key = code[CodeKeys.Key];
 			string text;
-			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function))
+			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
 			{
 				if (code[CodeKeys.Value][CodeKeys.Literal] == null)
 				{
