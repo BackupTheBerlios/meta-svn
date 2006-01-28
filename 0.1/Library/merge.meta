@@ -1,16 +1,16 @@
 documentation="Combines several maps into one."
 |sum
-	array=arg
+	array=@
 	function=
 		|
-			overwrite=arg.present
-			this=sum
-				array=keys arg.present
+			overwrite=@.present
+			&=sum
+				array=keys @.present
 				function=
 					|
-						result=arg.previous
-						result.[arg.present]=overwrite.[arg.present]
-						this=result
-				start=arg.previous
+						result=@.previous
+						result.[@.present]=overwrite.[@.present]
+						&=result
+				start=@.previous
 	start=*
-|Meta.Library.Merge arg
+|Meta.Library.Merge @

@@ -21,7 +21,7 @@ license='"
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE."'
 |
-	this=merge
+	&=merge
 		%
 		=
 			"AssignedToCurrent"
@@ -76,7 +76,7 @@ license='"
 		'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
 	"ImpliedAutokey"
 	"Autokey"
-	commandLineArguments=arg
+	commandLineArguments=@
 	aMap=
 		a="a"
 	[aMap]="Object"
@@ -97,7 +97,7 @@ license='"
 				%.%.autoSearch="changed"
 		SetB=
 			|
-				%.%.b.[1]=arg.value
+				%.%.b.[1]=@.value
 				&="changed"
 		x=
 			a="b"
@@ -128,7 +128,7 @@ license='"
 	scopeFromFunctionTest=scopeFromFunction *
 	ReturnEverything=
 		|
-			&=arg
+			&=@
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -148,16 +148,16 @@ license='"
 	SetCurrent=
 		|
 			&=
-				arg=arg
-				x=arg.symbol
+				@=@
+				x=@.symbol
 			&=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
 		|
-			SecondLevel arg
+			SecondLevel @
 	SecondLevel=
-		|arg
+		|@
 	argTest=FirstLevel
 		a="z"
 	TestClass=Meta.TestClass
@@ -241,7 +241,7 @@ license='"
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
-			%.%.upperLevel=arg
+			%.%.upperLevel=@
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
@@ -249,7 +249,7 @@ license='"
 	staticEventChanged=*
 	ChangeStaticEvent=
 		|
-			%.%.staticEventChanged=arg
+			%.%.staticEventChanged=@
 	TestClass.staticEvent.add
 		|
 			ChangeStaticEvent 1

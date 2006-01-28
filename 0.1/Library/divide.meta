@@ -1,4 +1,4 @@
 documentation="Divides one integer by another."
 |Meta.StrategyMap.[Meta.Number] Meta.Number.op_Division
-	Meta.Number.[Meta.Map] arg.[1]
-	Meta.Number.[Meta.Map] arg.[2]
+	Meta.Number.[Meta.Map] @.[1]
+	Meta.Number.[Meta.Map] @.[2]

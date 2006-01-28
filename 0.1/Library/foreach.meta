@@ -1,6 +1,6 @@
 |apply
-	array=keys arg.map
+	array=keys @.map
 	function=
-		|arg.arg.function
-			value=arg.arg.map.[arg]
-			key=arg
+		|@.@.function
+			value=@.@.map.[@]
+			key=@

@@ -1,8 +1,8 @@
 documentation="Returns whether at least one boolean is true."
 |sum
-	array=arg
+	array=@
 	function=
-		|table.[arg]
+		|table.[@]
 	start=*
 table=
 	[

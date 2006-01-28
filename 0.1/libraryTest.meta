@@ -69,9 +69,9 @@
 			apply=
 				applyMethod=
 					|add
-						arg
+						@
 						1
-				this=apply
+				&=apply
 					function=applyMethod
 					array=
 						1
@@ -105,7 +105,7 @@
 				counter=*
 				SetCounter=
 					|
-						scope.scope.counter=arg
+						%.%.counter=@
 				test=while
 					condition=
 						|smaller
@@ -114,7 +114,7 @@
 					function=
 						|SetCounter
 							[*]=counter
-				this=counter
+				&=counter
 			sort=sort
 				array=
 					=
@@ -131,10 +131,10 @@
 						y=98834
 				compare=
 					|greater
-						arg.a.x
-						arg.b.x
+						@.a.x
+						@.b.x
 			integerToString=integerToString 5
 		bitwiseTest=bitwiseOr
 			20
 			["System.Windows.Forms"].Keys.Tab
-	this=test
+	&=test

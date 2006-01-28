@@ -1,5 +1,5 @@
 documentation="Negates a boolean."
-|table.[arg]
+|table.[@]
 table=
 	[*]=1
 	[1]=*

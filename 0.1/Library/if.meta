@@ -5,8 +5,8 @@
 				|*
 			then=
 				|*
-		arg
+		@
 	cases=
 		[1]=argument.then
 		[*]=argument.else
-	this=cases.[argument.condition] *
+	&=cases.[argument.condition] *
