@@ -50,7 +50,6 @@ namespace Meta
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
-		// rename argument to parameter???? would be more logical an unambigous
 		public static readonly Map Parameter="parameter";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
@@ -62,8 +61,6 @@ namespace Meta
 		public static readonly Map Scope = "scope";
 		public static readonly Map Arg="arg";
 		public static readonly Map This="this";
-		//public static readonly Map Net = "net";
-		//public static readonly Map Local = "local";
 	}
 	public class DotNetKeys
 	{
@@ -142,7 +139,7 @@ namespace Meta
 			if (extent != null)
 			{
 				text = extent.FileName + ", line ";
-				text += extent.Start.Line + ", column " + extent.Start.Column;// +": ";
+				text += extent.Start.Line + ", column " + extent.Start.Column;
 			}
 			else
 			{
@@ -187,7 +184,6 @@ namespace Meta
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
 			string text = "Key does not exist: " + Serialize.Value(key);
-			//string text = "The key " + Serialize.Value(key) + " does not exist";
 			if (Leaves(map) < 1000)
 			{
 				text+="\nin: "+Serialize.Value(map);
@@ -239,8 +235,7 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(callable.Extent);// + "Function has thrown an exception.");
-				//e.InvocationList.Add(MetaException.GetExtentText(callable.Extent) + "Function has thrown an exception.");
+				e.InvocationList.Add(callable.Extent);
 				throw e;
 			}
 			catch (Exception e)
@@ -251,7 +246,6 @@ namespace Meta
 			{
 				result = Map.Empty;
 			}
-			//result.Scope = null;
 			return result;
 		}
 	}
@@ -286,9 +280,8 @@ namespace Meta
 
 	public abstract class Subselect
 	{
-		// refactor, remove "arg"
-		public abstract Map EvaluateImplementation(Map context, Map arg, Map executionContext);
-		public abstract void Assign(ref Map context, Map value,ref Map executionContext);
+		public abstract Map EvaluateImplementation(Map context, Map executionContext);
+		public abstract void Assign(ref Map context, Map value, ref Map executionContext);
 	}
 	public class Current:Subselect
 	{
@@ -297,9 +290,8 @@ namespace Meta
 			value.Scope = context.Scope;
 			value.Argument = context.Argument;
 			executionContext = value;
-			//context = value;
 		}
-		public override Map EvaluateImplementation(Map context, Map arg,Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return context;
 		}
@@ -310,7 +302,7 @@ namespace Meta
 		{
 			throw new Exception("Cannot assign to scope.");
 		}
-		public override Map EvaluateImplementation(Map context, Map arg, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return context.Scope;
 		}
@@ -318,12 +310,12 @@ namespace Meta
 	public class Argument:Subselect
 	{
 		// maybe this should be caught in the parser, or even allow it?, at least for scope
-		// rename context to selected
-		public override void Assign(ref Map context, Map value,ref Map executionContext)
+		// ref is not really necessary for selected
+		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
 			throw new Exception("Cannot assign to argument.");
 		}
-		public override Map EvaluateImplementation(Map context, Map arg, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			Map scope=context;
 			while (scope!=null && scope.Argument == null)
@@ -335,23 +327,23 @@ namespace Meta
 	}
 	public class Lookup:Subselect
 	{
-		public override void Assign(ref Map context, Map value,ref Map executionContext)
+		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
-			context[keyExpression.GetExpression().Evaluate(executionContext)]=value;
+			selected[keyExpression.GetExpression().Evaluate(executionContext)]=value;
 		}
 		private Map keyExpression;
 		public Lookup(Map keyExpression)
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map arg, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return context[keyExpression.GetExpression().Evaluate(executionContext)];
 		}
 	}
 	public class Search:Subselect
 	{
-		public override void Assign(ref Map context, Map value,ref Map executionContext)
+		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -360,29 +352,21 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map arg, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
-				Map scope = context;
-			//try
-			//{
-				Map key = keyExpression.GetExpression().Evaluate(executionContext);
-				while (scope != null && !scope.ContainsKey(key))
-				{
-					scope = scope.Scope;
-				}
-				if (scope == null)
-				{
-					Throw.KeyNotFound(key, keyExpression.Extent, context);
-				}
+			Map scope = context;
+			Map key = keyExpression.GetExpression().Evaluate(executionContext);
+			while (scope != null && !scope.ContainsKey(key))
+			{
+				scope = scope.Scope;
+			}
+			if (scope == null)
+			{
+				Throw.KeyNotFound(key, keyExpression.Extent, context);
+			}
 			return scope[key];
-			//}
-			//catch(Exception e)
-			//{
-			//    throw e;
-			//}
 		}
 	}
-
 	public class Select : Expression
 	{
 		private Map GetSpecialKey(Map context, Map key)
@@ -427,7 +411,6 @@ namespace Meta
 			return val;
 		}
 		private List<Map> keys;
-		//private List<Subselect> subselects=new List<Subselect>();
 		public Select(Map code)
 		{
 			this.keys = code.Array;
@@ -437,263 +420,14 @@ namespace Meta
 			Map selected=context;
 			foreach (Map key in keys)
 			{
-				selected=key.GetSubselect().EvaluateImplementation(selected, arg, context);
+				selected=key.GetSubselect().EvaluateImplementation(selected, context);
 				if (selected == null)
 				{
 				}
 			}
 			return selected;
-			//Map selected = FindFirstKey(keys[0], context);
-			//for (int i = 1; i < keys.Count; i++)
-			//{
-			//    Map key = keys[i].GetExpression().Evaluate(context);
-			//    Map oldSelected = selected;
-			//    if (key.Equals(SpecialKeys.Scope))
-			//    {
-			//        selected = selected.Scope;
-			//    }
-			//    else if (key.Equals(SpecialKeys.Arg))
-			//    {
-			//        // refactor
-			//        Map x = context;
-			//        for (int k = 0; k < i; k++)
-			//        {
-			//            while (x != null && x.argument == null)
-			//            {
-			//                x = x.Scope;
-			//            }
-			//            x = x.Scope;
-			//        }
-			//        while (x != null && x.argument == null)
-			//        {
-			//            x = x.Scope;
-			//        }
-			//        if (x != null)
-			//        {
-			//            selected = x.argument;
-			//        }
-			//        else
-			//        {
-			//            selected = null;
-			//        }
-			//    }
-			//    else
-			//    {
-			//        if (!selected.ContainsKey(key))// fix: sometimes keys do not exist
-			//        {
-			//        }
-			//        selected = selected[key];
-			//    }
-			//    if (selected == null)
-			//    {
-			//        Throw.KeyDoesNotExist(key, oldSelected, keys[i].Extent);
-			//    }
-			//}
-			//return selected;
 		}
-		//public override Map EvaluateImplementation(Map context, Map arg)
-		//{
-		//    Map selected = FindFirstKey(keys[0], context);
-		//    for (int i = 1; i < keys.Count; i++)
-		//    {
-		//        Map key = keys[i].GetExpression().Evaluate(context);
-		//        Map oldSelected = selected;
-		//        if (key.Equals(SpecialKeys.Scope))
-		//        {
-		//            selected = selected.Scope;
-		//        }
-		//        else if (key.Equals(SpecialKeys.Arg))
-		//        {
-		//            // refactor
-		//            Map x = context;
-		//            for (int k = 0; k < i; k++)
-		//            {
-		//                while (x != null && x.argument == null)
-		//                {
-		//                    x = x.Scope;
-		//                }
-		//                x = x.Scope;
-		//            }
-		//            while (x != null && x.argument == null)
-		//            {
-		//                x = x.Scope;
-		//            }
-		//            if (x != null)
-		//            {
-		//                selected = x.argument;
-		//            }
-		//            else
-		//            {
-		//                selected = null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            if (!selected.ContainsKey(key))// fix: sometimes keys do not exist
-		//            {
-		//            }
-		//            selected = selected[key];
-		//        }
-		//        if (selected == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key, oldSelected, keys[i].Extent);
-		//        }
-		//    }
-		//    return selected;
-		//}
-		//public override Map EvaluateImplementation(Map context, Map arg)
-		//{
-		//    Map selected = FindFirstKey(keys[0], context);
-		//    for (int i = 1; i < keys.Count; i++)
-		//    {
-		//        Map key = keys[i].GetExpression().Evaluate(context);
-		//        Map oldSelected = selected;
-		//        if (key.Equals(SpecialKeys.Scope))
-		//        {
-		//            selected = selected.Scope;
-		//        }
-		//        else if (key.Equals(SpecialKeys.Arg))
-		//        {
-		//            // refactor
-		//            Map x = context;
-		//            for (int k = 0; k < i; k++)
-		//            {
-		//                while (x != null && x.argument == null)
-		//                {
-		//                    x = x.Scope;
-		//                }
-		//                x = x.Scope;
-		//            }
-		//            while (x != null && x.argument == null)
-		//            {
-		//                x = x.Scope;
-		//            }
-		//            if (x != null)
-		//            {
-		//                selected = x.argument;
-		//            }
-		//            else
-		//            {
-		//                selected = null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            if (!selected.ContainsKey(key))// fix: sometimes keys do not exist
-		//            {
-		//            }
-		//            selected = selected[key];
-		//        }
-		//        if (selected == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key, oldSelected, keys[i].Extent);
-		//        }
-		//    }
-		//    return selected;
-		//}
 	}
-	//public class Select : Expression
-	//{
-	//    private Map GetSpecialKey(Map context,Map key)
-	//    {
-	//        Map val;
-	//        if (key.Equals(SpecialKeys.Scope))
-	//        {
-	//            val = context.Scope;
-	//        }
-	//        else if (key.Equals(SpecialKeys.Arg))
-	//        {
-	//            val = context.Argument;
-	//        }
-	//        else if (key.Equals(SpecialKeys.This))
-	//        {
-	//            val = context.Scope.Scope.Scope;
-	//        }
-	//        else
-	//        {
-	//            val = null;
-	//        }
-	//        return val;
-	//    }
-	//    private Map FindFirstKey(Map keyExpression, Map context)
-	//    {
-	//        Map key = keyExpression.GetExpression().Evaluate(context);
-	//        if(key.Equals(new StrategyMap("greater")))
-	//        {
-	//        }
-	//        Map val=GetSpecialKey(context, key);
-	//        if (val==null)
-	//        {
-	//            Map selected = context;
-	//            while (!selected.ContainsKey(key))
-	//            {
-	//                selected = selected.Scope;
-
-	//                if (selected == null)
-	//                {
-	//                    Throw.KeyNotFound(key, keyExpression.Extent,context);
-	//                }
-	//            }
-	//            val = selected[key];
-	//        }
-	//        return val;
-	//    }
-	//    private List<Map> keys;
-	//    public Select(Map code)
-	//    {
-	//        this.keys = code.Array;
-	//    }
-	//    public override Map EvaluateImplementation(Map context,Map arg)
-	//    {
-	//        Map selected = FindFirstKey(keys[0], context);
-	//        for (int i = 1; i<keys.Count; i++)
-	//        {
-	//            Map key = keys[i].GetExpression().Evaluate(context);
-	//            Map oldSelected = selected;
-	//            if (key.Equals(SpecialKeys.Scope))
-	//            {
-	//                selected = selected.Scope;
-	//            }
-	//            else if (key.Equals(SpecialKeys.Arg))
-	//            {
-	//                // refactor
-	//                Map x = context;
-	//                for (int k = 0; k < i; k++)
-	//                {
-	//                    while (x!= null && x.argument == null)
-	//                    {
-	//                        x = x.Scope;
-	//                    }
-	//                    x = x.Scope;
-	//                }
-	//                while (x != null && x.argument == null)
-	//                {
-	//                    x = x.Scope;
-	//                }
-	//                if (x != null)
-	//                {
-	//                    selected = x.argument;
-	//                }
-	//                else
-	//                {
-	//                    selected= null;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                if(!selected.ContainsKey(key))// fix: sometimes keys do not exist
-	//                {
-	//                }
-	//                selected = selected[key];
-	//            }
-	//            if (selected == null)
-	//            {
-	//                Throw.KeyDoesNotExist(key,oldSelected, keys[i].Extent);
-	//            }
-	//        }
-	//        return selected;
-	//    }
-	//}
 	public class Statement
 	{
 		List<Map> keys;
@@ -712,83 +446,20 @@ namespace Meta
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
 				Map oldSelected=selected;
-				selected = keys[i].GetSubselect().EvaluateImplementation(selected, null, context);
-				if (selected == null)
-				{
-					//Throw.KeyDoesNotExist(key, oldSelected, keys[0].Extent);
-				}
+				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
 			}
 			Map val = value.GetExpression().Evaluate(context);
 			keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, ref context);
-			//keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, context);
-
-			//if (lastKey.Equals(SpecialKeys.This))
-			//{
-			//    val.Scope = context.Scope;
-			//    //val.Parent = context.Parent;
-			//    val.Argument = context.Argument;
-			//    context = val;
-			//}
-			//else
-			//{
-			//    selection[lastKey] = val;
-			//}
 		}
-		//public void Assign(ref Map context)
-		//{
-		//    Map selection = context;
-		//    Map key;
-		//    int i = 0;
-		//    for (; i + 1 < keys.Count; )
-		//    {
-		//        key = keys[i].GetExpression().Evaluate(context);
-		//        Map oldSelection = selection;
-		//        if (key.Equals(SpecialKeys.Scope))
-		//        {
-		//            selection = selection.Scope;
-		//        }
-		//        else
-		//        {
-		//            selection = selection.GetForAssignment(key);
-		//        }
-
-		//        if (selection == null)
-		//        {
-		//            Throw.KeyDoesNotExist(key,oldSelection, keys[0].Extent);
-		//        }
-		//        i++;
-		//    }
-		//    Map lastKey = keys[i].GetExpression().Evaluate(context);
-		//    Map val = value.GetExpression().Evaluate(context);
-		//    if (lastKey.Equals((Map)"autoSearch"))
-		//    {
-		//    }
-		//    if (lastKey.Equals(SpecialKeys.This))
-		//    {
-		//        val.Scope = context.Scope;
-		//        //val.Parent = context.Parent;
-		//        val.Argument = context.Argument;
-		//        context = val;
-		//    }
-		//    else
-		//    {
-		//        selection[lastKey] = val;
-		//    }
-		//}
 	}
 	public class Library
 	{
 		public static string writtenText = "";
 		public static void Write(string text)
 		{
-			writtenText += text;// +Environment.NewLine;
+			writtenText += text;
 			Console.Write(text);
 		}
-		//public static void WriteLine(string text)
-		//{
-		//    writtenText += text + Environment.NewLine;
-		//    Console.WriteLine(text);
-		//}
 		public static Map Minimum(Map arg)
 		{
 			Number minumum = arg[1].GetNumber();
@@ -822,14 +493,8 @@ namespace Meta
 				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
 				// refactor
 				return x != 0 ? -1 : 0;
-				//return x != 0 ? -1 : 0;
 			}));
 			return new StrategyMap(array);
-			//arg.Array.Sort(new Comparison<Map>(delegate(Map a, Map b) 
-			//{ 
-			//    return a["sort"].GetInteger().GetInt32().CompareTo(b["sort"].GetInteger());
-			//}));
-			//return new StrategyMap(arg);
 		}
 		public static Map Pop(Map arg)
 		{
@@ -1123,15 +788,6 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		//public static Map Create(params Map[] maps)
-		//{
-		//    Map map=new StrategyMap();
-		//    for (int i = 0; i + 2 <= maps.Length; i += 2)
-		//    {
-		//        map[maps[i]] = maps[i + 1];
-		//    }
-		//    return map;
-		//}
 		public Map Argument
 		{
 			get
@@ -1974,17 +1630,6 @@ namespace Meta
 							{
 								object x = target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { });
 								result = new ObjectMap(x);
-								//constructor = target.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, new Type[] { }, new ParameterModifier[] { });
-								//object obj = constructor.Invoke(new object[] { });
-								//result = new ObjectMap(obj);
-								//int asdf = 0;
-								//result = null;
-								//new System.Drawing.Point();
-								//constructor = target.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static, null, new Type[] { }, new ParameterModifier[] { });
-								//object obj=constructor.Invoke(new object[] { });
-								//result = new ObjectMap(obj);
-								//int asdf = 0;
-								//result = null;
 							}
 							else
 							{
@@ -1994,7 +1639,6 @@ namespace Meta
 							{
 								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value);
 							}
-							//System.Windows.Forms.Form form=System.Windows.Forms.Form();
 							dotNet = result.Object;
 						}
 						break;
@@ -2225,7 +1869,6 @@ namespace Meta
 					throw e.InnerException;
 				}
 			}
-			//return Transform.ToSimpleMeta(result);
 			return Transform.ToMeta(result);
 		}
 	}
@@ -2496,7 +2139,6 @@ namespace Meta
 	            foreach (object argument in arguments)
 	            {
 					arg.Append(Transform.ToSimpleMeta(argument));
-					//arg.Append(Transform.ToMeta(argument));
 				}
 	            Map result = this.callable.Call(arg);
 	            return Meta.Transform.ToDotNet(result, this.returnType);
@@ -2508,12 +2150,6 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map value;
-			//if (key.IsString && key.GetString() == this.type.Name)
-			//{
-			//    value = this.Constructor;
-			//    //value = this.Constructor;
-
-			//}
 			if (key is TypeMap && ((TypeMap)key).type == typeof(Map) && this.type==typeof(ObjectMap))
 			{
 			}
@@ -2541,35 +2177,6 @@ namespace Meta
 			}
 			return value;
 		}
-		//protected override Map Get(Map key)
-		//{
-		//    Map value;
-		//    if (key.IsString && key.GetString() == this.type.Name)
-		//    {
-		//        value = this.Constructor;
-		//        //value = this.Constructor;
-
-		//    }
-		//    else if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is ClassMap; }))
-		//    {
-		//        List<Type> types;
-		//        if (type.GetGenericArguments().Length == 1)
-		//        {
-		//            types = new List<Type>();
-		//            types.Add(((ClassMap)key).Type);
-		//        }
-		//        else
-		//        {
-		//            types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((ClassMap)map).type; }));
-		//        }
-		//        value = new ClassMap(type.MakeGenericType(types.ToArray()));
-		//    }
-		//    else
-		//    {
-		//        value = base.Get(key);
-		//    }
-		//    return value;
-		//}
 		public override bool IsFunction
 		{
 			get
@@ -2616,9 +2223,6 @@ namespace Meta
 				return new Method(type);
 			}
 		}
-		//public TypeMap(object obj, Type type):base(obj,type)
-		//{
-		//}
 		public TypeMap(Type targetType):base(null,targetType)
 		{
 		}
@@ -2744,10 +2348,6 @@ namespace Meta
 				return keys;
 			}
 		}
-		//public override bool ContainsKey(Map key)
-		//{
-		//    return key.Equals(Map.Empty) && data != 0;
-		//}
 		public override Map Get(Map key)
 		{
 			Map value;
@@ -2984,14 +2584,7 @@ namespace Meta
 				copy[pair.Key] = pair.Value;
 			}
 			return copy;
-			//this.map.Strategy = new CloneStrategy(this);
-			//return new StrategyMap(new CloneStrategy(this));
 		}
-		//public override MapStrategy CopyData()
-		//{
-		//    this.map.Strategy = new CloneStrategy(this);
-		//    return new CloneStrategy(this);
-		//}
 		public DictionaryStrategy(int Count)
 		{
 			this.data=new Dictionary<Map,Map>(Count);
@@ -3294,7 +2887,6 @@ namespace Meta
 					}
 				}
 				result = new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
-				//result = Transform.ToMeta(eventDelegate.DynamicInvoke(arguments.ToArray()));
 			}
 			else
 			{
@@ -3478,7 +3070,6 @@ namespace Meta
 					}
 					else if (members[0] is FieldInfo)
 					{
-						//val = Transform.ToSimpleMeta(type.GetField(text).GetValue(obj));
 						val = Transform.ToMeta(type.GetField(text).GetValue(obj));
 					}
 					else if (members[0] is EventInfo)
@@ -3942,6 +3533,8 @@ namespace Meta
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument };
+
+		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public static char[] lookupStringFirstForbidden;
 		public const char emptyMap = '*';
@@ -3990,18 +3583,8 @@ namespace Meta
 			get
 			{
 				return column;
-				//int startPos = Math.Min(index, text.Length - 1);
-				//return index - text.LastIndexOf('\n', startPos);
 			}
 		}
-		//public int Column
-		//{
-		//    get
-		//    {
-		//        int startPos = Math.Min(index, text.Length - 1);
-		//        return index - text.LastIndexOf('\n', startPos);
-		//    }
-		//}
 		private char Look()
 		{
 			return Look(0);
@@ -4582,16 +4165,6 @@ namespace Meta
 				new Assignment(CodeKeys.Value,
 					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
-
-		//public static Rule Function = new PrePost(
-		//    delegate(Parser parser) { parser.functions++; },
-		//    new Sequence(
-		//        Syntax.function,
-		//        new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
-		//        new Assignment(CodeKeys.Value,
-		//            new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
-
-
 		private static Rule EndOfLine = 
 			new Sequence(
 				new ZeroOrMore(
@@ -4751,10 +4324,6 @@ namespace Meta
 							LookupString,
 							LookupAnything))));
 
-		//private static Rule Lookup = 
-		//    new Alternatives(
-		//        LookupString,
-		//        LookupAnything);
 		private static Rule Search = new Sequence(
 			new Assignment(
 				CodeKeys.Search,
@@ -4791,88 +4360,6 @@ namespace Meta
 							Syntax.select,
 							new ReferenceAssignment(
 								Lookup))))));
-		//private static Rule Keys = new Sequence(
-		//    new Assignment(
-		//        1,
-		//        LookupLeft),
-		//    new Appending(
-		//        new ZeroOrMore(
-		//            new Autokey(
-		//                new Sequence(
-		//                    Syntax.select,
-		//                    new ReferenceAssignment(
-		//                        LookupLeft))))));
-
-		//private static Rule Keys = new Sequence(
-		//    new Assignment(
-		//        1,
-		//        Lookup),
-		//    new Appending(
-		//        new ZeroOrMore(
-		//            new Autokey(
-		//                new Sequence(
-		//                    Syntax.select,
-		//                    new ReferenceAssignment(
-		//                        Lookup))))));
-
-
-
-
-		// refactor
-		//private static Rule Keys = new Sequence(
-		//    new Assignment(
-		//        1,
-		//        Lookup),
-		//    new Appending(
-		//        new ZeroOrMore(
-		//            new Autokey(
-		//                new Sequence(
-		//                    Syntax.select,
-		//                    new ReferenceAssignment(
-		//                        Lookup))))));
-
-		//private static Rule Select = new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Select,
-		//        new Sequence(
-		//            new Assignment(
-		//                1,
-		//                new Sequence(
-		//                    new Assignment(
-		//                        CodeKeys.Search,
-		//                        Lookup))),
-		//            new Appending(
-		//                new ZeroOrMore(
-		//                    new Autokey(
-		//                        new Sequence(
-		//                            Syntax.select,
-		//                            new ReferenceAssignment(
-		//                                new Sequence(
-		//                                    new Assignment(
-		//                                        CodeKeys.Lookup,
-		//                                        Lookup))))))))));
-
-		//private static Rule Select = new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Select,
-		//        new Sequence(
-		//            new Assignment(
-		//                1,
-		//                Lookup),
-		//            new Appending(
-		//                new ZeroOrMore(
-		//                    new Autokey(
-		//                        new Sequence(
-		//                            Syntax.select,
-		//                            new ReferenceAssignment(
-		//                                Lookup))))))));
-
-
-		//private static Rule Select = 
-		//    new Sequence(
-		//        new Assignment(
-		//            CodeKeys.Select,
-		//            Keys));
 
 		public static Rule Statement = new Sequence(
 			new ReferenceAssignment(
@@ -4896,8 +4383,6 @@ namespace Meta
 								CodeKeys.Key,
 								new CustomRule(delegate(Parser p, out bool matched){
 									Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek())));
-									//Map map = new StrategyMap(CodeKeys.Lookup, new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek())));
-									//Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
 									p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 									matched = true;
 									return map;})))))),
@@ -4972,6 +4457,458 @@ namespace Meta
 						matched = p.functions != 0;
 						return null; }))));
 	}
+	public class Serializer
+	{
+		public class Rule
+		{
+			public abstract string Match(Map map,out bool matched);
+		}
+		public class OneOrMore
+		{
+		}
+		public static Rule Select = new Sequence(
+			Search,
+			new ZeroOrMore(
+				Syntax.select,
+				
+		public static Rule EmptyMap = new Identical(
+			Map.Empty,
+			Syntax.emptyMap);
+		public static Rule Expression = new Alternatives(
+			Program,
+			Select,
+			Call,
+			EmptyMap,
+			Number,
+			String);
+		public static Rule Statement = new Sequence(
+			new Key(
+				CodeKeys.Key,
+				Keys),
+			new Keys(
+				CodeKeys.Value,
+				Expression));
+		public static Rule Program = new OneOrMore(Statement);
+
+
+	}
+
+
+	//public class Serializer
+	//{
+	//    private Map m;
+	//    public Serializer(Map m)
+	//    {
+	//        this.m = m;
+	//    }
+	//    public string GetMap()
+	//    {
+	//        return "";
+	//    }
+	//    public abstract class Rule
+	//    {
+	//        public abstract string Match(out bool matched, Map map,out int count);
+	//    }
+	//    public class Sequence : Rule
+	//    {
+	//        public Sequence(params Rule[] rules)
+	//        {
+	//            this.rules = new List<Rule>(rules);
+	//        }
+	//        private List<Rule> rules;
+	//        // maybe count should be a bool, or something,
+	//        // or the map should actually be modified
+	//        // or we should traverse the thing one by one
+	//        // i actually think this would be the best way to do it
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            string text="";
+	//            matched = map.Count==rules.Count;
+	//            count = rules.Count;
+	//            foreach (Rule rule in rules)
+	//            {
+	//                if (!matched)
+	//                {
+	//                    break;
+	//                }
+
+	//                text += rule.Match(out matched, map,newCount);
+
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class KeyRule : Rule
+	//    {
+	//        private Map key;
+	//        private Rule rule;
+	//        public KeyRule(Map key,Rule rule)
+	//        {
+	//            this.key = key;
+	//            this.rule = rule;
+	//        }
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            string text;
+	//            count = 1;
+	//            if (map.ContainsKey(key))
+	//            {
+	//                text=rule.Match(out matched, map[key]);
+	//            }
+	//            else
+	//            {
+	//                text = "";
+	//                matched = false;
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class OneOrMore:Rule
+	//    {
+	//        private Rule rule;
+	//        public OneOrMore(Rule rule)
+	//        {
+	//            this.rule = rule;
+	//        }
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            string text = "";
+	//            matched = false;
+	//            count = 0;
+	//            foreach (Map m in map.Array)
+	//            {
+	//                text+=rule.Match(out matched, m);
+	//                count++;
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class Alternatives : Rule
+	//    {
+	//        private List<Rule> alternatives;
+	//        public Alternatives(params Rule[] alternatives)
+	//        {
+	//            this.alternatives = new List<Rule>(alternatives);
+	//        }
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            matched=false;
+	//            string text=null;
+	//            foreach (Rule rule in alternatives)
+	//            {
+	//                text = rule.Match(out matched, map,out count);
+	//                if (matched)
+	//                {
+	//                    break;
+	//                }
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class Equal : Rule
+	//    {
+	//        private Map map;
+	//        private string text;
+	//        public Equal(Map map,string text)
+	//        {
+	//            this.map = map;
+	//            this.text = text;
+	//        }
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            string text;
+	//            count = this.map.Count;
+	//            if (map.Equals(this.map))
+	//            {
+	//                matched = true;
+	//                text = this.text;
+	//            }
+	//            else
+	//            {
+	//                matched = false;
+	//                text = null;
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class CharacterExcept : Rule
+	//    {
+	//        private char[] chars;
+	//        public CharacterExcept(params char[] chars)
+	//        {
+	//            this.chars = chars;
+	//        }
+	//        public override string Match(out bool matched, Map map,out int count)
+	//        {
+	//            string text=null;
+	//            matched = false;
+	//            count = 1;
+	//            if(Transform.IsIntegerInRange(map,char.MinValue,char.MaxValue))
+	//            {
+	//                char c=Convert.ToChar(map.GetNumber().Numerator);
+	//                if (c.ToString().IndexOfAny(chars) == -1)
+	//                {
+	//                    matched = true;
+	//                    text = c.ToString();
+	//                }
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    public class Literal : Rule
+	//    {
+	//        private string text;
+	//        public Literal(string text)
+	//        {
+	//            this.text = text;
+	//        }
+	//        public override string Match(out bool matched, Map map, out int count)
+	//        {
+	//            count = 0;
+	//            matched = true;
+	//            return text;
+	//        }
+	//    }
+	//    //public class Enclose : Rule
+	//    //{
+	//    //    private Rule rule;
+	//    //    private string start;
+	//    //    private string end;
+	//    //    public Enclose(string start,Rule rule,string end)
+	//    //    {
+	//    //        this.start = start;
+	//    //        this.rule = rule;
+	//    //        this.end = end;
+	//    //    }
+	//    //    public override string Match(out bool matched, Map map)
+	//    //    {
+	//    //        return start + rule.Match(out matched, map) + end;
+	//    //    }
+	//    //}
+
+	//    public static Rule Expression;
+
+	//    public static Rule Current = new Equal(
+	//            new StrategyMap(
+	//                CodeKeys.Current,
+	//                Map.Empty),
+	//            Syntax.current.ToString());
+	//    public static Rule Scope = new Equal(
+	//            new StrategyMap(CodeKeys.Scope,Map.Empty),
+	//            Syntax.scope.ToString());
+	//    public static Rule Argument = new Equal(
+	//            new StrategyMap(CodeKeys.Argument, Map.Empty),
+	//            Syntax.argument.ToString());
+
+
+
+	//    public static Rule LookupString = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
+
+
+	//    public static Rule LookupAnything = new Sequence(
+	//        new Literal(Syntax.lookupStart.ToString()),
+	//        Expression,
+	//        new Literal(Syntax.lookupEnd.ToString()));
+
+	//    public static Rule Subselect=new Sequence(
+	//        new KeyRule(
+	//            CodeKeys.Lookup,
+	//            new Alternatives(LookupString,LookupAnything)));
+
+	//    public static Rule Lookup = new Alternatives(
+	//        Current,
+	//        Scope,
+	//        Argument,
+	//        Subselect
+	//    );
+
+	//    public static Rule Keys = new OneOrMore(
+	//        Lookup
+	//        );
+	//    public static Rule Statement = new Sequence(
+	//        new KeyRule(
+	//            CodeKeys.Key,
+	//            Keys
+	//            ),
+	//        new KeyRule(
+	//            CodeKeys.Value,
+	//            Expression
+	//        ));			
+	//}
+
+	//public class Serializer
+	//{
+	//    public abstract class Condition
+	//    {
+	//        public abstract bool Match(Map arg);
+	//    }
+	//    public abstract class Production
+	//    {
+	//        public abstract string Match(Map arg);
+	//    }
+	//    public abstract class ExpressionBase
+	//    {
+	//        //private Condition condition;
+	//        //private Production production;
+	//        //public ExpressionBase(Condition condition, Production production)
+	//        //{
+	//        //    this.condition = condition;
+	//        //    this.production = production;
+	//        //}
+	//        public abstract string Match(Map map, out bool matched);
+	//        //{
+	//        //    string text=MatchImplementation(map,matched);
+	//        //    return text;
+	//        //}
+	//        //public string Match(Map map, out bool matched)
+	//        //{
+	//            //matched = condition.Match(map);
+	//            //string text;
+	//            //if (matched)
+	//            //{
+	//            //    text = production.Match(map);
+	//            //}
+	//            //else
+	//            //{
+	//            //    text = null;
+	//            //}
+	//            //return text;
+	//        //}
+	//        //public abstract string MatchImplementation(Map map, out bool matched);
+	//    }
+	//    public class Expression:ExpressionBase
+	//    {
+	//        private Condition condition;
+	//        private Production production;
+	//        public Expression(Condition condition, Production production)
+	//        {
+	//            this.condition = condition;
+	//            this.production = production;
+	//        }
+	//        public override string Match(Map map, out bool matched)
+	//        {
+	//            matched = condition.Match(map);
+	//            string text;
+	//            if (matched)
+	//            {
+	//                text = production.Match(map);
+	//            }
+	//            else
+	//            {
+	//                text = null;
+	//            }
+	//            return text;
+	//        }
+	//    }
+	//    //public class Expression
+	//    //{
+	//    //    private Condition condition;
+	//    //    private Production production;
+	//    //    public Expression(Condition condition,Production production)
+	//    //    {
+	//    //        this.condition=condition;
+	//    //        this.production=production;
+	//    //    }
+	//    //    public string Match(Map map,out bool matched)
+	//    //    {
+	//    //        matched=condition.Match(map);
+	//    //        string text;
+	//    //        if(matched)
+	//    //        {
+	//    //            text=production.Match(map);
+	//    //        }
+	//    //        else
+	//    //        {
+	//    //            text=null;
+	//    //        }
+	//    //        return text;
+	//    //    }
+	//    //}
+	//    public class Equality : Condition
+	//    {
+	//        private Map map;
+	//        public Equality(Map map)
+	//        {
+	//            this.map = map;
+	//        }
+	//        public override bool Match(Map arg)
+	//        {
+	//            return map.Equals(arg);
+	//        }
+	//    }
+	//    public class Literal : Production
+	//    {
+	//        private string literal;
+	//        public Literal(string literal)
+	//        {
+	//            this.literal = literal;
+	//        }
+	//        public override string Match(Map arg)
+	//        {
+	//            return literal;
+	//        }
+	//    }
+	//    public Serializer(Map map)
+	//    {
+	//    }
+	//    public string GetMap(Map map)
+	//    {
+	//        return "";
+	//    }
+
+	//    //public Expression String = new Expression();
+	//    //public Expression Number = new Expression();
+
+	//    //public Expression Function = new Expression();
+	//    //public Expression Program = new Expression();
+	//    //public Expression Select = new Expression();
+	//    //public Expression Call = new Expression();
+	//    //public Expression EmptyMap = new Expression();
+
+
+	//    public class EqualKeys:Condition
+	//    {
+	//        private List<Map> keys;
+	//        public EqualKeys(params Map[] keys)
+	//        {
+	//            this.keys = new List<Map>(keys);
+	//        }
+	//        public override bool Match(Map arg)
+	//        {
+	//            return arg.Count==keys.Count && keys.TrueForAll(new Predicate<Map>(delegate(Map target)
+	//            {
+	//                return arg.ContainsKey(target);
+	//            }));
+	//        }
+	//    }
+	//    public class Sequence : Expression
+	//    {
+	//        private List<Expression> expressions;
+	//        public Sequence(params Expression[] expressions)
+	//        {
+	//            this.expressions = expressions;
+	//        }
+	//    }
+	//    public Expression Map = new Expression(null, null);
+	//    public Expression Statement = new Expression(
+	//        new EqualKeys(CodeKeys.Key, CodeKeys.Value),new Sequence(null,null));
+
+	//    public Expression Scope = new Expression(
+	//        new Equality(new StrategyMap(CodeKeys.Scope,Meta.Map.Empty)),
+	//        new Literal(Syntax.scope.ToString()));
+	//    public Expression Current = new Expression(
+	//        new Equality(new StrategyMap(CodeKeys.Current, Meta.Map.Empty)),
+	//        new Literal(Syntax.current.ToString()));
+	//    public Expression Argument = new Expression(
+	//        new Equality(new StrategyMap(CodeKeys.Argument, Meta.Map.Empty)),
+	//        new Literal(Syntax.argument.ToString()));
+
+
+
+
+
+
+	//}
 	public class Serialize
 	{
 		public static string Value(Map val)
@@ -5193,15 +5130,7 @@ namespace Meta
 			}
 			return text;
 		}
-		//public static string Select(Map code, string indentation)
-		//{
-		//    string text = Lookup(code[1], indentation);
-		//    for (int i = 2; code.ContainsKey(i); i++)
-		//    {
-		//        text += Syntax.select + Lookup(code[i], indentation);
-		//    }
-		//    return text;
-		//}
+
 		public static string Lookup(Map code, string indentation)
 		{
 			string text;
@@ -5249,24 +5178,6 @@ namespace Meta
 			}
 			return text;
 		}
-		//public static string Lookup(Map code, string indentation)
-		//{
-		//    string text;
-		//    if (code.ContainsKey(CodeKeys.Literal))
-		//    {
-		//        text = Key(code[CodeKeys.Literal], indentation);
-		//    }
-		//    else
-		//    {
-		//        text = Syntax.lookupStart + Expression(code, indentation);
-		//        if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
-		//        {
-		//            text += indentation;
-		//        }
-		//        text += Syntax.lookupEnd;
-		//    }
-		//    return text;
-		//}
 		private static string StringValue(Map val, string indentation)
 		{
 			string text;
@@ -5654,12 +5565,10 @@ namespace Meta
 		public static bool operator >=(Number a, Number b)
 		{
 			return a.Expand(b) >= b.Expand(a);
-			//return a.integer >= b.integer;
 		}
 		public static bool operator <=(Number a, Number b)
 		{
 			return a.Expand(b) <= b.Expand(a);
-			//return a.integer <= b.integer;
 		}
 		public override bool Equals(object o)
 		{
@@ -5715,7 +5624,7 @@ namespace Meta
 			{
 				get
 				{
-					return Path.Combine(Process.InstallationPath, "Test");//).FullName, "Test");
+					return Path.Combine(Process.InstallationPath, "Test");
 				}
 			}
 			private static string BasicTest
@@ -5766,7 +5675,8 @@ namespace Meta
 				{
 					level = 1;
 					Map map = FileSystem.ParseFile(BasicTest);
-					return Meta.Serialize.Value(map).TrimStart();
+					bool matched;
+					return new Serializer(map).GetMap();
 				}
 			}
 
@@ -5849,7 +5759,6 @@ namespace Meta
 				public static object GetResultFromDelegate()
 				{
 					return del.DynamicInvoke(new object[] { "argumentString" });
-					//return del.GetType().GetMethod("Invoke").Invoke(del.Target, new object[] { "argumentString" });
 				}
 				public double doubleValue = 0.0;
 				public float floatValue = 0.0F;
