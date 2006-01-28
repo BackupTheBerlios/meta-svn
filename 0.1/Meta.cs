@@ -4510,10 +4510,6 @@ namespace Meta
 				if (matched)
 				{
 				}
-				//if (val.Equals(Map.Empty))
-				//{
-				//    text = Syntax.emptyMap.ToString();
-				//}
 				else if (val.IsString)
 				{
 					text = StringValue.Match(val, indentation,out matched);
@@ -4533,34 +4529,6 @@ namespace Meta
 			}
 			return text;
 		}
-		//private static string Value(Map val, string indentation)
-		//{
-		//    string text;
-		//    if (val is StrategyMap)
-		//    {
-		//        if (val.Equals(Map.Empty))
-		//        {
-		//            text = Syntax.emptyMap.ToString();
-		//        }
-		//        else if (val.IsString)
-		//        {
-		//            text = StringValue(val, indentation);
-		//        }
-		//        else if (val.IsNumber)
-		//        {
-		//            text = IntegerValue(val);
-		//        }
-		//        else
-		//        {
-		//            text = MapValue(val, indentation);
-		//        }
-		//    }
-		//    else
-		//    {
-		//        text = val.ToString();
-		//    }
-		//    return text;
-		//}
 		private static string IntegerValue(Map number)
 		{
 			return number.GetNumber().ToString();
@@ -4570,7 +4538,8 @@ namespace Meta
 			string text;
 			if (key.IsString && !key.Equals(Map.Empty))
 			{
-				text = StringKey(key, indentation);
+				bool matched;
+				text = StringKey.Match(key, indentation,out matched);
 			}
 			else
 			{
@@ -4592,16 +4561,76 @@ namespace Meta
 			}
 			return text;
 		}
-		private static string StringKey(Map key, string indentation)
+		public class Alternatives : Rule
 		{
-			bool matched;
-			string text=LiteralKey.Match(key,indentation,out matched);
-			if (!matched)
+			private Rule[] rules;
+			public Alternatives(params Rule[] rules)
 			{
-				text = Syntax.lookupStart + StringValue.Match(key, indentation,out matched) + Syntax.lookupEnd;
+				this.rules = rules;
+			}
+			public override string Match(Map map,string indentation, out bool matched)
+			{
+				string text = null;
+				matched = false;
+				foreach (Rule rule in rules)
+				{
+					text = rule.Match(map,indentation, out matched);
+					if (matched)
+					{
+						break;
+					}
+				}
+				return text;
+			}
+		}
+
+		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
+		{
+			string text = null;
+			if (val.IsString)
+			{
+				int longestMatch = 0;
+				if (val.GetString().IndexOf("'n'") != -1)
+				{
+				}
+				string mapString = val.GetString();
+				string[] split = mapString.Split(Syntax.@string);
+				for (int i = 1; i < split.Length; i++)
+				{
+					int matchLength = split[i].Length - split[i].TrimStart(Syntax.stringEscape).Length + 1;
+					if (matchLength > longestMatch)
+					{
+						longestMatch = matchLength;
+					}
+				}
+				string escape = "";
+				for (int i = 0; i < longestMatch; i++)
+				{
+					escape += Syntax.stringEscape;
+				}
+				text = escape + Syntax.@string;
+				string[] lines = val.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
+				text += lines[0];
+				for (int i = 1; i < lines.Length; i++)
+				{
+					text += Syntax.unixNewLine + indentation + Syntax.indentation + lines[i];
+				}
+				text += Syntax.@string + escape;
+				matched = true;
+			}
+			else
+			{
+				matched = false;
+				text = null;
 			}
 			return text;
-		}
+		});
+		public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
+
+		private static Rule StringKey = new Alternatives(
+			LiteralKey,
+			new Decorator(Syntax.lookupStart.ToString(), StringValue, Syntax.lookupEnd.ToString()));
+
 		public class OneOrMore:Rule
 		{
 			private Rule rule;
@@ -4647,7 +4676,7 @@ namespace Meta
 				return text;
 			}
 		}
-		public static  Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
+
 		public static string MapValue(Map map, string indentation)
 		{
 			string text;
@@ -4725,34 +4754,6 @@ namespace Meta
 			matched = true;
 			return text;
 		});
-		//public static string Expression(Map code, string indentation)
-		//{
-		//    string text;
-		//    if (code == null)
-		//    {
-		//    }
-		//    if (code.ContainsKey(CodeKeys.Call))
-		//    {
-		//        text = Call(code[CodeKeys.Call], indentation);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Program))
-		//    {
-		//        text = Program(code[CodeKeys.Program], indentation);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Literal))
-		//    {
-		//        text = LiteralFunction(code[CodeKeys.Literal], indentation);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Select))
-		//    {
-		//        text = Select(code[CodeKeys.Select], indentation);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Cannot serialize map.");
-		//    }
-		//    return text;
-		//}
 		public class KeyRule : Rule
 		{
 			public Map key;
@@ -4993,49 +4994,6 @@ namespace Meta
 		}
 
 
-
-		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
-		{
-			//private static string StringValue(Map val, string indentation)
-			//{
-			string text;
-			if (val.IsString)
-			{
-				int longestMatch = 0;
-				if (val.GetString().IndexOf("'n'") != -1)
-				{
-				}
-				string mapString = val.GetString();
-				string[] split = mapString.Split(Syntax.@string);
-				for (int i = 1; i < split.Length; i++)
-				{
-					int matchLength = split[i].Length - split[i].TrimStart(Syntax.stringEscape).Length + 1;
-					if (matchLength > longestMatch)
-					{
-						longestMatch = matchLength;
-					}
-				}
-				string escape = "";
-				for (int i = 0; i < longestMatch; i++)
-				{
-					escape += Syntax.stringEscape;
-				}
-				text = escape + Syntax.@string;
-				string[] lines = val.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-				text += lines[0];
-				for (int i = 1; i < lines.Length; i++)
-				{
-					text += Syntax.unixNewLine + indentation + Syntax.indentation + lines[i];
-				}
-				text += Syntax.@string + escape;
-			}
-			else
-			{
-				text = MapValue(val, indentation);
-			}
-			matched = true;
-			return text;
-		});
 
 	}
 
