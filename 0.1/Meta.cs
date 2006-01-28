@@ -4733,7 +4733,7 @@ namespace Meta
 			}
 			if (code.ContainsKey(CodeKeys.Call))
 			{
-				text = Call(code[CodeKeys.Call], indentation);
+				text = Call.Match(code[CodeKeys.Call], indentation,out matched);
 			}
 			else if (code.ContainsKey(CodeKeys.Program))
 			{
@@ -4807,46 +4807,21 @@ namespace Meta
 				return text;
 			}
 		}
-		public static string Call(Map code, string indentation)
-		{
-			//Map callable = code[CodeKeys.Callable];
-			Map argument = code[CodeKeys.Parameter];
-			bool matched;
-
-			string text = new KeyRule(CodeKeys.Callable, Expression).Match(code, indentation, out matched);
-			//string text = new KeyRule(CodeKeys.Callable, Expression).Match(code, indentation, out matched);
-
-			//if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
-			//{
-			//    text += Syntax.call;
-			//}
-			//else
-			//{
-			//}
-			text += new KeyRule(CodeKeys.Parameter, new Alternatives(
-				Program,
-				new Decorator(
-					Syntax.call.ToString(),
-					Expression,
-					""))).Match(code, indentation, out matched);
-			//text += new KeyRule(CodeKeys.Parameter, Expression).Match(code, indentation, out matched);
-			return text;
-		}
 		//public static string Call(Map code, string indentation)
 		//{
-		//    Map callable = code[CodeKeys.Callable];
-		//    Map argument = code[CodeKeys.Parameter];
 		//    bool matched;
-		//    string text = Expression.Match(callable, indentation,out matched);
-
-		//    if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
-		//    {
-		//        text += Syntax.call;
-		//    }
-		//    else
-		//    {
-		//    }
-		//    text += Expression.Match(argument, indentation,out matched);
+		//    string text = new Set(
+		//        new KeyRule(
+		//            CodeKeys.Callable,
+		//            Expression),
+		//        new KeyRule(
+		//            CodeKeys.Parameter,
+		//            new Alternatives(
+		//                Program,
+		//                new Decorator(
+		//                    Syntax.call.ToString(),
+		//                    Expression,
+		//                    "")))).Match(code, indentation, out matched);
 		//    return text;
 		//}
 		public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
@@ -4874,28 +4849,19 @@ namespace Meta
 			}
 			return text;
 		});
-		//public static string Program(Map code, string indentation)
-		//{
-		//    string text;
-		//    if (code.Array.Count == 0)
-		//    {
-		//        text = "*";
-		//    }
-		//    else
-		//    {
-		//        text = Syntax.unixNewLine.ToString();
-		//        int autoKeys = 0;
-		//        foreach (Map statement in code.Array)
-		//        {
-		//            text += Statement(statement, indentation + Syntax.indentation, ref autoKeys);
-		//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-		//            {
-		//                text += Syntax.unixNewLine;
-		//            }
-		//        }
-		//    }
-		//    return text;
-		//}
+		public static Rule Call = new Set(
+				new KeyRule(
+					CodeKeys.Callable,
+					Expression),
+				new KeyRule(
+					CodeKeys.Parameter,
+					new Alternatives(
+						Program,
+						new Decorator(
+							Syntax.call.ToString(),
+							Expression,
+							""))));
+
 		public static string Statement(Map code, string indentation, ref int autoKeys)
 		{
 			Map key = code[CodeKeys.Key];
