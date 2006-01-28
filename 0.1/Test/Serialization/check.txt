@@ -22,7 +22,7 @@
 		SOFTWARE."'
 |
 	this=merge
-		scope
+		%
 		=
 			"AssignedToCurrent"
 	scoping=
@@ -76,7 +76,7 @@
 		'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
 	"ImpliedAutokey"
 	"Autokey"
-	commandLineArguments=arg
+	commandLineArguments=@
 	aMap=
 		a="a"
 	[aMap]="Object"
@@ -97,7 +97,7 @@
 				scope.scope.autoSearch="changed"
 		SetB=
 			|
-				scope.scope.b.[1]=arg.value
+				scope.scope.b.[1]=@.value
 				this="changed"
 		x=
 			a="b"
@@ -128,7 +128,7 @@
 	scopeFromFunctionTest=scopeFromFunction *
 	ReturnEverything=
 		|
-			this=arg
+			this=@
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -148,16 +148,16 @@
 	SetCurrent=
 		|
 			this=
-				arg=arg
-				x=arg.symbol
+				arg=@
+				x=@.symbol
 			this=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
 		|
-			SecondLevel arg
+			SecondLevel @
 	SecondLevel=
-		|arg
+		|@
 	argTest=FirstLevel
 		a="z"
 	TestClass=Meta.TestClass
@@ -241,7 +241,7 @@
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
-			scope.scope.upperLevel=arg
+			scope.scope.upperLevel=@
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
@@ -249,21 +249,21 @@
 	staticEventChanged=*
 	ChangeStaticEvent=
 		|
-			scope.scope.staticEventChanged=arg
+			scope.scope.staticEventChanged=@
 	TestClass.staticEvent.add
 		|
 			ChangeStaticEvent 1
-			this=arg.[1]
+			this=@.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		|arg.[1]
+		|@.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate *
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=*
 	testClass.instanceEvent.add
 		|
 			scope.scope.scope.instanceEventChanged=1
-			this=arg.[1]
+			this=@.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -331,26 +331,26 @@
 	loop=
 		|
 			whileDecision=not equal
-				arg
+				@
 				10
 			whileBranches=
 				=
 					|loop add
-						arg
+						@
 						1
 				[*]=
-					|arg
-			this=whileBranches.[whileDecision] arg
+					|@
+			this=whileBranches.[whileDecision] @
 	whileCounter=loop 3
 	returnInMap=
 		|
-			result=arg
+			result=@
 	literalAsArgument=returnInMap 1
 	returnFunction=
 		|
 			|"functionResult"
 	returnArg=
-		|arg
+		|@
 	myArg=
 		|
 			hello="world"

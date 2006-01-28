@@ -35,9 +35,13 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"literal"
+												"search"
 											Value (StrategyMap):
-												"scopingValue"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"literal"
+													Value (StrategyMap):
+														"scopingValue"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopingValue"
@@ -66,9 +70,13 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"search"
 									Value (StrategyMap):
-										"scopingValue"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"scopingValue"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lexicalScoping"
@@ -491,18 +499,22 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
-																		"literal"
+																		"argument"
 																	Value (StrategyMap):
-																		"arg"
+																		""
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																2
 															Value (StrategyMap):
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
-																		"literal"
+																		"lookup"
 																	Value (StrategyMap):
-																		"value"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"value"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										2
@@ -681,9 +693,13 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"search"
 															Value (StrategyMap):
-																"inScope"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"literal"
+																	Value (StrategyMap):
+																		"inScope"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"inScope"
@@ -751,9 +767,13 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
-																		"literal"
+																		"search"
 																	Value (StrategyMap):
-																		"scopeFromFunctionData"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"scopeFromFunctionData"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFromFunction"
@@ -772,9 +792,13 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"search"
 									Value (StrategyMap):
-										"scopeFromFunctionData"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"scopeFromFunctionData"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFromFunctionTest"
@@ -823,9 +847,9 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"argument"
 															Value (StrategyMap):
-																"arg"
+																""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"everythingReturned"
@@ -1101,9 +1125,9 @@ Entry (KeyValuePair`2)
 																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
-																						"literal"
+																						"argument"
 																					Value (StrategyMap):
-																						"arg"
+																						""
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														2
@@ -1135,18 +1159,22 @@ Entry (KeyValuePair`2)
 																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
-																						"literal"
+																						"argument"
 																					Value (StrategyMap):
-																						"arg"
+																						""
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				2
 																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
-																						"literal"
+																						"lookup"
 																					Value (StrategyMap):
-																						"symbol"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"literal"
+																							Value (StrategyMap):
+																								"symbol"
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								2
@@ -1178,9 +1206,13 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"search"
 															Value (StrategyMap):
-																"x"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"literal"
+																	Value (StrategyMap):
+																		"x"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"thisSet"
@@ -1224,9 +1256,13 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"search"
 																			Value (StrategyMap):
-																				"SecondLevel"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"SecondLevel"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"parameter"
@@ -1241,9 +1277,9 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"argument"
 																			Value (StrategyMap):
-																				"arg"
+																				""
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"key"
@@ -1275,9 +1311,9 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"argument"
 									Value (StrategyMap):
-										"arg"
+										""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"argTest"
@@ -1490,9 +1526,13 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"search"
 									Value (StrategyMap):
-										"someFunction"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"someFunction"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"callFunctionResult"
@@ -1659,9 +1699,13 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"search"
 									Value (StrategyMap):
-										"value"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"value"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"selectionFunctionResult"
@@ -1733,9 +1777,9 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"argument"
 															Value (StrategyMap):
-																"arg"
+																""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"ChangeUpperLevel"
@@ -1774,9 +1818,13 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"search"
 																			Value (StrategyMap):
-																				"SetUpperLevel"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"SetUpperLevel"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"parameter"
@@ -1870,9 +1918,9 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"argument"
 															Value (StrategyMap):
-																"arg"
+																""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		8
@@ -2222,9 +2270,13 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"search"
 																			Value (StrategyMap):
-																				"not"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"not"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"parameter"
@@ -2247,9 +2299,13 @@ Entry (KeyValuePair`2)
 																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
-																								"literal"
+																								"search"
 																							Value (StrategyMap):
-																								"equal"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										"literal"
+																									Value (StrategyMap):
+																										"equal"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		"parameter"
@@ -2276,9 +2332,9 @@ Entry (KeyValuePair`2)
 																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
-																														"literal"
+																														"argument"
 																													Value (StrategyMap):
-																														"arg"
+																														""
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
 																								"key"
@@ -2398,9 +2454,13 @@ Entry (KeyValuePair`2)
 																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
-																																		"literal"
+																																		"search"
 																																	Value (StrategyMap):
-																																		"loop"
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				"literal"
+																																			Value (StrategyMap):
+																																				"loop"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												"parameter"
@@ -2423,9 +2483,13 @@ Entry (KeyValuePair`2)
 																																			Value (StrategyMap):
 																																				Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
-																																						"literal"
+																																						"search"
 																																					Value (StrategyMap):
-																																						"add"
+																																						Entry (KeyValuePair`2)
+																																							Key (StrategyMap):
+																																								"literal"
+																																							Value (StrategyMap):
+																																								"add"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																"parameter"
@@ -2452,9 +2516,9 @@ Entry (KeyValuePair`2)
 																																									Value (StrategyMap):
 																																										Entry (KeyValuePair`2)
 																																											Key (StrategyMap):
-																																												"literal"
+																																												"argument"
 																																											Value (StrategyMap):
-																																												"arg"
+																																												""
 																																				Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						"key"
@@ -2567,9 +2631,9 @@ Entry (KeyValuePair`2)
 																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
-																														"literal"
+																														"argument"
 																													Value (StrategyMap):
-																														"arg"
+																														""
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								3
@@ -2609,26 +2673,38 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"search"
 																			Value (StrategyMap):
-																				"whileBranches"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"whileBranches"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		2
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"select"
+																				"lookup"
 																			Value (StrategyMap):
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
-																						1
+																						"select"
 																					Value (StrategyMap):
 																						Entry (KeyValuePair`2)
 																							Key (StrategyMap):
-																								"literal"
+																								1
 																							Value (StrategyMap):
-																								"whileDecision"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										"search"
+																									Value (StrategyMap):
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												"literal"
+																											Value (StrategyMap):
+																												"whileDecision"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"parameter"
@@ -2643,9 +2719,9 @@ Entry (KeyValuePair`2)
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
-																				"literal"
+																				"argument"
 																			Value (StrategyMap):
-																				"arg"
+																				""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"returnInMap"
@@ -2689,9 +2765,9 @@ Entry (KeyValuePair`2)
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
-																"literal"
+																"argument"
 															Value (StrategyMap):
-																"arg"
+																""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalAsArgument"
@@ -2761,9 +2837,9 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"literal"
+										"argument"
 									Value (StrategyMap):
-										"arg"
+										""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"myArg"
