@@ -3614,6 +3614,7 @@ namespace Meta
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
+
 			public static implicit operator Rule(string text)
 			{
 				return new StringRule(text);
@@ -3875,10 +3876,10 @@ namespace Meta
 				}
 			}
 		}
-		public class Literal : Rule
+		public class LiteralRule : Rule
 		{
 			private Map literal;
-			public Literal(Map literal)
+			public LiteralRule(Map literal)
 			{
 				this.literal = literal;
 			}
@@ -4161,7 +4162,7 @@ namespace Meta
 			delegate(Parser parser) { parser.functions++; },
 			new Sequence(
 				Syntax.function,
-				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 				new Assignment(CodeKeys.Value,
 					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
@@ -4212,7 +4213,7 @@ namespace Meta
 				new Sequence(
 					Syntax.emptyMap,
 					new ReferenceAssignment(
-						new Literal(Map.Empty)))));
+						new LiteralRule(Map.Empty)))));
 
 		private static Rule LookupAnything = 
 			new Sequence(
@@ -4276,31 +4277,31 @@ namespace Meta
 
 		private static Rule Current = new Sequence(
 			Syntax.current,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Current, Map.Empty))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
 		private static Rule Scope = new Sequence(
 			Syntax.scope,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Scope, Map.Empty))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Argument = new Sequence(
 			Syntax.argument,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Argument, Map.Empty))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
 
 
 		// remove
 		private static Rule CurrentLeft = new Sequence(
 			Syntax.current,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
 
 
 		private static Rule ScopeLeft = new Sequence(
 			Syntax.scope,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
 
 		private static Rule ArgumentLeft = new Sequence(
 			Syntax.argument,
-			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
 
 		private static Rule LookupLeft =
 			new Alternatives(
@@ -4457,473 +4458,62 @@ namespace Meta
 						matched = p.functions != 0;
 						return null; }))));
 	}
-	public class Serializer
-	{
-		public class Rule
-		{
-			public abstract string Match(Map map,out bool matched);
-		}
-		public class OneOrMore
-		{
-		}
-		public static Rule Select = new Sequence(
-			Search,
-			new ZeroOrMore(
-				Syntax.select,
-				
-		public static Rule EmptyMap = new Identical(
-			Map.Empty,
-			Syntax.emptyMap);
-		public static Rule Expression = new Alternatives(
-			Program,
-			Select,
-			Call,
-			EmptyMap,
-			Number,
-			String);
-		public static Rule Statement = new Sequence(
-			new Key(
-				CodeKeys.Key,
-				Keys),
-			new Keys(
-				CodeKeys.Value,
-				Expression));
-		public static Rule Program = new OneOrMore(Statement);
 
-
-	}
-
-
-	//public class Serializer
-	//{
-	//    private Map m;
-	//    public Serializer(Map m)
-	//    {
-	//        this.m = m;
-	//    }
-	//    public string GetMap()
-	//    {
-	//        return "";
-	//    }
-	//    public abstract class Rule
-	//    {
-	//        public abstract string Match(out bool matched, Map map,out int count);
-	//    }
-	//    public class Sequence : Rule
-	//    {
-	//        public Sequence(params Rule[] rules)
-	//        {
-	//            this.rules = new List<Rule>(rules);
-	//        }
-	//        private List<Rule> rules;
-	//        // maybe count should be a bool, or something,
-	//        // or the map should actually be modified
-	//        // or we should traverse the thing one by one
-	//        // i actually think this would be the best way to do it
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            string text="";
-	//            matched = map.Count==rules.Count;
-	//            count = rules.Count;
-	//            foreach (Rule rule in rules)
-	//            {
-	//                if (!matched)
-	//                {
-	//                    break;
-	//                }
-
-	//                text += rule.Match(out matched, map,newCount);
-
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class KeyRule : Rule
-	//    {
-	//        private Map key;
-	//        private Rule rule;
-	//        public KeyRule(Map key,Rule rule)
-	//        {
-	//            this.key = key;
-	//            this.rule = rule;
-	//        }
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            string text;
-	//            count = 1;
-	//            if (map.ContainsKey(key))
-	//            {
-	//                text=rule.Match(out matched, map[key]);
-	//            }
-	//            else
-	//            {
-	//                text = "";
-	//                matched = false;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class OneOrMore:Rule
-	//    {
-	//        private Rule rule;
-	//        public OneOrMore(Rule rule)
-	//        {
-	//            this.rule = rule;
-	//        }
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            string text = "";
-	//            matched = false;
-	//            count = 0;
-	//            foreach (Map m in map.Array)
-	//            {
-	//                text+=rule.Match(out matched, m);
-	//                count++;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Alternatives : Rule
-	//    {
-	//        private List<Rule> alternatives;
-	//        public Alternatives(params Rule[] alternatives)
-	//        {
-	//            this.alternatives = new List<Rule>(alternatives);
-	//        }
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            matched=false;
-	//            string text=null;
-	//            foreach (Rule rule in alternatives)
-	//            {
-	//                text = rule.Match(out matched, map,out count);
-	//                if (matched)
-	//                {
-	//                    break;
-	//                }
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Equal : Rule
-	//    {
-	//        private Map map;
-	//        private string text;
-	//        public Equal(Map map,string text)
-	//        {
-	//            this.map = map;
-	//            this.text = text;
-	//        }
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            string text;
-	//            count = this.map.Count;
-	//            if (map.Equals(this.map))
-	//            {
-	//                matched = true;
-	//                text = this.text;
-	//            }
-	//            else
-	//            {
-	//                matched = false;
-	//                text = null;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class CharacterExcept : Rule
-	//    {
-	//        private char[] chars;
-	//        public CharacterExcept(params char[] chars)
-	//        {
-	//            this.chars = chars;
-	//        }
-	//        public override string Match(out bool matched, Map map,out int count)
-	//        {
-	//            string text=null;
-	//            matched = false;
-	//            count = 1;
-	//            if(Transform.IsIntegerInRange(map,char.MinValue,char.MaxValue))
-	//            {
-	//                char c=Convert.ToChar(map.GetNumber().Numerator);
-	//                if (c.ToString().IndexOfAny(chars) == -1)
-	//                {
-	//                    matched = true;
-	//                    text = c.ToString();
-	//                }
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Literal : Rule
-	//    {
-	//        private string text;
-	//        public Literal(string text)
-	//        {
-	//            this.text = text;
-	//        }
-	//        public override string Match(out bool matched, Map map, out int count)
-	//        {
-	//            count = 0;
-	//            matched = true;
-	//            return text;
-	//        }
-	//    }
-	//    //public class Enclose : Rule
-	//    //{
-	//    //    private Rule rule;
-	//    //    private string start;
-	//    //    private string end;
-	//    //    public Enclose(string start,Rule rule,string end)
-	//    //    {
-	//    //        this.start = start;
-	//    //        this.rule = rule;
-	//    //        this.end = end;
-	//    //    }
-	//    //    public override string Match(out bool matched, Map map)
-	//    //    {
-	//    //        return start + rule.Match(out matched, map) + end;
-	//    //    }
-	//    //}
-
-	//    public static Rule Expression;
-
-	//    public static Rule Current = new Equal(
-	//            new StrategyMap(
-	//                CodeKeys.Current,
-	//                Map.Empty),
-	//            Syntax.current.ToString());
-	//    public static Rule Scope = new Equal(
-	//            new StrategyMap(CodeKeys.Scope,Map.Empty),
-	//            Syntax.scope.ToString());
-	//    public static Rule Argument = new Equal(
-	//            new StrategyMap(CodeKeys.Argument, Map.Empty),
-	//            Syntax.argument.ToString());
-
-
-
-	//    public static Rule LookupString = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
-
-
-	//    public static Rule LookupAnything = new Sequence(
-	//        new Literal(Syntax.lookupStart.ToString()),
-	//        Expression,
-	//        new Literal(Syntax.lookupEnd.ToString()));
-
-	//    public static Rule Subselect=new Sequence(
-	//        new KeyRule(
-	//            CodeKeys.Lookup,
-	//            new Alternatives(LookupString,LookupAnything)));
-
-	//    public static Rule Lookup = new Alternatives(
-	//        Current,
-	//        Scope,
-	//        Argument,
-	//        Subselect
-	//    );
-
-	//    public static Rule Keys = new OneOrMore(
-	//        Lookup
-	//        );
-	//    public static Rule Statement = new Sequence(
-	//        new KeyRule(
-	//            CodeKeys.Key,
-	//            Keys
-	//            ),
-	//        new KeyRule(
-	//            CodeKeys.Value,
-	//            Expression
-	//        ));			
-	//}
-
-	//public class Serializer
-	//{
-	//    public abstract class Condition
-	//    {
-	//        public abstract bool Match(Map arg);
-	//    }
-	//    public abstract class Production
-	//    {
-	//        public abstract string Match(Map arg);
-	//    }
-	//    public abstract class ExpressionBase
-	//    {
-	//        //private Condition condition;
-	//        //private Production production;
-	//        //public ExpressionBase(Condition condition, Production production)
-	//        //{
-	//        //    this.condition = condition;
-	//        //    this.production = production;
-	//        //}
-	//        public abstract string Match(Map map, out bool matched);
-	//        //{
-	//        //    string text=MatchImplementation(map,matched);
-	//        //    return text;
-	//        //}
-	//        //public string Match(Map map, out bool matched)
-	//        //{
-	//            //matched = condition.Match(map);
-	//            //string text;
-	//            //if (matched)
-	//            //{
-	//            //    text = production.Match(map);
-	//            //}
-	//            //else
-	//            //{
-	//            //    text = null;
-	//            //}
-	//            //return text;
-	//        //}
-	//        //public abstract string MatchImplementation(Map map, out bool matched);
-	//    }
-	//    public class Expression:ExpressionBase
-	//    {
-	//        private Condition condition;
-	//        private Production production;
-	//        public Expression(Condition condition, Production production)
-	//        {
-	//            this.condition = condition;
-	//            this.production = production;
-	//        }
-	//        public override string Match(Map map, out bool matched)
-	//        {
-	//            matched = condition.Match(map);
-	//            string text;
-	//            if (matched)
-	//            {
-	//                text = production.Match(map);
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    //public class Expression
-	//    //{
-	//    //    private Condition condition;
-	//    //    private Production production;
-	//    //    public Expression(Condition condition,Production production)
-	//    //    {
-	//    //        this.condition=condition;
-	//    //        this.production=production;
-	//    //    }
-	//    //    public string Match(Map map,out bool matched)
-	//    //    {
-	//    //        matched=condition.Match(map);
-	//    //        string text;
-	//    //        if(matched)
-	//    //        {
-	//    //            text=production.Match(map);
-	//    //        }
-	//    //        else
-	//    //        {
-	//    //            text=null;
-	//    //        }
-	//    //        return text;
-	//    //    }
-	//    //}
-	//    public class Equality : Condition
-	//    {
-	//        private Map map;
-	//        public Equality(Map map)
-	//        {
-	//            this.map = map;
-	//        }
-	//        public override bool Match(Map arg)
-	//        {
-	//            return map.Equals(arg);
-	//        }
-	//    }
-	//    public class Literal : Production
-	//    {
-	//        private string literal;
-	//        public Literal(string literal)
-	//        {
-	//            this.literal = literal;
-	//        }
-	//        public override string Match(Map arg)
-	//        {
-	//            return literal;
-	//        }
-	//    }
-	//    public Serializer(Map map)
-	//    {
-	//    }
-	//    public string GetMap(Map map)
-	//    {
-	//        return "";
-	//    }
-
-	//    //public Expression String = new Expression();
-	//    //public Expression Number = new Expression();
-
-	//    //public Expression Function = new Expression();
-	//    //public Expression Program = new Expression();
-	//    //public Expression Select = new Expression();
-	//    //public Expression Call = new Expression();
-	//    //public Expression EmptyMap = new Expression();
-
-
-	//    public class EqualKeys:Condition
-	//    {
-	//        private List<Map> keys;
-	//        public EqualKeys(params Map[] keys)
-	//        {
-	//            this.keys = new List<Map>(keys);
-	//        }
-	//        public override bool Match(Map arg)
-	//        {
-	//            return arg.Count==keys.Count && keys.TrueForAll(new Predicate<Map>(delegate(Map target)
-	//            {
-	//                return arg.ContainsKey(target);
-	//            }));
-	//        }
-	//    }
-	//    public class Sequence : Expression
-	//    {
-	//        private List<Expression> expressions;
-	//        public Sequence(params Expression[] expressions)
-	//        {
-	//            this.expressions = expressions;
-	//        }
-	//    }
-	//    public Expression Map = new Expression(null, null);
-	//    public Expression Statement = new Expression(
-	//        new EqualKeys(CodeKeys.Key, CodeKeys.Value),new Sequence(null,null));
-
-	//    public Expression Scope = new Expression(
-	//        new Equality(new StrategyMap(CodeKeys.Scope,Meta.Map.Empty)),
-	//        new Literal(Syntax.scope.ToString()));
-	//    public Expression Current = new Expression(
-	//        new Equality(new StrategyMap(CodeKeys.Current, Meta.Map.Empty)),
-	//        new Literal(Syntax.current.ToString()));
-	//    public Expression Argument = new Expression(
-	//        new Equality(new StrategyMap(CodeKeys.Argument, Meta.Map.Empty)),
-	//        new Literal(Syntax.argument.ToString()));
-
-
-
-
-
-
-	//}
 	public class Serialize
 	{
+		public abstract class Rule
+		{
+			public abstract string Match(Map map, out bool matched);
+		}
 		public static string Value(Map val)
 		{
 			return Value(val, null);
 		}
+		public class Literal:Rule
+		{
+			private Rule rule;
+			private string literal;
+			public Literal(char c,Rule rule):this(c.ToString(),rule)
+			{
+			}
+			public Literal(string literal,Rule rule)
+			{
+				this.literal=literal;
+				this.rule=rule;
+			}
+			public override string Match(Map map, out bool matched)
+			{
+				rule.Match(map,out matched);
+				string text;
+				if(matched)
+				{
+					text=literal;
+				}
+				else
+				{
+					text=null;
+				}
+				return text;
+			}
+		}
+		private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
 		private static string Value(Map val, string indentation)
 		{
 			string text;
 			if (val is StrategyMap)
 			{
+				bool matched;
 				if (val.Equals(Map.Empty))
 				{
-					text = Syntax.emptyMap.ToString();
 				}
+				text = EmptyMap.Match(val, out matched);
+				if (matched)
+				{
+				}
+				//if (val.Equals(Map.Empty))
+				//{
+				//    text = Syntax.emptyMap.ToString();
+				//}
 				else if (val.IsString)
 				{
 					text = StringValue(val, indentation);
@@ -4942,6 +4532,38 @@ namespace Meta
 				text = val.ToString();
 			}
 			return text;
+		}
+		//private static string Value(Map val, string indentation)
+		//{
+		//    string text;
+		//    if (val is StrategyMap)
+		//    {
+		//        if (val.Equals(Map.Empty))
+		//        {
+		//            text = Syntax.emptyMap.ToString();
+		//        }
+		//        else if (val.IsString)
+		//        {
+		//            text = StringValue(val, indentation);
+		//        }
+		//        else if (val.IsNumber)
+		//        {
+		//            text = IntegerValue(val);
+		//        }
+		//        else
+		//        {
+		//            text = MapValue(val, indentation);
+		//        }
+		//    }
+		//    else
+		//    {
+		//        text = val.ToString();
+		//    }
+		//    return text;
+		//}
+		private static string IntegerValue(Map number)
+		{
+			return number.GetNumber().ToString();
 		}
 		public static string Key(Map key, string indentation)
 		{
@@ -4972,21 +4594,60 @@ namespace Meta
 		}
 		private static string StringKey(Map key, string indentation)
 		{
-			string text;
-			if (IsLiteralKey(key.GetString()))
-			{
-				text = key.GetString();
-			}
-			else
+			bool matched;
+			string text=LiteralKey.Match(key,out matched);
+			if (!matched)
 			{
 				text = Syntax.lookupStart + StringValue(key, indentation) + Syntax.lookupEnd;
 			}
 			return text;
 		}
-		private static bool IsLiteralKey(string text)
+		public class OneOrMore:Rule
 		{
-			return -1 == text.IndexOfAny(Syntax.lookupStringForbidden);
+			private Rule rule;
+			public OneOrMore(Rule rule)
+			{
+				this.rule = rule;
+			}
+			public override string Match(Map map, out bool matched)
+			{
+				matched = false;
+				string text = "";
+				foreach (Map m in map.Array)
+				{
+					text += rule.Match(m, out matched);
+					if (!matched)
+					{
+						break;
+					}
+				}
+				return text;
+			}
 		}
+		public class CharacterExcept : Rule
+		{
+			private char[] chars;
+			public CharacterExcept(params char[] chars)
+			{
+				this.chars = chars;
+			}
+			public override string Match(Map map,out bool matched)
+			{
+				string text = null;
+				matched = false;
+				if (Transform.IsIntegerInRange(map, char.MinValue, char.MaxValue))
+				{
+					char c = Convert.ToChar((int)map.GetNumber().Numerator);
+					if (c.ToString().IndexOfAny(chars) == -1)
+					{
+						matched = true;
+						text = c.ToString();
+					}
+				}
+				return text;
+			}
+		}
+		public static  Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
 		public static string MapValue(Map map, string indentation)
 		{
 			string text;
@@ -5036,7 +4697,7 @@ namespace Meta
 			}
 			else if (code.ContainsKey(CodeKeys.Literal))
 			{
-				text = Literal(code[CodeKeys.Literal], indentation);
+				text = LiteralFunction(code[CodeKeys.Literal], indentation);
 			}
 			else if (code.ContainsKey(CodeKeys.Select))
 			{
@@ -5048,11 +4709,64 @@ namespace Meta
 			}
 			return text;
 		}
+		public class KeyRule : Rule
+		{
+			public Map key;
+			Rule value;
+			public KeyRule(Map key, Rule value)
+			{
+				this.key = key;
+				this.value = value;
+			}
+			public override string Match(Map map, out bool matched)
+			{
+				string text;
+				if (map.ContainsKey(key))
+				{
+					text = value.Match(map[key], out matched);
+				}
+				else
+				{
+					text = null;
+					matched = false;
+				}
+				return text;
+			}
+		}
+		public class Set:Rule
+		{
+			private Rule[] rules;
+			public Set(params Rule[] rules)
+			{
+				this.rules = rules;
+			}
+			public override string Match(Map map, out bool matched)
+			{
+				string text = "";
+				int keyCount = 0;
+				matched = true;
+				foreach (Rule rule in rules)
+				{
+					text += rule.Match(map, out matched);
+					if (rule is KeyRule)
+					{
+						keyCount++;
+					}
+					if (!matched)
+					{
+						break;
+					}
+				}
+				matched = map.Count == keyCount && matched;
+				return text;
+			}
+		}
 		public static string Call(Map code, string indentation)
 		{
 			Map callable = code[CodeKeys.Callable];
 			Map argument = code[CodeKeys.Parameter];
 			string text = Expression(callable, indentation);
+
 			if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
 			{
 				text += Syntax.call;
@@ -5117,7 +4831,7 @@ namespace Meta
 			}
 			return text;
 		}
-		public static string Literal(Map code, string indentation)
+		public static string LiteralFunction(Map code, string indentation)
 		{
 			return Value(code, indentation);
 		}
@@ -5135,7 +4849,7 @@ namespace Meta
 		{
 			string text;
 			Map lookup;
-			if ((lookup=code[CodeKeys.Search])!=null || (lookup=code[CodeKeys.Lookup])!=null)
+			if ((lookup = code[CodeKeys.Search]) != null || (lookup = code[CodeKeys.Lookup]) != null)
 			{
 				if (lookup.ContainsKey(CodeKeys.Literal))
 				{
@@ -5151,32 +4865,64 @@ namespace Meta
 					text += Syntax.lookupEnd;
 				}
 			}
-			else if (code.ContainsKey(CodeKeys.Current))
-			{
-				text = Syntax.current.ToString();
-			}
-			else if (code.ContainsKey(CodeKeys.Argument))
-			{
-				text = Syntax.argument.ToString();
-			}
-			else if (code.ContainsKey(CodeKeys.Scope))
-			{
-				text = Syntax.scope.ToString();
-			}
-			else if (code.ContainsKey(CodeKeys.Literal))
-			{
-				text = Key(code[CodeKeys.Literal], indentation);
-			}
 			else
 			{
-				text = Syntax.lookupStart + Expression(code, indentation);
-				if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+				bool matched;
+				text = Current.Match(code, out matched);
+				if (!matched)
 				{
-					text += indentation;
+					text = Argument.Match(code, out matched);
 				}
-				text += Syntax.lookupEnd;
+				if (!matched)
+				{
+					text = Scope.Match(code, out matched);
+				}
+				if (matched)
+				{
+				}
+				else if (code.ContainsKey(CodeKeys.Literal))
+				{
+					text = Key(code[CodeKeys.Literal], indentation);
+				}
+				else
+				{
+					text = Syntax.lookupStart + Expression(code, indentation);
+					if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+					{
+						text += indentation;
+					}
+					text += Syntax.lookupEnd;
+				}
 			}
 			return text;
+		}
+		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
+		public static Rule Argument = new Equal(new StrategyMap(CodeKeys.Argument, Map.Empty), Syntax.argument.ToString());
+		public static Rule Scope = new Equal(new StrategyMap(CodeKeys.Scope, Map.Empty), Syntax.scope.ToString());
+		public class Equal : Rule
+		{
+			private Map map;
+			private string literal;
+			public Equal(Map map, string literal)
+			{
+				this.map = map;
+				this.literal = literal;
+			}
+			public override string Match(Map m, out bool matched)
+			{
+				string text;
+				if (m.Equals(map))
+				{
+					text = literal;
+					matched = true;
+				}
+				else
+				{
+					text = null;
+					matched = false;
+				}
+				return text;
+			}
 		}
 		private static string StringValue(Map val, string indentation)
 		{
@@ -5217,12 +4963,9 @@ namespace Meta
 			}
 			return text;
 		}
-		private static string IntegerValue(Map number)
-		{
-			return number.GetNumber().ToString();
-		}
+
 	}
-	// refactor, remove???
+
 	public class FileSystem
 	{
 		// refactor
@@ -5318,7 +5061,7 @@ namespace Meta
 		}
 		public static void Save()
 		{
-			string text = Serialize.MapValue(fileSystem, null).Trim(new char[] { '\n' });
+			string text = Serialize.Value(fileSystem).Trim(new char[] { '\n' });
 			if (text == "\"\"")
 			{
 				text = "";
@@ -5641,34 +5384,34 @@ namespace Meta
 					return Path.Combine(Process.InstallationPath, "libraryTest.meta");
 				}
 			}
-			public class Extents : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					Map argument = Map.Empty;
-					return FileSystem.ParseFile(BasicTest);
-				}
-			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					Map argument = new StrategyMap();
-					argument[1] = "first arg";
-					argument[2] = "second=arg";
-					return FileSystem.ParseFile(BasicTest).Call(argument);
-				}
-			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
-				}
-			}
+			//public class Extents : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        Map argument = Map.Empty;
+			//        return FileSystem.ParseFile(BasicTest);
+			//    }
+			//}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        Map argument = new StrategyMap();
+			//        argument[1] = "first arg";
+			//        argument[2] = "second=arg";
+			//        return FileSystem.ParseFile(BasicTest).Call(argument);
+			//    }
+			//}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+			//    }
+			//}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -5676,7 +5419,7 @@ namespace Meta
 					level = 1;
 					Map map = FileSystem.ParseFile(BasicTest);
 					bool matched;
-					return new Serializer(map).GetMap();
+					return Meta.Serialize.Value(map);
 				}
 			}
 

@@ -1,4 +1,5 @@
-"license='"
+"
+license='"
 		Copyright (c) 2005 Christian Staudenmeyer
 		
 		Permission is hereby granted, free of charge, to any person obtaining
@@ -21,21 +22,25 @@
 		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE."'
 |
-	this=merge
-		%
-		=
-			"AssignedToCurrent"
+	&=merge
+		[1]=%
+		[2]=
+			[1]="AssignedToCurrent"
 	scoping=
 		test=
 			scopingValue="right"
-			|scopingValue
+			function=
+				select=
+					[1]=
+						search=
+							literal="scopingValue"
 	scopingValue="wrong"
 	scopingTest=scoping.test
 	lexicalScoping=scopingTest *
 	unicodeText="äaba"
-	scope.scope.testSubDir.x=*
+	%.%.testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
-	scope.scope.testSubDir.x=
+	%.%.testSubDir.x=
 		a="b"
 		x=
 			x="hello"
@@ -69,13 +74,13 @@
 	fraction=3/2
 	persistenceTest=testSubDir
 	literalEscapeTest=
-		"asdf"
-		"asdf"
-		''"as"'df"''
-		'''"as"''df"'''
-		'''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
-	"ImpliedAutokey"
-	"Autokey"
+		[1]="asdf"
+		[2]="asdf"
+		[3]=''"as"'df"''
+		[4]='''"as"''df"'''
+		[5]='''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
+	[1]="ImpliedAutokey"
+	[2]="Autokey"
 	commandLineArguments=@
 	aMap=
 		a="a"
@@ -92,19 +97,73 @@
 		autoSearch="default"
 		b=*
 		SetA=
-			|
-				scope.scope.a="c"
-				scope.scope.autoSearch="changed"
+			function=
+				program=
+					[1]=
+						key=
+							[1]=
+								scope=*
+							[2]=
+								scope=*
+							[3]=
+								lookup=
+									literal="a"
+						value=
+							literal="c"
+					[2]=
+						key=
+							[1]=
+								scope=*
+							[2]=
+								scope=*
+							[3]=
+								lookup=
+									literal="autoSearch"
+						value=
+							literal="changed"
 		SetB=
-			|
-				scope.scope.b.[1]=@.value
-				this="changed"
+			function=
+				program=
+					[1]=
+						key=
+							[1]=
+								scope=*
+							[2]=
+								scope=*
+							[3]=
+								lookup=
+									literal="b"
+							[4]=
+								lookup=
+									literal=1
+						value=
+							select=
+								[1]=
+									argument=*
+								[2]=
+									lookup=
+										literal="value"
+					[2]=
+						key=
+							[1]=
+								current=*
+						value=
+							literal="changed"
 		x=
 			a="b"
 			c="d"
-		=
-			|
-				this.a="b"
+		[1]=
+			function=
+				program=
+					[1]=
+						key=
+							[1]=
+								current=*
+							[2]=
+								lookup=
+									literal="a"
+						value=
+							literal="b"
 	a="default"
 	b=*
 	aSet=object.SetA *
@@ -115,49 +174,170 @@
 	scopeTest="default"
 	scopeFunction=
 		inScope="right"
-		|
-			scope.scope.scopeTest=inScope
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							scope=*
+						[2]=
+							scope=*
+						[3]=
+							lookup=
+								literal="scopeTest"
+					value=
+						select=
+							[1]=
+								search=
+									literal="inScope"
 	inScope="wrong"
-	scopeFunction *
+	[3]=scopeFunction *
 	scopeFromFunctionData="wrong"
 	scopeFunctionFunction=
 		scopeFromFunctionData="right"
-		|
-			|scopeFromFunctionData
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="function"
+					value=
+						literal=
+							select=
+								[1]=
+									search=
+										literal="scopeFromFunctionData"
 	scopeFromFunction=scopeFunctionFunction *
 	scopeFromFunctionTest=scopeFromFunction *
 	ReturnEverything=
-		|
-			this=@
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							current=*
+					value=
+						select=
+							[1]=
+								argument=*
 	everythingReturned=ReturnEverything
-		"a"
-		"b"
-		"c"
+		[1]="a"
+		[2]="b"
+		[3]="c"
 	variableAsArgument=ReturnEverything
-		"x"
-		"y"
-		"z"
+		[1]="x"
+		[2]="y"
+		[3]="z"
 	ReturnFunction=
-		|
-			this=
-				|
-					this=
-						1
-						2
-						3
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							current=*
+					value=
+						program=
+							[1]=
+								key=
+									[1]=
+										lookup=
+											literal="function"
+								value=
+									literal=
+										program=
+											[1]=
+												key=
+													[1]=
+														current=*
+												value=
+													program=
+														[1]=
+															value=
+																literal=1
+															key=
+																[1]=
+																	lookup=
+																		literal=1
+														[2]=
+															value=
+																literal=2
+															key=
+																[1]=
+																	lookup=
+																		literal=2
+														[3]=
+															value=
+																literal=3
+															key=
+																[1]=
+																	lookup=
+																		literal=3
 	SetCurrent=
-		|
-			this=
-				arg=@
-				x=@.symbol
-			this=x
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							current=*
+					value=
+						program=
+							[1]=
+								key=
+									[1]=
+										lookup=
+											literal="asdf"
+								value=
+									select=
+										[1]=
+											argument=*
+							[2]=
+								key=
+									[1]=
+										lookup=
+											literal="x"
+								value=
+									select=
+										[1]=
+											argument=*
+										[2]=
+											lookup=
+												literal="symbol"
+				[2]=
+					key=
+						[1]=
+							current=*
+					value=
+						select=
+							[1]=
+								search=
+									literal="x"
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
-		|
-			SecondLevel @
+		function=
+			program=
+				[1]=
+					value=
+						call=
+							callable=
+								select=
+									[1]=
+										search=
+											literal="SecondLevel"
+							parameter=
+								select=
+									[1]=
+										argument=*
+					key=
+						[1]=
+							lookup=
+								literal=1
 	SecondLevel=
-		|@
+		function=
+			select=
+				[1]=
+					argument=*
 	argTest=FirstLevel
 		a="z"
 	TestClass=Meta.TestClass
@@ -180,90 +360,212 @@
 	stringOverload=MemberTest.OverloadedMethod.[mscorlib.String] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[mscorlib.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		Meta.MemberTest
-		mscorlib.Int32
+		[1]=Meta.MemberTest
+		[2]=mscorlib.Int32
 	]
-		memberTest
-		3247
+		[1]=memberTest
+		[2]=3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		Meta.MemberTest
-		mscorlib.Int32
+		[1]=Meta.MemberTest
+		[2]=mscorlib.Int32
 	]
-		memberTest
-		3247
+		[1]=memberTest
+		[2]=3247
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
+	[4]=MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
 	classPropertyValue=MemberTest.ClassProperty.get *
-	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
+	[5]=memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
 	instancePropertyValue=memberTest.InstanceProperty.get *
 	interceptedSymbol="/hello/"
 	positionalNoConversion=Meta.PositionalNoConversion
-		"m"
-		"n"
-		"o"
+		[1]="m"
+		[2]="n"
+		[3]="o"
 	positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-		"r"
-		"s"
-		"t"
+		[1]="r"
+		[2]="s"
+		[3]="t"
 	namedNoConversion=Meta.NamedNoConversion
-		"m"
+		[1]="m"
 		y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		c="t"
-		"r"
+		[1]="r"
 	indexerNoConversion=Meta.IndexerNoConversion *
-	indexerNoConversion.Item.set
-		"abc"
-		"hihi"
+	[6]=indexerNoConversion.Item.set
+		[1]="abc"
+		[2]="hihi"
 	indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
 	literalFunction=
-		|5
+		function=
+			literal=5
 	literalFunctionResult=literalFunction *
 	someFunction=
-		|
-			this="simple function this"
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							current=*
+					value=
+						literal="simple function this"
 	callFunction=
-		|someFunction
+		function=
+			select=
+				[1]=
+					search=
+						literal="someFunction"
 	callFunctionResult=callFunction *
 	delayedFunction=
-		|
-			|
-				x="y"
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="function"
+					value=
+						literal=
+							program=
+								[1]=
+									key=
+										[1]=
+											lookup=
+												literal="x"
+									value=
+										literal="y"
 	delayedFunctionResult=delayedFunction *
 	value="xyz"
 	selectionFunction=
-		|value
+		function=
+			select=
+				[1]=
+					search=
+						literal="value"
 	selectionFunctionResult=selectionFunction *
 	upperLevel="unchanged"
 	SetUpperLevel=
-		|
-			scope.scope.upperLevel=@
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							scope=*
+						[2]=
+							scope=*
+						[3]=
+							lookup=
+								literal="upperLevel"
+					value=
+						select=
+							[1]=
+								argument=*
 	ChangeUpperLevel=
-		|
-			SetUpperLevel "changed"
-	ChangeUpperLevel *
+		function=
+			program=
+				[1]=
+					value=
+						call=
+							callable=
+								select=
+									[1]=
+										search=
+											literal="SetUpperLevel"
+							parameter=
+								literal="changed"
+					key=
+						[1]=
+							lookup=
+								literal=1
+	[7]=ChangeUpperLevel *
 	staticEventChanged=*
 	ChangeStaticEvent=
-		|
-			scope.scope.staticEventChanged=@
-	TestClass.staticEvent.add
-		|
-			ChangeStaticEvent 1
-			this=@.[1]
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							scope=*
+						[2]=
+							scope=*
+						[3]=
+							lookup=
+								literal="staticEventChanged"
+					value=
+						select=
+							[1]=
+								argument=*
+	[8]=TestClass.staticEvent.add
+		function=
+			program=
+				[1]=
+					value=
+						call=
+							callable=
+								select=
+									[1]=
+										search=
+											literal="ChangeStaticEvent"
+							parameter=
+								literal=1
+					key=
+						[1]=
+							lookup=
+								literal=1
+				[2]=
+					key=
+						[1]=
+							current=*
+					value=
+						select=
+							[1]=
+								argument=*
+							[2]=
+								lookup=
+									literal=1
 	staticEvent=TestClass.staticEvent
-	TestClass.TakeDelegate
-		|@.[1]
+	[9]=TestClass.TakeDelegate
+		function=
+			select=
+				[1]=
+					argument=*
+				[2]=
+					lookup=
+						literal=1
 	resultFromDelegate=TestClass.GetResultFromDelegate *
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=*
-	testClass.instanceEvent.add
-		|
-			scope.scope.scope.instanceEventChanged=1
-			this=@.[1]
+	[10]=testClass.instanceEvent.add
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							scope=*
+						[2]=
+							scope=*
+						[3]=
+							scope=*
+						[4]=
+							lookup=
+								literal="instanceEventChanged"
+					value=
+						literal=1
+				[2]=
+					key=
+						[1]=
+							current=*
+					value=
+						select=
+							[1]=
+								argument=*
+							[2]=
+								lookup=
+									literal=1
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -271,32 +573,41 @@
 	firstIf="unchanged"
 	secondIf="unchanged"
 	firstIfCondition=equal
-		1
-		one
+		[1]=1
+		[2]=one
 	firstIfBranches=
-		=
-			|"then"
+		[1]=
+			function=
+				literal="then"
 		[*]=
-			|"else"
+			function=
+				literal="else"
 	firstIf=firstIfBranches.[firstIfCondition] *
 	bigNumber=50020202
 	secondSwitch="unchanged"
 	secondSwitchCases=
-		"one"
-		"two"
-		"three"
+		[1]="one"
+		[2]="two"
+		[3]="three"
 	secondSwitch=secondSwitchCases.[3]
 	emptyMap=*
 	emptyFunction=
-		|
-			x="hello"
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="x"
+					value=
+						literal="hello"
 	emptyFunctionResult=emptyFunction *
 	font=["System.Drawing"].Font.[
-		mscorlib.String
-		mscorlib.Single
+		[1]=mscorlib.String
+		[2]=mscorlib.Single
 	]
-		"Courier New"
-		10
+		[1]="Courier New"
+		[2]=10
 	decimalTest=5
 	fractionTest=40
 	stringTest="hello"
@@ -309,10 +620,10 @@
 						hello!
 						"
 	arrayList=mscorlib.ArrayList.[*] *
-	arrayList.Add "hello"
+	[11]=arrayList.Add "hello"
 	arrayListResult=arrayList.Item.get *
 	textBox=["System.Windows.Forms"].TextBox *
-	textBox.Text.set "
+	[12]=textBox.Text.set "
 				Alle meine Entchen,
 				schwimmen auf dem See,
 				schwimmen auf dem See,
@@ -321,7 +632,7 @@
 	lines=textBox.Lines.get *
 	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
 	form=["System.Windows.Forms"].Form *
-	form.Location.set.[["System.Drawing"].Point]
+	[13]=form.Location.set.[["System.Drawing"].Point]
 		X=5
 		Y=1000
 	automaticConversionTest=form.Location.get.[*] *
@@ -329,34 +640,179 @@
 	escapedText="'#'n'''t"
 	whileCounter=*
 	loop=
-		|
-			whileDecision=not equal
-				@
-				10
-			whileBranches=
-				=
-					|loop add
-						@
-						1
-				[*]=
-					|@
-			this=whileBranches.[whileDecision] @
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="whileDecision"
+					value=
+						call=
+							callable=
+								select=
+									[1]=
+										search=
+											literal="not"
+							parameter=
+								call=
+									callable=
+										select=
+											[1]=
+												search=
+													literal="equal"
+									parameter=
+										program=
+											[1]=
+												value=
+													select=
+														[1]=
+															argument=*
+												key=
+													[1]=
+														lookup=
+															literal=1
+											[2]=
+												value=
+													literal=10
+												key=
+													[1]=
+														lookup=
+															literal=2
+				[2]=
+					key=
+						[1]=
+							lookup=
+								literal="whileBranches"
+					value=
+						program=
+							[1]=
+								value=
+									program=
+										[1]=
+											key=
+												[1]=
+													lookup=
+														literal="function"
+											value=
+												literal=
+													call=
+														callable=
+															select=
+																[1]=
+																	search=
+																		literal="loop"
+														parameter=
+															call=
+																callable=
+																	select=
+																		[1]=
+																			search=
+																				literal="add"
+																parameter=
+																	program=
+																		[1]=
+																			value=
+																				select=
+																					[1]=
+																						argument=*
+																			key=
+																				[1]=
+																					lookup=
+																						literal=1
+																		[2]=
+																			value=
+																				literal=1
+																			key=
+																				[1]=
+																					lookup=
+																						literal=2
+								key=
+									[1]=
+										lookup=
+											literal=1
+							[2]=
+								key=
+									[1]=
+										lookup=
+											literal=*
+								value=
+									program=
+										[1]=
+											key=
+												[1]=
+													lookup=
+														literal="function"
+											value=
+												literal=
+													select=
+														[1]=
+															argument=*
+				[3]=
+					key=
+						[1]=
+							current=*
+					value=
+						call=
+							callable=
+								select=
+									[1]=
+										search=
+											literal="whileBranches"
+									[2]=
+										lookup=
+											select=
+												[1]=
+													search=
+														literal="whileDecision"
+							parameter=
+								select=
+									[1]=
+										argument=*
 	whileCounter=loop 3
 	returnInMap=
-		|
-			result=@
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="result"
+					value=
+						select=
+							[1]=
+								argument=*
 	literalAsArgument=returnInMap 1
 	returnFunction=
-		|
-			|"functionResult"
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="function"
+					value=
+						literal=
+							literal="functionResult"
 	returnArg=
-		|@
+		function=
+			select=
+				[1]=
+					argument=*
 	myArg=
-		|
-			hello="world"
+		function=
+			program=
+				[1]=
+					key=
+						[1]=
+							lookup=
+								literal="hello"
+					value=
+						literal="world"
 	funcReturnTest=returnArg myArg *
 	documentedFunction=
 		doc="This function returns #hello ."
-		|"hello"
+		function=
+			literal="hello"
 	docFunctionResult=documentedFunction *
 "
