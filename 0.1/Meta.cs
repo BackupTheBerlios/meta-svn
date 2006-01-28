@@ -4516,7 +4516,7 @@ namespace Meta
 				//}
 				else if (val.IsString)
 				{
-					text = StringValue(val, indentation);
+					text = StringValue.Match(val, indentation,out matched);
 				}
 				else if (val.IsNumber)
 				{
@@ -4598,7 +4598,7 @@ namespace Meta
 			string text=LiteralKey.Match(key,indentation,out matched);
 			if (!matched)
 			{
-				text = Syntax.lookupStart + StringValue(key, indentation) + Syntax.lookupEnd;
+				text = Syntax.lookupStart + StringValue.Match(key, indentation,out matched) + Syntax.lookupEnd;
 			}
 			return text;
 		}
@@ -4931,10 +4931,36 @@ namespace Meta
 				}
 				else
 				{
-					text = Syntax.lookupStart + Expression.Match(code, indentation,out matched) + Syntax.lookupEnd;
+					text = new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString()).Match(code, indentation, out matched);
 				}
 			}
 			return text;
+		}
+		public class Decorator : Rule
+		{
+			private string start;
+			private Rule rule;
+			private string end;
+			public Decorator(string start, Rule rule, string end)
+			{
+				this.start = start;
+				this.rule = rule;
+				this.end = end;
+			}
+			public override string Match(Map map, string indentation, out bool matched)
+			{
+				string text=rule.Match(map, indentation, out matched);
+				if (matched)
+				{
+					text = start + text + end;
+				}
+				else
+				{
+					text = null;
+					matched = false;
+				}
+				return text;
+			}
 		}
 
 		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
@@ -4968,9 +4994,10 @@ namespace Meta
 
 
 
-
-		private static string StringValue(Map val, string indentation)
+		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
 		{
+			//private static string StringValue(Map val, string indentation)
+			//{
 			string text;
 			if (val.IsString)
 			{
@@ -5006,8 +5033,9 @@ namespace Meta
 			{
 				text = MapValue(val, indentation);
 			}
+			matched = true;
 			return text;
-		}
+		});
 
 	}
 
