@@ -286,14 +286,18 @@ namespace Meta
 
 	public abstract class Subselect
 	{
+		// refactor, remove "arg"
 		public abstract Map EvaluateImplementation(Map context, Map arg, Map executionContext);
-		public abstract void Assign(ref Map context, Map value,Map executionContext);
+		public abstract void Assign(ref Map context, Map value,ref Map executionContext);
 	}
 	public class Current:Subselect
 	{
-		public override void Assign(ref Map context, Map value,Map executionContext)
+		public override void Assign(ref Map context, Map value,ref  Map executionContext)
 		{
-			context = value;
+			value.Scope = context.Scope;
+			value.Argument = context.Argument;
+			executionContext = value;
+			//context = value;
 		}
 		public override Map EvaluateImplementation(Map context, Map arg,Map executionContext)
 		{
@@ -302,7 +306,7 @@ namespace Meta
 	}
 	public class Scope:Subselect
 	{
-		public override void Assign(ref Map context, Map value,Map executionContext)
+		public override void Assign(ref Map context, Map value,ref Map executionContext)
 		{
 			throw new Exception("Cannot assign to scope.");
 		}
@@ -314,7 +318,8 @@ namespace Meta
 	public class Argument:Subselect
 	{
 		// maybe this should be caught in the parser, or even allow it?, at least for scope
-		public override void Assign(ref Map context, Map value, Map executionContext)
+		// rename context to selected
+		public override void Assign(ref Map context, Map value,ref Map executionContext)
 		{
 			throw new Exception("Cannot assign to argument.");
 		}
@@ -330,7 +335,7 @@ namespace Meta
 	}
 	public class Lookup:Subselect
 	{
-		public override void Assign(ref Map context, Map value, Map executionContext)
+		public override void Assign(ref Map context, Map value,ref Map executionContext)
 		{
 			context[keyExpression.GetExpression().Evaluate(executionContext)]=value;
 		}
@@ -346,7 +351,7 @@ namespace Meta
 	}
 	public class Search:Subselect
 	{
-		public override void Assign(ref Map context, Map value, Map executionContext)
+		public override void Assign(ref Map context, Map value,ref Map executionContext)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -357,13 +362,24 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map context, Map arg, Map executionContext)
 		{
-			Map scope = context;
-			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			while (scope!=null && !scope.ContainsKey(key))
-			{
-				scope = scope.Scope;
-			}
+				Map scope = context;
+			//try
+			//{
+				Map key = keyExpression.GetExpression().Evaluate(executionContext);
+				while (scope != null && !scope.ContainsKey(key))
+				{
+					scope = scope.Scope;
+				}
+				if (scope == null)
+				{
+					Throw.KeyNotFound(key, keyExpression.Extent, context);
+				}
 			return scope[key];
+			//}
+			//catch(Exception e)
+			//{
+			//    throw e;
+			//}
 		}
 	}
 
@@ -685,49 +701,80 @@ namespace Meta
 		public Statement(Map code)
 		{
 			this.keys = code[CodeKeys.Key].Array;
+			if (keys.Count == 0)
+			{
+			}
 			this.value = code[CodeKeys.Value];
 		}
 		public void Assign(ref Map context)
 		{
-			Map selection = context;
-			Map key;
-			int i = 0;
-			for (; i + 1 < keys.Count; )
+			Map selected = context;
+			for (int i = 0; i + 1 < keys.Count; i++)
 			{
-				key = keys[i].GetExpression().Evaluate(context);
-				Map oldSelection = selection;
-				if (key.Equals(SpecialKeys.Scope))
+				Map oldSelected=selected;
+				selected = keys[i].GetSubselect().EvaluateImplementation(selected, null, context);
+				if (selected == null)
 				{
-					selection = selection.Scope;
+					//Throw.KeyDoesNotExist(key, oldSelected, keys[0].Extent);
 				}
-				else
-				{
-					selection = selection.GetForAssignment(key);
-				}
-
-				if (selection == null)
-				{
-					Throw.KeyDoesNotExist(key,oldSelection, keys[0].Extent);
-				}
-				i++;
 			}
-			Map lastKey = keys[i].GetExpression().Evaluate(context);
 			Map val = value.GetExpression().Evaluate(context);
-			if (lastKey.Equals((Map)"autoSearch"))
-			{
-			}
-			if (lastKey.Equals(SpecialKeys.This))
-			{
-				val.Scope = context.Scope;
-				//val.Parent = context.Parent;
-				val.Argument = context.Argument;
-				context = val;
-			}
-			else
-			{
-				selection[lastKey] = val;
-			}
+			keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, ref context);
+			//keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, context);
+
+			//if (lastKey.Equals(SpecialKeys.This))
+			//{
+			//    val.Scope = context.Scope;
+			//    //val.Parent = context.Parent;
+			//    val.Argument = context.Argument;
+			//    context = val;
+			//}
+			//else
+			//{
+			//    selection[lastKey] = val;
+			//}
 		}
+		//public void Assign(ref Map context)
+		//{
+		//    Map selection = context;
+		//    Map key;
+		//    int i = 0;
+		//    for (; i + 1 < keys.Count; )
+		//    {
+		//        key = keys[i].GetExpression().Evaluate(context);
+		//        Map oldSelection = selection;
+		//        if (key.Equals(SpecialKeys.Scope))
+		//        {
+		//            selection = selection.Scope;
+		//        }
+		//        else
+		//        {
+		//            selection = selection.GetForAssignment(key);
+		//        }
+
+		//        if (selection == null)
+		//        {
+		//            Throw.KeyDoesNotExist(key,oldSelection, keys[0].Extent);
+		//        }
+		//        i++;
+		//    }
+		//    Map lastKey = keys[i].GetExpression().Evaluate(context);
+		//    Map val = value.GetExpression().Evaluate(context);
+		//    if (lastKey.Equals((Map)"autoSearch"))
+		//    {
+		//    }
+		//    if (lastKey.Equals(SpecialKeys.This))
+		//    {
+		//        val.Scope = context.Scope;
+		//        //val.Parent = context.Parent;
+		//        val.Argument = context.Argument;
+		//        context = val;
+		//    }
+		//    else
+		//    {
+		//        selection[lastKey] = val;
+		//    }
+		//}
 	}
 	public class Library
 	{
@@ -1397,6 +1444,7 @@ namespace Meta
 				return array;
 			}
 		}
+		// refactor
 		public Map GetForAssignment(Map key)
 		{
 			return Get(key);
@@ -4162,6 +4210,9 @@ namespace Meta
 				matched = false;
 				foreach (Rule expression in cases)
 				{
+					if (expression == null)
+					{
+					}
 					result = (Map)expression.Match(parser, out matched);
 					if (matched)
 					{
@@ -4527,9 +4578,18 @@ namespace Meta
 			delegate(Parser parser) { parser.functions++; },
 			new Sequence(
 				Syntax.function,
-				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
+				new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 				new Assignment(CodeKeys.Value,
 					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
+
+
+		//public static Rule Function = new PrePost(
+		//    delegate(Parser parser) { parser.functions++; },
+		//    new Sequence(
+		//        Syntax.function,
+		//        new Assignment(CodeKeys.Key, new Literal(new StrategyMap(1, new StrategyMap(CodeKeys.Literal, CodeKeys.Function)))),
+		//        new Assignment(CodeKeys.Value,
+		//            new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
 
 		private static Rule EndOfLine = 
@@ -4655,6 +4715,7 @@ namespace Meta
 			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Argument, Map.Empty))));
 
 
+		// remove
 		private static Rule CurrentLeft = new Sequence(
 			Syntax.current,
 			new ReferenceAssignment(new Literal(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
@@ -4694,31 +4755,6 @@ namespace Meta
 		//    new Alternatives(
 		//        LookupString,
 		//        LookupAnything);
-
-		private static Rule Keys = new Sequence(
-			new Assignment(
-				1,
-				LookupLeft),
-			new Appending(
-				new ZeroOrMore(
-					new Autokey(
-						new Sequence(
-							Syntax.select,
-							new ReferenceAssignment(
-								LookupLeft))))));
-
-		//private static Rule Keys = new Sequence(
-		//    new Assignment(
-		//        1,
-		//        Lookup),
-		//    new Appending(
-		//        new ZeroOrMore(
-		//            new Autokey(
-		//                new Sequence(
-		//                    Syntax.select,
-		//                    new ReferenceAssignment(
-		//                        Lookup))))));
-
 		private static Rule Search = new Sequence(
 			new Assignment(
 				CodeKeys.Search,
@@ -4743,6 +4779,58 @@ namespace Meta
 									Syntax.select,
 									new ReferenceAssignment(
 										Lookup))))))));
+
+		private static Rule Keys = new Sequence(
+			new Assignment(
+				1,
+				Lookup),
+			new Appending(
+				new ZeroOrMore(
+					new Autokey(
+						new Sequence(
+							Syntax.select,
+							new ReferenceAssignment(
+								Lookup))))));
+		//private static Rule Keys = new Sequence(
+		//    new Assignment(
+		//        1,
+		//        LookupLeft),
+		//    new Appending(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    Syntax.select,
+		//                    new ReferenceAssignment(
+		//                        LookupLeft))))));
+
+		//private static Rule Keys = new Sequence(
+		//    new Assignment(
+		//        1,
+		//        Lookup),
+		//    new Appending(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    Syntax.select,
+		//                    new ReferenceAssignment(
+		//                        Lookup))))));
+
+
+
+
+		// refactor
+		//private static Rule Keys = new Sequence(
+		//    new Assignment(
+		//        1,
+		//        Lookup),
+		//    new Appending(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    Syntax.select,
+		//                    new ReferenceAssignment(
+		//                        Lookup))))));
+
 		//private static Rule Select = new Sequence(
 		//    new Assignment(
 		//        CodeKeys.Select,
@@ -4807,7 +4895,9 @@ namespace Meta
 							new Assignment(
 								CodeKeys.Key,
 								new CustomRule(delegate(Parser p, out bool matched){
-									Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+									Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek())));
+									//Map map = new StrategyMap(CodeKeys.Lookup, new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek())));
+									//Map map = new StrategyMap(1, new StrategyMap(CodeKeys.Literal, p.defaultKeys.Peek()));
 									p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 									matched = true;
 									return map;})))))),

@@ -148,7 +148,7 @@ license='"
 	SetCurrent=
 		|
 			&=
-				@=@
+				asdf=@
 				x=@.symbol
 			&=x
 	thisSet=SetCurrent
