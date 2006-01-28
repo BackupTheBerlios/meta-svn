@@ -4803,7 +4803,8 @@ namespace Meta
 		{
 			Map key = code[CodeKeys.Key];
 			string text;
-			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
+			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
+			//if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
 			{
 				if (code[CodeKeys.Value][CodeKeys.Literal] == null)
 				{
@@ -4815,7 +4816,8 @@ namespace Meta
 				Map autoKey;
 				text = indentation;
 				Map value = code[CodeKeys.Value];
-				if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
+				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
+				//if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
 				{
 					autoKeys++;
 					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
@@ -4887,7 +4889,7 @@ namespace Meta
 				else
 				{
 					text = Syntax.lookupStart + Expression(code, indentation);
-					if (code.ContainsKey(CodeKeys.Program) && code[CodeKeys.Program].Count != 0)
+					if (code.ContainsKey(CodeKeys.Program))// && code[CodeKeys.Program].Count != 0)
 					{
 						text += indentation;
 					}
@@ -4924,6 +4926,10 @@ namespace Meta
 				return text;
 			}
 		}
+
+
+
+
 		private static string StringValue(Map val, string indentation)
 		{
 			string text;
