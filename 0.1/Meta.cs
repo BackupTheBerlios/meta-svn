@@ -4463,7 +4463,7 @@ namespace Meta
 	{
 		public abstract class Rule
 		{
-			public abstract string Match(Map map, out bool matched);
+			public abstract string Match(Map map, string indentation, out bool matched);
 		}
 		public static string Value(Map val)
 		{
@@ -4481,9 +4481,9 @@ namespace Meta
 				this.literal=literal;
 				this.rule=rule;
 			}
-			public override string Match(Map map, out bool matched)
+			public override string Match(Map map,string indentation, out bool matched)
 			{
-				rule.Match(map,out matched);
+				rule.Match(map,indentation,out matched);
 				string text;
 				if(matched)
 				{
@@ -4506,7 +4506,7 @@ namespace Meta
 				if (val.Equals(Map.Empty))
 				{
 				}
-				text = EmptyMap.Match(val, out matched);
+				text = EmptyMap.Match(val,indentation, out matched);
 				if (matched)
 				{
 				}
@@ -4595,7 +4595,7 @@ namespace Meta
 		private static string StringKey(Map key, string indentation)
 		{
 			bool matched;
-			string text=LiteralKey.Match(key,out matched);
+			string text=LiteralKey.Match(key,indentation,out matched);
 			if (!matched)
 			{
 				text = Syntax.lookupStart + StringValue(key, indentation) + Syntax.lookupEnd;
@@ -4609,13 +4609,13 @@ namespace Meta
 			{
 				this.rule = rule;
 			}
-			public override string Match(Map map, out bool matched)
+			public override string Match(Map map,string indentation, out bool matched)
 			{
 				matched = false;
 				string text = "";
 				foreach (Map m in map.Array)
 				{
-					text += rule.Match(m, out matched);
+					text += rule.Match(m,indentation, out matched);
 					if (!matched)
 					{
 						break;
@@ -4631,7 +4631,7 @@ namespace Meta
 			{
 				this.chars = chars;
 			}
-			public override string Match(Map map,out bool matched)
+			public override string Match(Map map,string indentation,out bool matched)
 			{
 				string text = null;
 				matched = false;
@@ -4664,7 +4664,9 @@ namespace Meta
 			{
 				if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 				{
-					text += indentation + Syntax.function + Expression(entry.Value, indentation);
+					bool matched;
+					text += indentation + Syntax.function + Expression.Match(entry.Value, indentation,out matched);
+					//text += indentation + Syntax.function + Expression(entry.Value, indentation);
 					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 					{
 						text += Syntax.unixNewLine;
@@ -4681,7 +4683,20 @@ namespace Meta
 			}
 			return text;
 		}
-		public static string Expression(Map code, string indentation)
+		public delegate string CustomRuleDelegate(Map map,string indentation, out bool matched);
+		public class CustomRule : Rule
+		{
+			private CustomRuleDelegate customRule;
+			public CustomRule(CustomRuleDelegate customRule)
+			{
+				this.customRule = customRule;
+			}
+			public override string Match(Map map,string indentation, out bool matched)
+			{
+				return customRule(map,indentation, out matched);
+			}
+		}
+		public static Rule Expression = new CustomRule(delegate(Map code,string indentation, out bool matched)
 		{
 			string text;
 			if (code == null)
@@ -4707,8 +4722,37 @@ namespace Meta
 			{
 				throw new ApplicationException("Cannot serialize map.");
 			}
+			matched = true;
 			return text;
-		}
+		});
+		//public static string Expression(Map code, string indentation)
+		//{
+		//    string text;
+		//    if (code == null)
+		//    {
+		//    }
+		//    if (code.ContainsKey(CodeKeys.Call))
+		//    {
+		//        text = Call(code[CodeKeys.Call], indentation);
+		//    }
+		//    else if (code.ContainsKey(CodeKeys.Program))
+		//    {
+		//        text = Program(code[CodeKeys.Program], indentation);
+		//    }
+		//    else if (code.ContainsKey(CodeKeys.Literal))
+		//    {
+		//        text = LiteralFunction(code[CodeKeys.Literal], indentation);
+		//    }
+		//    else if (code.ContainsKey(CodeKeys.Select))
+		//    {
+		//        text = Select(code[CodeKeys.Select], indentation);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Cannot serialize map.");
+		//    }
+		//    return text;
+		//}
 		public class KeyRule : Rule
 		{
 			public Map key;
@@ -4718,12 +4762,12 @@ namespace Meta
 				this.key = key;
 				this.value = value;
 			}
-			public override string Match(Map map, out bool matched)
+			public override string Match(Map map,string indentation, out bool matched)
 			{
 				string text;
 				if (map.ContainsKey(key))
 				{
-					text = value.Match(map[key], out matched);
+					text = value.Match(map[key],indentation, out matched);
 				}
 				else
 				{
@@ -4740,14 +4784,14 @@ namespace Meta
 			{
 				this.rules = rules;
 			}
-			public override string Match(Map map, out bool matched)
+			public override string Match(Map map,string indentation, out bool matched)
 			{
 				string text = "";
 				int keyCount = 0;
 				matched = true;
 				foreach (Rule rule in rules)
 				{
-					text += rule.Match(map, out matched);
+					text += rule.Match(map,indentation, out matched);
 					if (rule is KeyRule)
 					{
 						keyCount++;
@@ -4765,7 +4809,8 @@ namespace Meta
 		{
 			Map callable = code[CodeKeys.Callable];
 			Map argument = code[CodeKeys.Parameter];
-			string text = Expression(callable, indentation);
+			bool matched;
+			string text = Expression.Match(callable, indentation,out matched);
 
 			if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
 			{
@@ -4774,7 +4819,7 @@ namespace Meta
 			else
 			{
 			}
-			text += Expression(argument, indentation);
+			text += Expression.Match(argument, indentation,out matched);
 			return text;
 		}
 		public static string Program(Map code, string indentation)
@@ -4804,12 +4849,9 @@ namespace Meta
 			Map key = code[CodeKeys.Key];
 			string text;
 			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
-			//if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
 			{
-				if (code[CodeKeys.Value][CodeKeys.Literal] == null)
-				{
-				}
-				text = indentation + Syntax.function + Expression(code[CodeKeys.Value][CodeKeys.Literal], indentation);
+				bool matched;
+				text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation,out matched);
 			}
 			else
 			{
@@ -4817,7 +4859,6 @@ namespace Meta
 				text = indentation;
 				Map value = code[CodeKeys.Value];
 				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
-				//if (key.Count == 1 && (autoKey = key[1][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
 				{
 					autoKeys++;
 					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
@@ -4829,7 +4870,8 @@ namespace Meta
 				{
 					text += Select(code[CodeKeys.Key], indentation) + Syntax.statement;
 				}
-				text += Expression(value, indentation);
+				bool matched;
+				text += Expression.Match(value, indentation,out matched);
 			}
 			return text;
 		}
@@ -4859,7 +4901,8 @@ namespace Meta
 				}
 				else
 				{
-					text = Syntax.lookupStart + Expression(lookup, indentation);
+					bool matched;
+					text = Syntax.lookupStart + Expression.Match(lookup, indentation,out matched);
 					if (lookup.ContainsKey(CodeKeys.Program) && lookup[CodeKeys.Program].Count != 0)
 					{
 						text += indentation;
@@ -4870,14 +4913,14 @@ namespace Meta
 			else
 			{
 				bool matched;
-				text = Current.Match(code, out matched);
+				text = Current.Match(code,indentation, out matched);
 				if (!matched)
 				{
-					text = Argument.Match(code, out matched);
+					text = Argument.Match(code,indentation, out matched);
 				}
 				if (!matched)
 				{
-					text = Scope.Match(code, out matched);
+					text = Scope.Match(code,indentation, out matched);
 				}
 				if (matched)
 				{
@@ -4888,16 +4931,12 @@ namespace Meta
 				}
 				else
 				{
-					text = Syntax.lookupStart + Expression(code, indentation);
-					if (code.ContainsKey(CodeKeys.Program))// && code[CodeKeys.Program].Count != 0)
-					{
-						text += indentation;
-					}
-					text += Syntax.lookupEnd;
+					text = Syntax.lookupStart + Expression.Match(code, indentation,out matched) + Syntax.lookupEnd;
 				}
 			}
 			return text;
 		}
+
 		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
 		public static Rule Argument = new Equal(new StrategyMap(CodeKeys.Argument, Map.Empty), Syntax.argument.ToString());
 		public static Rule Scope = new Equal(new StrategyMap(CodeKeys.Scope, Map.Empty), Syntax.scope.ToString());
@@ -4910,7 +4949,7 @@ namespace Meta
 				this.map = map;
 				this.literal = literal;
 			}
-			public override string Match(Map m, out bool matched)
+			public override string Match(Map m,string indentation, out bool matched)
 			{
 				string text;
 				if (m.Equals(map))

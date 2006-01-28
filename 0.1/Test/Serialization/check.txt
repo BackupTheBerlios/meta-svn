@@ -360,4 +360,8 @@ license='"
 		doc="This function returns #hello ."
 		|"hello"
 	docFunctionResult=documentedFunction *
+complicated=
+	[
+		complicated="key"
+	]="complicated key"
 "
