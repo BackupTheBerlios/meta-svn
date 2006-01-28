@@ -37,6 +37,13 @@ namespace Meta
 {
 	public class CodeKeys
 	{
+
+		public static readonly Map Search = "search";
+		public static readonly Map Lookup = "lookup";
+
+
+
+
 		public static readonly Map Current="current";
 		public static readonly Map Scope="scope";
 		public static readonly Map Arg="argument";
@@ -47,7 +54,7 @@ namespace Meta
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
 		// rename argument to parameter???? would be more logical an unambigous
-		public static readonly Map Argument="argument";
+		public static readonly Map Parameter="parameter";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
@@ -217,7 +224,7 @@ namespace Meta
 		public Call(Map code)
 		{
 			this.callable = code[CodeKeys.Callable];
-			this.parameter = code[CodeKeys.Argument];
+			this.parameter = code[CodeKeys.Parameter];
 		}
 		public override Map EvaluateImplementation(Map current,Map arg)
 		{
@@ -4467,7 +4474,7 @@ namespace Meta
 						CodeKeys.Callable,
 						Select),
 					new Assignment(
-						CodeKeys.Argument,
+						CodeKeys.Parameter,
 						new Alternatives(
 							new Sequence(
 								Syntax.call, 
@@ -4619,7 +4626,7 @@ namespace Meta
 		public static string Call(Map code, string indentation)
 		{
 			Map callable = code[CodeKeys.Callable];
-			Map argument = code[CodeKeys.Argument];
+			Map argument = code[CodeKeys.Parameter];
 			string text = Expression(callable, indentation);
 			if (!(argument.ContainsKey(CodeKeys.Program) && argument[CodeKeys.Program].Count != 0))
 			{
