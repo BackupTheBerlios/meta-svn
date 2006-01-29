@@ -786,25 +786,63 @@ namespace Meta
 			}
 		}
 	}
-	public class Scope
+	public abstract class Scope
 	{
-		public static implicit operator Scope(Map map)
+		public abstract Map Get();
+	}
+	public class TemporaryScope:Scope
+	{
+		public static implicit operator TemporaryScope(Map map)
 		{
-			return new Scope(map);
+			return new TemporaryScope(map);
 		}
 		private Map map;
-		public Scope(Map map)
+		public TemporaryScope(Map map)
 		{
 			this.map = map;
 		}
-		public Map Get()
+		public override Map Get()
 		{
 			return map;
 		}
 	}
+	public abstract class PersistantScope : Scope
+	{
+		private List<Map> keys;
+		public PersistantScope(PersistantScope parent, Map key)
+		{
+			this.keys = new List<Map>(parent.keys);
+			this.keys.Add(key);
+		}
+		public override Map Get()
+		{
+			Map scope = FileSystem.fileSystem;
+			foreach (Map key in keys)
+			{
+				scope = scope[key];
+			}
+			return scope;
+		}
+	}
+	//public class Scope
+	//{
+	//    public static implicit operator Scope(Map map)
+	//    {
+	//        return new Scope(map);
+	//    }
+	//    private Map map;
+	//    public Scope(Map map)
+	//    {
+	//        this.map = map;
+	//    }
+	//    public Map Get()
+	//    {
+	//        return map;
+	//    }
+	//}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		public static implicit operator Map(Scope scope)
+		public static implicit operator Map(TemporaryScope scope)
 		{
 			return scope.Get();
 		}
@@ -1074,7 +1112,7 @@ namespace Meta
 			}
 			return text;
 		}
-		public Scope Scope
+		public TemporaryScope Scope
 		{
 			get
 			{
@@ -1096,7 +1134,7 @@ namespace Meta
 		//        scope = value;
 		//    }
 		//}
-		private Scope scope;
+		private TemporaryScope scope;
 		//private Map scope;
 		public virtual int Count
 		{
@@ -1151,19 +1189,10 @@ namespace Meta
 					expression = null;
 					statement = null;
 					Map val = value;
-					//Map val = value.Copy();//.Copy();
-					if (val.scope==null || val.scope.Get() == null)
+					if (val.scope == null || val.scope.Get() == null)
 					{
-						val.scope = this;
+						val.scope = new TemporaryScope(this);
 					}
-					//if (val.scope.Get() == null)
-					//{
-					//    val.scope = this;
-					//}
-					//if (val.scope == null)
-					//{
-					//    val.scope = this;
-					//}
                     Set(key, val);
                 }
              }
@@ -1173,12 +1202,6 @@ namespace Meta
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[CodeKeys.Function];
-
-			//Map current = new StrategyMap();
-			//current.Scope = this;
-			//current.Argument = arg;
-
-			//Map result = function.GetExpression().Evaluate(current, arg);
 			Map result = function.GetExpression().Evaluate(this, arg);
 			return result;
 		}
@@ -5114,9 +5137,8 @@ namespace Meta
 			return result;
 		}
 		public static Map fileSystem;
-		private static Map LoadDirectory(string path)
+		private static void LoadDirectory(string path,Map map)
 		{
-			Map map = new StrategyMap();
 			foreach (string fileName in Directory.GetFiles(path, "*.meta"))
 			{
 				map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
@@ -5125,16 +5147,34 @@ namespace Meta
 			{
 				if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
 				{
-					map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
+					string name=new DirectoryInfo(directoryName).Name;
+					map[name] = new StrategyMap();
+					LoadDirectory(directoryName, map[name]);
 				}
 			}
-			return map;
 		}
+		//private static Map LoadDirectory(string path)
+		//{
+		//    Map map = new StrategyMap();
+		//    foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+		//    {
+		//        map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
+		//    }
+		//    foreach (string directoryName in Directory.GetDirectories(path))
+		//    {
+		//        if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
+		//        {
+		//            map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
+		//        }
+		//    }
+		//    return map;
+		//}
 		static FileSystem()
 		{
-			fileSystem = LoadDirectory(Path.Combine(Process.InstallationPath, "Library"));
+			fileSystem=new StrategyMap();
+			LoadDirectory(Path.Combine(Process.InstallationPath, "Library"),fileSystem);
 			fileSystem.Scope = Gac.gac;
-			Gac.gac["local"] = fileSystem;
+			//Gac.gac["local"] = fileSystem;
 		}
 		public static void Save()
 		{
