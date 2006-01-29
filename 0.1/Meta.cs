@@ -4877,7 +4877,6 @@ namespace Meta
 			SelectImplementation));
 
 
-
 		public static string Lookup(Map code, string indentation)
 		{
 			string text;
@@ -4892,18 +4891,20 @@ namespace Meta
 				else
 				{
 					bool matched;
-					text = Syntax.lookupStart + Expression.Match(lookup, indentation, out matched);
-					if (lookup.ContainsKey(CodeKeys.Program) && lookup[CodeKeys.Program].Count != 0)
-					{
-						text += indentation;
-					}
+					text = Syntax.lookupStart.ToString();
+					text += new Alternatives(
+						new Decorator(
+							"",
+							Program,
+							indentation),
+						Expression).Match(lookup, indentation, out matched);
 					text += Syntax.lookupEnd;
 				}
 			}
 			else
 			{
 				bool matched;
-				text=new Alternatives(
+				text = new Alternatives(
 					Current,
 					Argument,
 					Scope,
@@ -4921,12 +4922,12 @@ namespace Meta
 		//        if (lookup.ContainsKey(CodeKeys.Literal))
 		//        {
 		//            bool matched;
-		//            text = Key.Match(lookup[CodeKeys.Literal], indentation,out matched);
+		//            text = Key.Match(lookup[CodeKeys.Literal], indentation, out matched);
 		//        }
 		//        else
 		//        {
 		//            bool matched;
-		//            text = Syntax.lookupStart + Expression.Match(lookup, indentation,out matched);
+		//            text = Syntax.lookupStart + Expression.Match(lookup, indentation, out matched);
 		//            if (lookup.ContainsKey(CodeKeys.Program) && lookup[CodeKeys.Program].Count != 0)
 		//            {
 		//                text += indentation;
@@ -4937,26 +4938,12 @@ namespace Meta
 		//    else
 		//    {
 		//        bool matched;
-		//        text = Current.Match(code,indentation, out matched);
-		//        if (!matched)
-		//        {
-		//            text = Argument.Match(code,indentation, out matched);
-		//        }
-		//        if (!matched)
-		//        {
-		//            text = Scope.Match(code,indentation, out matched);
-		//        }
-		//        if (!matched)
-		//        {
-		//            text = new Set(new KeyRule(CodeKeys.Literal,Key)).Match(code, indentation, out matched);
-		//        }
-		//        if (matched)
-		//        {
-		//        }
-		//        else
-		//        {
-		//            text = new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString()).Match(code, indentation, out matched);
-		//        }
+		//        text=new Alternatives(
+		//            Current,
+		//            Argument,
+		//            Scope,
+		//            new Set(new KeyRule(CodeKeys.Literal, Key)),
+		//            new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())).Match(code, indentation, out matched);
 		//    }
 		//    return text;
 		//}
