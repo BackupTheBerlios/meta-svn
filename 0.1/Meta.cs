@@ -788,14 +788,15 @@ namespace Meta
 	}
 	public abstract class Scope
 	{
+		public static implicit operator Scope(Map map)
+		{
+			return new TemporaryScope(map);
+		}
 		public abstract Map Get();
 	}
 	public class TemporaryScope:Scope
 	{
-		public static implicit operator TemporaryScope(Map map)
-		{
-			return new TemporaryScope(map);
-		}
+
 		private Map map;
 		public TemporaryScope(Map map)
 		{
@@ -806,9 +807,13 @@ namespace Meta
 			return map;
 		}
 	}
-	public abstract class PersistantScope : Scope
+	public class PersistantScope : Scope
 	{
 		private List<Map> keys;
+		public PersistantScope()
+		{
+			this.keys = new List<Map>();
+		}
 		public PersistantScope(PersistantScope parent, Map key)
 		{
 			this.keys = new List<Map>(parent.keys);
@@ -817,9 +822,9 @@ namespace Meta
 		public override Map Get()
 		{
 			Map scope = FileSystem.fileSystem;
-			foreach (Map key in keys)
+			for(int i=0;i<keys.Count-1;i++)
 			{
-				scope = scope[key];
+				scope = scope[keys[i]];
 			}
 			return scope;
 		}
@@ -842,7 +847,7 @@ namespace Meta
 	//}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		public static implicit operator Map(TemporaryScope scope)
+		public static implicit operator Map(Scope scope)
 		{
 			return scope.Get();
 		}
@@ -1112,7 +1117,7 @@ namespace Meta
 			}
 			return text;
 		}
-		public TemporaryScope Scope
+		public Scope Scope
 		{
 			get
 			{
@@ -1134,7 +1139,7 @@ namespace Meta
 		//        scope = value;
 		//    }
 		//}
-		private TemporaryScope scope;
+		private Scope scope;
 		//private Map scope;
 		public virtual int Count
 		{
@@ -1182,20 +1187,41 @@ namespace Meta
 			{
 				return Get(key);
 			}
-            set
-            {
-                if (value != null)
-                {
+			set
+			{
+				if (value != null)
+				{
 					expression = null;
 					statement = null;
 					Map val = value;
 					if (val.scope == null || val.scope.Get() == null)
 					{
-						val.scope = new TemporaryScope(this);
+						if (this.scope is PersistantScope)
+						{
+							val.scope = new PersistantScope((PersistantScope)Scope, key);
+						}
+						else
+						{
+							val.scope = new TemporaryScope(this);
+						}
 					}
-                    Set(key, val);
-                }
-             }
+					Set(key, val);
+				}
+			}
+			//set
+			//{
+			//    if (value != null)
+			//    {
+			//        expression = null;
+			//        statement = null;
+			//        Map val = value;
+			//        if (val.scope == null || val.scope.Get() == null)
+			//        {
+			//            val.scope = new TemporaryScope(this);
+			//        }
+			//        Set(key, val);
+			//    }
+			// }
         }
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
@@ -5105,7 +5131,6 @@ namespace Meta
 				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
 				parsed.Scope = FileSystem.fileSystem;
-				//parsed.Scope = null;
 				return parsed;
 			}
 		}
@@ -5153,28 +5178,12 @@ namespace Meta
 				}
 			}
 		}
-		//private static Map LoadDirectory(string path)
-		//{
-		//    Map map = new StrategyMap();
-		//    foreach (string fileName in Directory.GetFiles(path, "*.meta"))
-		//    {
-		//        map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
-		//    }
-		//    foreach (string directoryName in Directory.GetDirectories(path))
-		//    {
-		//        if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
-		//        {
-		//            map[new DirectoryInfo(directoryName).Name] = LoadDirectory(directoryName);
-		//        }
-		//    }
-		//    return map;
-		//}
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
+			fileSystem.Scope = new PersistantScope();
 			LoadDirectory(Path.Combine(Process.InstallationPath, "Library"),fileSystem);
 			fileSystem.Scope = Gac.gac;
-			//Gac.gac["local"] = fileSystem;
 		}
 		public static void Save()
 		{
