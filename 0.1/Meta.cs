@@ -4876,6 +4876,20 @@ namespace Meta
 				CodeKeys.Select,
 			SelectImplementation));
 
+		//public static Rule LookupSearchImplementation = new Alternatives(
+		//            new KeyRule(
+		//                CodeKeys.Literal,
+		//                Key),
+		//            new Decorator(
+		//                Syntax.lookupStart.ToString(),
+		//                new Alternatives(
+		//                    new Decorator(
+		//                        "",
+		//                        Program,
+		//                        indentation),
+		//                    Expression),
+		//                Syntax.lookupEnd.ToString()));//.Match(lookup, indentation, out matched);
+
 
 		public static string Lookup(Map code, string indentation)
 		{
@@ -4884,7 +4898,8 @@ namespace Meta
 			if ((lookup = code[CodeKeys.Search]) != null || (lookup = code[CodeKeys.Lookup]) != null)
 			{
 				bool matched;
-				text=new Alternatives(
+				//text = LookupSearchImplementation.Match(lookup, indentation, out matched);
+				text = new Alternatives(
 					new KeyRule(
 						CodeKeys.Literal,
 						Key),
@@ -4897,25 +4912,6 @@ namespace Meta
 								indentation),
 							Expression),
 						Syntax.lookupEnd.ToString())).Match(lookup, indentation, out matched);
-				//}
-				//if (lookup.ContainsKey(CodeKeys.Literal))
-				//{
-				//    bool matched;
-				//    text = Key.Match(lookup[CodeKeys.Literal], indentation, out matched);
-				//}
-				//else
-				//{
-				//    bool matched;
-				//    text=new Decorator(
-				//        Syntax.lookupStart.ToString(),
-				//        new Alternatives(
-				//            new Decorator(
-				//                "",
-				//                Program,
-				//                indentation),
-				//            Expression),
-				//        Syntax.lookupEnd.ToString()).Match(lookup, indentation, out matched);
-				//}
 			}
 			else
 			{
@@ -4963,23 +4959,57 @@ namespace Meta
 		//    }
 		//    return text;
 		//}
+		public abstract class Production
+		{
+			public static implicit operator Production(string text)
+			{
+				return new StringProduction(text);
+			}
+			public abstract string Get(string indentation);
+		}
+		public class StringProduction : Production
+		{
+			private string text;
+			public StringProduction(string text)
+			{
+				this.text = text;
+			}
+			public override string Get(string indentation)
+			{
+				return text;
+			}
+		}
+		public class IndentationProduction:Production
+		{
+			public override string  Get(string indentation)
+			{
+				return indentation;
+			}
+		}
+
 		public class Decorator : Rule
 		{
-			private string start;
+			private Production start;
 			private Rule rule;
-			private string end;
-			public Decorator(string start, Rule rule, string end)
+			private Production end;
+			public Decorator(Production start, Rule rule, Production end)
 			{
 				this.start = start;
 				this.rule = rule;
 				this.end = end;
 			}
+			//public Decorator(string start, Rule rule, string end)
+			//{
+			//    this.start = start;
+			//    this.rule = rule;
+			//    this.end = end;
+			//}
 			public override string Match(Map map, string indentation, out bool matched)
 			{
-				string text=rule.Match(map, indentation, out matched);
+				string text = rule.Match(map, indentation, out matched);
 				if (matched)
 				{
-					text = start + text + end;
+					text = start.Get(indentation) + text + end.Get(indentation);
 				}
 				else
 				{
@@ -4989,6 +5019,32 @@ namespace Meta
 				return text;
 			}
 		}
+		//public class Decorator : Rule
+		//{
+		//    private string start;
+		//    private Rule rule;
+		//    private string end;
+		//    public Decorator(string start, Rule rule, string end)
+		//    {
+		//        this.start = start;
+		//        this.rule = rule;
+		//        this.end = end;
+		//    }
+		//    public override string Match(Map map, string indentation, out bool matched)
+		//    {
+		//        string text=rule.Match(map, indentation, out matched);
+		//        if (matched)
+		//        {
+		//            text = start + text + end;
+		//        }
+		//        else
+		//        {
+		//            text = null;
+		//            matched = false;
+		//        }
+		//        return text;
+		//    }
+		//}
 
 		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
 		public static Rule Argument = new Equal(new StrategyMap(CodeKeys.Argument, Map.Empty), Syntax.argument.ToString());
