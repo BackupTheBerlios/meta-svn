@@ -296,7 +296,7 @@ namespace Meta
 			return context;
 		}
 	}
-	public class Scope:Subselect
+	public class ScopeSubselect:Subselect
 	{
 		public override void Assign(ref Map context, Map value,ref Map executionContext)
 		{
@@ -382,7 +382,7 @@ namespace Meta
 			}
 			else if (key.Equals(SpecialKeys.This))
 			{
-				val = context.Scope.Scope.Scope;
+				val = context.Scope.Get().Scope.Get().Scope.Get();
 			}
 			else
 			{
@@ -786,8 +786,28 @@ namespace Meta
 			}
 		}
 	}
+	public class Scope
+	{
+		public static implicit operator Scope(Map map)
+		{
+			return new Scope(map);
+		}
+		private Map map;
+		public Scope(Map map)
+		{
+			this.map = map;
+		}
+		public Map Get()
+		{
+			return map;
+		}
+	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public static implicit operator Map(Scope scope)
+		{
+			return scope.Get();
+		}
 		public Map Argument
 		{
 			get
@@ -797,9 +817,9 @@ namespace Meta
 				{
 					arg = argument;
 				}
-				else if (Scope != null)
+				else if (Scope.Get() != null)
 				{
-					arg = Scope.Argument;
+					arg = Scope.Get().Argument;
 				}
 				else
 				{
@@ -856,7 +876,7 @@ namespace Meta
 				}
 				else if (ContainsKey(CodeKeys.Scope))
 				{
-					subselect = new Scope();
+					subselect = new ScopeSubselect();
 				}
 				else if (ContainsKey(CodeKeys.Search))
 				{
@@ -1054,18 +1074,30 @@ namespace Meta
 			}
 			return text;
 		}
-        public Map Scope
-        {
-            get
-            {
-                return scope;
-            }
-            set
-            {
-                scope = value;
-            }
-        }
-        private Map scope;
+		public Scope Scope
+		{
+			get
+			{
+				return scope;
+			}
+			set
+			{
+				scope = value;
+			}
+		}
+		//public Map Scope
+		//{
+		//    get
+		//    {
+		//        return scope;
+		//    }
+		//    set
+		//    {
+		//        scope = value;
+		//    }
+		//}
+		private Scope scope;
+		//private Map scope;
 		public virtual int Count
 		{
 			get
@@ -1120,10 +1152,18 @@ namespace Meta
 					statement = null;
 					Map val = value;
 					//Map val = value.Copy();//.Copy();
-					if (val.scope == null)
+					if (val.scope==null || val.scope.Get() == null)
 					{
 						val.scope = this;
 					}
+					//if (val.scope.Get() == null)
+					//{
+					//    val.scope = this;
+					//}
+					//if (val.scope == null)
+					//{
+					//    val.scope = this;
+					//}
                     Set(key, val);
                 }
              }
@@ -4852,7 +4892,6 @@ namespace Meta
 				{
 					bool m;
 					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
-					//text += Select.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
 				}
 				bool matched;
 				text += Expression.Match(value, indentation,out matched);
@@ -4889,6 +4928,7 @@ namespace Meta
 								new IndentationProduction()),
 							Expression),
 						Syntax.lookupEnd.ToString()));
+
 		public abstract class Production
 		{
 			public static implicit operator Production(string text)
@@ -4943,9 +4983,21 @@ namespace Meta
 				return text;
 			}
 		}
-		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
-		public static Rule Argument = new Equal(new StrategyMap(CodeKeys.Argument, Map.Empty), Syntax.argument.ToString());
-		public static Rule Scope = new Equal(new StrategyMap(CodeKeys.Scope, Map.Empty), Syntax.scope.ToString());
+		public static Rule Current = new Equal(
+			new StrategyMap(
+				CodeKeys.Current, 
+				Map.Empty),
+			Syntax.current.ToString());
+		public static Rule Argument = new Equal(
+			new StrategyMap(
+				CodeKeys.Argument,
+				Map.Empty),
+			Syntax.argument.ToString());
+		public static Rule Scope = new Equal(
+			new StrategyMap(
+				CodeKeys.Scope,
+				Map.Empty),
+			Syntax.scope.ToString());
 		public class Equal : Rule
 		{
 			private Map map;
@@ -4989,9 +5041,6 @@ namespace Meta
 					Scope,
 					new Set(new KeyRule(CodeKeys.Literal, Key)),
 					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
-
-
-		//private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
 	}
 
 	public class FileSystem
@@ -5412,34 +5461,34 @@ namespace Meta
 					return Path.Combine(Process.InstallationPath, "libraryTest.meta");
 				}
 			}
-			//public class Extents : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        Map argument = Map.Empty;
-			//        return FileSystem.ParseFile(BasicTest);
-			//    }
-			//}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        Map argument = new StrategyMap();
-			//        argument[1] = "first arg";
-			//        argument[2] = "second=arg";
-			//        return FileSystem.ParseFile(BasicTest).Call(argument);
-			//    }
-			//}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
-			//    }
-			//}
+			public class Extents : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					Map argument = Map.Empty;
+					return FileSystem.ParseFile(BasicTest);
+				}
+			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					Map argument = new StrategyMap();
+					argument[1] = "first arg";
+					argument[2] = "second=arg";
+					return FileSystem.ParseFile(BasicTest).Call(argument);
+				}
+			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+				}
+			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)

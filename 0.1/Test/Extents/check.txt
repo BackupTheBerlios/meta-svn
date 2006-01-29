@@ -62,9 +62,9 @@ Entry (KeyValuePair`2)
 					"2"
 			End (SourcePosition):
 				Line (Int32):
-					"361"
+					"362"
 				Column (Int32):
-					"40"
+					"1"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				Extent:
@@ -79,9 +79,9 @@ Entry (KeyValuePair`2)
 							"2"
 					End (SourcePosition):
 						Line (Int32):
-							"361"
+							"362"
 						Column (Int32):
-							"40"
+							"1"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
@@ -53651,9 +53651,9 @@ Entry (KeyValuePair`2)
 									"1"
 							End (SourcePosition):
 								Line (Int32):
-									"361"
+									"362"
 								Column (Int32):
-									"40"
+									"1"
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -53878,3 +53878,64 @@ Entry (KeyValuePair`2)
 																Column (Int32):
 																	"40"
 														""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		Extent (Extent):
+			Start (SourcePosition):
+				Line (Int32):
+					"362"
+				Column (Int32):
+					"1"
+			End (SourcePosition):
+				Line (Int32):
+					"362"
+				Column (Int32):
+					"12"
+		"complicated"
+	Value (StrategyMap):
+		Extent:
+			null
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"364"
+								Column (Int32):
+									"3"
+							End (SourcePosition):
+								Line (Int32):
+									"364"
+								Column (Int32):
+									"14"
+						"complicated"
+					Value (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"364"
+								Column (Int32):
+									"15"
+							End (SourcePosition):
+								Line (Int32):
+									"364"
+								Column (Int32):
+									"20"
+						"key"
+			Value (StrategyMap):
+				Extent (Extent):
+					Start (SourcePosition):
+						Line (Int32):
+							"365"
+						Column (Int32):
+							"4"
+					End (SourcePosition):
+						Line (Int32):
+							"365"
+						Column (Int32):
+							"21"
+				"complicated key"
