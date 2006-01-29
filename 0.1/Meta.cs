@@ -4876,30 +4876,7 @@ namespace Meta
 				CodeKeys.Select,
 			SelectImplementation));
 
-		//public static Rule LookupSearchImplementation = new Alternatives(
-		//            new KeyRule(
-		//                CodeKeys.Literal,
-		//                Key),
-		//            new Decorator(
-		//                Syntax.lookupStart.ToString(),
-		//                new Alternatives(
-		//                    new Decorator(
-		//                        "",
-		//                        Program,
-		//                        indentation),
-		//                    Expression),
-		//                Syntax.lookupEnd.ToString()));//.Match(lookup, indentation, out matched);
-
-
-		public static string Lookup(Map code, string indentation)
-		{
-			string text;
-			Map lookup;
-			if ((lookup = code[CodeKeys.Search]) != null || (lookup = code[CodeKeys.Lookup]) != null)
-			{
-				bool matched;
-				//text = LookupSearchImplementation.Match(lookup, indentation, out matched);
-				text = new Alternatives(
+		public static Rule LookupSearchImplementation = new Alternatives(
 					new KeyRule(
 						CodeKeys.Literal,
 						Key),
@@ -4909,13 +4886,28 @@ namespace Meta
 							new Decorator(
 								"",
 								Program,
-								indentation),
+								new IndentationProduction()),
 							Expression),
-						Syntax.lookupEnd.ToString())).Match(lookup, indentation, out matched);
-			}
-			else
+						Syntax.lookupEnd.ToString()));//.Match(lookup, indentation, out matched);
+
+		public static string Lookup(Map code, string indentation)
+		{
+
+			string text="";
+			Map lookup;
+			bool matched=false;
+			text=new Alternatives(
+				new Set(
+					new KeyRule(
+						CodeKeys.Search,
+						LookupSearchImplementation)),
+				new Set(
+					new KeyRule(
+						CodeKeys.Lookup,
+						LookupSearchImplementation))).Match(code, indentation, out matched);
+
+			if(!matched)
 			{
-				bool matched;
 				text = new Alternatives(
 					Current,
 					Argument,
@@ -4925,40 +4917,6 @@ namespace Meta
 			}
 			return text;
 		}
-		//public static string Lookup(Map code, string indentation)
-		//{
-		//    string text;
-		//    Map lookup;
-		//    if ((lookup = code[CodeKeys.Search]) != null || (lookup = code[CodeKeys.Lookup]) != null)
-		//    {
-		//        if (lookup.ContainsKey(CodeKeys.Literal))
-		//        {
-		//            bool matched;
-		//            text = Key.Match(lookup[CodeKeys.Literal], indentation, out matched);
-		//        }
-		//        else
-		//        {
-		//            bool matched;
-		//            text = Syntax.lookupStart + Expression.Match(lookup, indentation, out matched);
-		//            if (lookup.ContainsKey(CodeKeys.Program) && lookup[CodeKeys.Program].Count != 0)
-		//            {
-		//                text += indentation;
-		//            }
-		//            text += Syntax.lookupEnd;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        bool matched;
-		//        text=new Alternatives(
-		//            Current,
-		//            Argument,
-		//            Scope,
-		//            new Set(new KeyRule(CodeKeys.Literal, Key)),
-		//            new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())).Match(code, indentation, out matched);
-		//    }
-		//    return text;
-		//}
 		public abstract class Production
 		{
 			public static implicit operator Production(string text)
@@ -4998,12 +4956,6 @@ namespace Meta
 				this.rule = rule;
 				this.end = end;
 			}
-			//public Decorator(string start, Rule rule, string end)
-			//{
-			//    this.start = start;
-			//    this.rule = rule;
-			//    this.end = end;
-			//}
 			public override string Match(Map map, string indentation, out bool matched)
 			{
 				string text = rule.Match(map, indentation, out matched);
@@ -5019,33 +4971,6 @@ namespace Meta
 				return text;
 			}
 		}
-		//public class Decorator : Rule
-		//{
-		//    private string start;
-		//    private Rule rule;
-		//    private string end;
-		//    public Decorator(string start, Rule rule, string end)
-		//    {
-		//        this.start = start;
-		//        this.rule = rule;
-		//        this.end = end;
-		//    }
-		//    public override string Match(Map map, string indentation, out bool matched)
-		//    {
-		//        string text=rule.Match(map, indentation, out matched);
-		//        if (matched)
-		//        {
-		//            text = start + text + end;
-		//        }
-		//        else
-		//        {
-		//            text = null;
-		//            matched = false;
-		//        }
-		//        return text;
-		//    }
-		//}
-
 		public static Rule Current = new Equal(new StrategyMap(CodeKeys.Current, Map.Empty), Syntax.current.ToString());
 		public static Rule Argument = new Equal(new StrategyMap(CodeKeys.Argument, Map.Empty), Syntax.argument.ToString());
 		public static Rule Scope = new Equal(new StrategyMap(CodeKeys.Scope, Map.Empty), Syntax.scope.ToString());
