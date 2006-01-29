@@ -4861,10 +4861,10 @@ namespace Meta
 		}
 		private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
 				{
-					string text = Lookup(code[1], indentation);
+					string text = Lookup.Match(code[1], indentation,out matched);
 					for (int i = 2; code.ContainsKey(i); i++)
 					{
-						text += Syntax.select + Lookup(code[i], indentation);
+						text += Syntax.select + Lookup.Match(code[i], indentation,out matched);
 					}
 					matched = true;
 					return text;
@@ -4888,30 +4888,7 @@ namespace Meta
 								Program,
 								new IndentationProduction()),
 							Expression),
-						Syntax.lookupEnd.ToString()));//.Match(lookup, indentation, out matched);
-		public static string Lookup(Map code, string indentation)
-		{
-			string text = "";
-			Map lookup;
-			bool matched = false;
-			text=new Alternatives(
-				new Alternatives(
-					new Set(
-						new KeyRule(
-							CodeKeys.Search,
-							LookupSearchImplementation)),
-					new Set(
-						new KeyRule(
-							CodeKeys.Lookup,
-							LookupSearchImplementation))),
-				new Alternatives(
-					Current,
-					Argument,
-					Scope,
-					new Set(new KeyRule(CodeKeys.Literal, Key)),
-					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString()))).Match(code, indentation, out matched);
-			return text;
-		}
+						Syntax.lookupEnd.ToString()));
 		public abstract class Production
 		{
 			public static implicit operator Production(string text)
@@ -4996,6 +4973,23 @@ namespace Meta
 		}
 		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
 		public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal,Value));
+		public static Rule Lookup = new Alternatives(
+				new Alternatives(
+					new Set(
+						new KeyRule(
+							CodeKeys.Search,
+							LookupSearchImplementation)),
+					new Set(
+						new KeyRule(
+							CodeKeys.Lookup,
+							LookupSearchImplementation))),
+				new Alternatives(
+					Current,
+					Argument,
+					Scope,
+					new Set(new KeyRule(CodeKeys.Literal, Key)),
+					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
+
 
 		//private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
 	}
