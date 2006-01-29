@@ -4692,40 +4692,6 @@ namespace Meta
 			matched = true;
 			return text;
 		});
-		//public static string MapValue(Map map, string indentation)
-		//{
-		//    string text;
-		//    text = Syntax.unixNewLine.ToString();
-		//    if (indentation == null)
-		//    {
-		//        indentation = "";
-		//    }
-		//    else
-		//    {
-		//        indentation += Syntax.indentation;
-		//    }
-		//    foreach (KeyValuePair<Map, Map> entry in map)
-		//    {
-		//        if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
-		//        {
-		//            bool matched;
-		//            text += indentation + Syntax.function + Expression.Match(entry.Value, indentation,out matched);
-		//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-		//            {
-		//                text += Syntax.unixNewLine;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            text += indentation + Key((Map)entry.Key, indentation) + Syntax.statement + Value((Map)entry.Value, (indentation));
-		//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-		//            {
-		//                text += Syntax.unixNewLine;
-		//            }
-		//        }
-		//    }
-		//    return text;
-		//}
 		public delegate string CustomRuleDelegate(Map map,string indentation, out bool matched);
 		public class CustomRule : Rule
 		{
@@ -4760,35 +4726,8 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(Call, Program, LiteralProduction, Select);
+			return new Alternatives(Call,EmptyMap, Program, LiteralProduction, Select);
 		});
-		//public static Rule Expression = new DelayedRule(delegate()
-		//{
-		//    return new CustomRule(delegate(Map code, string indentation, out bool matched)
-		//{
-		//    string text;
-		//        text = Call.Match(code, indentation, out matched);
-		//        if (!matched)
-		//        {
-		//            text = Program.Match(code, indentation, out matched);
-		//        }
-		//        if (!matched)
-		//        {
-		//            text = LiteralProduction.Match(code, indentation, out matched);
-		//            //text = Value.Match(code, indentation, out matched);
-		//        }
-		//        if(!matched)
-		//        {
-		//            text = Select.Match(code, indentation, out matched);
-		//        }
-		//        if (!matched)
-		//        {
-		//            throw new ApplicationException("Cannot serialize map.");
-		//        }
-		//    matched = true;
-		//    return text;
-		//});
-		//});
 
 		public class KeyRule : Rule
 		{
@@ -4845,10 +4784,10 @@ namespace Meta
 		public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
 		{
 			string text;			
-			if (!code.ContainsKey(CodeKeys.Program) || code[CodeKeys.Program].Array.Count == 0)
+			if (!code.ContainsKey(CodeKeys.Program))
 			{
-				matched = false;
-				text = "*";
+			    matched = false;
+				text = null;
 			}
 			else
 			{
@@ -4880,7 +4819,9 @@ namespace Meta
 							Program,
 							new Decorator(
 								Syntax.call.ToString(),
-								Expression,
+								new Alternatives(
+									EmptyMap,
+									Expression),
 								""))))));
 
 		public static string Statement(Map code, string indentation, ref int autoKeys)
@@ -4916,11 +4857,6 @@ namespace Meta
 			}
 			return text;
 		}
-		//public static string LiteralFunction(Map code, string indentation)
-		//{
-		//    bool matched;
-		//    return Value.Match(code, indentation,out matched);
-		//}
 		private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
 				{
 					string text = Lookup(code[1], indentation);
@@ -4937,16 +4873,6 @@ namespace Meta
 			new KeyRule(
 				CodeKeys.Select,
 			SelectImplementation));
-				//new CustomRule(delegate(Map code, string indentation, out bool matched)
-				//{
-				//    string text = Lookup(code[1], indentation);
-				//    for (int i = 2; code.ContainsKey(i); i++)
-				//    {
-				//        text += Syntax.select + Lookup(code[i], indentation);
-				//    }
-				//    matched = true;
-				//    return text;
-				//})));
 		//public static Rule Select=new CustomRule(delegate(Map code, string indentation,out bool matched)
 		//{
 		//    string text = Lookup(code[1], indentation);
