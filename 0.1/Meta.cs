@@ -4760,96 +4760,36 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new CustomRule(delegate(Map code, string indentation, out bool matched)
-		{
-			string text;
-				text = Call.Match(code, indentation, out matched);
-				if (!matched)
-				{
-					text = Program.Match(code, indentation, out matched);
-				}
-				if (!matched)
-				{
-					text = LiteralProduction.Match(code, indentation, out matched);
-					//text = Value.Match(code, indentation, out matched);
-				}
-				if(!matched)
-				{
-					text = Select.Match(code, indentation, out matched);
-				}
-				if (matched)
-				{
-				}
-				//else if (code.ContainsKey(CodeKeys.Select))
-				//{
-				//    text = Select.Match(code[CodeKeys.Select], indentation, out matched);
-				//}
-				else
-				{
-					throw new ApplicationException("Cannot serialize map.");
-				}
-			matched = true;
-			return text;
+			return new Alternatives(Call, Program, LiteralProduction, Select);
 		});
-		});
-
-
 		//public static Rule Expression = new DelayedRule(delegate()
 		//{
 		//    return new CustomRule(delegate(Map code, string indentation, out bool matched)
 		//{
 		//    string text;
-		//    if (code.ContainsKey(CodeKeys.Call))
-		//    {
-		//        text = Call.Match(code[CodeKeys.Call], indentation, out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Program))
-		//    {
-		//        text = Program.Match(code, indentation, out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Literal))
-		//    {
-		//        text = Value.Match(code[CodeKeys.Literal], indentation, out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Select))
-		//    {
-		//        text = Select.Match(code[CodeKeys.Select], indentation, out matched);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Cannot serialize map.");
-		//    }
+		//        text = Call.Match(code, indentation, out matched);
+		//        if (!matched)
+		//        {
+		//            text = Program.Match(code, indentation, out matched);
+		//        }
+		//        if (!matched)
+		//        {
+		//            text = LiteralProduction.Match(code, indentation, out matched);
+		//            //text = Value.Match(code, indentation, out matched);
+		//        }
+		//        if(!matched)
+		//        {
+		//            text = Select.Match(code, indentation, out matched);
+		//        }
+		//        if (!matched)
+		//        {
+		//            throw new ApplicationException("Cannot serialize map.");
+		//        }
 		//    matched = true;
 		//    return text;
 		//});
 		//});
 
-		//public static Rule Expression = new CustomRule(delegate(Map code,string indentation, out bool matched)
-		//{
-		//    string text;
-		//    if (code.ContainsKey(CodeKeys.Call))
-		//    {
-		//        text = Call.Match(code[CodeKeys.Call], indentation,out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Program))
-		//    {
-		//        text = Program.Match(code, indentation, out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Literal))
-		//    {
-		//        text = Value.Match(code[CodeKeys.Literal], indentation, out matched);
-		//    }
-		//    else if (code.ContainsKey(CodeKeys.Select))
-		//    {
-		//        text = Select.Match(code[CodeKeys.Select], indentation,out matched);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Cannot serialize map.");
-		//    }
-		//    matched = true;
-		//    return text;
-		//});
 		public class KeyRule : Rule
 		{
 			public Map key;
@@ -4942,19 +4882,6 @@ namespace Meta
 								Syntax.call.ToString(),
 								Expression,
 								""))))));
-
-		//public static Rule Call = new Set(
-		//        new KeyRule(
-		//            CodeKeys.Callable,
-		//            Expression),
-		//        new KeyRule(
-		//            CodeKeys.Parameter,
-		//            new Alternatives(
-		//                Program,
-		//                new Decorator(
-		//                    Syntax.call.ToString(),
-		//                    Expression,
-		//                    ""))));
 
 		public static string Statement(Map code, string indentation, ref int autoKeys)
 		{
