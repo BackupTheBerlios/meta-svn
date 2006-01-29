@@ -907,7 +907,8 @@ namespace Meta
 			string text="";
 			foreach (Map key in this.Keys)
 			{
-				text += Meta.Serialize.Key(key,"") + " ";
+				bool matched;
+				text += Meta.Serialize.Key.Match(key,"",out matched) + " ";
 			}
 			return text;
 		}
@@ -4512,13 +4513,13 @@ namespace Meta
 			}
 			return text;
 		});
-		public static string Key(Map key, string indentation)
+		public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
 		{
 			string text;
 			if (key.IsString && !key.Equals(Map.Empty))
 			{
-				bool matched;
-				text = StringKey.Match(key, indentation,out matched);
+				bool m;
+				text = StringKey.Match(key, indentation, out m);
 			}
 			else
 			{
@@ -4530,18 +4531,19 @@ namespace Meta
 				}
 				else if (key.IsNumber)
 				{
-					bool matched;
-					text += IntegerValue.Match(key, indentation, out matched);
+					bool m;
+					text += IntegerValue.Match(key, indentation, out m);
 				}
 				else
 				{
-					bool matched;
-					text += MapValue.Match(key, indentation,out matched) + indentation;
+					bool m;
+					text += MapValue.Match(key, indentation, out m) + indentation;
 				}
 				text += Syntax.lookupEnd;
 			}
+			matched = true;
 			return text;
-		}
+		});
 		public class Alternatives : Rule
 		{
 			private Rule[] rules;
@@ -4682,7 +4684,7 @@ namespace Meta
 				}
 				else
 				{
-					text += indentation + Key((Map)entry.Key, indentation) + Syntax.statement + Value.Match((Map)entry.Value, (indentation),out matched);
+					text += indentation + Key.Match((Map)entry.Key, indentation,out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation),out matched);
 					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 					{
 						text += Syntax.unixNewLine;
@@ -4873,25 +4875,6 @@ namespace Meta
 			new KeyRule(
 				CodeKeys.Select,
 			SelectImplementation));
-		//public static Rule Select=new CustomRule(delegate(Map code, string indentation,out bool matched)
-		//{
-		//    string text = Lookup(code[1], indentation);
-		//    for (int i = 2; code.ContainsKey(i); i++)
-		//    {
-		//        text += Syntax.select + Lookup(code[i], indentation);
-		//    }
-		//    matched = true;
-		//    return text;
-		//});
-		//public static string Select(Map code, string indentation)
-		//{
-		//    string text = Lookup(code[1], indentation);
-		//    for (int i = 2; code.ContainsKey(i); i++)
-		//    {
-		//        text += Syntax.select + Lookup(code[i], indentation);
-		//    }
-		//    return text;
-		//}
 
 		public static string Lookup(Map code, string indentation)
 		{
@@ -4901,7 +4884,8 @@ namespace Meta
 			{
 				if (lookup.ContainsKey(CodeKeys.Literal))
 				{
-					text = Key(lookup[CodeKeys.Literal], indentation);
+					bool matched;
+					text = Key.Match(lookup[CodeKeys.Literal], indentation,out matched);
 				}
 				else
 				{
@@ -4931,7 +4915,7 @@ namespace Meta
 				}
 				else if (code.ContainsKey(CodeKeys.Literal))
 				{
-					text = Key(code[CodeKeys.Literal], indentation);
+					text = Key.Match(code[CodeKeys.Literal], indentation,out matched);
 				}
 				else
 				{
