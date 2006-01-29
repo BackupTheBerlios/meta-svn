@@ -4889,32 +4889,27 @@ namespace Meta
 								new IndentationProduction()),
 							Expression),
 						Syntax.lookupEnd.ToString()));//.Match(lookup, indentation, out matched);
-
 		public static string Lookup(Map code, string indentation)
 		{
-
-			string text="";
+			string text = "";
 			Map lookup;
-			bool matched=false;
+			bool matched = false;
 			text=new Alternatives(
-				new Set(
-					new KeyRule(
-						CodeKeys.Search,
-						LookupSearchImplementation)),
-				new Set(
-					new KeyRule(
-						CodeKeys.Lookup,
-						LookupSearchImplementation))).Match(code, indentation, out matched);
-
-			if(!matched)
-			{
-				text = new Alternatives(
+				new Alternatives(
+					new Set(
+						new KeyRule(
+							CodeKeys.Search,
+							LookupSearchImplementation)),
+					new Set(
+						new KeyRule(
+							CodeKeys.Lookup,
+							LookupSearchImplementation))),
+				new Alternatives(
 					Current,
 					Argument,
 					Scope,
 					new Set(new KeyRule(CodeKeys.Literal, Key)),
-					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())).Match(code, indentation, out matched);
-			}
+					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString()))).Match(code, indentation, out matched);
 			return text;
 		}
 		public abstract class Production
