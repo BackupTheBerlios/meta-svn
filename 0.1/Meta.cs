@@ -4883,23 +4883,39 @@ namespace Meta
 			Map lookup;
 			if ((lookup = code[CodeKeys.Search]) != null || (lookup = code[CodeKeys.Lookup]) != null)
 			{
-				if (lookup.ContainsKey(CodeKeys.Literal))
-				{
-					bool matched;
-					text = Key.Match(lookup[CodeKeys.Literal], indentation, out matched);
-				}
-				else
-				{
-					bool matched;
-					text = Syntax.lookupStart.ToString();
-					text += new Alternatives(
-						new Decorator(
-							"",
-							Program,
-							indentation),
-						Expression).Match(lookup, indentation, out matched);
-					text += Syntax.lookupEnd;
-				}
+				bool matched;
+				text=new Alternatives(
+					new KeyRule(
+						CodeKeys.Literal,
+						Key),
+					new Decorator(
+						Syntax.lookupStart.ToString(),
+						new Alternatives(
+							new Decorator(
+								"",
+								Program,
+								indentation),
+							Expression),
+						Syntax.lookupEnd.ToString())).Match(lookup, indentation, out matched);
+				//}
+				//if (lookup.ContainsKey(CodeKeys.Literal))
+				//{
+				//    bool matched;
+				//    text = Key.Match(lookup[CodeKeys.Literal], indentation, out matched);
+				//}
+				//else
+				//{
+				//    bool matched;
+				//    text=new Decorator(
+				//        Syntax.lookupStart.ToString(),
+				//        new Alternatives(
+				//            new Decorator(
+				//                "",
+				//                Program,
+				//                indentation),
+				//            Expression),
+				//        Syntax.lookupEnd.ToString()).Match(lookup, indentation, out matched);
+				//}
 			}
 			else
 			{
