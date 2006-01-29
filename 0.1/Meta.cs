@@ -4910,12 +4910,12 @@ namespace Meta
 				{
 					text = Scope.Match(code,indentation, out matched);
 				}
+				if (!matched)
+				{
+					text = new Set(new KeyRule(CodeKeys.Literal,Key)).Match(code, indentation, out matched);
+				}
 				if (matched)
 				{
-				}
-				else if (code.ContainsKey(CodeKeys.Literal))
-				{
-					text = Key.Match(code[CodeKeys.Literal], indentation,out matched);
 				}
 				else
 				{
