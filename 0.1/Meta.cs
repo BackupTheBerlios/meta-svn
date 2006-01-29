@@ -183,16 +183,16 @@ namespace Meta
 		}
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			string text = "Key does not exist: " + Serialize.Value(key);
+			string text = "Key does not exist: " + Serialize.ValueFunction(key);
 			if (Leaves(map) < 1000)
 			{
-				text+="\nin: "+Serialize.Value(map);
+				text+="\nin: "+Serialize.ValueFunction(map);
 			}
 			throw new ExecutionException(text,extent,map);
 		}
 		public static void KeyNotFound(Map key,Extent extent,Map context)
 		{
-			throw new ExecutionException("Key could not be found: "+Serialize.Value(key),extent,context);
+			throw new ExecutionException("Key could not be found: "+Serialize.ValueFunction(key),extent,context);
 		}
 	}
 	public abstract class Expression
@@ -3143,7 +3143,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Cannot set key " + Meta.Serialize.Value(key) + ".");
+				throw new ApplicationException("Cannot set key " + Meta.Serialize.ValueFunction(key) + ".");
 			}
 		}
 		public string Serialize(string indent,string[] functions)
@@ -4458,16 +4458,16 @@ namespace Meta
 						matched = p.functions != 0;
 						return null; }))));
 	}
-
 	public class Serialize
 	{
 		public abstract class Rule
 		{
 			public abstract string Match(Map map, string indentation, out bool matched);
 		}
-		public static string Value(Map val)
+		public static string ValueFunction(Map val)
 		{
-			return Value(val, null);
+			bool matched;
+			return Value.Match(val, null,out matched);
 		}
 		public class Literal:Rule
 		{
@@ -4497,42 +4497,44 @@ namespace Meta
 			}
 		}
 		private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
-		private static string Value(Map val, string indentation)
+		//private static string Value(Map val, string indentation)
+		//{
+		//    string text;
+		//    bool matched;
+		//    text = EmptyMap.Match(val,indentation, out matched);
+		//    if (!matched)
+		//    {
+		//        text = StringValue.Match(val, indentation,out matched);
+		//    }
+		//    if (!matched)
+		//    {
+		//        text = IntegerValue.Match(val, indentation, out matched);
+		//    }
+		//    if (!matched)
+		//    {
+		//        text = MapValue.Match(val, indentation,out matched);
+		//    }
+		//    return text;
+		//}
+		private static Rule IntegerValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
 		{
 			string text;
-			if (val is StrategyMap)
+			if (map.IsNumber)
 			{
-				bool matched;
-				if (val.Equals(Map.Empty))
-				{
-				}
-				text = EmptyMap.Match(val,indentation, out matched);
-				if (matched)
-				{
-				}
-				else if (val.IsString)
-				{
-					text = StringValue.Match(val, indentation,out matched);
-				}
-				else if (val.IsNumber)
-				{
-					text = IntegerValue(val);
-				}
-				else
-				{
-					text = MapValue(val, indentation);
-				}
+				text = map.GetNumber().ToString();
+				matched = true;
 			}
 			else
 			{
-				text = val.ToString();
+				matched = false;
+				text = null;
 			}
 			return text;
-		}
-		private static string IntegerValue(Map number)
-		{
-			return number.GetNumber().ToString();
-		}
+		});
+		//private static string IntegerValue(Map number)
+		//{
+		//    return number.GetNumber().ToString();
+		//}
 		public static string Key(Map key, string indentation)
 		{
 			string text;
@@ -4551,11 +4553,13 @@ namespace Meta
 				}
 				else if (key.IsNumber)
 				{
-					text += IntegerValue(key.GetNumber());
+					bool matched;
+					text += IntegerValue.Match(key, indentation, out matched);
 				}
 				else
 				{
-					text += MapValue(key, indentation) + indentation;
+					bool matched;
+					text += MapValue.Match(key, indentation,out matched) + indentation;
 				}
 				text += Syntax.lookupEnd;
 			}
@@ -4676,8 +4680,7 @@ namespace Meta
 				return text;
 			}
 		}
-
-		public static string MapValue(Map map, string indentation)
+		public static Rule MapValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
 		{
 			string text;
 			text = Syntax.unixNewLine.ToString();
@@ -4693,9 +4696,8 @@ namespace Meta
 			{
 				if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 				{
-					bool matched;
-					text += indentation + Syntax.function + Expression.Match(entry.Value, indentation,out matched);
-					//text += indentation + Syntax.function + Expression(entry.Value, indentation);
+					bool m;
+					text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
 					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 					{
 						text += Syntax.unixNewLine;
@@ -4703,15 +4705,50 @@ namespace Meta
 				}
 				else
 				{
-					text += indentation + Key((Map)entry.Key, indentation) + Syntax.statement + Value((Map)entry.Value, (indentation));
+					text += indentation + Key((Map)entry.Key, indentation) + Syntax.statement + Value.Match((Map)entry.Value, (indentation),out matched);
 					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 					{
 						text += Syntax.unixNewLine;
 					}
 				}
 			}
+			matched = true;
 			return text;
-		}
+		});
+		//public static string MapValue(Map map, string indentation)
+		//{
+		//    string text;
+		//    text = Syntax.unixNewLine.ToString();
+		//    if (indentation == null)
+		//    {
+		//        indentation = "";
+		//    }
+		//    else
+		//    {
+		//        indentation += Syntax.indentation;
+		//    }
+		//    foreach (KeyValuePair<Map, Map> entry in map)
+		//    {
+		//        if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
+		//        {
+		//            bool matched;
+		//            text += indentation + Syntax.function + Expression.Match(entry.Value, indentation,out matched);
+		//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+		//            {
+		//                text += Syntax.unixNewLine;
+		//            }
+		//        }
+		//        else
+		//        {
+		//            text += indentation + Key((Map)entry.Key, indentation) + Syntax.statement + Value((Map)entry.Value, (indentation));
+		//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+		//            {
+		//                text += Syntax.unixNewLine;
+		//            }
+		//        }
+		//    }
+		//    return text;
+		//}
 		public delegate string CustomRuleDelegate(Map map,string indentation, out bool matched);
 		public class CustomRule : Rule
 		{
@@ -4738,7 +4775,6 @@ namespace Meta
 			else if (code.ContainsKey(CodeKeys.Program))
 			{
 				text = Program.Match(code, indentation, out matched);
-				//text = Program.Match(code[CodeKeys.Program], indentation, out matched);
 			}
 			else if (code.ContainsKey(CodeKeys.Literal))
 			{
@@ -4807,23 +4843,6 @@ namespace Meta
 				return text;
 			}
 		}
-		//public static string Call(Map code, string indentation)
-		//{
-		//    bool matched;
-		//    string text = new Set(
-		//        new KeyRule(
-		//            CodeKeys.Callable,
-		//            Expression),
-		//        new KeyRule(
-		//            CodeKeys.Parameter,
-		//            new Alternatives(
-		//                Program,
-		//                new Decorator(
-		//                    Syntax.call.ToString(),
-		//                    Expression,
-		//                    "")))).Match(code, indentation, out matched);
-		//    return text;
-		//}
 		public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
 		{
 			string text;			
@@ -4895,7 +4914,8 @@ namespace Meta
 		}
 		public static string LiteralFunction(Map code, string indentation)
 		{
-			return Value(code, indentation);
+			bool matched;
+			return Value.Match(code, indentation,out matched);
 		}
 		public static string Select(Map code, string indentation)
 		{
@@ -5009,9 +5029,7 @@ namespace Meta
 				return text;
 			}
 		}
-
-
-
+		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
 	}
 
 	public class FileSystem
@@ -5109,7 +5127,7 @@ namespace Meta
 		}
 		public static void Save()
 		{
-			string text = Serialize.Value(fileSystem).Trim(new char[] { '\n' });
+			string text = Serialize.ValueFunction(fileSystem).Trim(new char[] { '\n' });
 			if (text == "\"\"")
 			{
 				text = "";
@@ -5467,7 +5485,7 @@ namespace Meta
 					level = 1;
 					Map map = FileSystem.ParseFile(BasicTest);
 					bool matched;
-					return Meta.Serialize.Value(map);
+					return Meta.Serialize.ValueFunction(map);
 				}
 			}
 
