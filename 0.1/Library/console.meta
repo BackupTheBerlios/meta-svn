@@ -6,3 +6,5 @@ write=
 	|Meta.Library.Write @
 readLine=
 	|mscorlib.Console.ReadLine *
+clear=
+	|mscorlib.Console.Clear *

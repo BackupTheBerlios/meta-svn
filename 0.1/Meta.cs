@@ -224,7 +224,6 @@ namespace Meta
 			Map function = callable.GetExpression().Evaluate(current);
 			if (!function.IsFunction)
 			{
-				object x=function.IsFunction;
 				throw new ExecutionException("Called map is not a function.", callable.Extent,current);
 			}
 			Map argument = parameter.GetExpression().Evaluate(current);
@@ -338,7 +337,14 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
-			return context[keyExpression.GetExpression().Evaluate(executionContext)];
+			Map key=keyExpression.GetExpression().Evaluate(executionContext);
+			if (!context.ContainsKey(key))
+			{
+				context.ContainsKey(key);
+				Throw.KeyDoesNotExist(key, context, keyExpression.Extent);
+			}
+			return context[key];
+			//return context[keyExpression.GetExpression().Evaluate(executionContext)];
 		}
 	}
 	public class Search:Subselect
@@ -549,19 +555,18 @@ namespace Meta
 		{
 			if (args.Length == 0)
 			{
-				Console.WriteLine("Meta 0.1 interactive mode");
+				Console.WriteLine("Interactive mode of Meta 0.1");
 				Map map = new StrategyMap();
 				map.Scope = FileSystem.fileSystem;
 				string code;
 
 				Parser parser = new Parser("", "Interactive console");
-				parser.indentationCount = 0;
 				parser.functions++;
 				parser.defaultKeys.Push(1);
 				while (true)
 				{
 					code = "";
-					Console.Write(parser.Line + "> ");
+					Console.Write(parser.Line + " ");
 					int lines = 0;
 					while (true)
 					{
@@ -574,20 +579,16 @@ namespace Meta
 							{
 								break;
 							}
-							else if(lines==0)
-							{
-								SendKeys.SendWait("{TAB}");
-							}
 						}
 						else
-						{
+							{
 							if (lines != 0)
 							{
 								break;
 							}
 						}
 						lines++;
-						Console.Write(parser.Line + lines + ". ");
+						Console.Write(parser.Line + lines + " ");
 						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
 						{
 							SendKeys.SendWait("{TAB}");
@@ -595,6 +596,7 @@ namespace Meta
 					}
 					try
 					{
+						Console.WriteLine();
 						bool matched;
 						parser.text += code;
 						Map statement = Parser.Statement.Match(parser, out matched);
@@ -607,9 +609,11 @@ namespace Meta
 							else
 							{
 								parser.index = parser.text.Length;
+								// make this more exact
 								throw new SyntaxException("Syntax error", parser);
 							}
 						}
+						Console.WriteLine();
 						Console.WriteLine();
 					}
 					catch (Exception e)
@@ -807,42 +811,26 @@ namespace Meta
 			return map;
 		}
 	}
-	public class PersistantScope : Scope
-	{
-		private List<Map> keys;
-		public PersistantScope()
-		{
-			this.keys = new List<Map>();
-		}
-		public PersistantScope(PersistantScope parent, Map key)
-		{
-			this.keys = new List<Map>(parent.keys);
-			this.keys.Add(key);
-		}
-		public override Map Get()
-		{
-			Map scope = FileSystem.fileSystem;
-			for(int i=0;i<keys.Count-1;i++)
-			{
-				scope = scope[keys[i]];
-			}
-			return scope;
-		}
-	}
-	//public class Scope
+	//public class PersistantScope : Scope
 	//{
-	//    public static implicit operator Scope(Map map)
+	//    private List<Map> keys;
+	//    public PersistantScope()
 	//    {
-	//        return new Scope(map);
+	//        this.keys = new List<Map>();
 	//    }
-	//    private Map map;
-	//    public Scope(Map map)
+	//    public PersistantScope(PersistantScope parent, Map key)
 	//    {
-	//        this.map = map;
+	//        this.keys = new List<Map>(parent.keys);
+	//        this.keys.Add(key);
 	//    }
-	//    public Map Get()
+	//    public override Map Get()
 	//    {
-	//        return map;
+	//        Map scope = FileSystem.fileSystem;
+	//        for(int i=0;i<keys.Count-1;i++)
+	//        {
+	//            scope = scope[keys[i]];
+	//        }
+	//        return scope;
 	//    }
 	//}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
@@ -1196,14 +1184,14 @@ namespace Meta
 					Map val = value;
 					if (val.scope == null || val.scope.Get() == null)
 					{
-						if (this.scope is PersistantScope)
-						{
-							val.scope = new PersistantScope((PersistantScope)Scope, key);
-						}
-						else
-						{
+						//if (this.scope is PersistantScope)
+						//{
+						//    val.scope = new PersistantScope((PersistantScope)Scope, key);
+						//}
+						//else
+						//{
 							val.scope = new TemporaryScope(this);
-						}
+						//}
 					}
 					Set(key, val);
 				}
@@ -2237,8 +2225,24 @@ namespace Meta
 	}
 	public class TypeMap: DotNetMap
 	{
+		public override bool ContainsKey(Map key)
+		{
+			return Get(key) != null || base.ContainsKey(key);
+		}
+		//public override bool ContainsKey(Map key)
+		//{
+		//    if (key is TypeMap)
+		//    {
+		//        // refactor???
+		//        return Get(key) != null;
+		//    }
+		//    return base.ContainsKey(key);
+		//}
 		protected override Map Get(Map key)
 		{
+			if (this.Type.Name == "Font")
+			{
+			}
 			Map value;
 			if (key is TypeMap && ((TypeMap)key).type == typeof(Map) && this.type==typeof(ObjectMap))
 			{
@@ -4557,7 +4561,20 @@ namespace Meta
 		public static string ValueFunction(Map val)
 		{
 			bool matched;
-			return Value.Match(val, null,out matched);
+			//string text;
+			//if (val is TypeMap)
+			//{
+			//    text = "TypeMap: "+((TypeMap)val).Type.ToString();
+			//}
+			//else if(val is ObjectMap)
+			//{
+			//    text = "ObjectMap: " + ((ObjectMap)val).Object.ToString();
+			//}
+			//else
+			//{
+			//    text=Value.Match(val, null,out matched);
+			//}
+			return Value.Match(val, null, out matched);
 		}
 		public class Literal:Rule
 		{
@@ -4622,6 +4639,14 @@ namespace Meta
 				{
 					bool m;
 					text += IntegerValue.Match(key, indentation, out m);
+				}
+				else if (key is TypeMap)
+				{
+					text = "TypeMap: "+((TypeMap)key).Type.ToString();
+				}
+				else if(key is ObjectMap)
+				{
+					text = "ObjectMap: " + ((ObjectMap)key).Object.ToString();
 				}
 				else
 				{
@@ -4760,23 +4785,34 @@ namespace Meta
 			{
 				indentation += Syntax.indentation;
 			}
-			foreach (KeyValuePair<Map, Map> entry in map)
+			if (map is TypeMap)
 			{
-				if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
+				text+= "TypeMap: "+((TypeMap)map).Type.ToString();
+			}
+			else if (map is ObjectMap)
+			{
+				text += "ObjectMap: " + ((ObjectMap)map).Object.ToString();
+			}
+			else
+			{
+				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					bool m;
-					text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
-					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 					{
-						text += Syntax.unixNewLine;
+						bool m;
+						text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
+						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+						{
+							text += Syntax.unixNewLine;
+						}
 					}
-				}
-				else
-				{
-					text += indentation + Key.Match((Map)entry.Key, indentation,out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation),out matched);
-					if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+					else
 					{
-						text += Syntax.unixNewLine;
+						text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
+						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+						{
+							text += Syntax.unixNewLine;
+						}
 					}
 				}
 			}
@@ -5162,7 +5198,40 @@ namespace Meta
 			return result;
 		}
 		public static Map fileSystem;
-		private static void LoadDirectory(string path,Map map)
+		//private static void LoadDirectory(string path, Map map)
+		//{
+		//    foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+		//    {
+		//        map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
+		//        //map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
+		//    }
+		//    foreach (string directoryName in Directory.GetDirectories(path))
+		//    {
+		//        if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
+		//        {
+		//            string name = new DirectoryInfo(directoryName).Name;
+		//            map[name] = new StrategyMap();
+		//            LoadDirectory(directoryName, map[name]);
+		//        }
+		//    }
+		//}
+		//private static void LoadDirectory(string path, Map map)
+		//{
+		//    foreach (string fileName in Directory.GetFiles(path, "*.meta"))
+		//    {
+		//        map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
+		//    }
+		//    foreach (string directoryName in Directory.GetDirectories(path))
+		//    {
+		//        if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
+		//        {
+		//            string name = new DirectoryInfo(directoryName).Name;
+		//            map[name] = new StrategyMap();
+		//            LoadDirectory(directoryName, map[name]);
+		//        }
+		//    }
+		//}
+		private static void LoadDirectory(string path, Map map)
 		{
 			foreach (string fileName in Directory.GetFiles(path, "*.meta"))
 			{
@@ -5172,7 +5241,7 @@ namespace Meta
 			{
 				if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
 				{
-					string name=new DirectoryInfo(directoryName).Name;
+					string name = new DirectoryInfo(directoryName).Name;
 					map[name] = new StrategyMap();
 					LoadDirectory(directoryName, map[name]);
 				}
@@ -5181,7 +5250,7 @@ namespace Meta
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
-			fileSystem.Scope = new PersistantScope();
+			//fileSystem.Scope = new PersistantScope();
 			LoadDirectory(Path.Combine(Process.InstallationPath, "Library"),fileSystem);
 			fileSystem.Scope = Gac.gac;
 		}

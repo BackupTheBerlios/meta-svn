@@ -1,1 +1,1 @@
-|console.writeLine Meta.Serialize.Value.[Meta.Map] @
+|console.write Meta.Serialize.ValueFunction @
