@@ -32,6 +32,7 @@ using Meta;
 using Meta.Test;
 using Microsoft.Win32;
 using System.Windows.Forms;
+using System.Net.Sockets;
 
 namespace Meta
 {
@@ -596,7 +597,7 @@ namespace Meta
 					}
 					try
 					{
-						Console.WriteLine();
+						//Console.WriteLine();
 						bool matched;
 						parser.text += code;
 						Map statement = Parser.Statement.Match(parser, out matched);
@@ -614,7 +615,7 @@ namespace Meta
 							}
 						}
 						Console.WriteLine();
-						Console.WriteLine();
+						//Console.WriteLine();
 					}
 					catch (Exception e)
 					{
@@ -635,6 +636,7 @@ namespace Meta
 				}
 				else
 				{
+					Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
 					Map function = FileSystem.ParseFile(args[0]);
 					int autoKeys = 0;
 					Map argument = new StrategyMap();
@@ -837,7 +839,14 @@ namespace Meta
 	{
 		public static implicit operator Map(Scope scope)
 		{
-			return scope.Get();
+			if (scope == null)
+			{
+				return null;
+			}
+			else
+			{
+				return scope.Get();
+			}
 		}
 		public Map Argument
 		{
@@ -1513,41 +1522,69 @@ namespace Meta
 		{
 		}
 	}
-	//public class RemoteStrategy : MapStrategy
-	//{
-	//    public override MapStrategy CopyImplementation()
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        if(!key.IsString)
-	//        {
-	//            throw new ApplicationException("key is not a string");
-	//        }
-	//        WebClient webClient=new WebClient();
-	//        Uri fullPath=new Uri(new Uri("http://"+address),key.GetString()+".meta");
-	//        Stream stream=webClient.OpenRead(fullPath.ToString());
-	//        StreamReader streamReader=new StreamReader(stream);
-	//        return FileSystem.Parse(streamReader,"Web");
-	//    }
-	//    public override void Set(Map key,Map val)
-	//    {
-	//        throw new ApplicationException("Cannot set key in remote map.");
-	//    }
-	//    private string address;
-	//    public RemoteStrategy(string address)
-	//    {
-	//        this.address=address;
-	//    }
-	//}
+	public class RemoteStrategy : MapStrategy
+	{
+		public override bool Equal(MapStrategy strategy)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override Map CopyData()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		//public override MapStrategy CopyImplementation()
+		//{
+		//    throw new Exception("The method or operation is not implemented.");
+		//}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				return null;
+			}
+		}
+		// make this the default behaviour of ContainsKey
+		public override bool ContainsKey(Map key)
+		{
+			return Get(key) != null;
+		}
+		public override Map Get(Map key)
+		{
+			if (!key.IsString)
+			{
+				throw new ApplicationException("key is not a string");
+			}
+			WebClient webClient = new WebClient();
+			// this should really be a RemoteStrategy again, I think
+			//Uri fullPath = new Uri(new Uri("http://" + address), key.GetString() + ".meta");
+			Map map;
+			string newAddress = new Uri(address+"/"+key.GetString()).ToString();
+			try
+			{
+				Stream stream = webClient.OpenRead(newAddress);
+				//Stream stream = webClient.OpenRead(fullPath.ToString());
+				StreamReader streamReader = new StreamReader(stream);
+				// ParseFile should not take the file name but maybe the scope???
+				map=FileSystem.ParseFile(streamReader, "Web");
+				map.Scope = FileSystem.fileSystem;
+			}
+			catch(Exception e)
+			{
+				map=new StrategyMap(new RemoteStrategy(newAddress));
+			}
+			return map;
+			//return FileSystem.Parse(streamReader, "Web");
+		}
+		public override void Set(Map key, Map val)
+		{
+			throw new ApplicationException("Cannot set key in remote map.");
+		}
+		private string address;
+		public RemoteStrategy(string address)
+		{
+			this.address = address;
+		}
+	}
 	//public class NetStrategy:MapStrategy
 	//{
 	//    public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
@@ -1706,8 +1743,16 @@ namespace Meta
 							}
 							else if (target.IsValueType)
 							{
-								object x = target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { });
-								result = new ObjectMap(x);
+								if (target.Equals(typeof(void)))
+								{
+									result = null;
+									break;
+								}
+								else
+								{
+									object x = target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { });
+									result = new ObjectMap(x);
+								}
 							}
 							else
 							{
@@ -1891,6 +1936,9 @@ namespace Meta
 			List<object> arguments = new List<object>();
 			bool argumentsMatched = true;
 			ParameterInfo[] parameters = method.GetParameters();
+			if (this.method != null && this.method.Name == "Poll")
+			{
+			}
 			if (parameters.Length == 1)
 			{
 				if (parameters[0].ParameterType.Name == "Int32")
@@ -2229,15 +2277,6 @@ namespace Meta
 		{
 			return Get(key) != null || base.ContainsKey(key);
 		}
-		//public override bool ContainsKey(Map key)
-		//{
-		//    if (key is TypeMap)
-		//    {
-		//        // refactor???
-		//        return Get(key) != null;
-		//    }
-		//    return base.ContainsKey(key);
-		//}
 		protected override Map Get(Map key)
 		{
 			if (this.Type.Name == "Font")
@@ -5264,12 +5303,72 @@ namespace Meta
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
 	}
+	public class Web : StrategyMap
+	{
+		public static readonly Web web = new Web();
+		public Web():base(new WebStrategy())
+		{
+		}
+	}
+	public class WebStrategy : MapStrategy
+	{
+		public override Map CopyData()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override void Set(Map key, Map val)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override bool Equal(MapStrategy strategy)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{ 
+				throw new Exception("The method or operation is not implemented."); 
+			}
+		}
+		// maybe this should be the default implementation of ContainsKey, instead of using Keys
+		public override bool ContainsKey(Map key)
+		{
+			return Get(key) != null;
+		}
+		const int port = 1036;
+		public override Map Get(Map key)
+		{
+			if (!key.IsString)
+			{
+				throw new ApplicationException("key is not a string");
+			}
+			string address = key.GetString();
+
+			WebClient webClient = new WebClient();
+			try
+			{
+				//Dns.GetHostEntry(address);
+				//Dns.GetHostAddresses(address);
+				new TcpClient().Connect(address, port);
+				return new StrategyMap(new RemoteStrategy("http://"+address+":"+port));
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+		}
+		public WebStrategy()
+		{
+		}
+	}
 	public class Gac: StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
 		private Gac()
 		{
 			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+			this["web"] = Web.web;
 		}
 		private bool Load(Map key)
 		{
