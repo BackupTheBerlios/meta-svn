@@ -297,7 +297,6 @@ license='"
 	]
 		"Courier New"		
 		10
-	'"webTest=web.["localhost"].Web.["test.meta"] *"'
 	decimalTest=5
 	fractionTest=40
 	stringTest="hello"		

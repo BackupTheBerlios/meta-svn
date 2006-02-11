@@ -31,9 +31,9 @@
 			negativeAdd=add
 				-100
 				91
-			subtractTest=subtract
+			subtractTest=add
 				1/4
-				1/100
+				opposite 1/100
 			multiplyInteger=multiply
 				19
 				1023
@@ -46,9 +46,9 @@
 			smaller=smaller
 				23
 				2
-			divide=divide
+			divide=multiply
 				1000
-				7
+				reciprocal 7
 		bitwiseTest=
 			or=bitwiseOr
 				8

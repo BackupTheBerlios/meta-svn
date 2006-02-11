@@ -461,11 +461,42 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Reciprocal(Map arg)
+		{
+			Number number = arg.GetNumber();
+			return new Number(number.Denominator, number.Numerator);
+		}
+		public static Map Add(Map arg)
+		{
+			Number result=0;
+			foreach (Map map in arg.Array)
+			{
+				result += map.GetNumber();
+			}
+			return result;
+		}
 		public static string writtenText = "";
 		public static void Write(string text)
 		{
 			writtenText += text;
 			Console.Write(text);
+		}
+		public static Map Maximum(Map arg)
+		{
+			Number maximum = arg[1].GetNumber();
+			foreach (Map map in arg.Array)
+			{
+				Number number = map.GetNumber();
+				if (number > maximum)
+				{
+					maximum = number;
+				}
+			}
+			return new StrategyMap(maximum);
+		}
+		public static Map Opposite(Map arg)
+		{
+			return arg.GetNumber()*-1;
 		}
 		public static Map Minimum(Map arg)
 		{
@@ -1932,6 +1963,9 @@ namespace Meta
 		protected Type type;
 		public override Map Call(Map argument)
 		{
+			if (this.method.Name.StartsWith("MakeArray"))
+			{
+			}
 			object result;
 			List<object> arguments = new List<object>();
 			bool argumentsMatched = true;
@@ -2299,6 +2333,10 @@ namespace Meta
 					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
 				}
 				value = new TypeMap(type.MakeGenericType(types.ToArray()));
+			}
+			else if (type == typeof(Array) && key is TypeMap)
+			{
+				value=new TypeMap(((TypeMap)key).Type.MakeArrayType());
 			}
 			else
 			{
@@ -5336,7 +5374,7 @@ namespace Meta
 		{
 			return Get(key) != null;
 		}
-		const int port = 1036;
+		const int port = 80;
 		public override Map Get(Map key)
 		{
 			if (!key.IsString)
