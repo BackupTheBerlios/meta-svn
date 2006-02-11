@@ -3046,3 +3046,63 @@ Entry (KeyValuePair`2)
 		"docFunctionResult"
 	Value (StrategyMap):
 		"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"topLevel"
+	Value (StrategyMap):
+		"changed"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"deep"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"map"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"test"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"function"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"program"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												1
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"key"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																1
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"search"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"topLevel"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"value"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																"changed"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		14
+	Value (StrategyMap):
+		""

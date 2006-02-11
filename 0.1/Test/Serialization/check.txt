@@ -360,6 +360,13 @@ license='"
 		doc="This function returns #hello ."
 		|"hello"
 	docFunctionResult=documentedFunction *
+	topLevel="default"
+	deep=
+		map=
+			test=
+				|
+					topLevel="changed"
+	deep.map.test *
 complicated=
 	[
 		complicated="key"

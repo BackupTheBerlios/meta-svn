@@ -352,7 +352,20 @@ namespace Meta
 	{
 		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			Map scope = executionContext;
+			Map key = keyExpression.GetExpression().Evaluate(executionContext);
+			while (scope != null && !scope.ContainsKey(key))
+			{
+				scope = scope.Scope;
+			}
+			if (scope == null)
+			{
+				Throw.KeyNotFound(key, keyExpression.Extent, executionContext);
+			}
+			else
+			{
+				scope[key] = value;
+			}
 		}
 		private Map keyExpression;
 		public Search(Map keyExpression)
@@ -454,6 +467,9 @@ namespace Meta
 			{
 				Map oldSelected=selected;
 				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
+			}
+			if (keys[keys.Count-1].GetSubselect() is Search)
+			{
 			}
 			Map val = value.GetExpression().Evaluate(context);
 			keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, ref context);
@@ -3689,6 +3705,7 @@ namespace Meta
 			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
 			Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
+		public const char search='$';
 		public const char current='&';
 		public const char scope='%';
 		public const char argument='@';
@@ -3785,7 +3802,6 @@ namespace Meta
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
-
 			public static implicit operator Rule(string text)
 			{
 				return new StringRule(text);
@@ -4521,10 +4537,17 @@ namespace Meta
 									new ReferenceAssignment(
 										Lookup))))))));
 
+
+		private static Rule KeysSearch = new Sequence(
+				Syntax.search,
+				new ReferenceAssignment(Search)
+			);
 		private static Rule Keys = new Sequence(
 			new Assignment(
 				1,
-				Lookup),
+				new Alternatives(
+					KeysSearch,
+					Lookup)),
 			new Appending(
 				new ZeroOrMore(
 					new Autokey(
@@ -4532,6 +4555,18 @@ namespace Meta
 							Syntax.select,
 							new ReferenceAssignment(
 								Lookup))))));
+
+		//private static Rule Keys = new Sequence(
+		//    new Assignment(
+		//        1,
+		//        Lookup),
+		//    new Appending(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    Syntax.select,
+		//                    new ReferenceAssignment(
+		//                        Lookup))))));
 
 		public static Rule Statement = new Sequence(
 			new ReferenceAssignment(
