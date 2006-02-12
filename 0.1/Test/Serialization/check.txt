@@ -336,7 +336,7 @@ license='"
 				10
 			whileBranches=
 				=
-					|loop add
+					|loop sum
 						@
 						1
 				[*]=

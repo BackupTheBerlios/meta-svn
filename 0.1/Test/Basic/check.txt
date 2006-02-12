@@ -1380,9 +1380,14 @@ Entry (KeyValuePair`2)
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
-						"a"
+						1
 					Value (StrategyMap):
-						"z"
+						"first arg"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						2
+					Value (StrategyMap):
+						"second=arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"TestClass"
@@ -2024,7 +2029,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"resultFromDelegate"
 	Value (StrategyMap):
-		"argumentString"
+		"first arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
@@ -2593,7 +2598,7 @@ Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								"literal"
 																																							Value (StrategyMap):
-																																								"add"
+																																								"sum"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																"parameter"
@@ -3020,9 +3025,14 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"hello"
+				1
 			Value (StrategyMap):
-				"world"
+				"first arg"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"second=arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"documentedFunction"

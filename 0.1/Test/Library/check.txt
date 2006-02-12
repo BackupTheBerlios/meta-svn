@@ -80,6 +80,16 @@ Entry (KeyValuePair`2)
 				1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"nonincreasingTest"
+			Value (StrategyMap):
+				""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"nondecreasingTest"
+			Value (StrategyMap):
+				1
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"smaller"
 			Value (StrategyMap):
 				""
@@ -97,6 +107,11 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"mapTest"
 	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"switchTest"
+			Value (StrategyMap):
+				"right"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"if"

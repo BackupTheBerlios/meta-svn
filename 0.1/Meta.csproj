@@ -102,12 +102,13 @@
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
-    <None Include="Library\divide.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\foreach.meta" />
     <None Include="Library\greater.meta" />
     <None Include="Library\if.meta" />
     <None Include="Library\integerToString.meta" />
+    <None Include="Library\nondecreasing.meta" />
+    <None Include="Library\nonincreasing.meta" />
     <None Include="Library\reciprocal.meta" />
     <None Include="Library\isInteger.meta" />
     <None Include="Library\isString.meta" />
@@ -117,8 +118,6 @@
     <None Include="Library\maximum.meta" />
     <None Include="Library\merge.meta" />
     <None Include="Library\minimum.meta" />
-    <None Include="Library\opposite.meta" />
-    <None Include="Library\multiply.meta" />
     <None Include="Library\not.meta" />
     <None Include="Library\or.meta" />
     <None Include="Library\pop.meta" />
@@ -127,8 +126,8 @@
     <None Include="Library\remove.meta" />
     <None Include="Library\smaller.meta" />
     <None Include="Library\sort.meta" />
-    <None Include="Library\subtract.meta" />
     <None Include="Library\sum.meta" />
+    <None Include="Library\switch.meta" />
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
   </ItemGroup>

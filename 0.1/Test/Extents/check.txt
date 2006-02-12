@@ -50229,7 +50229,7 @@ Entry (KeyValuePair`2)
 																																																							"338"
 																																																						Column (Int32):
 																																																							"15"
-																																																				"add"
+																																																				"sum"
 																																										Entry (KeyValuePair`2)
 																																											Key (StrategyMap):
 																																												Extent:

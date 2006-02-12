@@ -25,28 +25,42 @@
 					*
 					*
 		numberTest=
-			positiveAdd=add
+			positiveAdd=sum
 				100
 				1000
-			negativeAdd=add
+			negativeAdd=sum
 				-100
 				91
-			subtractTest=add
+			subtractTest=sum
 				1/4
-				opposite 1/100
-			multiplyInteger=multiply
+				product
+					1/100
+					-1
+			multiplyInteger=product
 				19
 				1023
-			multiplyFraction=multiply
+			multiplyFraction=product
 				3/2
 				7/3
 			greater=greater
 				4
 				1
+			nonincreasingTest=nonincreasing
+				1
+				1
+				0
+				1
+			nondecreasingTest=nondecreasing
+				1
+				2
+				3
+				4
+				5
+				6
 			smaller=smaller
 				23
 				2
-			divide=multiply
+			divide=product
 				1000
 				reciprocal 7
 		bitwiseTest=
@@ -54,6 +68,13 @@
 				8
 				20
 		mapTest=
+			switchTest=switch
+				cases=
+					x=
+						|"right"
+					y=
+						|"wrong"
+				control="x"					
 			if=if
 				condition=1
 				then=
@@ -68,7 +89,7 @@
 				"die Katze lief im Schnee."
 			apply=
 				applyMethod=
-					|add
+					|sum
 						@
 						1
 				&=apply

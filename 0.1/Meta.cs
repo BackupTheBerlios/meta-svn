@@ -280,7 +280,7 @@ namespace Meta
 
 	public abstract class Subselect
 	{
-		public abstract Map EvaluateImplementation(Map context, Map executionContext);
+		public abstract Map EvaluateImplementation(int i,Map context, Map executionContext);
 		public abstract void Assign(ref Map context, Map value, ref Map executionContext);
 	}
 	public class Current:Subselect
@@ -291,7 +291,7 @@ namespace Meta
 			value.Argument = context.Argument;
 			executionContext = value;
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
 			return context;
 		}
@@ -302,7 +302,7 @@ namespace Meta
 		{
 			throw new Exception("Cannot assign to scope.");
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
 			return context.Scope;
 		}
@@ -315,12 +315,24 @@ namespace Meta
 		{
 			throw new Exception("Cannot assign to argument.");
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
-			Map scope=context;
-			while (scope!=null && scope.Argument == null)
+			Map scope = executionContext;
+			//Map scope = executionContext;
+			for (int k = 0; ; k++)
 			{
-				scope = scope.Scope;
+				while (scope != null && scope.Argument == null)
+				{
+					scope = scope.Scope;
+				}
+				if (k < i)
+				{
+					scope = scope.Scope;
+				}
+				else
+				{
+					break;
+				}
 			}
 			return scope.Argument;
 		}
@@ -336,7 +348,7 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
 			if (!context.ContainsKey(key))
@@ -372,7 +384,7 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
@@ -438,9 +450,11 @@ namespace Meta
 		public override Map EvaluateImplementation(Map context, Map arg)
 		{
 			Map selected=context;
+			int i = 0;
 			foreach (Map key in keys)
 			{
-				selected=key.GetSubselect().EvaluateImplementation(selected, context);
+				i++;
+				selected=key.GetSubselect().EvaluateImplementation(i,selected, context);
 				if (selected == null)
 				{
 				}
@@ -466,7 +480,7 @@ namespace Meta
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
 				Map oldSelected=selected;
-				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
+				selected = keys[i].GetSubselect().EvaluateImplementation(i,selected, context);
 			}
 			if (keys[keys.Count-1].GetSubselect() is Search)
 			{
@@ -477,12 +491,51 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Nonincreasing(Map arg)
+		{
+			bool nonincreasing = true;
+			for (int i = 1; i  < arg.ArrayCount;i++)
+			{
+				if (arg[i + 1].GetNumber() > arg[i].GetNumber())
+				{
+					nonincreasing = false;
+					break;
+				}
+			}
+			return nonincreasing;
+		}
+		public static Map Nondecreasing(Map arg)
+		{
+			bool nondecreasing = true;
+			for (int i = 1; i < arg.ArrayCount; i++)
+			{
+				if (arg[i + 1].GetNumber() < arg[i].GetNumber())
+				{
+					nondecreasing = false;
+					break;
+				}
+			}
+			return nondecreasing;
+		}
+		public static Map And(Map arg)
+		{
+			bool and = true; ;
+			foreach (Map map in arg.Array)
+			{
+				if (!map.GetBoolean())
+				{
+					and = false;
+					break;
+				}
+			}
+			return and;
+		}
 		public static Map Reciprocal(Map arg)
 		{
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
 		}
-		public static Map Add(Map arg)
+		public static Map Sum(Map arg)
 		{
 			Number result=0;
 			foreach (Map map in arg.Array)
@@ -904,7 +957,7 @@ namespace Meta
 				{
 					arg = argument;
 				}
-				else if (Scope.Get() != null)
+				else if (Scope!=null && Scope.Get() != null)
 				{
 					arg = Scope.Get().Argument;
 				}
