@@ -307,6 +307,39 @@ namespace Meta
 			return context.Scope;
 		}
 	}
+	//if (key.Equals(SpecialKeys.Scope))
+	//{
+	//    selected = selected.Scope;
+	//}
+	//else if (key.Equals(SpecialKeys.Arg))
+	//{
+	//    // refactor
+	//    Map x = context;
+	//    for (int k = 0; k < i; k++)
+	//    {
+	//        while (x!= null && x.argument == null)
+	//        {
+	//            x = x.Scope;
+	//        }
+	//        x = x.Scope;
+	//    }
+	//    while (x != null && x.argument == null)
+	//    {
+	//        x = x.Scope;
+	//    }
+	//    if (x != null)
+	//    {
+	//        selected = x.argument;
+	//    }
+	//    else
+	//    {
+	//        selected= null;
+	//    }
+	//}
+	//else
+	//{
+	//    selected = selected[key];
+	//}
 	public class Argument:Subselect
 	{
 		// maybe this should be caught in the parser, or even allow it?, at least for scope
@@ -319,15 +352,22 @@ namespace Meta
 		{
 			Map scope = executionContext;
 			//Map scope = executionContext;
+			if (i > 0)
+			{
+			}
 			for (int k = 0; ; k++)
 			{
-				while (scope != null && scope.Argument == null)
+				while (scope != null && scope.argument == null)
 				{
 					scope = scope.Scope;
 				}
 				if (k < i)
 				{
+					//Map argument = scope.argument;
+					//while (argument.Equals(scope.Argument)) // not quite correct
+					//{
 					scope = scope.Scope;
+					//}
 				}
 				else
 				{
@@ -453,11 +493,11 @@ namespace Meta
 			int i = 0;
 			foreach (Map key in keys)
 			{
-				i++;
 				selected=key.GetSubselect().EvaluateImplementation(i,selected, context);
 				if (selected == null)
 				{
 				}
+				i++;
 			}
 			return selected;
 		}
@@ -654,139 +694,147 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			if (args.Length == 0)
+			try
 			{
-				Console.WriteLine("Interactive mode of Meta 0.1");
-				Map map = new StrategyMap();
-				map.Scope = FileSystem.fileSystem;
-				string code;
-
-				Parser parser = new Parser("", "Interactive console");
-				parser.functions++;
-				parser.defaultKeys.Push(1);
-				while (true)
+				if (args.Length == 0)
 				{
-					code = "";
-					Console.Write(parser.Line + " ");
-					int lines = 0;
+					Console.WriteLine("Interactive mode of Meta 0.1");
+					Map map = new StrategyMap();
+					map.Scope = FileSystem.fileSystem;
+					string code;
+
+					Parser parser = new Parser("", "Interactive console");
+					parser.functions++;
+					parser.defaultKeys.Push(1);
 					while (true)
 					{
-						string input = Console.ReadLine();
-						if (input.Trim().Length != 0)
+						code = "";
+						Console.Write(parser.Line + " ");
+						int lines = 0;
+						while (true)
 						{
-							code += input + Syntax.unixNewLine;
-							char character = input[input.TrimEnd().Length - 1];
-							if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
+							string input = Console.ReadLine();
+							if (input.Trim().Length != 0)
 							{
-								break;
-							}
-						}
-						else
-							{
-							if (lines != 0)
-							{
-								break;
-							}
-						}
-						lines++;
-						Console.Write(parser.Line + lines + " ");
-						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
-						{
-							SendKeys.SendWait("{TAB}");
-						}
-					}
-					try
-					{
-						//Console.WriteLine();
-						bool matched;
-						parser.text += code;
-						Map statement = Parser.Statement.Match(parser, out matched);
-						if (matched)
-						{
-							if (parser.index == parser.text.Length)
-							{
-								statement.GetStatement().Assign(ref map);
-							}
-							else
-							{
-								parser.index = parser.text.Length;
-								// make this more exact
-								throw new SyntaxException("Syntax error", parser);
-							}
-						}
-						Console.WriteLine();
-						//Console.WriteLine();
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(e.ToString());
-					}
-				}
-			}
-			else
-			{
-				if (args[0] == "-test")
-				{
-					new MetaTest().Run();
-				}
-				else if (args[0] == "-profile")
-				{
-					Console.WriteLine("profiling");
-					object x = FileSystem.fileSystem["basicTest"];
-				}
-				else
-				{
-					Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
-					Map function = FileSystem.ParseFile(args[0]);
-					int autoKeys = 0;
-					Map argument = new StrategyMap();
-					for (int i = 1; i < args.Length; i++)
-					{
-						string arg = args[i];
-
-						Map key;
-						Map value;
-						if (arg.StartsWith("-"))
-						{
-							string nextArg;
-							// move down
-							if (i + 1 < args.Length)
-							{
-								nextArg = args[i + 1];
-							}
-							else
-							{
-								nextArg = null;
-							}
-							key = arg.Remove(0, 1);
-							if (nextArg != null)
-							{
-								if (nextArg.StartsWith("-"))
+								code += input + Syntax.unixNewLine;
+								char character = input[input.TrimEnd().Length - 1];
+								if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
 								{
-									value = Map.Empty;
+									break;
+								}
+							}
+							else
+							{
+								if (lines != 0)
+								{
+									break;
+								}
+							}
+							lines++;
+							Console.Write(parser.Line + lines + " ");
+							for (int i = 0; i < input.Length && input[i] == '\t'; i++)
+							{
+								SendKeys.SendWait("{TAB}");
+							}
+						}
+						try
+						{
+							//Console.WriteLine();
+							bool matched;
+							parser.text += code;
+							Map statement = Parser.Statement.Match(parser, out matched);
+							if (matched)
+							{
+								if (parser.index == parser.text.Length)
+								{
+									statement.GetStatement().Assign(ref map);
 								}
 								else
 								{
-									value = nextArg;
-									i++;
+									parser.index = parser.text.Length;
+									// make this more exact
+									throw new SyntaxException("Syntax error", parser);
+								}
+							}
+							Console.WriteLine();
+							//Console.WriteLine();
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e.ToString());
+						}
+					}
+				}
+				else
+				{
+					if (args[0] == "-test")
+					{
+						new MetaTest().Run();
+					}
+					else if (args[0] == "-profile")
+					{
+						Console.WriteLine("profiling");
+						object x = FileSystem.fileSystem["basicTest"];
+					}
+					else
+					{
+						Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
+						Map function = FileSystem.ParseFile(args[0]);
+						int autoKeys = 0;
+						Map argument = new StrategyMap();
+						for (int i = 1; i < args.Length; i++)
+						{
+							string arg = args[i];
 
+							Map key;
+							Map value;
+							if (arg.StartsWith("-"))
+							{
+								string nextArg;
+								// move down
+								if (i + 1 < args.Length)
+								{
+									nextArg = args[i + 1];
+								}
+								else
+								{
+									nextArg = null;
+								}
+								key = arg.Remove(0, 1);
+								if (nextArg != null)
+								{
+									if (nextArg.StartsWith("-"))
+									{
+										value = Map.Empty;
+									}
+									else
+									{
+										value = nextArg;
+										i++;
+
+									}
+								}
+								else
+								{
+									value = Map.Empty;
 								}
 							}
 							else
 							{
-								value = Map.Empty;
+								autoKeys++;
+								key = autoKeys;
+								value = arg;
 							}
+							argument[key] = value;
 						}
-						else
-						{
-							autoKeys++;
-							key = autoKeys;
-							value = arg;
-						}
-						argument[key] = value;
+						function.Call(argument);
 					}
-					function.Call(argument);
 				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
+				Console.ReadLine();
 			}
 		}
 		Thread thread;
@@ -948,6 +996,7 @@ namespace Meta
 				return scope.Get();
 			}
 		}
+		// this is really stupidly implemented, very annoying
 		public Map Argument
 		{
 			get
@@ -4357,6 +4406,30 @@ namespace Meta
 		public static Rule Expression = new DelayedRule(delegate(){
 			return new Alternatives(EmptyMap, Number, String, Program, Call, Select); });
 
+
+		public static Rule Call = new DelayedRule(delegate()
+		{
+			return new Sequence(
+				new Assignment(
+					CodeKeys.Call,
+					new Sequence(
+						new Assignment(
+							CodeKeys.Callable,
+							Select),
+						new Assignment(
+							CodeKeys.Parameter,
+							new Alternatives(
+								new Sequence(
+									Syntax.call,
+									new ReferenceAssignment(Expression)),
+								Program)),
+						new CustomRule(delegate(Parser p, out bool matched)
+			{
+				matched = p.functions != 0;
+				return null;
+			}))));
+		});
+
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
 		private int GetEscapeCharCount()
@@ -4543,6 +4616,8 @@ namespace Meta
 			Syntax.argument,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
 
+
+
 		private static Rule LookupLeft =
 			new Alternatives(
 				CurrentLeft,
@@ -4699,23 +4774,28 @@ namespace Meta
 						delegate(Parser p) { 
 							p.defaultKeys.Pop(); })));
 
-		public static Rule Call = new Sequence(
-			new Assignment(
-				CodeKeys.Call,
-				new Sequence(
-					new Assignment(
-						CodeKeys.Callable,
-						Select),
-					new Assignment(
-						CodeKeys.Parameter,
-						new Alternatives(
-							new Sequence(
-								Syntax.call, 
-								new ReferenceAssignment(Expression)),
-							Program)),
-					new CustomRule(delegate(Parser p,out bool matched) {
-						matched = p.functions != 0;
-						return null; }))));
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Call,
+		//            new Sequence(
+		//                new Assignment(
+		//                    CodeKeys.Callable,
+		//                    Select),
+		//                new Assignment(
+		//                    CodeKeys.Parameter,
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            Syntax.call,
+		//                            new ReferenceAssignment(Expression)),
+		//                        Program)),
+		//                new CustomRule(delegate(Parser p, out bool matched)
+		//    {
+		//        matched = p.functions != 0;
+		//        return null;
+		//    }))));
+		//});
 	}
 	public class Serialize
 	{

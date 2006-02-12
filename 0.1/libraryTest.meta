@@ -74,7 +74,7 @@
 						|"right"
 					y=
 						|"wrong"
-				control="x"					
+				control="x"				
 			if=if
 				condition=1
 				then=

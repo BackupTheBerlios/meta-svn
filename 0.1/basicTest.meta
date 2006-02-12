@@ -366,6 +366,13 @@ license='"
 				|
 					$topLevel="changed"
 	deep.map.test *
+	outerFunction=
+		|
+			innerFunction=
+				|
+					&=@.@
+			innerFunction *
+	outerFunctionTest=outerFunction "right"
 complicated=
 	[
 		complicated="key"
