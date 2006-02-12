@@ -1,6 +1,6 @@
 documentation="Determines whether maps are identical."
 |
-	result=sum
+	result=repeat
 		array=@
 		function=
 			|

@@ -1,0 +1,6 @@
+|if
+	condition=contains
+		map=@.cases
+		key=@.control
+	then=
+		|@.@.cases.[@.@.@.control] *

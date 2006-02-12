@@ -1,10 +1,10 @@
 documentation="Combines several maps into one."
-|sum
+|repeat
 	array=@
 	function=
 		|
 			overwrite=@.present
-			&=sum
+			&=repeat
 				array=keys @.present
 				function=
 					|

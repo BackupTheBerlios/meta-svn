@@ -1,5 +1,5 @@
 documentation="Returns whether at least one boolean is true."
-|sum
+|repeat
 	array=@
 	function=
 		|table.[@]

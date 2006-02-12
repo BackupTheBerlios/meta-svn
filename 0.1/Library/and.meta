@@ -1,5 +1,5 @@
 documentation="Returns whether all booleans are true."
-|sum
+|repeat
 	array=@
 	function=
 		|table.[@]

@@ -16,7 +16,7 @@ applyImplementation=
 				|applyImplementation
 					array=@.array
 					function=@.function
-					index=add
+					index=sum
 						@.index
 						1
 					object=Meta.ObjectMap.[mscorlib.Object] @.result

@@ -1,5 +1,5 @@
 documentation="Multiplies integers."
-|Meta.StrategyMap.[Meta.Number] sum
+|Meta.StrategyMap.[Meta.Number] repeat
 	array=@
 	function=
 		|Meta.Number.op_Multiply
