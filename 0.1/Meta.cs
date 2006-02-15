@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Net;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Meta;
@@ -33,6 +34,7 @@ using Meta.Test;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Net.Sockets;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Meta
 {
@@ -712,18 +714,26 @@ namespace Meta
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
-		public DirectoryMap(DirectoryInfo directory)
+		public DirectoryMap(DirectoryInfo directory, Scope scope)
 		{
 			this.directory = directory;
-			if (directory.Parent != null)
-			{
-				this.Scope = new DirectoryMap(directory.Parent);
-			}
-			else
-			{
-				this.Scope = FileSystem.fileSystem;
-			}
+			this.Scope = scope;
 		}
+		public DirectoryMap(DirectoryInfo directory):this(directory,directory.Parent!=null? new DirectoryMap(directory.Parent):FileSystem.fileSystem)
+		{
+		}
+		//public DirectoryMap(DirectoryInfo directory)
+		//{
+		//    this.directory = directory;
+		//    if (directory.Parent != null)
+		//    {
+		//        this.Scope = new DirectoryMap(directory.Parent);
+		//    }
+		//    else
+		//    {
+		//        this.Scope = FileSystem.fileSystem;
+		//    }
+		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -760,6 +770,9 @@ namespace Meta
 			string name = key.GetString();
 			string file = Path.Combine(directory.FullName, name);
 			string metaFile = Path.Combine(directory.FullName, name + ".meta");
+			if (key.GetString().StartsWith("Background"))
+			{
+			}
 			if (File.Exists(metaFile))
 			{
 				value = FileSystem.ParseFile(metaFile);
@@ -904,7 +917,12 @@ namespace Meta
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 		static extern IntPtr GetStdHandle(int nStdHandle);
-
+		public static bool useConsole = false;
+		public static void UseConsole()
+		{
+			AllocConsole();
+			useConsole = true;
+		}
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -912,7 +930,7 @@ namespace Meta
 			{
 				if (args.Length == 0)
 				{
-					AllocConsole();
+					UseConsole();
 					Console.WriteLine("Interactive mode of Meta 0.1");
 					Map map = new StrategyMap();
 					map.Scope = FileSystem.fileSystem;
@@ -984,12 +1002,13 @@ namespace Meta
 				{
 					if (args[0] == "-test")
 					{
-						AllocConsole();
+						UseConsole();
+						//AllocConsole();
 						new MetaTest().Run();
 					}
 					else if (args[0] == "-profile")
 					{
-						AllocConsole();
+						UseConsole();
 						Console.WriteLine("profiling");
 						object x = FileSystem.fileSystem["basicTest"];
 					}
@@ -1060,8 +1079,15 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.ToString());
-				Console.ReadLine();
+				if (useConsole)
+				{
+					Console.WriteLine(e.ToString());
+					Console.ReadLine();
+				}
+				else
+				{
+					MessageBox.Show(e.ToString(), "Meta exception");
+				}
 			}
 		}
 
@@ -1903,69 +1929,69 @@ namespace Meta
 		{
 		}
 	}
-	public class RemoteStrategy : MapStrategy
-	{
-		public override bool Equal(MapStrategy strategy)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override Map CopyData()
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		//public override MapStrategy CopyImplementation()
-		//{
-		//    throw new Exception("The method or operation is not implemented.");
-		//}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return null;
-			}
-		}
-		// make this the default behaviour of ContainsKey
-		public override bool ContainsKey(Map key)
-		{
-			return Get(key) != null;
-		}
-		public override Map Get(Map key)
-		{
-			if (!key.IsString)
-			{
-				throw new ApplicationException("key is not a string");
-			}
-			WebClient webClient = new WebClient();
-			// this should really be a RemoteStrategy again, I think
-			//Uri fullPath = new Uri(new Uri("http://" + address), key.GetString() + ".meta");
-			Map map;
-			string newAddress = new Uri(address+"/"+key.GetString()).ToString();
-			try
-			{
-				Stream stream = webClient.OpenRead(newAddress);
-				//Stream stream = webClient.OpenRead(fullPath.ToString());
-				StreamReader streamReader = new StreamReader(stream);
-				// ParseFile should not take the file name but maybe the scope???
-				map=FileSystem.ParseFile(streamReader, "Web");
-				map.Scope = FileSystem.fileSystem;
-			}
-			catch(Exception e)
-			{
-				map=new StrategyMap(new RemoteStrategy(newAddress));
-			}
-			return map;
-			//return FileSystem.Parse(streamReader, "Web");
-		}
-		public override void Set(Map key, Map val)
-		{
-			throw new ApplicationException("Cannot set key in remote map.");
-		}
-		private string address;
-		public RemoteStrategy(string address)
-		{
-			this.address = address;
-		}
-	}
+	//public class RemoteStrategy : MapStrategy
+	//{
+	//    public override bool Equal(MapStrategy strategy)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override Map CopyData()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    //public override MapStrategy CopyImplementation()
+	//    //{
+	//    //    throw new Exception("The method or operation is not implemented.");
+	//    //}
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    // make this the default behaviour of ContainsKey
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        if (!key.IsString)
+	//        {
+	//            throw new ApplicationException("key is not a string");
+	//        }
+	//        WebClient webClient = new WebClient();
+	//        // this should really be a RemoteStrategy again, I think
+	//        //Uri fullPath = new Uri(new Uri("http://" + address), key.GetString() + ".meta");
+	//        Map map;
+	//        string newAddress = new Uri(address+"/"+key.GetString()).ToString();
+	//        try
+	//        {
+	//            Stream stream = webClient.OpenRead(newAddress);
+	//            //Stream stream = webClient.OpenRead(fullPath.ToString());
+	//            StreamReader streamReader = new StreamReader(stream);
+	//            // ParseFile should not take the file name but maybe the scope???
+	//            map=FileSystem.ParseFile(streamReader, "Web");
+	//            map.Scope = FileSystem.fileSystem;
+	//        }
+	//        catch(Exception e)
+	//        {
+	//            map=new StrategyMap(new RemoteStrategy(newAddress));
+	//        }
+	//        return map;
+	//        //return FileSystem.Parse(streamReader, "Web");
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key in remote map.");
+	//    }
+	//    private string address;
+	//    public RemoteStrategy(string address)
+	//    {
+	//        this.address = address;
+	//    }
+	//}
 	//public class NetStrategy:MapStrategy
 	//{
 	//    public static readonly StrategyMap Net = new StrategyMap(new NetStrategy());
@@ -2112,6 +2138,33 @@ namespace Meta
 						else if (target.IsAssignableFrom(meta.GetType()))
 						{
 							dotNet = meta;
+						}
+						else if (target.IsArray)
+						{
+							Type elementType=target.GetElementType();
+							ArrayList list = new ArrayList();
+							bool converted=true;
+							foreach (Map m in meta.Array)
+							{
+								object o = Transform.ToDotNet(m, elementType);
+								if (o != null)
+								{
+									list.Add(o);
+								}
+								else
+								{
+									converted=false;
+									break;
+								}
+							}
+							if (converted)
+							{
+								dotNet=list.ToArray(elementType);
+							}
+							else
+							{
+								dotNet = null;
+							}
 						}
 						else
 						{
@@ -4250,6 +4303,9 @@ namespace Meta
 			protected override Map MatchImplementation(Parser parser,out bool matched)
 			{
 				pre(parser);
+				if (rule == null)
+				{
+				}
 				Map result = rule.Match(parser,out matched);
 				post(parser);
 				return result;
@@ -4378,6 +4434,9 @@ namespace Meta
 				bool success = true;
 				foreach (Action action in actions)
 				{
+					if (action == null)
+					{
+					}
 					// refactor
 					bool matched = action.Execute(parser, ref result);
 					if (!matched)
@@ -4533,6 +4592,9 @@ namespace Meta
 			public bool Execute(Parser parser, ref Map result)
 			{
 				bool matched;
+				if (rule == null)
+				{
+				}
 				Map map = rule.Match(parser, out matched);
 				if (matched)
 				{
@@ -4670,49 +4732,19 @@ namespace Meta
 			return escapeCharCount;
 		}
 
-		private static Rule String = new Sequence(
-			new Assignment(
-				CodeKeys.Literal,
-				new PrePost(
-					delegate(Parser p) { },
-					new Sequence(
-						new ZeroOrMore(
-							new Sequence(
-								Syntax.stringEscape,
-								new CustomRule(
-									delegate(Parser p, out bool matched) {
-										p.escapeCharCount++;
-										matched = true;
-										return null; }))),
-						Syntax.@string,
-						new ReferenceAssignment(
-							new ZeroOrMore(
-								new Autokey(
-									new Sequence(
-										new Not(
-											new Sequence(
-												Syntax.@string,
-												new CustomRule(delegate(Parser p,out bool matched) {
-													return new N(
-														// use reflection to get at this? or do assignments in constructor, should be a property or a function that can be called, incremented or whatever
-														p.escapeCharCount,
-														Syntax.stringEscape).Match(p,out matched);}))),
-										new ReferenceAssignment(new CharacterExcept()))))),
-						Syntax.@string,
-						new CustomRule(delegate(Parser p, out bool matched) { 
-							return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched); })),
-					delegate(Parser p) { 
-						p.escapeCharCount = 0; })));
 
-		public static Rule Function = new PrePost(
-			delegate(Parser parser) { parser.functions++; },
-			new Sequence(
-				Syntax.function,
-				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
-				new Assignment(CodeKeys.Value,
-					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
-
-		private static Rule EndOfLine = 
+		// somehow include the newline here
+		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
+		{
+			return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
+		});
+		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
+		{
+			pa.indentationCount--;
+			matched = false;
+			return null;
+		});
+		private static Rule EndOfLine =
 			new Sequence(
 				new ZeroOrMore(
 					new Alternatives(
@@ -4722,30 +4754,281 @@ namespace Meta
 					Syntax.unixNewLine,
 					Syntax.windowsNewLine));
 
-		private static Rule Indentation = 
+		private static Rule EndOfLinePreserve = new FlattenRule(
+			new Sequence(
+				new FlattenRule(
+					new ZeroOrMore(
+							new Autokey(new Alternatives(
+								Syntax.space,
+								Syntax.tab)))),
+				new Autokey(
+					new Alternatives(
+						Syntax.unixNewLine,
+						Syntax.windowsNewLine))));
+
+
+		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
+		{
+			Map map = new Sequence(
+				EndOfLine,
+				new StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation))).Match(pa, out matched);
+			// this should be done automatically
+			if (matched)
+			{
+				pa.indentationCount--;
+			}
+			return map;
+		});
+
+		private static Rule Indentation =
 			new Alternatives(
-				new CustomRule(delegate(Parser p,out bool matched) {
-					if (p.isStartOfFile)
-					{
-						p.isStartOfFile = false;
-						p.indentationCount++;
-						matched = true;
-						return null;
-					}
-					else
-					{
-						matched = false;
-						return null;
-					}}),
+				new CustomRule(delegate(Parser p, out bool matched)
+		{
+			if (p.isStartOfFile)
+			{
+				p.isStartOfFile = false;
+				p.indentationCount++;
+				matched = true;
+				return null;
+			}
+			else
+			{
+				matched = false;
+				return null;
+			}
+		}),
 				new Sequence(
 					new Sequence(
 						EndOfLine,
-						new CustomRule(delegate(Parser p,out bool matched) { 
-							return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p,out matched); })),
-					new CustomRule(delegate(Parser p,out bool matched){
-						p.indentationCount++;
-						matched = true;
-						return null;})));
+						new CustomRule(delegate(Parser p, out bool matched)
+		{
+			return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
+		})),
+					new CustomRule(delegate(Parser p, out bool matched)
+		{
+			p.indentationCount++;
+			matched = true;
+			return null;
+		})));
+
+		private static Rule StringLine = new CustomRule(delegate(Parser p, out bool matched)
+		{
+			Map m=new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0]))).Match(p, out matched);
+			//m.Append(Syntax.unixNewLine);
+			return m;
+		});
+
+
+		private static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
+		{
+			if (parser.file.EndsWith("basicTest.meta"))
+			{
+			}
+			Map map = new Sequence(
+				new Assignment(
+					CodeKeys.Literal,
+						new Sequence(
+							Syntax.@string,
+							new ReferenceAssignment(
+								new ZeroOrMore(
+									new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
+							Syntax.@string))).Match(parser, out matched);
+			if (!matched)
+			{
+				map = new Sequence(
+					new Assignment(
+						CodeKeys.Literal,
+						new Sequence(
+							Syntax.@string,
+							Indentation,
+							new ReferenceAssignment(
+								new FlattenRule(
+									new Sequence(
+										new Autokey(StringLine),
+										new Autokey(
+											new FlattenRule(
+												new ZeroOrMore(
+													new Autokey(
+														new Sequence(
+															EndOfLinePreserve, // not really correct, should preserve whitespace
+															SameIndentation,
+															new ReferenceAssignment(
+																new FlattenRule(
+																	new Sequence(
+																		new Autokey(new LiteralRule(Syntax.unixNewLine.ToString())),
+																		new Autokey(StringLine)
+																		// maybe remove implicit operators, they are too confusing
+																		))))))))))),
+							StringDedentation,
+							Syntax.@string))).Match(parser, out matched);
+				if (matched)
+				{
+				}
+			}
+			//Map map=new Sequence(
+			//    new Assignment(
+			//        CodeKeys.Literal,
+			//        new Alternatives(
+			//            new Sequence(
+			//                Syntax.@string,
+			//                new ReferenceAssignment(
+			//                    new ZeroOrMore(
+			//                        new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[1], Syntax.@string)))),
+			//                Syntax.@string),
+			//            new Sequence(
+			//                Syntax.@string,
+			//                Indentation,
+			//                new ReferenceAssignment(new FlattenRule(
+			//                    new ZeroOrMore(
+			//                        new Sequence(
+			//                            SameIndentation,
+			//                            new ReferenceAssignment(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[1])))))),
+			//                Dedentation,
+			//                Syntax.@string)))).Match(parser, out matched);
+			return map;
+		});
+
+		//private static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    if (parser.file.EndsWith("basicTest.meta"))
+		//    {
+		//    }
+		//    Map map = new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Literal,
+		//                new Sequence(
+		//                    Syntax.@string,
+		//                    new ReferenceAssignment(
+		//                        new ZeroOrMore(
+		//                            new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
+		//                    Syntax.@string))).Match(parser,out matched);
+		//    if (!matched)
+		//    {
+		//        map = new Sequence(
+		//                Syntax.@string,
+		//                Indentation,
+		//                new ReferenceAssignment( 
+		//                    new FlattenRule(
+		//                        new Sequence(
+		//                            new Autokey(StringLine),
+		//                            new ReferenceAssignment(
+		//                                new FlattenRule(
+		//                                    new ZeroOrMore(
+		//                                        new Autokey(new Sequence(
+		//                                            EndOfLine, // not really correct, should preserve whitespace
+		//                                            SameIndentation,
+		//                                            new ReferenceAssignment(StringLine))))))))),
+		//                StringDedentation,
+		//                Syntax.@string).Match(parser, out matched);
+		//    }
+		//    //Map map=new Sequence(
+		//    //    new Assignment(
+		//    //        CodeKeys.Literal,
+		//    //        new Alternatives(
+		//    //            new Sequence(
+		//    //                Syntax.@string,
+		//    //                new ReferenceAssignment(
+		//    //                    new ZeroOrMore(
+		//    //                        new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[1], Syntax.@string)))),
+		//    //                Syntax.@string),
+		//    //            new Sequence(
+		//    //                Syntax.@string,
+		//    //                Indentation,
+		//    //                new ReferenceAssignment(new FlattenRule(
+		//    //                    new ZeroOrMore(
+		//    //                        new Sequence(
+		//    //                            SameIndentation,
+		//    //                            new ReferenceAssignment(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[1])))))),
+		//    //                Dedentation,
+		//    //                Syntax.@string)))).Match(parser, out matched);
+		//    return map;
+		//});
+
+
+		//private static Rule String = new Sequence(
+		//    new Assignment(
+		//        CodeKeys.Literal,
+		//        new PrePost(
+		//            delegate(Parser p) { },
+		//            new Sequence(
+		//                new ZeroOrMore(
+		//                    new Sequence(
+		//                        Syntax.stringEscape,
+		//                        new CustomRule(
+		//                            delegate(Parser p, out bool matched)
+		//                            {
+		//                                p.escapeCharCount++;
+		//                                matched = true;
+		//                                return null;
+		//                            }))),
+		//                Syntax.@string,
+		//                new ReferenceAssignment(
+		//                    new ZeroOrMore(
+		//                        new Autokey(
+		//                            new Sequence(
+		//                                new Not(
+		//                                    new Sequence(
+		//                                        Syntax.@string,
+		//                                        new CustomRule(delegate(Parser p, out bool matched)
+		//{
+		//    return new N(
+		//        // use reflection to get at this? or do assignments in constructor, should be a property or a function that can be called, incremented or whatever
+		//        p.escapeCharCount,
+		//        Syntax.stringEscape).Match(p, out matched);
+		//}))),
+		//                                new ReferenceAssignment(new CharacterExcept()))))),
+		//                Syntax.@string,
+		//                new CustomRule(delegate(Parser p, out bool matched)
+		//{
+		//    return new StringRule("".PadLeft(p.escapeCharCount, Syntax.stringEscape)).Match(p, out matched);
+		//})),
+		//            delegate(Parser p)
+		//            {
+		//                p.escapeCharCount = 0;
+		//            })));
+
+		public static Rule Function = new PrePost(
+			delegate(Parser parser) { parser.functions++; },
+			new Sequence(
+				Syntax.function,
+				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+				new Assignment(CodeKeys.Value,
+					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
+
+		//private static Rule EndOfLine = 
+		//    new Sequence(
+		//        new ZeroOrMore(
+		//            new Alternatives(
+		//                Syntax.space,
+		//                Syntax.tab)),
+		//        new Alternatives(
+		//            Syntax.unixNewLine,
+		//            Syntax.windowsNewLine));
+
+		//private static Rule Indentation = 
+		//    new Alternatives(
+		//        new CustomRule(delegate(Parser p,out bool matched) {
+		//            if (p.isStartOfFile)
+		//            {
+		//                p.isStartOfFile = false;
+		//                p.indentationCount++;
+		//                matched = true;
+		//                return null;
+		//            }
+		//            else
+		//            {
+		//                matched = false;
+		//                return null;
+		//            }}),
+		//        new Sequence(
+		//            new Sequence(
+		//                EndOfLine,
+		//                new CustomRule(delegate(Parser p,out bool matched) { 
+		//                    return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p,out matched); })),
+		//            new CustomRule(delegate(Parser p,out bool matched){
+		//                p.indentationCount++;
+		//                matched = true;
+		//                return null;})));
 
 		private Rule Whitespace = 
 			new ZeroOrMore(
@@ -5003,15 +5286,18 @@ namespace Meta
 									new Autokey(
 										new Sequence(
 											new Alternatives(
-												new CustomRule(delegate(Parser pa,out bool matched) {
-														return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);}),
-												new CustomRule(delegate(Parser pa,out bool matched) {
-														pa.indentationCount--;
-														matched = false;
-														return null; })),
+												SameIndentation,
+												//new CustomRule(delegate(Parser pa,out bool matched) {
+												//        return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa,out matched);}),
+												Dedentation),
+												//new CustomRule(delegate(Parser pa,out bool matched) {
+												//        pa.indentationCount--;
+												//        matched = false;
+												//        return null; })),
 											new ReferenceAssignment(Statement)))))),
 						delegate(Parser p) { 
 							p.defaultKeys.Pop(); })));
+
 
 		//public static Rule Call = new DelayedRule(delegate()
 		//{
@@ -5760,8 +6046,8 @@ namespace Meta
 		public override ICollection<Map> Keys
 		{
 			get
-			{ 
-				throw new Exception("The method or operation is not implemented."); 
+			{
+				throw new Exception("The method or operation is not implemented.");
 			}
 		}
 		// maybe this should be the default implementation of ContainsKey, instead of using Keys
@@ -5781,12 +6067,28 @@ namespace Meta
 			WebClient webClient = new WebClient();
 			try
 			{
-				//Dns.GetHostEntry(address);
-				//Dns.GetHostAddresses(address);
-				new TcpClient().Connect(address, port);
-				return new StrategyMap(new RemoteStrategy("http://"+address+":"+port));
+				//new TcpClient().Connect(address, port);
+				string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
+				string cacheDirectory = Path.Combine(metaPath, "Cache");
+				DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
+				string zipDirectory=Path.Combine(metaPath,"Zip");
+				string zipFile = Path.Combine(zipDirectory, address + ".zip");
+				Directory.CreateDirectory(zipDirectory);
+				string metaZipAddress = "http://"+address + "/" + "meta.zip";
+
+				try
+				{
+					webClient.DownloadFile(metaZipAddress, zipFile);
+				}
+				catch (Exception e)
+				{
+					return null;
+				}
+				unzipDirectory.Create();
+				Unzip(zipFile, unzipDirectory.FullName);
+				return new DirectoryMap(unzipDirectory,this.map);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				return null;
 			}
@@ -5794,7 +6096,120 @@ namespace Meta
 		public WebStrategy()
 		{
 		}
+		public static void Unzip(string zipFile,string dir)
+		{
+			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
+
+			ZipEntry theEntry;
+			while ((theEntry = s.GetNextEntry()) != null)
+			{
+
+				Console.WriteLine(theEntry.Name);
+
+				string directoryName = Path.GetDirectoryName(theEntry.Name);
+				string fileName = Path.GetFileName(theEntry.Name);
+
+				// create directory
+				//Directory.CreateDirectory(directoryName);
+
+				if (fileName != String.Empty)
+				{
+					FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
+
+					int size = 2048;
+					byte[] data = new byte[2048];
+					while (true)
+					{
+						size = s.Read(data, 0, data.Length);
+						if (size > 0)
+						{
+							streamWriter.Write(data, 0, size);
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					streamWriter.Close();
+				}
+			}
+			s.Close();
+		}
 	}
+	//public class WebStrategy : MapStrategy
+	//{
+	//    public override Map CopyData()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override bool Equal(MapStrategy strategy)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        { 
+	//            throw new Exception("The method or operation is not implemented."); 
+	//        }
+	//    }
+	//    // maybe this should be the default implementation of ContainsKey, instead of using Keys
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    const int port = 80;
+	//    public override Map Get(Map key)
+	//    {
+	//        if (!key.IsString)
+	//        {
+	//            throw new ApplicationException("key is not a string");
+	//        }
+	//        string address = key.GetString();
+
+	//        WebClient webClient = new WebClient();
+	//        try
+	//        {
+	//            //Dns.GetHostEntry(address);
+	//            //Dns.GetHostAddresses(address);
+	//            new TcpClient().Connect(address, port);
+	//            return new StrategyMap(new RemoteStrategy("http://" + address + ":" + port));
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    //public override Map Get(Map key)
+	//    //{
+	//    //    if (!key.IsString)
+	//    //    {
+	//    //        throw new ApplicationException("key is not a string");
+	//    //    }
+	//    //    string address = key.GetString();
+
+	//    //    WebClient webClient = new WebClient();
+	//    //    try
+	//    //    {
+	//    //        //Dns.GetHostEntry(address);
+	//    //        //Dns.GetHostAddresses(address);
+	//    //        new TcpClient().Connect(address, port);
+	//    //        return new StrategyMap(new RemoteStrategy("http://"+address+":"+port));
+	//    //    }
+	//    //    catch(Exception e)
+	//    //    {
+	//    //        return null;
+	//    //    }
+	//    //}
+	//    public WebStrategy()
+	//    {
+	//    }
+	//}
 	public class Gac: StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
