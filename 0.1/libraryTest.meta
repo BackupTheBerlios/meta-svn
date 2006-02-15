@@ -157,5 +157,5 @@
 			integerToString=integerToString 5
 		bitwiseTest=bitwiseOr
 			20
-			["System.Windows.Forms"].Keys.Tab
+			/.["System.Windows.Forms"].Keys.Tab
 	&=test

@@ -1,10 +1,10 @@
 writeLine=
 	|write join
 		@
-		mscorlib.Environment.NewLine.get *
+		/.mscorlib.Environment.NewLine.get *
 write=
-	|Meta.Library.Write @
+	|/.Meta.Library.Write @
 readLine=
-	|mscorlib.Console.ReadLine *
+	|/.mscorlib.Console.ReadLine *
 clear=
-	|mscorlib.Console.Clear *
+	|/.mscorlib.Console.Clear *

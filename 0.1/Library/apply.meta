@@ -19,7 +19,7 @@ applyImplementation=
 					index=sum
 						@.index
 						1
-					object=Meta.ObjectMap.[mscorlib.Object] @.result
+					object=/.Meta.ObjectMap.[/.mscorlib.Object] @.result
 					argument=@.function @.array.[@.index]
 					object.Append argument
 					result=object.This.get *

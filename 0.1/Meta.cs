@@ -39,6 +39,7 @@ namespace Meta
 	public class CodeKeys
 	{
 
+		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
 		public static readonly Map Lookup = "lookup";
 
@@ -377,6 +378,17 @@ namespace Meta
 			return scope.Argument;
 		}
 	}
+	public class Root : Subselect
+	{
+		public override void Assign(ref Map selected, Map value, ref Map executionContext)
+		{
+			throw new Exception("Cannot assign to argument.");
+		}
+		public override Map EvaluateImplementation(int i, Map context, Map executionContext)
+		{
+			return Gac.gac;
+		}
+	}
 	public class Lookup:Subselect
 	{
 		public override void Assign(ref Map selected, Map value,ref Map executionContext)
@@ -391,6 +403,9 @@ namespace Meta
 		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
 		{
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
+			if (context == null)
+			{
+			}
 			if (!context.ContainsKey(key))
 			{
 				context.ContainsKey(key);
@@ -432,9 +447,14 @@ namespace Meta
 			{
 				scope = scope.Scope;
 			}
-			if (scope == null)
+			if (scope == null || !scope.ContainsKey(key))
 			{
 				Throw.KeyNotFound(key, keyExpression.Extent, context);
+			}
+			if (scope[key] == null)
+			{
+				scope.ContainsKey(key);
+				object x = scope[key];
 			}
 			return scope[key];
 		}
@@ -689,8 +709,202 @@ namespace Meta
 			return Map.Empty;
 		}
 	}
+	public class DirectoryMap : Map
+	{
+		private DirectoryInfo directory;
+		public DirectoryMap(DirectoryInfo directory)
+		{
+			this.directory = directory;
+			if (directory.Parent != null)
+			{
+				this.Scope = new DirectoryMap(directory.Parent);
+			}
+			else
+			{
+				this.Scope = FileSystem.fileSystem;
+			}
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				List<Map> keys = new List<Map>();
+				foreach (DirectoryInfo subdir in directory.GetDirectories())
+				{
+					keys.Add(subdir.Name);
+				}
+				foreach (FileInfo file in directory.GetFiles("*.*"))
+				{
+					string fileName;
+					if (file.Extension == ".meta")
+					{
+						fileName = Path.GetFileNameWithoutExtension(file.FullName);
+					}
+					else
+					{
+						fileName = file.Name;
+					}
+					keys.Add(fileName);
+				}
+				return keys;
+			}
+		}
+		// probably incorrect
+		public override bool IsFunction
+		{
+			get { return false; }
+		}
+		protected override Map Get(Map key)
+		{
+			Map value;
+			string name = key.GetString();
+			string file = Path.Combine(directory.FullName, name);
+			string metaFile = Path.Combine(directory.FullName, name + ".meta");
+			if (File.Exists(metaFile))
+			{
+				value = FileSystem.ParseFile(metaFile);
+			}
+			else
+			{
+				if (File.Exists(file))
+				{
+					switch (Path.GetExtension(file))
+					{
+						case ".txt":
+						case ".meta":
+							value = new StrategyMap(new ListStrategy());
+							foreach (char c in File.ReadAllText(file))
+							{
+								value.Append(c);
+							}
+							break;
+						default:
+							value = new StrategyMap(new ListStrategy());
+							foreach (byte b in File.ReadAllBytes(file))
+							{
+								value.Append(b);
+							}
+							break;
+					}
+				}
+				else
+				{
+					DirectoryInfo subDir=new DirectoryInfo(Path.Combine(directory.FullName,name));
+					if(subDir.Exists)
+					{
+						return new DirectoryMap (subDir);
+					}
+					else
+					{
+						value=null;
+					}
+				}
+			}
+			return value;
+		}
+		protected override void Set(Map key, Map val)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		protected override Map CopyData()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+	}
+	//public class DirectoryMap : Map
+	//{
+	//    private string directory;
+	//    public DirectoryMap(string directory)
+	//    {
+	//        this.directory = directory;
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            List<Map> keys = new List<Map>();
+	//            foreach (string subdir in Directory.GetDirectories(directory))
+	//            {
+	//                keys.Add(subdir);
+	//            }
+	//            foreach (string file in Directory.GetFiles(directory, "*.*"))
+	//            {
+	//                string fileName;
+	//                if (Path.GetExtension(file) == ".meta")
+	//                {
+	//                    fileName = Path.GetFileNameWithoutExtension(file);
+	//                }
+	//                else
+	//                {
+	//                    fileName = Path.GetFileName(file);
+	//                }
+	//                keys.Add(fileName);
+	//            }
+	//            return keys;
+	//        }
+	//    }
+	//    public override bool IsFunction
+	//    {
+	//        get { return false; }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map value;
+	//        string name = key.GetString();
+	//        string file = Path.Combine(directory, name);
+	//        string metaFile = Path.Combine(directory, name + ".meta");
+	//        if (File.Exists(metaFile))
+	//        {
+	//            value = FileSystem.ParseFile(metaFile);
+	//        }
+	//        else
+	//        {
+	//            if (File.Exists(file))
+	//            {
+	//                switch (Path.GetExtension(file))
+	//                {
+	//                    case ".txt":
+	//                    case ".meta":
+	//                        value = new StrategyMap(new ListStrategy());
+	//                        foreach (char c in File.ReadAllText(file))
+	//                        {
+	//                            value.Append(c);
+	//                        }
+	//                        break;
+	//                    default:
+	//                        value = new StrategyMap(new ListStrategy());
+	//                        foreach (byte b in File.ReadAllBytes(file))
+	//                        {
+	//                            value.Append(b);
+	//                        }
+	//                        break;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                value = null;
+	//            }
+	//        }
+	//        return value;
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//}
 	public class Process
 	{
+		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
+		ExactSpelling = true)]
+		static extern bool AllocConsole();
+
+		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+		static extern IntPtr GetStdHandle(int nStdHandle);
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -698,6 +912,7 @@ namespace Meta
 			{
 				if (args.Length == 0)
 				{
+					AllocConsole();
 					Console.WriteLine("Interactive mode of Meta 0.1");
 					Map map = new StrategyMap();
 					map.Scope = FileSystem.fileSystem;
@@ -769,20 +984,32 @@ namespace Meta
 				{
 					if (args[0] == "-test")
 					{
+						AllocConsole();
 						new MetaTest().Run();
 					}
 					else if (args[0] == "-profile")
 					{
+						AllocConsole();
 						Console.WriteLine("profiling");
 						object x = FileSystem.fileSystem["basicTest"];
 					}
 					else
 					{
-						Directory.SetCurrentDirectory(Path.GetDirectoryName(args[0]));
-						Map function = FileSystem.ParseFile(args[0]);
+						int i = 1;
+						int fileIndex = 0;
+						if (args[0] == "-console")
+						{
+							AllocConsole();
+							i++;
+							fileIndex++;
+						}
+						string directory = Path.GetDirectoryName(args[fileIndex]);
+						Directory.SetCurrentDirectory(directory);
+						Map function = FileSystem.ParseFile(args[fileIndex]);
+						function.Scope = new DirectoryMap(new DirectoryInfo(directory));
 						int autoKeys = 0;
 						Map argument = new StrategyMap();
-						for (int i = 1; i < args.Length; i++)
+						for (; i < args.Length; i++)
 						{
 							string arg = args[i];
 
@@ -837,6 +1064,7 @@ namespace Meta
 				Console.ReadLine();
 			}
 		}
+
 		Thread thread;
 		private Map parameter;
 		private Map program;
@@ -1074,6 +1302,10 @@ namespace Meta
 				else if (ContainsKey(CodeKeys.Lookup))
 				{
 					subselect = new Lookup(this[CodeKeys.Lookup]);
+				}
+				else if(ContainsKey(CodeKeys.Root))
+				{
+					subselect=new Root();
 				}
 				else
 				{
@@ -3807,6 +4039,7 @@ namespace Meta
 			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
 			Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
+		public const char root = '/';
 		public const char search='$';
 		public const char current='&';
 		public const char scope='%';
@@ -3822,7 +4055,7 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument, search, root };
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -4601,6 +4834,10 @@ namespace Meta
 			Syntax.argument,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
 
+		private static Rule Root = new Sequence(
+			Syntax.root,
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Root, Map.Empty))));
+
 
 		// remove
 		private static Rule CurrentLeft = new Sequence(
@@ -4640,6 +4877,7 @@ namespace Meta
 							LookupString,
 							LookupAnything))));
 
+				
 		private static Rule Search = new Sequence(
 			new Assignment(
 				CodeKeys.Search,
@@ -4655,6 +4893,7 @@ namespace Meta
 					new Assignment(
 						1,
 						new Alternatives(
+							Root,
 							Search,
 							Lookup)),
 					new Appending(
@@ -4806,19 +5045,6 @@ namespace Meta
 		public static string ValueFunction(Map val)
 		{
 			bool matched;
-			//string text;
-			//if (val is TypeMap)
-			//{
-			//    text = "TypeMap: "+((TypeMap)val).Type.ToString();
-			//}
-			//else if(val is ObjectMap)
-			//{
-			//    text = "ObjectMap: " + ((ObjectMap)val).Object.ToString();
-			//}
-			//else
-			//{
-			//    text=Value.Match(val, null,out matched);
-			//}
 			return Value.Match(val, null, out matched);
 		}
 		public class Literal:Rule
@@ -5411,7 +5637,8 @@ namespace Meta
 				Map parsed = ParseFile(reader,filePath);
 				// todo: reintroduce this
 				//MakePersistant((StrategyMap)parsed);
-				parsed.Scope = FileSystem.fileSystem;
+				parsed.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(filePath)));
+				//parsed.Scope = FileSystem.fileSystem;
 				return parsed;
 			}
 		}
@@ -5588,7 +5815,14 @@ namespace Meta
 				if (key.IsString)
 				{
 					string assemblyName = key.GetString();
-					Assembly assembly = Assembly.LoadWithPartialName(assemblyName);
+					Assembly assembly = null;
+					try
+					{
+						assembly= Assembly.LoadWithPartialName(assemblyName);
+					}
+					catch
+					{
+					}
 					if (assembly != null)
 					{
 						this[key] = LoadAssembly(assembly);

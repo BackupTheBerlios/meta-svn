@@ -34,9 +34,9 @@ license='"
 	scopingTest=scoping.test
 	lexicalScoping=scopingTest *
 	unicodeText="äaba"
-	%.%.testSubDir.x=*
+	testSubDir.x=*
 	persistantDeleteTest=testSubDir.x
-	%.%.testSubDir.x=
+	testSubDir.x=
 		a="b"
 		x=
 			x="hello"
@@ -161,7 +161,7 @@ license='"
 		|@
 	argTest=FirstLevel
 		a="z"
-	TestClass=Meta.TestClass
+	TestClass=.Meta.TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
 	testClass=TestClass *
@@ -176,19 +176,19 @@ license='"
 		culture="Neutral"
 		name="mscorlib"
 	].Int32
-	MemberTest=Meta.MemberTest
+	MemberTest=.Meta.MemberTest
 	memberTest=MemberTest *
-	stringOverload=MemberTest.OverloadedMethod.[mscorlib.String] "hello"
-	integerOverload=MemberTest.OverloadedMethod.[mscorlib.Int32] 5
+	stringOverload=MemberTest.OverloadedMethod.[.mscorlib.String] "hello"
+	integerOverload=MemberTest.OverloadedMethod.[.mscorlib.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		Meta.MemberTest
-		mscorlib.Int32
+		.Meta.MemberTest
+		.mscorlib.Int32
 	]
 		memberTest
 		3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
-		Meta.MemberTest
-		mscorlib.Int32
+		.Meta.MemberTest
+		.mscorlib.Int32
 	]
 		memberTest
 		3247
@@ -199,7 +199,7 @@ license='"
 	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
 	instancePropertyValue=memberTest.InstanceProperty.get *
 	interceptedSymbol="/hello/"
-	positionalNoConversion=Meta.PositionalNoConversion
+	positionalNoConversion=.Meta.PositionalNoConversion
 		"m"
 		"n"
 		"o"
@@ -207,13 +207,13 @@ license='"
 		"r"
 		"s"
 		"t"
-	namedNoConversion=Meta.NamedNoConversion
+	namedNoConversion=.Meta.NamedNoConversion
 		"m"
 		y="n"
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		c="t"
 		"r"
-	indexerNoConversion=Meta.IndexerNoConversion *
+	indexerNoConversion=.Meta.IndexerNoConversion *
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
@@ -292,9 +292,9 @@ license='"
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction *
-	font=["System.Drawing"].Font.[
-		mscorlib.String
-		mscorlib.Single
+	font=.["System.Drawing"].Font.[
+		.mscorlib.String
+		.mscorlib.Single
 	]
 		"Courier New"
 		10
@@ -309,10 +309,10 @@ license='"
 						hello world!
 						hello!
 						"
-	arrayList=mscorlib.ArrayList.[*] *
+	arrayList=.mscorlib.ArrayList.[*] *
 	arrayList.Add "hello"
 	arrayListResult=arrayList.Item.get *
-	textBox=["System.Windows.Forms"].TextBox *
+	textBox=.["System.Windows.Forms"].TextBox *
 	textBox.Text.set "
 				Alle meine Entchen,
 				schwimmen auf dem See,
@@ -320,9 +320,9 @@ license='"
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh."
 	lines=textBox.Lines.get *
-	alleMeineText=lines.GetValue.[mscorlib.Int32] 1
-	form=["System.Windows.Forms"].Form *
-	form.Location.set.[["System.Drawing"].Point]
+	alleMeineText=lines.GetValue.[.mscorlib.Int32] 1
+	form=.["System.Windows.Forms"].Form *
+	form.Location.set.[.["System.Drawing"].Point]
 		X=5
 		Y=1000
 	automaticConversionTest=form.Location.get.[*] *
@@ -367,6 +367,13 @@ license='"
 				|
 					topLevel="changed"
 	deep.map.test *
+	outerFunction=
+		|
+			innerFunction=
+				|
+					&=@.@
+			innerFunction *
+	outerFunctionTest=outerFunction "right"
 complicated=
 	[
 		complicated="key"

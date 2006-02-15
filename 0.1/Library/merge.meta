@@ -13,4 +13,4 @@ documentation="Combines several maps into one."
 						&=result
 				start=@.previous
 	start=*
-|Meta.Library.Merge @
+|/.Meta.Library.Merge @

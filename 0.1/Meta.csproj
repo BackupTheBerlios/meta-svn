@@ -16,7 +16,7 @@
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>false</DelaySign>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Meta</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <StartupObject>
@@ -108,6 +108,7 @@
     <None Include="Library\integerToString.meta" />
     <None Include="Library\nondecreasing.meta" />
     <None Include="Library\nonincreasing.meta" />
+    <None Include="Library\product.meta" />
     <None Include="Library\reciprocal.meta" />
     <None Include="Library\isInteger.meta" />
     <None Include="Library\isString.meta" />
