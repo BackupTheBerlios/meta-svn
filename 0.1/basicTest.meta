@@ -41,6 +41,7 @@ license="
 		x=
 			x="hello"
 			y="world"
+	$testSubDir.x.a="hi"
 	integerHashTest=
 		[2]="correct hash content"
 		hashTestData=

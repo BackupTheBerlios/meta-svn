@@ -172,16 +172,16 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"persistenceTest"
-	Value (StrategyMap):
+	Value (FileMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"a"
 			Value (StrategyMap):
-				"b"
+				"hi"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"x"
-			Value (StrategyMap):
+			Value (FileSubMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"x"
