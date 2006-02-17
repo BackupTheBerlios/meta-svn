@@ -172,7 +172,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"persistenceTest"
-	Value (StrategyMap):
+	Value (DirectoryMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"testLib"

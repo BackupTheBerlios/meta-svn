@@ -446,7 +446,7 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("SdlDotNet")))
+			if (key.Equals(new StrategyMap("testSubDir")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -721,6 +721,22 @@ namespace Meta
 		{
 		}
 	}
+	public class FileMap : StrategyMap
+	{
+		private string path;
+		public FileMap(string path,MapStrategy strategy)
+			: base(strategy)
+		{
+			this.path = path;
+		}
+		public string Path
+		{
+			get
+			{
+				return path;
+			}
+		}
+	}
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
@@ -746,17 +762,6 @@ namespace Meta
 				}
 				keys.Add(fileName);
 			}
-			if (directory.Name == "Meta" && keys.Count == 0)
-			{
-			}
-		}
-		public override bool ContainsKey(Map key)
-		{
-			if(key.Equals(new StrategyMap("SdlDotNet")))
-			{
-			}
-			return keys.Contains(key);
-			//return Get(key) != null;
 		}
 		public DirectoryMap(DirectoryInfo directory)
 			: this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
@@ -781,15 +786,6 @@ namespace Meta
 				{
 					Directory.SetCurrentDirectory(directory.FullName);
 				}
-				if (name == "SdlDotNet")
-				{
-				}
-				if (name == "pong")
-				{
-				}
-				if (name == "merge")
-				{
-				}
 				string file = Path.Combine(directory.FullName, name);
 				string metaFile = Path.Combine(directory.FullName, name + ".meta");
 				string dllFile = Path.Combine(directory.FullName, name + ".dll");
@@ -799,6 +795,7 @@ namespace Meta
 				if (File.Exists(metaFile))
 				{
 					value = FileSystem.ParseFile(metaFile);
+					//value = FileSystem.ParseFile(metaFile);
 					value.Scope = this;
 				}
 				else
@@ -825,14 +822,15 @@ namespace Meta
 							{
 								case ".txt":
 								case ".meta":
-									value = new StrategyMap(new ListStrategy());
+									value = new FileMap(file,new ListStrategy());
 									foreach (char c in File.ReadAllText(file))
 									{
 										value.Append(c);
 									}
 									break;
 								default:
-									value = new StrategyMap(new ListStrategy());
+									// maybe put this stuff into FileMap
+									value = new FileMap(file,new ListStrategy());
 									foreach (byte b in File.ReadAllBytes(file))
 									{
 										value.Append(b);
@@ -845,7 +843,7 @@ namespace Meta
 							DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
 							if (subDir.Exists)
 							{
-								return new DirectoryMap(subDir);
+								value= new DirectoryMap(subDir);
 							}
 							else
 							{
@@ -859,98 +857,42 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map val)
 		{
-			throw new Exception("The method or operation is not implemented.");
+			if (key.IsString)
+			{
+				string name = key.GetString();
+				string extension = Path.GetExtension(name);
+				if (extension=="")
+				{
+					string text=Meta.Serialize.ValueFunction(val);
+					if (text == Syntax.emptyMap.ToString())
+					{
+						text = "";
+					}
+					else
+					{
+						text = text.Trim(Syntax.unixNewLine);
+					}
+					File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+				}
+				else if (extension == ".txt" || extension == ".meta")
+				{
+					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+				}
+				else
+				{
+					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+				}
+			}
+			else
+			{
+				throw new ApplicationException("Cannot set non-string in directory.");
+			}
 		}
 		protected override Map CopyData()
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
-	//public class DirectoryMap : Map
-	//{
-	//    private string directory;
-	//    public DirectoryMap(string directory)
-	//    {
-	//        this.directory = directory;
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            List<Map> keys = new List<Map>();
-	//            foreach (string subdir in Directory.GetDirectories(directory))
-	//            {
-	//                keys.Add(subdir);
-	//            }
-	//            foreach (string file in Directory.GetFiles(directory, "*.*"))
-	//            {
-	//                string fileName;
-	//                if (Path.GetExtension(file) == ".meta")
-	//                {
-	//                    fileName = Path.GetFileNameWithoutExtension(file);
-	//                }
-	//                else
-	//                {
-	//                    fileName = Path.GetFileName(file);
-	//                }
-	//                keys.Add(fileName);
-	//            }
-	//            return keys;
-	//        }
-	//    }
-	//    public override bool IsFunction
-	//    {
-	//        get { return false; }
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        Map value;
-	//        string name = key.GetString();
-	//        string file = Path.Combine(directory, name);
-	//        string metaFile = Path.Combine(directory, name + ".meta");
-	//        if (File.Exists(metaFile))
-	//        {
-	//            value = FileSystem.ParseFile(metaFile);
-	//        }
-	//        else
-	//        {
-	//            if (File.Exists(file))
-	//            {
-	//                switch (Path.GetExtension(file))
-	//                {
-	//                    case ".txt":
-	//                    case ".meta":
-	//                        value = new StrategyMap(new ListStrategy());
-	//                        foreach (char c in File.ReadAllText(file))
-	//                        {
-	//                            value.Append(c);
-	//                        }
-	//                        break;
-	//                    default:
-	//                        value = new StrategyMap(new ListStrategy());
-	//                        foreach (byte b in File.ReadAllBytes(file))
-	//                        {
-	//                            value.Append(b);
-	//                        }
-	//                        break;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                value = null;
-	//            }
-	//        }
-	//        return value;
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//}
 	public class Process
 	{
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
@@ -5347,30 +5289,6 @@ namespace Meta
 											new ReferenceAssignment(Statement)))))),
 						delegate(Parser p) { 
 							p.defaultKeys.Pop(); })));
-
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Assignment(
-		//            CodeKeys.Call,
-		//            new Sequence(
-		//                new Assignment(
-		//                    CodeKeys.Callable,
-		//                    Select),
-		//                new Assignment(
-		//                    CodeKeys.Parameter,
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            Syntax.call,
-		//                            new ReferenceAssignment(Expression)),
-		//                        Program)),
-		//                new CustomRule(delegate(Parser p, out bool matched)
-		//    {
-		//        matched = p.functions != 0;
-		//        return null;
-		//    }))));
-		//});
 	}
 	public class Serialize
 	{
