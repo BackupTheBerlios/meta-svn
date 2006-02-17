@@ -1,5 +1,5 @@
 "
-license='"Copyright (c) 2005 Christian Staudenmeyer
+license='"Copyright (c) 2005, 2006 Christian Staudenmeyer
 	
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the

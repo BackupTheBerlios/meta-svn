@@ -1,4 +1,4 @@
-//	Copyright (c) 2005 Christian Staudenmeyer
+//	Copyright (c) 2005, 2006 Christian Staudenmeyer
 //
 //	Permission is hereby granted, free of charge, to any person obtaining
 //	a copy of this software and associated documentation files (the
@@ -423,6 +423,7 @@ namespace Meta
 		{
 			Map scope = executionContext;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
+
 			while (scope != null && !scope.ContainsKey(key))
 			{
 				scope = scope.Scope;
@@ -445,6 +446,9 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
+			if (key.Equals(new StrategyMap("SdlDotNet")))
+			{
+			}
 			while (scope != null && !scope.ContainsKey(key))
 			{
 				scope = scope.Scope;
@@ -711,53 +715,56 @@ namespace Meta
 			return Map.Empty;
 		}
 	}
+	public class WebDirectoryMap : DirectoryMap
+	{
+		public WebDirectoryMap(DirectoryInfo directory, Scope scope):base(directory,scope)
+		{
+		}
+	}
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
-		public DirectoryMap(DirectoryInfo directory, Scope scope)
+		private List<Map> keys=new List<Map>();
+		protected DirectoryMap(DirectoryInfo directory, Scope scope)
 		{
-			this.directory = directory;
-			this.Scope = scope;
+		    this.directory = directory;
+		    this.Scope = scope;
+			foreach (DirectoryInfo subdir in directory.GetDirectories())
+			{
+				keys.Add(subdir.Name);
+			}
+			foreach (FileInfo file in directory.GetFiles("*.*"))
+			{
+				string fileName;
+				if (file.Extension == ".meta" || file.Extension== ".dll")
+				{
+					fileName = Path.GetFileNameWithoutExtension(file.FullName);
+				}
+				else
+				{
+					fileName = file.Name;
+				}
+				keys.Add(fileName);
+			}
+			if (directory.Name == "Meta" && keys.Count == 0)
+			{
+			}
 		}
-		public DirectoryMap(DirectoryInfo directory):this(directory,directory.Parent!=null? new DirectoryMap(directory.Parent):FileSystem.fileSystem)
+		public override bool ContainsKey(Map key)
+		{
+			if(key.Equals(new StrategyMap("SdlDotNet")))
+			{
+			}
+			return keys.Contains(key);
+			//return Get(key) != null;
+		}
+		public DirectoryMap(DirectoryInfo directory)
+			: this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
 		{
 		}
-		//public DirectoryMap(DirectoryInfo directory)
-		//{
-		//    this.directory = directory;
-		//    if (directory.Parent != null)
-		//    {
-		//        this.Scope = new DirectoryMap(directory.Parent);
-		//    }
-		//    else
-		//    {
-		//        this.Scope = FileSystem.fileSystem;
-		//    }
-		//}
 		public override ICollection<Map> Keys
 		{
-			get
-			{
-				List<Map> keys = new List<Map>();
-				foreach (DirectoryInfo subdir in directory.GetDirectories())
-				{
-					keys.Add(subdir.Name);
-				}
-				foreach (FileInfo file in directory.GetFiles("*.*"))
-				{
-					string fileName;
-					if (file.Extension == ".meta")
-					{
-						fileName = Path.GetFileNameWithoutExtension(file.FullName);
-					}
-					else
-					{
-						fileName = file.Name;
-					}
-					keys.Add(fileName);
-				}
-				return keys;
-			}
+			get { return keys; }
 		}
 		// probably incorrect
 		public override bool IsFunction
@@ -766,50 +773,85 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			Map value;
-			string name = key.GetString();
-			string file = Path.Combine(directory.FullName, name);
-			string metaFile = Path.Combine(directory.FullName, name + ".meta");
-			if (key.GetString().StartsWith("Background"))
+			Map value=null;
+			if (key.IsString)
 			{
-			}
-			if (File.Exists(metaFile))
-			{
-				value = FileSystem.ParseFile(metaFile);
-			}
-			else
-			{
-				if (File.Exists(file))
+				string name = key.GetString();
+				if (directory.FullName != Process.LibraryPath)
 				{
-					switch (Path.GetExtension(file))
-					{
-						case ".txt":
-						case ".meta":
-							value = new StrategyMap(new ListStrategy());
-							foreach (char c in File.ReadAllText(file))
-							{
-								value.Append(c);
-							}
-							break;
-						default:
-							value = new StrategyMap(new ListStrategy());
-							foreach (byte b in File.ReadAllBytes(file))
-							{
-								value.Append(b);
-							}
-							break;
-					}
+					Directory.SetCurrentDirectory(directory.FullName);
+				}
+				if (name == "SdlDotNet")
+				{
+				}
+				if (name == "pong")
+				{
+				}
+				if (name == "merge")
+				{
+				}
+				string file = Path.Combine(directory.FullName, name);
+				string metaFile = Path.Combine(directory.FullName, name + ".meta");
+				string dllFile = Path.Combine(directory.FullName, name + ".dll");
+				if (key.GetString().StartsWith("Background"))
+				{
+				}
+				if (File.Exists(metaFile))
+				{
+					value = FileSystem.ParseFile(metaFile);
+					value.Scope = this;
 				}
 				else
 				{
-					DirectoryInfo subDir=new DirectoryInfo(Path.Combine(directory.FullName,name));
-					if(subDir.Exists)
+					bool dllLoaded = false;
+					if (File.Exists(dllFile))
 					{
-						return new DirectoryMap (subDir);
+						try
+						{
+							Assembly assembly = Assembly.LoadFile(dllFile);
+							value = Gac.LoadAssembly(assembly);
+							dllLoaded = true;
+						}
+						catch (Exception e)
+						{
+							value = null;
+						}
 					}
-					else
+					if (!dllLoaded)
 					{
-						value=null;
+						if (File.Exists(file))
+						{
+							switch (Path.GetExtension(file))
+							{
+								case ".txt":
+								case ".meta":
+									value = new StrategyMap(new ListStrategy());
+									foreach (char c in File.ReadAllText(file))
+									{
+										value.Append(c);
+									}
+									break;
+								default:
+									value = new StrategyMap(new ListStrategy());
+									foreach (byte b in File.ReadAllBytes(file))
+									{
+										value.Append(b);
+									}
+									break;
+							}
+						}
+						else
+						{
+							DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+							if (subDir.Exists)
+							{
+								return new DirectoryMap(subDir);
+							}
+							else
+							{
+								value = null;
+							}
+						}
 					}
 				}
 			}
@@ -1005,6 +1047,7 @@ namespace Meta
 						UseConsole();
 						//AllocConsole();
 						new MetaTest().Run();
+						Console.ReadLine();
 					}
 					else if (args[0] == "-profile")
 					{
@@ -1023,7 +1066,7 @@ namespace Meta
 							fileIndex++;
 						}
 						string directory = Path.GetDirectoryName(args[fileIndex]);
-						Directory.SetCurrentDirectory(directory);
+						//Directory.SetCurrentDirectory(directory);
 						Map function = FileSystem.ParseFile(args[fileIndex]);
 						function.Scope = new DirectoryMap(new DirectoryInfo(directory));
 						int autoKeys = 0;
@@ -1191,6 +1234,13 @@ namespace Meta
 			set
 			{
 				installationPath = value;
+			}
+		}
+		public static string LibraryPath
+		{
+			get
+			{
+				return Path.Combine(Process.InstallationPath, "Library");
 			}
 		}
 	}
@@ -6011,6 +6061,7 @@ namespace Meta
 			//fileSystem.Scope = new PersistantScope();
 			LoadDirectory(Path.Combine(Process.InstallationPath, "Library"),fileSystem);
 			fileSystem.Scope = Gac.gac;
+			//Web.web.Scope=fileSystem;
 		}
 		public static void Save()
 		{
@@ -6086,7 +6137,9 @@ namespace Meta
 				}
 				unzipDirectory.Create();
 				Unzip(zipFile, unzipDirectory.FullName);
-				return new DirectoryMap(unzipDirectory,this.map);
+				// temporarily use filesystem for some of this stuff, since library is not implemented in web or net yet
+				return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem);
+				//return new DirectoryMap(unzipDirectory, this.map);
 			}
 			catch (Exception e)
 			{
@@ -6268,7 +6321,7 @@ namespace Meta
 			}
 			return loaded;
 		}
-		private Map LoadAssembly(Assembly assembly)
+		public static Map LoadAssembly(Assembly assembly)
 		{
 			Map val = new StrategyMap();
 			foreach (Type type in assembly.GetExportedTypes())
