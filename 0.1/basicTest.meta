@@ -68,7 +68,7 @@ license="
 			negative=*
 			denominator=7
 	fraction=3/2
-	persistenceTest=testSubDir
+	persistenceTest=testSubDir.x
 	literalEscapeTest=
 		"asdf"
 		"asdf"

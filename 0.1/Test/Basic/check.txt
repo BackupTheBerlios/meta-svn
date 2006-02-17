@@ -172,35 +172,26 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"persistenceTest"
-	Value (DirectoryMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"testLib"
+				"a"
 			Value (StrategyMap):
-				""
+				"b"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"x"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
-						"a"
-					Value (StrategyMap):
-						"b"
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
 						"x"
 					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								"hello"
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								"world"
+						"hello"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"y"
+					Value (StrategyMap):
+						"world"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalEscapeTest"

@@ -6604,7 +6604,7 @@ Entry (KeyValuePair`2)
 										Line (Int32):
 											"71"
 										Column (Int32):
-											"28"
+											"30"
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										Extent:
@@ -6621,7 +6621,7 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"71"
 												Column (Int32):
-													"28"
+													"30"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
@@ -6674,6 +6674,58 @@ Entry (KeyValuePair`2)
 																		Column (Int32):
 																			"28"
 																"testSubDir"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												2
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"71"
+														Column (Int32):
+															"28"
+													End (SourcePosition):
+														Line (Int32):
+															"71"
+														Column (Int32):
+															"30"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"lookup"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"71"
+																Column (Int32):
+																	"29"
+															End (SourcePosition):
+																Line (Int32):
+																	"71"
+																Column (Int32):
+																	"30"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"71"
+																		Column (Int32):
+																			"29"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"71"
+																		Column (Int32):
+																			"30"
+																"x"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:
