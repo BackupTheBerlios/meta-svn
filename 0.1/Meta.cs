@@ -423,7 +423,7 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("testSubDir")))
+			if (key.Equals(new StrategyMap("merge")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -693,8 +693,9 @@ namespace Meta
 	}
 	public class WebDirectoryMap : DirectoryMap
 	{
-		public WebDirectoryMap(DirectoryInfo directory, Scope scope):base(directory,scope)
+		public WebDirectoryMap(DirectoryInfo directory, Scope scope):base(directory,scope)//,scope)
 		{
+			this.Scope = scope;
 		}
 	}
 	public class FileMap : StrategyMap
@@ -757,19 +758,22 @@ namespace Meta
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
-		private List<Map> keys=new List<Map>();
-		protected DirectoryMap(DirectoryInfo directory, Scope scope)
+		private List<Map> keys = new List<Map>();
+		public DirectoryMap(DirectoryInfo directory,Scope scope)
 		{
-		    this.directory = directory;
-		    this.Scope = scope;
+			this.directory = directory;
+			//this.Scope = scope;
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
+				//Map value = Get(subdir.FullName);
+				//value.Scope = this;
+				//strategy.Set(subdir.Name, value);
 				keys.Add(subdir.Name);
 			}
 			foreach (FileInfo file in directory.GetFiles("*.*"))
 			{
 				string fileName;
-				if (file.Extension == ".meta" || file.Extension== ".dll")
+				if (file.Extension == ".meta" || file.Extension == ".dll")
 				{
 					fileName = Path.GetFileNameWithoutExtension(file.FullName);
 				}
@@ -777,13 +781,38 @@ namespace Meta
 				{
 					fileName = file.Name;
 				}
+				//Map value = Get(fileName);
+				//value.Scope = this;
+				//strategy.Set(fileName, value);
 				keys.Add(fileName);
+				//Map scope;
+				//if (directory.Parent != null)
+				//{
+				//    scope = new DirectoryMap(directory.Parent);
+				//}
+				//else
+				//{
+				//    // if it is the file system itself, it should not have a parent
+				//    scope = FileSystem.fileSystem;
+				//}
+				this.Scope = scope;
+
+				//string fileName;
+				//if (file.Extension == ".meta" || file.Extension == ".dll")
+				//{
+				//    fileName = Path.GetFileNameWithoutExtension(file.FullName);
+				//}
+				//else
+				//{
+				//    fileName = file.Name;
+				//}
+				//keys.Add(fileName);
 			}
 		}
-		public DirectoryMap(DirectoryInfo directory)
-			: this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
-		{
-		}
+		//public DirectoryMap(DirectoryInfo directory)
+		//    : this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
+		//{
+		//}
 		public override ICollection<Map> Keys
 		{
 			get { return keys; }
@@ -792,99 +821,112 @@ namespace Meta
 		{
 			get { return false; }
 		}
+		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		protected override Map Get(Map key)
 		{
-			Map value=null;
+			Map value = null;
 			if (key.IsString)
 			{
-				string name = key.GetString();
-				if (directory.FullName != Process.LibraryPath)
+				if (cache.ContainsKey(key))
 				{
-					Directory.SetCurrentDirectory(directory.FullName);
-				}
-				string file = Path.Combine(directory.FullName, name);
-				string metaFile = Path.Combine(directory.FullName, name + ".meta");
-				string dllFile = Path.Combine(directory.FullName, name + ".dll");
-				if (key.GetString().StartsWith("Background"))
-				{
-				}
-				if (File.Exists(metaFile))
-				{
-					string text=File.ReadAllText(metaFile);
-					Map result;
-					FileMap fileMap=new FileMap(metaFile);
-					if (text != "")
-					{
-						Parser parser = new Parser(text, metaFile);
-						bool matched;
-						result = Parser.Program.Match(parser, out matched);
-						if (parser.index != parser.text.Length)
-						{
-							throw new SyntaxException("Expected end of file.", parser);
-						}
-						Expression.parsingFile = metaFile;
-						value = result.GetExpression().Evaluate(Map.Empty);
-						Expression.parsingFile = null;
-						Expression.firstFile = null;
-					}
-					else
-					{
-						value = Map.Empty;
-					}
-
-					value.Scope = this;
+					value = cache[key];
 				}
 				else
 				{
-					bool dllLoaded = false;
-					if (File.Exists(dllFile))
+					string name = key.GetString();
+					if (directory.FullName != Process.LibraryPath)
 					{
-						try
-						{
-							Assembly assembly = Assembly.LoadFile(dllFile);
-							value = Gac.LoadAssembly(assembly);
-							dllLoaded = true;
-						}
-						catch (Exception e)
-						{
-							value = null;
-						}
+						Directory.SetCurrentDirectory(directory.FullName);
 					}
-					if (!dllLoaded)
+					string file = Path.Combine(directory.FullName, name);
+					string metaFile = Path.Combine(directory.FullName, name + ".meta");
+					string dllFile = Path.Combine(directory.FullName, name + ".dll");
+					if (key.GetString().StartsWith("Background"))
 					{
-						if (File.Exists(file))
+					}
+					if (File.Exists(metaFile))
+					{
+						string text = File.ReadAllText(metaFile);
+						Map result;
+						FileMap fileMap = new FileMap(metaFile);
+						if (text != "")
 						{
-							switch (Path.GetExtension(file))
+							Parser parser = new Parser(text, metaFile);
+							bool matched;
+							result = Parser.Program.Match(parser, out matched);
+							if (parser.index != parser.text.Length)
 							{
-								case ".txt":
-								case ".meta":
-									value = new FileMap(file,new ListStrategy());
-									foreach (char c in File.ReadAllText(file))
-									{
-										value.Append(c);
-									}
-									break;
-								default:
-									value = new FileMap(file,new ListStrategy());
-									foreach (byte b in File.ReadAllBytes(file))
-									{
-										value.Append(b);
-									}
-									break;
+								throw new SyntaxException("Expected end of file.", parser);
 							}
+							Expression.parsingFile = metaFile;
+							value = result.GetExpression().Evaluate(Map.Empty);
+							Expression.parsingFile = null;
+							Expression.firstFile = null;
 						}
 						else
 						{
-							DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-							if (subDir.Exists)
+							value = Map.Empty;
+						}
+
+						value.Scope = this;
+					}
+					else
+					{
+						bool dllLoaded = false;
+						if (File.Exists(dllFile))
+						{
+							try
 							{
-								value= new DirectoryMap(subDir);
+								Assembly assembly = Assembly.LoadFile(dllFile);
+								value = Gac.LoadAssembly(assembly);
+								dllLoaded = true;
 							}
-							else
+							catch (Exception e)
 							{
 								value = null;
 							}
 						}
+						if (!dllLoaded)
+						{
+							if (File.Exists(file))
+							{
+								switch (Path.GetExtension(file))
+								{
+									case ".txt":
+									case ".meta":
+										value = new FileMap(file, new ListStrategy());
+										foreach (char c in File.ReadAllText(file))
+										{
+											value.Append(c);
+										}
+										break;
+									default:
+										value = new FileMap(file, new ListStrategy());
+										foreach (byte b in File.ReadAllBytes(file))
+										{
+											value.Append(b);
+										}
+										break;
+								}
+							}
+							else
+							{
+								DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+								if (subDir.Exists)
+								{
+									value = new DirectoryMap(subDir,this);
+								}
+								else
+								{
+									value = null;
+								}
+							}
+						}
+					}
+					if (value != null)
+					{
+						value.Scope = this;
+						cache[key] = value;
 					}
 				}
 			}
@@ -895,10 +937,11 @@ namespace Meta
 			if (key.IsString)
 			{
 				string name = key.GetString();
+				string realName;
 				string extension = Path.GetExtension(name);
-				if (extension=="")
+				if (extension == "")
 				{
-					string text=Meta.Serialize.ValueFunction(val);
+					string text = Meta.Serialize.ValueFunction(val);
 					if (text == Syntax.emptyMap.ToString())
 					{
 						text = "";
@@ -917,6 +960,7 @@ namespace Meta
 				{
 					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
 				}
+				cache[key] = val;
 			}
 			else
 			{
@@ -928,6 +972,180 @@ namespace Meta
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
+	//public class DirectoryMap : Map
+	//{
+	//    private DirectoryInfo directory;
+	//    private List<Map> keys=new List<Map>();
+	//    protected DirectoryMap(DirectoryInfo directory, Scope scope)
+	//    {
+	//        this.directory = directory;
+	//        this.Scope = scope;
+	//        foreach (DirectoryInfo subdir in directory.GetDirectories())
+	//        {
+	//            keys.Add(subdir.Name);
+	//        }
+	//        foreach (FileInfo file in directory.GetFiles("*.*"))
+	//        {
+	//            string fileName;
+	//            if (file.Extension == ".meta" || file.Extension== ".dll")
+	//            {
+	//                fileName = Path.GetFileNameWithoutExtension(file.FullName);
+	//            }
+	//            else
+	//            {
+	//                fileName = file.Name;
+	//            }
+	//            keys.Add(fileName);
+	//        }
+	//    }
+	//    public DirectoryMap(DirectoryInfo directory)
+	//        : this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
+	//    {
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get { return keys; }
+	//    }
+	//    public override bool IsFunction
+	//    {
+	//        get { return false; }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map value=null;
+	//        if (key.IsString)
+	//        {
+	//            string name = key.GetString();
+	//            if (directory.FullName != Process.LibraryPath)
+	//            {
+	//                Directory.SetCurrentDirectory(directory.FullName);
+	//            }
+	//            string file = Path.Combine(directory.FullName, name);
+	//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
+	//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
+	//            if (key.GetString().StartsWith("Background"))
+	//            {
+	//            }
+	//            if (File.Exists(metaFile))
+	//            {
+	//                string text=File.ReadAllText(metaFile);
+	//                Map result;
+	//                FileMap fileMap=new FileMap(metaFile);
+	//                if (text != "")
+	//                {
+	//                    Parser parser = new Parser(text, metaFile);
+	//                    bool matched;
+	//                    result = Parser.Program.Match(parser, out matched);
+	//                    if (parser.index != parser.text.Length)
+	//                    {
+	//                        throw new SyntaxException("Expected end of file.", parser);
+	//                    }
+	//                    Expression.parsingFile = metaFile;
+	//                    value = result.GetExpression().Evaluate(Map.Empty);
+	//                    Expression.parsingFile = null;
+	//                    Expression.firstFile = null;
+	//                }
+	//                else
+	//                {
+	//                    value = Map.Empty;
+	//                }
+
+	//                value.Scope = this;
+	//            }
+	//            else
+	//            {
+	//                bool dllLoaded = false;
+	//                if (File.Exists(dllFile))
+	//                {
+	//                    try
+	//                    {
+	//                        Assembly assembly = Assembly.LoadFile(dllFile);
+	//                        value = Gac.LoadAssembly(assembly);
+	//                        dllLoaded = true;
+	//                    }
+	//                    catch (Exception e)
+	//                    {
+	//                        value = null;
+	//                    }
+	//                }
+	//                if (!dllLoaded)
+	//                {
+	//                    if (File.Exists(file))
+	//                    {
+	//                        switch (Path.GetExtension(file))
+	//                        {
+	//                            case ".txt":
+	//                            case ".meta":
+	//                                value = new FileMap(file,new ListStrategy());
+	//                                foreach (char c in File.ReadAllText(file))
+	//                                {
+	//                                    value.Append(c);
+	//                                }
+	//                                break;
+	//                            default:
+	//                                value = new FileMap(file,new ListStrategy());
+	//                                foreach (byte b in File.ReadAllBytes(file))
+	//                                {
+	//                                    value.Append(b);
+	//                                }
+	//                                break;
+	//                        }
+	//                    }
+	//                    else
+	//                    {
+	//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+	//                        if (subDir.Exists)
+	//                        {
+	//                            value= new DirectoryMap(subDir);
+	//                        }
+	//                        else
+	//                        {
+	//                            value = null;
+	//                        }
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return value;
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        if (key.IsString)
+	//        {
+	//            string name = key.GetString();
+	//            string extension = Path.GetExtension(name);
+	//            if (extension=="")
+	//            {
+	//                string text=Meta.Serialize.ValueFunction(val);
+	//                if (text == Syntax.emptyMap.ToString())
+	//                {
+	//                    text = "";
+	//                }
+	//                else
+	//                {
+	//                    text = text.Trim(Syntax.unixNewLine);
+	//                }
+	//                File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+	//            }
+	//            else if (extension == ".txt" || extension == ".meta")
+	//            {
+	//                File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+	//            }
+	//            else
+	//            {
+	//                File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+	//            }
+	//        }
+	//        else
+	//        {
+	//            throw new ApplicationException("Cannot set non-string in directory.");
+	//        }
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//}
 	public class Process
 	{
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
@@ -1041,7 +1259,7 @@ namespace Meta
 						}
 						string directory = Path.GetDirectoryName(args[fileIndex]);
 						Map function = FileSystem.ParseFile(args[fileIndex]);
-						function.Scope = new DirectoryMap(new DirectoryInfo(directory));
+						//function.Scope = new DirectoryMap(new DirectoryInfo(directory));
 						int autoKeys = 0;
 						Map argument = new StrategyMap();
 						for (; i < args.Length; i++)
@@ -5624,7 +5842,7 @@ namespace Meta
 			{
 				Map parsed = ParseFile(reader,filePath);
 				// this is problematic and slow for the library, refactor all that stuff
-				parsed.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(filePath)));
+				//parsed.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(filePath)));
 				return parsed;
 			}
 		}
@@ -5675,7 +5893,7 @@ namespace Meta
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
-			fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")));
+			fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")),null);
 			fileSystem.Scope = Gac.gac;
 		}
 		public static void Save()
@@ -5688,40 +5906,21 @@ namespace Meta
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
 		}
 	}
-	public class Web : StrategyMap
+	//public class Web : StrategyMap
+	//{
+	//    public static readonly Web web = new Web();
+	//    public Web():base(new WebStrategy())
+	//    {
+	//    }
+	//}
+	public class Web
 	{
-		public static readonly Web web = new Web();
-		public Web():base(new WebStrategy())
-		{
-		}
-	}
-	public class WebStrategy : MapStrategy
-	{
-		public override Map CopyData()
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override void Set(Map key, Map val)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override bool Equal(MapStrategy strategy)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				throw new Exception("The method or operation is not implemented.");
-			}
-		}
-		public override bool ContainsKey(Map key)
-		{
-			return Get(key) != null;
-		}
+		//public override bool ContainsKey(Map key)
+		//{
+		//    return Get(key) != null;
+		//}
 		const int port = 80;
-		public override Map Get(Map key)
+		public static Map Get(Map key)
 		{
 			if (!key.IsString)
 			{
@@ -5730,8 +5929,8 @@ namespace Meta
 			string address = key.GetString();
 
 			WebClient webClient = new WebClient();
-			try
-			{
+			//try
+			//{
 				string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
 				string cacheDirectory = Path.Combine(metaPath, "Cache");
 				DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
@@ -5752,15 +5951,15 @@ namespace Meta
 				Unzip(zipFile, unzipDirectory.FullName);
 				// net should be parent
 				return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem);
-			}
-			catch (Exception e)
-			{
-				return null;
-			}
+			//}
+			//catch (Exception e)
+			//{
+			//    return null;
+			//}
 		}
-		public WebStrategy()
-		{
-		}
+		//public WebStrategy()
+		//{
+		//}
 		public static void Unzip(string zipFile,string dir)
 		{
 			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
@@ -5802,13 +6001,119 @@ namespace Meta
 			s.Close();
 		}
 	}
-	public class Gac: StrategyMap
+	//public class WebStrategy : MapStrategy
+	//{
+	//    public override Map CopyData()
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override bool Equal(MapStrategy strategy)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            throw new Exception("The method or operation is not implemented.");
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    const int port = 80;
+	//    public override Map Get(Map key)
+	//    {
+	//        if (!key.IsString)
+	//        {
+	//            throw new ApplicationException("key is not a string");
+	//        }
+	//        string address = key.GetString();
+
+	//        WebClient webClient = new WebClient();
+	//        try
+	//        {
+	//            string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
+	//            string cacheDirectory = Path.Combine(metaPath, "Cache");
+	//            DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
+	//            string zipDirectory=Path.Combine(metaPath,"Zip");
+	//            string zipFile = Path.Combine(zipDirectory, address + ".zip");
+	//            Directory.CreateDirectory(zipDirectory);
+	//            string metaZipAddress = "http://"+address + "/" + "meta.zip";
+
+	//            try
+	//            {
+	//                webClient.DownloadFile(metaZipAddress, zipFile);
+	//            }
+	//            catch (Exception e)
+	//            {
+	//                return null;
+	//            }
+	//            unzipDirectory.Create();
+	//            Unzip(zipFile, unzipDirectory.FullName);
+	//            // net should be parent
+	//            return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem);
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    public WebStrategy()
+	//    {
+	//    }
+	//    public static void Unzip(string zipFile,string dir)
+	//    {
+	//        ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
+
+	//        ZipEntry theEntry;
+	//        while ((theEntry = s.GetNextEntry()) != null)
+	//        {
+
+	//            Console.WriteLine(theEntry.Name);
+
+	//            string directoryName = Path.GetDirectoryName(theEntry.Name);
+	//            string fileName = Path.GetFileName(theEntry.Name);
+
+	//            // create directory
+	//            //Directory.CreateDirectory(directoryName);
+
+	//            if (fileName != String.Empty)
+	//            {
+	//                FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
+
+	//                int size = 2048;
+	//                byte[] data = new byte[2048];
+	//                while (true)
+	//                {
+	//                    size = s.Read(data, 0, data.Length);
+	//                    if (size > 0)
+	//                    {
+	//                        streamWriter.Write(data, 0, size);
+	//                    }
+	//                    else
+	//                    {
+	//                        break;
+	//                    }
+	//                }
+
+	//                streamWriter.Close();
+	//            }
+	//        }
+	//        s.Close();
+	//    }
+	//}
+	public class Gac : StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
 		private Gac()
 		{
 			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-			this["web"] = Web.web;
 		}
 		private bool Load(Map key)
 		{
@@ -5825,7 +6130,7 @@ namespace Meta
 					Assembly assembly = null;
 					try
 					{
-						assembly= Assembly.LoadWithPartialName(assemblyName);
+						assembly = Assembly.LoadWithPartialName(assemblyName);
 					}
 					catch
 					{
@@ -5871,11 +6176,11 @@ namespace Meta
 					string name;
 					if (type.IsGenericTypeDefinition)
 					{
-						name=type.Name.Split('`')[0];
+						name = type.Name.Split('`')[0];
 					}
 					else
 					{
-						name=type.Name;
+						name = type.Name;
 					}
 					selected[type.Name] = new TypeMap(type);
 				}
@@ -5891,7 +6196,8 @@ namespace Meta
 			}
 			else
 			{
-				val = null;
+				val = Web.Get(key);
+				//val = null;
 			}
 			return val;
 		}
@@ -5904,10 +6210,121 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key)
 		{
-			return Load(key);
+			return Get(key) != null;
+			//return Load(key);
 		}
+		//public override bool ContainsKey(Map key)
+		//{
+		//    return Load(key);
+		//}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
+	//public class Gac: StrategyMap
+	//{
+	//    public static readonly StrategyMap gac = new Gac();
+	//    private Gac()
+	//    {
+	//        this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+	//        //this["web"] = Web.web;
+	//    }
+	//    private bool Load(Map key)
+	//    {
+	//        bool loaded;
+	//        if (strategy.ContainsKey(key))
+	//        {
+	//            loaded = true;
+	//        }
+	//        else
+	//        {
+	//            if (key.IsString)
+	//            {
+	//                string assemblyName = key.GetString();
+	//                Assembly assembly = null;
+	//                try
+	//                {
+	//                    assembly= Assembly.LoadWithPartialName(assemblyName);
+	//                }
+	//                catch
+	//                {
+	//                }
+	//                if (assembly != null)
+	//                {
+	//                    this[key] = LoadAssembly(assembly);
+	//                    loaded = true;
+	//                }
+	//                else
+	//                {
+	//                    loaded = false;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                Map version = key["version"];
+	//                Map publicKeyToken = key["publicKeyToken"];
+	//                Map culture = key["culture"];
+	//                Map name = key["name"];
+	//                if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+	//                {
+	//                    Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+	//                    this[key] = LoadAssembly(assembly);
+	//                    loaded = true;
+	//                }
+	//                else
+	//                {
+	//                    loaded = false;
+	//                }
+	//            }
+	//        }
+	//        return loaded;
+	//    }
+	//    public static Map LoadAssembly(Assembly assembly)
+	//    {
+	//        Map val = new StrategyMap();
+	//        foreach (Type type in assembly.GetExportedTypes())
+	//        {
+	//            if (type.DeclaringType == null)
+	//            {
+	//                Map selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition)
+	//                {
+	//                    name=type.Name.Split('`')[0];
+	//                }
+	//                else
+	//                {
+	//                    name=type.Name;
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map val;
+	//        if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
+	//        {
+	//            val = strategy.Get(key);
+	//        }
+	//        else
+	//        {
+	//            val = null;
+	//        }
+	//        return val;
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            throw new ApplicationException("not implemented.");
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Load(key);
+	//    }
+	//    protected Map cachedAssemblyInfo = new StrategyMap();
+	//}
 	public class Number
 	{
 		public Number(double numerator, double denominator)
@@ -6135,7 +6552,10 @@ namespace Meta
 					Map argument = new StrategyMap();
 					argument[1] = "first arg";
 					argument[2] = "second=arg";
-					return FileSystem.ParseFile(BasicTest).Call(argument);
+					Map basic=FileSystem.ParseFile(BasicTest);
+					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)),FileSystem.fileSystem);
+					int asdf=basic.Scope.Get().Count;
+					return basic.Call(argument);
 				}
 			}
 			public class Library : Test
@@ -6143,7 +6563,10 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+					Map library=FileSystem.ParseFile(LibraryTest);
+					library.Scope=FileSystem.fileSystem;
+					return library.Call(Map.Empty);
+					//return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
 				}
 			}
 			public class Serialization : Test
