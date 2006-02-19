@@ -379,6 +379,22 @@ namespace Meta
 			return scope.Argument;
 		}
 	}
+	public class CallSubselect : Subselect
+	{
+		private Call call;
+		public CallSubselect(Map code)
+		{
+			this.call = new Call(code);
+		}
+		public override void Assign(ref Map context, Map value, ref Map executionContext)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override Map EvaluateImplementation(int i, Map context, Map executionContext)
+		{
+			return call.Evaluate(context);
+		}
+	}
 	public class Root : Subselect
 	{
 		public override void Assign(ref Map selected, Map value, ref Map executionContext)
@@ -1318,8 +1334,8 @@ namespace Meta
 					if (installationPath == null)
 					{
 						Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
-						//installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
+						//installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
+						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
 						//installationPath = Path.GetDirectoryName(uri.AbsolutePath);
 					}
 				}
@@ -1476,6 +1492,10 @@ namespace Meta
 				else if(ContainsKey(CodeKeys.Root))
 				{
 					subselect=new Root();
+				}
+				else if(ContainsKey(CodeKeys.Call))
+				{
+					subselect=new CallSubselect(this[CodeKeys.Call]);
 				}
 				else
 				{
@@ -4757,91 +4777,25 @@ namespace Meta
 			return new Sequence(
 				new Assignment(
 					CodeKeys.Call,
-					new Alternatives(
 						new Sequence(
-							new Assignment(
-								CodeKeys.Callable,
-								new Alternatives(
-									Select,
-									ExplicitCall)),
-							new Assignment(
-								CodeKeys.Parameter,
-								new Alternatives(
-									new Sequence(
-										Syntax.call,
-										new ReferenceAssignment(Expression)),
-									Program)),
-							new CustomRule(delegate(Parser p, out bool matched)
-						{
-							matched = p.functions != 0;
-							return null;
-						})))));
+						new Assignment(
+							CodeKeys.Callable,
+							new Alternatives(
+								Select,
+								ExplicitCall)),
+						new Assignment(
+							CodeKeys.Parameter,
+							new Alternatives(
+								new Sequence(
+									Syntax.call,
+									new ReferenceAssignment(Expression)),
+								Program)),
+						new CustomRule(delegate(Parser p, out bool matched)
+					{
+						matched = p.functions != 0;
+						return null;
+					}))));
 		});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Assignment(
-		//            CodeKeys.Call,
-		//            new Alternatives(
-		//                new Sequence(
-		//                    new Assignment(
-		//                        CodeKeys.Callable,
-		//                        Select),
-		//                    new Assignment(
-		//                        CodeKeys.Parameter,
-		//                        new Alternatives(
-		//                            new Sequence(
-		//                                Syntax.call,
-		//                                new ReferenceAssignment(Expression)),
-		//                            Program)),
-		//                    new CustomRule(delegate(Parser p, out bool matched)
-		//                {
-		//                    matched = p.functions != 0;
-		//                    return null;
-		//                })),
-		//                new Sequence(
-		//                    Syntax.callStart,
-		//                    new Assignment(
-		//                        CodeKeys.Callable,
-		//                        Select),
-		//                    new Assignment(
-		//                        CodeKeys.Parameter,
-		//                        new Alternatives(
-		//                            new Sequence(
-		//                                Syntax.call,
-		//                                new ReferenceAssignment(Expression)),
-		//                            Program)),
-		//                    new CustomRule(delegate(Parser p, out bool matched)
-		//                {
-		//                    matched = p.functions != 0;
-		//                    return null;
-		//                }),
-		//                    Syntax.callEnd))));
-
-		//});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Assignment(
-		//            CodeKeys.Call,
-		//            new Sequence(
-		//                new Assignment(
-		//                    CodeKeys.Callable,
-		//                    Select),
-		//                new Assignment(
-		//                    CodeKeys.Parameter,
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            Syntax.call,
-		//                            new ReferenceAssignment(Expression)),
-		//                        Program)),
-		//                new CustomRule(delegate(Parser p, out bool matched)
-		//    {
-		//        matched = p.functions != 0;
-		//        return null;
-		//    }))));
-		//});
-
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
 		private int GetEscapeCharCount()
@@ -5146,7 +5100,8 @@ namespace Meta
 						new Alternatives(
 							Root,
 							Search,
-							Lookup)),
+							Lookup,
+							ExplicitCall)),
 					new Appending(
 						new ZeroOrMore(
 							new Autokey(
