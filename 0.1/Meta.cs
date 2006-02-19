@@ -80,11 +80,32 @@ namespace Meta
 	}
 	public class Mono
 	{
+		public static byte[] ReadAllBytes(string path)
+		{
+			return File.ReadAllBytes(path);
+		}
+		public static void WriteAllBytes(string path, byte[] bytes)
+		{
+			using (FileStream stream = new FileStream(path,FileMode.Create,FileAccess.Write))
+			{
+				using (BinaryWriter writer = new BinaryWriter(stream))
+				{
+					writer.Write(bytes);
+				}
+			}
+		}
 		public static string ReadAllText(string path)
 		{
 			using (StreamReader reader = new StreamReader(path))
 			{
 				return reader.ReadToEnd();
+			}
+		}
+		public static void WriteAllText(string path, string text)
+		{
+			using (StreamWriter writer = new StreamWriter(path, false, Encoding.Default))
+			{
+				writer.Write(text);
 			}
 		}
 		public static void WriteAllText(string path, string text,Encoding encoding)
@@ -737,7 +758,8 @@ namespace Meta
 			{
 				text=Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine);
 			}
-			File.WriteAllText(path, text);
+			Mono.WriteAllText(path, text);
+			//File.WriteAllText(path, text);
 		}
 		private string path;
 		public FileMap(string path)
@@ -872,7 +894,8 @@ namespace Meta
 					}
 					if (File.Exists(metaFile))
 					{
-						string text = File.ReadAllText(metaFile);
+						string text = Mono.ReadAllText(metaFile);
+						//string text = File.ReadAllText(metaFile);
 						Map result;
 						FileMap fileMap = new FileMap(metaFile);
 						if (text != "")
@@ -921,14 +944,16 @@ namespace Meta
 									case ".txt":
 									case ".meta":
 										value = new FileMap(file, new ListStrategy());
-										foreach (char c in File.ReadAllText(file))
+										foreach (char c in Mono.ReadAllText(file))
+										//foreach (char c in File.ReadAllText(file))
 										{
 											value.Append(c);
 										}
 										break;
 									default:
 										value = new FileMap(file, new ListStrategy());
-										foreach (byte b in File.ReadAllBytes(file))
+										foreach (byte b in Mono.ReadAllBytes(file))
+										//foreach (byte b in File.ReadAllBytes(file))
 										{
 											value.Append(b);
 										}
@@ -976,15 +1001,18 @@ namespace Meta
 					{
 						text = text.Trim(Syntax.unixNewLine);
 					}
-					File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+					Mono.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+					//File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 				}
 				else if (extension == ".txt" || extension == ".meta")
 				{
-					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+					Mono.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+					//File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
 				}
 				else
 				{
-					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+					Mono.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+					//File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
 				}
 				cache[key] = val;
 			}
@@ -998,180 +1026,6 @@ namespace Meta
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
-	//public class DirectoryMap : Map
-	//{
-	//    private DirectoryInfo directory;
-	//    private List<Map> keys=new List<Map>();
-	//    protected DirectoryMap(DirectoryInfo directory, Scope scope)
-	//    {
-	//        this.directory = directory;
-	//        this.Scope = scope;
-	//        foreach (DirectoryInfo subdir in directory.GetDirectories())
-	//        {
-	//            keys.Add(subdir.Name);
-	//        }
-	//        foreach (FileInfo file in directory.GetFiles("*.*"))
-	//        {
-	//            string fileName;
-	//            if (file.Extension == ".meta" || file.Extension== ".dll")
-	//            {
-	//                fileName = Path.GetFileNameWithoutExtension(file.FullName);
-	//            }
-	//            else
-	//            {
-	//                fileName = file.Name;
-	//            }
-	//            keys.Add(fileName);
-	//        }
-	//    }
-	//    public DirectoryMap(DirectoryInfo directory)
-	//        : this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
-	//    {
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get { return keys; }
-	//    }
-	//    public override bool IsFunction
-	//    {
-	//        get { return false; }
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        Map value=null;
-	//        if (key.IsString)
-	//        {
-	//            string name = key.GetString();
-	//            if (directory.FullName != Process.LibraryPath)
-	//            {
-	//                Directory.SetCurrentDirectory(directory.FullName);
-	//            }
-	//            string file = Path.Combine(directory.FullName, name);
-	//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
-	//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
-	//            if (key.GetString().StartsWith("Background"))
-	//            {
-	//            }
-	//            if (File.Exists(metaFile))
-	//            {
-	//                string text=File.ReadAllText(metaFile);
-	//                Map result;
-	//                FileMap fileMap=new FileMap(metaFile);
-	//                if (text != "")
-	//                {
-	//                    Parser parser = new Parser(text, metaFile);
-	//                    bool matched;
-	//                    result = Parser.Program.Match(parser, out matched);
-	//                    if (parser.index != parser.text.Length)
-	//                    {
-	//                        throw new SyntaxException("Expected end of file.", parser);
-	//                    }
-	//                    Expression.parsingFile = metaFile;
-	//                    value = result.GetExpression().Evaluate(Map.Empty);
-	//                    Expression.parsingFile = null;
-	//                    Expression.firstFile = null;
-	//                }
-	//                else
-	//                {
-	//                    value = Map.Empty;
-	//                }
-
-	//                value.Scope = this;
-	//            }
-	//            else
-	//            {
-	//                bool dllLoaded = false;
-	//                if (File.Exists(dllFile))
-	//                {
-	//                    try
-	//                    {
-	//                        Assembly assembly = Assembly.LoadFile(dllFile);
-	//                        value = Gac.LoadAssembly(assembly);
-	//                        dllLoaded = true;
-	//                    }
-	//                    catch (Exception e)
-	//                    {
-	//                        value = null;
-	//                    }
-	//                }
-	//                if (!dllLoaded)
-	//                {
-	//                    if (File.Exists(file))
-	//                    {
-	//                        switch (Path.GetExtension(file))
-	//                        {
-	//                            case ".txt":
-	//                            case ".meta":
-	//                                value = new FileMap(file,new ListStrategy());
-	//                                foreach (char c in File.ReadAllText(file))
-	//                                {
-	//                                    value.Append(c);
-	//                                }
-	//                                break;
-	//                            default:
-	//                                value = new FileMap(file,new ListStrategy());
-	//                                foreach (byte b in File.ReadAllBytes(file))
-	//                                {
-	//                                    value.Append(b);
-	//                                }
-	//                                break;
-	//                        }
-	//                    }
-	//                    else
-	//                    {
-	//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-	//                        if (subDir.Exists)
-	//                        {
-	//                            value= new DirectoryMap(subDir);
-	//                        }
-	//                        else
-	//                        {
-	//                            value = null;
-	//                        }
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return value;
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        if (key.IsString)
-	//        {
-	//            string name = key.GetString();
-	//            string extension = Path.GetExtension(name);
-	//            if (extension=="")
-	//            {
-	//                string text=Meta.Serialize.ValueFunction(val);
-	//                if (text == Syntax.emptyMap.ToString())
-	//                {
-	//                    text = "";
-	//                }
-	//                else
-	//                {
-	//                    text = text.Trim(Syntax.unixNewLine);
-	//                }
-	//                File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
-	//            }
-	//            else if (extension == ".txt" || extension == ".meta")
-	//            {
-	//                File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
-	//            }
-	//            else
-	//            {
-	//                File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
-	//            }
-	//        }
-	//        else
-	//        {
-	//            throw new ApplicationException("Cannot set non-string in directory.");
-	//        }
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//}
 	public class Process
 	{
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
@@ -1186,6 +1040,151 @@ namespace Meta
 			AllocConsole();
 			useConsole = true;
 		}
+		public class Commands
+		{
+			public static void Help()
+			{
+				UseConsole();
+				Console.WriteLine("help");
+				Console.ReadLine();
+			}
+			public static void Interactive()
+			{
+				UseConsole();
+				Console.WriteLine("Interactive mode of Meta 0.1");
+				Map map = new StrategyMap();
+				map.Scope = FileSystem.fileSystem;
+				string code;
+
+				Parser parser = new Parser("", "Interactive console");
+				parser.functions++;
+				parser.defaultKeys.Push(1);
+				while (true)
+				{
+					code = "";
+					Console.Write(parser.Line + " ");
+					int lines = 0;
+					while (true)
+					{
+						string input = Console.ReadLine();
+						if (input.Trim().Length != 0)
+						{
+							code += input + Syntax.unixNewLine;
+							char character = input[input.TrimEnd().Length - 1];
+							if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
+							{
+								break;
+							}
+						}
+						else
+						{
+							if (lines != 0)
+							{
+								break;
+							}
+						}
+						lines++;
+						Console.Write(parser.Line + lines + " ");
+						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
+						{
+							SendKeys.SendWait("{TAB}");
+						}
+					}
+					try
+					{
+						bool matched;
+						parser.text += code;
+						Map statement = Parser.Statement.Match(parser, out matched);
+						if (matched)
+						{
+							if (parser.index == parser.text.Length)
+							{
+								statement.GetStatement().Assign(ref map);
+							}
+							else
+							{
+								parser.index = parser.text.Length;
+								// make this more exact
+								throw new SyntaxException("Syntax error", parser);
+							}
+						}
+						Console.WriteLine();
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.ToString());
+					}
+				}
+			}
+			public static void Test()
+			{
+				UseConsole();
+				new MetaTest().Run();
+				Console.ReadLine();
+			}
+			public static void Run(string[] args)
+			{
+				int i = 1;
+				int fileIndex = 0;
+				if (args[0] == "-console")
+				{
+					UseConsole();
+					i++;
+					fileIndex++;
+				}
+				string directory = Path.GetDirectoryName(args[fileIndex]);
+				Map function = FileSystem.ParseFile(args[fileIndex]);
+				function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
+				int autoKeys = 0;
+				Map argument = new StrategyMap();
+				for (; i < args.Length; i++)
+				{
+					string arg = args[i];
+
+					Map key;
+					Map value;
+					if (arg.StartsWith("-"))
+					{
+						string nextArg;
+						// move down
+						if (i + 1 < args.Length)
+						{
+							nextArg = args[i + 1];
+						}
+						else
+						{
+							nextArg = null;
+						}
+						key = arg.Remove(0, 1);
+						if (nextArg != null)
+						{
+							if (nextArg.StartsWith("-"))
+							{
+								value = Map.Empty;
+							}
+							else
+							{
+								value = nextArg;
+								i++;
+
+							}
+						}
+						else
+						{
+							value = Map.Empty;
+						}
+					}
+					else
+					{
+						autoKeys++;
+						key = autoKeys;
+						value = arg;
+					}
+					argument[key] = value;
+				}
+				function.Call(argument);
+			}
+		}
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -1193,148 +1192,25 @@ namespace Meta
 			{
 				if (args.Length == 0)
 				{
-					UseConsole();
-					Console.WriteLine("Interactive mode of Meta 0.1");
-					Map map = new StrategyMap();
-					map.Scope = FileSystem.fileSystem;
-					string code;
-
-					Parser parser = new Parser("", "Interactive console");
-					parser.functions++;
-					parser.defaultKeys.Push(1);
-					while (true)
-					{
-						code = "";
-						Console.Write(parser.Line + " ");
-						int lines = 0;
-						while (true)
-						{
-							string input = Console.ReadLine();
-							if (input.Trim().Length != 0)
-							{
-								code += input + Syntax.unixNewLine;
-								char character = input[input.TrimEnd().Length - 1];
-								if (!(Char.IsLetter(character) || character == ']') && !input.StartsWith("\t") && character != '=')
-								{
-									break;
-								}
-							}
-							else
-							{
-								if (lines != 0)
-								{
-									break;
-								}
-							}
-							lines++;
-							Console.Write(parser.Line + lines + " ");
-							for (int i = 0; i < input.Length && input[i] == '\t'; i++)
-							{
-								SendKeys.SendWait("{TAB}");
-							}
-						}
-						try
-						{
-							bool matched;
-							parser.text += code;
-							Map statement = Parser.Statement.Match(parser, out matched);
-							if (matched)
-							{
-								if (parser.index == parser.text.Length)
-								{
-									statement.GetStatement().Assign(ref map);
-								}
-								else
-								{
-									parser.index = parser.text.Length;
-									// make this more exact
-									throw new SyntaxException("Syntax error", parser);
-								}
-							}
-							Console.WriteLine();
-						}
-						catch (Exception e)
-						{
-							Console.WriteLine(e.ToString());
-						}
-					}
+					Commands.Help();
 				}
 				else
 				{
-					if (args[0] == "-test")
+					if (args[0] == "-interactive")
 					{
-						UseConsole();
-						new MetaTest().Run();
-						Console.ReadLine();
+						Commands.Interactive();
 					}
-					else if (args[0] == "-profile")
+					else if (args[0] == "-test")
 					{
-						UseConsole();
-						Console.WriteLine("profiling");
-						object x = FileSystem.fileSystem["basicTest"];
+						Commands.Test();
+					}
+					else if (args[0] == "-help")
+					{
+						Commands.Help();
 					}
 					else
 					{
-						int i = 1;
-						int fileIndex = 0;
-						if (args[0] == "-console")
-						{
-							UseConsole();
-							//AllocConsole();
-							i++;
-							fileIndex++;
-						}
-						string directory = Path.GetDirectoryName(args[fileIndex]);
-						Map function = FileSystem.ParseFile(args[fileIndex]);
-						function.Scope = new DirectoryMap(new DirectoryInfo(directory),FileSystem.fileSystem);
-						int autoKeys = 0;
-						Map argument = new StrategyMap();
-						for (; i < args.Length; i++)
-						{
-							string arg = args[i];
-
-							Map key;
-							Map value;
-							if (arg.StartsWith("-"))
-							{
-								string nextArg;
-								// move down
-								if (i + 1 < args.Length)
-								{
-									nextArg = args[i + 1];
-								}
-								else
-								{
-									nextArg = null;
-								}
-								key = arg.Remove(0, 1);
-								if (nextArg != null)
-								{
-									if (nextArg.StartsWith("-"))
-									{
-										value = Map.Empty;
-									}
-									else
-									{
-										value = nextArg;
-										i++;
-
-									}
-								}
-								else
-								{
-									value = Map.Empty;
-								}
-							}
-							else
-							{
-								autoKeys++;
-								key = autoKeys;
-								value = arg;
-							}
-							argument[key] = value;
-						}
-						function.Call(argument);
+						Commands.Run(args);
 					}
 				}
 			}
@@ -1351,7 +1227,6 @@ namespace Meta
 				}
 			}
 		}
-
 		Thread thread;
 		private Map parameter;
 		private Map program;
@@ -3959,8 +3834,10 @@ namespace Meta
 					Serialize(result, "", stringBuilder, level);
 
 					string resultText = stringBuilder.ToString();
-					File.WriteAllText(resultPath, resultText, Encoding.Default);
-					File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
+					Mono.WriteAllText(resultPath, resultText, Encoding.Default);
+					//File.WriteAllText(resultPath, resultText, Encoding.Default);
+					Mono.WriteAllText(resultCopyPath, resultText, Encoding.Default);
+					//File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
 
 					bool successful = Mono.ReadAllText(resultPath).Equals(Mono.ReadAllText(checkPath));
 
@@ -4385,7 +4262,7 @@ namespace Meta
 					}
 				}
 				else
-				{
+					{
 					matched = false;
 					result = null;
 				}
@@ -5930,7 +5807,8 @@ namespace Meta
 			{
 				text = "";
 			}
-			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath,"meta.meta"), text,Encoding.Default);
+			Mono.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
+			//File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
 		}
 	}
 	//public class Web : StrategyMap
@@ -6548,18 +6426,25 @@ namespace Meta
 					return Path.Combine(Process.InstallationPath, "Test");
 				}
 			}
+			public static string TestPath
+			{
+				get
+				{
+					return Path.Combine(Process.InstallationPath, "Test");
+				}
+			}
 			private static string BasicTest
 			{
 				get
 				{
-					return Path.Combine(Process.InstallationPath, "basicTest.meta");
+					return Path.Combine(TestPath, "basicTest.meta");
 				}
 			}
 			private static string LibraryTest
 			{
 				get
 				{
-					return Path.Combine(Process.InstallationPath, "libraryTest.meta");
+					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
 			public class Extents : Test
@@ -6579,9 +6464,9 @@ namespace Meta
 					Map argument = new StrategyMap();
 					argument[1] = "first arg";
 					argument[2] = "second=arg";
-					Map basic=FileSystem.ParseFile(BasicTest);
-					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)),FileSystem.fileSystem);
-					int asdf=basic.Scope.Get().Count;
+					Map basic = FileSystem.ParseFile(BasicTest);
+					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
+					int asdf = basic.Scope.Get().Count;
 					return basic.Call(argument);
 				}
 			}
@@ -6590,8 +6475,8 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					Map library=FileSystem.ParseFile(LibraryTest);
-					library.Scope=FileSystem.fileSystem;
+					Map library = FileSystem.ParseFile(LibraryTest);
+					library.Scope = FileSystem.fileSystem;
 					return library.Call(Map.Empty);
 					//return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
 				}
