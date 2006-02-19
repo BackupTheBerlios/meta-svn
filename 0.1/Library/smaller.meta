@@ -1,4 +1,0 @@
-documentation="Determines whether the first integer is smaller than the second integer."
-|/.Meta.StrategyMap.[/.mscorlib.Boolean] /.Meta.Number.op_LessThan
-	/.Meta.Number.[/.Meta.Map] @.[1]
-	/.Meta.Number.[/.Meta.Map] @.[2]

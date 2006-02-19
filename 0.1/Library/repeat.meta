@@ -5,7 +5,7 @@
 	result=@.start
 sumImplementation=
 	|
-		stop=greater
+		stop=decreasing
 			@.index
 			length @.array
 		next=

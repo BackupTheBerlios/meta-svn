@@ -109,10 +109,11 @@
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
+    <None Include="Library\decreasing.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\foreach.meta" />
-    <None Include="Library\greater.meta" />
     <None Include="Library\if.meta" />
+    <None Include="Library\increasing.meta" />
     <None Include="Library\integerToString.meta" />
     <None Include="Library\nondecreasing.meta" />
     <None Include="Library\nonincreasing.meta" />
@@ -132,7 +133,7 @@
     <None Include="Library\print.meta" />
     <None Include="Library\range.meta" />
     <None Include="Library\remove.meta" />
-    <None Include="Library\smaller.meta" />
+    <None Include="Library\repeat.meta" />
     <None Include="Library\sort.meta" />
     <None Include="Library\sum.meta" />
     <None Include="Library\switch.meta" />

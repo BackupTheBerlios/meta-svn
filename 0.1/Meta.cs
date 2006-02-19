@@ -534,6 +534,32 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Increasing(Map arg)
+		{
+			bool increasing = true;
+			for (int i = 1; i < arg.ArrayCount; i++)
+			{
+				if (!(arg[i + 1].GetNumber() > arg[i].GetNumber()))
+				{
+					increasing = false;
+					break;
+				}
+			}
+			return increasing;
+		}
+		public static Map Decreasing(Map arg)
+		{
+			bool decreasing = true;
+			for (int i = 1; i < arg.ArrayCount; i++)
+			{
+				if (!(arg[i + 1].GetNumber() < arg[i].GetNumber()))
+				{
+					decreasing = false;
+					break;
+				}
+			}
+			return decreasing;
+		}
 		public static Map Nonincreasing(Map arg)
 		{
 			bool nonincreasing = true;
@@ -1253,13 +1279,14 @@ namespace Meta
 						int fileIndex = 0;
 						if (args[0] == "-console")
 						{
-							AllocConsole();
+							UseConsole();
+							//AllocConsole();
 							i++;
 							fileIndex++;
 						}
 						string directory = Path.GetDirectoryName(args[fileIndex]);
 						Map function = FileSystem.ParseFile(args[fileIndex]);
-						//function.Scope = new DirectoryMap(new DirectoryInfo(directory));
+						function.Scope = new DirectoryMap(new DirectoryInfo(directory),FileSystem.fileSystem);
 						int autoKeys = 0;
 						Map argument = new StrategyMap();
 						for (; i < args.Length; i++)
