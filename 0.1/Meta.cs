@@ -1318,7 +1318,8 @@ namespace Meta
 					if (installationPath == null)
 					{
 						Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-						installationPath = Path.GetDirectoryName(uri.AbsolutePath);
+						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
+						//installationPath = Path.GetDirectoryName(uri.AbsolutePath);
 					}
 				}
 				return installationPath;

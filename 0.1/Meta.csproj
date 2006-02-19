@@ -6,10 +6,11 @@
     <ProjectGuid>{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>meta.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>meta</AssemblyName>
+    <AssemblyName>Meta</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -51,7 +52,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>.\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -75,7 +76,10 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73" />
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -99,11 +103,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="meta.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="basicTest.meta" />
-    <None Include="libraryTest.meta" />
     <None Include="Library\and.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
@@ -139,11 +138,13 @@
     <None Include="Library\switch.meta" />
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
+    <None Include="Test\basicTest.meta" />
+    <None Include="Test\libraryTest.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy meta.exe meta.dll</PostBuildEvent>
+    <PostBuildEvent>copy Meta.exe Meta.dll</PostBuildEvent>
   </PropertyGroup>
 </Project>
