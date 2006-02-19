@@ -1318,7 +1318,8 @@ namespace Meta
 					if (installationPath == null)
 					{
 						Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
+						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
+						//installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
 						//installationPath = Path.GetDirectoryName(uri.AbsolutePath);
 					}
 				}
@@ -4095,6 +4096,8 @@ namespace Meta
 			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
 			Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
+		public const char callStart = '(';
+		public const char callEnd = ')';
 		public const char root = '/';
 		public const char search='$';
 		public const char current='&';
@@ -4111,7 +4114,7 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument, search, root };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument, search, root ,callStart,callEnd};
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -4724,13 +4727,13 @@ namespace Meta
 			return new Alternatives(EmptyMap, Number, String, Program, Call, Select);
 		});
 
-
-		public static Rule Call = new DelayedRule(delegate()
+		public static Rule ExplicitCall=new DelayedRule(delegate()
 		{
 			return new Sequence(
 				new Assignment(
 					CodeKeys.Call,
 					new Sequence(
+						Syntax.callStart,
 						new Assignment(
 							CodeKeys.Callable,
 							Select),
@@ -4742,11 +4745,102 @@ namespace Meta
 									new ReferenceAssignment(Expression)),
 								Program)),
 						new CustomRule(delegate(Parser p, out bool matched)
-			{
-				matched = p.functions != 0;
-				return null;
-			}))));
+					{
+						matched = p.functions != 0;
+						return null;
+					}),
+						Syntax.callEnd)));
 		});
+
+		public static Rule Call = new DelayedRule(delegate()
+		{
+			return new Sequence(
+				new Assignment(
+					CodeKeys.Call,
+					new Alternatives(
+						new Sequence(
+							new Assignment(
+								CodeKeys.Callable,
+								new Alternatives(
+									Select,
+									ExplicitCall)),
+							new Assignment(
+								CodeKeys.Parameter,
+								new Alternatives(
+									new Sequence(
+										Syntax.call,
+										new ReferenceAssignment(Expression)),
+									Program)),
+							new CustomRule(delegate(Parser p, out bool matched)
+						{
+							matched = p.functions != 0;
+							return null;
+						})))));
+		});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Call,
+		//            new Alternatives(
+		//                new Sequence(
+		//                    new Assignment(
+		//                        CodeKeys.Callable,
+		//                        Select),
+		//                    new Assignment(
+		//                        CodeKeys.Parameter,
+		//                        new Alternatives(
+		//                            new Sequence(
+		//                                Syntax.call,
+		//                                new ReferenceAssignment(Expression)),
+		//                            Program)),
+		//                    new CustomRule(delegate(Parser p, out bool matched)
+		//                {
+		//                    matched = p.functions != 0;
+		//                    return null;
+		//                })),
+		//                new Sequence(
+		//                    Syntax.callStart,
+		//                    new Assignment(
+		//                        CodeKeys.Callable,
+		//                        Select),
+		//                    new Assignment(
+		//                        CodeKeys.Parameter,
+		//                        new Alternatives(
+		//                            new Sequence(
+		//                                Syntax.call,
+		//                                new ReferenceAssignment(Expression)),
+		//                            Program)),
+		//                    new CustomRule(delegate(Parser p, out bool matched)
+		//                {
+		//                    matched = p.functions != 0;
+		//                    return null;
+		//                }),
+		//                    Syntax.callEnd))));
+
+		//});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Call,
+		//            new Sequence(
+		//                new Assignment(
+		//                    CodeKeys.Callable,
+		//                    Select),
+		//                new Assignment(
+		//                    CodeKeys.Parameter,
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            Syntax.call,
+		//                            new ReferenceAssignment(Expression)),
+		//                        Program)),
+		//                new CustomRule(delegate(Parser p, out bool matched)
+		//    {
+		//        matched = p.functions != 0;
+		//        return null;
+		//    }))));
+		//});
 
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;

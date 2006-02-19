@@ -1737,6 +1737,15 @@ Entry (KeyValuePair`2)
 												"y"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"delayedFunctionDirect"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				"y"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"value"
 	Value (StrategyMap):
 		"xyz"

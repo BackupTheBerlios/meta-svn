@@ -242,6 +242,7 @@ license="
 			|
 				x="y"
 	delayedFunctionResult=delayedFunction *
+	delayedFunctionDirect=(delayedFunction *) *
 	value="xyz"
 	selectionFunction=
 		|value
