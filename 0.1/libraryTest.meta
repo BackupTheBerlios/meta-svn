@@ -42,22 +42,22 @@
 			multiplyFraction=product
 				3/2
 				7/3
-			greater=decreasing
+			greater=strictlyDecreasing
 				4
 				1
-			nonincreasingTest=nonincreasing
+			nonincreasingTest=decreasing
 				1
 				1
 				0
 				1
-			nondecreasingTest=nondecreasing
+			nondecreasingTest=increasing
 				1
 				2
 				3
 				4
 				5
 				6
-			smaller=increasing
+			smaller=strictlyIncreasing
 				23
 				2
 			divide=product
@@ -129,7 +129,7 @@
 						%.%.counter=@
 				test=while
 					condition=
-						|increasing
+						|strictlyIncreasing
 							counter
 							10
 					function=
@@ -151,7 +151,7 @@
 						x=245
 						y=98834
 				compare=
-					|decreasing
+					|strictlyDecreasing
 						@.a.x
 						@.b.x
 			integerToString=integerToString 5

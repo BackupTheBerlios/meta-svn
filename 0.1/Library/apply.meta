@@ -6,7 +6,7 @@ documentation="Calls a function with every value in an array as an argument and 
 	result=*
 applyImplementation=
 	|
-		stop=decreasing
+		stop=strictlyDecreasing
 			@.index
 			length @.array
 		next=

@@ -534,7 +534,7 @@ namespace Meta
 	}
 	public class Library
 	{
-		public static Map Increasing(Map arg)
+		public static Map StrictlyIncreasing(Map arg)
 		{
 			bool increasing = true;
 			for (int i = 1; i < arg.ArrayCount; i++)
@@ -547,7 +547,7 @@ namespace Meta
 			}
 			return increasing;
 		}
-		public static Map Decreasing(Map arg)
+		public static Map StrictlyDecreasing(Map arg)
 		{
 			bool decreasing = true;
 			for (int i = 1; i < arg.ArrayCount; i++)
@@ -560,7 +560,7 @@ namespace Meta
 			}
 			return decreasing;
 		}
-		public static Map Nonincreasing(Map arg)
+		public static Map Decreasing(Map arg)
 		{
 			bool nonincreasing = true;
 			for (int i = 1; i  < arg.ArrayCount;i++)
@@ -573,7 +573,7 @@ namespace Meta
 			}
 			return nonincreasing;
 		}
-		public static Map Nondecreasing(Map arg)
+		public static Map Increasing(Map arg)
 		{
 			bool nondecreasing = true;
 			for (int i = 1; i < arg.ArrayCount; i++)
