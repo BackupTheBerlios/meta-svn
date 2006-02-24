@@ -132,6 +132,7 @@
     <None Include="Library\remove.meta" />
     <None Include="Library\repeat.meta" />
     <None Include="Library\sort.meta" />
+    <None Include="Library\split.meta" />
     <None Include="Library\strictlyDecreasing.meta" />
     <None Include="Library\strictlyIncreasing.meta" />
     <None Include="Library\sum.meta" />

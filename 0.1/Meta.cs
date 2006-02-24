@@ -435,9 +435,12 @@ namespace Meta
 	{
 		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
+			
 			Map scope = executionContext;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-
+			if (key.Equals(new StrategyMap("test.html")))
+			{
+			}
 			while (scope != null && !scope.ContainsKey(key))
 			{
 				scope = scope.Scope;
@@ -460,7 +463,7 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("merge")))
+			if (key.Equals(new StrategyMap("test.html")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -571,6 +574,53 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Split(Map arg)
+		{
+			Map arrays = new StrategyMap();
+			Map subArray = new StrategyMap();
+			Map array=arg["array"];
+			for(int i=0;i<array.ArrayCount;i++)
+			{
+				Map map = array.Array[i];
+				if (map.Equals(arg["item"]) || i==array.ArrayCount-1)
+				{
+					if (i == array.ArrayCount - 1)
+					{
+						subArray.Append(map);
+					}
+					arrays.Append(subArray);
+					subArray = new StrategyMap();
+				}
+				else
+				{
+					subArray.Append(map);
+				}
+			}
+			return arrays;
+		}
+		//public static Map Split(Map arg)
+		//{
+		//    Map arrays = new StrategyMap();
+		//    Map subArray=new StrategyMap();
+		//    foreach (Map map in arg["array"].Array)
+		//    {
+		//        if (map.Equals(arg["item"]))
+		//        {
+		//            arrays.Append(subArray);
+		//            subArray = new StrategyMap();
+		//        }
+		//        else
+		//        {
+		//            subArray.Append(map);
+		//        }
+		//    }
+		//    return arrays;
+		//}
+		public static Map CreateConsole(Map arg)
+		{
+			Process.AllocConsole();
+			return Map.Empty;
+		}
 		public static Map StrictlyIncreasing(Map arg)
 		{
 			bool increasing = true;
@@ -823,6 +873,23 @@ namespace Meta
 	{
 		private DirectoryInfo directory;
 		private List<Map> keys = new List<Map>();
+		private static Map FindParent(DirectoryInfo dir)
+		{
+			Map parent;
+			if (dir.Parent != null)
+			{
+				parent = new DirectoryMap(dir.Parent);
+			}
+			else
+			{
+				parent = FileSystem.fileSystem;
+			}
+			return parent;
+		}
+		public DirectoryMap(DirectoryInfo directory)
+			: this(directory, FindParent(directory))
+		{
+		}
 		public DirectoryMap(DirectoryInfo directory,Scope scope)
 		{
 			this.directory = directory;
@@ -1020,7 +1087,7 @@ namespace Meta
 					Mono.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 					//File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 				}
-				else if (extension == ".txt" || extension == ".meta")
+				else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
 				{
 					Mono.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
 					//File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
@@ -1046,7 +1113,7 @@ namespace Meta
 	{
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
 		ExactSpelling = true)]
-		static extern bool AllocConsole();
+		public static extern bool AllocConsole();
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 		static extern IntPtr GetStdHandle(int nStdHandle);
@@ -1148,9 +1215,13 @@ namespace Meta
 					i++;
 					fileIndex++;
 				}
+
+
+
 				string directory = Path.GetDirectoryName(args[fileIndex]);
 				Map function = FileSystem.ParseFile(args[fileIndex]);
-				function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
+				function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
+				//function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
 				int autoKeys = 0;
 				Map argument = new StrategyMap();
 				for (; i < args.Length; i++)
@@ -1199,11 +1270,57 @@ namespace Meta
 					argument[key] = value;
 				}
 				function.Call(argument);
+				//Console.Write("Content-Type: text/html\n\n");
+				//Console.Write("<html><head><title>CGI" +
+				//    " in C#</title></head><body>" +
+				//    "CGI Environment:<br />");
+				//Console.Write("<table border = \"1\"><tbody><tr><td>The" +
+				//    " Common Gateway " +
+				//    "Interface revision on the server:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("GATEWAY_INTERFACE") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The serevr's hostname or IP address:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("SERVER_NAME") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The name and" +
+				//    " version of the server software that" +
+				//    " is answering the client request:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("SERVER_SOFTWARE") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The name and revision of the information " +
+				//    "protocol the request came in with:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("SERVER_PROTOCOL") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The method with which the information request" +
+				//    "was issued:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("REQUEST_METHOD") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>Extra path information passed to a CGI" +
+				//    " program:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("PATH_INFO") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The translated version of the path given " +
+				//    "by the variable PATH_INFO:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("PATH_TRANSLATED") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The GET information passed to the program. " +
+				//    "It is appended to the URL with a \"?\":</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("QUERY_STRING") +
+				//    "</td></tr>");
+				//Console.Write("<tr><td>The remote IP address of the user making +" +
+				//    "the request:</td><td>" +
+				//    System.Environment.GetEnvironmentVariable("REMOTE_ADDR") +
+				//    "</td></tr>");
+				//Console.Write("</tbody></table></body></html>");
+				//Console.ReadLine();
 			}
 		}
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			//Environment.GetEnvironmentVariable("");
+			//Console.Write("Content-Type: text/html\n\nhello world");
+			//return;
 			try
 			{
 				if (args.Length == 0)
@@ -1350,9 +1467,17 @@ namespace Meta
 		{
 			get
 			{
-				return Path.Combine(Process.InstallationPath, "Library");
+				return @"C:\Meta\0.1\Library";
+				//return Path.Combine(Process.InstallationPath, "Library");
 			}
 		}
+		//public static string LibraryPath
+		//{
+		//    get
+		//    {
+		//        return Path.Combine(Process.InstallationPath, "Library");
+		//    }
+		//}
 	}
 	public abstract class Scope
 	{
@@ -1872,7 +1997,6 @@ namespace Meta
 			return new StrategyMap(text);
 		}
 	}
-
 	public class StrategyMap:Map
 	{
 		public StrategyMap(params Map[] keysAndValues):this()
@@ -2844,6 +2968,7 @@ namespace Meta
 				return obj;
 			}
 		}
+		// remove this
 		public ObjectMap(object target, Type type)
 			: base(target, type)
 		{
@@ -5847,8 +5972,10 @@ namespace Meta
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
-			fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")),null);
+			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
+			//fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")), null);
 			fileSystem.Scope = Gac.gac;
+			Gac.gac.Scope = fileSystem;
 		}
 		public static void Save()
 		{

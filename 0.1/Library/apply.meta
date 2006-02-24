@@ -3,7 +3,7 @@ documentation="Calls a function with every value in an array as an argument and 
 	array=@.array
 	function=@.function
 	index=1
-	result=*
+	result=0
 applyImplementation=
 	|
 		stop=strictlyDecreasing
@@ -12,7 +12,7 @@ applyImplementation=
 		next=
 			=
 				|@.result
-			[*]=
+			[0]=
 				|applyImplementation
 					array=@.array
 					function=@.function
@@ -22,5 +22,5 @@ applyImplementation=
 					object=/.Meta.ObjectMap.[/.mscorlib.Object] @.result
 					argument=@.function @.array.[@.index]
 					object.Append argument
-					result=object.This.get *
+					result=object.This.get 0
 		&=next.[stop] @

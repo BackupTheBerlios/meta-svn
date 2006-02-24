@@ -2,11 +2,11 @@
 	argument=merge
 		=
 			else=
-				|*
+				|0
 			then=
-				|*
+				|0
 		@
 	cases=
 		[1]=argument.then
-		[*]=argument.else
-	&=cases.[argument.condition] *
+		[0]=argument.else
+	&=cases.[argument.condition] 0

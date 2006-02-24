@@ -1,4 +1,4 @@
 documentation="Returns the keys of a map in an array."
 |
 	object=/.Meta.ObjectMap.[/.mscorlib.Object] @
-	&=/.Meta.StrategyMap.[/.mscorlib.["ICollection`1"].[/.Meta.Map]] object.Keys.get *
+	&=/.Meta.StrategyMap.[/.mscorlib.["ICollection`1"].[/.Meta.Map]] object.Keys.get 0

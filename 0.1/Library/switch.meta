@@ -3,4 +3,4 @@
 		map=@.cases
 		key=@.control
 	then=
-		|@.@.cases.[@.@.control] *
+		|@.@.cases.[@.@.control] 0

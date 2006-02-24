@@ -32,9 +32,9 @@ license="
 			|scopingValue
 	scopingValue="wrong"
 	scopingTest=scoping.test
-	lexicalScoping=scopingTest *
+	lexicalScoping=scopingTest 0
 	unicodeText="äaba"
-	$testSubDir.x=*
+	$testSubDir.x=0
 	persistantDeleteTest=testSubDir.x
 	$testSubDir.x=
 		a="b"
@@ -45,28 +45,28 @@ license="
 	integerHashTest=
 		[2]="correct hash content"
 		hashTestData=
-			[*]=
-				[*]=*
+			[0]=
+				[0]=0
 		hashTest=[hashTestData]
 	negativeInteger=100
 	negativeInteger.x="hello"
 	integerIncrementTest=5
-	integerIncrementTest.[*]=integerIncrementTest
+	integerIncrementTest.[0]=integerIncrementTest
 	integerDecrementTest=5
-	integerDecrementTest=integerDecrementTest.[*]
+	integerDecrementTest=integerDecrementTest.[0]
 	negativeNumber=-123
 	mapNumbers=
 		integer=
-			[*]=5
+			[0]=5
 		negative=
-			[*]=5
-			negative=*
+			[0]=5
+			negative=0
 		fraction=
-			[*]=5
+			[0]=5
 			denominator=7
 		negativeFraction=
-			[*]=5
-			negative=*
+			[0]=5
+			negative=0
 			denominator=7
 	fraction=3/2
 	persistenceTest=testSubDir.x
@@ -98,7 +98,7 @@ license="
 	object=
 		a="default"
 		autoSearch="default"
-		b=*
+		b=0
 		SetA=
 			|
 				%.%.a="c"
@@ -114,8 +114,8 @@ license="
 			|
 				&.a="b"
 	a="default"
-	b=*
-	aSet=object.SetA *
+	b=0
+	aSet=object.SetA 0
 	bSet=object.SetB
 		value=
 			x=7
@@ -126,14 +126,14 @@ license="
 		|
 			%.%.scopeTest=inScope
 	inScope="wrong"
-	scopeFunction *
+	scopeFunction 0
 	scopeFromFunctionData="wrong"
 	scopeFunctionFunction=
 		scopeFromFunctionData="right"
 		|
 			|scopeFromFunctionData
-	scopeFromFunction=scopeFunctionFunction *
-	scopeFromFunctionTest=scopeFromFunction *
+	scopeFromFunction=scopeFunctionFunction 0
+	scopeFromFunctionTest=scopeFromFunction 0
 	ReturnEverything=
 		|
 			&=@
@@ -171,7 +171,7 @@ license="
 	TestClass=/.Meta.TestClass
 	TestClass.NestedClass.field=5
 	nestedClassTest=TestClass.NestedClass.field
-	testClass=TestClass *
+	testClass=TestClass 0
 	testClass.floatValue=3
 	testClass.doubleValue=4
 	testClass.decimalValue=5
@@ -184,7 +184,7 @@ license="
 		name="mscorlib"
 	].Int32
 	MemberTest=/.Meta.MemberTest
-	memberTest=MemberTest *
+	memberTest=MemberTest 0
 	stringOverload=MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
 	memberTestOverload=MemberTest.OverloadedMethod.[
@@ -201,10 +201,10 @@ license="
 		3247
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	MemberTest.ClassProperty.set memberTest.InstanceProperty.get *
-	classPropertyValue=MemberTest.ClassProperty.get *
-	memberTest.InstanceProperty.set MemberTest.ClassProperty.get *
-	instancePropertyValue=memberTest.InstanceProperty.get *
+	MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
+	classPropertyValue=MemberTest.ClassProperty.get 0
+	memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
+	instancePropertyValue=memberTest.InstanceProperty.get 0
 	interceptedSymbol="/hello/"
 	positionalNoConversion=/.Meta.PositionalNoConversion
 		"m"
@@ -220,7 +220,7 @@ license="
 	namedNoConversionConcatenated=namedNoConversion.Concatenate
 		c="t"
 		"r"
-	indexerNoConversion=/.Meta.IndexerNoConversion *
+	indexerNoConversion=/.Meta.IndexerNoConversion 0
 	indexerNoConversion.Item.set
 		"abc"
 		"hihi"
@@ -230,23 +230,23 @@ license="
 	xyz="w"
 	literalFunction=
 		|5
-	literalFunctionResult=literalFunction *
+	literalFunctionResult=literalFunction 0
 	someFunction=
 		|
 			&="simple function this"
 	callFunction=
 		|someFunction
-	callFunctionResult=callFunction *
+	callFunctionResult=callFunction 0
 	delayedFunction=
 		|
 			|
 				x="y"
-	delayedFunctionResult=delayedFunction *
-	delayedFunctionDirect=((delayedFunction *) *).x
+	delayedFunctionResult=delayedFunction 0
+	delayedFunctionDirect=((delayedFunction 0) 0).x
 	value="xyz"
 	selectionFunction=
 		|value
-	selectionFunctionResult=selectionFunction *
+	selectionFunctionResult=selectionFunction 0
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
@@ -254,8 +254,8 @@ license="
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
-	ChangeUpperLevel *
-	staticEventChanged=*
+	ChangeUpperLevel 0
+	staticEventChanged=0
 	ChangeStaticEvent=
 		|
 			%.%.staticEventChanged=@
@@ -266,9 +266,9 @@ license="
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
 		|@.[1]
-	resultFromDelegate=TestClass.GetResultFromDelegate *
+	resultFromDelegate=TestClass.GetResultFromDelegate 0
 	staticEventResult=TestClass.staticEvent testClass
-	instanceEventChanged=*
+	instanceEventChanged=0
 	testClass.instanceEvent.add
 		|
 			%.%.%.instanceEventChanged=1
@@ -285,9 +285,9 @@ license="
 	firstIfBranches=
 		=
 			|"then"
-		[*]=
+		[0]=
 			|"else"
-	firstIf=firstIfBranches.[firstIfCondition] *
+	firstIf=firstIfBranches.[firstIfCondition] 0
 	bigNumber=50020202
 	secondSwitch="unchanged"
 	secondSwitchCases=
@@ -295,11 +295,11 @@ license="
 		"two"
 		"three"
 	secondSwitch=secondSwitchCases.[3]
-	emptyMap=*
+	emptyMap=0
 	emptyFunction=
 		|
 			x="hello"
-	emptyFunctionResult=emptyFunction *
+	emptyFunctionResult=emptyFunction 0
 	font=/.["System.Drawing"].Font.[
 		/.mscorlib.String
 		/.mscorlib.Single
@@ -317,10 +317,10 @@ license="
 			hello world!
 			hello!
 		"
-	arrayList=/.mscorlib.ArrayList.[*] *
+	arrayList=/.mscorlib.ArrayList.[0] 0
 	arrayList.Add "hello"
-	arrayListResult=arrayList.Item.get *
-	textBox=/.["System.Windows.Forms"].TextBox *
+	arrayListResult=arrayList.Item.get 0
+	textBox=/.["System.Windows.Forms"].TextBox 0
 	textBox.Text.set "
 		Alle meine Entchen,
 		schwimmen auf dem See,
@@ -328,16 +328,16 @@ license="
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh.
 	"
-	lines=textBox.Lines.get *
+	lines=textBox.Lines.get 0
 	alleMeineText=lines.GetValue.[/.mscorlib.Int32] 1
-	form=/.["System.Windows.Forms"].Form *
+	form=/.["System.Windows.Forms"].Form 0
 	form.Location.set.[/.["System.Drawing"].Point]
 		X=5
 		Y=1000
-	automaticConversionTest=form.Location.get.[*] *
+	automaticConversionTest=form.Location.get.[0] 0
 	tabText="			hello"
 	escapedText="'#'n'''t"
-	whileCounter=*
+	whileCounter=0
 	loop=
 		|
 			whileDecision=not equal
@@ -348,7 +348,7 @@ license="
 					|loop sum
 						@
 						1
-				[*]=
+				[0]=
 					|@
 			&=whileBranches.[whileDecision] @
 	whileCounter=loop 3
@@ -364,24 +364,24 @@ license="
 	myArg=
 		|
 			hello="world"
-	funcReturnTest=returnArg myArg *
+	funcReturnTest=returnArg myArg 0
 	documentedFunction=
 		doc="This function returns #hello ."
 		|"hello"
-	docFunctionResult=documentedFunction *
+	docFunctionResult=documentedFunction 0
 	topLevel="default"
 	deep=
 		map=
 			test=
 				|
 					$topLevel="changed"
-	deep.map.test *
+	deep.map.test 0
 	outerFunction=
 		|
 			innerFunction=
 				|
 					&=@.@
-			innerFunction *
+			innerFunction 0
 	outerFunctionTest=outerFunction "right"
 complicated=
 	[

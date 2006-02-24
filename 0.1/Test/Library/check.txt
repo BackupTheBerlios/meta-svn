@@ -185,6 +185,25 @@ Entry (KeyValuePair`2)
 				10
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"splitTest"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						1
+					Value (StrategyMap):
+						"hello"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						2
+					Value (StrategyMap):
+						"world"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						3
+					Value (StrategyMap):
+						"hello"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"sort"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)

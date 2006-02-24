@@ -3,20 +3,20 @@ documentation="Returns whether at least one boolean is true."
 	array=@
 	function=
 		|table.[@]
-	start=*
+	start=0
 table=
 	[
 		previous=1
-		present=*
+		present=0
 	]=1
 	[
-		previous=*
+		previous=0
 		present=1
 	]=1
 	[
-		previous=*
-		present=*
-	]=*
+		previous=0
+		present=0
+	]=0
 	[
 		previous=1
 		present=1

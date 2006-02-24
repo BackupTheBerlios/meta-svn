@@ -5,4 +5,4 @@ documentation="Performs a bitwise or operation on integers."
 		|/.Meta.Number.op_BitwiseOr
 			/.Meta.Number.[/.Meta.Number] @.previous
 			/.Meta.Number.[/.Meta.Map] /.Meta.Transform.ToMeta @.present
-	start=/.Meta.Number.[/.Meta.Map] *
+	start=/.Meta.Number.[/.Meta.Map] 0

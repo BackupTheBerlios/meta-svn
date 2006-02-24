@@ -11,10 +11,10 @@ sumImplementation=
 		next=
 			=
 				|@.result
-			[*]=
+			[0]=
 				|sumImplementation
 					index=
-						[*]=@.index
+						[0]=@.index
 					result=@.function
 						previous=@.result
 						present=@.array.[@.index]

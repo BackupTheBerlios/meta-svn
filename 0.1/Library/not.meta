@@ -1,5 +1,5 @@
 documentation="Negates a boolean."
 |table.[@]
 table=
-	[*]=1
-	[1]=*
+	[0]=1
+	[1]=0

@@ -7,16 +7,16 @@ documentation="Returns whether all booleans are true."
 table=
 	[
 		previous=1
-		present=*
-	]=*
+		present=0
+	]=0
 	[
-		previous=*
+		previous=0
 		present=1
-	]=*
+	]=0
 	[
-		previous=*
-		present=*
-	]=*
+		previous=0
+		present=0
+	]=0
 	[
 		previous=1
 		present=1

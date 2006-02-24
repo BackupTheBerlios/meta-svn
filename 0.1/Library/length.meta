@@ -1,4 +1,4 @@
 documentation="Returns the length of an array."
 |
 	map=/.Meta.ObjectMap.[/.mscorlib.Object] @
-	&=/.Meta.StrategyMap.[/.mscorlib.Int32] map.ArrayCount.get *
+	&=/.Meta.StrategyMap.[/.mscorlib.Int32] map.ArrayCount.get 0
