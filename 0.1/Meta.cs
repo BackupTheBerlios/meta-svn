@@ -35,6 +35,7 @@ using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Web;
 
 namespace Meta
 {
@@ -194,7 +195,11 @@ namespace Meta
 			int count = 0;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				if (pair.Value.IsNumber)
+				if (pair.Value == null)
+				{
+					count++;
+				}
+				else if (pair.Value.IsNumber)
 				{
 					count++;
 				}
@@ -574,6 +579,72 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map StringReplace(Map arg)
+		{
+			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
+		}
+		public static Map UrlDecode(Map arg)
+		{
+			string[] aSplit;
+			string sOutput;
+			string sConvert = arg.GetString();
+			//Dim I
+			//If IsNull(sConvert) Then
+			//   URLDecode = ""
+			//   Exit Function
+			//End If
+
+			//' convert all pluses to spaces
+			sOutput = sConvert.Replace("+", " ");
+			//sOutput = REPLACE(sConvert, "+", " ")
+
+			//' next convert %hexdigits to the character
+			aSplit = sOutput.Split('%');
+
+			//If IsArray(aSplit) Then
+			sOutput = aSplit[0];
+			for(int i=1;i<aSplit.Length;i++)
+			{
+				//sOutput = aSplit(0)
+				//For I = 0 to UBound(aSplit) - 1
+				sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16)+aSplit[i].Substring(2);
+				//Next
+				//End If
+			}
+			return sOutput;
+			//URLDecode = sOutput
+		}
+		//End Function
+		//public static Map HtmlDecode(Map arg)
+		//{
+		//    //string text = arg.GetString();
+		//    string text = "http://localhost/cgi-bin/offer.meta?offer=asdf+asdf+f+&description=fasdf+";
+		//    //int i;
+		//    text.Replace("&quot;", ((char)34).ToString()).Replace(
+		//        "&lt;", ((char)60).ToString()).Replace("&gt;", ((char)62).ToString()).Replace(
+		//        "&amp;", ((char)38).ToString()).Replace("&nbsp;", ((char)32).ToString());
+		//    for (int i = 1; i <= 255; i++)
+		//    {
+		//        text = text.Replace("&#" + i + ";", ((char)i).ToString());
+		//    }
+		//    //Next
+		//    //HTMLDecode = sText
+		//    return text;
+		//    //End Function
+		//}
+		public static Map Try(Map arg)
+		{
+			Map result;
+			try
+			{
+				result=arg["function"].Call(Map.Empty);
+			}
+			catch (Exception e)
+			{
+				result=arg["catch"].Call(new ObjectMap(e));
+			}
+			return result;
+		}
 		public static Map Split(Map arg)
 		{
 			Map arrays = new StrategyMap();
@@ -1315,12 +1386,14 @@ namespace Meta
 				//Console.ReadLine();
 			}
 		}
+
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//Environment.GetEnvironmentVariable("");
-			//Console.Write("Content-Type: text/html\n\nhello world");
-			//return;
+
+
+			Library.UrlDecode("x%3D%22hello%22");
 			try
 			{
 				if (args.Length == 0)
@@ -1448,16 +1521,24 @@ namespace Meta
 			{
 				if (installationPath == null)
 				{
-					if (installationPath == null)
-					{
-						Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-						//installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
-						installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
-						//installationPath = Path.GetDirectoryName(uri.AbsolutePath);
-					}
+					installationPath = @"C:\Meta\0.1\";
 				}
 				return installationPath;
 			}
+			//get
+			//{
+			//    if (installationPath == null)
+			//    {
+			//        if (installationPath == null)
+			//        {
+			//            Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
+			//            //installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
+			//            installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
+			//            //installationPath = Path.GetDirectoryName(uri.AbsolutePath);
+			//        }
+			//    }
+			//    return installationPath;
+			//}
 			set
 			{
 				installationPath = value;
@@ -5308,6 +5389,20 @@ namespace Meta
 			matched = true;
 			return null;
 		}));
+		public static Map RunProgram(string text, string fileName)
+		{
+			return ParseProgram(text, fileName).GetExpression().Evaluate(FileSystem.fileSystem);
+		}
+		public static Map ParseProgram(string text,string fileName)
+		{
+			Parser parser = new Parser(text, "Offer input");
+			parser.functions++;
+			parser.defaultKeys.Push(1);
+			//Parser parser = new Parser(text, fileName);
+			bool matched;
+			Map result = Parser.Program.Match(parser, out matched);
+			return result;
+		}
 
 		public static Rule Program =
 			new Sequence(
@@ -5975,7 +6070,7 @@ namespace Meta
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
 			//fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")), null);
 			fileSystem.Scope = Gac.gac;
-			Gac.gac.Scope = fileSystem;
+			//Gac.gac.Scope = fileSystem;
 		}
 		public static void Save()
 		{

@@ -87,6 +87,7 @@
     <Reference Include="System.Data">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms">
       <Private>False</Private>
     </Reference>
@@ -111,6 +112,7 @@
     <None Include="Library\decreasing.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\foreach.meta" />
+    <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />
     <None Include="Library\increasing.meta" />
     <None Include="Library\integerToString.meta" />
@@ -135,8 +137,10 @@
     <None Include="Library\split.meta" />
     <None Include="Library\strictlyDecreasing.meta" />
     <None Include="Library\strictlyIncreasing.meta" />
+    <None Include="Library\string.meta" />
     <None Include="Library\sum.meta" />
     <None Include="Library\switch.meta" />
+    <None Include="Library\try.meta" />
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
     <None Include="Test\basicTest.meta" />

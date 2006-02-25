@@ -140,6 +140,11 @@
 				array="hello world hello"
 				space=" "
 				item=space.[1]
+			tryTest=try
+				function=
+					|keyThatDoesNotExist
+				catch=
+					|@.ToString 0
 			sort=sort
 				array=
 					=
@@ -159,6 +164,10 @@
 						@.a.x
 						@.b.x
 			integerToString=integerToString 5
+			stringReplace=string.replace
+				string="hello hello hi"
+				old="he"
+				new="i"
 		bitwiseTest=bitwiseOr
 			20
 			/.["System.Windows.Forms"].Keys.Tab

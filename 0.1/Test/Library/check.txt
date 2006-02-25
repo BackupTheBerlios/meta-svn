@@ -204,6 +204,11 @@ Entry (KeyValuePair`2)
 						"hello"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"tryTest"
+			Value (StrategyMap):
+				"C:\Meta\0.1\Test\libraryTest.meta, line 145, column 7: Key could not be found: "keyThatDoesNotExist""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"sort"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
@@ -267,3 +272,8 @@ Entry (KeyValuePair`2)
 				"integerToString"
 			Value (StrategyMap):
 				"5"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"stringReplace"
+			Value (StrategyMap):
+				"illo illo hi"
