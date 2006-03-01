@@ -277,3 +277,31 @@ Entry (KeyValuePair`2)
 				"stringReplace"
 			Value (StrategyMap):
 				"illo illo hi"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"filterTest"
+	Value (StrategyMap):
+		""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"findTest"
+	Value (StrategyMap):
+		""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"findTest2"
+	Value (StrategyMap):
+		""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"htmlTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"urlTest"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"decodeTest"
+					Value (StrategyMap):
+						"x="hello""

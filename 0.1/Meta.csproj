@@ -111,6 +111,8 @@
     <None Include="Library\contains.meta" />
     <None Include="Library\decreasing.meta" />
     <None Include="Library\equal.meta" />
+    <None Include="Library\filter.meta" />
+    <None Include="Library\find.meta" />
     <None Include="Library\foreach.meta" />
     <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />
@@ -133,6 +135,7 @@
     <None Include="Library\range.meta" />
     <None Include="Library\remove.meta" />
     <None Include="Library\repeat.meta" />
+    <None Include="Library\serialize.meta" />
     <None Include="Library\sort.meta" />
     <None Include="Library\split.meta" />
     <None Include="Library\strictlyDecreasing.meta" />

@@ -171,4 +171,24 @@
 		bitwiseTest=bitwiseOr
 			20
 			/.["System.Windows.Forms"].Keys.Tab
+		filterTest=filter
+			array=
+				1
+				1
+				3
+				5
+				2
+			function=
+				|equal
+					@
+					1
+		findTest=find
+			array="hello hello hi"
+			value="he"
+		findTest2=find
+			array="test test"
+			value="test test"
+		htmlTest=
+			urlTest=
+				decodeTest=html.url.decode "x%3D%22hello%22"
 	&=test

@@ -579,6 +579,37 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Find(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			string text=arg["array"].GetString();
+			string value=arg["value"].GetString();
+			for (int i = 0; ; i++)
+			{
+				i = text.IndexOf(value, i);
+				if (i == -1)
+				{
+					break;
+				}
+				else
+				{
+					result.Append(i+1);
+				}
+			}
+			return result;
+		}
+		public static Map Filter(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			foreach (Map map in arg["array"].Array)
+			{
+				if (arg["function"].Call(map).GetBoolean())
+				{
+					result.Append(map);
+				}
+			}
+			return result;
+		}
 		public static Map StringReplace(Map arg)
 		{
 			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
@@ -4345,7 +4376,8 @@ namespace Meta
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public static char[] lookupStringFirstForbidden;
-		public const char emptyMap = '*';
+		public const char emptyMap = '0';
+		//public const char emptyMap = '*';
 		public const char call = ' ';
 		public const char select = '.';
 
@@ -5107,7 +5139,7 @@ namespace Meta
 						new Sequence(
 							Syntax.@string,
 							new ReferenceAssignment(
-								new ZeroOrMore(
+								new OneOrMore(
 									new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
 							Syntax.@string))).Match(parser, out matched);
 			if (!matched)
