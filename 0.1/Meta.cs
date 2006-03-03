@@ -2013,7 +2013,7 @@ namespace Meta
 			get
 			{
 				bool isString;
-				if (ArrayCount == Count)
+				if (ArrayCount == Count && ArrayCount != 0)
 				{
 					isString = this.Array.TrueForAll(
 						delegate(Map map)
