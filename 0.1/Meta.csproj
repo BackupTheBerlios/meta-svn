@@ -108,12 +108,14 @@
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\character.meta" />
+    <None Include="Library\complement.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
     <None Include="Library\decreasing.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\filter.meta" />
     <None Include="Library\find.meta" />
+    <None Include="Library\first.meta" />
     <None Include="Library\foreach.meta" />
     <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />

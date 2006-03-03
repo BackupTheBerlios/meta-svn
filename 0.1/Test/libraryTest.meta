@@ -202,4 +202,14 @@
 			array="alle meine entchen"
 			start=5
 			end=11
+		complementTest=complement
+			=
+				apple="green"
+				orange="orange"
+				banana="yellow"
+			=
+				apple="red"
+				orange="yellow"
+				strawberries="red"
+		firstTest=first "a"
 	&=test

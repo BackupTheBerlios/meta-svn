@@ -579,6 +579,47 @@ namespace Meta
 	}
 	public class Library
 	{
+		//public static Map Complement(Map arg)
+		//{
+		//    foreach (Map map in arg.Array)
+		//    {
+
+		//    }
+		//}
+		public static Map Complement(Map arg)
+		{
+		    //Map found = new StrategyMap();
+		    //Map removed=new StrategyMap();
+		    //Map result = new StrategyMap();
+		    Dictionary<Map, Map> found = new Dictionary<Map, Map>();
+		    foreach (Map map in arg.Array)
+		    {
+		        foreach (KeyValuePair<Map, Map> entry in map)
+		        {
+		            if (found.ContainsKey(entry.Key))
+		            {
+		                found[entry.Key] = null;
+		            }
+		            else
+		            {
+		                found[entry.Key] = entry.Value;
+		            }
+		            //if (!removed.ContainsKey(entry.Key) && !found.ContainsKey(entry.Key))
+		            //{
+		            //    found[entry.Key] = entry.Value;
+		            //}
+		        }
+		    }
+		    Map result = new StrategyMap();
+		    foreach (KeyValuePair<Map, Map> entry in found)
+		    {
+		        if (entry.Value != null)
+		        {
+					result[entry.Key] = entry.Value;
+		        }
+		    }
+			return result;
+		}
 		public static Map Slice(Map arg)
 		{
 			Map array=arg["array"];

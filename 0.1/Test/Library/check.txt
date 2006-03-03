@@ -320,3 +320,22 @@ Entry (KeyValuePair`2)
 		"sliceTest"
 	Value (StrategyMap):
 		" meine "
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"complementTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"banana"
+			Value (StrategyMap):
+				"yellow"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"strawberries"
+			Value (StrategyMap):
+				"red"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"firstTest"
+	Value (StrategyMap):
+		97
