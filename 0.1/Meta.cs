@@ -1572,14 +1572,18 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
+				string text = e.Message + "\n\n" + e.StackTrace;
 				if (useConsole)
 				{
-					Console.WriteLine(e.ToString());
+					//Console.WriteLine(e.ToString());
+					//Console.WriteLine(e.StackTrace);
+					Console.WriteLine(text);
 					Console.ReadLine();
 				}
 				else
 				{
-					MessageBox.Show(e.ToString(), "Meta exception");
+					MessageBox.Show(text, "Meta exception");
+					//MessageBox.Show(e.ToString(), "Meta exception");
 				}
 			}
 		}
@@ -1926,7 +1930,14 @@ namespace Meta
 			}
 			else if (this.IsNumber)
 			{
-				text = this.GetNumber().ToString();
+				try
+				{
+					text = this.GetNumber().ToString();
+				}
+				catch(Exception e)
+				{
+					text = "";
+				}
 			}
 			else
 			{
@@ -2733,6 +2744,20 @@ namespace Meta
 
 	public abstract class MethodImplementation:Map
 	{
+		public override bool IsString
+		{
+			get
+			{
+				return false;
+			}
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public MethodImplementation(MethodBase method, object obj, Type type)
 		{
 			this.method = method;

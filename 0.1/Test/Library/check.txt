@@ -15,7 +15,7 @@ Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"false"
 					Value (StrategyMap):
-						""
+						0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"and"
@@ -29,7 +29,7 @@ Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"false"
 					Value (StrategyMap):
-						""
+						0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"orTest"
@@ -43,7 +43,7 @@ Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"false"
 					Value (StrategyMap):
-						""
+						0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"otherTrue"
@@ -87,7 +87,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"nonincreasingTest"
 			Value (StrategyMap):
-				""
+				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"nondecreasingTest"
@@ -97,7 +97,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"smaller"
 			Value (StrategyMap):
-				""
+				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"divide"
@@ -182,7 +182,7 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"false"
 							Value (StrategyMap):
-								""
+								0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"while"
