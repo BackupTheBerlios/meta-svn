@@ -1,26 +1,2 @@
 documentation="Calls a function with every value in an array as an argument and returns the results as an array."
-|applyImplementation
-	array=@.array
-	function=@.function
-	index=1
-	result=0
-applyImplementation=
-	|
-		stop=strictlyDecreasing
-			@.index
-			length @.array
-		next=
-			=
-				|@.result
-			[0]=
-				|applyImplementation
-					array=@.array
-					function=@.function
-					index=sum
-						@.index
-						1
-					object=/.Meta.ObjectMap.[/.mscorlib.Object] @.result
-					argument=@.function @.array.[@.index]
-					object.Append argument
-					result=object.This.get 0
-		&=next.[stop] @
+|/.Meta.Library.Apply @

@@ -579,6 +579,84 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Slice(Map arg)
+		{
+			Map array=arg["array"];
+			int start;
+			if (arg.ContainsKey("start"))
+			{
+				start = arg["start"].GetNumber().GetInt32();
+			}
+			else
+			{
+				start = 1;
+			}
+			int end;
+			if (arg.ContainsKey("end"))
+			{
+				end = arg["end"].GetNumber().GetInt32();
+			}
+			else
+			{
+				end = array.ArrayCount;
+			}
+			Map result = new StrategyMap(new ListStrategy());
+			for (int i = start; i <= end; i++)
+			{
+				result.Append(array[i]);
+			}
+			return result;
+		}
+		public static Map Replace(Map arg)
+		{
+			throw new ApplicationException("Method not implemented.");
+		}
+		public static Map Equal(Map arg)
+		{
+			bool equal = true;
+			if (arg.ArrayCount > 3)
+			{
+			}
+			if(arg.ArrayCount>1)
+			{
+				for(int i=1;arg.ContainsKey(i+1);i++)
+				{
+					if (!arg[i].Equals(arg[i + 1]))
+					{
+						equal = false;
+						break;
+					}
+				}
+			}
+			return equal;
+		}
+		public static Map Not(Map arg)
+		{
+			return !arg.GetBoolean();
+		}
+		public static Map Or(Map arg)
+		{
+			bool or=false;
+			foreach (Map map in arg.Array)
+			{
+				//or = true;
+				if (map.GetBoolean())
+				{
+					or = true;
+					break;
+				}
+			}
+			return or;
+		}
+		public static Map Apply(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			foreach (Map map in arg["array"].Array)
+			{
+				result.Append(arg["function"].Call(map));
+			}
+			return result;
+		}
 		public static Map Find(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -676,6 +754,7 @@ namespace Meta
 			}
 			return result;
 		}
+
 		public static Map Split(Map arg)
 		{
 			Map arrays = new StrategyMap();
@@ -1422,14 +1501,13 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-
-
 			Library.UrlDecode("x%3D%22hello%22");
 			try
 			{
 				if (args.Length == 0)
 				{
-					Commands.Help();
+					Commands.Interactive();
+					//Commands.Help();
 				}
 				else
 				{

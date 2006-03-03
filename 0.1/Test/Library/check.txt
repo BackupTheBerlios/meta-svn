@@ -32,7 +32,7 @@ Entry (KeyValuePair`2)
 						""
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"or"
+				"orTest"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -44,6 +44,11 @@ Entry (KeyValuePair`2)
 						"false"
 					Value (StrategyMap):
 						""
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"otherTrue"
+					Value (StrategyMap):
+						1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"numberTest"
@@ -206,7 +211,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"tryTest"
 			Value (StrategyMap):
-				"C:\Meta\0.1\Test\libraryTest.meta, line 145, column 7: Key could not be found: "keyThatDoesNotExist""
+				"C:\Meta\0.1\Test\libraryTest.meta, line 151, column 7: Key could not be found: "keyThatDoesNotExist""
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"sort"
@@ -305,3 +310,13 @@ Entry (KeyValuePair`2)
 						"decodeTest"
 					Value (StrategyMap):
 						"x="hello""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"characterTest"
+	Value (StrategyMap):
+		38
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"sliceTest"
+	Value (StrategyMap):
+		" meine "

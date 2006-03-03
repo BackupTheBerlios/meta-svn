@@ -1,16 +1,2 @@
 documentation="Determines whether maps are identical."
-|
-	result=repeat
-		array=@
-		function=
-			|
-				first=/.Meta.ObjectMap.[/.mscorlib.Object] @.previous.previous
-				&=
-					equality=and
-						/.Meta.StrategyMap.[/.mscorlib.Boolean] first.Equals @.present
-						@.previous.equality
-					previous=@.present
-		start=
-			equality=1
-			previous=@.[1]
-	&=result.equality
+|/.Meta.Library.Equal @
