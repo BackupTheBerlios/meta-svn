@@ -1,23 +1,23 @@
 |sumImplementation
 	index=1
-	array=@.array
-	function=@.function
-	result=@.start
+	array=argument.array
+	function=argument.function
+	result=argument.start
 sumImplementation=
 	|
 		stop=strictlyDecreasing
-			@.index
-			length @.array
+			argument.index
+			length argument.array
 		next=
 			=
-				|@.result
+				|argument.result
 			[0]=
 				|sumImplementation
 					index=
-						[0]=@.index
-					result=@.function
-						previous=@.result
-						present=@.array.[@.index]
-					array=@.array
-					function=@.function
-		&=next.[stop] @
+						[0]=argument.index
+					result=argument.function
+						previous=argument.result
+						present=argument.array.[argument.index]
+					array=argument.array
+					function=argument.function
+		&=next.[stop] argument

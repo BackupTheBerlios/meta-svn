@@ -1,12 +1,12 @@
 |
-	argument=merge
+	arg=merge
 		=
 			else=
 				|0
 			then=
 				|0
-		@
+		argument
 	cases=
-		[1]=argument.then
-		[0]=argument.else
-	&=cases.[argument.condition] 0
+		[1]=arg.then
+		[0]=arg.else
+	&=cases.[arg.condition] 0

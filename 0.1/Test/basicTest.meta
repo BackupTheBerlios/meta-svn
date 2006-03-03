@@ -84,7 +84,7 @@ license="
 		"
 	"ImpliedAutokey"
 	"Autokey"
-	commandLineArguments=@
+	commandLineArguments=argument
 	aMap=
 		a="a"
 	[aMap]="Object"
@@ -105,7 +105,7 @@ license="
 				%.%.autoSearch="changed"
 		SetB=
 			|
-				%.%.b.[1]=@.value
+				%.%.b.[1]=argument.value
 				&="changed"
 		x=
 			a="b"
@@ -136,7 +136,7 @@ license="
 	scopeFromFunctionTest=scopeFromFunction 0
 	ReturnEverything=
 		|
-			&=@
+			&=argument
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -156,16 +156,16 @@ license="
 	SetCurrent=
 		|
 			&=
-				asdf=@
-				x=@.symbol
+				asdf=argument
+				x=argument.symbol
 			&=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
 		|
-			SecondLevel @
+			SecondLevel argument
 	SecondLevel=
-		|@
+		|argument
 	argTest=FirstLevel
 		a="z"
 	TestClass=/.Meta.TestClass
@@ -250,7 +250,7 @@ license="
 	upperLevel="unchanged"
 	SetUpperLevel=
 		|
-			%.%.upperLevel=@
+			%.%.upperLevel=argument
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
@@ -258,21 +258,21 @@ license="
 	staticEventChanged=0
 	ChangeStaticEvent=
 		|
-			%.%.staticEventChanged=@
+			%.%.staticEventChanged=argument
 	TestClass.staticEvent.add
 		|
 			ChangeStaticEvent 1
-			&=@.[1]
+			&=argument.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		|@.[1]
+		|argument.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate 0
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=0
 	testClass.instanceEvent.add
 		|
 			%.%.%.instanceEventChanged=1
-			&=@.[1]
+			&=argument.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -341,26 +341,26 @@ license="
 	loop=
 		|
 			whileDecision=not equal
-				@
+				argument
 				10
 			whileBranches=
 				
 					|loop sum
-						@
+						argument
 						1
 				[0]=
-					|@
-			&=whileBranches.[whileDecision] @
+					|argument
+			&=whileBranches.[whileDecision] argument
 	whileCounter=loop 3
 	returnInMap=
 		|
-			result=@
+			result=argument
 	literalAsArgument=returnInMap 1
 	returnFunction=
 		|
 			|"functionResult"
 	returnArg=
-		|@
+		|argument
 	myArg=
 		|
 			hello="world"
@@ -380,7 +380,7 @@ license="
 		|
 			innerFunction=
 				|
-					&=@.@
+					&=argument.argument
 			innerFunction 0
 	outerFunctionTest=outerFunction "right"
 complicated=

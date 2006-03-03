@@ -4478,7 +4478,8 @@ namespace Meta
 		public const char search='$';
 		public const char current='&';
 		public const char scope='%';
-		public const char argument='@';
+		//public const char argument='@';
+		public const string argument = "argument";
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -4490,7 +4491,7 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, argument, search, root ,callStart,callEnd};
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, search, root ,callStart,callEnd};
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -4708,6 +4709,9 @@ namespace Meta
 			}
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
+				if (text == Syntax.argument && parser.Rest.IndexOf("argument")<100)
+				{
+				}
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
 				{
@@ -5393,7 +5397,7 @@ namespace Meta
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Argument = new Sequence(
-			Syntax.argument,
+			new StringRule(Syntax.argument),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
 
 		private static Rule Root = new Sequence(
@@ -5412,7 +5416,7 @@ namespace Meta
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
 
 		private static Rule ArgumentLeft = new Sequence(
-			Syntax.argument,
+			new StringRule(Syntax.argument),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
 
 
@@ -5456,6 +5460,7 @@ namespace Meta
 						1,
 						new Alternatives(
 							Root,
+							Argument,
 							Search,
 							Lookup,
 							ExplicitCall)),

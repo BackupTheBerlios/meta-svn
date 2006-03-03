@@ -1,6 +1,6 @@
 documentation="Negates a boolean."
-|table.[@]
+|table.[argument]
 table=
 	[0]=1
 	[1]=0
-|/.Meta.Library.Not @
+|/.Meta.Library.Not argument

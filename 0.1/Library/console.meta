@@ -1,9 +1,9 @@
 writeLine=
 	|write join
-		@
+		argument
 		/.mscorlib.Environment.NewLine.get 0
 write=
-	|/.Meta.Library.Write @
+	|/.Meta.Library.Write argument
 readLine=
 	|/.mscorlib.Console.ReadLine 0
 clear=

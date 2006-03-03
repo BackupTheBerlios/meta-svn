@@ -1,6 +1,6 @@
 |if
 	condition=contains
-		map=@.cases
-		key=@.control
+		map=argument.cases
+		key=argument.control
 	then=
-		|@.@.cases.[@.@.control] 0
+		|argument.argument.cases.[argument.argument.control] 0

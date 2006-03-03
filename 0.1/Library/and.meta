@@ -1,8 +1,8 @@
 documentation="Returns whether all booleans are true."
 |repeat
-	array=@
+	array=argument
 	function=
-		|table.[@]
+		|table.[argument]
 	start=1
 table=
 	[

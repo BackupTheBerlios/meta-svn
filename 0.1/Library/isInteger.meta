@@ -1,3 +1,3 @@
 |
-	object=/.Meta.ObjectMap.[/.mscorlib.Object] @
+	object=/.Meta.ObjectMap.[/.mscorlib.Object] argument
 	&=object.IsInteger.get 0
