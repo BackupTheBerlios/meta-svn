@@ -1,3 +1,1 @@
-|
-	object=/.Meta.ObjectMap.[/.mscorlib.Object] argument
-	&=object.IsString.get 0
+map|(/.Meta.ObjectMap.[/.mscorlib.Object] map).IsString.get 0

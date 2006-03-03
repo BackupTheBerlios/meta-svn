@@ -104,7 +104,7 @@ commandLine|
 				$a="c"
 				$autoSearch="changed"
 		SetB=
-			b|
+			newB|
 				$b.[1]=argument.value
 				&="changed"
 		x=

@@ -513,7 +513,7 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"parameterName"
 							Value (StrategyMap):
-								"b"
+								"newB"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"x"

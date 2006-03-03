@@ -258,7 +258,7 @@ namespace Meta
 			{
 				arg.Scope = context;
 				current.Scope = arg;
-				arg[CodeKeys.ParameterName] = argument;
+				arg[context[CodeKeys.Function][CodeKeys.ParameterName]] = argument;
 			}
 			current.Argument = argument;
 			return EvaluateImplementation(current, argument);
