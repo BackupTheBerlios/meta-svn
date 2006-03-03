@@ -41,7 +41,7 @@ namespace Meta
 {
 	public class CodeKeys
 	{
-
+		public static readonly Map ParameterName="parameterName";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
 		public static readonly Map Lookup = "lookup";
@@ -253,6 +253,13 @@ namespace Meta
 				current=new StrategyMap();
 			}
 			current.Scope = context;
+			Map arg = new StrategyMap();
+			if (context.ContainsKey(CodeKeys.Function) && context[CodeKeys.Function].ContainsKey(CodeKeys.ParameterName))
+			{
+				arg.Scope = context;
+				current.Scope = arg;
+				arg[CodeKeys.ParameterName] = argument;
+			}
 			current.Argument = argument;
 			return EvaluateImplementation(current, argument);
 		}
@@ -4699,6 +4706,9 @@ namespace Meta
 			}
 			protected override bool MatchCharacer(char c)
 			{
+				if (characters[0] == Syntax.function)
+				{
+				}
 				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
 			}
 		}
@@ -5323,14 +5333,58 @@ namespace Meta
 			}
 			return map;
 		});
-
 		public static Rule Function = new PrePost(
 			delegate(Parser parser) { parser.functions++; },
 			new Sequence(
-				Syntax.function,
+				//new LiteralRule(
+				//    new StrategyMap(
+				//        CodeKeys.Key,
+				//        new StrategyMap(
+				//            1,
+				//            new StrategyMap(
+				//                CodeKeys.Lookup,
+				//                new StrategyMap(
+				//                    CodeKeys.Literal,
+				//                    CodeKeys.Function))))),
+				//new Assignment(
+				//    CodeKeys.Value,
+				//    new ZeroOrMore(
+				//        new Autokey(
+				//            new CharacterExcept(
+				//                Syntax.function, Syntax.unixNewLine)))),
+				//new Assignment(CodeKeys.ParameterName,new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.function,Syntax.unixNewLine)))),
+				//Syntax.function,
 				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 				new Assignment(CodeKeys.Value,
-					new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
+					new Sequence(
+						new Assignment(CodeKeys.Literal, new CustomRule(delegate(Parser p,out bool matched)
+		{
+			Map parameterName=new ZeroOrMore(
+				new Autokey(
+					new CharacterExcept(
+						Syntax.function, Syntax.unixNewLine))).Match(p,out matched);
+			Map result=null;
+			if(matched)
+			{
+				result=new Sequence(Syntax.function,new ReferenceAssignment(Expression)).Match(p,out matched);
+				if(matched)
+				{
+					result[CodeKeys.ParameterName]=parameterName;
+				}
+			}
+			return result;
+		}))))
+			
+			
+			), delegate(Parser parser) { parser.functions--; });
+
+		//public static Rule Function = new PrePost(
+		//    delegate(Parser parser) { parser.functions++; },
+		//    new Sequence(
+		//        Syntax.function,
+		//        new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+		//        new Assignment(CodeKeys.Value,
+		//            new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
 		private Rule Whitespace =
 			new ZeroOrMore(

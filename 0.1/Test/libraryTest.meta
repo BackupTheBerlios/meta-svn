@@ -132,7 +132,7 @@
 				counter=0
 				SetCounter=
 					|
-						%.%.counter=argument
+						$counter=argument
 				test=while
 					condition=
 						|strictlyIncreasing

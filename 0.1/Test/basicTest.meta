@@ -21,7 +21,7 @@ license="
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 "
-|
+commandLine|
 	&=merge
 		%
 		=
@@ -101,11 +101,11 @@ license="
 		b=0
 		SetA=
 			|
-				%.%.a="c"
-				%.%.autoSearch="changed"
+				$a="c"
+				$autoSearch="changed"
 		SetB=
-			|
-				%.%.b.[1]=argument.value
+			b|
+				$b.[1]=argument.value
 				&="changed"
 		x=
 			a="b"
@@ -124,7 +124,7 @@ license="
 	scopeFunction=
 		inScope="right"
 		|
-			%.%.scopeTest=inScope
+			$scopeTest=inScope
 	inScope="wrong"
 	scopeFunction 0
 	scopeFromFunctionData="wrong"
@@ -135,7 +135,7 @@ license="
 	scopeFromFunction=scopeFunctionFunction 0
 	scopeFromFunctionTest=scopeFromFunction 0
 	ReturnEverything=
-		|
+		everything|
 			&=argument
 	everythingReturned=ReturnEverything
 		"a"
@@ -154,7 +154,7 @@ license="
 						2
 						3
 	SetCurrent=
-		|
+		current|
 			&=
 				asdf=argument
 				x=argument.symbol
@@ -162,10 +162,10 @@ license="
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
-		|
+		arg|
 			SecondLevel argument
 	SecondLevel=
-		|argument
+		arg|argument
 	argTest=FirstLevel
 		a="z"
 	TestClass=/.Meta.TestClass
@@ -249,29 +249,29 @@ license="
 	selectionFunctionResult=selectionFunction 0
 	upperLevel="unchanged"
 	SetUpperLevel=
-		|
-			%.%.upperLevel=argument
+		arg|
+			$upperLevel=argument
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
 	ChangeUpperLevel 0
 	staticEventChanged=0
 	ChangeStaticEvent=
-		|
-			%.%.staticEventChanged=argument
+		arg|
+			$staticEventChanged=argument
 	TestClass.staticEvent.add
-		|
+		arg|
 			ChangeStaticEvent 1
 			&=argument.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		|argument.[1]
+		arg|argument.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate 0
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=0
 	testClass.instanceEvent.add
-		|
-			%.%.%.instanceEventChanged=1
+		arg|
+			$instanceEventChanged=1
 			&=argument.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
@@ -339,28 +339,28 @@ license="
 	escapedText="'#'n'''t"
 	whileCounter=0
 	loop=
-		|
+		start|
 			whileDecision=not equal
 				argument
 				10
 			whileBranches=
-				
-					|loop sum
+				=
+					arg|loop sum
 						argument
 						1
 				[0]=
-					|argument
+					arg|argument
 			&=whileBranches.[whileDecision] argument
 	whileCounter=loop 3
 	returnInMap=
-		|
+		arg|
 			result=argument
 	literalAsArgument=returnInMap 1
 	returnFunction=
 		|
 			|"functionResult"
 	returnArg=
-		|argument
+		arg|argument
 	myArg=
 		|
 			hello="world"
@@ -377,7 +377,7 @@ license="
 					$topLevel="changed"
 	deep.map.test 0
 	outerFunction=
-		|
+		arg|
 			innerFunction=
 				|
 					&=argument.argument
