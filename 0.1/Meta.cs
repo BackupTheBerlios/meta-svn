@@ -213,16 +213,18 @@ namespace Meta
 		}
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			string text = "Key does not exist: " + Serialize.ValueFunction(key);
-			if (Leaves(map) < 1000)
-			{
-				text+="\nin: "+Serialize.ValueFunction(map);
-			}
+			string text = "Missing key: " + Serialize.ValueFunction(key);
+			// hier den scope ausgeben
+
+			//if (Leaves(map) < 1000)
+			//{
+			//    text+="\nin: "+Serialize.ValueFunction(map);
+			//}
 			throw new ExecutionException(text,extent,map);
 		}
 		public static void KeyNotFound(Map key,Extent extent,Map context)
 		{
-			throw new ExecutionException("Key could not be found: "+Serialize.ValueFunction(key),extent,context);
+			throw new ExecutionException("Key not found: "+Serialize.ValueFunction(key),extent,context);
 		}
 	}
 	public abstract class Expression
@@ -435,6 +437,9 @@ namespace Meta
 			if (context == null)
 			{
 			}
+			if(key.Equals(new StrategyMap("Trim")))
+			{
+			}
 			if (!context.ContainsKey(key))
 			{
 				context.ContainsKey(key);
@@ -586,6 +591,62 @@ namespace Meta
 	}
 	public class Library
 	{
+		private static Random random = new Random();
+		public static Map Random(Map arg)
+		{
+			return random.Next(1,arg.GetNumber().GetInt32());
+		}
+		public static Map FindFirst(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			Map array=arg["array"];
+			Map value = arg["value"];
+			for (int i = 1; i<=array.ArrayCount ; i++)
+			{
+				for (int k = 1;value[k].Equals(array[i+k-1]);k++)
+				{
+					if (k == value.ArrayCount)
+					{
+						return i;
+					}
+
+				}
+			}
+			return 0;
+		}
+		public static Map Reverse(Map arg)
+		{
+			List<Map> list=arg.Array;
+			list.Reverse();
+			return new StrategyMap(list);
+		}
+		public static Map Range(Map arg)
+		{
+			int end=arg.GetNumber().GetInt32();
+			Map result = new StrategyMap();
+			for (int i = 1; i < end; i++)
+			{
+				result.Append(i);
+			}
+			return result;
+		}
+		public static Map If(Map arg)
+		{
+			Map result;
+			if (arg[1].GetBoolean())
+			{
+				result=arg["then"].Call(Map.Empty);
+			}
+			else if (arg.ContainsKey("else"))
+			{
+				result = arg["else"].Call(Map.Empty);
+			}
+			else
+			{
+				result = Map.Empty;
+			}
+			return result;
+		}
 		//public static Map Complement(Map arg)
 		//{
 		//    foreach (Map map in arg.Array)
@@ -979,14 +1040,24 @@ namespace Meta
 		}
 		public static Map Sort(Map arg)
 		{
-			List<Map> array=arg["array"].Array;
+			List<Map> array = arg["array"].Array;
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
-				int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
-				return x != 0 ? -1 : 0;
+				return arg["function"].Call(a).GetNumber().GetInt32().CompareTo(arg["function"].Call(b).GetNumber().GetInt32());
+				//return x != 0 ? -1 : 0;
 			}));
 			return new StrategyMap(array);
 		}
+		//public static Map Sort(Map arg)
+		//{
+		//    List<Map> array=arg["array"].Array;
+		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+		//    {
+		//        int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
+		//        return x != 0 ? -1 : 0;
+		//    }));
+		//    return new StrategyMap(array);
+		//}
 		public static Map Pop(Map arg)
 		{
 			Map count=new StrategyMap(arg.Array.Count);
@@ -1432,7 +1503,7 @@ namespace Meta
 			{
 				UseConsole();
 				new MetaTest().Run();
-				Console.ReadLine();
+				//Console.ReadLine();
 			}
 			public static void Run(string[] args)
 			{
@@ -1549,7 +1620,11 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			Library.UrlDecode("x%3D%22hello%22");
+			//UseConsole();
+			//Console.WriteLine(@"Content-Type: text/html\n\n");//<form action='' id='meta' name='meta' method='post'><textarea cols='40' rows='5' id='search' name='search' onkeydown='if(event.keyCode==13 && event.ctrlKey){document.meta.submit();}'></textarea><br></br><input type='submit' value='Search'></input></form>");// + Console.In.ReadToEnd());
+
+			//return;
+			//string x=System.Environment.GetEnvironmentVariable("CONTENT_LENGTH");
 			try
 			{
 				if (args.Length == 0)
@@ -1579,11 +1654,12 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				string text = e.Message + "\n\n" + e.StackTrace;
+				string text = Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
 				if (useConsole)
 				{
 					//Console.WriteLine(e.ToString());
 					//Console.WriteLine(e.StackTrace);
+					//Console.BackgroundColor = ConsoleColor.Red;
 					Console.WriteLine(text);
 					Console.ReadLine();
 				}
@@ -2669,10 +2745,14 @@ namespace Meta
 		public static Map ToMeta(object dotNet)
 		{
 			Map meta;
-			if(dotNet==null)
+			if (dotNet == null)
 			{
-				meta=null;
+				meta = Map.Empty;
 			}
+			//if(dotNet==null)
+			//{
+			//    meta=null;
+			//}
 			else
 			{
 				switch(Type.GetTypeCode(dotNet.GetType()))
@@ -3232,6 +3312,10 @@ namespace Meta
 			}
 		}
 		// remove this
+		public ObjectMap(string text)
+			: this(text, text.GetType())
+		{
+		}
 		public ObjectMap(object target, Type type)
 			: base(target, type)
 		{
@@ -4012,17 +4096,26 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key)
 		{
-			if(key.IsString)
+			if (key.IsString)
 			{
-				string text=key.GetString();
-				if(type.GetMember(key.GetString(),
-					BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
-				{
-					return true;
-				}
+				return Get(key) != null;
+		
 			}
 			return false;
 		}
+		//public override bool ContainsKey(Map key)
+		//{
+		//    if(key.IsString)
+		//    {
+		//        string text=key.GetString();
+		//        if(type.GetMember(key.GetString(),
+		//            BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).Length!=0)
+		//        {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -5183,7 +5276,10 @@ namespace Meta
 							CodeKeys.Parameter,
 							new Alternatives(
 								new Sequence(
-									Syntax.call,
+									new Alternatives(
+										Syntax.call,
+										Syntax.indentation),
+									//Syntax.call,
 									new ReferenceAssignment(Expression)),
 								Program)),
 						new CustomRule(delegate(Parser p, out bool matched)
@@ -5475,9 +5571,9 @@ namespace Meta
 			Syntax.scope,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
-		private static Rule Argument = new Sequence(
-			new StringRule(Syntax.argument),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
+		//private static Rule Argument = new Sequence(
+		//    new StringRule(Syntax.argument),
+		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
 
 		private static Rule Root = new Sequence(
 			Syntax.root,
@@ -5514,7 +5610,7 @@ namespace Meta
 			new Alternatives(
 				Current,
 				Scope,
-				Argument,
+				//Argument,
 				new Sequence(
 					new Assignment(
 						CodeKeys.Lookup,
@@ -5539,7 +5635,7 @@ namespace Meta
 						1,
 						new Alternatives(
 							Root,
-							Argument,
+							//Argument,
 							Search,
 							Lookup,
 							ExplicitCall)),

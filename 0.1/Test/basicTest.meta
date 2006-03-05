@@ -84,7 +84,7 @@ commandLine|
 		"
 	"ImpliedAutokey"
 	"Autokey"
-	commandLineArguments=argument
+	commandLineArguments=commandLine
 	aMap=
 		a="a"
 	[aMap]="Object"
@@ -105,7 +105,7 @@ commandLine|
 				$autoSearch="changed"
 		SetB=
 			newB|
-				$b.[1]=argument.value
+				$b.[1]=newB.value
 				&="changed"
 		x=
 			a="b"
@@ -115,7 +115,7 @@ commandLine|
 				&.a="b"
 	a="default"
 	b=0
-	aSet=object.SetA 0
+	aSet=object.SetA	0
 	bSet=object.SetB
 		value=
 			x=7
@@ -136,7 +136,7 @@ commandLine|
 	scopeFromFunctionTest=scopeFromFunction 0
 	ReturnEverything=
 		everything|
-			&=argument
+			&=everything
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -156,16 +156,16 @@ commandLine|
 	SetCurrent=
 		current|
 			&=
-				asdf=argument
-				x=argument.symbol
+				asdf=current
+				x=current.symbol
 			&=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
 		arg|
-			SecondLevel argument
+			SecondLevel arg
 	SecondLevel=
-		arg|argument
+		arg|arg
 	argTest=FirstLevel
 		a="z"
 	TestClass=/.Meta.TestClass
@@ -250,7 +250,7 @@ commandLine|
 	upperLevel="unchanged"
 	SetUpperLevel=
 		arg|
-			$upperLevel=argument
+			$upperLevel=arg
 	ChangeUpperLevel=
 		|
 			SetUpperLevel "changed"
@@ -258,21 +258,21 @@ commandLine|
 	staticEventChanged=0
 	ChangeStaticEvent=
 		arg|
-			$staticEventChanged=argument
+			$staticEventChanged=arg
 	TestClass.staticEvent.add
 		arg|
 			ChangeStaticEvent 1
-			&=argument.[1]
+			&=arg.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
-		arg|argument.[1]
+		arg|arg.[1]
 	resultFromDelegate=TestClass.GetResultFromDelegate 0
 	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=0
 	testClass.instanceEvent.add
 		arg|
 			$instanceEventChanged=1
-			&=argument.[1]
+			&=arg.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -341,26 +341,26 @@ commandLine|
 	loop=
 		start|
 			whileDecision=not equal
-				argument
+				start
 				10
 			whileBranches=
 				=
 					arg|loop sum
-						argument
+						arg
 						1
 				[0]=
-					arg|argument
-			&=whileBranches.[whileDecision] argument
+					arg|arg
+			&=whileBranches.[whileDecision] start
 	whileCounter=loop 3
 	returnInMap=
 		arg|
-			result=argument
+			result=arg
 	literalAsArgument=returnInMap 1
 	returnFunction=
 		|
 			|"functionResult"
 	returnArg=
-		arg|argument
+		arg|arg
 	myArg=
 		|
 			hello="world"
@@ -380,7 +380,7 @@ commandLine|
 		arg|
 			innerFunction=
 				|
-					&=argument.argument
+					&=arg
 			innerFunction 0
 	outerFunctionTest=outerFunction "right"
 complicated=

@@ -1,18 +1,18 @@
-|sumImplementation
+argument|sumImplementation
 	index=1
 	array=argument.array
 	function=argument.function
 	result=argument.start
 sumImplementation=
-	|
+	argument|
 		stop=strictlyDecreasing
 			argument.index
 			length argument.array
 		next=
 			=
-				|argument.result
+				argument|argument.result
 			[0]=
-				|sumImplementation
+				argument|sumImplementation
 					index=
 						[0]=argument.index
 					result=argument.function

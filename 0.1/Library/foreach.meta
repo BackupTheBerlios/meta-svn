@@ -1,6 +1,6 @@
-|apply
+argument|apply
 	array=keys argument.map
 	function=
-		|argument.argument.function
-			value=argument.argument.map.[argument]
-			key=argument
+		arg|argument.function
+			value=argument.map.[arg]
+			key=arg

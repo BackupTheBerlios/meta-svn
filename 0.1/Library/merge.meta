@@ -1,5 +1,5 @@
 documentation="Combines several maps into one."
-|repeat
+argument|repeat
 	array=argument
 	function=
 		|
@@ -13,4 +13,4 @@ documentation="Combines several maps into one."
 						&=result
 				start=argument.previous
 	start=0
-|/.Meta.Library.Merge argument
+argument|/.Meta.Library.Merge argument

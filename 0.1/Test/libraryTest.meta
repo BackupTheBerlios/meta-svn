@@ -82,7 +82,7 @@
 						|"wrong"
 				control="x"				
 			if=if
-				condition=1
+				1
 				then=
 					|"if test successful"
 			remove=remove
@@ -95,7 +95,7 @@
 				"die Katze lief im Schnee."
 			apply=
 				applyMethod=
-					|sum
+					argument|sum
 						argument
 						1
 				&=apply
@@ -131,7 +131,7 @@
 			while=
 				counter=0
 				SetCounter=
-					|
+					argument|
 						$counter=argument
 				test=while
 					condition=
@@ -150,7 +150,7 @@
 				function=
 					|keyThatDoesNotExist
 				catch=
-					|argument.ToString 0
+					argument|argument.ToString 0
 			sort=sort
 				array=
 					=
@@ -165,10 +165,8 @@
 					=
 						x=245
 						y=98834
-				compare=
-					|strictlyDecreasing
-						argument.a.x
-						argument.b.x
+				function=
+					argument|argument.x
 			integerToString=integerToString 5
 			stringReplace=string.replace
 				string="hello hello hi"
@@ -185,7 +183,7 @@
 				5
 				2
 			function=
-				|equal
+				argument|equal
 					argument
 					1
 		findTest=find
@@ -212,4 +210,9 @@
 				orange="yellow"
 				strawberries="red"
 		firstTest=first "a"
+		rangeTest=range 10
+		reverseTest=reverse "hello"
+		findFirstTest=findFirst
+			value="hell"
+			array="he hi hello"
 	&=test

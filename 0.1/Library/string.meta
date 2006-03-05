@@ -1,2 +1,4 @@
 replace=
-	|/.Meta.Library.StringReplace argument
+	argument|/.Meta.Library.StringReplace argument
+trim=
+	text|(/.Meta.ObjectMap.[mscorlib.String] text).Trim.[0] 0

@@ -211,7 +211,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"tryTest"
 			Value (StrategyMap):
-				"C:\Meta\0.1\Test\libraryTest.meta, line 151, column 7: Key could not be found: "keyThatDoesNotExist""
+				"C:\Meta\0.1\Test\libraryTest.meta, line 151, column 7: Key not found: "keyThatDoesNotExist""
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"sort"
@@ -224,15 +224,29 @@ Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"x"
 							Value (StrategyMap):
-								245
+								12
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"y"
 							Value (StrategyMap):
-								98834
+								234
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						2
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								12
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"y"
+							Value (StrategyMap):
+								234
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						3
 					Value (StrategyMap):
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -246,32 +260,18 @@ Entry (KeyValuePair`2)
 								3245
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
-						3
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								12
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								234
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
 						4
 					Value (StrategyMap):
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"x"
 							Value (StrategyMap):
-								12
+								245
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								"y"
 							Value (StrategyMap):
-								234
+								98834
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"integerToString"
@@ -339,3 +339,18 @@ Entry (KeyValuePair`2)
 		"firstTest"
 	Value (StrategyMap):
 		97
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"rangeTest"
+	Value (StrategyMap):
+		"	"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"reverseTest"
+	Value (StrategyMap):
+		"olleh"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"findFirstTest"
+	Value (StrategyMap):
+		7
