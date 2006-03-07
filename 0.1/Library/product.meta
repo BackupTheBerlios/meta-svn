@@ -1,8 +1,2 @@
 documentation="Multiplies integers."
-argument|/.Meta.StrategyMap.[/.Meta.Number] repeat
-	array=argument
-	function=
-		argument|/.Meta.Number.op_Multiply
-			/.Meta.Number.[/.Meta.Number] argument.previous
-			/.Meta.Number.[/.Meta.Map] argument.present
-	start=/.Meta.Number.[/.Meta.Map] 1
+argument|/.Meta.Library.Product argument

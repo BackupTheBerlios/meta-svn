@@ -195,7 +195,6 @@
 		htmlTest=
 			urlTest=
 				decodeTest=html.url.decode "x%3D%22hello%22"
-		characterTest=character "&"
 		sliceTest=slice
 			array="alle meine entchen"
 			start=5
@@ -215,4 +214,14 @@
 		findFirstTest=findFirst
 			value="hell"
 			array="he hi hello"
+		foreachTest=foreach
+			map=
+				x="hi"
+				y="hello"
+			function=
+				entry|
+					[entry.value]=entry.key
+		valuesTest=values
+			x="hi"
+			y="hello"
 	current=test

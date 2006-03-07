@@ -359,47 +359,47 @@ namespace Meta
 			return context;
 		}
 	}
-	public class ScopeSubselect:Subselect
-	{
-		public override void Assign(ref Map context, Map value,ref Map executionContext)
-		{
-			throw new Exception("Cannot assign to scope.");
-		}
-		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
-		{
-			return context.Scope;
-		}
-	}
-	public class Argument:Subselect
-	{
-		public override void Assign(ref Map selected, Map value,ref Map executionContext)
-		{
-			throw new Exception("Cannot assign to argument.");
-		}
-		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
-		{
-			Map scope = executionContext;
-			if (i > 0)
-			{
-			}
-			for (int k = 0; ; k++)
-			{
-				while (scope != null && scope.argument == null)
-				{
-					scope = scope.Scope;
-				}
-				if (k < i)
-				{
-					scope = scope.Scope;
-				}
-				else
-				{
-					break;
-				}
-			}
-			return scope.Argument;
-		}
-	}
+	//public class ScopeSubselect:Subselect
+	//{
+	//    public override void Assign(ref Map context, Map value,ref Map executionContext)
+	//    {
+	//        throw new Exception("Cannot assign to scope.");
+	//    }
+	//    public override Map EvaluateImplementation(int i,Map context, Map executionContext)
+	//    {
+	//        return context.Scope;
+	//    }
+	//}
+	//public class Argument:Subselect
+	//{
+	//    public override void Assign(ref Map selected, Map value,ref Map executionContext)
+	//    {
+	//        throw new Exception("Cannot assign to argument.");
+	//    }
+	//    public override Map EvaluateImplementation(int i,Map context, Map executionContext)
+	//    {
+	//        Map scope = executionContext;
+	//        if (i > 0)
+	//        {
+	//        }
+	//        for (int k = 0; ; k++)
+	//        {
+	//            while (scope != null && scope.argument == null)
+	//            {
+	//                scope = scope.Scope;
+	//            }
+	//            if (k < i)
+	//            {
+	//                scope = scope.Scope;
+	//            }
+	//            else
+	//            {
+	//                break;
+	//            }
+	//        }
+	//        return scope.Argument;
+	//    }
+	//}
 	public class CallSubselect : Subselect
 	{
 		private Call call;
@@ -598,6 +598,33 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Product(Map arg)
+		{
+			Number result = 1;
+			foreach (Map number in arg.Array)
+			{
+				result *= number.GetNumber();
+			}
+			return result;
+		}
+		public static Map Foreach(Map arg)
+		{
+			Map result=new StrategyMap();
+			foreach(KeyValuePair<Map,Map> entry in arg["map"])
+			{
+				result.Append(arg["function"].Call(new StrategyMap("key",entry.Key,"value",entry.Value)));
+			}
+			return result;
+		}
+		public static Map BinaryOr(Map arg)
+		{
+		    int binaryOr = 0;
+		    foreach (Map map in arg.Array)
+		    {
+	            binaryOr |= map.GetNumber().GetInt32();
+		    }
+		    return binaryOr;
+		}
 		private static Random random = new Random();
 		public static Map Random(Map arg)
 		{
@@ -2010,14 +2037,14 @@ namespace Meta
 				{
 					subselect = new Current();
 				}
-				else if (ContainsKey(CodeKeys.Argument))
-				{
-					subselect = new Argument();
-				}
-				else if (ContainsKey(CodeKeys.Scope))
-				{
-					subselect = new ScopeSubselect();
-				}
+				//else if (ContainsKey(CodeKeys.Argument))
+				//{
+				//    subselect = new Argument();
+				//}
+				//else if (ContainsKey(CodeKeys.Scope))
+				//{
+				//    subselect = new ScopeSubselect();
+				//}
 				else if (ContainsKey(CodeKeys.Search))
 				{
 					subselect = new Search(this[CodeKeys.Search]);
@@ -4697,8 +4724,9 @@ namespace Meta
 		public const char search='$';
 		public const string current = "current";
 		//public const char current='&';
-		public const char scope='%';
-		public const string argument = "argument";
+		public const string scope = "scope";
+		//public const char scope = '%';
+		//public const string argument = "argument";
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -4710,7 +4738,7 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, scope, search, root, callStart, callEnd };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
 		//public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, search, root, callStart, callEnd };
 
 		// remove???
@@ -4931,9 +4959,9 @@ namespace Meta
 			}
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
-				if (text == Syntax.argument && parser.Rest.IndexOf("argument")<100)
-				{
-				}
+				//if (text == Syntax.argument && parser.Rest.IndexOf("argument")<100)
+				//{
+				//}
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
 				{
@@ -5663,7 +5691,7 @@ namespace Meta
 
 
 		private static Rule Scope = new Sequence(
-			Syntax.scope,
+			new StringRule(Syntax.scope),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		//private static Rule Argument = new Sequence(
@@ -5682,12 +5710,12 @@ namespace Meta
 
 
 		private static Rule ScopeLeft = new Sequence(
-			Syntax.scope,
+			new StringRule(Syntax.scope),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
 
-		private static Rule ArgumentLeft = new Sequence(
-			new StringRule(Syntax.argument),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
+		//private static Rule ArgumentLeft = new Sequence(
+		//    new StringRule(Syntax.argument),
+		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
 
 
 
@@ -5695,7 +5723,7 @@ namespace Meta
 			new Alternatives(
 				CurrentLeft,
 				ScopeLeft,
-				ArgumentLeft,
+				//ArgumentLeft,
 				LookupString,
 				LookupAnything);
 
@@ -5704,7 +5732,7 @@ namespace Meta
 		private static Rule Lookup =
 			new Alternatives(
 				Current,
-				Scope,
+				//Scope,
 				//Argument,
 				new Sequence(
 					new Assignment(
@@ -5800,6 +5828,8 @@ namespace Meta
 					if (EndOfLine.Match(p, out matched) == null)
 					{
 						p.index += 2;
+						//matched = false;
+						//return null;
 						throw new SyntaxException("Expected newline.", p);
 					}
 					else
@@ -6365,16 +6395,16 @@ namespace Meta
 				CodeKeys.Current, 
 				Map.Empty),
 			Syntax.current.ToString());
-		public static Rule Argument = new Equal(
-			new StrategyMap(
-				CodeKeys.Argument,
-				Map.Empty),
-			Syntax.argument.ToString());
-		public static Rule Scope = new Equal(
-			new StrategyMap(
-				CodeKeys.Scope,
-				Map.Empty),
-			Syntax.scope.ToString());
+		//public static Rule Argument = new Equal(
+		//    new StrategyMap(
+		//        CodeKeys.Argument,
+		//        Map.Empty),
+		//    Syntax.argument.ToString());
+		//public static Rule Scope = new Equal(
+		//    new StrategyMap(
+		//        CodeKeys.Scope,
+		//        Map.Empty),
+		//    Syntax.scope.ToString());
 		public class Equal : Rule
 		{
 			private Map map;
@@ -6414,8 +6444,8 @@ namespace Meta
 							LookupSearchImplementation))),
 				new Alternatives(
 					Current,
-					Argument,
-					Scope,
+					//Argument,
+					//Scope,
 					new Set(new KeyRule(CodeKeys.Literal, Key)),
 					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
 	}

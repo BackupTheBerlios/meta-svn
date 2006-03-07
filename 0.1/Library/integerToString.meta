@@ -1,4 +1,2 @@
 documentation="Converts an integer to a string."
-argument|
-	int=/.Meta.Number.[/.Meta.Map] argument
-	current=/.Meta.StrategyMap.[/.mscorlib.String] int.ToString 0
+argument|/.Meta.StrategyMap.[/.mscorlib.String] (/.Meta.Number.[/.Meta.Map] argument).ToString 0

@@ -1,23 +1,2 @@
 documentation="Returns whether all booleans are true."
-arg|repeat
-	array=arg
-	function=
-		arg|table.[arg]
-	start=1
-table=
-	[
-		previous=1
-		present=0
-	]=0
-	[
-		previous=0
-		present=1
-	]=0
-	[
-		previous=0
-		present=0
-	]=0
-	[
-		previous=1
-		present=1
-	]=1
+arg|/.Meta.Library.And arg

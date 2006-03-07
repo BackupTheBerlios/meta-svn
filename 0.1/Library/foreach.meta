@@ -1,6 +1,1 @@
-argument|apply
-	array=keys argument.map
-	function=
-		arg|argument.function
-			value=argument.map.[arg]
-			key=arg
+argument|/.Meta.Library.Foreach argument

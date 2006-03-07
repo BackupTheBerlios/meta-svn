@@ -107,7 +107,6 @@
     <None Include="Library\and.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
-    <None Include="Library\character.meta" />
     <None Include="Library\complement.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
@@ -139,7 +138,6 @@
     <None Include="Library\print.meta" />
     <None Include="Library\range.meta" />
     <None Include="Library\remove.meta" />
-    <None Include="Library\repeat.meta" />
     <None Include="Library\replace.meta" />
     <None Include="Library\reverse.meta" />
     <None Include="Library\serialize.meta" />

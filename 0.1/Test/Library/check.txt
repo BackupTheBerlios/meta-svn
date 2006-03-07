@@ -312,11 +312,6 @@ Entry (KeyValuePair`2)
 						"x="hello""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"characterTest"
-	Value (StrategyMap):
-		38
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"sliceTest"
 	Value (StrategyMap):
 		" meine "
@@ -354,3 +349,39 @@ Entry (KeyValuePair`2)
 		"findFirstTest"
 	Value (StrategyMap):
 		7
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"foreachTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"hi"
+					Value (StrategyMap):
+						"x"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"hello"
+					Value (StrategyMap):
+						"y"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"valuesTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"hi"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"hello"

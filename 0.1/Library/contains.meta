@@ -1,4 +1,2 @@
 documentation="Determines whether a map contains a key."
-argument|
-	object=/.Meta.ObjectMap.[/.mscorlib.Object] argument.map
-	current=/.Meta.StrategyMap.[/.mscorlib.Boolean] object.ContainsKey argument.key
+argument|/.Meta.StrategyMap.[/.mscorlib.Boolean] (/.Meta.ObjectMap.[/.mscorlib.Object] argument.map).ContainsKey argument.key

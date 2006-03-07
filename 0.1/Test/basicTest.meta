@@ -23,7 +23,6 @@ license="
 "
 commandLine|
 	current=merge
-		%
 		=
 			"AssignedToCurrent"
 	scoping=
