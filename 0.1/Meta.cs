@@ -4695,9 +4695,9 @@ namespace Meta
 		public const char callEnd = ')';
 		public const char root = '/';
 		public const char search='$';
-		public const char current='&';
+		public const string current = "current";
+		//public const char current='&';
 		public const char scope='%';
-		//public const char argument='@';
 		public const string argument = "argument";
 		public const char negative='-';
 		public const char fraction = '/';
@@ -4710,13 +4710,13 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, search, root ,callStart,callEnd};
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, scope, search, root, callStart, callEnd };
+		//public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, search, root, callStart, callEnd };
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public static char[] lookupStringFirstForbidden;
 		public const char emptyMap = '0';
-		//public const char emptyMap = '*';
 		public const char call = ' ';
 		public const char select = '.';
 
@@ -5657,7 +5657,8 @@ namespace Meta
 								Syntax.lookupStringForbidden)))));
 
 		private static Rule Current = new Sequence(
-			Syntax.current,
+			new StringRule(Syntax.current),
+			//Syntax.current,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
@@ -5676,7 +5677,7 @@ namespace Meta
 
 		// remove
 		private static Rule CurrentLeft = new Sequence(
-			Syntax.current,
+			new StringRule(Syntax.current),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
 
 

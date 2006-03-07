@@ -20,4 +20,4 @@ sumImplementation=
 						present=argument.array.[argument.index]
 					array=argument.array
 					function=argument.function
-		&=next.[stop] argument
+		current=next.[stop] argument

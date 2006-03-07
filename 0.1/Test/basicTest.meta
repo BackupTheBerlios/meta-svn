@@ -22,7 +22,7 @@ license="
 	SOFTWARE.
 "
 commandLine|
-	&=merge
+	current=merge
 		%
 		=
 			"AssignedToCurrent"
@@ -111,13 +111,13 @@ commandLine|
 		SetB=
 			newB|
 				$b.[1]=newB.value
-				&="changed"
+				current="changed"
 		x=
 			a="b"
 			c="d"
 		=
 			|
-				&.a="b"
+				current.a="b"
 	a="default"
 	b=0
 	aSet=object.SetA	0
@@ -141,7 +141,7 @@ commandLine|
 	scopeFromFunctionTest=scopeFromFunction 0
 	ReturnEverything=
 		everything|
-			&=everything
+			current=everything
 	everythingReturned=ReturnEverything
 		"a"
 		"b"
@@ -152,18 +152,18 @@ commandLine|
 		"z"
 	ReturnFunction=
 		|
-			&=
+			current=
 				|
-					&=
+					current=
 						1
 						2
 						3
 	SetCurrent=
 		current|
-			&=
+			current=
 				asdf=current
 				x=current.symbol
-			&=x
+			current=x
 	thisSet=SetCurrent
 		symbol="haha"
 	FirstLevel=
@@ -238,7 +238,7 @@ commandLine|
 	literalFunctionResult=literalFunction 0
 	someFunction=
 		|
-			&="simple function this"
+			current="simple function this"
 	callFunction=
 		|someFunction
 	callFunctionResult=callFunction 0
@@ -267,7 +267,7 @@ commandLine|
 	TestClass.staticEvent.add
 		arg|
 			ChangeStaticEvent 1
-			&=arg.[1]
+			current=arg.[1]
 	staticEvent=TestClass.staticEvent
 	TestClass.TakeDelegate
 		arg|arg.[1]
@@ -277,7 +277,7 @@ commandLine|
 	testClass.instanceEvent.add
 		arg|
 			$instanceEventChanged=1
-			&=arg.[1]
+			current=arg.[1]
 	instanceEvent=testClass.instanceEvent
 	instanceEventResult=testClass.instanceEvent 5
 	one=1
@@ -355,7 +355,7 @@ commandLine|
 						1
 				[0]=
 					arg|arg
-			&=whileBranches.[whileDecision] start
+			current=whileBranches.[whileDecision] start
 	whileCounter=loop 3
 	returnInMap=
 		arg|
@@ -385,7 +385,7 @@ commandLine|
 		arg|
 			innerFunction=
 				|
-					&=arg
+					current=arg
 			innerFunction 0
 	outerFunctionTest=outerFunction "right"
 	newLines="

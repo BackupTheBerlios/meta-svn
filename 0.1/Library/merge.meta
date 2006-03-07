@@ -4,13 +4,13 @@ argument|repeat
 	function=
 		|
 			overwrite=argument.present
-			&=repeat
+			current=repeat
 				array=keys argument.present
 				function=
 					|
 						result=argument.previous
 						result.[argument.present]=overwrite.[argument.present]
-						&=result
+						current=result
 				start=argument.previous
 	start=0
 argument|/.Meta.Library.Merge argument

@@ -98,7 +98,7 @@
 					argument|sum
 						argument
 						1
-				&=apply
+				current=apply
 					function=applyMethod
 					array=
 						1
@@ -141,7 +141,7 @@
 					function=
 						|SetCounter
 							[0]=counter
-				&=counter
+				current=counter
 			splitTest=split
 				array="hello world hello"
 				space=" "
@@ -215,4 +215,4 @@
 		findFirstTest=findFirst
 			value="hell"
 			array="he hi hello"
-	&=test
+	current=test
