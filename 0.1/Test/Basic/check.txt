@@ -94,6 +94,20 @@ Entry (KeyValuePair`2)
 		"right"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"cTest"
+	Value (FileMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				"someTest"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"cTest2"
+	Value (StrategyMap):
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"unicodeText"
 	Value (StrategyMap):
 		"äaba"
@@ -3485,3 +3499,9 @@ Entry (KeyValuePair`2)
 				1
 			Value (StrategyMap):
 				"right"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"newLines"
+	Value (StrategyMap):
+		"
+"

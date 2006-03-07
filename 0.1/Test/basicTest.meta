@@ -33,6 +33,11 @@ commandLine|
 	scopingValue="wrong"
 	scopingTest=scoping.test
 	lexicalScoping=scopingTest 0
+	$C:.hello=
+		x="someTest"
+	cTest=C:.hello
+	$C:.hello=0
+	cTest2=C:.hello
 	unicodeText="äaba"
 	$testSubDir.x=0
 	persistantDeleteTest=testSubDir.x
@@ -383,6 +388,10 @@ commandLine|
 					&=arg
 			innerFunction 0
 	outerFunctionTest=outerFunction "right"
+	newLines="
+		
+		
+	"
 complicated=
 	[
 		complicated="key"

@@ -185,6 +185,13 @@ namespace Meta
 				return GetExtentText(extent) + ": " + message;
 			}
 		}
+		public Extent Extent
+		{
+			get
+			{
+				return extent;
+			}
+		}
         private string message;
 		private Extent extent;
 	}
@@ -455,7 +462,7 @@ namespace Meta
 			
 			Map scope = executionContext;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("test.html")))
+			if (key.Equals(new StrategyMap("C:")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -480,7 +487,7 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("test.html")))
+			if (key.Equals(new StrategyMap("C:")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -1169,10 +1176,79 @@ namespace Meta
 			}
 		}
 	}
+	public class DrivesMap : Map
+	{
+		public override bool ContainsKey(Map key)
+		{
+			bool containsKey;
+			if (key.IsString)
+			{
+				containsKey = drives.ContainsKey(key.GetString());
+			}
+			else
+			{
+				containsKey = false;
+			}
+			return containsKey;
+		}
+		public override bool IsFunction
+		{
+			get { return false; }
+		}
+		public override ICollection<Map> Keys
+		{
+			get { throw new Exception("The method or operation is not implemented."); }
+		}
+		protected override Map Get(Map key)
+		{
+			string name = key.GetString();
+			Map result;
+			if (drives.ContainsKey(name))
+			{
+				DirectoryInfo directory = new DirectoryInfo(name+"\\");
+				result = new DirectoryMap(directory,this);
+			}
+			else
+			{
+				result=null;
+			}
+			return result;
+		}
+		protected override void Set(Map key, Map val)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		protected override Map CopyData()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		Dictionary<string, string> drives = new Dictionary<string, string>();
+		public DrivesMap()
+		{
+			foreach (string drive in Directory.GetLogicalDrives())
+			{
+				drives.Add(drive.Remove(2), "");
+			}
+		}
+	}
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
 		private List<Map> keys = new List<Map>();
+		//private static Map FindParent(DirectoryInfo dir)
+		//{
+		//    Map parent;
+		//    if (dir.Parent != null)
+		//    {
+		//        parent = new DirectoryMap(dir.Parent);
+		//    }
+		//    else
+		//    {
+		//        parent = new DrivesMap();
+		//        parent.Scope = FileSystem.fileSystem;
+		//    }
+		//    return parent;
+		//}
 		private static Map FindParent(DirectoryInfo dir)
 		{
 			Map parent;
@@ -1371,6 +1447,9 @@ namespace Meta
 			if (key.IsString)
 			{
 				string name = key.GetString();
+				if (name == "hello")
+				{
+				}
 				string realName;
 				string extension = Path.GetExtension(name);
 				if (extension == "")
@@ -1385,17 +1464,14 @@ namespace Meta
 						text = text.Trim(Syntax.unixNewLine);
 					}
 					Mono.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
-					//File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 				}
 				else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
 				{
 					Mono.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
-					//File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
 				}
 				else
 				{
 					Mono.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
-					//File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
 				}
 				cache[key] = val;
 			}
@@ -1521,6 +1597,7 @@ namespace Meta
 				string directory = Path.GetDirectoryName(args[fileIndex]);
 				Map function = FileSystem.ParseFile(args[fileIndex]);
 				function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
+				//function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
 				//function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
 				int autoKeys = 0;
 				Map argument = new StrategyMap();
@@ -1620,6 +1697,8 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			//System.Diagnostics.Process.Start(@"""C:\Programme\Microsoft Visual Studio 8\Common7\IDE\VCSExpress.exe"" C:\Fireserv\www\cgi-bin\search.meta");
+
 			//UseConsole();
 			//Console.WriteLine(@"Content-Type: text/html\n\n");//<form action='' id='meta' name='meta' method='post'><textarea cols='40' rows='5' id='search' name='search' onkeydown='if(event.keyCode==13 && event.ctrlKey){document.meta.submit();}'></textarea><br></br><input type='submit' value='Search'></input></form>");// + Console.In.ReadToEnd());
 
@@ -1650,6 +1729,21 @@ namespace Meta
 					{
 						Commands.Run(args);
 					}
+				}
+			}
+			catch (MetaException e)
+			{
+				string text = e.ToString();
+				System.Diagnostics.Process.Start("devenv",e.Extent.FileName+@" /command ""Edit.GoTo "+e.Extent.Start.Line+"\"");
+				//System.Diagnostics.Process.Start("devenv", @"C:\Fireserv\www\cgi-bin\search.meta /command ""Edit.GoTo 10""");
+				if (useConsole)
+				{
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
+				else
+				{
+					MessageBox.Show(text, "Meta exception");
 				}
 			}
 			catch (Exception e)
@@ -7068,7 +7162,10 @@ namespace Meta
 					argument[1] = "first arg";
 					argument[2] = "second=arg";
 					Map basic = FileSystem.ParseFile(BasicTest);
-					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
+					DrivesMap drives = new DrivesMap();
+					drives.Scope = FileSystem.fileSystem;
+					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)),drives);
+					//basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
 					int asdf = basic.Scope.Get().Count;
 					return basic.Call(argument);
 				}
