@@ -4787,10 +4787,7 @@ namespace Meta
 		public const char root = '/';
 		public const char search='$';
 		public const string current = "current";
-		//public const char current='&';
-		public const string scope = "scope";
-		//public const char scope = '%';
-		//public const string argument = "argument";
+		//public const string scope = "scope";
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -4803,7 +4800,6 @@ namespace Meta
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
-		//public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, current, scope, search, root, callStart, callEnd };
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -5808,9 +5804,9 @@ namespace Meta
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
-		private static Rule Scope = new Sequence(
-			new Match(new StringRule(Syntax.scope)),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
+		//private static Rule Scope = new Sequence(
+		//    new Match(new StringRule(Syntax.scope)),
+		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Root = new Sequence(
 			new Match(new Character(Syntax.root)),
