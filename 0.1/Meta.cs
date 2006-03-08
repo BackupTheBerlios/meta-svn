@@ -261,12 +261,12 @@ namespace Meta
 			{
 				current=new StrategyMap();
 			}
-			current.Scope = context;
+			current.Scope = new TemporaryScope(context);
 			Map arg = new StrategyMap();
 			if (context.ContainsKey(CodeKeys.Function) && context[CodeKeys.Function].ContainsKey(CodeKeys.ParameterName))
 			{
-				arg.Scope = context;
-				current.Scope = arg;
+				arg.Scope = new TemporaryScope(context);
+				current.Scope = new TemporaryScope(arg);
 				arg[context[CodeKeys.Function][CodeKeys.ParameterName]] = argument;
 			}
 			current.Argument = argument;
@@ -681,18 +681,8 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map Complement(Map arg)
-		//{
-		//    foreach (Map map in arg.Array)
-		//    {
-
-		//    }
-		//}
 		public static Map Complement(Map arg)
 		{
-		    //Map found = new StrategyMap();
-		    //Map removed=new StrategyMap();
-		    //Map result = new StrategyMap();
 		    Dictionary<Map, Map> found = new Dictionary<Map, Map>();
 		    foreach (Map map in arg.Array)
 		    {
@@ -706,10 +696,6 @@ namespace Meta
 		            {
 		                found[entry.Key] = entry.Value;
 		            }
-		            //if (!removed.ContainsKey(entry.Key) && !found.ContainsKey(entry.Key))
-		            //{
-		            //    found[entry.Key] = entry.Value;
-		            //}
 		        }
 		    }
 		    Map result = new StrategyMap();
@@ -840,11 +826,6 @@ namespace Meta
 			string[] aSplit;
 			string sOutput;
 			string sConvert = arg.GetString();
-			//Dim I
-			//If IsNull(sConvert) Then
-			//   URLDecode = ""
-			//   Exit Function
-			//End If
 
 			//' convert all pluses to spaces
 			sOutput = sConvert.Replace("+", " ");
@@ -857,33 +838,10 @@ namespace Meta
 			sOutput = aSplit[0];
 			for(int i=1;i<aSplit.Length;i++)
 			{
-				//sOutput = aSplit(0)
-				//For I = 0 to UBound(aSplit) - 1
 				sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16)+aSplit[i].Substring(2);
-				//Next
-				//End If
 			}
 			return sOutput;
-			//URLDecode = sOutput
 		}
-		//End Function
-		//public static Map HtmlDecode(Map arg)
-		//{
-		//    //string text = arg.GetString();
-		//    string text = "http://localhost/cgi-bin/offer.meta?offer=asdf+asdf+f+&description=fasdf+";
-		//    //int i;
-		//    text.Replace("&quot;", ((char)34).ToString()).Replace(
-		//        "&lt;", ((char)60).ToString()).Replace("&gt;", ((char)62).ToString()).Replace(
-		//        "&amp;", ((char)38).ToString()).Replace("&nbsp;", ((char)32).ToString());
-		//    for (int i = 1; i <= 255; i++)
-		//    {
-		//        text = text.Replace("&#" + i + ";", ((char)i).ToString());
-		//    }
-		//    //Next
-		//    //HTMLDecode = sText
-		//    return text;
-		//    //End Function
-		//}
 		public static Map Try(Map arg)
 		{
 			Map result;
@@ -897,7 +855,6 @@ namespace Meta
 			}
 			return result;
 		}
-
 		public static Map Split(Map arg)
 		{
 			Map arrays = new StrategyMap();
@@ -922,24 +879,6 @@ namespace Meta
 			}
 			return arrays;
 		}
-		//public static Map Split(Map arg)
-		//{
-		//    Map arrays = new StrategyMap();
-		//    Map subArray=new StrategyMap();
-		//    foreach (Map map in arg["array"].Array)
-		//    {
-		//        if (map.Equals(arg["item"]))
-		//        {
-		//            arrays.Append(subArray);
-		//            subArray = new StrategyMap();
-		//        }
-		//        else
-		//        {
-		//            subArray.Append(map);
-		//        }
-		//    }
-		//    return arrays;
-		//}
 		public static Map CreateConsole(Map arg)
 		{
 			Process.AllocConsole();
@@ -1078,20 +1017,9 @@ namespace Meta
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
 				return arg["function"].Call(a).GetNumber().GetInt32().CompareTo(arg["function"].Call(b).GetNumber().GetInt32());
-				//return x != 0 ? -1 : 0;
 			}));
 			return new StrategyMap(array);
 		}
-		//public static Map Sort(Map arg)
-		//{
-		//    List<Map> array=arg["array"].Array;
-		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-		//    {
-		//        int x=arg["compare"].Call(new StrategyMap("a", a, "b", b)).GetNumber().GetInt32();
-		//        return x != 0 ? -1 : 0;
-		//    }));
-		//    return new StrategyMap(array);
-		//}
 		public static Map Pop(Map arg)
 		{
 			Map count=new StrategyMap(arg.Array.Count);
@@ -1140,7 +1068,7 @@ namespace Meta
 	}
 	public class WebDirectoryMap : DirectoryMap
 	{
-		public WebDirectoryMap(DirectoryInfo directory, Scope scope):base(directory,scope)//,scope)
+		public WebDirectoryMap(DirectoryInfo directory, Position scope):base(directory,scope)//,scope)
 		{
 			this.Scope = scope;
 		}
@@ -1159,7 +1087,6 @@ namespace Meta
 				text=Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine);
 			}
 			Mono.WriteAllText(path, text);
-			//File.WriteAllText(path, text);
 		}
 		private string path;
 		public FileMap(string path)
@@ -1233,7 +1160,7 @@ namespace Meta
 			if (drives.ContainsKey(name))
 			{
 				DirectoryInfo directory = new DirectoryInfo(name+"\\");
-				result = new DirectoryMap(directory,this);
+				result = new DirectoryMap(directory, new TemporaryScope(this));
 			}
 			else
 			{
@@ -1262,20 +1189,6 @@ namespace Meta
 	{
 		private DirectoryInfo directory;
 		private List<Map> keys = new List<Map>();
-		//private static Map FindParent(DirectoryInfo dir)
-		//{
-		//    Map parent;
-		//    if (dir.Parent != null)
-		//    {
-		//        parent = new DirectoryMap(dir.Parent);
-		//    }
-		//    else
-		//    {
-		//        parent = new DrivesMap();
-		//        parent.Scope = FileSystem.fileSystem;
-		//    }
-		//    return parent;
-		//}
 		private static Map FindParent(DirectoryInfo dir)
 		{
 			Map parent;
@@ -1285,15 +1198,16 @@ namespace Meta
 			}
 			else
 			{
-				parent = FileSystem.fileSystem;
+				parent = new DrivesMap();
+				parent.Scope = new TemporaryScope(FileSystem.fileSystem);
 			}
 			return parent;
 		}
 		public DirectoryMap(DirectoryInfo directory)
-			: this(directory, FindParent(directory))
+			: this(directory, new TemporaryScope(FindParent(directory)))
 		{
 		}
-		public DirectoryMap(DirectoryInfo directory,Scope scope)
+		public DirectoryMap(DirectoryInfo directory,Position scope)
 		{
 			this.directory = directory;
 			//this.Scope = scope;
@@ -1403,7 +1317,7 @@ namespace Meta
 							value = Map.Empty;
 						}
 
-						value.Scope = this;
+						value.Scope = new TemporaryScope(this);
 					}
 					else
 					{
@@ -1451,7 +1365,7 @@ namespace Meta
 								DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
 								if (subDir.Exists)
 								{
-									value = new DirectoryMap(subDir,this);
+									value = new DirectoryMap(subDir,new TemporaryScope(this));
 								}
 								else
 								{
@@ -1462,7 +1376,7 @@ namespace Meta
 					}
 					if (value != null)
 					{
-						value.Scope = this;
+						value.Scope = new TemporaryScope(this);
 						cache[key] = value;
 					}
 				}
@@ -1539,7 +1453,7 @@ namespace Meta
 				UseConsole();
 				Console.WriteLine("Interactive mode of Meta 0.1");
 				Map map = new StrategyMap();
-				map.Scope = FileSystem.fileSystem;
+				map.Scope = new TemporaryScope(FileSystem.fileSystem);
 				string code;
 
 				Parser parser = new Parser("", "Interactive console");
@@ -1623,7 +1537,7 @@ namespace Meta
 
 				string directory = Path.GetDirectoryName(args[fileIndex]);
 				Map function = FileSystem.ParseFile(args[fileIndex]);
-				function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
+				function.Scope = new TemporaryScope(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
 				//function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
 				//function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
 				int autoKeys = 0;
@@ -1918,17 +1832,16 @@ namespace Meta
 		//    }
 		//}
 	}
-	public abstract class Scope
+	public abstract class Position
 	{
-		public static implicit operator Scope(Map map)
-		{
-			return new TemporaryScope(map);
-		}
+		//public static implicit operator Position(Map map)
+		//{
+		//    return new TemporaryScope(map);
+		//}
 		public abstract Map Get();
 	}
-	public class TemporaryScope:Scope
+	public class TemporaryScope:Position
 	{
-
 		private Map map;
 		public TemporaryScope(Map map)
 		{
@@ -1963,7 +1876,7 @@ namespace Meta
 	//}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		public static implicit operator Map(Scope scope)
+		public static implicit operator Map(Position scope)
 		{
 			if (scope == null)
 			{
@@ -2256,7 +2169,7 @@ namespace Meta
 			}
 			return text;
 		}
-		public Scope Scope
+		public Position Scope
 		{
 			get
 			{
@@ -2267,7 +2180,7 @@ namespace Meta
 				scope = value;
 			}
 		}
-		private Scope scope;
+		private Position scope;
 		public virtual int Count
 		{
 			get
@@ -6525,7 +6438,7 @@ namespace Meta
 			fileSystem=new StrategyMap();
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
 			//fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")), null);
-			fileSystem.Scope = Gac.gac;
+			fileSystem.Scope = new TemporaryScope(Gac.gac);
 			//Gac.gac.Scope = fileSystem;
 		}
 		public static void Save()
@@ -6583,7 +6496,7 @@ namespace Meta
 				unzipDirectory.Create();
 				Unzip(zipFile, unzipDirectory.FullName);
 				// net should be parent
-				return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem);
+				return new WebDirectoryMap(unzipDirectory, new TemporaryScope(FileSystem.fileSystem));
 			//}
 			//catch (Exception e)
 			//{
@@ -7194,8 +7107,8 @@ namespace Meta
 					argument[2] = "second=arg";
 					Map basic = FileSystem.ParseFile(BasicTest);
 					DrivesMap drives = new DrivesMap();
-					drives.Scope = FileSystem.fileSystem;
-					basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)),drives);
+					drives.Scope = new TemporaryScope(FileSystem.fileSystem);
+					basic.Scope = new TemporaryScope(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryScope(drives)));
 					//basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
 					int asdf = basic.Scope.Get().Count;
 					return basic.Call(argument);
@@ -7207,7 +7120,7 @@ namespace Meta
 				{
 					level = 2;
 					Map library = FileSystem.ParseFile(LibraryTest);
-					library.Scope = FileSystem.fileSystem;
+					library.Scope = new TemporaryScope(FileSystem.fileSystem);
 					return library.Call(Map.Empty);
 					//return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
 				}
