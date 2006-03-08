@@ -5295,14 +5295,14 @@ namespace Meta
 		}
 		public abstract class Action
 		{
-			public static implicit operator Action(char character)
-			{
-				return new Match(new Character(character));
-			}
-			public static implicit operator Action(Rule rule)
-			{
-				return new Match(rule);
-			}
+			//public static implicit operator Action(char character)
+			//{
+			//    return new Match(new Character(character));
+			//}
+			//public static implicit operator Action(Rule rule)
+			//{
+			//    return new Match(rule);
+			//}
 			protected Rule rule;
 			public Action(Rule rule)
 			{
@@ -5428,13 +5428,13 @@ namespace Meta
 		{
 			public static Rule EndOfLine =
 				new Sequence(
-					new ZeroOrMore(
-						new Alternatives(
+					new Match(new ZeroOrMore(
+						new Match(new Alternatives(
 							Syntax.space,
-							Syntax.tab)),
-					new Alternatives(
+							Syntax.tab)))),
+					new Match(new Alternatives(
 						Syntax.unixNewLine,
-						Syntax.windowsNewLine));
+						Syntax.windowsNewLine)));
 
 			public static Rule Integer =
 				new Sequence(
@@ -5471,14 +5471,14 @@ namespace Meta
 			{
 				return new Alternatives(
 					new Sequence(
-						Syntax.@string,
+						new Match(Syntax.@string),
 						new ReferenceAssignment(
 							new OneOrMore(
 								new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
-						Syntax.@string),
+						new Match(Syntax.@string)),
 					new Sequence(
-						Syntax.@string,
-						Indentation,
+						new Match(Syntax.@string),
+						new Match(Indentation),
 						new ReferenceAssignment(
 							new FlattenRule(
 								new Sequence(
@@ -5488,16 +5488,16 @@ namespace Meta
 											new ZeroOrMore(
 												new Autokey(
 													new Sequence(
-														EndOfLinePreserve,
-														SameIndentation,
+														new Match(EndOfLinePreserve),
+														new Match(SameIndentation),
 														new ReferenceAssignment(
 															new FlattenRule(
 																new Sequence(
 																	new Autokey(new LiteralRule(Syntax.unixNewLine.ToString())),
 																	new Autokey(StringLine)
 																	))))))))))),
-						StringDedentation,
-						Syntax.@string)).Match(parser, out matched);
+						new Match(StringDedentation),
+						new Match(Syntax.@string))).Match(parser, out matched);
 			});
 			public static Rule Number = new Sequence(
 				new ReferenceAssignment(
@@ -5506,7 +5506,7 @@ namespace Meta
 					NumberKeys.Denominator,
 					new Optional(
 						new Sequence(
-							Syntax.fraction,
+							new Match(Syntax.fraction),
 							new ReferenceAssignment(
 								Integer)))));
 			public static Rule LookupString=new OneOrMore(
@@ -5625,7 +5625,7 @@ namespace Meta
 				Map result = null;
 				if (matched)
 				{
-					result = new Sequence(Syntax.function, new ReferenceAssignment(Expression)).Match(p, out matched);
+					result = new Sequence(new Match(Syntax.function), new ReferenceAssignment(Expression)).Match(p, out matched);
 					if (matched)
 					{
 						result[CodeKeys.ParameterName] = parameterName;
@@ -5640,7 +5640,7 @@ namespace Meta
 				new Assignment(
 					CodeKeys.Call,
 					new Sequence(
-						Syntax.callStart,
+						new Match(Syntax.callStart),
 						new Assignment(
 							CodeKeys.Callable,
 							Select),
@@ -5648,17 +5648,17 @@ namespace Meta
 							CodeKeys.Parameter,
 							new Alternatives(
 								new Sequence(
-									Syntax.call,
+									new Match(Syntax.call),
 									new ReferenceAssignment(Expression)),
 								Program)),
 								// remove
-						new CustomRule(delegate(Parser p, out bool matched)
-					{
-						matched = true;
-						//matched = p.functions != 0;
-						return null;
-					}),
-						Syntax.callEnd)));
+						new Match(new CustomRule(delegate(Parser p, out bool matched)
+						{
+							matched = true;
+							//matched = p.functions != 0;
+							return null;
+						})),
+						new Match(Syntax.callEnd))));
 		});
 
 		public static Rule Call = new DelayedRule(delegate()
@@ -5667,26 +5667,28 @@ namespace Meta
 				new Assignment(
 					CodeKeys.Call,
 						new Sequence(
-						new Assignment(
-							CodeKeys.Callable,
-							new Alternatives(
-								Select,
-								ExplicitCall)),
-						new Assignment(
-							CodeKeys.Parameter,
-							new Alternatives(
-								new Sequence(
-									new Alternatives(
-										Syntax.call,
-										Syntax.indentation),
-									new ReferenceAssignment(Expression)),
-								Program)),
-						new CustomRule(delegate(Parser p, out bool matched)
-					{
-						matched = true;
-						//matched = p.functions != 0;
-						return null;
-					}))));
+							new Assignment(
+								CodeKeys.Callable,
+								new Alternatives(
+									Select,
+									ExplicitCall)),
+							new Assignment(
+								CodeKeys.Parameter,
+								new Alternatives(
+									new Sequence(
+										new Match(
+											new Alternatives(
+												Syntax.call,
+												Syntax.indentation)),
+										new ReferenceAssignment(Expression)),
+									Program)),
+								// remove
+							new Match(new CustomRule(delegate(Parser p, out bool matched)
+							{
+								matched = true;
+								//matched = p.functions != 0;
+								return null;
+							})))));
 		});
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
@@ -5710,11 +5712,12 @@ namespace Meta
 
 		private static Rule EndOfLinePreserve = new FlattenRule(
 			new Sequence(
-				new FlattenRule(
+				// this is a bug, should be preserved
+				new Match(new FlattenRule(
 					new ZeroOrMore(
 							new Autokey(new Alternatives(
 								Syntax.space,
-								Syntax.tab)))),
+								Syntax.tab))))),
 				new Autokey(
 					new Alternatives(
 						Syntax.unixNewLine,
@@ -5724,8 +5727,8 @@ namespace Meta
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			Map map = new Sequence(
-				Data.EndOfLine,
-				new StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation))).Match(pa, out matched);
+				new Match(Data.EndOfLine),
+				new Match(new StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
 			// this should be done automatically
 			if (matched)
 			{
@@ -5752,25 +5755,21 @@ namespace Meta
 			}
 		}),
 				new Sequence(
-					new Sequence(
-						Data.EndOfLine,
-						new CustomRule(delegate(Parser p, out bool matched)
+					new Match(new Sequence(
+						new Match(Data.EndOfLine),
+						new Match(new CustomRule(delegate(Parser p, out bool matched)
 		{
 			return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
-		})),
-					new CustomRule(delegate(Parser p, out bool matched)
+		})))),
+					new Match(new CustomRule(delegate(Parser p, out bool matched)
 		{
 			p.indentationCount++;
 			matched = true;
 			return null;
-		})));
+		}))));
 
-		// refactor
-		private static Rule StringLine = new CustomRule(delegate(Parser p, out bool matched)
-		{
-			Map m = new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0]))).Match(p, out matched);
-			return m;
-		});
+		private static Rule StringLine = new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+
 
 		private static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
 		{
@@ -5790,24 +5789,26 @@ namespace Meta
 		
 		private Rule Whitespace =
 			new ZeroOrMore(
-				new Alternatives(
-					Syntax.tab,
-					Syntax.space));
+				new Match(
+					new Alternatives(
+							new Character(Syntax.tab),
+							new Character(Syntax.space))));
 
 		private static Rule EmptyMap = new Sequence(
 			new Assignment(
 				CodeKeys.Literal,
 				new Sequence(
-					Syntax.emptyMap,
+					new Match(Syntax.emptyMap),
 					new ReferenceAssignment(
 						new LiteralRule(Map.Empty)))));
 
 		private static Rule LookupAnything =
 			new Sequence(
-				Syntax.lookupStart,
+				new Match(Syntax.lookupStart),
 				new ReferenceAssignment(Expression),
-				new ZeroOrMore(Syntax.indentation),
-				Syntax.lookupEnd);
+				new Match(new ZeroOrMore(
+					new Match(Syntax.indentation))),
+				new Match(Syntax.lookupEnd));
 
 
 		private static Rule Number =
@@ -5823,16 +5824,16 @@ namespace Meta
 					Data.LookupString));
 
 		private static Rule Current = new Sequence(
-			new StringRule(Syntax.current),
+			new Match(new StringRule(Syntax.current)),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
 		private static Rule Scope = new Sequence(
-			new StringRule(Syntax.scope),
+			new Match(new StringRule(Syntax.scope)),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Root = new Sequence(
-			Syntax.root,
+			new Match(Syntax.root),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Root, Map.Empty))));
 
 
@@ -5863,7 +5864,6 @@ namespace Meta
 						1,
 						new Alternatives(
 							Root,
-							//Argument,
 							Search,
 							Lookup,
 							ExplicitCall)),
@@ -5871,13 +5871,13 @@ namespace Meta
 						new ZeroOrMore(
 							new Autokey(
 								new Sequence(
-									Syntax.select,
+									new Match(Syntax.select),
 									new ReferenceAssignment(
 										Lookup))))))));
 
 
 		private static Rule KeysSearch = new Sequence(
-				Syntax.search,
+				new Match(Syntax.search),
 				new ReferenceAssignment(Search)
 			);
 		private static Rule Keys = new Sequence(
@@ -5890,7 +5890,7 @@ namespace Meta
 				new ZeroOrMore(
 					new Autokey(
 						new Sequence(
-							Syntax.select,
+							new Match(Syntax.select),
 							new ReferenceAssignment(
 								Lookup))))));
 
@@ -5903,13 +5903,13 @@ namespace Meta
 							new Assignment(
 								CodeKeys.Key,
 								Keys),
-							Syntax.statement,
+							new Match(Syntax.statement),
 							new Assignment(
 								CodeKeys.Value,
 								Expression)),
 						new Sequence(
-							new Optional(
-								Syntax.statement),
+							new Match(new Optional(
+								Syntax.statement)),
 							new Assignment(
 								CodeKeys.Value,
 								Expression),
@@ -5922,7 +5922,7 @@ namespace Meta
 			matched = true;
 			return map;
 		})))))),
-			new CustomRule(delegate(Parser p, out bool matched)
+			new Match(new CustomRule(delegate(Parser p, out bool matched)
 		{
 			// i dont understand this
 			if (Data.EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
@@ -5950,7 +5950,7 @@ namespace Meta
 			}
 			matched = true;
 			return null;
-		}));
+		})));
 		public static Map RunProgram(string text, string fileName)
 		{
 			return ParseProgram(text, fileName).GetExpression().Evaluate(FileSystem.fileSystem);
@@ -5959,41 +5959,36 @@ namespace Meta
 		{
 			// slightly wrong
 			Parser parser = new Parser(text, fileName,FileSystem.fileSystem.Position);
-			//parser.functions++;
 			parser.defaultKeys.Push(1);
-			//Parser parser = new Parser(text, fileName);
 			bool matched;
 			Map result = Parser.Program.Match(parser, out matched);
 			return result;
 		}
-
-
-		public static Rule Program =
-			new Sequence(
-				Indentation,
-				new Assignment(
-					CodeKeys.Program,
-					new PrePost(
-						delegate(Parser p)
-						{
-							p.defaultKeys.Push(1);
-						},
-						new Sequence(
-							new Assignment(
-								1,
-								Statement),
-							new Appending(
-								new ZeroOrMore(
-									new Autokey(
-										new Sequence(
-											new Alternatives(
-												SameIndentation,
-												Dedentation),
-											new ReferenceAssignment(Statement)))))),
-						delegate(Parser p)
-						{
-							p.defaultKeys.Pop();
-						})));
+		public static Rule Program = new Sequence(
+			new Match(Indentation),
+			new Assignment(
+				CodeKeys.Program,
+				new PrePost(
+					delegate(Parser p)
+					{
+						p.defaultKeys.Push(1);
+					},
+					new Sequence(
+						new Assignment(
+							1,
+							Statement),
+						new Appending(
+							new ZeroOrMore(
+								new Autokey(
+									new Sequence(
+										new Match(new Alternatives(
+											SameIndentation,
+											Dedentation)),
+										new ReferenceAssignment(Statement)))))),
+					delegate(Parser p)
+					{
+						p.defaultKeys.Pop();
+					})));
 	}
 	public class Serialize
 	{
