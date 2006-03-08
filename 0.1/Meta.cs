@@ -220,13 +220,8 @@ namespace Meta
 		}
 		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
 		{
-			string text = "Missing key: " + Serialize.ValueFunction(key);
+			string text = "Key not existent: " + Serialize.ValueFunction(key);
 			// hier den scope ausgeben
-
-			//if (Leaves(map) < 1000)
-			//{
-			//    text+="\nin: "+Serialize.ValueFunction(map);
-			//}
 			throw new ExecutionException(text,extent,map);
 		}
 		public static void KeyNotFound(Map key,Extent extent,Map context)
@@ -1260,7 +1255,7 @@ namespace Meta
 						FileMap fileMap = new FileMap(metaFile);
 						if (text != "")
 						{
-							Parser parser = new Parser(text, metaFile);
+							Parser parser = new Parser(text, metaFile,new PersistantPosition(this.Position,name));
 							bool matched;
 							result = Parser.Program.Match(parser, out matched);
 							if (parser.index != parser.text.Length)
@@ -1304,19 +1299,21 @@ namespace Meta
 									case ".txt":
 									case ".meta":
 										value = new FileMap(file, new ListStrategy());
-										foreach (char c in Mono.ReadAllText(file))
-										//foreach (char c in File.ReadAllText(file))
-										{
-											value.Append(c);
-										}
+										// this is problematic, writes the file all the time
+										//foreach (char c in Mono.ReadAllText(file))
+										////foreach (char c in File.ReadAllText(file))
+										//{
+										//    value.Append(c);
+										//}
 										break;
 									default:
 										value = new FileMap(file, new ListStrategy());
-										foreach (byte b in Mono.ReadAllBytes(file))
-										//foreach (byte b in File.ReadAllBytes(file))
-										{
-											value.Append(b);
-										}
+										// problematic, writes the file
+										//foreach (byte b in Mono.ReadAllBytes(file))
+										////foreach (byte b in File.ReadAllBytes(file))
+										//{
+										//    value.Append(b);
+										//}
 										break;
 								}
 							}
@@ -1344,6 +1341,122 @@ namespace Meta
 			}
 			return value;
 		}
+		//protected override Map Get(Map key)
+		//{
+		//    Map value = null;
+		//    if (key.IsString)
+		//    {
+		//        if (cache.ContainsKey(key))
+		//        {
+		//            value = cache[key];
+		//        }
+		//        else
+		//        {
+		//            string name = key.GetString();
+		//            if (directory.FullName != Process.LibraryPath)
+		//            {
+		//                Directory.SetCurrentDirectory(directory.FullName);
+		//            }
+		//            string file = Path.Combine(directory.FullName, name);
+		//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
+		//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
+		//            if (key.GetString().StartsWith("Background"))
+		//            {
+		//            }
+		//            if (File.Exists(metaFile))
+		//            {
+		//                string text = File.ReadAllText(metaFile, Encoding.Default);
+		//                //string text = Mono.ReadAllText(metaFile, Encoding.Default);
+		//                Map result;
+		//                FileMap fileMap = new FileMap(metaFile);
+		//                if (text != "")
+		//                {
+		//                    Parser parser = new Parser(text, metaFile);
+		//                    bool matched;
+		//                    result = Parser.Program.Match(parser, out matched);
+		//                    if (parser.index != parser.text.Length)
+		//                    {
+		//                        throw new SyntaxException("Expected end of file.", parser);
+		//                    }
+		//                    Expression.parsingFile = metaFile;
+		//                    value = result.GetExpression().Evaluate(Map.Empty);
+		//                    Expression.parsingFile = null;
+		//                    Expression.firstFile = null;
+		//                }
+		//                else
+		//                {
+		//                    value = Map.Empty;
+		//                }
+
+		//                value.Scope = new TemporaryPosition(this);
+		//            }
+		//            else
+		//            {
+		//                bool dllLoaded = false;
+		//                if (File.Exists(dllFile))
+		//                {
+		//                    try
+		//                    {
+		//                        Assembly assembly = Assembly.LoadFile(dllFile);
+		//                        value = Gac.LoadAssembly(assembly);
+		//                        dllLoaded = true;
+		//                    }
+		//                    catch (Exception e)
+		//                    {
+		//                        value = null;
+		//                    }
+		//                }
+		//                if (!dllLoaded)
+		//                {
+		//                    if (File.Exists(file))
+		//                    {
+		//                        switch (Path.GetExtension(file))
+		//                        {
+		//                            case ".txt":
+		//                            case ".meta":
+		//                                value = new FileMap(file, new ListStrategy());
+		//                                // this is problematic, writes the file all the time
+		//                                //foreach (char c in Mono.ReadAllText(file))
+		//                                ////foreach (char c in File.ReadAllText(file))
+		//                                //{
+		//                                //    value.Append(c);
+		//                                //}
+		//                                break;
+		//                            default:
+		//                                value = new FileMap(file, new ListStrategy());
+		//                                // problematic, writes the file
+		//                                //foreach (byte b in Mono.ReadAllBytes(file))
+		//                                ////foreach (byte b in File.ReadAllBytes(file))
+		//                                //{
+		//                                //    value.Append(b);
+		//                                //}
+		//                                break;
+		//                        }
+		//                    }
+		//                    else
+		//                    {
+		//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+		//                        if (subDir.Exists)
+		//                        {
+		//                            value = new DirectoryMap(subDir, this.Position);
+		//                            //value = new DirectoryMap(subDir, new TemporaryPosition(this));
+		//                        }
+		//                        else
+		//                        {
+		//                            value = null;
+		//                        }
+		//                    }
+		//                }
+		//            }
+		//            if (value != null)
+		//            {
+		//                value.Scope = new TemporaryPosition(this);
+		//                cache[key] = value;
+		//            }
+		//        }
+		//    }
+		//    return value;
+		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -1417,7 +1530,8 @@ namespace Meta
 				map.Scope = new TemporaryPosition(FileSystem.fileSystem);
 				string code;
 
-				Parser parser = new Parser("", "Interactive console");
+				// this is still kinda wrong, interactive mode should exist in filesystem, somehow
+				Parser parser = new Parser("", "Interactive console",FileSystem.fileSystem.Position);
 				parser.functions++;
 				parser.defaultKeys.Push(1);
 				while (true)
@@ -1495,12 +1609,24 @@ namespace Meta
 				}
 
 
+				string path = args[fileIndex];
+				string positionPath = Path.Combine(Path.GetDirectoryName(path),Path.GetFileNameWithoutExtension(args[fileIndex]));
+				//string directoryPath = Path.GetDirectoryName(args[fileIndex]);
 
-				string directory = Path.GetDirectoryName(args[fileIndex]);
-				Map function = FileSystem.ParseFile(args[fileIndex]);
-				function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
-				//function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
-				//function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
+				string[] position=positionPath.Split(Path.DirectorySeparatorChar);
+				Map function=FileSystem.fileSystem["localhost"];
+				foreach (string pos in position)
+				{
+					function = function[pos];
+				}
+				//new DirectoryInfo(directoryPath);
+				//Map function = FileSystem.ParseFile(args[fileIndex]);
+				//function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
+
+				//Map function = FileSystem.ParseFile(args[fileIndex]);
+				//function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
+				
+				
 				int autoKeys = 0;
 				Map argument = new StrategyMap();
 				for (; i < args.Length; i++)
@@ -1549,87 +1675,147 @@ namespace Meta
 					argument[key] = value;
 				}
 				function.Call(argument);
-				//Console.Write("Content-Type: text/html\n\n");
-				//Console.Write("<html><head><title>CGI" +
-				//    " in C#</title></head><body>" +
-				//    "CGI Environment:<br />");
-				//Console.Write("<table border = \"1\"><tbody><tr><td>The" +
-				//    " Common Gateway " +
-				//    "Interface revision on the server:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("GATEWAY_INTERFACE") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The serevr's hostname or IP address:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("SERVER_NAME") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The name and" +
-				//    " version of the server software that" +
-				//    " is answering the client request:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("SERVER_SOFTWARE") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The name and revision of the information " +
-				//    "protocol the request came in with:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("SERVER_PROTOCOL") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The method with which the information request" +
-				//    "was issued:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("REQUEST_METHOD") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>Extra path information passed to a CGI" +
-				//    " program:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("PATH_INFO") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The translated version of the path given " +
-				//    "by the variable PATH_INFO:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("PATH_TRANSLATED") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The GET information passed to the program. " +
-				//    "It is appended to the URL with a \"?\":</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("QUERY_STRING") +
-				//    "</td></tr>");
-				//Console.Write("<tr><td>The remote IP address of the user making +" +
-				//    "the request:</td><td>" +
-				//    System.Environment.GetEnvironmentVariable("REMOTE_ADDR") +
-				//    "</td></tr>");
-				//Console.Write("</tbody></table></body></html>");
-				//Console.ReadLine();
 			}
+
+
+			//public static void Run(string[] args)
+			//{
+			//    int i = 1;
+			//    int fileIndex = 0;
+			//    if (args[0] == "-console")
+			//    {
+			//        UseConsole();
+			//        i++;
+			//        fileIndex++;
+			//    }
+
+
+
+			//    string directory = Path.GetDirectoryName(args[fileIndex]);
+			//    Map function = FileSystem.ParseFile(args[fileIndex]);
+			//    function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
+			//    //function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
+			//    //function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
+			//    int autoKeys = 0;
+			//    Map argument = new StrategyMap();
+			//    for (; i < args.Length; i++)
+			//    {
+			//        string arg = args[i];
+
+			//        Map key;
+			//        Map value;
+			//        if (arg.StartsWith("-"))
+			//        {
+			//            string nextArg;
+			//            // move down
+			//            if (i + 1 < args.Length)
+			//            {
+			//                nextArg = args[i + 1];
+			//            }
+			//            else
+			//            {
+			//                nextArg = null;
+			//            }
+			//            key = arg.Remove(0, 1);
+			//            if (nextArg != null)
+			//            {
+			//                if (nextArg.StartsWith("-"))
+			//                {
+			//                    value = Map.Empty;
+			//                }
+			//                else
+			//                {
+			//                    value = nextArg;
+			//                    i++;
+
+			//                }
+			//            }
+			//            else
+			//            {
+			//                value = Map.Empty;
+			//            }
+			//        }
+			//        else
+			//        {
+			//            autoKeys++;
+			//            key = autoKeys;
+			//            value = arg;
+			//        }
+			//        argument[key] = value;
+			//    }
+			//    function.Call(argument);
+			//    //Console.Write("Content-Type: text/html\n\n");
+			//    //Console.Write("<html><head><title>CGI" +
+			//    //    " in C#</title></head><body>" +
+			//    //    "CGI Environment:<br />");
+			//    //Console.Write("<table border = \"1\"><tbody><tr><td>The" +
+			//    //    " Common Gateway " +
+			//    //    "Interface revision on the server:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("GATEWAY_INTERFACE") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The serevr's hostname or IP address:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("SERVER_NAME") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The name and" +
+			//    //    " version of the server software that" +
+			//    //    " is answering the client request:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("SERVER_SOFTWARE") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The name and revision of the information " +
+			//    //    "protocol the request came in with:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("SERVER_PROTOCOL") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The method with which the information request" +
+			//    //    "was issued:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("REQUEST_METHOD") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>Extra path information passed to a CGI" +
+			//    //    " program:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("PATH_INFO") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The translated version of the path given " +
+			//    //    "by the variable PATH_INFO:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("PATH_TRANSLATED") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The GET information passed to the program. " +
+			//    //    "It is appended to the URL with a \"?\":</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("QUERY_STRING") +
+			//    //    "</td></tr>");
+			//    //Console.Write("<tr><td>The remote IP address of the user making +" +
+			//    //    "the request:</td><td>" +
+			//    //    System.Environment.GetEnvironmentVariable("REMOTE_ADDR") +
+			//    //    "</td></tr>");
+			//    //Console.Write("</tbody></table></body></html>");
+			//    //Console.ReadLine();
+			//}
 		}
 
 
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//System.Diagnostics.Process.Start(@"""C:\Programme\Microsoft Visual Studio 8\Common7\IDE\VCSExpress.exe"" C:\Fireserv\www\cgi-bin\search.meta");
-
-			//UseConsole();
-			//Console.WriteLine(@"Content-Type: text/html\n\n");//<form action='' id='meta' name='meta' method='post'><textarea cols='40' rows='5' id='search' name='search' onkeydown='if(event.keyCode==13 && event.ctrlKey){document.meta.submit();}'></textarea><br></br><input type='submit' value='Search'></input></form>");// + Console.In.ReadToEnd());
-
-			//return;
-			//string x=System.Environment.GetEnvironmentVariable("CONTENT_LENGTH");
 			try
 			{
 				if (args.Length == 0)
 				{
 					Commands.Interactive();
-					//Commands.Help();
 				}
 				else
 				{
-					if (args[0] == "-interactive")
+					switch(args[0])
 					{
-						Commands.Interactive();
-					}
-					else if (args[0] == "-test")
-					{
-						Commands.Test();
-					}
-					else if (args[0] == "-help")
-					{
-						Commands.Help();
-					}
-					else
-					{
-						Commands.Run(args);
+						case "-interactive":
+							Commands.Interactive();
+							break;
+						case "-test":
+							Commands.Test();
+							break;
+						case "-help":
+							Commands.Help();
+							break;
+						default:
+							Commands.Run(args);
+							break;
 					}
 				}
 			}
@@ -1809,11 +1995,11 @@ namespace Meta
 		{
 			this.keys = new List<Map>(keys);
 		}
-		//public PersistantPosition(PersistantPosition parent, Map key)
-		//{
-		//    this.keys = new List<Map>(parent.keys);
-		//    this.keys.Add(key);
-		//}
+		public PersistantPosition(PersistantPosition parent, Map key)
+		{
+			this.keys = new List<Map>(parent.keys);
+			this.keys.Add(key);
+		}
 		public override Map Get()
 		{
 			Map scope = FileSystem.fileSystem;
@@ -4632,6 +4818,7 @@ namespace Meta
 	}
 	public class Parser
 	{
+
 		private bool negative = false;
 		private string Rest
 		{
@@ -4685,11 +4872,13 @@ namespace Meta
 			}
 			return character;
 		}
-		public Parser(string text, string filePath)
+		private PersistantPosition position;
+		public Parser(string text, string filePath,PersistantPosition position)
 		{
 			this.index = 0;
 			this.text = text;
 			this.file = filePath;
+			this.position = position;
 		}
 		public bool isStartOfFile = true;
 		public int functions = 0;
@@ -5227,7 +5416,74 @@ namespace Meta
 		{
 			return new Alternatives(EmptyMap, Number, String, Program, Call, Select);
 		});
+		public class Data
+		{
+			public static Rule Integer =
+				new Sequence(
+					new Do(
+						new Optional(Syntax.negative),
+						delegate(Parser p, Map map, ref Map result)
+						{
+							p.negative = map != null;
+							return null;
+						}),
+					new ReferenceAssignment(
+						new Sequence(
+							new ReferenceAssignment(
+								new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result)
+			{
+				if (result == null)
+				{
+					result = p.CreateMap();
+				}
+				result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+				return result;
+			}))),
+								new Do(
+									new Nothing(),
+									delegate(Parser p, Map map, ref Map result)
+									{
+										if (result.GetNumber() > 0 && p.negative)
+										{
+											result = 0 - result.GetNumber();
+										}
+										return null;
+									}))));
 
+			//public class Assignment : Action
+			//{
+			//    public Assignment(Rule keyRule,Rule syntaxRule,Rule valueRule):base(
+			//    {
+			//    }
+			//    protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			//    {
+			//        throw new Exception("The method or operation is not implemented.");
+			//    }
+			//}
+			public static Rule String = new Sequence();
+			public static Rule Number = new Sequence(
+				new ReferenceAssignment(
+					Integer),
+				new OptionalAssignment(
+					NumberKeys.Denominator,
+					new Optional(
+						new Sequence(
+							Syntax.fraction,
+							new ReferenceAssignment(
+								Integer)))));
+
+			public static Rule Key = new Sequence();
+
+			//public static Rule Value = new Alternatives(
+			//    Map,
+			//    String,
+			//    Number);
+			//public static Rule Map = new OneOrMore(
+			//    new Assignment(
+			//        Key,
+			//        //new StringRule("="),
+			//        Value));
+		}
 		public static Rule ExplicitCall=new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -5464,53 +5720,73 @@ namespace Meta
 				Syntax.lookupEnd);
 
 
-		private static Rule Integer =
-			new Sequence(
-				new Do(
-					new Optional(Syntax.negative),
-					delegate(Parser p, Map map, ref Map result)
-					{
-						p.negative = map != null;
-						return null;
-					}),
-				new ReferenceAssignment(
-					new Sequence(
-						new ReferenceAssignment(
-							new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result)
-		{
-			if (result == null)
-			{
-				result = p.CreateMap();
-			}
-			result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
-			return result;
-		}))),
-							new Do(
-								new Nothing(),
-								delegate(Parser p, Map map, ref Map result)
-								{
-									if (result.GetNumber() > 0 && p.negative)
-									{
-										result = 0 - result.GetNumber();
-									}
-									return null;
-								}))));
-
+		//private static Rule Integer =
+		//    new Sequence(
+		//        new Do(
+		//            new Optional(Syntax.negative),
+		//            delegate(Parser p, Map map, ref Map result)
+		//            {
+		//                p.negative = map != null;
+		//                return null;
+		//            }),
+		//        new ReferenceAssignment(
+		//            new Sequence(
+		//                new ReferenceAssignment(
+		//                    new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result)
+		//{
+		//    if (result == null)
+		//    {
+		//        result = p.CreateMap();
+		//    }
+		//    result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+		//    return result;
+		//}))),
+		//                    new Do(
+		//                        new Nothing(),
+		//                        delegate(Parser p, Map map, ref Map result)
+		//                        {
+		//                            if (result.GetNumber() > 0 && p.negative)
+		//                            {
+		//                                result = 0 - result.GetNumber();
+		//                            }
+		//                            return null;
+		//                        }))));
 
 		private static Rule Number =
 			new Sequence(
 				new Assignment(
 					CodeKeys.Literal,
-					new Sequence(
-						new ReferenceAssignment(
-							Integer),
-						new OptionalAssignment(
-							NumberKeys.Denominator,
-							new Optional(
-								new Sequence(
-									Syntax.fraction,
-									new ReferenceAssignment(
-										Integer)))))));
+					Data.Number));
+
+		//private static Rule Number =
+		//    new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Literal,
+		//            new Sequence(
+		//                new ReferenceAssignment(
+		//                    Data.Integer),
+		//                new OptionalAssignment(
+		//                    NumberKeys.Denominator,
+		//                    new Optional(
+		//                        new Sequence(
+		//                            Syntax.fraction,
+		//                            new ReferenceAssignment(
+		//                                Data.Integer)))))));
+
+		//private static Rule Number =
+		//    new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Literal,
+		//            new Sequence(
+		//                new ReferenceAssignment(
+		//                    Integer),
+		//                new OptionalAssignment(
+		//                    NumberKeys.Denominator,
+		//                    new Optional(
+		//                        new Sequence(
+		//                            Syntax.fraction,
+		//                            new ReferenceAssignment(
+		//                                Integer)))))));
 
 
 		private static Rule LookupString =
@@ -5689,7 +5965,8 @@ namespace Meta
 		}
 		public static Map ParseProgram(string text,string fileName)
 		{
-			Parser parser = new Parser(text, "Offer input");
+			// slightly wrong
+			Parser parser = new Parser(text, fileName,FileSystem.fileSystem.Position);
 			parser.functions++;
 			parser.defaultKeys.Push(1);
 			//Parser parser = new Parser(text, fileName);
@@ -5697,6 +5974,7 @@ namespace Meta
 			Map result = Parser.Program.Match(parser, out matched);
 			return result;
 		}
+
 
 		public static Rule Program =
 			new Sequence(
@@ -6293,61 +6571,8 @@ namespace Meta
 				parsing = value;
 			}
 		}
-		// remove, put everything into FileMap
-		public static Map ParseFile(string filePath)
-		{
-			using (TextReader reader = new StreamReader(filePath, Encoding.Default))
-			{
-				Map parsed = ParseFile(reader,filePath);
-				// this is problematic and slow for the library, refactor all that stuff
-				//parsed.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(filePath)));
-				return parsed;
-			}
-		}
-		public static Map ParseFile(TextReader textReader,string fileName)
-		{
-			Parsing = true;
-			Map result=Compile(textReader,fileName).GetExpression().Evaluate(Map.Empty);
-			Parsing = false;
-			return result;
-		}
-		public static Map Compile(TextReader textReader,string fileName)
-		{
-			string text=textReader.ReadToEnd();
-			Map result;
-			if (text == "")
-			{
-				result = new StrategyMap(CodeKeys.Program, Map.Empty);
-			}
-			else
-			{
-				Parser parser = new Parser(text, fileName);
-				bool matched;
-				result = Parser.Program.Match(parser,out matched);
-				if (parser.index != parser.text.Length)
-				{
-					throw new SyntaxException("Expected end of file.", parser);
-				}
-			}
-			return result;
-		}
+		// combine gac into fileSystem
 		public static Map fileSystem;
-		private static void LoadDirectory(string path, Map map)
-		{
-			foreach (string fileName in Directory.GetFiles(path, "*.meta"))
-			{
-				map[Path.GetFileNameWithoutExtension(fileName)] = FileSystem.ParseFile(fileName);
-			}
-			foreach (string directoryName in Directory.GetDirectories(path))
-			{
-				if ((new DirectoryInfo(directoryName).Attributes & FileAttributes.Hidden) == 0)
-				{
-					string name = new DirectoryInfo(directoryName).Name;
-					map[name] = new StrategyMap();
-					LoadDirectory(directoryName, map[name]);
-				}
-			}
-		}
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
@@ -6355,8 +6580,6 @@ namespace Meta
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
 			DrivesMap drives = new DrivesMap();
 			FileSystem.fileSystem["localhost"] = drives;
-			//drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
-
 			fileSystem.Scope = new TemporaryPosition(Gac.gac);
 		}
 		public static void Save()
@@ -6778,9 +7001,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					//Map argument = Map.Empty;
 					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"];
-					//return FileSystem.ParseFile(BasicTest);
 				}
 			}
 			public class Basic : Test
@@ -6788,29 +7009,9 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					Map argument = new StrategyMap();
-					argument[1] = "first arg";
-					argument[2] = "second=arg";
-					Map basic = FileSystem.ParseFile(BasicTest);
-					int asdf = basic.Scope.Get().Count;
+					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
 					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
 				}
-				//public override object GetResult(out int level)
-				//{
-				//    level = 2;
-				//    Map argument = new StrategyMap();
-				//    argument[1] = "first arg";
-				//    argument[2] = "second=arg";
-				//    Map basic = FileSystem.ParseFile(BasicTest);
-				//    //DrivesMap drives = new DrivesMap();
-				//    //FileSystem.fileSystem["localhost"] = drives;
-				//    //drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
-				//    //basic.Scope = new PersistantPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest))));
-				//    //basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
-				//    //basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
-				//    int asdf = basic.Scope.Get().Count;
-				//    return basic.Call(argument);
-				//}
 			}
 			public class Library : Test
 			{
@@ -6818,43 +7019,15 @@ namespace Meta
 				{
 					level = 2;
 					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
-					//Map library = FileSystem.ParseFile(LibraryTest);
-					//library.Scope = new TemporaryPosition(FileSystem.fileSystem);
-					//return library.Call(Map.Empty);
 				}
-				//public override object GetResult(out int level)
-				//{
-				//    level = 2;
-				//    Map library = FileSystem.ParseFile(LibraryTest);
-				//    library.Scope = new TemporaryPosition(FileSystem.fileSystem);
-				//    return library.Call(Map.Empty);
-				//    //return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
-				//}
 			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					//Map map = FileSystem.ParseFile(BasicTest);
-					//bool matched;
 					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
-					//return Meta.Serialize.ValueFunction(map);
 				}
-				//public override object GetResult(out int level)
-				//{
-				//    level = 1;
-				//    Map map = FileSystem.ParseFile(BasicTest);
-				//    bool matched;
-				//    return Meta.Serialize.ValueFunction(map);
-				//}
-				//public override object GetResult(out int level)
-				//{
-				//    level = 1;
-				//    Map map = FileSystem.ParseFile(BasicTest);
-				//    bool matched;
-				//    return Meta.Serialize.ValueFunction(map);
-				//}
 			}
 
 		}
