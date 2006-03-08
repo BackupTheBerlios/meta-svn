@@ -4893,18 +4893,6 @@ namespace Meta
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
-			public static implicit operator Rule(string text)
-			{
-				return new StringRule(text);
-			}
-			public static implicit operator Rule(char[] characters)
-			{
-				return new Character(characters);
-			}
-			public static implicit operator Rule(char character)
-			{
-				return new Character(character);
-			}
 			public Map Match(Parser parser, out bool matched)
 			{
 				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
@@ -5032,7 +5020,7 @@ namespace Meta
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
 				{
-					actions.Add(new Match(c));
+					actions.Add(new Match(new Character(c)));
 				}
 				return new Sequence(actions.ToArray()).Match(parser, out matched);
 			}
@@ -5295,14 +5283,6 @@ namespace Meta
 		}
 		public abstract class Action
 		{
-			//public static implicit operator Action(char character)
-			//{
-			//    return new Match(new Character(character));
-			//}
-			//public static implicit operator Action(Rule rule)
-			//{
-			//    return new Match(rule);
-			//}
 			protected Rule rule;
 			public Action(Rule rule)
 			{
@@ -5430,16 +5410,16 @@ namespace Meta
 				new Sequence(
 					new Match(new ZeroOrMore(
 						new Match(new Alternatives(
-							Syntax.space,
-							Syntax.tab)))),
+							new Character(Syntax.space),
+							new Character(Syntax.tab))))),
 					new Match(new Alternatives(
-						Syntax.unixNewLine,
-						Syntax.windowsNewLine)));
+						new Character(Syntax.unixNewLine),
+						new StringRule(Syntax.windowsNewLine))));
 
 			public static Rule Integer =
 				new Sequence(
 					new Do(
-						new Optional(Syntax.negative),
+						new Optional(new Character(Syntax.negative)),
 						delegate(Parser p, Map map, ref Map result)
 						{
 							p.negative = map != null;
@@ -5448,7 +5428,7 @@ namespace Meta
 					new ReferenceAssignment(
 						new Sequence(
 							new ReferenceAssignment(
-								new OneOrMore(new Do(Syntax.integer, delegate(Parser p, Map map, ref Map result)
+								new OneOrMore(new Do(new Character(Syntax.integer), delegate(Parser p, Map map, ref Map result)
 			{
 				if (result == null)
 				{
@@ -5471,13 +5451,13 @@ namespace Meta
 			{
 				return new Alternatives(
 					new Sequence(
-						new Match(Syntax.@string),
+						new Match(new Character(Syntax.@string)),
 						new ReferenceAssignment(
 							new OneOrMore(
 								new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
-						new Match(Syntax.@string)),
+						new Match(new Character(Syntax.@string))),
 					new Sequence(
-						new Match(Syntax.@string),
+						new Match(new Character(Syntax.@string)),
 						new Match(Indentation),
 						new ReferenceAssignment(
 							new FlattenRule(
@@ -5497,7 +5477,7 @@ namespace Meta
 																	new Autokey(StringLine)
 																	))))))))))),
 						new Match(StringDedentation),
-						new Match(Syntax.@string))).Match(parser, out matched);
+						new Match(new Character(Syntax.@string)))).Match(parser, out matched);
 			});
 			public static Rule Number = new Sequence(
 				new ReferenceAssignment(
@@ -5506,7 +5486,7 @@ namespace Meta
 					NumberKeys.Denominator,
 					new Optional(
 						new Sequence(
-							new Match(Syntax.fraction),
+							new Match(new Character(Syntax.fraction)),
 							new ReferenceAssignment(
 								Integer)))));
 			public static Rule LookupString=new OneOrMore(
@@ -5625,7 +5605,7 @@ namespace Meta
 				Map result = null;
 				if (matched)
 				{
-					result = new Sequence(new Match(Syntax.function), new ReferenceAssignment(Expression)).Match(p, out matched);
+					result = new Sequence(new Match(new Character(Syntax.function)), new ReferenceAssignment(Expression)).Match(p, out matched);
 					if (matched)
 					{
 						result[CodeKeys.ParameterName] = parameterName;
@@ -5640,7 +5620,7 @@ namespace Meta
 				new Assignment(
 					CodeKeys.Call,
 					new Sequence(
-						new Match(Syntax.callStart),
+						new Match(new Character(Syntax.callStart)),
 						new Assignment(
 							CodeKeys.Callable,
 							Select),
@@ -5648,7 +5628,7 @@ namespace Meta
 							CodeKeys.Parameter,
 							new Alternatives(
 								new Sequence(
-									new Match(Syntax.call),
+									new Match(new Character(Syntax.call)),
 									new ReferenceAssignment(Expression)),
 								Program)),
 								// remove
@@ -5658,7 +5638,7 @@ namespace Meta
 							//matched = p.functions != 0;
 							return null;
 						})),
-						new Match(Syntax.callEnd))));
+						new Match(new Character(Syntax.callEnd)))));
 		});
 
 		public static Rule Call = new DelayedRule(delegate()
@@ -5678,8 +5658,8 @@ namespace Meta
 									new Sequence(
 										new Match(
 											new Alternatives(
-												Syntax.call,
-												Syntax.indentation)),
+												new Character(Syntax.call),
+												new Character(Syntax.indentation))),
 										new ReferenceAssignment(Expression)),
 									Program)),
 								// remove
@@ -5716,12 +5696,12 @@ namespace Meta
 				new Match(new FlattenRule(
 					new ZeroOrMore(
 							new Autokey(new Alternatives(
-								Syntax.space,
-								Syntax.tab))))),
+								new Character(Syntax.space),
+								new Character(Syntax.tab)))))),
 				new Autokey(
 					new Alternatives(
-						Syntax.unixNewLine,
-						Syntax.windowsNewLine))));
+						new Character(Syntax.unixNewLine),
+						new StringRule(Syntax.windowsNewLine)))));
 
 
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
@@ -5798,17 +5778,17 @@ namespace Meta
 			new Assignment(
 				CodeKeys.Literal,
 				new Sequence(
-					new Match(Syntax.emptyMap),
+					new Match(new Character(Syntax.emptyMap)),
 					new ReferenceAssignment(
 						new LiteralRule(Map.Empty)))));
 
 		private static Rule LookupAnything =
 			new Sequence(
-				new Match(Syntax.lookupStart),
+				new Match(new Character((Syntax.lookupStart))),
 				new ReferenceAssignment(Expression),
 				new Match(new ZeroOrMore(
-					new Match(Syntax.indentation))),
-				new Match(Syntax.lookupEnd));
+					new Match(new Character(Syntax.indentation)))),
+				new Match(new Character(Syntax.lookupEnd)));
 
 
 		private static Rule Number =
@@ -5833,7 +5813,7 @@ namespace Meta
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Root = new Sequence(
-			new Match(Syntax.root),
+			new Match(new Character(Syntax.root)),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Root, Map.Empty))));
 
 
@@ -5871,13 +5851,13 @@ namespace Meta
 						new ZeroOrMore(
 							new Autokey(
 								new Sequence(
-									new Match(Syntax.select),
+									new Match(new Character(Syntax.select)),
 									new ReferenceAssignment(
 										Lookup))))))));
 
 
 		private static Rule KeysSearch = new Sequence(
-				new Match(Syntax.search),
+				new Match(new Character(Syntax.search)),
 				new ReferenceAssignment(Search)
 			);
 		private static Rule Keys = new Sequence(
@@ -5890,7 +5870,7 @@ namespace Meta
 				new ZeroOrMore(
 					new Autokey(
 						new Sequence(
-							new Match(Syntax.select),
+							new Match(new Character(Syntax.select)),
 							new ReferenceAssignment(
 								Lookup))))));
 
@@ -5903,13 +5883,13 @@ namespace Meta
 							new Assignment(
 								CodeKeys.Key,
 								Keys),
-							new Match(Syntax.statement),
+							new Match(new Character(Syntax.statement)),
 							new Assignment(
 								CodeKeys.Value,
 								Expression)),
 						new Sequence(
 							new Match(new Optional(
-								Syntax.statement)),
+								new Character(Syntax.statement))),
 							new Assignment(
 								CodeKeys.Value,
 								Expression),
