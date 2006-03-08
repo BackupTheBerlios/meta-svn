@@ -359,47 +359,6 @@ namespace Meta
 			return context;
 		}
 	}
-	//public class ScopeSubselect:Subselect
-	//{
-	//    public override void Assign(ref Map context, Map value,ref Map executionContext)
-	//    {
-	//        throw new Exception("Cannot assign to scope.");
-	//    }
-	//    public override Map EvaluateImplementation(int i,Map context, Map executionContext)
-	//    {
-	//        return context.Scope;
-	//    }
-	//}
-	//public class Argument:Subselect
-	//{
-	//    public override void Assign(ref Map selected, Map value,ref Map executionContext)
-	//    {
-	//        throw new Exception("Cannot assign to argument.");
-	//    }
-	//    public override Map EvaluateImplementation(int i,Map context, Map executionContext)
-	//    {
-	//        Map scope = executionContext;
-	//        if (i > 0)
-	//        {
-	//        }
-	//        for (int k = 0; ; k++)
-	//        {
-	//            while (scope != null && scope.argument == null)
-	//            {
-	//                scope = scope.Scope;
-	//            }
-	//            if (k < i)
-	//            {
-	//                scope = scope.Scope;
-	//            }
-	//            else
-	//            {
-	//                break;
-	//            }
-	//        }
-	//        return scope.Argument;
-	//    }
-	//}
 	public class CallSubselect : Subselect
 	{
 		private Call call;
@@ -1069,8 +1028,7 @@ namespace Meta
 	public class WebDirectoryMap : DirectoryMap
 	{
 		public WebDirectoryMap(DirectoryInfo directory, PersistantPosition scope)
-			: base(directory, scope)//,scope)
-		//public WebDirectoryMap(DirectoryInfo directory, Position scope):base(directory,scope)//,scope)
+			: base(directory, scope)
 		{
 			this.Scope = scope;
 		}
@@ -1176,7 +1134,6 @@ namespace Meta
 			{
 				DirectoryInfo directory = new DirectoryInfo(name+"\\");
 				result = new DirectoryMap(directory, this.Position);
-				//result = new DirectoryMap(directory, new TemporaryPosition(this));
 			}
 			else
 			{
@@ -1224,10 +1181,6 @@ namespace Meta
 			{
 				parent = new DrivesMap();
 				FileSystem.fileSystem["localhost"] = parent;
-				//parent.Scope = new TemporaryPosition(FileSystem.fileSystem);
-
-				//parent = new DrivesMap();
-				//parent.Scope = new TemporaryPosition(FileSystem.fileSystem);
 			}
 			return parent;
 		}
@@ -1235,10 +1188,6 @@ namespace Meta
 			: this(directory, FindParent(directory).Position)
 		{
 		}
-		//public DirectoryMap(DirectoryInfo directory)
-		//    : this(directory, new TemporaryPosition(FindParent(directory)))
-		//{
-		//}
 		public DirectoryMap(DirectoryInfo directory, PersistantPosition scope)
 		{
 			this.directory = directory;
@@ -1253,12 +1202,8 @@ namespace Meta
 			pos.Add("localhost");
 			pos.Reverse();
 			this.position = new PersistantPosition(pos);
-			//this.Scope = scope;
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
-				//Map value = Get(subdir.FullName);
-				//value.Scope = this;
-				//strategy.Set(subdir.Name, value);
 				keys.Add(subdir.Name);
 			}
 			foreach (FileInfo file in directory.GetFiles("*.*"))
@@ -1272,98 +1217,10 @@ namespace Meta
 				{
 					fileName = file.Name;
 				}
-				//Map value = Get(fileName);
-				//value.Scope = this;
-				//strategy.Set(fileName, value);
 				keys.Add(fileName);
-				//Map scope;
-				//if (directory.Parent != null)
-				//{
-				//    scope = new DirectoryMap(directory.Parent);
-				//}
-				//else
-				//{
-				//    // if it is the file system itself, it should not have a parent
-				//    scope = FileSystem.fileSystem;
-				//}
 				this.Scope = scope;
-
-				//string fileName;
-				//if (file.Extension == ".meta" || file.Extension == ".dll")
-				//{
-				//    fileName = Path.GetFileNameWithoutExtension(file.FullName);
-				//}
-				//else
-				//{
-				//    fileName = file.Name;
-				//}
-				//keys.Add(fileName);
 			}
 		}
-		//public DirectoryMap(DirectoryInfo directory,Position scope)
-		//{
-		//    this.directory = directory;
-		//    List<Map> pos = new List<Map>();
-		//    DirectoryInfo dir = directory;
-		//    do
-		//    {
-		//        pos.Add(dir.Name);
-		//        dir = dir.Parent;
-		//    }
-		//    while (dir != null);
-		//    pos.Add("localhost");
-		//    this.position = new PersistantPosition(pos);
-		//    //this.Scope = scope;
-		//    foreach (DirectoryInfo subdir in directory.GetDirectories())
-		//    {
-		//        //Map value = Get(subdir.FullName);
-		//        //value.Scope = this;
-		//        //strategy.Set(subdir.Name, value);
-		//        keys.Add(subdir.Name);
-		//    }
-		//    foreach (FileInfo file in directory.GetFiles("*.*"))
-		//    {
-		//        string fileName;
-		//        if (file.Extension == ".meta" || file.Extension == ".dll")
-		//        {
-		//            fileName = Path.GetFileNameWithoutExtension(file.FullName);
-		//        }
-		//        else
-		//        {
-		//            fileName = file.Name;
-		//        }
-		//        //Map value = Get(fileName);
-		//        //value.Scope = this;
-		//        //strategy.Set(fileName, value);
-		//        keys.Add(fileName);
-		//        //Map scope;
-		//        //if (directory.Parent != null)
-		//        //{
-		//        //    scope = new DirectoryMap(directory.Parent);
-		//        //}
-		//        //else
-		//        //{
-		//        //    // if it is the file system itself, it should not have a parent
-		//        //    scope = FileSystem.fileSystem;
-		//        //}
-		//        this.Scope = scope;
-
-		//        //string fileName;
-		//        //if (file.Extension == ".meta" || file.Extension == ".dll")
-		//        //{
-		//        //    fileName = Path.GetFileNameWithoutExtension(file.FullName);
-		//        //}
-		//        //else
-		//        //{
-		//        //    fileName = file.Name;
-		//        //}
-		//        //keys.Add(fileName);
-		//    }
-		//}
-		//public DirectoryMap(DirectoryInfo directory)
-		//    : this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
-		//{
-		//}
 		public override ICollection<Map> Keys
 		{
 			get { return keys; }
@@ -5519,9 +5376,6 @@ namespace Meta
 
 		private static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
 		{
-			if (parser.file.EndsWith("basicTest.meta"))
-			{
-			}
 			Map map = new Sequence(
 				new Assignment(
 					CodeKeys.Literal,
@@ -5558,33 +5412,12 @@ namespace Meta
 																		))))))))))),
 							StringDedentation,
 							Syntax.@string))).Match(parser, out matched);
-				if (matched)
-				{
-				}
 			}
 			return map;
 		});
 		public static Rule Function = new PrePost(
 			delegate(Parser parser) { parser.functions++; },
 			new Sequence(
-				//new LiteralRule(
-				//    new StrategyMap(
-				//        CodeKeys.Key,
-				//        new StrategyMap(
-				//            1,
-				//            new StrategyMap(
-				//                CodeKeys.Lookup,
-				//                new StrategyMap(
-				//                    CodeKeys.Literal,
-				//                    CodeKeys.Function))))),
-				//new Assignment(
-				//    CodeKeys.Value,
-				//    new ZeroOrMore(
-				//        new Autokey(
-				//            new CharacterExcept(
-				//                Syntax.function, Syntax.unixNewLine)))),
-				//new Assignment(CodeKeys.ParameterName,new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.function,Syntax.unixNewLine)))),
-				//Syntax.function,
 				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 				new Assignment(CodeKeys.Value,
 					new Sequence(
@@ -5608,14 +5441,6 @@ namespace Meta
 			
 			
 			), delegate(Parser parser) { parser.functions--; });
-
-		//public static Rule Function = new PrePost(
-		//    delegate(Parser parser) { parser.functions++; },
-		//    new Sequence(
-		//        Syntax.function,
-		//        new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
-		//        new Assignment(CodeKeys.Value,
-		//            new Sequence(new Assignment(CodeKeys.Literal, Expression)))), delegate(Parser parser) { parser.functions--; });
 
 		private Rule Whitespace =
 			new ZeroOrMore(
@@ -6408,16 +6233,6 @@ namespace Meta
 				CodeKeys.Current, 
 				Map.Empty),
 			Syntax.current.ToString());
-		//public static Rule Argument = new Equal(
-		//    new StrategyMap(
-		//        CodeKeys.Argument,
-		//        Map.Empty),
-		//    Syntax.argument.ToString());
-		//public static Rule Scope = new Equal(
-		//    new StrategyMap(
-		//        CodeKeys.Scope,
-		//        Map.Empty),
-		//    Syntax.scope.ToString());
 		public class Equal : Rule
 		{
 			private Map map;
@@ -6537,9 +6352,7 @@ namespace Meta
 		{
 			fileSystem=new StrategyMap();
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
-			//fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")), null);
 			fileSystem.Scope = new TemporaryPosition(Gac.gac);
-			//Gac.gac.Scope = fileSystem;
 		}
 		public static void Save()
 		{
@@ -6549,22 +6362,10 @@ namespace Meta
 				text = "";
 			}
 			Mono.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
-			//File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
 		}
 	}
-	//public class Web : StrategyMap
-	//{
-	//    public static readonly Web web = new Web();
-	//    public Web():base(new WebStrategy())
-	//    {
-	//    }
-	//}
 	public class Web
 	{
-		//public override bool ContainsKey(Map key)
-		//{
-		//    return Get(key) != null;
-		//}
 		const int port = 80;
 		public static Map Get(Map key)
 		{
@@ -6604,9 +6405,6 @@ namespace Meta
 			//    return null;
 			//}
 		}
-		//public WebStrategy()
-		//{
-		//}
 		public static void Unzip(string zipFile,string dir)
 		{
 			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
@@ -6648,113 +6446,6 @@ namespace Meta
 			s.Close();
 		}
 	}
-	//public class WebStrategy : MapStrategy
-	//{
-	//    public override Map CopyData()
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override void Set(Map key, Map val)
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override bool Equal(MapStrategy strategy)
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            throw new Exception("The method or operation is not implemented.");
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return Get(key) != null;
-	//    }
-	//    const int port = 80;
-	//    public override Map Get(Map key)
-	//    {
-	//        if (!key.IsString)
-	//        {
-	//            throw new ApplicationException("key is not a string");
-	//        }
-	//        string address = key.GetString();
-
-	//        WebClient webClient = new WebClient();
-	//        try
-	//        {
-	//            string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
-	//            string cacheDirectory = Path.Combine(metaPath, "Cache");
-	//            DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
-	//            string zipDirectory=Path.Combine(metaPath,"Zip");
-	//            string zipFile = Path.Combine(zipDirectory, address + ".zip");
-	//            Directory.CreateDirectory(zipDirectory);
-	//            string metaZipAddress = "http://"+address + "/" + "meta.zip";
-
-	//            try
-	//            {
-	//                webClient.DownloadFile(metaZipAddress, zipFile);
-	//            }
-	//            catch (Exception e)
-	//            {
-	//                return null;
-	//            }
-	//            unzipDirectory.Create();
-	//            Unzip(zipFile, unzipDirectory.FullName);
-	//            // net should be parent
-	//            return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem);
-	//        }
-	//        catch (Exception e)
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    public WebStrategy()
-	//    {
-	//    }
-	//    public static void Unzip(string zipFile,string dir)
-	//    {
-	//        ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
-
-	//        ZipEntry theEntry;
-	//        while ((theEntry = s.GetNextEntry()) != null)
-	//        {
-
-	//            Console.WriteLine(theEntry.Name);
-
-	//            string directoryName = Path.GetDirectoryName(theEntry.Name);
-	//            string fileName = Path.GetFileName(theEntry.Name);
-
-	//            // create directory
-	//            //Directory.CreateDirectory(directoryName);
-
-	//            if (fileName != String.Empty)
-	//            {
-	//                FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
-
-	//                int size = 2048;
-	//                byte[] data = new byte[2048];
-	//                while (true)
-	//                {
-	//                    size = s.Read(data, 0, data.Length);
-	//                    if (size > 0)
-	//                    {
-	//                        streamWriter.Write(data, 0, size);
-	//                    }
-	//                    else
-	//                    {
-	//                        break;
-	//                    }
-	//                }
-
-	//                streamWriter.Close();
-	//            }
-	//        }
-	//        s.Close();
-	//    }
-	//}
 	public class Gac : StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
@@ -6844,7 +6535,6 @@ namespace Meta
 			else
 			{
 				val = Web.Get(key);
-				//val = null;
 			}
 			return val;
 		}
@@ -6858,120 +6548,9 @@ namespace Meta
 		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null;
-			//return Load(key);
 		}
-		//public override bool ContainsKey(Map key)
-		//{
-		//    return Load(key);
-		//}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
-	//public class Gac: StrategyMap
-	//{
-	//    public static readonly StrategyMap gac = new Gac();
-	//    private Gac()
-	//    {
-	//        this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-	//        //this["web"] = Web.web;
-	//    }
-	//    private bool Load(Map key)
-	//    {
-	//        bool loaded;
-	//        if (strategy.ContainsKey(key))
-	//        {
-	//            loaded = true;
-	//        }
-	//        else
-	//        {
-	//            if (key.IsString)
-	//            {
-	//                string assemblyName = key.GetString();
-	//                Assembly assembly = null;
-	//                try
-	//                {
-	//                    assembly= Assembly.LoadWithPartialName(assemblyName);
-	//                }
-	//                catch
-	//                {
-	//                }
-	//                if (assembly != null)
-	//                {
-	//                    this[key] = LoadAssembly(assembly);
-	//                    loaded = true;
-	//                }
-	//                else
-	//                {
-	//                    loaded = false;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                Map version = key["version"];
-	//                Map publicKeyToken = key["publicKeyToken"];
-	//                Map culture = key["culture"];
-	//                Map name = key["name"];
-	//                if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-	//                {
-	//                    Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-	//                    this[key] = LoadAssembly(assembly);
-	//                    loaded = true;
-	//                }
-	//                else
-	//                {
-	//                    loaded = false;
-	//                }
-	//            }
-	//        }
-	//        return loaded;
-	//    }
-	//    public static Map LoadAssembly(Assembly assembly)
-	//    {
-	//        Map val = new StrategyMap();
-	//        foreach (Type type in assembly.GetExportedTypes())
-	//        {
-	//            if (type.DeclaringType == null)
-	//            {
-	//                Map selected = val;
-	//                string name;
-	//                if (type.IsGenericTypeDefinition)
-	//                {
-	//                    name=type.Name.Split('`')[0];
-	//                }
-	//                else
-	//                {
-	//                    name=type.Name;
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        Map val;
-	//        if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
-	//        {
-	//            val = strategy.Get(key);
-	//        }
-	//        else
-	//        {
-	//            val = null;
-	//        }
-	//        return val;
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            throw new ApplicationException("not implemented.");
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return Load(key);
-	//    }
-	//    protected Map cachedAssemblyInfo = new StrategyMap();
-	//}
 	public class Number
 	{
 		public Number(double numerator, double denominator)
