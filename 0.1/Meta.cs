@@ -1068,7 +1068,9 @@ namespace Meta
 	}
 	public class WebDirectoryMap : DirectoryMap
 	{
-		public WebDirectoryMap(DirectoryInfo directory, Position scope):base(directory,scope)//,scope)
+		public WebDirectoryMap(DirectoryInfo directory, PersistantPosition scope)
+			: base(directory, scope)//,scope)
+		//public WebDirectoryMap(DirectoryInfo directory, Position scope):base(directory,scope)//,scope)
 		{
 			this.Scope = scope;
 		}
@@ -1132,6 +1134,13 @@ namespace Meta
 	}
 	public class DrivesMap : Map
 	{
+		public override PersistantPosition Position
+		{
+			get
+			{
+				return new PersistantPosition(new Map[] { "localhost" });
+			}
+		}
 		public override bool ContainsKey(Map key)
 		{
 			bool containsKey;
@@ -1166,7 +1175,8 @@ namespace Meta
 			if (drives.ContainsKey(name))
 			{
 				DirectoryInfo directory = new DirectoryInfo(name+"\\");
-				result = new DirectoryMap(directory, new TemporaryPosition(this));
+				result = new DirectoryMap(directory, this.Position);
+				//result = new DirectoryMap(directory, new TemporaryPosition(this));
 			}
 			else
 			{
@@ -1222,10 +1232,14 @@ namespace Meta
 			return parent;
 		}
 		public DirectoryMap(DirectoryInfo directory)
-			: this(directory, new TemporaryPosition(FindParent(directory)))
+			: this(directory, FindParent(directory).Position)
 		{
 		}
-		public DirectoryMap(DirectoryInfo directory,Position scope)
+		//public DirectoryMap(DirectoryInfo directory)
+		//    : this(directory, new TemporaryPosition(FindParent(directory)))
+		//{
+		//}
+		public DirectoryMap(DirectoryInfo directory, PersistantPosition scope)
 		{
 			this.directory = directory;
 			List<Map> pos = new List<Map>();
@@ -1237,6 +1251,7 @@ namespace Meta
 			}
 			while (dir != null);
 			pos.Add("localhost");
+			pos.Reverse();
 			this.position = new PersistantPosition(pos);
 			//this.Scope = scope;
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
@@ -1285,6 +1300,66 @@ namespace Meta
 				//keys.Add(fileName);
 			}
 		}
+		//public DirectoryMap(DirectoryInfo directory,Position scope)
+		//{
+		//    this.directory = directory;
+		//    List<Map> pos = new List<Map>();
+		//    DirectoryInfo dir = directory;
+		//    do
+		//    {
+		//        pos.Add(dir.Name);
+		//        dir = dir.Parent;
+		//    }
+		//    while (dir != null);
+		//    pos.Add("localhost");
+		//    this.position = new PersistantPosition(pos);
+		//    //this.Scope = scope;
+		//    foreach (DirectoryInfo subdir in directory.GetDirectories())
+		//    {
+		//        //Map value = Get(subdir.FullName);
+		//        //value.Scope = this;
+		//        //strategy.Set(subdir.Name, value);
+		//        keys.Add(subdir.Name);
+		//    }
+		//    foreach (FileInfo file in directory.GetFiles("*.*"))
+		//    {
+		//        string fileName;
+		//        if (file.Extension == ".meta" || file.Extension == ".dll")
+		//        {
+		//            fileName = Path.GetFileNameWithoutExtension(file.FullName);
+		//        }
+		//        else
+		//        {
+		//            fileName = file.Name;
+		//        }
+		//        //Map value = Get(fileName);
+		//        //value.Scope = this;
+		//        //strategy.Set(fileName, value);
+		//        keys.Add(fileName);
+		//        //Map scope;
+		//        //if (directory.Parent != null)
+		//        //{
+		//        //    scope = new DirectoryMap(directory.Parent);
+		//        //}
+		//        //else
+		//        //{
+		//        //    // if it is the file system itself, it should not have a parent
+		//        //    scope = FileSystem.fileSystem;
+		//        //}
+		//        this.Scope = scope;
+
+		//        //string fileName;
+		//        //if (file.Extension == ".meta" || file.Extension == ".dll")
+		//        //{
+		//        //    fileName = Path.GetFileNameWithoutExtension(file.FullName);
+		//        //}
+		//        //else
+		//        //{
+		//        //    fileName = file.Name;
+		//        //}
+		//        //keys.Add(fileName);
+		//    }
+		//}
 		//public DirectoryMap(DirectoryInfo directory)
 		//    : this(directory, directory.Parent != null ? new DirectoryMap(directory.Parent) : FileSystem.fileSystem)
 		//{
@@ -1393,7 +1468,8 @@ namespace Meta
 								DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
 								if (subDir.Exists)
 								{
-									value = new DirectoryMap(subDir,new TemporaryPosition(this));
+									value = new DirectoryMap(subDir, this.Position);
+									//value = new DirectoryMap(subDir, new TemporaryPosition(this));
 								}
 								else
 								{
@@ -1884,7 +1960,7 @@ namespace Meta
 		public override Map Get()
 		{
 			Map scope = FileSystem.fileSystem;
-			for (int i = 0; i < keys.Count - 1; i++)
+			for (int i = 0; i < keys.Count; i++)
 			{
 				scope = scope[keys[i]];
 			}
@@ -6520,8 +6596,9 @@ namespace Meta
 				unzipDirectory.Create();
 				Unzip(zipFile, unzipDirectory.FullName);
 				// net should be parent
-				return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
-			//}
+				return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem.Position);
+				//return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
+				//}
 			//catch (Exception e)
 			//{
 			//    return null;
@@ -7133,7 +7210,8 @@ namespace Meta
 					DrivesMap drives = new DrivesMap();
 					FileSystem.fileSystem["localhost"] = drives;
 					//drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
-					basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
+					basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), drives.Position));
+					//basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
 					//basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
 					int asdf = basic.Scope.Get().Count;
 					return basic.Call(argument);
