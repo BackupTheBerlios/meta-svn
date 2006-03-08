@@ -261,12 +261,12 @@ namespace Meta
 			{
 				current=new StrategyMap();
 			}
-			current.Scope = new TemporaryScope(context);
+			current.Scope = new TemporaryPosition(context);
 			Map arg = new StrategyMap();
 			if (context.ContainsKey(CodeKeys.Function) && context[CodeKeys.Function].ContainsKey(CodeKeys.ParameterName))
 			{
-				arg.Scope = new TemporaryScope(context);
-				current.Scope = new TemporaryScope(arg);
+				arg.Scope = new TemporaryPosition(context);
+				current.Scope = new TemporaryPosition(arg);
 				arg[context[CodeKeys.Function][CodeKeys.ParameterName]] = argument;
 			}
 			current.Argument = argument;
@@ -1151,7 +1151,13 @@ namespace Meta
 		}
 		public override ICollection<Map> Keys
 		{
-			get { throw new Exception("The method or operation is not implemented."); }
+			get 
+			{
+				// buggy
+
+				return new List<Map>();
+				//throw new Exception("The method or operation is not implemented."); 
+			}
 		}
 		protected override Map Get(Map key)
 		{
@@ -1160,7 +1166,7 @@ namespace Meta
 			if (drives.ContainsKey(name))
 			{
 				DirectoryInfo directory = new DirectoryInfo(name+"\\");
-				result = new DirectoryMap(directory, new TemporaryScope(this));
+				result = new DirectoryMap(directory, new TemporaryPosition(this));
 			}
 			else
 			{
@@ -1187,6 +1193,14 @@ namespace Meta
 	}
 	public class DirectoryMap : Map
 	{
+		public override PersistantPosition Position
+		{
+			get
+			{
+				return position;
+			}
+		}
+		private PersistantPosition position;
 		private DirectoryInfo directory;
 		private List<Map> keys = new List<Map>();
 		private static Map FindParent(DirectoryInfo dir)
@@ -1199,17 +1213,31 @@ namespace Meta
 			else
 			{
 				parent = new DrivesMap();
-				parent.Scope = new TemporaryScope(FileSystem.fileSystem);
+				FileSystem.fileSystem["localhost"] = parent;
+				//parent.Scope = new TemporaryPosition(FileSystem.fileSystem);
+
+				//parent = new DrivesMap();
+				//parent.Scope = new TemporaryPosition(FileSystem.fileSystem);
 			}
 			return parent;
 		}
 		public DirectoryMap(DirectoryInfo directory)
-			: this(directory, new TemporaryScope(FindParent(directory)))
+			: this(directory, new TemporaryPosition(FindParent(directory)))
 		{
 		}
 		public DirectoryMap(DirectoryInfo directory,Position scope)
 		{
 			this.directory = directory;
+			List<Map> pos = new List<Map>();
+			DirectoryInfo dir = directory;
+			do
+			{
+				pos.Add(dir.Name);
+				dir = dir.Parent;
+			}
+			while (dir != null);
+			pos.Add("localhost");
+			this.position = new PersistantPosition(pos);
 			//this.Scope = scope;
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
@@ -1317,7 +1345,7 @@ namespace Meta
 							value = Map.Empty;
 						}
 
-						value.Scope = new TemporaryScope(this);
+						value.Scope = new TemporaryPosition(this);
 					}
 					else
 					{
@@ -1365,7 +1393,7 @@ namespace Meta
 								DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
 								if (subDir.Exists)
 								{
-									value = new DirectoryMap(subDir,new TemporaryScope(this));
+									value = new DirectoryMap(subDir,new TemporaryPosition(this));
 								}
 								else
 								{
@@ -1376,7 +1404,7 @@ namespace Meta
 					}
 					if (value != null)
 					{
-						value.Scope = new TemporaryScope(this);
+						value.Scope = new TemporaryPosition(this);
 						cache[key] = value;
 					}
 				}
@@ -1453,7 +1481,7 @@ namespace Meta
 				UseConsole();
 				Console.WriteLine("Interactive mode of Meta 0.1");
 				Map map = new StrategyMap();
-				map.Scope = new TemporaryScope(FileSystem.fileSystem);
+				map.Scope = new TemporaryPosition(FileSystem.fileSystem);
 				string code;
 
 				Parser parser = new Parser("", "Interactive console");
@@ -1537,7 +1565,7 @@ namespace Meta
 
 				string directory = Path.GetDirectoryName(args[fileIndex]);
 				Map function = FileSystem.ParseFile(args[fileIndex]);
-				function.Scope = new TemporaryScope(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
+				function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
 				//function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
 				//function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
 				int autoKeys = 0;
@@ -1689,7 +1717,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				string text = Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
+				string text = e.ToString();//Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
 				if (useConsole)
 				{
 					//Console.WriteLine(e.ToString());
@@ -1824,26 +1852,15 @@ namespace Meta
 				//return Path.Combine(Process.InstallationPath, "Library");
 			}
 		}
-		//public static string LibraryPath
-		//{
-		//    get
-		//    {
-		//        return Path.Combine(Process.InstallationPath, "Library");
-		//    }
-		//}
 	}
 	public abstract class Position
 	{
-		//public static implicit operator Position(Map map)
-		//{
-		//    return new TemporaryScope(map);
-		//}
 		public abstract Map Get();
 	}
-	public class TemporaryScope:Position
+	public class TemporaryPosition:Position
 	{
 		private Map map;
-		public TemporaryScope(Map map)
+		public TemporaryPosition(Map map)
 		{
 			this.map = map;
 		}
@@ -1852,30 +1869,37 @@ namespace Meta
 			return map;
 		}
 	}
-	//public class PersistantScope : Scope
-	//{
-	//    private List<Map> keys;
-	//    public PersistantScope()
-	//    {
-	//        this.keys = new List<Map>();
-	//    }
-	//    public PersistantScope(PersistantScope parent, Map key)
-	//    {
-	//        this.keys = new List<Map>(parent.keys);
-	//        this.keys.Add(key);
-	//    }
-	//    public override Map Get()
-	//    {
-	//        Map scope = FileSystem.fileSystem;
-	//        for(int i=0;i<keys.Count-1;i++)
-	//        {
-	//            scope = scope[keys[i]];
-	//        }
-	//        return scope;
-	//    }
-	//}
+	public class PersistantPosition : Position
+	{
+		private List<Map> keys;
+		public PersistantPosition(ICollection<Map> keys)
+		{
+			this.keys = new List<Map>(keys);
+		}
+		//public PersistantPosition(PersistantPosition parent, Map key)
+		//{
+		//    this.keys = new List<Map>(parent.keys);
+		//    this.keys.Add(key);
+		//}
+		public override Map Get()
+		{
+			Map scope = FileSystem.fileSystem;
+			for (int i = 0; i < keys.Count - 1; i++)
+			{
+				scope = scope[keys[i]];
+			}
+			return scope;
+		}
+	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public virtual PersistantPosition Position
+		{
+			get
+			{
+				return null;
+			}
+		}
 		public static implicit operator Map(Position scope)
 		{
 			if (scope == null)
@@ -2242,7 +2266,7 @@ namespace Meta
 						//}
 						//else
 						//{
-							val.scope = new TemporaryScope(this);
+							val.scope = new TemporaryPosition(this);
 						//}
 					}
 					Set(key, val);
@@ -6438,7 +6462,7 @@ namespace Meta
 			fileSystem=new StrategyMap();
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
 			//fileSystem = new DirectoryMap(new DirectoryInfo(Path.Combine(Process.InstallationPath, "Library")), null);
-			fileSystem.Scope = new TemporaryScope(Gac.gac);
+			fileSystem.Scope = new TemporaryPosition(Gac.gac);
 			//Gac.gac.Scope = fileSystem;
 		}
 		public static void Save()
@@ -6496,7 +6520,7 @@ namespace Meta
 				unzipDirectory.Create();
 				Unzip(zipFile, unzipDirectory.FullName);
 				// net should be parent
-				return new WebDirectoryMap(unzipDirectory, new TemporaryScope(FileSystem.fileSystem));
+				return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
 			//}
 			//catch (Exception e)
 			//{
@@ -7107,8 +7131,9 @@ namespace Meta
 					argument[2] = "second=arg";
 					Map basic = FileSystem.ParseFile(BasicTest);
 					DrivesMap drives = new DrivesMap();
-					drives.Scope = new TemporaryScope(FileSystem.fileSystem);
-					basic.Scope = new TemporaryScope(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryScope(drives)));
+					FileSystem.fileSystem["localhost"] = drives;
+					//drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
+					basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
 					//basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
 					int asdf = basic.Scope.Get().Count;
 					return basic.Call(argument);
@@ -7120,7 +7145,7 @@ namespace Meta
 				{
 					level = 2;
 					Map library = FileSystem.ParseFile(LibraryTest);
-					library.Scope = new TemporaryScope(FileSystem.fileSystem);
+					library.Scope = new TemporaryPosition(FileSystem.fileSystem);
 					return library.Call(Map.Empty);
 					//return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
 				}
