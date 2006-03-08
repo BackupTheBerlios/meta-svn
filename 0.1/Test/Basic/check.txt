@@ -90,7 +90,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"cTest"
-	Value (FileMap):
+	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"x"

@@ -1257,13 +1257,21 @@ namespace Meta
 						{
 							Parser parser = new Parser(text, metaFile,new PersistantPosition(this.Position,name));
 							bool matched;
-							result = Parser.Program.Match(parser, out matched);
+							if(parser.file.Contains("string.meta"))
+							{
+							}
+							if (parser.text.Length == 12)
+							{
+							}
+							result = Parser.Data.Map.Match(parser, out matched);
+							//result = Parser.Program.Match(parser, out matched);
 							if (parser.index != parser.text.Length)
 							{
 								throw new SyntaxException("Expected end of file.", parser);
 							}
 							Expression.parsingFile = metaFile;
-							value = result.GetExpression().Evaluate(Map.Empty);
+							value = result;
+							//value = result.GetExpression().Evaluate(Map.Empty);
 							Expression.parsingFile = null;
 							Expression.firstFile = null;
 						}
@@ -5418,6 +5426,16 @@ namespace Meta
 		});
 		public class Data
 		{
+			public static Rule EndOfLine =
+				new Sequence(
+					new ZeroOrMore(
+						new Alternatives(
+							Syntax.space,
+							Syntax.tab)),
+					new Alternatives(
+						Syntax.unixNewLine,
+						Syntax.windowsNewLine));
+
 			public static Rule Integer =
 				new Sequence(
 					new Do(
@@ -5491,9 +5509,183 @@ namespace Meta
 							Syntax.fraction,
 							new ReferenceAssignment(
 								Integer)))));
-			public static Rule Map = new Sequence();
+			public static Rule LookupString=new OneOrMore(
+				new Autokey(
+					new CharacterExcept(
+						Syntax.lookupStringForbidden)));
+			public static Rule Map = new CustomRule(delegate(Parser parser,out bool matched)
+			{
+				if (parser.Rest == "")
+				{
+					matched = false;
+				}
+				Indentation.Match(parser,out matched);
+				Map map=new StrategyMap();
+				if(matched)
+				{
+					parser.defaultKeys.Push(1);
+					map=Entry.Match(parser, out matched);
+					//map.Append(Entry.Match(parser, out matched));
+					if (matched)
+					{
+						while(true)
+						{
+							if (parser.Rest == "")
+							{
+								break;
+							}
+							new Alternatives(
+								SameIndentation,
+								Dedentation).Match(parser,out matched);
+							if (matched)
+							{
+								map = Library.Merge(new StrategyMap(
+									1, map,
+									2, Entry.Match(parser, out matched)));
+								//map.Append(Entry.Match(parser, out matched));
+							}
+							else
+							{
+								matched = true;
+								break;
+							}
+							if (parser.Rest == "")
+							{
+								break;
+							}
+						}
+					}
+					parser.defaultKeys.Pop();
+				}
+				return map;
+			});
+			//public static Rule Map = new Sequence(
+			//    Indentation,
+			//    new Assignment(
+			//        CodeKeys.Program,
+			//        new PrePost(
+			//            delegate(Parser p)
+			//            {
+			//                p.defaultKeys.Push(1);
+			//            },
+			//            new Sequence(
+			//                new Assignment(
+			//                    1,
+			//                    Statement),
+			//                new Appending(
+			//                    new ZeroOrMore(
+			//                        new Autokey(
+			//                            new Sequence(
+			//                                new Alternatives(
+			//                                    SameIndentation,
+			//                                    Dedentation),
+			//                                new ReferenceAssignment(Statement)))))),
+			//            delegate(Parser p)
+			//            {
+			//                p.defaultKeys.Pop();
+			//            })));
+			//public static Rule Map = new ZeroOrMore(
+			//    new Autokey(
+			//        new Sequence(
+			//            new ReferenceAssignment(Entry),
+			//            EndOfLine)));
+			public static Rule Value=new Alternatives(
+				Map,
+				String,
+				Number
+				);
+			public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
+			{
+				Map result = new StrategyMap();
+				if (parser.Rest.StartsWith("commandLine"))
+				{
+				}
+				Map function=Parser.Function.Match(parser, out matched);
+				if (matched)
+				{
+					result[CodeKeys.Function] = function[CodeKeys.Value][CodeKeys.Literal];
+				}
+				else
+				{
+					Map key = LookupString.Match(parser, out matched);
+					if (matched)
+					{
+						new StringRule(Syntax.statement.ToString()).Match(parser, out matched);
+						if (matched)
+						{
+							Map value = Value.Match(parser, out matched);
+							result[key] = value;
 
-			public static Rule Key = new Sequence();
+							// i dont understand this
+							bool match;
+							if (Data.EndOfLine.Match(parser, out match) == null && parser.Look() != Syntax.endOfFile)
+							{
+								parser.index -= 1;
+								if (Data.EndOfLine.Match(parser, out match) == null)
+								{
+									parser.index -= 1;
+									if (Data.EndOfLine.Match(parser, out match) == null)
+									{
+										parser.index += 2;
+										//matched = false;
+										//return null;
+										throw new SyntaxException("Expected newline.", parser);
+									}
+									else
+									{
+										parser.line--;
+									}
+								}
+								else
+								{
+									parser.line--;
+								}
+							}
+							//if (Data.EndOfLine.Match(parser, out matched) == null && parser.Look() != Syntax.endOfFile)
+							//{
+							//    parser.index -= 1;
+							//    if (Data.EndOfLine.Match(parser, out matched) == null)
+							//    {
+							//        parser.index -= 1;
+							//        if (Data.EndOfLine.Match(parser, out matched) == null)
+							//        {
+							//            parser.index += 2;
+							//            //matched = false;
+							//            //return null;
+							//            throw new SyntaxException("Expected newline.", parser);
+							//        }
+							//        else
+							//        {
+							//            parser.line--;
+							//        }
+							//    }
+							//    else
+							//    {
+							//        parser.line--;
+							//    }
+							//}
+						}
+					}
+				}
+				return result;
+			});
+			public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
+			{
+				Map parameterName = new ZeroOrMore(
+					new Autokey(
+						new CharacterExcept(
+							Syntax.function, Syntax.unixNewLine))).Match(p, out matched);
+				Map result = null;
+				if (matched)
+				{
+					result = new Sequence(Syntax.function, new ReferenceAssignment(Expression)).Match(p, out matched);
+					if (matched)
+					{
+						result[CodeKeys.ParameterName] = parameterName;
+					}
+				}
+				return result;
+			});
 		}
 		public static Rule ExplicitCall=new DelayedRule(delegate()
 		{
@@ -5566,15 +5758,17 @@ namespace Meta
 			matched = false;
 			return null;
 		});
-		private static Rule EndOfLine =
-			new Sequence(
-				new ZeroOrMore(
-					new Alternatives(
-						Syntax.space,
-						Syntax.tab)),
-				new Alternatives(
-					Syntax.unixNewLine,
-					Syntax.windowsNewLine));
+
+
+		//private static Rule EndOfLine =
+		//    new Sequence(
+		//        new ZeroOrMore(
+		//            new Alternatives(
+		//                Syntax.space,
+		//                Syntax.tab)),
+		//        new Alternatives(
+		//            Syntax.unixNewLine,
+		//            Syntax.windowsNewLine));
 
 		private static Rule EndOfLinePreserve = new FlattenRule(
 			new Sequence(
@@ -5592,7 +5786,7 @@ namespace Meta
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			Map map = new Sequence(
-				EndOfLine,
+				Data.EndOfLine,
 				new StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation))).Match(pa, out matched);
 			// this should be done automatically
 			if (matched)
@@ -5621,7 +5815,7 @@ namespace Meta
 		}),
 				new Sequence(
 					new Sequence(
-						EndOfLine,
+						Data.EndOfLine,
 						new CustomRule(delegate(Parser p, out bool matched)
 		{
 			return new StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
@@ -5763,26 +5957,56 @@ namespace Meta
 				new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 				new Assignment(CodeKeys.Value,
 					new Sequence(
-						new Assignment(CodeKeys.Literal, new CustomRule(delegate(Parser p,out bool matched)
-		{
-			Map parameterName=new ZeroOrMore(
-				new Autokey(
-					new CharacterExcept(
-						Syntax.function, Syntax.unixNewLine))).Match(p,out matched);
-			Map result=null;
-			if(matched)
-			{
-				result=new Sequence(Syntax.function,new ReferenceAssignment(Expression)).Match(p,out matched);
-				if(matched)
-				{
-					result[CodeKeys.ParameterName]=parameterName;
-				}
-			}
-			return result;
-		}))))
+						new Assignment(
+							CodeKeys.Literal,
+							Data.Function)))
+							//new CustomRule(delegate(Parser p, out bool matched)
+							//{
+							//    Map parameterName = new ZeroOrMore(
+							//        new Autokey(
+							//            new CharacterExcept(
+							//                Syntax.function, Syntax.unixNewLine))).Match(p, out matched);
+							//    Map result = null;
+							//    if (matched)
+							//    {
+							//        result = new Sequence(Syntax.function, new ReferenceAssignment(Expression)).Match(p, out matched);
+							//        if (matched)
+							//        {
+							//            result[CodeKeys.ParameterName] = parameterName;
+							//        }
+							//    }
+							//    return result;
+							//}))))
+			), 
+			delegate(Parser parser) { parser.functions--; });
+
+
+		//public static Rule Function = new PrePost(
+		//    delegate(Parser parser) { parser.functions++; },
+		//    new Sequence(
+		//        new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+		//        new Assignment(CodeKeys.Value,
+		//            new Sequence(
+		//                new Assignment(CodeKeys.Literal, new CustomRule(delegate(Parser p,out bool matched)
+		//{
+		//    Map parameterName=new ZeroOrMore(
+		//        new Autokey(
+		//            new CharacterExcept(
+		//                Syntax.function, Syntax.unixNewLine))).Match(p,out matched);
+		//    Map result=null;
+		//    if(matched)
+		//    {
+		//        result=new Sequence(Syntax.function,new ReferenceAssignment(Expression)).Match(p,out matched);
+		//        if(matched)
+		//        {
+		//            result[CodeKeys.ParameterName]=parameterName;
+		//        }
+		//    }
+		//    return result;
+		//}))))
 			
 			
-			), delegate(Parser parser) { parser.functions--; });
+		//    ), delegate(Parser parser) { parser.functions--; });
 
 		private Rule Whitespace =
 			new ZeroOrMore(
@@ -5816,14 +6040,19 @@ namespace Meta
 			new Sequence(
 				new Assignment(
 					CodeKeys.Literal,
-					new OneOrMore(
-						new Autokey(
-							new CharacterExcept(
-								Syntax.lookupStringForbidden)))));
+					Data.LookupString));
+
+		//private static Rule LookupString =
+		//    new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Literal,
+		//            new OneOrMore(
+		//                new Autokey(
+		//                    new CharacterExcept(
+		//                        Syntax.lookupStringForbidden)))));
 
 		private static Rule Current = new Sequence(
 			new StringRule(Syntax.current),
-			//Syntax.current,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
@@ -5831,46 +6060,14 @@ namespace Meta
 			new StringRule(Syntax.scope),
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
-		//private static Rule Argument = new Sequence(
-		//    new StringRule(Syntax.argument),
-		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Argument, Map.Empty))));
-
 		private static Rule Root = new Sequence(
 			Syntax.root,
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Root, Map.Empty))));
 
 
-		// remove
-		//private static Rule CurrentLeft = new Sequence(
-		//    new StringRule(Syntax.current),
-		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
-
-
-		//private static Rule ScopeLeft = new Sequence(
-		//    new StringRule(Syntax.scope),
-		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
-
-		//private static Rule ArgumentLeft = new Sequence(
-		//    new StringRule(Syntax.argument),
-		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Arg))));
-
-
-
-		//private static Rule LookupLeft =
-		//    new Alternatives(
-		//        CurrentLeft,
-		//        ScopeLeft,
-		//        //ArgumentLeft,
-		//        LookupString,
-		//        LookupAnything);
-
-
-
 		private static Rule Lookup =
 			new Alternatives(
 				Current,
-				//Scope,
-				//Argument,
 				new Sequence(
 					new Assignment(
 						CodeKeys.Lookup,
@@ -5928,7 +6125,8 @@ namespace Meta
 
 		public static Rule Statement = new Sequence(
 			new ReferenceAssignment(
-				new Alternatives(Function,
+				new Alternatives(
+					Function,
 					new Alternatives(
 						new Sequence(
 							new Assignment(
@@ -5956,13 +6154,13 @@ namespace Meta
 			new CustomRule(delegate(Parser p, out bool matched)
 		{
 			// i dont understand this
-			if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
+			if (Data.EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
 			{
 				p.index -= 1;
-				if (EndOfLine.Match(p, out matched) == null)
+				if (Data.EndOfLine.Match(p, out matched) == null)
 				{
 					p.index -= 1;
-					if (EndOfLine.Match(p, out matched) == null)
+					if (Data.EndOfLine.Match(p, out matched) == null)
 					{
 						p.index += 2;
 						//matched = false;
