@@ -5451,35 +5451,35 @@ namespace Meta
 									}))));
 			public static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
 			{
-						return new Alternatives(
-							new Sequence(
-								Syntax.@string,
-								new ReferenceAssignment(
-									new OneOrMore(
-										new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
-								Syntax.@string),
-							new Sequence(
-								Syntax.@string,
-								Indentation,
-								new ReferenceAssignment(
-									new FlattenRule(
-										new Sequence(
-											new Autokey(StringLine),
-											new Autokey(
-												new FlattenRule(
-													new ZeroOrMore(
-														new Autokey(
-															new Sequence(
-																EndOfLinePreserve,
-																SameIndentation,
-																new ReferenceAssignment(
-																	new FlattenRule(
-																		new Sequence(
-																			new Autokey(new LiteralRule(Syntax.unixNewLine.ToString())),
-																			new Autokey(StringLine)
-																			))))))))))),
-								StringDedentation,
-								Syntax.@string)).Match(parser, out matched);
+				return new Alternatives(
+					new Sequence(
+						Syntax.@string,
+						new ReferenceAssignment(
+							new OneOrMore(
+								new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.@string)))),
+						Syntax.@string),
+					new Sequence(
+						Syntax.@string,
+						Indentation,
+						new ReferenceAssignment(
+							new FlattenRule(
+								new Sequence(
+									new Autokey(StringLine),
+									new Autokey(
+										new FlattenRule(
+											new ZeroOrMore(
+												new Autokey(
+													new Sequence(
+														EndOfLinePreserve,
+														SameIndentation,
+														new ReferenceAssignment(
+															new FlattenRule(
+																new Sequence(
+																	new Autokey(new LiteralRule(Syntax.unixNewLine.ToString())),
+																	new Autokey(StringLine)
+																	))))))))))),
+						StringDedentation,
+						Syntax.@string)).Match(parser, out matched);
 			});
 			public static Rule Number = new Sequence(
 				new ReferenceAssignment(
@@ -5491,18 +5491,9 @@ namespace Meta
 							Syntax.fraction,
 							new ReferenceAssignment(
 								Integer)))));
+			public static Rule Map = new Sequence();
 
 			public static Rule Key = new Sequence();
-
-			//public static Rule Value = new Alternatives(
-			//    Map,
-			//    String,
-			//    Number);
-			//public static Rule Map = new OneOrMore(
-			//    new Assignment(
-			//        Key,
-			//        //new StringRule("="),
-			//        Value));
 		}
 		public static Rule ExplicitCall=new DelayedRule(delegate()
 		{
@@ -5850,14 +5841,14 @@ namespace Meta
 
 
 		// remove
-		private static Rule CurrentLeft = new Sequence(
-			new StringRule(Syntax.current),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
+		//private static Rule CurrentLeft = new Sequence(
+		//    new StringRule(Syntax.current),
+		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.This))));
 
 
-		private static Rule ScopeLeft = new Sequence(
-			new StringRule(Syntax.scope),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
+		//private static Rule ScopeLeft = new Sequence(
+		//    new StringRule(Syntax.scope),
+		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Literal, SpecialKeys.Scope))));
 
 		//private static Rule ArgumentLeft = new Sequence(
 		//    new StringRule(Syntax.argument),
@@ -5865,13 +5856,13 @@ namespace Meta
 
 
 
-		private static Rule LookupLeft =
-			new Alternatives(
-				CurrentLeft,
-				ScopeLeft,
-				//ArgumentLeft,
-				LookupString,
-				LookupAnything);
+		//private static Rule LookupLeft =
+		//    new Alternatives(
+		//        CurrentLeft,
+		//        ScopeLeft,
+		//        //ArgumentLeft,
+		//        LookupString,
+		//        LookupAnything);
 
 
 
