@@ -58809,11 +58809,11 @@ Entry (KeyValuePair`2)
 				Column (Int32):
 					"12"
 		"complicated"
-	Value (StrategyMap):
+	Value (FileSubMap):
 		Extent:
 			null
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (FileSubMap):
 				Extent:
 					null
 				Entry (KeyValuePair`2)

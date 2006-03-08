@@ -142,18 +142,18 @@ namespace Meta
 		{
 			get
 			{
-				return stack;
+				return invocationList;
 			}
 		}
-		private List<Extent> stack = new List<Extent>();
+		private List<Extent> invocationList = new List<Extent>();
 		public override string ToString()
 		{
 			string message = Message;
-			if (stack.Count != 0)
+			if (invocationList.Count != 0)
 			{
 				message+="\n\nStack trace:";
 			}
-			foreach(Extent extent in stack)
+			foreach(Extent extent in invocationList)
 			{
 				message+="\n" + GetExtentText(extent);
 			}
@@ -1254,8 +1254,8 @@ namespace Meta
 					}
 					if (File.Exists(metaFile))
 					{
-						string text = Mono.ReadAllText(metaFile);
-						//string text = File.ReadAllText(metaFile);
+						string text = File.ReadAllText(metaFile, Encoding.Default);
+						//string text = Mono.ReadAllText(metaFile, Encoding.Default);
 						Map result;
 						FileMap fileMap = new FileMap(metaFile);
 						if (text != "")
@@ -6351,7 +6351,12 @@ namespace Meta
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
+
 			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
+			DrivesMap drives = new DrivesMap();
+			FileSystem.fileSystem["localhost"] = drives;
+			//drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
+
 			fileSystem.Scope = new TemporaryPosition(Gac.gac);
 		}
 		public static void Save()
@@ -6773,8 +6778,9 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					Map argument = Map.Empty;
-					return FileSystem.ParseFile(BasicTest);
+					//Map argument = Map.Empty;
+					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"];
+					//return FileSystem.ParseFile(BasicTest);
 				}
 			}
 			public class Basic : Test
@@ -6786,36 +6792,69 @@ namespace Meta
 					argument[1] = "first arg";
 					argument[2] = "second=arg";
 					Map basic = FileSystem.ParseFile(BasicTest);
-					DrivesMap drives = new DrivesMap();
-					FileSystem.fileSystem["localhost"] = drives;
-					//drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
-					basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), drives.Position));
-					//basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
-					//basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
 					int asdf = basic.Scope.Get().Count;
-					return basic.Call(argument);
+					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
 				}
+				//public override object GetResult(out int level)
+				//{
+				//    level = 2;
+				//    Map argument = new StrategyMap();
+				//    argument[1] = "first arg";
+				//    argument[2] = "second=arg";
+				//    Map basic = FileSystem.ParseFile(BasicTest);
+				//    //DrivesMap drives = new DrivesMap();
+				//    //FileSystem.fileSystem["localhost"] = drives;
+				//    //drives.Scope = new TemporaryPosition(FileSystem.fileSystem);
+				//    //basic.Scope = new PersistantPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest))));
+				//    //basic.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), new TemporaryPosition(drives)));
+				//    //basic.Scope = new DirectoryMap(new DirectoryInfo(Path.GetDirectoryName(BasicTest)), FileSystem.fileSystem);
+				//    int asdf = basic.Scope.Get().Count;
+				//    return basic.Call(argument);
+				//}
 			}
 			public class Library : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					Map library = FileSystem.ParseFile(LibraryTest);
-					library.Scope = new TemporaryPosition(FileSystem.fileSystem);
-					return library.Call(Map.Empty);
-					//return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
+					//Map library = FileSystem.ParseFile(LibraryTest);
+					//library.Scope = new TemporaryPosition(FileSystem.fileSystem);
+					//return library.Call(Map.Empty);
 				}
+				//public override object GetResult(out int level)
+				//{
+				//    level = 2;
+				//    Map library = FileSystem.ParseFile(LibraryTest);
+				//    library.Scope = new TemporaryPosition(FileSystem.fileSystem);
+				//    return library.Call(Map.Empty);
+				//    //return FileSystem.ParseFile(LibraryTest).Call(Map.Empty);
+				//}
 			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					Map map = FileSystem.ParseFile(BasicTest);
-					bool matched;
-					return Meta.Serialize.ValueFunction(map);
+					//Map map = FileSystem.ParseFile(BasicTest);
+					//bool matched;
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
+					//return Meta.Serialize.ValueFunction(map);
 				}
+				//public override object GetResult(out int level)
+				//{
+				//    level = 1;
+				//    Map map = FileSystem.ParseFile(BasicTest);
+				//    bool matched;
+				//    return Meta.Serialize.ValueFunction(map);
+				//}
+				//public override object GetResult(out int level)
+				//{
+				//    level = 1;
+				//    Map map = FileSystem.ParseFile(BasicTest);
+				//    bool matched;
+				//    return Meta.Serialize.ValueFunction(map);
+				//}
 			}
 
 		}
