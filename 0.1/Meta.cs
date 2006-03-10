@@ -4604,6 +4604,7 @@ namespace Meta
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
 		public const char shortFunction = ':';
+		// stringForbidden???
 		public const char @string = '\"';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
@@ -5891,6 +5892,7 @@ namespace Meta
 			}
 		}
 		public delegate bool Matches(Map map);
+		// get rid of indentation somehow?
 		public delegate string GetMatch(Map map);
 		public class CustomSerialize : Rule
 		{
@@ -5901,13 +5903,33 @@ namespace Meta
 				this.matches = matches;
 				this.getMatch = getMatch;
 			}
+			private Rule rule;
+			public CustomSerialize(Matches matches, Rule rule)
+			{
+				this.matches = matches;
+				this.rule = rule;
+			}
 			public override string Match(Map map, string indentation, out bool matched)
 			{
 				matched = matches(map);
 				string text;
 				if (matched)
 				{
-					text = getMatch(map);
+					string unIndented;
+					if (getMatch != null)
+					{
+						unIndented = getMatch(map);
+					}
+					else
+					{
+						unIndented = rule.Match(map,indentation,out matched);
+					}
+					string[] lines = unIndented.Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine },StringSplitOptions.None);
+					text = lines[0];
+					for(int i=1;i<lines.Length;i++)
+					{
+						text += Syntax.unixNewLine.ToString()+ indentation + lines[i] ;
+					}
 				}
 				else
 				{
@@ -5927,60 +5949,111 @@ namespace Meta
 			{
 				return map.GetNumber().ToString();
 			});
-		//private static Rule IntegerValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
+		public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
+					{
+						return new Alternatives(
+							new CustomSerialize(
+								delegate(Map map) { return map.IsString && !map.Equals(Map.Empty); },
+								delegate(Map map) { bool m; return StringKey.Match(key, indentation, out m); }),
+
+							new Enclose(
+								Syntax.lookupStart.ToString(),
+								new Alternatives(
+									new CustomSerialize(
+										delegate(Map map) { return map.Equals(Map.Empty); },
+										delegate(Map map) { return Syntax.emptyMap.ToString(); }),
+									new CustomSerialize(
+										delegate(Map map) { return key.IsNumber; },
+										IntegerValue),
+									new CustomSerialize(
+										delegate(Map map) { return key is TypeMap; },
+										delegate(Map map) { return "TypeMap: " + ((TypeMap)map).Type.ToString(); }),
+									new CustomSerialize(
+										delegate(Map map) { return key is ObjectMap; },
+										delegate(Map map) { return "ObjectMap: " + ((ObjectMap)key).Object.ToString(); }),
+									new CustomSerialize(
+										delegate(Map map) { return true; },
+										delegate(Map map)
+										{
+											bool m;
+											return MapValue.Match(key, indentation, out m) + indentation;
+										})),
+							Syntax.lookupEnd.ToString())).Match(key, indentation, out matched);
+					});
+		//public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
+		//        {
+		//            string text=new CustomSerialize(
+		//                delegate(Map map) {return map.IsString && !map.Equals(Map.Empty);},
+		//                delegate(Map map) {bool m;return StringKey.Match(key, indentation, out m);}).Match(key,indentation,out matched);
+
+		//            if(!matched)
+		//            {
+		//                text=new Enclose(
+		//                    Syntax.lookupStart.ToString(),
+		//                    new Alternatives(
+		//                        new CustomSerialize(
+		//                            delegate(Map map) { return map.Equals(Map.Empty); },
+		//                            delegate(Map map) { return Syntax.emptyMap.ToString(); }),
+		//                        new CustomSerialize(
+		//                            delegate(Map map) { return key.IsNumber; },
+		//                            delegate(Map map) { bool m; return IntegerValue.Match(key, indentation, out m); }),
+		//                        new CustomSerialize(
+		//                            delegate(Map map) { return key is TypeMap; },
+		//                            delegate(Map map) { return "TypeMap: " + ((TypeMap)map).Type.ToString(); }),
+		//                        new CustomSerialize(
+		//                            delegate(Map map) { return key is ObjectMap; },
+		//                            delegate(Map map) { return "ObjectMap: " + ((ObjectMap)key).Object.ToString(); }),
+		//                        new CustomSerialize(
+		//                            delegate(Map map) { return true; },
+		//                            delegate(Map map)
+		//                            {
+		//                                bool m;
+		//                                return MapValue.Match(key, indentation, out m) + indentation;
+		//                            })),
+		//                Syntax.lookupEnd.ToString()).Match(key,indentation,out matched);
+		//            }
+		//            matched = true;
+		//            return text;
+		//        });
+		//public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
 		//{
 		//    string text;
-		//    if (map.IsNumber)
+		//    if (key.IsString && !key.Equals(Map.Empty))
 		//    {
-		//        text = map.GetNumber().ToString();
-		//        matched = true;
+		//        bool m;
+		//        text = StringKey.Match(key, indentation, out m);
 		//    }
 		//    else
 		//    {
-		//        matched = false;
-		//        text = null;
+
+		//        text = Syntax.lookupStart.ToString();
+		//        if (key.Equals(Map.Empty))
+		//        {
+		//            text += Syntax.emptyMap;
+		//        }
+		//        else if (key.IsNumber)
+		//        {
+		//            bool m;
+		//            text += IntegerValue.Match(key, indentation, out m);
+		//        }
+		//        else if (key is TypeMap)
+		//        {
+		//            text = "TypeMap: "+((TypeMap)key).Type.ToString();
+		//        }
+		//        else if(key is ObjectMap)
+		//        {
+		//            text = "ObjectMap: " + ((ObjectMap)key).Object.ToString();
+		//        }
+		//        else
+		//        {
+		//            bool m;
+		//            text += MapValue.Match(key, indentation, out m) + indentation;
+		//        }
+		//        text += Syntax.lookupEnd;
 		//    }
+		//    matched = true;
 		//    return text;
 		//});
-		public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
-		{
-			string text;
-			if (key.IsString && !key.Equals(Map.Empty))
-			{
-				bool m;
-				text = StringKey.Match(key, indentation, out m);
-			}
-			else
-			{
-
-				text = Syntax.lookupStart.ToString();
-				if (key.Equals(Map.Empty))
-				{
-					text += Syntax.emptyMap;
-				}
-				else if (key.IsNumber)
-				{
-					bool m;
-					text += IntegerValue.Match(key, indentation, out m);
-				}
-				else if (key is TypeMap)
-				{
-					text = "TypeMap: "+((TypeMap)key).Type.ToString();
-				}
-				else if(key is ObjectMap)
-				{
-					text = "ObjectMap: " + ((ObjectMap)key).Object.ToString();
-				}
-				else
-				{
-					bool m;
-					text += MapValue.Match(key, indentation, out m) + indentation;
-				}
-				text += Syntax.lookupEnd;
-			}
-			matched = true;
-			return text;
-		});
 
 		public static Rule MapValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
 		{
@@ -6028,45 +6101,64 @@ namespace Meta
 			matched = true;
 			return text;
 		});
-
-		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
-		{
-			string text = null;
-			if (val.IsString)
+		private static Rule StringValue = new CustomSerialize(
+			delegate(Map map)
 			{
-				int longestMatch = 0;
-				string mapString = val.GetString();
-				string[] split = mapString.Split(Syntax.@string);
-				for (int i = 1; i < split.Length; i++)
+				return map.IsString;
+			},
+			delegate(Map map)
+			{
+				string text = Syntax.@string.ToString();
+				string mapString = map.GetString();
+				if (mapString.IndexOf(Syntax.@string) == -1 && mapString.IndexOf(Syntax.unixNewLine) == -1)
 				{
-					int matchLength = split[i].Length - split[i].TrimStart(Syntax.stringEscape).Length + 1;
-					if (matchLength > longestMatch)
+					text += mapString;
+				}
+				else
+				{
+					string[] lines = map.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
+					for (int i = 0; i < lines.Length; i++)
 					{
-						longestMatch = matchLength;
+						text += Syntax.unixNewLine.ToString() + Syntax.indentation + lines[i];
+						//text += Syntax.unixNewLine + indentation + Syntax.indentation + lines[i];
 					}
+					text += Syntax.unixNewLine.ToString();
+					//text += Syntax.unixNewLine + indentation;
 				}
-				string escape = "";
-				for (int i = 0; i < longestMatch; i++)
-				{
-					escape += Syntax.stringEscape;
-				}
-				text = escape + Syntax.@string;
-				string[] lines = val.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-				text += lines[0];
-				for (int i = 1; i < lines.Length; i++)
-				{
-					text += Syntax.unixNewLine + indentation + Syntax.indentation + lines[i];
-				}
-				text += Syntax.@string + escape;
-				matched = true;
-			}
-			else
-			{
-				matched = false;
-				text = null;
-			}
-			return text;
-		});
+				text += Syntax.@string;
+				return text;
+			});
+		//private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
+		//{
+		//    string text = null;
+		//    if (val.IsString)
+		//    {
+		//        string mapString = val.GetString();
+
+		//        text = Syntax.@string.ToString();
+		//        if (mapString.IndexOf(Syntax.@string) == -1 && mapString.IndexOf(Syntax.unixNewLine) == -1)
+		//        {
+		//            text += mapString;
+		//        }
+		//        else
+		//        {
+		//            string[] lines = val.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
+		//            for (int i = 0; i < lines.Length; i++)
+		//            {
+		//                text += Syntax.unixNewLine + indentation+Syntax.indentation  + lines[i];
+		//            }
+		//            text += Syntax.unixNewLine+indentation;
+		//        }
+		//        text += Syntax.@string;
+		//        matched = true;
+		//    }
+		//    else
+		//    {
+		//        matched = false;
+		//        text = null;
+		//    }
+		//    return text;
+		//});
 
 
 		public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
@@ -6900,6 +6992,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -6925,14 +7025,7 @@ namespace Meta
 					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
 				}
 			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
-				}
-			}
+
 
 		}
 		namespace TestClasses

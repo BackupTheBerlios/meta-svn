@@ -1,5 +1,6 @@
 "
-license='"Copyright (c) 2005, 2006 Christian Staudenmeyer
+license="
+	Copyright (c) 2005, 2006 Christian Staudenmeyer
 	
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
@@ -19,7 +20,8 @@ license='"Copyright (c) 2005, 2006 Christian Staudenmeyer
 	BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
 	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-	SOFTWARE."'
+	SOFTWARE.
+"
 function=
 	parameterName="commandLine"
 	program=
@@ -578,21 +580,27 @@ function=
 									literal=2
 					[3]=
 						value=
-							literal=''"as"'df"''
+							literal="
+								as"'df
+							"
 						key=
 							[1]=
 								lookup=
 									literal=3
 					[4]=
 						value=
-							literal='''"as"''df"'''
+							literal="
+								as"''df
+							"
 						key=
 							[1]=
 								lookup=
 									literal=4
 					[5]=
 						value=
-							literal='''''''''''''''''"as"''''''''''''''''df"'''''''''''''''''
+							literal="
+								as"''''''''''''''''df
+							"
 						key=
 							[1]=
 								lookup=
@@ -2973,8 +2981,10 @@ function=
 								lookup=
 									literal="aLongText"
 						value=
-							literal="hello world!
-								hello!"
+							literal="
+								hello world!
+								hello!
+							"
 		[148]=
 			key=
 				[1]=
@@ -3068,11 +3078,13 @@ function=
 								lookup=
 									literal="set"
 					parameter=
-						literal="Alle meine Entchen,
+						literal="
+							Alle meine Entchen,
 							schwimmen auf dem See,
 							schwimmen auf dem See,
 							Köpfchen in das Wasser,
-							Schwaenzchen in die Hoeh."
+							Schwaenzchen in die Hoeh.
+						"
 			key=
 				[1]=
 					lookup=
@@ -3701,7 +3713,9 @@ function=
 						literal="newLines"
 			value=
 				literal="
-					"
+					
+					
+				"
 shortFunc=
 	function=
 		parameterName="arg"
@@ -3711,6 +3725,6 @@ shortFunc=
 					literal="arg"
 complicated=
 	[
-		complicated="key"
-	]="complicated key"
+			complicated="key"
+		]="complicated key"
 "
