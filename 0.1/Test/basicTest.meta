@@ -23,6 +23,10 @@ license="
 	SOFTWARE.
 "
 commandLine|
+	asdf="hello"
+	shortFunction=
+		arg|asdf
+	shortFunctionTest=shortFunction "hello"
 	current=merge
 		=
 			"AssignedToCurrent"
@@ -350,7 +354,7 @@ commandLine|
 				10
 			whileBranches=
 				=
-					arg|loop sum
+					arg|loop add
 						arg
 						1
 				[0]=
@@ -392,8 +396,6 @@ commandLine|
 		
 		
 	"
-	shortFunction=arg:arg
-	shortFunctionTest=shortFunction "hello"
 shortFunc=arg:arg
 complicated=
 	[

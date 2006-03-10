@@ -31,21 +31,21 @@
 					1
 					0
 		numberTest=
-			positiveAdd=sum
+			positiveAdd=add
 				100
 				1000
-			negativeAdd=sum
+			negativeAdd=add
 				-100
 				91
-			subtractTest=sum
+			subtractTest=add
 				1/4
-				product
+				multiply
 					1/100
 					-1
-			multiplyInteger=product
+			multiplyInteger=multiply
 				19
 				1023
-			multiplyFraction=product
+			multiplyFraction=multiply
 				3/2
 				7/3
 			greater=strictlyDecreasing
@@ -66,7 +66,7 @@
 			smaller=strictlyIncreasing
 				23
 				2
-			divide=product
+			divide=multiply
 				1000
 				reciprocal 7
 		bitwiseTest=
@@ -95,7 +95,7 @@
 				"die Katze lief im Schnee."
 			apply=
 				applyMethod=
-					argument|sum
+					argument|add
 						argument
 						1
 				current=apply
@@ -224,4 +224,7 @@
 		valuesTest=values
 			x="hi"
 			y="hello"
+		isStringTest=
+			no=isString 2
+			yes=isString "hi"
 	current=test

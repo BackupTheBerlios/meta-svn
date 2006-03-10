@@ -385,3 +385,17 @@ Entry (KeyValuePair`2)
 				2
 			Value (StrategyMap):
 				"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"isStringTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"no"
+			Value (StrategyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"yes"
+			Value (StrategyMap):
+				1

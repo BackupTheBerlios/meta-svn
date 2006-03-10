@@ -332,7 +332,9 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map context,Map arg)
 		{
-			return literal.Copy();
+			Map result=literal.Copy();
+			result.Scope = new TemporaryPosition(context);
+			return result;
 		}
 	}
 
@@ -441,7 +443,7 @@ namespace Meta
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("C:")))
+			if (key.Equals(new StrategyMap("asdf")))
 			{
 			}
 			while (scope != null && !scope.ContainsKey(key))
@@ -5611,17 +5613,18 @@ namespace Meta
 						CodeKeys.Literal,
 						Data.String)).Match(parser,out matched);
 		});
+
 		public static Rule ShortFunction = new Sequence(
 			new Assignment(
 				CodeKeys.Literal,
 				Data.ShortFunction));
+
+
 		//public static Rule ShortFunction = new Sequence(
-		//    new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
-		//    new Assignment(CodeKeys.Value,
-		//        new Sequence(
-		//            new Assignment(
-		//                CodeKeys.Literal,
-		//                Data.ShortFunction))));
+		//    new Assignment(
+		//        CodeKeys.Literal,
+		//        Data.ShortFunction));
+
 
 		public static Rule Function = new Sequence(
 			new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
@@ -5946,16 +5949,12 @@ namespace Meta
 				return text;
 			}
 		}
-
 		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
 		{
 			string text = null;
 			if (val.IsString)
 			{
 				int longestMatch = 0;
-				if (val.GetString().IndexOf("'n'") != -1)
-				{
-				}
 				string mapString = val.GetString();
 				string[] split = mapString.Split(Syntax.@string);
 				for (int i = 1; i < split.Length; i++)
