@@ -3725,6 +3725,6 @@ shortFunc=
 					literal="arg"
 complicated=
 	[
-			complicated="key"
-		]="complicated key"
+		complicated="key"
+]="complicated key"
 "
