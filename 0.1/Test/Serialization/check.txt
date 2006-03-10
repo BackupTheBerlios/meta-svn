@@ -3621,4 +3621,8 @@ function=
 				literal="
 					"
 	parameterName="commandLine"
+complicated=
+	[
+		complicated="key"
+	]="complicated key"
 "

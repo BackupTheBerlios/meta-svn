@@ -1263,7 +1263,8 @@ namespace Meta
 							if (parser.text.Length == 12)
 							{
 							}
-							result = Parser.Data.Map.Match(parser, out matched);
+							result = Parser.Data.File.Match(parser, out matched);
+							//result = Parser.Data.Map.Match(parser, out matched);
 							//result = Parser.Program.Match(parser, out matched);
 							if (parser.index != parser.text.Length)
 							{
@@ -4787,7 +4788,6 @@ namespace Meta
 		public const char root = '/';
 		public const char search='$';
 		public const string current = "current";
-		//public const string scope = "scope";
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -4822,7 +4822,6 @@ namespace Meta
 	}
 	public class Parser
 	{
-
 		private bool negative = false;
 		private string Rest
 		{
@@ -5402,6 +5401,7 @@ namespace Meta
 		});
 		public class Data
 		{
+
 			public static Rule EndOfLine =
 				new Sequence(
 					new Match(new ZeroOrMore(
@@ -5409,6 +5409,7 @@ namespace Meta
 							new Character(Syntax.space),
 							new Character(Syntax.tab))))),
 					new Match(new Alternatives(
+				// factor this out
 						new Character(Syntax.unixNewLine),
 						new StringRule(Syntax.windowsNewLine))));
 
@@ -5489,6 +5490,8 @@ namespace Meta
 				new Autokey(
 					new CharacterExcept(
 						Syntax.lookupStringForbidden)));
+
+
 			public static Rule Map = new CustomRule(delegate(Parser parser,out bool matched)
 			{
 				if (parser.Rest == "")
@@ -5540,6 +5543,14 @@ namespace Meta
 				String,
 				Number
 				);
+			private static Rule LookupAnything =
+				new Sequence(
+					new Match(new Character((Syntax.lookupStart))),
+					new ReferenceAssignment(Value),
+					new Match(new ZeroOrMore(
+						new Match(new Character(Syntax.indentation)))),
+					new Match(new Character(Syntax.lookupEnd)));
+			// refactor
 			public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
 			{
 				Map result = new StrategyMap();
@@ -5553,7 +5564,8 @@ namespace Meta
 				}
 				else
 				{
-					Map key = LookupString.Match(parser, out matched);
+					Map key = new Alternatives(LookupString,LookupAnything).Match(parser, out matched);
+					//Map key = LookupString.Match(parser, out matched);
 					if (matched)
 					{
 						new StringRule(Syntax.statement.ToString()).Match(parser, out matched);
@@ -5609,6 +5621,18 @@ namespace Meta
 				}
 				return result;
 			});
+			public static Rule File = new Sequence(
+				new Match(
+					new Optional(
+						new Sequence(
+							new Match(
+								new StringRule("#!")),
+							new Match(
+								new ZeroOrMore(
+									new Match(
+										new CharacterExcept(Syntax.unixNewLine)))),
+							new Match(EndOfLine)))),
+				new ReferenceAssignment(Map));
 		}
 		public static Rule ExplicitCall=new DelayedRule(delegate()
 		{
@@ -5804,9 +5828,6 @@ namespace Meta
 			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
 
 
-		//private static Rule Scope = new Sequence(
-		//    new Match(new StringRule(Syntax.scope)),
-		//    new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Scope, Map.Empty))));
 
 		private static Rule Root = new Sequence(
 			new Match(new Character(Syntax.root)),
@@ -5927,19 +5948,19 @@ namespace Meta
 			matched = true;
 			return null;
 		})));
-		public static Map RunProgram(string text, string fileName)
-		{
-			return ParseProgram(text, fileName).GetExpression().Evaluate(FileSystem.fileSystem);
-		}
-		public static Map ParseProgram(string text,string fileName)
-		{
-			// slightly wrong
-			Parser parser = new Parser(text, fileName,FileSystem.fileSystem.Position);
-			parser.defaultKeys.Push(1);
-			bool matched;
-			Map result = Parser.Program.Match(parser, out matched);
-			return result;
-		}
+		//public static Map RunProgram(string text, string fileName)
+		//{
+		//    return ParseProgram(text, fileName).GetExpression().Evaluate(FileSystem.fileSystem);
+		//}
+		//public static Map ParseProgram(string text,string fileName)
+		//{
+		//    // slightly wrong
+		//    Parser parser = new Parser(text, fileName,FileSystem.fileSystem.Position);
+		//    parser.defaultKeys.Push(1);
+		//    bool matched;
+		//    Map result = Parser.Program.Match(parser, out matched);
+		//    return result;
+		//}
 		public static Rule Program = new Sequence(
 			new Match(Indentation),
 			new Assignment(
