@@ -1350,122 +1350,6 @@ namespace Meta
 			}
 			return value;
 		}
-		//protected override Map Get(Map key)
-		//{
-		//    Map value = null;
-		//    if (key.IsString)
-		//    {
-		//        if (cache.ContainsKey(key))
-		//        {
-		//            value = cache[key];
-		//        }
-		//        else
-		//        {
-		//            string name = key.GetString();
-		//            if (directory.FullName != Process.LibraryPath)
-		//            {
-		//                Directory.SetCurrentDirectory(directory.FullName);
-		//            }
-		//            string file = Path.Combine(directory.FullName, name);
-		//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
-		//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
-		//            if (key.GetString().StartsWith("Background"))
-		//            {
-		//            }
-		//            if (File.Exists(metaFile))
-		//            {
-		//                string text = File.ReadAllText(metaFile, Encoding.Default);
-		//                //string text = Mono.ReadAllText(metaFile, Encoding.Default);
-		//                Map result;
-		//                FileMap fileMap = new FileMap(metaFile);
-		//                if (text != "")
-		//                {
-		//                    Parser parser = new Parser(text, metaFile);
-		//                    bool matched;
-		//                    result = Parser.Program.Match(parser, out matched);
-		//                    if (parser.index != parser.text.Length)
-		//                    {
-		//                        throw new SyntaxException("Expected end of file.", parser);
-		//                    }
-		//                    Expression.parsingFile = metaFile;
-		//                    value = result.GetExpression().Evaluate(Map.Empty);
-		//                    Expression.parsingFile = null;
-		//                    Expression.firstFile = null;
-		//                }
-		//                else
-		//                {
-		//                    value = Map.Empty;
-		//                }
-
-		//                value.Scope = new TemporaryPosition(this);
-		//            }
-		//            else
-		//            {
-		//                bool dllLoaded = false;
-		//                if (File.Exists(dllFile))
-		//                {
-		//                    try
-		//                    {
-		//                        Assembly assembly = Assembly.LoadFile(dllFile);
-		//                        value = Gac.LoadAssembly(assembly);
-		//                        dllLoaded = true;
-		//                    }
-		//                    catch (Exception e)
-		//                    {
-		//                        value = null;
-		//                    }
-		//                }
-		//                if (!dllLoaded)
-		//                {
-		//                    if (File.Exists(file))
-		//                    {
-		//                        switch (Path.GetExtension(file))
-		//                        {
-		//                            case ".txt":
-		//                            case ".meta":
-		//                                value = new FileMap(file, new ListStrategy());
-		//                                // this is problematic, writes the file all the time
-		//                                //foreach (char c in Mono.ReadAllText(file))
-		//                                ////foreach (char c in File.ReadAllText(file))
-		//                                //{
-		//                                //    value.Append(c);
-		//                                //}
-		//                                break;
-		//                            default:
-		//                                value = new FileMap(file, new ListStrategy());
-		//                                // problematic, writes the file
-		//                                //foreach (byte b in Mono.ReadAllBytes(file))
-		//                                ////foreach (byte b in File.ReadAllBytes(file))
-		//                                //{
-		//                                //    value.Append(b);
-		//                                //}
-		//                                break;
-		//                        }
-		//                    }
-		//                    else
-		//                    {
-		//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-		//                        if (subDir.Exists)
-		//                        {
-		//                            value = new DirectoryMap(subDir, this.Position);
-		//                            //value = new DirectoryMap(subDir, new TemporaryPosition(this));
-		//                        }
-		//                        else
-		//                        {
-		//                            value = null;
-		//                        }
-		//                    }
-		//                }
-		//            }
-		//            if (value != null)
-		//            {
-		//                value.Scope = new TemporaryPosition(this);
-		//                cache[key] = value;
-		//            }
-		//        }
-		//    }
-		//    return value;
-		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -1685,121 +1569,7 @@ namespace Meta
 				}
 				function.Call(argument);
 			}
-
-
-			//public static void Run(string[] args)
-			//{
-			//    int i = 1;
-			//    int fileIndex = 0;
-			//    if (args[0] == "-console")
-			//    {
-			//        UseConsole();
-			//        i++;
-			//        fileIndex++;
-			//    }
-
-
-
-			//    string directory = Path.GetDirectoryName(args[fileIndex]);
-			//    Map function = FileSystem.ParseFile(args[fileIndex]);
-			//    function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
-			//    //function.Scope = new DirectoryMap(new DirectoryInfo(directory));//, FileSystem.fileSystem);
-			//    //function.Scope = new DirectoryMap(new DirectoryInfo(directory), FileSystem.fileSystem);
-			//    int autoKeys = 0;
-			//    Map argument = new StrategyMap();
-			//    for (; i < args.Length; i++)
-			//    {
-			//        string arg = args[i];
-
-			//        Map key;
-			//        Map value;
-			//        if (arg.StartsWith("-"))
-			//        {
-			//            string nextArg;
-			//            // move down
-			//            if (i + 1 < args.Length)
-			//            {
-			//                nextArg = args[i + 1];
-			//            }
-			//            else
-			//            {
-			//                nextArg = null;
-			//            }
-			//            key = arg.Remove(0, 1);
-			//            if (nextArg != null)
-			//            {
-			//                if (nextArg.StartsWith("-"))
-			//                {
-			//                    value = Map.Empty;
-			//                }
-			//                else
-			//                {
-			//                    value = nextArg;
-			//                    i++;
-
-			//                }
-			//            }
-			//            else
-			//            {
-			//                value = Map.Empty;
-			//            }
-			//        }
-			//        else
-			//        {
-			//            autoKeys++;
-			//            key = autoKeys;
-			//            value = arg;
-			//        }
-			//        argument[key] = value;
-			//    }
-			//    function.Call(argument);
-			//    //Console.Write("Content-Type: text/html\n\n");
-			//    //Console.Write("<html><head><title>CGI" +
-			//    //    " in C#</title></head><body>" +
-			//    //    "CGI Environment:<br />");
-			//    //Console.Write("<table border = \"1\"><tbody><tr><td>The" +
-			//    //    " Common Gateway " +
-			//    //    "Interface revision on the server:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("GATEWAY_INTERFACE") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The serevr's hostname or IP address:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("SERVER_NAME") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The name and" +
-			//    //    " version of the server software that" +
-			//    //    " is answering the client request:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("SERVER_SOFTWARE") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The name and revision of the information " +
-			//    //    "protocol the request came in with:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("SERVER_PROTOCOL") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The method with which the information request" +
-			//    //    "was issued:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("REQUEST_METHOD") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>Extra path information passed to a CGI" +
-			//    //    " program:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("PATH_INFO") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The translated version of the path given " +
-			//    //    "by the variable PATH_INFO:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("PATH_TRANSLATED") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The GET information passed to the program. " +
-			//    //    "It is appended to the URL with a \"?\":</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("QUERY_STRING") +
-			//    //    "</td></tr>");
-			//    //Console.Write("<tr><td>The remote IP address of the user making +" +
-			//    //    "the request:</td><td>" +
-			//    //    System.Environment.GetEnvironmentVariable("REMOTE_ADDR") +
-			//    //    "</td></tr>");
-			//    //Console.Write("</tbody></table></body></html>");
-			//    //Console.ReadLine();
-			//}
 		}
-
-
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -2193,7 +1963,11 @@ namespace Meta
 		public virtual string Serialize()
 		{
 			string text;
-			if (this.IsString)
+			if (this.Count == 0)
+			{
+				text = "0";
+			}
+			else if (this.IsString)
 			{
 				text = "\"" + this.GetString() + "\"";
 			}
@@ -2293,7 +2067,7 @@ namespace Meta
 			get
 			{
 				bool isString;
-				if (ArrayCount == Count && ArrayCount != 0)
+				if (ArrayCount == Count)
 				{
 					isString = this.Array.TrueForAll(
 						delegate(Map map)
@@ -4795,6 +4569,7 @@ namespace Meta
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
+		public const char shortFunction = ':';
 		public const char @string = '\"';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
@@ -5378,6 +5153,17 @@ namespace Meta
 				}
 			}
 		}
+		public class Merge : Action
+		{
+			public Merge(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result = Library.Merge(new StrategyMap(1, result, 2, map));
+			}
+		}
 		public class Do : Action
 		{
 			private CustomActionDelegate action;
@@ -5606,21 +5392,42 @@ namespace Meta
 			});
 			public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
 			{
-				Map parameterName = new ZeroOrMore(
-					new Autokey(
-						new CharacterExcept(
-							Syntax.function, Syntax.unixNewLine))).Match(p, out matched);
-				Map result = null;
-				if (matched)
-				{
-					result = new Sequence(new Match(new Character(Syntax.function)), new ReferenceAssignment(Expression)).Match(p, out matched);
-					if (matched)
-					{
-						result[CodeKeys.ParameterName] = parameterName;
-					}
-				}
+				Map result=new Sequence(
+					new Merge(
+						new Sequence(
+							new Assignment(
+								CodeKeys.ParameterName,
+								new ZeroOrMore(
+								new Autokey(
+									new CharacterExcept(
+										Syntax.function,
+										Syntax.unixNewLine)))))),
+					new Merge(
+						new Sequence(
+							new Match(
+								new Character(
+									Syntax.function)),
+							new ReferenceAssignment(
+								Expression)))).Match(p,out matched);
 				return result;
 			});
+			//public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
+			//{
+			//    Map parameterName = new ZeroOrMore(
+			//        new Autokey(
+			//            new CharacterExcept(
+			//                Syntax.function, Syntax.unixNewLine))).Match(p, out matched);
+			//    Map result = null;
+			//    if (matched)
+			//    {
+			//        result = new Sequence(new Match(new Character(Syntax.function)), new ReferenceAssignment(Expression)).Match(p, out matched);
+			//        if (matched)
+			//        {
+			//            result[CodeKeys.ParameterName] = parameterName;
+			//        }
+			//    }
+			//    return result;
+			//});
 			public static Rule File = new Sequence(
 				new Match(
 					new Optional(
