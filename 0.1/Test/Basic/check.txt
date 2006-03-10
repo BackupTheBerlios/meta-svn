@@ -2,7 +2,111 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		1
 	Value (StrategyMap):
-		"ImpliedAutokey"
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"asdf"
+	Value (StrategyMap):
+		"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"shortFunction"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"function"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"parameterName"
+					Value (StrategyMap):
+						"arg"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"select"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"search"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"asdf"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"shortFunctionTest"
+	Value (StrategyMap):
+		"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"counter"
+	Value (StrategyMap):
+		5
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"SetCounter"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"function"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"parameterName"
+					Value (StrategyMap):
+						"argument"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"program"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"key"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												1
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"search"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																"counter"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"value"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"select"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														1
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"search"
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"literal"
+																	Value (StrategyMap):
+																		"argument"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scoping"
@@ -243,6 +347,11 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		2
+	Value (StrategyMap):
+		"ImpliedAutokey"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		3
 	Value (StrategyMap):
 		"Autokey"
 Entry (KeyValuePair`2)
@@ -698,7 +807,7 @@ Entry (KeyValuePair`2)
 		"wrong"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		3
+		4
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -1467,7 +1576,7 @@ Entry (KeyValuePair`2)
 		"MemberTest function, argument+Meta.Test.TestClasses.MemberTest3247"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		4
+		5
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -1477,7 +1586,7 @@ Entry (KeyValuePair`2)
 		"b"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		5
+		6
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -1517,7 +1626,7 @@ Entry (KeyValuePair`2)
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		6
+		7
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -1998,7 +2107,7 @@ Entry (KeyValuePair`2)
 																1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		7
+		8
 	Value (StrategyMap):
 		" "
 Entry (KeyValuePair`2)
@@ -2067,7 +2176,7 @@ Entry (KeyValuePair`2)
 																		"arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		8
+		9
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2081,7 +2190,7 @@ Entry (KeyValuePair`2)
 				0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		9
+		10
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2101,7 +2210,7 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		10
+		11
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2320,7 +2429,7 @@ Entry (KeyValuePair`2)
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		11
+		12
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2336,7 +2445,7 @@ Entry (KeyValuePair`2)
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		12
+		13
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2356,7 +2465,7 @@ Entry (KeyValuePair`2)
 		System.Windows.Forms.Form, Text: 
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		13
+		14
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -3253,7 +3362,7 @@ Entry (KeyValuePair`2)
 																"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		14
+		15
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)

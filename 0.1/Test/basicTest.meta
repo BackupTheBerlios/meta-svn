@@ -23,13 +23,17 @@ license="
 	SOFTWARE.
 "
 commandLine|
+	current=merge
+		=
+			"AssignedToCurrent"
 	asdf="hello"
 	shortFunction=
 		arg|asdf
 	shortFunctionTest=shortFunction "hello"
-	current=merge
-		=
-			"AssignedToCurrent"
+	counter=0
+	SetCounter=argument:
+		$counter=argument
+	SetCounter 5
 	scoping=
 		test=
 			scopingValue="right"
@@ -37,11 +41,11 @@ commandLine|
 	scopingValue="wrong"
 	scopingTest=scoping.test
 	lexicalScoping=scopingTest 0
-	$C:.hello=
+	$["C:"].hello=
 		x="someTest"
-	cTest=C:.hello
-	$C:.hello=0
-	cTest2=C:.hello
+	cTest=["C:"].hello
+	$["C:"].hello=0
+	cTest2=["C:"].hello
 	unicodeText="äaba"
 	$testSubDir.x=0
 	persistantDeleteTest=testSubDir.x

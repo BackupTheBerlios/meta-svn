@@ -76,15 +76,12 @@
 		mapTest=
 			switchTest=switch
 				cases=
-					x=
-						|"right"
-					y=
-						|"wrong"
+					x=:"right"
+					y=:"wrong"
 				control="x"				
 			if=if
 				1
-				then=
-					|"if test successful"
+				then=:"if test successful"
 			remove=remove
 				map=
 					x="hello"
@@ -227,4 +224,16 @@
 		isStringTest=
 			no=isString 2
 			yes=isString "hi"
+		intersectTest=intersect
+			=
+				apple="green"
+				orange="orange"
+				banana="yellow"
+			=
+				apple="red"
+				orange="yellow"
+				strawberries="red"
+			=
+				apple="last"
+				orange="green"
 	current=test

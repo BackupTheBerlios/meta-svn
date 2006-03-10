@@ -637,6 +637,34 @@ namespace Meta
 			}
 			return result;
 		}
+		public static Map Intersect(Map arg)
+		{
+			Dictionary<Map, object> keys = new Dictionary<Map, object>();
+			foreach (Map map in arg.Array)
+			{
+				foreach (KeyValuePair<Map, Map> entry in map)
+				{
+					keys[entry.Key] = null;
+				}
+			}
+			Dictionary<Map,Map> result = new Dictionary<Map,Map>();
+			foreach (KeyValuePair<Map, object> entry in keys)
+			{
+				foreach(Map map in arg.Array)
+				{
+					if (map.ContainsKey(entry.Key))
+					{
+						result[entry.Key] = map[entry.Key];
+					}
+					else
+					{
+						result.Remove(entry.Key);
+						break;
+					}
+				}
+			}
+			return new StrategyMap(new DictionaryStrategy(result));
+		}
 		public static Map Complement(Map arg)
 		{
 		    Dictionary<Map, Map> found = new Dictionary<Map, Map>();
@@ -1615,23 +1643,23 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
-			catch (Exception e)
-			{
-				string text = e.ToString();//Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
-				if (useConsole)
-				{
-					//Console.WriteLine(e.ToString());
-					//Console.WriteLine(e.StackTrace);
-					//Console.BackgroundColor = ConsoleColor.Red;
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
-				else
-				{
-					MessageBox.Show(text, "Meta exception");
-					//MessageBox.Show(e.ToString(), "Meta exception");
-				}
-			}
+			//catch (Exception e)
+			//{
+			//    string text = e.ToString();//Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
+			//    if (useConsole)
+			//    {
+			//        //Console.WriteLine(e.ToString());
+			//        //Console.WriteLine(e.StackTrace);
+			//        //Console.BackgroundColor = ConsoleColor.Red;
+			//        Console.WriteLine(text);
+			//        Console.ReadLine();
+			//    }
+			//    else
+			//    {
+			//        MessageBox.Show(text, "Meta exception");
+			//        //MessageBox.Show(e.ToString(), "Meta exception");
+			//    }
+			//}
 		}
 		Thread thread;
 		private Map parameter;
@@ -3616,6 +3644,10 @@ namespace Meta
 			}
 			return copy;
 		}
+		public DictionaryStrategy(Dictionary<Map, Map> data)
+		{
+			this.data = data;
+		}
 		public DictionaryStrategy(int Count)
 		{
 			this.data=new Dictionary<Map,Map>(Count);
@@ -4576,7 +4608,7 @@ namespace Meta
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape,shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd};
 
 		// remove???
 		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -5836,58 +5868,80 @@ namespace Meta
 	}
 	public class Serialize
 	{
-		public abstract class Rule
+		public class Alternatives : Rule
 		{
-			public abstract string Match(Map map, string indentation, out bool matched);
-		}
-		public static string ValueFunction(Map val)
-		{
-			bool matched;
-			return Value.Match(val, null, out matched);
-		}
-		public class Literal:Rule
-		{
-			private Rule rule;
-			private string literal;
-			public Literal(char c,Rule rule):this(c.ToString(),rule)
+			private Rule[] rules;
+			public Alternatives(params Rule[] rules)
 			{
+				this.rules = rules;
 			}
-			public Literal(string literal,Rule rule)
+			public override string Match(Map map, string indentation, out bool matched)
 			{
-				this.literal=literal;
-				this.rule=rule;
-			}
-			public override string Match(Map map,string indentation, out bool matched)
-			{
-				rule.Match(map,indentation,out matched);
-				string text;
-				if(matched)
+				string text = null;
+				matched = false;
+				foreach (Rule rule in rules)
 				{
-					text=literal;
+					text = rule.Match(map, indentation, out matched);
+					if (matched)
+					{
+						break;
+					}
+				}
+				return text;
+			}
+		}
+		public delegate bool Matches(Map map);
+		public delegate string GetMatch(Map map);
+		public class CustomSerialize : Rule
+		{
+			private Matches matches;
+			private GetMatch getMatch;
+			public CustomSerialize(Matches matches, GetMatch getMatch)
+			{
+				this.matches = matches;
+				this.getMatch = getMatch;
+			}
+			public override string Match(Map map, string indentation, out bool matched)
+			{
+				matched = matches(map);
+				string text;
+				if (matched)
+				{
+					text = getMatch(map);
 				}
 				else
 				{
-					text=null;
+					text = null;
 				}
 				return text;
 			}
 		}
 		private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
-		private static Rule IntegerValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
-		{
-			string text;
-			if (map.IsNumber)
+
+		private static Rule IntegerValue = new CustomSerialize(
+			delegate(Map map)
 			{
-				text = map.GetNumber().ToString();
-				matched = true;
-			}
-			else
+				return map.IsNumber;
+			},
+			delegate(Map map)
 			{
-				matched = false;
-				text = null;
-			}
-			return text;
-		});
+				return map.GetNumber().ToString();
+			});
+		//private static Rule IntegerValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
+		//{
+		//    string text;
+		//    if (map.IsNumber)
+		//    {
+		//        text = map.GetNumber().ToString();
+		//        matched = true;
+		//    }
+		//    else
+		//    {
+		//        matched = false;
+		//        text = null;
+		//    }
+		//    return text;
+		//});
 		public static Rule Key = new CustomRule(delegate(Map key, string indentation, out bool matched)
 		{
 			string text;
@@ -5927,28 +5981,54 @@ namespace Meta
 			matched = true;
 			return text;
 		});
-		public class Alternatives : Rule
+
+		public static Rule MapValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
 		{
-			private Rule[] rules;
-			public Alternatives(params Rule[] rules)
+			string text;
+			text = Syntax.unixNewLine.ToString();
+			if (indentation == null)
 			{
-				this.rules = rules;
+				indentation = "";
 			}
-			public override string Match(Map map,string indentation, out bool matched)
+			else
 			{
-				string text = null;
-				matched = false;
-				foreach (Rule rule in rules)
+				indentation += Syntax.indentation;
+			}
+			if (map is TypeMap)
+			{
+				text += "TypeMap: " + ((TypeMap)map).Type.ToString();
+			}
+			else if (map is ObjectMap)
+			{
+				text += "ObjectMap: " + ((ObjectMap)map).Object.ToString();
+			}
+			else
+			{
+				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					text = rule.Match(map,indentation, out matched);
-					if (matched)
+					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 					{
-						break;
+						bool m;
+						text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
+						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+						{
+							text += Syntax.unixNewLine;
+						}
+					}
+					else
+					{
+						text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
+						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+						{
+							text += Syntax.unixNewLine;
+						}
 					}
 				}
-				return text;
 			}
-		}
+			matched = true;
+			return text;
+		});
+
 		private static Rule StringValue = new CustomRule(delegate(Map val, string indentation, out bool matched)
 		{
 			string text = null;
@@ -5987,12 +6067,121 @@ namespace Meta
 			}
 			return text;
 		});
+
+
 		public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
 
 		private static Rule StringKey = new Alternatives(
 			LiteralKey,
-			new Decorator(Syntax.lookupStart.ToString(), StringValue, Syntax.lookupEnd.ToString()));
+			new Enclose(Syntax.lookupStart.ToString(), StringValue, Syntax.lookupEnd.ToString()));
 
+		
+		public static Rule Call = new Set(
+			new KeyRule(
+				CodeKeys.Call,
+				new Set(
+					new KeyRule(
+						CodeKeys.Callable,
+						Expression),
+					new KeyRule(
+						CodeKeys.Parameter,
+						new Alternatives(
+							Program,
+							new Enclose(
+								Syntax.call.ToString(),
+								new Alternatives(
+									EmptyMap,
+									Expression),
+								""))))));
+
+		public static string Statement(Map code, string indentation, ref int autoKeys)
+		{
+			Map key = code[CodeKeys.Key];
+			string text;
+			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
+			{
+				bool matched;
+				text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation,out matched);
+			}
+			else
+			{
+				Map autoKey;
+				text = indentation;
+				Map value = code[CodeKeys.Value];
+				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
+				{
+					autoKeys++;
+					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
+					{
+						text += Syntax.statement;
+					}
+				}
+				else
+				{
+					bool m;
+					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
+				}
+				bool matched;
+				text += Expression.Match(value, indentation,out matched);
+			}
+			return text;
+		}
+		private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
+		{
+			string text = Lookup.Match(code[1], indentation,out matched);
+			for (int i = 2; code.ContainsKey(i); i++)
+			{
+				text += Syntax.select + Lookup.Match(code[i], indentation,out matched);
+			}
+			matched = true;
+			return text;
+		});
+		public static Rule Keys = SelectImplementation;
+
+		public static Rule Select = new Set(
+			new KeyRule(
+				CodeKeys.Select,
+				SelectImplementation));
+
+		public static Rule LookupSearchImplementation = new Alternatives(
+			new KeyRule(
+				CodeKeys.Literal,
+				Key),
+			new Enclose(
+				Syntax.lookupStart.ToString(),
+				new Alternatives(
+					new Enclose(
+						"",
+						Program,
+						new IndentationProduction()),
+					Expression),
+				Syntax.lookupEnd.ToString()));
+
+
+		public static Rule Current = new Equal(
+			new StrategyMap(
+				CodeKeys.Current, 
+				Map.Empty),
+			Syntax.current.ToString());
+
+		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
+		public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal, Value));
+		public static Rule Lookup = new Alternatives(
+				new Alternatives(
+					new Set(
+						new KeyRule(
+							CodeKeys.Search,
+							LookupSearchImplementation)),
+					new Set(
+						new KeyRule(
+							CodeKeys.Lookup,
+							LookupSearchImplementation))),
+				new Alternatives(
+					Current,
+			//Argument,
+			//Scope,
+					new Set(new KeyRule(CodeKeys.Literal, Key)),
+					new Enclose(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
 		public class OneOrMore:Rule
 		{
 			private Rule rule;
@@ -6038,52 +6227,6 @@ namespace Meta
 				return text;
 			}
 		}
-		public static Rule MapValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
-		{
-			string text;
-			text = Syntax.unixNewLine.ToString();
-			if (indentation == null)
-			{
-				indentation = "";
-			}
-			else
-			{
-				indentation += Syntax.indentation;
-			}
-			if (map is TypeMap)
-			{
-				text+= "TypeMap: "+((TypeMap)map).Type.ToString();
-			}
-			else if (map is ObjectMap)
-			{
-				text += "ObjectMap: " + ((ObjectMap)map).Object.ToString();
-			}
-			else
-			{
-				foreach (KeyValuePair<Map, Map> entry in map)
-				{
-					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
-					{
-						bool m;
-						text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
-						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-						{
-							text += Syntax.unixNewLine;
-						}
-					}
-					else
-					{
-						text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
-						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-						{
-							text += Syntax.unixNewLine;
-						}
-					}
-				}
-			}
-			matched = true;
-			return text;
-		});
 		public delegate string CustomRuleDelegate(Map map,string indentation, out bool matched);
 		public class CustomRule : Rule
 		{
@@ -6198,87 +6341,6 @@ namespace Meta
 			}
 			return text;
 		});
-		public static Rule Call = new Set(
-			new KeyRule(
-				CodeKeys.Call,
-				new Set(
-					new KeyRule(
-						CodeKeys.Callable,
-						Expression),
-					new KeyRule(
-						CodeKeys.Parameter,
-						new Alternatives(
-							Program,
-							new Decorator(
-								Syntax.call.ToString(),
-								new Alternatives(
-									EmptyMap,
-									Expression),
-								""))))));
-
-		public static string Statement(Map code, string indentation, ref int autoKeys)
-		{
-			Map key = code[CodeKeys.Key];
-			string text;
-			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
-			{
-				bool matched;
-				text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation,out matched);
-			}
-			else
-			{
-				Map autoKey;
-				text = indentation;
-				Map value = code[CodeKeys.Value];
-				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
-				{
-					autoKeys++;
-					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
-					{
-						text += Syntax.statement;
-					}
-				}
-				else
-				{
-					bool m;
-					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
-				}
-				bool matched;
-				text += Expression.Match(value, indentation,out matched);
-			}
-			return text;
-		}
-		private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
-				{
-					string text = Lookup.Match(code[1], indentation,out matched);
-					for (int i = 2; code.ContainsKey(i); i++)
-					{
-						text += Syntax.select + Lookup.Match(code[i], indentation,out matched);
-					}
-					matched = true;
-					return text;
-				});
-		public static Rule Keys = SelectImplementation;
-
-		public static Rule Select = new Set(
-			new KeyRule(
-				CodeKeys.Select,
-			SelectImplementation));
-
-		public static Rule LookupSearchImplementation = new Alternatives(
-					new KeyRule(
-						CodeKeys.Literal,
-						Key),
-					new Decorator(
-						Syntax.lookupStart.ToString(),
-						new Alternatives(
-							new Decorator(
-								"",
-								Program,
-								new IndentationProduction()),
-							Expression),
-						Syntax.lookupEnd.ToString()));
-
 		public abstract class Production
 		{
 			public static implicit operator Production(string text)
@@ -6307,12 +6369,12 @@ namespace Meta
 			}
 		}
 
-		public class Decorator : Rule
+		public class Enclose : Rule
 		{
 			private Production start;
 			private Rule rule;
 			private Production end;
-			public Decorator(Production start, Rule rule, Production end)
+			public Enclose(Production start, Rule rule, Production end)
 			{
 				this.start = start;
 				this.rule = rule;
@@ -6333,11 +6395,6 @@ namespace Meta
 				return text;
 			}
 		}
-		public static Rule Current = new Equal(
-			new StrategyMap(
-				CodeKeys.Current, 
-				Map.Empty),
-			Syntax.current.ToString());
 		public class Equal : Rule
 		{
 			private Map map;
@@ -6363,24 +6420,44 @@ namespace Meta
 				return text;
 			}
 		}
-		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
-		public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal,Value));
-		public static Rule Lookup = new Alternatives(
-				new Alternatives(
-					new Set(
-						new KeyRule(
-							CodeKeys.Search,
-							LookupSearchImplementation)),
-					new Set(
-						new KeyRule(
-							CodeKeys.Lookup,
-							LookupSearchImplementation))),
-				new Alternatives(
-					Current,
-					//Argument,
-					//Scope,
-					new Set(new KeyRule(CodeKeys.Literal, Key)),
-					new Decorator(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
+
+		public abstract class Rule
+		{
+			public abstract string Match(Map map, string indentation, out bool matched);
+		}
+		public static string ValueFunction(Map val)
+		{
+			bool matched;
+			return Value.Match(val, null, out matched);
+		}
+		public class Literal : Rule
+		{
+			private Rule rule;
+			private string literal;
+			public Literal(char c, Rule rule)
+				: this(c.ToString(), rule)
+			{
+			}
+			public Literal(string literal, Rule rule)
+			{
+				this.literal = literal;
+				this.rule = rule;
+			}
+			public override string Match(Map map, string indentation, out bool matched)
+			{
+				rule.Match(map, indentation, out matched);
+				string text;
+				if (matched)
+				{
+					text = literal;
+				}
+				else
+				{
+					text = null;
+				}
+				return text;
+			}
+		}
 	}
 
 	public class FileSystem
