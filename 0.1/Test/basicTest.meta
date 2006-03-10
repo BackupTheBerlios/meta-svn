@@ -392,6 +392,9 @@ commandLine|
 		
 		
 	"
+	shortFunction=arg:arg
+	shortFunctionTest=shortFunction "hello"
+shortFunc=arg:arg
 complicated=
 	[
 		complicated="key"

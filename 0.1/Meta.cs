@@ -5183,7 +5183,7 @@ namespace Meta
 
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(EmptyMap, Number, String, Program, Call, Select);
+			return new Alternatives(EmptyMap, Number, String, Program, Call,ShortFunction, Select);
 		});
 		public class Data
 		{
@@ -5324,10 +5324,35 @@ namespace Meta
 				}
 				return map;
 			});
+			public static Rule ShortFunction = new CustomRule(delegate(Parser p, out bool matched)
+			{
+				Map result = new Sequence(
+					new Assignment(
+						CodeKeys.Function,
+						new Sequence(
+						new Merge(
+							new Sequence(
+								new Assignment(
+									CodeKeys.ParameterName,
+									new ZeroOrMore(
+										new Autokey(
+											new CharacterExcept(
+												Syntax.shortFunction,
+												Syntax.unixNewLine)))))),
+						new Merge(
+							new Sequence(
+								new Match(
+									new Character(
+										Syntax.shortFunction)),
+								new ReferenceAssignment(
+									Expression)))))).Match(p, out matched);
+				return result;
+			});
 			public static Rule Value=new Alternatives(
 				Map,
 				String,
-				Number
+				Number,
+				ShortFunction
 				);
 			private static Rule LookupAnything =
 				new Sequence(
@@ -5390,6 +5415,7 @@ namespace Meta
 				}
 				return result;
 			});
+
 			public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
 			{
 				Map result=new Sequence(
@@ -5585,6 +5611,17 @@ namespace Meta
 						CodeKeys.Literal,
 						Data.String)).Match(parser,out matched);
 		});
+		public static Rule ShortFunction = new Sequence(
+			new Assignment(
+				CodeKeys.Literal,
+				Data.ShortFunction));
+		//public static Rule ShortFunction = new Sequence(
+		//    new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+		//    new Assignment(CodeKeys.Value,
+		//        new Sequence(
+		//            new Assignment(
+		//                CodeKeys.Literal,
+		//                Data.ShortFunction))));
 
 		public static Rule Function = new Sequence(
 			new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
@@ -6082,7 +6119,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(Call,EmptyMap, Program, LiteralProduction, Select);
+			return new Alternatives(Call,EmptyMap, Program, LiteralProduction,Select);
 		});
 
 		public class KeyRule : Rule

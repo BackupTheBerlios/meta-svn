@@ -3507,3 +3507,38 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		"
 "
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"shortFunction"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"function"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"parameterName"
+					Value (StrategyMap):
+						"arg"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"select"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"search"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"literal"
+											Value (StrategyMap):
+												"arg"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"shortFunctionTest"
+	Value (StrategyMap):
+		"hello"
