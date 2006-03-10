@@ -5935,51 +5935,57 @@ namespace Meta
 			{
 				return map.GetNumber().ToString();
 			});
-		public static Rule MapValue = new CustomRule(delegate(Map map, string indentation, out bool matched)
+
+		public static Rule TypeMap = new CustomSerialize(
+			delegate(Map map) {return map is TypeMap;},
+			delegate(Map map) {return "TypeMap: " + ((TypeMap)map).Type.ToString();});
+		public static Rule ObjectMap = new CustomSerialize(
+					delegate(Map map) { return map is ObjectMap; },
+					delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
+
+		public static Rule MapValue = new CustomRule(delegate(Map asdf, string indent, out bool ma)
 		{
-			string text;
-			text = Syntax.unixNewLine.ToString();
-			if (indentation == null)
+			string t;
+			t = Syntax.unixNewLine.ToString();
+			if (indent == null)
 			{
-				indentation = "";
+				indent = "";
 			}
 			else
 			{
-				indentation += Syntax.indentation;
+				indent += Syntax.indentation;
 			}
-			if (map is TypeMap)
-			{
-				text += "TypeMap: " + ((TypeMap)map).Type.ToString();
-			}
-			else if (map is ObjectMap)
-			{
-				text += "ObjectMap: " + ((ObjectMap)map).Object.ToString();
-			}
-			else
-			{
-				foreach (KeyValuePair<Map, Map> entry in map)
+			t+=new Alternatives(
+				TypeMap,
+				ObjectMap,
+				new CustomRule(delegate(Map map,string indentation,out bool matched)
 				{
-					if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
+					string text = "";
+					foreach (KeyValuePair<Map, Map> entry in map)
 					{
-						bool m;
-						text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
-						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+						if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
 						{
-							text += Syntax.unixNewLine;
+							bool m;
+							text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
+							if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+							{
+								text += Syntax.unixNewLine;
+							}
+						}
+						else
+						{
+							text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
+							if (!text.EndsWith(Syntax.unixNewLine.ToString()))
+							{
+								text += Syntax.unixNewLine;
+							}
 						}
 					}
-					else
-					{
-						text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
-						if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-						{
-							text += Syntax.unixNewLine;
-						}
-					}
-				}
-			}
-			matched = true;
-			return text;
+					matched = true;
+					return text;
+				})).Match(asdf,indent,out ma);
+			ma = true;
+			return t;
 		});
 		private static Rule StringValue = new CustomSerialize(
 			delegate(Map map)
@@ -6135,12 +6141,8 @@ namespace Meta
 							delegate(Map map) { return map.Equals(Map.Empty); },
 							delegate(Map map) { return Syntax.emptyMap.ToString(); }),
 							IntegerValue,
-						new CustomSerialize(
-							delegate(Map map) { return map is TypeMap; },
-							delegate(Map map) { return "TypeMap: " + ((TypeMap)map).Type.ToString(); }),
-						new CustomSerialize(
-							delegate(Map map) { return map is ObjectMap; },
-							delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); }),
+						TypeMap,
+						ObjectMap,
 						MapValue),
 				Syntax.lookupEnd.ToString()));
 
