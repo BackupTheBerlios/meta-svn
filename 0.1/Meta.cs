@@ -216,12 +216,12 @@ namespace Meta
 			}
 			current.Scope = new TemporaryPosition(context);
 			Map arg = new StrategyMap();
-			if (context.ContainsKey(Code.Function) && context[Code.Function].ContainsKey(Code.ParameterName))
-			{
-				arg.Scope = new TemporaryPosition(context);
-				current.Scope = new TemporaryPosition(arg);
-				arg[context[Code.Function][Code.ParameterName]] = argument;
-			}
+			//if (context.ContainsKey(Code.Function) && context[Code.Function].ContainsKey(Code.ParameterName))
+			//{
+			//    arg.Scope = new TemporaryPosition(context);
+			//    current.Scope = new TemporaryPosition(arg);
+			//    arg[context[Code.Function][Code.ParameterName]] = argument;
+			//}
 			return EvaluateImplementation(current);
 		}
 		public abstract Map EvaluateImplementation(Map context);
@@ -2046,7 +2046,7 @@ namespace Meta
 		//        argument = value;
 		//    }
 		//}
-		public Map argument=null;
+		//public Map argument=null;
 		public abstract bool IsFunction
 		{
 			get;
@@ -2392,7 +2392,18 @@ namespace Meta
 		public virtual Map Call(Map arg)
 		{
 			Map function = this[Code.Function];
-			Map result = function.GetExpression().Evaluate(this, arg);
+			Map context;
+			if (this.ContainsKey(Code.Function) && this[Code.Function].ContainsKey(Code.ParameterName))
+			{
+				context = new StrategyMap();
+				context.Scope = new TemporaryPosition(this);
+				context[this[Code.Function][Code.ParameterName]] = arg;
+			}
+			else
+			{
+				context = this;
+			}
+			Map result = function.GetExpression().Evaluate(context, arg);
 			return result;
 		}
 		public abstract ICollection<Map> Keys
