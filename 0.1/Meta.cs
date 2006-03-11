@@ -188,41 +188,11 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
-		// refactor, firstFile is horrible
 		public static FileMap firstFile = null;
 		public static string parsingFile = null;
 		public Map Evaluate(Map context)
 		{
-			return Evaluate(context, null);
-		}
-		public Map Evaluate(Map context,Map argument)
-		{
-			Map current;
-			if (parsingFile != null)
-			{
-				if (firstFile == null)
-				{
-					current = new FileMap(parsingFile);
-					firstFile = (FileMap)current;
-				}
-				else
-				{
-					current = new FileSubMap(firstFile);
-				}
-			}
-			else
-			{
-				current = new StrategyMap();
-			}
-			current.Scope = new TemporaryPosition(context);
-			Map arg = new StrategyMap();
-			//if (context.ContainsKey(Code.Function) && context[Code.Function].ContainsKey(Code.ParameterName))
-			//{
-			//    arg.Scope = new TemporaryPosition(context);
-			//    current.Scope = new TemporaryPosition(arg);
-			//    arg[context[Code.Function][Code.ParameterName]] = argument;
-			//}
-			return EvaluateImplementation(current);
+			return EvaluateImplementation(new StrategyMap(new TemporaryPosition(context)));
 		}
 		public abstract Map EvaluateImplementation(Map context);
 	}
@@ -288,7 +258,7 @@ namespace Meta
 	public abstract class Subselect
 	{
 		public abstract Map EvaluateImplementation(Map context, Map executionContext);
-		//public abstract Map EvaluateImplementation(int i, Map context, Map executionContext);
+		// why is executionContext a ref parameter, i dont get it
 		public abstract void Assign(ref Map context, Map value, ref Map executionContext);
 	}
 	public class Current:Subselect
@@ -344,15 +314,8 @@ namespace Meta
 		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
-			if (context == null)
-			{
-			}
-			if(key.Equals(new StrategyMap("Trim")))
-			{
-			}
 			if (!context.ContainsKey(key))
 			{
-				context.ContainsKey(key);
 				throw new KeyDoesNotExist(key, context, keyExpression.Extent);
 			}
 			return context[key];
@@ -362,51 +325,42 @@ namespace Meta
 	{
 		public override void Assign(ref Map selected, Map value,ref Map executionContext)
 		{
-			
+			Map evaluatedKey = key.GetExpression().Evaluate(executionContext);
 			Map scope = executionContext;
-			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("C:")))
+			while (scope != null && !scope.ContainsKey(evaluatedKey))
 			{
-			}
-			while (scope != null && !scope.ContainsKey(key))
-			{
-				scope = scope.Scope;
+				scope = scope.Scope.Get();
 			}
 			if (scope == null)
 			{
-				throw new KeyNotFound(key, keyExpression.Extent, executionContext);
+				throw new KeyNotFound(evaluatedKey, key.Extent, executionContext);
 			}
 			else
 			{
-				scope[key] = value;
+				scope[evaluatedKey] = value;
 			}
 		}
-		private Map keyExpression;
+		private Map key;
 		public Search(Map keyExpression)
 		{
-			this.keyExpression = keyExpression;
+			this.key = keyExpression;
 		}
 		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
+			Map evaluatedKey = key.GetExpression().Evaluate(executionContext);
 			Map scope = context;
-			Map key = keyExpression.GetExpression().Evaluate(executionContext);
-			if (key.Equals(new StrategyMap("asdf")))
+			while (scope != null && !scope.ContainsKey(evaluatedKey))
 			{
+				scope = scope.Scope.Get();
 			}
-			while (scope != null && !scope.ContainsKey(key))
+			if (scope == null)
 			{
-				scope = scope.Scope;
+				throw new KeyNotFound(evaluatedKey, key.Extent, context);
 			}
-			if (scope == null || !scope.ContainsKey(key))
+			else
 			{
-				throw new KeyNotFound(key, keyExpression.Extent, context);
+				return scope[evaluatedKey];
 			}
-			if (scope[key] == null)
-			{
-				scope.ContainsKey(key);
-				object x = scope[key];
-			}
-			return scope[key];
 		}
 	}
 	public class Select : Expression
@@ -433,9 +387,6 @@ namespace Meta
 		public Statement(Map code)
 		{
 			this.keys = code[Code.Key].Array;
-			if (keys.Count == 0)
-			{
-			}
 			this.value = code[Code.Value];
 		}
 		public void Assign(ref Map context)
@@ -443,15 +394,16 @@ namespace Meta
 			Map selected = context;
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
-				Map oldSelected=selected;
 				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
 			}
-			Map val = value.GetExpression().Evaluate(context);
-			keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, ref context);
+			keys[keys.Count - 1].GetSubselect().Assign(ref selected, value.GetExpression().Evaluate(context), ref context);
 		}
 	}
 	public class Library
 	{
+		// TODO: maybe this stuff could be reduced?
+		// simplified
+		// some parameters change
 		public static Map Product(Map arg)
 		{
 			Number result = 1;
@@ -929,13 +881,14 @@ namespace Meta
 			}
 			return result;
 		}
+		// maybe rename, something more general
 		public static Map Join(Map arg)
 		{
 			Map result = Map.Empty;
 			Number counter = 1;
 			foreach (Map map in arg.Array)
 			{
-				result.AppendMap(map);
+				result.AppendRange(map);
 			}
 			return result;
 		}
@@ -948,6 +901,7 @@ namespace Meta
 			return Map.Empty;
 		}
 	}
+	// TODO: combine this with GAC
 	public class WebDirectoryMap : DirectoryMap
 	{
 		public WebDirectoryMap(DirectoryInfo directory, PersistantPosition scope)
@@ -958,36 +912,15 @@ namespace Meta
 	}
 	public class FileMap : StrategyMap
 	{
-		public void Save()
-		{
-			string text;
-			if(this.Equals(Map.Empty))
-			{
-				text="";
-			}
-			else
-			{
-				text=Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine);
-			}
-			File.WriteAllText(path, text);
-		}
 		private string path;
 		public FileMap(string path)
-			: this(path,new DictionaryStrategy())
+			: this(path, new DictionaryStrategy())
 		{
 		}
 		public FileMap(string path, MapStrategy strategy)
 			: base(strategy)
 		{
 			this.path = path;
-		}
-		protected override void Set(Map key, Map value)
-		{
-			base.Set(key, value);
-			if (Expression.firstFile == null && path.EndsWith(".meta"))
-			{
-				Save();
-			}
 		}
 		public string Path
 		{
@@ -996,7 +929,22 @@ namespace Meta
 				return path;
 			}
 		}
+		// TODO: refactor, dont remember when this should be called
+		public void Save()
+		{
+			File.WriteAllText(path,this.Count==0? "": Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine));
+		}
+		protected override void Set(Map key, Map value)
+		{
+			base.Set(key, value);
+			// TODO: refactor
+			if (Expression.firstFile == null && path.EndsWith(".meta"))
+			{
+				Save();
+			}
+		}
 	}
+	// should be create in the new data parser, what about non-file source, though?
 	public class FileSubMap : FileMap
 	{
 		private FileMap fileMap;
@@ -1015,6 +963,14 @@ namespace Meta
 	}
 	public class DrivesMap : Map
 	{
+		Dictionary<string, string> drives = new Dictionary<string, string>();
+		public DrivesMap()
+		{
+			foreach (string drive in Directory.GetLogicalDrives())
+			{
+				drives.Add(drive.Remove(2), "");
+			}
+		}
 		public override PersistantPosition Position
 		{
 			get
@@ -1035,15 +991,15 @@ namespace Meta
 			}
 			return containsKey;
 		}
-		public override bool IsFunction
-		{
-			get { return false; }
-		}
+		//public override bool IsCallable
+		//{
+		//    get { return false; }
+		//}
 		public override ICollection<Map> Keys
 		{
 			get 
 			{
-				// buggy
+				// TODO: buggy, why is this called
 
 				return new List<Map>();
 				//throw new Exception("The method or operation is not implemented."); 
@@ -1052,33 +1008,17 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			string name = key.GetString();
-			Map result;
-			if (drives.ContainsKey(name))
-			{
-				DirectoryInfo directory = new DirectoryInfo(name+"\\");
-				result = new DirectoryMap(directory, this.Position);
-			}
-			else
-			{
-				result=null;
-			}
-			return result;
+			// TODO: incorrect
+			return !drives.ContainsKey(name)? null: new DirectoryMap(new DirectoryInfo(name+"\\"), this.Position);
 		}
 		protected override void Set(Map key, Map val)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
+		// what does this do? bad name
 		protected override Map CopyData()
 		{
 			throw new Exception("The method or operation is not implemented.");
-		}
-		Dictionary<string, string> drives = new Dictionary<string, string>();
-		public DrivesMap()
-		{
-			foreach (string drive in Directory.GetLogicalDrives())
-			{
-				drives.Add(drive.Remove(2), "");
-			}
 		}
 	}
 	public class DirectoryMap : Map
@@ -1148,48 +1088,6 @@ namespace Meta
 		{
 			get { return keys; }
 		}
-		//[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto, Pack=1)]
-		//        public struct SHFILEOPSTRUCT
-		//{
-		//        public IntPtr hwnd;
-		//        [MarshalAs(UnmanagedType.U4)] public int wFunc;
-		//        public string pFrom;
-		//        public string pTo;
-		//        public short fFlags;
-		//        [MarshalAs(UnmanagedType.Bool)] public bool fAnyOperationsAborted;
-		//        public IntPtr hNameMappings;
-		//        public string lpszProgressTitle;
-
-		//}
-		//[DllImport("shell32.dll", CharSet=CharSet.Auto)]
-		//static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
-		//const int FO_DELETE = 3;
-		//const int FOF_ALLOWUNDO = 0x40;
-		//const int FOF_NOCONFIRMATION = 0x10;    //Don't prompt the user.;
-
-
-        // Contains information that the SHFileOperation function uses to
-		//[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]
-		//public struct SHFILEOPSTRUCT
-		//{
-		//    public IntPtr hwnd;
-		//    public UInt32 wFunc;
-		//    public string pFrom;
-		//    public string pTo;
-		//    public UInt16 fFlags;
-		//    public Int32 fAnyOperationsAborted;
-		//    public IntPtr hNameMappings;
-		//    [MarshalAs(UnmanagedType.LPWStr)]
-		//    public String lpszProgressTitle;
-		//}
-
-		//[DllImport("shell32.dll" , CharSet = CharSet.Unicode)]
-		//public static extern Int32 SHFileOperation(ref SHFILEOPSTRUCT lpFileOp);
-
-		//const int FO_DELETE = 3;
-		//const int FOF_ALLOWUNDO = 0x40;
-		//const int FOF_NOCONFIRMATION = 0x10;
-
 		public class InteropSHFileOperation
 		{
 			public enum FO_Func : uint
@@ -1396,11 +1294,12 @@ namespace Meta
 			fo.fFlags.FOF_NOCONFIRMATION = true;
 			fo.pFrom = fname;
         }
-		public override bool IsFunction
-		{
-			get { return false; }
-		}
+		//public override bool IsCallable
+		//{
+		//    get { return false; }
+		//}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+		// fix
 		protected override Map Get(Map key)
 		{
 			Map value = null;
@@ -1440,15 +1339,12 @@ namespace Meta
 							{
 							}
 							result = Parser.Data.File.Match(parser, out matched);
-							//result = Parser.Data.Map.Match(parser, out matched);
-							//result = Parser.Program.Match(parser, out matched);
 							if (parser.index != parser.text.Length)
 							{
 								throw new SyntaxException("Expected end of file.", parser);
 							}
 							Expression.parsingFile = metaFile;
 							value = result;
-							//value = result.GetExpression().Evaluate(Map.Empty);
 							Expression.parsingFile = null;
 							Expression.firstFile = null;
 						}
@@ -1456,7 +1352,6 @@ namespace Meta
 						{
 							value = Map.Empty;
 						}
-
 						value.Scope = new TemporaryPosition(this);
 					}
 					else
@@ -1531,10 +1426,6 @@ namespace Meta
 			if (key.IsString)
 			{
 				string name = key.GetString();
-				if (name == "hello")
-				{
-				}
-				string realName;
 				string extension = Path.GetExtension(name);
 				if (extension == "")
 				{
@@ -1585,8 +1476,7 @@ namespace Meta
 	}
 	public class Process
 	{
-		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true,
-		ExactSpelling = true)]
+		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
 		public static extern bool AllocConsole();
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
@@ -1684,17 +1574,15 @@ namespace Meta
 			{
 				int i = 1;
 				int fileIndex = 0;
+				// bad
 				if (args[0] == "-console")
 				{
 					UseConsole();
 					i++;
 					fileIndex++;
 				}
-
-
 				string path = args[fileIndex];
 				string positionPath = Path.Combine(Path.GetDirectoryName(path),Path.GetFileNameWithoutExtension(args[fileIndex]));
-				//string directoryPath = Path.GetDirectoryName(args[fileIndex]);
 
 				string[] position=positionPath.Split(Path.DirectorySeparatorChar);
 				Map function=FileSystem.fileSystem["localhost"];
@@ -1702,88 +1590,13 @@ namespace Meta
 				{
 					function = function[pos];
 				}
-				//new DirectoryInfo(directoryPath);
-				//Map function = FileSystem.ParseFile(args[fileIndex]);
-				//function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
 
-				//Map function = FileSystem.ParseFile(args[fileIndex]);
-				//function.Scope = new TemporaryPosition(new DirectoryMap(new DirectoryInfo(directory)));//, FileSystem.fileSystem);
-				
-				
-				int autoKeys = 0;
-				Map argument = new StrategyMap();
-				for (; i < args.Length; i++)
-				{
-					string arg = args[i];
-
-					Map key;
-					Map value;
-					if (arg.StartsWith("-"))
-					{
-						string nextArg;
-						// move down
-						if (i + 1 < args.Length)
-						{
-							nextArg = args[i + 1];
-						}
-						else
-						{
-							nextArg = null;
-						}
-						key = arg.Remove(0, 1);
-						if (nextArg != null)
-						{
-							if (nextArg.StartsWith("-"))
-							{
-								value = Map.Empty;
-							}
-							else
-							{
-								value = nextArg;
-								i++;
-
-							}
-						}
-						else
-						{
-							value = Map.Empty;
-						}
-					}
-					else
-					{
-						autoKeys++;
-						key = autoKeys;
-						value = arg;
-					}
-					argument[key] = value;
-				}
-				function.Call(argument);
+				function.Call(Map.Empty);
 			}
 		}
-
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			 //// Create a channel for communicating w/ the remote object
-			 //// Notice no port is specified on the client
-			 //TcpChannel chan = new TcpChannel();
-			 //ChannelServices.RegisterChannel(chan);
-
-			 //// Create an instance of the remote object
-			 //SampleObject obj = (SampleObject) Activator.GetObject(
-			 //    typeof(CodeGuru.Remoting.SampleObject),
-			 //    "tcp://localhost:8080/HelloWorld" );
-
-			 //// Use the object
-			 //if( obj.Equals(null) )
-			 //{
-			 //  System.Console.WriteLine("Error: unable to locate server");
-			 //}
-			 //else
-			 //{
-			 //  Console.WriteLine(obj.HelloWorld());
-			 //}
-			 //return;
 			try
 			{
 
@@ -1814,7 +1627,6 @@ namespace Meta
 			{
 				string text = e.ToString();
 				System.Diagnostics.Process.Start("devenv",e.Extent.FileName+@" /command ""Edit.GoTo "+e.Extent.Start.Line+"\"");
-				//System.Diagnostics.Process.Start("devenv", @"C:\Fireserv\www\cgi-bin\search.meta /command ""Edit.GoTo 10""");
 				if (useConsole)
 				{
 					Console.WriteLine(text);
@@ -1825,23 +1637,19 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
-			//catch (Exception e)
-			//{
-			//    string text = e.ToString();//Environment.NewLine + e.Message;// +"\n\n" + e.StackTrace;
-			//    if (useConsole)
-			//    {
-			//        //Console.WriteLine(e.ToString());
-			//        //Console.WriteLine(e.StackTrace);
-			//        //Console.BackgroundColor = ConsoleColor.Red;
-			//        Console.WriteLine(text);
-			//        Console.ReadLine();
-			//    }
-			//    else
-			//    {
-			//        MessageBox.Show(text, "Meta exception");
-			//        //MessageBox.Show(e.ToString(), "Meta exception");
-			//    }
-			//}
+			catch (Exception e)
+			{
+				string text = e.ToString();
+				if (useConsole)
+				{
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
+				else
+				{
+					MessageBox.Show(text, "Meta exception");
+				}
+			}
 		}
 		Thread thread;
 		private Map parameter;
@@ -1931,24 +1739,19 @@ namespace Meta
 			{
 				if (installationPath == null)
 				{
+					// fix this
+					// how to find this out?
+					// maybe look in registry
+					// no other reliable way
+					// maybe Meta should be put in the Gac, actually
+					// difficult to debug though, maybe
+					// but where in the registry
+					// who would have to install it?
+					// should be installable for non-admins, too
 					installationPath = @"C:\Meta\0.1\";
 				}
 				return installationPath;
 			}
-			//get
-			//{
-			//    if (installationPath == null)
-			//    {
-			//        if (installationPath == null)
-			//        {
-			//            Uri uri = new Uri(Assembly.GetAssembly(typeof(Map)).CodeBase);
-			//            //installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).FullName;//.Parent.Parent.FullName;
-			//            installationPath = new DirectoryInfo(Path.GetDirectoryName(uri.AbsolutePath)).Parent.Parent.FullName;
-			//            //installationPath = Path.GetDirectoryName(uri.AbsolutePath);
-			//        }
-			//    }
-			//    return installationPath;
-			//}
 			set
 			{
 				installationPath = value;
@@ -1958,8 +1761,8 @@ namespace Meta
 		{
 			get
 			{
+				// fix this
 				return @"C:\Meta\0.1\Library";
-				//return Path.Combine(Process.InstallationPath, "Library");
 			}
 		}
 	}
@@ -1986,23 +1789,68 @@ namespace Meta
 		{
 			this.keys = new List<Map>(keys);
 		}
-		public PersistantPosition(PersistantPosition parent, Map key)
+		public PersistantPosition(PersistantPosition parent, Map ownKey)
 		{
 			this.keys = new List<Map>(parent.keys);
-			this.keys.Add(key);
+			this.keys.Add(ownKey);
 		}
 		public override Map Get()
 		{
-			Map scope = FileSystem.fileSystem;
-			for (int i = 0; i < keys.Count; i++)
+			Map position = FileSystem.fileSystem;
+			foreach(Map key in keys)
 			{
-				scope = scope[keys[i]];
+				position = position[key];
 			}
-			return scope;
+			return position;
 		}
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public static implicit operator Map(Number integer)
+		{
+			return new StrategyMap(integer);
+		}
+		public static implicit operator Map(bool boolean)
+		{
+			return new StrategyMap(new Number((int)(boolean ? 1 : 0)));
+		}
+		public static implicit operator Map(char character)
+		{
+			return new StrategyMap(new Number(character));
+		}
+		public static implicit operator Map(byte integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(sbyte integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(uint integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(ushort integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(int integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(long integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(ulong integer)
+		{
+			return new StrategyMap(new Number(integer));
+		}
+		public static implicit operator Map(string text)
+		{
+			return new StrategyMap(text);
+		}
+		// fix this
 		public virtual PersistantPosition Position
 		{
 			get
@@ -2010,54 +1858,11 @@ namespace Meta
 				return null;
 			}
 		}
-		public static implicit operator Map(Position scope)
+		public virtual void AppendRange(Map array)
 		{
-			if (scope == null)
-			{
-				return null;
-			}
-			else
-			{
-				return scope.Get();
-			}
+			AppendRangeDefault(array);
 		}
-		// this is really stupidly implemented, very annoying
-		//public Map Argument
-		//{
-		//    get
-		//    {
-		//        Map arg;
-		//        if (argument != null)
-		//        {
-		//            arg = argument;
-		//        }
-		//        else if (Scope!=null && Scope.Get() != null)
-		//        {
-		//            arg = Scope.Get().Argument;
-		//        }
-		//        else
-		//        {
-		//            arg = null;
-		//        }
-		//        return arg;
-		//    }
-		//    set
-		//    {
-		//        argument = value;
-		//    }
-		//}
-		//public Map argument=null;
-		public abstract bool IsFunction
-		{
-			get;
-		}
-
-		// rename
-		public virtual void AppendMap(Map array)
-		{
-			AppendMapDefault(array);
-		}
-		public virtual void AppendMapDefault(Map array)
+		public virtual void AppendRangeDefault(Map array)
 		{
 			int counter = ArrayCount + 1;
 			foreach (Map map in array.Array)
@@ -2066,104 +1871,77 @@ namespace Meta
 				counter++;
 			}
 		}
-		private Statement statement;
+		private object compiledCode;
+
 		public Statement GetStatement()
 		{
-			if (statement == null)
+			if (compiledCode == null)
 			{
-				statement = new Statement(this);
+				compiledCode = new Statement(this);
 			}
-			return statement;
+			return (Statement)compiledCode;
 		}
-		private Subselect subselect;
 		public Subselect GetSubselect()
 		{
-			if (subselect == null)
+			if (compiledCode == null)
 			{
 				if (ContainsKey(Code.Current))
 				{
-					subselect = new Current();
+					compiledCode = new Current();
 				}
-				//else if (ContainsKey(CodeKeys.Argument))
-				//{
-				//    subselect = new Argument();
-				//}
-				//else if (ContainsKey(CodeKeys.Scope))
-				//{
-				//    subselect = new ScopeSubselect();
-				//}
 				else if (ContainsKey(Code.Search))
 				{
-					subselect = new Search(this[Code.Search]);
+					compiledCode = new Search(this[Code.Search]);
 				}
 				else if (ContainsKey(Code.Lookup))
 				{
-					subselect = new Lookup(this[Code.Lookup]);
+					compiledCode = new Lookup(this[Code.Lookup]);
 				}
-				else if(ContainsKey(Code.Root))
+				else if (ContainsKey(Code.Root))
 				{
-					subselect=new Root();
+					compiledCode = new Root();
 				}
-				else if(ContainsKey(Code.Call))
+				else if (ContainsKey(Code.Call))
 				{
-					subselect=new CallSubselect(this[Code.Call]);
+					compiledCode = new CallSubselect(this[Code.Call]);
 				}
 				else
 				{
 					throw new Exception("Map is not a subselect.");
 				}
 			}
-			return subselect;
+			return (Subselect)compiledCode;
 		}
 		public Expression GetExpression()
 		{
-			if (expression == null)
+			if (compiledCode == null)
 			{
 				if (ContainsKey(Code.Call))
 				{
-					expression = new Call(this[Code.Call]);
+					compiledCode = new Call(this[Code.Call]);
 				}
 				else if (ContainsKey(Code.Program))
 				{
-					expression = new Program(this[Code.Program]);
+					compiledCode = new Program(this[Code.Program]);
 				}
 				else if (ContainsKey(Code.Literal))
 				{
-					expression = new Literal(this[Code.Literal]);
+					compiledCode = new Literal(this[Code.Literal]);
 				}
 				else if (ContainsKey(Code.Select))
 				{
-					expression = new Select(this[Code.Select]);
+					compiledCode = new Select(this[Code.Select]);
 				}
 				else
 				{
 					throw new ApplicationException("Cannot compile map.");
 				}
 			}
-			return expression;
-		}
-		private Expression expression;
-
-		public string GetKeyStrings()
-		{
-			string text="";
-			foreach (Map key in this.Keys)
-			{
-				bool matched;
-				text += Meta.Serialize.Key.Match(key,"",out matched) + " ";
-			}
-			return text;
-		}
-		public Map This
-		{
-			get
-			{
-				return this;
-			}
+			return (Expression)compiledCode;
 		}
 		public void Append(Map map)
 		{
-			this[Array.Count + 1] = map;
+			this[ArrayCount + 1] = map;
 		}
 		public static Map Empty
 		{
@@ -2185,14 +1963,7 @@ namespace Meta
 			}
 			else if (this.IsNumber)
 			{
-				try
-				{
-					text = this.GetNumber().ToString();
-				}
-				catch(Exception e)
-				{
-					text = "";
-				}
+				text = this.GetNumber().ToString();
 			}
 			else
 			{
@@ -2207,65 +1978,12 @@ namespace Meta
 				return IsNumber && (GetNumber()==0 || GetNumber()==1);
 			}
 		}
-		public virtual bool GetBoolean()
-		{
-			bool boolean;
-			if(GetNumber()==0)
-			{
-				boolean=false;
-			}
-			else if(GetNumber()==1)
-			{
-				boolean=true;
-			}
-			else
-			{
-				throw new ApplicationException("Map is not a boolean.");
-			}
-			return boolean;
-		}
 		public virtual bool IsNumber
 		{
 			get
 			{
 				return IsNumberDefault;
 			}
-		}
-		public bool IsNumberDefault
-		{
-			get
-			{
-				try
-				{
-					return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this[Map.Empty].IsNumber);
-				}
-				catch(Exception e)
-				{
-					int asfd;
-					return ContainsKey(Map.Empty) && this[Map.Empty].IsNumber;
-				}
-			}
-		}
-		public virtual Number GetNumber()
-		{
-			return GetNumberDefault();
-		}
-		public Number GetNumberDefault()
-		{
-			Number number;
-			if(this.Equals(Map.Empty))
-			{
-				number=0;
-			}
-			else if(this.Count==1 && this.ContainsKey(Map.Empty) && this[Map.Empty].GetNumber()!=null)
-			{
-				number = 1 + this[Map.Empty].GetNumber();
-			}
-			else
-			{
-				throw new ApplicationException("Map is not an integer");
-			}
-			return number;
 		}
 		public virtual bool IsString
 		{
@@ -2274,29 +1992,48 @@ namespace Meta
 				return IsStringDefault;
 			}
 		}
+		public bool IsNumberDefault
+		{
+			get
+			{
+				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this[Map.Empty].IsNumber);
+			}
+		}
 		public bool IsStringDefault
 		{
 			get
 			{
-				bool isString;
-				if (ArrayCount == Count)
+				return ArrayCount == Count && this.Array.TrueForAll(delegate(Map map)
 				{
-					isString = this.Array.TrueForAll(
-						delegate(Map map)
-						{
-							return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
-						});
-				}
-				else
-				{
-					isString = false;
-				}
-				return isString;
+					return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
+				});
 			}
+		}
+		public virtual Number GetNumber()
+		{
+			return GetNumberDefault();
 		}
 		public virtual string GetString()
 		{
 			return GetStringDefault();
+		}
+		public virtual bool GetBoolean()
+		{
+			bool boolean;
+			Number number = GetNumber();
+			if (number == 0)
+			{
+				boolean = false;
+			}
+			else if (number == 1)
+			{
+				boolean = true;
+			}
+			else
+			{
+				throw new ApplicationException("Map is not a boolean.");
+			}
+			return boolean;
 		}
 		public string GetStringDefault()
 		{
@@ -2306,6 +2043,23 @@ namespace Meta
 				text+=Convert.ToChar(this[key].GetNumber().GetInt32());
 			}
 			return text;
+		}
+		public Number GetNumberDefault()
+		{
+			Number number;
+			if (this.Equals(Map.Empty))
+			{
+				number = 0;
+			}
+			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this[Map.Empty].IsNumber)
+			{
+				number = 1 + this[Map.Empty].GetNumber();
+			}
+			else
+			{
+				throw new ApplicationException("Map is not an integer");
+			}
+			return number;
 		}
 		public Position Scope
 		{
@@ -2354,11 +2108,6 @@ namespace Meta
 				return array;
 			}
 		}
-		// refactor
-		public Map GetForAssignment(Map key)
-		{
-			return Get(key);
-		}
         public Map this[Map key]
         {
 			get
@@ -2369,19 +2118,12 @@ namespace Meta
 			{
 				if (value != null)
 				{
-					expression = null;
-					statement = null;
+					compiledCode = null;
 					Map val = value;
+					// refactor
 					if (val.scope == null || val.scope.Get() == null)
 					{
-						//if (this.scope is PersistantScope)
-						//{
-						//    val.scope = new PersistantScope((PersistantScope)Scope, key);
-						//}
-						//else
-						//{
-							val.scope = new TemporaryPosition(this);
-						//}
+						val.scope = new TemporaryPosition(this);
 					}
 					Set(key, val);
 				}
@@ -2391,25 +2133,14 @@ namespace Meta
         protected abstract void Set(Map key, Map val);
 		public virtual Map Call(Map arg)
 		{
-			Map function = this[Code.Function];
-			Map context;
-			if (this.ContainsKey(Code.Function) && this[Code.Function].ContainsKey(Code.ParameterName))
-			{
-				context = new StrategyMap();
-				context.Scope = new TemporaryPosition(this);
-				context[this[Code.Function][Code.ParameterName]] = arg;
-			}
-			else
-			{
-				context = this;
-			}
-			Map result = function.GetExpression().Evaluate(context, arg);
-			return result;
+			return this[Code.Function].GetExpression().Evaluate(
+				new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg));
 		}
 		public abstract ICollection<Map> Keys
 		{
 			get;
 		}
+		// refactor
 		public Map Copy()
 		{
 			Map clone = CopyData();
@@ -2422,18 +2153,6 @@ namespace Meta
 		{
 			return Keys.Contains(key);
 		}
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-
-        }
-		public virtual IEnumerator<KeyValuePair<Map, Map>> GetEnumerator()
-		{
-			foreach (Map key in Keys)
-			{
-				yield return new KeyValuePair<Map, Map>(key, this[key]);
-			}
-		}
 		public override int GetHashCode()
 		{
 			if (IsNumber)
@@ -2444,6 +2163,17 @@ namespace Meta
 			else
 			{
 				return Count;
+			}
+		}
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
+		public virtual IEnumerator<KeyValuePair<Map, Map>> GetEnumerator()
+		{
+			foreach (Map key in Keys)
+			{
+				yield return new KeyValuePair<Map, Map>(key, this[key]);
 			}
 		}
 		Extent extent;
@@ -2459,204 +2189,13 @@ namespace Meta
 				extent=value;
 			}
 		}
-		private Map parent;
-		public static implicit operator Map(Number integer)
-		{
-			return new StrategyMap(integer);
-		}
-		public static implicit operator Map(bool boolean)
-		{
-			return new StrategyMap(new Number((int)(boolean?1:0)));
-		}
-		public static implicit operator Map(char character)
-		{
-			return new StrategyMap(new Number(character));
-		}
-		public static implicit operator Map(byte integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(sbyte integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(uint integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(ushort integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(int integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(long integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(ulong integer)
-		{
-			return new StrategyMap(new Number(integer));
-		}
-		public static implicit operator Map(string text)
-		{
-			return new StrategyMap(text);
-		}
 	}
 	public class StrategyMap:Map
 	{
-		public StrategyMap(params Map[] keysAndValues):this()
+		public StrategyMap(Position scope)
+			: this()
 		{
-			for (int i = 0; i + 2 <= keysAndValues.Length; i += 2)
-			{
-				this[keysAndValues[i]] = keysAndValues[i + 1];
-			}
-		}
-		public override bool IsFunction
-		{
-			get
-			{
-				Map function=this[Code.Function];
-				bool isFunction;
-				if (function != null && (function.ContainsKey(Code.Call) || function.ContainsKey(Code.Literal) || function.ContainsKey(Code.Program) || function.ContainsKey(Code.Select)))
-				{
-					isFunction = true;
-				}
-				else
-				{
-					isFunction = false;
-				}
-				return isFunction;
-			}
-		}
-		public override int ArrayCount
-		{
-			get
-			{
-				return strategy.GetArrayCount();
-			}
-		}
-		public override void AppendMap(Map array)
-		{
-			strategy.AppendMap(array);
-		}
-		public bool Persistant
-		{
-			get
-			{
-				return persistant;
-			}
-			set
-			{
-				persistant = value;
-			}
-		}
-		private bool persistant=false;
-
-		public override Map Call(Map arg)
-		{
-			return base.Call(arg);
-		}
-		public void InitFromStrategy(MapStrategy clone)
-		{
-			foreach (Map key in clone.Keys)
-			{
-				this[key] = clone.Get(key);
-			}
-		}
-		public override Number GetNumber()
-		{
-			return strategy.GetNumber();
-		}
-		public override string GetString()
-		{
-			return strategy.GetString();
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return strategy.IsString;
-			}
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return strategy.IsNumber;
-			}
-		}
-		public override int Count
-		{
-			get
-			{
-				return strategy.Count;
-			}
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				return strategy.Array;
-			}
-		}
-		protected override Map Get(Map key)
-		{
-			if (key.Equals(new StrategyMap("Meta")))
-			{
-			}
-			return strategy.Get(key);
-		}
-		protected override void Set(Map key, Map value)
-		{
-			strategy.Set(key, value);
-		}
-
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return strategy.Keys;
-			}
-		}
-		protected override Map CopyData()
-		{
-			return strategy.CopyData();
-		}
-		public override bool ContainsKey(Map key)
-		{
-			return strategy.ContainsKey(key);
-		}
-		public override bool Equals(object toCompare)
-		{
-			bool isEqual;
-			if (Object.ReferenceEquals(toCompare, this))
-			{
-				isEqual = true;
-			}
-			else if (toCompare is StrategyMap)
-			{
-				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
-			}
-			else
-			{
-				isEqual = false;
-			}
-			return isEqual;
-		}
-		public MapStrategy Strategy
-		{
-			get
-			{
-				return strategy;
-			}
-			set
-			{
-				strategy = value;
-				strategy.map = this;
-			}
+			this.Scope = scope;
 		}
 		protected MapStrategy strategy;
 		public StrategyMap(bool boolean)
@@ -2687,12 +2226,134 @@ namespace Meta
 			: this(new Number(i))
 		{
 		}
-		public StrategyMap(Number number):this(new NumberStrategy(number))
+		public StrategyMap(Number number)
+			: this(new NumberStrategy(number))
 		{
 		}
 		public StrategyMap(string text)
 			: this(new ListStrategy(text))
 		{
+		}
+		public StrategyMap(Position scope, params Map[] keysAndValues)
+			: this(keysAndValues)
+		{
+			this.Scope = scope;
+		}
+		public StrategyMap(params Map[] keysAndValues):this()
+		{
+			for (int i = 0; i <= keysAndValues.Length - 2; i += 2)
+			{
+				this[keysAndValues[i]] = keysAndValues[i + 1];
+			}
+		}
+		public override int ArrayCount
+		{
+			get
+			{
+				return strategy.GetArrayCount();
+			}
+		}
+		public override void AppendRange(Map array)
+		{
+			strategy.AppendRange(array);
+		}
+		public void InitFromStrategy(MapStrategy clone)
+		{
+			foreach (Map key in clone.Keys)
+			{
+				this[key] = clone.Get(key);
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return strategy.IsString;
+			}
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return strategy.IsNumber;
+			}
+		}
+		public override Number GetNumber()
+		{
+			return strategy.GetNumber();
+		}
+		public override string GetString()
+		{
+			return strategy.GetString();
+		}
+		public override int Count
+		{
+			get
+			{
+				return strategy.Count;
+			}
+		}
+		public override List<Map> Array
+		{
+			get
+			{
+				return strategy.Array;
+			}
+		}
+		protected override Map Get(Map key)
+		{
+			return strategy.Get(key);
+		}
+		protected override void Set(Map key, Map value)
+		{
+			strategy.Set(key, value); 
+		}
+		protected override Map CopyData() 
+		{ 
+			return strategy.CopyData(); 
+		}
+		public override bool ContainsKey(Map key) 
+		{ 
+			return strategy.ContainsKey(key); 
+		}
+		public override ICollection<Map> Keys
+		{
+			get { 
+				return strategy.Keys; 
+			}
+		}
+		public override bool Equals(object toCompare)
+		{
+			bool isEqual;
+			if (Object.ReferenceEquals(toCompare, this))
+			{
+				isEqual = true;
+			}
+			else if (toCompare is StrategyMap)
+			{
+				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
+			}
+			else
+			{
+				isEqual = false;
+			}
+			return isEqual;
+		}
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		public MapStrategy Strategy
+		{
+			get
+			{
+				return strategy;
+			}
+			set
+			{
+				strategy = value;
+				strategy.map = this;
+			}
 		}
 	}
 	public class Transform
@@ -2700,19 +2361,7 @@ namespace Meta
 		public static object ToDotNet(Map meta, Type target)
 		{
 			object dotNet = null;
-			if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-				&& meta.ContainsKey(Code.Function))
-			{
-				MethodInfo invoke = target.GetMethod("Invoke",
-					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-				Delegate function = MethodOverload.CreateDelegateFromCode(target, meta);
-				dotNet = function;
-			}
-			if (meta is TypeMap && target == typeof(Type))
-			{
-				dotNet = ((TypeMap)meta).type;
-			}
-			else if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
+			if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
 			{
 				dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
 			}
@@ -2721,48 +2370,40 @@ namespace Meta
 				switch (Type.GetTypeCode(target))
 				{
 					case TypeCode.Boolean:
-						if (IsIntegerInRange(meta, 0, 1))
+						if (meta.IsBoolean)
 						{
-							if (meta.GetNumber() == 0)
-							{
-								dotNet = false;
-							}
-							else if (meta.GetNumber() == 1)
-							{
-								dotNet = true;
-							}
+							dotNet = meta.GetBoolean();
 						}
 						break;
 					case TypeCode.Byte:
-						if (IsIntegerInRange(meta, new Number(Byte.MinValue), new Number(Byte.MaxValue)))
+						if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue))
 						{
 							dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
 						}
 						break;
 					case TypeCode.Char:
-						if (IsIntegerInRange(meta, (int)Char.MinValue, (int)Char.MaxValue))
+						if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue))
 						{
-							dotNet = Convert.ToChar(meta.GetNumber().GetInt64());
+							dotNet = Convert.ToChar(meta.GetNumber().GetInt32());
 						}
 						break;
 					case TypeCode.DateTime:
 						dotNet = null;
 						break;
 					case TypeCode.DBNull:
-						if (meta.IsNumber && meta.GetNumber() == 0)
-						{
-							dotNet = DBNull.Value;
-						}
+						dotNet = null;
 						break;
 					case TypeCode.Decimal:
-						if (IsIntegerInRange(meta, new Number((double)decimal.MinValue), new Number((double)decimal.MaxValue)))
+						if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue))
 						{
+							// add function, GetDecimal
 							dotNet = (decimal)(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Double:
-						if (IsIntegerInRange(meta, new Number(double.MinValue), new Number(double.MaxValue)))
+						if (IsIntegerInRange(meta, double.MinValue, double.MaxValue))
 						{
+							// fix this
 							dotNet = (double)(meta.GetNumber().GetInt64());
 						}
 						break;
@@ -2773,7 +2414,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Int32:
-						if (IsIntegerInRange(meta, (Number)Int32.MinValue, Int32.MaxValue))
+						if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue))
 						{
 							dotNet = meta.GetNumber().GetInt32();
 						}
@@ -2785,10 +2426,16 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Object:
-						if (target.Name == "Point")
+						if (target == typeof(Type) && meta is TypeMap)
 						{
+							dotNet = ((TypeMap)meta).type;
 						}
-						if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
+						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+								&& meta.ContainsKey(Code.Function))
+						{
+							dotNet = MethodOverload.CreateDelegateFromCode(target, meta);
+						}
+						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
 						{
 							dotNet = ((ObjectMap)meta).obj;
 						}
@@ -2796,11 +2443,13 @@ namespace Meta
 						{
 							dotNet = meta;
 						}
+						// maybe remove
 						else if (target.IsArray)
 						{
-							Type elementType=target.GetElementType();
+							string[] asdf;
 							ArrayList list = new ArrayList();
 							bool converted=true;
+							Type elementType=target.GetElementType();
 							foreach (Map m in meta.Array)
 							{
 								object o = Transform.ToDotNet(m, elementType);
@@ -2818,15 +2467,11 @@ namespace Meta
 							{
 								dotNet=list.ToArray(elementType);
 							}
-							else
-							{
-								dotNet = null;
-							}
 						}
 						else
 						{
-							ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
 							ObjectMap result;
+							ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
 							if (constructor != null)
 							{
 								result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
@@ -2840,8 +2485,7 @@ namespace Meta
 								}
 								else
 								{
-									object x = target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { });
-									result = new ObjectMap(x);
+									result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
 								}
 							}
 							else
@@ -2856,14 +2500,15 @@ namespace Meta
 						}
 						break;
 					case TypeCode.SByte:
-						if (IsIntegerInRange(meta, (Number)SByte.MinValue, (Number)SByte.MaxValue))
+						if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))
 						{
 							dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());
 						}
 						break;
 					case TypeCode.Single:
-						if (IsIntegerInRange(meta, new Number(Single.MinValue), new Number(Single.MaxValue)))
+						if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue))
 						{
+							// wrong
 							dotNet = (float)meta.GetNumber().GetInt64();
 						}
 						break;
@@ -2874,7 +2519,7 @@ namespace Meta
 						}
 						break;
 					case TypeCode.UInt16:
-						if (IsIntegerInRange(meta, new Number(UInt16.MinValue), new Number(UInt16.MaxValue)))
+						if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue))
 						{
 							dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());
 						}
@@ -2910,107 +2555,81 @@ namespace Meta
 		}
 		public static Map ToSimpleMeta(object dotNet)
 		{
-			Map meta;
 			if (dotNet == null)
 			{
-				meta = new ObjectMap(null, typeof(Object));
+				return new ObjectMap(null, typeof(Object));
 			}
 			else if (dotNet is Map)
 			{
-				meta = (Map)dotNet;
+				return (Map)dotNet;
 			}
 			else
 			{
-				meta = new ObjectMap(dotNet);
+				return new ObjectMap(dotNet);
 			}
-			return meta;
 		}
 		public static Map ToMeta(object dotNet)
 		{
-			Map meta;
 			if (dotNet == null)
 			{
-				meta = Map.Empty;
+				return Map.Empty;
 			}
-			//if(dotNet==null)
-			//{
-			//    meta=null;
-			//}
 			else
 			{
 				switch(Type.GetTypeCode(dotNet.GetType()))
 				{
 					case TypeCode.Boolean:
-						meta=((bool)dotNet)? 1:0;
-						break;
+						return Convert.ToInt32(((bool)dotNet));
 					case TypeCode.Byte:
-						meta=(byte)dotNet;
-						break;
+						return (byte)dotNet;
 					case TypeCode.Char:
-						meta=(char)dotNet;
-						break;
+						return (char)dotNet;
 					case TypeCode.DateTime:
-						meta=new ObjectMap(dotNet);
-						break;
+						return new ObjectMap(dotNet);
 					case TypeCode.DBNull:
-						meta=new ObjectMap(dotNet);
-						break;
+						return new ObjectMap(dotNet);
 					case TypeCode.Decimal:
-						meta=(int)dotNet;
-						break;
+						return (int)dotNet;
 					case TypeCode.Double:
-						meta=(int)dotNet;
-						break;
+						return (int)dotNet;
 					case TypeCode.Int16:
-						meta=(short)dotNet;
-						break;
+						return (short)dotNet;
 					case TypeCode.Int32:
-						meta=(int)dotNet;
-						break;
+						return (int)dotNet;
 					case TypeCode.Int64:
-						meta=(long)dotNet;
-						break;
+						return (long)dotNet;
 					case TypeCode.Object:
 						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
 						{
-							meta=(int)Convert.ToInt32((Enum)dotNet);
+							return (int)Convert.ToInt32((Enum)dotNet);
 						}
 						else if(dotNet is Map)
 						{
-							meta=(Map)dotNet;
+							return (Map)dotNet;
 						}
 						else
 						{
-							meta=new ObjectMap(dotNet);
+							return new ObjectMap(dotNet);
 						}
-						break;
 					case TypeCode.SByte:
-						meta=(sbyte)dotNet;
-						break;
+						return (sbyte)dotNet;
 					case TypeCode.Single:
-						meta=(int)dotNet;
-						break;
+						return (int)dotNet;
 					case TypeCode.String:
-						meta=(string)dotNet;
-						break;
+						return (string)dotNet;
 					case TypeCode.UInt32:
-						meta=(uint)dotNet;
-						break;
+						return (uint)dotNet;
 					case TypeCode.UInt64:
-						meta=(ulong)dotNet;
-						break;
+						return (ulong)dotNet;
 					case TypeCode.UInt16:
-						meta=(ushort)dotNet;
-						break;
+						return (ushort)dotNet;
 					default:
 						throw new ApplicationException("not implemented");
 				}
 			}
-			return meta;
 		}
 	}
 	public delegate object DelegateCreatedForGenericDelegates();
-
 
 	public abstract class MethodImplementation:Map
 	{
@@ -3039,9 +2658,6 @@ namespace Meta
 		protected Type type;
 		public override Map Call(Map argument)
 		{
-			if (this.method.Name.StartsWith("MakeArray"))
-			{
-			}
 			object result;
 			List<object> arguments = new List<object>();
 			bool argumentsMatched = true;
@@ -3051,11 +2667,6 @@ namespace Meta
 			}
 			if (parameters.Length == 1)
 			{
-				if (parameters[0].ParameterType.Name == "Int32")
-				{
-				}
-				if (this.method.Name.StartsWith("set_Instance"))
-				{
 				}
 				object arg = Transform.ToDotNet(argument, parameters[0].ParameterType);
 				if (arg != null)
@@ -3113,7 +2724,7 @@ namespace Meta
 		// refactor
 		public override Map Call(Map arg)
 		{
-			if (IsFunction)
+			if (IsCallable)
 			{
 				return base.Call(arg);
 			}
@@ -3122,13 +2733,13 @@ namespace Meta
 				throw new ApplicationException("Method cannot be called directly, it is overloaded.");
 			}
 		}
-	    public override bool IsFunction
-	    {
-	        get
-	        {
-	            return method!=null;
-	        }
-	    }
+		public bool IsCallable
+		{
+			get
+			{
+				return method != null;
+			}
+		}
 	    private Dictionary<Map, MethodOverload> overloads;
 	    private Method(Dictionary<Map, MethodOverload> overloads,MethodBase method,object obj,Type type):base(method,obj,type)
 	    {
@@ -3243,13 +2854,13 @@ namespace Meta
 	}
 	public class MethodOverload : MethodImplementation
 	{
-	    public override bool IsFunction
-	    {
-	        get
-	        {
-	            return true;
-	        }
-	    }
+		//public override bool IsCallable
+		//{
+		//    get
+		//    {
+		//        return true;
+		//    }
+		//}
 	    protected override Map CopyData()
 	    {
 	        return new MethodOverload(this.method, this.obj, this.type);
@@ -3424,13 +3035,13 @@ namespace Meta
 			}
 			return value;
 		}
-		public override bool IsFunction
-		{
-			get
-			{
-				return Constructor.IsFunction;
-			}
-		}
+		//public override bool IsCallable
+		//{
+		//    get
+		//    {
+		//        return Constructor.IsCallable;
+		//    }
+		//}
 		public Type Type
 		{
 			get
@@ -3480,13 +3091,13 @@ namespace Meta
 	}
 	public class ObjectMap: DotNetMap
 	{
-		public override bool IsFunction
-		{
-			get
-			{
-				return false;
-			}
-		}
+		//public override bool IsCallable
+		//{
+		//    get
+		//    {
+		//        return false;
+		//    }
+		//}
 		public object Object
 		{
 			get
@@ -3681,7 +3292,7 @@ namespace Meta
 				return data.Count;
 			}
 		}
-		public override void AppendMap(Map array)
+		public override void AppendRange(Map array)
 		{
 			foreach (Map map in array.Array)
 			{
@@ -3972,9 +3583,9 @@ namespace Meta
 		{
 			return map.GetArrayCountDefault();
 		}
-		public virtual void AppendMap(Map array)
+		public virtual void AppendRange(Map array)
 		{
-			map.AppendMapDefault(array);
+			map.AppendRangeDefault(array);
 		}
 		public void Panic(MapStrategy newStrategy)
 		{
@@ -4105,13 +3716,13 @@ namespace Meta
 	}
 	public class Event:Map
 	{
-		public override bool IsFunction
-		{
-			get
-			{
-				return true;
-			}
-		}
+		//public override bool IsCallable
+		//{
+		//    get
+		//    {
+		//        return true;
+		//    }
+		//}
 		EventInfo eventInfo;
 		object obj;
 		Type type;
@@ -4187,13 +3798,13 @@ namespace Meta
 	}
 	public class Property:Map
 	{
-		public override bool IsFunction
-		{
-			get
-			{
-				return false;
-			}
-		}
+		//public override bool IsCallable
+		//{
+		//    get
+		//    {
+		//        return false;
+		//    }
+		//}
 		PropertyInfo property;
 		object obj;
 		Type type;
@@ -4465,6 +4076,7 @@ namespace Meta
 			}
 		}
 	}
+	// rename
 	[AttributeUsage(AttributeTargets.Property)]
 	public class SerializeAttribute : Attribute
 	{
@@ -6652,6 +6264,9 @@ namespace Meta
 			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
 		}
 	}
+	// maybe we should get rid of these and just implement a real application server or something like that
+	// a simple webservice should be enough, actually. its not that important right now, though
+
 	public class Web
 	{
 		const int port = 80;
@@ -6906,6 +6521,14 @@ namespace Meta
 		public Number Clone()
 		{
 			return new Number(this);
+		}
+		public static implicit operator Number(double number)
+		{
+			return new Number(number);
+		}
+		public static implicit operator Number(decimal number)
+		{
+			return new Number((double)number);
 		}
 		public static implicit operator Number(int integer)
 		{

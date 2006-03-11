@@ -145,7 +145,7 @@
 				item=space.[1]
 			tryTest=try
 				function=
-					|keyThatDoesNotExist
+					|"hello"
 				catch=
 					argument|argument.ToString 0
 			sort=sort

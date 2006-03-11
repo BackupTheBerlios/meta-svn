@@ -3616,3 +3616,18 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		"
 "
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		16
+	Value (StrategyMap):
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"enumTest"
+	Value (StrategyMap):
+		2
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"typeTest"
+	Value (ObjectMap):
+		System.String[]

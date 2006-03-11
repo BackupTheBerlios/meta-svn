@@ -400,6 +400,14 @@ commandLine|
 		
 		
 	"
+	["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
+	enumTest=["System.Windows.Forms"].Application.VisualStyleState.get 0
+	typeTest=mscorlib.Array.CreateInstance.[
+		mscorlib.Type
+		mscorlib.Int32
+	]
+		mscorlib.String
+		5
 shortFunc=arg:arg
 complicated=
 	[

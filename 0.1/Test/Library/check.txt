@@ -211,7 +211,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"tryTest"
 			Value (StrategyMap):
-				"C:\Meta\0.1\Test\libraryTest.meta, line 148, column 7: Key not found: "keyThatDoesNotExist""
+				"hello"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"sort"

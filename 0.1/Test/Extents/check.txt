@@ -6,7 +6,7 @@ Extent (Extent):
 			"1"
 	End (SourcePosition):
 		Line (Int32):
-			"408"
+			"416"
 		Column (Int32):
 			"1"
 Entry (KeyValuePair`2)
@@ -70,7 +70,7 @@ Entry (KeyValuePair`2)
 					"1"
 			End (SourcePosition):
 				Line (Int32):
-					"403"
+					"411"
 				Column (Int32):
 					"1"
 		Entry (KeyValuePair`2)
@@ -105,7 +105,7 @@ Entry (KeyValuePair`2)
 							"2"
 					End (SourcePosition):
 						Line (Int32):
-							"403"
+							"411"
 						Column (Int32):
 							"1"
 				Entry (KeyValuePair`2)
@@ -776,12 +776,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -1283,14 +1283,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -2237,12 +2237,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -2968,14 +2968,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -3658,14 +3658,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -4176,14 +4176,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -5727,14 +5727,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -5847,14 +5847,14 @@ Entry (KeyValuePair`2)
 																																Extent (Extent):
 																																	Start (SourcePosition):
 																																		Line (Int32):
-																																			"397"
+																																			"404"
 																																		Column (Int32):
-																																			"18"
+																																			"69"
 																																	End (SourcePosition):
 																																		Line (Int32):
-																																			"397"
+																																			"404"
 																																		Column (Int32):
-																																			"19"
+																																			"70"
 																																0
 																								Entry (KeyValuePair`2)
 																									Key (StrategyMap):
@@ -5882,14 +5882,14 @@ Entry (KeyValuePair`2)
 																												Extent (Extent):
 																													Start (SourcePosition):
 																														Line (Int32):
-																															"397"
+																															"404"
 																														Column (Int32):
-																															"18"
+																															"69"
 																													End (SourcePosition):
 																														Line (Int32):
-																															"397"
+																															"404"
 																														Column (Int32):
-																															"19"
+																															"70"
 																												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -6658,14 +6658,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -7089,14 +7089,14 @@ Entry (KeyValuePair`2)
 																Extent (Extent):
 																	Start (SourcePosition):
 																		Line (Int32):
-																			"397"
+																			"404"
 																		Column (Int32):
-																			"18"
+																			"69"
 																	End (SourcePosition):
 																		Line (Int32):
-																			"397"
+																			"404"
 																		Column (Int32):
-																			"19"
+																			"70"
 																0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -7536,14 +7536,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -7777,14 +7777,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -7933,14 +7933,14 @@ Entry (KeyValuePair`2)
 																						Extent (Extent):
 																							Start (SourcePosition):
 																								Line (Int32):
-																									"397"
+																									"404"
 																								Column (Int32):
-																									"18"
+																									"69"
 																							End (SourcePosition):
 																								Line (Int32):
-																									"397"
+																									"404"
 																								Column (Int32):
-																									"19"
+																									"70"
 																						0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -8139,14 +8139,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -8501,14 +8501,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -8657,14 +8657,14 @@ Entry (KeyValuePair`2)
 																						Extent (Extent):
 																							Start (SourcePosition):
 																								Line (Int32):
-																									"397"
+																									"404"
 																								Column (Int32):
-																									"18"
+																									"69"
 																							End (SourcePosition):
 																								Line (Int32):
-																									"397"
+																									"404"
 																								Column (Int32):
-																									"19"
+																									"70"
 																						0
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
@@ -12071,14 +12071,14 @@ Entry (KeyValuePair`2)
 																Extent (Extent):
 																	Start (SourcePosition):
 																		Line (Int32):
-																			"397"
+																			"404"
 																		Column (Int32):
-																			"18"
+																			"69"
 																	End (SourcePosition):
 																		Line (Int32):
-																			"397"
+																			"404"
 																		Column (Int32):
-																			"19"
+																			"70"
 																0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -12226,12 +12226,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -12716,12 +12716,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -13628,12 +13628,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -14152,14 +14152,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -14445,14 +14445,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -15496,12 +15496,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -16054,14 +16054,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -16493,12 +16493,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -16621,12 +16621,12 @@ Entry (KeyValuePair`2)
 																						Extent (Extent):
 																							Start (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																							End (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																						Entry (KeyValuePair`2)
@@ -17007,14 +17007,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -17248,14 +17248,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -17403,12 +17403,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -18841,12 +18841,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -19063,12 +19063,12 @@ Entry (KeyValuePair`2)
 																												Extent (Extent):
 																													Start (SourcePosition):
 																														Line (Int32):
-																															"406"
+																															"414"
 																														Column (Int32):
 																															"3"
 																													End (SourcePosition):
 																														Line (Int32):
-																															"406"
+																															"414"
 																														Column (Int32):
 																															"3"
 																												Entry (KeyValuePair`2)
@@ -19687,12 +19687,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -20932,12 +20932,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -21445,12 +21445,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -22943,14 +22943,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -25057,14 +25057,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -28907,14 +28907,14 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"18"
+																					"69"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"19"
+																					"70"
 																		0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -29294,14 +29294,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -29794,14 +29794,14 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"18"
+																					"69"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"19"
+																					"70"
 																		0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -30181,14 +30181,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -32835,14 +32835,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -34203,12 +34203,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -34538,14 +34538,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -34693,12 +34693,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -35036,12 +35036,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -35422,14 +35422,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -35577,12 +35577,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -35705,12 +35705,12 @@ Entry (KeyValuePair`2)
 																						Extent (Extent):
 																							Start (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																							End (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																						Entry (KeyValuePair`2)
@@ -36160,14 +36160,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -36503,14 +36503,14 @@ Entry (KeyValuePair`2)
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"18"
+																													"69"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"397"
+																													"404"
 																												Column (Int32):
-																													"19"
+																													"70"
 																										0
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -36538,14 +36538,14 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"18"
+																					"69"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"19"
+																					"70"
 																		0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -36866,12 +36866,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -37252,14 +37252,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -37528,12 +37528,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -37948,12 +37948,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -38427,14 +38427,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -38590,14 +38590,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -38745,12 +38745,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -39320,12 +39320,12 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																		Entry (KeyValuePair`2)
@@ -40349,12 +40349,12 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																		Entry (KeyValuePair`2)
@@ -40881,14 +40881,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -41346,14 +41346,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -41656,12 +41656,12 @@ Entry (KeyValuePair`2)
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"406"
+																					"414"
 																				Column (Int32):
 																					"3"
 																		Entry (KeyValuePair`2)
@@ -43796,12 +43796,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -44018,14 +44018,14 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"18"
+																							"69"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"19"
+																							"70"
 																				0
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
@@ -44087,12 +44087,12 @@ Entry (KeyValuePair`2)
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"406"
+																							"414"
 																						Column (Int32):
 																							"3"
 																				Entry (KeyValuePair`2)
@@ -44525,14 +44525,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -45514,14 +45514,14 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -45669,12 +45669,12 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -46124,14 +46124,14 @@ Entry (KeyValuePair`2)
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -48688,14 +48688,14 @@ hello!"
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"18"
+																							"69"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"19"
+																							"70"
 																				0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -48723,14 +48723,14 @@ hello!"
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -49334,14 +49334,14 @@ hello!"
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -49653,14 +49653,14 @@ hello!"
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -50320,14 +50320,14 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -51113,14 +51113,14 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -52215,14 +52215,14 @@ Schwaenzchen in die Hoeh."
 																				Extent (Extent):
 																					Start (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"18"
+																							"69"
 																					End (SourcePosition):
 																						Line (Int32):
-																							"397"
+																							"404"
 																						Column (Int32):
-																							"19"
+																							"70"
 																				0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -52250,14 +52250,14 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -52613,14 +52613,14 @@ Schwaenzchen in die Hoeh."
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"18"
+													"69"
 											End (SourcePosition):
 												Line (Int32):
-													"397"
+													"404"
 												Column (Int32):
-													"19"
+													"70"
 										0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -52768,12 +52768,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -53666,12 +53666,12 @@ Schwaenzchen in die Hoeh."
 																																		Extent (Extent):
 																																			Start (SourcePosition):
 																																				Line (Int32):
-																																					"406"
+																																					"414"
 																																				Column (Int32):
 																																					"3"
 																																			End (SourcePosition):
 																																				Line (Int32):
-																																					"406"
+																																					"414"
 																																				Column (Int32):
 																																					"3"
 																																		Entry (KeyValuePair`2)
@@ -54366,14 +54366,14 @@ Schwaenzchen in die Hoeh."
 																																		Extent (Extent):
 																																			Start (SourcePosition):
 																																				Line (Int32):
-																																					"397"
+																																					"404"
 																																				Column (Int32):
-																																					"18"
+																																					"69"
 																																			End (SourcePosition):
 																																				Line (Int32):
-																																					"397"
+																																					"404"
 																																				Column (Int32):
-																																					"19"
+																																					"70"
 																																		0
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
@@ -54435,12 +54435,12 @@ Schwaenzchen in die Hoeh."
 																																		Extent (Extent):
 																																			Start (SourcePosition):
 																																				Line (Int32):
-																																					"406"
+																																					"414"
 																																				Column (Int32):
 																																					"3"
 																																			End (SourcePosition):
 																																				Line (Int32):
-																																					"406"
+																																					"414"
 																																				Column (Int32):
 																																					"3"
 																																		Entry (KeyValuePair`2)
@@ -55345,12 +55345,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -56006,12 +56006,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -56134,12 +56134,12 @@ Schwaenzchen in die Hoeh."
 																						Extent (Extent):
 																							Start (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																							End (SourcePosition):
 																								Line (Int32):
-																									"406"
+																									"414"
 																								Column (Int32):
 																									"3"
 																						Entry (KeyValuePair`2)
@@ -56383,12 +56383,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -56683,12 +56683,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -57258,14 +57258,14 @@ Schwaenzchen in die Hoeh."
 																		Extent (Extent):
 																			Start (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"18"
+																					"69"
 																			End (SourcePosition):
 																				Line (Int32):
-																					"397"
+																					"404"
 																				Column (Int32):
-																					"19"
+																					"70"
 																		0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -57534,12 +57534,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -57869,14 +57869,14 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -58385,12 +58385,12 @@ Schwaenzchen in die Hoeh."
 																										Extent (Extent):
 																											Start (SourcePosition):
 																												Line (Int32):
-																													"406"
+																													"414"
 																												Column (Int32):
 																													"3"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"406"
+																													"414"
 																												Column (Int32):
 																													"3"
 																										Entry (KeyValuePair`2)
@@ -58875,14 +58875,14 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"18"
+																	"69"
 															End (SourcePosition):
 																Line (Int32):
-																	"397"
+																	"404"
 																Column (Int32):
-																	"19"
+																	"70"
 														0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
@@ -59072,12 +59072,12 @@ Schwaenzchen in die Hoeh."
 														Extent (Extent):
 															Start (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 															End (SourcePosition):
 																Line (Int32):
-																	"406"
+																	"414"
 																Column (Int32):
 																	"3"
 														Entry (KeyValuePair`2)
@@ -59320,12 +59320,12 @@ Schwaenzchen in die Hoeh."
 																												Extent (Extent):
 																													Start (SourcePosition):
 																														Line (Int32):
-																															"406"
+																															"414"
 																														Column (Int32):
 																															"3"
 																													End (SourcePosition):
 																														Line (Int32):
-																															"406"
+																															"414"
 																														Column (Int32):
 																															"3"
 																												Entry (KeyValuePair`2)
@@ -59731,14 +59731,14 @@ Schwaenzchen in die Hoeh."
 																												Extent (Extent):
 																													Start (SourcePosition):
 																														Line (Int32):
-																															"397"
+																															"404"
 																														Column (Int32):
-																															"18"
+																															"69"
 																													End (SourcePosition):
 																														Line (Int32):
-																															"397"
+																															"404"
 																														Column (Int32):
-																															"19"
+																															"70"
 																												0
 																				Entry (KeyValuePair`2)
 																					Key (StrategyMap):
@@ -60145,17 +60145,2019 @@ Schwaenzchen in die Hoeh."
 													"3"
 										"
 "
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						177
+					Value (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"403"
+								Column (Int32):
+									"1"
+							End (SourcePosition):
+								Line (Int32):
+									"404"
+								Column (Int32):
+									"1"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"value"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"403"
+										Column (Int32):
+											"2"
+									End (SourcePosition):
+										Line (Int32):
+											"403"
+										Column (Int32):
+											"119"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										"call"
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"403"
+												Column (Int32):
+													"2"
+											End (SourcePosition):
+												Line (Int32):
+													"403"
+												Column (Int32):
+													"119"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"callable"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"403"
+														Column (Int32):
+															"2"
+													End (SourcePosition):
+														Line (Int32):
+															"403"
+														Column (Int32):
+															"59"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"select"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"403"
+																Column (Int32):
+																	"2"
+															End (SourcePosition):
+																Line (Int32):
+																	"403"
+																Column (Int32):
+																	"59"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"2"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"26"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"search"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"2"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"26"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"25"
+																				"System.Windows.Forms"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"26"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"38"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"27"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"38"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"27"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"38"
+																				"Application"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"38"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"55"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"39"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"55"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"39"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"55"
+																				"VisualStyleState"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																4
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"55"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"59"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"56"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"59"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"56"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"59"
+																				"set"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"argument"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"403"
+														Column (Int32):
+															"59"
+													End (SourcePosition):
+														Line (Int32):
+															"403"
+														Column (Int32):
+															"119"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"select"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"403"
+																Column (Int32):
+																	"60"
+															End (SourcePosition):
+																Line (Int32):
+																	"403"
+																Column (Int32):
+																	"119"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"60"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"84"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"search"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"60"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"84"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"61"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"83"
+																				"System.Windows.Forms"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"84"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"101"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"85"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"101"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"85"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"101"
+																				"VisualStyleState"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"101"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"403"
+																		Column (Int32):
+																			"119"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"102"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"403"
+																				Column (Int32):
+																					"119"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"102"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"403"
+																						Column (Int32):
+																							"119"
+																				"ClientAreaEnabled"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"403"
+										Column (Int32):
+											"119"
+									End (SourcePosition):
+										Line (Int32):
+											"403"
+										Column (Int32):
+											"119"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent:
+											null
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"lookup"
+											Value (StrategyMap):
+												Extent:
+													null
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"literal"
+													Value (StrategyMap):
+														Extent:
+															null
+														16
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						178
+					Value (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"404"
+								Column (Int32):
+									"1"
+							End (SourcePosition):
+								Line (Int32):
+									"405"
+								Column (Int32):
+									"1"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"404"
+										Column (Int32):
+											"2"
+									End (SourcePosition):
+										Line (Int32):
+											"404"
+										Column (Int32):
+											"10"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"404"
+												Column (Int32):
+													"2"
+											End (SourcePosition):
+												Line (Int32):
+													"404"
+												Column (Int32):
+													"10"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"lookup"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"2"
+													End (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"10"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"literal"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"2"
+															End (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"10"
+														"enumTest"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"value"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"404"
+										Column (Int32):
+											"11"
+									End (SourcePosition):
+										Line (Int32):
+											"404"
+										Column (Int32):
+											"70"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										"call"
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"404"
+												Column (Int32):
+													"11"
+											End (SourcePosition):
+												Line (Int32):
+													"404"
+												Column (Int32):
+													"70"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"callable"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"11"
+													End (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"68"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"select"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"11"
+															End (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"68"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"11"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"35"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"search"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"11"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"35"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"12"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"34"
+																				"System.Windows.Forms"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"35"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"47"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"36"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"47"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"36"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"47"
+																				"Application"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"47"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"64"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"48"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"64"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"48"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"64"
+																				"VisualStyleState"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																4
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"64"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"404"
+																		Column (Int32):
+																			"68"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"65"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"404"
+																				Column (Int32):
+																					"68"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"65"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"404"
+																						Column (Int32):
+																							"68"
+																				"get"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"argument"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"68"
+													End (SourcePosition):
+														Line (Int32):
+															"404"
+														Column (Int32):
+															"70"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"literal"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"69"
+															End (SourcePosition):
+																Line (Int32):
+																	"404"
+																Column (Int32):
+																	"70"
+														0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						179
+					Value (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"405"
+								Column (Int32):
+									"1"
+							End (SourcePosition):
+								Line (Int32):
+									"411"
+								Column (Int32):
+									"1"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"405"
+										Column (Int32):
+											"2"
+									End (SourcePosition):
+										Line (Int32):
+											"405"
+										Column (Int32):
+											"10"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"405"
+												Column (Int32):
+													"2"
+											End (SourcePosition):
+												Line (Int32):
+													"405"
+												Column (Int32):
+													"10"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"lookup"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"405"
+														Column (Int32):
+															"2"
+													End (SourcePosition):
+														Line (Int32):
+															"405"
+														Column (Int32):
+															"10"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"literal"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"405"
+																Column (Int32):
+																	"2"
+															End (SourcePosition):
+																Line (Int32):
+																	"405"
+																Column (Int32):
+																	"10"
+														"typeTest"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"value"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"405"
+										Column (Int32):
+											"11"
+									End (SourcePosition):
+										Line (Int32):
+											"411"
+										Column (Int32):
+											"1"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										"call"
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"405"
+												Column (Int32):
+													"11"
+											End (SourcePosition):
+												Line (Int32):
+													"411"
+												Column (Int32):
+													"1"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"callable"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"405"
+														Column (Int32):
+															"11"
+													End (SourcePosition):
+														Line (Int32):
+															"408"
+														Column (Int32):
+															"3"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"select"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"405"
+																Column (Int32):
+																	"11"
+															End (SourcePosition):
+																Line (Int32):
+																	"408"
+																Column (Int32):
+																	"3"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"11"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"19"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"search"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"11"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"19"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"11"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"19"
+																				"mscorlib"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"19"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"25"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"20"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"25"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"20"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"25"
+																				"Array"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																3
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"25"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"40"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"26"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"40"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"26"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"405"
+																						Column (Int32):
+																							"40"
+																				"CreateInstance"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																4
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"405"
+																		Column (Int32):
+																			"40"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"408"
+																		Column (Int32):
+																			"3"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"405"
+																				Column (Int32):
+																					"41"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"408"
+																				Column (Int32):
+																					"3"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"program"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"406"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"408"
+																						Column (Int32):
+																							"1"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						1
+																					Value (StrategyMap):
+																						Extent (Extent):
+																							Start (SourcePosition):
+																								Line (Int32):
+																									"406"
+																								Column (Int32):
+																									"3"
+																							End (SourcePosition):
+																								Line (Int32):
+																									"407"
+																								Column (Int32):
+																									"1"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"value"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"406"
+																										Column (Int32):
+																											"3"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"406"
+																										Column (Int32):
+																											"16"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"select"
+																									Value (StrategyMap):
+																										Extent (Extent):
+																											Start (SourcePosition):
+																												Line (Int32):
+																													"406"
+																												Column (Int32):
+																													"3"
+																											End (SourcePosition):
+																												Line (Int32):
+																													"406"
+																												Column (Int32):
+																													"16"
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												1
+																											Value (StrategyMap):
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"406"
+																														Column (Int32):
+																															"3"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"406"
+																														Column (Int32):
+																															"11"
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"search"
+																													Value (StrategyMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"406"
+																																Column (Int32):
+																																	"3"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"406"
+																																Column (Int32):
+																																	"11"
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (StrategyMap):
+																																Extent (Extent):
+																																	Start (SourcePosition):
+																																		Line (Int32):
+																																			"406"
+																																		Column (Int32):
+																																			"3"
+																																	End (SourcePosition):
+																																		Line (Int32):
+																																			"406"
+																																		Column (Int32):
+																																			"11"
+																																"mscorlib"
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												2
+																											Value (StrategyMap):
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"406"
+																														Column (Int32):
+																															"11"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"406"
+																														Column (Int32):
+																															"16"
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"lookup"
+																													Value (StrategyMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"406"
+																																Column (Int32):
+																																	"12"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"406"
+																																Column (Int32):
+																																	"16"
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (StrategyMap):
+																																Extent (Extent):
+																																	Start (SourcePosition):
+																																		Line (Int32):
+																																			"406"
+																																		Column (Int32):
+																																			"12"
+																																	End (SourcePosition):
+																																		Line (Int32):
+																																			"406"
+																																		Column (Int32):
+																																			"16"
+																																"Type"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"key"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"406"
+																										Column (Int32):
+																											"16"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"406"
+																										Column (Int32):
+																											"16"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										1
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												"lookup"
+																											Value (StrategyMap):
+																												Extent:
+																													null
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (StrategyMap):
+																														Extent:
+																															null
+																														1
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						2
+																					Value (StrategyMap):
+																						Extent (Extent):
+																							Start (SourcePosition):
+																								Line (Int32):
+																									"407"
+																								Column (Int32):
+																									"1"
+																							End (SourcePosition):
+																								Line (Int32):
+																									"408"
+																								Column (Int32):
+																									"1"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"value"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"407"
+																										Column (Int32):
+																											"3"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"407"
+																										Column (Int32):
+																											"17"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"select"
+																									Value (StrategyMap):
+																										Extent (Extent):
+																											Start (SourcePosition):
+																												Line (Int32):
+																													"407"
+																												Column (Int32):
+																													"3"
+																											End (SourcePosition):
+																												Line (Int32):
+																													"407"
+																												Column (Int32):
+																													"17"
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												1
+																											Value (StrategyMap):
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"407"
+																														Column (Int32):
+																															"3"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"407"
+																														Column (Int32):
+																															"11"
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"search"
+																													Value (StrategyMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"407"
+																																Column (Int32):
+																																	"3"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"407"
+																																Column (Int32):
+																																	"11"
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (StrategyMap):
+																																Extent (Extent):
+																																	Start (SourcePosition):
+																																		Line (Int32):
+																																			"407"
+																																		Column (Int32):
+																																			"3"
+																																	End (SourcePosition):
+																																		Line (Int32):
+																																			"407"
+																																		Column (Int32):
+																																			"11"
+																																"mscorlib"
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												2
+																											Value (StrategyMap):
+																												Extent (Extent):
+																													Start (SourcePosition):
+																														Line (Int32):
+																															"407"
+																														Column (Int32):
+																															"11"
+																													End (SourcePosition):
+																														Line (Int32):
+																															"407"
+																														Column (Int32):
+																															"17"
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"lookup"
+																													Value (StrategyMap):
+																														Extent (Extent):
+																															Start (SourcePosition):
+																																Line (Int32):
+																																	"407"
+																																Column (Int32):
+																																	"12"
+																															End (SourcePosition):
+																																Line (Int32):
+																																	"407"
+																																Column (Int32):
+																																	"17"
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																Extent:
+																																	null
+																																"literal"
+																															Value (StrategyMap):
+																																Extent (Extent):
+																																	Start (SourcePosition):
+																																		Line (Int32):
+																																			"407"
+																																		Column (Int32):
+																																			"12"
+																																	End (SourcePosition):
+																																		Line (Int32):
+																																			"407"
+																																		Column (Int32):
+																																			"17"
+																																"Int32"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"key"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"407"
+																										Column (Int32):
+																											"17"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"407"
+																										Column (Int32):
+																											"17"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										1
+																									Value (StrategyMap):
+																										Extent:
+																											null
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												Extent:
+																													null
+																												"lookup"
+																											Value (StrategyMap):
+																												Extent:
+																													null
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														Extent:
+																															null
+																														"literal"
+																													Value (StrategyMap):
+																														Extent:
+																															null
+																														2
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"argument"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"408"
+														Column (Int32):
+															"3"
+													End (SourcePosition):
+														Line (Int32):
+															"411"
+														Column (Int32):
+															"1"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"program"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"409"
+																Column (Int32):
+																	"3"
+															End (SourcePosition):
+																Line (Int32):
+																	"411"
+																Column (Int32):
+																	"1"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"409"
+																		Column (Int32):
+																			"3"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"410"
+																		Column (Int32):
+																			"1"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"value"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"409"
+																				Column (Int32):
+																					"3"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"409"
+																				Column (Int32):
+																					"18"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"select"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"409"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"409"
+																						Column (Int32):
+																							"18"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						1
+																					Value (StrategyMap):
+																						Extent (Extent):
+																							Start (SourcePosition):
+																								Line (Int32):
+																									"409"
+																								Column (Int32):
+																									"3"
+																							End (SourcePosition):
+																								Line (Int32):
+																									"409"
+																								Column (Int32):
+																									"11"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"search"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"409"
+																										Column (Int32):
+																											"3"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"409"
+																										Column (Int32):
+																											"11"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent (Extent):
+																											Start (SourcePosition):
+																												Line (Int32):
+																													"409"
+																												Column (Int32):
+																													"3"
+																											End (SourcePosition):
+																												Line (Int32):
+																													"409"
+																												Column (Int32):
+																													"11"
+																										"mscorlib"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						2
+																					Value (StrategyMap):
+																						Extent (Extent):
+																							Start (SourcePosition):
+																								Line (Int32):
+																									"409"
+																								Column (Int32):
+																									"11"
+																							End (SourcePosition):
+																								Line (Int32):
+																									"409"
+																								Column (Int32):
+																									"18"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"lookup"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"409"
+																										Column (Int32):
+																											"12"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"409"
+																										Column (Int32):
+																											"18"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent (Extent):
+																											Start (SourcePosition):
+																												Line (Int32):
+																													"409"
+																												Column (Int32):
+																													"12"
+																											End (SourcePosition):
+																												Line (Int32):
+																													"409"
+																												Column (Int32):
+																													"18"
+																										"String"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"409"
+																				Column (Int32):
+																					"18"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"409"
+																				Column (Int32):
+																					"18"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"lookup"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																2
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"410"
+																		Column (Int32):
+																			"1"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"411"
+																		Column (Int32):
+																			"1"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"value"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"410"
+																				Column (Int32):
+																					"3"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"410"
+																				Column (Int32):
+																					"4"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"410"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"410"
+																						Column (Int32):
+																							"4"
+																				5
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"key"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"410"
+																				Column (Int32):
+																					"4"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"410"
+																				Column (Int32):
+																					"4"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				1
+																			Value (StrategyMap):
+																				Extent:
+																					null
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						"lookup"
+																					Value (StrategyMap):
+																						Extent:
+																							null
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"literal"
+																							Value (StrategyMap):
+																								Extent:
+																									null
+																								2
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"403"
+					"411"
 				Column (Int32):
 					"1"
 			End (SourcePosition):
 				Line (Int32):
-					"403"
+					"411"
 				Column (Int32):
 					"10"
 		"shortFunc"
@@ -60163,12 +62165,12 @@ Entry (KeyValuePair`2)
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"403"
+					"411"
 				Column (Int32):
 					"11"
 			End (SourcePosition):
 				Line (Int32):
-					"403"
+					"411"
 				Column (Int32):
 					"18"
 		Entry (KeyValuePair`2)
@@ -60180,12 +62182,12 @@ Entry (KeyValuePair`2)
 				Extent (Extent):
 					Start (SourcePosition):
 						Line (Int32):
-							"403"
+							"411"
 						Column (Int32):
 							"11"
 					End (SourcePosition):
 						Line (Int32):
-							"403"
+							"411"
 						Column (Int32):
 							"18"
 				Entry (KeyValuePair`2)
@@ -60197,12 +62199,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"403"
+									"411"
 								Column (Int32):
 									"11"
 							End (SourcePosition):
 								Line (Int32):
-									"403"
+									"411"
 								Column (Int32):
 									"14"
 						"arg"
@@ -60215,12 +62217,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"403"
+									"411"
 								Column (Int32):
 									"15"
 							End (SourcePosition):
 								Line (Int32):
-									"403"
+									"411"
 								Column (Int32):
 									"18"
 						Entry (KeyValuePair`2)
@@ -60232,12 +62234,12 @@ Entry (KeyValuePair`2)
 								Extent (Extent):
 									Start (SourcePosition):
 										Line (Int32):
-											"403"
+											"411"
 										Column (Int32):
 											"15"
 									End (SourcePosition):
 										Line (Int32):
-											"403"
+											"411"
 										Column (Int32):
 											"18"
 								Entry (KeyValuePair`2)
@@ -60249,12 +62251,12 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"403"
+													"411"
 												Column (Int32):
 													"15"
 											End (SourcePosition):
 												Line (Int32):
-													"403"
+													"411"
 												Column (Int32):
 													"18"
 										Entry (KeyValuePair`2)
@@ -60266,12 +62268,12 @@ Entry (KeyValuePair`2)
 												Extent (Extent):
 													Start (SourcePosition):
 														Line (Int32):
-															"403"
+															"411"
 														Column (Int32):
 															"15"
 													End (SourcePosition):
 														Line (Int32):
-															"403"
+															"411"
 														Column (Int32):
 															"18"
 												"arg"
@@ -60280,12 +62282,12 @@ Entry (KeyValuePair`2)
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"404"
+					"412"
 				Column (Int32):
 					"1"
 			End (SourcePosition):
 				Line (Int32):
-					"404"
+					"412"
 				Column (Int32):
 					"12"
 		"complicated"
@@ -60293,12 +62295,12 @@ Entry (KeyValuePair`2)
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"404"
+					"412"
 				Column (Int32):
 					"13"
 			End (SourcePosition):
 				Line (Int32):
-					"408"
+					"416"
 				Column (Int32):
 					"1"
 		Entry (KeyValuePair`2)
@@ -60306,12 +62308,12 @@ Entry (KeyValuePair`2)
 				Extent (Extent):
 					Start (SourcePosition):
 						Line (Int32):
-							"405"
+							"413"
 						Column (Int32):
 							"2"
 					End (SourcePosition):
 						Line (Int32):
-							"407"
+							"415"
 						Column (Int32):
 							"3"
 				Entry (KeyValuePair`2)
@@ -60319,12 +62321,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"406"
+									"414"
 								Column (Int32):
 									"3"
 							End (SourcePosition):
 								Line (Int32):
-									"406"
+									"414"
 								Column (Int32):
 									"14"
 						"complicated"
@@ -60332,12 +62334,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"406"
+									"414"
 								Column (Int32):
 									"15"
 							End (SourcePosition):
 								Line (Int32):
-									"406"
+									"414"
 								Column (Int32):
 									"20"
 						"key"
@@ -60345,12 +62347,12 @@ Entry (KeyValuePair`2)
 				Extent (Extent):
 					Start (SourcePosition):
 						Line (Int32):
-							"407"
+							"415"
 						Column (Int32):
 							"4"
 					End (SourcePosition):
 						Line (Int32):
-							"407"
+							"415"
 						Column (Int32):
 							"21"
 				"complicated key"
