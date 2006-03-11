@@ -54,7 +54,7 @@ namespace Meta
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
-		public static readonly Map Parameter="argument";
+		public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
@@ -79,7 +79,9 @@ namespace Meta
 		{
 		}
 	}
-	// print the extent here
+	// TODO: refactor exceptions
+	// TODO: print the position here
+	// TODO: this is a fricking mess
 	public class ExecutionException : MetaException
 	{
 		private Map context;
@@ -88,7 +90,6 @@ namespace Meta
 			this.context = context;
 		}
 	}
-	// this is a fricking mess
 	public abstract class MetaException:ApplicationException
 	{
 		public static int Leaves(Map map)
@@ -122,6 +123,7 @@ namespace Meta
 		private List<Extent> invocationList = new List<Extent>();
 		public override string ToString()
 		{
+			// TODO: messy, horrible
 			string message = Message;
 			if (invocationList.Count != 0)
 			{
@@ -171,11 +173,11 @@ namespace Meta
 	}
 	public class KeyDoesNotExist : ExecutionException
 	{
+		// TODO: stupid, duplicated
 		public KeyDoesNotExist(Map key, Map map, Extent extent)
 			:base("Key does not exist: " + Serialize.ValueFunction(key), extent, map)
 		{
 		}
-
 	}
 	public class KeyNotFound : ExecutionException
 	{
@@ -186,13 +188,14 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		// refactor, firstFile is horrible
 		public static FileMap firstFile = null;
 		public static string parsingFile = null;
 		public Map Evaluate(Map context)
 		{
 			return Evaluate(context, null);
 		}
-		public Map Evaluate(Map context, Map argument)
+		public Map Evaluate(Map context,Map argument)
 		{
 			Map current;
 			if (parsingFile != null)
@@ -209,7 +212,7 @@ namespace Meta
 			}
 			else
 			{
-				current=new StrategyMap();
+				current = new StrategyMap();
 			}
 			current.Scope = new TemporaryPosition(context);
 			Map arg = new StrategyMap();
@@ -219,33 +222,27 @@ namespace Meta
 				current.Scope = new TemporaryPosition(arg);
 				arg[context[Code.Function][Code.ParameterName]] = argument;
 			}
-			current.Argument = argument;
-			return EvaluateImplementation(current, argument);
+			return EvaluateImplementation(current);
 		}
-		public abstract Map EvaluateImplementation(Map context,Map arg);
+		public abstract Map EvaluateImplementation(Map context);
 	}
 	public class Call : Expression
 	{
 		private Map callable;
-		public Map parameter;
+		public Map argument;
 		public Call(Map code)
 		{
 			this.callable = code[Code.Callable];
-			this.parameter = code[Code.Parameter];
+			this.argument = code[Code.Argument];
 		}
-		public override Map EvaluateImplementation(Map current,Map arg)
+		public override Map EvaluateImplementation(Map current)
+		//public override Map EvaluateImplementation(Map current,Map arg)
 		{
-			Map function = callable.GetExpression().Evaluate(current);
-			if (!function.IsFunction)
-			{
-				throw new ExecutionException("Called map is not a function.", callable.Extent,current);
-			}
-			Map argument = parameter.GetExpression().Evaluate(current);
-			Map result;
 			try
 			{
-				result = function.Call(argument);
+				return callable.GetExpression().Evaluate(current).Call(argument.GetExpression().Evaluate(current));
 			}
+			// TODO: refactor
 			catch (MetaException e)
 			{
 				e.InvocationList.Add(callable.Extent);
@@ -255,11 +252,6 @@ namespace Meta
 			{
 				throw new ExecutionException(e.ToString(), callable.Extent,current);
 			}
-			if (result == null)
-			{
-				result = Map.Empty;
-			}
-			return result;
 		}
 	}
 	public class Program : Expression
@@ -269,7 +261,7 @@ namespace Meta
 		{
 			statements = code.Array;
 		}
-		public override Map EvaluateImplementation(Map current,Map arg)
+		public override Map EvaluateImplementation(Map current)
 		{
 			foreach (Map statement in statements)
 			{
@@ -285,7 +277,7 @@ namespace Meta
 		{
 			this.literal = code;
 		}
-		public override Map EvaluateImplementation(Map context,Map arg)
+		public override Map EvaluateImplementation(Map context)
 		{
 			Map result=literal.Copy();
 			result.Scope = new TemporaryPosition(context);
@@ -295,7 +287,8 @@ namespace Meta
 
 	public abstract class Subselect
 	{
-		public abstract Map EvaluateImplementation(int i,Map context, Map executionContext);
+		public abstract Map EvaluateImplementation(Map context, Map executionContext);
+		//public abstract Map EvaluateImplementation(int i, Map context, Map executionContext);
 		public abstract void Assign(ref Map context, Map value, ref Map executionContext);
 	}
 	public class Current:Subselect
@@ -303,10 +296,9 @@ namespace Meta
 		public override void Assign(ref Map context, Map value,ref  Map executionContext)
 		{
 			value.Scope = context.Scope;
-			value.Argument = context.Argument;
 			executionContext = value;
 		}
-		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return context;
 		}
@@ -322,7 +314,7 @@ namespace Meta
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		public override Map EvaluateImplementation(int i, Map context, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return call.Evaluate(context);
 		}
@@ -333,7 +325,7 @@ namespace Meta
 		{
 			throw new Exception("Cannot assign to argument.");
 		}
-		public override Map EvaluateImplementation(int i, Map context, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			return Gac.gac;
 		}
@@ -349,7 +341,7 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
 			if (context == null)
@@ -394,7 +386,7 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(int i,Map context, Map executionContext)
+		public override Map EvaluateImplementation(Map context, Map executionContext)
 		{
 			Map scope = context;
 			Map key = keyExpression.GetExpression().Evaluate(executionContext);
@@ -424,17 +416,12 @@ namespace Meta
 		{
 			this.keys = code.Array;
 		}
-		public override Map EvaluateImplementation(Map context, Map arg)
+		public override Map EvaluateImplementation(Map context)
 		{
 			Map selected=context;
-			int i = 0;
 			foreach (Map key in keys)
 			{
-				selected=key.GetSubselect().EvaluateImplementation(i,selected, context);
-				if (selected == null)
-				{
-				}
-				i++;
+				selected=key.GetSubselect().EvaluateImplementation(selected, context);
 			}
 			return selected;
 		}
@@ -457,10 +444,7 @@ namespace Meta
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
 				Map oldSelected=selected;
-				selected = keys[i].GetSubselect().EvaluateImplementation(i,selected, context);
-			}
-			if (keys[keys.Count-1].GetSubselect() is Search)
-			{
+				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
 			}
 			Map val = value.GetExpression().Evaluate(context);
 			keys[keys.Count - 1].GetSubselect().Assign(ref selected, val, ref context);
@@ -2038,30 +2022,30 @@ namespace Meta
 			}
 		}
 		// this is really stupidly implemented, very annoying
-		public Map Argument
-		{
-			get
-			{
-				Map arg;
-				if (argument != null)
-				{
-					arg = argument;
-				}
-				else if (Scope!=null && Scope.Get() != null)
-				{
-					arg = Scope.Get().Argument;
-				}
-				else
-				{
-					arg = null;
-				}
-				return arg;
-			}
-			set
-			{
-				argument = value;
-			}
-		}
+		//public Map Argument
+		//{
+		//    get
+		//    {
+		//        Map arg;
+		//        if (argument != null)
+		//        {
+		//            arg = argument;
+		//        }
+		//        else if (Scope!=null && Scope.Get() != null)
+		//        {
+		//            arg = Scope.Get().Argument;
+		//        }
+		//        else
+		//        {
+		//            arg = null;
+		//        }
+		//        return arg;
+		//    }
+		//    set
+		//    {
+		//        argument = value;
+		//    }
+		//}
 		public Map argument=null;
 		public abstract bool IsFunction
 		{
@@ -5711,7 +5695,7 @@ namespace Meta
 							Code.Callable,
 							Select),
 						new Assignment(
-							Code.Parameter,
+							Code.Argument,
 							new Alternatives(
 								new Sequence(
 									new Match(new Character(Syntax.call)),
@@ -5739,7 +5723,7 @@ namespace Meta
 									Select,
 									ExplicitCall)),
 							new Assignment(
-								Code.Parameter,
+								Code.Argument,
 								new Alternatives(
 									new Sequence(
 										new Match(
@@ -6164,7 +6148,7 @@ namespace Meta
 						Code.Callable,
 						Expression),
 					new KeyRule(
-						Code.Parameter,
+						Code.Argument,
 						new Alternatives(
 							Program,
 							new Enclose(
