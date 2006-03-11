@@ -212,12 +212,11 @@
 			value="hell"
 			array="he hi hello"
 		foreachTest=foreach
-			map=
+			=
 				x="hi"
 				y="hello"
-			function=
-				entry|
-					[entry.value]=entry.key
+			entry|
+				[entry.value]=entry.key
 		valuesTest=values
 			x="hi"
 			y="hello"
@@ -236,4 +235,5 @@
 			=
 				apple="last"
 				orange="green"
+		lowerTest=string.toLower "HeLLo"
 	current=test

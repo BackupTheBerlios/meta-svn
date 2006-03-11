@@ -1445,7 +1445,7 @@ Entry (KeyValuePair`2)
 																						"SecondLevel"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"parameter"
+														"argument"
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -2081,7 +2081,7 @@ Entry (KeyValuePair`2)
 																						"SetUpperLevel"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"parameter"
+														"argument"
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -2557,7 +2557,7 @@ Entry (KeyValuePair`2)
 																						"not"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"parameter"
+														"argument"
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -2586,7 +2586,7 @@ Entry (KeyValuePair`2)
 																										"equal"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
-																		"parameter"
+																		"argument"
 																	Value (StrategyMap):
 																		Entry (KeyValuePair`2)
 																			Key (StrategyMap):
@@ -2766,7 +2766,7 @@ Entry (KeyValuePair`2)
 																																				"loop"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
-																												"parameter"
+																												"argument"
 																											Value (StrategyMap):
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
@@ -2795,7 +2795,7 @@ Entry (KeyValuePair`2)
 																																								"add"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
-																																"parameter"
+																																"argument"
 																															Value (StrategyMap):
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
@@ -3043,7 +3043,7 @@ Entry (KeyValuePair`2)
 																												"whileDecision"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"parameter"
+														"argument"
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -3522,7 +3522,7 @@ Entry (KeyValuePair`2)
 																						"innerFunction"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"parameter"
+														"argument"
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):

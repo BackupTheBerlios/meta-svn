@@ -123,7 +123,6 @@
     <None Include="Library\integerToString.meta" />
     <None Include="Library\intersect.meta" />
     <None Include="Library\isNumber.meta" />
-    <None Include="Library\product.meta" />
     <None Include="Library\random.meta" />
     <None Include="Library\reciprocal.meta" />
     <None Include="Library\isString.meta" />
@@ -148,7 +147,6 @@
     <None Include="Library\strictlyDecreasing.meta" />
     <None Include="Library\strictlyIncreasing.meta" />
     <None Include="Library\string.meta" />
-    <None Include="Library\sum.meta" />
     <None Include="Library\switch.meta" />
     <None Include="Library\try.meta" />
     <None Include="Library\values.meta" />

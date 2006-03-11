@@ -413,3 +413,8 @@ Entry (KeyValuePair`2)
 				"orange"
 			Value (StrategyMap):
 				"green"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"lowerTest"
+	Value (StrategyMap):
+		"hello"

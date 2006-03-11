@@ -2,3 +2,4 @@ replace=
 	argument|/.Meta.Library.StringReplace argument
 trim=
 	text|(/.Meta.ObjectMap.[mscorlib.String] text).Trim.[0] 0
+toLower=string:(/.Meta.ObjectMap.[/.mscorlib.String] string).ToLower.[0] 0

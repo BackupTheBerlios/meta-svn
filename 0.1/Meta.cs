@@ -36,98 +36,50 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Web;
+using System.Runtime.InteropServices;
+using System.Runtime.Remoting;
+
 
 namespace Meta
 {
-	public class CodeKeys
+	public class Code
 	{
 		public static readonly Map ParameterName="parameterName";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
 		public static readonly Map Lookup = "lookup";
-
 		public static readonly Map Current="current";
 		public static readonly Map Scope="scope";
-		public static readonly Map Argument="argument";
-
-
 		public static readonly Map Literal="literal";
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
 		public static readonly Map Callable="callable";
-		public static readonly Map Parameter="parameter";
+		public static readonly Map Parameter="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
 		public static readonly Map Value="value";
 	}
-	public class SpecialKeys
-	{
-		public static readonly Map Scope = "scope";
-		public static readonly Map Arg="arg";
-		public static readonly Map This="this";
-	}
-	public class DotNetKeys
+	public class DotNet
 	{
 		public static readonly Map Add="add";
 		public static readonly Map Remove="remove";
 		public static readonly Map Get="get";
 		public static readonly Map Set="set";
 	}
-	public class NumberKeys
+	public class Numbers
 	{
 		public static readonly Map Negative="negative";
 		public static readonly Map Denominator="denominator";
 	}
-	public class Mono
-	{
-		public static byte[] ReadAllBytes(string path)
-		{
-			return File.ReadAllBytes(path);
-		}
-		public static void WriteAllBytes(string path, byte[] bytes)
-		{
-			using (FileStream stream = new FileStream(path,FileMode.Create,FileAccess.Write))
-			{
-				using (BinaryWriter writer = new BinaryWriter(stream))
-				{
-					writer.Write(bytes);
-				}
-			}
-		}
-		public static string ReadAllText(string path)
-		{
-			using (StreamReader reader = new StreamReader(path))
-			{
-				return reader.ReadToEnd();
-			}
-		}
-		public static void WriteAllText(string path, string text)
-		{
-			using (StreamWriter writer = new StreamWriter(path, false, Encoding.Default))
-			{
-				writer.Write(text);
-			}
-		}
-		public static void WriteAllText(string path, string text,Encoding encoding)
-		{
-			using (StreamWriter writer = new StreamWriter(path,false,encoding))
-			{
-				writer.Write(text);
-			}
-		}
-	}
 	public class SyntaxException:MetaException
 	{
 		public SyntaxException(string message, Parser parser)
-			: this(message, parser.File, parser.Line, parser.Column)
-		{
-		}
-		public SyntaxException(string message,string fileName, int line, int column)
-			: base(message, new Extent(line, column, line, column,fileName))
+			: base(message, new Extent(parser.Line, parser.Column,parser.Line,parser.Column,parser.File))
 		{
 		}
 	}
+	// print the extent here
 	public class ExecutionException : MetaException
 	{
 		private Map context;
@@ -136,8 +88,30 @@ namespace Meta
 			this.context = context;
 		}
 	}
+	// this is a fricking mess
 	public abstract class MetaException:ApplicationException
 	{
+		public static int Leaves(Map map)
+		{
+			int count = 0;
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				if (pair.Value == null)
+				{
+					count++;
+				}
+				else if (pair.Value.IsNumber)
+				{
+					count++;
+				}
+				else
+				{
+					count += Leaves(pair.Value);
+				}
+			}
+			return count;
+
+		}
 		public List<Extent> InvocationList
 		{
 			get
@@ -195,38 +169,19 @@ namespace Meta
         private string message;
 		private Extent extent;
 	}
-	public class Throw
+	public class KeyDoesNotExist : ExecutionException
 	{
-		public static int Leaves(Map map)
+		public KeyDoesNotExist(Map key, Map map, Extent extent)
+			:base("Key does not exist: " + Serialize.ValueFunction(key), extent, map)
 		{
-			int count = 0;
-			foreach (KeyValuePair<Map, Map> pair in map)
-			{
-				if (pair.Value == null)
-				{
-					count++;
-				}
-				else if (pair.Value.IsNumber)
-				{
-					count++;
-				}
-				else
-				{
-					count += Leaves(pair.Value);
-				}
-			}
-			return count;
+		}
 
-		}
-		public static void KeyDoesNotExist(Map key,Map map,Extent extent)
+	}
+	public class KeyNotFound : ExecutionException
+	{
+		public KeyNotFound(Map key, Extent extent, Map context)
+			:base("Key not found: " + Serialize.ValueFunction(key), extent, context)
 		{
-			string text = "Key not existent: " + Serialize.ValueFunction(key);
-			// hier den scope ausgeben
-			throw new ExecutionException(text,extent,map);
-		}
-		public static void KeyNotFound(Map key,Extent extent,Map context)
-		{
-			throw new ExecutionException("Key not found: "+Serialize.ValueFunction(key),extent,context);
 		}
 	}
 	public abstract class Expression
@@ -258,11 +213,11 @@ namespace Meta
 			}
 			current.Scope = new TemporaryPosition(context);
 			Map arg = new StrategyMap();
-			if (context.ContainsKey(CodeKeys.Function) && context[CodeKeys.Function].ContainsKey(CodeKeys.ParameterName))
+			if (context.ContainsKey(Code.Function) && context[Code.Function].ContainsKey(Code.ParameterName))
 			{
 				arg.Scope = new TemporaryPosition(context);
 				current.Scope = new TemporaryPosition(arg);
-				arg[context[CodeKeys.Function][CodeKeys.ParameterName]] = argument;
+				arg[context[Code.Function][Code.ParameterName]] = argument;
 			}
 			current.Argument = argument;
 			return EvaluateImplementation(current, argument);
@@ -275,8 +230,8 @@ namespace Meta
 		public Map parameter;
 		public Call(Map code)
 		{
-			this.callable = code[CodeKeys.Callable];
-			this.parameter = code[CodeKeys.Parameter];
+			this.callable = code[Code.Callable];
+			this.parameter = code[Code.Parameter];
 		}
 		public override Map EvaluateImplementation(Map current,Map arg)
 		{
@@ -406,7 +361,7 @@ namespace Meta
 			if (!context.ContainsKey(key))
 			{
 				context.ContainsKey(key);
-				Throw.KeyDoesNotExist(key, context, keyExpression.Extent);
+				throw new KeyDoesNotExist(key, context, keyExpression.Extent);
 			}
 			return context[key];
 		}
@@ -427,7 +382,7 @@ namespace Meta
 			}
 			if (scope == null)
 			{
-				Throw.KeyNotFound(key, keyExpression.Extent, executionContext);
+				throw new KeyNotFound(key, keyExpression.Extent, executionContext);
 			}
 			else
 			{
@@ -452,7 +407,7 @@ namespace Meta
 			}
 			if (scope == null || !scope.ContainsKey(key))
 			{
-				Throw.KeyNotFound(key, keyExpression.Extent, context);
+				throw new KeyNotFound(key, keyExpression.Extent, context);
 			}
 			if (scope[key] == null)
 			{
@@ -464,47 +419,6 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		private Map GetSpecialKey(Map context, Map key)
-		{
-			Map val;
-			if (key.Equals(SpecialKeys.Scope))
-			{
-				val = context.Scope;
-			}
-			else if (key.Equals(SpecialKeys.Arg))
-			{
-				val = context.Argument;
-			}
-			else if (key.Equals(SpecialKeys.This))
-			{
-				val = context.Scope.Get().Scope.Get().Scope.Get();
-			}
-			else
-			{
-				val = null;
-			}
-			return val;
-		}
-		private Map FindFirstKey(Map keyExpression, Map context)
-		{
-			Map key = keyExpression.GetExpression().Evaluate(context);
-			Map val = GetSpecialKey(context, key);
-			if (val == null)
-			{
-				Map selected = context;
-				while (!selected.ContainsKey(key))
-				{
-					selected = selected.Scope;
-
-					if (selected == null)
-					{
-						Throw.KeyNotFound(key, keyExpression.Extent, context);
-					}
-				}
-				val = selected[key];
-			}
-			return val;
-		}
 		private List<Map> keys;
 		public Select(Map code)
 		{
@@ -531,11 +445,11 @@ namespace Meta
 		public Map value;
 		public Statement(Map code)
 		{
-			this.keys = code[CodeKeys.Key].Array;
+			this.keys = code[Code.Key].Array;
 			if (keys.Count == 0)
 			{
 			}
-			this.value = code[CodeKeys.Value];
+			this.value = code[Code.Value];
 		}
 		public void Assign(ref Map context)
 		{
@@ -566,9 +480,9 @@ namespace Meta
 		public static Map Foreach(Map arg)
 		{
 			Map result=new StrategyMap();
-			foreach(KeyValuePair<Map,Map> entry in arg["map"])
+			foreach(KeyValuePair<Map,Map> entry in arg[1])
 			{
-				result.Append(arg["function"].Call(new StrategyMap("key",entry.Key,"value",entry.Value)));
+				result.Append(arg.Call(new StrategyMap("key",entry.Key,"value",entry.Value)));
 			}
 			return result;
 		}
@@ -1071,7 +985,7 @@ namespace Meta
 			{
 				text=Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine);
 			}
-			Mono.WriteAllText(path, text);
+			File.WriteAllText(path, text);
 		}
 		private string path;
 		public FileMap(string path)
@@ -1250,6 +1164,254 @@ namespace Meta
 		{
 			get { return keys; }
 		}
+		//[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Auto, Pack=1)]
+		//        public struct SHFILEOPSTRUCT
+		//{
+		//        public IntPtr hwnd;
+		//        [MarshalAs(UnmanagedType.U4)] public int wFunc;
+		//        public string pFrom;
+		//        public string pTo;
+		//        public short fFlags;
+		//        [MarshalAs(UnmanagedType.Bool)] public bool fAnyOperationsAborted;
+		//        public IntPtr hNameMappings;
+		//        public string lpszProgressTitle;
+
+		//}
+		//[DllImport("shell32.dll", CharSet=CharSet.Auto)]
+		//static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
+		//const int FO_DELETE = 3;
+		//const int FOF_ALLOWUNDO = 0x40;
+		//const int FOF_NOCONFIRMATION = 0x10;    //Don't prompt the user.;
+
+
+        // Contains information that the SHFileOperation function uses to
+		//[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)]
+		//public struct SHFILEOPSTRUCT
+		//{
+		//    public IntPtr hwnd;
+		//    public UInt32 wFunc;
+		//    public string pFrom;
+		//    public string pTo;
+		//    public UInt16 fFlags;
+		//    public Int32 fAnyOperationsAborted;
+		//    public IntPtr hNameMappings;
+		//    [MarshalAs(UnmanagedType.LPWStr)]
+		//    public String lpszProgressTitle;
+		//}
+
+		//[DllImport("shell32.dll" , CharSet = CharSet.Unicode)]
+		//public static extern Int32 SHFileOperation(ref SHFILEOPSTRUCT lpFileOp);
+
+		//const int FO_DELETE = 3;
+		//const int FOF_ALLOWUNDO = 0x40;
+		//const int FOF_NOCONFIRMATION = 0x10;
+
+		public class InteropSHFileOperation
+		{
+			public enum FO_Func : uint
+			{
+				FO_MOVE = 0x0001,
+				FO_COPY = 0x0002,
+				FO_DELETE = 0x0003,
+				FO_RENAME = 0x0004,
+			}
+
+			struct SHFILEOPSTRUCT
+			{
+				public IntPtr hwnd;
+				public FO_Func wFunc;
+				[MarshalAs(UnmanagedType.LPWStr)]
+				public string pFrom;
+				[MarshalAs(UnmanagedType.LPWStr)]
+				public string pTo;
+				public ushort fFlags;
+				public bool fAnyOperationsAborted;
+				public IntPtr hNameMappings;
+				[MarshalAs(UnmanagedType.LPWStr)]
+				public string lpszProgressTitle;
+
+			}
+
+			[DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+			static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
+
+			private SHFILEOPSTRUCT _ShFile;
+			public FILEOP_FLAGS fFlags;
+
+			public IntPtr hwnd
+			{
+				set
+				{
+					this._ShFile.hwnd = value;
+				}
+			}
+			public FO_Func wFunc
+			{
+				set
+				{
+					this._ShFile.wFunc = value;
+				}
+			}
+
+			public string pFrom
+			{
+				set
+				{
+					this._ShFile.pFrom = value + '\0' + '\0';
+				}
+			}
+			public string pTo
+			{
+				set
+				{
+					this._ShFile.pTo = value + '\0' + '\0';
+				}
+			}
+
+			public bool fAnyOperationsAborted
+			{
+				set
+				{
+					this._ShFile.fAnyOperationsAborted = value;
+				}
+			}
+			public IntPtr hNameMappings
+			{
+				set
+				{
+					this._ShFile.hNameMappings = value;
+				}
+			}
+			public string lpszProgressTitle
+			{
+				set
+				{
+					this._ShFile.lpszProgressTitle = value + '\0';
+				}
+			}
+
+			public InteropSHFileOperation()
+			{
+
+				this.fFlags = new FILEOP_FLAGS();
+				this._ShFile = new SHFILEOPSTRUCT();
+				this._ShFile.hwnd = IntPtr.Zero;
+				this._ShFile.wFunc = FO_Func.FO_COPY;
+				this._ShFile.pFrom = "";
+				this._ShFile.pTo = "";
+				this._ShFile.fAnyOperationsAborted = false;
+				this._ShFile.hNameMappings = IntPtr.Zero;
+				this._ShFile.lpszProgressTitle = "";
+
+			}
+
+			public bool Execute()
+			{
+				this._ShFile.fFlags = this.fFlags.Flag;
+				int ReturnValue = SHFileOperation(ref this._ShFile);
+				if (ReturnValue == 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public class FILEOP_FLAGS
+			{
+				[Flags]
+				private enum FILEOP_FLAGS_ENUM : ushort
+				{
+					FOF_MULTIDESTFILES = 0x0001,
+					FOF_CONFIRMMOUSE = 0x0002,
+					FOF_SILENT = 0x0004,  // don't create progress/report
+					FOF_RENAMEONCOLLISION = 0x0008,
+					FOF_NOCONFIRMATION = 0x0010,  // Don't prompt the user.
+					FOF_WANTMAPPINGHANDLE = 0x0020,  // Fill in SHFILEOPSTRUCT.hNameMappings
+					// Must be freed using SHFreeNameMappings
+					FOF_ALLOWUNDO = 0x0040,
+					FOF_FILESONLY = 0x0080,  // on *.*, do only files
+					FOF_SIMPLEPROGRESS = 0x0100,  // means don't show names of files
+					FOF_NOCONFIRMMKDIR = 0x0200,  // don't confirm making any needed dirs
+					FOF_NOERRORUI = 0x0400,  // don't put up error UI
+					FOF_NOCOPYSECURITYATTRIBS = 0x0800,  // dont copy NT file Security Attributes
+					FOF_NORECURSION = 0x1000,  // don't recurse into directories.
+					FOF_NO_CONNECTED_ELEMENTS = 0x2000,  // don't operate on connected elements.
+					FOF_WANTNUKEWARNING = 0x4000,  // during delete operation, warn if nuking instead of recycling (partially overrides FOF_NOCONFIRMATION)
+					FOF_NORECURSEREPARSE = 0x8000,  // treat reparse points as objects, not containers
+				}
+
+				public bool FOF_MULTIDESTFILES = false;
+				public bool FOF_CONFIRMMOUSE = false;
+				public bool FOF_SILENT = false;
+				public bool FOF_RENAMEONCOLLISION = false;
+				public bool FOF_NOCONFIRMATION = false;
+				public bool FOF_WANTMAPPINGHANDLE = false;
+				public bool FOF_ALLOWUNDO = false;
+				public bool FOF_FILESONLY = false;
+				public bool FOF_SIMPLEPROGRESS = false;
+				public bool FOF_NOCONFIRMMKDIR = false;
+				public bool FOF_NOERRORUI = false;
+				public bool FOF_NOCOPYSECURITYATTRIBS = false;
+				public bool FOF_NORECURSION = false;
+				public bool FOF_NO_CONNECTED_ELEMENTS = false;
+				public bool FOF_WANTNUKEWARNING = false;
+				public bool FOF_NORECURSEREPARSE = false;
+				public ushort Flag
+				{
+					get
+					{
+						ushort ReturnValue = 0;
+
+						if (this.FOF_MULTIDESTFILES == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_MULTIDESTFILES;
+						if (this.FOF_CONFIRMMOUSE == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_CONFIRMMOUSE;
+						if (this.FOF_SILENT == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SILENT;
+						if (this.FOF_RENAMEONCOLLISION == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_RENAMEONCOLLISION;
+						if (this.FOF_NOCONFIRMATION == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMATION;
+						if (this.FOF_WANTMAPPINGHANDLE == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTMAPPINGHANDLE;
+						if (this.FOF_ALLOWUNDO == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_ALLOWUNDO;
+						if (this.FOF_FILESONLY == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_FILESONLY;
+						if (this.FOF_SIMPLEPROGRESS == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SIMPLEPROGRESS;
+						if (this.FOF_NOCONFIRMMKDIR == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMMKDIR;
+						if (this.FOF_NOERRORUI == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOERRORUI;
+						if (this.FOF_NOCOPYSECURITYATTRIBS == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCOPYSECURITYATTRIBS;
+						if (this.FOF_NORECURSION == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSION;
+						if (this.FOF_NO_CONNECTED_ELEMENTS == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NO_CONNECTED_ELEMENTS;
+						if (this.FOF_WANTNUKEWARNING == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTNUKEWARNING;
+						if (this.FOF_NORECURSEREPARSE == true)
+							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSEREPARSE;
+
+						return ReturnValue;
+					}
+				}
+			}
+
+		}
+        public static void TrashFile(string fname)
+        {
+			InteropSHFileOperation fo = new InteropSHFileOperation();
+			fo.wFunc = InteropSHFileOperation.FO_Func.FO_DELETE;
+			fo.fFlags.FOF_ALLOWUNDO = true;
+			fo.fFlags.FOF_NOCONFIRMATION = true;
+			fo.pFrom = fname;
+        }
 		public override bool IsFunction
 		{
 			get { return false; }
@@ -1280,7 +1442,7 @@ namespace Meta
 					if (File.Exists(metaFile))
 					{
 						string text = File.ReadAllText(metaFile, Encoding.Default);
-						//string text = Mono.ReadAllText(metaFile, Encoding.Default);
+						//string text = File.ReadAllText(metaFile, Encoding.Default);
 						Map result;
 						FileMap fileMap = new FileMap(metaFile);
 						if (text != "")
@@ -1339,7 +1501,7 @@ namespace Meta
 									case ".meta":
 										value = new FileMap(file, new ListStrategy());
 										// this is problematic, writes the file all the time
-										//foreach (char c in Mono.ReadAllText(file))
+										//foreach (char c in File.ReadAllText(file))
 										////foreach (char c in File.ReadAllText(file))
 										//{
 										//    value.Append(c);
@@ -1348,7 +1510,7 @@ namespace Meta
 									default:
 										value = new FileMap(file, new ListStrategy());
 										// problematic, writes the file
-										//foreach (byte b in Mono.ReadAllBytes(file))
+										//foreach (byte b in File.ReadAllBytes(file))
 										////foreach (byte b in File.ReadAllBytes(file))
 										//{
 										//    value.Append(b);
@@ -1392,24 +1554,38 @@ namespace Meta
 				string extension = Path.GetExtension(name);
 				if (extension == "")
 				{
-					string text = Meta.Serialize.ValueFunction(val);
-					if (text == Syntax.emptyMap.ToString())
+					string directoryPath=Path.Combine(this.directory.FullName,name);
+					// somewhat unlogical
+					if (Directory.Exists(directoryPath))
 					{
-						text = "";
+						Map subDirectory = this[name];
+						foreach (KeyValuePair<Map, Map> entry in val)
+						{
+							// buggy if there is a Meta file with the same name
+							subDirectory[entry.Key] = entry.Value;
+						}
 					}
 					else
 					{
-						text = text.Trim(Syntax.unixNewLine);
+						string text = Meta.Serialize.ValueFunction(val);
+						if (text == Syntax.emptyMap.ToString())
+						{
+							text = "";
+						}
+						else
+						{
+							text = text.Trim(Syntax.unixNewLine);
+						}
+						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 					}
-					Mono.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 				}
 				else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
 				{
-					Mono.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
 				}
 				else
 				{
-					Mono.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
 				}
 				cache[key] = val;
 			}
@@ -1600,11 +1776,33 @@ namespace Meta
 				function.Call(argument);
 			}
 		}
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			 //// Create a channel for communicating w/ the remote object
+			 //// Notice no port is specified on the client
+			 //TcpChannel chan = new TcpChannel();
+			 //ChannelServices.RegisterChannel(chan);
+
+			 //// Create an instance of the remote object
+			 //SampleObject obj = (SampleObject) Activator.GetObject(
+			 //    typeof(CodeGuru.Remoting.SampleObject),
+			 //    "tcp://localhost:8080/HelloWorld" );
+
+			 //// Use the object
+			 //if( obj.Equals(null) )
+			 //{
+			 //  System.Console.WriteLine("Error: unable to locate server");
+			 //}
+			 //else
+			 //{
+			 //  Console.WriteLine(obj.HelloWorld());
+			 //}
+			 //return;
 			try
 			{
+
 				if (args.Length == 0)
 				{
 					Commands.Interactive();
@@ -1898,7 +2096,7 @@ namespace Meta
 		{
 			if (subselect == null)
 			{
-				if (ContainsKey(CodeKeys.Current))
+				if (ContainsKey(Code.Current))
 				{
 					subselect = new Current();
 				}
@@ -1910,21 +2108,21 @@ namespace Meta
 				//{
 				//    subselect = new ScopeSubselect();
 				//}
-				else if (ContainsKey(CodeKeys.Search))
+				else if (ContainsKey(Code.Search))
 				{
-					subselect = new Search(this[CodeKeys.Search]);
+					subselect = new Search(this[Code.Search]);
 				}
-				else if (ContainsKey(CodeKeys.Lookup))
+				else if (ContainsKey(Code.Lookup))
 				{
-					subselect = new Lookup(this[CodeKeys.Lookup]);
+					subselect = new Lookup(this[Code.Lookup]);
 				}
-				else if(ContainsKey(CodeKeys.Root))
+				else if(ContainsKey(Code.Root))
 				{
 					subselect=new Root();
 				}
-				else if(ContainsKey(CodeKeys.Call))
+				else if(ContainsKey(Code.Call))
 				{
-					subselect=new CallSubselect(this[CodeKeys.Call]);
+					subselect=new CallSubselect(this[Code.Call]);
 				}
 				else
 				{
@@ -1937,21 +2135,21 @@ namespace Meta
 		{
 			if (expression == null)
 			{
-				if (ContainsKey(CodeKeys.Call))
+				if (ContainsKey(Code.Call))
 				{
-					expression = new Call(this[CodeKeys.Call]);
+					expression = new Call(this[Code.Call]);
 				}
-				else if (ContainsKey(CodeKeys.Program))
+				else if (ContainsKey(Code.Program))
 				{
-					expression = new Program(this[CodeKeys.Program]);
+					expression = new Program(this[Code.Program]);
 				}
-				else if (ContainsKey(CodeKeys.Literal))
+				else if (ContainsKey(Code.Literal))
 				{
-					expression = new Literal(this[CodeKeys.Literal]);
+					expression = new Literal(this[Code.Literal]);
 				}
-				else if (ContainsKey(CodeKeys.Select))
+				else if (ContainsKey(Code.Select))
 				{
-					expression = new Select(this[CodeKeys.Select]);
+					expression = new Select(this[Code.Select]);
 				}
 				else
 				{
@@ -2209,7 +2407,7 @@ namespace Meta
         protected abstract void Set(Map key, Map val);
 		public virtual Map Call(Map arg)
 		{
-			Map function = this[CodeKeys.Function];
+			Map function = this[Code.Function];
 			Map result = function.GetExpression().Evaluate(this, arg);
 			return result;
 		}
@@ -2325,9 +2523,9 @@ namespace Meta
 		{
 			get
 			{
-				Map function=this[CodeKeys.Function];
+				Map function=this[Code.Function];
 				bool isFunction;
-				if (function != null && (function.ContainsKey(CodeKeys.Call) || function.ContainsKey(CodeKeys.Literal) || function.ContainsKey(CodeKeys.Program) || function.ContainsKey(CodeKeys.Select)))
+				if (function != null && (function.ContainsKey(Code.Call) || function.ContainsKey(Code.Literal) || function.ContainsKey(Code.Program) || function.ContainsKey(Code.Select)))
 				{
 					isFunction = true;
 				}
@@ -2508,7 +2706,7 @@ namespace Meta
 		{
 			object dotNet = null;
 			if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-				&& meta.ContainsKey(CodeKeys.Function))
+				&& meta.ContainsKey(Code.Function))
 			{
 				MethodInfo invoke = target.GetMethod("Invoke",
 					BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
@@ -2657,7 +2855,7 @@ namespace Meta
 							}
 							foreach (KeyValuePair<Map, Map> pair in meta)
 							{
-								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value);
+								((Property)result[pair.Key])[DotNet.Set].Call(pair.Value);
 							}
 							dotNet = result.Object;
 						}
@@ -3398,11 +3596,11 @@ namespace Meta
 				}
 				if (data < 0)
 				{
-					keys.Add(NumberKeys.Negative);
+					keys.Add(Numbers.Negative);
 				}
 				if (data.Denominator != 1.0d)
 				{
-					keys.Add(NumberKeys.Denominator);
+					keys.Add(Numbers.Denominator);
 				}
 				return keys;
 			}
@@ -3416,11 +3614,11 @@ namespace Meta
 				{
 					value = data - 1;
 				}
-				else if(key.Equals(NumberKeys.Negative))
+				else if(key.Equals(Numbers.Negative))
 				{
 					value=Map.Empty;
 				}
-				else if (key.Equals(NumberKeys.Denominator))
+				else if (key.Equals(Numbers.Denominator))
 				{
 					value = new StrategyMap(new Number(data.Denominator));
 				}
@@ -3441,14 +3639,14 @@ namespace Meta
 			{
 				this.data = value.GetNumber() + 1;
 			}
-			else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && data!=0)
+			else if (key.Equals(Numbers.Negative) && value.Equals(Map.Empty) && data!=0)
 			{
 				if (data > 0)
 				{
 					data = 0 - data;
 				}
 			}
-			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber)
+			else if (key.Equals(Numbers.Denominator) && value.IsNumber)
 			{
 				this.data = new Number(data.Numerator, value.GetNumber().GetInt32());
 			}
@@ -3968,7 +4166,7 @@ namespace Meta
 				List<Map> keys=new List<Map>();
 				if(eventInfo.GetAddMethod()!=null)
 				{
-					keys.Add(DotNetKeys.Add);
+					keys.Add(DotNet.Add);
 				}
 
 				return keys;
@@ -3977,7 +4175,7 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map val;
-			if (key.Equals(DotNetKeys.Add))
+			if (key.Equals(DotNet.Add))
 			{
 				val = new Method(eventInfo.GetAddMethod().Name, obj, type);
 			}
@@ -4022,11 +4220,11 @@ namespace Meta
 				List<Map> keys=new List<Map>();
 				if(property.GetGetMethod()!=null)
 				{
-					keys.Add(DotNetKeys.Get);
+					keys.Add(DotNet.Get);
 				}
 				if(property.GetSetMethod()!=null)
 				{
-					keys.Add(DotNetKeys.Set);
+					keys.Add(DotNet.Set);
 				}
 				return keys;
 			}
@@ -4034,11 +4232,11 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map val;
-			if(key.Equals(DotNetKeys.Get))
+			if(key.Equals(DotNet.Get))
 			{
 				val=new Method(property.GetGetMethod().Name,obj,type);
 			}
-			else if(key.Equals(DotNetKeys.Set))
+			else if(key.Equals(DotNet.Set))
 			{
 				val=new Method(property.GetSetMethod().Name,obj,type);
 			}
@@ -4331,12 +4529,12 @@ namespace Meta
 					Serialize(result, "", stringBuilder, level);
 
 					string resultText = stringBuilder.ToString();
-					Mono.WriteAllText(resultPath, resultText, Encoding.Default);
+					File.WriteAllText(resultPath, resultText, Encoding.Default);
 					//File.WriteAllText(resultPath, resultText, Encoding.Default);
-					//Mono.WriteAllText(resultCopyPath, resultText, Encoding.Default);
+					//File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
 					//File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
 
-					bool successful = Mono.ReadAllText(resultPath).Equals(Mono.ReadAllText(checkPath));
+					bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
 
 					if (!successful)
 					{
@@ -5301,7 +5499,7 @@ namespace Meta
 				new ReferenceAssignment(
 					Integer),
 				new OptionalAssignment(
-					NumberKeys.Denominator,
+					Numbers.Denominator,
 					new Optional(
 						new Sequence(
 							new Match(new Character(Syntax.fraction)),
@@ -5363,12 +5561,12 @@ namespace Meta
 			{
 				Map result = new Sequence(
 					new Assignment(
-						CodeKeys.Function,
+						Code.Function,
 						new Sequence(
 						new Merge(
 							new Sequence(
 								new Assignment(
-									CodeKeys.ParameterName,
+									Code.ParameterName,
 									new ZeroOrMore(
 										new Autokey(
 											new CharacterExcept(
@@ -5406,7 +5604,7 @@ namespace Meta
 				Map function=Parser.Function.Match(parser, out matched);
 				if (matched)
 				{
-					result[CodeKeys.Function] = function[CodeKeys.Value][CodeKeys.Literal];
+					result[Code.Function] = function[Code.Value][Code.Literal];
 				}
 				else
 				{
@@ -5457,7 +5655,7 @@ namespace Meta
 					new Merge(
 						new Sequence(
 							new Assignment(
-								CodeKeys.ParameterName,
+								Code.ParameterName,
 								new ZeroOrMore(
 								new Autokey(
 									new CharacterExcept(
@@ -5506,14 +5704,14 @@ namespace Meta
 		{
 			return new Sequence(
 				new Assignment(
-					CodeKeys.Call,
+					Code.Call,
 					new Sequence(
 						new Match(new Character(Syntax.callStart)),
 						new Assignment(
-							CodeKeys.Callable,
+							Code.Callable,
 							Select),
 						new Assignment(
-							CodeKeys.Parameter,
+							Code.Parameter,
 							new Alternatives(
 								new Sequence(
 									new Match(new Character(Syntax.call)),
@@ -5533,15 +5731,15 @@ namespace Meta
 		{
 			return new Sequence(
 				new Assignment(
-					CodeKeys.Call,
+					Code.Call,
 						new Sequence(
 							new Assignment(
-								CodeKeys.Callable,
+								Code.Callable,
 								new Alternatives(
 									Select,
 									ExplicitCall)),
 							new Assignment(
-								CodeKeys.Parameter,
+								Code.Parameter,
 								new Alternatives(
 									new Sequence(
 										new Match(
@@ -5643,13 +5841,13 @@ namespace Meta
 		{
 			return new Sequence(
 					new Assignment(
-						CodeKeys.Literal,
+						Code.Literal,
 						Data.String)).Match(parser,out matched);
 		});
 
 		public static Rule ShortFunction = new Sequence(
 			new Assignment(
-				CodeKeys.Literal,
+				Code.Literal,
 				Data.ShortFunction));
 
 
@@ -5660,11 +5858,11 @@ namespace Meta
 
 
 		public static Rule Function = new Sequence(
-			new Assignment(CodeKeys.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
-			new Assignment(CodeKeys.Value,
+			new Assignment(Code.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(Code.Lookup, new StrategyMap(Code.Literal, Code.Function))))),
+			new Assignment(Code.Value,
 				new Sequence(
 					new Assignment(
-						CodeKeys.Literal,
+						Code.Literal,
 						Data.Function))));
 		
 		private Rule Whitespace =
@@ -5676,7 +5874,7 @@ namespace Meta
 
 		private static Rule EmptyMap = new Sequence(
 			new Assignment(
-				CodeKeys.Literal,
+				Code.Literal,
 				new Sequence(
 					new Match(new Character(Syntax.emptyMap)),
 					new ReferenceAssignment(
@@ -5694,24 +5892,24 @@ namespace Meta
 		private static Rule Number =
 			new Sequence(
 				new Assignment(
-					CodeKeys.Literal,
+					Code.Literal,
 					Data.Number));
 
 		private static Rule LookupString =
 			new Sequence(
 				new Assignment(
-					CodeKeys.Literal,
+					Code.Literal,
 					Data.LookupString));
 
 		private static Rule Current = new Sequence(
 			new Match(new StringRule(Syntax.current)),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Current, Map.Empty))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(Code.Current, Map.Empty))));
 
 
 
 		private static Rule Root = new Sequence(
 			new Match(new Character(Syntax.root)),
-			new ReferenceAssignment(new LiteralRule(new StrategyMap(CodeKeys.Root, Map.Empty))));
+			new ReferenceAssignment(new LiteralRule(new StrategyMap(Code.Root, Map.Empty))));
 
 
 		private static Rule Lookup =
@@ -5719,7 +5917,7 @@ namespace Meta
 				Current,
 				new Sequence(
 					new Assignment(
-						CodeKeys.Lookup,
+						Code.Lookup,
 						new Alternatives(
 							LookupString,
 							LookupAnything))));
@@ -5727,7 +5925,7 @@ namespace Meta
 
 		private static Rule Search = new Sequence(
 			new Assignment(
-				CodeKeys.Search,
+				Code.Search,
 				new Alternatives(
 					LookupString,
 					LookupAnything)));
@@ -5735,7 +5933,7 @@ namespace Meta
 
 		private static Rule Select = new Sequence(
 			new Assignment(
-				CodeKeys.Select,
+				Code.Select,
 				new Sequence(
 					new Assignment(
 						1,
@@ -5778,23 +5976,23 @@ namespace Meta
 					new Alternatives(
 						new Sequence(
 							new Assignment(
-								CodeKeys.Key,
+								Code.Key,
 								Keys),
 							new Match(new Character(Syntax.statement)),
 							new Assignment(
-								CodeKeys.Value,
+								Code.Value,
 								Expression)),
 						new Sequence(
 							new Match(new Optional(
 								new Character(Syntax.statement))),
 							new Assignment(
-								CodeKeys.Value,
+								Code.Value,
 								Expression),
 							new Assignment(
-								CodeKeys.Key,
+								Code.Key,
 								new CustomRule(delegate(Parser p, out bool matched)
 		{
-			Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
+			Map map = p.CreateMap(1, p.CreateMap(Code.Lookup, p.CreateMap(Code.Literal, p.defaultKeys.Peek())));
 			p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 			matched = true;
 			return map;
@@ -5831,7 +6029,7 @@ namespace Meta
 		public static Rule Program = new Sequence(
 			new Match(Indentation),
 			new Assignment(
-				CodeKeys.Program,
+				Code.Program,
 				new PrePost(
 					delegate(Parser p)
 					{
@@ -5856,76 +6054,7 @@ namespace Meta
 	}
 	public class Serialize
 	{
-		public class Alternatives : Rule
-		{
-			private Rule[] rules;
-			public Alternatives(params Rule[] rules)
-			{
-				this.rules = rules;
-			}
-			public override string Match(Map map, string indentation, out bool matched)
-			{
-				string text = null;
-				matched = false;
-				foreach (Rule rule in rules)
-				{
-					text = rule.Match(map, indentation, out matched);
-					if (matched)
-					{
-						break;
-					}
-				}
-				return text;
-			}
-		}
-		public delegate bool Matches(Map map);
-		public delegate string GetMatch(Map map);
-		public class CustomSerialize : Rule
-		{
-			private Matches matches;
-			private GetMatch getMatch;
-			public CustomSerialize(Matches matches, GetMatch getMatch)
-			{
-				this.matches = matches;
-				this.getMatch = getMatch;
-			}
-			private Rule rule;
-			public CustomSerialize(Matches matches, Rule rule)
-			{
-				this.matches = matches;
-				this.rule = rule;
-			}
-			public override string Match(Map map, string indentation, out bool matched)
-			{
-				matched = matches(map);
-				string text;
-				if (matched)
-				{
-					string unIndented;
-					if (getMatch != null)
-					{
-						unIndented = getMatch(map);
-					}
-					else
-					{
-						unIndented = rule.Match(map,indentation,out matched);
-					}
-					string[] lines = unIndented.Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine },StringSplitOptions.None);
-					text = lines[0];
-					for(int i=1;i<lines.Length;i++)
-					{
-						text += Syntax.unixNewLine.ToString()+ indentation + lines[i] ;
-					}
-				}
-				else
-				{
-					text = null;
-				}
-				return text;
-			}
-		}
 		private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
-
 		private static Rule IntegerValue = new CustomSerialize(
 			delegate(Map map)
 			{
@@ -5939,9 +6068,12 @@ namespace Meta
 		public static Rule TypeMap = new CustomSerialize(
 			delegate(Map map) {return map is TypeMap;},
 			delegate(Map map) {return "TypeMap: " + ((TypeMap)map).Type.ToString();});
+
+		// simply return null if you dont match??
 		public static Rule ObjectMap = new CustomSerialize(
-					delegate(Map map) { return map is ObjectMap; },
-					delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
+			delegate(Map map) { return map is ObjectMap; },
+			delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
+
 
 		public static Rule MapValue = new CustomRule(delegate(Map asdf, string indent, out bool ma)
 		{
@@ -5958,12 +6090,12 @@ namespace Meta
 			t+=new Alternatives(
 				TypeMap,
 				ObjectMap,
-				new CustomRule(delegate(Map map,string indentation,out bool matched)
+				new CustomRule(delegate(Map map, string indentation, out bool matched)
 				{
 					string text = "";
 					foreach (KeyValuePair<Map, Map> entry in map)
 					{
-						if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
+						if (entry.Key.Equals(Code.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(Code.Call) || entry.Value.ContainsKey(Code.Literal) || entry.Value.ContainsKey(Code.Program) || entry.Value.ContainsKey(Code.Select)))
 						{
 							bool m;
 							text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
@@ -5983,10 +6115,12 @@ namespace Meta
 					}
 					matched = true;
 					return text;
-				})).Match(asdf,indent,out ma);
+				})).Match(asdf, indent, out ma);
 			ma = true;
 			return t;
 		});
+
+
 		private static Rule StringValue = new CustomSerialize(
 			delegate(Map map)
 			{
@@ -6012,6 +6146,7 @@ namespace Meta
 				text += Syntax.@string;
 				return text;
 			});
+		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
 
 
 		public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
@@ -6023,13 +6158,13 @@ namespace Meta
 		
 		public static Rule Call = new Set(
 			new KeyRule(
-				CodeKeys.Call,
+				Code.Call,
 				new Set(
 					new KeyRule(
-						CodeKeys.Callable,
+						Code.Callable,
 						Expression),
 					new KeyRule(
-						CodeKeys.Parameter,
+						Code.Parameter,
 						new Alternatives(
 							Program,
 							new Enclose(
@@ -6041,22 +6176,22 @@ namespace Meta
 
 		public static string Statement(Map code, string indentation, ref int autoKeys)
 		{
-			Map key = code[CodeKeys.Key];
+			Map key = code[Code.Key];
 			string text;
-			if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
+			if (key.Count == 1 && key[1].ContainsKey(Code.Lookup) && key[1][Code.Lookup].ContainsKey(Code.Literal) && key[1][Code.Lookup][Code.Literal].Equals(Code.Function) && code[Code.Value].ContainsKey(Code.Literal))
 			{
 				bool matched;
-				text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation,out matched);
+				text = indentation + Syntax.function + Expression.Match(code[Code.Value][Code.Literal], indentation,out matched);
 			}
 			else
 			{
 				Map autoKey;
 				text = indentation;
-				Map value = code[CodeKeys.Value];
-				if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
+				Map value = code[Code.Value];
+				if (key.Count == 1 && key[1].ContainsKey(Code.Lookup) && key[1][Code.Lookup].ContainsKey(Code.Literal) && (autoKey = key[1][Code.Lookup][Code.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
 				{
 					autoKeys++;
-					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
+					if (value.ContainsKey(Code.Program) && value[Code.Program].Count != 0)
 					{
 						text += Syntax.statement;
 					}
@@ -6064,7 +6199,7 @@ namespace Meta
 				else
 				{
 					bool m;
-					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
+					text += Keys.Match(code[Code.Key], indentation, out m) + Syntax.statement;
 				}
 				bool matched;
 				text += Expression.Match(value, indentation,out matched);
@@ -6085,12 +6220,12 @@ namespace Meta
 
 		public static Rule Select = new Set(
 			new KeyRule(
-				CodeKeys.Select,
+				Code.Select,
 				SelectImplementation));
 
 		public static Rule LookupSearchImplementation = new Alternatives(
 			new KeyRule(
-				CodeKeys.Literal,
+				Code.Literal,
 				Key),
 			new Enclose(
 				Syntax.lookupStart.ToString(),
@@ -6105,46 +6240,39 @@ namespace Meta
 
 		public static Rule Current = new Equal(
 			new StrategyMap(
-				CodeKeys.Current, 
+				Code.Current, 
 				Map.Empty),
 			Syntax.current.ToString());
 
-		private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
-
-		public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal, Value));
+		public static Rule LiteralProduction = new Set(new KeyRule(Code.Literal, Value));
 
 		public static Rule Lookup = new Alternatives(
 				new Alternatives(
 					new Set(
 						new KeyRule(
-							CodeKeys.Search,
+							Code.Search,
 							LookupSearchImplementation)),
 					new Set(
 						new KeyRule(
-							CodeKeys.Lookup,
+							Code.Lookup,
 							LookupSearchImplementation))),
 				new Alternatives(
 					Current,
-					new Set(new KeyRule(CodeKeys.Literal, Key)),
+					new Set(new KeyRule(Code.Literal, Key)),
 					new Enclose(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
 
 
-
 		public static Rule Key = new Alternatives(
-				new CustomSerialize(
-					delegate(Map map) { return map.IsString && !map.Equals(Map.Empty); },
-					StringKey),
-				new Enclose(
-					Syntax.lookupStart.ToString(),
-					new Alternatives(
-						new CustomSerialize(
-							delegate(Map map) { return map.Equals(Map.Empty); },
-							delegate(Map map) { return Syntax.emptyMap.ToString(); }),
-							IntegerValue,
-						TypeMap,
-						ObjectMap,
-						MapValue),
-				Syntax.lookupEnd.ToString()));
+			StringKey,
+			new Enclose(
+				Syntax.lookupStart.ToString(),
+				new Alternatives(
+					EmptyMap,
+					IntegerValue,
+					TypeMap,
+					ObjectMap,
+					MapValue),
+			Syntax.lookupEnd.ToString()));
 
 		public class OneOrMore:Rule
 		{
@@ -6283,14 +6411,14 @@ namespace Meta
 		public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
 		{
 			string text;			
-			if (!code.ContainsKey(CodeKeys.Program))
+			if (!code.ContainsKey(Code.Program))
 			{
 			    matched = false;
 				text = null;
 			}
 			else
 			{
-				code = code[CodeKeys.Program];
+				code = code[Code.Program];
 				text = Syntax.unixNewLine.ToString();
 				int autoKeys = 0;
 				foreach (Map statement in code.Array)
@@ -6359,6 +6487,7 @@ namespace Meta
 				return text;
 			}
 		}
+		// combine with Literal?
 		public class Equal : Rule
 		{
 			private Map map;
@@ -6422,6 +6551,74 @@ namespace Meta
 				return text;
 			}
 		}
+		public class Alternatives : Rule
+		{
+			private Rule[] rules;
+			public Alternatives(params Rule[] rules)
+			{
+				this.rules = rules;
+			}
+			public override string Match(Map map, string indentation, out bool matched)
+			{
+				string text = null;
+				matched = false;
+				foreach (Rule rule in rules)
+				{
+					text = rule.Match(map, indentation, out matched);
+					if (matched)
+					{
+						break;
+					}
+				}
+				return text;
+			}
+		}
+		public delegate bool Matches(Map map);
+		public delegate string GetMatch(Map map);
+		public class CustomSerialize : Rule
+		{
+			private Matches matches;
+			private GetMatch getMatch;
+			public CustomSerialize(Matches matches, GetMatch getMatch)
+			{
+				this.matches = matches;
+				this.getMatch = getMatch;
+			}
+			private Rule rule;
+			public CustomSerialize(Matches matches, Rule rule)
+			{
+				this.matches = matches;
+				this.rule = rule;
+			}
+			public override string Match(Map map, string indentation, out bool matched)
+			{
+				matched = matches(map);
+				string text;
+				if (matched)
+				{
+					string unIndented;
+					if (getMatch != null)
+					{
+						unIndented = getMatch(map);
+					}
+					else
+					{
+						unIndented = rule.Match(map, indentation, out matched);
+					}
+					string[] lines = unIndented.Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
+					text = lines[0];
+					for (int i = 1; i < lines.Length; i++)
+					{
+						text += Syntax.unixNewLine.ToString() + indentation + lines[i];
+					}
+				}
+				else
+				{
+					text = null;
+				}
+				return text;
+			}
+		}
 	}
 
 	public class FileSystem
@@ -6457,7 +6654,7 @@ namespace Meta
 			{
 				text = "";
 			}
-			Mono.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
+			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
 		}
 	}
 	public class Web
@@ -6864,14 +7061,7 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
-				}
-			}
+
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -6897,7 +7087,14 @@ namespace Meta
 					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
 				}
 			}
-
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
+				}
+			}
 
 		}
 		namespace TestClasses
