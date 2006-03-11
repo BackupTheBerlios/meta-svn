@@ -3794,25 +3794,26 @@ namespace Meta
 				MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
 				if (foundMembers.Length != 0)
 				{
-					if (foundMembers[0] is MethodBase)
+					MemberInfo member = foundMembers[0];
+					if (member is MethodBase)
 					{
 						return new Method(memberName, obj, type);
 					}
-					else if (foundMembers[0] is PropertyInfo)
+					else if (member is PropertyInfo)
 					{
 						return new Property(type.GetProperty(memberName), this.obj, type);
 					}
-					else if (foundMembers[0] is FieldInfo)
+					else if (member is FieldInfo)
 					{
 						return Transform.ToMeta(type.GetField(memberName).GetValue(obj));
 					}
-					else if (foundMembers[0] is EventInfo)
+					else if (member is EventInfo)
 					{
-						return new Event(((EventInfo)foundMembers[0]), obj, type);
+						return new Event(((EventInfo)member), obj, type);
 					}
-					else if (foundMembers[0] is Type)
+					else if (member is Type)
 					{
-						return new TypeMap((Type)foundMembers[0]);
+						return new TypeMap((Type)member);
 					}
 					else
 					{
@@ -3831,77 +3832,16 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			if (key.IsString && type.GetMember(key.GetString(), bindingFlags).Length != 0)
+			string fieldName = key.GetString();
+			FieldInfo field = type.GetField(fieldName, bindingFlags);
+			if (field!=null)
 			{
-				string text = key.GetString();
-				MemberInfo member = type.GetMember(text, bindingFlags)[0];
-				if (member is FieldInfo)
-				{
-					FieldInfo field = (FieldInfo)member;
-					object val = Transform.TryToDotNet(value, field.FieldType);
-					if (val != null)
-					{
-						field.SetValue(obj, val);
-					}
-					else
-					{
-						throw new ApplicationException("Field " + field.Name + " could not be assigned because the value cannot be converted.");
-					}
-				}
-				else if (member is PropertyInfo)
-				{
-					throw new ApplicationException("Cannot set property " + member.Name + " directly. Use its set method instead.");
-				}
-				else if (member is EventInfo)
-				{
-					throw new ApplicationException("Cannot set event " + member.Name + " directly. Use its add method instead.");
-				}
-				else if (member is MethodBase)
-				{
-					throw new ApplicationException("Cannot assign to method " + member.Name + ".");
-				}
-				else
-				{
-					throw new ApplicationException("Could not assign " + text + " .");
-				}
-			}
-			else if (obj != null && key.IsNumber && type.IsArray)
-			{
-				object converted = Transform.TryToDotNet(value, type.GetElementType());
-				if (converted != null)
-				{
-					((Array)obj).SetValue(converted, key.GetNumber().GetInt32());
-					return;
-				}
+				field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
 			}
 			else
 			{
-				throw new ApplicationException("Cannot set key " + Meta.Serialize.ValueFunction(key) + ".");
+				throw new ApplicationException("Field " + fieldName + " does not exist.");
 			}
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				List<Map> array=new List<Map>();
-				foreach(Map key in Keys)
-				{
-					if(key.IsNumber)
-					{
-						array.Add(this[key]);
-					}
-				}
-				return array;
-			}
-		}
-
-		public override bool ContainsKey(Map key)
-		{
-			if (key.IsString)
-			{
-				return Get(key) != null;
-			}
-			return false;
 		}
 		public override ICollection<Map> Keys
 		{
@@ -3946,8 +3886,6 @@ namespace Meta
 			return eventDelegate;
 		}
 	}
-
-
 	public interface ISerializeEnumerableSpecial
 	{
 		string Serialize();
@@ -4011,13 +3949,16 @@ namespace Meta
 					Test test=(Test)testType.GetConstructor(new Type[]{}).Invoke(null);
 					int level;
 					Console.Write(testType.Name + "...");
+
+
 					DateTime startTime = DateTime.Now;
 					object result=test.GetResult(out level);
-
 					TimeSpan duration = DateTime.Now - startTime;
+
+
 					string testDirectory = Path.Combine(TestDirectory, testType.Name);
+					
 					string resultPath = Path.Combine(testDirectory, "result.txt");
-					//string resultCopyPath = Path.Combine(testDirectory, "resultCopy.txt");
 					string checkPath = Path.Combine(testDirectory, "check.txt");
 
 					Directory.CreateDirectory(testDirectory);
@@ -4029,30 +3970,18 @@ namespace Meta
 					StringBuilder stringBuilder = new StringBuilder();
 					Serialize(result, "", stringBuilder, level);
 
-					string resultText = stringBuilder.ToString();
-					File.WriteAllText(resultPath, resultText, Encoding.Default);
-					//File.WriteAllText(resultPath, resultText, Encoding.Default);
-					//File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
-					//File.WriteAllText(resultCopyPath, resultText, Encoding.Default);
-
-					bool successful = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
-
-					if (!successful)
-					{
-						allTestsSucessful = false;
-					}
-
-					string durationText = duration.TotalSeconds.ToString();
+					File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
 					string successText;
-					if (!successful)
+					if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
 					{
 						successText = "failed";
+						allTestsSucessful = false;
 					}
 					else
 					{
 						successText = "succeeded";
 					}
-					Console.WriteLine(" " + successText + "  " + durationText + " s");
+					Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
 				}
 			}
 			if (!allTestsSucessful)
@@ -4071,15 +4000,14 @@ namespace Meta
 					BindingFlags.Public|BindingFlags.DeclaredOnly|BindingFlags.Instance,
 					null,
 					new Type[]{},
-					new ParameterModifier[] { })!=null
-			;
+					new ParameterModifier[] { })!=null;
 		}
 		private bool UseProperty(PropertyInfo property,int level)
 		{
 			object[] attributes=property.GetCustomAttributes(typeof(SerializeAttribute), false);
 
 			return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly()
-			|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
+				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
 		}
 		public void Serialize(object obj,string indent,StringBuilder builder,int level) 
 		{
@@ -4125,29 +4053,6 @@ namespace Meta
 	}
 	public class SourcePosition
 	{
-		public bool IsSmaller(SourcePosition other)
-		{
-			return this.Line<other.Line || (this.Line==other.Line && this.Column<other.Column);
-		}
-		public bool IsGreater(SourcePosition other)
-		{
-			return this.Line>other.Line || (this.Line==other.Line && this.Column>other.Column);
-		}
-		public bool IsBetween(Extent extent)
-		{
-			if(extent!=null)
-			{
-				if(this.IsGreater(extent.Start) || this.Equals(extent.Start))
-				{
-					if(this.IsSmaller(extent.End) || this.Equals(extent.End))
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-
-		}
 		private int line;
 		private int column;
 		public SourcePosition(int line,int column)
@@ -4155,10 +4060,6 @@ namespace Meta
 			this.line=line;
 			this.column=column;
 
-		}
-		public override bool Equals(object obj)
-		{
-			return obj is SourcePosition && ((SourcePosition)obj).Line==Line && ((SourcePosition)obj).Column==Column;
 		}
 		[Serialize]
 		public int Line
@@ -4187,57 +4088,24 @@ namespace Meta
 	}
 	public class Extent
 	{
+		private SourcePosition start;
+		private SourcePosition end;
+		public Extent(SourcePosition start, SourcePosition end, string fileName)
+		{
+			this.start = start;
+			this.end = end;
+			this.fileName = fileName;
+		}
+		private string fileName;
+		public Extent(int startLine, int startColumn, int endLine, int endColumn, string fileName)
+			: this(new SourcePosition(startLine, startColumn), new SourcePosition(endLine, endColumn), fileName)
+		{
+		}
 		public string FileName
 		{
 			get
 			{
 				return fileName;
-			}
-		}
-		public static List<Extent> GetExtents(string fileName,int firstLine,int lastLine)
-		{
-			List<Extent> result=new List<Extent>();
-			foreach(KeyValuePair<Extent,Extent> entry in Extents)
-			{
-				Extent extent=(Extent)entry.Value;
-				if(extent.Start.Line>=firstLine && extent.End.Line<=lastLine)
-				{
-					result.Add(extent);
-				}
-			}
-			return result;
-		}
-		public static Dictionary<Extent,Extent> Extents
-		{
-			get
-			{
-				return extents;
-			}
-		}
-		private static Dictionary<Extent,Extent> extents=new Dictionary<Extent,Extent>();
-		public override bool Equals(object obj)
-		{	
-			bool isEqual=false;
-			if(obj != null && obj is Extent)
-			{
-				Extent extent=(Extent)obj;
-				if(
-					extent.Start.Line==Start.Line && 
-					extent.Start.Column==Start.Column && 
-					extent.End.Line==End.Line && 
-					extent.End.Column==End.Column
-				)
-				{
-					isEqual=true;
-				}
-			}
-			return isEqual;
-		}
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return Start.Line.GetHashCode()*Start.Column.GetHashCode()*End.Line.GetHashCode()*End.Column.GetHashCode();
 			}
 		}
 		[Serialize]
@@ -4256,31 +4124,6 @@ namespace Meta
 				return end;
 			}
 		}
-		private SourcePosition start;
-		private SourcePosition end;
-		public Extent(SourcePosition start, SourcePosition end,string fileName)
-		{
-			this.start = start;
-			this.end = end;
-			this.fileName = fileName;
-		}
-		private string fileName;
-		public Extent(int startLine,int startColumn,int endLine,int endColumn,string fileName):this(new SourcePosition(startLine,startColumn),new SourcePosition(endLine,endColumn),fileName)
-		{
-		}
-		public Extent CreateExtent(int startLine,int startColumn,int endLine,int endColumn,string fileName)
-		{
-			Extent extent=new Extent(startLine,startColumn,endLine,endColumn,fileName);
-			if(!extents.ContainsKey(extent))
-			{
-				extents.Add(extent,extent);
-			}
-			return (Extent)extents[extent];
-		}
-	}
-	public abstract class PersistantStrategy:MapStrategy
-	{
-		public abstract void Replace(Map value);
 	}
 	public class Syntax
 	{
@@ -4303,7 +4146,7 @@ namespace Meta
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
 		public const char shortFunction = ':';
-		// stringForbidden???
+		// introduce stringForbidden???
 		public const char @string = '\"';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
@@ -4323,12 +4166,6 @@ namespace Meta
 		public const char tab = '\t';
 	}
 	public delegate Map ParseFunction(Parser parser, out bool matched);
-	public class PersistantMap:StrategyMap
-	{
-		public PersistantMap(string fileName)
-		{
-		}
-	}
 	public class Parser
 	{
 		private bool negative = false;
