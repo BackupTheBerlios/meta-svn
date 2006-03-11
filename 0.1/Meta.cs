@@ -1456,11 +1456,11 @@ namespace Meta
 				}
 				else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
 				{
-					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.ToDotNet(val, typeof(string)));
+					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.TryToDotNet(val, typeof(string)));
 				}
 				else
 				{
-					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.ToDotNet(val, typeof(byte[])));
+					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.TryToDotNet(val, typeof(byte[])));
 				}
 				cache[key] = val;
 			}
@@ -1885,30 +1885,7 @@ namespace Meta
 		{
 			if (compiledCode == null)
 			{
-				if (ContainsKey(Code.Current))
-				{
-					compiledCode = new Current();
-				}
-				else if (ContainsKey(Code.Search))
-				{
-					compiledCode = new Search(this[Code.Search]);
-				}
-				else if (ContainsKey(Code.Lookup))
-				{
-					compiledCode = new Lookup(this[Code.Lookup]);
-				}
-				else if (ContainsKey(Code.Root))
-				{
-					compiledCode = new Root();
-				}
-				else if (ContainsKey(Code.Call))
-				{
-					compiledCode = new CallSubselect(this[Code.Call]);
-				}
-				else
-				{
-					throw new Exception("Map is not a subselect.");
-				}
+				compiledCode = CreateSubselect();
 			}
 			return (Subselect)compiledCode;
 		}
@@ -1916,28 +1893,59 @@ namespace Meta
 		{
 			if (compiledCode == null)
 			{
-				if (ContainsKey(Code.Call))
-				{
-					compiledCode = new Call(this[Code.Call]);
-				}
-				else if (ContainsKey(Code.Program))
-				{
-					compiledCode = new Program(this[Code.Program]);
-				}
-				else if (ContainsKey(Code.Literal))
-				{
-					compiledCode = new Literal(this[Code.Literal]);
-				}
-				else if (ContainsKey(Code.Select))
-				{
-					compiledCode = new Select(this[Code.Select]);
-				}
-				else
-				{
-					throw new ApplicationException("Cannot compile map.");
-				}
+				compiledCode = CreateExpression();
 			}
 			return (Expression)compiledCode;
+		}
+		public Subselect CreateSubselect()
+		{
+			if (ContainsKey(Code.Current))
+			{
+				return new Current();
+			}
+			else if (ContainsKey(Code.Search))
+			{
+				return new Search(this[Code.Search]);
+			}
+			else if (ContainsKey(Code.Lookup))
+			{
+				return new Lookup(this[Code.Lookup]);
+			}
+			else if (ContainsKey(Code.Root))
+			{
+				return new Root();
+			}
+			else if (ContainsKey(Code.Call))
+			{
+				return new CallSubselect(this[Code.Call]);
+			}
+			else
+			{
+				throw new Exception("Map is not a subselect.");
+			}
+		}
+		public Expression CreateExpression()
+		{
+			if (ContainsKey(Code.Call))
+			{
+				return new Call(this[Code.Call]);
+			}
+			else if (ContainsKey(Code.Program))
+			{
+				return new Program(this[Code.Program]);
+			}
+			else if (ContainsKey(Code.Literal))
+			{
+				return new Literal(this[Code.Literal]);
+			}
+			else if (ContainsKey(Code.Select))
+			{
+				return new Select(this[Code.Select]);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot compile map.");
+			}
 		}
 		public void Append(Map map)
 		{
@@ -2118,6 +2126,7 @@ namespace Meta
 			{
 				if (value != null)
 				{
+					// this isnt sufficient
 					compiledCode = null;
 					Map val = value;
 					// refactor
@@ -2360,6 +2369,103 @@ namespace Meta
 	{
 		public static object ToDotNet(Map meta, Type target)
 		{
+			bool converted;
+			object dotNet=ToDotNet(meta, target, out converted);
+			if (!converted)
+			{
+				throw new ApplicationException("Cannot convert argument.");
+			}
+			return dotNet;
+		}
+
+		// combine with method below
+		public static object ToDotNet(Map meta, Type target,out bool converted)
+		{
+			object dotNet = TryToDotNet(meta, target);
+			converted = dotNet != null;
+			return dotNet;
+		}
+		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+		{
+			MethodInfo invoke = delegateType.GetMethod("Invoke");
+			ParameterInfo[] parameters = invoke.GetParameters();
+			List<Type> arguments = new List<Type>();
+			arguments.Add(typeof(MetaDelegate));
+			foreach (ParameterInfo parameter in parameters)
+			{
+				arguments.Add(parameter.ParameterType);
+			}
+			DynamicMethod hello = new DynamicMethod("EventHandler",
+				invoke.ReturnType,
+				arguments.ToArray(),
+				typeof(Map).Module);
+			ILGenerator il = hello.GetILGenerator();
+
+			LocalBuilder local = il.DeclareLocal(typeof(object[]));
+			il.Emit(OpCodes.Ldc_I4, parameters.Length);
+			il.Emit(OpCodes.Newarr, typeof(object));
+			il.Emit(OpCodes.Stloc, local);
+
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				il.Emit(OpCodes.Ldloc, local);
+				il.Emit(OpCodes.Ldc_I4, i);
+				il.Emit(OpCodes.Ldarg, i + 1);
+				il.Emit(OpCodes.Stelem_Ref);
+			}
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Ldloc, local);
+			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
+			if (invoke.ReturnType == typeof(void))
+			{
+				il.Emit(OpCodes.Pop);
+				il.Emit(OpCodes.Ret);
+			}
+			else
+			{
+				il.Emit(OpCodes.Castclass, invoke.ReturnType);
+				il.Emit(OpCodes.Ret);
+			}
+			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+			return del;
+		}
+
+
+		public class EventHandlerContainer
+		{
+			private Map callable;
+			public EventHandlerContainer(Map callable)
+			{
+				this.callable = callable;
+			}
+			public Map Raise(Map argument)
+			{
+				return callable.Call(argument);
+			}
+		}
+		public class MetaDelegate
+		{
+			private Map callable;
+			private Type returnType;
+			public MetaDelegate(Map callable, Type returnType)
+			{
+				this.callable = callable;
+				this.returnType = returnType;
+			}
+			public object Call(object[] arguments)
+			{
+				Map arg = new StrategyMap();
+				foreach (object argument in arguments)
+				{
+					arg.Append(Transform.ToSimpleMeta(argument));
+				}
+				Map result = this.callable.Call(arg);
+				return Meta.Transform.TryToDotNet(result, this.returnType);
+			}
+		}
+		public static object TryToDotNet(Map meta, Type target)
+		{
 			object dotNet = null;
 			if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
 			{
@@ -2433,7 +2539,7 @@ namespace Meta
 						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 								&& meta.ContainsKey(Code.Function))
 						{
-							dotNet = MethodOverload.CreateDelegateFromCode(target, meta);
+							dotNet = CreateDelegateFromCode(target, meta);
 						}
 						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
 						{
@@ -2452,7 +2558,7 @@ namespace Meta
 							Type elementType=target.GetElementType();
 							foreach (Map m in meta.Array)
 							{
-								object o = Transform.ToDotNet(m, elementType);
+								object o = Transform.TryToDotNet(m, elementType);
 								if (o != null)
 								{
 									list.Add(o);
@@ -2629,10 +2735,17 @@ namespace Meta
 			}
 		}
 	}
-	public delegate object DelegateCreatedForGenericDelegates();
-
 	public abstract class MethodImplementation:Map
 	{
+		protected MethodBase method;
+		protected object obj;
+		protected Type type;
+		public MethodImplementation(MethodBase method, object obj, Type type)
+		{
+			this.method = method;
+			this.obj = obj;
+			this.type = type;
+		}
 		public override bool IsString
 		{
 			get
@@ -2647,206 +2760,135 @@ namespace Meta
 				return false;
 			}
 		}
-		public MethodImplementation(MethodBase method, object obj, Type type)
-		{
-			this.method = method;
-			this.obj = obj;
-			this.type = type;
-		}
-		protected MethodBase method;
-		protected object obj;
-		protected Type type;
 		public override Map Call(Map argument)
 		{
-			object result;
-			List<object> arguments = new List<object>();
-			bool argumentsMatched = true;
 			ParameterInfo[] parameters = method.GetParameters();
-			if (this.method != null && this.method.Name == "Poll")
-			{
-			}
+			object[] arguments = new object[parameters.Length];
 			if (parameters.Length == 1)
 			{
-				}
-				object arg = Transform.ToDotNet(argument, parameters[0].ParameterType);
-				if (arg != null)
-				{
-					arguments.Add(arg);
-				}
-				else
-				{
-					throw new ApplicationException("Cannot convert argument.");
-				}
+				arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType);
 			}
 			else
 			{
-				// refactor
-				for (int i = 0; argumentsMatched && i < parameters.Length; i++)
+				for (int i = 0; i < parameters.Length; i++)
 				{
-					object arg = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-					if (arg != null)
-					{
-						arguments.Add(arg);
-					}
-					else
-					{
-						throw new ApplicationException("Cannot convert argument.");
-					}
+					arguments[i]=Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
 				}
 			}
-			if (method is ConstructorInfo)
+			try
 			{
-				try
-				{
-					result = ((ConstructorInfo)method).Invoke(arguments.ToArray());
-				}
-				catch (Exception e)
-				{
-					throw e.InnerException;
-				}
+				return Transform.ToMeta(
+					method is ConstructorInfo ?
+						((ConstructorInfo)method).Invoke(arguments) :
+						 method.Invoke(obj, arguments));
 			}
-			else
+			catch (Exception e)
 			{
-				try
-				{
-					result = method.Invoke(obj, arguments.ToArray());
-				}
-				catch (Exception e)
-				{
-					throw e.InnerException;
-				}
+				throw e.InnerException;
 			}
-			return Transform.ToMeta(result);
 		}
 	}
 	public class Method : MethodImplementation
 	{
-		// refactor
-		public override Map Call(Map arg)
-		{
-			if (IsCallable)
-			{
-				return base.Call(arg);
-			}
-			else
-			{
-				throw new ApplicationException("Method cannot be called directly, it is overloaded.");
-			}
-		}
-		public bool IsCallable
-		{
-			get
-			{
-				return method != null;
-			}
-		}
-	    private Dictionary<Map, MethodOverload> overloads;
-	    private Method(Dictionary<Map, MethodOverload> overloads,MethodBase method,object obj,Type type):base(method,obj,type)
+	    private Dictionary<Map, MethodOverload> overloadedMethods;
+		// why overloads and method itself?
+	    private Method(Dictionary<Map, MethodOverload> overloadedMethods,MethodBase method,object obj,Type type):base(method,obj,type)
 	    {
-	        this.overloads = overloads;
+	        this.overloadedMethods = overloadedMethods;
 	    }
-		private static MethodBase GetSingleMethod(string name, object obj, Type type)
+		// refactor
+		public Method(string name, object obj, Type type)
+			: base(GetSingleMethod(name, obj, type), obj, type)
 		{
-			MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
-			MethodBase singleMethod;
-			if (members.Length == 1)
-			{
-				singleMethod = (MethodBase)members[0];
-			}
-			else
-			{
-				singleMethod = null;
-			}
-			return singleMethod;
-		}
-		private static BindingFlags GetBindingFlags(object obj,string name)
-		{
-			BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic;
-			if (obj != null || name==".ctor")
-			{
-				bindingFlags |= BindingFlags.Instance;
-			}
-			else
-			{
-				bindingFlags |= BindingFlags.Static;
-			}
-			return bindingFlags;
-		}
-		public Method(string name, object obj, Type type):base(GetSingleMethod(name,obj,type), obj,type)
-	    {
-			if (name=="set_Location")
-			{
-			}
-			MemberInfo[] methods=type.GetMember(name, GetBindingFlags(obj,name));
+			MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
 			// refactor
-			if(methods.Length>1)
+			if (methods.Length > 1)
 			{
-				this.overloads=new Dictionary<Map,MethodOverload>();
+				this.overloadedMethods = new Dictionary<Map, MethodOverload>();
 				foreach (MethodBase method in methods)
 				{
 					Map key;
 
-					ParameterInfo[] parameters=method.GetParameters();
+					ParameterInfo[] parameters = method.GetParameters();
 					if (parameters.Length == 1)
 					{
 						key = new TypeMap(parameters[0].ParameterType);
 					}
 					else
 					{
-						key=new StrategyMap();
+						key = new StrategyMap();
 						foreach (ParameterInfo parameter in parameters)
 						{
 							key.Append(new TypeMap(parameter.ParameterType));
 						}
 					}
 					MethodOverload overload = new MethodOverload(method, obj, type);
-					overloads[key]=overload;
+					overloadedMethods[key] = overload;
 				}
 			}
 			else
 			{
-				this.overloads=null;
+				this.overloadedMethods = null;
 			}
-	    }
-		public Method(Type type):this(".ctor", null, type)
+		}
+		public Method(Type type)
+			: this(".ctor", null, type)
 		{
 		}
-	    protected override Map CopyData()
-	    {
-	        return new Method(overloads,method,obj,type);
-	    }
+		private static MethodBase GetSingleMethod(string name, object obj, Type type)
+		{
+			MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
+			if (members.Length == 1)
+			{
+				return (MethodBase)members[0];
+			}
+			else
+			{
+				return null;
+			}
+		}
+		private static BindingFlags GetBindingFlags(object obj,string name)
+		{
+			if (name==".ctor" || obj != null)
+			{
+				return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+			}
+			else
+			{
+				return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+			}
+		}
 	    public override ICollection<Map> Keys
 	    {
 	        get
 	        {
-				ICollection<Map> keys;
-				if (overloads != null)
+				if (overloadedMethods != null)
 				{
-					keys = overloads.Keys;
+					return overloadedMethods.Keys;
 				}
 				else
 				{
-					keys = new List<Map>();
+					return new List<Map>();
 				}
-				return keys;
 	        }
 	    }
 	    protected override Map Get(Map key)
 	    {
-	        MethodOverload value;
-			if (key is TypeMap && ((TypeMap)key).Type.Name.StartsWith("ICollection"))
+			if (overloadedMethods == null)
 			{
-			}
-			if (overloads == null)
-			{
-				value = null;
+				return null;
 			}
 			else
 			{
-				overloads.TryGetValue(key, out value);
+				MethodOverload value;
+				overloadedMethods.TryGetValue(key, out value);
+				return value;
 			}
-	        return value;
 	    }
+		protected override Map CopyData()
+		{
+			return new Method(overloadedMethods, method, obj, type);
+		}
 	    protected override void Set(Map key, Map val)
 	    {
 	        throw new ApplicationException("Cannot set key in Method.");
@@ -2854,13 +2896,11 @@ namespace Meta
 	}
 	public class MethodOverload : MethodImplementation
 	{
-		//public override bool IsCallable
-		//{
-		//    get
-		//    {
-		//        return true;
-		//    }
-		//}
+		public MethodOverload(MethodBase method, object obj, Type type)
+			: base(method, obj, type)
+		{
+		}
+		// is that correct?
 	    protected override Map CopyData()
 	    {
 	        return new MethodOverload(this.method, this.obj, this.type);
@@ -2880,9 +2920,6 @@ namespace Meta
 	    {
 	        throw new ApplicationException("Cannot set key in MethodOverload");
 	    }
-		public MethodOverload(MethodBase method, object obj, Type type):base(method,obj,type)
-		{
-		}
 		public override bool Equals(object toCompare)
 		{
 			if (toCompare is MethodOverload)
@@ -2902,6 +2939,8 @@ namespace Meta
 				return false;
 			}
 		}
+		// why overriden here?
+		// and not in MethodImplementation
 	    public override int GetHashCode()
 	    {
 	        unchecked
@@ -2914,134 +2953,49 @@ namespace Meta
 	            return hash;
 	        }
 	    }
-	    public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
-	    {
-	        MethodInfo invoke = delegateType.GetMethod("Invoke");
-	        ParameterInfo[] parameters = invoke.GetParameters();
-	        List<Type> arguments = new List<Type>();
-	        arguments.Add(typeof(MetaDelegate));
-	        foreach (ParameterInfo parameter in parameters)
-	        {
-	            arguments.Add(parameter.ParameterType);
-	        }
-	        DynamicMethod hello = new DynamicMethod("EventHandler",
-	            invoke.ReturnType,
-	            arguments.ToArray(),
-	            typeof(Map).Module);
-	        ILGenerator il = hello.GetILGenerator();
-
-	        LocalBuilder local = il.DeclareLocal(typeof(object[]));
-	        il.Emit(OpCodes.Ldc_I4, parameters.Length);
-	        il.Emit(OpCodes.Newarr, typeof(object));
-	        il.Emit(OpCodes.Stloc, local);
-
-	        for (int i = 0; i < parameters.Length; i++)
-	        {
-	            il.Emit(OpCodes.Ldloc, local);
-	            il.Emit(OpCodes.Ldc_I4, i);
-	            il.Emit(OpCodes.Ldarg, i + 1);
-	            il.Emit(OpCodes.Stelem_Ref);
-	        }
-	        il.Emit(OpCodes.Ldarg_0);
-	        il.Emit(OpCodes.Ldloc, local);
-	        il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
-
-	        if (invoke.ReturnType == typeof(void))
-	        {
-	            il.Emit(OpCodes.Pop);
-	            il.Emit(OpCodes.Ret);
-	        }
-	        else
-	        {
-	            il.Emit(OpCodes.Castclass, invoke.ReturnType);
-	            il.Emit(OpCodes.Ret);
-	        }
-	        Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
-	        return del;
-	    }
-	    public class EventHandlerContainer
-	    {
-	        private Map callable;
-	        public EventHandlerContainer(Map callable)
-	        {
-	            this.callable = callable;
-	        }
-	        public Map Raise(Map argument)
-	        {
-	            return callable.Call(argument);
-	        }
-	    }
-	    public class MetaDelegate
-	    {
-	        private Map callable;
-	        private Type returnType;
-	        public MetaDelegate(Map callable, Type returnType)
-	        {
-	            this.callable = callable;
-	            this.returnType = returnType;
-	        }
-	        public object Call(object[] arguments)
-	        {
-	            Map arg = new StrategyMap();
-	            foreach (object argument in arguments)
-	            {
-					arg.Append(Transform.ToSimpleMeta(argument));
-				}
-	            Map result = this.callable.Call(arg);
-	            return Meta.Transform.ToDotNet(result, this.returnType);
-	        }
-	    }
 	}
 	public class TypeMap: DotNetMap
 	{
+		public TypeMap(Type targetType)
+			: base(null, targetType)
+		{
+		}
 		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null || base.ContainsKey(key);
 		}
 		protected override Map Get(Map key)
 		{
-			if (this.Type.Name == "Font")
+			// maybe generic types should be a separate class
+			if (type.IsGenericTypeDefinition)
 			{
-			}
-			Map value;
-			if (key is TypeMap && ((TypeMap)key).type == typeof(Map) && this.type==typeof(ObjectMap))
-			{
-			}
-			if (type.IsGenericTypeDefinition && key.Array.TrueForAll(delegate(Map map) { return map is TypeMap; }))
-			{
-				List<Type> types;
+				List<Type> types=new List<Type>();
 				if (type.GetGenericArguments().Length == 1)
 				{
-					types = new List<Type>();
 					types.Add(((TypeMap)key).Type);
 				}
 				else
 				{
-					types = key.Array.ConvertAll<Type>(new Converter<Map, Type>(delegate(Map map) { return ((TypeMap)map).type; }));
+					foreach (Map map in key.Array)
+					{
+						types.Add(((TypeMap)map).type);
+					}
 				}
-				value = new TypeMap(type.MakeGenericType(types.ToArray()));
+				return new TypeMap(type.MakeGenericType(types.ToArray()));
 			}
 			else if (type == typeof(Array) && key is TypeMap)
 			{
-				value=new TypeMap(((TypeMap)key).Type.MakeArrayType());
+				return new TypeMap(((TypeMap)key).Type.MakeArrayType());
+			}
+			else if(base.Get(key)!=null)
+			{
+				return base.Get(key);
 			}
 			else
 			{
-				value = base.Get(key);
+				return this.Constructor[key];
 			}
-			if (value == null)
-			{
-				value = this.Constructor[key];
-			}
-			return value;
 		}
-		//public override bool IsCallable
-		//{
-		//    get
-		//    {
-		//        return Constructor.IsCallable;
-		//    }
-		//}
 		public Type Type
 		{
 			get
@@ -3055,20 +3009,7 @@ namespace Meta
 		}
 		public override bool Equals(object obj)
 		{
-			bool equal;
-			if (obj is TypeMap)
-			{
-				TypeMap typeMap = (TypeMap)obj;
-				equal = typeMap.type == this.type;
-				if (equal)
-				{
-				}
-			}
-			else
-			{
-				equal = false;
-			}
-			return equal;
+			return obj is TypeMap && ((TypeMap)obj).Type == this.type;
 		}
 		protected override Map CopyData()
 		{
@@ -3081,9 +3022,6 @@ namespace Meta
 				return new Method(type);
 			}
 		}
-		public TypeMap(Type targetType):base(null,targetType)
-		{
-		}
 		public override Map Call(Map argument)
 		{
 			return Constructor.Call(argument);
@@ -3091,13 +3029,6 @@ namespace Meta
 	}
 	public class ObjectMap: DotNetMap
 	{
-		//public override bool IsCallable
-		//{
-		//    get
-		//    {
-		//        return false;
-		//    }
-		//}
 		public object Object
 		{
 			get
@@ -3105,7 +3036,6 @@ namespace Meta
 				return obj;
 			}
 		}
-		// remove this
 		public ObjectMap(string text)
 			: this(text, text.GetType())
 		{
@@ -3153,6 +3083,7 @@ namespace Meta
 				}
 				else
 				{
+					// that is not logical, maybe ListStrategy is not suitable for this, only if key==1
 					Panic(key, val, new ListStrategy());
 				}
 			}
@@ -3168,65 +3099,25 @@ namespace Meta
 	}
 	public class NumberStrategy : DataStrategy<Number>
 	{
-		public override bool IsNumber
-		{
-			get
-			{
-				return true;
-			}
-		}
-		public override Number GetNumber()
-		{
-			return data;
-		}
-		protected override bool SameEqual(Number otherData)
-		{
-			return otherData == data;
-		}
 		public NumberStrategy(Number number)
 		{
 			this.data = new Number(number);
 		}
-		public override Map CopyData()
-		{
-			return new StrategyMap(new NumberStrategy(data));
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				List<Map> keys = new List<Map>();
-				if (data != 0)
-				{
-					keys.Add(Map.Empty);
-				}
-				if (data < 0)
-				{
-					keys.Add(Numbers.Negative);
-				}
-				if (data.Denominator != 1.0d)
-				{
-					keys.Add(Numbers.Denominator);
-				}
-				return keys;
-			}
-		}
 		public override Map Get(Map key)
 		{
-			Map value;
 			if (ContainsKey(key))
 			{
 				if (key.Equals(Map.Empty))
 				{
-					value = data - 1;
+					return data - 1;
 				}
 				else if(key.Equals(Numbers.Negative))
 				{
-					value=Map.Empty;
+					return Map.Empty;
 				}
 				else if (key.Equals(Numbers.Denominator))
 				{
-					value = new StrategyMap(new Number(data.Denominator));
+					return new StrategyMap(new Number(data.Denominator));
 				}
 				else
 				{
@@ -3235,9 +3126,8 @@ namespace Meta
 			}
 			else
 			{
-				value = null;
+				return null;
 			}
-			return value;
 		}
 		public override void Set(Map key, Map value)
 		{
@@ -3261,42 +3151,110 @@ namespace Meta
 				Panic(key, value);
 			}
 		}
+
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				List<Map> keys = new List<Map>();
+				if (data != 0)
+				{
+					keys.Add(Map.Empty);
+				}
+				if (data < 0)
+				{
+					keys.Add(Numbers.Negative);
+				}
+				if (data.Denominator != 1.0d)
+				{
+					keys.Add(Numbers.Denominator);
+				}
+				return keys;
+			}
+		}
+		public override Map CopyData()
+		{
+			return new StrategyMap(new NumberStrategy(data));
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return true;
+			}
+		}
+		// is data really useful?
+		public override Number GetNumber()
+		{
+			return data;
+		}
+		// ???
+		protected override bool SameEqual(Number otherData)
+		{
+			return otherData == data;
+		}
 	}
 	public class ListStrategy : DataStrategy<List<Map>>
 	{
-		protected override bool SameEqual(List<Map> otherData)
+
+		public ListStrategy()
 		{
-			bool equal;
-			if (data.Count == otherData.Count)
+			this.data = new List<Map>();
+		}
+		public ListStrategy(string text)
+		{
+			this.data = new List<Map>(text.Length);
+			foreach (char c in text)
 			{
-				equal = true;
-				for (int i = 0; i < data.Count; i++)
+				this.data.Add(new StrategyMap(c));
+			}
+		}
+		public ListStrategy(ListStrategy original)
+		{
+			this.data = new List<Map>(original.data);
+		}
+		public override Map Get(Map key)
+		{
+			Map value = null;
+			if (key.IsNumber)
+			{
+				int integer = key.GetNumber().GetInt32();
+				if (integer >= 1 && integer <= data.Count)
 				{
-					if (!this.data[i].Equals(otherData[i]))
-					{
-						equal = false;
-						break;
-					}
+					value = data[integer - 1];
+				}
+			}
+			return value;
+		}
+		public override void Set(Map key, Map val)
+		{
+			if (key.IsNumber)
+			{
+				int integer = key.GetNumber().GetInt32();
+				if (integer >= 1 && integer <= data.Count)
+				{
+					data[integer - 1] = val;
+				}
+				else if (integer == data.Count + 1)
+				{
+					data.Add(val);
+				}
+				else
+				{
+					Panic(key, val);
 				}
 			}
 			else
 			{
-				equal = false;
+				Panic(key, val);
 			}
-			return equal;
 		}
+
 		public override int Count
 		{
 			get
 			{
 				return data.Count;
-			}
-		}
-		public override void AppendRange(Map array)
-		{
-			foreach (Map map in array.Array)
-			{
-				this.data.Add(map.Copy());
 			}
 		}
 		public override List<Map> Array
@@ -3306,6 +3264,7 @@ namespace Meta
 				return this.data;
 			}
 		}
+
 		public override int GetArrayCount()
 		{
 			return this.data.Count;
@@ -3345,22 +3304,6 @@ namespace Meta
 				return keys;
 			}
 		}
-		public ListStrategy()
-		{
-			this.data = new List<Map>();
-		}
-		public ListStrategy(string text)
-		{
-			this.data = new List<Map>(text.Length);
-			foreach (char c in text)
-			{
-				this.data.Add(new StrategyMap(c));
-			}
-		}
-		public ListStrategy(ListStrategy original)
-		{
-			this.data = new List<Map>(original.data);
-		}
 		public override Map CopyData()
 		{
 			// refactor, combine with DictionaryStrategy?
@@ -3371,56 +3314,22 @@ namespace Meta
 			}
 			return copy;
 		}
-		public override Map Get(Map key)
+		public override void AppendRange(Map array)
 		{
-			Map value = null;
-			if (key.IsNumber)
+			foreach (Map map in array.Array)
 			{
-				int integer = key.GetNumber().GetInt32();
-				if (integer >= 1 && integer <= data.Count)
-				{
-					value = data[integer - 1];
-				}
-			}
-			return value;
-		}
-		public override void Set(Map key, Map val)
-		{
-			if (key.IsNumber)
-			{
-				int integer = key.GetNumber().GetInt32();
-				if (integer >= 1 && integer <= data.Count)
-				{
-					data[integer - 1] = val;
-				}
-				else if (integer == data.Count + 1)
-				{
-					data.Add(val);
-				}
-				else
-				{
-					Panic(key, val);
-				}
-			}
-			else
-			{
-				Panic(key, val);
+				this.data.Add(map.Copy());
 			}
 		}
-	}
-	public class DictionaryStrategy:DataStrategy<Dictionary<Map,Map>>
-	{
-		protected override bool SameEqual(Dictionary<Map, Map> otherData)
+		protected override bool SameEqual(List<Map> otherData)
 		{
 			bool equal;
 			if (data.Count == otherData.Count)
 			{
 				equal = true;
-				foreach (KeyValuePair<Map, Map> pair in data)
+				for (int i = 0; i < data.Count; i++)
 				{
-					Map value;
-					otherData.TryGetValue(pair.Key,out value);
-					if (!pair.Value.Equals(value))
+					if (!this.data[i].Equals(otherData[i]))
 					{
 						equal = false;
 						break;
@@ -3433,20 +3342,11 @@ namespace Meta
 			}
 			return equal;
 		}
+	}
+	public class DictionaryStrategy:DataStrategy<Dictionary<Map,Map>>
+	{
 		public DictionaryStrategy():this(2)
 		{
-			if (this.map!= null &&this.IsString && this.GetString() == "abc, ")
-			{
-			}
-		}
-		public override Map CopyData()
-		{
-			StrategyMap copy=new StrategyMap();
-			foreach (KeyValuePair<Map, Map> pair in this.map)
-			{
-				copy[pair.Key] = pair.Value;
-			}
-			return copy;
 		}
 		public DictionaryStrategy(Dictionary<Map, Map> data)
 		{
@@ -3454,20 +3354,34 @@ namespace Meta
 		}
 		public DictionaryStrategy(int Count)
 		{
-			this.data=new Dictionary<Map,Map>(Count);
+			this.data = new Dictionary<Map, Map>(Count);
 		}
-		public override List<Map> Array
+		public override Map Get(Map key)
 		{
-			get
-			{
-				List<Map> list=new List<Map>();
-				for(Number iInteger=new Number(1);ContainsKey(new StrategyMap(iInteger));iInteger+=1)
-				{
-					list.Add(this.Get(new StrategyMap(iInteger)));
-				}
-				return list;
-			}
+			Map val;
+			data.TryGetValue(key, out val);
+			return val;
 		}
+		public override void Set(Map key, Map value)
+		{
+			data[key] = value;
+		}
+		public override bool ContainsKey(Map key)
+		{
+			return data.ContainsKey(key);
+		}
+		//public override List<Map> Array
+		//{
+		//    get
+		//    {
+		//        List<Map> list=new List<Map>();
+		//        for(int i=1;ContainsKey(i);i++)
+		//        {
+		//            list.Add(this.Get(i));
+		//        }
+		//        return list;
+		//    }
+		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -3482,19 +3396,38 @@ namespace Meta
 				return data.Count;
 			}
 		}
-		public override Map  Get(Map key)
+
+		public override Map CopyData()
 		{
-			Map val;
-            data.TryGetValue(key,out val);
-            return val;
+			StrategyMap copy = new StrategyMap();
+			foreach (KeyValuePair<Map, Map> pair in this.map)
+			{
+				copy[pair.Key] = pair.Value;
+			}
+			return copy;
 		}
-		public override void Set(Map key,Map value)
+		protected override bool SameEqual(Dictionary<Map, Map> otherData)
 		{
-			data[key]=value;
-		}
-		public override bool ContainsKey(Map key) 
-		{
-			return data.ContainsKey(key);
+			bool equal;
+			if (data.Count == otherData.Count)
+			{
+				equal = true;
+				foreach (KeyValuePair<Map, Map> pair in data)
+				{
+					Map value;
+					otherData.TryGetValue(pair.Key, out value);
+					if (!pair.Value.Equals(value))
+					{
+						equal = false;
+						break;
+					}
+				}
+			}
+			else
+			{
+				equal = false;
+			}
+			return equal;
 		}
 	}
 	//public class CloneStrategy : DataStrategy<MapStrategy>
@@ -3578,7 +3511,6 @@ namespace Meta
 
 	public abstract class MapStrategy
 	{
-
 		public virtual int GetArrayCount()
 		{
 			return map.GetArrayCountDefault();
@@ -3744,13 +3676,13 @@ namespace Meta
 				ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
 				if (parameters.Length == 2)
 				{
-					arguments.Add(Transform.ToDotNet(argument, parameters[1].ParameterType));
+					arguments.Add(Transform.TryToDotNet(argument, parameters[1].ParameterType));
 				}
 				else
 				{
 					for (int i = 1; i < parameters.Length; i++)
 					{
-						arguments.Add(Transform.ToDotNet(argument[i], parameters[i].ParameterType));
+						arguments.Add(Transform.TryToDotNet(argument[i], parameters[i].ParameterType));
 					}
 				}
 				result = new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
@@ -3897,7 +3829,6 @@ namespace Meta
 			if (key.IsString)
 			{
 				return Get(key) != null;
-		
 			}
 			return false;
 		}
@@ -3981,7 +3912,7 @@ namespace Meta
 				if (member is FieldInfo)
 				{
 					FieldInfo field = (FieldInfo)member;
-					object val = Transform.ToDotNet(value, field.FieldType);
+					object val = Transform.TryToDotNet(value, field.FieldType);
 					if (val!=null)
 					{
 						field.SetValue(obj, val);
@@ -4010,7 +3941,7 @@ namespace Meta
 			}
 			else if (obj != null && key.IsNumber && type.IsArray)
 			{
-				object converted = Transform.ToDotNet(value, type.GetElementType());
+				object converted = Transform.TryToDotNet(value, type.GetElementType());
 				if (converted!=null)
 				{
 					((Array)obj).SetValue(converted, key.GetNumber().GetInt32());
@@ -4030,7 +3961,7 @@ namespace Meta
 		{
 			EventInfo eventInfo=type.GetEvent(name,BindingFlags.Public|BindingFlags.NonPublic|
 				BindingFlags.Static|BindingFlags.Instance);
-			Delegate eventDelegate=MethodOverload.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
+			Delegate eventDelegate=Transform.CreateDelegateFromCode(eventInfo.EventHandlerType,code);
 			return eventDelegate;
 		}
 		public DotNetMap(object obj,Type type)
