@@ -72,46 +72,18 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map Denominator="denominator";
 	}
-	public class SyntaxException:MetaException
+	public abstract class MetaException : ApplicationException
 	{
-		public SyntaxException(string message, Parser parser)
-			: base(message, new Extent(parser.Line, parser.Column,parser.Line,parser.Column,parser.File))
-		{
-		}
-	}
-	// TODO: refactor exceptions
-	// TODO: print the position here
-	// TODO: this is a fricking mess
-	public class ExecutionException : MetaException
-	{
-		private Map context;
-		public ExecutionException(string message, Extent extent,Map context):base(message,extent)
-		{
-			this.context = context;
-		}
-	}
-	public abstract class MetaException:ApplicationException
-	{
-		public static int Leaves(Map map)
-		{
-			int count = 0;
-			foreach (KeyValuePair<Map, Map> pair in map)
-			{
-				if (pair.Value == null)
-				{
-					count++;
-				}
-				else if (pair.Value.IsNumber)
-				{
-					count++;
-				}
-				else
-				{
-					count += Leaves(pair.Value);
-				}
-			}
-			return count;
+		private string message;
+		private Extent extent;
+		// this should use Positions instead of extents in the long run
+		private List<Extent> invocationList = new List<Extent>();
 
+
+		public MetaException(string message, Extent extent)
+		{
+			this.message = message;
+			this.extent = extent;
 		}
 		public List<Extent> InvocationList
 		{
@@ -120,18 +92,17 @@ namespace Meta
 				return invocationList;
 			}
 		}
-		private List<Extent> invocationList = new List<Extent>();
 		public override string ToString()
 		{
 			// TODO: messy, horrible
 			string message = Message;
 			if (invocationList.Count != 0)
 			{
-				message+="\n\nStack trace:";
+				message += "\n\nStack trace:";
 			}
-			foreach(Extent extent in invocationList)
+			foreach (Extent extent in invocationList)
 			{
-				message+="\n" + GetExtentText(extent);
+				message += "\n" + GetExtentText(extent);
 			}
 			return message;
 		}
@@ -149,11 +120,6 @@ namespace Meta
 			}
 			return text;
 		}
-		public MetaException(string message, Extent extent)
-		{
-			this.message = message;
-			this.extent = extent;
-		}
 		public override string Message
 		{
 			get
@@ -168,33 +134,59 @@ namespace Meta
 				return extent;
 			}
 		}
-        private string message;
-		private Extent extent;
+		public static int CountLeaves(Map map)
+		{
+			int count = 0;
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				if (pair.Value == null)
+				{
+					count++;
+				}
+				else if (pair.Value.IsNumber)
+				{
+					count++;
+				}
+				else
+				{
+					count += CountLeaves(pair.Value);
+				}
+			}
+			return count;
+		}
+	}
+	public class SyntaxException:MetaException
+	{
+		public SyntaxException(string message, Parser parser)
+			: base(message, new Extent(parser.Line, parser.Column,parser.Line,parser.Column,parser.File))
+		{
+		}
+	}
+	public class ExecutionException : MetaException
+	{
+		private Map context;
+		public ExecutionException(string message, Extent extent,Map context):base(message,extent)
+		{
+			this.context = context;
+		}
 	}
 	public class KeyDoesNotExist : ExecutionException
 	{
-		// TODO: stupid, duplicated
-		public KeyDoesNotExist(Map key, Map map, Extent extent)
+		public KeyDoesNotExist(Map key, Extent extent, Map map)
 			:base("Key does not exist: " + Serialize.ValueFunction(key), extent, map)
 		{
 		}
 	}
 	public class KeyNotFound : ExecutionException
 	{
-		public KeyNotFound(Map key, Extent extent, Map context)
-			:base("Key not found: " + Serialize.ValueFunction(key), extent, context)
+		public KeyNotFound(Map key, Extent extent, Map map)
+			:base("Key not found: " + Serialize.ValueFunction(key), extent, map)
 		{
 		}
 	}
 	public abstract class Expression
 	{
-		public static FileMap firstFile = null;
-		public static string parsingFile = null;
-		public Map Evaluate(Map context)
-		{
-			return EvaluateImplementation(new StrategyMap(new TemporaryPosition(context)));
-		}
-		public abstract Map EvaluateImplementation(Map context);
+		public abstract Map Evaluate(Map context);
 	}
 	public class Call : Expression
 	{
@@ -205,7 +197,7 @@ namespace Meta
 			this.callable = code[Code.Callable];
 			this.argument = code[Code.Argument];
 		}
-		public override Map EvaluateImplementation(Map current)
+		public override Map Evaluate(Map current)
 		//public override Map EvaluateImplementation(Map current,Map arg)
 		{
 			try
@@ -231,8 +223,9 @@ namespace Meta
 		{
 			statements = code.Array;
 		}
-		public override Map EvaluateImplementation(Map current)
+		public override Map Evaluate(Map parent)
 		{
+			Map current = new StrategyMap(new TemporaryPosition(parent));
 			foreach (Map statement in statements)
 			{
 				statement.GetStatement().Assign(ref current);
@@ -247,7 +240,7 @@ namespace Meta
 		{
 			this.literal = code;
 		}
-		public override Map EvaluateImplementation(Map context)
+		public override Map Evaluate(Map context)
 		{
 			Map result=literal.Copy();
 			result.Scope = new TemporaryPosition(context);
@@ -316,7 +309,7 @@ namespace Meta
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
 			if (!context.ContainsKey(key))
 			{
-				throw new KeyDoesNotExist(key, context, keyExpression.Extent);
+				throw new KeyDoesNotExist(key, keyExpression.Extent, context);
 			}
 			return context[key];
 		}
@@ -370,7 +363,7 @@ namespace Meta
 		{
 			this.keys = code.Array;
 		}
-		public override Map EvaluateImplementation(Map context)
+		public override Map Evaluate(Map context)
 		{
 			Map selected=context;
 			foreach (Map key in keys)
@@ -938,10 +931,10 @@ namespace Meta
 		{
 			base.Set(key, value);
 			// TODO: refactor
-			if (Expression.firstFile == null && path.EndsWith(".meta"))
-			{
-				Save();
-			}
+			//if (Expression.firstFile == null && path.EndsWith(".meta"))
+			//{
+			//    Save();
+			//}
 		}
 	}
 	// should be create in the new data parser, what about non-file source, though?
@@ -955,10 +948,10 @@ namespace Meta
 		protected override void Set(Map key, Map value)
 		{
 			strategy.Set(key, value);
-			if (Expression.firstFile == null && fileMap.Path.EndsWith(".meta"))
-			{
-				fileMap.Save();
-			}
+			//if (Expression.firstFile == null && fileMap.Path.EndsWith(".meta"))
+			//{
+			//    fileMap.Save();
+			//}
 		}
 	}
 	public class DrivesMap : Map
@@ -1343,10 +1336,10 @@ namespace Meta
 							{
 								throw new SyntaxException("Expected end of file.", parser);
 							}
-							Expression.parsingFile = metaFile;
+							//Expression.parsingFile = metaFile;
 							value = result;
-							Expression.parsingFile = null;
-							Expression.firstFile = null;
+							//Expression.parsingFile = null;
+							//Expression.firstFile = null;
 						}
 						else
 						{
@@ -4166,6 +4159,9 @@ namespace Meta
 		public const char tab = '\t';
 	}
 	public delegate Map ParseFunction(Parser parser, out bool matched);
+
+
+	// refactor completely
 	public class Parser
 	{
 		private bool negative = false;
@@ -4230,7 +4226,6 @@ namespace Meta
 			this.position = position;
 		}
 		public bool isStartOfFile = true;
-		//public int functions = 0;
 		public int indentationCount = -1;
 		public abstract class Rule
 		{
@@ -4355,9 +4350,6 @@ namespace Meta
 			}
 			protected override Map MatchImplementation(Parser parser, out bool matched)
 			{
-				//if (text == Syntax.argument && parser.Rest.IndexOf("argument")<100)
-				//{
-				//}
 				List<Action> actions = new List<Action>();
 				foreach (char c in text)
 				{
@@ -4758,6 +4750,9 @@ namespace Meta
 		});
 		public class Data
 		{
+			public static Rule NewLine = new Alternatives(
+						new Character(Syntax.unixNewLine),
+						new StringRule(Syntax.windowsNewLine));
 
 			public static Rule EndOfLine =
 				new Sequence(
@@ -4765,10 +4760,7 @@ namespace Meta
 						new Match(new Alternatives(
 							new Character(Syntax.space),
 							new Character(Syntax.tab))))),
-					new Match(new Alternatives(
-				// factor this out
-						new Character(Syntax.unixNewLine),
-						new StringRule(Syntax.windowsNewLine))));
+					new Match(NewLine));
 
 			public static Rule Integer =
 				new Sequence(
@@ -4851,10 +4843,6 @@ namespace Meta
 
 			public static Rule Map = new CustomRule(delegate(Parser parser,out bool matched)
 			{
-				if (parser.Rest == "")
-				{
-					matched = false;
-				}
 				Indentation.Match(parser,out matched);
 				Map map=new StrategyMap();
 				if(matched)
@@ -4913,10 +4901,8 @@ namespace Meta
 						new Merge(
 							new Sequence(
 								new Match(
-									new Character(
-										Syntax.shortFunction)),
-								new ReferenceAssignment(
-									Expression)))))).Match(p, out matched);
+									new Character(Syntax.shortFunction)),
+								new ReferenceAssignment(Expression)))))).Match(p, out matched);
 				return result;
 			});
 			public static Rule Value=new Alternatives(
@@ -5008,23 +4994,6 @@ namespace Meta
 								Expression)))).Match(p,out matched);
 				return result;
 			});
-			//public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
-			//{
-			//    Map parameterName = new ZeroOrMore(
-			//        new Autokey(
-			//            new CharacterExcept(
-			//                Syntax.function, Syntax.unixNewLine))).Match(p, out matched);
-			//    Map result = null;
-			//    if (matched)
-			//    {
-			//        result = new Sequence(new Match(new Character(Syntax.function)), new ReferenceAssignment(Expression)).Match(p, out matched);
-			//        if (matched)
-			//        {
-			//            result[CodeKeys.ParameterName] = parameterName;
-			//        }
-			//    }
-			//    return result;
-			//});
 			public static Rule File = new Sequence(
 				new Match(
 					new Optional(
@@ -5055,13 +5024,6 @@ namespace Meta
 									new Match(new Character(Syntax.call)),
 									new ReferenceAssignment(Expression)),
 								Program)),
-								// remove
-						new Match(new CustomRule(delegate(Parser p, out bool matched)
-						{
-							matched = true;
-							//matched = p.functions != 0;
-							return null;
-						})),
 						new Match(new Character(Syntax.callEnd)))));
 		});
 
@@ -5085,14 +5047,7 @@ namespace Meta
 												new Character(Syntax.call),
 												new Character(Syntax.indentation))),
 										new ReferenceAssignment(Expression)),
-									Program)),
-								// remove
-							new Match(new CustomRule(delegate(Parser p, out bool matched)
-							{
-								matched = true;
-								//matched = p.functions != 0;
-								return null;
-							})))));
+									Program)))));
 		});
 		public Stack<int> defaultKeys = new Stack<int>();
 		private int escapeCharCount = 0;
@@ -5102,7 +5057,7 @@ namespace Meta
 		}
 
 
-		// somehow include the newline here
+		// somehow include the newline here   ???
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
@@ -5188,35 +5143,24 @@ namespace Meta
 				Code.Literal,
 				Data.ShortFunction));
 
-
-		//public static Rule ShortFunction = new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Literal,
-		//        Data.ShortFunction));
-
-
 		public static Rule Function = new Sequence(
-			new Assignment(Code.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(Code.Lookup, new StrategyMap(Code.Literal, Code.Function))))),
-			new Assignment(Code.Value,
-				new Sequence(
-					new Assignment(
-						Code.Literal,
-						Data.Function))));
+			new Assignment(Code.Key,new LiteralRule(new StrategyMap(1, new StrategyMap(Code.Lookup, new StrategyMap(Code.Literal, Code.Function))))),
+			new Assignment(Code.Value,new Sequence(
+				new Assignment(Code.Literal,Data.Function))));
 		
 		private Rule Whitespace =
 			new ZeroOrMore(
 				new Match(
 					new Alternatives(
-							new Character(Syntax.tab),
-							new Character(Syntax.space))));
+						new Character(Syntax.tab),
+						new Character(Syntax.space))));
 
 		private static Rule EmptyMap = new Sequence(
-			new Assignment(
-				Code.Literal,
-				new Sequence(
-					new Match(new Character(Syntax.emptyMap)),
-					new ReferenceAssignment(
-						new LiteralRule(Map.Empty)))));
+			new Assignment(Code.Literal, new Sequence(
+				new Match(
+					new Character(Syntax.emptyMap)),
+				new ReferenceAssignment(
+					new LiteralRule(Map.Empty)))));
 
 		private static Rule LookupAnything =
 			new Sequence(
@@ -5291,8 +5235,9 @@ namespace Meta
 
 		private static Rule KeysSearch = new Sequence(
 				new Match(new Character(Syntax.search)),
-				new ReferenceAssignment(Search)
-			);
+				new ReferenceAssignment(Search));
+
+
 		private static Rule Keys = new Sequence(
 			new Assignment(
 				1,
@@ -5390,6 +5335,7 @@ namespace Meta
 						p.defaultKeys.Pop();
 					})));
 	}
+	// refactor
 	public class Serialize
 	{
 		private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
@@ -5958,128 +5904,6 @@ namespace Meta
 			}
 		}
 	}
-
-	public class FileSystem
-	{
-		// refactor
-		private static bool parsing=false;
-		public static bool Parsing
-		{
-			get
-			{
-				return parsing;
-			}
-			set
-			{
-				parsing = value;
-			}
-		}
-		// combine gac into fileSystem
-		public static Map fileSystem;
-		static FileSystem()
-		{
-			fileSystem=new StrategyMap();
-
-			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
-			DrivesMap drives = new DrivesMap();
-			FileSystem.fileSystem["localhost"] = drives;
-			fileSystem.Scope = new TemporaryPosition(Gac.gac);
-		}
-		public static void Save()
-		{
-			string text = Serialize.ValueFunction(fileSystem).Trim(new char[] { '\n' });
-			if (text == "\"\"")
-			{
-				text = "";
-			}
-			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
-		}
-	}
-	// maybe we should get rid of these and just implement a real application server or something like that
-	// a simple webservice should be enough, actually. its not that important right now, though
-
-	public class Web
-	{
-		const int port = 80;
-		public static Map Get(Map key)
-		{
-			if (!key.IsString)
-			{
-				throw new ApplicationException("key is not a string");
-			}
-			string address = key.GetString();
-
-			WebClient webClient = new WebClient();
-			//try
-			//{
-				string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
-				string cacheDirectory = Path.Combine(metaPath, "Cache");
-				DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
-				string zipDirectory=Path.Combine(metaPath,"Zip");
-				string zipFile = Path.Combine(zipDirectory, address + ".zip");
-				Directory.CreateDirectory(zipDirectory);
-				string metaZipAddress = "http://"+address + "/" + "meta.zip";
-
-				try
-				{
-					webClient.DownloadFile(metaZipAddress, zipFile);
-				}
-				catch (Exception e)
-				{
-					return null;
-				}
-				unzipDirectory.Create();
-				Unzip(zipFile, unzipDirectory.FullName);
-				// net should be parent
-				return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem.Position);
-				//return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
-				//}
-			//catch (Exception e)
-			//{
-			//    return null;
-			//}
-		}
-		public static void Unzip(string zipFile,string dir)
-		{
-			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
-
-			ZipEntry theEntry;
-			while ((theEntry = s.GetNextEntry()) != null)
-			{
-
-				Console.WriteLine(theEntry.Name);
-
-				string directoryName = Path.GetDirectoryName(theEntry.Name);
-				string fileName = Path.GetFileName(theEntry.Name);
-
-				// create directory
-				//Directory.CreateDirectory(directoryName);
-
-				if (fileName != String.Empty)
-				{
-					FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
-
-					int size = 2048;
-					byte[] data = new byte[2048];
-					while (true)
-					{
-						size = s.Read(data, 0, data.Length);
-						if (size > 0)
-						{
-							streamWriter.Write(data, 0, size);
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					streamWriter.Close();
-				}
-			}
-			s.Close();
-		}
-	}
 	public class Gac : StrategyMap
 	{
 		public static readonly StrategyMap gac = new Gac();
@@ -6185,19 +6009,111 @@ namespace Meta
 		}
 		protected Map cachedAssemblyInfo = new StrategyMap();
 	}
+	public class FileSystem
+	{
+		// combine gac into fileSystem
+		public static Map fileSystem;
+		static FileSystem()
+		{
+			fileSystem=new StrategyMap();
+			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
+			DrivesMap drives = new DrivesMap();
+			FileSystem.fileSystem["localhost"] = drives;
+			fileSystem.Scope = new TemporaryPosition(Gac.gac);
+		}
+		public static void Save()
+		{
+			string text = Serialize.ValueFunction(fileSystem).Trim(new char[] { '\n' });
+			if (text == "\"\"")
+			{
+				text = "";
+			}
+			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
+		}
+	}
+	public class Web
+	{
+		const int port = 80;
+		public static Map Get(Map key)
+		{
+			if (!key.IsString)
+			{
+				throw new ApplicationException("key is not a string");
+			}
+			string address = key.GetString();
+
+			WebClient webClient = new WebClient();
+
+			string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
+			string cacheDirectory = Path.Combine(metaPath, "Cache");
+			DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
+			string zipDirectory=Path.Combine(metaPath,"Zip");
+			string zipFile = Path.Combine(zipDirectory, address + ".zip");
+			Directory.CreateDirectory(zipDirectory);
+			string metaZipAddress = "http://"+address + "/" + "meta.zip";
+
+			try
+			{
+				webClient.DownloadFile(metaZipAddress, zipFile);
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+			unzipDirectory.Create();
+			Unzip(zipFile, unzipDirectory.FullName);
+			// net should be parent
+			return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem.Position);
+			//return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
+			//}
+		}
+		public static void Unzip(string zipFile,string dir)
+		{
+			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
+
+			ZipEntry theEntry;
+			while ((theEntry = s.GetNextEntry()) != null)
+			{
+
+				Console.WriteLine(theEntry.Name);
+
+				string directoryName = Path.GetDirectoryName(theEntry.Name);
+				string fileName = Path.GetFileName(theEntry.Name);
+
+				// fix this for directory creation
+
+				//Directory.CreateDirectory(directoryName);
+
+				if (fileName != String.Empty)
+				{
+					FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
+
+					int size = 2048;
+					byte[] data = new byte[2048];
+					while (true)
+					{
+						size = s.Read(data, 0, data.Length);
+						if (size > 0)
+						{
+							streamWriter.Write(data, 0, size);
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					streamWriter.Close();
+				}
+			}
+			s.Close();
+		}
+	}
 	public class Number
 	{
-		public Number(double numerator, double denominator)
-		{
-			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
-			if (denominator < 0)
-			{
-				numerator = -numerator;
-				denominator = -denominator;
-			}
-			this.numerator=numerator/greatestCommonDivisor;
-			this.denominator = denominator / greatestCommonDivisor;
-		}
+		private readonly double numerator;
+		private readonly double denominator;
+
 		public Number(Number i):this(i.numerator,i.denominator)
 		{
 		}
@@ -6218,6 +6134,17 @@ namespace Meta
 		public Number(ulong integer):this((double)integer)
 		{
 		}
+		public Number(double numerator, double denominator)
+		{
+			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+			if (denominator < 0)
+			{
+				numerator = -numerator;
+				denominator = -denominator;
+			}
+			this.numerator=numerator/greatestCommonDivisor;
+			this.denominator = denominator / greatestCommonDivisor;
+		}
 		public double Numerator
 		{
 			get
@@ -6232,8 +6159,6 @@ namespace Meta
 				return denominator;
 			}
 		}
-		private readonly double numerator;
-		private readonly double denominator;
 		public static Number operator |(Number a, Number b)
 		{
 			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
@@ -6277,16 +6202,16 @@ namespace Meta
 		{
 			a = Math.Abs(a);
 			b = Math.Abs(b);
-			   while (a!=0 && b!=0) {
-					   if(a > b)
-							   a = a % b;
-					   else
-							   b = b % a;
-			   }
-			   if(a == 0)
-					   return b;
-			   else
-					   return a;
+		   while (a!=0 && b!=0) {
+				   if(a > b)
+						   a = a % b;
+				   else
+						   b = b % a;
+		   }
+		   if(a == 0)
+				   return b;
+		   else
+				   return a;
 		}
 		private static double LeastCommonMultiple(Number a, Number b)
 		{
@@ -6303,9 +6228,6 @@ namespace Meta
 		}
 		public static Number operator -(Number a, Number b)
 		{
-			if (a.Denominator != 1.0)
-			{
-			}
 			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a,b));
 		}
 		public static Number operator *(Number a, Number b)
