@@ -407,7 +407,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"apple"
 			Value (StrategyMap):
-				"last"
+				"green"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"orange"

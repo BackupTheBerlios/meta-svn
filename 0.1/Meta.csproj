@@ -138,7 +138,6 @@
     <None Include="Library\print.meta" />
     <None Include="Library\range.meta" />
     <None Include="Library\remove.meta" />
-    <None Include="Library\replace.meta" />
     <None Include="Library\reverse.meta" />
     <None Include="Library\serialize.meta" />
     <None Include="Library\slice.meta" />

@@ -198,39 +198,25 @@ namespace Meta
 			this.argument = code[Code.Argument];
 		}
 		public override Map Evaluate(Map current)
-		//public override Map EvaluateImplementation(Map current,Map arg)
 		{
-			try
-			{
-				return callable.GetExpression().Evaluate(current).Call(argument.GetExpression().Evaluate(current));
-			}
-			// TODO: refactor
-			catch (MetaException e)
-			{
-				e.InvocationList.Add(callable.Extent);
-				throw e;
-			}
-			catch (Exception e)
-			{
-				throw new ExecutionException(e.ToString(), callable.Extent,current);
-			}
+			return callable.GetExpression().Evaluate(current).Call(argument.GetExpression().Evaluate(current));
 		}
 	}
 	public class Program : Expression
 	{
-		private List<Map> statements;
+		private Map statements;
 		public Program(Map code)
 		{
-			statements = code.Array;
+			statements = code;
 		}
 		public override Map Evaluate(Map parent)
 		{
-			Map current = new StrategyMap(new TemporaryPosition(parent));
-			foreach (Map statement in statements)
+			Map context = new StrategyMap(new TemporaryPosition(parent));
+			foreach (Map statement in statements.Array)
 			{
-				statement.GetStatement().Assign(ref current);
+				statement.GetStatement().Assign(ref context);
 			}
-			return current;
+			return context;
 		}
 	}
 	public class Literal : Expression
@@ -247,64 +233,64 @@ namespace Meta
 			return result;
 		}
 	}
-
 	public abstract class Subselect
 	{
-		public abstract Map EvaluateImplementation(Map context, Map executionContext);
+		public abstract Map Evaluate(Map context, Map executionContext);
 		// why is executionContext a ref parameter, i dont get it
 		public abstract void Assign(ref Map context, Map value, ref Map executionContext);
 	}
 	public class Current:Subselect
 	{
-		public override void Assign(ref Map context, Map value,ref  Map executionContext)
-		{
-			value.Scope = context.Scope;
-			executionContext = value;
-		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map Evaluate(Map context, Map executionContext)
 		{
 			return context;
+		}
+		public override void Assign(ref Map context, Map value, ref  Map executionContext)
+		{
+			value.Scope = executionContext.Scope;
+			executionContext = value;
 		}
 	}
 	public class CallSubselect : Subselect
 	{
+		// caching is somewhat unlogical here
+		// map cannot be expression and subselect at the same time
+		// that is problematic, because it is entirely possible, at least with call
+		// maybe there should be another call inside it but that makes it too complicated, maybe
+		// however it is the only logical thing
 		private Call call;
 		public CallSubselect(Map code)
 		{
 			this.call = new Call(code);
 		}
+		public override Map Evaluate(Map context, Map executionContext)
+		{
+			return call.Evaluate(context);
+		}
 		public override void Assign(ref Map context, Map value, ref Map executionContext)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
-		{
-			return call.Evaluate(context);
-		}
 	}
 	public class Root : Subselect
 	{
+		public override Map Evaluate(Map context, Map executionContext)
+		{
+			return Gac.gac;
+		}
 		public override void Assign(ref Map selected, Map value, ref Map executionContext)
 		{
 			throw new Exception("Cannot assign to argument.");
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
-		{
-			return Gac.gac;
-		}
 	}
 	public class Lookup:Subselect
 	{
-		public override void Assign(ref Map selected, Map value,ref Map executionContext)
-		{
-			selected[keyExpression.GetExpression().Evaluate(executionContext)]=value;
-		}
 		private Map keyExpression;
 		public Lookup(Map keyExpression)
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map Evaluate(Map context, Map executionContext)
 		{
 			Map key=keyExpression.GetExpression().Evaluate(executionContext);
 			if (!context.ContainsKey(key))
@@ -313,70 +299,76 @@ namespace Meta
 			}
 			return context[key];
 		}
+		public override void Assign(ref Map selected, Map value,ref Map executionContext)
+		{
+			selected[keyExpression.GetExpression().Evaluate(executionContext)]=value;
+		}
 	}
 	public class Search:Subselect
 	{
-		public override void Assign(ref Map selected, Map value,ref Map executionContext)
-		{
-			Map evaluatedKey = key.GetExpression().Evaluate(executionContext);
-			Map scope = executionContext;
-			while (scope != null && !scope.ContainsKey(evaluatedKey))
-			{
-				scope = scope.Scope.Get();
-			}
-			if (scope == null)
-			{
-				throw new KeyNotFound(evaluatedKey, key.Extent, executionContext);
-			}
-			else
-			{
-				scope[evaluatedKey] = value;
-			}
-		}
 		private Map key;
 		public Search(Map keyExpression)
 		{
 			this.key = keyExpression;
 		}
-		public override Map EvaluateImplementation(Map context, Map executionContext)
+		public override Map Evaluate(Map context, Map executionContext)
 		{
 			Map evaluatedKey = key.GetExpression().Evaluate(executionContext);
-			Map scope = context;
-			while (scope != null && !scope.ContainsKey(evaluatedKey))
+			Map selected = context;
+			while (selected != null && !selected.ContainsKey(evaluatedKey))
 			{
-				scope = scope.Scope.Get();
+				selected = selected.Scope.Get();
 			}
-			if (scope == null)
+			if (selected == null)
 			{
 				throw new KeyNotFound(evaluatedKey, key.Extent, context);
 			}
 			else
 			{
-				return scope[evaluatedKey];
+				return selected[evaluatedKey];
+			}
+		}
+		// get rid of either context or executionContext or rename them
+		public override void Assign(ref Map context, Map value,ref Map executionContext)
+		{
+			Map evaluatedKey = key.GetExpression().Evaluate(executionContext);
+			Map selected = executionContext;
+			while (selected != null && !selected.ContainsKey(evaluatedKey))
+			{
+				selected = selected.Scope.Get();
+			}
+			if (selected == null)
+			{
+				throw new KeyNotFound(evaluatedKey, key.Extent, executionContext);
+			}
+			else
+			{
+				selected[evaluatedKey] = value;
 			}
 		}
 	}
 	public class Select : Expression
 	{
-		private List<Map> keys;
+		private List<Map> subselects;
 		public Select(Map code)
 		{
-			this.keys = code.Array;
+			this.subselects = code.Array;
 		}
 		public override Map Evaluate(Map context)
 		{
 			Map selected=context;
-			foreach (Map key in keys)
+			foreach (Map subselect in subselects)
 			{
-				selected=key.GetSubselect().EvaluateImplementation(selected, context);
+				selected=subselect.GetSubselect().Evaluate(selected, context);
 			}
 			return selected;
 		}
 	}
 	public class Statement
 	{
-		List<Map> keys;
-		public Map value;
+		// somewhat inconsequential
+		private List<Map> keys;
+		private Map value;
 		public Statement(Map code)
 		{
 			this.keys = code[Code.Key].Array;
@@ -387,31 +379,19 @@ namespace Meta
 			Map selected = context;
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
-				selected = keys[i].GetSubselect().EvaluateImplementation(selected, context);
+				selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
 			keys[keys.Count - 1].GetSubselect().Assign(ref selected, value.GetExpression().Evaluate(context), ref context);
 		}
 	}
 	public class Library
 	{
-		// TODO: maybe this stuff could be reduced?
-		// simplified
-		// some parameters change
 		public static Map Product(Map arg)
 		{
 			Number result = 1;
 			foreach (Map number in arg.Array)
 			{
 				result *= number.GetNumber();
-			}
-			return result;
-		}
-		public static Map Foreach(Map arg)
-		{
-			Map result=new StrategyMap();
-			foreach(KeyValuePair<Map,Map> entry in arg[1])
-			{
-				result.Append(arg.Call(new StrategyMap("key",entry.Key,"value",entry.Value)));
 			}
 			return result;
 		}
@@ -429,39 +409,11 @@ namespace Meta
 		{
 			return random.Next(1,arg.GetNumber().GetInt32());
 		}
-		public static Map FindFirst(Map arg)
-		{
-			Map result = new StrategyMap(new ListStrategy());
-			Map array=arg["array"];
-			Map value = arg["value"];
-			for (int i = 1; i<=array.ArrayCount ; i++)
-			{
-				for (int k = 1;value[k].Equals(array[i+k-1]);k++)
-				{
-					if (k == value.ArrayCount)
-					{
-						return i;
-					}
-
-				}
-			}
-			return 0;
-		}
 		public static Map Reverse(Map arg)
 		{
 			List<Map> list=arg.Array;
 			list.Reverse();
 			return new StrategyMap(list);
-		}
-		public static Map Range(Map arg)
-		{
-			int end=arg.GetNumber().GetInt32();
-			Map result = new StrategyMap();
-			for (int i = 1; i < end; i++)
-			{
-				result.Append(i);
-			}
-			return result;
 		}
 		public static Map If(Map arg)
 		{
@@ -493,7 +445,9 @@ namespace Meta
 			Dictionary<Map,Map> result = new Dictionary<Map,Map>();
 			foreach (KeyValuePair<Map, object> entry in keys)
 			{
-				foreach(Map map in arg.Array)
+				List<Map> args=arg.Array;
+				args.Reverse();
+				foreach(Map map in args)
 				{
 					if (map.ContainsKey(entry.Key))
 					{
@@ -508,76 +462,15 @@ namespace Meta
 			}
 			return new StrategyMap(new DictionaryStrategy(result));
 		}
-		public static Map Complement(Map arg)
-		{
-		    Dictionary<Map, Map> found = new Dictionary<Map, Map>();
-		    foreach (Map map in arg.Array)
-		    {
-		        foreach (KeyValuePair<Map, Map> entry in map)
-		        {
-		            if (found.ContainsKey(entry.Key))
-		            {
-		                found[entry.Key] = null;
-		            }
-		            else
-		            {
-		                found[entry.Key] = entry.Value;
-		            }
-		        }
-		    }
-		    Map result = new StrategyMap();
-		    foreach (KeyValuePair<Map, Map> entry in found)
-		    {
-		        if (entry.Value != null)
-		        {
-					result[entry.Key] = entry.Value;
-		        }
-		    }
-			return result;
-		}
-		public static Map Slice(Map arg)
-		{
-			Map array=arg["array"];
-			int start;
-			if (arg.ContainsKey("start"))
-			{
-				start = arg["start"].GetNumber().GetInt32();
-			}
-			else
-			{
-				start = 1;
-			}
-			int end;
-			if (arg.ContainsKey("end"))
-			{
-				end = arg["end"].GetNumber().GetInt32();
-			}
-			else
-			{
-				end = array.ArrayCount;
-			}
-			Map result = new StrategyMap(new ListStrategy());
-			for (int i = start; i <= end; i++)
-			{
-				result.Append(array[i]);
-			}
-			return result;
-		}
-		public static Map Replace(Map arg)
-		{
-			throw new ApplicationException("Method not implemented.");
-		}
 		public static Map Equal(Map arg)
 		{
 			bool equal = true;
-			if (arg.ArrayCount > 3)
-			{
-			}
 			if(arg.ArrayCount>1)
 			{
-				for(int i=1;arg.ContainsKey(i+1);i++)
+				List<Map> array = arg.Array;
+				for (int i = 0; i<arg.Count-1; i++)
 				{
-					if (!arg[i].Equals(arg[i + 1]))
+					if (!array[i].Equals(array[i + 1]))
 					{
 						equal = false;
 						break;
@@ -595,7 +488,6 @@ namespace Meta
 			bool or=false;
 			foreach (Map map in arg.Array)
 			{
-				//or = true;
 				if (map.GetBoolean())
 				{
 					or = true;
@@ -603,71 +495,6 @@ namespace Meta
 				}
 			}
 			return or;
-		}
-		public static Map Apply(Map arg)
-		{
-			Map result = new StrategyMap(new ListStrategy());
-			foreach (Map map in arg["array"].Array)
-			{
-				result.Append(arg["function"].Call(map));
-			}
-			return result;
-		}
-		public static Map Find(Map arg)
-		{
-			Map result = new StrategyMap(new ListStrategy());
-			string text=arg["array"].GetString();
-			string value=arg["value"].GetString();
-			for (int i = 0; ; i++)
-			{
-				i = text.IndexOf(value, i);
-				if (i == -1)
-				{
-					break;
-				}
-				else
-				{
-					result.Append(i+1);
-				}
-			}
-			return result;
-		}
-		public static Map Filter(Map arg)
-		{
-			Map result = new StrategyMap(new ListStrategy());
-			foreach (Map map in arg["array"].Array)
-			{
-				if (arg["function"].Call(map).GetBoolean())
-				{
-					result.Append(map);
-				}
-			}
-			return result;
-		}
-		public static Map StringReplace(Map arg)
-		{
-			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
-		}
-		public static Map UrlDecode(Map arg)
-		{
-			string[] aSplit;
-			string sOutput;
-			string sConvert = arg.GetString();
-
-			//' convert all pluses to spaces
-			sOutput = sConvert.Replace("+", " ");
-			//sOutput = REPLACE(sConvert, "+", " ")
-
-			//' next convert %hexdigits to the character
-			aSplit = sOutput.Split('%');
-
-			//If IsArray(aSplit) Then
-			sOutput = aSplit[0];
-			for(int i=1;i<aSplit.Length;i++)
-			{
-				sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16)+aSplit[i].Substring(2);
-			}
-			return sOutput;
 		}
 		public static Map Try(Map arg)
 		{
@@ -708,7 +535,7 @@ namespace Meta
 		}
 		public static Map CreateConsole(Map arg)
 		{
-			Process.AllocConsole();
+			Interpreter.AllocConsole();
 			return Map.Empty;
 		}
 		public static Map StrictlyIncreasing(Map arg)
@@ -826,6 +653,7 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
+		// should be called unite or something, should be: "Unify"
 		public static Map Merge(Map arg)
 		{
 			Map result=new StrategyMap();
@@ -838,6 +666,7 @@ namespace Meta
 			}
 			return result;
 		}
+		// rename arguments
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg["array"].Array;
@@ -847,6 +676,7 @@ namespace Meta
 			}));
 			return new StrategyMap(array);
 		}
+		// remove
 		public static Map Pop(Map arg)
 		{
 			Map count=new StrategyMap(arg.Array.Count);
@@ -860,6 +690,7 @@ namespace Meta
 			}
 			return result;
 		}
+		// remove
 		public static Map Remove(Map arg)
 		{
 			Map map = arg["map"];
@@ -885,6 +716,131 @@ namespace Meta
 			}
 			return result;
 		}
+
+
+		// wrong
+		public static Map Complement(Map arg)
+		{
+			Dictionary<Map, Map> found = new Dictionary<Map, Map>();
+			foreach (Map map in arg.Array)
+			{
+				foreach (KeyValuePair<Map, Map> entry in map)
+				{
+					if (found.ContainsKey(entry.Key))
+					{
+						found[entry.Key] = null;
+					}
+					else
+					{
+						found[entry.Key] = entry.Value;
+					}
+				}
+			}
+			Map result = new StrategyMap();
+			foreach (KeyValuePair<Map, Map> entry in found)
+			{
+				if (entry.Value != null)
+				{
+					result[entry.Key] = entry.Value;
+				}
+			}
+			return result;
+		}
+		// unnecessary?
+		public static Map Range(Map arg)
+		{
+			int end = arg.GetNumber().GetInt32();
+			Map result = new StrategyMap();
+			for (int i = 1; i < end; i++)
+			{
+				result.Append(i);
+			}
+			return result;
+		}
+		public static Map Find(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			string text = arg["array"].GetString();
+			string value = arg["value"].GetString();
+			for (int i = 0; ; i++)
+			{
+				i = text.IndexOf(value, i);
+				if (i == -1)
+				{
+					break;
+				}
+				else
+				{
+					result.Append(i + 1);
+				}
+			}
+			return result;
+		}
+		// use Intersect + Range
+		// but range would need start parameter, then, too
+		//	x=intersect
+		//		range
+		//			start=2
+		//			end=4
+		//		y
+		//	maybe intersect should work the other way round	
+		public static Map Slice(Map arg)
+		{
+			Map array = arg["array"];
+			int start;
+			if (arg.ContainsKey("start"))
+			{
+				start = arg["start"].GetNumber().GetInt32();
+			}
+			else
+			{
+				start = 1;
+			}
+			int end;
+			if (arg.ContainsKey("end"))
+			{
+				end = arg["end"].GetNumber().GetInt32();
+			}
+			else
+			{
+				end = array.ArrayCount;
+			}
+			Map result = new StrategyMap(new ListStrategy());
+			for (int i = start; i <= end; i++)
+			{
+				result.Append(array[i]);
+			}
+			return result;
+		}
+		public static Map StringReplace(Map arg)
+		{
+			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
+		}
+		// should be removed
+		public static Map UrlDecode(Map arg)
+		{
+			string[] aSplit;
+			string sOutput;
+			string sConvert = arg.GetString();
+
+			//' convert all pluses to spaces
+			sOutput = sConvert.Replace("+", " ");
+			//sOutput = REPLACE(sConvert, "+", " ")
+
+			//' next convert %hexdigits to the character
+			aSplit = sOutput.Split('%');
+
+			//If IsArray(aSplit) Then
+			sOutput = aSplit[0];
+			for (int i = 1; i < aSplit.Length; i++)
+			{
+				sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16) + aSplit[i].Substring(2);
+			}
+			return sOutput;
+		}
+		// change this to work for all maps?
+
+		// change arguments?
 		public static Map While(Map arg)
 		{
 			while (arg["condition"].Call(Map.Empty).GetBoolean())
@@ -893,14 +849,55 @@ namespace Meta
 			}
 			return Map.Empty;
 		}
-	}
-	// TODO: combine this with GAC
-	public class WebDirectoryMap : DirectoryMap
-	{
-		public WebDirectoryMap(DirectoryInfo directory, PersistantPosition scope)
-			: base(directory, scope)
+		public static Map Apply(Map arg)
 		{
-			this.Scope = scope;
+			Map result = new StrategyMap(new ListStrategy());
+			foreach (Map map in arg["array"].Array)
+			{
+				result.Append(arg["function"].Call(map));
+			}
+			return result;
+		}
+		public static Map Filter(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			foreach (Map map in arg["array"].Array)
+			{
+				if (arg["function"].Call(map).GetBoolean())
+				{
+					result.Append(map);
+				}
+			}
+			return result;
+		}
+
+		// bad names
+		public static Map FindFirst(Map arg)
+		{
+			Map result = new StrategyMap(new ListStrategy());
+			Map array = arg["array"];
+			Map value = arg["value"];
+			for (int i = 1; i <= array.ArrayCount; i++)
+			{
+				for (int k = 1; value[k].Equals(array[i + k - 1]); k++)
+				{
+					if (k == value.ArrayCount)
+					{
+						return i;
+					}
+
+				}
+			}
+			return 0;
+		}
+		public static Map Foreach(Map arg)
+		{
+			Map result = new StrategyMap();
+			foreach (KeyValuePair<Map, Map> entry in arg[1])
+			{
+				result.Append(arg.Call(new StrategyMap("key", entry.Key, "value", entry.Value)));
+			}
+			return result;
 		}
 	}
 	public class FileMap : StrategyMap
@@ -922,22 +919,11 @@ namespace Meta
 				return path;
 			}
 		}
-		// TODO: refactor, dont remember when this should be called
 		public void Save()
 		{
 			File.WriteAllText(path,this.Count==0? "": Meta.Serialize.ValueFunction(this).Trim(Syntax.unixNewLine));
 		}
-		protected override void Set(Map key, Map value)
-		{
-			base.Set(key, value);
-			// TODO: refactor
-			//if (Expression.firstFile == null && path.EndsWith(".meta"))
-			//{
-			//    Save();
-			//}
-		}
 	}
-	// should be create in the new data parser, what about non-file source, though?
 	public class FileSubMap : FileMap
 	{
 		private FileMap fileMap;
@@ -948,10 +934,6 @@ namespace Meta
 		protected override void Set(Map key, Map value)
 		{
 			strategy.Set(key, value);
-			//if (Expression.firstFile == null && fileMap.Path.EndsWith(".meta"))
-			//{
-			//    fileMap.Save();
-			//}
 		}
 	}
 	public class DrivesMap : Map
@@ -973,42 +955,39 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key)
 		{
-			bool containsKey;
 			if (key.IsString)
 			{
-				containsKey = drives.ContainsKey(key.GetString());
+				return drives.ContainsKey(key.GetString());
 			}
 			else
 			{
-				containsKey = false;
+				return false;
 			}
-			return containsKey;
 		}
-		//public override bool IsCallable
-		//{
-		//    get { return false; }
-		//}
 		public override ICollection<Map> Keys
 		{
 			get 
 			{
-				// TODO: buggy, why is this called
-
 				return new List<Map>();
-				//throw new Exception("The method or operation is not implemented."); 
 			}
 		}
 		protected override Map Get(Map key)
 		{
 			string name = key.GetString();
 			// TODO: incorrect
-			return !drives.ContainsKey(name)? null: new DirectoryMap(new DirectoryInfo(name+"\\"), this.Position);
+			if (!drives.ContainsKey(name))
+			{
+				return null;
+			}
+			else
+			{
+				return new DirectoryMap(new DirectoryInfo(name + "\\"), this.Position);
+			}
 		}
 		protected override void Set(Map key, Map val)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		// what does this do? bad name
 		protected override Map CopyData()
 		{
 			throw new Exception("The method or operation is not implemented.");
@@ -1026,26 +1005,11 @@ namespace Meta
 		private PersistantPosition position;
 		private DirectoryInfo directory;
 		private List<Map> keys = new List<Map>();
-		private static Map FindParent(DirectoryInfo dir)
-		{
-			Map parent;
-			if (dir.Parent != null)
-			{
-				parent = new DirectoryMap(dir.Parent);
-			}
-			else
-			{
-				parent = new DrivesMap();
-				FileSystem.fileSystem["localhost"] = parent;
-			}
-			return parent;
-		}
-		public DirectoryMap(DirectoryInfo directory)
-			: this(directory, FindParent(directory).Position)
-		{
-		}
+
 		public DirectoryMap(DirectoryInfo directory, PersistantPosition scope)
 		{
+			// this is a bit too complicated
+			// should get a PersistantPosition directly
 			this.directory = directory;
 			List<Map> pos = new List<Map>();
 			DirectoryInfo dir = directory;
@@ -1277,7 +1241,6 @@ namespace Meta
 					}
 				}
 			}
-
 		}
         public static void TrashFile(string fname)
         {
@@ -1287,10 +1250,6 @@ namespace Meta
 			fo.fFlags.FOF_NOCONFIRMATION = true;
 			fo.pFrom = fname;
         }
-		//public override bool IsCallable
-		//{
-		//    get { return false; }
-		//}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		// fix
 		protected override Map Get(Map key)
@@ -1305,7 +1264,7 @@ namespace Meta
 				else
 				{
 					string name = key.GetString();
-					if (directory.FullName != Process.LibraryPath)
+					if (directory.FullName != Interpreter.LibraryPath)
 					{
 						Directory.SetCurrentDirectory(directory.FullName);
 					}
@@ -1318,28 +1277,18 @@ namespace Meta
 					if (File.Exists(metaFile))
 					{
 						string text = File.ReadAllText(metaFile, Encoding.Default);
-						//string text = File.ReadAllText(metaFile, Encoding.Default);
 						Map result;
 						FileMap fileMap = new FileMap(metaFile);
 						if (text != "")
 						{
 							Parser parser = new Parser(text, metaFile,new PersistantPosition(this.Position,name));
 							bool matched;
-							if(parser.file.Contains("string.meta"))
-							{
-							}
-							if (parser.text.Length == 12)
-							{
-							}
 							result = Parser.Data.File.Match(parser, out matched);
 							if (parser.index != parser.text.Length)
 							{
 								throw new SyntaxException("Expected end of file.", parser);
 							}
-							//Expression.parsingFile = metaFile;
 							value = result;
-							//Expression.parsingFile = null;
-							//Expression.firstFile = null;
 						}
 						else
 						{
@@ -1396,7 +1345,6 @@ namespace Meta
 								if (subDir.Exists)
 								{
 									value = new DirectoryMap(subDir, this.Position);
-									//value = new DirectoryMap(subDir, new TemporaryPosition(this));
 								}
 								else
 								{
@@ -1467,18 +1415,63 @@ namespace Meta
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
-	public class Process
+	public class Interpreter
 	{
-		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
-		public static extern bool AllocConsole();
-
-		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
-		static extern IntPtr GetStdHandle(int nStdHandle);
-		public static bool useConsole = false;
-		public static void UseConsole()
+		[STAThread]
+		public static void Main(string[] args)
 		{
-			AllocConsole();
-			useConsole = true;
+			try
+			{
+				if (args.Length == 0)
+				{
+					Commands.Interactive();
+				}
+				else
+				{
+					switch (args[0])
+					{
+						case "-interactive":
+							Commands.Interactive();
+							break;
+						case "-test":
+							Commands.Test();
+							break;
+						case "-help":
+							Commands.Help();
+							break;
+						default:
+							Commands.Run(args);
+							break;
+					}
+				}
+			}
+			catch (MetaException e)
+			{
+				string text = e.ToString();
+				System.Diagnostics.Process.Start("devenv", e.Extent.FileName + @" /command ""Edit.GoTo " + e.Extent.Start.Line + "\"");
+				if (useConsole)
+				{
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
+				else
+				{
+					MessageBox.Show(text, "Meta exception");
+				}
+			}
+			catch (Exception e)
+			{
+				string text = e.ToString();
+				if (useConsole)
+				{
+					Console.WriteLine(text);
+					Console.ReadLine();
+				}
+				else
+				{
+					MessageBox.Show(text, "Meta exception");
+				}
+			}
 		}
 		public class Commands
 		{
@@ -1497,8 +1490,8 @@ namespace Meta
 				string code;
 
 				// this is still kinda wrong, interactive mode should exist in filesystem, somehow
-				Parser parser = new Parser("", "Interactive console",FileSystem.fileSystem.Position);
-				//parser.functions++;
+				// should have a position, too
+				Parser parser = new Parser("", "Interactive console", FileSystem.fileSystem.Position);
 				parser.defaultKeys.Push(1);
 				while (true)
 				{
@@ -1545,7 +1538,6 @@ namespace Meta
 							else
 							{
 								parser.index = parser.text.Length;
-								// make this more exact
 								throw new SyntaxException("Syntax error", parser);
 							}
 						}
@@ -1561,24 +1553,22 @@ namespace Meta
 			{
 				UseConsole();
 				new MetaTest().Run();
-				//Console.ReadLine();
 			}
 			public static void Run(string[] args)
 			{
 				int i = 1;
 				int fileIndex = 0;
-				// bad
-				if (args[0] == "-console")
-				{
-					UseConsole();
-					i++;
-					fileIndex++;
-				}
+				//if (args[0] == "-console")
+				//{
+				//    UseConsole();
+				//    i++;
+				//    fileIndex++;
+				//}
 				string path = args[fileIndex];
-				string positionPath = Path.Combine(Path.GetDirectoryName(path),Path.GetFileNameWithoutExtension(args[fileIndex]));
+				string positionPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(args[fileIndex]));
 
-				string[] position=positionPath.Split(Path.DirectorySeparatorChar);
-				Map function=FileSystem.fileSystem["localhost"];
+				string[] position = positionPath.Split(Path.DirectorySeparatorChar);
+				Map function = FileSystem.fileSystem["localhost"];
 				foreach (string pos in position)
 				{
 					function = function[pos];
@@ -1587,168 +1577,28 @@ namespace Meta
 				function.Call(Map.Empty);
 			}
 		}
-		[STAThread]
-		public static void Main(string[] args)
-		{
-			try
-			{
+		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
+		public static extern bool AllocConsole();
 
-				if (args.Length == 0)
-				{
-					Commands.Interactive();
-				}
-				else
-				{
-					switch(args[0])
-					{
-						case "-interactive":
-							Commands.Interactive();
-							break;
-						case "-test":
-							Commands.Test();
-							break;
-						case "-help":
-							Commands.Help();
-							break;
-						default:
-							Commands.Run(args);
-							break;
-					}
-				}
-			}
-			catch (MetaException e)
-			{
-				string text = e.ToString();
-				System.Diagnostics.Process.Start("devenv",e.Extent.FileName+@" /command ""Edit.GoTo "+e.Extent.Start.Line+"\"");
-				if (useConsole)
-				{
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
-				else
-				{
-					MessageBox.Show(text, "Meta exception");
-				}
-			}
-			catch (Exception e)
-			{
-				string text = e.ToString();
-				if (useConsole)
-				{
-					Console.WriteLine(text);
-					Console.ReadLine();
-				}
-				else
-				{
-					MessageBox.Show(text, "Meta exception");
-				}
-			}
-		}
-		Thread thread;
-		private Map parameter;
-		private Map program;
-		public Process(Map program,Map parameter)
+		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+		static extern IntPtr GetStdHandle(int nStdHandle);
+		// should this be per process?
+		public static bool useConsole = false;
+		public static void UseConsole()
 		{
-			this.thread=new Thread(new ThreadStart(Run));
-			processes[thread]=this;
-			this.program=program;
-			this.parameter=parameter;
+			AllocConsole();
+			useConsole = true;
 		}
-		static Process()
-		{
-			processes[Thread.CurrentThread]=new Process(null,null);
-		}
-		public Process() : this(FileSystem.fileSystem, new StrategyMap())
-		{
-		}
-		public void Run()
-		{
-			program.Call(parameter);
-		}
-		public void Start()
-		{
-			thread.Start();
-		}
-		public void Stop()
-		{
-			if(thread.ThreadState!=System.Threading.ThreadState.Suspended && thread.ThreadState!=System.Threading.ThreadState.SuspendRequested)
-			{
-				thread.Suspend();
-			}
-		}
-		public void Pause()
-		{
-			thread.Suspend();
-		}
-		public void Continue()
-		{
-			if(thread.ThreadState==System.Threading.ThreadState.Suspended)
-			{
-				thread.Resume();
-			}
-		}
-		public static Process Current
-		{
-			get
-			{
-				return (Process)processes[Thread.CurrentThread];
-			}
-		}
-		private static Dictionary<Thread,Process> processes=new Dictionary<Thread,Process>();
-		private bool reverseDebugging=false;
-		private SourcePosition breakPoint=new SourcePosition(0,0);
-
-		public bool ReverseDebugging
-		{
-			get
-			{
-				return reverseDebugging;
-			}
-			set
-			{
-				reverseDebugging=value;
-			}
-		}
-
-		public event DebugBreak Break;
-
-		public delegate void DebugBreak(Map data);
-		public void CallBreak(Map data)
-		{
-			if(Break!=null)
-			{
-				if(data==null)
-				{
-					data=new StrategyMap("nothing");
-				}
-				Break(data);
-				Thread.CurrentThread.Suspend();
-			}
-		}
-		private static string installationPath=null;
 		public static string InstallationPath
 		{
 			get
 			{
-				if (installationPath == null)
-				{
-					// fix this
-					// how to find this out?
-					// maybe look in registry
-					// no other reliable way
-					// maybe Meta should be put in the Gac, actually
-					// difficult to debug though, maybe
-					// but where in the registry
-					// who would have to install it?
-					// should be installable for non-admins, too
-					installationPath = @"C:\Meta\0.1\";
-				}
-				return installationPath;
+				return @"C:\Meta\0.1\";
 			}
-			set
-			{
-				installationPath = value;
-			}
+			//set
+			//{
+			//    installationPath = value;
+			//}
 		}
 		public static string LibraryPath
 		{
@@ -4122,15 +3972,13 @@ namespace Meta
 	{
 		static Syntax()
 		{
-			List<char> list = new List<char>(Syntax.lookupStringForbidden);
-			list.AddRange(Syntax.lookupStringFirstForbiddenAdditional);
-			Syntax.lookupStringFirstForbidden = list.ToArray();
+			//List<char> list = new List<char>(Syntax.lookupStringForbidden);
+			//Syntax.lookupStringFirstForbidden = list.ToArray();
 		}
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
 		public const char search='$';
-		public const string current = "current";
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -4139,620 +3987,51 @@ namespace Meta
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
 		public const char shortFunction = ':';
-		// introduce stringForbidden???
 		public const char @string = '\"';
-		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape,shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd};
-
-		// remove???
-		public static char[] lookupStringFirstForbiddenAdditional = new char[] { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringFirstForbidden;
 		public const char emptyMap = '0';
 		public const char call = ' ';
 		public const char select = '.';
-
 		public const char stringEscape = '\'';
 		public const char statement = '=';
 		public const char space = ' ';
 		public const char tab = '\t';
+		public const string current = "current";
+		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape,shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd};
 	}
-	public delegate Map ParseFunction(Parser parser, out bool matched);
-
-
+	
 	// refactor completely
 	public class Parser
 	{
 		private bool negative = false;
-		private string Rest
-		{
-			get
-			{
-				return text.Substring(index);
-			}
-		}
 		public string text;
 		public int index;
-		public string file;
-
+		private string file;
 		private int line = 1;
-		public string File
-		{
-			get
-			{
-				return file;
-			}
-		}
-		public int Line
-		{
-			get
-			{
-				return line;
-			}
-		}
 		private int column = 1;
-		public int Column
-		{
-			get
-			{
-				return column;
-			}
-		}
-		private char Look()
-		{
-			return Look(0);
-		}
-		private char Look(int lookahead)
-		{
-			char character;
-			int i = index + lookahead;
-			if (i < text.Length)
-			{
-				character = text[index + lookahead];
-			}
-			else
-			{
-				character = Syntax.endOfFile;
-			}
-			return character;
-		}
+		private bool isStartOfFile = true;
+		private int indentationCount = -1;
 		private PersistantPosition position;
-		public Parser(string text, string filePath,PersistantPosition position)
+		public Stack<int> defaultKeys = new Stack<int>();
+
+		public Parser(string text, string filePath, PersistantPosition position)
 		{
 			this.index = 0;
 			this.text = text;
 			this.file = filePath;
 			this.position = position;
 		}
-		public bool isStartOfFile = true;
-		public int indentationCount = -1;
-		public abstract class Rule
-		{
-			public Map Match(Parser parser, out bool matched)
-			{
-				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
-				// use an extent here, some sort of, maybe clone things instead of creating them all the time
-				int oldIndex = parser.index;
-				int oldLine = parser.line;
-				int oldColumn = parser.column;
-				Map result = MatchImplementation(parser, out matched);
-
-				if (!matched)
-				{
-					parser.index = oldIndex;
-					parser.line = oldLine;
-					parser.column = oldColumn;
-				}
-				else
-				{
-					extent.End.Line = parser.Line;
-					extent.End.Column = parser.Column;
-					if (result != null)
-					{
-						result.Extent = extent;
-					}
-				}
-				return result;
-			}
-			protected abstract Map MatchImplementation(Parser parser, out bool match);
-		}
-		public abstract class CharacterRule : Rule
-		{
-			public CharacterRule(char[] chars)
-			{
-				this.characters = chars;
-			}
-			protected char[] characters;
-			protected abstract bool MatchCharacer(char c);
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map result;
-				char character = parser.Look();
-				if (MatchCharacer(character))
-				{
-					result = character;
-					matched = true;
-					parser.index++;
-					parser.column++;
-					if (character == Syntax.unixNewLine)
-					{
-						parser.line++;
-						parser.column = 1;
-					}
-				}
-				else
-					{
-					matched = false;
-					result = null;
-				}
-				return result;
-			}
-		}
-		public class Character : CharacterRule
-		{
-			public Character(params char[] characters)
-				: base(characters)
-			{
-			}
-			protected override bool MatchCharacer(char c)
-			{
-				if (c == Syntax.fraction)
-				{
-				}
-				return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
-			}
-		}
-		// refactor, remove
-		public class CharacterExcept : CharacterRule
-		{
-			public CharacterExcept(params char[] characters)
-				: base(characters)
-			{
-			}
-			protected override bool MatchCharacer(char c)
-			{
-				if (characters[0] == Syntax.function)
-				{
-				}
-				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
-			}
-		}
-		public delegate void PrePostDelegate(Parser parser);
-		public class PrePost : Rule
-		{
-			private PrePostDelegate pre;
-			private PrePostDelegate post;
-			private Rule rule;
-			public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
-			{
-				this.pre = pre;
-				this.rule = rule;
-				this.post = post;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				pre(parser);
-				if (rule == null)
-				{
-				}
-				Map result = rule.Match(parser, out matched);
-				post(parser);
-				return result;
-			}
-		}
-		public class StringRule : Rule
-		{
-			private string text;
-			public StringRule(string text)
-			{
-				this.text = text;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				List<Action> actions = new List<Action>();
-				foreach (char c in text)
-				{
-					actions.Add(new Match(new Character(c)));
-				}
-				return new Sequence(actions.ToArray()).Match(parser, out matched);
-			}
-		}
-		// refactor, remove
-		public class CustomRule : Rule
-		{
-			private ParseFunction parseFunction;
-			public CustomRule(ParseFunction parseFunction)
-			{
-				this.parseFunction = parseFunction;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				return parseFunction(parser, out matched);
-			}
-		}
-		public delegate Rule RuleFunction();
-		public class DelayedRule : Rule
-		{
-			private RuleFunction ruleFunction;
-			private Rule rule;
-			public DelayedRule(RuleFunction ruleFunction)
-			{
-				this.ruleFunction = ruleFunction;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				if (rule == null)
-				{
-					rule = ruleFunction();
-				}
-				return rule.Match(parser, out matched);
-			}
-		}
-		public class Alternatives : Rule
-		{
-			private Rule[] cases;
-			public Alternatives(params Rule[] cases)
-			{
-				this.cases = cases;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map result = null;
-				matched = false;
-				foreach (Rule expression in cases)
-				{
-					if (expression == null)
-					{
-					}
-					result = (Map)expression.Match(parser, out matched);
-					if (matched)
-					{
-						break;
-					}
-				}
-				return result;
-			}
-		}
-		public class FlattenRule : Rule
-		{
-			private Rule rule;
-			public FlattenRule(Rule rule)
-			{
-				this.rule = rule;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool match)
-			{
-				Map map = rule.Match(parser, out match);
-				Map result;
-				if (match)
-				{
-					result = Library.Join(map);
-				}
-				else
-				{
-					result = null;
-				}
-				return result;
-			}
-		}
-		public class Not : Rule
-		{
-			private Rule rule;
-			public Not(Rule rule)
-			{
-				this.rule = rule;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool match)
-			{
-				bool matched;
-				Map result = rule.Match(parser, out matched);
-				match = !matched;
-				return result;
-			}
-		}
-		public Map CreateMap(params Map[] maps)
-		{
-			return new StrategyMap(maps);
-		}
-		public Map CreateMap()
-		{
-			return CreateMap(new EmptyStrategy());
-		}
-		public Map CreateMap(MapStrategy strategy)
-		{
-			return new StrategyMap(strategy);
-		}
-		public class Sequence : Rule
-		{
-			private Action[] actions;
-			public Sequence(params Action[] rules)
-			{
-				this.actions = rules;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool match)
-			{
-				Map result = parser.CreateMap();
-				bool success = true;
-				foreach (Action action in actions)
-				{
-					if (action == null)
-					{
-					}
-					// refactor
-					bool matched = action.Execute(parser, ref result);
-					if (!matched)
-					{
-						success = false;
-						break;
-					}
-				}
-				if (!success)
-				{
-					match = false;
-					return null;
-				}
-				else
-				{
-					match = true;
-					return result;
-				}
-			}
-		}
-		public class LiteralRule : Rule
-		{
-			private Map literal;
-			// should convert literal into a FileMap
-			public LiteralRule(Map literal)
-			{
-				this.literal = literal;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				matched = true;
-				return literal;
-			}
-		}
-		public class ZeroOrMore : Rule
-		{
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map list = parser.CreateMap(new ListStrategy());
-				while (true)
-				{
-					if (!action.Execute(parser, ref list))
-					{
-						break;
-					}
-				}
-				matched = true;
-				return list;
-			}
-			private Action action;
-			public ZeroOrMore(Action action)
-			{
-				this.action = action;
-			}
-		}
-		public class N : Rule
-		{
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map list = parser.CreateMap(new ListStrategy());
-				int counter = 0;
-				while (true)
-				{
-					if (!action.Execute(parser, ref list))
-					{
-						break;
-					}
-					else
-					{
-						counter++;
-					}
-				}
-				matched = counter == n;
-				return list;
-			}
-			private Action action;
-			private int n;
-			public N(int n, Action action)
-			{
-				this.n = n;
-				this.action = action;
-			}
-		}
-		public class OneOrMore : Rule
-		{
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				Map list = parser.CreateMap(new ListStrategy());
-				matched = false;
-				while (true)
-				{
-					if (!action.Execute(parser, ref list))
-					{
-						break;
-					}
-					matched = true;
-				}
-				return list;
-			}
-			private Action action;
-			public OneOrMore(Action action)
-			{
-				this.action = action;
-			}
-		}
-		public class Optional : Rule
-		{
-			private Rule rule;
-			public Optional(Rule rule)
-			{
-				this.rule = rule;
-			}
-			protected override Map MatchImplementation(Parser parser, out bool match)
-			{
-				Map matched = rule.Match(parser, out match);
-				if (matched == null)
-				{
-					match = true;
-					return null;
-				}
-				else
-				{
-					match = true;
-					return matched;
-				}
-			}
-		}
-		public class Nothing : Rule
-		{
-			protected override Map MatchImplementation(Parser parser, out bool matched)
-			{
-				matched = true;
-				return null;
-			}
-		}
-		public abstract class Action
-		{
-			protected Rule rule;
-			public Action(Rule rule)
-			{
-				if (rule == null)
-				{
-				}
-				this.rule = rule;
-			}
-			public bool Execute(Parser parser, ref Map result)
-			{
-				bool matched;
-				if (rule == null)
-				{
-				}
-				Map map = rule.Match(parser, out matched);
-				if (matched)
-				{
-					ExecuteImplementation(parser, map, ref result);
-				}
-				return matched;
-			}
-			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result);
-		}
-		public class OptionalAssignment : Action
-		{
-			private Map key;
-			public OptionalAssignment(Map key, Rule rule)
-				: base(rule)
-			{
-				this.key = key;
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				if (map != null)
-				{
-					result[key] = map;
-
-				}
-			}
-		}
-		public class Autokey : Action
-		{
-			public Autokey(Rule rule)
-				: base(rule)
-			{
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				result.Append(map);
-			}
-		}
-		public class Assignment : Action
-		{
-			private Map key;
-			public Assignment(Map key, Rule rule)
-				: base(rule)
-			{
-				this.key = key;
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				result[key] = map;
-			}
-		}
-		public class Match : Action
-		{
-
-			public Match(Rule rule)
-				: base(rule)
-			{
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-			}
-		}
-		public class ReferenceAssignment : Action
-		{
-			public ReferenceAssignment(Rule rule)
-				: base(rule)
-			{
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				result = map;
-			}
-		}
-		public class Appending : Action
-		{
-			public Appending(Rule rule)
-				: base(rule)
-			{
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				foreach (Map m in map.Array)
-				{
-					result.Append(m);
-				}
-			}
-		}
-		public class Merge : Action
-		{
-			public Merge(Rule rule)
-				: base(rule)
-			{
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				result = Library.Merge(new StrategyMap(1, result, 2, map));
-			}
-		}
-		public class Do : Action
-		{
-			private CustomActionDelegate action;
-			public Do(Rule rule, CustomActionDelegate action)
-				: base(rule)
-			{
-				this.action = action;
-			}
-			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
-			{
-				this.action(parser, map, ref result);
-			}
-		}
-
-
-		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
-
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(EmptyMap, Number, String, Program, Call,ShortFunction, Select);
+			return new Alternatives(EmptyMap, Number, String, Program, Call, ShortFunction, Select);
 		});
 		public class Data
 		{
 			public static Rule NewLine = new Alternatives(
-						new Character(Syntax.unixNewLine),
-						new StringRule(Syntax.windowsNewLine));
+				new Character(Syntax.unixNewLine),
+				new StringRule(Syntax.windowsNewLine));
 
 			public static Rule EndOfLine =
 				new Sequence(
@@ -4793,6 +4072,7 @@ namespace Meta
 										}
 										return null;
 									}))));
+
 			public static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
 			{
 				return new Alternatives(
@@ -4835,24 +4115,24 @@ namespace Meta
 							new Match(new Character(Syntax.fraction)),
 							new ReferenceAssignment(
 								Integer)))));
-			public static Rule LookupString=new OneOrMore(
+			public static Rule LookupString = new OneOrMore(
 				new Autokey(
 					new CharacterExcept(
 						Syntax.lookupStringForbidden)));
 
 
-			public static Rule Map = new CustomRule(delegate(Parser parser,out bool matched)
+			// refactor
+			public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 			{
-				Indentation.Match(parser,out matched);
-				Map map=new StrategyMap();
-				if(matched)
+				Indentation.Match(parser, out matched);
+				Map map = new StrategyMap();
+				if (matched)
 				{
 					parser.defaultKeys.Push(1);
-					map=Entry.Match(parser, out matched);
-					//map.Append(Entry.Match(parser, out matched));
+					map = Entry.Match(parser, out matched);
 					if (matched)
 					{
-						while(true)
+						while (true)
 						{
 							if (parser.Rest == "")
 							{
@@ -4860,7 +4140,7 @@ namespace Meta
 							}
 							new Alternatives(
 								SameIndentation,
-								Dedentation).Match(parser,out matched);
+								Dedentation).Match(parser, out matched);
 							if (matched)
 							{
 								map = Library.Merge(new StrategyMap(
@@ -4905,12 +4185,13 @@ namespace Meta
 								new ReferenceAssignment(Expression)))))).Match(p, out matched);
 				return result;
 			});
-			public static Rule Value=new Alternatives(
+			public static Rule Value = new Alternatives(
 				Map,
 				String,
 				Number,
 				ShortFunction
 				);
+
 			private static Rule LookupAnything =
 				new Sequence(
 					new Match(new Character((Syntax.lookupStart))),
@@ -4922,17 +4203,14 @@ namespace Meta
 			public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
 			{
 				Map result = new StrategyMap();
-				if (parser.Rest.StartsWith("commandLine"))
-				{
-				}
-				Map function=Parser.Function.Match(parser, out matched);
+				Map function = Parser.Function.Match(parser, out matched);
 				if (matched)
 				{
 					result[Code.Function] = function[Code.Value][Code.Literal];
 				}
 				else
 				{
-					Map key = new Alternatives(LookupString,LookupAnything).Match(parser, out matched);
+					Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
 					//Map key = LookupString.Match(parser, out matched);
 					if (matched)
 					{
@@ -4975,7 +4253,7 @@ namespace Meta
 
 			public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
 			{
-				Map result=new Sequence(
+				Map result = new Sequence(
 					new Merge(
 						new Sequence(
 							new Assignment(
@@ -4991,7 +4269,7 @@ namespace Meta
 								new Character(
 									Syntax.function)),
 							new ReferenceAssignment(
-								Expression)))).Match(p,out matched);
+								Expression)))).Match(p, out matched);
 				return result;
 			});
 			public static Rule File = new Sequence(
@@ -5007,7 +4285,7 @@ namespace Meta
 							new Match(EndOfLine)))),
 				new ReferenceAssignment(Map));
 		}
-		public static Rule ExplicitCall=new DelayedRule(delegate()
+		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
 				new Assignment(
@@ -5049,15 +4327,7 @@ namespace Meta
 										new ReferenceAssignment(Expression)),
 									Program)))));
 		});
-		public Stack<int> defaultKeys = new Stack<int>();
-		private int escapeCharCount = 0;
-		private int GetEscapeCharCount()
-		{
-			return escapeCharCount;
-		}
 
-
-		// somehow include the newline here   ???
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			return new StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
@@ -5071,7 +4341,7 @@ namespace Meta
 
 		private static Rule EndOfLinePreserve = new FlattenRule(
 			new Sequence(
-				// this is a bug, should be preserved
+			// this is a bug, text should be preserved
 				new Match(new FlattenRule(
 					new ZeroOrMore(
 							new Autokey(new Alternatives(
@@ -5088,7 +4358,6 @@ namespace Meta
 			Map map = new Sequence(
 				new Match(Data.EndOfLine),
 				new Match(new StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
-			// this should be done automatically
 			if (matched)
 			{
 				pa.indentationCount--;
@@ -5135,7 +4404,7 @@ namespace Meta
 			return new Sequence(
 					new Assignment(
 						Code.Literal,
-						Data.String)).Match(parser,out matched);
+						Data.String)).Match(parser, out matched);
 		});
 
 		public static Rule ShortFunction = new Sequence(
@@ -5144,10 +4413,10 @@ namespace Meta
 				Data.ShortFunction));
 
 		public static Rule Function = new Sequence(
-			new Assignment(Code.Key,new LiteralRule(new StrategyMap(1, new StrategyMap(Code.Lookup, new StrategyMap(Code.Literal, Code.Function))))),
-			new Assignment(Code.Value,new Sequence(
-				new Assignment(Code.Literal,Data.Function))));
-		
+			new Assignment(Code.Key, new LiteralRule(new StrategyMap(1, new StrategyMap(Code.Lookup, new StrategyMap(Code.Literal, Code.Function))))),
+			new Assignment(Code.Value, new Sequence(
+				new Assignment(Code.Literal, Data.Function))));
+
 		private Rule Whitespace =
 			new ZeroOrMore(
 				new Match(
@@ -5282,7 +4551,6 @@ namespace Meta
 		})))))),
 			new Match(new CustomRule(delegate(Parser p, out bool matched)
 		{
-			// i dont understand this
 			if (Data.EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
 			{
 				p.index -= 1;
@@ -5292,8 +4560,6 @@ namespace Meta
 					if (Data.EndOfLine.Match(p, out matched) == null)
 					{
 						p.index += 2;
-						//matched = false;
-						//return null;
 						throw new SyntaxException("Expected newline.", p);
 					}
 					else
@@ -5334,6 +4600,563 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
+		public abstract class Action
+		{
+			protected Rule rule;
+			public Action(Rule rule)
+			{
+				this.rule = rule;
+			}
+			public bool Execute(Parser parser, ref Map result)
+			{
+				bool matched;
+				Map map = rule.Match(parser, out matched);
+				if (matched)
+				{
+					ExecuteImplementation(parser, map, ref result);
+				}
+				return matched;
+			}
+			protected abstract void ExecuteImplementation(Parser parser, Map map, ref Map result);
+		}
+		public class OptionalAssignment : Action
+		{
+			private Map key;
+			public OptionalAssignment(Map key, Rule rule)
+				: base(rule)
+			{
+				this.key = key;
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				if (map != null)
+				{
+					result[key] = map;
+				}
+			}
+		}
+		// these are too complicated, they do almost nothing
+		// Rule and Action should be separate
+		// default might be a match
+		// Action should be the only class that is always created
+		// easy to add custom action, too
+		public class Autokey : Action
+		{
+			public Autokey(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result.Append(map);
+			}
+		}
+		public class Assignment : Action
+		{
+			private Map key;
+			public Assignment(Map key, Rule rule)
+				: base(rule)
+			{
+				this.key = key;
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result[key] = map;
+			}
+		}
+		public class Match : Action
+		{
+			public Match(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+			}
+		}
+		public class ReferenceAssignment : Action
+		{
+			public ReferenceAssignment(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result = map;
+			}
+		}
+		public class Appending : Action
+		{
+			public Appending(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				foreach (Map m in map.Array)
+				{
+					result.Append(m);
+				}
+			}
+		}
+		public class Merge : Action
+		{
+			public Merge(Rule rule)
+				: base(rule)
+			{
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				result = Library.Merge(new StrategyMap(1, result, 2, map));
+			}
+		}
+		public class Do : Action
+		{
+			private CustomActionDelegate action;
+			public Do(Rule rule, CustomActionDelegate action)
+				: base(rule)
+			{
+				this.action = action;
+			}
+			protected override void ExecuteImplementation(Parser parser, Map map, ref Map result)
+			{
+				this.action(parser, map, ref result);
+			}
+		}
+
+
+		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
+
+		public abstract class Rule
+		{
+			public Map Match(Parser parser, out bool matched)
+			{
+				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
+				// use an extent here, some sort of, maybe clone things instead of creating them all the time
+				int oldIndex = parser.index;
+				int oldLine = parser.line;
+				int oldColumn = parser.column;
+				Map result = MatchImplementation(parser, out matched);
+
+				if (!matched)
+				{
+					parser.index = oldIndex;
+					parser.line = oldLine;
+					parser.column = oldColumn;
+				}
+				else
+				{
+					extent.End.Line = parser.Line;
+					extent.End.Column = parser.Column;
+					if (result != null)
+					{
+						result.Extent = extent;
+					}
+				}
+				return result;
+			}
+			protected abstract Map MatchImplementation(Parser parser, out bool match);
+		}
+		public class Character : CharacterRule
+		{
+			public Character(params char[] characters)
+				: base(characters)
+			{
+			}
+			protected override bool MatchCharacer(char c)
+			{
+				return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
+			}
+		}
+		public class CharacterExcept : CharacterRule
+		{
+			public CharacterExcept(params char[] characters)
+				: base(characters)
+			{
+			}
+			protected override bool MatchCharacer(char c)
+			{
+				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
+			}
+		}
+		public abstract class CharacterRule : Rule
+		{
+			public CharacterRule(char[] chars)
+			{
+				this.characters = chars;
+			}
+			protected char[] characters;
+			protected abstract bool MatchCharacer(char c);
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map result;
+				char character = parser.Look();
+				if (MatchCharacer(character))
+				{
+					result = character;
+					matched = true;
+					parser.index++;
+					parser.column++;
+					if (character == Syntax.unixNewLine)
+					{
+						parser.line++;
+						parser.column = 1;
+					}
+				}
+				else
+				{
+					matched = false;
+					result = null;
+				}
+				return result;
+			}
+		}
+		public delegate void PrePostDelegate(Parser parser);
+		public class PrePost : Rule
+		{
+			private PrePostDelegate pre;
+			private PrePostDelegate post;
+			private Rule rule;
+			public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
+			{
+				this.pre = pre;
+				this.rule = rule;
+				this.post = post;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				pre(parser);
+				if (rule == null)
+				{
+				}
+				Map result = rule.Match(parser, out matched);
+				post(parser);
+				return result;
+			}
+		}
+		public class StringRule : Rule
+		{
+			private string text;
+			public StringRule(string text)
+			{
+				this.text = text;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				List<Action> actions = new List<Action>();
+				foreach (char c in text)
+				{
+					actions.Add(new Match(new Character(c)));
+				}
+				return new Sequence(actions.ToArray()).Match(parser, out matched);
+			}
+		}
+		public delegate Map ParseFunction(Parser parser, out bool matched);
+		public class CustomRule : Rule
+		{
+			private ParseFunction parseFunction;
+			public CustomRule(ParseFunction parseFunction)
+			{
+				this.parseFunction = parseFunction;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				return parseFunction(parser, out matched);
+			}
+		}
+		public delegate Rule RuleFunction();
+		public class DelayedRule : Rule
+		{
+			private RuleFunction ruleFunction;
+			private Rule rule;
+			public DelayedRule(RuleFunction ruleFunction)
+			{
+				this.ruleFunction = ruleFunction;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				if (rule == null)
+				{
+					rule = ruleFunction();
+				}
+				return rule.Match(parser, out matched);
+			}
+		}
+		public class Alternatives : Rule
+		{
+			private Rule[] cases;
+			public Alternatives(params Rule[] cases)
+			{
+				this.cases = cases;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map result = null;
+				matched = false;
+				foreach (Rule expression in cases)
+				{
+					if (expression == null)
+					{
+					}
+					result = (Map)expression.Match(parser, out matched);
+					if (matched)
+					{
+						break;
+					}
+				}
+				return result;
+			}
+		}
+		public class FlattenRule : Rule
+		{
+			private Rule rule;
+			public FlattenRule(Rule rule)
+			{
+				this.rule = rule;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				Map map = rule.Match(parser, out match);
+				if (match)
+				{
+					return Library.Join(map);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+		public class Not : Rule
+		{
+			private Rule rule;
+			public Not(Rule rule)
+			{
+				this.rule = rule;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				bool matched;
+				Map result = rule.Match(parser, out matched);
+				match = !matched;
+				return result;
+			}
+		}
+		public class Sequence : Rule
+		{
+			private Action[] actions;
+			public Sequence(params Action[] rules)
+			{
+				this.actions = rules;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				Map result = parser.CreateMap();
+				bool success = true;
+				foreach (Action action in actions)
+				{
+					if (action == null)
+					{
+					}
+					// refactor
+					bool matched = action.Execute(parser, ref result);
+					if (!matched)
+					{
+						success = false;
+						break;
+					}
+				}
+				if (!success)
+				{
+					match = false;
+					return null;
+				}
+				else
+				{
+					match = true;
+					return result;
+				}
+			}
+		}
+		public class LiteralRule : Rule
+		{
+			private Map literal;
+			// should convert literal into a FileMap
+			public LiteralRule(Map literal)
+			{
+				this.literal = literal;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				matched = true;
+				return literal;
+			}
+		}
+		public class ZeroOrMore : Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map list = parser.CreateMap(new ListStrategy());
+				while (true)
+				{
+					if (!action.Execute(parser, ref list))
+					{
+						break;
+					}
+				}
+				matched = true;
+				return list;
+			}
+			private Action action;
+			public ZeroOrMore(Action action)
+			{
+				this.action = action;
+			}
+		}
+		public class N : Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map list = parser.CreateMap(new ListStrategy());
+				int counter = 0;
+				while (true)
+				{
+					if (!action.Execute(parser, ref list))
+					{
+						break;
+					}
+					else
+					{
+						counter++;
+					}
+				}
+				matched = counter == n;
+				return list;
+			}
+			private Action action;
+			private int n;
+			public N(int n, Action action)
+			{
+				this.n = n;
+				this.action = action;
+			}
+		}
+		// maybe combine all the loops into one? or something like that
+		// only the number is different
+		public class OneOrMore : Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map list = parser.CreateMap(new ListStrategy());
+				matched = false;
+				while (true)
+				{
+					if (!action.Execute(parser, ref list))
+					{
+						break;
+					}
+					matched = true;
+				}
+				return list;
+			}
+			private Action action;
+			public OneOrMore(Action action)
+			{
+				this.action = action;
+			}
+		}
+		public class Optional : Rule
+		{
+			private Rule rule;
+			public Optional(Rule rule)
+			{
+				this.rule = rule;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				Map matched = rule.Match(parser, out match);
+				if (matched == null)
+				{
+					match = true;
+					return null;
+				}
+				else
+				{
+					match = true;
+					return matched;
+				}
+			}
+		}
+		// this is really dumb
+		public class Nothing : Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				matched = true;
+				return null;
+			}
+		}
+
+		public string File
+		{
+			get
+			{
+				return file;
+			}
+		}
+		public int Line
+		{
+			get
+			{
+				return line;
+			}
+		}
+		private string Rest
+		{
+			get
+			{
+				return text.Substring(index);
+			}
+		}
+		public int Column
+		{
+			get
+			{
+				return column;
+			}
+		}
+
+
+		private char Look()
+		{
+			return Look(0);
+		}
+		private char Look(int lookahead)
+		{
+			char character;
+			int i = index + lookahead;
+			if (i < text.Length)
+			{
+				character = text[index + lookahead];
+			}
+			else
+			{
+				character = Syntax.endOfFile;
+			}
+			return character;
+		}
+		public Map CreateMap(params Map[] maps)
+		{
+			return new StrategyMap(maps);
+		}
+		public Map CreateMap()
+		{
+			return CreateMap(new EmptyStrategy());
+		}
+		public Map CreateMap(MapStrategy strategy)
+		{
+			return new StrategyMap(strategy);
+		}
 	}
 	// refactor
 	public class Serialize
@@ -6016,97 +5839,10 @@ namespace Meta
 		static FileSystem()
 		{
 			fileSystem=new StrategyMap();
-			fileSystem = new DirectoryMap(new DirectoryInfo(Process.LibraryPath), null);
+			fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath), null);
 			DrivesMap drives = new DrivesMap();
 			FileSystem.fileSystem["localhost"] = drives;
 			fileSystem.Scope = new TemporaryPosition(Gac.gac);
-		}
-		public static void Save()
-		{
-			string text = Serialize.ValueFunction(fileSystem).Trim(new char[] { '\n' });
-			if (text == "\"\"")
-			{
-				text = "";
-			}
-			File.WriteAllText(System.IO.Path.Combine(Process.InstallationPath, "meta.meta"), text, Encoding.Default);
-		}
-	}
-	public class Web
-	{
-		const int port = 80;
-		public static Map Get(Map key)
-		{
-			if (!key.IsString)
-			{
-				throw new ApplicationException("key is not a string");
-			}
-			string address = key.GetString();
-
-			WebClient webClient = new WebClient();
-
-			string metaPath=Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
-			string cacheDirectory = Path.Combine(metaPath, "Cache");
-			DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
-			string zipDirectory=Path.Combine(metaPath,"Zip");
-			string zipFile = Path.Combine(zipDirectory, address + ".zip");
-			Directory.CreateDirectory(zipDirectory);
-			string metaZipAddress = "http://"+address + "/" + "meta.zip";
-
-			try
-			{
-				webClient.DownloadFile(metaZipAddress, zipFile);
-			}
-			catch (Exception e)
-			{
-				return null;
-			}
-			unzipDirectory.Create();
-			Unzip(zipFile, unzipDirectory.FullName);
-			// net should be parent
-			return new WebDirectoryMap(unzipDirectory, FileSystem.fileSystem.Position);
-			//return new WebDirectoryMap(unzipDirectory, new TemporaryPosition(FileSystem.fileSystem));
-			//}
-		}
-		public static void Unzip(string zipFile,string dir)
-		{
-			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
-
-			ZipEntry theEntry;
-			while ((theEntry = s.GetNextEntry()) != null)
-			{
-
-				Console.WriteLine(theEntry.Name);
-
-				string directoryName = Path.GetDirectoryName(theEntry.Name);
-				string fileName = Path.GetFileName(theEntry.Name);
-
-				// fix this for directory creation
-
-				//Directory.CreateDirectory(directoryName);
-
-				if (fileName != String.Empty)
-				{
-					FileStream streamWriter = File.Create(Path.Combine(dir,theEntry.Name));
-
-					int size = 2048;
-					byte[] data = new byte[2048];
-					while (true)
-					{
-						size = s.Read(data, 0, data.Length);
-						if (size > 0)
-						{
-							streamWriter.Write(data, 0, size);
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					streamWriter.Close();
-				}
-			}
-			s.Close();
 		}
 	}
 	public class Number
@@ -6283,6 +6019,83 @@ namespace Meta
 			return Convert.ToInt64(numerator);
 		}
 	}
+	// experimential
+	public class Web
+	{
+		const int port = 80;
+		public static Map Get(Map key)
+		{
+			if (!key.IsString)
+			{
+				throw new ApplicationException("key is not a string");
+			}
+			string address = key.GetString();
+
+			WebClient webClient = new WebClient();
+
+			string metaPath = Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
+			string cacheDirectory = Path.Combine(metaPath, "Cache");
+			DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
+			string zipDirectory = Path.Combine(metaPath, "Zip");
+			string zipFile = Path.Combine(zipDirectory, address + ".zip");
+			Directory.CreateDirectory(zipDirectory);
+			string metaZipAddress = "http://" + address + "/" + "meta.zip";
+
+			try
+			{
+				webClient.DownloadFile(metaZipAddress, zipFile);
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+			unzipDirectory.Create();
+			Unzip(zipFile, unzipDirectory.FullName);
+			// net should be parent
+			return new DirectoryMap(unzipDirectory, FileSystem.fileSystem.Position);
+		}
+		public static void Unzip(string zipFile, string dir)
+		{
+			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
+
+			ZipEntry theEntry;
+			while ((theEntry = s.GetNextEntry()) != null)
+			{
+
+				Console.WriteLine(theEntry.Name);
+
+				string directoryName = Path.GetDirectoryName(theEntry.Name);
+				string fileName = Path.GetFileName(theEntry.Name);
+
+				// fix this for directory creation
+
+				//Directory.CreateDirectory(directoryName);
+
+				if (fileName != String.Empty)
+				{
+					FileStream streamWriter = File.Create(Path.Combine(dir, theEntry.Name));
+
+					int size = 2048;
+					byte[] data = new byte[2048];
+					while (true)
+					{
+						size = s.Read(data, 0, data.Length);
+						if (size > 0)
+						{
+							streamWriter.Write(data, 0, size);
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					streamWriter.Close();
+				}
+			}
+			s.Close();
+		}
+	}
 	namespace Test
 	{
 		public class MetaTest : TestRunner
@@ -6308,14 +6121,14 @@ namespace Meta
 			{
 				get
 				{
-					return Path.Combine(Process.InstallationPath, "Test");
+					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
 			public static string TestPath
 			{
 				get
 				{
-					return Path.Combine(Process.InstallationPath, "Test");
+					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
 			private static string BasicTest
@@ -6531,4 +6344,3 @@ namespace Meta
 		}
 	}
 }
-

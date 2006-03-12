@@ -3631,3 +3631,8 @@ Entry (KeyValuePair`2)
 		"typeTest"
 	Value (ObjectMap):
 		System.String[]
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"123hello"
+	Value (StrategyMap):
+		"asdf"

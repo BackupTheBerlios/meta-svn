@@ -408,6 +408,7 @@ commandLine|
 	]
 		mscorlib.String
 		5
+	123hello="asdf"
 shortFunc=arg:arg
 complicated=
 	[
