@@ -1693,7 +1693,7 @@ namespace Meta
 		{
 			return new StrategyMap(text);
 		}
-		// fix this
+		[Serialize(1)]
 		public virtual PersistantPosition Position
 		{
 			get
@@ -5176,11 +5176,9 @@ namespace Meta
 			delegate(Map map) {return map is TypeMap;},
 			delegate(Map map) {return "TypeMap: " + ((TypeMap)map).Type.ToString();});
 
-		// simply return null if you dont match??
 		public static Rule ObjectMap = new CustomSerialize(
 			delegate(Map map) { return map is ObjectMap; },
 			delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
-
 
 		public static Rule MapValue = new CustomRule(delegate(Map asdf, string indent, out bool ma)
 		{
