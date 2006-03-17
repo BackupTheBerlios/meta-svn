@@ -3636,3 +3636,31 @@ Entry (KeyValuePair`2)
 		"123hello"
 	Value (StrategyMap):
 		"asdf"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"copySourceData"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				"y"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"z"
+			Value (StrategyMap):
+				"a"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"copiedData"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				"changed"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"z"
+			Value (StrategyMap):
+				"a"

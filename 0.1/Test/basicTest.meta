@@ -409,6 +409,11 @@ commandLine|
 		mscorlib.String
 		5
 	123hello="asdf"
+	copySourceData=
+		x="y"
+		z="a"
+	copiedData=copySourceData
+	copiedData.x="changed"
 shortFunc=arg:arg
 complicated=
 	[

@@ -386,6 +386,19 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Parse(Map arg)
+		{
+			Map start = new StrategyMap();
+			Parser parser = new Parser(arg.GetString(), start, "Parse function", null);
+			bool matched;
+			Map result = Parser.Data.File.Match(parser, out matched);
+			if (parser.index != parser.text.Length)
+			{
+				throw new SyntaxException("Expected end of file.", parser);
+			}
+			return result;
+
+		}
 		public static Map Product(Map arg)
 		{
 			Number result = 1;
@@ -990,7 +1003,8 @@ namespace Meta
 		}
 		protected override Map CopyData()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			return this;
+			//throw new Exception("The method or operation is not implemented.");
 		}
 	}
 	public class DirectoryMap : Map
@@ -1979,7 +1993,15 @@ namespace Meta
 				{
 					// this isnt sufficient
 					compiledCode = null;
-					Map val = value;
+					Map val;
+					try
+					{
+						 val=value.Copy();
+					}
+					catch (Exception e)
+					{
+						val = null;
+					}
 					// refactor
 					if (this.Position is PersistantPosition)
 					{
@@ -2020,9 +2042,19 @@ namespace Meta
 			get;
 		}
 		// refactor
+		//public static Map FixScope(Map map)
+		//{
+		//    foreach (KeyValuePair<Map, Map> entry in map)
+		//    {
+		//        if (Object.ReferenceEquals(entry.Value.scope, map))
+		//        {
+		//        }
+		//    }
+		//}
 		public Map Copy()
 		{
 			Map clone = CopyData();
+			//clone = FixScope(clone);
 			clone.Scope = Scope;
 			clone.Extent = Extent;
 			return clone;
@@ -3260,7 +3292,14 @@ namespace Meta
 			StrategyMap copy = new StrategyMap();
 			foreach (KeyValuePair<Map, Map> pair in this.map)
 			{
-				copy[pair.Key] = pair.Value;
+				Map value=pair.Value;
+				// this is somewhat messy, should be done in other strategies, too
+				if (pair.Value.Scope!=null && pair.Value.Scope.Get()!= null && Object.ReferenceEquals(pair.Value.Scope.Get(), map))
+				{
+					value.Scope=null;
+				}
+				copy[pair.Key] = value;
+				int asdf = 0;
 			}
 			return copy;
 		}

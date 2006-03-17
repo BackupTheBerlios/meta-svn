@@ -123,6 +123,7 @@
     <None Include="Library\integerToString.meta" />
     <None Include="Library\intersect.meta" />
     <None Include="Library\isNumber.meta" />
+    <None Include="Library\parse.meta" />
     <None Include="Library\random.meta" />
     <None Include="Library\reciprocal.meta" />
     <None Include="Library\isString.meta" />

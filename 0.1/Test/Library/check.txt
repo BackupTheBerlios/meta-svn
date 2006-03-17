@@ -418,3 +418,204 @@ Entry (KeyValuePair`2)
 		"lowerTest"
 	Value (StrategyMap):
 		"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"parseTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"asdf"
+			Value (StrategyMap):
+				"hello"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"y"
+					Value (StrategyMap):
+						"hello"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"z"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"a"
+							Value (StrategyMap):
+								"x"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"function"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"parameterName"
+									Value (StrategyMap):
+										"arg"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"call"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"callable"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"select"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																1
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"search"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"join"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"argument"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"program"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																1
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"value"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"hello "
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"key"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				1
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"lookup"
+																					Value (StrategyMap):
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"literal"
+																							Value (StrategyMap):
+																								1
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																2
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"value"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"select"
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						1
+																					Value (StrategyMap):
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"search"
+																							Value (StrategyMap):
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										"literal"
+																									Value (StrategyMap):
+																										"arg"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"key"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				1
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"lookup"
+																					Value (StrategyMap):
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"literal"
+																							Value (StrategyMap):
+																								2
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																3
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"value"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"!"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"key"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				1
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"lookup"
+																					Value (StrategyMap):
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"literal"
+																							Value (StrategyMap):
+																								3
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"func"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"function"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"parameterName"
+							Value (StrategyMap):
+								"arg"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"select"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										1
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"search"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"literal"
+													Value (StrategyMap):
+														"arg"
