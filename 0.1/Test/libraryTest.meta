@@ -87,7 +87,7 @@
 					x="hello"
 					y="world"
 				key="x"
-			join=join
+			append=append
 				"abc, "
 				"die Katze lief im Schnee."
 			apply=
@@ -242,7 +242,7 @@
 				y="hello"
 				z=
 					a="x"
-					arg|join
+					arg|append
 						"hello "
 						arg
 						"!"

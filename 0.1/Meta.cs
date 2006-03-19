@@ -719,7 +719,7 @@ namespace Meta
 			return result;
 		}
 		// maybe rename, something more general
-		public static Map Join(Map arg)
+		public static Map Append(Map arg)
 		{
 			Map result = Map.Empty;
 			Number counter = 1;
@@ -1043,7 +1043,7 @@ namespace Meta
 			foreach (FileInfo file in directory.GetFiles("*.*"))
 			{
 				string fileName;
-				if (file.Extension == ".meta" || file.Extension == ".dll")
+				if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
 				{
 					fileName = Path.GetFileNameWithoutExtension(file.FullName);
 				}
@@ -1285,9 +1285,8 @@ namespace Meta
 					string file = Path.Combine(directory.FullName, name);
 					string metaFile = Path.Combine(directory.FullName, name + ".meta");
 					string dllFile = Path.Combine(directory.FullName, name + ".dll");
-					if (key.GetString().StartsWith("Background"))
-					{
-					}
+					string exeFile = Path.Combine(directory.FullName, name + ".exe");
+
 					if (File.Exists(metaFile))
 					{
 						string text = File.ReadAllText(metaFile, Encoding.Default);
@@ -1320,6 +1319,37 @@ namespace Meta
 							{
 								Assembly assembly = Assembly.LoadFile(dllFile);
 								value = Gac.LoadAssembly(assembly);
+								//foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+								//{
+								//    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
+								//    if (File.Exists(path))
+								//    {
+								//        Assembly.LoadFile(path);
+								//    }
+								//}
+								dllLoaded = true;
+							}
+							catch (Exception e)
+							{
+								value = null;
+							}
+						}
+						else if(File.Exists(exeFile))
+						{
+							try
+							{
+								Assembly assembly = Assembly.LoadFile(exeFile);
+								value = Gac.LoadAssembly(assembly);
+								//foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+								//{
+								//    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
+								//    if (File.Exists(path))
+								//    {
+								//        Assembly a=Assembly.LoadFile(path);
+								//        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
+								//        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+								//    }
+								//}
 								dllLoaded = true;
 							}
 							catch (Exception e)
@@ -1377,6 +1407,13 @@ namespace Meta
 			}
 			return value;
 		}
+
+
+
+		//void CurrentDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs args)
+		//{
+		//    args.LoadedAssembly;
+		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -1437,6 +1474,7 @@ namespace Meta
 		{
 			try
 			{
+				//AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 				if (args.Length == 0)
 				{
 					Commands.Interactive();
@@ -1453,6 +1491,9 @@ namespace Meta
 							break;
 						case "-help":
 							Commands.Help();
+							break;
+						case "-profile":
+							Commands.Profile();
 							break;
 						default:
 							Commands.Run(args);
@@ -1487,9 +1528,29 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
+			Console.ReadLine();
+		}
+		private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+		{
+			string path = Path.Combine(Directory.GetCurrentDirectory(), args.Name.Substring(0,args.Name.IndexOf(","))+".dll");
+			if (File.Exists(path))
+			{
+				return Assembly.LoadFile(path);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		public class Commands
 		{
+			public static void Profile()
+			{
+				DateTime start = DateTime.Now;
+				AllocConsole();
+				FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(Map.Empty);
+				Console.WriteLine((DateTime.Now-start).TotalSeconds);
+			}
 			public static void Help()
 			{
 				UseConsole();
@@ -1582,6 +1643,9 @@ namespace Meta
 				//    fileIndex++;
 				//}
 				string path = args[fileIndex];
+				string startDirectory=Path.GetDirectoryName(path);
+				Directory.SetCurrentDirectory(startDirectory);
+				//Environment.SetEnvironmentVariable("PATH", startDirectory+";"+Environment.GetEnvironmentVariable("PATH"));
 				string positionPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(args[fileIndex]));
 
 				string[] position = positionPath.Split(Path.DirectorySeparatorChar);
@@ -1812,6 +1876,15 @@ namespace Meta
 				throw new ApplicationException("Cannot compile map.");
 			}
 		}
+		// this could be optimized by overriding it in strategyMap
+		//public virtual void Append(Map map)
+		//{
+		//    AppendDefault(map);
+		//}
+		//public void AppendDefault(Map map)
+		//{
+		//    this[ArrayCount + 1] = map;
+		//}
 		public void Append(Map map)
 		{
 			this[ArrayCount + 1] = map;
@@ -2034,8 +2107,22 @@ namespace Meta
         protected abstract void Set(Map key, Map val);
 		public virtual Map Call(Map arg)
 		{
-			return this[Code.Function].GetExpression().Evaluate(
-				new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg));
+			//try
+			//{
+			if (!ContainsKey(Code.Function))
+			{
+				throw new ApplicationException("Map is not a function");
+			}
+			else
+			{
+				return this[Code.Function].GetExpression().Evaluate(
+					new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg));
+			}
+			//}
+			//catch (Exception e)
+			//{
+			//    return null;
+			//}
 		}
 		public abstract ICollection<Map> Keys
 		{
@@ -2242,8 +2329,13 @@ namespace Meta
 			}
 			else if (toCompare is StrategyMap)
 			{
-				isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
+				isEqual = ((StrategyMap)toCompare).strategy.EqualStrategy(strategy);
+				//isEqual = ((StrategyMap)toCompare).strategy.Equals(strategy);
 			}
+			//else if (toCompare is StrategyMap)
+			//{
+			//    isEqual = ((StrategyMap)toCompare).strategy.Equal(strategy);
+			//}
 			else
 			{
 				isEqual = false;
@@ -2907,7 +2999,7 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			return 1;
+			return type.GetHashCode();
 		}
 		public override bool Equals(object obj)
 		{
@@ -2960,10 +3052,14 @@ namespace Meta
 	}
 	public class EmptyStrategy : MapStrategy
 	{
-		public override bool Equal(MapStrategy strategy)
+		public override bool EqualStrategy(MapStrategy obj)
 		{
-			return strategy.Count == 0;
+			return obj.Count == 0;
 		}
+		//public override bool Equal(MapStrategy strategy)
+		//{
+		//    return strategy.Count == 0;
+		//}
 		public override ICollection<Map> Keys
 		{
 			get
@@ -2999,11 +3095,21 @@ namespace Meta
 			return null;
 		}
 	}
-	public class NumberStrategy : DataStrategy<Number>
+	public class NumberStrategy : MapStrategy
 	{
+		public override bool EqualStrategy(MapStrategy obj)
+		{
+			return obj.IsNumber && obj.GetNumber().Equals(data);
+		}
+		//public override bool Equals(object obj)
+		//{
+		//    return data.Equals(((MapStrategy)obj).GetNumber());
+		//}
+		private Number data;
 		public NumberStrategy(Number number)
 		{
-			this.data = new Number(number);
+			this.data = number;
+			//this.data = new Number(number);
 		}
 		public override Map Get(Map key)
 		{
@@ -3076,6 +3182,7 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
+			//return new StrategyMap(new CloneStrategy(this));
 			return new StrategyMap(new NumberStrategy(data));
 		}
 		public override bool IsNumber
@@ -3091,13 +3198,18 @@ namespace Meta
 			return data;
 		}
 		// ???
-		protected override bool SameEqual(Number otherData)
-		{
-			return otherData == data;
-		}
+		//protected override bool SameEqual(Number otherData)
+		//{
+		//    return otherData == data;
+		//}
 	}
-	public class ListStrategy : DataStrategy<List<Map>>
+	public class ListStrategy : MapStrategy
 	{
+		private List<Map> data;
+		//public override void Append(Map map)
+		//{
+		//    data.Add(map);
+		//}
 
 		public ListStrategy()
 		{
@@ -3209,12 +3321,13 @@ namespace Meta
 		public override Map CopyData()
 		{
 			// refactor, combine with DictionaryStrategy?
-			StrategyMap copy = new StrategyMap(new ListStrategy());
-			foreach(KeyValuePair<Map,Map> pair in this.map)
-			{
-				copy[pair.Key] = pair.Value;
-			}
-			return copy;
+			return new StrategyMap(new CloneStrategy(this));
+			//StrategyMap copy = new StrategyMap(new ListStrategy());
+			//foreach(KeyValuePair<Map,Map> pair in this.map)
+			//{
+			//    copy[pair.Key] = pair.Value;
+			//}
+			//return copy;
 		}
 		public override void AppendRange(Map array)
 		{
@@ -3223,30 +3336,39 @@ namespace Meta
 				this.data.Add(map.Copy());
 			}
 		}
-		protected override bool SameEqual(List<Map> otherData)
+		public override bool EqualStrategy(MapStrategy obj)
 		{
-			bool equal;
-			if (data.Count == otherData.Count)
+			if (obj is ListStrategy)
 			{
-				equal = true;
-				for (int i = 0; i < data.Count; i++)
+				bool equal;
+				List<Map> otherData=((ListStrategy)obj).data;
+				if (data.Count == otherData.Count)
 				{
-					if (!this.data[i].Equals(otherData[i]))
+					equal = true;
+					for (int i = 0; i < data.Count; i++)
 					{
-						equal = false;
-						break;
+						if (!this.data[i].Equals(otherData[i]))
+						{
+							equal = false;
+							break;
+						}
 					}
 				}
+				else
+				{
+					equal = false;
+				}
+				return equal;
 			}
 			else
 			{
-				equal = false;
+				return EqualDefault(obj);
 			}
-			return equal;
 		}
 	}
-	public class DictionaryStrategy:DataStrategy<Dictionary<Map,Map>>
+	public class DictionaryStrategy:MapStrategy
 	{
+		private Dictionary<Map, Map> data;
 		public DictionaryStrategy():this(2)
 		{
 		}
@@ -3289,126 +3411,140 @@ namespace Meta
 		// ??
 		public override Map CopyData()
 		{
-			StrategyMap copy = new StrategyMap();
-			foreach (KeyValuePair<Map, Map> pair in this.map)
-			{
-				Map value=pair.Value;
-				// this is somewhat messy, should be done in other strategies, too
-				if (pair.Value.Scope!=null && pair.Value.Scope.Get()!= null && Object.ReferenceEquals(pair.Value.Scope.Get(), map))
-				{
-					value.Scope=null;
-				}
-				copy[pair.Key] = value;
-				int asdf = 0;
-			}
-			return copy;
+			return new StrategyMap(new CloneStrategy(this));
+			//StrategyMap copy = new StrategyMap();
+			//foreach (KeyValuePair<Map, Map> pair in this.map)
+			//{
+			//    Map value = pair.Value;
+			//    // this is somewhat messy, should be done in other strategies, too
+			//    if (pair.Value.Scope != null && pair.Value.Scope.Get() != null && Object.ReferenceEquals(pair.Value.Scope.Get(), map))
+			//    {
+			//        value.Scope = null;
+			//    }
+			//    copy[pair.Key] = value;
+			//    int asdf = 0;
+			//}
+			//return copy;
 		}
 		// rename
-		protected override bool SameEqual(Dictionary<Map, Map> otherData)
+		//protected override bool SameEqual(Dictionary<Map, Map> otherData)
+		//{
+		//    bool equal;
+		//    if (data.Count == otherData.Count)
+		//    {
+		//        equal = true;
+		//        foreach (KeyValuePair<Map, Map> pair in data)
+		//        {
+		//            Map value;
+		//            otherData.TryGetValue(pair.Key, out value);
+		//            if (!pair.Value.Equals(value))
+		//            {
+		//                equal = false;
+		//                break;
+		//            }
+		//        }
+		//    }
+		//    else
+		//    {
+		//        equal = false;
+		//    }
+		//    return equal;
+		//}
+	}
+	public class CloneStrategy : MapStrategy
+	{
+		private MapStrategy data;
+		// always use CloneStrategy, only have logic in one place, too complicated to use
+		public CloneStrategy(MapStrategy original)
 		{
-			bool equal;
-			if (data.Count == otherData.Count)
+			this.data = original;
+		}
+		public override List<Map> Array
+		{
+			get
 			{
-				equal = true;
-				foreach (KeyValuePair<Map, Map> pair in data)
-				{
-					Map value;
-					otherData.TryGetValue(pair.Key, out value);
-					if (!pair.Value.Equals(value))
-					{
-						equal = false;
-						break;
-					}
-				}
+				return data.Array;
 			}
-			else
+		}
+		public override bool ContainsKey(Map key)
+		{
+			return data.ContainsKey(key);
+		}
+		public override int Count
+		{
+			get
 			{
-				equal = false;
+				return data.Count;
 			}
-			return equal;
+		}
+		public override Map CopyData()
+		{
+			MapStrategy clone = new CloneStrategy(this.data);
+			map.Strategy = new CloneStrategy(this.data);
+			return new StrategyMap(clone);
+		}
+		public override bool EqualStrategy(MapStrategy obj)
+		{
+			return obj.EqualStrategy(data);
+			//return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
+		}
+		public override int GetHashCode()
+		{
+			return data.GetHashCode();
+		}
+		public override Number GetNumber()
+		{
+			return data.GetNumber();
+		}
+		//public override Integer GetInteger()
+		//{
+		//    return data.GetInteger();
+		//}
+		public override string GetString()
+		{
+			return data.GetString();
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return data.IsNumber;
+			}
+		}
+		//public override bool IsInteger
+		//{
+		//    get
+		//    {
+		//        return data.IsInteger;
+		//    }
+		//}
+		public override bool IsString
+		{
+			get
+			{
+				return data.IsString;
+			}
+		}
+		public override ICollection<Map> Keys
+		{
+			get
+			{
+				return data.Keys;
+			}
+		}
+		public override Map Get(Map key)
+		{
+			return data.Get(key);
+		}
+		public override void Set(Map key, Map value)
+		{
+			Panic(key, value);
 		}
 	}
-	//public class CloneStrategy : DataStrategy<MapStrategy>
-	//{
-	//    // always use CloneStrategy, only have logic in one place, too complicated to use
-	//    public CloneStrategy(MapStrategy original)
-	//    {
-	//        this.data = original;
-	//    }
-	//    public override List<Map> Array
-	//    {
-	//        get
-	//        {
-	//            return data.Array;
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return data.ContainsKey(key);
-	//    }
-	//    public override int Count
-	//    {
-	//        get
-	//        {
-	//            return data.Count;
-	//        }
-	//    }
-	//    public override Map CopyData()
-	//    {
-	//        MapStrategy clone = new CloneStrategy(this.data);
-	//        map.Strategy = new CloneStrategy(this.data);
-	//        return new StrategyMap(clone);
-
-	//    }
-	//    protected override bool SameEqual(MapStrategy otherData)
-	//    {
-	//        return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
-	//    }
-	//    public override int GetHashCode()
-	//    {
-	//        return data.GetHashCode();
-	//    }
-	//    public override Integer GetInteger()
-	//    {
-	//        return data.GetInteger();
-	//    }
-	//    public override string GetString()
-	//    {
-	//        return data.GetString();
-	//    }
-	//    public override bool IsInteger
-	//    {
-	//        get
-	//        {
-	//            return data.IsInteger;
-	//        }
-	//    }
-	//    public override bool IsString
-	//    {
-	//        get
-	//        {
-	//            return data.IsString;
-	//        }
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return data.Keys;
-	//        }
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        return data.Get(key);
-	//    }
-	//    public override void Set(Map key, Map value)
-	//    {
-	//        Panic(key, value);
-	//    }
-	//}
 
 	public abstract class MapStrategy
 	{
+		// map is not really reliable, might have been copied
 		public StrategyMap map;
 
 		public abstract void Set(Map key, Map val);
@@ -3501,8 +3637,11 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		public abstract bool Equal(MapStrategy strategy);
-
+		//public abstract bool Equal(MapStrategy strategy);
+		public virtual bool EqualStrategy(MapStrategy obj)
+		{
+			return EqualDefault((MapStrategy)obj);
+		}
 		public virtual bool EqualDefault(MapStrategy strategy)
 		{
 			if (Object.ReferenceEquals(strategy, this))
@@ -3529,25 +3668,29 @@ namespace Meta
 			}
 		}
 	}
-	public abstract class DataStrategy<T> : MapStrategy
-	{
-		public T data;
-		public override bool Equal(MapStrategy strategy)
-		{
-			bool equal;
-			if (strategy is DataStrategy<T>)
-			{
-				equal = SameEqual(((DataStrategy<T>)strategy).data);
-			}
-			else
-			{
-				equal = EqualDefault(strategy);
-			}
-			return equal;
-		}
-		// rename
-		protected abstract bool SameEqual(T otherData);
-	}
+	//public abstract class DataStrategy<T> : MapStrategy
+	//{
+	//    public T data;
+	//    public override bool Equal(MapStrategy strategy)
+	//    {
+	//        bool equal;
+	//        if (strategy is DataStrategy<T>)
+	//        {
+	//            equal = SameEqual(((DataStrategy<T>)strategy).data);
+	//        }
+	//        else if (strategy is CloneStrategy && ((CloneStrategy)strategy).data is DataStrategy<T>)
+	//        {
+	//            equal = SameEqual(((DataStrategy<T>)((CloneStrategy)strategy).data).data);
+	//        }
+	//        else
+	//        {
+	//            equal = EqualDefault(strategy);
+	//        }
+	//        return equal;
+	//    }
+	//    // rename
+	//    protected abstract bool SameEqual(T otherData);
+	//}
 	public class Event:Map
 	{
 		Type type;
@@ -3751,6 +3894,10 @@ namespace Meta
 			{
 				throw new ApplicationException("Field " + fieldName + " does not exist.");
 			}
+		}
+		public override bool ContainsKey(Map key)
+		{
+			return key.IsString && this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
 		}
 		public override ICollection<Map> Keys
 		{
@@ -4874,7 +5021,7 @@ namespace Meta
 		{
 			public Map Match(Parser parser, out bool matched)
 			{
-				Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
+				//Extent extent = new Extent(parser.Line, parser.Column, 0, 0, parser.file);
 				// use an extent here, some sort of, maybe clone things instead of creating them all the time
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
@@ -4889,11 +5036,12 @@ namespace Meta
 				}
 				else
 				{
-					extent.End.Line = parser.Line;
-					extent.End.Column = parser.Column;
+					//extent.End.Line = parser.Line;
+					//extent.End.Column = parser.Column;
 					if (result != null)
 					{
-						result.Extent = extent;
+						result.Extent = new Extent(oldLine,oldColumn,parser.line,parser.column,parser.file);
+						//result.Extent = extent;
 					}
 				}
 				return result;
@@ -5063,7 +5211,7 @@ namespace Meta
 				Map map = rule.Match(parser, out match);
 				if (match)
 				{
-					return Library.Join(map);
+					return Library.Append(map);
 				}
 				else
 				{

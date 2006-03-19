@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\and.meta" />
+    <None Include="Library\append.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\complement.meta" />
@@ -127,7 +128,6 @@
     <None Include="Library\random.meta" />
     <None Include="Library\reciprocal.meta" />
     <None Include="Library\isString.meta" />
-    <None Include="Library\join.meta" />
     <None Include="Library\keys.meta" />
     <None Include="Library\length.meta" />
     <None Include="Library\maximum.meta" />

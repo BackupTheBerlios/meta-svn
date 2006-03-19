@@ -133,7 +133,7 @@ Entry (KeyValuePair`2)
 						"world"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"join"
+				"append"
 			Value (StrategyMap):
 				"abc, die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
@@ -478,7 +478,7 @@ Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				"literal"
 																			Value (StrategyMap):
-																				"join"
+																				"append"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"argument"

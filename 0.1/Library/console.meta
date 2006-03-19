@@ -1,5 +1,5 @@
 writeLine=
-	argument|console.write join
+	argument|console.write append
 		argument
 		/.mscorlib.Environment.NewLine.get 0
 write=
