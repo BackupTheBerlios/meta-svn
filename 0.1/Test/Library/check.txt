@@ -338,7 +338,8 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"rangeTest"
 	Value (StrategyMap):
-		"	"
+		"	
+"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"reverseTest"

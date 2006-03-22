@@ -1315,7 +1315,6 @@ namespace Meta
 						{
 							value = Map.Empty;
 						}
-						value.Scope = new TemporaryPosition(this);
 					}
 					else
 					{
@@ -1569,7 +1568,7 @@ namespace Meta
 				UseConsole();
 				Console.WriteLine("Interactive mode of Meta 0.1");
 				Map map = new StrategyMap();
-				map.Scope = new TemporaryPosition(FileSystem.fileSystem);
+				//map.Scope = new TemporaryPosition(FileSystem.fileSystem);
 				string code;
 
 				// this is still kinda wrong, interactive mode should exist in filesystem, somehow
@@ -1733,6 +1732,55 @@ namespace Meta
 				position = position[key];
 			}
 			return position;
+		}
+	}
+	public class FunctionBodyKey : Map
+	{
+		public FunctionBodyKey(int id)
+		{
+			this.id = id;
+		}
+		private int id;
+		public override bool Equals(object obj)
+		{
+			return obj is FunctionBodyKey && ((FunctionBodyKey)obj).id==id;
+		}
+		public override int GetHashCode()
+		{
+			return id.GetHashCode();
+		}
+		protected override Map Get(Map key)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		protected override void Set(Map key, Map val)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		protected override Map CopyData()
+		{
+			return this;
+		}
+		public override ICollection<Map> Keys
+		{
+			get 
+			{
+				return new List<Map>();
+			}
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return false;
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return false;
+			}
 		}
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
@@ -2094,62 +2142,50 @@ namespace Meta
 					Set(key, val);
 				}
 			}
-			//set
-			//{
-			//    if (value != null)
-			//    {
-			//        // this isnt sufficient
-			//        compiledCode = null;
-			//        Map val = value;
-			//        // refactor
-			//        if (val.scope == null || val.scope.Get() == null)
-			//        {
-			//            val.scope = new TemporaryPosition(this);
-			//        }
-			//        Set(key, val);
-			//    }
-			//}
         }
         protected abstract Map Get(Map key);
         protected abstract void Set(Map key, Map val);
+		private int numCalls = 0;
+		private Map AddCall(Map map,out int calls)
+		{
+			numCalls++;
+			Map functionBody = new FunctionBodyKey(numCalls);
+			this[functionBody] = map;
+			calls = numCalls;
+			return this[functionBody];
+		}
+		private void RemoveCall(int call)
+		{
+			this[new FunctionBodyKey(call)] = null;
+		}
 		public virtual Map Call(Map arg)
 		{
-			//try
-			//{
 			if (!ContainsKey(Code.Function))
 			{
 				throw new ApplicationException("Map is not a function");
 			}
 			else
 			{
-				return this[Code.Function].GetExpression().Evaluate(
-					new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg));
+				int call;
+				Map functionBody=AddCall(new StrategyMap(this[Code.Function][Code.ParameterName], arg),out call);
+				//Map functionBody = new StrategyMap(this[Code.Function][Code.ParameterName], arg);
+				//Map functionBody = new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg);
+				Map result=this[Code.Function].GetExpression().Evaluate(functionBody);
+
+				RemoveCall(call);
+				return result;
+
+				//return this[Code.Function].GetExpression().Evaluate(
+				//    new StrategyMap(new TemporaryPosition(this), this[Code.Function][Code.ParameterName], arg));
 			}
-			//}
-			//catch (Exception e)
-			//{
-			//    return null;
-			//}
 		}
 		public abstract ICollection<Map> Keys
 		{
 			get;
 		}
-		// refactor
-		//public static void FixScope(Map map)
-		//{
-		//    foreach (KeyValuePair<Map, Map> entry in map)
-		//    {
-		//        entry.Value.Scope = new TemporaryPosition(map);
-		//        //if (Object.ReferenceEquals(entry.Value.scope, map))
-		//        //{
-		//        //}
-		//    }
-		//}
 		public Map Copy()
 		{
 			Map clone = CopyData();
-			//FixScope(clone);
 			clone.Scope = Scope;
 			clone.Extent = Extent;
 			return clone;

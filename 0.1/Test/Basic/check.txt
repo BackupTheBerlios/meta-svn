@@ -38,6 +38,15 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"asdf"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"shortFunctionTest"
@@ -107,6 +116,15 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"argument"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"argument"
+					Value (StrategyMap):
+						5
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scoping"
@@ -186,6 +204,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"scopingValue"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lexicalScoping"
@@ -530,6 +553,11 @@ Entry (KeyValuePair`2)
 														"literal"
 													Value (StrategyMap):
 														"changed"
+				Entry (KeyValuePair`2)
+					Key (FunctionBodyKey):
+						0
+					Value (StrategyMap):
+						1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"SetB"
@@ -641,6 +669,28 @@ Entry (KeyValuePair`2)
 														"literal"
 													Value (StrategyMap):
 														"changed"
+				Entry (KeyValuePair`2)
+					Key (FunctionBodyKey):
+						0
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"newB"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"value"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"x"
+											Value (StrategyMap):
+												7
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"z"
+											Value (StrategyMap):
+												1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"x"
@@ -800,6 +850,11 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"inScope"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"inScope"
@@ -888,6 +943,11 @@ Entry (KeyValuePair`2)
 																				"literal"
 																			Value (StrategyMap):
 																				"scopeFromFunctionData"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFromFunction"
@@ -918,6 +978,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"scopeFromFunctionData"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scopeFromFunctionTest"
@@ -978,6 +1043,52 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"everything"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"everything"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								"a"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								2
+							Value (StrategyMap):
+								"b"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								3
+							Value (StrategyMap):
+								"c"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"everything"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								"x"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								2
+							Value (StrategyMap):
+								"y"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								3
+							Value (StrategyMap):
+								"z"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"everythingReturned"
@@ -1388,6 +1499,19 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"x"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"current"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"symbol"
+							Value (StrategyMap):
+								"haha"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"thisSet"
@@ -1481,6 +1605,19 @@ Entry (KeyValuePair`2)
 																"literal"
 															Value (StrategyMap):
 																1
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"a"
+							Value (StrategyMap):
+								"z"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"SecondLevel"
@@ -1511,6 +1648,19 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"arg"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"a"
+							Value (StrategyMap):
+								"z"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"argTest"
@@ -1667,6 +1817,11 @@ Entry (KeyValuePair`2)
 						"literal"
 					Value (StrategyMap):
 						5
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalFunctionResult"
@@ -1745,6 +1900,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"someFunction"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"callFunctionResult"
@@ -1873,6 +2033,16 @@ Entry (KeyValuePair`2)
 																				"literal"
 																			Value (StrategyMap):
 																				"y"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"delayedFunctionResult"
@@ -1960,6 +2130,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"value"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"selectionFunctionResult"
@@ -2029,6 +2204,15 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"arg"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"ChangeUpperLevel"
@@ -2105,6 +2289,11 @@ Entry (KeyValuePair`2)
 																"literal"
 															Value (StrategyMap):
 																1
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		8
@@ -2174,6 +2363,15 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"arg"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		9
@@ -2274,6 +2472,11 @@ Entry (KeyValuePair`2)
 								"literal"
 							Value (StrategyMap):
 								"then"
+				Entry (KeyValuePair`2)
+					Key (FunctionBodyKey):
+						0
+					Value (StrategyMap):
+						1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				0
@@ -2373,6 +2576,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"hello"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"emptyFunctionResult"
@@ -3062,6 +3270,78 @@ Entry (KeyValuePair`2)
 																						"literal"
 																					Value (StrategyMap):
 																						"start"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						3
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						4
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						5
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						6
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						7
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						8
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						9
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"start"
+					Value (StrategyMap):
+						10
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"returnInMap"
@@ -3121,6 +3401,15 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StrategyMap):
 																		"arg"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"literalAsArgument"
@@ -3216,6 +3505,19 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"arg"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"hello"
+							Value (StrategyMap):
+								"world"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"myArg"
@@ -3263,6 +3565,11 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StrategyMap):
 												"world"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"funcReturnTest"
@@ -3295,6 +3602,11 @@ Entry (KeyValuePair`2)
 						"literal"
 					Value (StrategyMap):
 						"hello"
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"docFunctionResult"
@@ -3360,6 +3672,11 @@ Entry (KeyValuePair`2)
 																"literal"
 															Value (StrategyMap):
 																"changed"
+						Entry (KeyValuePair`2)
+							Key (FunctionBodyKey):
+								0
+							Value (StrategyMap):
+								1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		15
@@ -3546,6 +3863,15 @@ Entry (KeyValuePair`2)
 																"literal"
 															Value (StrategyMap):
 																1
+		Entry (KeyValuePair`2)
+			Key (FunctionBodyKey):
+				0
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"arg"
+					Value (StrategyMap):
+						"right"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"outerFunctionTest"
@@ -3605,6 +3931,11 @@ Entry (KeyValuePair`2)
 																				"literal"
 																			Value (StrategyMap):
 																				"arg"
+				Entry (KeyValuePair`2)
+					Key (FunctionBodyKey):
+						0
+					Value (StrategyMap):
+						1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
