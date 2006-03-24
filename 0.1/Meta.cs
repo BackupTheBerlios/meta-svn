@@ -3340,15 +3340,15 @@ namespace Meta
 		{
 			return new Method(overloadedMethods, method, obj, type);
 		}
-		private Dictionary<Map, Map> data = new Dictionary<Map, Map>();
+		//private Dictionary<Map, Map> data = new Dictionary<Map, Map>();
 		protected override Map Get(Map key)
 		{
-			if (data.ContainsKey(key))
-			{
-				return data[key];
-			}
-			else
-			{
+			//if (data.ContainsKey(key))
+			//{
+			//    return data[key];
+			//}
+			//else
+			//{
 				if (overloadedMethods == null)
 				{
 					return null;
@@ -3359,11 +3359,12 @@ namespace Meta
 					overloadedMethods.TryGetValue(key, out value);
 					return value;
 				}
-			}
+			//}
 		}
 	    protected override void Set(Map key, Map val)
 	    {
-			data[key] = val;
+			throw new Exception("Method Set not implemented");
+			//data[key] = val;
 	    }
 	}
 	public class MethodOverload : MethodImplementation
@@ -3384,23 +3385,23 @@ namespace Meta
 	            return new List<Map>();
 	        }
 	    }
-		private Dictionary<Map, Map> data = new Dictionary<Map, Map>();
+		//private Dictionary<Map, Map> data = new Dictionary<Map, Map>();
 	    protected override Map Get(Map key)
 	    {
-			if (data.ContainsKey(key))
-			{
-				return data[key];
-			}
-			else
-			{
+			//if (data.ContainsKey(key))
+			//{
+			//    return data[key];
+			//}
+			//else
+			//{
 				return null;
-			}
+			//}
 			//return null;
 	    }
 	    protected override void Set(Map key, Map val)
 	    {
-			data[key] = val;
-			//throw new ApplicationException("Cannot set key in MethodOverload");
+			//data[key] = val;
+			throw new ApplicationException("Cannot set key in MethodOverload");
 	    }
 		public override bool Equals(object toCompare)
 		{
