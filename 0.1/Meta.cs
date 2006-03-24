@@ -1847,9 +1847,9 @@ namespace Meta
 							Commands.Profile();
 							break;
 						default:
-							throw new Exception("invalid command line");
-							//Commands.Run(args);
-							//break;
+							//throw new Exception("invalid command line");
+							Commands.Run(args);
+							break;
 					}
 				}
 			}
@@ -1914,6 +1914,7 @@ namespace Meta
 			{
 				UseConsole();
 				Console.WriteLine("Interactive mode of Meta 0.1");
+				object x = FileSystem.fileSystem;
 				Map map = new StrategyMap();
 				//map.Scope = new TemporaryPosition(FileSystem.fileSystem);
 				string code;
@@ -1924,92 +1925,170 @@ namespace Meta
 				// wrong
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
-				//while (true)
-				//{
-				//    code = "";
-				//    Console.Write(parser.Line + " ");
-				//    int lines = 0;
-				//    while (true)
-				//    {
-				//        string input = Console.ReadLine();
-				//        if (input.Trim().Length != 0)
-				//        {
-				//            code += input + Syntax.unixNewLine;
-				//            char character = input[input.TrimEnd().Length - 1];
-				//            if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
-				//            {
-				//                break;
-				//            }
-				//        }
-				//        else
-				//        {
-				//            if (lines != 0)
-				//            {
-				//                break;
-				//            }
-				//        }
-				//        lines++;
-				//        Console.Write(parser.Line + lines + " ");
-				//        for (int i = 0; i < input.Length && input[i] == '\t'; i++)
-				//        {
-				//            SendKeys.SendWait("{TAB}");
-				//        }
-				//    }
-				//    try
-				//    {
-				//        bool matched;
-				//        parser.text += code;
-				//        Map statement = Parser.Statement.Match(parser, out matched);
-				//        if (matched)
-				//        {
-				//            if (parser.index == parser.text.Length)
-				//            {
-				//                statement.GetStatement().Assign(ref map);
-				//            }
-				//            else
-				//            {
-				//                parser.index = parser.text.Length;
-				//                throw new SyntaxException("Syntax error", parser);
-				//            }
-				//        }
-				//        Console.WriteLine();
-				//    }
-				//    catch (Exception e)
-				//    {
-				//        Console.WriteLine(e.ToString());
-				//    }
-				//}
+				PersistantPosition position = new PersistantPosition(new Map[] { "localhost" });
+				int calls;
+				position.Get().AddCall(new StrategyMap(), out calls);
+				PersistantPosition local=new PersistantPosition(position,new FunctionBodyKey(calls));
+
+
+				while (true)
+				{
+					code = "";
+					Console.Write(parser.Line + " ");
+					int lines = 0;
+					while (true)
+					{
+						string input = Console.ReadLine();
+						if (input.Trim().Length != 0)
+						{
+							code += input + Syntax.unixNewLine;
+							char character = input[input.TrimEnd().Length - 1];
+							if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
+							{
+								break;
+							}
+						}
+						else
+						{
+							if (lines != 0)
+							{
+								break;
+							}
+						}
+						lines++;
+						Console.Write(parser.Line + lines + " ");
+						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
+						{
+							SendKeys.SendWait("{TAB}");
+						}
+					}
+					try
+					{
+						bool matched;
+						parser.text += code;
+						Map statement = Parser.Statement.Match(parser, out matched);
+						if (matched)
+						{
+							if (parser.index == parser.text.Length)
+							{
+								statement.GetStatement().Assign(local);
+								//statement.GetStatement().Assign(ref map);
+								//statement.GetStatement().Assign(ref map);
+							}
+							else
+							{
+								parser.index = parser.text.Length;
+								throw new SyntaxException("Syntax error", parser);
+							}
+						}
+						Console.WriteLine();
+					}
+					catch (Exception e)
+					{
+						Console.WriteLine(e.ToString());
+					}
+				}
 			}
+			//public static void Interactive()
+			//{
+			//    UseConsole();
+			//    Console.WriteLine("Interactive mode of Meta 0.1");
+			//    Map map = new StrategyMap();
+			//    //map.Scope = new TemporaryPosition(FileSystem.fileSystem);
+			//    string code;
+
+			//    // this is still kinda wrong, interactive mode should exist in filesystem, somehow
+			//    // should have a position, too
+
+			//    // wrong
+			//    Parser parser = new Parser("", "Interactive console");
+			//    parser.defaultKeys.Push(1);
+			//    //while (true)
+			//    //{
+			//    //    code = "";
+			//    //    Console.Write(parser.Line + " ");
+			//    //    int lines = 0;
+			//    //    while (true)
+			//    //    {
+			//    //        string input = Console.ReadLine();
+			//    //        if (input.Trim().Length != 0)
+			//    //        {
+			//    //            code += input + Syntax.unixNewLine;
+			//    //            char character = input[input.TrimEnd().Length - 1];
+			//    //            if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
+			//    //            {
+			//    //                break;
+			//    //            }
+			//    //        }
+			//    //        else
+			//    //        {
+			//    //            if (lines != 0)
+			//    //            {
+			//    //                break;
+			//    //            }
+			//    //        }
+			//    //        lines++;
+			//    //        Console.Write(parser.Line + lines + " ");
+			//    //        for (int i = 0; i < input.Length && input[i] == '\t'; i++)
+			//    //        {
+			//    //            SendKeys.SendWait("{TAB}");
+			//    //        }
+			//    //    }
+			//    //    try
+			//    //    {
+			//    //        bool matched;
+			//    //        parser.text += code;
+			//    //        Map statement = Parser.Statement.Match(parser, out matched);
+			//    //        if (matched)
+			//    //        {
+			//    //            if (parser.index == parser.text.Length)
+			//    //            {
+			//    //                statement.GetStatement().Assign(ref map);
+			//    //            }
+			//    //            else
+			//    //            {
+			//    //                parser.index = parser.text.Length;
+			//    //                throw new SyntaxException("Syntax error", parser);
+			//    //            }
+			//    //        }
+			//    //        Console.WriteLine();
+			//    //    }
+			//    //    catch (Exception e)
+			//    //    {
+			//    //        Console.WriteLine(e.ToString());
+			//    //    }
+			//    //}
+			//}
 			public static void Test()
 			{
 				UseConsole();
 				new MetaTest().Run();
 			}
-			//public static void Run(string[] args)
-			//{
-			//    int i = 1;
-			//    int fileIndex = 0;
-			//    //if (args[0] == "-console")
-			//    //{
-			//    //    UseConsole();
-			//    //    i++;
-			//    //    fileIndex++;
-			//    //}
-			//    string path = args[fileIndex];
-			//    string startDirectory=Path.GetDirectoryName(path);
-			//    Directory.SetCurrentDirectory(startDirectory);
-			//    //Environment.SetEnvironmentVariable("PATH", startDirectory+";"+Environment.GetEnvironmentVariable("PATH"));
-			//    string positionPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(args[fileIndex]));
+			public static void Run(string[] args)
+			{
+				//int i = 1;
+				//int fileIndex = 0;
+				////if (args[0] == "-console")
+				////{
+				////    UseConsole();
+				////    i++;
+				////    fileIndex++;
+				////}
+				//string path = args[fileIndex];
+				//string startDirectory = Path.GetDirectoryName(path);
+				//Directory.SetCurrentDirectory(startDirectory);
+				////Environment.SetEnvironmentVariable("PATH", startDirectory+";"+Environment.GetEnvironmentVariable("PATH"));
+				//string positionPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(args[fileIndex]));
 
-			//    string[] position = positionPath.Split(Path.DirectorySeparatorChar);
-			//    Map function = FileSystem.fileSystem["localhost"];
-			//    foreach (string pos in position)
-			//    {
-			//        function = function[pos];
-			//    }
+				//string[] position = positionPath.Split(Path.DirectorySeparatorChar);
+				//Map function = FileSystem.fileSystem["localhost"];
+				//foreach (string pos in position)
+				//{
+				//    function = function[pos];
+				//}
 
-			//    function.Call(Map.Empty);
-			//}
+				//function.Call(Map.Empty);
+			}
 		}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
 		public static extern bool AllocConsole();
@@ -6931,7 +7010,9 @@ namespace Meta
 	public class FileSystem
 	{
 		// combine gac into fileSystem
+
 		public static DirectoryMap fileSystem;
+		// this stuff should be done somehwere else!!
 		static FileSystem()
 		{
 			//fileSystem=new StrategyMap();
