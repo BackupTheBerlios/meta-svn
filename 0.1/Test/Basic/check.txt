@@ -1537,27 +1537,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"testClass"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				1
-			Value (StrategyMap):
-				"AssignedToCurrent"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"floatValue"
-			Value (StrategyMap):
-				3
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"doubleValue"
-			Value (StrategyMap):
-				4
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"decimalValue"
-			Value (StrategyMap):
-				5
+	Value (ObjectMap):
+		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"boolTest"
@@ -1576,17 +1557,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTest"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				1
-			Value (StrategyMap):
-				"AssignedToCurrent"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"instanceField"
-			Value (StrategyMap):
-				"b"
+	Value (ObjectMap):
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"stringOverload"
@@ -1599,71 +1571,79 @@ Entry (KeyValuePair`2)
 		"integer function, argument+5"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		5
+		"memberTestOverload"
 	Value (StrategyMap):
-		"memberTestOverload=MemberTest.OverloadedMethod.[
-	/.Meta.MemberTest
-	/.mscorlib.Int32
-]
-	memberTest
-	3247
-memberTestOverload=MemberTest.OverloadedMethod.[
-	/.Meta.MemberTest
-	/.mscorlib.Int32
-]
-	memberTest
-	3247"
+		"MemberTest function, argument+Meta.Test.TestClasses.MemberTest3247"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		5
+	Value (ObjectMap):
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		6
 	Value (StrategyMap):
-		"MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
-classPropertyValue=MemberTest.ClassProperty.get 0
-memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
-instancePropertyValue=memberTest.InstanceProperty.get 0
-interceptedSymbol="/hello/""
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"positionalNoConversion"
-	Value (StrategyMap):
-		"integer function, argument+5"
+		3247
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		7
 	Value (StrategyMap):
-		"positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-	"r"
-	"s"
-	"t""
+		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"namedNoConversion"
+		"classPropertyValue"
 	Value (StrategyMap):
-		"integer function, argument+5"
+		"b"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		8
 	Value (StrategyMap):
-		"namedNoConversionConcatenated=namedNoConversion.Concatenate
-	c="t"
-	"r""
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"instancePropertyValue"
+	Value (StrategyMap):
+		"b"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"interceptedSymbol"
+	Value (StrategyMap):
+		"/hello/"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"positionalNoConversion"
+	Value (ObjectMap):
+		Meta.Test.TestClasses.PositionalNoConversion
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"positionalNoConversionConcatenated"
+	Value (StrategyMap):
+		"rstmno"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"namedNoConversion"
+	Value (ObjectMap):
+		Meta.Test.TestClasses.NamedNoConversion
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"namedNoConversionConcatenated"
+	Value (StrategyMap):
+		"rnulltmnnull"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversion"
-	Value (StrategyMap):
-		"integer function, argument+5"
+	Value (ObjectMap):
+		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		9
 	Value (StrategyMap):
-		"indexerNoConversion.Item.set
-	"abc"
-	"hihi""
+		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		10
+		"indexerNoConversionIndexed"
 	Value (StrategyMap):
-		"indexerNoConversionIndexed=indexerNoConversion.Item.get "abc""
+		"abchihiunchangedYunchangedZabc"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"interceptedSymbolTwo"
@@ -2137,7 +2117,7 @@ Entry (KeyValuePair`2)
 																1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		11
+		10
 	Value (StrategyMap):
 		" "
 Entry (KeyValuePair`2)
@@ -2206,7 +2186,7 @@ Entry (KeyValuePair`2)
 																		"arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		12
+		11
 	Value (StrategyMap):
 		"TestClass.staticEvent.add
 	arg|
@@ -2215,18 +2195,18 @@ Entry (KeyValuePair`2)
 staticEvent=TestClass.staticEvent"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		13
+		12
 	Value (StrategyMap):
 		"TestClass.TakeDelegate
 	arg|arg.[1]"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		14
+		13
 	Value (StrategyMap):
 		"resultFromDelegate=TestClass.GetResultFromDelegate 0"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		15
+		14
 	Value (StrategyMap):
 		"staticEventResult=TestClass.staticEvent testClass"
 Entry (KeyValuePair`2)
@@ -2236,7 +2216,7 @@ Entry (KeyValuePair`2)
 		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		16
+		15
 	Value (StrategyMap):
 		"testClass.instanceEvent.add
 	arg|
@@ -2245,7 +2225,7 @@ Entry (KeyValuePair`2)
 instanceEvent=testClass.instanceEvent"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		17
+		16
 	Value (StrategyMap):
 		"instanceEventResult=testClass.instanceEvent 5"
 Entry (KeyValuePair`2)
@@ -2270,7 +2250,7 @@ Entry (KeyValuePair`2)
 		"unchanged"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		18
+		17
 	Value (StrategyMap):
 		"firstIfCondition=equal
 	1
@@ -2373,7 +2353,7 @@ Entry (KeyValuePair`2)
 				"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		19
+		18
 	Value (StrategyMap):
 		"font=/.["System.Drawing"].Font.[
 	/.mscorlib.String
@@ -2418,14 +2398,14 @@ Entry (KeyValuePair`2)
 hello!"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		20
+		19
 	Value (StrategyMap):
 		"arrayList=/.mscorlib.ArrayList.[0] 0
 arrayList.Add "hello"
 arrayListResult=arrayList.Item.get 0"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		21
+		20
 	Value (StrategyMap):
 		"textBox=/.["System.Windows.Forms"].TextBox 0
 textBox.Text.set "
@@ -2459,7 +2439,7 @@ Entry (KeyValuePair`2)
 		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		22
+		21
 	Value (StrategyMap):
 		"loop=
 	start|
@@ -2678,7 +2658,7 @@ Entry (KeyValuePair`2)
 												"world"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		23
+		22
 	Value (StrategyMap):
 		"funcReturnTest=returnArg myArg 0"
 Entry (KeyValuePair`2)
@@ -2771,7 +2751,7 @@ Entry (KeyValuePair`2)
 																"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		24
+		23
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -3027,17 +3007,17 @@ Entry (KeyValuePair`2)
 "
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		25
+		24
 	Value (StrategyMap):
 		"["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		26
+		25
 	Value (StrategyMap):
 		"enumTest=["System.Windows.Forms"].Application.VisualStyleState.get 0"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		27
+		26
 	Value (StrategyMap):
 		"typeTest=mscorlib.Array.CreateInstance.[
 	mscorlib.Type

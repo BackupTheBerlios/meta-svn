@@ -200,56 +200,44 @@ commandLine|
 	memberTest=MemberTest 0
 	stringOverload=MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
-	"
-		memberTestOverload=MemberTest.OverloadedMethod.[
-			/.Meta.MemberTest
-			/.mscorlib.Int32
-		]
-			memberTest
-			3247
-		memberTestOverload=MemberTest.OverloadedMethod.[
-			/.Meta.MemberTest
-			/.mscorlib.Int32
-		]
-			memberTest
-			3247
-	"
+	memberTestOverload=MemberTest.OverloadedMethod.[
+		/.Meta.MemberTest
+		/.mscorlib.Int32
+	]
+	memberTest
+	3247
+	memberTestOverload=MemberTest.OverloadedMethod.[
+		/.Meta.MemberTest
+		/.mscorlib.Int32
+	]
+		memberTest
+		3247
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	"
-		MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
-		classPropertyValue=MemberTest.ClassProperty.get 0
-		memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
-		instancePropertyValue=memberTest.InstanceProperty.get 0
-		interceptedSymbol="/hello/"
-	"
+	MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
+	classPropertyValue=MemberTest.ClassProperty.get 0
+	memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
+	instancePropertyValue=memberTest.InstanceProperty.get 0
+	interceptedSymbol="/hello/"
 	positionalNoConversion=/.Meta.PositionalNoConversion
 		"m"
 		"n"
 		"o"
-	"
-		positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-			"r"
-			"s"
-			"t"
-	"
+	positionalNoConversionConcatenated=positionalNoConversion.Concatenate
+		"r"
+		"s"
+		"t"
 	namedNoConversion=/.Meta.NamedNoConversion
 		"m"
 		y="n"
-	"
-		namedNoConversionConcatenated=namedNoConversion.Concatenate
-			c="t"
-			"r"
-	"
+	namedNoConversionConcatenated=namedNoConversion.Concatenate
+		c="t"
+		"r"
 	indexerNoConversion=/.Meta.IndexerNoConversion 0
-	"
-		indexerNoConversion.Item.set
-			"abc"
-			"hihi"
-	"
-	"
-		indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
-	"
+	indexerNoConversion.Item.set
+		"abc"
+		"hihi"
+	indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
