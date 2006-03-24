@@ -1925,7 +1925,7 @@ namespace Meta
 				// wrong
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
-				PersistantPosition position = new PersistantPosition(new Map[] { "localhost" });
+				PersistantPosition position = new PersistantPosition(new Map[] { "filesystem","localhost" });
 				int calls;
 				position.Get().AddCall(new StrategyMap(), out calls);
 				PersistantPosition local=new PersistantPosition(position,new FunctionBodyKey(calls));
@@ -7423,15 +7423,14 @@ namespace Meta
 			//        return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
 			//    }
 			//}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
-			//    }
-			//}
-
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
+				}
+			}
 		}
 		namespace TestClasses
 		{

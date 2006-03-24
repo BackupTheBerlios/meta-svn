@@ -60,7 +60,7 @@ commandLine|
 		hashTestData=
 			[0]=
 				[0]=0
-		hashTest=[2]
+		hashTest=[hashTestData]
 	negativeInteger=100
 	negativeInteger.x="hello"
 	integerIncrementTest=5
@@ -204,6 +204,8 @@ commandLine|
 		/.Meta.MemberTest
 		/.mscorlib.Int32
 	]
+		memberTest
+		3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
 		/.Meta.MemberTest
 		/.mscorlib.Int32
