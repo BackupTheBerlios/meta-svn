@@ -176,9 +176,22 @@ Entry (KeyValuePair`2)
 								0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"while"
+				1
 			Value (StrategyMap):
+				"while=
+	counter=0
+	SetCounter=
+		argument|
+			$counter=argument
+	test=while
+		condition=
+			|strictlyIncreasing
+				counter
 				10
+		function=
+			|SetCounter
+				[0]=counter
+	current=counter"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"splitTest"
@@ -275,9 +288,19 @@ Entry (KeyValuePair`2)
 				"illo illo hi"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"filterTest"
+		1
 	Value (StrategyMap):
-		""
+		"filterTest=filter
+	array=
+		1
+		1
+		3
+		5
+		2
+	function=
+		argument|equal
+			argument
+			1"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"findTest"
@@ -351,18 +374,11 @@ Entry (KeyValuePair`2)
 						"y"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"valuesTest"
+		2
 	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				1
-			Value (StrategyMap):
-				"hi"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				2
-			Value (StrategyMap):
-				"hello"
+		"valuesTest=values
+	x="hi"
+	y="hello""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"isStringTest"
@@ -390,7 +406,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"orange"
 			Value (StrategyMap):
-				"orange"
+				"green"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lowerTest"
