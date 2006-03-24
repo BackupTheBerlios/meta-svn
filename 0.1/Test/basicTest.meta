@@ -276,31 +276,33 @@ commandLine|
 		arg|
 			ChangeStaticEvent 1
 			current=arg.[1]
-	staticEvent=TestClass.staticEvent
+	"staticEvent=TestClass.staticEvent"
 	TestClass.TakeDelegate
 		arg|arg.[1]
-	resultFromDelegate=TestClass.GetResultFromDelegate 0
-	staticEventResult=TestClass.staticEvent testClass
+	"resultFromDelegate=TestClass.GetResultFromDelegate 0"
+	"staticEventResult=TestClass.staticEvent testClass"
 	instanceEventChanged=0
 	testClass.instanceEvent.add
 		arg|
 			$instanceEventChanged=1
 			current=arg.[1]
 	instanceEvent=testClass.instanceEvent
-	instanceEventResult=testClass.instanceEvent 5
+	"instanceEventResult=testClass.instanceEvent 5"
 	one=1
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=equal
-		1
-		one
-	firstIfBranches=
-		=
-			|"then"
-		[0]=
-			|"else"
-	firstIf=firstIfBranches.[firstIfCondition] 0
+	"
+		firstIfCondition=equal
+			1
+			one
+		firstIfBranches=
+			=
+				|"then"
+			[0]=
+				|"else"
+		firstIf=firstIfBranches.[firstIfCondition] 0
+	"
 	bigNumber=50020202
 	secondSwitch="unchanged"
 	secondSwitchCases=
@@ -351,20 +353,22 @@ commandLine|
 	tabText="			hello"
 	escapedText="'#'n'''t"
 	whileCounter=0
-	loop=
-		start|
-			whileDecision=not equal
-				start
-				10
-			whileBranches=
-				=
-					arg|loop add
-						arg
-						1
-				[0]=
-					arg|arg
-			current=whileBranches.[whileDecision] start
-	whileCounter=loop 3
+	"
+		loop=
+			start|
+				whileDecision=not equal
+					start
+					10
+				whileBranches=
+					=
+						arg|loop add
+							arg
+							1
+					[0]=
+						arg|arg
+				current=whileBranches.[whileDecision] start
+		whileCounter=loop 3
+	"
 	returnInMap=
 		arg|
 			result=arg
@@ -377,7 +381,7 @@ commandLine|
 	myArg=
 		|
 			hello="world"
-	funcReturnTest=returnArg myArg 0
+	"funcReturnTest=returnArg myArg 0"
 	documentedFunction=
 		doc="This function returns #hello ."
 		|"hello"

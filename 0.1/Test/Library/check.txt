@@ -124,15 +124,6 @@ Entry (KeyValuePair`2)
 				"if test successful"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"remove"
-			Value (StrategyMap):
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						"y"
-					Value (StrategyMap):
-						"world"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
 				"append"
 			Value (StrategyMap):
 				"abc, die Katze lief im Schnee."
@@ -317,20 +308,6 @@ Entry (KeyValuePair`2)
 		" meine "
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"complementTest"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"banana"
-			Value (StrategyMap):
-				"yellow"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"strawberries"
-			Value (StrategyMap):
-				"red"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"firstTest"
 	Value (StrategyMap):
 		97
@@ -413,7 +390,7 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"orange"
 			Value (StrategyMap):
-				"green"
+				"orange"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lowerTest"

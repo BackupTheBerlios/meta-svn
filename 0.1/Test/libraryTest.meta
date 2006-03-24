@@ -82,25 +82,18 @@
 			if=if
 				1
 				then=:"if test successful"
-			remove=remove
-				map=
-					x="hello"
-					y="world"
-				key="x"
 			append=append
 				"abc, "
 				"die Katze lief im Schnee."
 			apply=
-				applyMethod=
-					argument|add
-						argument
-						1
 				current=apply
-					function=applyMethod
-					array=
+					=
 						1
 						2
 						3
+					argument|add
+						argument
+						1
 			contains=contains
 				map=
 					x="hello"
@@ -149,7 +142,8 @@
 				catch=
 					argument|argument.ToString 0
 			sort=sort
-				array=
+				argument|argument.x
+				=
 					=
 						x=12
 						y=234
@@ -162,8 +156,6 @@
 					=
 						x=245
 						y=98834
-				function=
-					argument|argument.x
 			integerToString=integerToString 5
 			stringReplace=string.replace
 				string="hello hello hi"
@@ -196,15 +188,6 @@
 			array="alle meine entchen"
 			start=5
 			end=11
-		complementTest=complement
-			=
-				apple="green"
-				orange="orange"
-				banana="yellow"
-			=
-				apple="red"
-				orange="yellow"
-				strawberries="red"
 		firstTest=first "a"
 		rangeTest=range 10
 		reverseTest=reverse "hello"
