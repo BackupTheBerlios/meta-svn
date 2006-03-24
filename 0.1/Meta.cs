@@ -233,6 +233,7 @@ namespace Meta
 				statement.GetStatement().Assign(contextPosition);
 				//statement.GetStatement().Assign(ref context);
 			}
+			contextPosition.Get().Scope = new PersistantPosition(parent.Keys);
 			//Map result = contextPosition.Get();
 			//parent.Get().RemoveCall(call);
 			return contextPosition;
@@ -276,7 +277,9 @@ namespace Meta
 		{
 			int calls;
 			context.Get().AddCall(literal.Copy(), out calls);
-			return new PersistantPosition(context, new FunctionBodyKey(calls));
+			PersistantPosition position=new PersistantPosition(context, new FunctionBodyKey(calls));
+			position.Get().Scope = position.GetParent();
+			return position;
 			//Map result = literal.Copy();
 			////result.Scope = context;
 			////result.Scope = new TemporaryPosition(context);
@@ -385,7 +388,11 @@ namespace Meta
 		//}
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
-			selected.Get()[keyExpression.GetExpression().Evaluate(context).Get()] = value;
+			Map key=keyExpression.GetExpression().Evaluate(context).Get();
+			if (key.Equals(new StrategyMap("then")))
+			{
+			}
+			selected.Get()[key] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
@@ -574,11 +581,25 @@ namespace Meta
 				//selected = keys[i].GetSubselect().Evaluate(selected, context);
 				//selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
-			Map val=value.GetExpression().Evaluate(context).Get();
+			Map val = value.GetExpression().Evaluate(context).Get();
 			keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
 		}
+		//public void Assign(PersistantPosition context)
+		//{
+		//    PersistantPosition selected = context;
+		//    for (int i = 0; i + 1 < keys.Count; i++)
+		//    {
+		//        selected = keys[i].GetSubselect().Evaluate(selected, context);
+		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
+		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
+		//    }
+		//    Map val=value.GetExpression().Evaluate(context).Get();
+		//    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+		//    //keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
+		//    //keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
+		//}
 		//public void Assign(PersistantPosition context)
 		//{
 		//    PersistantPosition selected = context;
@@ -649,13 +670,22 @@ namespace Meta
 		public static Map If(Map arg)
 		{
 			Map result;
+			int calls;
+			MethodImplementation.currentPosition.Get().AddCall(arg, out calls);
+			//PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, new FunctionBodyKey(calls));
+			//PersistantPosition thenPosition = new PersistantPosition(position, "then");
+			//PersistantPosition elsePosition = new PersistantPosition(position, "else");
 			if (arg[1].GetBoolean())
 			{
-				result=arg["then"].Call(Map.Empty,MethodImplementation.currentPosition).Get();
+				result = arg["then"].Call(Map.Empty, arg["then"].Scope).Get();
+				//result = thenPosition.Get().Call(Map.Empty, thenPosition).Get();
+				//result = arg["then"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
 			}
 			else if (arg.ContainsKey("else"))
 			{
-				result = arg["else"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
+				result = arg["else"].Call(Map.Empty, arg["else"].Scope).Get();
+				//result = elsePosition.Get().Call(Map.Empty, elsePosition).Get();
+				//result = arg["else"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
 			}
 			else
 			{
@@ -1017,10 +1047,29 @@ namespace Meta
 			Map result = new StrategyMap(new ListStrategy());
 			foreach (Map map in arg[1].Array)
 			{
-				result.Append(arg.Call(map, MethodImplementation.currentPosition).Get());
+				PersistantPosition pos=arg.Call(map, arg.Scope);
+				result.Append(pos.Get());
 			}
 			return result;
 		}
+		//public static Map Apply(Map arg)
+		//{
+		//    Map result = new StrategyMap(new ListStrategy());
+		//    foreach (Map map in arg[1].Array)
+		//    {
+		//        result.Append(arg.Call(map, arg.Scope).Get());
+		//    }
+		//    return result;
+		//}
+		//public static Map Apply(Map arg)
+		//{
+		//    Map result = new StrategyMap(new ListStrategy());
+		//    foreach (Map map in arg[1].Array)
+		//    {
+		//        result.Append(arg.Call(map, MethodImplementation.currentPosition).Get());
+		//    }
+		//    return result;
+		//}
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -2372,7 +2421,7 @@ namespace Meta
 			}
 			return number;
 		}
-		public Position Scope
+		public PersistantPosition Scope
 		{
 			get
 			{
@@ -2383,7 +2432,7 @@ namespace Meta
 				scope = value;
 			}
 		}
-		private Position scope;
+		private PersistantPosition scope;
 		public virtual int Count
 		{
 			get
@@ -2617,7 +2666,7 @@ namespace Meta
 		{
 			strategy.Remove(key);
 		}
-		public StrategyMap(Position scope)
+		public StrategyMap(PersistantPosition scope)
 			: this()
 		{
 			this.Scope = scope;
@@ -2659,7 +2708,7 @@ namespace Meta
 			: this(new ListStrategy(text))
 		{
 		}
-		public StrategyMap(Position scope, params Map[] keysAndValues)
+		public StrategyMap(PersistantPosition scope, params Map[] keysAndValues)
 			: this(keysAndValues)
 		{
 			this.Scope = scope;
@@ -3205,6 +3254,9 @@ namespace Meta
 		}
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
+			if (this.method.Name == "If")
+			{
+			}
 			currentPosition = position; // should copy this
 			ParameterInfo[] parameters = method.GetParameters();
 			object[] arguments = new object[parameters.Length];
@@ -7196,42 +7248,45 @@ namespace Meta
 					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
 				}
 			}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
-			//        Map code = new StrategyMap(
-			//            CodeKeys.Call, new StrategyMap(
-			//                CodeKeys.Callable, new StrategyMap(
-			//                    CodeKeys.Select, new StrategyMap(
-			//                        1, new StrategyMap(
-			//                            CodeKeys.Search, new StrategyMap(
-			//                                CodeKeys.Literal, "localhost")),
-			//                        2, new StrategyMap(
-			//                            CodeKeys.Lookup, new StrategyMap(
-			//                                CodeKeys.Literal, "C:")),
-			//                        3, new StrategyMap(
-			//                            CodeKeys.Lookup, new StrategyMap(
-			//                                CodeKeys.Literal, "Meta")),
-			//                        4, new StrategyMap(
-			//                            CodeKeys.Lookup, new StrategyMap(
-			//                                CodeKeys.Literal, "0.1")),
-			//                        5, new StrategyMap(
-			//                            CodeKeys.Lookup, new StrategyMap(
-			//                                CodeKeys.Literal, "Test")),
-			//                        6, new StrategyMap(
-			//                            CodeKeys.Lookup, new StrategyMap(
-			//                                CodeKeys.Literal, "libraryTest")))),
-			//                CodeKeys.Argument, new StrategyMap(
-			//                    CodeKeys.Literal, Map.Empty)));
-			//        return code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { "localhost" })));
-			//        //return code.GetExpression().Evaluate(FileSystem.fileSystem, new PersistantPosition(new List<Map>()));
-			//        //level = 2;
-			//        //return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
-			//    }
-			//}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
+					Map code = new StrategyMap(
+						CodeKeys.Call, new StrategyMap(
+							CodeKeys.Callable, new StrategyMap(
+								CodeKeys.Select, new StrategyMap(
+									1, new StrategyMap(
+										CodeKeys.Search, new StrategyMap(
+											CodeKeys.Literal, "filesystem")),
+									2, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "localhost")),
+									3, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "C:")),
+									4, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "Meta")),
+									5, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "0.1")),
+									6, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "Test")),
+									7, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, "libraryTest")))),
+							CodeKeys.Argument, new StrategyMap(
+								CodeKeys.Literal, Map.Empty)));
+					return code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
+					//return code.GetExpression().Evaluate(FileSystem.fileSystem, new PersistantPosition(new List<Map>()));
+					//level = 2;
+					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
+				}
+			}
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
