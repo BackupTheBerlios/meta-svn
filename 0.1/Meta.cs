@@ -2440,7 +2440,7 @@ namespace Meta
 			else
 			{
 				int call;
-				Map functionBody = AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg), out call);
+				AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg), out call);
 				PersistantPosition bodyPosition = new PersistantPosition(position, new FunctionBodyKey(call));
 				PersistantPosition result = this[CodeKeys.Function].GetExpression().Evaluate(bodyPosition);
 				//Map result = this[Code.Function].GetExpression().Evaluate(functionBody);
@@ -2855,7 +2855,11 @@ namespace Meta
 				il.Emit(OpCodes.Castclass, invoke.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+			int calls;
+			MethodImplementation.currentPosition.Get().AddCall(code, out calls);
+			PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, new FunctionBodyKey(calls));
+			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
+			//Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 			return del;
 		}
 
@@ -2876,9 +2880,10 @@ namespace Meta
 		}
 		public class MetaDelegate
 		{
-			private Map callable;
+			private PersistantPosition callable;
+			//private Map callable;
 			private Type returnType;
-			public MetaDelegate(Map callable, Type returnType)
+			public MetaDelegate(PersistantPosition callable, Type returnType)
 			{
 				this.callable = callable;
 				this.returnType = returnType;
@@ -2890,7 +2895,9 @@ namespace Meta
 				{
 					arg.Append(Transform.ToSimpleMeta(argument));
 				}
-				Map result = this.callable.Call(arg,MethodImplementation.currentPosition).Get();
+				Map result = this.callable.Get().Call(arg, this.callable).Get();
+				//Map result = this.callable.Get().Call(arg, MethodImplementation.currentPosition).Get();
+				//Map result = this.callable.Call(arg, MethodImplementation.currentPosition).Get();
 				//Map result = this.callable.Call(arg);
 				return Meta.Transform.TryToDotNet(result, this.returnType);
 			}
@@ -3031,8 +3038,9 @@ namespace Meta
 							}
 							foreach (KeyValuePair<Map, Map> pair in meta)
 							{
-								// passing null as position is dangerous
-								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value,null);
+								// passing null as position is dangerous, currentPosition is wrong
+								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
+								//((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, null);
 							}
 							dotNet = result.Object;
 						}
@@ -4293,18 +4301,21 @@ namespace Meta
 		//        return null;
 		//    }
 		//}
+		private Method add;
 		protected override Map Get(Map key)
 		{
-			Map val;
 			if (key.Equals(DotNetKeys.Add))
 			{
-				val = new Method(eventInfo.GetAddMethod().Name, obj, type);
+				if (add == null)
+				{
+					add = new Method(eventInfo.GetAddMethod().Name, obj, type);
+				}
+				return add;
 			}
 			else
 			{
-				val = null;
+				return null;
 			}
-			return val;
 		}
 		protected override void Set(Map key,Map val)
 		{

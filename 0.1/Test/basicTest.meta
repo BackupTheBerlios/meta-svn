@@ -204,8 +204,6 @@ commandLine|
 		/.Meta.MemberTest
 		/.mscorlib.Int32
 	]
-	memberTest
-	3247
 	memberTestOverload=MemberTest.OverloadedMethod.[
 		/.Meta.MemberTest
 		/.mscorlib.Int32
@@ -272,28 +270,22 @@ commandLine|
 	ChangeStaticEvent=
 		arg|
 			$staticEventChanged=arg
-	"
-		TestClass.staticEvent.add
-			arg|
-				ChangeStaticEvent 1
-				current=arg.[1]
-		staticEvent=TestClass.staticEvent
-	"
-	"
-		TestClass.TakeDelegate
-			arg|arg.[1]
-	"
-	"resultFromDelegate=TestClass.GetResultFromDelegate 0"
-	"staticEventResult=TestClass.staticEvent testClass"
+	TestClass.staticEvent.add
+		arg|
+			ChangeStaticEvent 1
+			current=arg.[1]
+	staticEvent=TestClass.staticEvent
+	TestClass.TakeDelegate
+		arg|arg.[1]
+	resultFromDelegate=TestClass.GetResultFromDelegate 0
+	staticEventResult=TestClass.staticEvent testClass
 	instanceEventChanged=0
-	"
-		testClass.instanceEvent.add
-			arg|
-				$instanceEventChanged=1
-				current=arg.[1]
-		instanceEvent=testClass.instanceEvent
-	"
-	"instanceEventResult=testClass.instanceEvent 5"
+	testClass.instanceEvent.add
+		arg|
+			$instanceEventChanged=1
+			current=arg.[1]
+	instanceEvent=testClass.instanceEvent
+	instanceEventResult=testClass.instanceEvent 5
 	one=1
 	two=2
 	firstIf="unchanged"
@@ -350,12 +342,10 @@ commandLine|
 	lines=textBox.Lines.get 0
 	alleMeineText=lines.GetValue.[/.mscorlib.Int32] 1
 	form=/.["System.Windows.Forms"].Form 0
-	"
-		form.Location.set.[/.["System.Drawing"].Point]
-			X=5
-			Y=1000
-		automaticConversionTest=form.Location.get.[0] 0
-	"
+	form.Location.set.[/.["System.Drawing"].Point]
+		X=5
+		Y=1000
+	automaticConversionTest=form.Location.get.[0] 0
 	tabText="			hello"
 	escapedText="'#'n'''t"
 	whileCounter=0
