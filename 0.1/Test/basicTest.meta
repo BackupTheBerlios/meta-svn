@@ -60,7 +60,7 @@ commandLine|
 		hashTestData=
 			[0]=
 				[0]=0
-		hashTest=[hashTestData]
+		hashTest=[2]
 	negativeInteger=100
 	negativeInteger.x="hello"
 	integerIncrementTest=5
@@ -200,44 +200,56 @@ commandLine|
 	memberTest=MemberTest 0
 	stringOverload=MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
 	integerOverload=MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
-	memberTestOverload=MemberTest.OverloadedMethod.[
-		/.Meta.MemberTest
-		/.mscorlib.Int32
-	]
-		memberTest
-		3247
-	memberTestOverload=MemberTest.OverloadedMethod.[
-		/.Meta.MemberTest
-		/.mscorlib.Int32
-	]
-		memberTest
-		3247
+	"
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			/.Meta.MemberTest
+			/.mscorlib.Int32
+		]
+			memberTest
+			3247
+		memberTestOverload=MemberTest.OverloadedMethod.[
+			/.Meta.MemberTest
+			/.mscorlib.Int32
+		]
+			memberTest
+			3247
+	"
 	MemberTest.classField="a"
 	memberTest.instanceField="b"
-	MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
-	classPropertyValue=MemberTest.ClassProperty.get 0
-	memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
-	instancePropertyValue=memberTest.InstanceProperty.get 0
-	interceptedSymbol="/hello/"
+	"
+		MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
+		classPropertyValue=MemberTest.ClassProperty.get 0
+		memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
+		instancePropertyValue=memberTest.InstanceProperty.get 0
+		interceptedSymbol="/hello/"
+	"
 	positionalNoConversion=/.Meta.PositionalNoConversion
 		"m"
 		"n"
 		"o"
-	positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-		"r"
-		"s"
-		"t"
+	"
+		positionalNoConversionConcatenated=positionalNoConversion.Concatenate
+			"r"
+			"s"
+			"t"
+	"
 	namedNoConversion=/.Meta.NamedNoConversion
 		"m"
 		y="n"
-	namedNoConversionConcatenated=namedNoConversion.Concatenate
-		c="t"
-		"r"
+	"
+		namedNoConversionConcatenated=namedNoConversion.Concatenate
+			c="t"
+			"r"
+	"
 	indexerNoConversion=/.Meta.IndexerNoConversion 0
-	indexerNoConversion.Item.set
-		"abc"
-		"hihi"
-	indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
+	"
+		indexerNoConversion.Item.set
+			"abc"
+			"hihi"
+	"
+	"
+		indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
+	"
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
@@ -272,21 +284,27 @@ commandLine|
 	ChangeStaticEvent=
 		arg|
 			$staticEventChanged=arg
-	TestClass.staticEvent.add
-		arg|
-			ChangeStaticEvent 1
-			current=arg.[1]
-	"staticEvent=TestClass.staticEvent"
-	TestClass.TakeDelegate
-		arg|arg.[1]
+	"
+		TestClass.staticEvent.add
+			arg|
+				ChangeStaticEvent 1
+				current=arg.[1]
+		staticEvent=TestClass.staticEvent
+	"
+	"
+		TestClass.TakeDelegate
+			arg|arg.[1]
+	"
 	"resultFromDelegate=TestClass.GetResultFromDelegate 0"
 	"staticEventResult=TestClass.staticEvent testClass"
 	instanceEventChanged=0
-	testClass.instanceEvent.add
-		arg|
-			$instanceEventChanged=1
-			current=arg.[1]
-	instanceEvent=testClass.instanceEvent
+	"
+		testClass.instanceEvent.add
+			arg|
+				$instanceEventChanged=1
+				current=arg.[1]
+		instanceEvent=testClass.instanceEvent
+	"
 	"instanceEventResult=testClass.instanceEvent 5"
 	one=1
 	two=2
@@ -315,12 +333,14 @@ commandLine|
 		|
 			x="hello"
 	emptyFunctionResult=emptyFunction 0
-	font=/.["System.Drawing"].Font.[
-		/.mscorlib.String
-		/.mscorlib.Single
-	]
-		"Courier New"		
-		10
+	"
+		font=/.["System.Drawing"].Font.[
+			/.mscorlib.String
+			/.mscorlib.Single
+		]
+			"Courier New"		
+			10
+	"
 	decimalTest=5
 	fractionTest=40
 	stringTest="hello"		
@@ -332,24 +352,28 @@ commandLine|
 			hello world!
 			hello!
 		"
-	arrayList=/.mscorlib.ArrayList.[0] 0
-	arrayList.Add "hello"
-	arrayListResult=arrayList.Item.get 0
-	textBox=/.["System.Windows.Forms"].TextBox 0
-	textBox.Text.set "
-		Alle meine Entchen,
-		schwimmen auf dem See,
-		schwimmen auf dem See,
-		Köpfchen in das Wasser,
-		Schwaenzchen in die Hoeh.
 	"
-	lines=textBox.Lines.get 0
-	alleMeineText=lines.GetValue.[/.mscorlib.Int32] 1
-	form=/.["System.Windows.Forms"].Form 0
-	form.Location.set.[/.["System.Drawing"].Point]
-		X=5
-		Y=1000
-	automaticConversionTest=form.Location.get.[0] 0
+		arrayList=/.mscorlib.ArrayList.[0] 0
+		arrayList.Add "hello"
+		arrayListResult=arrayList.Item.get 0
+	"
+	"
+		textBox=/.["System.Windows.Forms"].TextBox 0
+		textBox.Text.set "
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			Schwaenzchen in die Hoeh.
+		"
+		lines=textBox.Lines.get 0
+		alleMeineText=lines.GetValue.[/.mscorlib.Int32] 1
+		form=/.["System.Windows.Forms"].Form 0
+		form.Location.set.[/.["System.Drawing"].Point]
+			X=5
+			Y=1000
+		automaticConversionTest=form.Location.get.[0] 0
+	"
 	tabText="			hello"
 	escapedText="'#'n'''t"
 	whileCounter=0
@@ -404,14 +428,20 @@ commandLine|
 		
 		
 	"
-	["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
-	enumTest=["System.Windows.Forms"].Application.VisualStyleState.get 0
-	typeTest=mscorlib.Array.CreateInstance.[
-		mscorlib.Type
-		mscorlib.Int32
-	]
-		mscorlib.String
-		5
+	"
+		["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
+	"
+	"
+		enumTest=["System.Windows.Forms"].Application.VisualStyleState.get 0
+	"
+	"
+		typeTest=mscorlib.Array.CreateInstance.[
+			mscorlib.Type
+			mscorlib.Int32
+		]
+			mscorlib.String
+			5
+	"
 	123hello="asdf"
 	copySourceData=
 		x="y"
