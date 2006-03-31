@@ -235,7 +235,8 @@ namespace Meta
 				statement.GetStatement().Assign(contextPosition);
 				//statement.GetStatement().Assign(ref context);
 			}
-			contextPosition.Get().Scope = new PersistantPosition(parent.Keys);
+			contextPosition.Get().Scope = new PersistantPosition(parent);
+			//contextPosition.Get().Scope = new PersistantPosition(parent.Keys);
 			//Map result = contextPosition.Get();
 			//parent.Get().RemoveCall(call);
 			return contextPosition;
@@ -310,8 +311,9 @@ namespace Meta
 		{
 			//value.Scope = executionContext;
 			//value.Scope = executionContext.Scope;
-			PersistantPosition parent=new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
-			Map parentMap=parent.Get();
+			PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			//PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			Map parentMap = parent.Get();
 			parentMap[executionContext.Keys[executionContext.Keys.Count-1]]=value;
 			//executionContext = value;
 		}
@@ -435,7 +437,8 @@ namespace Meta
 				{
 					if (selection.Get().Scope != null)
 					{
-						selection = selection.Get().Scope.Copy();
+						selection = new PersistantPosition(selection.Get().Scope);
+						//selection = selection.Get().Scope.Copy();
 					}
 					else
 					{
@@ -802,7 +805,8 @@ namespace Meta
 		public static Map Try(Map arg)
 		{
 			Map result;
-			PersistantPosition argument = Call.lastArgument.Copy();
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			//PersistantPosition argument = Call.lastArgument.Copy();
 			try
 			{
 				result = argument.Get()["function"].Call(Map.Empty, argument).Get();
@@ -989,7 +993,8 @@ namespace Meta
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg[1].Array;
-			PersistantPosition argument = Call.lastArgument.Copy();
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			//PersistantPosition argument = Call.lastArgument.Copy();
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
 				return argument.Get().Call(a, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
@@ -1096,7 +1101,9 @@ namespace Meta
 		// default should be infinite loop, maybe?
 		public static Map While(Map arg)
 		{
-			PersistantPosition argument = Call.lastArgument.Copy();
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			//PersistantPosition argument = new PersistantPosition(Call.lastArgument.Copy());
+			//PersistantPosition argument = Call.lastArgument.Copy();
 			while (argument.Get()[1].Call(Map.Empty, argument).Get().GetBoolean())
 			{
 				argument.Get().Call(Map.Empty, argument);
@@ -1106,7 +1113,7 @@ namespace Meta
 		public static Map Apply(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument.Keys);
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
 			foreach (Map map in arg[1].Array)
 			{
 				PersistantPosition pos = argument.Get().Call(map, argument);
@@ -1117,7 +1124,8 @@ namespace Meta
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			PersistantPosition argument = Call.lastArgument.Copy();
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			//PersistantPosition argument = Call.lastArgument.Copy();
 			foreach (Map map in arg[1].Array)
 			{
 				if (argument.Get().Call(map, argument).Get().GetBoolean())
@@ -1166,7 +1174,8 @@ namespace Meta
 		public static Map Foreach(Map arg)
 		{
 			Map result = new StrategyMap();
-			PersistantPosition argument = Call.lastArgument.Copy();
+			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			//PersistantPosition argument = Call.lastArgument.Copy();
 			foreach (KeyValuePair<Map, Map> entry in arg[1])
 			{
 				result.Append(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
@@ -2204,29 +2213,31 @@ namespace Meta
 	}
 	public class PersistantPosition : Position
 	{
-		public PersistantPosition Copy()
-		{
-			return new PersistantPosition(Keys);
-		}
 		public List<Map> Keys
 		{
 			get
 			{
-				return keys;
+				return new List<Map>(keys);
 			}
 		}
-		private List<Map> keys;
+		private Map[] keys;
+		public PersistantPosition(PersistantPosition position)
+		{
+			// inefficient
+			this.keys = new List<Map>(position.keys).ToArray();
+		}
 		public PersistantPosition(ICollection<Map> keys)
 		{
-			this.keys = new List<Map>(keys);
+			this.keys = new List<Map>(keys).ToArray();
 		}
 		public PersistantPosition(PersistantPosition parent, Map ownKey)
 		{
 			if (parent == null)
 			{
 			}
-			this.keys = new List<Map>(parent.keys);
-			this.keys.Add(ownKey);
+			List<Map> keyList=new List<Map>(parent.keys);
+			keyList.Add(ownKey);
+			this.keys = keyList.ToArray();
 		}
 		public PersistantPosition GetParent()
 		{
@@ -2236,24 +2247,39 @@ namespace Meta
 			}
 			else
 			{
-				return new PersistantPosition(this.Keys.GetRange(0,Keys.Count-1));
+				return new PersistantPosition(this.Keys.GetRange(0, Keys.Count - 1));
 			}
 		}
+		private Map cached;
 		public override Map Get()
 		{
-			Map position = Gac.gac;
-			//Map position = FileSystem.fileSystem;
-			int count = 0;
-			foreach (Map key in keys)
+			if (cached != null)
 			{
-				position = position[key];
-				if (position == null)
-				{
-					throw new Exception("Position does not exist");
-				}
-				count++;
+				return cached;
 			}
-			return position;
+			else
+			{
+				Map position = Gac.gac;
+				//Map position = FileSystem.fileSystem;
+				int count = 0;
+				foreach (Map key in keys)
+				{
+					position = position[key];
+					// maybe remove the event handlers, eventually, too
+					position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
+					if (position == null)
+					{
+						throw new Exception("Position does not exist");
+					}
+					count++;
+				}
+				cached = position;
+				return position;
+			}
+		}
+		void position_KeyChanged()
+		{
+			this.cached = null;
 		}
 	}
 	public class FunctionBodyKey : Map
@@ -2305,6 +2331,7 @@ namespace Meta
 			}
 		}
 	}
+	public delegate void KeyChangedEventHandler();
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
 		public override string ToString()
@@ -2364,9 +2391,45 @@ namespace Meta
 					{
 						Set(key, val);
 					}
+					if (KeyChanged != null)
+					{
+						this.KeyChanged();
+					}
 				}
+				//if (value != null)
+				//{
+				//    // this isnt sufficient
+				//    compiledCode = null;
+				//    Map val;
+				//    //try
+				//    //{
+				//    val = value.Copy();
+				//    //}
+				//    //catch (Exception e)
+				//    //{
+				//    //    val = null;// not so brilliant
+				//    //}
+				//    // refactor
+				//    //if (this.Position is PersistantPosition)
+				//    //{
+				//    //    val.Position = new PersistantPosition(Position, key);
+				//    //}
+				//    //if (val.scope == null || val.scope.Get() == null)
+				//    //{
+				//    //    val.scope = new TemporaryPosition(this); // use PersistantPosition, always?
+				//    //}
+				//    if (key is FunctionBodyKey)
+				//    {
+				//        this.temporaryData[(FunctionBodyKey)key] = val;
+				//    }
+				//    else
+				//    {
+				//        Set(key, val);
+				//    }
+				//}
 			}
 		}
+		public event KeyChangedEventHandler KeyChanged;
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
 		private int numCalls = 0;
@@ -4490,7 +4553,7 @@ namespace Meta
 		}
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
-			MethodImplementation.currentPosition = new PersistantPosition(position.Keys);
+			MethodImplementation.currentPosition = new PersistantPosition(position);
 			// binding flags arent really correct, should be different for static and instance events, combine with methodImplementation
 			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
 			if (eventDelegate != null)
