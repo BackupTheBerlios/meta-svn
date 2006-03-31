@@ -118,22 +118,18 @@
 						=
 							x="y"
 							y="a"
-			"
-				while=
-					counter=0
-					SetCounter=
-						argument|
-							$counter=argument
-					test=while
-						condition=
-							|strictlyIncreasing
-								counter
-								10
-						function=
-							|SetCounter
-								[0]=counter
-					current=counter
-			"
+			while=
+				counter=0
+				SetCounter=
+					argument|
+						$counter=argument
+				test=while
+					:strictlyIncreasing
+						counter
+						10
+					|SetCounter
+						[0]=counter
+				current=counter
 			splitTest=split
 				array="hello world hello"
 				space=" "
@@ -204,11 +200,9 @@
 				y="hello"
 			entry|
 				[entry.value]=entry.key
-		"
-			valuesTest=values
-				x="hi"
-				y="hello"
-		"
+		valuesTest=values
+			x="hi"
+			y="hello"
 		isStringTest=
 			no=isString 2
 			yes=isString "hi"

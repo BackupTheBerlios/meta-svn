@@ -418,7 +418,7 @@ namespace Meta
 		{
 			PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
-			if (key.Equals(new StrategyMap("memberTest")))
+			if (key.Equals(new StrategyMap("argument")))
 			{
 			}
 			//Map key = keyExpression.GetExpression().Evaluate(context.Get());
@@ -433,7 +433,14 @@ namespace Meta
 				}
 				else
 				{
-					selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+					if (selection.Get().Scope != null)
+					{
+						selection = selection.Get().Scope.Copy();
+					}
+					else
+					{
+						selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+					}
 				}
 			}
 			if (selection == null)
@@ -446,6 +453,38 @@ namespace Meta
 				//return selection[key];
 			}
 		}
+		//public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
+		//{
+		//    PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
+		//    Map key = keyPosition.Get();
+		//    if (key.Equals(new StrategyMap("counter")))
+		//    {
+		//    }
+		//    //Map key = keyExpression.GetExpression().Evaluate(context.Get());
+		//    PersistantPosition selection = selected;
+		//    //Map selection = selected;
+		//    while (!selection.Get().ContainsKey(key))
+		//    {
+		//        if (selection.Keys.Count == 0)
+		//        {
+		//            selection = null;
+		//            break;
+		//        }
+		//        else
+		//        {
+		//            selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+		//        }
+		//    }
+		//    if (selection == null)
+		//    {
+		//        throw new KeyNotFound(key, keyExpression.Extent, null);
+		//    }
+		//    else
+		//    {
+		//        return new PersistantPosition(selection, key);
+		//        //return selection[key];
+		//    }
+		//}
 		//public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
 		//{
 		//    Map key = keyExpression.GetExpression().Evaluate(context);
@@ -1054,16 +1093,16 @@ namespace Meta
 		}
 		// change this to work for all maps?
 
-		// change arguments?
+		// default should be infinite loop, maybe?
 		public static Map While(Map arg)
 		{
 			PersistantPosition argument = Call.lastArgument.Copy();
-			while (argument.Get()["condition"].Call(Map.Empty, argument).Get().GetBoolean())
-				//while (arg["condition"].Call(Map.Empty, MethodImplementation.currentPosition).Get().GetBoolean())
-				{
-					argument.Get()["function"].Call(Map.Empty, argument);
-					//arg["function"].Call(Map.Empty, MethodImplementation.currentPosition);
-				}
+			while (argument.Get()[1].Call(Map.Empty, argument).Get().GetBoolean())
+			//while (arg["condition"].Call(Map.Empty, MethodImplementation.currentPosition).Get().GetBoolean())
+			{
+				argument.Get().Call(Map.Empty, argument);
+				//arg["function"].Call(Map.Empty, MethodImplementation.currentPosition);
+			}
 			return Map.Empty;
 		}
 		public static Map Apply(Map arg)
@@ -1073,39 +1112,10 @@ namespace Meta
 			foreach (Map map in arg[1].Array)
 			{
 				PersistantPosition pos = argument.Get().Call(map, argument);
-				//PersistantPosition pos = arg.Call(map, arg.Scope);
 				result.Append(pos.Get());
 			}
 			return result;
 		}
-		//public static Map Apply(Map arg)
-		//{
-		//    Map result = new StrategyMap(new ListStrategy());
-		//    foreach (Map map in arg[1].Array)
-		//    {
-		//        PersistantPosition pos=arg.Call(map, arg.Scope);
-		//        result.Append(pos.Get());
-		//    }
-		//    return result;
-		//}
-		//public static Map Apply(Map arg)
-		//{
-		//    Map result = new StrategyMap(new ListStrategy());
-		//    foreach (Map map in arg[1].Array)
-		//    {
-		//        result.Append(arg.Call(map, arg.Scope).Get());
-		//    }
-		//    return result;
-		//}
-		//public static Map Apply(Map arg)
-		//{
-		//    Map result = new StrategyMap(new ListStrategy());
-		//    foreach (Map map in arg[1].Array)
-		//    {
-		//        result.Append(arg.Call(map, MethodImplementation.currentPosition).Get());
-		//    }
-		//    return result;
-		//}
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -2285,6 +2295,10 @@ namespace Meta
 	}
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public override string ToString()
+		{
+			return Meta.Serialize.ValueFunction(this);
+		}
 		private Dictionary<FunctionBodyKey, Map> temporaryData = new Dictionary<FunctionBodyKey, Map>();
 		public Map this[Map key]
 		{
@@ -5052,15 +5066,27 @@ namespace Meta
 
 		private bool UseToStringMethod(Type type)
 		{
-			return (!type.IsValueType || type.IsPrimitive )
-				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly()
-				&& type.GetMethod(
-					"ToString",
-					BindingFlags.Public|BindingFlags.DeclaredOnly|BindingFlags.Instance,
-					null,
-					new Type[]{},
-					new ParameterModifier[] { })!=null;
+			return (!type.IsValueType || type.IsPrimitive)
+				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();
+				//&& 
+				//type.GetMethod(
+				//    "ToString",
+				//    BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance,
+				//    null,
+				//    new Type[] { },
+				//    new ParameterModifier[] { }) != null;
 		}
+		//private bool UseToStringMethod(Type type)
+		//{
+		//    return (!type.IsValueType || type.IsPrimitive)
+		//        && Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly()
+		//        && type.GetMethod(
+		//            "ToString",
+		//            BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance,
+		//            null,
+		//            new Type[] { },
+		//            new ParameterModifier[] { }) != null;
+		//}
 		private bool UseProperty(PropertyInfo property,int level)
 		{
 			object[] attributes=property.GetCustomAttributes(typeof(SerializeAttribute), false);
@@ -7396,29 +7422,26 @@ namespace Meta
 											CodeKeys.Literal, "filesystem")),
 									2, new StrategyMap(
 										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal,"localhost")),
+											CodeKeys.Literal, "localhost")),
 									3, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"C:")),
+											CodeKeys.Literal, "C:")),
 									4, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"Meta")),
+											CodeKeys.Literal, "Meta")),
 									5, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"0.1")),
+											CodeKeys.Literal, "0.1")),
 									6, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"Test")),
+											CodeKeys.Literal, "Test")),
 									7, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"basicTest")))),
+											CodeKeys.Literal, "basicTest")))),
 							CodeKeys.Argument, new StrategyMap(
 								CodeKeys.Literal, argument)));
 					Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>())).Get();
-					//Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>()));
 					return result;
-					//return code.GetExpression().Evaluate(FileSystem.fileSystem);
-					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
 				}
 			}
 			public class Library : Test
@@ -7456,19 +7479,8 @@ namespace Meta
 								CodeKeys.Literal, Map.Empty)));
 					PersistantPosition position=code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
 					return position.Get();
-					//return code.GetExpression().Evaluate(FileSystem.fileSystem, new PersistantPosition(new List<Map>()));
-					//level = 2;
-					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
 				}
 			}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["libraryTest"].Call(Map.Empty);
-			//    }
-			//}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)

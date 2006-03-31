@@ -176,22 +176,9 @@ Entry (KeyValuePair`2)
 								0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				1
+				"while"
 			Value (StrategyMap):
-				"while=
-	counter=0
-	SetCounter=
-		argument|
-			$counter=argument
-	test=while
-		condition=
-			|strictlyIncreasing
-				counter
 				10
-		function=
-			|SetCounter
-				[0]=counter
-	current=counter"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"splitTest"
@@ -374,11 +361,18 @@ Entry (KeyValuePair`2)
 						"y"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		2
+		"valuesTest"
 	Value (StrategyMap):
-		"valuesTest=values
-	x="hi"
-	y="hello""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"hi"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"isStringTest"
