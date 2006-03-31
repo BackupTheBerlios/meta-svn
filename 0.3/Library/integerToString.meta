@@ -1,2 +1,0 @@
-documentation="Converts an integer to a string."
-argument|/.Meta.StrategyMap.[/.mscorlib.String] (/.Meta.Number.[/.Meta.Map] argument).ToString 0

@@ -1,4 +1,0 @@
-documentation="Determines whether a map contains a key."
-|
-	object=Meta.ObjectMap.[mscorlib.Object] arg.map
-	this=Meta.StrategyMap.[mscorlib.Boolean] object.ContainsKey arg.key

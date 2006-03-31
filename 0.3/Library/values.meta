@@ -1,4 +1,0 @@
-documentation="Returns an array containing the values of a map."
-argument|apply
-	keys argument
-	key|argument.[key]

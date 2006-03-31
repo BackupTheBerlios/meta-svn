@@ -1,8 +1,0 @@
-documentation="Multiplies integers."
-|Meta.StrategyMap.[Meta.Number] sum
-	array=arg
-	function=
-		|Meta.Number.op_Multiply
-			Meta.Number.[Meta.Number] arg.previous
-			Meta.Number.[Meta.Map] arg.present
-	start=Meta.Number.[Meta.Map] 1

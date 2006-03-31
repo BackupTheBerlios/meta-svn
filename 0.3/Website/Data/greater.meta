@@ -1,4 +1,0 @@
-documentation="Determines whether the first integer is greater than the second integer."
-|Meta.StrategyMap.[mscorlib.Boolean] Meta.Number.op_GreaterThan
-	Meta.Number.[Meta.Map] arg.[1]
-	Meta.Number.[Meta.Map] arg.[2]
