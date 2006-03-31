@@ -281,7 +281,7 @@ namespace Meta
 			int calls;
 			context.Get().AddCall(literal.Copy(), out calls);
 			PersistantPosition position=new PersistantPosition(context, new FunctionBodyKey(calls));
-			position.Get().Scope = position.GetParent();
+			position.Get().Scope = position.Parent;
 			return position;
 			//Map result = literal.Copy();
 			////result.Scope = context;
@@ -309,15 +309,36 @@ namespace Meta
 		}
 		public override void Assign(PersistantPosition context, Map value, PersistantPosition executionContext)
 		{
-			//value.Scope = executionContext;
-			//value.Scope = executionContext.Scope;
-			PersistantPosition parent = executionContext.GetParent();// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
-			//PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
-			//PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			PersistantPosition parent = executionContext.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			//executionContext.Assign(value);
 			Map parentMap = parent.Get();
-			parentMap[executionContext.Keys[executionContext.Keys.Length-1]]=value;
-			//executionContext = value;
+			parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
 		}
+		//public override void Assign(PersistantPosition context, Map value, PersistantPosition executionContext)
+		//{
+		//    //value.Scope = executionContext;
+		//    //value.Scope = executionContext.Scope;
+		//    executionContext.Assign(value);
+		//    //PersistantPosition parent = executionContext.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    ////PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    ////PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    //Map parentMap = parent.Get();
+		//    //parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
+		//    //parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
+		//    //executionContext = value;
+		//}
+		//public override void Assign(PersistantPosition context, Map value, PersistantPosition executionContext)
+		//{
+		//    //value.Scope = executionContext;
+		//    //value.Scope = executionContext.Scope;
+		//    PersistantPosition parent = executionContext.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    //PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    //PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    Map parentMap = parent.Get();
+		//    parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
+		//    //parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
+		//    //executionContext = value;
+		//}
 	}
 	public class CallSubselect : Subselect
 	{
@@ -393,15 +414,36 @@ namespace Meta
 		//}
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
-			Map key=keyExpression.GetExpression().Evaluate(context).Get();
-			if (key.Equals(new StrategyMap("then")))
-			{
-			}
+			Map key = keyExpression.GetExpression().Evaluate(context).Get();
+			//if (key.Equals(new StrategyMap("then")))
+			//{
+			//}
+			////PersistantPosition target = new PersistantPosition(selected, key);
+			////target.Assign(value);
+			//selected.Assign(key, value);
+			////PersistantPosition target=new PersistantPosition(selected,key);
+			//target.Assign(value);
 			selected.Get()[key] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 		}
+		//public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
+		//{
+		//    Map key=keyExpression.GetExpression().Evaluate(context).Get();
+		//    if (key.Equals(new StrategyMap("then")))
+		//    {
+		//    }
+		//    //PersistantPosition target = new PersistantPosition(selected, key);
+		//    //target.Assign(value);
+		//    selected.Assign(key,value);
+		//    //PersistantPosition target=new PersistantPosition(selected,key);
+		//    //target.Assign(value);
+		//    //selected.Get()[key] = value;
+		//    //selected[keyExpression.GetExpression().Evaluate(context)] = value;
+		//    //selected[keyExpression.GetExpression().Evaluate(context)] = value;
+		//    //selected[keyExpression.GetExpression().Evaluate(context)] = value;
+		//}
 		//public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		//{
 		//    selected.Get()[keyExpression.GetExpression().Evaluate(context)] = value;
@@ -429,8 +471,9 @@ namespace Meta
 			//Map selection = selected;
 			while (!selection.Get().ContainsKey(key))
 			{
-				if (selection.Keys.Length == 0)
-				{
+				if (selection.Parent==null)
+					//if (selection.Keys.Length == 0)
+					{
 					selection = null;
 					break;
 				}
@@ -443,7 +486,7 @@ namespace Meta
 					}
 					else
 					{
-						selection = selection.GetParent();//.Keys.Count - 1));
+						selection = selection.Parent;//.Keys.Count - 1));
 						//selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 					}
 				}
@@ -458,6 +501,47 @@ namespace Meta
 				//return selection[key];
 			}
 		}
+		//public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
+		//{
+		//    PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
+		//    Map key = keyPosition.Get();
+		//    if (key.Equals(new StrategyMap("argument")))
+		//    {
+		//    }
+		//    //Map key = keyExpression.GetExpression().Evaluate(context.Get());
+		//    PersistantPosition selection = selected;
+		//    //Map selection = selected;
+		//    while (!selection.Get().ContainsKey(key))
+		//    {
+		//        if (selection.Keys.Length == 0)
+		//        {
+		//            selection = null;
+		//            break;
+		//        }
+		//        else
+		//        {
+		//            if (selection.Get().Scope != null)
+		//            {
+		//                selection = new PersistantPosition(selection.Get().Scope);
+		//                //selection = selection.Get().Scope.Copy();
+		//            }
+		//            else
+		//            {
+		//                selection = selection.Parent;//.Keys.Count - 1));
+		//                //selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+		//            }
+		//        }
+		//    }
+		//    if (selection == null)
+		//    {
+		//        throw new KeyNotFound(key, keyExpression.Extent, null);
+		//    }
+		//    else
+		//    {
+		//        return new PersistantPosition(selection, key);
+		//        //return selection[key];
+		//    }
+		//}
 		//public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
 		//{
 		//    PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
@@ -526,7 +610,7 @@ namespace Meta
 			PersistantPosition selection = context;
 			while (selection != null && !selection.Get().ContainsKey(evaluatedKey))
 			{
-				selection = selection.GetParent();// new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+				selection = selection.Parent;// new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 				//selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 			}
 			if (selection == null)
@@ -535,17 +619,23 @@ namespace Meta
 			}
 			else
 			{
+				//selected.Assign(evaluatedKey,value);
+
+				//PersistantPosition target = new PersistantPosition(selection, evaluatedKey);
+				//target.Assign(value);
 				selection.Get()[evaluatedKey] = value;
 				//selection[evaluatedKey] = value;
 			}
 		}
 		//public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		//{
-		//    Map evaluatedKey = keyExpression.GetExpression().Evaluate(context);
+		//    PersistantPosition evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
+		//    Map evaluatedKey = evaluatedKeyPosition.Get();
 		//    PersistantPosition selection = context;
 		//    while (selection != null && !selection.Get().ContainsKey(evaluatedKey))
 		//    {
-		//        selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+		//        selection = selection.Parent;// new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+		//        //selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 		//    }
 		//    if (selection == null)
 		//    {
@@ -555,23 +645,6 @@ namespace Meta
 		//    {
 		//        selection.Get()[evaluatedKey] = value;
 		//        //selection[evaluatedKey] = value;
-		//    }
-		//}
-		//public override void Assign(Map selected, Map value, PersistantPosition context)
-		//{
-		//    Map evaluatedKey = keyExpression.GetExpression().Evaluate(context);
-		//    Map selection = context;
-		//    while (selection != null && !selection.ContainsKey(evaluatedKey))
-		//    {
-		//        selection = selection.Scope.Get();
-		//    }
-		//    if (selection == null)
-		//    {
-		//        throw new KeyNotFound(evaluatedKey, keyExpression.Extent, context);
-		//    }
-		//    else
-		//    {
-		//        selection[evaluatedKey] = value;
 		//    }
 		//}
 	}
@@ -585,28 +658,13 @@ namespace Meta
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
 			PersistantPosition selected = context;
-			//Map selected = context;
 			foreach (Map subselect in subselects)
 			{
 				selected = subselect.GetSubselect().Evaluate(selected, context);
-				//selected = subselect.GetSubselect().Evaluate(selected, context);
 			}
 			lastPosition = selected;
 			return selected;
-			//return selected.Get();
 		}
-		//public override PersistantPosition Evaluate(PersistantPosition context)
-		//{
-		//    PersistantPosition selected = context;
-		//    //Map selected = context;
-		//    foreach (Map subselect in subselects)
-		//    {
-		//        selected = subselect.GetSubselect().Evaluate(selected, context);
-		//        //selected = subselect.GetSubselect().Evaluate(selected, context);
-		//    }
-		//    lastPosition = selected;
-		//    return selected.Get();
-		//}
 		public static PersistantPosition lastPosition;
 	}
 	public class Statement
@@ -1956,7 +2014,7 @@ namespace Meta
 											CodeKeys.Literal,"Meta")),
 									5, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"0.1")),
+											CodeKeys.Literal,"0.2")),
 									6, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
 											CodeKeys.Literal,"Test")),
@@ -1989,7 +2047,7 @@ namespace Meta
 			public static void Interactive()
 			{
 				UseConsole();
-				Console.WriteLine("Interactive mode of Meta 0.1");
+				Console.WriteLine("Interactive mode of Meta 0.2");
 				object x = FileSystem.fileSystem;
 				Map map = new StrategyMap();
 				//map.Scope = new TemporaryPosition(FileSystem.fileSystem);
@@ -2182,7 +2240,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.1\";
+				return @"C:\Meta\0.2\";
 			}
 			//set
 			//{
@@ -2194,7 +2252,8 @@ namespace Meta
 			get
 			{
 				// fix this
-				return @"C:\Meta\0.1\Library";
+				return Path.Combine(InstallationPath,"Library");
+				//return @"C:\Meta\0.2\Library";
 			}
 		}
 	}
@@ -2214,8 +2273,24 @@ namespace Meta
 			return map;
 		}
 	}
+	// put assignment in here
 	public class PersistantPosition : Position
 	{
+		//public void Assign(Map key, Map value)
+		//{
+		//    Get()[key] = value;
+		//}
+		//public void Assign(Map value)
+		//{
+		//    PersistantPosition parent = this.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+		//    Map parentMap = parent.Get();
+		//    parentMap[this.keys[this.keys.Length - 1]] = value;
+		//}
+		//public void Assign(Map value)
+		//{
+		//    Map parentMap = Get();
+		//    parentMap[keys[keys.Length - 1]] = value;
+		//}
 		public Map[] Keys
 		{
 			get
@@ -2223,7 +2298,7 @@ namespace Meta
 				return keys;
 			}
 		}
-		private Map[] keys;
+		private readonly Map[] keys;
 		public PersistantPosition(PersistantPosition position)
 		{
 			// inefficient
@@ -2235,24 +2310,24 @@ namespace Meta
 		}
 		public PersistantPosition(PersistantPosition parent, Map ownKey)
 		{
-			if (parent == null)
-			{
-			}
 			List<Map> keyList=new List<Map>(parent.keys);
 			keyList.Add(ownKey);
 			this.keys = keyList.ToArray();
 		}
-		public PersistantPosition GetParent()
+		public PersistantPosition Parent
 		{
-			if (Keys.Length == 0)
+			get
 			{
-				throw new Exception("Position does not have a parent.");
-			}
-			else
-			{
-				List<Map> list=new List<Map>(this.Keys);
-				return new PersistantPosition(list.GetRange(0, list.Count - 1));
-				//return new PersistantPosition(this.Keys.GetRange(0, Keys.Count - 1));
+				if (keys.Length == 0)
+				{
+					return null;
+					//throw new Exception("Position does not have a parent.");
+				}
+				else
+				{
+					List<Map> list = new List<Map>(this.Keys);
+					return new PersistantPosition(list.GetRange(0, list.Count - 1));
+				}
 			}
 		}
 		private Map cached;
@@ -2271,11 +2346,11 @@ namespace Meta
 				{
 					position = position[key];
 					// maybe remove the event handlers, eventually, too
-					position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
 					if (position == null)
 					{
 						throw new Exception("Position does not exist");
 					}
+					position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
 					count++;
 				}
 				cached = position;
@@ -7484,7 +7559,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"];
+					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
 				}
 			}
 			public class Basic : Test
@@ -7511,7 +7586,7 @@ namespace Meta
 											CodeKeys.Literal, "Meta")),
 									5, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "0.1")),
+											CodeKeys.Literal, "0.2")),
 									6, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
 											CodeKeys.Literal, "Test")),
@@ -7548,7 +7623,7 @@ namespace Meta
 											CodeKeys.Literal, "Meta")),
 									5, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "0.1")),
+											CodeKeys.Literal, "0.2")),
 									6, new StrategyMap(
 										CodeKeys.Lookup, new StrategyMap(
 											CodeKeys.Literal, "Test")),
@@ -7566,7 +7641,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"]);
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
 		}
