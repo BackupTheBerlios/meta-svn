@@ -309,10 +309,11 @@ namespace Meta
 		}
 		public override void Assign(PersistantPosition context, Map value, PersistantPosition executionContext)
 		{
-			PersistantPosition parent = executionContext.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
-			//executionContext.Assign(value);
-			Map parentMap = parent.Get();
-			parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
+			executionContext.Assign(value);
+
+			//PersistantPosition parent = executionContext.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			//Map parentMap = parent.Get();
+			//parentMap[executionContext.Keys[executionContext.Keys.Length - 1]] = value;
 		}
 		//public override void Assign(PersistantPosition context, Map value, PersistantPosition executionContext)
 		//{
@@ -399,19 +400,7 @@ namespace Meta
 			return new PersistantPosition(selected, key);
 			//return selected.[key];
 		}
-		//public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
-		//{
-		//    Map key = keyExpression.GetExpression().Evaluate(context);
-		//    //Map key = keyExpression.GetExpression().Evaluate(context.Get());
-		//    if (!selected.Get().ContainsKey(key))
-		//        //if (!selected.ContainsKey(key))
-		//        //if (!selected.ContainsKey(key))
-		//    {
-		//        throw new KeyDoesNotExist(key, keyExpression.Extent, null);
-		//    }
-		//    return new PersistantPosition(selected,key);
-		//    //return selected.[key];
-		//}
+
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context).Get();
@@ -422,8 +411,10 @@ namespace Meta
 			////target.Assign(value);
 			//selected.Assign(key, value);
 			////PersistantPosition target=new PersistantPosition(selected,key);
-			//target.Assign(value);
-			selected.Get()[key] = value;
+
+			selected.Assign(key,value);
+			//selected.Get()[key] = value;
+
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
 			//selected[keyExpression.GetExpression().Evaluate(context)] = value;
@@ -606,25 +597,20 @@ namespace Meta
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
 			PersistantPosition evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
-			Map evaluatedKey = evaluatedKeyPosition.Get();
+			Map key = evaluatedKeyPosition.Get();
 			PersistantPosition selection = context;
-			while (selection != null && !selection.Get().ContainsKey(evaluatedKey))
+			while (selection != null && !selection.Get().ContainsKey(key))
 			{
 				selection = selection.Parent;// new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 				//selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 			}
 			if (selection == null)
 			{
-				throw new KeyNotFound(evaluatedKey, keyExpression.Extent, null);
+				throw new KeyNotFound(key, keyExpression.Extent, null);
 			}
 			else
 			{
-				//selected.Assign(evaluatedKey,value);
-
-				//PersistantPosition target = new PersistantPosition(selection, evaluatedKey);
-				//target.Assign(value);
-				selection.Get()[evaluatedKey] = value;
-				//selection[evaluatedKey] = value;
+				selection.Assign(key, value);
 			}
 		}
 		//public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
@@ -2276,16 +2262,16 @@ namespace Meta
 	// put assignment in here
 	public class PersistantPosition : Position
 	{
-		//public void Assign(Map key, Map value)
-		//{
-		//    Get()[key] = value;
-		//}
-		//public void Assign(Map value)
-		//{
-		//    PersistantPosition parent = this.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
-		//    Map parentMap = parent.Get();
-		//    parentMap[this.keys[this.keys.Length - 1]] = value;
-		//}
+		public void Assign(Map key, Map value)
+		{
+			Get()[key] = value;
+		}
+		public void Assign(Map value)
+		{
+			PersistantPosition parent = this.Parent;// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			Map parentMap = parent.Get();
+			parentMap[this.keys[this.keys.Length - 1]] = value;
+		}
 		//public void Assign(Map value)
 		//{
 		//    Map parentMap = Get();
