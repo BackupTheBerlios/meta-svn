@@ -414,6 +414,11 @@ Entry (KeyValuePair`2)
 		"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"upperTest"
+	Value (StrategyMap):
+		"HELLO"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"parseTest"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)

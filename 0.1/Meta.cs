@@ -1844,6 +1844,8 @@ namespace Meta
 							Commands.Help();
 							break;
 						case "-profile":
+							int level;
+							//new MetaTest.Basic().GetResult(out level);
 							Commands.Profile();
 							break;
 						default:
@@ -1900,10 +1902,50 @@ namespace Meta
 			{
 				DateTime start = DateTime.Now;
 				AllocConsole();
-				// wrong, wrong
-				FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(Map.Empty, MethodImplementation.currentPosition);
-				Console.WriteLine((DateTime.Now-start).TotalSeconds);
+
+					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
+					Map code = new StrategyMap(
+						CodeKeys.Call, new StrategyMap(
+							CodeKeys.Callable, new StrategyMap(
+								CodeKeys.Select, new StrategyMap(
+									1, new StrategyMap(
+										CodeKeys.Search, new StrategyMap(
+											CodeKeys.Literal, "filesystem")),
+									2, new StrategyMap(
+										CodeKeys.Search, new StrategyMap(
+											CodeKeys.Literal,"localhost")),
+									3, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal,"C:")),
+									4, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal,"Meta")),
+									5, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal,"0.1")),
+									6, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal,"Test")),
+									7, new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal,"basicTest")))),
+							CodeKeys.Argument, new StrategyMap(
+								CodeKeys.Literal, argument)));
+					Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>())).Get();
+					Console.WriteLine((DateTime.Now - start).TotalSeconds);
+
+					//Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>()));
+					//return code.GetExpression().Evaluate(FileSystem.fileSystem);
+					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
 			}
+			//public static void Profile()
+			//{
+			//    DateTime start = DateTime.Now;
+			//    AllocConsole();
+			//    // wrong, wrong
+			//    FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(Map.Empty, MethodImplementation.currentPosition);
+			//    Console.WriteLine((DateTime.Now-start).TotalSeconds);
+			//}
 			public static void Help()
 			{
 				UseConsole();
@@ -6904,6 +6946,10 @@ namespace Meta
 	}
 	public class Gac : StrategyMap
 	{
+		static Gac()
+		{
+			object x = FileSystem.fileSystem;
+		}
 		public static readonly StrategyMap gac = new Gac();
 		private Gac()
 		{

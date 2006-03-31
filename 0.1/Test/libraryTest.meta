@@ -224,7 +224,8 @@
 			=
 				apple="last"
 				orange="green"
-		lowerTest=string.toLower "HeLLo"
+		lowerTest=string.lower "HeLLo"
+		upperTest=string.upper "HeLLo"
 		parseTest=parse "
 			asdf="hello"
 			x=
