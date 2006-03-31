@@ -1098,10 +1098,8 @@ namespace Meta
 		{
 			PersistantPosition argument = Call.lastArgument.Copy();
 			while (argument.Get()[1].Call(Map.Empty, argument).Get().GetBoolean())
-			//while (arg["condition"].Call(Map.Empty, MethodImplementation.currentPosition).Get().GetBoolean())
 			{
 				argument.Get().Call(Map.Empty, argument);
-				//arg["function"].Call(Map.Empty, MethodImplementation.currentPosition);
 			}
 			return Map.Empty;
 		}
@@ -1120,16 +1118,30 @@ namespace Meta
 		{
 			Map result = new StrategyMap(new ListStrategy());
 			PersistantPosition argument = Call.lastArgument.Copy();
-			foreach (Map map in arg["array"].Array)
+			foreach (Map map in arg[1].Array)
 			{
-				if (argument.Get()["function"].Call(map, argument).Get().GetBoolean())
-					//if (arg["function"].Call(map, MethodImplementation.currentPosition).Get().GetBoolean())
-					{
+				if (argument.Get().Call(map, argument).Get().GetBoolean())
+				//if (arg["function"].Call(map, MethodImplementation.currentPosition).Get().GetBoolean())
+				{
 					result.Append(map);
 				}
 			}
 			return result;
 		}
+		//public static Map Filter(Map arg)
+		//{
+		//    Map result = new StrategyMap(new ListStrategy());
+		//    PersistantPosition argument = Call.lastArgument.Copy();
+		//    foreach (Map map in arg["array"].Array)
+		//    {
+		//        if (argument.Get()["function"].Call(map, new PersistantPosition(argument,"function")).Get().GetBoolean())
+		//        //if (arg["function"].Call(map, MethodImplementation.currentPosition).Get().GetBoolean())
+		//        {
+		//            result.Append(map);
+		//        }
+		//    }
+		//    return result;
+		//}
 
 		// bad names
 		public static Map FindFirst(Map arg)

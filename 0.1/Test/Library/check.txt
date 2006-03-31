@@ -275,19 +275,9 @@ Entry (KeyValuePair`2)
 				"illo illo hi"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		1
+		"filterTest"
 	Value (StrategyMap):
-		"filterTest=filter
-	array=
-		1
-		1
-		3
-		5
-		2
-	function=
-		argument|equal
-			argument
-			1"
+		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"findTest"
