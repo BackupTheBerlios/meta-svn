@@ -1,0 +1,6 @@
+argument|if
+	contains
+		map=argument.cases
+		key=argument.control
+	then=
+		|argument.cases.[argument.control] 0

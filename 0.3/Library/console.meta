@@ -1,0 +1,12 @@
+writeLine=
+	argument|write append
+		argument
+		/.mscorlib.Environment.NewLine.get 0
+write=
+	argument|/.Meta.Library.Write argument
+readLine=
+	|/.mscorlib.Console.ReadLine 0
+clear=
+	|/.mscorlib.Console.Clear 0
+create=
+	|Meta.Library.CreateConsole 0

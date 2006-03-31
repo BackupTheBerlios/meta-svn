@@ -1,0 +1,23 @@
+documentation="Returns whether at least one boolean is true."
+|sum
+	array=arg
+	function=
+		|table.[arg]
+	start=*
+table=
+	[
+		previous=1
+		present=*
+	]=1
+	[
+		previous=*
+		present=1
+	]=1
+	[
+		previous=*
+		present=*
+	]=*
+	[
+		previous=1
+		present=1
+	]=1

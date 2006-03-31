@@ -1,0 +1,4 @@
+writeLine=
+	|Meta.Library.WriteLine arg
+readLine=
+	|mscorlib.Console.ReadLine *
