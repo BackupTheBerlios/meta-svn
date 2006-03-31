@@ -1,0 +1,7 @@
+documentation="Repeats an array a given number of times."
+|
+	argument=arg.array
+	this=join apply
+		array=range arg.times
+		function=
+			|argument

@@ -1,0 +1,2 @@
+documentation="Calls a function as long as the condition function returns 1."
+argument|/.Meta.Library.While argument

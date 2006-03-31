@@ -1,0 +1,5 @@
+documentation="Returns an array containing the values of a map."
+|apply
+	array=keys arg
+	function=
+		|arg.arg.[arg]
