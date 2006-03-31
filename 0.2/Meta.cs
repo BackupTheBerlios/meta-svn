@@ -311,10 +311,11 @@ namespace Meta
 		{
 			//value.Scope = executionContext;
 			//value.Scope = executionContext.Scope;
-			PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			PersistantPosition parent = executionContext.GetParent();// new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
+			//PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
 			//PersistantPosition parent = new PersistantPosition(executionContext.Keys.GetRange(0, executionContext.Keys.Count - 1));
 			Map parentMap = parent.Get();
-			parentMap[executionContext.Keys[executionContext.Keys.Count-1]]=value;
+			parentMap[executionContext.Keys[executionContext.Keys.Length-1]]=value;
 			//executionContext = value;
 		}
 	}
@@ -428,7 +429,7 @@ namespace Meta
 			//Map selection = selected;
 			while (!selection.Get().ContainsKey(key))
 			{
-				if (selection.Keys.Count == 0)
+				if (selection.Keys.Length == 0)
 				{
 					selection = null;
 					break;
@@ -442,7 +443,8 @@ namespace Meta
 					}
 					else
 					{
-						selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+						selection = selection.GetParent();//.Keys.Count - 1));
+						//selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 					}
 				}
 			}
@@ -524,7 +526,8 @@ namespace Meta
 			PersistantPosition selection = context;
 			while (selection != null && !selection.Get().ContainsKey(evaluatedKey))
 			{
-				selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+				selection = selection.GetParent();// new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
+				//selection = new PersistantPosition(selection.Keys.GetRange(0, selection.Keys.Count - 1));
 			}
 			if (selection == null)
 			{
@@ -2213,11 +2216,11 @@ namespace Meta
 	}
 	public class PersistantPosition : Position
 	{
-		public List<Map> Keys
+		public Map[] Keys
 		{
 			get
 			{
-				return new List<Map>(keys);
+				return keys;
 			}
 		}
 		private Map[] keys;
@@ -2241,13 +2244,15 @@ namespace Meta
 		}
 		public PersistantPosition GetParent()
 		{
-			if (Keys.Count == 0)
+			if (Keys.Length == 0)
 			{
 				throw new Exception("Position does not have a parent.");
 			}
 			else
 			{
-				return new PersistantPosition(this.Keys.GetRange(0, Keys.Count - 1));
+				List<Map> list=new List<Map>(this.Keys);
+				return new PersistantPosition(list.GetRange(0, list.Count - 1));
+				//return new PersistantPosition(this.Keys.GetRange(0, Keys.Count - 1));
 			}
 		}
 		private Map cached;
