@@ -220,26 +220,53 @@ namespace Meta
 			{
 				statement.GetStatement().Assign(contextPosition);
 			}
-			contextPosition.Get().Scope = new PersistantPosition(parent);
+			contextPosition.Get().Scope = parent;
+			//contextPosition.Get().Scope = new PersistantPosition(parent);
 			return contextPosition;
 		}
 	}
 	public class Literal : Expression
 	{
+		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		private Map literal;
 		public Literal(Map code)
 		{
-			this.literal = code;
+			//if (cached.ContainsKey(code))
+			//{
+			//    this.literal = cached[code];
+			//}
+			//else
+			//{
+				this.literal = code;
+			//    cached[code] = code;
+			//}
 		}
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
 			int calls;
 			context.Get().AddCall(literal.Copy(), out calls);
-			PersistantPosition position=new PersistantPosition(context, new FunctionBodyKey(calls));
+			PersistantPosition position = new PersistantPosition(context, new FunctionBodyKey(calls));
 			position.Get().Scope = position.Parent;
 			return position;
 		}
 	}
+	//public class Literal : Expression
+	//{
+	//    private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
+	//    private Map literal;
+	//    public Literal(Map code)
+	//    {
+	//        this.literal = code;
+	//    }
+	//    public override PersistantPosition Evaluate(PersistantPosition context)
+	//    {
+	//        int calls;
+	//        context.Get().AddCall(literal.Copy(), out calls);
+	//        PersistantPosition position=new PersistantPosition(context, new FunctionBodyKey(calls));
+	//        position.Get().Scope = position.Parent;
+	//        return position;
+	//    }
+	//}
 	public abstract class Subselect
 	{
 		public abstract PersistantPosition Evaluate(PersistantPosition context, PersistantPosition executionContext);
@@ -335,7 +362,8 @@ namespace Meta
 				{
 					if (selection.Get().Scope != null)
 					{
-						selection = new PersistantPosition(selection.Get().Scope);
+						selection = selection.Get().Scope;
+						//selection = new PersistantPosition(selection.Get().Scope);
 					}
 					else
 					{
@@ -491,7 +519,7 @@ namespace Meta
 		}
 		public static Map Reverse(Map arg)
 		{
-			List<Map> list=arg.Array;
+			List<Map> list=new List<Map>(arg.Array);
 			list.Reverse();
 			return new StrategyMap(list);
 		}
@@ -589,7 +617,8 @@ namespace Meta
 		public static Map Try(Map arg)
 		{
 			Map result;
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
+			//PersistantPosition argument = new PersistantPosition(Call.lastArgument);
 			//PersistantPosition argument = Call.lastArgument.Copy();
 			try
 			{
@@ -777,7 +806,7 @@ namespace Meta
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg[1].Array;
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
 			//PersistantPosition argument = Call.lastArgument.Copy();
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
@@ -885,7 +914,7 @@ namespace Meta
 		// default should be infinite loop, maybe?
 		public static Map While(Map arg)
 		{
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
 			while (argument.Get()[1].Call(Map.Empty, argument).Get().GetBoolean())
 			{
 				argument.Get().Call(Map.Empty, argument);
@@ -895,7 +924,7 @@ namespace Meta
 		public static Map Apply(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
 			foreach (Map map in arg[1].Array)
 			{
 				PersistantPosition pos = argument.Get().Call(map, argument);
@@ -906,7 +935,7 @@ namespace Meta
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
 			foreach (Map map in arg[1].Array)
 			{
 				if (argument.Get().Call(map, argument).Get().GetBoolean())
@@ -939,7 +968,7 @@ namespace Meta
 		public static Map Foreach(Map arg)
 		{
 			Map result = new StrategyMap();
-			PersistantPosition argument = new PersistantPosition(Call.lastArgument);
+			PersistantPosition argument = Call.lastArgument;
 			foreach (KeyValuePair<Map, Map> entry in arg[1])
 			{
 				result.Append(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
@@ -1072,33 +1101,33 @@ namespace Meta
 				{
 					keys = GetKeys();
 				}
-				return keys; 
+				return keys;
 			}
 		}
-        public static void TrashFile(string fname)
-        {
+		public static void TrashFile(string fname)
+		{
 			InteropSHFileOperation fo = new InteropSHFileOperation();
 			fo.wFunc = InteropSHFileOperation.FO_Func.FO_DELETE;
 			fo.fFlags.FOF_ALLOWUNDO = true;
 			fo.fFlags.FOF_NOCONFIRMATION = true;
 			fo.pFrom = fname;
-        }
+		}
 		public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
-		// fix
 		protected override Map Get(Map key)
 		{
 			Map value = null;
-			if (key.IsString)
+			if (cache.ContainsKey(key))
 			{
-				if (key.GetString() == "basicTest")
-				{
-				}
-				if (cache.ContainsKey(key))
-				{
-					value = cache[key];
-				}
-				else
-				{
+				value = cache[key];
+			}
+			else if (key.IsString)
+			{
+				//if (cache.ContainsKey(key))
+				//{
+				//    value = cache[key];
+				//}
+				//else
+				//{
 					string name = key.GetString();
 					if (directory.FullName != Interpreter.LibraryPath)
 					{
@@ -1156,7 +1185,7 @@ namespace Meta
 								value = null;
 							}
 						}
-						else if(File.Exists(exeFile))
+						else if (File.Exists(exeFile))
 						{
 							try
 							{
@@ -1225,10 +1254,155 @@ namespace Meta
 					{
 						cache[key] = value;
 					}
-				}
+				//}
 			}
 			return value;
 		}
+		// fix
+		//protected override Map Get(Map key)
+		//{
+		//    Map value = null;
+		//    if (key.IsString)
+		//    {
+		//        if (key.GetString() == "basicTest")
+		//        {
+		//        }
+		//        if (cache.ContainsKey(key))
+		//        {
+		//            value = cache[key];
+		//        }
+		//        else
+		//        {
+		//            string name = key.GetString();
+		//            if (directory.FullName != Interpreter.LibraryPath)
+		//            {
+		//                Directory.SetCurrentDirectory(directory.FullName);
+		//            }
+		//            string file = Path.Combine(directory.FullName, name);
+		//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
+		//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
+		//            string exeFile = Path.Combine(directory.FullName, name + ".exe");
+
+		//            if (File.Exists(metaFile))
+		//            {
+		//                string text = File.ReadAllText(metaFile, Encoding.Default);
+		//                Map result;
+		//                FileMap fileMap = new FileMap(metaFile);
+		//                if (text != "")
+		//                {
+		//                    Map start = new StrategyMap();
+		//                    //Map start = new StrategyMap(new PersistantPosition(Position, key));
+		//                    Parser parser = new Parser(text, metaFile);
+		//                    bool matched;
+		//                    result = Parser.File.Match(parser, out matched);
+		//                    if (parser.index != parser.text.Length)
+		//                    {
+		//                        throw new SyntaxException("Expected end of file.", parser);
+		//                    }
+		//                    value = result;
+		//                }
+		//                else
+		//                {
+		//                    value = Map.Empty;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                bool dllLoaded = false;
+		//                if (File.Exists(dllFile))
+		//                {
+		//                    try
+		//                    {
+		//                        Assembly assembly = Assembly.LoadFile(dllFile);
+		//                        value = Gac.LoadAssembly(assembly);
+		//                        //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+		//                        //{
+		//                        //    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
+		//                        //    if (File.Exists(path))
+		//                        //    {
+		//                        //        Assembly.LoadFile(path);
+		//                        //    }
+		//                        //}
+		//                        dllLoaded = true;
+		//                    }
+		//                    catch (Exception e)
+		//                    {
+		//                        value = null;
+		//                    }
+		//                }
+		//                else if (File.Exists(exeFile))
+		//                {
+		//                    try
+		//                    {
+		//                        Assembly assembly = Assembly.LoadFile(exeFile);
+		//                        value = Gac.LoadAssembly(assembly);
+		//                        //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+		//                        //{
+		//                        //    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
+		//                        //    if (File.Exists(path))
+		//                        //    {
+		//                        //        Assembly a=Assembly.LoadFile(path);
+		//                        //        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
+		//                        //        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+		//                        //    }
+		//                        //}
+		//                        dllLoaded = true;
+		//                    }
+		//                    catch (Exception e)
+		//                    {
+		//                        value = null;
+		//                    }
+		//                }
+		//                if (!dllLoaded)
+		//                {
+		//                    if (File.Exists(file))
+		//                    {
+		//                        switch (Path.GetExtension(file))
+		//                        {
+		//                            case ".txt":
+		//                            case ".meta":
+		//                                value = new FileMap(file, new ListStrategy());
+		//                                // this is problematic, writes the file all the time
+		//                                //foreach (char c in File.ReadAllText(file))
+		//                                ////foreach (char c in File.ReadAllText(file))
+		//                                //{
+		//                                //    value.Append(c);
+		//                                //}
+		//                                break;
+		//                            default:
+		//                                value = new FileMap(file, new ListStrategy());
+		//                                // problematic, writes the file
+		//                                //foreach (byte b in File.ReadAllBytes(file))
+		//                                ////foreach (byte b in File.ReadAllBytes(file))
+		//                                //{
+		//                                //    value.Append(b);
+		//                                //}
+		//                                break;
+		//                        }
+		//                    }
+		//                    else
+		//                    {
+		//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+		//                        if (subDir.Exists)
+		//                        {
+		//                            value = new DirectoryMap(subDir);
+		//                            //value = new DirectoryMap(subDir, this.Position);
+		//                        }
+		//                        else
+		//                        {
+		//                            value = null;
+		//                        }
+		//                    }
+		//                }
+		//            }
+		//            if (value != null)
+		//            {
+		//                cache[key] = value;
+		//            }
+		//        }
+		//    }
+		//    return value;
+		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -1237,7 +1411,7 @@ namespace Meta
 				string extension = Path.GetExtension(name);
 				if (extension == "")
 				{
-					string directoryPath=Path.Combine(this.directory.FullName,name);
+					string directoryPath = Path.Combine(this.directory.FullName, name);
 					// somewhat unlogical
 					if (Directory.Exists(directoryPath))
 					{
@@ -1262,7 +1436,7 @@ namespace Meta
 						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 					}
 				}
-				else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
+				else if (extension == ".txt" || extension == ".meta" || extension == ".html" || extension == ".htm")
 				{
 					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.TryToDotNet(val, typeof(string)));
 				}
@@ -1479,6 +1653,459 @@ namespace Meta
 			}
 		}
 	}
+	//public class DirectoryMap : Map
+	//{
+	//    private DirectoryInfo directory;
+	//    private List<Map> keys;
+
+	//    public DirectoryMap(DirectoryInfo directory)
+	//    {
+	//        this.directory = directory;
+	//    }
+	//    private List<Map> GetKeys()
+	//    {
+	//        List<Map> keys = new List<Map>();
+	//        try
+	//        {
+	//            foreach (DirectoryInfo subdir in directory.GetDirectories())
+	//            {
+	//                keys.Add(subdir.Name);
+	//            }
+	//            foreach (FileInfo file in directory.GetFiles("*.*"))
+	//            {
+	//                string fileName;
+	//                if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
+	//                {
+	//                    fileName = Path.GetFileNameWithoutExtension(file.FullName);
+	//                }
+	//                else
+	//                {
+	//                    fileName = file.Name;
+	//                }
+	//                keys.Add(fileName);
+	//            }
+	//        }
+	//        // should only work in with drives, maybe separate DriveMap
+	//        catch (Exception e)
+	//        {
+	//        }
+	//        return keys;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            if (keys == null)
+	//            {
+	//                keys = GetKeys();
+	//            }
+	//            return keys; 
+	//        }
+	//    }
+	//    public static void TrashFile(string fname)
+	//    {
+	//        InteropSHFileOperation fo = new InteropSHFileOperation();
+	//        fo.wFunc = InteropSHFileOperation.FO_Func.FO_DELETE;
+	//        fo.fFlags.FOF_ALLOWUNDO = true;
+	//        fo.fFlags.FOF_NOCONFIRMATION = true;
+	//        fo.pFrom = fname;
+	//    }
+	//    public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+	//    // fix
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map value = null;
+	//        if (key.IsString)
+	//        {
+	//            if (key.GetString() == "basicTest")
+	//            {
+	//            }
+	//            if (cache.ContainsKey(key))
+	//            {
+	//                value = cache[key];
+	//            }
+	//            else
+	//            {
+	//                string name = key.GetString();
+	//                if (directory.FullName != Interpreter.LibraryPath)
+	//                {
+	//                    Directory.SetCurrentDirectory(directory.FullName);
+	//                }
+	//                string file = Path.Combine(directory.FullName, name);
+	//                string metaFile = Path.Combine(directory.FullName, name + ".meta");
+	//                string dllFile = Path.Combine(directory.FullName, name + ".dll");
+	//                string exeFile = Path.Combine(directory.FullName, name + ".exe");
+
+	//                if (File.Exists(metaFile))
+	//                {
+	//                    string text = File.ReadAllText(metaFile, Encoding.Default);
+	//                    Map result;
+	//                    FileMap fileMap = new FileMap(metaFile);
+	//                    if (text != "")
+	//                    {
+	//                        Map start = new StrategyMap();
+	//                        //Map start = new StrategyMap(new PersistantPosition(Position, key));
+	//                        Parser parser = new Parser(text, metaFile);
+	//                        bool matched;
+	//                        result = Parser.File.Match(parser, out matched);
+	//                        if (parser.index != parser.text.Length)
+	//                        {
+	//                            throw new SyntaxException("Expected end of file.", parser);
+	//                        }
+	//                        value = result;
+	//                    }
+	//                    else
+	//                    {
+	//                        value = Map.Empty;
+	//                    }
+	//                }
+	//                else
+	//                {
+	//                    bool dllLoaded = false;
+	//                    if (File.Exists(dllFile))
+	//                    {
+	//                        try
+	//                        {
+	//                            Assembly assembly = Assembly.LoadFile(dllFile);
+	//                            value = Gac.LoadAssembly(assembly);
+	//                            //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+	//                            //{
+	//                            //    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
+	//                            //    if (File.Exists(path))
+	//                            //    {
+	//                            //        Assembly.LoadFile(path);
+	//                            //    }
+	//                            //}
+	//                            dllLoaded = true;
+	//                        }
+	//                        catch (Exception e)
+	//                        {
+	//                            value = null;
+	//                        }
+	//                    }
+	//                    else if(File.Exists(exeFile))
+	//                    {
+	//                        try
+	//                        {
+	//                            Assembly assembly = Assembly.LoadFile(exeFile);
+	//                            value = Gac.LoadAssembly(assembly);
+	//                            //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
+	//                            //{
+	//                            //    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
+	//                            //    if (File.Exists(path))
+	//                            //    {
+	//                            //        Assembly a=Assembly.LoadFile(path);
+	//                            //        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
+	//                            //        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+	//                            //    }
+	//                            //}
+	//                            dllLoaded = true;
+	//                        }
+	//                        catch (Exception e)
+	//                        {
+	//                            value = null;
+	//                        }
+	//                    }
+	//                    if (!dllLoaded)
+	//                    {
+	//                        if (File.Exists(file))
+	//                        {
+	//                            switch (Path.GetExtension(file))
+	//                            {
+	//                                case ".txt":
+	//                                case ".meta":
+	//                                    value = new FileMap(file, new ListStrategy());
+	//                                    // this is problematic, writes the file all the time
+	//                                    //foreach (char c in File.ReadAllText(file))
+	//                                    ////foreach (char c in File.ReadAllText(file))
+	//                                    //{
+	//                                    //    value.Append(c);
+	//                                    //}
+	//                                    break;
+	//                                default:
+	//                                    value = new FileMap(file, new ListStrategy());
+	//                                    // problematic, writes the file
+	//                                    //foreach (byte b in File.ReadAllBytes(file))
+	//                                    ////foreach (byte b in File.ReadAllBytes(file))
+	//                                    //{
+	//                                    //    value.Append(b);
+	//                                    //}
+	//                                    break;
+	//                            }
+	//                        }
+	//                        else
+	//                        {
+	//                            DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+	//                            if (subDir.Exists)
+	//                            {
+	//                                value = new DirectoryMap(subDir);
+	//                                //value = new DirectoryMap(subDir, this.Position);
+	//                            }
+	//                            else
+	//                            {
+	//                                value = null;
+	//                            }
+	//                        }
+	//                    }
+	//                }
+	//                if (value != null)
+	//                {
+	//                    cache[key] = value;
+	//                }
+	//            }
+	//        }
+	//        return value;
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        if (key.IsString)
+	//        {
+	//            string name = key.GetString();
+	//            string extension = Path.GetExtension(name);
+	//            if (extension == "")
+	//            {
+	//                string directoryPath=Path.Combine(this.directory.FullName,name);
+	//                // somewhat unlogical
+	//                if (Directory.Exists(directoryPath))
+	//                {
+	//                    Map subDirectory = this[name];
+	//                    foreach (KeyValuePair<Map, Map> entry in val)
+	//                    {
+	//                        // buggy if there is a Meta file with the same name
+	//                        subDirectory[entry.Key] = entry.Value;
+	//                    }
+	//                }
+	//                else
+	//                {
+	//                    string text = Meta.Serialize.ValueFunction(val);
+	//                    if (text == Syntax.emptyMap.ToString())
+	//                    {
+	//                        text = "";
+	//                    }
+	//                    else
+	//                    {
+	//                        text = text.Trim(Syntax.unixNewLine);
+	//                    }
+	//                    File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+	//                }
+	//            }
+	//            else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
+	//            {
+	//                File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.TryToDotNet(val, typeof(string)));
+	//            }
+	//            else
+	//            {
+	//                File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.TryToDotNet(val, typeof(byte[])));
+	//            }
+	//            cache[key] = val;
+	//        }
+	//        else
+	//        {
+	//            throw new ApplicationException("Cannot set non-string in directory.");
+	//        }
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return this;
+	//    }
+	//    public class InteropSHFileOperation
+	//    {
+	//        public enum FO_Func : uint
+	//        {
+	//            FO_MOVE = 0x0001,
+	//            FO_COPY = 0x0002,
+	//            FO_DELETE = 0x0003,
+	//            FO_RENAME = 0x0004,
+	//        }
+
+	//        struct SHFILEOPSTRUCT
+	//        {
+	//            public IntPtr hwnd;
+	//            public FO_Func wFunc;
+	//            [MarshalAs(UnmanagedType.LPWStr)]
+	//            public string pFrom;
+	//            [MarshalAs(UnmanagedType.LPWStr)]
+	//            public string pTo;
+	//            public ushort fFlags;
+	//            public bool fAnyOperationsAborted;
+	//            public IntPtr hNameMappings;
+	//            [MarshalAs(UnmanagedType.LPWStr)]
+	//            public string lpszProgressTitle;
+
+	//        }
+
+	//        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+	//        static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
+
+	//        private SHFILEOPSTRUCT _ShFile;
+	//        public FILEOP_FLAGS fFlags;
+
+	//        public IntPtr hwnd
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.hwnd = value;
+	//            }
+	//        }
+	//        public FO_Func wFunc
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.wFunc = value;
+	//            }
+	//        }
+
+	//        public string pFrom
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.pFrom = value + '\0' + '\0';
+	//            }
+	//        }
+	//        public string pTo
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.pTo = value + '\0' + '\0';
+	//            }
+	//        }
+
+	//        public bool fAnyOperationsAborted
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.fAnyOperationsAborted = value;
+	//            }
+	//        }
+	//        public IntPtr hNameMappings
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.hNameMappings = value;
+	//            }
+	//        }
+	//        public string lpszProgressTitle
+	//        {
+	//            set
+	//            {
+	//                this._ShFile.lpszProgressTitle = value + '\0';
+	//            }
+	//        }
+
+	//        public InteropSHFileOperation()
+	//        {
+
+	//            this.fFlags = new FILEOP_FLAGS();
+	//            this._ShFile = new SHFILEOPSTRUCT();
+	//            this._ShFile.hwnd = IntPtr.Zero;
+	//            this._ShFile.wFunc = FO_Func.FO_COPY;
+	//            this._ShFile.pFrom = "";
+	//            this._ShFile.pTo = "";
+	//            this._ShFile.fAnyOperationsAborted = false;
+	//            this._ShFile.hNameMappings = IntPtr.Zero;
+	//            this._ShFile.lpszProgressTitle = "";
+
+	//        }
+
+	//        public bool Execute()
+	//        {
+	//            this._ShFile.fFlags = this.fFlags.Flag;
+	//            int ReturnValue = SHFileOperation(ref this._ShFile);
+	//            if (ReturnValue == 0)
+	//            {
+	//                return true;
+	//            }
+	//            else
+	//            {
+	//                return false;
+	//            }
+	//        }
+
+	//        public class FILEOP_FLAGS
+	//        {
+	//            [Flags]
+	//            private enum FILEOP_FLAGS_ENUM : ushort
+	//            {
+	//                FOF_MULTIDESTFILES = 0x0001,
+	//                FOF_CONFIRMMOUSE = 0x0002,
+	//                FOF_SILENT = 0x0004,  // don't create progress/report
+	//                FOF_RENAMEONCOLLISION = 0x0008,
+	//                FOF_NOCONFIRMATION = 0x0010,  // Don't prompt the user.
+	//                FOF_WANTMAPPINGHANDLE = 0x0020,  // Fill in SHFILEOPSTRUCT.hNameMappings
+	//                // Must be freed using SHFreeNameMappings
+	//                FOF_ALLOWUNDO = 0x0040,
+	//                FOF_FILESONLY = 0x0080,  // on *.*, do only files
+	//                FOF_SIMPLEPROGRESS = 0x0100,  // means don't show names of files
+	//                FOF_NOCONFIRMMKDIR = 0x0200,  // don't confirm making any needed dirs
+	//                FOF_NOERRORUI = 0x0400,  // don't put up error UI
+	//                FOF_NOCOPYSECURITYATTRIBS = 0x0800,  // dont copy NT file Security Attributes
+	//                FOF_NORECURSION = 0x1000,  // don't recurse into directories.
+	//                FOF_NO_CONNECTED_ELEMENTS = 0x2000,  // don't operate on connected elements.
+	//                FOF_WANTNUKEWARNING = 0x4000,  // during delete operation, warn if nuking instead of recycling (partially overrides FOF_NOCONFIRMATION)
+	//                FOF_NORECURSEREPARSE = 0x8000,  // treat reparse points as objects, not containers
+	//            }
+
+	//            public bool FOF_MULTIDESTFILES = false;
+	//            public bool FOF_CONFIRMMOUSE = false;
+	//            public bool FOF_SILENT = false;
+	//            public bool FOF_RENAMEONCOLLISION = false;
+	//            public bool FOF_NOCONFIRMATION = false;
+	//            public bool FOF_WANTMAPPINGHANDLE = false;
+	//            public bool FOF_ALLOWUNDO = false;
+	//            public bool FOF_FILESONLY = false;
+	//            public bool FOF_SIMPLEPROGRESS = false;
+	//            public bool FOF_NOCONFIRMMKDIR = false;
+	//            public bool FOF_NOERRORUI = false;
+	//            public bool FOF_NOCOPYSECURITYATTRIBS = false;
+	//            public bool FOF_NORECURSION = false;
+	//            public bool FOF_NO_CONNECTED_ELEMENTS = false;
+	//            public bool FOF_WANTNUKEWARNING = false;
+	//            public bool FOF_NORECURSEREPARSE = false;
+	//            public ushort Flag
+	//            {
+	//                get
+	//                {
+	//                    ushort ReturnValue = 0;
+
+	//                    if (this.FOF_MULTIDESTFILES == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_MULTIDESTFILES;
+	//                    if (this.FOF_CONFIRMMOUSE == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_CONFIRMMOUSE;
+	//                    if (this.FOF_SILENT == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SILENT;
+	//                    if (this.FOF_RENAMEONCOLLISION == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_RENAMEONCOLLISION;
+	//                    if (this.FOF_NOCONFIRMATION == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMATION;
+	//                    if (this.FOF_WANTMAPPINGHANDLE == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTMAPPINGHANDLE;
+	//                    if (this.FOF_ALLOWUNDO == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_ALLOWUNDO;
+	//                    if (this.FOF_FILESONLY == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_FILESONLY;
+	//                    if (this.FOF_SIMPLEPROGRESS == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SIMPLEPROGRESS;
+	//                    if (this.FOF_NOCONFIRMMKDIR == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMMKDIR;
+	//                    if (this.FOF_NOERRORUI == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOERRORUI;
+	//                    if (this.FOF_NOCOPYSECURITYATTRIBS == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCOPYSECURITYATTRIBS;
+	//                    if (this.FOF_NORECURSION == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSION;
+	//                    if (this.FOF_NO_CONNECTED_ELEMENTS == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NO_CONNECTED_ELEMENTS;
+	//                    if (this.FOF_WANTNUKEWARNING == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTNUKEWARNING;
+	//                    if (this.FOF_NORECURSEREPARSE == true)
+	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSEREPARSE;
+
+	//                    return ReturnValue;
+	//                }
+	//            }
+	//        }
+	//    }
+	//}
 	public class Interpreter
 	{
 		[STAThread]
@@ -1505,7 +2132,6 @@ namespace Meta
 							Commands.Help();
 							break;
 						case "-profile":
-							int level;
 							//new MetaTest.Basic().GetResult(out level);
 							Commands.Profile();
 							break;
@@ -1543,7 +2169,7 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
-			Console.ReadLine();
+			//Console.ReadLine();
 		}
 		private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 		{
@@ -1563,55 +2189,34 @@ namespace Meta
 			{
 				DateTime start = DateTime.Now;
 				AllocConsole();
-
-					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
-					Map code = new StrategyMap(
-						CodeKeys.Call, new StrategyMap(
-							CodeKeys.Callable, new StrategyMap(
-								CodeKeys.Select, new StrategyMap(
-									1, new StrategyMap(
-										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal, "filesystem")),
-									2, new StrategyMap(
-										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal,"localhost")),
-									3, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"C:")),
-									4, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"Meta")),
-									5, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"0.2")),
-									6, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"Test")),
-									7, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal,"basicTest")))),
-							CodeKeys.Argument, new StrategyMap(
-								CodeKeys.Literal, argument)));
-					Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>())).Get();
-					Console.WriteLine((DateTime.Now - start).TotalSeconds);
-
-					//Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>()));
-					//return code.GetExpression().Evaluate(FileSystem.fileSystem);
-					//return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(argument);
+				int level;
+				new Test.MetaTest.Library().GetResult(out level);
+				Console.WriteLine((DateTime.Now - start).TotalSeconds);
+				Console.ReadLine();
 			}
-			//public static void Profile()
-			//{
-			//    DateTime start = DateTime.Now;
-			//    AllocConsole();
-			//    // wrong, wrong
-			//    FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.1"]["Test"]["basicTest"].Call(Map.Empty, MethodImplementation.currentPosition);
-			//    Console.WriteLine((DateTime.Now-start).TotalSeconds);
-			//}
 			public static void Help()
 			{
 				UseConsole();
 				Console.WriteLine("help");
 				Console.ReadLine();
+			}
+			private static string ReadLine()
+			{
+				string text = "";
+			   ConsoleKeyInfo cki = new ConsoleKeyInfo();
+				do 
+				{
+					while (Console.KeyAvailable == false)
+						Thread.Sleep(250); // Loop until input is entered.
+					cki = Console.ReadKey(true);
+					text += cki.KeyChar;
+					Console.Write(cki.KeyChar);
+
+					//Console.WriteLine("You pressed the '{0}' key.", cki.Key);
+					
+				} 
+				while(cki.Key != ConsoleKey.Enter);
+				return text;
 			}
 			public static void Interactive()
 			{
@@ -1619,13 +2224,10 @@ namespace Meta
 				Console.WriteLine("Interactive mode of Meta 0.2");
 				object x = FileSystem.fileSystem;
 				Map map = new StrategyMap();
-				//map.Scope = new TemporaryPosition(FileSystem.fileSystem);
 				string code;
 
-				// this is still kinda wrong, interactive mode should exist in filesystem, somehow
-				// should have a position, too
 
-				// wrong
+
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
 				PersistantPosition position = new PersistantPosition(new Map[] { "filesystem","localhost" });
@@ -1641,6 +2243,7 @@ namespace Meta
 					int lines = 0;
 					while (true)
 					{
+						//string input = ReadLine();
 						string input = Console.ReadLine();
 						if (input.Trim().Length != 0)
 						{
@@ -1696,6 +2299,7 @@ namespace Meta
 			{
 				UseConsole();
 				new MetaTest().Run();
+				Console.ReadLine();
 			}
 			public static void Run(string[] args)
 			{
@@ -1783,7 +2387,7 @@ namespace Meta
 			Map parentMap = parent.Get();
 			parentMap[this.keys[this.keys.Length - 1]] = value;
 		}
-		public Map[] Keys
+		public IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -1802,10 +2406,17 @@ namespace Meta
 		}
 		public PersistantPosition(PersistantPosition parent, Map ownKey)
 		{
-			List<Map> keyList=new List<Map>(parent.keys);
+			List<Map> keyList = new List<Map>(parent.keys);
 			keyList.Add(ownKey);
 			this.keys = keyList.ToArray();
 		}
+		//public PersistantPosition(PersistantPosition parent, Map ownKey)
+		//{
+		//    List<Map> keyList=new List<Map>(parent.keys);
+		//    keyList.Add(ownKey);
+		//    this.keys = keyList.ToArray();
+		//}
+		private PersistantPosition parent;
 		public PersistantPosition Parent
 		{
 			get
@@ -1817,38 +2428,82 @@ namespace Meta
 				}
 				else
 				{
-					List<Map> list = new List<Map>(this.Keys);
-					return new PersistantPosition(list.GetRange(0, list.Count - 1));
+					if (parent == null)
+					{
+						List<Map> list = new List<Map>(this.Keys);
+						parent = new PersistantPosition(list.GetRange(0, list.Count - 1));
+					}
+					return parent;
 				}
 			}
 		}
+		//public PersistantPosition Parent
+		//{
+		//    get
+		//    {
+		//        if (keys.Length == 0)
+		//        {
+		//            return null;
+		//            //throw new Exception("Position does not have a parent.");
+		//        }
+		//        else
+		//        {
+		//            List<Map> list = new List<Map>(this.Keys);
+		//            return new PersistantPosition(list.GetRange(0, list.Count - 1));
+		//        }
+		//    }
+		//}
 		private Map cached;
 		public override Map Get()
 		{
-			if (cached != null)
+			if (cached == null)
 			{
-				return cached;
+				cached = DetermineMap();
 			}
-			else
-			{
-				Map position = Gac.gac;
-				//Map position = FileSystem.fileSystem;
-				int count = 0;
-				foreach (Map key in keys)
-				{
-					position = position[key];
-					// maybe remove the event handlers, eventually, too
-					if (position == null)
-					{
-						throw new Exception("Position does not exist");
-					}
-					position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
-					count++;
-				}
-				cached = position;
-				return position;
-			}
+			return cached;
 		}
+		private Map DetermineMap()
+		{
+			Map position = Gac.gac;
+			int count = 0;
+			foreach (Map key in keys)
+			{
+				position = position[key];
+				if (position == null)
+				{
+					throw new Exception("Position does not exist");
+				}
+				position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
+				count++;
+			}
+			return position;
+		}
+		//public override Map Get()
+		//{
+		//    if (cached != null)
+		//    {
+		//        return cached;
+		//    }
+		//    else
+		//    {
+		//        Map position = Gac.gac;
+		//        //Map position = FileSystem.fileSystem;
+		//        int count = 0;
+		//        foreach (Map key in keys)
+		//        {
+		//            position = position[key];
+		//            // maybe remove the event handlers, eventually, too
+		//            if (position == null)
+		//            {
+		//                throw new Exception("Position does not exist");
+		//            }
+		//            position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
+		//            count++;
+		//        }
+		//        cached = position;
+		//        return position;
+		//    }
+		//}
 		void position_KeyChanged()
 		{
 			this.cached = null;
@@ -3658,7 +4313,7 @@ namespace Meta
 		}
 		public override bool EqualStrategy(MapStrategy obj)
 		{
-			return obj.EqualStrategy(original);
+			return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
 			//return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
 		}
 		public override int GetHashCode()
@@ -3836,7 +4491,8 @@ namespace Meta
 		}
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
-			MethodImplementation.currentPosition = new PersistantPosition(position);
+			MethodImplementation.currentPosition = position;
+			//MethodImplementation.currentPosition = new PersistantPosition(position);
 			// binding flags arent really correct, should be different for static and instance events, combine with methodImplementation
 			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
 			if (eventDelegate != null)
@@ -5975,67 +6631,18 @@ namespace Meta
 			}
 		}
 	}
-	public class Gac : StrategyMap
+	public class Gac : Map
 	{
+		public static readonly Map gac = new Gac();
 		static Gac()
 		{
 			object x = FileSystem.fileSystem;
 		}
-		public static readonly StrategyMap gac = new Gac();
 		private Gac()
 		{
 			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
-		private bool Load(Map key)
-		{
-			bool loaded;
-			if (strategy.ContainsKey(key))
-			{
-				loaded = true;
-			}
-			else
-			{
-				if (key.IsString)
-				{
-					string assemblyName = key.GetString();
-					Assembly assembly = null;
-					try
-					{
-						assembly = Assembly.LoadWithPartialName(assemblyName);
-					}
-					catch
-					{
-					}
-					if (assembly != null)
-					{
-						this[key] = LoadAssembly(assembly);
-						loaded = true;
-					}
-					else
-					{
-						loaded = false;
-					}
-				}
-				else
-				{
-					Map version = key["version"];
-					Map publicKeyToken = key["publicKeyToken"];
-					Map culture = key["culture"];
-					Map name = key["name"];
-					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-					{
-						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-						this[key] = LoadAssembly(assembly);
-						loaded = true;
-					}
-					else
-					{
-						loaded = false;
-					}
-				}
-			}
-			return loaded;
-		}
+		private Dictionary<Map, Map> cache=new Dictionary<Map,Map>();
 		public static Map LoadAssembly(Assembly assembly)
 		{
 			Map val = new StrategyMap();
@@ -6060,16 +6667,53 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			Map val;
-			if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
+			Map value;
+			if (!cache.ContainsKey(key))
 			{
-				val = strategy.Get(key);
+				if (key.IsString)
+				{
+					try
+					{
+						value=LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
+						this[key] = value;
+					}
+					catch
+					{
+						value=null;
+					}
+				}
+				else
+				{
+					Map version = key["version"];
+					Map publicKeyToken = key["publicKeyToken"];
+					Map culture = key["culture"];
+					Map name = key["name"];
+					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+					{
+						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+						value=LoadAssembly(assembly);
+						this[key] = value;
+					}
+					else
+					{
+						value=null;
+					}
+				}
 			}
 			else
 			{
-				val = Web.Get(key);
+				value = cache[key];
 			}
-			return val;
+			return value;
+		}
+		protected override void Set(Map key, Map val)
+		{
+			cache[key] = val;
+			//throw new Exception("The method or operation is not implemented.");
+		}
+		protected override Map CopyData()
+		{
+			return this;
 		}
 		protected override ICollection<Map> KeysImplementation
 		{
@@ -6082,8 +6726,117 @@ namespace Meta
 		{
 			return Get(key) != null;
 		}
-		protected Map cachedAssemblyInfo = new StrategyMap();
+		//protected Map cachedAssemblyInfo = new StrategyMap();
 	}
+	//public class Gac : StrategyMap
+	//{
+	//    static Gac()
+	//    {
+	//        object x = FileSystem.fileSystem;
+	//    }
+	//    public static readonly StrategyMap gac = new Gac();
+	//    private Gac()
+	//    {
+	//        this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+	//    }
+	//    private bool Load(Map key)
+	//    {
+	//        bool loaded;
+	//        if (strategy.ContainsKey(key))
+	//        {
+	//            loaded = true;
+	//        }
+	//        else
+	//        {
+	//            if (key.IsString)
+	//            {
+	//                string assemblyName = key.GetString();
+	//                Assembly assembly = null;
+	//                try
+	//                {
+	//                    assembly = Assembly.LoadWithPartialName(assemblyName);
+	//                }
+	//                catch
+	//                {
+	//                }
+	//                if (assembly != null)
+	//                {
+	//                    this[key] = LoadAssembly(assembly);
+	//                    loaded = true;
+	//                }
+	//                else
+	//                {
+	//                    loaded = false;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                Map version = key["version"];
+	//                Map publicKeyToken = key["publicKeyToken"];
+	//                Map culture = key["culture"];
+	//                Map name = key["name"];
+	//                if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+	//                {
+	//                    Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+	//                    this[key] = LoadAssembly(assembly);
+	//                    loaded = true;
+	//                }
+	//                else
+	//                {
+	//                    loaded = false;
+	//                }
+	//            }
+	//        }
+	//        return loaded;
+	//    }
+	//    public static Map LoadAssembly(Assembly assembly)
+	//    {
+	//        Map val = new StrategyMap();
+	//        foreach (Type type in assembly.GetExportedTypes())
+	//        {
+	//            if (type.DeclaringType == null)
+	//            {
+	//                Map selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition)
+	//                {
+	//                    name = type.Name.Split('`')[0];
+	//                }
+	//                else
+	//                {
+	//                    name = type.Name;
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map val;
+	//        if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
+	//        {
+	//            val = strategy.Get(key);
+	//        }
+	//        else
+	//        {
+	//            val = Web.Get(key);
+	//        }
+	//        return val;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            throw new ApplicationException("not implemented.");
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    //protected Map cachedAssemblyInfo = new StrategyMap();
+	//}
 	public class FileSystem
 	{
 		// combine gac into fileSystem
@@ -6412,37 +7165,44 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
-					Map code = new StrategyMap(
-						CodeKeys.Call, new StrategyMap(
-							CodeKeys.Callable, new StrategyMap(
-								CodeKeys.Select, new StrategyMap(
-									1, new StrategyMap(
-										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal, "filesystem")),
-									2, new StrategyMap(
-										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal, "localhost")),
-									3, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "C:")),
-									4, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "Meta")),
-									5, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "0.2")),
-									6, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "Test")),
-									7, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "basicTest")))),
-							CodeKeys.Argument, new StrategyMap(
-								CodeKeys.Literal, argument)));
-					Map result = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>())).Get();
+					Map result = Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 					return result;
 				}
+			}
+			public static Map Run(string path,Map argument)
+			{
+				List<string> list=new List<string>();
+				FileInfo file=new FileInfo(path);
+				list.Add(Path.GetFileNameWithoutExtension(file.FullName));
+				DirectoryInfo directory=file.Directory;
+				while(true)
+				{
+					list.Add(directory.Name.Trim('\\'));
+					directory=directory.Parent;
+					if(directory==null)
+					{
+						break;
+					}
+				}
+				list.Add("localhost");
+				list.Add("filesystem");
+				list.Reverse();
+				Map lookups=new StrategyMap();
+				foreach(Map entry in list)
+				{
+					lookups.Append(new StrategyMap(
+					    CodeKeys.Lookup, new StrategyMap(
+				        CodeKeys.Literal, entry)));
+				}
+				Map code = new StrategyMap(
+					CodeKeys.Call, new StrategyMap(
+						CodeKeys.Callable, new StrategyMap(
+							CodeKeys.Select, lookups),
+						CodeKeys.Argument, new StrategyMap(
+							CodeKeys.Literal, argument)));
+					PersistantPosition position=code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
+					return position.Get();
+
 			}
 			public class Library : Test
 			{
@@ -6450,35 +7210,36 @@ namespace Meta
 				{
 					level = 2;
 					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
-					Map code = new StrategyMap(
-						CodeKeys.Call, new StrategyMap(
-							CodeKeys.Callable, new StrategyMap(
-								CodeKeys.Select, new StrategyMap(
-									1, new StrategyMap(
-										CodeKeys.Search, new StrategyMap(
-											CodeKeys.Literal, "filesystem")),
-									2, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "localhost")),
-									3, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "C:")),
-									4, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "Meta")),
-									5, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "0.2")),
-									6, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "Test")),
-									7, new StrategyMap(
-										CodeKeys.Lookup, new StrategyMap(
-											CodeKeys.Literal, "libraryTest")))),
-							CodeKeys.Argument, new StrategyMap(
-								CodeKeys.Literal, Map.Empty)));
-					PersistantPosition position=code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
-					return position.Get();
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", argument);
+					//Map code = new StrategyMap(
+					//    CodeKeys.Call, new StrategyMap(
+					//        CodeKeys.Callable, new StrategyMap(
+					//            CodeKeys.Select, new StrategyMap(
+					//                1, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "filesystem")),
+					//                2, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "localhost")),
+					//                3, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "C:")),
+					//                4, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "Meta")),
+					//                5, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "0.2")),
+					//                6, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "Test")),
+					//                7, new StrategyMap(
+					//                    CodeKeys.Lookup, new StrategyMap(
+					//                        CodeKeys.Literal, "libraryTest")))),
+					//        CodeKeys.Argument, new StrategyMap(
+					//            CodeKeys.Literal, Map.Empty)));
+					//PersistantPosition position=code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
+					//return position.Get();
 				}
 			}
 			public class Serialization : Test
