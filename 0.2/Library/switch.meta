@@ -1,6 +1,6 @@
 argument|if
-	contains
+	. contains
 		map argument.cases
 		key argument.control
-	then=
+	then
 		|argument.cases.[argument.control] 0

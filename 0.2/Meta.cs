@@ -3995,7 +3995,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw e.InnerException;
+				throw new ApplicationException("implementation exception: "+e.InnerException.ToString()+e.StackTrace,e.InnerException);
 			}
 		}
 	}
@@ -5732,7 +5732,6 @@ namespace Meta
 					new CharacterExcept(
 					Syntax.lookupStringForbidden)));
 
-
 		// refactor
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
@@ -5775,6 +5774,48 @@ namespace Meta
 			}
 			return map;
 		});
+		//// refactor
+		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Indentation.Match(parser, out matched);
+		//    Map map = new StrategyMap();
+		//    if (matched)
+		//    {
+		//        parser.defaultKeys.Push(1);
+		//        map = Entry.Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            while (true)
+		//            {
+		//                if (parser.Rest == "")
+		//                {
+		//                    break;
+		//                }
+		//                new Alternatives(
+		//                    SameIndentation,
+		//                    Dedentation).Match(parser, out matched);
+		//                if (matched)
+		//                {
+		//                    map = Library.Merge(new StrategyMap(
+		//                        1, map,
+		//                        2, Entry.Match(parser, out matched)));
+		//                    //map.Append(Entry.Match(parser, out matched));
+		//                }
+		//                else
+		//                {
+		//                    matched = true;
+		//                    break;
+		//                }
+		//                if (parser.Rest == "")
+		//                {
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        parser.defaultKeys.Pop();
+		//    }
+		//    return map;
+		//});
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
@@ -5816,6 +5857,9 @@ namespace Meta
 		public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			Map result = new StrategyMap();
+			if (parser.Rest.StartsWith("replace"))
+			{
+			}
 			Map function = Parser.FunctionExpression.Match(parser, out matched);
 			if (matched)
 			{
@@ -5828,8 +5872,8 @@ namespace Meta
 				{
 					StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
 					//StringRule(Syntax.statement.ToString()).Match(parser, out matched);
-					if (matched)
-					{
+					//if (matched)
+					//{
 						Map value = Value.Match(parser, out matched);
 						result[key] = value;
 
@@ -5858,11 +5902,62 @@ namespace Meta
 								parser.line--;
 							}
 						}
-					}
+					//}
 				}
 			}
 			return result;
 		});
+		//// refactor
+		//public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Map result = new StrategyMap();
+		//    Map function = Parser.FunctionExpression.Match(parser, out matched);
+		//    if (matched)
+		//    {
+		//        result[CodeKeys.Function] = function[CodeKeys.Value][CodeKeys.Literal];
+		//    }
+		//    else
+		//    {
+		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+		//            //StringRule(Syntax.statement.ToString()).Match(parser, out matched);
+		//            if (matched)
+		//            {
+		//                Map value = Value.Match(parser, out matched);
+		//                result[key] = value;
+
+		//                // i dont understand this
+		//                bool match;
+		//                if (EndOfLine.Match(parser, out match) == null && parser.Look() != Syntax.endOfFile)
+		//                {
+		//                    parser.index -= 1;
+		//                    if (EndOfLine.Match(parser, out match) == null)
+		//                    {
+		//                        parser.index -= 1;
+		//                        if (EndOfLine.Match(parser, out match) == null)
+		//                        {
+		//                            parser.index += 2;
+		//                            //matched = false;
+		//                            //return null;
+		//                            throw new SyntaxException("Expected newline.", parser);
+		//                        }
+		//                        else
+		//                        {
+		//                            parser.line--;
+		//                        }
+		//                    }
+		//                    else
+		//                    {
+		//                        parser.line--;
+		//                    }
+		//                }
+		//            }
+		//        }
+		//    }
+		//    return result;
+		//});
 
 		public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
 		{

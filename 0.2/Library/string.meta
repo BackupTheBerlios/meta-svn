@@ -1,3 +1,4 @@
+asdf "hello"
 replace
 	argument|/.Meta.Library.StringReplace argument
 trim
