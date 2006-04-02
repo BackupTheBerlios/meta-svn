@@ -236,13 +236,25 @@ namespace Meta
 			}
 			else
 			{
-				this.literal = code;
+				this.literal = code.Copy();
 			}
 		}
+		//private PersistantPosition position;
+
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
+			//if (position == null)
+			//{
+			//    FunctionBodyKey calls;
+			//    context.Get().AddCall(literal, out calls);
+			//    //context.Get().AddCall(literal.Copy(), out calls);
+			//    position = new PersistantPosition(context, calls);
+			//    position.Get().Scope = context.Parent;
+			//    //position.Get().Scope = position.Parent;
+			//}
 			FunctionBodyKey calls;
-			context.Get().AddCall(literal.Copy(), out calls);
+			context.Get().AddCall(literal, out calls);
+			//context.Get().AddCall(literal.Copy(), out calls);
 			PersistantPosition position = new PersistantPosition(context, calls);
 			position.Get().Scope = position.Parent;
 			return position;
@@ -375,7 +387,9 @@ namespace Meta
 			Map key = keyPosition.Get();
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
-				if (lastContext.Equals(context))
+				string text = lastContext.ToString();
+				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count<lastEvaluated.Keys.Count-1)
+					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent))
 				{
 					return lastEvaluated;
 				}
@@ -415,7 +429,7 @@ namespace Meta
 			}
 			else
 			{
-				lastEvaluated=new PersistantPosition(selection, key);
+				lastEvaluated = new PersistantPosition(selection, key);
 				return lastEvaluated;
 				//return new PersistantPosition(selection, key);
 			}
@@ -423,9 +437,12 @@ namespace Meta
 
 		void Search_KeyChanged(KeyChangedEventArgs e)
 		{
-			lastEvaluated = null;
-			lastKey = null;
-			lastContext = null;
+			if (lastKey != null && e.Key.Equals(lastKey))
+			{
+				lastEvaluated = null;
+				lastKey = null;
+				lastContext = null;
+			}
 		}
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
@@ -449,7 +466,7 @@ namespace Meta
 			}
 		}
 	}
-	//public class Search:Subselect
+	//public class Search : Subselect
 	//{
 	//    private Map keyExpression;
 	//    public Search(Map keyExpression)
@@ -466,9 +483,9 @@ namespace Meta
 	//        PersistantPosition selection = selected;
 	//        while (!selection.Get().ContainsKey(key))
 	//        {
-	//            if (selection.Parent==null)
-	//                //if (selection.Keys.Length == 0)
-	//                {
+	//            if (selection.Parent == null)
+	//            //if (selection.Keys.Length == 0)
+	//            {
 	//                selection = null;
 	//                break;
 	//            }
@@ -2316,13 +2333,13 @@ namespace Meta
 							Commands.Interactive();
 							break;
 						case "-test":
-							try
-							{
+							//try
+							//{
 								Commands.Test();
-							}
-							catch (Exception e)
-							{
-							}
+							//}
+							//catch (Exception e)
+							//{
+							//}
 							Console.ReadLine();
 							break;
 						case "-help":
@@ -2576,6 +2593,30 @@ namespace Meta
 	// put assignment in here
 	public class PersistantPosition : Position
 	{
+		public List<Map> Keys
+		{
+			get
+			{
+				PersistantPosition position = this;
+				List<Map> keys = new List<Map>();
+				while (position != null && position.key != null)
+				{
+					keys.Add(position.key);
+					position = position.Parent;
+				}
+				keys.Reverse();
+				return keys;
+			}
+		}
+		public override string ToString()
+		{
+			string text = "";
+			foreach (Map map in Keys)
+			{
+				text += map.ToString();
+			}
+			return text;
+		}
 		public override bool Equals(object obj)
 		{
 			PersistantPosition position=(PersistantPosition)obj;
