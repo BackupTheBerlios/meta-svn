@@ -213,9 +213,10 @@ namespace Meta
 		}
 		public override PersistantPosition Evaluate(PersistantPosition parent)
 		{
-			int call;
+			FunctionBodyKey call;
 			parent.Get().AddCall(new StrategyMap(), out call);
-			PersistantPosition contextPosition = new PersistantPosition(parent, new FunctionBodyKey(call));
+			//parent.Get().AddCall(new StrategyMap(), out call);
+			PersistantPosition contextPosition = new PersistantPosition(parent, call);
 			foreach (Map statement in statements.Array)
 			{
 				statement.GetStatement().Assign(contextPosition);
@@ -235,9 +236,9 @@ namespace Meta
 		}
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
-			int calls;
+			FunctionBodyKey calls;
 			context.Get().AddCall(literal.Copy(), out calls);
-			PersistantPosition position = new PersistantPosition(context, new FunctionBodyKey(calls));
+			PersistantPosition position = new PersistantPosition(context, calls);
 			position.Get().Scope = position.Parent;
 			return position;
 		}
@@ -363,7 +364,7 @@ namespace Meta
 		{
 			PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
-			if (key.Equals(new StrategyMap("argument")))
+			if (key.Equals(new StrategyMap("lines")))
 			{
 			}
 			PersistantPosition selection = selected;
@@ -401,6 +402,9 @@ namespace Meta
 		{
 			PersistantPosition evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = evaluatedKeyPosition.Get();
+			if (key.Equals(new StrategyMap("lines")))
+			{
+			}
 			PersistantPosition selection = context;
 			while (selection != null && !selection.Get().ContainsKey(key))
 			{
@@ -562,7 +566,7 @@ namespace Meta
 		public static Map If(Map arg)
 		{
 			Map result;
-			int calls;
+			FunctionBodyKey calls;
 			// probably wrong
 			MethodImplementation.currentPosition.Get().AddCall(arg, out calls);
 			//PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, new FunctionBodyKey(calls));
@@ -1311,7 +1315,8 @@ namespace Meta
 										//{
 										//    value.Append(c);
 										//}
-										value = new StrategyMap(new ListStrategy(File.ReadAllText(file)));
+										value = new StrategyMap(File.ReadAllText(file));
+										//value = new StrategyMap(new ListStrategy(File.ReadAllText(file)));
 										break;
 									default:
 										value = new FileMap(file, new ListStrategy());
@@ -2279,8 +2284,8 @@ namespace Meta
 				DateTime start = DateTime.Now;
 				AllocConsole();
 				int level;
-				//new Test.MetaTest.Profile().GetResult(out level);
-				new Test.MetaTest.Library().GetResult(out level);
+				new Test.MetaTest.Profile().GetResult(out level);
+				//new Test.MetaTest.Library().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
 				//Console.ReadLine();
 			}
@@ -2321,9 +2326,9 @@ namespace Meta
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
 				PersistantPosition position = new PersistantPosition(new Map[] { "filesystem","localhost" });
-				int calls;
+				FunctionBodyKey calls;
 				position.Get().AddCall(new StrategyMap(), out calls);
-				PersistantPosition local=new PersistantPosition(position,new FunctionBodyKey(calls));
+				PersistantPosition local=new PersistantPosition(position,calls);
 
 
 				while (true)
@@ -2704,13 +2709,13 @@ namespace Meta
 		protected abstract void Set(Map key, Map val);
 		private int numCalls = 0;
 		// wrong name
-		public Map AddCall(Map map, out int calls)
+		public Map AddCall(Map map, out FunctionBodyKey call)
 		{
 			numCalls++;
-			Map functionBody = new FunctionBodyKey(numCalls);
-			this[functionBody] = map;
-			calls = numCalls;
-			return this[functionBody];
+			call = new FunctionBodyKey(numCalls);
+			this[call] = map;
+			//this[call] = map;
+			return this[call];
 		}
 		public void RemoveCall(int call)
 		{
@@ -3004,9 +3009,9 @@ namespace Meta
 			}
 			else
 			{
-				int call;
+				FunctionBodyKey call;
 				AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg), out call);
-				PersistantPosition bodyPosition = new PersistantPosition(position, new FunctionBodyKey(call));
+				PersistantPosition bodyPosition = new PersistantPosition(position, call);
 				PersistantPosition result = this[CodeKeys.Function].GetExpression().Evaluate(bodyPosition);
 				return result;
 			}
@@ -3367,10 +3372,10 @@ namespace Meta
 				il.Emit(OpCodes.Castclass, invoke.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			int calls;
+			FunctionBodyKey calls;
 			// probably wrong
 			MethodImplementation.currentPosition.Get().AddCall(code, out calls);
-			PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, new FunctionBodyKey(calls));
+			PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, calls);
 			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
 			//Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 			return del;
@@ -3741,11 +3746,11 @@ namespace Meta
 					method is ConstructorInfo ?
 						((ConstructorInfo)method).Invoke(arguments) :
 						 method.Invoke(obj, arguments));
-				int calls;
+				FunctionBodyKey calls;
 				// this should really be a function of a position and return a new position
 				position.Get().AddCall(result, out calls);
 				//this.AddCall(result, out calls);
-				return new PersistantPosition(position, new FunctionBodyKey(calls));
+				return new PersistantPosition(position, calls);
 			}
 			catch (Exception e)
 			{
@@ -4344,14 +4349,14 @@ namespace Meta
 		{
 			this.list = new List<Map>(capacity);
 		}
-		public ListStrategy(string text)
-		{
-			this.list = new List<Map>(text.Length);
-			foreach (char c in text)
-			{
-				this.list.Add(new StrategyMap(c));
-			}
-		}
+		//public ListStrategy(string text)
+		//{
+		//    this.list = new List<Map>(text.Length);
+		//    foreach (char c in text)
+		//    {
+		//        this.list.Add(new StrategyMap(c));
+		//    }
+		//}
 		public ListStrategy(ListStrategy original)
 		{
 			this.list = new List<Map>(original.list);
@@ -4780,9 +4785,9 @@ namespace Meta
 					}
 				}
 				Map result=new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray())); // why not convert result???
-				int calls;
+				FunctionBodyKey calls;
 				this.AddCall(result, out calls);
-				return new PersistantPosition(position, new FunctionBodyKey(calls));
+				return new PersistantPosition(position, calls);
 				//return new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray())); // why not convert result???
 			}
 			else
@@ -7427,22 +7432,6 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Profile : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-				}
-			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7459,6 +7448,24 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Profile : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);//.GetString();
+					//return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty).GetString();
+				}
+			}
+
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
