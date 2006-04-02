@@ -1,0 +1,20 @@
+|
+	lines=string.split
+		["INPUT.txt"]
+		delimiters=
+			characters.linefeed
+	result=0
+	apply
+		lines
+		line|
+			parts=string.split
+				line
+				delimiters=
+					characters.tab
+			if
+				not contains
+					map=result
+					key=parts.[1]
+				then=:
+					$result.[parts.[1]]=0
+	current="hello"
