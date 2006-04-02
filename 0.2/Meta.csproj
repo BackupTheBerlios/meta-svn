@@ -108,9 +108,11 @@
     <None Include="Library\append.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
+    <None Include="Library\characters.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
     <None Include="Library\decreasing.meta" />
+    <None Include="Library\divide.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\filter.meta" />
     <None Include="Library\find.meta" />
@@ -144,6 +146,7 @@
     <None Include="Library\strictlyDecreasing.meta" />
     <None Include="Library\strictlyIncreasing.meta" />
     <None Include="Library\string.meta" />
+    <None Include="Library\subtract.meta" />
     <None Include="Library\switch.meta" />
     <None Include="Library\try.meta" />
     <None Include="Library\values.meta" />

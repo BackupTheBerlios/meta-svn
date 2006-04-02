@@ -231,15 +231,7 @@ namespace Meta
 		private Map literal;
 		public Literal(Map code)
 		{
-			//if (cached.ContainsKey(code))
-			//{
-			//    this.literal = cached[code];
-			//}
-			//else
-			//{
-				this.literal = code;
-			//    cached[code] = code;
-			//}
+			this.literal = code;
 		}
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
@@ -250,6 +242,31 @@ namespace Meta
 			return position;
 		}
 	}
+	//public class Literal : Expression
+	//{
+	//    private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
+	//    private Map literal;
+	//    public Literal(Map code)
+	//    {
+	//        //if (cached.ContainsKey(code))
+	//        //{
+	//        //    this.literal = cached[code];
+	//        //}
+	//        //else
+	//        //{
+	//            this.literal = code;
+	//        //    cached[code] = code;
+	//        //}
+	//    }
+	//    public override PersistantPosition Evaluate(PersistantPosition context)
+	//    {
+	//        int calls;
+	//        context.Get().AddCall(literal.Copy(), out calls);
+	//        PersistantPosition position = new PersistantPosition(context, new FunctionBodyKey(calls));
+	//        position.Get().Scope = position.Parent;
+	//        return position;
+	//    }
+	//}
 	//public class Literal : Expression
 	//{
 	//    private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
@@ -481,6 +498,25 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map SplitString(Map arg)
+		{
+			char[] delimiters=(char[])Transform.ToDotNet(arg["delimiters"],typeof(char[]));
+			string [] split=arg[1].GetString().Split(delimiters);
+			Map result=new StrategyMap(new ListStrategy(split.Length));
+			foreach (string text in split)
+			{
+				result.Append(text);
+			}
+			return result;
+		}
+		public static Map Subtract(Map arg)
+		{
+			return arg[1].GetNumber() - arg[2].GetNumber();
+		}
+		public static Map Divide(Map arg)
+		{
+			return arg[1].GetNumber() / arg[2].GetNumber();
+		}
 		public static Map Parse(Map arg)
 		{
 			Map start = new StrategyMap();
@@ -632,43 +668,91 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map Try(Map arg)
-		//{
-		//    Map result;
-		//    try
-		//    {
-		//        result = arg["function"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        result = arg["catch"].Call(new ObjectMap(e), MethodImplementation.currentPosition).Get();
-		//    }
-		//    return result;
-		//}
 		public static Map Split(Map arg)
 		{
 			Map arrays = new StrategyMap();
 			Map subArray = new StrategyMap();
-			Map array=arg["array"];
-			for(int i=0;i<array.ArrayCount;i++)
+			List<Map> array = arg[1].Array;
+			List<Map> delimiters = arg["delimiters"].Array;
+
+			for (int i = 0; i < array.Count; i++)
 			{
-				Map map = array.Array[i];
-				if (map.Equals(arg["item"]) || i==array.ArrayCount-1)
+				Map map = array[i];
+				bool equal = false;
+				foreach (Map delimiter in delimiters)
 				{
-					if (i == array.ArrayCount - 1)
+					if (map.Equals(delimiter))
+					{
+						equal = true;
+						break;
+					}
+				}
+				if (equal || i == array.Count - 1)
+				{
+					if (i == array.Count - 1)
 					{
 						subArray.Append(map);
 					}
 					arrays.Append(subArray);
 					subArray = new StrategyMap();
 				}
+				//if (map.Equals(arg[2]) || i == array.Count - 1)
+				//{
+				//    if (i == array.Count - 1)
+				//    {
+				//        subArray.Append(map);
+				//    }
+				//    arrays.Append(subArray);
+				//    subArray = new StrategyMap();
+				//}
 				else
 				{
 					subArray.Append(map);
 				}
 			}
+			//for (int i = 0; i < array.ArrayCount; i++)
+			//{
+			//    Map map = array.Array[i];
+			//    if (map.Equals(arg[2]) || i == array.ArrayCount - 1)
+			//    {
+			//        if (i == array.ArrayCount - 1)
+			//        {
+			//            subArray.Append(map);
+			//        }
+			//        arrays.Append(subArray);
+			//        subArray = new StrategyMap();
+			//    }
+			//    else
+			//    {
+			//        subArray.Append(map);
+			//    }
+			//}
 			return arrays;
 		}
+		//public static Map Split(Map arg)
+		//{
+		//    Map arrays = new StrategyMap();
+		//    Map subArray = new StrategyMap();
+		//    Map array=arg[1];
+		//    for(int i=0;i<array.ArrayCount;i++)
+		//    {
+		//        Map map = array.Array[i];
+		//        if (map.Equals(arg[2]) || i==array.ArrayCount-1)
+		//        {
+		//            if (i == array.ArrayCount - 1)
+		//            {
+		//                subArray.Append(map);
+		//            }
+		//            arrays.Append(subArray);
+		//            subArray = new StrategyMap();
+		//        }
+		//        else
+		//        {
+		//            subArray.Append(map);
+		//        }
+		//    }
+		//    return arrays;
+		//}
 		public static Map CreateConsole(Map arg)
 		{
 			Interpreter.AllocConsole();
@@ -754,6 +838,10 @@ namespace Meta
 			return result;
 		}
 		public static string writtenText = "";
+		public static void WriteLine(string text)
+		{
+			Write(text + Environment.NewLine);
+		}
 		public static void Write(string text)
 		{
 			writtenText += text;
@@ -1216,13 +1304,14 @@ namespace Meta
 								{
 									case ".txt":
 									case ".meta":
-										value = new FileMap(file, new ListStrategy());
+										//value = new FileMap(file, new ListStrategy());
 										// this is problematic, writes the file all the time
 										//foreach (char c in File.ReadAllText(file))
 										////foreach (char c in File.ReadAllText(file))
 										//{
 										//    value.Append(c);
 										//}
+										value = new StrategyMap(new ListStrategy(File.ReadAllText(file)));
 										break;
 									default:
 										value = new FileMap(file, new ListStrategy());
@@ -2190,9 +2279,10 @@ namespace Meta
 				DateTime start = DateTime.Now;
 				AllocConsole();
 				int level;
+				//new Test.MetaTest.Profile().GetResult(out level);
 				new Test.MetaTest.Library().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
-				Console.ReadLine();
+				//Console.ReadLine();
 			}
 			public static void Help()
 			{
@@ -2715,10 +2805,18 @@ namespace Meta
 				throw new ApplicationException("Cannot compile map.");
 			}
 		}
-		public void Append(Map map)
+		public virtual void Append(Map map)
 		{
 			this[ArrayCount + 1] = map;
 		}
+		//public void AppendDefault(Map map)
+		//{
+		//    this[ArrayCount + 1] = map;
+		//}
+		//public void Append(Map map)
+		//{
+		//    this[ArrayCount + 1] = map;
+		//}
 		public static Map Empty
 		{
 			get
@@ -2813,13 +2911,22 @@ namespace Meta
 		}
 		public string GetStringDefault()
 		{
-			string text = "";
+			StringBuilder text = new StringBuilder("");
 			foreach (Map key in Keys)
 			{
-				text += Convert.ToChar(this[key].GetNumber().GetInt32());
+				text.Append(Convert.ToChar(this[key].GetNumber().GetInt32()));
 			}
-			return text;
+			return text.ToString();
 		}
+		//public string GetStringDefault()
+		//{
+		//    string text = "";
+		//    foreach (Map key in Keys)
+		//    {
+		//        text += Convert.ToChar(this[key].GetNumber().GetInt32());
+		//    }
+		//    return text;
+		//}
 		public Number GetNumberDefault()
 		{
 			Number number;
@@ -3024,6 +3131,10 @@ namespace Meta
 	}
 	public class StrategyMap:Map
 	{
+		public override void Append(Map map)
+		{
+			strategy.Append(map);
+		}
 		public override void Remove(Map key)
 		{
 			strategy.Remove(key);
@@ -3067,7 +3178,8 @@ namespace Meta
 		{
 		}
 		public StrategyMap(string text)
-			: this(new ListStrategy(text))
+			: this(new StringStrategy(text))
+			//: this(new ListStrategy(text))
 		{
 		}
 		public StrategyMap(PersistantPosition scope, params Map[] keysAndValues)
@@ -3606,7 +3718,7 @@ namespace Meta
 		}
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
-			if (this.method.Name == "If")
+			if (this.method.Name == "Write")
 			{
 			}
 			currentPosition = position; // should copy this
@@ -4067,17 +4179,170 @@ namespace Meta
 			return number;
 		}
 	}
-	public class ListStrategy : MapStrategy
+	public class StringStrategy : ArrayStrategy
 	{
+		protected override Map GetIndex(int i)
+		{
+			return text[i];
+		}
+		private string text;
+		public StringStrategy(string text)
+		{
+			this.text = text;
+		}
+		public override bool EqualStrategy(MapStrategy obj)
+		{
+			return (obj is StringStrategy && ((StringStrategy)obj).text == text) || base.EqualStrategy(obj);
+		}
+		public override void Remove(Map key)
+		{
+			Panic(new ListStrategy());
+			map.Strategy.Remove(key);
+		}
+		public override void Set(Map key, Map val)
+		{
+			Panic(key, val);
+		}
+		public override int Count
+		{
+			get
+			{
+				return text.Length;
+			}
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return false;
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return true;
+			}
+		}
+		public override string GetString()
+		{
+			return text;
+		}
+		public override Map Get(Map key)
+		{
+			if (key.IsNumber)
+			{
+				Number number = key.GetNumber();
+				if (number.IsNatural && number > 0 && number <= Count)
+				{
+					return text[number.GetInt32()-1];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
+		public override bool ContainsKey(Map key)
+		{
+			if (key.IsNumber)
+			{
+				Number number = key.GetNumber();
+				if (number.IsNatural)
+				{
+					return number > 0 && number <= text.Length;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		public override int GetArrayCount()
+		{
+			return text.Length;
+		}
+		public override Map CopyData()
+		{
+			return new StrategyMap(new CloneStrategy(this));
+		}
+		public override ICollection<Map> Keys
+		{
+			get 
+			{
+				List<Map> keys = new List<Map>(text.Length);
+				for (int i = 1; i <= text.Length; i++)
+				{
+					keys.Add(i);
+				}
+				return keys;
+			}
+		}
+	}
+	public abstract class ArrayStrategy : MapStrategy
+	{
+		protected abstract Map GetIndex(int i);
+		public override bool EqualStrategy(MapStrategy obj)
+		{
+			if (obj is ArrayStrategy)
+			{
+				bool equal;
+				ArrayStrategy strategy = (ArrayStrategy)obj;
+				//List<Map> otherData = ((ListStrategy)obj).list;
+				if (Count == strategy.Count)
+				{
+					equal = true;
+					for (int i = 0; i < strategy.Count; i++)
+					{
+						if (!GetIndex(i).Equals(strategy.GetIndex(i)))
+						{
+							equal = false;
+							break;
+						}
+					}
+				}
+				else
+				{
+					equal = false;
+				}
+				return equal;
+			}
+			else
+			{
+				return EqualDefault(obj);
+			}
+		}
+	}
+	public class ListStrategy : ArrayStrategy
+	{
+		protected override Map GetIndex(int i)
+		{
+			return list[i];
+		}
+		public override void Append(Map map)
+		{
+			list.Add(map);
+		}
 		public override void Remove(Map key)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
 		private List<Map> list;
 
-		public ListStrategy()
+		public ListStrategy():this(5)
 		{
-			this.list = new List<Map>();
+		}
+		public ListStrategy(int capacity)
+		{
+			this.list = new List<Map>(capacity);
 		}
 		public ListStrategy(string text)
 		{
@@ -4193,35 +4458,35 @@ namespace Meta
 				this.list.Add(map.Copy());
 			}
 		}
-		public override bool EqualStrategy(MapStrategy obj)
-		{
-			if (obj is ListStrategy)
-			{
-				bool equal;
-				List<Map> otherData=((ListStrategy)obj).list;
-				if (list.Count == otherData.Count)
-				{
-					equal = true;
-					for (int i = 0; i < list.Count; i++)
-					{
-						if (!this.list[i].Equals(otherData[i]))
-						{
-							equal = false;
-							break;
-						}
-					}
-				}
-				else
-				{
-					equal = false;
-				}
-				return equal;
-			}
-			else
-			{
-				return EqualDefault(obj);
-			}
-		}
+		//public override bool EqualStrategy(MapStrategy obj)
+		//{
+		//    if (obj is ListStrategy)
+		//    {
+		//        bool equal;
+		//        List<Map> otherData=((ListStrategy)obj).list;
+		//        if (list.Count == otherData.Count)
+		//        {
+		//            equal = true;
+		//            for (int i = 0; i < list.Count; i++)
+		//            {
+		//                if (!this.list[i].Equals(otherData[i]))
+		//                {
+		//                    equal = false;
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        else
+		//        {
+		//            equal = false;
+		//        }
+		//        return equal;
+		//    }
+		//    else
+		//    {
+		//        return EqualDefault(obj);
+		//    }
+		//}
 	}
 	public class DictionaryStrategy:MapStrategy
 	{
@@ -4361,6 +4626,10 @@ namespace Meta
 
 	public abstract class MapStrategy
 	{
+		public virtual void Append(Map map)
+		{
+		    this.Set(GetArrayCount() + 1,map);
+		}
 		public abstract void Remove(Map key);
 		// map is not really reliable, might have been copied
 		public StrategyMap map;
@@ -6853,6 +7122,13 @@ namespace Meta
 	}
 	public class Number
 	{
+		public bool IsNatural
+		{
+			get
+			{
+				return denominator == 1.0d;
+			}
+		}
 		private readonly double numerator;
 		private readonly double denominator;
 
@@ -7151,7 +7427,22 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Profile : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7165,8 +7456,23 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					Map result = Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-					return result;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
 			public static Map Run(string path,Map argument)
@@ -7204,52 +7510,7 @@ namespace Meta
 					return position.Get();
 
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					Map argument = new StrategyMap(1, "first arg", 2, "second=arg");
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", argument);
-					//Map code = new StrategyMap(
-					//    CodeKeys.Call, new StrategyMap(
-					//        CodeKeys.Callable, new StrategyMap(
-					//            CodeKeys.Select, new StrategyMap(
-					//                1, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "filesystem")),
-					//                2, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "localhost")),
-					//                3, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "C:")),
-					//                4, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "Meta")),
-					//                5, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "0.2")),
-					//                6, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "Test")),
-					//                7, new StrategyMap(
-					//                    CodeKeys.Lookup, new StrategyMap(
-					//                        CodeKeys.Literal, "libraryTest")))),
-					//        CodeKeys.Argument, new StrategyMap(
-					//            CodeKeys.Literal, Map.Empty)));
-					//PersistantPosition position=code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
-					//return position.Get();
-				}
-			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+
 		}
 		namespace TestClasses
 		{

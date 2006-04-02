@@ -1,7 +1,5 @@
 writeLine=
-	argument|write append
-		argument
-		/.mscorlib.Environment.NewLine.get 0
+	argument|/.Meta.Library.WriteLine argument
 write=
 	argument|/.Meta.Library.Write argument
 readLine=

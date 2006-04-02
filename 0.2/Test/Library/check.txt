@@ -70,6 +70,16 @@ Entry (KeyValuePair`2)
 				6/25
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"subtractTest2"
+			Value (StrategyMap):
+				101
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"divideTest"
+			Value (StrategyMap):
+				103/5
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"multiplyInteger"
 			Value (StrategyMap):
 				19437
@@ -198,6 +208,50 @@ Entry (KeyValuePair`2)
 						3
 					Value (StrategyMap):
 						"hello"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"stringSplitTest"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						1
+					Value (StrategyMap):
+						"he"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						2
+					Value (StrategyMap):
+						0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						3
+					Value (StrategyMap):
+						"o"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						4
+					Value (StrategyMap):
+						"wor"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						5
+					Value (StrategyMap):
+						"d"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						6
+					Value (StrategyMap):
+						"he"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						7
+					Value (StrategyMap):
+						0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						8
+					Value (StrategyMap):
+						"o"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"tryTest"

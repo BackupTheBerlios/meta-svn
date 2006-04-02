@@ -42,6 +42,12 @@
 				multiply
 					1/100
 					-1
+			subtractTest2=subtract
+				103
+				2
+			divideTest=divide
+				103
+				5
 			multiplyInteger=multiply
 				19
 				1023
@@ -131,9 +137,17 @@
 						[0]=counter
 				current=counter
 			splitTest=split
-				array="hello world hello"
+				"hello world hello"
 				space=" "
-				item=space.[1]
+				delimiters=
+					space.[1]
+			stringSplitTest=string.split
+				"hello world hello"
+				space=" "
+				l="l"
+				delimiters=
+					space.[1]
+					l.[1]
 			tryTest=try
 				function=
 					|"hello"
