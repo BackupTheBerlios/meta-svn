@@ -72,7 +72,7 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map Denominator="denominator";
 	}
-	public abstract class MetaException : ApplicationException
+	public class MetaException : Exception
 	{
 		private string message;
 		private Extent extent;
@@ -422,7 +422,15 @@ namespace Meta
 					}
 				}
 			}
-			selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
+			try
+			{
+				selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
+			}
+			catch(Exception e)
+			{
+
+			}
+			//selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
 			if (selection == null)
 			{
 				throw new KeyNotFound(key, keyExpression.Extent, null);
@@ -571,8 +579,15 @@ namespace Meta
 				//selected = keys[i].GetSubselect().Evaluate(selected, context);
 				//selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
-			Map val = value.GetExpression().Evaluate(context).Get();
-			keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+			try
+			{
+				Map val = value.GetExpression().Evaluate(context).Get();
+				keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+			}
+			catch (ApplicationException e)
+			{
+				throw new MetaException(e.Message, value.Extent);
+			}
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
 		}
@@ -2359,7 +2374,7 @@ namespace Meta
 			catch (MetaException e)
 			{
 				string text = e.ToString();
-				System.Diagnostics.Process.Start("devenv", e.Extent.FileName + @" /command ""Edit.GoTo " + e.Extent.Start.Line + "\"");
+				//System.Diagnostics.Process.Start("devenv", e.Extent.FileName + @" /command ""Edit.GoTo " + e.Extent.Start.Line + "\"");
 				if (useConsole)
 				{
 					Console.WriteLine(text);
@@ -2666,12 +2681,13 @@ namespace Meta
 		public virtual Map DetermineMap()
 		{
 			Map map = parent.Get();
-			if (map == null)
-			{
-				throw new Exception("Position does not exist");
-			}
 			map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
-			return map[key];
+			Map result=map[key];
+			if (result == null)
+			{
+				throw new ApplicationException("Position does not exist");
+			}
+			return result;
 		}
 		//public virtual Map DetermineMap()
 		//{
@@ -5499,6 +5515,7 @@ namespace Meta
 	}
 	public class Syntax
 	{
+		public const char autokey = '.';
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
@@ -5518,12 +5535,14 @@ namespace Meta
 		public const char call = ' ';
 		public const char select = '.';
 		public const char stringEscape = '\'';
-		public const char statement = '=';
+		public const char assignment = ' ';
+		//public const char statement = '=';
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const string current = "current";
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape,shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd};
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, stringEscape, shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
+		//public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
 	}
 	
 	// refactor completely
@@ -5807,7 +5826,8 @@ namespace Meta
 				Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
 				if (matched)
 				{
-					StringRule(Syntax.statement.ToString()).Match(parser, out matched);
+					StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+					//StringRule(Syntax.statement.ToString()).Match(parser, out matched);
 					if (matched)
 					{
 						Map value = Value.Match(parser, out matched);
@@ -6034,12 +6054,33 @@ namespace Meta
 				new Action(new ReferenceAssignment(),Search));
 
 
+		private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
+		{
+			bool m;
+			new Character(Syntax.autokey).Match(p, out m);
+			if (m)
+			{
+				Map map = p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+				//Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
+
+				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+				matched = true;
+				return map;
+			}
+			else
+			{
+				matched = false;
+				return null;
+			}
+		});
+
 		private static Rule Keys = new Sequence(
 			new Action(new Assignment(
 				1),
 				new Alternatives(
 					KeysSearch,
-					Lookup)),
+					Lookup,
+					AutokeyLookup)),
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),
@@ -6057,25 +6098,26 @@ namespace Meta
 							new Action(new Assignment(
 								CodeKeys.Key),
 								Keys),
-							new Action(new Match(),new Character(Syntax.statement)),
+							new Action(new Match(),new Optional(new Character(Syntax.assignment))),
 							new Action(new Assignment(
 								CodeKeys.Value),
-								Expression)),
-						new Sequence(
-							new Action(new Match(),new Optional(
-								new Character(Syntax.statement))),
-							new Action(new Assignment(
-								CodeKeys.Value),
-								Expression),
-							new Action(new Assignment(
-								CodeKeys.Key),
-								new CustomRule(delegate(Parser p, out bool matched)
-		{
-			Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
-			p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-			matched = true;
-			return map;
-		})))))),
+								Expression))//,
+		//                new Sequence(
+		//                    new Action(new Match(),new Optional(
+		//                        new Character(Syntax.assignment))),
+		//                    new Action(new Assignment(
+		//                        CodeKeys.Value),
+		//                        Expression),
+		//                    new Action(new Assignment(
+		//                        CodeKeys.Key),
+		//                        new CustomRule(delegate(Parser p, out bool matched)
+		//{
+		//    Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
+		//    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//    matched = true;
+		//    return map;
+		//})))
+			))),
 			new Action(new Match(),new CustomRule(delegate(Parser p, out bool matched)
 		{
 			if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
@@ -6594,7 +6636,8 @@ namespace Meta
 						}
 						else
 						{
-							text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
+							text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.assignment + Value.Match((Map)entry.Value, (indentation), out matched);
+							//text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
 							if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 							{
 								text += Syntax.unixNewLine;
@@ -6681,13 +6724,15 @@ namespace Meta
 					autoKeys++;
 					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
 					{
-						text += Syntax.statement;
+						text += Syntax.assignment;
+						//text += Syntax.statement;
 					}
 				}
 				else
 				{
 					bool m;
-					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
+					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.assignment;
+					//text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
 				}
 				bool matched;
 				text += Expression.Match(value, indentation,out matched);
@@ -7800,7 +7845,8 @@ namespace Meta
 				}
 				public static object GetResultFromDelegate()
 				{
-					return del.DynamicInvoke(new object[] { "argumentString" });
+					return "hello";
+					//return del.DynamicInvoke(new object[] { "argumentString" });
 				}
 				public double doubleValue = 0.0;
 				public float floatValue = 0.0F;

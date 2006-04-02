@@ -1,2 +1,2 @@
-documentation="Determines whether a map contains a key. Deprecated."
+documentation "Determines whether a map contains a key. Deprecated."
 argument|/.Meta.StrategyMap.[/.mscorlib.Boolean] (/.Meta.ObjectMap.[/.mscorlib.Object] argument.map).ContainsKey argument.key

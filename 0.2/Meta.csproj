@@ -104,6 +104,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />
     <None Include="Library\append.meta" />
     <None Include="Library\apply.meta" />

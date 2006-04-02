@@ -1,5 +1,5 @@
 #!C:\Programme\Meta\Meta.exe
-license="
+license "
 	Copyright (c) 2005, 2006 Christian Staudenmeyer
 	
 	Permission is hereby granted, free of charge, to any person obtaining
@@ -23,399 +23,387 @@ license="
 	SOFTWARE.
 "
 commandLine|
-	current=merge
-		=
-			"AssignedToCurrent"
-	asdf="hello"
-	shortFunction=
+	current merge
+		.
+			. "AssignedToCurrent"
+	asdf "hello"
+	shortFunction
 		arg|asdf
-	shortFunctionTest=shortFunction "hello"
-	counter=0
-	SetCounter=argument:
-		$counter=argument
-	SetCounter 5
-	scoping=
-		test=
-			scopingValue="right"
+	shortFunctionTest shortFunction "hello"
+	counter 0
+	SetCounter argument:
+		$counter argument
+	. SetCounter 5
+	scoping
+		test
+			scopingValue "right"
 			|scopingValue
-	scopingValue="wrong"
-	scopingTest=scoping.test
-	lexicalScoping=scopingTest 0
-	$["C:"].hello=
-		x="someTest"
-	cTest=["C:"].hello
-	$["C:"].hello=0
-	cTest2=["C:"].hello
-	unicodeText="äaba"
-	$testSubDir.x=0
-	persistantDeleteTest=testSubDir.x
-	$testSubDir.x=
-		a="b"
-		x=
-			x="hello"
-			y="world"
-	$testSubDir.x.a="hi"
-	integerHashTest=
-		[2]="correct hash content"
-		hashTestData=
-			[0]=
-				[0]=0
-		hashTest=[hashTestData]
-	negativeInteger=100
-	negativeInteger.x="hello"
-	integerIncrementTest=5
-	integerIncrementTest.[0]=integerIncrementTest
-	integerDecrementTest=5
-	integerDecrementTest=integerDecrementTest.[0]
-	negativeNumber=-123
-	mapNumbers=
-		integer=
-			[0]=5
-		negative=
-			[0]=5
-			negative=0
-		fraction=
-			[0]=5
-			denominator=7
-		negativeFraction=
-			[0]=5
-			negative=0
-			denominator=7
-	fraction=3/2
-	persistenceTest=testSubDir.x
-	literalEscapeTest=
-		"asdf"
-		"asdf"
-		"
+	scopingValue "wrong"
+	scopingTest scoping.test
+	lexicalScoping scopingTest 0
+	$["C:"].hello
+		x "someTest"
+	cTest ["C:"].hello
+	$["C:"].hello 0
+	cTest2 ["C:"].hello
+	unicodeText "äaba"
+	$testSubDir.x 0
+	persistantDeleteTest testSubDir.x
+	$testSubDir.x
+		a "b"
+		x
+			x "hello"
+			y "world"
+	$testSubDir.x.a "hi"
+	integerHashTest
+		[2] "correct hash content"
+		hashTestData
+			[0]
+				[0] 0
+		hashTest [hashTestData]
+	negativeInteger 100
+	negativeInteger.x "hello"
+	integerIncrementTest 5
+	integerIncrementTest.[0] integerIncrementTest
+	integerDecrementTest 5
+	integerDecrementTest integerDecrementTest.[0]
+	negativeNumber -123
+	mapNumbers
+		integer
+			[0] 5
+		negative
+			[0] 5
+			negative 0
+		fraction
+			[0] 5
+			denominator 7
+		negativeFraction
+			[0] 5
+			negative 0
+			denominator 7
+	fraction 3/2
+	persistenceTest testSubDir.x
+	literalEscapeTest
+		. "asdf"
+		. "asdf"
+		. "
 			as"'df
 		"
-		"
+		. "
 			as"''df
 		"
-		"
+		. "
 			as"''''''''''''''''df
 		"
-	"ImpliedAutokey"
-	"Autokey"
-	commandLineArguments=commandLine
-	aMap=
-		a="a"
-	[aMap]="Object"
-	["normal symbol"]="NormalSymbol"
-	lookupSymbol="LookupSymbol"
-	["long key symbol"]="LookupExtendedSymbol"
-	lookedUpMap=[aMap]
-	lookedUpNormalSymbol=["normal symbol"]
-	lookedUpSymbol=lookupSymbol
-	lookedUpLongSymbol=["long key symbol"]
-	object=
-		a="default"
-		autoSearch="default"
-		b=0
-		SetA=
+	. "ImpliedAutokey"
+	. "Autokey"
+	commandLineArguments commandLine
+	aMap
+		a "a"
+	[aMap] "Object"
+	["normal symbol"] "NormalSymbol"
+	lookupSymbol "LookupSymbol"
+	["long key symbol"] "LookupExtendedSymbol"
+	lookedUpMap [aMap]
+	lookedUpNormalSymbol ["normal symbol"]
+	lookedUpSymbol lookupSymbol
+	lookedUpLongSymbol ["long key symbol"]
+	object
+		a "default"
+		autoSearch "default"
+		b 0
+		SetA
 			|
-				$a="c"
-				$autoSearch="changed"
-		SetB=
+				$a "c"
+				$autoSearch "changed"
+		SetB
 			newB|
-				$b.[1]=newB.value
-				current="changed"
-		x=
-			a="b"
-			c="d"
-		=
+				$b.[1] newB.value
+				current "changed"
+		x
+			a "b"
+			c "d"
+		.
 			|
-				current.a="b"
-	a="default"
-	b=0
-	aSet=object.SetA	0
-	bSet=object.SetB
-		value=
-			x=7
-			z=1
-	scopeTest="default"
-	scopeFunction=
-		inScope="right"
+				current.a "b"
+	a "default"
+	b 0
+	aSet object.SetA	0
+	bSet object.SetB
+		value
+			x 7
+			z 1
+	scopeTest "default"
+	scopeFunction
+		inScope "right"
 		|
-			$scopeTest=inScope
-	inScope="wrong"
-	scopeFunction 0
-	scopeFromFunctionData="wrong"
-	scopeFunctionFunction=
-		scopeFromFunctionData="right"
+			$scopeTest inScope
+	inScope "wrong"
+	. scopeFunction 0
+	scopeFromFunctionData "wrong"
+	scopeFunctionFunction
+		scopeFromFunctionData "right"
 		|
 			|scopeFromFunctionData
-	scopeFromFunction=scopeFunctionFunction 0
-	scopeFromFunctionTest=scopeFromFunction 0
-	ReturnEverything=
+	scopeFromFunction scopeFunctionFunction 0
+	scopeFromFunctionTest scopeFromFunction 0
+	ReturnEverything
 		everything|
-			current=everything
-	everythingReturned=ReturnEverything
-		"a"
-		"b"
-		"c"
-	variableAsArgument=ReturnEverything
-		"x"
-		"y"
-		"z"
-	ReturnFunction=
-		|
-			current=
-				|
-					current=
-						1
-						2
-						3
-	SetCurrent=
+			current everything
+	everythingReturned ReturnEverything
+		. "a"
+		. "b"
+		. "c"
+	variableAsArgument ReturnEverything
+		. "x"
+		. "y"
+		. "z"
+	SetCurrent
 		current|
-			current=
-				asdf=current
-				x=current.symbol
-			current=x
-	thisSet=SetCurrent
-		symbol="haha"
-	FirstLevel=
+			current
+				asdf current
+				x current.symbol
+			current x
+	thisSet SetCurrent
+		symbol "haha"
+	FirstLevel
 		arg|
-			SecondLevel arg
-	SecondLevel=
+			. SecondLevel arg
+	SecondLevel
 		arg|arg
-	argTest=FirstLevel
-		a="z"
-	TestClass=/.Meta.TestClass
-	TestClass.NestedClass.field=5
-	nestedClassTest=TestClass.NestedClass.field
-	testClass=TestClass 0
-	testClass.floatValue=3
-	testClass.doubleValue=4
-	testClass.decimalValue=5
-	TestClass.boolTest=1
-	boolTest=TestClass.boolTest
-	strongNameTest=[
-		version="2.0.0.0"
-		publicKeyToken="b77a5c561934e089"
-		culture="Neutral"
-		name="mscorlib"
+	argTest FirstLevel
+		a "z"
+	TestClass /.Meta.TestClass
+	TestClass.NestedClass.field 5
+	nestedClassTest TestClass.NestedClass.field
+	testClass TestClass 0
+	testClass.floatValue 3
+	testClass.doubleValue 4
+	testClass.decimalValue 5
+	TestClass.boolTest 1
+	boolTest TestClass.boolTest
+	strongNameTest [
+		version "2.0.0.0"
+		publicKeyToken "b77a5c561934e089"
+		culture "Neutral"
+		name "mscorlib"
 	].Int32
-	MemberTest=/.Meta.MemberTest
-	memberTest=MemberTest 0
-	stringOverload=MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
-	integerOverload=MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
-	memberTestOverload=MemberTest.OverloadedMethod.[
-		/.Meta.MemberTest
-		/.mscorlib.Int32
+	MemberTest /.Meta.MemberTest
+	memberTest MemberTest 0
+	stringOverload MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
+	integerOverload MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
+	memberTestOverload MemberTest.OverloadedMethod.[
+		. /.Meta.MemberTest
+		. /.mscorlib.Int32
 	]
-		memberTest
-		3247
-	memberTestOverload=MemberTest.OverloadedMethod.[
-		/.Meta.MemberTest
-		/.mscorlib.Int32
+		. memberTest
+		. 3247
+	memberTestOverload MemberTest.OverloadedMethod.[
+		. /.Meta.MemberTest
+		. /.mscorlib.Int32
 	]
-		memberTest
-		3247
-	MemberTest.classField="a"
-	memberTest.instanceField="b"
-	MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
-	classPropertyValue=MemberTest.ClassProperty.get 0
-	memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
-	instancePropertyValue=memberTest.InstanceProperty.get 0
-	interceptedSymbol="/hello/"
-	positionalNoConversion=/.Meta.PositionalNoConversion
-		"m"
-		"n"
-		"o"
-	positionalNoConversionConcatenated=positionalNoConversion.Concatenate
-		"r"
-		"s"
-		"t"
-	namedNoConversion=/.Meta.NamedNoConversion
-		"m"
-		y="n"
-	namedNoConversionConcatenated=namedNoConversion.Concatenate
-		c="t"
-		"r"
-	indexerNoConversion=/.Meta.IndexerNoConversion 0
-	indexerNoConversion.Item.set
-		"abc"
-		"hihi"
-	indexerNoConversionIndexed=indexerNoConversion.Item.get "abc"
-	interceptedSymbolTwo=1
-	k="hello"
-	xyz="w"
-	literalFunction=
+		. memberTest
+		. 3247
+	MemberTest.classField "a"
+	memberTest.instanceField "b"
+	. MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
+	classPropertyValue MemberTest.ClassProperty.get 0
+	. memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
+	instancePropertyValue memberTest.InstanceProperty.get 0
+	interceptedSymbol "/hello/"
+	positionalNoConversion /.Meta.PositionalNoConversion
+		. "m"
+		. "n"
+		. "o"
+	positionalNoConversionConcatenated positionalNoConversion.Concatenate
+		. "r"
+		. "s"
+		. "t"
+	namedNoConversion /.Meta.NamedNoConversion
+		. "m"
+		y "n"
+	namedNoConversionConcatenated namedNoConversion.Concatenate
+		c "t"
+		. "r"
+	indexerNoConversion /.Meta.IndexerNoConversion 0
+	. indexerNoConversion.Item.set
+		. "abc"
+		. "hihi"
+	indexerNoConversionIndexed indexerNoConversion.Item.get "abc"
+	interceptedSymbolTwo 1
+	k "hello"
+	xyz "w"
+	literalFunction
 		|5
-	literalFunctionResult=literalFunction 0
-	someFunction=
+	literalFunctionResult literalFunction 0
+	someFunction
 		|
-			current="simple function this"
-	callFunction=
+			current "simple function this"
+	callFunction
 		|someFunction
-	callFunctionResult=callFunction 0
-	delayedFunction=
+	callFunctionResult callFunction 0
+	delayedFunction
 		|
 			|
-				x="y"
-	delayedFunctionResult=delayedFunction 0
-	delayedFunctionDirect=((delayedFunction 0) 0).x
-	value="xyz"
-	selectionFunction=
+				x "y"
+	delayedFunctionResult delayedFunction 0
+	delayedFunctionDirect ((delayedFunction 0) 0).x
+	value "xyz"
+	selectionFunction
 		|value
-	selectionFunctionResult=selectionFunction 0
-	upperLevel="unchanged"
-	SetUpperLevel=
+	selectionFunctionResult selectionFunction 0
+	upperLevel "unchanged"
+	SetUpperLevel
 		arg|
-			$upperLevel=arg
-	ChangeUpperLevel=
+			$upperLevel arg
+	ChangeUpperLevel
 		|
-			SetUpperLevel "changed"
-	ChangeUpperLevel 0
-	staticEventChanged=0
-	ChangeStaticEvent=
+			. SetUpperLevel "changed"
+	. ChangeUpperLevel 0
+	staticEventChanged 0
+	ChangeStaticEvent
 		arg|
-			$staticEventChanged=arg
-	TestClass.staticEvent.add
+			$staticEventChanged arg
+	. TestClass.staticEvent.add
 		arg|
-			ChangeStaticEvent 1
-			current=arg.[1]
-	staticEvent=TestClass.staticEvent
+			. ChangeStaticEvent 1
+			current arg.[1]
+	staticEvent TestClass.staticEvent
 	TestClass.TakeDelegate
 		arg|arg.[1]
-	resultFromDelegate=TestClass.GetResultFromDelegate 0
-	staticEventResult=TestClass.staticEvent testClass
-	instanceEventChanged=0
-	testClass.instanceEvent.add
+	resultFromDelegate TestClass.GetResultFromDelegate 0
+	staticEventResult TestClass.staticEvent testClass
+	instanceEventChanged 0
+	. testClass.instanceEvent.add
 		arg|
-			$instanceEventChanged=1
-			current=arg.[1]
-	instanceEvent=testClass.instanceEvent
-	instanceEventResult=testClass.instanceEvent 5
-	one=1
-	two=2
-	firstIf="unchanged"
-	secondIf="unchanged"
-	firstIfCondition=equal
-		1
-		one
-	firstIfBranches=
-		=
+			$instanceEventChanged 1
+			current arg.[1]
+	instanceEvent testClass.instanceEvent
+	instanceEventResult testClass.instanceEvent 5
+	one 1
+	two 2
+	firstIf "unchanged"
+	secondIf "unchanged"
+	firstIfCondition equal
+		. 1
+		. one
+	firstIfBranches
+		.
 			|"then"
-		[0]=
+		[1]
 			|"else"
-	firstIf=firstIfBranches.[firstIfCondition] 0
-	bigNumber=50020202
-	secondSwitch="unchanged"
-	secondSwitchCases=
-		"one"
-		"two"
-		"three"
-	secondSwitch=secondSwitchCases.[3]
-	emptyMap=0
-	emptyFunction=
+	firstIf firstIfBranches.[firstIfCondition] 0
+	bigNumber 50020202
+	secondSwitch "unchanged"
+	secondSwitchCases
+		. "one"
+		. "two"
+		. "three"
+	secondSwitch secondSwitchCases.[3]
+	emptyMap 0
+	emptyFunction
 		|
-			x="hello"
-	emptyFunctionResult=emptyFunction 0
-	font=/.["System.Drawing"].Font.[
-		/.mscorlib.String
-		/.mscorlib.Single
+			x "hello"
+	emptyFunctionResult emptyFunction 0
+	font /.["System.Drawing"].Font.[
+		. /.mscorlib.String
+		. /.mscorlib.Single
 	]
-		"Courier New"		
-		10
-	decimalTest=5
-	fractionTest=40
-	stringTest="hello"		
-	stringTest.[6]=stringTest.[1]
-	helloh="hi"
-	stringStrategyHashTest=[stringTest]
-	x=
-		aLongText="
+		. "Courier New"		
+		. 10
+	decimalTest 5
+	fractionTest 40
+	stringTest "hello"		
+	stringTest.[6] stringTest.[1]
+	helloh "hi"
+	stringStrategyHashTest [stringTest]
+	x
+		aLongText"
 			hello world!
 			hello!
 		"
-	arrayList=/.mscorlib.ArrayList.[0] 0
-	arrayList.Add "hello"
-	arrayListResult=arrayList.Item.get 0
-	textBox=/.["System.Windows.Forms"].TextBox 0
-	textBox.Text.set "
+	arrayList /.mscorlib.ArrayList.[0] 0
+	. arrayList.Add "hello"
+	arrayListResult arrayList.Item.get 0
+	textBox /.["System.Windows.Forms"].TextBox 0
+	. textBox.Text.set "
 		Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh.
 	"
-	lines=textBox.Lines.get 0
-	alleMeineText=lines.GetValue.[/.mscorlib.Int32] 1
-	form=/.["System.Windows.Forms"].Form 0
-	form.Location.set.[/.["System.Drawing"].Point]
-		X=5
-		Y=1000
-	automaticConversionTest=form.Location.get.[0] 0
-	tabText="			hello"
-	escapedText="'#'n'''t"
-	whileCounter=0
-	loop=
+	lines textBox.Lines.get 0
+	alleMeineText lines.GetValue.[/.mscorlib.Int32] 1
+	form /.["System.Windows.Forms"].Form 0
+	. form.Location.set.[/.["System.Drawing"].Point]
+		X 5
+		Y 1000
+	automaticConversionTest form.Location.get.[0] 0
+	tabText "			hello"
+	escapedText "'#'n'''t"
+	whileCounter 0
+	loop
 		start|
-			whileDecision=not equal
-				start
-				10
-			whileBranches=
-				=
+			whileDecision not equal
+				. start
+				. 10
+			whileBranches
+				.
 					arg|loop add
-						arg
-						1
-				[0]=
+						. arg
+						. 1
+				[0]
 					arg|arg
-			current=whileBranches.[whileDecision] start
-	whileCounter=loop 3
-	returnInMap=
+			current whileBranches.[whileDecision] start
+	whileCounter loop 3
+	returnInMap
 		arg|
-			result=arg
-	literalAsArgument=returnInMap 1
-	returnFunction=
+			result arg
+	literalAsArgument returnInMap 1
+	returnFunction
 		|
 			|"functionResult"
-	returnArg=
+	returnArg
 		arg|arg
 	myArg=
 		|
-			hello="world"
-	funcReturnTest=returnArg myArg 0
-	documentedFunction=
-		doc="This function returns #hello ."
+			hello "world"
+	. "funcReturnTest returnArg myArg 0"
+	documentedFunction
+		doc "This function returns #hello ."
 		|"hello"
-	docFunctionResult=documentedFunction 0
-	topLevel="default"
-	deep=
-		map=
-			test=
+	docFunctionResult documentedFunction 0
+	topLevel "default"
+	deep
+		map
+			test
 				|
-					$topLevel="changed"
+					$topLevel "changed"
 	deep.map.test 0
-	outerFunction=
+	outerFunction
 		arg|
-			innerFunction=
+			innerFunction
 				|
-					current=arg
+					current arg
 			innerFunction 0
-	outerFunctionTest=outerFunction "right"
-	newLines="
+	outerFunctionTest outerFunction "right"
+	newLines "
 		
 		
 	"
-	["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
-	enumTest=["System.Windows.Forms"].Application.VisualStyleState.get 0
-	typeTest=mscorlib.Array.CreateInstance.[
-		mscorlib.Type
-		mscorlib.Int32
+	. ["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
+	enumTest ["System.Windows.Forms"].Application.VisualStyleState.get 0
+	typeTest mscorlib.Array.CreateInstance.[
+		. mscorlib.Type
+		. mscorlib.Int32
 	]
-		mscorlib.String
-		5
-	123hello="asdf"
-	copySourceData=
-		x="y"
-		z="a"
-	copiedData=copySourceData
-	copiedData.x="changed"
-shortFunc=arg:arg
-complicated=
-	[
-		complicated="key"
-	]="complicated key"
+		. mscorlib.String
+		. 5
+	123hello "asdf"
+	copySourceData
+		x "y"
+		z "a"
+	copiedData copySourceData
+	copiedData.x "changed"
+shortFunc arg:arg
