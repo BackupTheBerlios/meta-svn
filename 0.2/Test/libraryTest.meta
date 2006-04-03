@@ -85,7 +85,7 @@
 					x :"right"
 					y :"wrong"
 				control "x"				
-			if if
+			ifTest if
 				. 1
 				then :"if test successful"
 			append append
@@ -154,7 +154,17 @@
 				catch 
 					argument|argument.ToString 0
 			sort sort
-				argument|argument.x
+				argument|if
+					. strictlyIncreasing
+						. argument.[1].x
+						. argument.[2].x
+					then :-1
+					else :if
+						. strictlyDecreasing
+							. argument.[1].x
+							. argument.[2].x
+						then :1
+						else :0
 				.
 					.
 						x 12

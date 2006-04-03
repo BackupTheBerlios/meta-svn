@@ -13,7 +13,7 @@
 					. characters.tab
 			key parts.[1]
 			value parts.[2]
-			if
+			. if
 				. contains
 					map result
 					key key
@@ -25,4 +25,12 @@
 				else :
 					$result.[key]
 						. value
+	. "
+		. foreach
+			result
+			entry|
+				result.[entry.key] sort
+					entry.value
+					argument|argument.x
+	"
 	current result

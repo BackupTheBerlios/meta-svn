@@ -129,7 +129,7 @@ Entry (KeyValuePair`2)
 				"right"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"if"
+				"ifTest"
 			Value (StrategyMap):
 				"if test successful"
 		Entry (KeyValuePair`2)

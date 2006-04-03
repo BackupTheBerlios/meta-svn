@@ -1045,11 +1045,25 @@ namespace Meta
 			//PersistantPosition argument = Call.lastArgument.Copy();
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
-				return argument.Get().Call(a, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
+				Map result=argument.Get().Call(new StrategyMap(1, a, 2, b), argument).Get();
+				return result.GetNumber().GetInt32();//);//, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
+				//return argument.Get().Call(new StrategyMap(1, a, 2, b), argument).Get().GetNumber().GetInt32();//);//, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
 				//return arg.Call(a, MethodImplementation.currentPosition).Get().GetNumber().GetInt32().CompareTo(arg.Call(b, MethodImplementation.currentPosition).Get().GetNumber().GetInt32());
 			}));
 			return new StrategyMap(array);
 		}
+		//public static Map Sort(Map arg)
+		//{
+		//    List<Map> array = arg[1].Array;
+		//    PersistantPosition argument = Call.lastArgument;
+		//    //PersistantPosition argument = Call.lastArgument.Copy();
+		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+		//    {
+		//        return argument.Get().Call(a, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
+		//        //return arg.Call(a, MethodImplementation.currentPosition).Get().GetNumber().GetInt32().CompareTo(arg.Call(b, MethodImplementation.currentPosition).Get().GetNumber().GetInt32());
+		//    }));
+		//    return new StrategyMap(array);
+		//}
 		public static Map Append(Map arg)
 		{
 			Map result = Map.Empty;
@@ -7795,6 +7809,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Profile : Test
 			{
 				public override object GetResult(out int level)
@@ -7820,14 +7842,7 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 
 
 			//public class Library : Test
