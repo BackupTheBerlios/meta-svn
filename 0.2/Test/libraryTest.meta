@@ -211,11 +211,9 @@
 				y "hello"
 			entry|
 				[entry.value] entry.key
-		valuesTest "
-			values
-				x "hi"
-				y "hello"
-		"
+		valuesTest values
+			x "hi"
+			y "hello"
 		isStringTest 
 			no isString 2
 			yes isString "hi"
@@ -233,18 +231,16 @@
 				orange "green"
 		lowerTest string.lower "HeLLo"
 		upperTest string.upper "HeLLo"
-		parseTest "
-			parse "
-				asdf "hello"
-				x 
-					y "hello"
-					z 
-						a "x"
-						arg|append
-							"hello "
-							arg
-							"!"
-				func arg:arg
-			"
+		parseTest parse "
+			asdf "hello"
+			x 
+				y "hello"
+				z 
+					a "x"
+					arg|append
+						. "hello "
+						. arg
+						. "!"
+			func arg:arg
 		"
 	current test
