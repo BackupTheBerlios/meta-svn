@@ -158,6 +158,14 @@ commandLine|
 		. "x"
 		. "y"
 		. "z"
+	ReturnFunction
+		|
+			current
+				|
+					current
+						. 1
+						. 2
+						. 3
 	SetCurrent
 		current|
 			current
@@ -269,7 +277,7 @@ commandLine|
 			. ChangeStaticEvent 1
 			current arg.[1]
 	staticEvent TestClass.staticEvent
-	TestClass.TakeDelegate
+	. TestClass.TakeDelegate
 		arg|arg.[1]
 	resultFromDelegate TestClass.GetResultFromDelegate 0
 	staticEventResult TestClass.staticEvent testClass
@@ -290,7 +298,7 @@ commandLine|
 	firstIfBranches
 		.
 			|"then"
-		[1]
+		[0]
 			|"else"
 	firstIf firstIfBranches.[firstIfCondition] 0
 	bigNumber 50020202
@@ -366,10 +374,10 @@ commandLine|
 			|"functionResult"
 	returnArg
 		arg|arg
-	myArg=
+	myArg
 		|
 			hello "world"
-	. "funcReturnTest returnArg myArg 0"
+	funcReturnTest returnArg myArg 0
 	documentedFunction
 		doc "This function returns #hello ."
 		|"hello"
@@ -380,13 +388,13 @@ commandLine|
 			test
 				|
 					$topLevel "changed"
-	deep.map.test 0
+	. deep.map.test 0
 	outerFunction
 		arg|
 			innerFunction
 				|
 					current arg
-			innerFunction 0
+			. innerFunction 0
 	outerFunctionTest outerFunction "right"
 	newLines "
 		

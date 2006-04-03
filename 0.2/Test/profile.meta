@@ -1,20 +1,28 @@
 |
-	lines=string.split
-		["INPUT.txt"]
-		delimiters=
-			characters.linefeed
-	result=0
-	apply
-		lines
+	lines string.split
+		. ["INPUT.txt"]
+		delimiters
+			. characters.linefeed
+	result 0
+	. apply
+		. lines
 		line|
-			parts=string.split
-				line
-				delimiters=
-					characters.tab
+			parts string.split
+				. line
+				delimiters
+					. characters.tab
+			key parts.[1]
+			value parts.[2]
 			if
-				not contains
-					map=result
-					key=parts.[1]
-				then=:
-					$result.[parts.[1]]=0
-	current="hello"
+				. contains
+					map result
+					key key
+				then :
+					$result.[key] append
+						. result.[key]
+						.
+							. value
+				else :
+					$result.[key]
+						. value
+	current result

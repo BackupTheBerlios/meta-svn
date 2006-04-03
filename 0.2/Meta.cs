@@ -387,7 +387,7 @@ namespace Meta
 			Map key = keyPosition.Get();
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
-				string text = lastContext.ToString();
+				//string text = lastContext.ToString();
 				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count<lastEvaluated.Keys.Count-1)
 					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent))
 				{
@@ -563,6 +563,13 @@ namespace Meta
 	public class Statement
 	{
 		// somewhat inconsequential
+		public List<Map> Keys
+		{
+			get
+			{
+				return keys;
+			}
+		}
 		private List<Map> keys;
 		private Map value;
 		public Statement(Map code)
@@ -632,14 +639,22 @@ namespace Meta
 	{
 		public static Map SplitString(Map arg)
 		{
-			char[] delimiters=(char[])Transform.ToDotNet(arg["delimiters"],typeof(char[]));
-			string [] split=arg[1].GetString().Split(delimiters);
-			Map result=new StrategyMap(new ListStrategy(split.Length));
-			foreach (string text in split)
-			{
-				result.Append(text);
-			}
-			return result;
+			//try
+			//{
+				char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
+				string[] split = arg[1].GetString().Split(delimiters);
+				Map result = new StrategyMap(new ListStrategy(split.Length));
+				foreach (string text in split)
+				{
+					result.Append(text);
+				}
+
+				return result;
+			//}
+			//catch (Exception e)
+			//{
+			//    return null;
+			//}
 		}
 		public static Map Subtract(Map arg)
 		{
@@ -2420,9 +2435,9 @@ namespace Meta
 				AllocConsole();
 				int level;
 				new Test.MetaTest.Profile().GetResult(out level);
-				//new Test.MetaTest.Library().GetResult(out level);
+				//new Test.MetaTest.Basic().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
-				//Console.ReadLine();
+				Console.ReadLine();
 			}
 			public static void Help()
 			{
@@ -2504,6 +2519,7 @@ namespace Meta
 						bool matched;
 						parser.text += code;
 						Map statement = Parser.Statement.Match(parser, out matched);
+						int count=local.Get().ArrayCount;
 						if (matched)
 						{
 							if (parser.index == parser.text.Length)
@@ -2516,6 +2532,10 @@ namespace Meta
 							{
 								parser.index = parser.text.Length;
 								throw new SyntaxException("Syntax error", parser);
+							}
+							if (local.Get().ArrayCount > count)
+							{
+								Library.WriteLine(Serialize.ValueFunction(local.Get()[local.Get().ArrayCount]));
 							}
 						}
 						Console.WriteLine();
@@ -7775,6 +7795,15 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Profile : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);//.GetString();
+					//return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty).GetString();
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7799,15 +7828,7 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Profile : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);//.GetString();
-					//return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty).GetString();
-				}
-			}
+
 
 			//public class Library : Test
 			//{
@@ -7940,8 +7961,7 @@ namespace Meta
 				}
 				public static object GetResultFromDelegate()
 				{
-					return "hello";
-					//return del.DynamicInvoke(new object[] { "argumentString" });
+					return del.DynamicInvoke(new object[] { "argumentString" });
 				}
 				public double doubleValue = 0.0;
 				public float floatValue = 0.0F;

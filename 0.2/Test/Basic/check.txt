@@ -1005,6 +1005,201 @@ Entry (KeyValuePair`2)
 				"z"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"ReturnFunction"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"function"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"parameterName"
+					Value (StrategyMap):
+						0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"program"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								1
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"key"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												1
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"current"
+													Value (StrategyMap):
+														0
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"value"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"program"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														1
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"key"
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		1
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"lookup"
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"function"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"value"
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"literal"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"parameterName"
+																			Value (StrategyMap):
+																				0
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"program"
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						1
+																					Value (StrategyMap):
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"key"
+																							Value (StrategyMap):
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										1
+																									Value (StrategyMap):
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												"current"
+																											Value (StrategyMap):
+																												0
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								"value"
+																							Value (StrategyMap):
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										"program"
+																									Value (StrategyMap):
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												1
+																											Value (StrategyMap):
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"key"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																1
+																															Value (StrategyMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StrategyMap):
+																																		"lookup"
+																																	Value (StrategyMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				"literal"
+																																			Value (StrategyMap):
+																																				1
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"value"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																"literal"
+																															Value (StrategyMap):
+																																1
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												2
+																											Value (StrategyMap):
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"key"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																1
+																															Value (StrategyMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StrategyMap):
+																																		"lookup"
+																																	Value (StrategyMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				"literal"
+																																			Value (StrategyMap):
+																																				2
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"value"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																"literal"
+																															Value (StrategyMap):
+																																2
+																										Entry (KeyValuePair`2)
+																											Key (StrategyMap):
+																												3
+																											Value (StrategyMap):
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"key"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																1
+																															Value (StrategyMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StrategyMap):
+																																		"lookup"
+																																	Value (StrategyMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StrategyMap):
+																																				"literal"
+																																			Value (StrategyMap):
+																																				3
+																												Entry (KeyValuePair`2)
+																													Key (StrategyMap):
+																														"value"
+																													Value (StrategyMap):
+																														Entry (KeyValuePair`2)
+																															Key (StrategyMap):
+																																"literal"
+																															Value (StrategyMap):
+																																3
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"SetCurrent"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
@@ -1982,9 +2177,14 @@ Entry (KeyValuePair`2)
 				0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		10
+	Value (StrategyMap):
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"resultFromDelegate"
 	Value (StrategyMap):
-		"hello"
+		"argumentString"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
@@ -1997,7 +2197,7 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		10
+		11
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2028,7 +2228,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"firstIf"
 	Value (StrategyMap):
-		"else"
+		"then"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"secondIf"
@@ -2046,6 +2246,24 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"function"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"parameterName"
+							Value (StrategyMap):
+								0
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"literal"
+							Value (StrategyMap):
+								"then"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				0
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -2198,7 +2416,7 @@ Entry (KeyValuePair`2)
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		11
+		12
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2214,7 +2432,7 @@ Entry (KeyValuePair`2)
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		12
+		13
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2234,7 +2452,7 @@ Entry (KeyValuePair`2)
 		System.Windows.Forms.Form, Text: 
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		13
+		14
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2987,7 +3205,7 @@ Entry (KeyValuePair`2)
 												"arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"myArg="
+		"myArg"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
@@ -3034,9 +3252,13 @@ Entry (KeyValuePair`2)
 												"world"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		14
+		"funcReturnTest"
 	Value (StrategyMap):
-		"funcReturnTest returnArg myArg 0"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"hello"
+			Value (StrategyMap):
+				"world"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"documentedFunction"
@@ -3069,7 +3291,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"topLevel"
 	Value (StrategyMap):
-		"default"
+		"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"deep"
@@ -3082,7 +3304,54 @@ Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"test"
 					Value (StrategyMap):
-						0
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"function"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"parameterName"
+									Value (StrategyMap):
+										0
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										"program"
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												1
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"key"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																1
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"search"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"topLevel"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"value"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																"changed"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		15
+	Value (StrategyMap):
+		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"outerFunction"
@@ -3225,16 +3494,45 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
-																"innerFunction"
+																1
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
 										"value"
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"literal"
+												"call"
 											Value (StrategyMap):
-												0
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"callable"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"select"
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		1
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"search"
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"innerFunction"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"argument"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"outerFunctionTest"
@@ -3243,7 +3541,62 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"innerFunction"
 			Value (StrategyMap):
-				0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"function"
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"parameterName"
+							Value (StrategyMap):
+								0
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"program"
+							Value (StrategyMap):
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										1
+									Value (StrategyMap):
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"key"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														1
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"current"
+															Value (StrategyMap):
+																0
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												"value"
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"select"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																1
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		"search"
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"literal"
+																			Value (StrategyMap):
+																				"arg"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"right"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"newLines"
@@ -3252,7 +3605,7 @@ Entry (KeyValuePair`2)
 "
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		15
+		16
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
