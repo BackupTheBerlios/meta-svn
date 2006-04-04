@@ -1323,7 +1323,12 @@ namespace Meta
 		private Dictionary<Map,string> keys;
 		protected override bool ContainsKeyImplementation(Map key)
 		{
-			return Keys.Contains(key);
+			if (keys == null)
+			{
+				keys = GetKeys();
+			}
+			return keys.ContainsKey(key);
+			//return KeysImplementation.Contains(key);
 			//return cache.ContainsKey(key);
 		}
 
