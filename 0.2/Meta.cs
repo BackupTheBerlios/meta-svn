@@ -1328,8 +1328,6 @@ namespace Meta
 				keys = GetKeys();
 			}
 			return keys.ContainsKey(key);
-			//return KeysImplementation.Contains(key);
-			//return cache.ContainsKey(key);
 		}
 
 		public DirectoryMap(DirectoryInfo directory)
@@ -1357,7 +1355,6 @@ namespace Meta
 						fileName = file.Name;
 					}
 					keys.Add(fileName,"");
-					//keys.Add(fileName);
 				}
 			}
 			// should only work in with drives, maybe separate DriveMap
@@ -2666,9 +2663,11 @@ namespace Meta
 			return map;
 		}
 	}
+	public delegate void BustOptimization();
 	// put assignment in here
 	public class PersistantPosition : Position
 	{
+		private Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
 		public List<Map> Keys
 		{
 			get
@@ -2707,12 +2706,18 @@ namespace Meta
 		public void Assign(Map key, Map value)
 		{
 			Get()[key] = value;
+			if (optimizations.ContainsKey(key))
+			{
+				optimizations[key]();
+				optimizations.Remove(key);
+			}
 		}
 		public void Assign(Map value)
 		{
-			PersistantPosition parent = this.Parent;
-			Map parentMap = parent.Get();
-			parentMap[key] = value;
+			Parent.Assign(key, value);
+			//PersistantPosition parent = this.Parent;
+			//Map parentMap = parent.Get();
+			//parentMap[key] = value;
 		}
 		public PersistantPosition(PersistantPosition parent, Map key)
 		{
@@ -2739,17 +2744,44 @@ namespace Meta
 		{
 			return cached != null && Parent.CacheValid();
 		}
+		public void AddOptimization(Map key,BustOptimization optimization)
+		{
+			if (!optimizations.ContainsKey(key))
+			{
+				optimizations[key] = optimization;
+			}
+			else
+			{
+				optimizations[key] += optimization;
+			}
+		}
+		private void Bust()
+		{
+			this.cached = null;
+		}
 		public virtual Map DetermineMap()
 		{
 			Map map = parent.Get();
-			map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
-			Map result=map[key];
+			parent.AddOptimization(key,new BustOptimization(Bust));
+			//map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
+			Map result = map[key];
 			if (result == null)
 			{
 				throw new ApplicationException("Position does not exist");
 			}
 			return result;
 		}
+		//public virtual Map DetermineMap()
+		//{
+		//    Map map = parent.Get();
+		//    map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
+		//    Map result=map[key];
+		//    if (result == null)
+		//    {
+		//        throw new ApplicationException("Position does not exist");
+		//    }
+		//    return result;
+		//}
 		//public virtual Map DetermineMap()
 		//{
 		//    Map map = parent.DetermineMap()[key];

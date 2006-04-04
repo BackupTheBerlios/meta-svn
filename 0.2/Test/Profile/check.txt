@@ -1,278 +1,3796 @@
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"/data/web/LibInfo/ets/English/cgimail.html"
+		"gopher://gopher.uchicago.edu/00/ucomputing/compdesc"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				2
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				3
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				4
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				5
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				6
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				7
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/"
+				"/data/web/LibInfo/FAQ/home.html"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"/data/web/LibInfo/ets/English/core.html"
+		"gopher://iubvm.ucs.indiana.edu/11/TML"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
 			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/BR_PHIL.form.html"
+				"/data/web/LibInfo/ets/Latin/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				2
 			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/OLD_ENG.form.html"
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lawnext.uchicago.edu:70/00/.libraryfiles/whomay.txt"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu/0/.Text/DUE_DATES.2"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/faqs.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu/0/.Text/GargoyleExpress"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/faqs.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu/0/.Text/photocopiers"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/faqs.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu/1/.Services/.Hours"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/faqs.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/callnumbers.3"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/catalog-hours"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/catalog-reference-guide"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/DUE_DATES.2"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/facultystudies"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/GargoyleExpress"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/LibraryCards"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				3
 			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/SHK_OUP.form.html"
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/lockers"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/photocopiers"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/reference-services"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/Reserve.txt"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/specialists-with-subjects"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/subjects-with-specialists"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/Sum95building_hours"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/0/.Text/Sum95building_hours_interim"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Email"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Services/.Circ"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Services/.Libs/.Reg"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Services/.Libs/.SSA"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Subject/.Hum/.EastA"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Subject/.Hum/.Slavic"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Subject/.Maps"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://lib-gopher.uchicago.edu:71/1/.Subject/.Spcl"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"gopher://tlg.cwis.uci.edu:3001/7?TLG"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://ccat.sas.upenn.edu/jod/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://medusa.perseus.tufts.edu/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://rainbow.uchicago.edu/chemistry"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				4
 			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/WITT.form.html"
+				"/data/web/LibInfo/ets/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				5
 			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/ETC.html"
+				"/data/web/LibInfo/ets/List/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				6
 			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/guests.html"
+				"/data/web/LibInfo/ets/List/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				7
 			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/britpo/britpo.html"
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/Dante/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_unrest/ROGET.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core2.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/BR_PHIL.form.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/oed.form.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core2.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/OLD_ENG.form.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/Shakes_OUP.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/SHK_OUP.form.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://tuna.uchicago.edu/forms_UofC/WITT.form.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.eb.com:180/cgi-bin/g/Articles/HTML/0/ebonline/http/dict.html?Mode=F"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core2.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.eb.com:180/eb.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.eb.com:80/help/help.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/~atbrooks/andrea.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/~atbrooks/safety/saftyhome.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/~mw15/currjourn.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/~mw15/margot.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemref.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/~mw15/recacqs.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/ets/English/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/images/underConstruction.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				8
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/"
+				"/data/web/LibInfo/ets/German/cgimail.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				9
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/cgimail.html"
+				"/data/web/LibInfo/ets/German/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				10
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/cgimail.html"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"/data/web/LibInfo/ets/English/foo.html"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				1
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				2
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/cgimail.html"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				3
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/cgimail.html"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"/data/web/LibInfo/ets/English/home.html"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				1
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				2
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				3
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				4
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				5
-			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/Home.gif"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				6
-			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/BR_PHIL.form.html"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				7
-			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/OLD_ENG.form.html"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				8
-			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/SHK_OUP.form.html"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				9
-			Value (StrategyMap):
-				"http://tuna.uchicago.edu/forms_UofC/WITT.form.html"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				10
-			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/ETC.html"
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				11
 			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/guests.html"
+				"/data/web/LibInfo/ets/Greek/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				12
 			Value (StrategyMap):
-				"http://www.lib.virginia.edu/etext/britpo/britpo.html"
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				13
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/"
+				"/data/web/LibInfo/ets/Greek/walsh.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				14
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/English/cgimail.html"
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				15
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/cgimail.html"
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				16
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				17
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				18
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				19
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				20
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				21
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				22
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				23
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				24
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				25
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				26
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				27
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				28
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				29
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				30
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				31
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				32
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				33
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				34
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				35
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				36
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				37
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				38
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				39
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				40
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				41
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				42
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				43
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				44
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				45
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"/data/web/LibInfo/ets/Italian/cgimail.html"
+		"http://www.lib.uchicago.edu/LibInfo/aboutLibInfo.html"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/"
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Catalogs/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				2
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/home.gif"
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Catalogs/catalog-connect.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Catalogs/Reserve/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Catalogs/ucat.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				3
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/"
+				"/data/web/LibInfo/ets/core2.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				4
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/home.gif"
+				"/data/web/LibInfo/ets/EB/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				5
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/Italian/"
+				"/data/web/LibInfo/ets/EB/home.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				6
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/Italian/home.gif"
+				"/data/web/LibInfo/ets/English/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				7
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/Italian/"
+				"/data/web/LibInfo/ets/English/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				12
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				13
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				14
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				15
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				16
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				17
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				18
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				19
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				20
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				21
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				22
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				23
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				24
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				25
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				26
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				27
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				28
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				29
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				30
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				31
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				32
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				33
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				34
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				35
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				36
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"/data/web/LibInfo/ets/Italian/core.html"
+		"http://www.lib.uchicago.edu/LibInfo/ets/"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
 			Value (StrategyMap):
-				"telnet://lib.dartmouth.edu"
+				"/data/web/LibInfo/ets/cgimail.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				2
 			Value (StrategyMap):
-				"http://tuna.uchicago.edu/Dante/"
+				"/data/web/LibInfo/ets/cgimail.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				3
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/Italian/"
+				"/data/web/LibInfo/ets/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				4
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/Italian/cgimail.html"
+				"/data/web/LibInfo/ets/core1.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				5
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/cgimail.html"
+				"/data/web/LibInfo/ets/core2.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				12
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				13
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				14
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				15
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				16
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				17
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				18
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				19
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				20
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				21
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				22
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				23
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				24
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				25
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				26
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				27
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				28
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				29
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				30
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				31
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				32
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				33
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				34
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				35
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				36
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				37
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"/data/web/LibInfo/ets/Italian/home.html"
+		"http://www.lib.uchicago.edu/LibInfo/ets/cgimail.html"
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				1
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/"
+				"/data/web/LibInfo/ets/core.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				2
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/home.gif"
+				"/data/web/LibInfo/ets/core1.html"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				3
 			Value (StrategyMap):
-				"http://www.lib.uchicago.edu/LibInfo/ets/"
+				"/data/web/LibInfo/ets/core2.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/EB/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core2.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/core.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/EB/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/EB/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/EB/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/English/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/English/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/English/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/English/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/German"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/German/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/core.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/German/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/German/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/German/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/tlg-info.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Greek/walsh.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Hebrew/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Hebrew/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/maintainers_address.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Hebrew/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Hebrew/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				12
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				13
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				14
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				15
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				16
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				17
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				18
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				19
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				20
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				21
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				22
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Italian/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/core.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Italian/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Italian/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Italian/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/cetedoc.txt"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/maintainers_address.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/Latin/walsh.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/List/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/core1.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/List/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/foo.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/list.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/List/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/ets/List/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				12
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				13
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				14
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/access.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/catalog.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/help.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/hours.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/locations.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/FAQ/nonbook.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/EB/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/German/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				11
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/tlg-info.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				12
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Greek/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				13
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				14
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				15
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				16
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				17
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				18
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cetedoc.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				19
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				20
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				21
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				22
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				23
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/List/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				24
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/walsh.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				25
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				26
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/catalog.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				27
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				28
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/help.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				29
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				30
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/hours.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				31
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				32
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				33
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				34
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				35
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				36
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				37
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				38
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				39
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				40
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				41
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Indexes/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Internet/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				10
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/../Crerar/jclcomp.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemref.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/Chem.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/chemill.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/chemref.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/chemsearch.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Chemistry/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/access.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/../Chemistry/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/../Eckhart/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/../Yerkes/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/cgimail.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/circ.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/JCL.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/jcladmin.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/jclcomp.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/jclelec.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/jclref.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/Map1.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/map1.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/Map2.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/map2.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/Map3.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/map3.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/Mapb.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Crerar/staff.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Eckhart/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/GovDocs/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/nonbook.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Harper/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Law/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Regenstein/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Science/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Science/home.gif"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/cgimail.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/SSAd/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Libraries/Yerkes/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/News/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/NewsAndEvents/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Reference/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Services/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/Services/reserve.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/Chemistry"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemsearch.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/Chemistry/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/Chemistry/home.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				6
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				7
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				8
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				9
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/HumSocSci/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/MiddleEast/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/SourcesBySubject/SouthAsia/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/FAQ/locations.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/LibInfo/whatsNew.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/local/share/web/LibInfo/ets/English/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.uchicago.edu/m4_ThisDir/English/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/test.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.virginia.edu/etext/britpo/britpo.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.virginia.edu/etext/ETC.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.virginia.edu/etext/guests.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/English/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.lib.virginia.edu/etext/latin/boethius/consolatio.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Latin/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.uchicago.edu/"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www.uchicago.edu/AIT.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"http://www-oi.uchicago.edu/OI/DEPT/RA/Research_Arch_Guide.html"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Hebrew/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"mailto:Crerar-Circulation@lib.uchicago.edu"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"mailto:Crerar-Reference@lib.uchicago.edu"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"mailto:Crerar-Reserve@lib.uchicago.edu"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Crerar/circ.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"mailto:Interlibrary-loan@lib.uchicago.edu"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/chemill.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"telnet://lib.dartmouth.edu"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/core.html"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				"/data/web/LibInfo/ets/Italian/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"telnet://proxy.lib.uchicago.edu:5006"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"telnet://proxy.lib.uchicago.edu:5024"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				"/data/web/LibInfo/Libraries/Chemistry/home.html"
