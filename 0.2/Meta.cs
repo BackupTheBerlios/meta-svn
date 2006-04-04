@@ -199,10 +199,18 @@ namespace Meta
 		public static PersistantPosition lastArgument;
 		public override PersistantPosition Evaluate(PersistantPosition current)
 		{
+
 			PersistantPosition arg = argument.GetExpression().Evaluate(current);
 			lastArgument = arg;
 			return callable.GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 		}
+		//public override PersistantPosition Evaluate(PersistantPosition current)
+		//{
+
+		//    PersistantPosition arg = argument.GetExpression().Evaluate(current);
+		//    lastArgument = arg;
+		//    return callable.GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+		//}
 	}
 	public class Program : Expression
 	{
@@ -388,7 +396,8 @@ namespace Meta
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
 				//string text = lastContext.ToString();
-				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count<lastEvaluated.Keys.Count-1)
+				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
+					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
 					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent))
 				{
 					return lastEvaluated;
@@ -593,7 +602,7 @@ namespace Meta
 			}
 			catch (ApplicationException e)
 			{
-				throw new MetaException(e.Message, value.Extent);
+				throw new MetaException(e.ToString()+e.StackTrace, value.Extent);
 			}
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
 			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
@@ -637,6 +646,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map CompareString(Map arg)
+		{
+			return arg[1].GetString().CompareTo(arg[2].GetString());
+		}
 		public static Map SplitString(Map arg)
 		{
 			//try
@@ -1271,7 +1284,7 @@ namespace Meta
 				cache[drive.Remove(2)] = new DirectoryMap(new DirectoryInfo(drive));
 			}
 		}
-		public override bool ContainsKey(Map key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return cache.ContainsKey(key);
 		}
@@ -1307,20 +1320,25 @@ namespace Meta
 	public class DirectoryMap : Map
 	{
 		private DirectoryInfo directory;
-		private List<Map> keys;
+		private Dictionary<Map,string> keys;
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return Keys.Contains(key);
+			//return cache.ContainsKey(key);
+		}
 
 		public DirectoryMap(DirectoryInfo directory)
 		{
 			this.directory = directory;
 		}
-		private List<Map> GetKeys()
+		private Dictionary<Map,string> GetKeys()
 		{
-			List<Map> keys = new List<Map>();
+			Dictionary<Map,string> keys = new Dictionary<Map,string>();
 			try
 			{
 				foreach (DirectoryInfo subdir in directory.GetDirectories())
 				{
-					keys.Add(subdir.Name);
+					keys.Add(subdir.Name,"");
 				}
 				foreach (FileInfo file in directory.GetFiles("*.*"))
 				{
@@ -1333,7 +1351,8 @@ namespace Meta
 					{
 						fileName = file.Name;
 					}
-					keys.Add(fileName);
+					keys.Add(fileName,"");
+					//keys.Add(fileName);
 				}
 			}
 			// should only work in with drives, maybe separate DriveMap
@@ -1350,7 +1369,7 @@ namespace Meta
 				{
 					keys = GetKeys();
 				}
-				return keys;
+				return keys.Keys;
 			}
 		}
 		public static void TrashFile(string fname)
@@ -2359,6 +2378,7 @@ namespace Meta
 	//}
 	public class Interpreter
 	{
+		public static bool profiling=false;
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -2390,6 +2410,7 @@ namespace Meta
 							Commands.Help();
 							break;
 						case "-profile":
+							profiling = true;
 							//new MetaTest.Basic().GetResult(out level);
 							Commands.Profile();
 							break;
@@ -2443,6 +2464,7 @@ namespace Meta
 		}
 		public class Commands
 		{
+
 			public static void Profile()
 			{
 				DateTime start = DateTime.Now;
@@ -2451,7 +2473,7 @@ namespace Meta
 				new Test.MetaTest.Profile().GetResult(out level);
 				//new Test.MetaTest.Basic().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
-				Console.ReadLine();
+				//Console.ReadLine();
 			}
 			public static void Help()
 			{
@@ -2859,6 +2881,10 @@ namespace Meta
 	//}
 	public class FunctionBodyKey : Map
 	{
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return false;
+		}
 		public FunctionBodyKey(int id)
 		{
 			this.id = id;
@@ -2928,16 +2954,27 @@ namespace Meta
 		{
 			return Meta.Serialize.ValueFunction(this);
 		}
-		private Dictionary<FunctionBodyKey, Map> temporaryData = new Dictionary<FunctionBodyKey, Map>();
+		private Dictionary<FunctionBodyKey, Map> TemporaryData
+		{
+			get
+			{
+				if (tempData == null)
+				{
+					tempData = new Dictionary<FunctionBodyKey, Map>();
+				}
+				return tempData;
+			}
+		}
+		//private Dictionary<FunctionBodyKey, Map> temporaryData = new Dictionary<FunctionBodyKey, Map>();
 		public Map this[Map key]
 		{
 			get
 			{
 				if (key is FunctionBodyKey)
 				{
-					if (temporaryData.ContainsKey((FunctionBodyKey)key))
+					if (TemporaryData.ContainsKey((FunctionBodyKey)key))
 					{
-						return temporaryData[(FunctionBodyKey)key];
+						return TemporaryData[(FunctionBodyKey)key];
 					}
 					else
 					{
@@ -2959,7 +2996,7 @@ namespace Meta
 					val = value.Copy();
 					if (key is FunctionBodyKey)
 					{
-						this.temporaryData[(FunctionBodyKey)key] = val;
+						this.TemporaryData[(FunctionBodyKey)key] = val;
 					}
 					else
 					{
@@ -2989,13 +3026,33 @@ namespace Meta
 		// remove int
 		public void RemoveCall(int call)
 		{
-			Remove(new FunctionBodyKey(call));
+			this.TemporaryData.Remove(new FunctionBodyKey(call));
+			//Remove(new FunctionBodyKey(call));
 			if (KeyChanged != null)
 			{
 				this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
 				this.KeyChanged = null;
 			}
 		}
+		//public void RemoveCall(int call)
+		//{
+		//    //this.temporaryData.Remove(new FunctionBodyKey(call));
+		//    Remove(new FunctionBodyKey(call));
+		//    if (KeyChanged != null)
+		//    {
+		//        this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
+		//        this.KeyChanged = null;
+		//    }
+		//}
+		//public void RemoveCall(int call)
+		//{
+		//    Remove(new FunctionBodyKey(call));
+		//    if (KeyChanged != null)
+		//    {
+		//        this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
+		//        this.KeyChanged = null;
+		//    }
+		//}
 		public virtual void AppendRange(Map array)
 		{
 			AppendRangeDefault(array);
@@ -3235,7 +3292,6 @@ namespace Meta
 				scope = value;
 			}
 		}
-		private PersistantPosition scope;
 		public virtual int Count
 		{
 			get
@@ -3314,9 +3370,9 @@ namespace Meta
 		{
 			Map clone = CopyData();
 			// not really correct
-			foreach (KeyValuePair<FunctionBodyKey, Map> entry in temporaryData)
+			foreach (KeyValuePair<FunctionBodyKey, Map> entry in TemporaryData)
 			{
-				clone.temporaryData[entry.Key] = entry.Value;
+				clone.TemporaryData[entry.Key] = entry.Value;
 			}
 			clone.numCalls = numCalls;
 			clone.Scope = Scope;
@@ -3324,10 +3380,31 @@ namespace Meta
 			return clone;
 		}
 		protected abstract Map CopyData();
-		public virtual bool ContainsKey(Map key)
+		public bool ContainsKey(Map key)
 		{
-			return (key is FunctionBodyKey && temporaryData.ContainsKey((FunctionBodyKey)key)) || KeysImplementation.Contains(key);
+			if (key is FunctionBodyKey)
+			{
+				return TemporaryData.ContainsKey((FunctionBodyKey)key);
+			}
+			else
+			{
+				return ContainsKeyImplementation(key);
+			}
+			//return (key is FunctionBodyKey && TemporaryData.ContainsKey((FunctionBodyKey)key)) || KeysImplementation.Contains(key);
 		}
+		protected abstract bool ContainsKeyImplementation(Map key);
+		//public virtual bool ContainsKey(Map key)
+		//{
+		//    if(key is FunctionBodyKey)
+		//    {
+		//        return TemporaryData.ContainsKey((FunctionBodyKey)key);
+		//    }
+		//    else
+		//    {
+		//        return KeysImplementation.Contains(key);
+		//    }
+		//    //return (key is FunctionBodyKey && TemporaryData.ContainsKey((FunctionBodyKey)key)) || KeysImplementation.Contains(key);
+		//}
 		public override int GetHashCode()
 		{
 			if (IsNumber)
@@ -3408,6 +3485,8 @@ namespace Meta
 		{
 			return new StrategyMap(text);
 		}
+		private PersistantPosition scope;
+		private Dictionary<FunctionBodyKey, Map> tempData;
 	}
 	public class StrategyMap:Map
 	{
@@ -3540,7 +3619,7 @@ namespace Meta
 		{ 
 			return strategy.CopyData(); 
 		}
-		public override bool ContainsKey(Map key) 
+		protected override bool ContainsKeyImplementation(Map key) 
 		{ 
 			return strategy.ContainsKey(key); 
 		}
@@ -4035,6 +4114,10 @@ namespace Meta
 	}
 	public class Method : MethodImplementation
 	{
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return overloadedMethods!=null && overloadedMethods.ContainsKey(key);
+		}
 	    private Dictionary<Map, MethodOverload> overloadedMethods;
 		// why overloads and method itself?
 	    private Method(Dictionary<Map, MethodOverload> overloadedMethods,MethodBase method,object obj,Type type):base(method,obj,type)
@@ -4142,6 +4225,10 @@ namespace Meta
 	}
 	public class MethodOverload : MethodImplementation
 	{
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return false;
+		}
 		public MethodOverload(MethodBase method, object obj, Type type)
 			: base(method, obj, type)
 		{
@@ -4206,7 +4293,7 @@ namespace Meta
 			: base(null, targetType)
 		{
 		}
-		public override bool ContainsKey(Map key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return Get(key) != null || base.ContainsKey(key);
 		}
@@ -4472,7 +4559,15 @@ namespace Meta
 		}
 		public override bool EqualStrategy(MapStrategy obj)
 		{
-			return (obj is StringStrategy && ((StringStrategy)obj).text == text) || base.EqualStrategy(obj);
+			if(obj is StringStrategy)
+			{
+				return ((StringStrategy)obj).text == text;
+			}
+			else
+			{
+				return base.EqualStrategy(obj);
+			}
+			//return (obj is StringStrategy && ((StringStrategy)obj).text == text) || base.EqualStrategy(obj);
 		}
 		public override void Remove(Map key)
 		{
@@ -4864,9 +4959,14 @@ namespace Meta
 		}
 		public override bool EqualStrategy(MapStrategy obj)
 		{
-			return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
-			//return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
+			return obj.EqualStrategy(original);
+			//return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
 		}
+		//public override bool EqualStrategy(MapStrategy obj)
+		//{
+		//    return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
+		//    //return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
+		//}
 		public override int GetHashCode()
 		{
 			return original.GetHashCode();
@@ -5035,6 +5135,10 @@ namespace Meta
 	}
 	public class Event:Map
 	{
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return key.Equals(DotNetKeys.Add);
+		}
 		Type type;
 		object obj;
 		EventInfo eventInfo;
@@ -5116,6 +5220,10 @@ namespace Meta
 	}
 	public class Property:Map
 	{
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return Get(key) != null;
+		}
 		object obj;
 		Type type;
 		PropertyInfo property;
@@ -5268,7 +5376,7 @@ namespace Meta
 				data[key] = value;
 			}
 		}
-		public override bool ContainsKey(Map key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return key.IsString && this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
 		}
@@ -7373,7 +7481,7 @@ namespace Meta
 				throw new ApplicationException("not implemented.");
 			}
 		}
-		public override bool ContainsKey(Map key)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return Get(key) != null;
 		}

@@ -153,7 +153,7 @@
 					|"hello"
 				catch 
 					argument|argument.ToString 0
-			sort sort
+			sortTest sort
 				argument|if
 					. strictlyIncreasing
 						. argument.[1].x

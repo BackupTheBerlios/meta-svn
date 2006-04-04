@@ -1,4 +1,3 @@
-asdf "hello"
 replace
 	argument|/.Meta.Library.StringReplace argument
 trim
@@ -6,3 +5,4 @@ trim
 lower string:(/.Meta.ObjectMap.[/.mscorlib.String] string).ToLower.[0] 0
 upper string:(/.Meta.ObjectMap.[/.mscorlib.String] string).ToUpper.[0] 0
 split arg:/.Meta.Library.SplitString arg
+compare arg:/.Meta.Library.CompareString arg
