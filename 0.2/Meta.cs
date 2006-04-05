@@ -76,7 +76,6 @@ namespace Meta
 	{
 		private string message;
 		private Extent extent;
-		// this should use Positions instead of extents in the long run
 		private List<Extent> invocationList = new List<Extent>();
 
 
@@ -204,13 +203,6 @@ namespace Meta
 			lastArgument = arg;
 			return callable.GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 		}
-		//public override PersistantPosition Evaluate(PersistantPosition current)
-		//{
-
-		//    PersistantPosition arg = argument.GetExpression().Evaluate(current);
-		//    lastArgument = arg;
-		//    return callable.GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-		//}
 	}
 	public class Program : Expression
 	{
@@ -247,68 +239,15 @@ namespace Meta
 				this.literal = code.Copy();
 			}
 		}
-		//private PersistantPosition position;
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
-			//if (position == null)
-			//{
-			//    FunctionBodyKey calls;
-			//    context.Get().AddCall(literal, out calls);
-			//    //context.Get().AddCall(literal.Copy(), out calls);
-			//    position = new PersistantPosition(context, calls);
-			//    position.Get().Scope = context.Parent;
-			//    //position.Get().Scope = position.Parent;
-			//}
 			FunctionBodyKey calls;
 			context.Get().AddCall(literal, out calls);
-			//context.Get().AddCall(literal.Copy(), out calls);
 			PersistantPosition position = new PersistantPosition(context, calls);
 			position.Get().Scope = position.Parent;
 			return position;
 		}
 	}
-	//public class Literal : Expression
-	//{
-	//    private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
-	//    private Map literal;
-	//    public Literal(Map code)
-	//    {
-	//        //if (cached.ContainsKey(code))
-	//        //{
-	//        //    this.literal = cached[code];
-	//        //}
-	//        //else
-	//        //{
-	//            this.literal = code;
-	//        //    cached[code] = code;
-	//        //}
-	//    }
-	//    public override PersistantPosition Evaluate(PersistantPosition context)
-	//    {
-	//        int calls;
-	//        context.Get().AddCall(literal.Copy(), out calls);
-	//        PersistantPosition position = new PersistantPosition(context, new FunctionBodyKey(calls));
-	//        position.Get().Scope = position.Parent;
-	//        return position;
-	//    }
-	//}
-	//public class Literal : Expression
-	//{
-	//    private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
-	//    private Map literal;
-	//    public Literal(Map code)
-	//    {
-	//        this.literal = code;
-	//    }
-	//    public override PersistantPosition Evaluate(PersistantPosition context)
-	//    {
-	//        int calls;
-	//        context.Get().AddCall(literal.Copy(), out calls);
-	//        PersistantPosition position=new PersistantPosition(context, new FunctionBodyKey(calls));
-	//        position.Get().Scope = position.Parent;
-	//        return position;
-	//    }
-	//}
 	public abstract class Subselect
 	{
 		public abstract PersistantPosition Evaluate(PersistantPosition context, PersistantPosition executionContext);
@@ -347,7 +286,6 @@ namespace Meta
 		public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
 		{
 			return RootPosition.rootPosition;
-			//return new PersistantPosition(new List<Map>());
 		}
 		public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
 		{
@@ -394,17 +332,10 @@ namespace Meta
 			Map key = keyPosition.Get();
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
-				//string text = lastContext.ToString();
 				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
-					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
-					//if (lastContext.Parent.Parent.Equals(context.Parent.Parent))
 				{
 					return lastEvaluated;
 				}
-				//if (Object.ReferenceEquals(lastContext, context))
-				//{
-				//    return lastEvaluated;
-				//}
 			}
 			lastKey = key.Copy();
 			lastContext = context;
@@ -422,7 +353,6 @@ namespace Meta
 					if (selection.Get().Scope != null)
 					{
 						selection = selection.Get().Scope;
-						//selection = new PersistantPosition(selection.Get().Scope);
 					}
 					else
 					{
@@ -438,7 +368,6 @@ namespace Meta
 			{
 
 			}
-			//selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
 			if (selection == null)
 			{
 				throw new KeyNotFound(key, keyExpression.Extent, null);
@@ -447,7 +376,6 @@ namespace Meta
 			{
 				lastEvaluated = new PersistantPosition(selection, key);
 				return lastEvaluated;
-				//return new PersistantPosition(selection, key);
 			}
 		}
 
@@ -482,73 +410,6 @@ namespace Meta
 			}
 		}
 	}
-	//public class Search : Subselect
-	//{
-	//    private Map keyExpression;
-	//    public Search(Map keyExpression)
-	//    {
-	//        this.keyExpression = keyExpression;
-	//    }
-	//    public override PersistantPosition Evaluate(PersistantPosition selected, PersistantPosition context)
-	//    {
-	//        PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
-	//        Map key = keyPosition.Get();
-	//        if (key.Equals(new StrategyMap("lines")))
-	//        {
-	//        }
-	//        PersistantPosition selection = selected;
-	//        while (!selection.Get().ContainsKey(key))
-	//        {
-	//            if (selection.Parent == null)
-	//            //if (selection.Keys.Length == 0)
-	//            {
-	//                selection = null;
-	//                break;
-	//            }
-	//            else
-	//            {
-	//                if (selection.Get().Scope != null)
-	//                {
-	//                    selection = selection.Get().Scope;
-	//                    //selection = new PersistantPosition(selection.Get().Scope);
-	//                }
-	//                else
-	//                {
-	//                    selection = selection.Parent;//.Keys.Count - 1));
-	//                }
-	//            }
-	//        }
-	//        if (selection == null)
-	//        {
-	//            throw new KeyNotFound(key, keyExpression.Extent, null);
-	//        }
-	//        else
-	//        {
-	//            return new PersistantPosition(selection, key);
-	//        }
-	//    }
-	//    public override void Assign(PersistantPosition selected, Map value, PersistantPosition context)
-	//    {
-	//        PersistantPosition evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
-	//        Map key = evaluatedKeyPosition.Get();
-	//        if (key.Equals(new StrategyMap("lines")))
-	//        {
-	//        }
-	//        PersistantPosition selection = context;
-	//        while (selection != null && !selection.Get().ContainsKey(key))
-	//        {
-	//            selection = selection.Parent;
-	//        }
-	//        if (selection == null)
-	//        {
-	//            throw new KeyNotFound(key, keyExpression.Extent, null);
-	//        }
-	//        else
-	//        {
-	//            selection.Assign(key, value);
-	//        }
-	//    }
-	//}
 	public class Select : Expression
 	{
 		private List<Map> subselects;
@@ -570,14 +431,6 @@ namespace Meta
 	}
 	public class Statement
 	{
-		// somewhat inconsequential
-		public List<Map> Keys
-		{
-			get
-			{
-				return keys;
-			}
-		}
 		private List<Map> keys;
 		private Map value;
 		public Statement(Map code)
@@ -591,8 +444,6 @@ namespace Meta
 			for (int i = 0; i + 1 < keys.Count; i++)
 			{
 				selected = keys[i].GetSubselect().Evaluate(selected, context);
-				//selected = keys[i].GetSubselect().Evaluate(selected, context);
-				//selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
 			try
 			{
@@ -603,45 +454,7 @@ namespace Meta
 			{
 				throw new MetaException(e.ToString()+e.StackTrace, value.Extent);
 			}
-			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
-			//keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
 		}
-		//public void Assign(PersistantPosition context)
-		//{
-		//    PersistantPosition selected = context;
-		//    for (int i = 0; i + 1 < keys.Count; i++)
-		//    {
-		//        selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//    }
-		//    Map val=value.GetExpression().Evaluate(context).Get();
-		//    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-		//    //keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context).Get(), context);
-		//    //keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
-		//}
-		//public void Assign(PersistantPosition context)
-		//{
-		//    PersistantPosition selected = context;
-		//    for (int i = 0; i + 1 < keys.Count; i++)
-		//    {
-		//        selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//    }
-		//    keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), context);
-		//    //keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
-		//}
-		//public void Assign(ref Map context)
-		//{
-		//    Map selected = context;
-		//    for (int i = 0; i + 1 < keys.Count; i++)
-		//    {
-		//        selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//        //selected = keys[i].GetSubselect().Evaluate(selected, context);
-		//    }
-		//    keys[keys.Count - 1].GetSubselect().Assign(selected, value.GetExpression().Evaluate(context), ref context);
-		//}
 	}
 	public class Library
 	{
@@ -651,22 +464,14 @@ namespace Meta
 		}
 		public static Map SplitString(Map arg)
 		{
-			//try
-			//{
-				char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-				string[] split = arg[1].GetString().Split(delimiters);
-				Map result = new StrategyMap(new ListStrategy(split.Length));
-				foreach (string text in split)
-				{
-					result.Append(text);
-				}
-
-				return result;
-			//}
-			//catch (Exception e)
-			//{
-			//    return null;
-			//}
+			char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
+			string[] split = arg[1].GetString().Split(delimiters);
+			Map result = new StrategyMap(new ListStrategy(split.Length));
+			foreach (string text in split)
+			{
+				result.Append(text);
+			}
+			return result;
 		}
 		public static Map Subtract(Map arg)
 		{
@@ -687,7 +492,6 @@ namespace Meta
 				throw new SyntaxException("Expected end of file.", parser);
 			}
 			return result;
-
 		}
 		public static Map Product(Map arg)
 		{
@@ -724,20 +528,13 @@ namespace Meta
 			FunctionBodyKey calls;
 			// probably wrong
 			MethodImplementation.currentPosition.Get().AddCall(arg, out calls);
-			//PersistantPosition position = new PersistantPosition(MethodImplementation.currentPosition, new FunctionBodyKey(calls));
-			//PersistantPosition thenPosition = new PersistantPosition(position, "then");
-			//PersistantPosition elsePosition = new PersistantPosition(position, "else");
 			if (arg[1].GetBoolean())
 			{
 				result = arg["then"].Call(Map.Empty, arg["then"].Scope).Get();
-				//result = thenPosition.Get().Call(Map.Empty, thenPosition).Get();
-				//result = arg["then"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
 			}
 			else if (arg.ContainsKey("else"))
 			{
 				result = arg["else"].Call(Map.Empty, arg["else"].Scope).Get();
-				//result = elsePosition.Get().Call(Map.Empty, elsePosition).Get();
-				//result = arg["else"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
 			}
 			else
 			{
@@ -813,17 +610,13 @@ namespace Meta
 		{
 			Map result;
 			PersistantPosition argument = Call.lastArgument;
-			//PersistantPosition argument = new PersistantPosition(Call.lastArgument);
-			//PersistantPosition argument = Call.lastArgument.Copy();
 			try
 			{
 				result = argument.Get()["function"].Call(Map.Empty, argument).Get();
-				//result = arg["function"].Call(Map.Empty, MethodImplementation.currentPosition).Get();
 			}
 			catch (Exception e)
 			{
 				result = argument.Get()["catch"].Call(new ObjectMap(e), argument).Get();
-				//result = arg["catch"].Call(new ObjectMap(e), MethodImplementation.currentPosition).Get();
 			}
 			return result;
 		}
@@ -833,7 +626,6 @@ namespace Meta
 			Map subArray = new StrategyMap();
 			List<Map> array = arg[1].Array;
 			List<Map> delimiters = arg["delimiters"].Array;
-
 			for (int i = 0; i < array.Count; i++)
 			{
 				Map map = array[i];
@@ -855,63 +647,13 @@ namespace Meta
 					arrays.Append(subArray);
 					subArray = new StrategyMap();
 				}
-				//if (map.Equals(arg[2]) || i == array.Count - 1)
-				//{
-				//    if (i == array.Count - 1)
-				//    {
-				//        subArray.Append(map);
-				//    }
-				//    arrays.Append(subArray);
-				//    subArray = new StrategyMap();
-				//}
 				else
 				{
 					subArray.Append(map);
 				}
 			}
-			//for (int i = 0; i < array.ArrayCount; i++)
-			//{
-			//    Map map = array.Array[i];
-			//    if (map.Equals(arg[2]) || i == array.ArrayCount - 1)
-			//    {
-			//        if (i == array.ArrayCount - 1)
-			//        {
-			//            subArray.Append(map);
-			//        }
-			//        arrays.Append(subArray);
-			//        subArray = new StrategyMap();
-			//    }
-			//    else
-			//    {
-			//        subArray.Append(map);
-			//    }
-			//}
 			return arrays;
 		}
-		//public static Map Split(Map arg)
-		//{
-		//    Map arrays = new StrategyMap();
-		//    Map subArray = new StrategyMap();
-		//    Map array=arg[1];
-		//    for(int i=0;i<array.ArrayCount;i++)
-		//    {
-		//        Map map = array.Array[i];
-		//        if (map.Equals(arg[2]) || i==array.ArrayCount-1)
-		//        {
-		//            if (i == array.ArrayCount - 1)
-		//            {
-		//                subArray.Append(map);
-		//            }
-		//            arrays.Append(subArray);
-		//            subArray = new StrategyMap();
-		//        }
-		//        else
-		//        {
-		//            subArray.Append(map);
-		//        }
-		//    }
-		//    return arrays;
-		//}
 		public static Map CreateConsole(Map arg)
 		{
 			Interpreter.AllocConsole();
@@ -1036,7 +778,6 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
-		// should be called unite or something, should be: "Unify"
 		public static Map Merge(Map arg)
 		{
 			Map result=new StrategyMap();
@@ -1064,18 +805,6 @@ namespace Meta
 			}));
 			return new StrategyMap(array);
 		}
-		//public static Map Sort(Map arg)
-		//{
-		//    List<Map> array = arg[1].Array;
-		//    PersistantPosition argument = Call.lastArgument;
-		//    //PersistantPosition argument = Call.lastArgument.Copy();
-		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-		//    {
-		//        return argument.Get().Call(a, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
-		//        //return arg.Call(a, MethodImplementation.currentPosition).Get().GetNumber().GetInt32().CompareTo(arg.Call(b, MethodImplementation.currentPosition).Get().GetNumber().GetInt32());
-		//    }));
-		//    return new StrategyMap(array);
-		//}
 		public static Map Append(Map arg)
 		{
 			Map result = Map.Empty;
@@ -1096,7 +825,6 @@ namespace Meta
 			}
 			return result;
 		}
-		// remove
 		public static Map Find(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -1148,21 +876,14 @@ namespace Meta
 		{
 			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
 		}
-		// should be removed
 		public static Map UrlDecode(Map arg)
 		{
 			string[] aSplit;
 			string sOutput;
 			string sConvert = arg.GetString();
 
-			//' convert all pluses to spaces
 			sOutput = sConvert.Replace("+", " ");
-			//sOutput = REPLACE(sConvert, "+", " ")
-
-			//' next convert %hexdigits to the character
 			aSplit = sOutput.Split('%');
-
-			//If IsArray(aSplit) Then
 			sOutput = aSplit[0];
 			for (int i = 1; i < aSplit.Length; i++)
 			{
@@ -1170,9 +891,6 @@ namespace Meta
 			}
 			return sOutput;
 		}
-		// change this to work for all maps?
-
-		// default should be infinite loop, maybe?
 		public static Map While(Map arg)
 		{
 			PersistantPosition argument = Call.lastArgument;
@@ -1206,7 +924,6 @@ namespace Meta
 			}
 			return result;
 		}
-		// bad names
 		public static Map FindFirst(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -1225,7 +942,6 @@ namespace Meta
 			}
 			return 0;
 		}
-		// combine with apply
 		public static Map Foreach(Map arg)
 		{
 			Map result = new StrategyMap();
@@ -1270,7 +986,7 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			strategy.Set(key, value);
+			strategy.Set(key, value,this);
 		}
 	}
 	public class DrivesMap : Map
@@ -1313,7 +1029,6 @@ namespace Meta
 		protected override Map CopyData()
 		{
 			return this;
-			//throw new Exception("The method or operation is not implemented.");
 		}
 	}
 	public class DirectoryMap : Map
@@ -1336,29 +1051,22 @@ namespace Meta
 		private Dictionary<Map,string> GetKeys()
 		{
 			Dictionary<Map,string> keys = new Dictionary<Map,string>();
-			try
+			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
-				foreach (DirectoryInfo subdir in directory.GetDirectories())
-				{
-					keys.Add(subdir.Name,"");
-				}
-				foreach (FileInfo file in directory.GetFiles("*.*"))
-				{
-					string fileName;
-					if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
-					{
-						fileName = Path.GetFileNameWithoutExtension(file.FullName);
-					}
-					else
-					{
-						fileName = file.Name;
-					}
-					keys.Add(fileName,"");
-				}
+				keys[subdir.Name]="";
 			}
-			// should only work in with drives, maybe separate DriveMap
-			catch (Exception e)
+			foreach (FileInfo file in directory.GetFiles("*.*"))
 			{
+				string fileName;
+				if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
+				{
+					fileName = Path.GetFileNameWithoutExtension(file.FullName);
+				}
+				else
+				{
+					fileName = file.Name;
+				}
+				keys[fileName]="";
 			}
 			return keys;
 		}
@@ -1391,289 +1099,104 @@ namespace Meta
 			}
 			else if (key.IsString)
 			{
-				//if (cache.ContainsKey(key))
-				//{
-				//    value = cache[key];
-				//}
-				//else
-				//{
-					string name = key.GetString();
-					if (directory.FullName != Interpreter.LibraryPath)
-					{
-						Directory.SetCurrentDirectory(directory.FullName);
-					}
-					string file = Path.Combine(directory.FullName, name);
-					string metaFile = Path.Combine(directory.FullName, name + ".meta");
-					string dllFile = Path.Combine(directory.FullName, name + ".dll");
-					string exeFile = Path.Combine(directory.FullName, name + ".exe");
+				string name = key.GetString();
+				if (directory.FullName != Interpreter.LibraryPath)
+				{
+					Directory.SetCurrentDirectory(directory.FullName);
+				}
+				string file = Path.Combine(directory.FullName, name);
+				string metaFile = Path.Combine(directory.FullName, name + ".meta");
+				string dllFile = Path.Combine(directory.FullName, name + ".dll");
+				string exeFile = Path.Combine(directory.FullName, name + ".exe");
 
-					if (File.Exists(metaFile))
+				if (File.Exists(metaFile))
+				{
+					string text = File.ReadAllText(metaFile, Encoding.Default);
+					Map result;
+					FileMap fileMap = new FileMap(metaFile);
+					if (text != "")
 					{
-						string text = File.ReadAllText(metaFile, Encoding.Default);
-						Map result;
-						FileMap fileMap = new FileMap(metaFile);
-						if (text != "")
+						Map start = new StrategyMap();
+						//Map start = new StrategyMap(new PersistantPosition(Position, key));
+						Parser parser = new Parser(text, metaFile);
+						bool matched;
+						result = Parser.File.Match(parser, out matched);
+						if (parser.index != parser.text.Length)
 						{
-							Map start = new StrategyMap();
-							//Map start = new StrategyMap(new PersistantPosition(Position, key));
-							Parser parser = new Parser(text, metaFile);
-							bool matched;
-							result = Parser.File.Match(parser, out matched);
-							if (parser.index != parser.text.Length)
-							{
-								throw new SyntaxException("Expected end of file.", parser);
-							}
-							value = result;
+							throw new SyntaxException("Expected end of file.", parser);
 						}
-						else
-						{
-							value = Map.Empty;
-						}
+						value = result;
 					}
 					else
 					{
-						bool dllLoaded = false;
-						if (File.Exists(dllFile))
+						value = Map.Empty;
+					}
+				}
+				else
+				{
+					bool dllLoaded = false;
+					if (File.Exists(dllFile))
+					{
+						try
 						{
-							try
+							Assembly assembly = Assembly.LoadFile(dllFile);
+							value = Gac.LoadAssembly(assembly);
+							dllLoaded = true;
+						}
+						catch (Exception e)
+						{
+							value = null;
+						}
+					}
+					else if (File.Exists(exeFile))
+					{
+						try
+						{
+							Assembly assembly = Assembly.LoadFile(exeFile);
+							value = Gac.LoadAssembly(assembly);
+							dllLoaded = true;
+						}
+						catch (Exception e)
+						{
+							value = null;
+						}
+					}
+					if (!dllLoaded)
+					{
+						if (File.Exists(file))
+						{
+							switch (Path.GetExtension(file))
 							{
-								Assembly assembly = Assembly.LoadFile(dllFile);
-								value = Gac.LoadAssembly(assembly);
-								//foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-								//{
-								//    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
-								//    if (File.Exists(path))
-								//    {
-								//        Assembly.LoadFile(path);
-								//    }
-								//}
-								dllLoaded = true;
-							}
-							catch (Exception e)
-							{
-								value = null;
+								case ".txt":
+								case ".meta":
+									value = new StrategyMap(File.ReadAllText(file));
+									break;
+								default:
+									value = new FileMap(file, new ListStrategy());
+									break;
 							}
 						}
-						else if (File.Exists(exeFile))
+						else
 						{
-							try
+							DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+							if (subDir.Exists)
 							{
-								Assembly assembly = Assembly.LoadFile(exeFile);
-								value = Gac.LoadAssembly(assembly);
-								//foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-								//{
-								//    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
-								//    if (File.Exists(path))
-								//    {
-								//        Assembly a=Assembly.LoadFile(path);
-								//        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
-								//        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-								//    }
-								//}
-								dllLoaded = true;
-							}
-							catch (Exception e)
-							{
-								value = null;
-							}
-						}
-						if (!dllLoaded)
-						{
-							if (File.Exists(file))
-							{
-								switch (Path.GetExtension(file))
-								{
-									case ".txt":
-									case ".meta":
-										//value = new FileMap(file, new ListStrategy());
-										// this is problematic, writes the file all the time
-										//foreach (char c in File.ReadAllText(file))
-										////foreach (char c in File.ReadAllText(file))
-										//{
-										//    value.Append(c);
-										//}
-										value = new StrategyMap(File.ReadAllText(file));
-										//value = new StrategyMap(new ListStrategy(File.ReadAllText(file)));
-										break;
-									default:
-										value = new FileMap(file, new ListStrategy());
-										// problematic, writes the file
-										//foreach (byte b in File.ReadAllBytes(file))
-										////foreach (byte b in File.ReadAllBytes(file))
-										//{
-										//    value.Append(b);
-										//}
-										break;
-								}
+								value = new DirectoryMap(subDir);
 							}
 							else
 							{
-								DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-								if (subDir.Exists)
-								{
-									value = new DirectoryMap(subDir);
-									//value = new DirectoryMap(subDir, this.Position);
-								}
-								else
-								{
-									value = null;
-								}
+								value = null;
 							}
 						}
 					}
-					if (value != null)
-					{
-						cache[key] = value;
-					}
-				//}
+				}
+				if (value != null)
+				{
+					cache[key] = value;
+				}
 			}
 			return value;
 		}
-		// fix
-		//protected override Map Get(Map key)
-		//{
-		//    Map value = null;
-		//    if (key.IsString)
-		//    {
-		//        if (key.GetString() == "basicTest")
-		//        {
-		//        }
-		//        if (cache.ContainsKey(key))
-		//        {
-		//            value = cache[key];
-		//        }
-		//        else
-		//        {
-		//            string name = key.GetString();
-		//            if (directory.FullName != Interpreter.LibraryPath)
-		//            {
-		//                Directory.SetCurrentDirectory(directory.FullName);
-		//            }
-		//            string file = Path.Combine(directory.FullName, name);
-		//            string metaFile = Path.Combine(directory.FullName, name + ".meta");
-		//            string dllFile = Path.Combine(directory.FullName, name + ".dll");
-		//            string exeFile = Path.Combine(directory.FullName, name + ".exe");
-
-		//            if (File.Exists(metaFile))
-		//            {
-		//                string text = File.ReadAllText(metaFile, Encoding.Default);
-		//                Map result;
-		//                FileMap fileMap = new FileMap(metaFile);
-		//                if (text != "")
-		//                {
-		//                    Map start = new StrategyMap();
-		//                    //Map start = new StrategyMap(new PersistantPosition(Position, key));
-		//                    Parser parser = new Parser(text, metaFile);
-		//                    bool matched;
-		//                    result = Parser.File.Match(parser, out matched);
-		//                    if (parser.index != parser.text.Length)
-		//                    {
-		//                        throw new SyntaxException("Expected end of file.", parser);
-		//                    }
-		//                    value = result;
-		//                }
-		//                else
-		//                {
-		//                    value = Map.Empty;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                bool dllLoaded = false;
-		//                if (File.Exists(dllFile))
-		//                {
-		//                    try
-		//                    {
-		//                        Assembly assembly = Assembly.LoadFile(dllFile);
-		//                        value = Gac.LoadAssembly(assembly);
-		//                        //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-		//                        //{
-		//                        //    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
-		//                        //    if (File.Exists(path))
-		//                        //    {
-		//                        //        Assembly.LoadFile(path);
-		//                        //    }
-		//                        //}
-		//                        dllLoaded = true;
-		//                    }
-		//                    catch (Exception e)
-		//                    {
-		//                        value = null;
-		//                    }
-		//                }
-		//                else if (File.Exists(exeFile))
-		//                {
-		//                    try
-		//                    {
-		//                        Assembly assembly = Assembly.LoadFile(exeFile);
-		//                        value = Gac.LoadAssembly(assembly);
-		//                        //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-		//                        //{
-		//                        //    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
-		//                        //    if (File.Exists(path))
-		//                        //    {
-		//                        //        Assembly a=Assembly.LoadFile(path);
-		//                        //        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
-		//                        //        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-		//                        //    }
-		//                        //}
-		//                        dllLoaded = true;
-		//                    }
-		//                    catch (Exception e)
-		//                    {
-		//                        value = null;
-		//                    }
-		//                }
-		//                if (!dllLoaded)
-		//                {
-		//                    if (File.Exists(file))
-		//                    {
-		//                        switch (Path.GetExtension(file))
-		//                        {
-		//                            case ".txt":
-		//                            case ".meta":
-		//                                value = new FileMap(file, new ListStrategy());
-		//                                // this is problematic, writes the file all the time
-		//                                //foreach (char c in File.ReadAllText(file))
-		//                                ////foreach (char c in File.ReadAllText(file))
-		//                                //{
-		//                                //    value.Append(c);
-		//                                //}
-		//                                break;
-		//                            default:
-		//                                value = new FileMap(file, new ListStrategy());
-		//                                // problematic, writes the file
-		//                                //foreach (byte b in File.ReadAllBytes(file))
-		//                                ////foreach (byte b in File.ReadAllBytes(file))
-		//                                //{
-		//                                //    value.Append(b);
-		//                                //}
-		//                                break;
-		//                        }
-		//                    }
-		//                    else
-		//                    {
-		//                        DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-		//                        if (subDir.Exists)
-		//                        {
-		//                            value = new DirectoryMap(subDir);
-		//                            //value = new DirectoryMap(subDir, this.Position);
-		//                        }
-		//                        else
-		//                        {
-		//                            value = null;
-		//                        }
-		//                    }
-		//                }
-		//            }
-		//            if (value != null)
-		//            {
-		//                cache[key] = value;
-		//            }
-		//        }
-		//    }
-		//    return value;
-		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -1683,13 +1206,11 @@ namespace Meta
 				if (extension == "")
 				{
 					string directoryPath = Path.Combine(this.directory.FullName, name);
-					// somewhat unlogical
 					if (Directory.Exists(directoryPath))
 					{
 						Map subDirectory = this[name];
 						foreach (KeyValuePair<Map, Map> entry in val)
 						{
-							// buggy if there is a Meta file with the same name
 							subDirectory[entry.Key] = entry.Value;
 						}
 					}
@@ -1924,459 +1445,6 @@ namespace Meta
 			}
 		}
 	}
-	//public class DirectoryMap : Map
-	//{
-	//    private DirectoryInfo directory;
-	//    private List<Map> keys;
-
-	//    public DirectoryMap(DirectoryInfo directory)
-	//    {
-	//        this.directory = directory;
-	//    }
-	//    private List<Map> GetKeys()
-	//    {
-	//        List<Map> keys = new List<Map>();
-	//        try
-	//        {
-	//            foreach (DirectoryInfo subdir in directory.GetDirectories())
-	//            {
-	//                keys.Add(subdir.Name);
-	//            }
-	//            foreach (FileInfo file in directory.GetFiles("*.*"))
-	//            {
-	//                string fileName;
-	//                if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
-	//                {
-	//                    fileName = Path.GetFileNameWithoutExtension(file.FullName);
-	//                }
-	//                else
-	//                {
-	//                    fileName = file.Name;
-	//                }
-	//                keys.Add(fileName);
-	//            }
-	//        }
-	//        // should only work in with drives, maybe separate DriveMap
-	//        catch (Exception e)
-	//        {
-	//        }
-	//        return keys;
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            if (keys == null)
-	//            {
-	//                keys = GetKeys();
-	//            }
-	//            return keys; 
-	//        }
-	//    }
-	//    public static void TrashFile(string fname)
-	//    {
-	//        InteropSHFileOperation fo = new InteropSHFileOperation();
-	//        fo.wFunc = InteropSHFileOperation.FO_Func.FO_DELETE;
-	//        fo.fFlags.FOF_ALLOWUNDO = true;
-	//        fo.fFlags.FOF_NOCONFIRMATION = true;
-	//        fo.pFrom = fname;
-	//    }
-	//    public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
-	//    // fix
-	//    protected override Map Get(Map key)
-	//    {
-	//        Map value = null;
-	//        if (key.IsString)
-	//        {
-	//            if (key.GetString() == "basicTest")
-	//            {
-	//            }
-	//            if (cache.ContainsKey(key))
-	//            {
-	//                value = cache[key];
-	//            }
-	//            else
-	//            {
-	//                string name = key.GetString();
-	//                if (directory.FullName != Interpreter.LibraryPath)
-	//                {
-	//                    Directory.SetCurrentDirectory(directory.FullName);
-	//                }
-	//                string file = Path.Combine(directory.FullName, name);
-	//                string metaFile = Path.Combine(directory.FullName, name + ".meta");
-	//                string dllFile = Path.Combine(directory.FullName, name + ".dll");
-	//                string exeFile = Path.Combine(directory.FullName, name + ".exe");
-
-	//                if (File.Exists(metaFile))
-	//                {
-	//                    string text = File.ReadAllText(metaFile, Encoding.Default);
-	//                    Map result;
-	//                    FileMap fileMap = new FileMap(metaFile);
-	//                    if (text != "")
-	//                    {
-	//                        Map start = new StrategyMap();
-	//                        //Map start = new StrategyMap(new PersistantPosition(Position, key));
-	//                        Parser parser = new Parser(text, metaFile);
-	//                        bool matched;
-	//                        result = Parser.File.Match(parser, out matched);
-	//                        if (parser.index != parser.text.Length)
-	//                        {
-	//                            throw new SyntaxException("Expected end of file.", parser);
-	//                        }
-	//                        value = result;
-	//                    }
-	//                    else
-	//                    {
-	//                        value = Map.Empty;
-	//                    }
-	//                }
-	//                else
-	//                {
-	//                    bool dllLoaded = false;
-	//                    if (File.Exists(dllFile))
-	//                    {
-	//                        try
-	//                        {
-	//                            Assembly assembly = Assembly.LoadFile(dllFile);
-	//                            value = Gac.LoadAssembly(assembly);
-	//                            //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-	//                            //{
-	//                            //    string path=Path.Combine(assembly.CodeBase,referencedAssembly.Name);
-	//                            //    if (File.Exists(path))
-	//                            //    {
-	//                            //        Assembly.LoadFile(path);
-	//                            //    }
-	//                            //}
-	//                            dllLoaded = true;
-	//                        }
-	//                        catch (Exception e)
-	//                        {
-	//                            value = null;
-	//                        }
-	//                    }
-	//                    else if(File.Exists(exeFile))
-	//                    {
-	//                        try
-	//                        {
-	//                            Assembly assembly = Assembly.LoadFile(exeFile);
-	//                            value = Gac.LoadAssembly(assembly);
-	//                            //foreach (AssemblyName referencedAssembly in assembly.GetReferencedAssemblies())
-	//                            //{
-	//                            //    string path = Path.Combine(Path.GetDirectoryName(assembly.Location), referencedAssembly.Name+".dll");
-	//                            //    if (File.Exists(path))
-	//                            //    {
-	//                            //        Assembly a=Assembly.LoadFile(path);
-	//                            //        AppDomain.CurrentDomain.AssemblyLoad += new AssemblyLoadEventHandler(CurrentDomain_AssemblyLoad);
-	//                            //        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-	//                            //    }
-	//                            //}
-	//                            dllLoaded = true;
-	//                        }
-	//                        catch (Exception e)
-	//                        {
-	//                            value = null;
-	//                        }
-	//                    }
-	//                    if (!dllLoaded)
-	//                    {
-	//                        if (File.Exists(file))
-	//                        {
-	//                            switch (Path.GetExtension(file))
-	//                            {
-	//                                case ".txt":
-	//                                case ".meta":
-	//                                    value = new FileMap(file, new ListStrategy());
-	//                                    // this is problematic, writes the file all the time
-	//                                    //foreach (char c in File.ReadAllText(file))
-	//                                    ////foreach (char c in File.ReadAllText(file))
-	//                                    //{
-	//                                    //    value.Append(c);
-	//                                    //}
-	//                                    break;
-	//                                default:
-	//                                    value = new FileMap(file, new ListStrategy());
-	//                                    // problematic, writes the file
-	//                                    //foreach (byte b in File.ReadAllBytes(file))
-	//                                    ////foreach (byte b in File.ReadAllBytes(file))
-	//                                    //{
-	//                                    //    value.Append(b);
-	//                                    //}
-	//                                    break;
-	//                            }
-	//                        }
-	//                        else
-	//                        {
-	//                            DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-	//                            if (subDir.Exists)
-	//                            {
-	//                                value = new DirectoryMap(subDir);
-	//                                //value = new DirectoryMap(subDir, this.Position);
-	//                            }
-	//                            else
-	//                            {
-	//                                value = null;
-	//                            }
-	//                        }
-	//                    }
-	//                }
-	//                if (value != null)
-	//                {
-	//                    cache[key] = value;
-	//                }
-	//            }
-	//        }
-	//        return value;
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        if (key.IsString)
-	//        {
-	//            string name = key.GetString();
-	//            string extension = Path.GetExtension(name);
-	//            if (extension == "")
-	//            {
-	//                string directoryPath=Path.Combine(this.directory.FullName,name);
-	//                // somewhat unlogical
-	//                if (Directory.Exists(directoryPath))
-	//                {
-	//                    Map subDirectory = this[name];
-	//                    foreach (KeyValuePair<Map, Map> entry in val)
-	//                    {
-	//                        // buggy if there is a Meta file with the same name
-	//                        subDirectory[entry.Key] = entry.Value;
-	//                    }
-	//                }
-	//                else
-	//                {
-	//                    string text = Meta.Serialize.ValueFunction(val);
-	//                    if (text == Syntax.emptyMap.ToString())
-	//                    {
-	//                        text = "";
-	//                    }
-	//                    else
-	//                    {
-	//                        text = text.Trim(Syntax.unixNewLine);
-	//                    }
-	//                    File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
-	//                }
-	//            }
-	//            else if (extension == ".txt" || extension == ".meta" || extension==".html" || extension==".htm")
-	//            {
-	//                File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.TryToDotNet(val, typeof(string)));
-	//            }
-	//            else
-	//            {
-	//                File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.TryToDotNet(val, typeof(byte[])));
-	//            }
-	//            cache[key] = val;
-	//        }
-	//        else
-	//        {
-	//            throw new ApplicationException("Cannot set non-string in directory.");
-	//        }
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        return this;
-	//    }
-	//    public class InteropSHFileOperation
-	//    {
-	//        public enum FO_Func : uint
-	//        {
-	//            FO_MOVE = 0x0001,
-	//            FO_COPY = 0x0002,
-	//            FO_DELETE = 0x0003,
-	//            FO_RENAME = 0x0004,
-	//        }
-
-	//        struct SHFILEOPSTRUCT
-	//        {
-	//            public IntPtr hwnd;
-	//            public FO_Func wFunc;
-	//            [MarshalAs(UnmanagedType.LPWStr)]
-	//            public string pFrom;
-	//            [MarshalAs(UnmanagedType.LPWStr)]
-	//            public string pTo;
-	//            public ushort fFlags;
-	//            public bool fAnyOperationsAborted;
-	//            public IntPtr hNameMappings;
-	//            [MarshalAs(UnmanagedType.LPWStr)]
-	//            public string lpszProgressTitle;
-
-	//        }
-
-	//        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-	//        static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
-
-	//        private SHFILEOPSTRUCT _ShFile;
-	//        public FILEOP_FLAGS fFlags;
-
-	//        public IntPtr hwnd
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.hwnd = value;
-	//            }
-	//        }
-	//        public FO_Func wFunc
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.wFunc = value;
-	//            }
-	//        }
-
-	//        public string pFrom
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.pFrom = value + '\0' + '\0';
-	//            }
-	//        }
-	//        public string pTo
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.pTo = value + '\0' + '\0';
-	//            }
-	//        }
-
-	//        public bool fAnyOperationsAborted
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.fAnyOperationsAborted = value;
-	//            }
-	//        }
-	//        public IntPtr hNameMappings
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.hNameMappings = value;
-	//            }
-	//        }
-	//        public string lpszProgressTitle
-	//        {
-	//            set
-	//            {
-	//                this._ShFile.lpszProgressTitle = value + '\0';
-	//            }
-	//        }
-
-	//        public InteropSHFileOperation()
-	//        {
-
-	//            this.fFlags = new FILEOP_FLAGS();
-	//            this._ShFile = new SHFILEOPSTRUCT();
-	//            this._ShFile.hwnd = IntPtr.Zero;
-	//            this._ShFile.wFunc = FO_Func.FO_COPY;
-	//            this._ShFile.pFrom = "";
-	//            this._ShFile.pTo = "";
-	//            this._ShFile.fAnyOperationsAborted = false;
-	//            this._ShFile.hNameMappings = IntPtr.Zero;
-	//            this._ShFile.lpszProgressTitle = "";
-
-	//        }
-
-	//        public bool Execute()
-	//        {
-	//            this._ShFile.fFlags = this.fFlags.Flag;
-	//            int ReturnValue = SHFileOperation(ref this._ShFile);
-	//            if (ReturnValue == 0)
-	//            {
-	//                return true;
-	//            }
-	//            else
-	//            {
-	//                return false;
-	//            }
-	//        }
-
-	//        public class FILEOP_FLAGS
-	//        {
-	//            [Flags]
-	//            private enum FILEOP_FLAGS_ENUM : ushort
-	//            {
-	//                FOF_MULTIDESTFILES = 0x0001,
-	//                FOF_CONFIRMMOUSE = 0x0002,
-	//                FOF_SILENT = 0x0004,  // don't create progress/report
-	//                FOF_RENAMEONCOLLISION = 0x0008,
-	//                FOF_NOCONFIRMATION = 0x0010,  // Don't prompt the user.
-	//                FOF_WANTMAPPINGHANDLE = 0x0020,  // Fill in SHFILEOPSTRUCT.hNameMappings
-	//                // Must be freed using SHFreeNameMappings
-	//                FOF_ALLOWUNDO = 0x0040,
-	//                FOF_FILESONLY = 0x0080,  // on *.*, do only files
-	//                FOF_SIMPLEPROGRESS = 0x0100,  // means don't show names of files
-	//                FOF_NOCONFIRMMKDIR = 0x0200,  // don't confirm making any needed dirs
-	//                FOF_NOERRORUI = 0x0400,  // don't put up error UI
-	//                FOF_NOCOPYSECURITYATTRIBS = 0x0800,  // dont copy NT file Security Attributes
-	//                FOF_NORECURSION = 0x1000,  // don't recurse into directories.
-	//                FOF_NO_CONNECTED_ELEMENTS = 0x2000,  // don't operate on connected elements.
-	//                FOF_WANTNUKEWARNING = 0x4000,  // during delete operation, warn if nuking instead of recycling (partially overrides FOF_NOCONFIRMATION)
-	//                FOF_NORECURSEREPARSE = 0x8000,  // treat reparse points as objects, not containers
-	//            }
-
-	//            public bool FOF_MULTIDESTFILES = false;
-	//            public bool FOF_CONFIRMMOUSE = false;
-	//            public bool FOF_SILENT = false;
-	//            public bool FOF_RENAMEONCOLLISION = false;
-	//            public bool FOF_NOCONFIRMATION = false;
-	//            public bool FOF_WANTMAPPINGHANDLE = false;
-	//            public bool FOF_ALLOWUNDO = false;
-	//            public bool FOF_FILESONLY = false;
-	//            public bool FOF_SIMPLEPROGRESS = false;
-	//            public bool FOF_NOCONFIRMMKDIR = false;
-	//            public bool FOF_NOERRORUI = false;
-	//            public bool FOF_NOCOPYSECURITYATTRIBS = false;
-	//            public bool FOF_NORECURSION = false;
-	//            public bool FOF_NO_CONNECTED_ELEMENTS = false;
-	//            public bool FOF_WANTNUKEWARNING = false;
-	//            public bool FOF_NORECURSEREPARSE = false;
-	//            public ushort Flag
-	//            {
-	//                get
-	//                {
-	//                    ushort ReturnValue = 0;
-
-	//                    if (this.FOF_MULTIDESTFILES == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_MULTIDESTFILES;
-	//                    if (this.FOF_CONFIRMMOUSE == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_CONFIRMMOUSE;
-	//                    if (this.FOF_SILENT == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SILENT;
-	//                    if (this.FOF_RENAMEONCOLLISION == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_RENAMEONCOLLISION;
-	//                    if (this.FOF_NOCONFIRMATION == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMATION;
-	//                    if (this.FOF_WANTMAPPINGHANDLE == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTMAPPINGHANDLE;
-	//                    if (this.FOF_ALLOWUNDO == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_ALLOWUNDO;
-	//                    if (this.FOF_FILESONLY == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_FILESONLY;
-	//                    if (this.FOF_SIMPLEPROGRESS == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SIMPLEPROGRESS;
-	//                    if (this.FOF_NOCONFIRMMKDIR == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMMKDIR;
-	//                    if (this.FOF_NOERRORUI == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOERRORUI;
-	//                    if (this.FOF_NOCOPYSECURITYATTRIBS == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCOPYSECURITYATTRIBS;
-	//                    if (this.FOF_NORECURSION == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSION;
-	//                    if (this.FOF_NO_CONNECTED_ELEMENTS == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NO_CONNECTED_ELEMENTS;
-	//                    if (this.FOF_WANTNUKEWARNING == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTNUKEWARNING;
-	//                    if (this.FOF_NORECURSEREPARSE == true)
-	//                        ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSEREPARSE;
-
-	//                    return ReturnValue;
-	//                }
-	//            }
-	//        }
-	//    }
-	//}
 	public class Interpreter
 	{
 		public static bool profiling=false;
@@ -2385,7 +1453,6 @@ namespace Meta
 		{
 			try
 			{
-				//AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
 				if (args.Length == 0)
 				{
 					Commands.Interactive();
@@ -2398,13 +1465,7 @@ namespace Meta
 							Commands.Interactive();
 							break;
 						case "-test":
-							//try
-							//{
-								Commands.Test();
-							//}
-							//catch (Exception e)
-							//{
-							//}
+							Commands.Test();
 							Console.ReadLine();
 							break;
 						case "-help":
@@ -2412,11 +1473,9 @@ namespace Meta
 							break;
 						case "-profile":
 							profiling = true;
-							//new MetaTest.Basic().GetResult(out level);
 							Commands.Profile();
 							break;
 						default:
-							//throw new Exception("invalid command line");
 							Commands.Run(args);
 							break;
 					}
@@ -2425,7 +1484,6 @@ namespace Meta
 			catch (MetaException e)
 			{
 				string text = e.ToString();
-				//System.Diagnostics.Process.Start("devenv", e.Extent.FileName + @" /command ""Edit.GoTo " + e.Extent.Start.Line + "\"");
 				if (useConsole)
 				{
 					Console.WriteLine(text);
@@ -2449,19 +1507,6 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
-			//Console.ReadLine();
-		}
-		private static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-		{
-			string path = Path.Combine(Directory.GetCurrentDirectory(), args.Name.Substring(0,args.Name.IndexOf(","))+".dll");
-			if (File.Exists(path))
-			{
-				return Assembly.LoadFile(path);
-			}
-			else
-			{
-				return null;
-			}
 		}
 		public class Commands
 		{
@@ -2472,9 +1517,7 @@ namespace Meta
 				AllocConsole();
 				int level;
 				new Test.MetaTest.Profile().GetResult(out level);
-				//new Test.MetaTest.Basic().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
-				//Console.ReadLine();
 			}
 			public static void Help()
 			{
@@ -2482,43 +1525,20 @@ namespace Meta
 				Console.WriteLine("help");
 				Console.ReadLine();
 			}
-			private static string ReadLine()
-			{
-				string text = "";
-			   ConsoleKeyInfo cki = new ConsoleKeyInfo();
-				do 
-				{
-					while (Console.KeyAvailable == false)
-						Thread.Sleep(250); // Loop until input is entered.
-					cki = Console.ReadKey(true);
-					text += cki.KeyChar;
-					Console.Write(cki.KeyChar);
-
-					//Console.WriteLine("You pressed the '{0}' key.", cki.Key);
-					
-				} 
-				while(cki.Key != ConsoleKey.Enter);
-				return text;
-			}
 			public static void Interactive()
 			{
 				UseConsole();
 				Console.WriteLine("Interactive mode of Meta 0.2");
-				object x = FileSystem.fileSystem;
+				object x = Gac.fileSystem;
 				Map map = new StrategyMap();
 				string code;
-
-
 
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
 				PersistantPosition position = new PersistantPosition(new PersistantPosition(RootPosition.rootPosition,"filesystem"), "localhost" );
-				//PersistantPosition position = new PersistantPosition(new Map[] { "filesystem", "localhost" });
 				FunctionBodyKey calls;
 				position.Get().AddCall(new StrategyMap(), out calls);
 				PersistantPosition local=new PersistantPosition(position,calls);
-
-
 				while (true)
 				{
 					code = "";
@@ -2562,8 +1582,6 @@ namespace Meta
 							if (parser.index == parser.text.Length)
 							{
 								statement.GetStatement().Assign(local);
-								//statement.GetStatement().Assign(ref map);
-								//statement.GetStatement().Assign(ref map);
 							}
 							else
 							{
@@ -2591,28 +1609,11 @@ namespace Meta
 			}
 			public static void Run(string[] args)
 			{
-				//int i = 1;
-				//int fileIndex = 0;
-				////if (args[0] == "-console")
-				////{
-				////    UseConsole();
-				////    i++;
-				////    fileIndex++;
-				////}
-				//string path = args[fileIndex];
-				//string startDirectory = Path.GetDirectoryName(path);
-				//Directory.SetCurrentDirectory(startDirectory);
-				////Environment.SetEnvironmentVariable("PATH", startDirectory+";"+Environment.GetEnvironmentVariable("PATH"));
-				//string positionPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(args[fileIndex]));
-
-				//string[] position = positionPath.Split(Path.DirectorySeparatorChar);
-				//Map function = FileSystem.fileSystem["localhost"];
-				//foreach (string pos in position)
-				//{
-				//    function = function[pos];
-				//}
-
-				//function.Call(Map.Empty);
+				string path = args[0];
+				string startDirectory = Path.GetDirectoryName(path);
+				Directory.SetCurrentDirectory(startDirectory);
+				//Environment.SetEnvironmentVariable("PATH", startDirectory + ";" + Environment.GetEnvironmentVariable("PATH"));
+				MetaTest.Run(path, Map.Empty);
 			}
 		}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
@@ -2620,7 +1621,6 @@ namespace Meta
 
 		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
 		static extern IntPtr GetStdHandle(int nStdHandle);
-		// should this be per process?
 		public static bool useConsole = false;
 		public static void UseConsole()
 		{
@@ -2633,10 +1633,6 @@ namespace Meta
 			{
 				return @"C:\Meta\0.2\";
 			}
-			//set
-			//{
-			//    installationPath = value;
-			//}
 		}
 		public static string LibraryPath
 		{
@@ -2663,7 +1659,6 @@ namespace Meta
 		}
 	}
 	public delegate void BustOptimization();
-	// put assignment in here
 	public class PersistantPosition : Position
 	{
 		private Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
@@ -2714,9 +1709,6 @@ namespace Meta
 		public void Assign(Map value)
 		{
 			Parent.Assign(key, value);
-			//PersistantPosition parent = this.Parent;
-			//Map parentMap = parent.Get();
-			//parentMap[key] = value;
 		}
 		public PersistantPosition(PersistantPosition parent, Map key)
 		{
@@ -2762,7 +1754,6 @@ namespace Meta
 		{
 			Map map = parent.Get();
 			parent.AddOptimization(key,new BustOptimization(Bust));
-			//map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
 			Map result = map[key];
 			if (result == null)
 			{
@@ -2881,7 +1872,6 @@ namespace Meta
 				return tempData;
 			}
 		}
-		//private Dictionary<FunctionBodyKey, Map> temporaryData = new Dictionary<FunctionBodyKey, Map>();
 		public Map this[Map key]
 		{
 			get
@@ -2906,7 +1896,6 @@ namespace Meta
 			{
 				if (value != null)
 				{
-					// this isnt sufficient
 					compiledCode = null;
 					Map val;
 					val = value.Copy();
@@ -3038,14 +2027,6 @@ namespace Meta
 		{
 			this[ArrayCount + 1] = map;
 		}
-		//public void AppendDefault(Map map)
-		//{
-		//    this[ArrayCount + 1] = map;
-		//}
-		//public void Append(Map map)
-		//{
-		//    this[ArrayCount + 1] = map;
-		//}
 		public static Map Empty
 		{
 			get
@@ -3147,15 +2128,6 @@ namespace Meta
 			}
 			return text.ToString();
 		}
-		//public string GetStringDefault()
-		//{
-		//    string text = "";
-		//    foreach (Map key in Keys)
-		//    {
-		//        text += Convert.ToChar(this[key].GetNumber().GetInt32());
-		//    }
-		//    return text;
-		//}
 		public Number GetNumberDefault()
 		{
 			Number number;
@@ -3282,26 +2254,12 @@ namespace Meta
 			{
 				return ContainsKeyImplementation(key);
 			}
-			//return (key is FunctionBodyKey && TemporaryData.ContainsKey((FunctionBodyKey)key)) || KeysImplementation.Contains(key);
 		}
 		protected abstract bool ContainsKeyImplementation(Map key);
-		//public virtual bool ContainsKey(Map key)
-		//{
-		//    if(key is FunctionBodyKey)
-		//    {
-		//        return TemporaryData.ContainsKey((FunctionBodyKey)key);
-		//    }
-		//    else
-		//    {
-		//        return KeysImplementation.Contains(key);
-		//    }
-		//    //return (key is FunctionBodyKey && TemporaryData.ContainsKey((FunctionBodyKey)key)) || KeysImplementation.Contains(key);
-		//}
 		public override int GetHashCode()
 		{
 			if (IsNumber)
 			{
-				//refactor, this is  totally wrong
 				return (int)(GetNumber().Numerator % int.MaxValue);
 			}
 			else
@@ -3384,11 +2342,11 @@ namespace Meta
 	{
 		public override void Append(Map map)
 		{
-			strategy.Append(map);
+			strategy.Append(map,this);
 		}
 		public override void Remove(Map key)
 		{
-			strategy.Remove(key);
+			strategy.Remove(key,this);
 		}
 		public StrategyMap(PersistantPosition scope)
 			: this()
@@ -3414,7 +2372,7 @@ namespace Meta
 		public StrategyMap(MapStrategy strategy)
 		{
 			this.strategy = strategy;
-			this.strategy.map = this;
+			//this.strategy.map = this;
 		}
 		public StrategyMap()
 			: this(new EmptyStrategy())
@@ -3452,10 +2410,10 @@ namespace Meta
 				return strategy.GetArrayCount();
 			}
 		}
-		public override void AppendRange(Map array)
-		{
-			strategy.AppendRange(array);
-		}
+		//public override void AppendRange(Map array)
+		//{
+		//    strategy.AppendRange(array);
+		//}
 		public void InitFromStrategy(MapStrategy clone)
 		{
 			foreach (Map key in clone.Keys)
@@ -3505,7 +2463,7 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			strategy.Set(key, value); 
+			strategy.Set(key, value,this); 
 		}
 		protected override Map CopyData() 
 		{ 
@@ -3552,7 +2510,7 @@ namespace Meta
 			set
 			{
 				strategy = value;
-				strategy.map = this;
+				//strategy.map = this;
 			}
 		}
 	}
@@ -4288,7 +3246,18 @@ namespace Meta
 	}
 	public class EmptyStrategy : MapStrategy
 	{
-		public override void Remove(Map key)
+		public override bool IsNumber
+		{
+			get 
+			{
+				return true;
+			}
+		}
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
+		public override void Remove(Map key,StrategyMap map)
 		{
 			throw new Exception("Key cannot be removed because it does not exist.");
 		}
@@ -4307,23 +3276,23 @@ namespace Meta
 		{
 			return new StrategyMap(new EmptyStrategy());
 		}
-		public override void Set(Map key, Map val)
+		public override void Set(Map key, Map val,StrategyMap map)
 		{
 			if (key.IsNumber)
 			{
 				if (key.Equals(Map.Empty) && val.IsNumber)
 				{
-					Panic(key, val, new NumberStrategy(0));
+					Panic(key, val, new NumberStrategy(0),map);
 				}
 				else
 				{
 					// that is not logical, maybe ListStrategy is not suitable for this, only if key==1
-					Panic(key, val, new ListStrategy());
+					Panic(key, val, new ListStrategy(),map);
 				}
 			}
 			else
 			{
-				Panic(key, val);
+				Panic(key, val,map);
 			}
 		}
 		public override Map Get(Map key)
@@ -4333,7 +3302,11 @@ namespace Meta
 	}
 	public class NumberStrategy : MapStrategy
 	{
-		public override void  Remove(Map key)
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
+		public override void  Remove(Map key,StrategyMap map)
 		{
 			if(key.Equals(Map.Empty))
 			{
@@ -4379,7 +3352,7 @@ namespace Meta
 				return null;
 			}
 		}
-		public override void Set(Map key, Map value)
+		public override void Set(Map key, Map value,StrategyMap map)
 		{
 			if (key.Equals(Map.Empty) && value.IsNumber)
 			{
@@ -4398,7 +3371,7 @@ namespace Meta
 			}
 			else
 			{
-				Panic(key, value);
+				Panic(key, value,map);
 			}
 		}
 
@@ -4437,6 +3410,10 @@ namespace Meta
 		{
 			return number;
 		}
+		public override int GetHashCode()
+		{
+			return (int)(number.Numerator % int.MaxValue);
+		}
 	}
 	public class StringStrategy : ArrayStrategy
 	{
@@ -4459,16 +3436,15 @@ namespace Meta
 			{
 				return base.EqualStrategy(obj);
 			}
-			//return (obj is StringStrategy && ((StringStrategy)obj).text == text) || base.EqualStrategy(obj);
 		}
-		public override void Remove(Map key)
+		public override void Remove(Map key,StrategyMap map)
 		{
-			Panic(new ListStrategy());
-			map.Strategy.Remove(key);
+			Panic(new ListStrategy(),map);
+			map.Strategy.Remove(key,map);
 		}
-		public override void Set(Map key, Map val)
+		public override void Set(Map key, Map val,StrategyMap map)
 		{
-			Panic(key, val);
+			Panic(key, val,map);
 		}
 		public override int Count
 		{
@@ -4596,15 +3572,22 @@ namespace Meta
 	}
 	public class ListStrategy : ArrayStrategy
 	{
+		//public override bool IsNumber
+		//{
+		//    get 
+		//    {
+		//        return false;
+		//    }
+		//}
 		protected override Map GetIndex(int i)
 		{
 			return list[i];
 		}
-		public override void Append(Map map)
+		public override void Append(Map map,StrategyMap parent)
 		{
 			list.Add(map);
 		}
-		public override void Remove(Map key)
+		public override void Remove(Map key,StrategyMap map)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -4617,14 +3600,6 @@ namespace Meta
 		{
 			this.list = new List<Map>(capacity);
 		}
-		//public ListStrategy(string text)
-		//{
-		//    this.list = new List<Map>(text.Length);
-		//    foreach (char c in text)
-		//    {
-		//        this.list.Add(new StrategyMap(c));
-		//    }
-		//}
 		public ListStrategy(ListStrategy original)
 		{
 			this.list = new List<Map>(original.list);
@@ -4642,7 +3617,7 @@ namespace Meta
 			}
 			return value;
 		}
-		public override void Set(Map key, Map val)
+		public override void Set(Map key, Map val,StrategyMap map)
 		{
 			if (key.IsNumber)
 			{
@@ -4657,12 +3632,12 @@ namespace Meta
 				}
 				else
 				{
-					Panic(key, val);
+					Panic(key, val,map);
 				}
 			}
 			else
 			{
-				Panic(key, val);
+				Panic(key, val,map);
 			}
 		}
 
@@ -4724,46 +3699,33 @@ namespace Meta
 		{
 			return new StrategyMap(new CloneStrategy(this));
 		}
-		public override void AppendRange(Map array)
-		{
-			foreach (Map map in array.Array)
-			{
-				this.list.Add(map.Copy());
-			}
-		}
-		//public override bool EqualStrategy(MapStrategy obj)
+		//public override void AppendRange(Map array)
 		//{
-		//    if (obj is ListStrategy)
+		//    foreach (Map map in array.Array)
 		//    {
-		//        bool equal;
-		//        List<Map> otherData=((ListStrategy)obj).list;
-		//        if (list.Count == otherData.Count)
-		//        {
-		//            equal = true;
-		//            for (int i = 0; i < list.Count; i++)
-		//            {
-		//                if (!this.list[i].Equals(otherData[i]))
-		//                {
-		//                    equal = false;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        else
-		//        {
-		//            equal = false;
-		//        }
-		//        return equal;
-		//    }
-		//    else
-		//    {
-		//        return EqualDefault(obj);
+		//        this.list.Add(map.Copy());
 		//    }
 		//}
 	}
 	public class DictionaryStrategy:MapStrategy
 	{
-		public override void Remove(Map key)
+		public override bool IsNumber
+		{
+			get
+			{
+				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);
+			}
+		}
+
+		public override int GetArrayCount()
+		{
+			int i = 1;
+			for (; this.ContainsKey(i); i++)
+			{
+			}
+			return i - 1;
+		}
+		public override void Remove(Map key,StrategyMap map)
 		{
 			dictionary.Remove(key);
 		}
@@ -4785,7 +3747,7 @@ namespace Meta
 			dictionary.TryGetValue(key, out val);
 			return val;
 		}
-		public override void Set(Map key, Map value)
+		public override void Set(Map key, Map value,StrategyMap map)
 		{
 			dictionary[key] = value;
 		}
@@ -4814,13 +3776,16 @@ namespace Meta
 	}
 	public class CloneStrategy : MapStrategy
 	{
-		public override void Remove(Map key)
+		public override int GetArrayCount()
 		{
-			Panic(new DictionaryStrategy());
-			Remove(key);
+			return original.GetArrayCount();
+		}
+		public override void Remove(Map key,StrategyMap map)
+		{
+			Panic(new DictionaryStrategy(),map);
+			Remove(key,map);
 		}
 		private MapStrategy original;
-		// always use CloneStrategy, only have logic in one place, too complicated to use
 		public CloneStrategy(MapStrategy original)
 		{
 			this.original = original;
@@ -4846,19 +3811,13 @@ namespace Meta
 		public override Map CopyData()
 		{
 			MapStrategy clone = new CloneStrategy(this.original);
-			map.Strategy = new CloneStrategy(this.original);
+			//map.Strategy = new CloneStrategy(this.original);
 			return new StrategyMap(clone);
 		}
 		public override bool EqualStrategy(MapStrategy obj)
 		{
 			return obj.EqualStrategy(original);
-			//return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
 		}
-		//public override bool EqualStrategy(MapStrategy obj)
-		//{
-		//    return Object.ReferenceEquals(original, obj) || obj.EqualStrategy(original);
-		//    //return Object.ReferenceEquals(data, otherData) || otherData.Equal(this.data);
-		//}
 		public override int GetHashCode()
 		{
 			return original.GetHashCode();
@@ -4896,23 +3855,22 @@ namespace Meta
 		{
 			return original.Get(key);
 		}
-		public override void Set(Map key, Map value)
+		public override void Set(Map key, Map value,StrategyMap map)
 		{
-			Panic(key, value);
+			Panic(key, value,map);
 		}
 	}
 
 	public abstract class MapStrategy
 	{
-		public virtual void Append(Map map)
+		public virtual void Append(Map map,StrategyMap parent)
 		{
-		    this.Set(GetArrayCount() + 1,map);
+		    this.Set(GetArrayCount() + 1,map,parent);
 		}
-		public abstract void Remove(Map key);
+		public abstract void Remove(Map key,StrategyMap map);
 		// map is not really reliable, might have been copied
-		public StrategyMap map;
 
-		public abstract void Set(Map key, Map val);
+		public abstract void Set(Map key, Map val,StrategyMap map);
 		public abstract Map Get(Map key);
 
 		public virtual bool ContainsKey(Map key)
@@ -4920,56 +3878,103 @@ namespace Meta
 			return Keys.Contains(key);
 		}
 
-		public virtual int GetArrayCount()
-		{
-			return map.GetArrayCountDefault();
-		}
-		public virtual void AppendRange(Map array)
-		{
-			map.AppendRangeDefault(array);
-		}
+		public abstract int GetArrayCount();
+		//{
+		//    return map.GetArrayCountDefault();
+		//}
+		//public virtual void AppendRange(Map array)
+		//{
+		//    map.AppendRangeDefault(array);
+		//}
 
 
 
 		public abstract Map CopyData();
 
 		// refactor
-		public void Panic(MapStrategy newStrategy)
+		public void Panic(MapStrategy newStrategy,StrategyMap map)
 		{
 			map.Strategy = newStrategy;
 			map.InitFromStrategy(this);
 		}
 
-		protected void Panic(Map key, Map val)
+		protected void Panic(Map key, Map val,StrategyMap map)
 		{
-			Panic(key, val, new DictionaryStrategy());
+			Panic(key, val, new DictionaryStrategy(),map);
 		}
-		protected void Panic(Map key, Map val, MapStrategy newStrategy)
+		protected void Panic(Map key, Map val, MapStrategy newStrategy,StrategyMap map)
 		{
-			Panic(newStrategy);
-			map.Strategy.Set(key, val); // why do it like this? this wont assign the parent, which is problematic!!!
+			Panic(newStrategy,map);
+			map.Strategy.Set(key, val,map); // why do it like this? this wont assign the parent, which is problematic!!!
 		}
+		//public abstract bool IsNumber
+		//{
+		//    get;
+		//}
 		public virtual bool IsNumber
+		{
+		    get
+		    {
+		        return IsNumberDefault;
+		    }
+		}
+		public bool IsNumberDefault
 		{
 			get
 			{
-				return map.IsNumberDefault;
+				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);
 			}
 		}
 		public virtual bool IsString
 		{
 			get
 			{
-				return map.IsStringDefault;
+				return IsStringDefault;
 			}
+		}
+		public bool IsStringDefault
+		{
+			get
+			{
+				return GetArrayCount() == Count && this.Array.TrueForAll(delegate(Map map)
+				{
+					return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
+				});
+			}
+		}
+		public string GetStringDefault()
+		{
+			StringBuilder text = new StringBuilder("");
+			foreach (Map key in Keys)
+			{
+				text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));
+			}
+			return text.ToString();
 		}
 		public virtual string GetString()
 		{
-			return map.GetStringDefault();
+			return GetStringDefault();
 		}
 		public virtual Number GetNumber()
 		{
-			return map.GetNumberDefault();
+			return GetNumberDefault();
+		}
+		public Number GetNumberDefault()
+		{
+			Number number;
+			if (Count==0)
+			{
+				number = 0;
+			}
+			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber)
+			{
+				number = 1 + this.Get(Map.Empty).GetNumber();
+			}
+			else
+			{
+				throw new ApplicationException("Map is not an integer");
+			}
+			return number;
 		}
 		public abstract ICollection<Map> Keys
 		{
@@ -5024,6 +4029,8 @@ namespace Meta
 				return isEqual;
 			}
 		}
+		//public StrategyMap map;
+
 	}
 	public class Event:Map
 	{
@@ -5043,8 +4050,6 @@ namespace Meta
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
 			MethodImplementation.currentPosition = position;
-			//MethodImplementation.currentPosition = new PersistantPosition(position);
-			// binding flags arent really correct, should be different for static and instance events, combine with methodImplementation
 			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
 			if (eventDelegate != null)
 			{
@@ -5061,7 +4066,7 @@ namespace Meta
 						arguments.Add(Transform.TryToDotNet(argument[i], parameters[i].ParameterType));
 					}
 				}
-				Map result=new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray())); // why not convert result???
+				Map result=new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
 				FunctionBodyKey calls;
 				this.AddCall(result, out calls);
 				return new PersistantPosition(position, calls);
@@ -5091,7 +4096,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
 		}
-
 		protected override ICollection<Map> KeysImplementation
 		{
 			get
@@ -5152,7 +4156,6 @@ namespace Meta
 					get = new Method(property.GetGetMethod().Name, obj, type);
 				}
 				return get;
-				//return new Method(property.GetGetMethod().Name, obj, type);
 			}
 			else if(key.Equals(DotNetKeys.Set))
 			{
@@ -5161,7 +4164,6 @@ namespace Meta
 					set=new Method(property.GetSetMethod().Name, obj, type);
 				}
 				return set;
-				//return new Method(property.GetSetMethod().Name, obj, type);
 			}
 			else
 			{
@@ -5177,19 +4179,15 @@ namespace Meta
 			return new Property(property, obj, type);
 		}
 	}
-	public abstract class DotNetMap : Map, ISerializeEnumerableSpecial
+	public abstract class DotNetMap : Map
 	{
 		private Dictionary<Map, Map> data=new Dictionary<Map,Map>();
-		// rename NonSerialized
-		[NonSerialized]
 		public object obj;
-		[NonSerialized]
 		public Type type;
 		private BindingFlags bindingFlags;
 
 		public DotNetMap(object obj, Type type)
 		{
-			// combine this with MethodImplementation, maybe add a Reflection class
 			if (obj == null)
 			{
 				this.bindingFlags = BindingFlags.Public | BindingFlags.Static;
@@ -5301,11 +4299,14 @@ namespace Meta
 
 		public override string Serialize()
 		{
-			return obj != null ? this.obj.ToString() : this.type.ToString();
-		}
-		public string Serialize(string indent, string[] functions)
-		{
-			return indent;
+			if (obj != null)
+			{
+				return this.obj.ToString();
+			}
+			else
+			{
+				return this.type.ToString();
+			}
 		}
 		public Delegate CreateEventDelegate(string name, Map code)
 		{
@@ -5570,15 +4571,391 @@ namespace Meta
 		public const char select = '.';
 		public const char stringEscape = '\'';
 		public const char assignment = ' ';
-		//public const char statement = '=';
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const string current = "current";
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, stringEscape, shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
-		//public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', statement, select, stringEscape, shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
 	}
-	
+
+
+	public class Gac : Map
+	{
+		public static readonly Map gac = new Gac();
+		public static DirectoryMap fileSystem;
+		static Gac()
+		{
+			fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
+			DrivesMap drives = new DrivesMap();
+			Gac.fileSystem.cache["localhost"] = drives;
+			Gac.gac["filesystem"] = Gac.fileSystem;
+		}
+		private Gac()
+		{
+			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+		}
+		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+		public static Map LoadAssembly(Assembly assembly)
+		{
+			Map val = new StrategyMap();
+			foreach (Type type in assembly.GetExportedTypes())
+			{
+				if (type.DeclaringType == null)
+				{
+					Map selected = val;
+					string name;
+					if (type.IsGenericTypeDefinition)
+					{
+						name = type.Name.Split('`')[0];
+					}
+					else
+					{
+						name = type.Name;
+					}
+					selected[type.Name] = new TypeMap(type);
+				}
+			}
+			return val;
+		}
+		protected override Map Get(Map key)
+		{
+			Map value;
+			if (!cache.ContainsKey(key))
+			{
+				if (key.IsString)
+				{
+					try
+					{
+						value = LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
+						this[key] = value;
+					}
+					catch
+					{
+						value = null;
+					}
+				}
+				else
+				{
+					Map version = key["version"];
+					Map publicKeyToken = key["publicKeyToken"];
+					Map culture = key["culture"];
+					Map name = key["name"];
+					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+					{
+						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+						value = LoadAssembly(assembly);
+						this[key] = value;
+					}
+					else
+					{
+						value = null;
+					}
+				}
+			}
+			else
+			{
+				value = cache[key];
+			}
+			return value;
+		}
+		protected override void Set(Map key, Map val)
+		{
+			cache[key] = val;
+			//throw new Exception("The method or operation is not implemented.");
+		}
+		protected override Map CopyData()
+		{
+			return this;
+		}
+		protected override ICollection<Map> KeysImplementation
+		{
+			get
+			{
+				throw new ApplicationException("not implemented.");
+			}
+		}
+		protected override bool ContainsKeyImplementation(Map key)
+		{
+			return Get(key) != null;
+		}
+		//protected Map cachedAssemblyInfo = new StrategyMap();
+	}
+	//public class FileSystem
+	//{
+	//    // combine gac into fileSystem
+
+	//    public static DirectoryMap fileSystem;
+	//    static FileSystem()
+	//    {
+	//        fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
+	//        DrivesMap drives = new DrivesMap();
+	//        FileSystem.fileSystem.cache["localhost"] = drives;
+	//        Gac.gac["filesystem"] = FileSystem.fileSystem;
+	//    }
+	//}
+	public class Number
+	{
+		public bool IsNatural
+		{
+			get
+			{
+				return denominator == 1.0d;
+			}
+		}
+		private readonly double numerator;
+		private readonly double denominator;
+
+		public Number(Number i)
+			: this(i.numerator, i.denominator)
+		{
+		}
+		public Number(Map map)
+			: this(map.GetNumber())
+		{
+		}
+		public Number(int integer)
+			: this((double)integer)
+		{
+		}
+		public Number(long integer)
+			: this((double)integer)
+		{
+		}
+		public Number(double integer)
+			: this(integer, 1)
+		{
+		}
+		public Number(ulong integer)
+			: this((double)integer)
+		{
+		}
+		public Number(double numerator, double denominator)
+		{
+			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+			if (denominator < 0)
+			{
+				numerator = -numerator;
+				denominator = -denominator;
+			}
+			this.numerator = numerator / greatestCommonDivisor;
+			this.denominator = denominator / greatestCommonDivisor;
+		}
+		public double Numerator
+		{
+			get
+			{
+				return numerator;
+			}
+		}
+		public double Denominator
+		{
+			get
+			{
+				return denominator;
+			}
+		}
+		public static Number operator |(Number a, Number b)
+		{
+			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
+		}
+		public override string ToString()
+		{
+			if (denominator == 1)
+			{
+				return numerator.ToString();
+			}
+			else
+			{
+				return numerator.ToString() + Syntax.fraction + denominator.ToString();
+			}
+		}
+		public Number Clone()
+		{
+			return new Number(this);
+		}
+		public static implicit operator Number(double number)
+		{
+			return new Number(number);
+		}
+		public static implicit operator Number(decimal number)
+		{
+			return new Number((double)number);
+		}
+		public static implicit operator Number(int integer)
+		{
+			return new Number(integer);
+		}
+		public static bool operator ==(Number a, Number b)
+		{
+			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator == b.denominator;
+		}
+		public static bool operator !=(Number a, Number b)
+		{
+			return !(a == b);
+		}
+		private static double GreatestCommonDivisor(double a, double b)
+		{
+			a = Math.Abs(a);
+			b = Math.Abs(b);
+			while (a != 0 && b != 0)
+			{
+				if (a > b)
+					a = a % b;
+				else
+					b = b % a;
+			}
+			if (a == 0)
+				return b;
+			else
+				return a;
+		}
+		private static double LeastCommonMultiple(Number a, Number b)
+		{
+			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
+		}
+		public static Number operator +(Number a, Number b)
+		{
+			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));
+		}
+
+		public static Number operator /(Number a, Number b)
+		{
+			return new Number(a.numerator * b.denominator, a.denominator * b.numerator);
+		}
+		public static Number operator -(Number a, Number b)
+		{
+			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));
+		}
+		public static Number operator *(Number a, Number b)
+		{
+			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);
+		}
+		public double Expand(Number b)
+		{
+			return numerator * (LeastCommonMultiple(this, b) / denominator);
+		}
+		public static bool operator >(Number a, Number b)
+		{
+			return a.Expand(b) > b.Expand(a);
+		}
+		public static bool operator <(Number a, Number b)
+		{
+			return a.Expand(b) < b.Expand(a);
+		}
+		public static bool operator >=(Number a, Number b)
+		{
+			return a.Expand(b) >= b.Expand(a);
+		}
+		public static bool operator <=(Number a, Number b)
+		{
+			return a.Expand(b) <= b.Expand(a);
+		}
+		public override bool Equals(object o)
+		{
+			if (!(o is Number))
+			{
+				return false;
+			}
+			Number b = (Number)o;
+			return b.numerator == numerator && b.denominator == denominator;
+		}
+		public override int GetHashCode()
+		{
+			Number x = new Number(this);
+			while (x > int.MaxValue)
+			{
+				x = x - int.MaxValue;
+			}
+			return x.GetInt32();
+		}
+		public int GetInt32()
+		{
+			// refactor, incorrect
+			return Convert.ToInt32(numerator);
+		}
+		public long GetInt64()
+		{
+			// refactor, incorrect
+			return Convert.ToInt64(numerator);
+		}
+	}
+	// experimential
+	public class Web
+	{
+		const int port = 80;
+		public static Map Get(Map key)
+		{
+			if (!key.IsString)
+			{
+				return null;
+			}
+			string address = key.GetString();
+
+			WebClient webClient = new WebClient();
+
+			string metaPath = Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
+			string cacheDirectory = Path.Combine(metaPath, "Cache");
+			DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
+			string zipDirectory = Path.Combine(metaPath, "Zip");
+			string zipFile = Path.Combine(zipDirectory, address + ".zip");
+			Directory.CreateDirectory(zipDirectory);
+			string metaZipAddress = "http://" + address + "/" + "meta.zip";
+
+			try
+			{
+				webClient.DownloadFile(metaZipAddress, zipFile);
+			}
+			catch (Exception e)
+			{
+				return null;
+			}
+			unzipDirectory.Create();
+			Unzip(zipFile, unzipDirectory.FullName);
+			// net should be parent
+			return new DirectoryMap(unzipDirectory);
+		}
+		public static void Unzip(string zipFile, string dir)
+		{
+			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
+
+			ZipEntry theEntry;
+			while ((theEntry = s.GetNextEntry()) != null)
+			{
+
+				Console.WriteLine(theEntry.Name);
+
+				string directoryName = Path.GetDirectoryName(theEntry.Name);
+				string fileName = Path.GetFileName(theEntry.Name);
+
+				// fix this for directory creation
+
+				//Directory.CreateDirectory(directoryName);
+
+				if (fileName != String.Empty)
+				{
+					FileStream streamWriter = File.Create(Path.Combine(dir, theEntry.Name));
+
+					int size = 2048;
+					byte[] data = new byte[2048];
+					while (true)
+					{
+						size = s.Read(data, 0, data.Length);
+						if (size > 0)
+						{
+							streamWriter.Write(data, 0, size);
+						}
+						else
+						{
+							break;
+						}
+					}
+
+					streamWriter.Close();
+				}
+			}
+			s.Close();
+		}
+	}
 	// refactor completely
 	public class Parser
 	{
@@ -5685,8 +5062,7 @@ namespace Meta
 	}))));
 		private static Rule EndOfLinePreserve = 
 			new Sequence(
-			// this is a bug, text should be preserved
-				new Action(new Match(), //new FlattenRule(
+				new Action(new Match(),
 					new ZeroOrMore(
 							new Action(new Autokey(), new Alternatives(
 								new Character(Syntax.space),
@@ -5738,11 +5114,10 @@ namespace Meta
 													new Action(new Match(), EndOfLinePreserve),
 													new Action(new Match(), SameIndentation),
 													new Action(new ReferenceAssignment(),
-														//new FlattenRule(
-															new Sequence(
-																new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
-																new Action(new Append(), StringLine)
-																)))))))),
+														new Sequence(
+															new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+															new Action(new Append(), StringLine)
+															)))))))),
 					new Action(new Match(), StringDedentation),
 					new Action(new Match(), new Character(Syntax.@string))));
 
@@ -5808,48 +5183,6 @@ namespace Meta
 			}
 			return map;
 		});
-		//// refactor
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    Indentation.Match(parser, out matched);
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        map = Entry.Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                if (parser.Rest == "")
-		//                {
-		//                    break;
-		//                }
-		//                new Alternatives(
-		//                    SameIndentation,
-		//                    Dedentation).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    map = Library.Merge(new StrategyMap(
-		//                        1, map,
-		//                        2, Entry.Match(parser, out matched)));
-		//                    //map.Append(Entry.Match(parser, out matched));
-		//                }
-		//                else
-		//                {
-		//                    matched = true;
-		//                    break;
-		//                }
-		//                if (parser.Rest == "")
-		//                {
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
@@ -5941,58 +5274,6 @@ namespace Meta
 			}
 			return result;
 		});
-		//// refactor
-		//public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    Map result = new StrategyMap();
-		//    Map function = Parser.FunctionExpression.Match(parser, out matched);
-		//    if (matched)
-		//    {
-		//        result[CodeKeys.Function] = function[CodeKeys.Value][CodeKeys.Literal];
-		//    }
-		//    else
-		//    {
-		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-		//            //StringRule(Syntax.statement.ToString()).Match(parser, out matched);
-		//            if (matched)
-		//            {
-		//                Map value = Value.Match(parser, out matched);
-		//                result[key] = value;
-
-		//                // i dont understand this
-		//                bool match;
-		//                if (EndOfLine.Match(parser, out match) == null && parser.Look() != Syntax.endOfFile)
-		//                {
-		//                    parser.index -= 1;
-		//                    if (EndOfLine.Match(parser, out match) == null)
-		//                    {
-		//                        parser.index -= 1;
-		//                        if (EndOfLine.Match(parser, out match) == null)
-		//                        {
-		//                            parser.index += 2;
-		//                            //matched = false;
-		//                            //return null;
-		//                            throw new SyntaxException("Expected newline.", parser);
-		//                        }
-		//                        else
-		//                        {
-		//                            parser.line--;
-		//                        }
-		//                    }
-		//                    else
-		//                    {
-		//                        parser.line--;
-		//                    }
-		//                }
-		//            }
-		//        }
-		//    }
-		//    return result;
-		//});
-
 		public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
 		{
 			Map result = new Sequence(
@@ -6190,7 +5471,6 @@ namespace Meta
 			if (m)
 			{
 				Map map = p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek()));
-				//Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
 
 				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 				matched = true;
@@ -6230,23 +5510,7 @@ namespace Meta
 							new Action(new Match(),new Optional(new Character(Syntax.assignment))),
 							new Action(new Assignment(
 								CodeKeys.Value),
-								Expression))//,
-		//                new Sequence(
-		//                    new Action(new Match(),new Optional(
-		//                        new Character(Syntax.assignment))),
-		//                    new Action(new Assignment(
-		//                        CodeKeys.Value),
-		//                        Expression),
-		//                    new Action(new Assignment(
-		//                        CodeKeys.Key),
-		//                        new CustomRule(delegate(Parser p, out bool matched)
-		//{
-		//    Map map = p.CreateMap(1, p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek())));
-		//    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//    matched = true;
-		//    return map;
-		//})))
-			))),
+								Expression))))),
 			new Action(new Match(),new CustomRule(delegate(Parser p, out bool matched)
 		{
 			if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
@@ -6766,7 +6030,6 @@ namespace Meta
 						else
 						{
 							text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.assignment + Value.Match((Map)entry.Value, (indentation), out matched);
-							//text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.statement + Value.Match((Map)entry.Value, (indentation), out matched);
 							if (!text.EndsWith(Syntax.unixNewLine.ToString()))
 							{
 								text += Syntax.unixNewLine;
@@ -6854,14 +6117,12 @@ namespace Meta
 					if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
 					{
 						text += Syntax.assignment;
-						//text += Syntax.statement;
 					}
 				}
 				else
 				{
 					bool m;
 					text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.assignment;
-					//text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.statement;
 				}
 				bool matched;
 				text += Expression.Match(value, indentation,out matched);
@@ -7149,7 +6410,6 @@ namespace Meta
 				return text;
 			}
 		}
-		// combine with Literal?
 		public class Equal : Rule
 		{
 			private Map map;
@@ -7282,484 +6542,6 @@ namespace Meta
 			}
 		}
 	}
-	public class Gac : Map
-	{
-		public static readonly Map gac = new Gac();
-		static Gac()
-		{
-			object x = FileSystem.fileSystem;
-		}
-		private Gac()
-		{
-			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-		}
-		private Dictionary<Map, Map> cache=new Dictionary<Map,Map>();
-		public static Map LoadAssembly(Assembly assembly)
-		{
-			Map val = new StrategyMap();
-			foreach (Type type in assembly.GetExportedTypes())
-			{
-				if (type.DeclaringType == null)
-				{
-					Map selected = val;
-					string name;
-					if (type.IsGenericTypeDefinition)
-					{
-						name = type.Name.Split('`')[0];
-					}
-					else
-					{
-						name = type.Name;
-					}
-					selected[type.Name] = new TypeMap(type);
-				}
-			}
-			return val;
-		}
-		protected override Map Get(Map key)
-		{
-			Map value;
-			if (!cache.ContainsKey(key))
-			{
-				if (key.IsString)
-				{
-					try
-					{
-						value=LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
-						this[key] = value;
-					}
-					catch
-					{
-						value=null;
-					}
-				}
-				else
-				{
-					Map version = key["version"];
-					Map publicKeyToken = key["publicKeyToken"];
-					Map culture = key["culture"];
-					Map name = key["name"];
-					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-					{
-						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-						value=LoadAssembly(assembly);
-						this[key] = value;
-					}
-					else
-					{
-						value=null;
-					}
-				}
-			}
-			else
-			{
-				value = cache[key];
-			}
-			return value;
-		}
-		protected override void Set(Map key, Map val)
-		{
-			cache[key] = val;
-			//throw new Exception("The method or operation is not implemented.");
-		}
-		protected override Map CopyData()
-		{
-			return this;
-		}
-		protected override ICollection<Map> KeysImplementation
-		{
-			get
-			{
-				throw new ApplicationException("not implemented.");
-			}
-		}
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return Get(key) != null;
-		}
-		//protected Map cachedAssemblyInfo = new StrategyMap();
-	}
-	//public class Gac : StrategyMap
-	//{
-	//    static Gac()
-	//    {
-	//        object x = FileSystem.fileSystem;
-	//    }
-	//    public static readonly StrategyMap gac = new Gac();
-	//    private Gac()
-	//    {
-	//        this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-	//    }
-	//    private bool Load(Map key)
-	//    {
-	//        bool loaded;
-	//        if (strategy.ContainsKey(key))
-	//        {
-	//            loaded = true;
-	//        }
-	//        else
-	//        {
-	//            if (key.IsString)
-	//            {
-	//                string assemblyName = key.GetString();
-	//                Assembly assembly = null;
-	//                try
-	//                {
-	//                    assembly = Assembly.LoadWithPartialName(assemblyName);
-	//                }
-	//                catch
-	//                {
-	//                }
-	//                if (assembly != null)
-	//                {
-	//                    this[key] = LoadAssembly(assembly);
-	//                    loaded = true;
-	//                }
-	//                else
-	//                {
-	//                    loaded = false;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                Map version = key["version"];
-	//                Map publicKeyToken = key["publicKeyToken"];
-	//                Map culture = key["culture"];
-	//                Map name = key["name"];
-	//                if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-	//                {
-	//                    Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-	//                    this[key] = LoadAssembly(assembly);
-	//                    loaded = true;
-	//                }
-	//                else
-	//                {
-	//                    loaded = false;
-	//                }
-	//            }
-	//        }
-	//        return loaded;
-	//    }
-	//    public static Map LoadAssembly(Assembly assembly)
-	//    {
-	//        Map val = new StrategyMap();
-	//        foreach (Type type in assembly.GetExportedTypes())
-	//        {
-	//            if (type.DeclaringType == null)
-	//            {
-	//                Map selected = val;
-	//                string name;
-	//                if (type.IsGenericTypeDefinition)
-	//                {
-	//                    name = type.Name.Split('`')[0];
-	//                }
-	//                else
-	//                {
-	//                    name = type.Name;
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        Map val;
-	//        if ((key.IsString && strategy.ContainsKey(key)) || Load(key))
-	//        {
-	//            val = strategy.Get(key);
-	//        }
-	//        else
-	//        {
-	//            val = Web.Get(key);
-	//        }
-	//        return val;
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            throw new ApplicationException("not implemented.");
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return Get(key) != null;
-	//    }
-	//    //protected Map cachedAssemblyInfo = new StrategyMap();
-	//}
-	public class FileSystem
-	{
-		// combine gac into fileSystem
-
-		public static DirectoryMap fileSystem;
-		// this stuff should be done somehwere else!!
-		static FileSystem()
-		{
-			fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
-			DrivesMap drives = new DrivesMap();
-			FileSystem.fileSystem.cache["localhost"] = drives;
-			Gac.gac["filesystem"] = FileSystem.fileSystem;
-		}
-	}
-	public class Number
-	{
-		public bool IsNatural
-		{
-			get
-			{
-				return denominator == 1.0d;
-			}
-		}
-		private readonly double numerator;
-		private readonly double denominator;
-
-		public Number(Number i):this(i.numerator,i.denominator)
-		{
-		}
-		public Number(Map map):this(map.GetNumber())
-		{
-		}
-		public Number(int integer)
-			: this((double)integer)
-		{
-		}
-		public Number(long integer)
-			: this((double)integer)
-		{
-		}
-		public Number(double integer):this(integer,1)
-		{
-		}
-		public Number(ulong integer):this((double)integer)
-		{
-		}
-		public Number(double numerator, double denominator)
-		{
-			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
-			if (denominator < 0)
-			{
-				numerator = -numerator;
-				denominator = -denominator;
-			}
-			this.numerator=numerator/greatestCommonDivisor;
-			this.denominator = denominator / greatestCommonDivisor;
-		}
-		public double Numerator
-		{
-			get
-			{
-				return numerator;
-			}
-		}
-		public double Denominator
-		{
-			get
-			{
-				return denominator;
-			}
-		}
-		public static Number operator |(Number a, Number b)
-		{
-			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
-		}
-		public override string ToString()
-		{
-			if (denominator == 1)
-			{
-				return numerator.ToString();
-			}
-			else
-			{
-				return numerator.ToString() + Syntax.fraction + denominator.ToString();
-			}
-		}
-		public Number Clone()
-		{
-			return new Number(this);
-		}
-		public static implicit operator Number(double number)
-		{
-			return new Number(number);
-		}
-		public static implicit operator Number(decimal number)
-		{
-			return new Number((double)number);
-		}
-		public static implicit operator Number(int integer)
-		{
-			return new Number(integer);
-		}
-		public static bool operator ==(Number a, Number b)
-		{
-			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator==b.denominator;
-		}
-		public static bool operator !=(Number a, Number b)
-		{
-			return !(a == b);
-		}
-		private static double GreatestCommonDivisor(double a, double b)
-		{
-			a = Math.Abs(a);
-			b = Math.Abs(b);
-		   while (a!=0 && b!=0) {
-				   if(a > b)
-						   a = a % b;
-				   else
-						   b = b % a;
-		   }
-		   if(a == 0)
-				   return b;
-		   else
-				   return a;
-		}
-		private static double LeastCommonMultiple(Number a, Number b)
-		{
-			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
-		}
-		public static Number operator +(Number a, Number b)
-		{
-			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a,b));
-		}
-
-		public static Number operator /(Number a, Number b)
-		{
-			return new Number(a.numerator*b.denominator,a.denominator*b.numerator);
-		}
-		public static Number operator -(Number a, Number b)
-		{
-			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a,b));
-		}
-		public static Number operator *(Number a, Number b)
-		{
-			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);
-		}
-		public double Expand(Number b)
-		{
-			return numerator * (LeastCommonMultiple(this, b) / denominator);
-		}
-		public static bool operator >(Number a, Number b)
-		{
-			return a.Expand(b) > b.Expand(a);
-		}
-		public static bool operator <(Number a, Number b)
-		{
-			return a.Expand(b) < b.Expand(a);
-		}
-		public static bool operator >=(Number a, Number b)
-		{
-			return a.Expand(b) >= b.Expand(a);
-		}
-		public static bool operator <=(Number a, Number b)
-		{
-			return a.Expand(b) <= b.Expand(a);
-		}
-		public override bool Equals(object o)
-		{
-			if (!(o is Number))
-			{
-				return false;
-			}
-			Number b = (Number)o;
-			return b.numerator==numerator && b.denominator==denominator;
-		}
-		public override int GetHashCode()
-		{
-			Number x = new Number(this);
-			while (x > int.MaxValue)
-			{
-				x = x - int.MaxValue;
-			}
-			return x.GetInt32();
-		}
-		public int GetInt32()
-		{
-			// refactor, incorrect
-			return Convert.ToInt32(numerator);
-		}
-		public long GetInt64()
-		{
-			// refactor, incorrect
-			return Convert.ToInt64(numerator);
-		}
-	}
-	// experimential
-	public class Web
-	{
-		const int port = 80;
-		public static Map Get(Map key)
-		{
-			if (!key.IsString)
-			{
-				return null;
-			}
-			string address = key.GetString();
-
-			WebClient webClient = new WebClient();
-
-			string metaPath = Path.Combine(new DirectoryInfo(Application.UserAppDataPath).Parent.Parent.Parent.FullName, "Meta");
-			string cacheDirectory = Path.Combine(metaPath, "Cache");
-			DirectoryInfo unzipDirectory = new DirectoryInfo(Path.Combine(cacheDirectory, address));
-			string zipDirectory = Path.Combine(metaPath, "Zip");
-			string zipFile = Path.Combine(zipDirectory, address + ".zip");
-			Directory.CreateDirectory(zipDirectory);
-			string metaZipAddress = "http://" + address + "/" + "meta.zip";
-
-			try
-			{
-				webClient.DownloadFile(metaZipAddress, zipFile);
-			}
-			catch (Exception e)
-			{
-				return null;
-			}
-			unzipDirectory.Create();
-			Unzip(zipFile, unzipDirectory.FullName);
-			// net should be parent
-			return new DirectoryMap(unzipDirectory);
-		}
-		public static void Unzip(string zipFile, string dir)
-		{
-			ZipInputStream s = new ZipInputStream(File.OpenRead(zipFile));
-
-			ZipEntry theEntry;
-			while ((theEntry = s.GetNextEntry()) != null)
-			{
-
-				Console.WriteLine(theEntry.Name);
-
-				string directoryName = Path.GetDirectoryName(theEntry.Name);
-				string fileName = Path.GetFileName(theEntry.Name);
-
-				// fix this for directory creation
-
-				//Directory.CreateDirectory(directoryName);
-
-				if (fileName != String.Empty)
-				{
-					FileStream streamWriter = File.Create(Path.Combine(dir, theEntry.Name));
-
-					int size = 2048;
-					byte[] data = new byte[2048];
-					while (true)
-					{
-						size = s.Read(data, 0, data.Length);
-						if (size > 0)
-						{
-							streamWriter.Write(data, 0, size);
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					streamWriter.Close();
-				}
-			}
-			s.Close();
-		}
-	}
 	namespace Test
 	{
 		public class MetaTest : TestRunner
@@ -7809,6 +6591,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Extents : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+				}
+			}
 			public class Library : Test
 			{
 				public override object GetResult(out int level)
@@ -7822,16 +6612,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);//.GetString();
-					//return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty).GetString();
-				}
-			}
-			public class Extents : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 				}
 			}
 			public class Basic : Test
@@ -7842,23 +6623,12 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-
-
-
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(FileSystem.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
 			public static Map Run(string path,Map argument)
@@ -7893,7 +6663,6 @@ namespace Meta
 						CodeKeys.Argument, new StrategyMap(
 							CodeKeys.Literal, argument)));
 				PersistantPosition position = code.GetExpression().Evaluate(RootPosition.rootPosition);
-				//PersistantPosition position = code.GetExpression().Evaluate(new PersistantPosition(new List<Map>(new Map[] { })));
 				return position.Get();
 
 			}
@@ -7901,7 +6670,6 @@ namespace Meta
 		}
 		namespace TestClasses
 		{
-			[Serializable]
 			public class MemberTest
 			{
 				public static string classField = "default";
@@ -7945,10 +6713,9 @@ namespace Meta
 			}
 			public delegate object IntEvent(object intArg);
 			public delegate object NormalEvent(object sender);
-			[Serializable]
 			public class TestClass
 			{
-				public class NestedClass// TODO: rename, only used for testing purposes
+				public class NestedClass
 				{
 					public static int field = 0;
 				}
@@ -7982,7 +6749,6 @@ namespace Meta
 				public float floatValue = 0.0F;
 				public decimal decimalValue = 0.0M;
 			}
-			[Serializable]
 			public class PositionalNoConversion : TestClass
 			{
 				public PositionalNoConversion(string p1, string b, string p2)
@@ -8020,7 +6786,6 @@ namespace Meta
 					this.y = def["y"].GetString();
 					this.z = def["p2"].GetString();
 				}
-				// refactor, remove
 				public string Concatenate(Map arg)
 				{
 					Map def = new StrategyMap();
@@ -8044,7 +6809,6 @@ namespace Meta
 						this.x + this.y + this.z;
 				}
 			}
-			[Serializable]
 			public class IndexerNoConversion : TestClass
 			{
 				public string this[string a]
