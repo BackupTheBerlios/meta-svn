@@ -39,6 +39,7 @@ using System.Web;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Drawing;
+//using Gtk;
 
 
 namespace Meta
@@ -459,6 +460,14 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map ShowGtk(Map arg)
+		{
+			Gtk.Application.Init();
+			Gtk.Window win = new Gtk.Window("TextViewSample");
+			////win.SetDefaultSize(600, 400);
+			win.ShowAll();
+			return Map.Empty;
+		}
 		public static Map With(Map arg)
 		{
 			Map obj = arg["object"];
@@ -1520,12 +1529,19 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			Form form=new Form();
-			Size size;
-			RichTextBox box;
-			OpenFileDialog dialog;
+			//Gtk.Application.Init();
+			//Gtk.Window win = new Gtk.Window("TextViewSample");
+			//////win.SetDefaultSize(600, 400);
+			//win.ShowAll();
+
+			//Application.Run();
+
+			//Form form=new Form();
+			//Size size;
+			//RichTextBox box;
+			//OpenFileDialog dialog;
 			//box.SelectedText
-			form.KeyDown += new KeyEventHandler(form_KeyDown);
+			//form.KeyDown += new KeyEventHandler(form_KeyDown);
 			try
 			{
 				if (args.Length == 0)
@@ -3053,6 +3069,10 @@ namespace Meta
 			object[] arguments = ConvertArgument(argument, out converted);
 			try
 			{
+				//if (arguments.Length == 1)
+				//{
+				//    arguments[0] = new Gtk.gtk "hello";
+				//}
 				Map result = Transform.ToMeta(
 					method is ConstructorInfo ?
 						((ConstructorInfo)method).Invoke(arguments) :
@@ -3447,6 +3467,10 @@ namespace Meta
 		}
 		public ObjectMap(string text)
 			: this(text, text.GetType())
+		{
+		}
+		public ObjectMap(Map target)
+			: this(target, target.GetType())
 		{
 		}
 		public ObjectMap(object target, Type type)
