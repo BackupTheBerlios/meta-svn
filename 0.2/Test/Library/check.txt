@@ -656,3 +656,22 @@ Entry (KeyValuePair`2)
 														"literal"
 													Value (StrategyMap):
 														"arg"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"invertTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"a"
+			Value (StrategyMap):
+				""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"b"
+			Value (StrategyMap):
+				""
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"c"
+			Value (StrategyMap):
+				""

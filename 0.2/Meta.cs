@@ -356,7 +356,7 @@ namespace Meta
 					}
 					else
 					{
-						selection = selection.Parent;//.Keys.Count - 1));
+						selection = selection.Parent;
 					}
 				}
 			}
@@ -465,7 +465,7 @@ namespace Meta
 		public static Map SplitString(Map arg)
 		{
 			char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-			string[] split = arg[1].GetString().Split(delimiters);
+			string[] split = arg["text"].GetString().Split(delimiters);
 			Map result = new StrategyMap(new ListStrategy(split.Length));
 			foreach (string text in split)
 			{
@@ -473,6 +473,34 @@ namespace Meta
 			}
 			return result;
 		}
+		public static Map Invert(Map arg)
+		{
+			Map result = new StrategyMap();
+
+			foreach (Map map in arg.Array)
+			{
+				foreach (KeyValuePair<Map, Map> entry in map)
+				{
+					if(!result.ContainsKey(entry.Key))
+					{
+						result[entry.Key] = new StrategyMap(new ListStrategy());
+					}
+					result[entry.Key].Append(entry.Value);
+				}
+			}
+			return result;
+		}
+		//public static Map SplitString(Map arg)
+		//{
+		//    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
+		//    string[] split = arg["text"].GetString().Split(delimiters);
+		//    Map result = new StrategyMap(new ListStrategy(split.Length));
+		//    foreach (string text in split)
+		//    {
+		//        result.Append(text);
+		//    }
+		//    return result;
+		//}
 		public static Map Subtract(Map arg)
 		{
 			return arg[1].GetNumber() - arg[2].GetNumber();
@@ -790,18 +818,14 @@ namespace Meta
 			}
 			return result;
 		}
-		// rename arguments
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg[1].Array;
 			PersistantPosition argument = Call.lastArgument;
-			//PersistantPosition argument = Call.lastArgument.Copy();
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
 				Map result=argument.Get().Call(new StrategyMap(1, a, 2, b), argument).Get();
-				return result.GetNumber().GetInt32();//);//, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
-				//return argument.Get().Call(new StrategyMap(1, a, 2, b), argument).Get().GetNumber().GetInt32();//);//, argument).Get().GetNumber().GetInt32().CompareTo(argument.Get().Call(b, argument).Get().GetNumber().GetInt32());
-				//return arg.Call(a, MethodImplementation.currentPosition).Get().GetNumber().GetInt32().CompareTo(arg.Call(b, MethodImplementation.currentPosition).Get().GetNumber().GetInt32());
+				return result.GetNumber().GetInt32();
 			}));
 			return new StrategyMap(array);
 		}
@@ -1117,7 +1141,6 @@ namespace Meta
 					if (text != "")
 					{
 						Map start = new StrategyMap();
-						//Map start = new StrategyMap(new PersistantPosition(Position, key));
 						Parser parser = new Parser(text, metaFile);
 						bool matched;
 						result = Parser.File.Match(parser, out matched);
@@ -1546,7 +1569,6 @@ namespace Meta
 					int lines = 0;
 					while (true)
 					{
-						//string input = ReadLine();
 						string input = Console.ReadLine();
 						if (input.Trim().Length != 0)
 						{
@@ -1612,7 +1634,6 @@ namespace Meta
 				string path = args[0];
 				string startDirectory = Path.GetDirectoryName(path);
 				Directory.SetCurrentDirectory(startDirectory);
-				//Environment.SetEnvironmentVariable("PATH", startDirectory + ";" + Environment.GetEnvironmentVariable("PATH"));
 				MetaTest.Run(path, Map.Empty);
 			}
 		}
@@ -1733,7 +1754,7 @@ namespace Meta
 		}
 		public virtual bool CacheValid()
 		{
-			return cached != null;// && Parent.CacheValid();
+			return cached != null;
 		}
 		public void AddOptimization(Map key,BustOptimization optimization)
 		{
@@ -1872,25 +1893,34 @@ namespace Meta
 				return tempData;
 			}
 		}
+		public Map TryGetValue(Map key)
+		{
+			if (key is FunctionBodyKey)
+			{
+				if (TemporaryData.ContainsKey((FunctionBodyKey)key))
+				{
+					return TemporaryData[(FunctionBodyKey)key];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return Get(key);
+			}
+		}
 		public Map this[Map key]
 		{
 			get
 			{
-				if (key is FunctionBodyKey)
+				Map value = TryGetValue(key);
+				if (value == null)
 				{
-					if (TemporaryData.ContainsKey((FunctionBodyKey)key))
-					{
-						return TemporaryData[(FunctionBodyKey)key];
-					}
-					else
-					{
-						return null;
-					}
+					throw new KeyDoesNotExist(key, null, this);
 				}
-				else
-				{
-					return Get(key);
-				}
+				return value;
 			}
 			set
 			{
@@ -1915,6 +1945,49 @@ namespace Meta
 				}
 			}
 		}
+		//public Map this[Map key]
+		//{
+		//    get
+		//    {
+		//        if (key is FunctionBodyKey)
+		//        {
+		//            if (TemporaryData.ContainsKey((FunctionBodyKey)key))
+		//            {
+		//                return TemporaryData[(FunctionBodyKey)key];
+		//            }
+		//            else
+		//            {
+		//                return null;
+		//            }
+		//        }
+		//        else
+		//        {
+		//            return Get(key);
+		//        }
+		//    }
+		//    set
+		//    {
+		//        if (value != null)
+		//        {
+		//            compiledCode = null;
+		//            Map val;
+		//            val = value.Copy();
+		//            if (key is FunctionBodyKey)
+		//            {
+		//                this.TemporaryData[(FunctionBodyKey)key] = val;
+		//            }
+		//            else
+		//            {
+		//                Set(key, val);
+		//            }
+		//            if (KeyChanged != null)
+		//            {
+		//                this.KeyChanged(new KeyChangedEventArgs(key));
+		//                this.KeyChanged = null;
+		//            }
+		//        }
+		//    }
+		//}
 		public event KeyChangedEventHandler KeyChanged;
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
@@ -2372,7 +2445,6 @@ namespace Meta
 		public StrategyMap(MapStrategy strategy)
 		{
 			this.strategy = strategy;
-			//this.strategy.map = this;
 		}
 		public StrategyMap()
 			: this(new EmptyStrategy())
@@ -2388,7 +2460,6 @@ namespace Meta
 		}
 		public StrategyMap(string text)
 			: this(new StringStrategy(text))
-			//: this(new ListStrategy(text))
 		{
 		}
 		public StrategyMap(PersistantPosition scope, params Map[] keysAndValues)
@@ -2410,10 +2481,6 @@ namespace Meta
 				return strategy.GetArrayCount();
 			}
 		}
-		//public override void AppendRange(Map array)
-		//{
-		//    strategy.AppendRange(array);
-		//}
 		public void InitFromStrategy(MapStrategy clone)
 		{
 			foreach (Map key in clone.Keys)
@@ -2497,10 +2564,6 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		//public override int GetHashCode()
-		//{
-		//    return base.GetHashCode();
-		//}
 		public MapStrategy Strategy
 		{
 			get
@@ -2510,7 +2573,6 @@ namespace Meta
 			set
 			{
 				strategy = value;
-				//strategy.map = this;
 			}
 		}
 	}
@@ -2603,7 +2665,6 @@ namespace Meta
 		public class MetaDelegate
 		{
 			private PersistantPosition callable;
-			//private Map callable;
 			private Type returnType;
 			public MetaDelegate(PersistantPosition callable, Type returnType)
 			{
@@ -2618,9 +2679,6 @@ namespace Meta
 					arg.Append(Transform.ToSimpleMeta(argument));
 				}
 				Map result = this.callable.Get().Call(arg, this.callable).Get();
-				//Map result = this.callable.Get().Call(arg, MethodImplementation.currentPosition).Get();
-				//Map result = this.callable.Call(arg, MethodImplementation.currentPosition).Get();
-				//Map result = this.callable.Call(arg);
 				return Meta.Transform.TryToDotNet(result, this.returnType);
 			}
 		}
@@ -3122,8 +3180,6 @@ namespace Meta
 				return false;
 			}
 		}
-		// why overriden here?
-		// and not in MethodImplementation
 	    public override int GetHashCode()
 	    {
 	        unchecked
@@ -3149,7 +3205,6 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			// maybe generic types should be a separate class
 			if (type.IsGenericTypeDefinition)
 			{
 				List<Type> types=new List<Type>();
@@ -4029,8 +4084,6 @@ namespace Meta
 				return isEqual;
 			}
 		}
-		//public StrategyMap map;
-
 	}
 	public class Event:Map
 	{
@@ -5255,8 +5308,6 @@ namespace Meta
 								if (EndOfLine.Match(parser, out match) == null)
 								{
 									parser.index += 2;
-									//matched = false;
-									//return null;
 									throw new SyntaxException("Expected newline.", parser);
 								}
 								else
@@ -5269,7 +5320,6 @@ namespace Meta
 								parser.line--;
 							}
 						}
-					//}
 				}
 			}
 			return result;

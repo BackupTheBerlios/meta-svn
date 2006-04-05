@@ -142,7 +142,7 @@
 				delimiters 
 					. space.[1]
 			stringSplitTest string.split
-				. "hello world hello"
+				text "hello world hello"
 				space " "
 				l "l"
 				delimiters 
@@ -253,4 +253,16 @@
 						. "!"
 			func arg:arg
 		"
+		invertTest invert
+			.
+				a 1
+				b 2
+				c 3
+			.
+				a 1
+				b 2
+				c 3
+			.
+				a 1
+				b 2
 	current test
