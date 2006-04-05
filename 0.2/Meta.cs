@@ -459,6 +459,15 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map With(Map arg)
+		{
+			Map obj = arg["object"];
+			foreach (KeyValuePair<Map, Map> entry in arg["data"])
+			{
+				obj[entry.Key] = entry.Value;
+			}
+			return obj;
+		}
 		public static Map CompareString(Map arg)
 		{
 			return arg[1].GetString().CompareTo(arg[2].GetString());
@@ -807,12 +816,38 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
+		//public static Map Merge(Map arg)
+		//{
+		//    if (arg.ArrayCount > 0)
+		//    {
+		//        Map result = arg[1].Copy();
+		//        for(int i=2;i<=arg.ArrayCount;i++)
+		//        {
+		//            foreach (KeyValuePair<Map, Map> pair in arg[i])
+		//            {
+		//                result[pair.Key] = pair.Value;
+		//            }
+		//        }
+		//        return result;
+		//    }
+		//    else
+		//    {
+		//        return Map.Empty;
+		//    }
+		//    //foreach (Map map in arg.Array)
+		//    //{
+		//    //    foreach (KeyValuePair<Map, Map> pair in map)
+		//    //    {
+		//    //        result[pair.Key] = pair.Value;
+		//    //    }
+		//    //}
+		//}
 		public static Map Merge(Map arg)
 		{
-			Map result=new StrategyMap();
+			Map result = new StrategyMap();
 			foreach (Map map in arg.Array)
 			{
-				foreach (KeyValuePair<Map,Map> pair in map)
+				foreach (KeyValuePair<Map, Map> pair in map)
 				{
 					result[pair.Key] = pair.Value;
 				}
@@ -1485,6 +1520,12 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			Form form=new Form();
+			Size size;
+			RichTextBox box;
+			OpenFileDialog dialog;
+			//box.SelectedText
+			form.KeyDown += new KeyEventHandler(form_KeyDown);
 			try
 			{
 				if (args.Length == 0)
@@ -1541,6 +1582,11 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
+		}
+
+		static void form_KeyDown(object sender, KeyEventArgs e)
+		{
+			//e.KeyCode = Keys.Enter;
 		}
 		public class Commands
 		{
@@ -3313,7 +3359,7 @@ namespace Meta
 		}
 		protected override bool ContainsKeyImplementation(Map key)
 		{
-			return Get(key) != null || base.ContainsKey(key);
+			return Get(key) != null;
 		}
 		protected override Map Get(Map key)
 		{
@@ -3343,7 +3389,7 @@ namespace Meta
 			}
 			else
 			{
-				return this.Constructor[key];
+				return this.Constructor.TryGetValue(key);
 			}
 		}
 		public Type Type
@@ -3384,6 +3430,14 @@ namespace Meta
 	}
 	public class ObjectMap: DotNetMap
 	{
+		public override bool Equals(object obj)
+		{
+			return obj is ObjectMap && ((ObjectMap)obj).obj.Equals(this.obj);
+		}
+		public override int GetHashCode()
+		{
+			return obj.GetHashCode();
+		}
 		public object Object
 		{
 			get
@@ -4279,73 +4333,6 @@ namespace Meta
 			return new Event(eventInfo, obj, type);
 		}
 	}
-	//public class Property : Map
-	//{
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return Get(key) != null;
-	//    }
-	//    object obj;
-	//    Type type;
-	//    PropertyInfo property;
-	//    public Property(PropertyInfo property, object obj, Type type)
-	//    {
-	//        this.property = property;
-	//        this.obj = obj;
-	//        this.type = type;
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            List<Map> keys = new List<Map>();
-	//            if (property.GetGetMethod() != null)
-	//            {
-	//                keys.Add(DotNetKeys.Get);
-	//            }
-	//            if (property.GetSetMethod() != null)
-	//            {
-	//                keys.Add(DotNetKeys.Set);
-	//            }
-	//            return keys;
-	//        }
-	//    }
-	//    private Method get;
-	//    private Method set;
-	//    protected override Map Get(Map key)
-	//    {
-	//        if (key.Equals(DotNetKeys.Get))
-	//        {
-	//            if (get == null)
-	//            {
-	//                get = new Method(property.GetGetMethod().Name, obj, type);
-	//            }
-	//            return get;
-	//        }
-	//        else if (key.Equals(DotNetKeys.Set))
-	//        {
-	//            if (set == null)
-	//            {
-	//                set = new Method(property.GetSetMethod().Name, obj, type);
-	//            }
-	//            return set;
-	//        }
-	//        else
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new ApplicationException("Cannot assign in property.");
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        return new Property(property, obj, type);
-	//    }
-	//}
-
-
 	public class IndexedProperty : Map
 	{
 		protected override bool ContainsKeyImplementation(Map key)
@@ -4539,9 +4526,10 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			Form form;
-			RichTextBox box;
-			OpenFileDialog dialog;
+
+			//form.WindowState=FormWindowState.
+			//box.SelectAll();
+			//box.Select(0, 0);
 			//dialog.filt
 			//box.SaveFile(
 			//new MenuItem(

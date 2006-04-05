@@ -274,4 +274,8 @@
 			.
 				a 1
 				b 2
+		withTest with
+			object ["System.Windows.Forms"].Form 0
+			data
+				Text "hello world"
 	current test

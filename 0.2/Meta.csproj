@@ -156,6 +156,7 @@
     <None Include="Library\try.meta" />
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
+    <None Include="Library\with.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="Test\profile.meta" />

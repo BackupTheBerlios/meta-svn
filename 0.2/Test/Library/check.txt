@@ -675,3 +675,8 @@ Entry (KeyValuePair`2)
 				"c"
 			Value (StrategyMap):
 				""
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"withTest"
+	Value (ObjectMap):
+		System.Windows.Forms.Form, Text: hello world
