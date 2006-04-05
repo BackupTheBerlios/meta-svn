@@ -248,7 +248,6 @@ namespace Meta
 			}
 		}
 		//private PersistantPosition position;
-
 		public override PersistantPosition Evaluate(PersistantPosition context)
 		{
 			//if (position == null)
@@ -2742,7 +2741,7 @@ namespace Meta
 		}
 		public virtual bool CacheValid()
 		{
-			return cached != null && Parent.CacheValid();
+			return cached != null;// && Parent.CacheValid();
 		}
 		public void AddOptimization(Map key,BustOptimization optimization)
 		{
@@ -2771,28 +2770,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public virtual Map DetermineMap()
-		//{
-		//    Map map = parent.Get();
-		//    map.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
-		//    Map result=map[key];
-		//    if (result == null)
-		//    {
-		//        throw new ApplicationException("Position does not exist");
-		//    }
-		//    return result;
-		//}
-		//public virtual Map DetermineMap()
-		//{
-		//    Map map = parent.DetermineMap()[key];
-		//    //Map map = parent.Get()[key];
-		//    if (map == null)
-		//    {
-		//        throw new Exception("Position does not exist");
-		//    }
-		//    map.KeyChanged+= new KeyChangedEventHandler(position_KeyChanged);
-		//    return map;
-		//}
 		void position_KeyChanged(KeyChangedEventArgs e)
 		{
 			
@@ -2817,105 +2794,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		//public override Map DetermineMap()
-		//{
-		//    return Gac.gac;
-		//}
-
 	}
-
-	//public class PersistantPosition : Position
-	//{
-	//    public void Assign(Map key, Map value)
-	//    {
-	//        Get()[key] = value;
-	//    }
-	//    public void Assign(Map value)
-	//    {
-	//        PersistantPosition parent = this.Parent;
-	//        Map parentMap = parent.Get();
-	//        parentMap[this.keys[this.keys.Length - 1]] = value;
-	//    }
-	//    public IEnumerable<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return keys;
-	//        }
-	//    }
-	//    private readonly Map[] keys;
-	//    public PersistantPosition(PersistantPosition position)
-	//    {
-	//        // inefficient
-	//        this.keys = new List<Map>(position.keys).ToArray();
-	//    }
-	//    public PersistantPosition(ICollection<Map> keys)
-	//    {
-	//        this.keys = new List<Map>(keys).ToArray();
-	//    }
-	//    public PersistantPosition(PersistantPosition parent, Map ownKey)
-	//    {
-	//        List<Map> keyList = new List<Map>(parent.keys);
-	//        keyList.Add(ownKey);
-	//        this.keys = keyList.ToArray();
-	//    }
-	//    //public PersistantPosition(PersistantPosition parent, Map ownKey)
-	//    //{
-	//    //    List<Map> keyList=new List<Map>(parent.keys);
-	//    //    keyList.Add(ownKey);
-	//    //    this.keys = keyList.ToArray();
-	//    //}
-	//    private PersistantPosition parent;
-	//    public PersistantPosition Parent
-	//    {
-	//        get
-	//        {
-	//            if (keys.Length == 0)
-	//            {
-	//                return null;
-	//                //throw new Exception("Position does not have a parent.");
-	//            }
-	//            else
-	//            {
-	//                if (parent == null)
-	//                {
-	//                    List<Map> list = new List<Map>(this.Keys);
-	//                    parent = new PersistantPosition(list.GetRange(0, list.Count - 1));
-	//                }
-	//                return parent;
-	//            }
-	//        }
-	//    }
-	//    private Map cached;
-	//    public override Map Get()
-	//    {
-	//        if (cached == null)
-	//        {
-	//            cached = DetermineMap();
-	//        }
-	//        return cached;
-	//    }
-	//    private Map DetermineMap()
-	//    {
-	//        Map position = Gac.gac;
-	//        int count = 0;
-	//        foreach (Map key in keys)
-	//        {
-	//            position = position[key];
-	//            if (position == null)
-	//            {
-	//                throw new Exception("Position does not exist");
-	//            }
-	//            position.KeyChanged += new KeyChangedEventHandler(position_KeyChanged);
-	//            count++;
-	//        }
-	//        return position;
-	//    }
-	//    void position_KeyChanged()
-	//    {
-	//        this.cached = null;
-	//    }
-	//}
 	public class FunctionBodyKey : Map
 	{
 		protected override bool ContainsKeyImplementation(Map key)
@@ -3051,45 +2930,21 @@ namespace Meta
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
 		private int numCalls = 0;
-		// wrong name
-		public Map AddCall(Map map, out FunctionBodyKey call)
+		public void AddCall(Map map, out FunctionBodyKey call)
 		{
 			numCalls++;
 			call = new FunctionBodyKey(numCalls);
 			this[call] = map;
-			//this[call] = map;
-			return this[call];
 		}
-		// remove int
-		public void RemoveCall(int call)
+		public void RemoveCall(FunctionBodyKey call)
 		{
-			this.TemporaryData.Remove(new FunctionBodyKey(call));
-			//Remove(new FunctionBodyKey(call));
+			this.TemporaryData.Remove(call);
 			if (KeyChanged != null)
 			{
-				this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
+				this.KeyChanged(new KeyChangedEventArgs(call));
 				this.KeyChanged = null;
 			}
 		}
-		//public void RemoveCall(int call)
-		//{
-		//    //this.temporaryData.Remove(new FunctionBodyKey(call));
-		//    Remove(new FunctionBodyKey(call));
-		//    if (KeyChanged != null)
-		//    {
-		//        this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
-		//        this.KeyChanged = null;
-		//    }
-		//}
-		//public void RemoveCall(int call)
-		//{
-		//    Remove(new FunctionBodyKey(call));
-		//    if (KeyChanged != null)
-		//    {
-		//        this.KeyChanged(new KeyChangedEventArgs(new FunctionBodyKey(call)));
-		//        this.KeyChanged = null;
-		//    }
-		//}
 		public virtual void AppendRange(Map array)
 		{
 			AppendRangeDefault(array);
@@ -3684,10 +3539,10 @@ namespace Meta
 			}
 			return isEqual;
 		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
+		//public override int GetHashCode()
+		//{
+		//    return base.GetHashCode();
+		//}
 		public MapStrategy Strategy
 		{
 			get
