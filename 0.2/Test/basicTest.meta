@@ -214,10 +214,10 @@ commandLine|
 		. 3247
 	MemberTest.classField "a"
 	memberTest.instanceField "b"
-	. MemberTest.ClassProperty.set memberTest.InstanceProperty.get 0
-	classPropertyValue MemberTest.ClassProperty.get 0
-	. memberTest.InstanceProperty.set MemberTest.ClassProperty.get 0
-	instancePropertyValue memberTest.InstanceProperty.get 0
+	MemberTest.ClassProperty memberTest.InstanceProperty
+	classPropertyValue MemberTest.ClassProperty
+	memberTest.InstanceProperty MemberTest.ClassProperty
+	instancePropertyValue memberTest.InstanceProperty
 	interceptedSymbol "/hello/"
 	positionalNoConversion /.Meta.PositionalNoConversion
 		. "m"
@@ -234,10 +234,8 @@ commandLine|
 		c "t"
 		. "r"
 	indexerNoConversion /.Meta.IndexerNoConversion 0
-	. indexerNoConversion.Item.set
-		. "abc"
-		. "hihi"
-	indexerNoConversionIndexed indexerNoConversion.Item.get "abc"
+	indexerNoConversion.Item.abc "hihi"
+	indexerNoConversionIndexed indexerNoConversion.Item.["abc"]
 	interceptedSymbolTwo 1
 	k "hello"
 	xyz "w"
@@ -332,22 +330,22 @@ commandLine|
 		"
 	arrayList /.mscorlib.ArrayList.[0] 0
 	. arrayList.Add "hello"
-	arrayListResult arrayList.Item.get 0
+	arrayListResult arrayList.Item.[0]
 	textBox /.["System.Windows.Forms"].TextBox 0
-	. textBox.Text.set "
+	textBox.Text "
 		Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh.
 	"
-	lines textBox.Lines.get 0
+	lines textBox.Lines
 	alleMeineText lines.GetValue.[/.mscorlib.Int32] 1
 	form /.["System.Windows.Forms"].Form 0
-	. form.Location.set.[/.["System.Drawing"].Point]
+	form.Location
 		X 5
 		Y 1000
-	automaticConversionTest form.Location.get.[0] 0
+	automaticConversionTest form.Location
 	tabText "			hello"
 	escapedText "'#'n'''t"
 	whileCounter 0
@@ -400,8 +398,8 @@ commandLine|
 		
 		
 	"
-	. ["System.Windows.Forms"].Application.VisualStyleState.set ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
-	enumTest ["System.Windows.Forms"].Application.VisualStyleState.get 0
+	$["System.Windows.Forms"].Application.VisualStyleState ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
+	enumTest ["System.Windows.Forms"].Application.VisualStyleState
 	typeTest mscorlib.Array.CreateInstance.[
 		. mscorlib.Type
 		. mscorlib.Int32

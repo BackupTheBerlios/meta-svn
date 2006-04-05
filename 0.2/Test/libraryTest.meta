@@ -104,7 +104,7 @@
 				map 
 					x "hello"
 				key "x"
-			keys keys
+			keysTest keys
 				jjqwv "aeäquq"
 				oere "i ke"
 				. "oiq"

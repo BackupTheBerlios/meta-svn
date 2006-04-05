@@ -972,10 +972,20 @@ namespace Meta
 			PersistantPosition argument = Call.lastArgument;
 			foreach (KeyValuePair<Map, Map> entry in arg[1])
 			{
-				result.Append(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+				result[entry.Key]=(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
 			}
 			return result;
 		}
+		//public static Map Foreach(Map arg)
+		//{
+		//    Map result = new StrategyMap();
+		//    PersistantPosition argument = Call.lastArgument;
+		//    foreach (KeyValuePair<Map, Map> entry in arg[1])
+		//    {
+		//        result.Append(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+		//    }
+		//    return result;
+		//}
 	}
 	public class FileMap : StrategyMap
 	{
@@ -2819,7 +2829,8 @@ namespace Meta
 							foreach (KeyValuePair<Map, Map> pair in meta)
 							{
 								// passing null as position is dangerous, currentPosition is wrong
-								((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
+								result[pair.Key]=pair.Value;//, MethodImplementation.currentPosition);
+								//((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
 								//((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, null);
 							}
 							dotNet = result.Object;
@@ -4167,71 +4178,166 @@ namespace Meta
 			return new Event(eventInfo, obj, type);
 		}
 	}
-	public class Property:Map
+	//public class Property : Map
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    object obj;
+	//    Type type;
+	//    PropertyInfo property;
+	//    public Property(PropertyInfo property, object obj, Type type)
+	//    {
+	//        this.property = property;
+	//        this.obj = obj;
+	//        this.type = type;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            List<Map> keys = new List<Map>();
+	//            if (property.GetGetMethod() != null)
+	//            {
+	//                keys.Add(DotNetKeys.Get);
+	//            }
+	//            if (property.GetSetMethod() != null)
+	//            {
+	//                keys.Add(DotNetKeys.Set);
+	//            }
+	//            return keys;
+	//        }
+	//    }
+	//    private Method get;
+	//    private Method set;
+	//    protected override Map Get(Map key)
+	//    {
+	//        if (key.Equals(DotNetKeys.Get))
+	//        {
+	//            if (get == null)
+	//            {
+	//                get = new Method(property.GetGetMethod().Name, obj, type);
+	//            }
+	//            return get;
+	//        }
+	//        else if (key.Equals(DotNetKeys.Set))
+	//        {
+	//            if (set == null)
+	//            {
+	//                set = new Method(property.GetSetMethod().Name, obj, type);
+	//            }
+	//            return set;
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot assign in property.");
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return new Property(property, obj, type);
+	//    }
+	//}
+
+
+	public class IndexedProperty : Map
 	{
 		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return Get(key) != null;
 		}
-		object obj;
-		Type type;
-		PropertyInfo property;
-		public Property(PropertyInfo property,object obj,Type type)
+		private object obj;
+		private Type type;
+		private PropertyInfo property;
+		private ParameterInfo[] parameters;
+		public IndexedProperty(PropertyInfo property, object obj, Type type)
 		{
-			this.property=property;
-			this.obj=obj;
-			this.type=type;
+			this.property = property;
+			this.obj = obj;
+			this.type = type;
+			this.parameters = property.GetIndexParameters();
+			if (parameters.Length != 1)
+			{
+				throw new Exception("invalid numbers of indexer parameters.");
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return false;
+			}
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return false;
+			}
 		}
 		protected override ICollection<Map> KeysImplementation
 		{
 			get
 			{
-				List<Map> keys=new List<Map>();
-				if(property.GetGetMethod()!=null)
-				{
-					keys.Add(DotNetKeys.Get);
-				}
-				if(property.GetSetMethod()!=null)
-				{
-					keys.Add(DotNetKeys.Set);
-				}
-				return keys;
+				throw new Exception("not implemented");
+				//List<Map> keys = new List<Map>();
+				//if (property.GetGetMethod() != null)
+				//{
+				//    keys.Add(DotNetKeys.Get);
+				//}
+				//if (property.GetSetMethod() != null)
+				//{
+				//    keys.Add(DotNetKeys.Set);
+				//}
+				//return keys;
 			}
 		}
-		private Method get;
-		private Method set;
+		//private Method get;
+		//private Method set;
 		protected override Map Get(Map key)
 		{
-			if(key.Equals(DotNetKeys.Get))
-			{
-				if (get == null)
-				{
-					get = new Method(property.GetGetMethod().Name, obj, type);
-				}
-				return get;
-			}
-			else if(key.Equals(DotNetKeys.Set))
-			{
-				if(set==null)
-				{
-					set=new Method(property.GetSetMethod().Name, obj, type);
-				}
-				return set;
-			}
-			else
-			{
-				return null;
-			}
+			return Transform.ToMeta(property.GetValue(obj,new object[] {Transform.ToDotNet(key,parameters[0].ParameterType)}));
+			//return null;
+			//this.property.GetValue(
+			//if (key.Equals(DotNetKeys.Get))
+			//{
+			//    if (get == null)
+			//    {
+			//        get = new Method(property.GetGetMethod().Name, obj, type);
+			//    }
+			//    return get;
+			//}
+			//else if (key.Equals(DotNetKeys.Set))
+			//{
+			//    if (set == null)
+			//    {
+			//        set = new Method(property.GetSetMethod().Name, obj, type);
+			//    }
+			//    return set;
+			//}
+			//else
+			//{
+			//    return null;
+			//}
 		}
-		protected override void Set(Map key,Map val)
+		protected override void Set(Map key, Map val)
 		{
-			throw new ApplicationException("Cannot assign in property.");
+			property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
+			int asdf = 0;
+			//throw new ApplicationException("Cannot assign in property.");
 		}
 		protected override Map CopyData()
 		{
-			return new Property(property, obj, type);
+			return new IndexedProperty(property, obj, type);
+			//return new Property(property, obj, type);
 		}
 	}
+
 	public abstract class DotNetMap : Map
 	{
 		private Dictionary<Map, Map> data=new Dictionary<Map,Map>();
@@ -4272,7 +4378,30 @@ namespace Meta
 					}
 					else if (member is PropertyInfo)
 					{
-						result=new Property(type.GetProperty(memberName), this.obj, type);
+						//                get = new Method(property.GetGetMethod().Name, obj, type);
+						//            }
+						//            return get;
+						//        }
+						//        else if(key.Equals(DotNetKeys.Set))
+						//        {
+						//            if(set==null)
+						//            {
+						//                set=new Method(property.GetSetMethod().Name, obj, type);
+						//            }
+						//            return set;
+	
+						//.GetIndexParameters
+						PropertyInfo property = (PropertyInfo)member;
+						ParameterInfo[] parameters=property.GetIndexParameters();
+						if (parameters.Length != 0)
+						{
+							result = new IndexedProperty(property, obj, type);
+						}
+						else
+						{
+							result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));//new Method(type.GetProperty(memberName).GetGetMethod().Name, this.obj, type).Call(Map.em;
+						}
+						//result=new Method(type.GetProperty(memberName).GetGetMethod().Name, this.obj, type).Call(;
 					}
 					else if (member is FieldInfo)
 					{
@@ -4309,16 +4438,43 @@ namespace Meta
 		protected override void Set(Map key, Map value)
 		{
 			string fieldName = key.GetString();
-			FieldInfo field = type.GetField(fieldName, bindingFlags);
-			if (field != null)
+			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+			if (members.Length != 0)
 			{
-				field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+				MemberInfo member = members[0];
+				if (member is FieldInfo)
+				{
+					FieldInfo field = (FieldInfo)member;
+					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+				}
+				else if (member is PropertyInfo)
+				{
+					PropertyInfo property = (PropertyInfo)member;
+					property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType),null);
+				}
+				else
+				{
+					throw new Exception("unknown member type");
+				}
 			}
 			else
 			{
 				data[key] = value;
 			}
 		}
+		//protected override void Set(Map key, Map value)
+		//{
+		//    string fieldName = key.GetString();
+		//    FieldInfo field = type.GetField(fieldName, bindingFlags);
+		//    if (field != null)
+		//    {
+		//        field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+		//    }
+		//    else
+		//    {
+		//        data[key] = value;
+		//    }
+		//}
 		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return key.IsString && this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
@@ -6649,6 +6805,14 @@ namespace Meta
 					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
 				}
 			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Library : Test
 			{
 				public override object GetResult(out int level)
@@ -6663,14 +6827,6 @@ namespace Meta
 				{
 					level = 2;
 					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-				}
-			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
 			public class Serialization : Test

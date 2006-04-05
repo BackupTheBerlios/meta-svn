@@ -149,7 +149,7 @@ Entry (KeyValuePair`2)
 				1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"keys"
+				"keysTest"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -387,7 +387,7 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				1
+				"x"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -396,7 +396,7 @@ Entry (KeyValuePair`2)
 						"x"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				2
+				"y"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):

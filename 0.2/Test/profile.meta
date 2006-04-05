@@ -1,35 +1,22 @@
 |
-	result 0
-	. apply
-		. string.split
-			text ["INPUT.txt"]
-			delimiters
-				. characters.linefeed
-		line|
-			parts string.split
-				text line
+	result foreach
+		. invert apply
+			. string.split
+				text ["INPUT.txt"]
 				delimiters
-					. characters.tab
-			value parts.[1]
-			key parts.[2]
-			$result.[key] if
-				. contains
-					map result
-					key key
-				then :append
-					. result.[key]
-					.
-						. value
-				else :
-					. value
-	. foreach
-		. result
-		entry|
-			$result.[entry.key] sort
-				. entry.value
-				arg|string.compare
-					. arg.[1]
-					. arg.[2]
+					. characters.linefeed
+			line|
+				parts string.split
+					text line
+					delimiters
+						. characters.tab
+				current
+					[parts.[2]] parts.[1]
+		entry|sort
+			. entry.value
+			arg|string.compare
+				. arg.[1]
+				. arg.[2]
 	sortedKeys sort
 		. keys result
 		arg|string.compare

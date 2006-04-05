@@ -1563,19 +1563,9 @@ Entry (KeyValuePair`2)
 		"MemberTest function, argument+Meta.Test.TestClasses.MemberTest3247"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		5
-	Value (StrategyMap):
-		0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"classPropertyValue"
 	Value (StrategyMap):
 		"b"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		6
-	Value (StrategyMap):
-		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instancePropertyValue"
@@ -1611,11 +1601,6 @@ Entry (KeyValuePair`2)
 		"indexerNoConversion"
 	Value (ObjectMap):
 		Meta.Test.TestClasses.IndexerNoConversion
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		7
-	Value (StrategyMap):
-		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversionIndexed"
@@ -2094,7 +2079,7 @@ Entry (KeyValuePair`2)
 																"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		8
+		5
 	Value (StrategyMap):
 		" "
 Entry (KeyValuePair`2)
@@ -2163,7 +2148,7 @@ Entry (KeyValuePair`2)
 																		"arg"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		9
+		6
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2177,7 +2162,7 @@ Entry (KeyValuePair`2)
 				0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		10
+		7
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2197,7 +2182,7 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		11
+		8
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2416,7 +2401,7 @@ Entry (KeyValuePair`2)
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		12
+		9
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -2432,11 +2417,6 @@ Entry (KeyValuePair`2)
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		13
-	Value (StrategyMap):
-		0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"lines"
 	Value (ObjectMap):
 		System.String[]
@@ -2450,11 +2430,6 @@ Entry (KeyValuePair`2)
 		"form"
 	Value (ObjectMap):
 		System.Windows.Forms.Form, Text: 
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		14
-	Value (StrategyMap):
-		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"automaticConversionTest"
@@ -3349,7 +3324,7 @@ Entry (KeyValuePair`2)
 																"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		15
+		10
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -3603,11 +3578,6 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		"
 "
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		16
-	Value (StrategyMap):
-		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"enumTest"
