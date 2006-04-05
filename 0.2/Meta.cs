@@ -38,6 +38,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.Web;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
+using System.Drawing;
 
 
 namespace Meta
@@ -2979,6 +2980,10 @@ namespace Meta
 			this.method = method;
 			this.obj = obj;
 			this.type = type;
+			if (method != null)
+			{
+				this.parameters = method.GetParameters();
+			}
 		}
 		public override bool IsString
 		{
@@ -2994,45 +2999,134 @@ namespace Meta
 				return false;
 			}
 		}
+		ParameterInfo[] parameters;
 		public override PersistantPosition Call(Map argument, PersistantPosition position)
 		{
-			if (this.method.Name == "Write")
-			{
-			}
-			currentPosition = position; // should copy this
-			ParameterInfo[] parameters = method.GetParameters();
-			object[] arguments = new object[parameters.Length];
-			if (parameters.Length == 1)
-			{
-				arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType);
-			}
-			else
-			{
-				for (int i = 0; i < parameters.Length; i++)
-				{
-					arguments[i] = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-				}
-			}
+			currentPosition = position;
+			bool converted;
+			object[] arguments = ConvertArgument(argument, out converted);
 			try
 			{
-				Map result=Transform.ToMeta(
+				Map result = Transform.ToMeta(
 					method is ConstructorInfo ?
 						((ConstructorInfo)method).Invoke(arguments) :
 						 method.Invoke(obj, arguments));
 				FunctionBodyKey calls;
-				// this should really be a function of a position and return a new position
 				position.Get().AddCall(result, out calls);
-				//this.AddCall(result, out calls);
 				return new PersistantPosition(position, calls);
 			}
 			catch (Exception e)
 			{
-				throw new ApplicationException("implementation exception: "+e.InnerException.ToString()+e.StackTrace,e.InnerException);
+				throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
 			}
 		}
+		public object[] ConvertArgument(Map argument,out bool converted)
+		{
+			object[] arguments = new object[parameters.Length];
+			if (parameters.Length == 1)
+			{
+				arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType, out converted);
+			}
+			else
+			{
+				if (argument.ArrayCount == parameters.Length)
+				{
+					converted = true;
+					for (int i = 0; i < parameters.Length; i++)
+					{
+						arguments[i] = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType, out converted);
+						if (!converted)
+						{
+							break;
+						}
+					}
+				}
+				else
+				{
+					converted = false;
+				}
+			}
+			return arguments;
+		}
+		//public override PersistantPosition Call(Map argument, PersistantPosition position)
+		//{
+		//    currentPosition = position; // should copy this
+		//    ParameterInfo[] parameters = method.GetParameters();
+		//    object[] arguments = new object[parameters.Length];
+		//    if (parameters.Length == 1)
+		//    {
+		//        arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType);
+		//    }
+		//    else
+		//    {
+		//        for (int i = 0; i < parameters.Length; i++)
+		//        {
+		//            arguments[i] = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
+		//        }
+		//    }
+		//    try
+		//    {
+		//        Map result=Transform.ToMeta(
+		//            method is ConstructorInfo ?
+		//                ((ConstructorInfo)method).Invoke(arguments) :
+		//                 method.Invoke(obj, arguments));
+		//        FunctionBodyKey calls;
+		//        // this should really be a function of a position and return a new position
+		//        position.Get().AddCall(result, out calls);
+		//        //this.AddCall(result, out calls);
+		//        return new PersistantPosition(position, calls);
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        throw new ApplicationException("implementation exception: "+e.InnerException.ToString()+e.StackTrace,e.InnerException);
+		//    }
+		//}
 	}
 	public class Method : MethodImplementation
 	{
+		public override PersistantPosition Call(Map argument, PersistantPosition position)
+		{
+			if (Overloaded)
+			{
+				MethodOverload overload=null;
+				foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
+				{
+					bool converted;
+					entry.Value.ConvertArgument(argument, out converted);
+					if (converted)
+					{
+						overload = entry.Value;
+						break;
+					}
+				}
+				if(overload==null)
+				{
+					throw new Exception("No matching overload found.");
+				}
+				else
+				{
+					return overload.Call(argument,position);
+				}
+			}
+			else
+			{
+				return base.Call(argument, position);
+			}
+		}
+		//public override PersistantPosition Call(Map argument, PersistantPosition position)
+		//{
+		//    if (Overloaded)
+		//    {
+		//        foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
+		//        {
+		//        }
+		//        return null;
+		//    }
+		//    else
+		//    {
+		//        return base.Call(argument, position);
+		//    }
+		//}
 		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return overloadedMethods!=null && overloadedMethods.ContainsKey(key);
@@ -3043,6 +3137,13 @@ namespace Meta
 	    {
 	        this.overloadedMethods = overloadedMethods;
 	    }
+		public bool Overloaded
+		{
+			get
+			{
+				return overloadedMethods != null;
+			}
+		}
 		// refactor
 		public Method(string name, object obj, Type type)
 			: base(GetSingleMethod(name, obj, type), obj, type)
@@ -4340,6 +4441,7 @@ namespace Meta
 
 	public abstract class DotNetMap : Map
 	{
+		// this shouldnt really be there
 		private Dictionary<Map, Map> data=new Dictionary<Map,Map>();
 		public object obj;
 		public Type type;
@@ -4437,6 +4539,16 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
+			Form form;
+			RichTextBox box;
+			OpenFileDialog dialog;
+			//dialog.filt
+			//box.SaveFile(
+			//new MenuItem(
+			//form.Menu=new MainMenu(;
+			//new Font(
+			//box.Font = new Font(
+			//form.Menu=new MainMenu(
 			string fieldName = key.GetString();
 			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
 			if (members.Length != 0)
@@ -4771,20 +4883,20 @@ namespace Meta
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
-		public const char shortFunction = ':';
+		//public const char shortFunction = ':';
 		public const char @string = '\"';
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public const char emptyMap = '0';
 		public const char call = ' ';
 		public const char select = '.';
-		public const char stringEscape = '\'';
+		//public const char stringEscape = '\'';
 		public const char assignment = ' ';
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const string current = "current";
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, stringEscape, shortFunction, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
 	}
 
 
@@ -5397,30 +5509,30 @@ namespace Meta
 		{
 			return Parser.Expression;
 		});
-		public static Rule ShortFunction = new Sequence(
-				new Action(new Assignment(
-					CodeKeys.Function),
-					new Sequence(
-					new Action(new Merge(),
-						new Sequence(
-							new Action(new Assignment(
-								CodeKeys.ParameterName),
-								new ZeroOrMore(
-									new Action(new Autokey(),
-										new CharacterExcept(
-											Syntax.shortFunction,
-											Syntax.unixNewLine)))))),
-					new Action(new Merge(),
-						new Sequence(
-							new Action(new Match(),
-								new Character(Syntax.shortFunction)),
-							new Action(new ReferenceAssignment(), ExpressionData))))));//.Match(p, out matched);
+		//public static Rule ShortFunction = new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Function),
+		//            new Sequence(
+		//            new Action(new Merge(),
+		//                new Sequence(
+		//                    new Action(new Assignment(
+		//                        CodeKeys.ParameterName),
+		//                        new ZeroOrMore(
+		//                            new Action(new Autokey(),
+		//                                new CharacterExcept(
+		//                                    //Syntax.shortFunction,
+		//                                    Syntax.unixNewLine)))))),
+		//            new Action(new Merge(),
+		//                new Sequence(
+		//                    new Action(new Match(),
+		//                        new Character(Syntax.shortFunction)),
+		//                    new Action(new ReferenceAssignment(), ExpressionData))))));//.Match(p, out matched);
 
 		public static Rule Value = new Alternatives(
 			Map,
 			String,
-			Number,
-			ShortFunction
+			Number
+			//ShortFunction
 			);
 
 		private static Rule LookupAnything =
@@ -5491,6 +5603,7 @@ namespace Meta
 							new ZeroOrMore(
 							new Action(new Autokey(),
 								new CharacterExcept(
+									Syntax.@string,
 									Syntax.function,
 									Syntax.unixNewLine)))))),
 				new Action(new Merge(),
@@ -5867,6 +5980,9 @@ namespace Meta
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
+				if (parser.Rest.StartsWith("Meta files *.meta|*.meta"))
+				{
+				}
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
 				{

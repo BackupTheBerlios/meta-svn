@@ -1,0 +1,50 @@
+|
+	current merge
+		. ["System.Windows.Forms"]
+		. ["System.Drawing"]
+		. mscorlib
+	. console.create 0
+	form Form 0
+	form.Title "Meta IDE"
+	box RichTextBox 0
+	box.Font Font
+		. "Courier New"
+		. 10
+	box.Dock DockStyle.Fill
+	file 0
+	form.Menu MainMenu
+		. MenuItem
+			. "&File"
+			.
+				. MenuItem
+					. "&Open"
+					.
+						|
+							dialog OpenFileDialog 0
+							dialog.Filter "Meta files (*.meta)|*.meta"
+							if
+								. equal
+									. DialogResult.OK
+									. dialog.ShowDialog 0
+								then
+									|
+										$file dialog.FileName
+				. MenuItem
+					. "&Save"
+					.
+						|if
+							. not equal
+								. file
+								. 0
+							then
+								|box.SaveFile file
+				. MenuItem
+					. "&Close"
+					.
+						|form.Close 0
+		. MenuItem
+			. "&Edit"
+			.
+				. MenuItem "&Copy"
+	. form.Controls.Add box
+	. form.ShowDialog.[0] 0
