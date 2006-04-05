@@ -82,12 +82,15 @@
 		mapTest 
 			switchTest switch
 				cases 
-					x :"right"
-					y :"wrong"
+					x
+						|"right"
+					y
+						|"wrong"
 				control "x"				
 			ifTest if
 				. 1
-				then :"if test successful"
+				then
+					|"if test successful"
 			append append
 				. "abc, "
 				. "die Katze lief im Schnee."
@@ -130,9 +133,10 @@
 					argument|
 						$counter argument
 				test while
-					. :strictlyIncreasing
-						. counter
-						. 10
+					.
+						|strictlyIncreasing
+							. counter
+							. 10
 					|SetCounter
 						[0] counter
 				current counter
@@ -158,13 +162,17 @@
 					. strictlyIncreasing
 						. argument.[1].x
 						. argument.[2].x
-					then :-1
-					else :if
-						. strictlyDecreasing
-							. argument.[1].x
-							. argument.[2].x
-						then :1
-						else :0
+					then
+						|-1
+					else
+						|if
+							. strictlyDecreasing
+								. argument.[1].x
+								. argument.[2].x
+							then
+								|1
+							else
+								|0
 				.
 					.
 						x 12
@@ -251,7 +259,8 @@
 						. "hello "
 						. arg
 						. "!"
-			func arg:arg
+			func
+				arg|arg
 		"
 		invertTest invert
 			.

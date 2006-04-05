@@ -31,8 +31,9 @@ commandLine|
 		arg|asdf
 	shortFunctionTest shortFunction "hello"
 	counter 0
-	SetCounter argument:
-		$counter argument
+	SetCounter
+		argument|
+			$counter argument
 	. SetCounter 5
 	scoping
 		test
@@ -412,4 +413,5 @@ commandLine|
 		z "a"
 	copiedData copySourceData
 	copiedData.x "changed"
-shortFunc arg:arg
+shortFunc
+	arg|arg

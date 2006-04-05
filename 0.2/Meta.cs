@@ -5186,7 +5186,8 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, ShortFunctionExpression, Select);
+			return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, Select);
+			//return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, ShortFunctionExpression, Select);
 		});
 		public static Rule NewLine = 
 			new Alternatives(
@@ -5570,10 +5571,10 @@ namespace Meta
 						String)).Match(parser, out matched);
 		});
 
-		public static Rule ShortFunctionExpression = new Sequence(
-			new Action(new Assignment(
-				CodeKeys.Literal),
-				ShortFunction));
+		//public static Rule ShortFunctionExpression = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Literal),
+		//        ShortFunction));
 
 		public static Rule FunctionExpression = new Sequence(
 			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),

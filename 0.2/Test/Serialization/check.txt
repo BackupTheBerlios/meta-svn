@@ -105,20 +105,26 @@ function
 					lookup 
 						literal "SetCounter"
 			value 
-				literal 
-					function 
-						parameterName "argument"
-						program 
+				program 
+					[1] 
+						key 
 							[1] 
-								key 
+								lookup 
+									literal "function"
+						value 
+							literal 
+								parameterName "argument"
+								program 
 									[1] 
-										search 
-											literal "counter"
-								value 
-									select 
-										[1] 
-											search 
-												literal "argument"
+										key 
+											[1] 
+												search 
+													literal "counter"
+										value 
+											select 
+												[1] 
+													search 
+														literal "argument"
 		[7] 
 			key 
 				[1] 
@@ -1755,108 +1761,60 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 5
+						literal "MemberTest"
+				[2] 
+					lookup 
+						literal "ClassProperty"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "MemberTest"
-							[2] 
-								lookup 
-									literal "ClassProperty"
-							[3] 
-								lookup 
-									literal "set"
-					argument 
-						call 
-							callable 
-								select 
-									[1] 
-										search 
-											literal "memberTest"
-									[2] 
-										lookup 
-											literal "InstanceProperty"
-									[3] 
-										lookup 
-											literal "get"
-							argument 
-								literal 0
+				select 
+					[1] 
+						search 
+							literal "memberTest"
+					[2] 
+						lookup 
+							literal "InstanceProperty"
 		[86] 
 			key 
 				[1] 
 					lookup 
 						literal "classPropertyValue"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "MemberTest"
-							[2] 
-								lookup 
-									literal "ClassProperty"
-							[3] 
-								lookup 
-									literal "get"
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "MemberTest"
+					[2] 
+						lookup 
+							literal "ClassProperty"
 		[87] 
 			key 
 				[1] 
 					lookup 
-						literal 6
+						literal "memberTest"
+				[2] 
+					lookup 
+						literal "InstanceProperty"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "memberTest"
-							[2] 
-								lookup 
-									literal "InstanceProperty"
-							[3] 
-								lookup 
-									literal "set"
-					argument 
-						call 
-							callable 
-								select 
-									[1] 
-										search 
-											literal "MemberTest"
-									[2] 
-										lookup 
-											literal "ClassProperty"
-									[3] 
-										lookup 
-											literal "get"
-							argument 
-								literal 0
+				select 
+					[1] 
+						search 
+							literal "MemberTest"
+					[2] 
+						lookup 
+							literal "ClassProperty"
 		[88] 
 			key 
 				[1] 
 					lookup 
 						literal "instancePropertyValue"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "memberTest"
-							[2] 
-								lookup 
-									literal "InstanceProperty"
-							[3] 
-								lookup 
-									literal "get"
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "memberTest"
+					[2] 
+						lookup 
+							literal "InstanceProperty"
 		[89] 
 			key 
 				[1] 
@@ -2029,56 +1987,31 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 7
+						literal "indexerNoConversion"
+				[2] 
+					lookup 
+						literal "Item"
+				[3] 
+					lookup 
+						literal "abc"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "indexerNoConversion"
-							[2] 
-								lookup 
-									literal "Item"
-							[3] 
-								lookup 
-									literal "set"
-					argument 
-						program 
-							[1] 
-								key 
-									[1] 
-										lookup 
-											literal 1
-								value 
-									literal "abc"
-							[2] 
-								key 
-									[1] 
-										lookup 
-											literal 2
-								value 
-									literal "hihi"
+				literal "hihi"
 		[96] 
 			key 
 				[1] 
 					lookup 
 						literal "indexerNoConversionIndexed"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "indexerNoConversion"
-							[2] 
-								lookup 
-									literal "Item"
-							[3] 
-								lookup 
-									literal "get"
-					argument 
-						literal "abc"
+				select 
+					[1] 
+						search 
+							literal "indexerNoConversion"
+					[2] 
+						lookup 
+							literal "Item"
+					[3] 
+						lookup 
+							literal "abc"
 		[97] 
 			key 
 				[1] 
@@ -2363,7 +2296,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 8
+						literal 5
 			value 
 				call 
 					callable 
@@ -2410,7 +2343,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 9
+						literal 6
 			value 
 				call 
 					callable 
@@ -2478,7 +2411,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 10
+						literal 7
 			value 
 				call 
 					callable 
@@ -2554,7 +2487,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 11
+						literal 8
 			value 
 				call 
 					callable 
@@ -3011,7 +2944,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 12
+						literal 9
 			value 
 				call 
 					callable 
@@ -3030,20 +2963,16 @@ function
 					lookup 
 						literal "arrayListResult"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "arrayList"
-							[2] 
-								lookup 
-									literal "Item"
-							[3] 
-								lookup 
-									literal "get"
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "arrayList"
+					[2] 
+						lookup 
+							literal "Item"
+					[3] 
+						lookup 
+							literal 0
 		[151] 
 			key 
 				[1] 
@@ -3067,48 +2996,31 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 13
+						literal "textBox"
+				[2] 
+					lookup 
+						literal "Text"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "textBox"
-							[2] 
-								lookup 
-									literal "Text"
-							[3] 
-								lookup 
-									literal "set"
-					argument 
-						literal "
-							Alle meine Entchen,
-							schwimmen auf dem See,
-							schwimmen auf dem See,
-							Köpfchen in das Wasser,
-							Schwaenzchen in die Hoeh.
-						"
+				literal "
+					Alle meine Entchen,
+					schwimmen auf dem See,
+					schwimmen auf dem See,
+					Köpfchen in das Wasser,
+					Schwaenzchen in die Hoeh.
+				"
 		[153] 
 			key 
 				[1] 
 					lookup 
 						literal "lines"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "textBox"
-							[2] 
-								lookup 
-									literal "Lines"
-							[3] 
-								lookup 
-									literal "get"
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "textBox"
+					[2] 
+						lookup 
+							literal "Lines"
 		[154] 
 			key 
 				[1] 
@@ -3160,70 +3072,39 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 14
+						literal "form"
+				[2] 
+					lookup 
+						literal "Location"
 			value 
-				call 
-					callable 
-						select 
+				program 
+					[1] 
+						key 
 							[1] 
-								search 
-									literal "form"
-							[2] 
 								lookup 
-									literal "Location"
-							[3] 
-								lookup 
-									literal "set"
-							[4] 
-								lookup 
-									select 
-										[1] 
-											root 0
-										[2] 
-											lookup 
-												literal "System.Drawing"
-										[3] 
-											lookup 
-												literal "Point"
-					argument 
-						program 
+									literal "X"
+						value 
+							literal 5
+					[2] 
+						key 
 							[1] 
-								key 
-									[1] 
-										lookup 
-											literal "X"
-								value 
-									literal 5
-							[2] 
-								key 
-									[1] 
-										lookup 
-											literal "Y"
-								value 
-									literal 1000
+								lookup 
+									literal "Y"
+						value 
+							literal 1000
 		[157] 
 			key 
 				[1] 
 					lookup 
 						literal "automaticConversionTest"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "form"
-							[2] 
-								lookup 
-									literal "Location"
-							[3] 
-								lookup 
-									literal "get"
-							[4] 
-								lookup 
-									literal 0
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "form"
+					[2] 
+						lookup 
+							literal "Location"
 		[158] 
 			key 
 				[1] 
@@ -3621,7 +3502,7 @@ function
 			key 
 				[1] 
 					lookup 
-						literal 15
+						literal 10
 			value 
 				call 
 					callable 
@@ -3719,58 +3600,41 @@ function
 		[177] 
 			key 
 				[1] 
+					search 
+						literal "System.Windows.Forms"
+				[2] 
 					lookup 
-						literal 16
+						literal "Application"
+				[3] 
+					lookup 
+						literal "VisualStyleState"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "System.Windows.Forms"
-							[2] 
-								lookup 
-									literal "Application"
-							[3] 
-								lookup 
-									literal "VisualStyleState"
-							[4] 
-								lookup 
-									literal "set"
-					argument 
-						select 
-							[1] 
-								search 
-									literal "System.Windows.Forms"
-							[2] 
-								lookup 
-									literal "VisualStyleState"
-							[3] 
-								lookup 
-									literal "ClientAreaEnabled"
+				select 
+					[1] 
+						search 
+							literal "System.Windows.Forms"
+					[2] 
+						lookup 
+							literal "VisualStyleState"
+					[3] 
+						lookup 
+							literal "ClientAreaEnabled"
 		[178] 
 			key 
 				[1] 
 					lookup 
 						literal "enumTest"
 			value 
-				call 
-					callable 
-						select 
-							[1] 
-								search 
-									literal "System.Windows.Forms"
-							[2] 
-								lookup 
-									literal "Application"
-							[3] 
-								lookup 
-									literal "VisualStyleState"
-							[4] 
-								lookup 
-									literal "get"
-					argument 
-						literal 0
+				select 
+					[1] 
+						search 
+							literal "System.Windows.Forms"
+					[2] 
+						lookup 
+							literal "Application"
+					[3] 
+						lookup 
+							literal "VisualStyleState"
 		[179] 
 			key 
 				[1] 
