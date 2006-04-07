@@ -1,6 +1,113 @@
 |
-	current gtk-sharp
+	current merge
+		. gtk-sharp
+		. pango-sharp
+		. mscorlib
 	. Application.Init 0
-	win ["gtk-sharp"].Window.[mscorlib.String] "TextViewSample"
+	. console.create 0
+	. console.write "hi"
+	win Window.[/.mscorlib.String] "TextViewSample"
+	. win.DeleteEvent.add
+		|Application.Quit 0
+	. win.SetDefaultSize
+		. 600
+		. 400
+	view TextView.[0] 0
+	. view.KeyPressEvent.add
+		e|if
+			. equal
+				. e.[2].Event.Key
+				. gdk-sharp.Key.Return
+			then
+				|print "equal!!!"
+			else
+				|print "not equal!!"
+	menuBar MenuBar.[0] 0
+	fileItem MenuItem.[String] "File"
+	fileMenu Menu.[0] 0
+	fileItem.Submenu fileMenu
+	menu
+		file
+			exit MenuItem.[String] "Exit"
+			. exit.Activated.add
+				|win.Destroy 0
+			open MenuItem.[String] "Open..."
+			. open.Activated.add
+				|
+					dialog FileChooserDialog.[
+						. String
+						. Window
+						. FileChooserAction
+						. Array.[Object]
+					]
+						. "titulo de prueba"
+						. win
+						. FileChooserAction.Open
+						. 0
+					. dialog.AddButton.[
+						. String
+						. ResponseType
+					] 
+						. "Cancel"
+						. ResponseType.Cancel
+					. dialog.AddButton.[
+						. String
+						. ResponseType
+					]
+						. "Accept"
+						. ResponseType.Accept
+					dialog.Filter FileFilter.[0] 0
+					. dialog.Filter.AddPattern "*.meta"
+					result dialog.Run 0
+					. if
+						. equal
+							. result
+							. ResponseType.Accept
+						then
+							|
+								$file dialog.Filename
+								$view.Buffer.Text File.ReadAllText file
+					. dialog.Destroy 0
+		edit
+			copy 0
+			cut 0
+			paste 0
+	. fileMenu.Append menu.file.open
+	. fileMenu.Append MenuItem.[String] "Save"
+	. fileMenu.Append menu.file.exit
+	. menuBar.Append fileItem
+	box VBox.[
+		. Boolean
+		. Int32
+	]
+		. 0
+		. 2
+	. box.PackStart.[
+		. Widget
+		. Boolean
+		. Boolean
+		. UInt32
+	]
+		. menuBar
+		. 0
+		. 0
+		. 0
+	. box.PackStart.[
+		. Widget
+		. Boolean
+		. Boolean
+		. UInt32
+	]
+		. view
+		. 1
+		. 1
+		. 0
+	. win.Add box
+	font FontDescription.[0] 0
+	font.Family "Courier New"
+	font.SizePoints 10
+	. win.Maximize 0
+	. view.ModifyFont font
+	. ". win.Add view"
 	. win.ShowAll 0
 	. Application.Run 0

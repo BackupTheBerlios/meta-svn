@@ -307,6 +307,7 @@ namespace Meta
 			Map key = keyPosition.Get();
 			if (!selected.Get().ContainsKey(key))
 			{
+				object x = selected.Get().ContainsKey(key);
 				throw new KeyDoesNotExist(key, keyExpression.Extent, null);
 			}
 			return new PersistantPosition(selected, key);
@@ -332,6 +333,9 @@ namespace Meta
 		{
 			PersistantPosition keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
+			if (key.Equals(new StrategyMap("win")))
+			{
+			}
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
 				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
@@ -1526,9 +1530,17 @@ namespace Meta
 	public class Interpreter
 	{
 		public static bool profiling=false;
+		public static void ChangeRef(ref string text)
+		{
+			text = "hello";
+		}
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			//object[] a = new object[] { "world" };
+			//typeof(Interpreter).GetMethod("ChangeRef").Invoke(null, a);
+			//int asdf = 0;
+
 			//Gtk.Application.Init();
 			//Gtk.Window win = new Gtk.Window("TextViewSample");
 			//////win.SetDefaultSize(600, 400);
@@ -2865,10 +2877,12 @@ namespace Meta
 								dotNet=list.ToArray(elementType);
 							}
 						}
-						else
+						else // this is too much magic, remove if possible
 						{
 							ObjectMap result;
-							ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
+							// why non-public? is this even used
+							ConstructorInfo constructor = target.GetConstructor(BindingFlags.Public, null, new Type[] { }, new ParameterModifier[] { });
+							//ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
 							if (constructor != null)
 							{
 								result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
@@ -2882,7 +2896,8 @@ namespace Meta
 								}
 								else
 								{
-									result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
+									result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
+									//result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
 								}
 							}
 							else
@@ -3066,13 +3081,12 @@ namespace Meta
 		{
 			currentPosition = position;
 			bool converted;
+			if (parameters.Length == 1)
+			{
+			}
 			object[] arguments = ConvertArgument(argument, out converted);
 			try
 			{
-				//if (arguments.Length == 1)
-				//{
-				//    arguments[0] = new Gtk.gtk "hello";
-				//}
 				Map result = Transform.ToMeta(
 					method is ConstructorInfo ?
 						((ConstructorInfo)method).Invoke(arguments) :
@@ -3265,11 +3279,13 @@ namespace Meta
 		{
 			if (name==".ctor" || obj != null)
 			{
-				return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+				return BindingFlags.Public | BindingFlags.Instance;
+				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 			}
 			else
 			{
-				return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+				return BindingFlags.Public | BindingFlags.Static;
+				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 			}
 		}
 	    protected override ICollection<Map> KeysImplementation
@@ -4294,6 +4310,7 @@ namespace Meta
 		{
 			MethodImplementation.currentPosition = position;
 			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+			//Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
 			if (eventDelegate != null)
 			{
 				List<object> arguments = new List<object>();
@@ -4480,6 +4497,9 @@ namespace Meta
 			else if (key.IsString)
 			{
 				string memberName = key.GetString();
+				if (memberName.Contains("FileChooser"))
+				{
+				}
 				MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
 				if (foundMembers.Length != 0)
 				{
@@ -4601,7 +4621,7 @@ namespace Meta
 		//}
 		protected override bool ContainsKeyImplementation(Map key)
 		{
-			return key.IsString && this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
+			return key.IsString && Get(key) != null;// this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
 		}
 		protected override ICollection<Map> KeysImplementation
 		{
