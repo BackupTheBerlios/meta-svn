@@ -343,9 +343,9 @@ commandLine|
 	lines textBox.Lines
 	alleMeineText lines.GetValue.[/.mscorlib.Int32] 1
 	form /.["System.Windows.Forms"].Form 0
-	form.Location
-		X 5
-		Y 1000
+	form.Location ["System.Drawing"].Point
+		. 5
+		. 1000
 	automaticConversionTest form.Location
 	tabText "			hello"
 	escapedText "'#'n'''t"

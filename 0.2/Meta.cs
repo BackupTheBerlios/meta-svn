@@ -2669,7 +2669,8 @@ namespace Meta
 			object dotNet=ToDotNet(meta, target, out converted);
 			if (!converted)
 			{
-				throw new ApplicationException("Cannot convert argument.");
+				object abc = ToDotNet(meta, target, out converted);
+				throw new ApplicationException("Cannot convert argument to "+target.ToString()+".");
 			}
 			return dotNet;
 		}
@@ -2877,42 +2878,42 @@ namespace Meta
 								dotNet=list.ToArray(elementType);
 							}
 						}
-						else // this is too much magic, remove if possible
-						{
-							ObjectMap result;
-							// why non-public? is this even used
-							ConstructorInfo constructor = target.GetConstructor(BindingFlags.Public, null, new Type[] { }, new ParameterModifier[] { });
-							//ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
-							if (constructor != null)
-							{
-								result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
-							}
-							else if (target.IsValueType)
-							{
-								if (target.Equals(typeof(void)))
-								{
-									result = null;
-									break;
-								}
-								else
-								{
-									result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
-									//result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
-								}
-							}
-							else
-							{
-								break;
-							}
-							foreach (KeyValuePair<Map, Map> pair in meta)
-							{
-								// passing null as position is dangerous, currentPosition is wrong
-								result[pair.Key]=pair.Value;//, MethodImplementation.currentPosition);
-								//((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
-								//((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, null);
-							}
-							dotNet = result.Object;
-						}
+						//else // this is too much magic, remove if possible
+						//{
+						//    ObjectMap result;
+						//    // why non-public? is this even used
+						//    ConstructorInfo constructor = target.GetConstructor(BindingFlags.Public, null, new Type[] { }, new ParameterModifier[] { });
+						//    //ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
+						//    if (constructor != null)
+						//    {
+						//        result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
+						//    }
+						//    else if (target.IsValueType)
+						//    {
+						//        if (target.Equals(typeof(void)))
+						//        {
+						//            result = null;
+						//            break;
+						//        }
+						//        else
+						//        {
+						//            result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
+						//            //result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
+						//        }
+						//    }
+						//    else
+						//    {
+						//        break;
+						//    }
+						//    foreach (KeyValuePair<Map, Map> pair in meta)
+						//    {
+						//        // passing null as position is dangerous, currentPosition is wrong
+						//        result[pair.Key]=pair.Value;//, MethodImplementation.currentPosition);
+						//        //((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
+						//        //((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, null);
+						//    }
+						//    dotNet = result.Object;
+						//}
 						break;
 					case TypeCode.SByte:
 						if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))

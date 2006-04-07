@@ -82,6 +82,8 @@
 	]
 		. 0
 		. 2
+	scrolled ScrolledWindow.[0] 0
+	. scrolled.Add view
 	. box.PackStart.[
 		. Widget
 		. Boolean
@@ -98,7 +100,7 @@
 		. Boolean
 		. UInt32
 	]
-		. view
+		. scrolled
 		. 1
 		. 1
 		. 0
@@ -106,8 +108,27 @@
 	font FontDescription.[0] 0
 	font.Family "Courier New"
 	font.SizePoints 10
+	tabs TabArray.[
+		. Int32
+		. Boolean
+	]
+		. 3
+		. 1
+	. tabs.SetTab
+		. 0
+		. TabAlign.Left
+		. 10
+	. tabs.SetTab
+		. 1
+		. TabAlign.Left
+		. 20
+	. tabs.SetTab
+		. 2
+		. TabAlign.Left
+		. 30
+	view.Tabs tabs
 	. win.Maximize 0
 	. view.ModifyFont font
-	. ". win.Add view"
+	. win.Add scrolled
 	. win.ShowAll 0
 	. Application.Run 0
