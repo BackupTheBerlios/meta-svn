@@ -6,7 +6,7 @@ Extent (Extent):
 			"1"
 	End (SourcePosition):
 		Line (Int32):
-			"418"
+			"422"
 		Column (Int32):
 			"1"
 Entry (KeyValuePair`2)
@@ -70,7 +70,7 @@ Entry (KeyValuePair`2)
 					"1"
 			End (SourcePosition):
 				Line (Int32):
-					"416"
+					"420"
 				Column (Int32):
 					"1"
 		Entry (KeyValuePair`2)
@@ -105,7 +105,7 @@ Entry (KeyValuePair`2)
 							"13"
 					End (SourcePosition):
 						Line (Int32):
-							"416"
+							"420"
 						Column (Int32):
 							"1"
 				Entry (KeyValuePair`2)
@@ -61558,17 +61558,500 @@ Schwaenzchen in die Hoeh."
 												Column (Int32):
 													"24"
 										"changed"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						184
+					Value (StrategyMap):
+						Extent (Extent):
+							Start (SourcePosition):
+								Line (Int32):
+									"416"
+								Column (Int32):
+									"1"
+							End (SourcePosition):
+								Line (Int32):
+									"420"
+								Column (Int32):
+									"1"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"key"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"416"
+										Column (Int32):
+											"2"
+									End (SourcePosition):
+										Line (Int32):
+											"416"
+										Column (Int32):
+											"19"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										1
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"416"
+												Column (Int32):
+													"2"
+											End (SourcePosition):
+												Line (Int32):
+													"416"
+												Column (Int32):
+													"19"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												"lookup"
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"416"
+														Column (Int32):
+															"2"
+													End (SourcePosition):
+														Line (Int32):
+															"416"
+														Column (Int32):
+															"19"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"literal"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"416"
+																Column (Int32):
+																	"2"
+															End (SourcePosition):
+																Line (Int32):
+																	"416"
+																Column (Int32):
+																	"19"
+														"characterLiterals"
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent:
+									null
+								"value"
+							Value (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"416"
+										Column (Int32):
+											"19"
+									End (SourcePosition):
+										Line (Int32):
+											"420"
+										Column (Int32):
+											"1"
+								Entry (KeyValuePair`2)
+									Key (StrategyMap):
+										Extent:
+											null
+										"program"
+									Value (StrategyMap):
+										Extent (Extent):
+											Start (SourcePosition):
+												Line (Int32):
+													"416"
+												Column (Int32):
+													"19"
+											End (SourcePosition):
+												Line (Int32):
+													"420"
+												Column (Int32):
+													"1"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												1
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"417"
+														Column (Int32):
+															"3"
+													End (SourcePosition):
+														Line (Int32):
+															"418"
+														Column (Int32):
+															"1"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"417"
+																Column (Int32):
+																	"3"
+															End (SourcePosition):
+																Line (Int32):
+																	"417"
+																Column (Int32):
+																	"4"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"417"
+																		Column (Int32):
+																			"3"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"417"
+																		Column (Int32):
+																			"4"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"417"
+																				Column (Int32):
+																					"3"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"417"
+																				Column (Int32):
+																					"4"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"417"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"417"
+																						Column (Int32):
+																							"4"
+																				"a"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"value"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"417"
+																Column (Int32):
+																	"5"
+															End (SourcePosition):
+																Line (Int32):
+																	"417"
+																Column (Int32):
+																	"8"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"417"
+																		Column (Int32):
+																			"5"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"417"
+																		Column (Int32):
+																			"8"
+																97
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												2
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"418"
+														Column (Int32):
+															"1"
+													End (SourcePosition):
+														Line (Int32):
+															"419"
+														Column (Int32):
+															"1"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"418"
+																Column (Int32):
+																	"3"
+															End (SourcePosition):
+																Line (Int32):
+																	"418"
+																Column (Int32):
+																	"8"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"418"
+																		Column (Int32):
+																			"3"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"418"
+																		Column (Int32):
+																			"8"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"418"
+																				Column (Int32):
+																					"3"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"418"
+																				Column (Int32):
+																					"8"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"418"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"418"
+																						Column (Int32):
+																							"8"
+																				"space"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"value"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"418"
+																Column (Int32):
+																	"9"
+															End (SourcePosition):
+																Line (Int32):
+																	"418"
+																Column (Int32):
+																	"12"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"418"
+																		Column (Int32):
+																			"9"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"418"
+																		Column (Int32):
+																			"12"
+																32
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												Extent:
+													null
+												3
+											Value (StrategyMap):
+												Extent (Extent):
+													Start (SourcePosition):
+														Line (Int32):
+															"419"
+														Column (Int32):
+															"1"
+													End (SourcePosition):
+														Line (Int32):
+															"420"
+														Column (Int32):
+															"1"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"key"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"419"
+																Column (Int32):
+																	"3"
+															End (SourcePosition):
+																Line (Int32):
+																	"419"
+																Column (Int32):
+																	"6"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																1
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"419"
+																		Column (Int32):
+																			"3"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"419"
+																		Column (Int32):
+																			"6"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"lookup"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"419"
+																				Column (Int32):
+																					"3"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"419"
+																				Column (Int32):
+																					"6"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"419"
+																						Column (Int32):
+																							"3"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"419"
+																						Column (Int32):
+																							"6"
+																				"tab"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"value"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"419"
+																Column (Int32):
+																	"7"
+															End (SourcePosition):
+																Line (Int32):
+																	"419"
+																Column (Int32):
+																	"10"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"419"
+																		Column (Int32):
+																			"7"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"419"
+																		Column (Int32):
+																			"10"
+																9
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"416"
+					"420"
 				Column (Int32):
 					"1"
 			End (SourcePosition):
 				Line (Int32):
-					"416"
+					"420"
 				Column (Int32):
 					"10"
 		"shortFunc"
@@ -61576,12 +62059,12 @@ Entry (KeyValuePair`2)
 		Extent (Extent):
 			Start (SourcePosition):
 				Line (Int32):
-					"416"
+					"420"
 				Column (Int32):
 					"10"
 			End (SourcePosition):
 				Line (Int32):
-					"417"
+					"421"
 				Column (Int32):
 					"9"
 		Entry (KeyValuePair`2)
@@ -61593,12 +62076,12 @@ Entry (KeyValuePair`2)
 				Extent (Extent):
 					Start (SourcePosition):
 						Line (Int32):
-							"417"
+							"421"
 						Column (Int32):
 							"2"
 					End (SourcePosition):
 						Line (Int32):
-							"417"
+							"421"
 						Column (Int32):
 							"9"
 				Entry (KeyValuePair`2)
@@ -61610,12 +62093,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"417"
+									"421"
 								Column (Int32):
 									"2"
 							End (SourcePosition):
 								Line (Int32):
-									"417"
+									"421"
 								Column (Int32):
 									"5"
 						"arg"
@@ -61628,12 +62111,12 @@ Entry (KeyValuePair`2)
 						Extent (Extent):
 							Start (SourcePosition):
 								Line (Int32):
-									"417"
+									"421"
 								Column (Int32):
 									"6"
 							End (SourcePosition):
 								Line (Int32):
-									"417"
+									"421"
 								Column (Int32):
 									"9"
 						Entry (KeyValuePair`2)
@@ -61645,12 +62128,12 @@ Entry (KeyValuePair`2)
 								Extent (Extent):
 									Start (SourcePosition):
 										Line (Int32):
-											"417"
+											"421"
 										Column (Int32):
 											"6"
 									End (SourcePosition):
 										Line (Int32):
-											"417"
+											"421"
 										Column (Int32):
 											"9"
 								Entry (KeyValuePair`2)
@@ -61662,12 +62145,12 @@ Entry (KeyValuePair`2)
 										Extent (Extent):
 											Start (SourcePosition):
 												Line (Int32):
-													"417"
+													"421"
 												Column (Int32):
 													"6"
 											End (SourcePosition):
 												Line (Int32):
-													"417"
+													"421"
 												Column (Int32):
 													"9"
 										Entry (KeyValuePair`2)
@@ -61679,12 +62162,12 @@ Entry (KeyValuePair`2)
 												Extent (Extent):
 													Start (SourcePosition):
 														Line (Int32):
-															"417"
+															"421"
 														Column (Int32):
 															"6"
 													End (SourcePosition):
 														Line (Int32):
-															"417"
+															"421"
 														Column (Int32):
 															"9"
 												"arg"

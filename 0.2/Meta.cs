@@ -4928,7 +4928,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const string current = "current";
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd };
+		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
 	}
 
 
@@ -5446,13 +5446,13 @@ namespace Meta
 		public static Rule CharacterDataExpression = new Sequence(
 			new Action(
 				new Match(),
-				new Character(Syntax.@string)),
+				new Character(Syntax.character)),
 			new Action(
 				new ReferenceAssignment(),
 				new CharacterExcept(Syntax.character)),
 			new Action(
 				new Match(),
-				new CharacterExcept(Syntax.character)));
+				new Character(Syntax.character)));
 
 		public static Rule String = new Alternatives(
 				new Sequence(
@@ -5721,12 +5721,6 @@ namespace Meta
 			return null;
 		});
 
-
-		//public static Rule ShortFunctionExpression = new Sequence(
-		//    new Action(new Assignment(
-		//        CodeKeys.Literal),
-		//        ShortFunction));
-
 		public static Rule FunctionExpression = new Sequence(
 			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
 			new Action(new Assignment(CodeKeys.Value), new Sequence(
@@ -5739,37 +5733,12 @@ namespace Meta
 						new Character(Syntax.tab),
 						new Character(Syntax.space))));
 
-		//private static Rule StringExpression = String;
-
-
-		//private static Rule StringExpression = new Sequence(
-		//            new Action(new Assignment(
-		//                CodeKeys.Literal),
-		//                String));
-
-		private static Rule EmptyMap = 
-			//new Sequence(
-			//new Action(
-			//new Assignment(CodeKeys.Literal), 
+		private static Rule EmptyMap =
 			new Sequence(
 				new Action(new Match(),
 					new Character(Syntax.emptyMap)),
 				new Action(new ReferenceAssignment(),
 					new LiteralRule(Meta.Map.Empty)));
-
-		//private static Rule EmptyMap = new Sequence(
-		//    new Action(new Assignment(CodeKeys.Literal), new Sequence(
-		//        new Action(new Match(),
-		//            new Character(Syntax.emptyMap)),
-		//        new Action(new ReferenceAssignment(),
-		//            new LiteralRule(Meta.Map.Empty)))));
-
-		//private static Rule NumberExpression = Number;
-		//private static Rule NumberExpression =
-		//    new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Literal),
-		//            Number));
 
 		private static Rule LiteralExpression = new Sequence(
 			new Action(
@@ -5778,13 +5747,8 @@ namespace Meta
 				new Alternatives(
 					EmptyMap,
 					String,
-					Number)));
-		//private static Rule EmptyMap = new Sequence(
-		//    new Action(new Assignment(CodeKeys.Literal), new Sequence(
-		//        new Action(new Match(),
-		//            new Character(Syntax.emptyMap)),
-		//        new Action(new ReferenceAssignment(),
-		//            new LiteralRule(Meta.Map.Empty)))));
+					Number,
+					CharacterDataExpression)));
 
 		private static Rule LookupAnythingExpression =
 			new Sequence(
@@ -5793,13 +5757,6 @@ namespace Meta
 				new Action(new Match(),new ZeroOrMore(
 					new Action(new Match(),new Character(Syntax.indentation)))),
 				new Action(new Match(),new Character(Syntax.lookupEnd)));
-
-
-		//private static Rule NumberExpression =
-		//    new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Literal),
-		//            Number));
 
 		private static Rule LookupStringExpression =
 			new Sequence(

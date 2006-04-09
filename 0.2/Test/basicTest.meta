@@ -413,5 +413,9 @@ commandLine|
 		z "a"
 	copiedData copySourceData
 	copiedData.x "changed"
+	characterLiterals
+		a 'a'
+		space ' '
+		tab '	'
 shortFunc
 	arg|arg

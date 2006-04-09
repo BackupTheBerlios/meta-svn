@@ -3621,3 +3621,22 @@ Entry (KeyValuePair`2)
 				"z"
 			Value (StrategyMap):
 				"a"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"characterLiterals"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"a"
+			Value (StrategyMap):
+				97
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"space"
+			Value (StrategyMap):
+				32
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"tab"
+			Value (StrategyMap):
+				9
