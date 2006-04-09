@@ -3077,21 +3077,31 @@ function
 					lookup 
 						literal "Location"
 			value 
-				program 
-					[1] 
-						key 
+				call 
+					callable 
+						select 
 							[1] 
+								search 
+									literal "System.Drawing"
+							[2] 
 								lookup 
-									literal "X"
-						value 
-							literal 5
-					[2] 
-						key 
+									literal "Point"
+					argument 
+						program 
 							[1] 
-								lookup 
-									literal "Y"
-						value 
-							literal 1000
+								key 
+									[1] 
+										lookup 
+											literal 1
+								value 
+									literal 5
+							[2] 
+								key 
+									[1] 
+										lookup 
+											literal 2
+								value 
+									literal 1000
 		[157] 
 			key 
 				[1] 

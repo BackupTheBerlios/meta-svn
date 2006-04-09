@@ -4916,14 +4916,13 @@ namespace Meta
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
-		//public const char shortFunction = ':';
 		public const char @string = '\"';
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public const char emptyMap = '0';
 		public const char call = ' ';
 		public const char select = '.';
-		//public const char stringEscape = '\'';
+		public const char character = '\'';
 		public const char assignment = ' ';
 		public const char space = ' ';
 		public const char tab = '\t';
@@ -5331,7 +5330,8 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, Select);
+			return new Alternatives(LiteralExpression, Program, Call, Select);
+			//return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, Select);
 			//return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, ShortFunctionExpression, Select);
 		});
 		public static Rule NewLine = 
@@ -5443,6 +5443,17 @@ namespace Meta
 			}
 			return map;
 		});
+		public static Rule CharacterDataExpression = new Sequence(
+			new Action(
+				new Match(),
+				new Character(Syntax.@string)),
+			new Action(
+				new ReferenceAssignment(),
+				new CharacterExcept(Syntax.character)),
+			new Action(
+				new Match(),
+				new CharacterExcept(Syntax.character)));
+
 		public static Rule String = new Alternatives(
 				new Sequence(
 					new Action(
@@ -5564,7 +5575,8 @@ namespace Meta
 		public static Rule Value = new Alternatives(
 			Map,
 			String,
-			Number
+			Number,
+			CharacterDataExpression
 			//ShortFunction
 			);
 
@@ -5709,13 +5721,6 @@ namespace Meta
 			return null;
 		});
 
-		private static Rule StringExpression = new CustomRule(delegate(Parser parser, out bool matched)
-		{
-			return new Sequence(
-					new Action(new Assignment(
-						CodeKeys.Literal),
-						String)).Match(parser, out matched);
-		});
 
 		//public static Rule ShortFunctionExpression = new Sequence(
 		//    new Action(new Assignment(
@@ -5734,12 +5739,52 @@ namespace Meta
 						new Character(Syntax.tab),
 						new Character(Syntax.space))));
 
-		private static Rule EmptyMap = new Sequence(
-			new Action(new Assignment(CodeKeys.Literal), new Sequence(
+		//private static Rule StringExpression = String;
+
+
+		//private static Rule StringExpression = new Sequence(
+		//            new Action(new Assignment(
+		//                CodeKeys.Literal),
+		//                String));
+
+		private static Rule EmptyMap = 
+			//new Sequence(
+			//new Action(
+			//new Assignment(CodeKeys.Literal), 
+			new Sequence(
 				new Action(new Match(),
 					new Character(Syntax.emptyMap)),
 				new Action(new ReferenceAssignment(),
-					new LiteralRule(Meta.Map.Empty)))));
+					new LiteralRule(Meta.Map.Empty)));
+
+		//private static Rule EmptyMap = new Sequence(
+		//    new Action(new Assignment(CodeKeys.Literal), new Sequence(
+		//        new Action(new Match(),
+		//            new Character(Syntax.emptyMap)),
+		//        new Action(new ReferenceAssignment(),
+		//            new LiteralRule(Meta.Map.Empty)))));
+
+		//private static Rule NumberExpression = Number;
+		//private static Rule NumberExpression =
+		//    new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Literal),
+		//            Number));
+
+		private static Rule LiteralExpression = new Sequence(
+			new Action(
+				new Assignment(
+					CodeKeys.Literal),
+				new Alternatives(
+					EmptyMap,
+					String,
+					Number)));
+		//private static Rule EmptyMap = new Sequence(
+		//    new Action(new Assignment(CodeKeys.Literal), new Sequence(
+		//        new Action(new Match(),
+		//            new Character(Syntax.emptyMap)),
+		//        new Action(new ReferenceAssignment(),
+		//            new LiteralRule(Meta.Map.Empty)))));
 
 		private static Rule LookupAnythingExpression =
 			new Sequence(
@@ -5750,11 +5795,11 @@ namespace Meta
 				new Action(new Match(),new Character(Syntax.lookupEnd)));
 
 
-		private static Rule NumberExpression =
-			new Sequence(
-				new Action(new Assignment(
-					CodeKeys.Literal),
-					Number));
+		//private static Rule NumberExpression =
+		//    new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Literal),
+		//            Number));
 
 		private static Rule LookupStringExpression =
 			new Sequence(
