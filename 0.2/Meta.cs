@@ -186,10 +186,41 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
-		public abstract PersistantPosition Evaluate(PersistantPosition context);
+		public abstract bool HasConstantKeysOnly
+		{
+			get;
+		}
+		public bool IsCall
+		{
+			get
+			{
+				return isCall;
+			}
+			set
+			{
+				isCall = value;
+			}
+		}
+		private bool isCall;
+		public static List<Expression> expressions = new List<Expression>();
+		public PersistantPosition Evaluate(PersistantPosition context)
+		{
+			expressions.Add(this);
+			PersistantPosition result = EvaluateImplementation(context);
+			expressions.RemoveAt(expressions.Count-1);
+			return result;
+		}
+		protected abstract PersistantPosition EvaluateImplementation(PersistantPosition context);
 	}
 	public class Call : Expression
 	{
+		public override bool HasConstantKeysOnly
+		{
+			get 
+			{
+				return true;
+			}
+		}
 		private Map callable;
 		public Map argument;
 		public Call(Map code)
@@ -197,10 +228,13 @@ namespace Meta
 			this.callable = code[CodeKeys.Callable];
 			this.argument = code[CodeKeys.Argument];
 		}
-		public static PersistantPosition lastArgument;
-		public override PersistantPosition Evaluate(PersistantPosition current)
+		public class Optimized
 		{
-
+		}
+		public static PersistantPosition lastArgument;
+		protected override PersistantPosition EvaluateImplementation(PersistantPosition current)
+		{
+			argument.GetExpression().IsCall = true;
 			PersistantPosition arg = argument.GetExpression().Evaluate(current);
 			lastArgument = arg;
 			return callable.GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
@@ -208,12 +242,20 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
+		public override bool HasConstantKeysOnly
+		{
+			get 
+			{
+				return false;
+				//throw new Exception("The method or operation is not implemented."); 
+			}
+		}
 		private Map statements;
 		public Program(Map code)
 		{
 			statements = code;
 		}
-		public override PersistantPosition Evaluate(PersistantPosition parent)
+		protected override PersistantPosition EvaluateImplementation(PersistantPosition parent)
 		{
 			FunctionBodyKey call;
 			parent.Get().AddCall(new StrategyMap(), out call);
@@ -228,6 +270,13 @@ namespace Meta
 	}
 	public class Literal : Expression
 	{
+		public override bool HasConstantKeysOnly
+		{
+			get 
+			{
+				return true;
+			}
+		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		private Map literal;
 		public Literal(Map code)
@@ -241,7 +290,7 @@ namespace Meta
 				this.literal = code.Copy();
 			}
 		}
-		public override PersistantPosition Evaluate(PersistantPosition context)
+		protected override PersistantPosition EvaluateImplementation(PersistantPosition context)
 		{
 			FunctionBodyKey calls;
 			context.Get().AddCall(literal, out calls);
@@ -338,9 +387,33 @@ namespace Meta
 			}
 			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
 			{
-				if (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count < lastEvaluated.Keys.Count - 1)
+				//bool constantKeys = false;
+				//for (int i = Expression.expressions.Count-1; i > 0;i-- )
+				//{
+				//    Expression expression = Expression.expressions[i];
+				//    if (expression.IsCall)
+				//    {
+				//        constantKeys = true;
+				//        break;
+				//    }
+				//    if (!expression.HasConstantKeysOnly)
+				//    {
+				//        break;
+				//    }
+				//}
+				if ((lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
 				{
 					return lastEvaluated;
+				}
+				//if ((constantKeys && context.Keys.Count >= lastEvaluated.Keys.Count-1) || (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
+				//{
+				//    return lastEvaluated;
+				//}
+				else
+				{
+					context.Equals(lastContext);
+					lastEvaluated = null;
+					lastKey = null;
 				}
 			}
 			lastKey = key.Copy();
@@ -418,12 +491,19 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
+		public override bool HasConstantKeysOnly
+		{
+			get 
+			{ 
+				return true;
+			}
+		}
 		private List<Map> subselects;
 		public Select(Map code)
 		{
 			this.subselects = code.Array;
 		}
-		public override PersistantPosition Evaluate(PersistantPosition context)
+		protected override PersistantPosition EvaluateImplementation(PersistantPosition context)
 		{
 			PersistantPosition selected = context;
 			foreach (Map subselect in subselects)
@@ -869,11 +949,11 @@ namespace Meta
 		}
 		public static Map Sort(Map arg)
 		{
-			List<Map> array = arg[1].Array;
+			List<Map> array = arg["array"].Array;
 			PersistantPosition argument = Call.lastArgument;
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
-				Map result=argument.Get().Call(new StrategyMap(1, a, 2, b), argument).Get();
+				Map result = argument["function"].Call(new StrategyMap(1, a, 2, b)).Get();
 				return result.GetNumber().GetInt32();
 			}));
 			return new StrategyMap(array);
@@ -1577,6 +1657,7 @@ namespace Meta
 						case "-profile":
 							profiling = true;
 							Commands.Profile();
+							//Console.ReadLine();
 							break;
 						default:
 							Commands.Run(args);
@@ -1767,6 +1848,10 @@ namespace Meta
 	public delegate void BustOptimization();
 	public class PersistantPosition : Position
 	{
+		public PersistantPosition Call(Map argument)
+		{
+			return Get().Call(argument, this);
+		}
 		private Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
 		public List<Map> Keys
 		{
@@ -1803,7 +1888,7 @@ namespace Meta
 		private Map key;
 		private PersistantPosition parent;
 
-		public void Assign(Map key, Map value)
+		public Map Assign(Map key, Map value)
 		{
 			Get()[key] = value;
 			if (optimizations.ContainsKey(key))
@@ -1811,10 +1896,42 @@ namespace Meta
 				optimizations[key]();
 				optimizations.Remove(key);
 			}
+
+			try
+			{
+				return Get()[key];
+			}
+			catch (Exception e)
+			{
+				return Get()[key];
+			}
 		}
+		//public void Assign(Map key, Map value)
+		//{
+		//    Get()[key] = value;
+		//    if (optimizations.ContainsKey(key))
+		//    {
+		//        optimizations[key]();
+		//        optimizations.Remove(key);
+		//    }
+		//}
 		public void Assign(Map value)
 		{
 			Parent.Assign(key, value);
+		}
+		public PersistantPosition this[Map key]
+		{
+			get
+			{
+				if (Get().ContainsKey(key))
+				{
+					return new PersistantPosition(this, key);
+				}
+				else
+				{
+					throw new Exception("Position does not exist");
+				}
+			}
 		}
 		public PersistantPosition(PersistantPosition parent, Map key)
 		{
@@ -3005,9 +3122,11 @@ namespace Meta
 					case TypeCode.DBNull:
 						return new ObjectMap(dotNet);
 					case TypeCode.Decimal:
-						return (int)dotNet;
+						return Convert.ToInt32(dotNet);
+						//return (int)dotNet;
 					case TypeCode.Double:
-						return (int)dotNet;
+						return Convert.ToInt32(dotNet);
+						//return (int)dotNet;
 					case TypeCode.Int16:
 						return (short)dotNet;
 					case TypeCode.Int32:
@@ -3030,7 +3149,8 @@ namespace Meta
 					case TypeCode.SByte:
 						return (sbyte)dotNet;
 					case TypeCode.Single:
-						return (int)dotNet;
+						return Convert.ToInt32(dotNet);
+						//return (int)dotNet;
 					case TypeCode.String:
 						return (string)dotNet;
 					case TypeCode.UInt32:
@@ -5331,8 +5451,6 @@ namespace Meta
 		public static Rule Expression = new DelayedRule(delegate()
 		{
 			return new Alternatives(LiteralExpression, Program, Call, Select);
-			//return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, Select);
-			//return new Alternatives(EmptyMap, NumberExpression, StringExpression, Program, Call, ShortFunctionExpression, Select);
 		});
 		public static Rule NewLine = 
 			new Alternatives(
@@ -5435,7 +5553,9 @@ namespace Meta
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			Map map = new Sequence(
-				new Action(new Match(), EndOfLine),
+				new Action(
+					new Match(),
+					EndOfLine),
 				new Action(new Match(), StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
 			if (matched)
 			{
@@ -5553,31 +5673,12 @@ namespace Meta
 		{
 			return Parser.Expression;
 		});
-		//public static Rule ShortFunction = new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Function),
-		//            new Sequence(
-		//            new Action(new Merge(),
-		//                new Sequence(
-		//                    new Action(new Assignment(
-		//                        CodeKeys.ParameterName),
-		//                        new ZeroOrMore(
-		//                            new Action(new Autokey(),
-		//                                new CharacterExcept(
-		//                                    //Syntax.shortFunction,
-		//                                    Syntax.unixNewLine)))))),
-		//            new Action(new Merge(),
-		//                new Sequence(
-		//                    new Action(new Match(),
-		//                        new Character(Syntax.shortFunction)),
-		//                    new Action(new ReferenceAssignment(), ExpressionData))))));//.Match(p, out matched);
 
 		public static Rule Value = new Alternatives(
 			Map,
 			String,
 			Number,
 			CharacterDataExpression
-			//ShortFunction
 			);
 
 		private static Rule LookupAnything =
@@ -5638,9 +5739,7 @@ namespace Meta
 			}
 			return result;
 		});
-		public static Rule Function = new CustomRule(delegate(Parser p, out bool matched)
-		{
-			Map result = new Sequence(
+		public static Rule Function = new Sequence(
 				new Action(new Merge(),
 					new Sequence(
 						new Action(new Assignment(
@@ -5653,13 +5752,13 @@ namespace Meta
 									Syntax.unixNewLine)))))),
 				new Action(new Merge(),
 					new Sequence(
-						new Action(new Match(),
+						new Action(
+						new Match(),
 							new Character(
 								Syntax.function)),
 						new Action(new ReferenceAssignment(),
-							ExpressionData)))).Match(p, out matched);
-			return result;
-		});
+							ExpressionData))));
+
 		public static Rule File = new Sequence(
 			new Action(new Match(),
 				new Optional(
@@ -5690,6 +5789,24 @@ namespace Meta
 								Program)),
 						new Action(new Match(),new Character(Syntax.callEnd)))));
 		});
+
+		//public static Rule ExplicitCall = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Match(),new Character(Syntax.callStart)),
+		//                new Action(new Assignment(CodeKeys.Callable),Select),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Argument),
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            new Action(new Match(),new Character(Syntax.call)),
+		//                            new Action(new ReferenceAssignment(),Expression)),
+		//                        Program)),
+		//                new Action(new Match(),new Character(Syntax.callEnd)))));
+		//});
 
 		public static Rule Call = new DelayedRule(delegate()
 		{

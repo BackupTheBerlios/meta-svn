@@ -158,22 +158,23 @@
 				catch 
 					argument|argument.ToString 0
 			sortTest sort
-				argument|if
-					. strictlyIncreasing
-						. argument.[1].x
-						. argument.[2].x
-					then
-						|-1
-					else
-						|if
-							. strictlyDecreasing
-								. argument.[1].x
-								. argument.[2].x
-							then
-								|1
-							else
-								|0
-				.
+				function
+					argument|if
+						. strictlyIncreasing
+							. argument.[1].x
+							. argument.[2].x
+						then
+							|-1
+						else
+							|if
+								. strictlyDecreasing
+									. argument.[1].x
+									. argument.[2].x
+								then
+									|1
+								else
+									|0
+				array
 					.
 						x 12
 						y 234

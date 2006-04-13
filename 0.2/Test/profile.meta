@@ -13,18 +13,19 @@
 				current
 					[parts.[2]] parts.[1]
 		entry|sort
-			. entry.value
-			arg|string.compare
-				. arg.[1]
-				. arg.[2]
-	sortedKeys sort
-		. keys result
-		arg|string.compare
-			. arg.[1]
-			. arg.[2]
-	sortedOutput 0
-	. apply
-		. sortedKeys
-		key|
-			$sortedOutput.[key] result.[key]
-	current sortedOutput
+			array entry.value
+			function
+				arg|string.compare
+					. arg.[1]
+					. arg.[2]
+	current apply
+		. sort
+			array keys result
+			function
+				arg|string.compare
+					. arg.[1]
+					. arg.[2]
+		key|append
+			. 
+				. key
+			. result.[key]
