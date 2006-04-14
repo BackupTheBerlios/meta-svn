@@ -1,17 +1,18 @@
 |
 	result foreach
 		. invert apply
-			. string.split
+			array string.split
 				text ["INPUT.txt"]
 				delimiters
 					. characters.linefeed
-			line|
-				parts string.split
-					text line
-					delimiters
-						. characters.tab
-				current
-					[parts.[2]] parts.[1]
+			function
+				line|
+					parts string.split
+						text line
+						delimiters
+							. characters.tab
+					current
+						[parts.[2]] parts.[1]
 		entry|sort
 			array entry.value
 			function
@@ -19,13 +20,14 @@
 					. arg.[1]
 					. arg.[2]
 	current apply
-		. sort
+		array sort
 			array keys result
 			function
 				arg|string.compare
 					. arg.[1]
 					. arg.[2]
-		key|append
-			. 
-				. key
-			. result.[key]
+		function
+			key|append
+				. 
+					. key
+				. result.[key]

@@ -1057,13 +1057,25 @@ namespace Meta
 		{
 			Map result = new StrategyMap(new ListStrategy());
 			PersistantPosition argument = Call.lastArgument;
-			foreach (Map map in arg[1].Array)
+			foreach (Map map in arg["array"].Array)
 			{
-				PersistantPosition pos = argument.Get().Call(map, argument);
+				PersistantPosition pos = argument["function"].Call(map);
+				//PersistantPosition pos = argument.Get().Call(map, argument);
 				result.Append(pos.Get());
 			}
 			return result;
 		}
+		//public static Map Apply(Map arg)
+		//{
+		//    Map result = new StrategyMap(new ListStrategy());
+		//    PersistantPosition argument = Call.lastArgument;
+		//    foreach (Map map in arg[1].Array)
+		//    {
+		//        PersistantPosition pos = argument.Get().Call(map, argument);
+		//        result.Append(pos.Get());
+		//    }
+		//    return result;
+		//}
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());

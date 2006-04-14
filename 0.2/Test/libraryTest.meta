@@ -96,13 +96,14 @@
 				. "die Katze lief im Schnee."
 			apply 
 				current apply
-					.
+					array
 						. 1
 						. 2
 						. 3
-					argument|add
-						. argument
-						. 1
+					function
+						argument|add
+							. argument
+							. 1
 			contains contains
 				map 
 					x "hello"
