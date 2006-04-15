@@ -46,6 +46,7 @@ namespace Meta
 {
 	public class CodeKeys
 	{
+		public static readonly Map Expression="expression";
 		public static readonly Map ParameterName="parameterName";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
@@ -908,7 +909,6 @@ namespace Meta
 			}
 			catch(Exception e)
 			{
-
 			}
 			if (selection == null)
 			{
@@ -2944,12 +2944,28 @@ namespace Meta
 			{
 				//FunctionBodyKey call;
 				arguments.Add(arg);
-				Position bodyPosition=position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg));
-				Position result = this[CodeKeys.Function].GetExpression().Evaluate(bodyPosition);
+				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg));
+				Position result = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
 				arguments.RemoveAt(arguments.Count - 1);
 				return result;
 			}
 		}
+		//public virtual Position Call(Map arg, Position position)
+		//{
+		//    if (!ContainsKey(CodeKeys.Function))
+		//    {
+		//        throw new ApplicationException("Map is not a function");
+		//    }
+		//    else
+		//    {
+		//        //FunctionBodyKey call;
+		//        arguments.Add(arg);
+		//        Position bodyPosition=position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg));
+		//        Position result = this[CodeKeys.Function].GetExpression().Evaluate(bodyPosition);
+		//        arguments.RemoveAt(arguments.Count - 1);
+		//        return result;
+		//    }
+		//}
 		public ICollection<Map> Keys
 		{
 			get
@@ -6136,6 +6152,10 @@ namespace Meta
 		{
 			return Parser.Expression;
 		});
+		//public static Rule ExpressionData = new DelayedRule(delegate()
+		//{
+		//    return Parser.Expression;
+		//});
 
 		public static Rule Value = new Alternatives(
 			Map,
@@ -6196,25 +6216,75 @@ namespace Meta
 			}
 			return result;
 		});
+		//public static Rule Function = new Sequence(
+		//            new Action(new Assignment(
+		//                CodeKeys.ParameterName),
+		//                new ZeroOrMore(
+		//                new Action(new Autokey(),
+		//                    new CharacterExcept(
+		//                        Syntax.@string,
+		//                        Syntax.function,
+		//                        Syntax.unixNewLine)))),
+		//                new Action(
+		//                    new Match(),
+		//                        new Character(
+		//                            Syntax.function)),
+		//                    new Action(new ReferenceAssignment(),
+		//                        ExpressionData));
 		public static Rule Function = new Sequence(
-				new Action(new Merge(),
-					new Sequence(
-						new Action(new Assignment(
-							CodeKeys.ParameterName),
-							new ZeroOrMore(
-							new Action(new Autokey(),
-								new CharacterExcept(
-									Syntax.@string,
-									Syntax.function,
-									Syntax.unixNewLine)))))),
-				new Action(new Merge(),
-					new Sequence(
-						new Action(
-						new Match(),
-							new Character(
-								Syntax.function)),
-						new Action(new ReferenceAssignment(),
-							ExpressionData))));
+			new Action(new Assignment(
+				CodeKeys.ParameterName),
+				new ZeroOrMore(
+				new Action(new Autokey(),
+					new CharacterExcept(
+						Syntax.@string,
+						Syntax.function,
+						Syntax.unixNewLine)))),
+			new Action(
+				new Match(),
+					new Character(
+						Syntax.function)),
+				new Action(new Assignment(CodeKeys.Expression),
+				ExpressionData));
+		//public static Rule Function = new Sequence(
+		//        new Action(new Merge(),
+		//            new Sequence(
+		//                new Action(new Assignment(
+		//                    CodeKeys.ParameterName),
+		//                    new ZeroOrMore(
+		//                    new Action(new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.@string,
+		//                            Syntax.function,
+		//                            Syntax.unixNewLine)))))),
+		//        new Action(new Merge(),
+		//            new Sequence(
+		//                new Action(
+		//                new Match(),
+		//                    new Character(
+		//                        Syntax.function)),
+		//                new Action(new ReferenceAssignment(),
+		//                    ExpressionData))));
+
+		//public static Rule Function = new Sequence(
+		//        new Action(new Merge(),
+		//            new Sequence(
+		//                new Action(new Assignment(
+		//                    CodeKeys.ParameterName),
+		//                    new ZeroOrMore(
+		//                    new Action(new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.@string,
+		//                            Syntax.function,
+		//                            Syntax.unixNewLine)))))),
+		//        new Action(new Merge(),
+		//            new Sequence(
+		//                new Action(
+		//                new Match(),
+		//                    new Character(
+		//                        Syntax.function)),
+		//                new Action(new ReferenceAssignment(),
+		//                    ExpressionData))));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),

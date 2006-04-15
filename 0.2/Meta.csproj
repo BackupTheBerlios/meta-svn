@@ -163,7 +163,7 @@
     <None Include="Library\with.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
-    <None Include="Test\parser.meta" />
+    <None Include="parser.meta" />
     <None Include="Test\profile.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
