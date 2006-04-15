@@ -15,7 +15,7 @@
 	view TextView.[0] 0
 	. view.KeyPressEvent.add
 		e|if
-			. equal
+			condition equal
 				. e.[2].Event.Key
 				. gdk-sharp.Key.Return
 			then
@@ -60,7 +60,7 @@
 					. dialog.Filter.AddPattern "*.meta"
 					result dialog.Run 0
 					. if
-						. equal
+						condition equal
 							. result
 							. ResponseType.Accept
 						then
@@ -71,7 +71,7 @@
 			save MenuItem.[String] "Save"
 			. save.Activated.add
 				|if
-					. not equal
+					condition not equal
 						. file
 						. 0
 					then

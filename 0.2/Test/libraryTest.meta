@@ -88,7 +88,7 @@
 						|"wrong"
 				control "x"				
 			ifTest if
-				. 1
+				condition 1
 				then
 					|"if test successful"
 			append append
@@ -161,14 +161,14 @@
 			sortTest sort
 				function
 					argument|if
-						. strictlyIncreasing
+						condition strictlyIncreasing
 							. argument.[1].x
 							. argument.[2].x
 						then
 							|-1
 						else
 							|if
-								. strictlyDecreasing
+								condition strictlyDecreasing
 									. argument.[1].x
 									. argument.[2].x
 								then
