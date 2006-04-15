@@ -1,1 +1,3 @@
-map|(/.Meta.ObjectMap.[/.mscorlib.Object] map).IsString
+map|
+	object /.Meta.ObjectMap.[/.mscorlib.Object] map
+	current object.IsString

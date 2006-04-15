@@ -1032,6 +1032,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Contains(Map arg)
+		{
+			return arg["map"].ContainsKey(arg["key"]);
+		}
 		public static Map ShowGtk(Map arg)
 		{
 			Gtk.Application.Init();
@@ -6112,7 +6116,6 @@ namespace Meta
 							map = Library.Merge(new StrategyMap(
 								1, map,
 								2, Entry.Match(parser, out matched)));
-							//map.Append(Entry.Match(parser, out matched));
 						}
 						else
 						{
@@ -6148,17 +6151,14 @@ namespace Meta
 				new Action(new Match(),new ZeroOrMore(
 					new Action(new Match(),new Character(Syntax.indentation)))),
 				new Action(new Match(),new Character(Syntax.lookupEnd)));
-		// refactor
+		
 		public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			Map result = new StrategyMap();
-			if (parser.Rest.StartsWith("replace"))
-			{
-			}
-			Map function = Parser.FunctionExpression.Match(parser, out matched);
+			Map function = Parser.Function.Match(parser, out matched);
 			if (matched)
 			{
-				result[CodeKeys.Function] = function[CodeKeys.Value][CodeKeys.Literal];
+				result[CodeKeys.Function] = function;
 			}
 			else
 			{
@@ -6166,35 +6166,32 @@ namespace Meta
 				if (matched)
 				{
 					StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-					//StringRule(Syntax.statement.ToString()).Match(parser, out matched);
-					//if (matched)
-					//{
 						Map value = Value.Match(parser, out matched);
 						result[key] = value;
 
 						// i dont understand this
 						bool match;
-						if (EndOfLine.Match(parser, out match) == null && parser.Look() != Syntax.endOfFile)
-						{
-							parser.index -= 1;
-							if (EndOfLine.Match(parser, out match) == null)
-							{
-								parser.index -= 1;
-								if (EndOfLine.Match(parser, out match) == null)
-								{
-									parser.index += 2;
-									throw new SyntaxException("Expected newline.", parser);
-								}
-								else
-								{
-									parser.line--;
-								}
-							}
-							else
-							{
-								parser.line--;
-							}
-						}
+						EndOfLine.Match(parser, out match);// == null && parser.Look() != Syntax.endOfFile)
+						//{
+						//    //parser.index -= 1;
+						//    //if (EndOfLine.Match(parser, out match) == null)
+						//    //{
+						//    //    parser.index -= 1;
+						//    //    if (EndOfLine.Match(parser, out match) == null)
+						//    //    {
+						//    //        parser.index += 2;
+						//    //        throw new SyntaxException("Expected newline.", parser);
+						//    //    }
+						//    //    else
+						//    //    {
+						//    //        parser.line--;
+						//    //    }
+						//    //}
+						//    //else
+						//    //{
+						//    //    parser.line--;
+						//    //}
+						//}
 				}
 			}
 			return result;
@@ -6232,42 +6229,6 @@ namespace Meta
 						new Action(new Match(),EndOfLine)))),
 			new Action(new ReferenceAssignment(),Map));
 
-		public static Rule ExplicitCall = new DelayedRule(delegate()
-		{
-			return new Sequence(
-				new Action(new Assignment(
-					CodeKeys.Call),
-					new Sequence(
-						new Action(new Match(),new Character(Syntax.callStart)),
-						new Action(new Assignment(CodeKeys.Callable),Select),
-						new Action(new Assignment(
-							CodeKeys.Argument),
-							new Alternatives(
-								new Sequence(
-									new Action(new Match(),new Character(Syntax.call)),
-									new Action(new ReferenceAssignment(),Expression)),
-								Program)),
-						new Action(new Match(),new Character(Syntax.callEnd)))));
-		});
-
-		//public static Rule ExplicitCall = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(),new Character(Syntax.callStart)),
-		//                new Action(new Assignment(CodeKeys.Callable),Select),
-		//                new Action(new Assignment(
-		//                    CodeKeys.Argument),
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            new Action(new Match(),new Character(Syntax.call)),
-		//                            new Action(new ReferenceAssignment(),Expression)),
-		//                        Program)),
-		//                new Action(new Match(),new Character(Syntax.callEnd)))));
-		//});
-
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -6276,9 +6237,7 @@ namespace Meta
 						new Sequence(
 							new Action(new Assignment(
 								CodeKeys.Callable),
-								new Alternatives(
-									Select,
-									ExplicitCall)),
+								Select),
 							new Action(new Assignment(
 								CodeKeys.Argument),
 								new Alternatives(
@@ -6380,8 +6339,7 @@ namespace Meta
 						new Alternatives(
 							Root,
 							Search,
-							Lookup,
-							ExplicitCall)),
+							Lookup)),
 					new Action(new Append(),
 						new ZeroOrMore(
 							new Action(new Autokey(),
@@ -6443,32 +6401,7 @@ namespace Meta
 							new Action(new Assignment(
 								CodeKeys.Value),
 								Expression))))),
-			new Action(new Match(),new CustomRule(delegate(Parser p, out bool matched)
-		{
-			if (EndOfLine.Match(p, out matched) == null && p.Look() != Syntax.endOfFile)
-			{
-				p.index -= 1;
-				if (EndOfLine.Match(p, out matched) == null)
-				{
-					p.index -= 1;
-					if (EndOfLine.Match(p, out matched) == null)
-					{
-						p.index += 2;
-						throw new SyntaxException("Expected newline.", p);
-					}
-					else
-					{
-						p.line--;
-					}
-				}
-				else
-				{
-					p.line--;
-				}
-			}
-			matched = true;
-			return null;
-		})));
+			new Action(new Match(),new Optional(EndOfLine)));
 
 		public static Rule Program = new Sequence(
 			new Action(

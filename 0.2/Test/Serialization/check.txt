@@ -2170,25 +2170,7 @@ function
 					lookup 
 						literal "delayedFunctionDirect"
 			value 
-				select 
-					[1] 
-						call 
-							callable 
-								select 
-									[1] 
-										call 
-											callable 
-												select 
-													[1] 
-														search 
-															literal "delayedFunction"
-											argument 
-												literal 0
-							argument 
-								literal 0
-					[2] 
-						lookup 
-							literal "x"
+				literal "((delayedFunction 0) 0).x"
 		[108] 
 			key 
 				[1] 

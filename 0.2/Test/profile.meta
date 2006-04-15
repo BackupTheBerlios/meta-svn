@@ -1,18 +1,24 @@
+getLines
+	text|string.split
+		text text
+		delimiters
+			. characters.linefeed
+getTabsMap
+	text|
+		parts string.split
+			text text
+			delimiters
+				. characters.tab
+		current
+			[parts.[2]] parts.[1]
 |
-	result foreach
-		. invert apply
-			array string.split
-				text ["INPUT.txt"]
-				delimiters
-					. characters.linefeed
-			function
-				line|
-					parts string.split
-						text line
-						delimiters
-							. characters.tab
-					current
-						[parts.[2]] parts.[1]
+	lines getLines ["INPUT.txt"]
+	map invert apply
+		array lines
+		function
+			line|getTabsMap line
+	sorted foreach
+		. map
 		entry|sort
 			array entry.value
 			function
@@ -21,13 +27,13 @@
 					. arg.[2]
 	current apply
 		array sort
-			array keys result
+			array keys map
 			function
 				arg|string.compare
 					. arg.[1]
 					. arg.[2]
 		function
-			key|append
+			key|join
 				. 
 					. key
-				. result.[key]
+				. sorted.[key]

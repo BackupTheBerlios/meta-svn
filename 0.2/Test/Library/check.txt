@@ -515,7 +515,7 @@ Entry (KeyValuePair`2)
 																			Key (StrategyMap):
 																				"literal"
 																			Value (StrategyMap):
-																				"append"
+																				"join"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"argument"

@@ -1896,7 +1896,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"delayedFunctionDirect"
 	Value (StrategyMap):
-		"y"
+		"((delayedFunction 0) 0).x"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"value"

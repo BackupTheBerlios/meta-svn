@@ -91,7 +91,7 @@
 				condition 1
 				then
 					|"if test successful"
-			append append
+			append join
 				. "abc, "
 				. "die Katze lief im Schnee."
 			apply 
@@ -257,7 +257,7 @@
 				y "hello"
 				z 
 					a "x"
-					arg|append
+					arg|join
 						. "hello "
 						. arg
 						. "!"

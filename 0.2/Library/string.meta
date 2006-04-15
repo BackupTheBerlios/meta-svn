@@ -1,11 +1,17 @@
 replace
 	argument|/.Meta.Library.StringReplace argument
 trim
-	text|(/.Meta.ObjectMap.[mscorlib.String] text).Trim.[0] 0
+	text|
+		object /.Meta.ObjectMap.[mscorlib.String] text
+		current object.Trim.[0] 0
 lower
-	string|(/.Meta.ObjectMap.[/.mscorlib.String] string).ToLower.[0] 0
+	string|
+		object /.Meta.ObjectMap.[/.mscorlib.String] string
+		current object.ToLower.[0] 0
 upper
-	string|(/.Meta.ObjectMap.[/.mscorlib.String] string).ToUpper.[0] 0
+	string|
+		object /.Meta.ObjectMap.[/.mscorlib.String] string
+		current object.ToUpper.[0] 0
 split
 	arg|/.Meta.Library.SplitString arg
 compare
