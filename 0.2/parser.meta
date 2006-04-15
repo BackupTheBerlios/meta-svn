@@ -1,0 +1,743 @@
+syntax
+	autokey '.'
+	callStart '('
+	callEnd ')'
+	root '/'
+	search '$'
+	negative '-'
+	fraction '/'
+	endOfFile 65535
+	indentation '\t'
+	unixNewLine '\n'
+	windowsNewLine "\r\n"
+	function '|'
+	string '"'
+	lookupStart '['
+	lookupEnd ']'
+	emptyMap '0'
+	call ' '
+	select '.'
+	character "'"
+	assignment ' '
+	space ' '
+	tab '\t'
+	current "current"
+	integer "0123456789"
+	lookupStringForbidden
+		. call
+		. indentation
+		. '\r'
+		. '\n'
+		. assignment
+		. select
+		. function
+		. string
+		. lookupStart
+		. lookupEnd
+		. emptyMap
+		. search
+		. root
+		. callStart
+		. callEnd
+		. character
+. "this should not really be defined here, its kinda unnecessary"
+codeKeys
+	parameterName "parameterName"
+	root "root"
+	search "search"
+	lookup "lookup"
+	current "current"
+	scope "scope"
+	literal "literal"
+	function "function"
+	call "call"
+	callable "callable"
+	argument "argument"
+	select "select"
+	program "program"
+	key "key"
+	value "value"
+arg|
+	text arg.text
+	file arg.file
+	index 0
+	line 1
+	column 0
+	startOfFile 1
+	indentationCount -1
+	defaultKeys 0
+	newline alternatives
+		. character syntax.unixNewLine
+		. stringRule syntax.windowsNewLine
+	endOfLine sequence
+		action
+			do match
+			rule zeroOrMore action
+				do match
+				rule alternatives
+					. character syntax.space
+					. character syntax.tab
+		action
+			do match
+			rule newLine
+	integer
+		rule sequence
+			. optional character syntax.negative
+			. oneOrMore syntax.integer
+		result
+			text|Meta.Number.Parse text
+	indentation
+		rule alternatives
+			.
+				|if
+					condition startOfFile
+					then
+						|
+							$startOfFile 0
+							result 0
+			. sequence
+				. endOfLine
+				. 
+					|loop
+						add
+							indentationCount
+							1
+						syntax.indentation
+		result
+			|
+				$indentationCount add
+					indentationCount
+					1
+	endOfLinePreserve sequence
+		. zeroOrMore alternatives
+			. character syntax.space
+			. character syntax.tab
+		. alternatives
+			character syntax.unixNewLine
+			stringRule syntax.windowsNewLine
+	sameIndentation
+		|loop
+			. indentationCount
+			. syntax.indentation
+	stringLine zeroOrMore characterExcept
+		. syntax.unixNewLine
+		. syntax.windowsNewLine[0]
+	stringDedentation 
+		rule sequence
+			. endOfLine
+			. loop
+				. subtract
+					. pa.indentationCount
+					. 1
+				. syntax.indentation
+		result
+			|
+				$indentationCount subtract
+					. indentationCount
+					. 1
+	characterDataExpression sequence
+		. character syntax.character
+		. characterExcept syntax.character
+		. character syntax.character
+	string sequence
+		. syntax.string
+		. alternatives
+			. oneOrMore characterExcept
+				. syntax.unixNewLine
+				. syntax.windowsNewLine[0]
+				. syntax.string
+			. sequence
+				. indentation
+				. sequence
+					stringLine
+					zeroOrMore
+						. endOfLinePreserve
+						. sameIndentation
+						. sequence
+							. literalRule syntax.unixNewLine.ToString()
+							. StringLine
+				. stringDedentation
+		. syntax.string			
+	number sequence
+		. oneOrMore syntax.integer
+		. optional sequence
+			. character syntax.fraction
+			. oneOrMore syntax.integer
+	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
+	map sequence
+		. indentation
+		. entry
+		. oneOrMore sequence alternatives
+			. sequence
+				. sameIndentation
+				. Entry.Match(parser, out matched)));
+			. dedentation
+	value alternatives
+		. map
+		. string,
+		. number
+		. characterDataExpression
+	lookupAnything sequence
+		. character syntax.lookupStart
+		. value
+		. zeroOrMore syntax.indentation
+		. character syntax.lookupEnd
+	entry sequence
+		. function
+		. alternatives
+			. lookupString
+			. lookupAnything
+		. character syntax.assignment
+		. value.Match
+	function sequence
+		. CodeKeys.ParameterName
+		. zeroOrMore characterExcept
+			syntax.string,
+			syntax.function,
+			syntax.unixNewLine
+		. sequence character syntax.function
+		. expressionData
+	file sequence
+		. optional sequence
+			. stringRule "#!"
+			. zeroOrMore characterExcept syntax.unixNewLine
+			. EndOfLine
+		. Map
+	call 
+		. CodeKeys.Call
+		. sequence
+		. CodeKeys.Callable
+		. alternatives
+			. Select,
+			. ExplicitCall
+		. CodeKeys.Argument
+		. alternatives
+			. sequence(
+				. alternatives
+					. syntax.call
+					. syntax.indentation
+				. expression
+			. program
+	dedentation
+		|
+			$indentationCount subtract
+				indentationCount
+				1
+	functionExpression = sequence
+		. CodeKeys.Key
+		.
+			.
+				[CodeKeys.Lookup]
+					[CodeKeys.Literal] CodeKeys.Function
+		. CodeKeys.Value
+		. CodeKeys.Literal
+		. function
+	whitespace zeroOrMore alternatives
+		. syntax.tab
+		. syntax.space
+	emptyMap
+		rule syntax.emptyMap
+		result 0
+	literalExpression sequence
+		. CodeKeys.Literal),
+		. alternatives
+			. emptyMap
+			. string
+			. number
+			. characterDataExpression
+	lookupAnythingExpression sequence
+		. syntax.lookupStart
+		. Expression
+		. zeroOrMore syntax.indentation
+		. syntax.lookupEnd
+	lookupStringExpression sequence 
+		. CodeKeys.Literal
+		. LookupString
+	current sequence
+		rule syntax.current
+		result
+			current 0
+	root sequence
+		rule syntax.root
+		result
+			[CodeKeys.Root] 0
+	lookup alternatives
+		. Current
+		. sequence
+			. CodeKeys.Lookup
+			. alternatives
+				. lookupStringExpression
+				. lookupAnythingExpression
+	search sequence
+		. CodeKeys.Search
+		. alternatives
+			. LookupStringExpression
+			. LookupAnythingExpression
+	select sequence
+		. CodeKeys.Select
+		. sequence
+			. 1
+			. alternatives
+				root
+				search,
+				lookup,
+			. zeroOrMore
+				. syntax.select
+				. Lookup
+	keysSearch sequence
+		. syntax.search
+		. search
+	AutokeyLookup
+		rule syntax.autokey
+		result
+			[CodeKeys.Lookup]
+				[CodeKeys.Literal] last defaultKeys
+			$defaultKeys push.Push(p.defaultKeys.Pop() + 1);
+			return null;
+	keys sequence
+		. 1
+		. alternatives
+			. keysSearch,
+			. lookup,
+			. autokeyLookup
+		. zeroOrMore
+			. sequence
+				. syntax.select
+				. Lookup	
+	statement sequence
+		. alternatives
+			. functionExpression
+			. alternatives
+				. sequence
+					. CodeKeys.Key
+					. keys
+					. optional syntax.assignment
+					. CodeKeys.Value
+					. expression
+					. endOfLine
+	program sequence
+		. CodeKeys.Program
+		. p.defaultKeys.Push(1);
+		. sequence
+			. indentation
+			. 1
+			. statement
+			. zeroOrMore sequence
+				. alternatives
+					. sameIndentation
+					. dedentation
+				. statement
+		. p.defaultKeys.Pop();
+	public abstract class Production
+	{
+		public abstract void Execute(Parser parser, Map map, ref Map result);
+	}
+	public class Action
+	{
+		private Rule rule;
+		private Production production;
+		public Action(Production production,Rule rule)
+		{
+			this.rule = rule;
+			this.production=production;
+		}
+		public bool Execute(Parser parser, ref Map result)
+		{
+			bool matched;
+			Map map = rule.Match(parser, out matched);
+			if (matched)
+			{
+				production.Execute(parser, map, ref result);
+			}
+			return matched;
+		}
+	}
+	public class Autokey : Production
+	{
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			result.Append(map);
+		}
+	}
+	public class Assignment : Production
+	{
+		private Map key;
+		public Assignment(Map key)
+		{
+			this.key = key;
+		}
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			result[key] = map;
+		}
+	}
+	public class Match : Production
+	{
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+		}
+	}
+	public class ReferenceAssignment : Production
+	{
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			result = map;
+		}
+	}
+	public class Append : Production
+	{
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			foreach (Map m in map.Array)
+			{
+				result.Append(m);
+			}
+		}
+	}
+	public class Merge : Production
+	{
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			result = Library.Merge(new StrategyMap(1, result, 2, map));
+		}
+	}
+	public class CustomAction : Production
+	{
+		private CustomActionDelegate action;
+		public CustomAction(CustomActionDelegate action)
+		{
+			this.action = action;
+		}
+		public override void Execute(Parser parser, Map map, ref Map result)
+		{
+			this.action(parser, map, ref result);
+		}
+	}
+	public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
+
+	public abstract class Rule
+	{
+		public Map Match(Parser parser, out bool matched)
+		{
+			int oldIndex = parser.index;
+			int oldLine = parser.line;
+			int oldColumn = parser.column;
+			if (parser.Rest.StartsWith("Meta files *.meta|*.meta"))
+			{
+			}
+			Map result = MatchImplementation(parser, out matched);
+			if (!matched)
+			{
+				parser.index = oldIndex;
+				parser.line = oldLine;
+				parser.column = oldColumn;
+			}
+			else
+			{
+				if (result != null)
+				{
+					result.Extent = new Extent(oldLine,oldColumn,parser.line,parser.column,parser.file);
+				}
+			}
+			return result;
+		}
+		protected abstract Map MatchImplementation(Parser parser, out bool match);
+	}
+	public class Character : CharacterRule
+	{
+		public Character(params char[] characters)
+			: base(characters)
+		{
+		}
+		protected override bool MatchCharacer(char c)
+		{
+			return c.ToString().IndexOfAny(characters) != -1 && c != syntax.endOfFile;
+		}
+	}
+	public class CharacterExcept : CharacterRule
+	{
+		public CharacterExcept(params char[] characters)
+			: base(characters)
+		{
+		}
+		protected override bool MatchCharacer(char c)
+		{
+			return c.ToString().IndexOfAny(characters) == -1 && c != syntax.endOfFile;
+		}
+	}
+	public abstract class CharacterRule : Rule
+	{
+		public CharacterRule(char[] chars)
+		{
+			this.characters = chars;
+		}
+		protected char[] characters;
+		protected abstract bool MatchCharacer(char c);
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			char character = parser.Look();
+			if (MatchCharacer(character))
+			{
+				matched = true;
+				parser.index++;
+				parser.column++;
+				if (character == syntax.unixNewLine)
+				{
+					parser.line++;
+					parser.column = 1;
+				}
+				return character;
+			}
+			else
+			{
+				matched = false;
+				return null;
+			}
+		}
+	}
+	public delegate void PrePostDelegate(Parser parser);
+	public class PrePost : Rule
+	{
+		private PrePostDelegate pre;
+		private PrePostDelegate post;
+		private Rule rule;
+		public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
+		{
+			this.pre = pre;
+			this.rule = rule;
+			this.post = post;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			pre(parser);
+			Map result = rule.Match(parser, out matched);
+			post(parser);
+			return result;
+		}
+	}
+	public static Rule StringRule(string text)
+	{
+		List<Action> actions = new List<Action>();
+		foreach (char c in text)
+		{
+			actions.Add(new Action(new Match(), new Character(c)));
+		}
+		return new Sequence(actions.ToArray());
+	}
+	public delegate Map ParseFunction(Parser parser, out bool matched);
+	public class CustomRule : Rule
+	{
+		private ParseFunction parseFunction;
+		public CustomRule(ParseFunction parseFunction)
+		{
+			this.parseFunction = parseFunction;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			return parseFunction(parser, out matched);
+		}
+	}
+	public delegate Rule RuleFunction();
+	public class DelayedRule : Rule
+	{
+		private RuleFunction ruleFunction;
+		private Rule rule;
+		public DelayedRule(RuleFunction ruleFunction)
+		{
+			this.ruleFunction = ruleFunction;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			if (rule == null)
+			{
+				rule = ruleFunction();
+			}
+			return rule.Match(parser, out matched);
+		}
+	}
+	public class Alternatives : Rule
+	{
+		private Rule[] cases;
+		public Alternatives(params Rule[] cases)
+		{
+			this.cases = cases;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			Map result = null;
+			matched = false;
+			foreach (Rule expression in cases)
+			{
+				result = (Map)expression.Match(parser, out matched);
+				if (matched)
+				{
+					break;
+				}
+			}
+			return result;
+		}
+	}
+	public class Sequence : Rule
+	{
+		private Action[] actions;
+		public Sequence(params Action[] rules)
+		{
+			this.actions = rules;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool match)
+		{
+			Map result = parser.CreateMap();
+			bool success = true;
+			foreach (Action action in actions)
+			{
+				// refactor
+				bool matched = action.Execute(parser, ref result);
+				if (!matched)
+				{
+					success = false;
+					break;
+				}
+			}
+			if (!success)
+			{
+				match = false;
+				return null;
+			}
+			else
+			{
+				match = true;
+				return result;
+			}
+		}
+	}
+	public class LiteralRule : Rule
+	{
+		private Map literal;
+		public LiteralRule(Map literal)
+		{
+			this.literal = literal;
+		}
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			matched = true;
+			return literal;
+		}
+	}
+	public class ZeroOrMore : Rule
+	{
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			Map list = parser.CreateMap(new ListStrategy());
+			while (true)
+			{
+				if (!action.Execute(parser, ref list))
+				{
+					break;
+				}
+			}
+			matched = true;
+			return list;
+		}
+		private Action action;
+		public ZeroOrMore(Action action)
+		{
+			this.action = action;
+		}
+	}
+	public class OneOrMore : Rule
+	{
+		protected override Map MatchImplementation(Parser parser, out bool matched)
+		{
+			Map list = parser.CreateMap(new ListStrategy());
+			matched = false;
+			while (true)
+			{
+				if (!action.Execute(parser, ref list))
+				{
+					break;
+				}
+				matched = true;
+			}
+			return list;
+		}
+		private Action action;
+		public OneOrMore(Action action)
+		{
+			this.action = action;
+		}
+	}
+	public class Optional : Rule
+	{
+		private Rule rule;
+		public Optional(Rule rule)
+		{
+			this.rule = rule;
+		}
+		// somewhat unlogical, should be OptionalAssignment
+		protected override Map MatchImplementation(Parser parser, out bool match)
+		{
+			Map matched = rule.Match(parser, out match);
+			if (matched == null)
+			{
+				match = true;
+				return null;
+			}
+			else
+			{
+				match = true;
+				return matched;
+			}
+		}
+	}
+	public string FileName
+	{
+		get
+		{
+			return file;
+		}
+	}
+	public int Line
+	{
+		get
+		{
+			return line;
+		}
+	}
+	private string Rest
+	{
+		get
+		{
+			return text.Substring(index);
+		}
+	}
+	public int Column
+	{
+		get
+		{
+			return column;
+		}
+	}
+	private char Look()
+	{
+		if (index < text.Length)
+		{
+			return text[index];
+		}
+		else
+		{
+			return syntax.endOfFile;
+		}
+	}
+	public Map CreateMap(params Map[] maps)
+	{
+		return new StrategyMap(maps);
+	}
+	public Map CreateMap()
+	{
+		return CreateMap(new EmptyStrategy());
+	}
+	public Map CreateMap(MapStrategy strategy)
+	{
+		return new StrategyMap(strategy);
+	}
+}
