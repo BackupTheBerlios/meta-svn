@@ -1,7 +1,63 @@
 integer "0123456789"
-syntax
-	string '"'
+codeKeys
+	parameterName "parameterName"
+	root "root"
+	search "search"
+	lookup "lookup"
+	current "current"
+	scope "scope"
+	literal "literal"
+	function "function"
+	call "call"
+	callable "callable"
+	argument "argument"
+	select "select"
+	program "program"
+	key "key"
+	value "value"
 text|
+	syntax
+		autokey '.'
+		callStart '('
+		callEnd ')'
+		root '/'
+		search '$'
+		negative '-'
+		fraction "/"
+		endOfFile 65535
+		indentation "\t"
+		unixNewLine "\n"
+		windowsNewLine "\r\n"
+		function '|'
+		string '"'
+		lookupStart '['
+		lookupEnd ']'
+		emptyMap '0'
+		call ' '
+		select '.'
+		character "'"
+		assignment ' '
+		space ' '
+		tab "\t"
+		mapCurrent "current"
+		integer "0123456789"
+		lookupStringForbidden
+			. call
+			. indentation
+			. "\r"
+			. "\n"
+			. assignment
+			. select
+			. function
+			. string
+			. lookupStart
+			. lookupEnd
+			. emptyMap
+			. search
+			. root
+			. callStart
+			. callEnd
+			. character
 	number rule
 		condition
 			text|
@@ -27,42 +83,33 @@ text|
 									. 1
 		result
 			text|/.Meta.Number.Parse text
-	character
-		char|rule
-			condition
-				text|if
-					condition not zero text
-					then
-						|if
-							condition equal
-								. first text
-								. char
-							then
-								|
-									result first text
-									rest slice
-										array text
-										start 2
-			result
-				char|char
-	characterExcept
-		char|rule
-			condition
-				text|if
-					condition not zero text
-					then
-						|if
-							condition not equal
-								. first text
-								. char
-							then
-								|
-									result first text
-									rest slice
-										array text
-										start 2
-			result
-				char|char
+	untested "!!!!!!"
+	newline alternatives
+		. character syntax.unixNewLine
+		. stringRule syntax.windowsNewLine
+	endOfLine sequence
+		. zeroOrMore alternatives
+			. character syntax.space
+			. character syntax.tab
+		. newline
+	indentation alternatives
+		.
+			text|if
+				condition startOfFile
+				then
+					|
+						$startOfFile 0
+						result 0
+						rest text
+		. sequence
+			. endOfLine
+			. 
+				text|nTimes
+					n add
+						. indentationCount
+						. 1
+					rule character syntax.indentation
+	untested "!!!!!!"
 	stringCharacter characterExcept syntax.string
 	stringTest prePost
 		pre character syntax.string
@@ -90,8 +137,52 @@ text|
 		"12344321 asdfasdf "
 	"
 	current parsed.result
+character
+	documentation "Matches one character."
+	char|rule
+		condition
+			text|if
+				condition not zero text
+				then
+					|if
+						condition equal
+							. first text
+							. char
+						then
+							|
+								result first text
+								rest slice
+									array text
+									start 2
+		result
+			char|char
+characterExcept
+	documentation "Matches one character that is not the provided character."
+	char|rule
+		condition
+			text|if
+				condition not zero text
+				then
+					|if
+						condition not equal
+							. first text
+							. char
+						then
+							|
+								result first text
+								rest slice
+									array text
+									start 2
+		result
+			char|char
+stringRule
+	documentation "Matches the provided sequence of characters."
+	string|sequence apply
+		array string
+		function
+			char|character char
 zeroOrMore
-	documentation "Matches a rule zero or more times"
+	documentation "Matches zero or more times."
 	rule|
 		text|
 			rest text
@@ -104,7 +195,7 @@ zeroOrMore
 						$rest ruleResult.rest
 						current ruleResult.result
 sequence
-	documentation "Returns the concatenated results of all rules in 'result', if all rules matched, or nothing."
+	documentation "Matches a sequence of rules."
 	rules|
 		text|
 			matched 0
@@ -155,7 +246,7 @@ prePost
 												result ruleResult.result
 												rest postResult.rest
 alternatives
-	documentation "Returns the result of the first rule that matched in 'result', or nothing."
+	documentation "Matches one of several alternative rules."
 	alts|
 		text|
 			result 0
@@ -175,7 +266,7 @@ alternatives
 				function
 					|0
 rule
-	documentation "A rule returns the result in 'result' or nothing, if the rule did not match."
+	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
 		text|
 			map arg.condition text
