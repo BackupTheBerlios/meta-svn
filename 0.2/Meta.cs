@@ -3723,7 +3723,15 @@ namespace Meta
 			if (parameters.Length == 1)
 			{
 			}
+			if(argument.ContainsKey("rest"))
+			{
+			}
+
 			object[] arguments = ConvertArgument(argument, out converted);
+			if (!converted)
+			{
+				throw new Exception("Could not convert argument.");
+			}
 			try
 			{
 				Map result = Transform.ToMeta(
@@ -5697,18 +5705,25 @@ namespace Meta
 		private readonly double denominator;
 		public static Number Parse(string text)
 		{
-			string[] parts = text.Split('/');
-			int numerator=Convert.ToInt32(parts[0]);
-			int denominator;
-			if (parts.Length > 2)
+			try
 			{
-				denominator = Convert.ToInt32(parts[2]);
+				string[] parts = text.Split('/');
+				int numerator = Convert.ToInt32(parts[0]);
+				int denominator;
+				if (parts.Length > 2)
+				{
+					denominator = Convert.ToInt32(parts[2]);
+				}
+				else
+				{
+					denominator = 1;
+				}
+				return new Number(numerator, denominator);
 			}
-			else
+			catch (Exception e)
 			{
-				denominator = 1;
+				return null;
 			}
-			return new Number(numerator, denominator);
 		}
 		public Number(Number i)
 			: this(i.numerator, i.denominator)
@@ -6129,7 +6144,7 @@ namespace Meta
 										new ZeroOrMore(
 											new Action(new Append(),
 												new Sequence(
-													new Action(new Match(), EndOfLinePreserve),
+													new Action(new Match(), EndOfLine),
 													new Action(new Match(), SameIndentation),
 													new Action(new ReferenceAssignment(),
 														new Sequence(

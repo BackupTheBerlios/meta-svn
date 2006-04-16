@@ -59,28 +59,7 @@ text|
 			. callEnd
 			. character
 	number rule
-		condition
-			text|
-				matched apply
-					array text
-					condition
-						char|contains
-							array integer
-							value char
-					function
-						arg|arg
-				current if
-					condition not equal
-						. matched
-						. 0
-					then
-						|
-							result matched
-							rest slice
-								array text
-								start add
-									. length matched
-									. 1
+		condition oneOrMore character syntax.integer
 		result
 			text|/.Meta.Number.Parse text
 	untested "!!!!!!"
@@ -101,16 +80,66 @@ text|
 						$startOfFile 0
 						result 0
 						rest text
-		. sequence
-			. endOfLine
-			. 
-				text|nTimes
-					n add
+		. rule
+			condition sequence
+				. endOfLine
+				. 
+					text|nTimes
+						n add
+							. indentationCount
+							. 1
+						rule character syntax.indentation
+			result
+				|
+					$indentationCount add
 						. indentationCount
 						. 1
-					rule character syntax.indentation
+	sameIndentation
+		|nTimes
+			n indentationCount
+			rule character syntax.indentation
+	stringLine zeroOrMore characterExcept
+		. syntax.unixNewLine
+		. syntax.windowsNewLine.[1]
+	stringDedentation 
+		rule sequence
+			. endOfLine
+			. |nTimes
+				n subtract
+					. indentationCount
+					. 1
+				rule character syntax.indentation
+		result
+			|
+				$indentationCount subtract
+					. indentationCount
+					. 1
+	characterDataExpression prePost
+		pre character syntax.character
+		rule characterExcept syntax.character
+		post character syntax.character
+	string prePost
+		pre syntax.string
+		rule alternatives
+			. oneOrMore characterExcept
+				. syntax.unixNewLine
+				. syntax.windowsNewLine.[1]
+				. syntax.string
+			. prePost
+				pre indentation
+				rule sequence
+					. stringLine
+					. zeroOrMore
+						. endOfLine
+						. sameIndentation
+						. sequence
+							. character syntax.unixNewLine
+							. stringLine
+				post stringDedentation
+		post syntax.string
 	untested "!!!!!!"
-	stringCharacter characterExcept syntax.string
+	stringCharacter characterExcept
+		. syntax.string
 	stringTest prePost
 		pre character syntax.string
 		rule zeroOrMore stringCharacter
@@ -133,21 +162,21 @@ text|
 	expression sequence
 		. number
 		. string
-	parsed stringTest "
-		"12344321 asdfasdf "
-	"
+	numberTest character syntax.integer
+	parsed numberTest "12344321 asdfasdf"
+	. print parsed
 	current parsed.result
 character
 	documentation "Matches one character."
-	char|rule
+	chars|rule
 		condition
 			text|if
 				condition not zero text
 				then
 					|if
-						condition equal
-							. first text
-							. char
+						condition contains
+							value first text
+							array chars
 						then
 							|
 								result first text
@@ -158,15 +187,15 @@ character
 			char|char
 characterExcept
 	documentation "Matches one character that is not the provided character."
-	char|rule
+	chars|rule
 		condition
 			text|if
 				condition not zero text
 				then
 					|if
-						condition not equal
-							. first text
-							. char
+						condition not contains
+							value first text
+							array chars
 						then
 							|
 								result first text
@@ -181,6 +210,21 @@ stringRule
 		array string
 		function
 			char|character char
+oneOrMore
+	documentation "Matches one or more times."
+	status "untested"
+	rule|
+		text|
+			loop zeroOrMore rule
+			loopResult loop text
+			. print loopResult
+			. if
+				condition not zero loopResult
+				then
+					|if
+						condition not zero loopResult.result
+						then
+							|loopResult
 zeroOrMore
 	documentation "Matches zero or more times."
 	rule|
