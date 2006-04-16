@@ -5,7 +5,7 @@ text|
 	number rule
 		condition
 			text|
-				text apply
+				matched apply
 					array text
 					condition
 						char|contains
@@ -19,31 +19,34 @@ text|
 						. 0
 					then
 						|
-							result text
+							result matched
+							rest slice
+								array text
+								start length matched
 		result
 			text|/.Meta.Number.Parse text
 	string rule
 		condition
 			text|
-				if
-					condition and
-						. equal
-							. first text
-							. syntax.string
-						. equal
-							. last text
-							. syntax.string
+				. print text
+				current if
+					condition 1
 					then
 						|
 							result text
+							rest slice
+								array text
+								start length text
 		result
-			text|text
-	expression alternatives
-		. string
+			text|
+				result text
+	expression sequence
 		. number
-	parsed expression text
+		. string
+	parsed expression "12344321 asdfasdf "
 	current parsed.result
 sequence
+	documentation "Returns the concatenated results of all rules in 'result', if all rules matched, or nothing."
 	rules|
 		text|
 			matched 0
@@ -53,16 +56,25 @@ sequence
 				function
 					rule|
 						ruleResult rule rest
-						if
-							condition not zero ruleResult
+						. print ruleResult
+						. if
+							condition hasKey
+								map ruleResult
+								key "result"
 							then
 								|
-									$rest ruleResult.rest
+									. "$rest ruleResult.rest"
 									$matched join
 										. matched
 										.
 											. ruleResult.result
+			result if
+				condition not zero matched
+				then
+					|
+						result matched
 alternatives
+	documentation "Returns the result of the first rule that matched in 'result', or nothing."
 	alts|
 		text|
 			result 0
@@ -82,6 +94,7 @@ alternatives
 				function
 					|0
 rule
+	documentation "A rule returns the result in 'result' or nothing, if the rule did not match."
 	arg|
 		text|
 			map arg.condition text

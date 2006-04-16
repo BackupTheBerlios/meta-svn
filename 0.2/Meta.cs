@@ -1049,6 +1049,9 @@ namespace Meta
 		}
 		public static Map HasKey(Map arg)
 		{
+			if (arg["key"].Equals(new StrategyMap("result")))
+			{
+			}
 			return arg["map"].ContainsKey(arg["key"]);
 		}
 		public static Map ShowGtk(Map arg)
@@ -2148,7 +2151,7 @@ namespace Meta
 							break;
 						case "-test":
 							Commands.Test();
-							Console.ReadLine();
+							//Console.ReadLine();
 							break;
 						case "-help":
 							Commands.Help();
@@ -2204,7 +2207,7 @@ namespace Meta
 				DateTime start = DateTime.Now;
 				AllocConsole();
 				int level;
-				new Test.MetaTest.Profile().GetResult(out level);
+				//new Test.MetaTest.Profile().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			}
 			public static void Help()
@@ -7586,14 +7589,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
-			public class Extents : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
-				}
-			}
+			//public class Extents : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+			//    }
+			//}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -7602,30 +7605,30 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Profile : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-				}
-			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+			//public class Profile : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
+			//    }
+			//}
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+			//    }
+			//}
 			public static Map Run(string path,Map argument)
 			{
 				List<string> list=new List<string>();
