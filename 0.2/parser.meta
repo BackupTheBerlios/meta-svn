@@ -159,15 +159,24 @@ text|
 									. 1
 		result
 			text|text
+	string prePost
+		pre character
+			. syntax.string
+		rule zeroOrMore characterExcept
+			. syntax.string
+		post character
+			. syntax.string
 	expression sequence
 		. number
 	numberTest rule
 		condition zeroOrMore character syntax.integer
 		result
 			text|/.Meta.Number.Parse text
-	parsed number "12344321 asdfasdf"
+	parsed string "
+		"12344321 asdfasdf"
+	"
 	. print parsed
-	current parsed.result
+	current parsed
 character
 	documentation "Matches one character."
 	chars|rule
@@ -185,6 +194,10 @@ character
 								rest slice
 									array text
 									start 2
+						else
+							|
+								. print chars
+								current 0
 		result
 			char|char
 characterExcept
@@ -219,7 +232,6 @@ oneOrMore
 		text|
 			loop zeroOrMore rule
 			loopResult loop text
-			. print loopResult
 			current if
 				condition not zero loopResult
 				then
