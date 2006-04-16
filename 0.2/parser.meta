@@ -161,9 +161,11 @@ text|
 			text|text
 	expression sequence
 		. number
-		. string
-	numberTest character syntax.integer
-	parsed numberTest "12344321 asdfasdf"
+	numberTest rule
+		condition zeroOrMore character syntax.integer
+		result
+			text|/.Meta.Number.Parse text
+	parsed number "12344321 asdfasdf"
 	. print parsed
 	current parsed.result
 character
@@ -218,7 +220,7 @@ oneOrMore
 			loop zeroOrMore rule
 			loopResult loop text
 			. print loopResult
-			. if
+			current if
 				condition not zero loopResult
 				then
 					|if
