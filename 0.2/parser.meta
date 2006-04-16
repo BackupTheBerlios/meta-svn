@@ -27,23 +27,25 @@ text|
 									. 1
 		result
 			text|/.Meta.Number.Parse text
-	stringCharacter rule
-		condition
-			text|if
-				condition not zero text
-				then
-					|if
-						condition not equal
-							. first text
-							. syntax.string
-						then
-							|
-								result first text
-								rest slice
-									array text
-									start 2
-		result
-			char|char
+	character
+		char|rule
+			condition
+				text|if
+					condition not zero text
+					then
+						|if
+							condition not equal
+								. first text
+								. char
+							then
+								|
+									result first text
+									rest slice
+										array text
+										start 2
+			result
+				char|char
+	stringCharacter character syntax.string
 	stringTest zeroOrMore stringCharacter
 	string rule
 		condition
