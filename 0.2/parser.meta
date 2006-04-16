@@ -34,6 +34,24 @@ text|
 					condition not zero text
 					then
 						|if
+							condition equal
+								. first text
+								. char
+							then
+								|
+									result first text
+									rest slice
+										array text
+										start 2
+			result
+				char|char
+	characterExcept
+		char|rule
+			condition
+				text|if
+					condition not zero text
+					then
+						|if
 							condition not equal
 								. first text
 								. char
@@ -45,12 +63,14 @@ text|
 										start 2
 			result
 				char|char
-	stringCharacter character syntax.string
-	stringTest zeroOrMore stringCharacter
+	stringCharacter characterExcept syntax.string
+	stringTest prePost
+		pre character syntax.string
+		rule zeroOrMore stringCharacter
+		post character syntax.string
 	string rule
 		condition
 			text|
-				. print text
 				current if
 					condition 1
 					then
@@ -67,7 +87,7 @@ text|
 		. number
 		. string
 	parsed stringTest "
-		12344321 asdfasdf 
+		"12344321 asdfasdf "
 	"
 	current parsed.result
 zeroOrMore
@@ -94,7 +114,6 @@ sequence
 				function
 					rule|
 						ruleResult rule rest
-						. print ruleResult
 						. if
 							condition hasKey
 								map ruleResult
@@ -119,21 +138,21 @@ prePost
 	arg|
 		text|
 			preResult arg.pre text
-			. if
+			current if
 				condition not zero preResult
 				then
 					|
 						ruleResult arg.rule preResult.rest
-						. if
+						current if
 							condition not zero ruleResult
 							then
 								|
 									postResult arg.post ruleResult.rest
-									. if
+									current if
 										condition not zero postResult
 										then
 											|
-												result ruleResult
+												result ruleResult.result
 												rest postResult.rest
 alternatives
 	documentation "Returns the result of the first rule that matched in 'result', or nothing."
@@ -168,5 +187,4 @@ rule
 					|
 						result arg.result map.result
 						rest map.rest
-			. print stuff
 			current stuff
