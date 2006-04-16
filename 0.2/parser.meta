@@ -15,14 +15,16 @@ text|
 						arg|arg
 				current if
 					condition not equal
-						. text
+						. matched
 						. 0
 					then
 						|
 							result matched
 							rest slice
 								array text
-								start length matched
+								start add
+									. length matched
+									. 1
 		result
 			text|/.Meta.Number.Parse text
 	string rule
@@ -36,12 +38,14 @@ text|
 							result text
 							rest slice
 								array text
-								start length text
+								start add
+									. length text
+									. 1
 		result
 			text|text
 	expression sequence
 		. number
-		. string
+		. number
 	parsed expression "12344321 asdfasdf "
 	current parsed.result
 sequence
@@ -50,7 +54,7 @@ sequence
 		text|
 			matched 0
 			rest text
-			. apply
+			applied apply
 				array rules
 				function
 					rule|
@@ -62,13 +66,15 @@ sequence
 								key "result"
 							then
 								|
-									. "$rest ruleResult.rest"
+									$rest ruleResult.rest
 									$matched join
 										. matched
 										.
 											. ruleResult.result
 			result if
-				condition not zero matched
+				condition equal
+					. length applied
+					. length rules
 				then
 					|
 						result matched
@@ -104,5 +110,6 @@ rule
 				then
 					|
 						result arg.result map.result
+						rest map.rest
 			. print stuff
 			current stuff
