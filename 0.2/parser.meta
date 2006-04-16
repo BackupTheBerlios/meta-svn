@@ -1,27 +1,32 @@
 integer "0123456789"
 text|
-	number alternatives
-		. rule
-			condition
-				text|
-					text apply
-						array text
-						condition
-							char|contains
-								array integer
-								value char
-						function
-							arg|arg
-					current if
-						condition not equal
-							. text
-							. 0
-						then
-							|
-								result text
-			result
-				text|/.Meta.Number.Parse text
-	parsed number text
+	number rule
+		condition
+			text|
+				text apply
+					array text
+					condition
+						char|contains
+							array integer
+							value char
+					function
+						arg|arg
+				current if
+					condition not equal
+						. text
+						. 0
+					then
+						|
+							result text
+		result
+			text|/.Meta.Number.Parse text
+	string rule
+		condition
+			text|
+				result text
+		result
+			text|text
+	parsed string text
 	current parsed.result
 alternatives
 	alts|

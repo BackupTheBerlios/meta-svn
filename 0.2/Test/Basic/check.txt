@@ -455,7 +455,20 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"b"
 			Value (StrategyMap):
-				0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						1
+					Value (StrategyMap):
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"x"
+							Value (StrategyMap):
+								7
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								"z"
+							Value (StrategyMap):
+								1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"SetA"
