@@ -27,6 +27,24 @@ text|
 									. 1
 		result
 			text|/.Meta.Number.Parse text
+	stringCharacter rule
+		condition
+			text|if
+				condition not zero text
+				then
+					|if
+						condition not equal
+							. first text
+							. syntax.string
+						then
+							|
+								result first text
+								rest slice
+									array text
+									start 2
+		result
+			char|char
+	stringTest zeroOrMore stringCharacter
 	string rule
 		condition
 			text|
@@ -45,9 +63,24 @@ text|
 			text|text
 	expression sequence
 		. number
-		. number
-	parsed expression "12344321 asdfasdf "
+		. string
+	parsed stringTest "
+		12344321 asdfasdf 
+	"
 	current parsed.result
+zeroOrMore
+	documentation "Matches a rule zero or more times"
+	rule|
+		text|
+			rest text
+			result while
+				condition
+					|not zero rule rest
+				function
+					|
+						ruleResult rule rest
+						$rest ruleResult.rest
+						current ruleResult.result
 sequence
 	documentation "Returns the concatenated results of all rules in 'result', if all rules matched, or nothing."
 	rules|
@@ -78,6 +111,28 @@ sequence
 				then
 					|
 						result matched
+
+prePost
+	documentation "Matches a rule and throws away the results of a preceding and a following rule."
+	arg|
+		text|
+			preResult arg.pre text
+			. if
+				condition not zero preResult
+				then
+					|
+						ruleResult arg.rule preResult.rest
+						. if
+							condition not zero ruleResult
+							then
+								|
+									postResult arg.post ruleResult.rest
+									. if
+										condition not zero postResult
+										then
+											|
+												result ruleResult
+												rest postResult.rest
 alternatives
 	documentation "Returns the result of the first rule that matched in 'result', or nothing."
 	alts|
