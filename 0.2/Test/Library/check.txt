@@ -191,6 +191,16 @@ Entry (KeyValuePair`2)
 				10
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"lastTest"
+			Value (StrategyMap):
+				111
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"firstTest"
+			Value (StrategyMap):
+				104
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"splitTest"
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)

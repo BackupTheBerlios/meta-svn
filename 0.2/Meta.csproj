@@ -112,7 +112,6 @@
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />
-    <None Include="Library\append.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\characters.meta" />
@@ -134,6 +133,7 @@
     <None Include="Library\intersect.meta" />
     <None Include="Library\invert.meta" />
     <None Include="Library\isNumber.meta" />
+    <None Include="Library\last.meta" />
     <None Include="Library\multiply.meta" />
     <None Include="Library\parse.meta" />
     <None Include="Library\random.meta" />

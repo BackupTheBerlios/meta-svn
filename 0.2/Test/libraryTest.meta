@@ -142,6 +142,8 @@
 						|SetCounter
 							[0] counter
 				current counter
+			lastTest last "hello"
+			firstTest first "hello"
 			splitTest split
 				. "hello world hello"
 				space " "

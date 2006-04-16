@@ -1,4 +1,6 @@
 integer "0123456789"
+syntax
+	string '"'
 text|
 	number rule
 		condition
@@ -23,11 +25,43 @@ text|
 	string rule
 		condition
 			text|
-				result text
+				if
+					condition and
+						. equal
+							. first text
+							. syntax.string
+						. equal
+							. last text
+							. syntax.string
+					then
+						|
+							result text
 		result
 			text|text
-	parsed string text
+	expression alternatives
+		. string
+		. number
+	parsed expression text
 	current parsed.result
+sequence
+	rules|
+		text|
+			matched 0
+			rest text
+			. apply
+				array rules
+				function
+					rule|
+						ruleResult rule rest
+						if
+							condition not zero ruleResult
+							then
+								|
+									$rest ruleResult.rest
+									$matched join
+										. matched
+										.
+											. ruleResult.result
 alternatives
 	alts|
 		text|
@@ -52,7 +86,9 @@ rule
 		text|
 			map arg.condition text
 			current if
-				condition not zero map
+				condition hasKey
+					map map
+					key "result"
 				then
 					|
 						result arg.result map.result

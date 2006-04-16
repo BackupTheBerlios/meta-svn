@@ -1039,6 +1039,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Last(Map arg)
+		{
+			return arg[arg.ArrayCount];
+		}
 		public static Map Contains(Map arg)
 		{
 			return arg["array"].Array.Contains(arg["value"]);
