@@ -38,8 +38,7 @@ text|
 								array text
 								start length text
 		result
-			text|
-				result text
+			text|text
 	expression sequence
 		. number
 		. string
@@ -98,10 +97,12 @@ rule
 	arg|
 		text|
 			map arg.condition text
-			current if
+			stuff if
 				condition hasKey
 					map map
 					key "result"
 				then
 					|
 						result arg.result map.result
+			. print stuff
+			current stuff
