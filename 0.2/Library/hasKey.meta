@@ -1,2 +1,2 @@
-documentation "Determines whether a map contains a key."
-argument|/.Meta.Library.Contains argument
+documentation "Determines whether a map has a key."
+argument|/.Meta.Library.HasKey argument

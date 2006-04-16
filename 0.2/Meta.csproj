@@ -126,6 +126,7 @@
     <None Include="Library\findFirst.meta" />
     <None Include="Library\first.meta" />
     <None Include="Library\foreach.meta" />
+    <None Include="Library\hasKey.meta" />
     <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />
     <None Include="Library\increasing.meta" />
@@ -161,6 +162,8 @@
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
+    <None Include="Library\zero.meta" />
+    <None Include="rest.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="parser.meta" />

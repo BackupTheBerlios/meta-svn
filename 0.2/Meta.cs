@@ -934,13 +934,20 @@ namespace Meta
 		{
 			Position evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = evaluatedKeyPosition.Get();
-			if (key.Equals(new StrategyMap("lines")))
+			if (key.Equals(new StrategyMap("result")))
 			{
 			}
 			Position selection = context;
 			while (selection != null && !selection.Get().ContainsKey(key))
 			{
-				selection = selection.Parent;
+				if (selection.Get().Scope != null)
+				{
+					selection = selection.Get().Scope;
+				}
+				else
+				{
+					selection = selection.Parent;
+				}
 			}
 			if (selection == null)
 			{
@@ -1033,6 +1040,10 @@ namespace Meta
 	public class Library
 	{
 		public static Map Contains(Map arg)
+		{
+			return arg["array"].Array.Contains(arg["value"]);
+		}
+		public static Map HasKey(Map arg)
 		{
 			return arg["map"].ContainsKey(arg["key"]);
 		}
@@ -1511,23 +1522,43 @@ namespace Meta
 		public static Map While(Map arg)
 		{
 			Position argument = Call.lastArgument;
-			while (argument.Get()[1].Call(Map.Empty, argument).Get().GetBoolean())
+			Map result = new StrategyMap(new ListStrategy());
+			while (argument["condition"].Call(Map.Empty).Get().GetBoolean())
 			{
-				argument.Get().Call(Map.Empty, argument);
+				result.Append(argument["function"].Call(Map.Empty).Get());
 			}
-			return Map.Empty;
+			return result;
 		}
 		public static Map Apply(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
 			Position argument = Call.lastArgument;
+			Map condition=arg.TryGetValue("condition");
 			foreach (Map map in arg["array"].Array)
 			{
+				if (condition!=null)
+				{
+					if (!condition.Call(map, argument).Get().GetBoolean())
+					{
+						break;
+					}
+				}
 				Position pos = argument["function"].Call(map);
 				result.Append(pos.Get());
 			}
 			return result;
 		}
+		//public static Map Apply(Map arg)
+		//{
+		//    Map result = new StrategyMap(new ListStrategy());
+		//    Position argument = Call.lastArgument;
+		//    foreach (Map map in arg["array"].Array)
+		//    {
+		//        Position pos = argument["function"].Call(map);
+		//        result.Append(pos.Get());
+		//    }
+		//    return result;
+		//}
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -5657,7 +5688,21 @@ namespace Meta
 		}
 		private readonly double numerator;
 		private readonly double denominator;
-
+		public static Number Parse(string text)
+		{
+			string[] parts = text.Split('/');
+			int numerator=Convert.ToInt32(parts[0]);
+			int denominator;
+			if (parts.Length > 2)
+			{
+				denominator = Convert.ToInt32(parts[2]);
+			}
+			else
+			{
+				denominator = 1;
+			}
+			return new Number(numerator, denominator);
+		}
 		public Number(Number i)
 			: this(i.numerator, i.denominator)
 		{
@@ -7535,6 +7580,14 @@ namespace Meta
 				{
 					level = 1;
 					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+				}
+			}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Basic : Test
