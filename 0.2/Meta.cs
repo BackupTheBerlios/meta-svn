@@ -316,43 +316,6 @@ namespace Meta
 				this.callable = callable;
 			}
 		}
-		//private OptimizedDelegate Optimize()
-		//{
-		//    DynamicMethod method = new DynamicMethod("Optimized",
-		//        typeof(Map),
-		//        new Type[]{typeof(Map)},
-		//        typeof(Map).Module);
-
-		//    ILGenerator il = method.GetILGenerator();
-
-		//    LocalBuilder local = il.DeclareLocal(typeof(object[]));
-		//    il.Emit(OpCodes.Ldc_I4, parameters.Length);
-		//    il.Emit(OpCodes.Newarr, typeof(object));
-		//    il.Emit(OpCodes.Stloc, local);
-
-		//    for (int i = 0; i < parameters.Length; i++)
-		//    {
-		//        il.Emit(OpCodes.Ldloc, local);
-		//        il.Emit(OpCodes.Ldc_I4, i);
-		//        il.Emit(OpCodes.Ldarg, i + 1);
-		//        il.Emit(OpCodes.Stelem_Ref);
-		//    }
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ldloc, local);
-		//    il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
-
-		//    if (invoke.ReturnType == typeof(void))
-		//    {
-		//        il.Emit(OpCodes.Pop);
-		//        il.Emit(OpCodes.Ret);
-		//    }
-		//    else
-		//    {
-		//        il.Emit(OpCodes.Castclass, invoke.ReturnType);
-		//        il.Emit(OpCodes.Ret);
-		//    }
-		//    return (OptimizedDelegate)method.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
-		//}
 	}
 	public delegate Position OptimizedDelegate(Map argument,Position parent);
 	public delegate Map ProgramDelegate(Map argument,Position parent);
