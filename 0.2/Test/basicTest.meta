@@ -270,22 +270,20 @@ commandLine|
 	ChangeStaticEvent
 		arg|
 			$staticEventChanged arg
-	. TestClass.staticEvent.add
+	TestClass.staticEvent
 		arg|
 			. ChangeStaticEvent 1
 			current arg.[1]
-	staticEvent TestClass.staticEvent
 	. TestClass.TakeDelegate
 		arg|arg.[1]
 	resultFromDelegate TestClass.GetResultFromDelegate 0
-	staticEventResult TestClass.staticEvent testClass
+	staticEventResult TestClass.CallStaticEvent testClass
 	instanceEventChanged 0
-	. testClass.instanceEvent.add
+	testClass.instanceEvent
 		arg|
 			$instanceEventChanged 1
 			current arg.[1]
-	instanceEvent testClass.instanceEvent
-	instanceEventResult testClass.instanceEvent 5
+	instanceEventResult testClass.CallInstanceEvent 5
 	one 1
 	two 2
 	firstIf "unchanged"

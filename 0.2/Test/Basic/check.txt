@@ -2278,20 +2278,6 @@ Entry (KeyValuePair`2)
 		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"staticEvent"
-	Value (Event):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"add"
-			Value (Method):
-				0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		7
-	Value (StrategyMap):
-		0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"resultFromDelegate"
 	Value (StrategyMap):
 		"argumentString"
@@ -2307,22 +2293,8 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		8
-	Value (StrategyMap):
-		0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"instanceEvent"
-	Value (Event):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"add"
-			Value (Method):
-				0
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"instanceEventResult"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		5
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -2538,7 +2510,7 @@ Entry (KeyValuePair`2)
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		9
+		7
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)
@@ -3501,7 +3473,7 @@ Entry (KeyValuePair`2)
 																		"changed"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		10
+		8
 	Value (StrategyMap):
 		0
 Entry (KeyValuePair`2)

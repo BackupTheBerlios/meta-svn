@@ -7,13 +7,13 @@
 	. console.create 0
 	. console.write "hi"
 	win Window.[/.mscorlib.String] "TextViewSample"
-	. win.DeleteEvent.add
+	win.DeleteEvent
 		|Application.Quit 0
 	. win.SetDefaultSize
 		. 600
 		. 400
 	view TextView.[0] 0
-	. view.KeyPressEvent.add
+	view.KeyPressEvent
 		e|if
 			condition equal
 				. e.[2].Event.Key
@@ -29,10 +29,10 @@
 	menu
 		file
 			exit MenuItem.[String] "Exit"
-			. exit.Activated.add
+			exit.Activated
 				|win.Destroy 0
 			open MenuItem.[String] "Open..."
-			. open.Activated.add
+			open.Activated
 				|
 					dialog FileChooserDialog.[
 						. String
@@ -69,7 +69,7 @@
 								$view.Buffer.Text File.ReadAllText file
 					. dialog.Destroy 0
 			save MenuItem.[String] "Save"
-			. save.Activated.add
+			save.Activated
 				|if
 					condition not equal
 						. file

@@ -137,6 +137,172 @@ text|
 							. stringLine
 				post stringDedentation
 		post syntax.string
+	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
+	map prePost
+		pre indentation
+		rule sequence
+			. entry
+			. oneOrMore sequence alternatives
+				. sequence
+					. sameIndentation
+					. Entry.Match(parser, out matched)));
+		post dedentation
+	value alternatives
+		. map
+		. string,
+		. number
+		. characterDataExpression
+	lookupAnything sequence
+		. character syntax.lookupStart
+		. value
+		. zeroOrMore syntax.indentation
+		. character syntax.lookupEnd
+	entry sequence
+		. function
+		. alternatives
+			. lookupString
+			. lookupAnything
+		. character syntax.assignment
+		. value.Match
+	function sequence
+		. CodeKeys.ParameterName
+		. zeroOrMore characterExcept
+			syntax.string,
+			syntax.function,
+			syntax.unixNewLine
+		. sequence character syntax.function
+		. expressionData
+	file sequence
+		. optional sequence
+			. stringRule "#!"
+			. zeroOrMore characterExcept syntax.unixNewLine
+			. EndOfLine
+		. Map
+	call 
+		. CodeKeys.Call
+		. sequence
+		. CodeKeys.Callable
+		. alternatives
+			. Select,
+			. ExplicitCall
+		. CodeKeys.Argument
+		. alternatives
+			. sequence(
+				. alternatives
+					. syntax.call
+					. syntax.indentation
+				. expression
+			. program
+	dedentation
+		|
+			$indentationCount subtract
+				indentationCount
+				1
+	functionExpression = sequence
+		. CodeKeys.Key
+		.
+			.
+				[CodeKeys.Lookup]
+					[CodeKeys.Literal] CodeKeys.Function
+		. CodeKeys.Value
+		. CodeKeys.Literal
+		. function
+	whitespace zeroOrMore alternatives
+		. syntax.tab
+		. syntax.space
+	emptyMap
+		rule syntax.emptyMap
+		result 0
+	literalExpression sequence
+		. CodeKeys.Literal),
+		. alternatives
+			. emptyMap
+			. string
+			. number
+			. characterDataExpression
+	lookupAnythingExpression sequence
+		. syntax.lookupStart
+		. Expression
+		. zeroOrMore syntax.indentation
+		. syntax.lookupEnd
+	lookupStringExpression sequence 
+		. CodeKeys.Literal
+		. LookupString
+	current sequence
+		rule syntax.current
+		result
+			current 0
+	root sequence
+		rule syntax.root
+		result
+			[CodeKeys.Root] 0
+	lookup alternatives
+		. Current
+		. sequence
+			. CodeKeys.Lookup
+			. alternatives
+				. lookupStringExpression
+				. lookupAnythingExpression
+	search sequence
+		. CodeKeys.Search
+		. alternatives
+			. LookupStringExpression
+			. LookupAnythingExpression
+	select sequence
+		. CodeKeys.Select
+		. sequence
+			. 1
+			. alternatives
+				root
+				search,
+				lookup,
+			. zeroOrMore
+				. syntax.select
+				. Lookup
+	keysSearch sequence
+		. syntax.search
+		. search
+	AutokeyLookup
+		rule syntax.autokey
+		result
+			[CodeKeys.Lookup]
+				[CodeKeys.Literal] last defaultKeys
+			$defaultKeys push.Push(p.defaultKeys.Pop() + 1);
+			return null;
+	keys sequence
+		. 1
+		. alternatives
+			. keysSearch,
+			. lookup,
+			. autokeyLookup
+		. zeroOrMore
+			. sequence
+				. syntax.select
+				. Lookup	
+	statement sequence
+		. alternatives
+			. functionExpression
+			. alternatives
+				. sequence
+					. CodeKeys.Key
+					. keys
+					. optional syntax.assignment
+					. CodeKeys.Value
+					. expression
+					. endOfLine
+	program sequence
+		. CodeKeys.Program
+		. p.defaultKeys.Push(1);
+		. sequence
+			. indentation
+			. 1
+			. statement
+			. zeroOrMore sequence
+				. alternatives
+					. sameIndentation
+					. dedentation
+				. statement
+		. p.defaultKeys.Pop();
 	untested "!!!!!!"
 	stringCharacter characterExcept
 		. syntax.string

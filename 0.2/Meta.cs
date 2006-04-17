@@ -2406,7 +2406,7 @@ namespace Meta
 		private Map key;
 		private Position parent;
 
-		public Map Assign(Map key, Map value)
+		public void Assign(Map key, Map value)
 		{
 			Get()[key] = value;
 			if (optimizations.ContainsKey(key))
@@ -2417,11 +2417,11 @@ namespace Meta
 
 			try
 			{
-				return Get()[key];
+				//return Get()[key];
 			}
 			catch (Exception e)
 			{
-				return Get()[key];
+				//return Get()[key];
 			}
 		}
 		public void Assign(Map value)
@@ -4940,87 +4940,87 @@ namespace Meta
 			}
 		}
 	}
-	public class Event:Map
-	{
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return key.Equals(DotNetKeys.Add);
-		}
-		Type type;
-		object obj;
-		EventInfo eventInfo;
-		public Event(EventInfo eventInfo,object obj,Type type)
-		{
-			this.eventInfo=eventInfo;
-			this.obj=obj;
-			this.type=type;
-		}
-		public override Position Call(Map argument, Position position)
-		{
-			MethodImplementation.currentPosition = position;
-			Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-			//Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-			if (eventDelegate != null)
-			{
-				List<object> arguments = new List<object>();
-				ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-				if (parameters.Length == 2)
-				{
-					arguments.Add(Transform.TryToDotNet(argument, parameters[1].ParameterType));
-				}
-				else
-				{
-					for (int i = 1; i < parameters.Length; i++)
-					{
-						arguments.Add(Transform.TryToDotNet(argument[i], parameters[i].ParameterType));
-					}
-				}
-				Map result=new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
-				return position.AddCall(result);
-			}
-			else
-			{
-				return null;
-			}
-		}
-		private Method add;
-		protected override Map Get(Map key)
-		{
-			if (key.Equals(DotNetKeys.Add))
-			{
-				if (add == null)
-				{
-					add = new Method(eventInfo.GetAddMethod().Name, obj, type);
-				}
-				return add;
-			}
-			else
-			{
-				return null;
-			}
-		}
-		protected override void Set(Map key,Map val)
-		{
-			throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
-		}
-		protected override ICollection<Map> KeysImplementation
-		{
-			get
-			{
-				List<Map> keys = new List<Map>();
-				if (eventInfo.GetAddMethod() != null)
-				{
-					keys.Add(DotNetKeys.Add);
-				}
+	//public class Event : Map
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return key.Equals(DotNetKeys.Add);
+	//    }
+	//    Type type;
+	//    object obj;
+	//    EventInfo eventInfo;
+	//    public Event(EventInfo eventInfo, object obj, Type type)
+	//    {
+	//        this.eventInfo = eventInfo;
+	//        this.obj = obj;
+	//        this.type = type;
+	//    }
+	//    public override Position Call(Map argument, Position position)
+	//    {
+	//        MethodImplementation.currentPosition = position;
+	//        Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+	//        //Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
+	//        if (eventDelegate != null)
+	//        {
+	//            List<object> arguments = new List<object>();
+	//            ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
+	//            if (parameters.Length == 2)
+	//            {
+	//                arguments.Add(Transform.TryToDotNet(argument, parameters[1].ParameterType));
+	//            }
+	//            else
+	//            {
+	//                for (int i = 1; i < parameters.Length; i++)
+	//                {
+	//                    arguments.Add(Transform.TryToDotNet(argument[i], parameters[i].ParameterType));
+	//                }
+	//            }
+	//            Map result = new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
+	//            return position.AddCall(result);
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    private Method add;
+	//    protected override Map Get(Map key)
+	//    {
+	//        if (key.Equals(DotNetKeys.Add))
+	//        {
+	//            if (add == null)
+	//            {
+	//                add = new Method(eventInfo.GetAddMethod().Name, obj, type);
+	//            }
+	//            return add;
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            List<Map> keys = new List<Map>();
+	//            if (eventInfo.GetAddMethod() != null)
+	//            {
+	//                keys.Add(DotNetKeys.Add);
+	//            }
 
-				return keys;
-			}
-		}
-		protected override Map CopyData()
-		{
-			return new Event(eventInfo, obj, type);
-		}
-	}
+	//            return keys;
+	//        }
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return new Event(eventInfo, obj, type);
+	//    }
+	//}
 	public class IndexedProperty : Map
 	{
 		protected override bool ContainsKeyImplementation(Map key)
@@ -5187,10 +5187,10 @@ namespace Meta
 					{
 						result=Transform.ToMeta(type.GetField(memberName).GetValue(obj));
 					}
-					else if (member is EventInfo)
-					{
-						result=new Event(((EventInfo)member), obj, type);
-					}
+					//else if (member is EventInfo)
+					//{
+					//    result=new Event(((EventInfo)member), obj, type);
+					//}
 					else if (member is Type)
 					{
 						result=new TypeMap((Type)member);
@@ -5242,6 +5242,11 @@ namespace Meta
 				{
 					PropertyInfo property = (PropertyInfo)member;
 					property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType),null);
+				}
+				else if (member is EventInfo)
+				{
+					EventInfo eventInfo = (EventInfo)member;
+				    new Method(eventInfo.GetAddMethod().Name, obj, type).Call(value,MethodImplementation.currentPosition);
 				}
 				else
 				{
@@ -7596,22 +7601,22 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
-			//public class Extents : Test
+			//public class Parser : Test
 			//{
 			//    public override object GetResult(out int level)
 			//    {
 			//        level = 1;
-			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 			//    }
 			//}
+			public class Extents : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -7620,30 +7625,30 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
-			//public class Profile : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-			//    }
-			//}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Profile : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
+				}
+			}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
 			public static Map Run(string path,Map argument)
 			{
 				List<string> list=new List<string>();
@@ -7734,6 +7739,14 @@ namespace Meta
 				}
 				public TestClass()
 				{
+				}
+				public object CallInstanceEvent(object intArg)
+				{
+					return instanceEvent(intArg);
+				}
+				public static object CallStaticEvent(object sender)
+				{
+					return staticEvent(sender);
 				}
 				public event IntEvent instanceEvent;
 				public static event NormalEvent staticEvent;
