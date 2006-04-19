@@ -7564,14 +7564,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			//public class Parser : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-			//    }
-			//}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)

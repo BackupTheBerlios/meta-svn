@@ -16,386 +16,392 @@ codeKeys
 	key "key"
 	value "value"
 text|
-	syntax
-		autokey '.'
-		callStart '('
-		callEnd ')'
-		root '/'
-		search '$'
-		negative '-'
-		fraction '/'
-		endOfFile 65535
-		indentation 13
-		unixNewLine 10
-		function '|'
-		string '"'
-		lookupStart '['
-		lookupEnd ']'
-		emptyMap '0'
-		call ' '
-		select '.'
-		character 53
-		assignment ' '
-		space ' '
-		tab 13
-		windowsNewLine "\r\n"
-		mapCurrent "current"
-		integer "0123456789"
-		lookupStringForbidden
-			. call
-			. indentation
-			. "\r"
-			. "\n"
-			. assignment
-			. select
-			. function
-			. string
-			. lookupStart
-			. lookupEnd
-			. emptyMap
-			. search
-			. root
-			. callStart
-			. callEnd
-			. character
-	number rule
-		result
-			text|/.Meta.Number.Parse text
-	untested "!!!!!!"
-	newline alternatives
-		. character syntax.unixNewLine
-		. stringRule syntax.windowsNewLine
-	endOfLine sequence
-		. zeroOrMore alternatives
-			. character syntax.space
-			. character syntax.tab
-		. newline
-	indentation alternatives
-		.
-			text|if
-				condition startOfFile
-				then
-					|
-						$startOfFile 0
-						result 0
-						rest text
-		. rule
-			condition sequence
-				. endOfLine
-				. 
-					text|nTimes
-						n add
-							. indentationCount
-							. 1
-						rule character syntax.indentation
-			result
-				|
-					$indentationCount add
-						. indentationCount
-						. 1
-	sameIndentation
-		|nTimes
-			n indentationCount
-			rule character syntax.indentation
-	stringLine zeroOrMore characterExcept
-		. syntax.unixNewLine
-		. syntax.windowsNewLine.[1]
-	stringDedentation 
-		rule sequence
-			. endOfLine
-			. |nTimes
-				n subtract
-					. indentationCount
-					. 1
-				rule character syntax.indentation
-		result
-			|
-				$indentationCount subtract
-					. indentationCount
-					. 1
-	characterDataExpression prePost
-		pre character syntax.character
-		rule characterExcept
-			. syntax.character
-		post character syntax.character
-	string prePost
-		pre syntax.string
-		rule alternatives
-			. oneOrMore characterExcept
-				. syntax.unixNewLine
-				. syntax.windowsNewLine.[1]
-				. syntax.string
-			. prePost
-				pre indentation
-				rule sequence
-					. stringLine
-					. zeroOrMore
-						. endOfLine
-						. sameIndentation
-						. sequence
-							. character syntax.unixNewLine
-							. stringLine
-				post stringDedentation
-		post syntax.string
-	lookupString oneOrMore characterExcept
-		. syntax.lookupStringForbidden
-	map prePost
-		pre indentation
-		rule sequence
-			. entry
-			. oneOrMore sequence alternatives
-				. sequence
-					. sameIndentation
-					. entry
-		post dedentation
-	value alternatives
-		. map
-		. string
-		. number
-		. characterDataExpression
-	lookupAnything sequence
-		. character syntax.lookupStart
-		. value
-		. zeroOrMore syntax.indentation
-		. character syntax.lookupEnd
-	entry sequence
-		. function
-		. alternatives
-			. lookupString
-			. lookupAnything
-		. character syntax.assignment
-		. value.Match
-	function rule
-		condition sequence
-			. zeroOrMore characterExcept
-				. syntax.string
-				. syntax.function
-				. syntax.unixNewLine
-			. sequence character syntax.function
-			. expressionData
-		result
-			arg|
-				[CodeKeys.ParameterName] arg.[1]
-				[CodeKeys.Expression] arg.[3]
-	call
-		condition sequence
-			. select
-			. alternatives
-				. rule
-					condition sequence
-						. alternatives
-							. syntax.call
-							. syntax.indentation
-						. expression
+	test
+		asdf|
+			text|
+				syntax
+					autokey '.'
+					callStart '('
+					callEnd ')'
+					root '/'
+					search '$'
+					negative '-'
+					fraction '/'
+					endOfFile 65535
+					indentation 13
+					unixNewLine 10
+					function '|'
+					string '"'
+					lookupStart '['
+					lookupEnd ']'
+					emptyMap '0'
+					call ' '
+					select '.'
+					character 53
+					assignment ' '
+					space ' '
+					tab 13
+					windowsNewLine "\r\n"
+					mapCurrent "current"
+					integer "0123456789"
+					lookupStringForbidden
+						. call
+						. indentation
+						. "\r"
+						. "\n"
+						. assignment
+						. select
+						. function
+						. string
+						. lookupStart
+						. lookupEnd
+						. emptyMap
+						. search
+						. root
+						. callStart
+						. callEnd
+						. character
+				number rule
 					result
-						arg|arg.[2]
-				. program
-		result
-			arg|
-				[CodeKeys.Call] 
-					[CodeKeys.Callable] arg.[1]
-					[CodeKeys.Argument] arg.[2]
-	dedentation rule
-		condition
-			|
-				result 0
-		result
-			|
-				$indentationCount subtract
-					indentationCount
-					1
-	functionExpression rule
-		condition function
-		result
-			arg|
-				[CodeKeys.Key]
+						text|/.Meta.Number.Parse text
+				untested "!!!!!!"
+				newline alternatives
+					. character syntax.unixNewLine
+					. stringRule syntax.windowsNewLine
+				endOfLine sequence
+					. zeroOrMore alternatives
+						. character syntax.space
+						. character syntax.tab
+					. newline
+				indentation alternatives
 					.
-						[CodeKeys.Lookup]
-							[CodeKeys.Literal] CodeKeys.Function
-				[CodeKeys.Value]
-					[CodeKeys.Literal] arg
-	whitespace zeroOrMore alternatives
-		. syntax.tab
-		. syntax.space
-	emptyMap rule
-		condition character syntax.emptyMap
-		result
-			|0
-	literalExpression rule
-		condition alternatives
-			. emptyMap
-			. string
-			. number
-			. characterDataExpression
-		result
-			arg|
-				[CodeKeys.Literal] arg
-	lookupAnythingExpression rule
-		condition sequence
-			. character syntax.lookupStart
-			. Expression
-			. zeroOrMore syntax.indentation
-			. character syntax.lookupEnd
-		result
-			arg|arg.[2]
-	lookupStringExpression 
-		condition LookupString 
-		rule
-			arg|
-				[CodeKeys.Literal] arg
-	ruleCurrent
-		condition stringRule syntax.current
-		result
-			|
-				["current"] 0
-	root
-		condition character syntax.root
-		result
-			arg|
-				[CodeKeys.Root] 0
-	realLookup
-		condition. sequence
-			. alternatives
-				. lookupStringExpression
-				. lookupAnythingExpression
-		result
-			arg|
-				[CodeKeys.Lookup] arg
-	lookup
-		condition alternatives
-			. ruleCurrent
-			. realLookup
-	search 
-		condition alternatives
-			. LookupStringExpression
-			. LookupAnythingExpression
-		result
-			arg|
-				[CodeKeys.Search] arg
-	select
-		condition sequence
-			rule
-				condition alternatives
-					root
-					search
-					lookup
-				result
-					arg|
-						. arg
-			. zeroOrMore rule
-				condition sequence
-					. character syntax.select
-					. lookup
-				result
-					arg|arg.[2]
-		result
-			arg|join arg
-	keysSearch sequence
-		. character syntax.search
-		. search
-	autokeyLookup
-		rule character syntax.autokey
-		result
-			|
-				$defaultKeys push.Push
-					. p.defaultKeys.Pop 0
-					. 1
-				current 
-					[CodeKeys.Lookup]
-						[CodeKeys.Literal] last defaultKeys
-	makeList
-		subRule|rule
-			condition subRule
-			result
-				arg|
-					. arg
-	keys rule
-		condition sequence
-			. makeList alternatives
-				. keysSearch
-				. lookup
-				. autokeyLookup
-			. zeroOrMore rule
-				condition sequence
-					. syntax.select
-					. lookup
-				result
-					arg|arg.[2]
-		result
-			arg|join arg
-	statement alternatives
-		. functionExpression
-		. rule
-			condition sequence
-				. keys
-				. optional syntax.assignment
-				. expression
-				. endOfLine
-			result
-				arg|
-					[CodeKeys.Key] arg.[1]
-					[CodeKeys.Value] arg.[3]
-	program rule
-		condition sequence
-			.
-				text|
-					. p.defaultKeys.Push(1);
-					result 0
-					rest text
-			. sequence
-				. indentation
-				. rule
-					condition statement
+						text|if
+							condition startOfFile
+							then
+								|
+									$startOfFile 0
+									result 0
+									rest text
+					. rule
+						condition sequence
+							. endOfLine
+							. 
+								text|nTimes
+									n add
+										. indentationCount
+										. 1
+									rule character syntax.indentation
+						result
+							|
+								$indentationCount add
+									. indentationCount
+									. 1
+				sameIndentation
+					|nTimes
+						n indentationCount
+						rule character syntax.indentation
+				stringLine zeroOrMore characterExcept
+					. syntax.unixNewLine
+					. syntax.windowsNewLine.[1]
+				stringDedentation 
+					rule sequence
+						. endOfLine
+						. |nTimes
+							n subtract
+								. indentationCount
+								. 1
+							rule character syntax.indentation
+					result
+						|
+							$indentationCount subtract
+								. indentationCount
+								. 1
+				characterDataExpression prePost
+					pre character syntax.character
+					rule characterExcept
+						. syntax.character
+					post character syntax.character
+				string prePost
+					pre syntax.string
+					rule alternatives
+						. oneOrMore characterExcept
+							. syntax.unixNewLine
+							. syntax.windowsNewLine.[1]
+							. syntax.string
+						. prePost
+							pre indentation
+							rule sequence
+								. stringLine
+								. zeroOrMore
+									. endOfLine
+									. sameIndentation
+									. sequence
+										. character syntax.unixNewLine
+										. stringLine
+							post stringDedentation
+					post syntax.string
+				lookupString oneOrMore characterExcept
+					. syntax.lookupStringForbidden
+				map prePost
+					pre indentation
+					rule sequence
+						. entry
+						. oneOrMore sequence alternatives
+							. sequence
+								. sameIndentation
+								. entry
+					post dedentation
+				value alternatives
+					. map
+					. string
+					. number
+					. characterDataExpression
+				lookupAnything sequence
+					. character syntax.lookupStart
+					. value
+					. zeroOrMore syntax.indentation
+					. character syntax.lookupEnd
+				entry sequence
+					. function
+					. alternatives
+						. lookupString
+						. lookupAnything
+					. character syntax.assignment
+					. value.Match
+				function rule
+					condition sequence
+						. zeroOrMore characterExcept
+							. syntax.string
+							. syntax.function
+							. syntax.unixNewLine
+						. sequence character syntax.function
+						. expressionData
 					result
 						arg|
-							. arg
-				. zeroOrMore sequence
-					. alternatives
-						. sameIndentation
-						. dedentation
-					. statement
-			. p.defaultKeys.Pop();
-		result
-			|
-				[CodeKeys.Program]
-	untested "!!!!!!"
-	stringCharacter characterExcept
-		. syntax.string
-	stringTest prePost
-		pre character syntax.string
-		rule zeroOrMore stringCharacter
-		post character syntax.string
-	string rule
-		condition
-			text|
-				current if
-					condition 1
-					then
+							[CodeKeys.ParameterName] arg.[1]
+							[CodeKeys.Expression] arg.[3]
+				call
+					condition sequence
+						. select
+						. alternatives
+							. rule
+								condition sequence
+									. alternatives
+										. syntax.call
+										. syntax.indentation
+									. expression
+								result
+									arg|arg.[2]
+							. program
+					result
+						arg|
+							[CodeKeys.Call] 
+								[CodeKeys.Callable] arg.[1]
+								[CodeKeys.Argument] arg.[2]
+				dedentation rule
+					condition
 						|
-							result text
-							rest slice
-								array text
-								start add
-									. length text
-									. 1
-		result
-			text|text
-	string prePost
-		pre character syntax.string
-		rule zeroOrMore characterExcept
-			. syntax.string
-		post character syntax.string
-	expression sequence
-		. number
-	numberTest rule
-		condition zeroOrMore character syntax.integer
-		result
-			text|/.Meta.Number.Parse text
-	parsed string "
-		"12344321 asdfasdf"
-	"
-	. print parsed
-	current parsed
+							result 0
+					result
+						|
+							$indentationCount subtract
+								. indentationCount
+								. 1
+				functionExpression rule
+					condition function
+					result
+						arg|
+							[CodeKeys.Key]
+								.
+									[CodeKeys.Lookup]
+										[CodeKeys.Literal] CodeKeys.Function
+							[CodeKeys.Value]
+								[CodeKeys.Literal] arg
+				whitespace zeroOrMore alternatives
+					. syntax.tab
+					. syntax.space
+				emptyMap rule
+					condition character syntax.emptyMap
+					result
+						|0
+				literalExpression rule
+					condition alternatives
+						. emptyMap
+						. string
+						. number
+						. characterDataExpression
+					result
+						arg|
+							[CodeKeys.Literal] arg
+				lookupAnythingExpression rule
+					condition sequence
+						. character syntax.lookupStart
+						. Expression
+						. zeroOrMore syntax.indentation
+						. character syntax.lookupEnd
+					result
+						arg|arg.[2]
+				lookupStringExpression 
+					condition LookupString 
+					rule
+						arg|
+							[CodeKeys.Literal] arg
+				ruleCurrent
+					condition stringRule syntax.current
+					result
+						|
+							["current"] 0
+				root
+					condition character syntax.root
+					result
+						arg|
+							[CodeKeys.Root] 0
+				realLookup
+					condition sequence
+						. alternatives
+							. lookupStringExpression
+							. lookupAnythingExpression
+					result
+						arg|
+							[CodeKeys.Lookup] arg
+				lookup
+					condition alternatives
+						. ruleCurrent
+						. realLookup
+				search 
+					condition alternatives
+						. LookupStringExpression
+						. LookupAnythingExpression
+					result
+						arg|
+							[CodeKeys.Search] arg
+				select
+					condition sequence
+						rule
+							condition alternatives
+								. root
+								. search
+								. lookup
+							result
+								arg|
+									. arg
+						. zeroOrMore rule
+							condition sequence
+								. character syntax.select
+								. lookup
+							result
+								arg|arg.[2]
+					result
+						arg|join arg
+				keysSearch sequence
+					. character syntax.search
+					. search
+				autokeyLookup
+					rule character syntax.autokey
+					result
+						|
+							$defaultKeys push.Push
+								. p.defaultKeys.Pop 0
+								. 1
+							current 
+								[CodeKeys.Lookup]
+									[CodeKeys.Literal] last defaultKeys
+				makeList
+					subRule|rule
+						condition subRule
+						result
+							arg|
+								. arg
+				keys rule
+					condition sequence
+						. makeList alternatives
+							. keysSearch
+							. lookup
+							. autokeyLookup
+						. zeroOrMore rule
+							condition sequence
+								. syntax.select
+								. lookup
+							result
+								arg|arg.[2]
+					result
+						arg|join arg
+				statement alternatives
+					. functionExpression
+					. rule
+						condition sequence
+							. keys
+							. optional syntax.assignment
+							. expression
+							. endOfLine
+						result
+							arg|
+								[CodeKeys.Key] arg.[1]
+								[CodeKeys.Value] arg.[3]
+				program rule
+					condition sequence
+						.
+							text|
+								. p.defaultKeys.Push 1
+								result 0
+								rest text
+						. sequence
+							. indentation
+							. rule
+								condition statement
+								result
+									arg|
+										. arg
+							. zeroOrMore sequence
+								. alternatives
+									. sameIndentation
+									. dedentation
+								. statement
+						. p.defaultKeys.Pop 0
+					result
+						arg|
+							[CodeKeys.Program] arg
+				untested "!!!!!!"
+				stringCharacter characterExcept
+					. syntax.string
+				stringTest prePost
+					pre character syntax.string
+					rule zeroOrMore stringCharacter
+					post character syntax.string
+				string rule
+					condition
+						text|
+							current if
+								condition 1
+								then
+									|
+										result text
+										rest slice
+											array text
+											start add
+												. length text
+												. 1
+					result
+						text|text
+				string prePost
+					pre character syntax.string
+					rule zeroOrMore characterExcept
+						. syntax.string
+					post character syntax.string
+				expression sequence
+					. number
+				numberTest rule
+					condition zeroOrMore character syntax.integer
+					result
+						text|/.Meta.Number.Parse text
+				parsed string "
+					"12344321 asdfasdf"
+				"
+				. print parsed
+				current parsed
+	. console.create 0
+	. console.writeLine text
+	current text
 characterSet
 	documentation "Matches one character in a set."
 	char|rule
