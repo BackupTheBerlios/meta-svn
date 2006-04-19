@@ -23,11 +23,10 @@ text|
 		root '/'
 		search '$'
 		negative '-'
-		fraction "/"
+		fraction '/'
 		endOfFile 65535
-		indentation "\t"
-		unixNewLine "\n"
-		windowsNewLine "\r\n"
+		indentation 13
+		unixNewLine 10
 		function '|'
 		string '"'
 		lookupStart '['
@@ -35,10 +34,11 @@ text|
 		emptyMap '0'
 		call ' '
 		select '.'
-		character "'"
+		character 53
 		assignment ' '
 		space ' '
-		tab "\t"
+		tab 13
+		windowsNewLine "\r\n"
 		mapCurrent "current"
 		integer "0123456789"
 		lookupStringForbidden
@@ -63,15 +63,12 @@ text|
 			text|/.Meta.Number.Parse text
 	untested "!!!!!!"
 	newline alternatives
-		. character
-			. syntax.unixNewLine
+		. character syntax.unixNewLine
 		. stringRule syntax.windowsNewLine
 	endOfLine sequence
 		. zeroOrMore alternatives
-			. character
-				. syntax.space
-			. character
-				. syntax.tab
+			. character syntax.space
+			. character syntax.tab
 		. newline
 	indentation alternatives
 		.
@@ -90,8 +87,7 @@ text|
 						n add
 							. indentationCount
 							. 1
-						rule character
-							. syntax.indentation
+						rule character syntax.indentation
 			result
 				|
 					$indentationCount add
@@ -100,8 +96,7 @@ text|
 	sameIndentation
 		|nTimes
 			n indentationCount
-			rule character
-				. syntax.indentation
+			rule character syntax.indentation
 	stringLine zeroOrMore characterExcept
 		. syntax.unixNewLine
 		. syntax.windowsNewLine.[1]
@@ -112,20 +107,17 @@ text|
 				n subtract
 					. indentationCount
 					. 1
-				rule character
-					. syntax.indentation
+				rule character syntax.indentation
 		result
 			|
 				$indentationCount subtract
 					. indentationCount
 					. 1
 	characterDataExpression prePost
-		pre character
-			. syntax.character
+		pre character syntax.character
 		rule characterExcept
 			. syntax.character
-		post character
-			. syntax.character
+		post character syntax.character
 	string prePost
 		pre syntax.string
 		rule alternatives
@@ -141,8 +133,7 @@ text|
 						. endOfLine
 						. sameIndentation
 						. sequence
-							. character
-								. syntax.unixNewLine
+							. character syntax.unixNewLine
 							. stringLine
 				post stringDedentation
 		post syntax.string
@@ -163,19 +154,16 @@ text|
 		. number
 		. characterDataExpression
 	lookupAnything sequence
-		. character
-			. syntax.lookupStart
+		. character syntax.lookupStart
 		. value
 		. zeroOrMore syntax.indentation
-		. character
-			. syntax.lookupEnd
+		. character syntax.lookupEnd
 	entry sequence
 		. function
 		. alternatives
 			. lookupString
 			. lookupAnything
-		. character
-			. syntax.assignment
+		. character syntax.assignment
 		. value.Match
 	function rule
 		condition sequence
@@ -183,8 +171,7 @@ text|
 				. syntax.string
 				. syntax.function
 				. syntax.unixNewLine
-			. sequence character
-				. syntax.function
+			. sequence character syntax.function
 			. expressionData
 		result
 			arg|
@@ -231,8 +218,7 @@ text|
 		. syntax.tab
 		. syntax.space
 	emptyMap rule
-		condition character
-			. syntax.emptyMap
+		condition character syntax.emptyMap
 		result
 			|0
 	literalExpression rule
@@ -246,12 +232,10 @@ text|
 				[CodeKeys.Literal] arg
 	lookupAnythingExpression rule
 		condition sequence
-			. character
-				. syntax.lookupStart
+			. character syntax.lookupStart
 			. Expression
 			. zeroOrMore syntax.indentation
-			. character
-				. syntax.lookupEnd
+			. character syntax.lookupEnd
 		result
 			arg|arg.[2]
 	lookupStringExpression 
@@ -265,8 +249,7 @@ text|
 			|
 				["current"] 0
 	root
-		condition character
-			. syntax.root
+		condition character syntax.root
 		result
 			arg|
 				[CodeKeys.Root] 0
@@ -301,20 +284,17 @@ text|
 						. arg
 			. zeroOrMore rule
 				condition sequence
-					. character
-						. syntax.select
+					. character syntax.select
 					. lookup
 				result
 					arg|arg.[2]
 		result
 			arg|join arg
 	keysSearch sequence
-		. character
-			. syntax.search
+		. character syntax.search
 		. search
 	autokeyLookup
-		rule character
-			. syntax.autokey
+		rule character syntax.autokey
 		result
 			|
 				$defaultKeys push.Push
@@ -401,12 +381,10 @@ text|
 		result
 			text|text
 	string prePost
-		pre character
-			. syntax.string
+		pre character syntax.string
 		rule zeroOrMore characterExcept
 			. syntax.string
-		post character
-			. syntax.string
+		post character syntax.string
 	expression sequence
 		. number
 	numberTest rule
@@ -418,8 +396,31 @@ text|
 	"
 	. print parsed
 	current parsed
-character
-	documentation "Matches one character."
+characterSet
+	documentation "Matches one character in a set."
+	char|rule
+		condition
+			text|if
+				condition not zero text
+				then
+					|if
+						condition equal
+							. first text
+							. char
+						then
+							|
+								result first text
+								rest slice
+									array text
+									start 2
+						else
+							|
+								. print chars
+								current 0
+		result
+			char|char
+characterSet
+	documentation "Matches one character in a set."
 	chars|rule
 		condition
 			text|if
