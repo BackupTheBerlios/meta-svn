@@ -2124,6 +2124,9 @@ namespace Meta
 							Commands.Profile();
 							//Console.ReadLine();
 							break;
+						case "-parser":
+							new MetaTest.Parser();
+							break;
 						default:
 							Commands.Run(args);
 							break;
@@ -5328,57 +5331,103 @@ namespace Meta
 	}
 	public abstract class TestRunner
 	{
-		protected abstract string TestDirectory
+		public static string TestDirectory
 		{
-			get;
+			get
+			{
+				return Path.Combine(Interpreter.InstallationPath, "Test");
+			}
 		}
+		//protected abstract string TestDirectory
+		//{
+		//    get;
+		//}
 		public abstract class Test
 		{
+			public void RunTest()
+			{
+				int level;
+				Console.Write(this.GetType().Name + "...");
+
+
+				DateTime startTime = DateTime.Now;
+				object result = GetResult(out level);
+				TimeSpan duration = DateTime.Now - startTime;
+
+
+				string testDirectory = Path.Combine(TestDirectory, this.GetType().Name);
+
+				string resultPath = Path.Combine(testDirectory, "result.txt");
+				string checkPath = Path.Combine(testDirectory, "check.txt");
+
+				Directory.CreateDirectory(testDirectory);
+				if (!File.Exists(checkPath))
+				{
+					File.Create(checkPath).Close();
+				}
+
+				StringBuilder stringBuilder = new StringBuilder();
+				Serialize(result, "", stringBuilder, level);
+
+				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
+				string successText;
+				if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
+				{
+					successText = "failed";
+					//allTestsSucessful = false;
+				}
+				else
+				{
+					successText = "succeeded";
+				}
+				Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
+			}
 			public abstract object GetResult(out int level);
 		}
 		public void Run()
 		{
 			bool allTestsSucessful = true;
-			foreach(Type testType in this.GetType().GetNestedTypes())
+			foreach (Type testType in this.GetType().GetNestedTypes())
 			{
 				if (testType.IsSubclassOf(typeof(Test)))
 				{
-					Test test=(Test)testType.GetConstructor(new Type[]{}).Invoke(null);
+					Test test = (Test)testType.GetConstructor(new Type[] { }).Invoke(null);
 					int level;
-					Console.Write(testType.Name + "...");
+					test.RunTest();
+					//Console.Write(testType.Name + "...");
 
 
-					DateTime startTime = DateTime.Now;
-					object result=test.GetResult(out level);
-					TimeSpan duration = DateTime.Now - startTime;
+					//DateTime startTime = DateTime.Now;
+					//object result = test.GetResult(out level);
+					//TimeSpan duration = DateTime.Now - startTime;
 
 
-					string testDirectory = Path.Combine(TestDirectory, testType.Name);
-					
-					string resultPath = Path.Combine(testDirectory, "result.txt");
-					string checkPath = Path.Combine(testDirectory, "check.txt");
+					//string testDirectory = Path.Combine(TestDirectory, testType.Name);
 
-					Directory.CreateDirectory(testDirectory);
-					if (!File.Exists(checkPath))
-					{
-						File.Create(checkPath).Close();
-					}
+					//string resultPath = Path.Combine(testDirectory, "result.txt");
+					//string checkPath = Path.Combine(testDirectory, "check.txt");
 
-					StringBuilder stringBuilder = new StringBuilder();
-					Serialize(result, "", stringBuilder, level);
+					//Directory.CreateDirectory(testDirectory);
+					//if (!File.Exists(checkPath))
+					//{
+					//    File.Create(checkPath).Close();
+					//}
 
-					File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
-					string successText;
-					if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
-					{
-						successText = "failed";
-						allTestsSucessful = false;
-					}
-					else
-					{
-						successText = "succeeded";
-					}
-					Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
+					//StringBuilder stringBuilder = new StringBuilder();
+					//Serialize(result, "", stringBuilder, level);
+
+					//File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
+					//string successText;
+					//if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
+					//{
+					//    successText = "failed";
+					//    allTestsSucessful = false;
+					//}
+					//else
+					//{
+					//    successText = "succeeded";
+					//}
+					//Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
 				}
 			}
 			if (!allTestsSucessful)
@@ -5386,21 +5435,71 @@ namespace Meta
 				Console.ReadLine();
 			}
 		}
+		//public void Run()
+		//{
+		//    bool allTestsSucessful = true;
+		//    foreach(Type testType in this.GetType().GetNestedTypes())
+		//    {
+		//        if (testType.IsSubclassOf(typeof(Test)))
+		//        {
+		//            Test test=(Test)testType.GetConstructor(new Type[]{}).Invoke(null);
+		//            int level;
+		//            Console.Write(testType.Name + "...");
+
+
+		//            DateTime startTime = DateTime.Now;
+		//            object result=test.GetResult(out level);
+		//            TimeSpan duration = DateTime.Now - startTime;
+
+
+		//            string testDirectory = Path.Combine(TestDirectory, testType.Name);
+					
+		//            string resultPath = Path.Combine(testDirectory, "result.txt");
+		//            string checkPath = Path.Combine(testDirectory, "check.txt");
+
+		//            Directory.CreateDirectory(testDirectory);
+		//            if (!File.Exists(checkPath))
+		//            {
+		//                File.Create(checkPath).Close();
+		//            }
+
+		//            StringBuilder stringBuilder = new StringBuilder();
+		//            Serialize(result, "", stringBuilder, level);
+
+		//            File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
+		//            string successText;
+		//            if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
+		//            {
+		//                successText = "failed";
+		//                allTestsSucessful = false;
+		//            }
+		//            else
+		//            {
+		//                successText = "succeeded";
+		//            }
+		//            Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
+		//        }
+		//    }
+		//    if (!allTestsSucessful)
+		//    {
+		//        Console.ReadLine();
+		//    }
+		//}
 		public const char indentationChar = '\t';
 
-		private bool UseToStringMethod(Type type)
+		private static bool UseToStringMethod(Type type)
 		{
 			return (!type.IsValueType || type.IsPrimitive)
 				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();
 		}
-		private bool UseProperty(PropertyInfo property,int level)
+		private static bool UseProperty(PropertyInfo property,int level)
 		{
 			object[] attributes=property.GetCustomAttributes(typeof(SerializeAttribute), false);
 
 			return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly()
 				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
 		}
-		public void Serialize(object obj,string indent,StringBuilder builder,int level) 
+		public static void Serialize(object obj,string indent,StringBuilder builder,int level) 
 		{
 			if(obj == null) 
 			{
@@ -7536,13 +7635,13 @@ namespace Meta
 				return count;
 
 			}
-			protected override string TestDirectory
-			{
-				get
-				{
-					return Path.Combine(Interpreter.InstallationPath, "Test");
-				}
-			}
+			//protected override string TestDirectory
+			//{
+			//    get
+			//    {
+			//        return Path.Combine(Interpreter.InstallationPath, "Test");
+			//    }
+			//}
 			public static string TestPath
 			{
 				get
