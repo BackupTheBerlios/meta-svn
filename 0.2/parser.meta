@@ -15,6 +15,7 @@ codeKeys
 	program "program"
 	key "key"
 	value "value"
+	expression "expression"
 text|
 	syntax
 		autokey '.'
@@ -61,7 +62,7 @@ text|
 			. callEnd
 			. character
 	number rule
-		condition zeroOrMore characterSet syntax.integer
+		condition oneOrMore characterSet syntax.integer
 		result
 			text|/.Meta.Number.Parse text
 	untested "!!!!!!"
@@ -73,29 +74,32 @@ text|
 			. character syntax.space
 			. character syntax.tab
 		. newline
-	indentation alternatives
-		.
+	startOfFile 1
+	indentationCount 0
+	indentation rule
+		condition sequence
+			. endOfLine
+			. 
+				text|nTimes
+					n add
+						. indentationCount
+						. 1
+					rule character syntax.indentation
+		result
+			|
+				$indentationCount add
+					. indentationCount
+					. 1
+	indentation rule
+		condition
 			text|if
 				condition startOfFile
 				then
 					|
-						$startOfFile 0
 						result 0
 						rest text
-		. rule
-			condition sequence
-				. endOfLine
-				. 
-					text|nTimes
-						n add
-							. indentationCount
-							. 1
-						rule character syntax.indentation
-			result
-				|
-					$indentationCount add
-						. indentationCount
-						. 1
+		result
+			|"hello"
 	sameIndentation
 		|nTimes
 			n indentationCount
@@ -178,15 +182,23 @@ text|
 				$indentationCount subtract
 					. indentationCount
 					. 1
+	mapCore sequence
+		. rule
+			condition entry
+			result
+				arg|
+					. arg
+		. oneOrMore rule
+			condition sequence
+				. sameIndentation
+				. entry
+			result
+				arg|arg.[2]
 	map prePost
 		pre indentation
-		rule sequence
-			. entry
-			. oneOrMore sequence alternatives
-				. sequence
-					. sameIndentation
-					. entry
+		rule mapCore
 		post dedentation
+	file mapCore
 	expression
 		text|
 			localRule rule
@@ -264,7 +276,8 @@ text|
 				result
 					arg|arg.[2]
 		result
-			arg|join arg
+			arg|
+				[codeKeys.select] join arg
 	functionExpression rule
 		condition function
 		result
@@ -275,20 +288,6 @@ text|
 							[codeKeys.literal] codeKeys.function
 				[codeKeys.value]
 					[codeKeys.literal] arg
-	optional
-		subRule|
-			text|
-				subRuleResult subRule text
-				current if
-					condition contains
-						map subRuleResult
-						key "result"
-					then
-						|subRuleResult
-					else
-						|
-							rest text
-							result 0
 	statement alternatives
 		. functionExpression
 		. rule
@@ -305,7 +304,7 @@ text|
 		condition sequence
 			.
 				text|
-					. p.defaultKeys.Push 1
+					. "p.defaultKeys.Push 1"
 					result 0
 					rest text
 			. sequence
@@ -321,10 +320,10 @@ text|
 						. dedentation
 					. statement
 			. 
-				text|p.defaultKeys.Pop 0
+				text|"p.defaultKeys.Pop 0"
 		result
 			arg|
-				[codeKeys.program] arg
+				[codeKeys.program] arg.[2]
 	call rule
 		condition sequence
 			. select
@@ -359,9 +358,12 @@ text|
 		result
 			arg|
 				[codeKeys.literal] arg
-	keysSearch sequence
-		. character syntax.search
-		. search
+	keysSearch rule
+		condition sequence
+			. character syntax.search
+			. search
+		result
+			arg|arg.[2]
 	autokeyLookup
 		rule character syntax.autokey
 		result
@@ -433,6 +435,27 @@ text|
 			complexTest select "
 				hello.["world"]
 			"
+		keysSearchTest
+			simple keysSearch "$hello"
+		keysTest
+			simple keys "hello.hello"
+		callTest
+			simple call "
+				hello "hi"
+			"
+		endOfLineTest
+			unix
+				shouldMatch endOfLine
+					. 10
+				shouldNotMatch endOfLine "hello"
+			windows 
+				shouldMatch endOfLine
+					. 13
+					. 10
+				shouldNotMatch endOfLine "hello"
+		whitespaceTest
+			shouldMatch whitespace "					 "
+			shouldNotMatch whitespace "			kj	"
 character
 	documentation "Matches one character."
 	char|rule
@@ -588,7 +611,9 @@ alternatives
 					alt|
 						applied alt text
 						current if
-							condition not zero applied
+							condition hasKey
+								map applied
+								key "result"
 							then
 								|
 									$result applied.result
@@ -605,6 +630,36 @@ alternatives
 					|
 						result result
 						rest rest
+nTimes
+	documentation "Matches a rule n times"
+	arg|
+		text|
+			rest text
+			allMatched 1
+			applied apply
+				array range arg.n
+				condition
+					|if
+						condition not hasKey
+							map arg.rule rest
+							key "result"
+						then
+							|
+								$allMatched 0
+								current 0
+						else
+							|1
+				function
+					|
+						ruleResult rule
+						$rest ruleResult.rest
+						current ruleResult.result
+			current if
+				condition allMatched
+				then
+					|
+						result applied
+						rest rest
 rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
@@ -619,3 +674,17 @@ rule
 						result arg.result map.result
 						rest map.rest
 			current stuff
+optional
+	subRule|
+		text|
+			subRuleResult subRule text
+			current if
+				condition hasKey
+					map subRuleResult
+					key "result"
+				then
+					|subRuleResult
+				else
+					|
+						rest text
+						result 0

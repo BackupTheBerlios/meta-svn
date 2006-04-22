@@ -997,7 +997,8 @@ namespace Meta
 			}
 			catch (ApplicationException e)
 			{
-				throw new MetaException(e.ToString()+e.StackTrace, value.Extent);
+				throw new MetaException(e.ToString(), value.Extent);
+				//throw new MetaException(e.ToString() + e.StackTrace, value.Extent);
 			}
 		}
 	}
