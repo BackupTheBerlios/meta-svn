@@ -1,0 +1,62 @@
+Extent:
+	null
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		Extent:
+			null
+		"strings"
+	Value (StrategyMap):
+		Extent:
+			null
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				"result"
+			Value (StrategyMap):
+				Extent:
+					null
+				"12344321 asdfasdf"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				"rest"
+			Value (StrategyMap):
+				Extent:
+					null
+				0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		Extent:
+			null
+		"numbers"
+	Value (StrategyMap):
+		Extent:
+			null
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				"integer"
+			Value (StrategyMap):
+				Extent:
+					null
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"result"
+					Value (ObjectMap):
+						Extent:
+							null
+						483821
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"rest"
+					Value (StrategyMap):
+						Extent:
+							null
+						0

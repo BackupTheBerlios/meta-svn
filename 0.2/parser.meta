@@ -409,7 +409,7 @@ text|
 			. syntax.string
 		post character syntax.string
 	numberTest rule
-		condition zeroOrMore character syntax.integer
+		condition zeroOrMore characterSet syntax.integer
 		result
 			text|/.Meta.Number.Parse text
 	old "
@@ -419,9 +419,12 @@ text|
 		. print parsed
 		current parsed
 	"
-	. console.create 0
-	. console.writeLine text
-	current text
+	current 
+		strings string "
+			"12344321 asdfasdf"
+		"
+		numbers
+			integer numberTest "483821"
 character
 	documentation "Matches one character."
 	char|rule
@@ -439,10 +442,6 @@ character
 								rest slice
 									array text
 									start 2
-						else
-							|
-								. print chars
-								current 0
 		result
 			char|char
 characterSet
