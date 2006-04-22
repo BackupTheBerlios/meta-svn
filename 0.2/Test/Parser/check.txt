@@ -4,7 +4,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		Extent:
 			null
-		"strings"
+		"stringTest"
 	Value (StrategyMap):
 		Extent:
 			null
@@ -12,25 +12,33 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				Extent:
 					null
-				"result"
+				"singleLine"
 			Value (StrategyMap):
 				Extent:
 					null
-				"12344321 asdfasdf"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				Extent:
-					null
-				"rest"
-			Value (StrategyMap):
-				Extent:
-					null
-				0
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"result"
+					Value (StrategyMap):
+						Extent:
+							null
+						"12344321 asdfasdf"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"rest"
+					Value (StrategyMap):
+						Extent:
+							null
+						0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		Extent:
 			null
-		"numbers"
+		"numberTest"
 	Value (StrategyMap):
 		Extent:
 			null
@@ -51,6 +59,91 @@ Entry (KeyValuePair`2)
 						Extent:
 							null
 						483821
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"rest"
+					Value (StrategyMap):
+						Extent:
+							null
+						0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		Extent:
+			null
+		"lookupStringTest"
+	Value (StrategyMap):
+		Extent:
+			null
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				"simple"
+			Value (StrategyMap):
+				Extent:
+					null
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"result"
+					Value (StrategyMap):
+						Extent:
+							null
+						Entry (KeyValuePair`2)
+							Key (StrategyMap):
+								Extent (Extent):
+									Start (SourcePosition):
+										Line (Int32):
+											"9"
+										Column (Int32):
+											"10"
+									End (SourcePosition):
+										Line (Int32):
+											"9"
+										Column (Int32):
+											"19"
+								"literal"
+							Value (StrategyMap):
+								Extent:
+									null
+								"hello"
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"rest"
+					Value (StrategyMap):
+						Extent:
+							null
+						0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		Extent:
+			null
+		"expressionTest"
+	Value (StrategyMap):
+		Extent:
+			null
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				Extent:
+					null
+				"stringTest"
+			Value (StrategyMap):
+				Extent:
+					null
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						Extent:
+							null
+						"result"
+					Value (StrategyMap):
+						Extent:
+							null
+						"hello"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						Extent:

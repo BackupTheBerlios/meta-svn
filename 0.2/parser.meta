@@ -59,6 +59,7 @@ text|
 			. callEnd
 			. character
 	number rule
+		condition zeroOrMore characterSet syntax.integer
 		result
 			text|/.Meta.Number.Parse text
 	untested "!!!!!!"
@@ -177,11 +178,7 @@ text|
 					. sameIndentation
 					. entry
 		post dedentation
-	expression
-		text|
-			rule sequence
-				. number
-			current rule text
+	expression string
 	function rule
 		condition sequence
 			. zeroOrMore characterExcept
@@ -192,8 +189,8 @@ text|
 			. expression
 		result
 			arg|
-				[CodeKeys.ParameterName] arg.[1]
-				[CodeKeys.Expression] arg.[3]
+				[codeKeys.parameterName] arg.[1]
+				[codeKeys.expression] arg.[3]
 	lookupAnythingExpression rule
 		condition sequence
 			. character syntax.lookupStart
@@ -202,23 +199,23 @@ text|
 			. character syntax.lookupEnd
 		result
 			arg|arg.[2]
-	lookupStringExpression 
+	lookupStringExpression rule
 		condition lookupString 
-		rule
+		result
 			arg|
-				[CodeKeys.Literal] arg
-	search 
+				[codeKeys.literal] arg
+	search rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
 		result
 			arg|
-				[CodeKeys.Search] arg
+				[codeKeys.search] arg
 	root
 		condition character syntax.root
 		result
 			arg|
-				[CodeKeys.Root] 0
+				[codeKeys.root] 0
 	ruleCurrent
 		condition stringRule syntax.current
 		result
@@ -231,12 +228,12 @@ text|
 				. lookupAnythingExpression
 		result
 			arg|
-				[CodeKeys.Lookup] arg
+				[codeKeys.lookup] arg
 	lookup
 		condition alternatives
 			. ruleCurrent
 			. realLookup
-	select
+	select rule
 		condition sequence
 			. rule
 				condition alternatives
@@ -258,12 +255,12 @@ text|
 		condition function
 		result
 			arg|
-				[CodeKeys.Key]
+				[codeKeys.key]
 					.
-						[CodeKeys.Lookup]
-							[CodeKeys.Literal] CodeKeys.Function
-				[CodeKeys.Value]
-					[CodeKeys.Literal] arg
+						[codeKeys.lookup]
+							[codeKeys.literal] codeKeys.function
+				[codeKeys.value]
+					[codeKeys.literal] arg
 	optional
 		subRule|
 			text|
@@ -288,8 +285,8 @@ text|
 				. endOfLine
 			result
 				arg|
-					[CodeKeys.Key] arg.[1]
-					[CodeKeys.Value] arg.[3]
+					[codeKeys.key] arg.[1]
+					[codeKeys.value] arg.[3]
 	program rule
 		condition sequence
 			.
@@ -313,7 +310,7 @@ text|
 				text|p.defaultKeys.Pop 0
 		result
 			arg|
-				[CodeKeys.Program] arg
+				[codeKeys.program] arg
 	call
 		condition sequence
 			. select
@@ -329,9 +326,9 @@ text|
 				. program
 		result
 			arg|
-				[CodeKeys.Call] 
-					[CodeKeys.Callable] arg.[1]
-					[CodeKeys.Argument] arg.[2]
+				[codeKeys.call] 
+					[codeKeys.callable] arg.[1]
+					[codeKeys.argument] arg.[2]
 	whitespace zeroOrMore alternatives
 		. syntax.tab
 		. syntax.space
@@ -347,7 +344,7 @@ text|
 			. characterDataExpression
 		result
 			arg|
-				[CodeKeys.Literal] arg
+				[codeKeys.literal] arg
 	keysSearch sequence
 		. character syntax.search
 		. search
@@ -359,8 +356,8 @@ text|
 					. p.defaultKeys.Pop 0
 					. 1
 				current 
-					[CodeKeys.Lookup]
-						[CodeKeys.Literal] last defaultKeys
+					[codeKeys.lookup]
+						[codeKeys.literal] last defaultKeys
 	makeList
 		subRule|rule
 			condition subRule
@@ -408,23 +405,23 @@ text|
 		rule zeroOrMore characterExcept
 			. syntax.string
 		post character syntax.string
-	numberTest rule
-		condition zeroOrMore characterSet syntax.integer
-		result
-			text|/.Meta.Number.Parse text
-	old "
-		parsed string "
-			"12344321 asdfasdf"
-		"
-		. print parsed
-		current parsed
-	"
+	expression
+		text|
+			someRule string
+			current someRule text
 	current 
-		strings string "
-			"12344321 asdfasdf"
-		"
-		numbers
-			integer numberTest "483821"
+		stringTest
+			singleLine string "
+				"12344321 asdfasdf"
+			"
+		numberTest
+			integer number "483821"
+		lookupStringTest
+			simple lookupStringExpression "hello"
+		expressionTest
+			stringTest expression "
+				"hello"
+			"
 character
 	documentation "Matches one character."
 	char|rule

@@ -251,71 +251,72 @@ namespace Meta
 			this.argument = code[CodeKeys.Argument].GetExpression();
 			//this.code = code;
 			this.parameterName = parameterName;
-			this.optimized = Optimize();
+			//this.optimized = Optimize();
 		}
 
 		public static Position lastArgument;
 		protected override Position EvaluateImplementation(Position current)
 		{
-			if (optimized != null)
-			{
-				return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
-			}
-			else
-			{
+			//if (optimized != null)
+			//{
+			//    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
+			//}
+			//else
+			//{
 				argument.IsCall = true;
 				Position arg = argument.Evaluate(current);
 				lastArgument = arg;
 				return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-			}
+			//}
 		}
-		public OptimizedDelegate optimized;
-		private OptimizedDelegate Optimize()
-		{
-			Select select = argument as Select;
-			if (select != null)
-			{
-				if (select.Subselects.Count == 1)
-				{
-					Search search = select.Subselects[0].GetSubselect() as Search;
-					if (search != null)
-					{
-						Literal literal = search.Key as Literal;
-						if (literal != null)
-						{
-							if (parameterName!=null && literal.Map.Equals(parameterName))
-								//if (code.ContainsKey(CodeKeys.ParameterName) && literal.Map.Equals(code[CodeKeys.ParameterName]))
-								{
-								DynamicMethod method = new DynamicMethod("Optimized", typeof(Position),
-									new Type[] { typeof(OptimizedCall), typeof(Map), typeof(Position) }, typeof(Map).Module);
+		//public OptimizedDelegate optimized;
+		//private OptimizedDelegate Optimize()
+		//{
+		//    Select select = argument as Select;
+		//    if (select != null)
+		//    {
+		//        if (select.Subselects.Count == 1)
+		//        {
+		//            Search search = select.Subselects[0].GetSubselect() as Search;
+		//            if (search != null)
+		//            {
+		//                Literal literal = search.Key as Literal;
+		//                if (literal != null)
+		//                {
+		//                    if (parameterName!=null && literal.Map.Equals(parameterName))
+		//                        //if (code.ContainsKey(CodeKeys.ParameterName) && literal.Map.Equals(code[CodeKeys.ParameterName]))
+		//                        {
+		//                        DynamicMethod method = new DynamicMethod("Optimized", typeof(Position),
+		//                            new Type[] { typeof(OptimizedCall), typeof(Map), typeof(Position) }, typeof(Map).Module);
 
-								ILGenerator il = method.GetILGenerator();
+		//                        ILGenerator il = method.GetILGenerator();
 
-								il.Emit(OpCodes.Ldarg_0);
-								il.Emit(OpCodes.Ldfld, typeof(OptimizedCall).GetField("callable", BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public));
-								il.Emit(OpCodes.Ldarg_2);
-								il.Emit(OpCodes.Call, typeof(Expression).GetMethod("Evaluate"));
-								il.Emit(OpCodes.Ldarg_1);
-								//il.Emit(OpCodes.Ldarg_2);
-								il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call"));
-								il.Emit(OpCodes.Ret);
+		//                        il.Emit(OpCodes.Ldarg_0);
+		//                        il.Emit(OpCodes.Ldfld, typeof(OptimizedCall).GetField("callable", BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public));
+		//                        il.Emit(OpCodes.Ldarg_2);
+		//                        il.Emit(OpCodes.Call, typeof(Expression).GetMethod("Evaluate"));
+		//                        il.Emit(OpCodes.Ldarg_1);
+		//                        //il.Emit(OpCodes.Ldarg_2);
+		//                        il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call"));
+		//                        il.Emit(OpCodes.Ret);
 
-								return (OptimizedDelegate)method.CreateDelegate(typeof(OptimizedDelegate), new OptimizedCall(callable));
-							}
-						}
-					}
-				}
-			}
-			return null;
-		}
-		public class OptimizedCall
-		{
-			public Expression callable;
-			public OptimizedCall(Expression callable)
-			{
-				this.callable = callable;
-			}
-		}
+		//                        return (OptimizedDelegate)method.CreateDelegate(typeof(OptimizedDelegate), new OptimizedCall(callable));
+		//                    }
+		//                }
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
+
+		//public class OptimizedCall
+		//{
+		//    public Expression callable;
+		//    public OptimizedCall(Expression callable)
+		//    {
+		//        this.callable = callable;
+		//    }
+		//}
 	}
 	public delegate Position OptimizedDelegate(Map argument,Position parent);
 	public delegate Map ProgramDelegate(Map argument,Position parent);
@@ -796,9 +797,9 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		private Position lastEvaluated;
-		private Map lastKey;
-		private Position lastContext;
+		//private Position lastEvaluated;
+		//private Map lastKey;
+		//private Position lastContext;
 		public override Position Evaluate(Position selected, Position context)
 		{
 			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
@@ -806,45 +807,45 @@ namespace Meta
 			if (key.Equals(new StrategyMap("win")))
 			{
 			}
-			if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
-			{
-				//bool constantKeys = false;
-				for (int i = Expression.expressions.Count - 1; i > 0; i--)
-				{
-					Expression expression = Expression.expressions[i];
-					if (expression.IsCall)
-					{
-						if (context.Keys.Count > (lastEvaluated.Keys.Count+(Expression.expressions.Count-i)))
-						{
-							return lastEvaluated;
-						}
-						else
-						{
-							break;
-						}
-					}
-					if (!expression.HasConstantKeysOnly)
-					{
-						break;
-					}
-				}
-				if ((lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
-				{
-					return lastEvaluated;
-				}
-				//if ((constantKeys && context.Keys.Count >= lastEvaluated.Keys.Count-1) || (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
-				//{
-				//    return lastEvaluated;
-				//}
-				else
-				{
-					//context.Equals(lastContext);
-					lastEvaluated = null;
-					lastKey = null;
-				}
-			}
-			lastKey = key.Copy();
-			lastContext = context;
+			//if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
+			//{
+			//    //bool constantKeys = false;
+			//    for (int i = Expression.expressions.Count - 1; i > 0; i--)
+			//    {
+			//        Expression expression = Expression.expressions[i];
+			//        if (expression.IsCall)
+			//        {
+			//            if (context.Keys.Count > (lastEvaluated.Keys.Count+(Expression.expressions.Count-i)))
+			//            {
+			//                return lastEvaluated;
+			//            }
+			//            else
+			//            {
+			//                break;
+			//            }
+			//        }
+			//        if (!expression.HasConstantKeysOnly)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    if ((lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
+			//    {
+			//        return lastEvaluated;
+			//    }
+			//    //if ((constantKeys && context.Keys.Count >= lastEvaluated.Keys.Count-1) || (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
+			//    //{
+			//    //    return lastEvaluated;
+			//    //}
+			//    else
+			//    {
+			//        //context.Equals(lastContext);
+			//        lastEvaluated = null;
+			//        lastKey = null;
+			//    }
+			//}
+			//lastKey = key.Copy();
+			//lastContext = context;
 			Position selection = selected;
 			while (!selection.Get().ContainsKey(key))
 			{
@@ -855,7 +856,7 @@ namespace Meta
 				}
 				else
 				{
-					selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
+					//selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
 					if (selection.Get().Scope != null)
 					{
 						selection = selection.Get().Scope;
@@ -866,33 +867,33 @@ namespace Meta
 					}
 				}
 			}
-			try
-			{
-				selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
-			}
-			catch(Exception e)
-			{
-			}
+			//try
+			//{
+			//    selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
+			//}
+			//catch(Exception e)
+			//{
+			//}
 			if (selection == null)
 			{
 				throw new KeyNotFound(key, keyExpression.Extent, null);
 			}
 			else
 			{
-				lastEvaluated = new Position(selection, key);
+				Position lastEvaluated = new Position(selection, key);
 				return lastEvaluated;
 			}
 		}
 
-		void Search_KeyChanged(KeyChangedEventArgs e)
-		{
-			if (lastKey != null && e.Key.Equals(lastKey))
-			{
-				lastEvaluated = null;
-				lastKey = null;
-				lastContext = null;
-			}
-		}
+		//void Search_KeyChanged(KeyChangedEventArgs e)
+		//{
+		//    if (lastKey != null && e.Key.Equals(lastKey))
+		//    {
+		//        lastEvaluated = null;
+		//        lastKey = null;
+		//        lastContext = null;
+		//    }
+		//}
 		public override void Assign(Position selected, Map value, Position context)
 		{
 			Position evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
