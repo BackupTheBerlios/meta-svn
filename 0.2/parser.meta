@@ -96,7 +96,7 @@ parser|
 				condition startOfFile
 				then
 					|
-						result 0
+						parsed 0
 						rest parser
 		result
 			|"hello"
@@ -180,7 +180,7 @@ parser|
 	dedentation rule
 		condition
 			|
-				result 0
+				parsed 0
 		result
 			|
 				$indentationCount subtract
@@ -309,7 +309,7 @@ parser|
 			.
 				parser|
 					. "p.defaultKeys.Push 1"
-					result 0
+					parsed 0
 					rest parser
 			. sequence
 				. indentation
@@ -473,7 +473,7 @@ character
 							. char
 						then
 							|
-								result first parser
+								parsed first parser
 								rest slice
 									array parser
 									start 2
@@ -492,7 +492,7 @@ characterSet
 							array chars
 						then
 							|
-								result first parser
+								parsed first parser
 								rest slice
 									array parser
 									start 2
@@ -513,7 +513,7 @@ characterExcept
 							array chars
 						then
 							|
-								result first parser
+								parsed first parser
 								rest slice
 									array parser
 									start 2
@@ -536,7 +536,7 @@ oneOrMore
 				condition not zero loopResult
 				then
 					|if
-						condition not zero loopResult.result
+						condition not zero loopResult.parsed
 						then
 							|loopResult
 zeroOrMore
@@ -544,14 +544,14 @@ zeroOrMore
 	rule|
 		parser|
 			rest parser
-			result while
+			parsed while
 				condition
 					|not zero rule rest
 				function
 					|
 						ruleResult rule rest
 						$rest ruleResult.rest
-						current ruleResult.result
+						current ruleResult.parsed
 sequence
 	documentation "Matches a sequence of rules."
 	rules|
@@ -566,11 +566,11 @@ sequence
 						current if
 							condition hasKey
 								map ruleResult
-								key "result"
+								key "parsed"
 							then
 								|
 									$rest ruleResult.rest
-									current ruleResult.result
+									current ruleResult.parsed
 							else
 								|
 									$allMatched 0
@@ -579,7 +579,7 @@ sequence
 				condition allMatched
 				then
 					|
-						result applied
+						parsed applied
 						rest rest
 prePost
 	documentation "Matches a rule and throws away the results of a preceding and a following rule."
@@ -600,13 +600,13 @@ prePost
 										condition not zero postResult
 										then
 											|
-												result ruleResult.result
+												parsed ruleResult.parsed
 												rest postResult.rest
 alternatives
 	documentation "Matches one of several alternative rules."
 	alts|
 		parser|
-			result 0
+			parsed 0
 			rest parser
 			matched 0
 			. apply
@@ -617,10 +617,10 @@ alternatives
 						current if
 							condition hasKey
 								map applied
-								key "result"
+								key "parsed"
 							then
 								|
-									$result applied.result
+									$parsed applied.parsed
 									$rest applied.rest
 									$matched 1
 									current 0
@@ -632,7 +632,7 @@ alternatives
 				condition matched
 				then
 					|
-						result result
+						parsed parsed
 						rest rest
 nTimes
 	documentation "Matches a rule n times"
@@ -646,7 +646,7 @@ nTimes
 					|if
 						condition not hasKey
 							map arg.rule rest
-							key "result"
+							key "parsed"
 						then
 							|
 								$allMatched 0
@@ -657,12 +657,12 @@ nTimes
 					|
 						ruleResult rule
 						$rest ruleResult.rest
-						current ruleResult.result
+						current ruleResult.parsed
 			current if
 				condition allMatched
 				then
 					|
-						result applied
+						parsed applied
 						rest rest
 rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
@@ -672,10 +672,10 @@ rule
 			stuff if
 				condition hasKey
 					map map
-					key "result"
+					key "parsed"
 				then
 					|
-						result arg.result map.result
+						parsed arg.result map.parsed
 						rest map.rest
 			current stuff
 optional
@@ -685,10 +685,10 @@ optional
 			current if
 				condition hasKey
 					map subRuleResult
-					key "result"
+					key "parsed"
 				then
 					|subRuleResult
 				else
 					|
 						rest parser
-						result 0
+						parsed 0
