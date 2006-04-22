@@ -26,7 +26,7 @@ text|
 		fraction '/'
 		endOfFile 65535
 		indentation 13
-		unixNewLine 10
+		unixNewLine 12
 		function '|'
 		string '"'
 		lookupStart '['
@@ -34,7 +34,7 @@ text|
 		emptyMap '0'
 		call ' '
 		select '.'
-		character 53
+		character 39
 		assignment ' '
 		space ' '
 		tab 13
@@ -138,6 +138,11 @@ text|
 							. stringLine
 				post stringDedentation
 		post syntax.string
+	string prePost
+		pre character syntax.string
+		rule zeroOrMore characterExcept
+			. syntax.string
+		post character syntax.string
 	lookupString oneOrMore characterExcept
 		. syntax.lookupStringForbidden
 	value
@@ -148,11 +153,14 @@ text|
 				. number
 				. characterDataExpression
 			current rule text
-	lookupAnything sequence
-		. character syntax.lookupStart
-		. value
-		. zeroOrMore syntax.indentation
-		. character syntax.lookupEnd
+	lookupAnything rule
+		condition sequence
+			. character syntax.lookupStart
+			. value
+			. zeroOrMore syntax.indentation
+			. character syntax.lookupEnd
+		result
+			arg|arg.[2]
 	entry sequence
 		. function
 		. alternatives
@@ -182,8 +190,7 @@ text|
 		text|
 			localRule rule
 				condition alternatives
-					. string
-					. number
+					. literalExpression
 				result
 					arg|arg
 			current localRule text
@@ -203,12 +210,12 @@ text|
 		condition sequence
 			. character syntax.lookupStart
 			. expression
-			. zeroOrMore syntax.indentation
+			. zeroOrMore character syntax.indentation
 			. character syntax.lookupEnd
 		result
 			arg|arg.[2]
 	lookupStringExpression rule
-		condition lookupString 
+		condition lookupString
 		result
 			arg|
 				[codeKeys.literal] arg
@@ -219,17 +226,17 @@ text|
 		result
 			arg|
 				[codeKeys.search] arg
-	root
+	root rule
 		condition character syntax.root
 		result
 			arg|
 				[codeKeys.root] 0
-	ruleCurrent
-		condition stringRule syntax.current
+	ruleCurrent rule
+		condition stringRule syntax.mapCurrent
 		result
 			|
 				["current"] 0
-	realLookup
+	realLookup rule
 		condition sequence
 			. alternatives
 				. lookupStringExpression
@@ -237,10 +244,9 @@ text|
 		result
 			arg|
 				[codeKeys.lookup] arg
-	lookup
-		condition alternatives
-			. ruleCurrent
-			. realLookup
+	lookup alternatives
+		. ruleCurrent
+		. realLookup
 	select rule
 		condition sequence
 			. rule
@@ -319,15 +325,15 @@ text|
 		result
 			arg|
 				[codeKeys.program] arg
-	call
+	call rule
 		condition sequence
 			. select
 			. alternatives
 				. rule
 					condition sequence
 						. alternatives
-							. syntax.call
-							. syntax.indentation
+							. character syntax.call
+							. character syntax.indentation
 						. expression
 					result
 						arg|arg.[2]
@@ -338,8 +344,8 @@ text|
 					[codeKeys.callable] arg.[1]
 					[codeKeys.argument] arg.[2]
 	whitespace zeroOrMore alternatives
-		. syntax.tab
-		. syntax.space
+		. character syntax.tab
+		. character syntax.space
 	emptyMap rule
 		condition character syntax.emptyMap
 		result
@@ -380,7 +386,7 @@ text|
 				. autokeyLookup
 			. zeroOrMore rule
 				condition sequence
-					. syntax.select
+					. character syntax.select
 					. lookup
 				result
 					arg|arg.[2]
@@ -389,31 +395,7 @@ text|
 	untested "!!!!!!"
 	stringCharacter characterExcept
 		. syntax.string
-	stringTest prePost
-		pre character syntax.string
-		rule zeroOrMore stringCharacter
-		post character syntax.string
-	string rule
-		condition
-			text|
-				current if
-					condition 1
-					then
-						|
-							result text
-							rest slice
-								array text
-								start add
-									. length text
-									. 1
-		result
-			text|text
-	string prePost
-		pre character syntax.string
-		rule zeroOrMore characterExcept
-			. syntax.string
-		post character syntax.string
-	current 
+	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string "
 				"12344321 asdfasdf"
@@ -426,6 +408,21 @@ text|
 			stringTest expression "
 				"hello"
 			"
+		literalTest
+			stringTest literalExpression "
+				"hello"
+			"
+			characterTest characterDataExpression "'a'"
+		lookupAnythingTest
+			simple lookupAnythingExpression "
+				["hello"]
+			"
+		searchTest search "hello"
+		rootTest root "/"
+		ruleCurrentTest 
+			shouldMatch ruleCurrent "current"
+			shouldNotMatch ruleCurrent "hello"
+		lookupTest lookup "hello"
 character
 	documentation "Matches one character."
 	char|rule
@@ -463,9 +460,7 @@ characterSet
 									array text
 									start 2
 						else
-							|
-								. print chars
-								current 0
+							|0
 		result
 			char|char
 characterExcept
@@ -524,31 +519,31 @@ sequence
 	documentation "Matches a sequence of rules."
 	rules|
 		text|
-			matched 0
 			rest text
+			allMatched 1
 			applied apply
 				array rules
 				function
 					rule|
 						ruleResult rule rest
-						. if
+						current if
 							condition hasKey
 								map ruleResult
 								key "result"
 							then
 								|
 									$rest ruleResult.rest
-									$matched join
-										. matched
-										.
-											. ruleResult.result
-			result if
-				condition equal
-					. length applied
-					. length rules
+									current ruleResult.result
+							else
+								|
+									$allMatched 0
+									current 0
+			current if
+				condition allMatched
 				then
 					|
-						result matched
+						result applied
+						rest rest
 prePost
 	documentation "Matches a rule and throws away the results of a preceding and a following rule."
 	arg|
@@ -576,6 +571,7 @@ alternatives
 		text|
 			result 0
 			rest text
+			matched 0
 			. apply
 				array alts
 				condition
@@ -587,11 +583,18 @@ alternatives
 								|
 									$result applied.result
 									$rest applied.rest
+									$matched 1
 									current 0
 							else
 								|1
 				function
 					|0
+			current if
+				condition matched
+				then
+					|
+						result result
+						rest rest
 rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
