@@ -178,7 +178,15 @@ text|
 					. sameIndentation
 					. entry
 		post dedentation
-	expression string
+	expression
+		text|
+			localRule rule
+				condition alternatives
+					. string
+					. number
+				result
+					arg|arg
+			current localRule text
 	function rule
 		condition sequence
 			. zeroOrMore characterExcept
@@ -405,10 +413,6 @@ text|
 		rule zeroOrMore characterExcept
 			. syntax.string
 		post character syntax.string
-	expression
-		text|
-			someRule string
-			current someRule text
 	current 
 		stringTest
 			singleLine string "
@@ -571,6 +575,7 @@ alternatives
 	alts|
 		text|
 			result 0
+			rest text
 			. apply
 				array alts
 				condition
@@ -581,6 +586,7 @@ alternatives
 							then
 								|
 									$result applied.result
+									$rest applied.rest
 									current 0
 							else
 								|1
