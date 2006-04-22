@@ -97,7 +97,7 @@ parser|
 				then
 					|
 						parsed 0
-						rest parser
+						text parser
 		result
 			|"hello"
 	sameIndentation
@@ -310,7 +310,7 @@ parser|
 				parser|
 					. "p.defaultKeys.Push 1"
 					parsed 0
-					rest parser
+					text parser
 			. sequence
 				. indentation
 				. rule
@@ -474,7 +474,7 @@ character
 						then
 							|
 								parsed first parser
-								rest slice
+								text slice
 									array parser
 									start 2
 		result
@@ -493,7 +493,7 @@ characterSet
 						then
 							|
 								parsed first parser
-								rest slice
+								text slice
 									array parser
 									start 2
 						else
@@ -514,7 +514,7 @@ characterExcept
 						then
 							|
 								parsed first parser
-								rest slice
+								text slice
 									array parser
 									start 2
 		result
@@ -543,33 +543,33 @@ zeroOrMore
 	documentation "Matches zero or more times."
 	rule|
 		parser|
-			rest parser
+			text parser
 			parsed while
 				condition
-					|not zero rule rest
+					|not zero rule text
 				function
 					|
-						ruleResult rule rest
-						$rest ruleResult.rest
+						ruleResult rule text
+						$text ruleResult.text
 						current ruleResult.parsed
 sequence
 	documentation "Matches a sequence of rules."
 	rules|
 		parser|
-			rest parser
+			text parser
 			allMatched 1
 			applied apply
 				array rules
 				function
 					rule|
-						ruleResult rule rest
+						ruleResult rule text
 						current if
 							condition hasKey
 								map ruleResult
 								key "parsed"
 							then
 								|
-									$rest ruleResult.rest
+									$text ruleResult.text
 									current ruleResult.parsed
 							else
 								|
@@ -580,7 +580,7 @@ sequence
 				then
 					|
 						parsed applied
-						rest rest
+						text text
 prePost
 	documentation "Matches a rule and throws away the results of a preceding and a following rule."
 	arg|
@@ -590,24 +590,24 @@ prePost
 				condition not zero preResult
 				then
 					|
-						ruleResult arg.rule preResult.rest
+						ruleResult arg.rule preResult.text
 						current if
 							condition not zero ruleResult
 							then
 								|
-									postResult arg.post ruleResult.rest
+									postResult arg.post ruleResult.text
 									current if
 										condition not zero postResult
 										then
 											|
 												parsed ruleResult.parsed
-												rest postResult.rest
+												text postResult.text
 alternatives
 	documentation "Matches one of several alternative rules."
 	alts|
 		parser|
 			parsed 0
-			rest parser
+			text parser
 			matched 0
 			. apply
 				array alts
@@ -621,7 +621,7 @@ alternatives
 							then
 								|
 									$parsed applied.parsed
-									$rest applied.rest
+									$text applied.text
 									$matched 1
 									current 0
 							else
@@ -633,19 +633,19 @@ alternatives
 				then
 					|
 						parsed parsed
-						rest rest
+						text text
 nTimes
 	documentation "Matches a rule n times"
 	arg|
 		parser|
-			rest parser
+			text parser
 			allMatched 1
 			applied apply
 				array range arg.n
 				condition
 					|if
 						condition not hasKey
-							map arg.rule rest
+							map arg.rule text
 							key "parsed"
 						then
 							|
@@ -656,14 +656,14 @@ nTimes
 				function
 					|
 						ruleResult rule
-						$rest ruleResult.rest
+						$text ruleResult.text
 						current ruleResult.parsed
 			current if
 				condition allMatched
 				then
 					|
 						parsed applied
-						rest rest
+						text text
 rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
@@ -676,7 +676,7 @@ rule
 				then
 					|
 						parsed arg.result map.parsed
-						rest map.rest
+						text map.text
 			current stuff
 optional
 	subRule|
@@ -690,5 +690,5 @@ optional
 					|subRuleResult
 				else
 					|
-						rest parser
+						text parser
 						parsed 0

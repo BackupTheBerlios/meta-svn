@@ -245,8 +245,10 @@ namespace Meta
 		private Expression callable;
 		public Expression argument;
 		private Map parameterName;
+		private Map code;
 		public Call(Map code,Map parameterName)
 		{
+			this.code = code;
 			this.callable = code[CodeKeys.Callable].GetExpression();
 			this.argument = code[CodeKeys.Argument].GetExpression();
 			//this.code = code;
@@ -257,18 +259,37 @@ namespace Meta
 		public static Position lastArgument;
 		protected override Position EvaluateImplementation(Position current)
 		{
-			//if (optimized != null)
-			//{
-			//    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
-			//}
-			//else
-			//{
+			try
+			{
 				argument.IsCall = true;
 				Position arg = argument.Evaluate(current);
 				lastArgument = arg;
 				return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-			//}
+			}
+			catch (MetaException e)
+			{
+				e.InvocationList.Add(this.code.Extent);
+				throw e;
+			}
+			catch (Exception e)
+			{
+				throw new MetaException(e.ToString(), this.code.Extent);
+			}
 		}
+		//protected override Position EvaluateImplementation(Position current)
+		//{
+		//    //if (optimized != null)
+		//    //{
+		//    //    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
+		//    //}
+		//    //else
+		//    //{
+		//        argument.IsCall = true;
+		//        Position arg = argument.Evaluate(current);
+		//        lastArgument = arg;
+		//        return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+		//    //}
+		//}
 		//public OptimizedDelegate optimized;
 		//private OptimizedDelegate Optimize()
 		//{
@@ -990,16 +1011,23 @@ namespace Meta
 			{
 				selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
-			try
-			{
+			//try
+			//{
 				Map val = value.GetExpression().Evaluate(context).Get();
 				keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-			}
-			catch (ApplicationException e)
-			{
-				throw new MetaException(e.ToString(), value.Extent);
-				//throw new MetaException(e.ToString() + e.StackTrace, value.Extent);
-			}
+			//}
+			//catch (ApplicationException e)
+			//{
+			//    //if (e.InnerException != null && e.InnerException is MetaException)
+			//    //{
+			//    //    throw e.InnerException;
+			//    //}
+			//    //else
+			//    //{
+			//        throw new MetaException(e.ToString(), value.Extent);
+			//    //}
+			//    //throw new MetaException(e.ToString() + e.StackTrace, value.Extent);
+			//}
 		}
 	}
 	public class Library
@@ -3714,7 +3742,14 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+				if (e.InnerException != null)
+				{
+					throw e.InnerException;
+				}
+				else
+				{
+					throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+				}
 			}
 		}
 		public object[] ConvertArgument(Map argument,out bool converted)
