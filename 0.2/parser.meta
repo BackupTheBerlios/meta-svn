@@ -16,7 +16,7 @@ codeKeys
 	key "key"
 	value "value"
 	expression "expression"
-text|
+parser|
 	syntax
 		autokey '.'
 		callStart '('
@@ -64,7 +64,7 @@ text|
 	number rule
 		condition oneOrMore characterSet syntax.integer
 		result
-			text|/.Meta.Number.Parse text
+			parser|/.Meta.Number.Parse parser
 	untested "!!!!!!"
 	newline alternatives
 		. character syntax.unixNewLine
@@ -80,7 +80,7 @@ text|
 		condition sequence
 			. endOfLine
 			. 
-				text|nTimes
+				parser|nTimes
 					n add
 						. indentationCount
 						. 1
@@ -92,12 +92,12 @@ text|
 					. 1
 	indentation rule
 		condition
-			text|if
+			parser|if
 				condition startOfFile
 				then
 					|
 						result 0
-						rest text
+						rest parser
 		result
 			|"hello"
 	sameIndentation
@@ -151,13 +151,13 @@ text|
 		post character syntax.string
 	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
-		text|
+		parser|
 			rule alternatives
 				. map
 				. string
 				. number
 				. characterDataExpression
-			current rule text
+			current rule parser
 	lookupAnything rule
 		condition sequence
 			. character syntax.lookupStart
@@ -166,13 +166,17 @@ text|
 			. character syntax.lookupEnd
 		result
 			arg|arg.[2]
-	entry sequence
-		. function
-		. alternatives
-			. lookupString
-			. lookupAnything
-		. character syntax.assignment
-		. value
+	entry rule
+		condition sequence
+			. function
+			. alternatives
+				. lookupString
+				. lookupAnything
+			. optional character syntax.assignment
+			. value
+		result
+			arg|
+				[arg.[2]] arg.[4]
 	dedentation rule
 		condition
 			|
@@ -200,13 +204,13 @@ text|
 		post dedentation
 	file mapCore
 	expression
-		text|
+		parser|
 			localRule rule
 				condition alternatives
 					. literalExpression
 				result
 					arg|arg
-			current localRule text
+			current localRule parser
 	function rule
 		condition sequence
 			. zeroOrMore characterExcept
@@ -303,10 +307,10 @@ text|
 	program rule
 		condition sequence
 			.
-				text|
+				parser|
 					. "p.defaultKeys.Push 1"
 					result 0
-					rest text
+					rest parser
 			. sequence
 				. indentation
 				. rule
@@ -320,7 +324,7 @@ text|
 						. dedentation
 					. statement
 			. 
-				text|"p.defaultKeys.Pop 0"
+				parser|"p.defaultKeys.Pop 0"
 		result
 			arg|
 				[codeKeys.program] arg.[2]
@@ -460,18 +464,18 @@ character
 	documentation "Matches one character."
 	char|rule
 		condition
-			text|if
-				condition not zero text
+			parser|if
+				condition not zero parser
 				then
 					|if
 						condition equal
-							. first text
+							. first parser
 							. char
 						then
 							|
-								result first text
+								result first parser
 								rest slice
-									array text
+									array parser
 									start 2
 		result
 			char|char
@@ -479,18 +483,18 @@ characterSet
 	documentation "Matches one character in a set."
 	chars|rule
 		condition
-			text|if
-				condition not zero text
+			parser|if
+				condition not zero parser
 				then
 					|if
 						condition contains
-							value first text
+							value first parser
 							array chars
 						then
 							|
-								result first text
+								result first parser
 								rest slice
-									array text
+									array parser
 									start 2
 						else
 							|0
@@ -500,18 +504,18 @@ characterExcept
 	documentation "Matches one character that is not the provided character."
 	chars|rule
 		condition
-			text|if
-				condition not zero text
+			parser|if
+				condition not zero parser
 				then
 					|if
 						condition not contains
-							value first text
+							value first parser
 							array chars
 						then
 							|
-								result first text
+								result first parser
 								rest slice
-									array text
+									array parser
 									start 2
 		result
 			char|char
@@ -525,9 +529,9 @@ oneOrMore
 	documentation "Matches one or more times."
 	status "untested"
 	rule|
-		text|
+		parser|
 			loop zeroOrMore rule
-			loopResult loop text
+			loopResult loop parser
 			current if
 				condition not zero loopResult
 				then
@@ -538,8 +542,8 @@ oneOrMore
 zeroOrMore
 	documentation "Matches zero or more times."
 	rule|
-		text|
-			rest text
+		parser|
+			rest parser
 			result while
 				condition
 					|not zero rule rest
@@ -551,8 +555,8 @@ zeroOrMore
 sequence
 	documentation "Matches a sequence of rules."
 	rules|
-		text|
-			rest text
+		parser|
+			rest parser
 			allMatched 1
 			applied apply
 				array rules
@@ -580,8 +584,8 @@ sequence
 prePost
 	documentation "Matches a rule and throws away the results of a preceding and a following rule."
 	arg|
-		text|
-			preResult arg.pre text
+		parser|
+			preResult arg.pre parser
 			current if
 				condition not zero preResult
 				then
@@ -601,15 +605,15 @@ prePost
 alternatives
 	documentation "Matches one of several alternative rules."
 	alts|
-		text|
+		parser|
 			result 0
-			rest text
+			rest parser
 			matched 0
 			. apply
 				array alts
 				condition
 					alt|
-						applied alt text
+						applied alt parser
 						current if
 							condition hasKey
 								map applied
@@ -633,8 +637,8 @@ alternatives
 nTimes
 	documentation "Matches a rule n times"
 	arg|
-		text|
-			rest text
+		parser|
+			rest parser
 			allMatched 1
 			applied apply
 				array range arg.n
@@ -663,8 +667,8 @@ nTimes
 rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
-		text|
-			map arg.condition text
+		parser|
+			map arg.condition parser
 			stuff if
 				condition hasKey
 					map map
@@ -676,8 +680,8 @@ rule
 			current stuff
 optional
 	subRule|
-		text|
-			subRuleResult subRule text
+		parser|
+			subRuleResult subRule parser
 			current if
 				condition hasKey
 					map subRuleResult
@@ -686,5 +690,5 @@ optional
 					|subRuleResult
 				else
 					|
-						rest text
+						rest parser
 						result 0
