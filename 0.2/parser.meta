@@ -25,8 +25,8 @@ text|
 		negative '-'
 		fraction '/'
 		endOfFile 65535
-		indentation 13
-		unixNewLine 12
+		indentation 9
+		unixNewLine 10
 		function '|'
 		string '"'
 		lookupStart '['
@@ -37,15 +37,17 @@ text|
 		character 39
 		assignment ' '
 		space ' '
-		tab 13
-		windowsNewLine "\r\n"
+		tab 9
 		mapCurrent "current"
 		integer "0123456789"
+		windowsNewLine
+			. 13
+			. 10
 		lookupStringForbidden
 			. call
 			. indentation
-			. "\r"
-			. "\n"
+			. 13
+			. 10
 			. assignment
 			. select
 			. function
@@ -143,8 +145,7 @@ text|
 		rule zeroOrMore characterExcept
 			. syntax.string
 		post character syntax.string
-	lookupString oneOrMore characterExcept
-		. syntax.lookupStringForbidden
+	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
 		text|
 			rule alternatives
@@ -237,10 +238,9 @@ text|
 			|
 				["current"] 0
 	realLookup rule
-		condition sequence
-			. alternatives
-				. lookupStringExpression
-				. lookupAnythingExpression
+		condition alternatives
+			. lookupStringExpression
+			. lookupAnythingExpression
 		result
 			arg|
 				[codeKeys.lookup] arg
@@ -395,6 +395,8 @@ text|
 	untested "!!!!!!"
 	stringCharacter characterExcept
 		. syntax.string
+	testRule zeroOrMore characterExcept
+		. '.'
 	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string "
@@ -404,6 +406,7 @@ text|
 			integer number "483821"
 		lookupStringTest
 			simple lookupStringExpression "hello"
+			shouldPartlyMatch lookupStringExpression "hello.hello"
 		expressionTest
 			stringTest expression "
 				"hello"
@@ -412,7 +415,8 @@ text|
 			stringTest literalExpression "
 				"hello"
 			"
-			characterTest characterDataExpression "'a'"
+			characterTest literalExpression "'a'"
+			emptyMapTest literalExpression "0"
 		lookupAnythingTest
 			simple lookupAnythingExpression "
 				["hello"]
@@ -423,6 +427,12 @@ text|
 			shouldMatch ruleCurrent "current"
 			shouldNotMatch ruleCurrent "hello"
 		lookupTest lookup "hello"
+		selectTest
+			singleTest select "hello"
+			severalTest select "hello.hello"
+			complexTest select "
+				hello.["world"]
+			"
 character
 	documentation "Matches one character."
 	char|rule

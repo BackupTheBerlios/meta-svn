@@ -15,6 +15,10 @@ lookupStringTest
 		result 
 			literal "hello"
 		rest 0
+	shouldPartlyMatch 
+		result 
+			literal "hello"
+		rest ".hello"
 expressionTest 
 	stringTest 
 		result 
@@ -26,7 +30,12 @@ literalTest
 			literal "hello"
 		rest 0
 	characterTest 
-		result 97
+		result 
+			literal 0
+		rest "'a'"
+	emptyMapTest 
+		result 
+			literal 0
 		rest 0
 lookupAnythingTest 
 	simple 
@@ -51,7 +60,31 @@ ruleCurrentTest
 lookupTest 
 	result 
 		lookup 
-			[1] 
-				literal "hello"
+			literal "hello"
 	rest 0
+selectTest 
+	singleTest 
+		result 
+			[1] 
+				search 
+					literal "hello"
+		rest 0
+	severalTest 
+		result 
+			[1] 
+				search 
+					literal "hello"
+			[2] 
+				lookup 
+					literal "hello"
+		rest 0
+	complexTest 
+		result 
+			[1] 
+				search 
+					literal "hello"
+			[2] 
+				lookup 
+					literal "world"
+		rest 0
 "
