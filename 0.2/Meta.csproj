@@ -109,7 +109,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Copy of rest.meta" />
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />

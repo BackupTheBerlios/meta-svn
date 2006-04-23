@@ -1032,6 +1032,7 @@ namespace Meta
 	}
 	public class Library
 	{
+
 		public static Map Last(Map arg)
 		{
 			return arg[arg.ArrayCount];
@@ -1345,9 +1346,12 @@ namespace Meta
 		}
 		public static Map And(Map arg)
 		{
-			bool and = true; ;
-			foreach (Map map in arg.Array)
+			bool and = true;
+			Position argument = Call.lastArgument;
+
+			foreach (Position callable in argument.Array)
 			{
+				Map map = callable.Call(Map.Empty).Get();
 				if (!map.GetBoolean())
 				{
 					and = false;
@@ -1356,6 +1360,19 @@ namespace Meta
 			}
 			return and;
 		}
+		//public static Map And(Map arg)
+		//{
+		//    bool and = true; ;
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        if (!map.GetBoolean())
+		//        {
+		//            and = false;
+		//            break;
+		//        }
+		//    }
+		//    return and;
+		//}
 		public static Map Reciprocal(Map arg)
 		{
 			Number number = arg.GetNumber();
@@ -2347,7 +2364,20 @@ namespace Meta
 	public delegate void BustOptimization();
 	public class Position
 	{
-		public Position AddCall(Map map)
+		public List<Position> Array
+		{
+			get
+			{
+				Map map=Get();
+				List<Position> array = new List<Position>();
+				for (int i = 1; i < map.ArrayCount; i++)
+				{
+					array.Add(new Position(this,i));
+				}
+				return array;
+			}
+		}
+			public Position AddCall(Map map)
 		{
 			Map got = Get();
 			got.numCalls++;

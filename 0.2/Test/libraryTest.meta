@@ -6,15 +6,23 @@
 				false not 1
 			and
 				true and
-					. 1
-					. 1
-					. 1
-					. 1
+					.
+						|1
+					. 
+						|1
+					. 
+						|1
+					. 
+						|1
 				false and
-					. 1
-					. 0
-					. 1
-					. 1
+					. 
+						|1
+					. 
+						|0
+					. 
+						|1
+					. 
+						|1
 			orTest
 				true or
 					. 1

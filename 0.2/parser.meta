@@ -61,6 +61,266 @@ parser|
 			. callStart
 			. callEnd
 			. character
+	character
+		documentation "Matches one character."
+		char|rule
+			condition
+				parser|if
+					condition not zero parser.text
+					then
+						|if
+							condition equal
+								. first parser.text
+								. char
+							then
+								|
+									parsed first parser.text
+									text slice
+										array parser.text
+										start 2
+			result
+				char|char
+	characterSet
+		documentation "Matches one character in a set."
+		chars|rule
+			condition
+				parser|if
+					condition not zero parser.text
+					then
+						|if
+							condition contains
+								value first parser.text
+								array chars
+							then
+								|
+									parsed first parser.text
+									text slice
+										array parser.text
+										start 2
+							else
+								|0
+			result
+				char|char
+	characterExcept
+		documentation "Matches one character that is not the provided character."
+		chars|rule
+			condition
+				parser|if
+					condition not zero parser.text
+					then
+						|if
+							condition not contains
+								value first parser.text
+								array chars
+							then
+								|
+									parsed first parser.text
+									text slice
+										array parser.text
+										start 2
+			result
+				char|char
+	stringRule
+		documentation "Matches the provided sequence of characters."
+		string|sequence apply
+			array string
+			function
+				char|character char
+	oneOrMore
+		documentation "Matches one or more times."
+		status "untested"
+		arg|rule
+			condition
+				parser|
+					loop zeroOrMore arg
+					loopResult loop
+						text parser.text
+					current if
+						condition hasKey
+							map loopResult
+							key "parsed"
+						then
+							|if
+								condition not zero loopResult.parsed
+								then
+									|loopResult
+	zeroOrMore
+		arg|rule
+			condition
+				parser|
+					text parser.text
+					parsed while
+						condition
+							|not zero arg
+								text text
+						function
+							|
+								argResult arg
+									text text
+								$text argResult.text
+								current argResult.parsed
+	sequence
+		documentation "Matches a sequence of rules."
+		rules|rule
+			condition
+				parser|
+					text parser.text
+					allMatched 1
+					applied apply
+						array rules
+						function
+							rule|
+								ruleResult rule
+									text text
+								current if
+									condition hasKey
+										map ruleResult
+										key "parsed"
+									then
+										|
+											$text ruleResult.text
+											current ruleResult.parsed
+									else
+										|
+											$allMatched 0
+											current 0
+					current if
+						condition allMatched
+						then
+							|
+								parsed applied
+								text text
+	prePost
+		documentation "Matches a rule and throws away the results of a preceding and a following rule."
+		arg|rule
+			condition
+				parser|
+					preResult arg.pre
+						text parser.text
+					current if
+						condition hasKey
+							map preResult
+							key "parsed"
+						then
+							|
+								ruleResult arg.rule
+									text preResult.text
+								current if
+									condition hasKey
+										map ruleResult
+										key "parsed"
+									then
+										|
+											postResult arg.post
+												text ruleResult.text
+											current if
+												condition hasKey
+													map postResult
+													key "parsed"
+												then
+													|
+														parsed ruleResult.parsed
+														text postResult.text
+	alternatives
+		documentation "Matches one of several alternative rules."
+		alts|rule
+			condition
+				parser|
+					parsed 0
+					text parser.text
+					matched 0
+					. apply
+						array alts
+						condition
+							alt|
+								applied alt
+									text parser.text
+								current if
+									condition hasKey
+										map applied
+										key "parsed"
+									then
+										|
+											$parsed applied.parsed
+											$text applied.text
+											$matched 1
+											current 0
+									else
+										|1
+						function
+							|0
+					current if
+						condition matched
+						then
+							|
+								parsed parsed
+								text text
+	nTimes
+		documentation "Matches a rule n times"
+		arg|rule
+			condition
+				parser|
+					text parser.text
+					allMatched 1
+					applied apply
+						array range arg.n
+						condition
+							|if
+								condition not hasKey
+									map arg.rule parser
+									key "parsed"
+								then
+									|
+										$allMatched 0
+										current 0
+								else
+									|1
+						function
+							|
+								ruleResult rule
+									text text
+								$text ruleResult.text
+								current ruleResult.parsed
+					current if
+						condition allMatched
+						then
+							|
+								parsed applied
+	rule
+		arg|
+			parser|
+				map arg.condition parser
+				stuff if
+					condition hasKey
+						map map
+						key "parsed"
+					then
+						|
+							$map.parsed if
+								condition hasKey
+									map arg
+									key "result"
+								then
+									|arg.result map.parsed
+								else
+									|map.parsed
+							current merge
+								. parser
+								. map
+				current stuff
+	optional
+		subRule|
+			parser|
+				subRuleResult subRule parser
+				current if
+					condition hasKey
+						map subRuleResult
+						key "parsed"
+					then
+						|subRuleResult
+					else
+						|
+							parsed 0
 	number rule
 		condition oneOrMore characterSet syntax.integer
 		result
@@ -208,8 +468,6 @@ parser|
 			localRule rule
 				condition alternatives
 					. literalExpression
-				result
-					arg|arg
 			current localRule
 				text parser.text
 	function rule
@@ -487,248 +745,3 @@ parser|
 				text "					 "
 			shouldNotMatch whitespace
 				text "			kj	"
-character
-	documentation "Matches one character."
-	char|rule
-		condition
-			parser|if
-				condition not zero parser.text
-				then
-					|if
-						condition equal
-							. first parser.text
-							. char
-						then
-							|
-								parsed first parser.text
-								text slice
-									array parser.text
-									start 2
-		result
-			char|char
-characterSet
-	documentation "Matches one character in a set."
-	chars|rule
-		condition
-			parser|if
-				condition not zero parser.text
-				then
-					|if
-						condition contains
-							value first parser.text
-							array chars
-						then
-							|
-								parsed first parser.text
-								text slice
-									array parser.text
-									start 2
-						else
-							|0
-		result
-			char|char
-characterExcept
-	documentation "Matches one character that is not the provided character."
-	chars|rule
-		condition
-			parser|if
-				condition not zero parser.text
-				then
-					|if
-						condition not contains
-							value first parser.text
-							array chars
-						then
-							|
-								parsed first parser.text
-								text slice
-									array parser.text
-									start 2
-		result
-			char|char
-stringRule
-	documentation "Matches the provided sequence of characters."
-	string|sequence apply
-		array string
-		function
-			char|character char
-oneOrMore
-	documentation "Matches one or more times."
-	status "untested"
-	rule|
-		parser|
-			loop zeroOrMore rule
-			loopResult loop
-				text parser.text
-			current if
-				condition not zero loopResult
-				then
-					|if
-						condition not zero loopResult.parsed
-						then
-							|loopResult
-zeroOrMore
-	documentation "Matches zero or more times."
-	rule|
-		parser|
-			text parser.text
-			parsed while
-				condition
-					|not zero rule
-						text text
-				function
-					|
-						ruleResult rule
-							text text
-						$text ruleResult.text
-						current ruleResult.parsed
-sequence
-	documentation "Matches a sequence of rules."
-	rules|
-		parser|
-			text parser.text
-			allMatched 1
-			applied apply
-				array rules
-				function
-					rule|
-						ruleResult rule
-							text text
-						current if
-							condition hasKey
-								map ruleResult
-								key "parsed"
-							then
-								|
-									$text ruleResult.text
-									current ruleResult.parsed
-							else
-								|
-									$allMatched 0
-									current 0
-			current if
-				condition allMatched
-				then
-					|
-						parsed applied
-						text text
-prePost
-	documentation "Matches a rule and throws away the results of a preceding and a following rule."
-	arg|
-		parser|
-			preResult arg.pre
-				text parser.text
-			current if
-				condition not zero preResult
-				then
-					|
-						ruleResult arg.rule
-							text preResult.text
-						current if
-							condition not zero ruleResult
-							then
-								|
-									postResult arg.post
-										text ruleResult.text
-									current if
-										condition not zero postResult
-										then
-											|
-												parsed ruleResult.parsed
-												text postResult.text
-alternatives
-	documentation "Matches one of several alternative rules."
-	alts|
-		parser|
-			parsed 0
-			text parser.text
-			matched 0
-			. apply
-				array alts
-				condition
-					alt|
-						applied alt
-							text parser.text
-						current if
-							condition hasKey
-								map applied
-								key "parsed"
-							then
-								|
-									$parsed applied.parsed
-									$text applied.text
-									$matched 1
-									current 0
-							else
-								|1
-				function
-					|0
-			current if
-				condition matched
-				then
-					|
-						parsed parsed
-						text text
-nTimes
-	documentation "Matches a rule n times"
-	arg|
-		parser|
-			text parser.text
-			allMatched 1
-			applied apply
-				array range arg.n
-				condition
-					|if
-						condition not hasKey
-							map arg.rule
-								text text
-							key "parsed"
-						then
-							|
-								$allMatched 0
-								current 0
-						else
-							|1
-				function
-					|
-						ruleResult rule
-							text text
-						$text ruleResult.text
-						current ruleResult.parsed
-			current if
-				condition allMatched
-				then
-					|
-						parsed applied
-						text text
-rule
-	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
-	arg|
-		parser|
-			map arg.condition
-				text parser.text
-			stuff if
-				condition hasKey
-					map map
-					key "parsed"
-				then
-					|
-						$map.parsed arg.result map.parsed
-						current merge
-							. parser
-							. map
-			current stuff
-optional
-	subRule|
-		parser|
-			subRuleResult subRule
-				text parser.text
-			current if
-				condition hasKey
-					map subRuleResult
-					key "parsed"
-				then
-					|subRuleResult
-				else
-					|
-						parsed 0
