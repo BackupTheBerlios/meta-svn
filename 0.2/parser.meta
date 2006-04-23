@@ -265,6 +265,40 @@ parser|
 						then
 							|
 								parsed applied
+	nTimes
+		arg|rule
+			condition
+				parser|
+					implementation
+						impArg|if
+							condition equal
+								. impArg.n
+								. 0
+							then
+								|impArg.parser
+							else
+								|
+									res arg.rule impArg.parser
+									. print res
+									current if
+										condition succeeded res
+										then
+											|
+												nextResult implementation
+													parser res
+													n subtract
+														. impArg.n
+														. 1
+												current 
+													parsed join
+														. 
+															. res.parsed
+														. nextResult.parsed
+													text nextResult.text
+													indentationCount nextResult.indentationCount
+					current implementation
+						parser parser
+						n arg.n
 	rule
 		arg|
 			parser|
@@ -321,17 +355,19 @@ parser|
 					rule character syntax.indentation
 		result
 			|
-				$indentationCount add
+				indentationCount add
 					. indentationCount
 					. 1
 	indentation rule
 		condition
-			parser|if
-				condition startOfFile
-				then
-					|
-						parsed 0
-						text parser.text
+			parser|
+				localRule nTimes
+					n add
+						. parser.indentationCount
+						. 1
+					rule character syntax.indentation
+				ruleResult localRule parser
+				current ruleResult
 		result
 			|"hello"
 	sameIndentation
@@ -714,3 +750,7 @@ parser|
 				text "					 "
 			shouldNotMatch whitespace
 				text "			kj	"
+		indentationTest
+			shouldMatch indentation
+				text "	"
+				indentationCount 0
