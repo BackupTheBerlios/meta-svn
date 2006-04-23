@@ -18,8 +18,6 @@ parser|
 		expression "expression"
 	syntax
 		autokey '.'
-		callStart '('
-		callEnd ')'
 		root '/'
 		search '$'
 		negative '-'
@@ -29,8 +27,9 @@ parser|
 		unixNewLine 10
 		function '|'
 		string '"'
-		lookupStart '['
-		lookupEnd ']'
+		lookup
+			start '['
+			end ']'
 		emptyMap '0'
 		call ' '
 		select '.'
@@ -43,7 +42,7 @@ parser|
 		windowsNewLine
 			. 13
 			. 10
-		lookupStringForbidden
+		lookupForbidden
 			. call
 			. indentation
 			. 13
@@ -52,13 +51,11 @@ parser|
 			. select
 			. function
 			. string
-			. lookupStart
-			. lookupEnd
+			. lookup.start
+			. lookup.end
 			. emptyMap
 			. search
 			. root
-			. callStart
-			. callEnd
 			. character
 	rule
 		arg|
@@ -356,19 +353,6 @@ parser|
 	stringLine zeroOrMore characterExcept
 		. syntax.unixNewLine
 		. syntax.windowsNewLine.[1]
-	stringDedentation 
-		rule sequence
-			. endOfLine
-			. |nTimes
-				n subtract
-					. indentationCount
-					. 1
-				rule character syntax.indentation
-		result
-			arg|
-				indentationCount subtract
-					. arg.indentationCount
-					. 1
 	characterDataExpression prePost
 		pre character syntax.character
 		rule characterExcept
@@ -394,7 +378,7 @@ parser|
 		post sequence
 			. optional newLine
 			. optional character syntax.string
-	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
+	lookupString oneOrMore characterExcept syntax.lookupForbidden
 	value
 		parser|
 			rule alternatives
@@ -405,10 +389,10 @@ parser|
 			current rule parser.text
 	lookupAnything rule
 		condition sequence
-			. character syntax.lookupStart
+			. character syntax.lookup.start
 			. value
 			. zeroOrMore syntax.indentation
-			. character syntax.lookupEnd
+			. character syntax.lookup.end
 		result
 			arg|
 				parsed arg.parsed.[2]
@@ -465,10 +449,10 @@ parser|
 					[codeKeys.expression] arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence
-			. character syntax.lookupStart
+			. character syntax.lookup.start
 			. expression
 			. zeroOrMore character syntax.indentation
-			. character syntax.lookupEnd
+			. character syntax.lookup.end
 		result
 			arg|
 				parsed arg.parsed.[2]
