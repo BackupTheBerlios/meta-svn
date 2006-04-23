@@ -97,7 +97,7 @@ parser|
 				then
 					|
 						parsed 0
-						text parser
+						text parser.text
 		result
 			|"hello"
 	sameIndentation
@@ -157,7 +157,7 @@ parser|
 				. string
 				. number
 				. characterDataExpression
-			current rule parser
+			current rule parser.text
 	lookupAnything rule
 		condition sequence
 			. character syntax.lookupStart
@@ -210,7 +210,8 @@ parser|
 					. literalExpression
 				result
 					arg|arg
-			current localRule parser
+			current localRule
+				text parser.text
 	function rule
 		condition sequence
 			. zeroOrMore characterExcept
@@ -310,7 +311,7 @@ parser|
 				parser|
 					. "p.defaultKeys.Push 1"
 					parsed 0
-					text parser
+					text parser.text.text
 			. sequence
 				. indentation
 				. rule
@@ -405,77 +406,103 @@ parser|
 		. '.'
 	current /.Meta.Serialize.ValueFunction
 		stringTest
-			singleLine string "
-				"12344321 asdfasdf"
-			"
+			singleLine string
+				text "
+					"12344321 asdfasdf"
+				"
 		numberTest
-			integer number "483821"
+			integer number
+				text "483821"
 		lookupStringTest
-			simple lookupStringExpression "hello"
-			shouldPartlyMatch lookupStringExpression "hello.hello"
+			simple lookupStringExpression
+				text "hello"
+			shouldPartlyMatch lookupStringExpression
+				text "hello.hello"
 		expressionTest
-			stringTest expression "
-				"hello"
-			"
+			stringTest expression
+				text "
+					"hello"
+				"
 		literalTest
-			stringTest literalExpression "
-				"hello"
-			"
-			characterTest literalExpression "'a'"
-			emptyMapTest literalExpression "0"
+			stringTest literalExpression 
+				text "
+					"hello"
+				"
+			characterTest literalExpression 
+				text "'a'"
+			emptyMapTest literalExpression 
+				text "0"
 		lookupAnythingTest
-			simple lookupAnythingExpression "
-				["hello"]
-			"
-		searchTest search "hello"
-		rootTest root "/"
+			simple lookupAnythingExpression
+				text "
+					["hello"]
+				"
+		searchTest search
+			text "hello"
+		rootTest root
+			text "/"
 		ruleCurrentTest 
-			shouldMatch ruleCurrent "current"
-			shouldNotMatch ruleCurrent "hello"
-		lookupTest lookup "hello"
+			shouldMatch ruleCurrent
+				text "current"
+			shouldNotMatch ruleCurrent
+				text "hello"
+		lookupTest lookup
+			text "hello"
 		selectTest
-			singleTest select "hello"
-			severalTest select "hello.hello"
-			complexTest select "
-				hello.["world"]
-			"
+			singleTest select
+				text "hello"
+			severalTest select
+				text "hello.hello"
+			complexTest select
+				text"
+					hello.["world"]
+				"
 		keysSearchTest
-			simple keysSearch "$hello"
+			simple keysSearch
+				text "$hello"
 		keysTest
-			simple keys "hello.hello"
+			simple keys
+				text "hello.hello"
 		callTest
-			simple call "
-				hello "hi"
-			"
+			simple call
+				text "
+					hello "hi"
+				"
 		endOfLineTest
 			unix
 				shouldMatch endOfLine
-					. 10
-				shouldNotMatch endOfLine "hello"
+					text
+						. 10
+				shouldNotMatch endOfLine
+					text "hello"
 			windows 
 				shouldMatch endOfLine
-					. 13
-					. 10
-				shouldNotMatch endOfLine "hello"
+					text 
+						. 13
+						. 10
+				shouldNotMatch endOfLine
+					text "hello"
 		whitespaceTest
-			shouldMatch whitespace "					 "
-			shouldNotMatch whitespace "			kj	"
+			shouldMatch whitespace
+				text "					 "
+			shouldNotMatch whitespace
+				text "			kj	"
 character
 	documentation "Matches one character."
 	char|rule
 		condition
 			parser|if
-				condition not zero parser
+				condition not zero parser.text
 				then
 					|if
 						condition equal
-							. first parser
+							. first parser.text
 							. char
 						then
 							|
-								parsed first parser
+								parsed first parser.text
 								text slice
-									array parser
+									array parser.text
 									start 2
 		result
 			char|char
@@ -484,17 +511,17 @@ characterSet
 	chars|rule
 		condition
 			parser|if
-				condition not zero parser
+				condition not zero parser.text
 				then
 					|if
 						condition contains
-							value first parser
+							value first parser.text
 							array chars
 						then
 							|
-								parsed first parser
+								parsed first parser.text
 								text slice
-									array parser
+									array parser.text
 									start 2
 						else
 							|0
@@ -505,17 +532,17 @@ characterExcept
 	chars|rule
 		condition
 			parser|if
-				condition not zero parser
+				condition not zero parser.text
 				then
 					|if
 						condition not contains
-							value first parser
+							value first parser.text
 							array chars
 						then
 							|
-								parsed first parser
+								parsed first parser.text
 								text slice
-									array parser
+									array parser.text
 									start 2
 		result
 			char|char
@@ -531,7 +558,8 @@ oneOrMore
 	rule|
 		parser|
 			loop zeroOrMore rule
-			loopResult loop parser
+			loopResult loop
+				text parser.text
 			current if
 				condition not zero loopResult
 				then
@@ -543,26 +571,29 @@ zeroOrMore
 	documentation "Matches zero or more times."
 	rule|
 		parser|
-			text parser
+			text parser.text
 			parsed while
 				condition
-					|not zero rule text
+					|not zero rule
+						text text
 				function
 					|
-						ruleResult rule text
+						ruleResult rule
+							text text
 						$text ruleResult.text
 						current ruleResult.parsed
 sequence
 	documentation "Matches a sequence of rules."
 	rules|
 		parser|
-			text parser
+			text parser.text
 			allMatched 1
 			applied apply
 				array rules
 				function
 					rule|
-						ruleResult rule text
+						ruleResult rule
+							text text
 						current if
 							condition hasKey
 								map ruleResult
@@ -585,17 +616,20 @@ prePost
 	documentation "Matches a rule and throws away the results of a preceding and a following rule."
 	arg|
 		parser|
-			preResult arg.pre parser
+			preResult arg.pre
+				text parser.text
 			current if
 				condition not zero preResult
 				then
 					|
-						ruleResult arg.rule preResult.text
+						ruleResult arg.rule
+							text preResult.text
 						current if
 							condition not zero ruleResult
 							then
 								|
-									postResult arg.post ruleResult.text
+									postResult arg.post
+										text ruleResult.text
 									current if
 										condition not zero postResult
 										then
@@ -607,13 +641,14 @@ alternatives
 	alts|
 		parser|
 			parsed 0
-			text parser
+			text parser.text
 			matched 0
 			. apply
 				array alts
 				condition
 					alt|
-						applied alt parser
+						applied alt
+							text parser.text
 						current if
 							condition hasKey
 								map applied
@@ -638,14 +673,15 @@ nTimes
 	documentation "Matches a rule n times"
 	arg|
 		parser|
-			text parser
+			text parser.text
 			allMatched 1
 			applied apply
 				array range arg.n
 				condition
 					|if
 						condition not hasKey
-							map arg.rule text
+							map arg.rule
+								text text
 							key "parsed"
 						then
 							|
@@ -656,6 +692,7 @@ nTimes
 				function
 					|
 						ruleResult rule
+							text text
 						$text ruleResult.text
 						current ruleResult.parsed
 			current if
@@ -668,7 +705,8 @@ rule
 	documentation "A rule returns the result in 'result' or an empty map, if the rule did not match."
 	arg|
 		parser|
-			map arg.condition parser
+			map arg.condition
+				text parser.text
 			stuff if
 				condition hasKey
 					map map
@@ -681,7 +719,8 @@ rule
 optional
 	subRule|
 		parser|
-			subRuleResult subRule parser
+			subRuleResult subRule
+				text parser.text
 			current if
 				condition hasKey
 					map subRuleResult
@@ -690,5 +729,5 @@ optional
 					|subRuleResult
 				else
 					|
-						text parser
+						text parser.text
 						parsed 0
