@@ -135,6 +135,7 @@
     <None Include="Library\isNumber.meta" />
     <None Include="Library\last.meta" />
     <None Include="Library\multiply.meta" />
+    <None Include="Library\null.meta" />
     <None Include="Library\parse.meta" />
     <None Include="Library\random.meta" />
     <None Include="Library\reciprocal.meta" />
@@ -163,7 +164,6 @@
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
-    <None Include="Library\zero.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="parser.meta" />

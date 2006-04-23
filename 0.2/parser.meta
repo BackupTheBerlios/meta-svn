@@ -1,22 +1,21 @@
-integer "0123456789"
-codeKeys
-	parameterName "parameterName"
-	root "root"
-	search "search"
-	lookup "lookup"
-	current "current"
-	scope "scope"
-	literal "literal"
-	function "function"
-	call "call"
-	callable "callable"
-	argument "argument"
-	select "select"
-	program "program"
-	key "key"
-	value "value"
-	expression "expression"
 parser|
+	codeKeys
+		parameterName "parameterName"
+		root "root"
+		search "search"
+		lookup "lookup"
+		mapCurrent "current"
+		scope "scope"
+		literal "literal"
+		function "function"
+		call "call"
+		callable "callable"
+		argument "argument"
+		select "select"
+		program "program"
+		key "key"
+		value "value"
+		expression "expression"
 	syntax
 		autokey '.'
 		callStart '('
@@ -61,24 +60,50 @@ parser|
 			. callStart
 			. callEnd
 			. character
-	character
-		documentation "Matches one character."
-		char|rule
+	rule
+		arg|
+			parser|
+				map arg.condition parser
+				stuff if
+					condition succeeded map
+					then
+						|
+							$map if
+								condition hasKey
+									map arg
+									key "result"
+								then
+									|merge
+										. map
+										. arg.result merge
+											. parser
+											. map
+								else
+									|map
+							current merge
+								. parser
+								. map
+				current stuff
+	charRule
+		comparison|rule
 			condition
 				parser|if
 					condition and
 						.
-							|not zero parser.text
-						.
-							|equal
-								. first parser.text
-								. char
+							|not null parser.text
+						. 
+							|comparison parser
 					then
 						|
 							parsed first parser.text
 							text slice
 								array parser.text
 								start 2
+	character
+		char|charRule
+			parser|equal
+				. first parser.text
+				. char
 	characterSet
 		documentation "Matches one character in a set."
 		chars|rule
@@ -86,7 +111,7 @@ parser|
 				parser|if
 					condition and
 						. 
-							|not zero parser.text
+							|not null parser.text
 						.
 							|contains
 								array chars
@@ -104,7 +129,7 @@ parser|
 				parser|if
 					condition and
 						. 
-							|not zero parser.text
+							|not null parser.text
 						.
 							|not contains
 								value first parser.text
@@ -133,7 +158,7 @@ parser|
 							.
 								|succeeded loopResult
 							.
-								|not zero loopResult.parsed
+								|not null loopResult.parsed
 						then
 							|loopResult
 	zeroOrMore
@@ -282,30 +307,6 @@ parser|
 					current implementation
 						parser parser
 						n arg.n
-	rule
-		arg|
-			parser|
-				map arg.condition parser
-				stuff if
-					condition succeeded map
-					then
-						|
-							$map if
-								condition hasKey
-									map arg
-									key "result"
-								then
-									|merge
-										. map
-										. arg.result merge
-											. parser
-											. map
-								else
-									|map
-							current merge
-								. parser
-								. map
-				current stuff
 	optional
 		subRule|
 			parser|
@@ -513,7 +514,7 @@ parser|
 		result
 			|
 				parsed
-					["current"] 0
+					[codeKeys.mapCurrent] 0
 	realLookup rule
 		condition alternatives
 			. lookupStringExpression
