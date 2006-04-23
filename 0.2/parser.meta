@@ -152,34 +152,40 @@ parser|
 								$text argResult.text
 								current argResult.parsed
 	sequence
-		documentation "Matches a sequence of rules."
 		rules|rule
 			condition
 				parser|
-					text parser.text
-					allMatched 1
-					applied apply
-						array rules
-						function
-							rule|
-								ruleResult rule
-									text text
-								current if
-									condition succeeded ruleResult
-									then
-										|
-											$text ruleResult.text
-											current ruleResult.parsed
-									else
-										|
-											$allMatched 0
-											current 0
-					current if
-						condition allMatched
-						then
-							|
-								parsed applied
-								text text
+					implementation
+						arg|if
+							condition hasKey
+								map arg.rules
+								key 1
+							then
+								|
+									ruleResult arg.rules.[1] arg.parser
+									current if
+										condition succeeded ruleResult
+										then
+											|
+												nextResult implementation
+													parser ruleResult
+													rules rest arg.rules
+												current if
+													condition succeeded nextResult
+													then
+														|
+															text nextResult.text
+															parsed join
+																.
+																	. ruleResult.parsed
+																. nextResult.parsed
+													else
+														|nextResult
+							else
+								|arg.parser
+					current implementation
+						parser parser
+						rules rules
 	prePost
 		documentation "Matches a rule and throws away the results of a preceding and a following rule."
 		arg|rule
@@ -294,12 +300,11 @@ parser|
 		condition oneOrMore characterSet syntax.integer
 		result
 			parser|/.Meta.Number.Parse parser
-	untested "!!!!!!"
 	newline alternatives
 		. character syntax.unixNewLine
 		. stringRule syntax.windowsNewLine
 	endOfLine sequence
-		. zeroOrMore alternatives
+		. zeroOrMore characterSet
 			. character syntax.space
 			. character syntax.tab
 		. newline
@@ -626,11 +631,6 @@ parser|
 					arg|arg.[2]
 		result
 			arg|join arg
-	untested "!!!!!!"
-	stringCharacter characterExcept
-		. syntax.string
-	testRule zeroOrMore characterExcept
-		. '.'
 	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string

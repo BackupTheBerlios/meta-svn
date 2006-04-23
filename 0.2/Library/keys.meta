@@ -1,4 +1,2 @@
 documentation "Returns the keys of a map in an array."
-map|
-	object /.Meta.ObjectMap.[/.Meta.Map] map
-	current /.Meta.StrategyMap.[/.mscorlib.["ICollection`1"].[/.Meta.Map]] object.Keys
+map|/.Meta.Library.Keys map

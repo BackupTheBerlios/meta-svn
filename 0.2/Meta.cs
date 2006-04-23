@@ -1032,6 +1032,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Keys(Map arg)
+		{
+			return new StrategyMap(arg.Keys);
+		}
 		public static Map Rest(Map arg)
 		{
 			return new StrategyMap(arg.Array.GetRange(1, arg.Array.Count - 1));
