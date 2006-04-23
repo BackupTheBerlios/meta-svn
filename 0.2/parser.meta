@@ -105,62 +105,20 @@ parser|
 				. first parser.text
 				. char
 	characterSet
-		documentation "Matches one character in a set."
-		chars|rule
-			condition
-				parser|if
-					condition and
-						. 
-							|not null parser.text
-						.
-							|contains
-								array chars
-								value first parser.text
-					then
-						|
-							parsed first parser.text
-							text slice
-								array parser.text
-								start 2
+		chars|charRule
+			parser|contains
+				array chars
+				value first parser.text
 	characterExcept
-		documentation "Matches one character that is not the provided character."
-		chars|rule
-			condition
-				parser|if
-					condition and
-						. 
-							|not null parser.text
-						.
-							|not contains
-								value first parser.text
-								array chars
-					then
-						|
-							parsed first parser.text
-							text slice
-								array parser.text
-								start 2
+		chars|charRule
+			parser|not contains
+				value first parser.text
+				array chars
 	stringRule
-		documentation "Matches the provided sequence of characters."
 		string|sequence apply
 			array string
 			function
 				char|character char
-	oneOrMore
-		arg|rule
-			condition
-				parser|
-					loop zeroOrMore arg
-					loopResult loop
-						text parser.text
-					current if
-						condition and
-							.
-								|succeeded loopResult
-							.
-								|not null loopResult.parsed
-						then
-							|loopResult
 	zeroOrMore
 		loopRule|rule
 			condition
@@ -187,6 +145,21 @@ parser|
 					current implementation
 						parsed 0
 						text parser.text
+	oneOrMore
+		arg|rule
+			condition
+				parser|
+					loop zeroOrMore arg
+					loopResult loop
+						text parser.text
+					current if
+						condition and
+							.
+								|succeeded loopResult
+							.
+								|not null loopResult.parsed
+						then
+							|loopResult
 	sequence
 		rules|rule
 			condition
@@ -246,6 +219,15 @@ parser|
 													|
 														parsed ruleResult.parsed
 														text postResult.text
+	prePost
+		arg|rule
+			condition sequence
+				. arg.pre
+				. arg.rule
+				. arg.post
+			result
+				parser|
+					parsed parser.parsed.[2]
 	succeeded
 		arg|hasKey
 			map arg
@@ -256,9 +238,7 @@ parser|
 				parser|
 					implementation
 						arg|if
-							condition hasKey
-								map arg
-								key 1
+							condition not null arg
 							then
 								|
 									altResult arg.[1] parser
@@ -306,7 +286,7 @@ parser|
 															indentationCount nextResult.indentationCount
 					current implementation
 						parser parser
-						n arg.n
+						n arg.n parser
 	optional
 		subRule|
 			parser|
@@ -336,9 +316,10 @@ parser|
 		condition
 			parser|
 				localRule nTimes
-					n add
-						. parser.indentationCount
-						. 1
+					n
+						|add
+							. parser.indentationCount
+							. 1
 					rule character syntax.indentation
 				ruleResult localRule parser
 				current ruleResult
@@ -351,7 +332,8 @@ parser|
 		condition
 			parser|
 				localRule nTimes
-					n parser.indentationCount
+					n
+						|parser.indentationCount
 					rule character syntax.indentation
 				ruleResult localRule parser
 				current ruleResult
@@ -359,9 +341,10 @@ parser|
 		condition
 			parser|
 				localRule nTimes
-					n subtract
-						. parser.indentationCount
-						. 1
+					n
+						|subtract
+							. parser.indentationCount
+							. 1
 					rule character syntax.indentation
 				localResult localRule parser
 				current localResult
