@@ -143,7 +143,7 @@ parser|
 					text parser.text
 					parsed while
 						condition
-							|not zero arg
+							|succeeded arg
 								text text
 						function
 							|
@@ -237,35 +237,6 @@ parser|
 											|implementation rest arg
 					current implementation alts
 	nTimes
-		documentation "Matches a rule n times"
-		arg|rule
-			condition
-				parser|
-					text parser.text
-					allMatched 1
-					applied apply
-						array range arg.n
-						condition
-							|if
-								condition not succeeded arg.rule parser
-								then
-									|
-										$allMatched 0
-										current 0
-								else
-									|1
-						function
-							|
-								ruleResult rule
-									text text
-								$text ruleResult.text
-								current ruleResult.parsed
-					current if
-						condition allMatched
-						then
-							|
-								parsed applied
-	nTimes
 		arg|rule
 			condition
 				parser|
@@ -279,7 +250,6 @@ parser|
 							else
 								|
 									res arg.rule impArg.parser
-									. print res
 									current if
 										condition succeeded res
 										then
@@ -307,12 +277,14 @@ parser|
 					condition succeeded map
 					then
 						|
-							$map.parsed if
+							$map if
 								condition hasKey
 									map arg
 									key "result"
 								then
-									|arg.result map.parsed
+									|merge
+										. map
+										. arg.result map
 								else
 									|map.parsed
 							current merge
@@ -333,7 +305,8 @@ parser|
 	number rule
 		condition oneOrMore characterSet syntax.integer
 		result
-			parser|/.Meta.Number.Parse parser
+			parser|
+				parsed /.Meta.Number.Parse parser.parsed
 	newline alternatives
 		. character syntax.unixNewLine
 		. stringRule syntax.windowsNewLine
@@ -354,9 +327,9 @@ parser|
 						. 1
 					rule character syntax.indentation
 		result
-			|
+			arg|
 				indentationCount add
-					. indentationCount
+					. arg.indentationCount
 					. 1
 	indentation rule
 		condition
@@ -386,9 +359,9 @@ parser|
 					. 1
 				rule character syntax.indentation
 		result
-			|
-				$indentationCount subtract
-					. indentationCount
+			arg|
+				indentationCount subtract
+					. arg.indentationCount
 					. 1
 	characterDataExpression prePost
 		pre character syntax.character
@@ -435,7 +408,8 @@ parser|
 			. zeroOrMore syntax.indentation
 			. character syntax.lookupEnd
 		result
-			arg|arg.[2]
+			arg|
+				parsed arg.parsed.[2]
 	entry rule
 		condition sequence
 			. function
@@ -446,28 +420,31 @@ parser|
 			. value
 		result
 			arg|
-				[arg.[2]] arg.[4]
+				parsed
+					[arg.parsed.[2]] arg.parsed.[4]
 	dedentation rule
 		condition
 			|
 				parsed 0
 		result
-			|
-				$indentationCount subtract
-					. indentationCount
+			arg|
+				indentationCount subtract
+					. arg.indentationCount
 					. 1
 	mapCore sequence
 		. rule
 			condition entry
 			result
 				arg|
-					. arg
+					parsed
+						. arg.parsed
 		. oneOrMore rule
 			condition sequence
 				. sameIndentation
 				. entry
 			result
-				arg|arg.[2]
+				arg|
+					parsed arg.parsed.[2]
 	map prePost
 		pre indentation
 		rule mapCore
@@ -490,8 +467,9 @@ parser|
 			. expression
 		result
 			arg|
-				[codeKeys.parameterName] arg.[1]
-				[codeKeys.expression] arg.[3]
+				parsed
+					[codeKeys.parameterName] arg.parsed.[1]
+					[codeKeys.expression] arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence
 			. character syntax.lookupStart
@@ -499,36 +477,42 @@ parser|
 			. zeroOrMore character syntax.indentation
 			. character syntax.lookupEnd
 		result
-			arg|arg.[2]
+			arg|
+				parsed arg.parsed.[2]
 	lookupStringExpression rule
 		condition lookupString
 		result
 			arg|
-				[codeKeys.literal] arg
+				parsed
+					[codeKeys.literal] arg.parsed
 	search rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
 		result
 			arg|
-				[codeKeys.search] arg
+				parsed
+					[codeKeys.search] arg.parsed
 	root rule
 		condition character syntax.root
 		result
 			arg|
-				[codeKeys.root] 0
+				parsed
+					[codeKeys.root] 0
 	ruleCurrent rule
 		condition stringRule syntax.mapCurrent
 		result
 			|
-				["current"] 0
+				parsed
+					["current"] 0
 	realLookup rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
 		result
 			arg|
-				[codeKeys.lookup] arg
+				parsed
+					[codeKeys.lookup] arg.parsed
 	lookup alternatives
 		. ruleCurrent
 		. realLookup
@@ -541,26 +525,30 @@ parser|
 					. lookup
 				result
 					arg|
-						. arg
+						parsed
+							. arg.parsed
 			. zeroOrMore rule
 				condition sequence
 					. character syntax.select
 					. lookup
 				result
-					arg|arg.[2]
+					arg|
+						parsed arg.parsed.[2]
 		result
 			arg|
-				[codeKeys.select] join arg
+				parsed
+					[codeKeys.select] join arg.parsed
 	functionExpression rule
 		condition function
 		result
 			arg|
-				[codeKeys.key]
-					.
-						[codeKeys.lookup]
-							[codeKeys.literal] codeKeys.function
-				[codeKeys.value]
-					[codeKeys.literal] arg
+				parsed
+					[codeKeys.key]
+						.
+							[codeKeys.lookup]
+								[codeKeys.literal] codeKeys.function
+					[codeKeys.value]
+						[codeKeys.literal] arg.parsed
 	statement alternatives
 		. functionExpression
 		. rule
@@ -571,8 +559,9 @@ parser|
 				. endOfLine
 			result
 				arg|
-					[codeKeys.key] arg.[1]
-					[codeKeys.value] arg.[3]
+					parsed
+						[codeKeys.key] arg.parsed.[1]
+						[codeKeys.value] arg.parsed.[3]
 	program rule
 		condition sequence
 			.
@@ -586,7 +575,8 @@ parser|
 					condition statement
 					result
 						arg|
-							. arg
+							parsed
+								. arg.parsed
 				. zeroOrMore sequence
 					. alternatives
 						. sameIndentation
@@ -596,7 +586,8 @@ parser|
 				parser|"p.defaultKeys.Pop 0"
 		result
 			arg|
-				[codeKeys.program] arg.[2]
+				parsed
+					[codeKeys.program] arg.parsed.[2]
 	call rule
 		condition sequence
 			. select
@@ -608,20 +599,23 @@ parser|
 							. character syntax.indentation
 						. expression
 					result
-						arg|arg.[2]
+						arg|
+							parsed arg.parsed.[2]
 				. program
 		result
 			arg|
-				[codeKeys.call] 
-					[codeKeys.callable] arg.[1]
-					[codeKeys.argument] arg.[2]
+				parsed
+					[codeKeys.call] 
+						[codeKeys.callable] arg.parsed.[1]
+						[codeKeys.argument] arg.parsed.[2]
 	whitespace zeroOrMore alternatives
 		. character syntax.tab
 		. character syntax.space
 	emptyMap rule
 		condition character syntax.emptyMap
 		result
-			|0
+			|
+				parsed 0
 	literalExpression rule
 		condition alternatives
 			. emptyMap
@@ -630,29 +624,32 @@ parser|
 			. characterDataExpression
 		result
 			arg|
-				[codeKeys.literal] arg
+				parsed
+					[codeKeys.literal] arg.parsed
 	keysSearch rule
 		condition sequence
 			. character syntax.search
 			. search
 		result
-			arg|arg.[2]
-	autokeyLookup
-		rule character syntax.autokey
+			arg|
+				parsed arg.parsed.[2]
+	autokeyLookup rule
+		condition character syntax.autokey
 		result
-			|
-				$defaultKeys push.Push
-					. p.defaultKeys.Pop 0
+			arg|
+				defaultKey add
+					. arg.defaultKey
 					. 1
-				current 
+				parsed
 					[codeKeys.lookup]
-						[codeKeys.literal] last defaultKeys
+						[codeKeys.literal] arg.defaultKey
 	makeList
 		subRule|rule
 			condition subRule
 			result
 				arg|
-					. arg
+					parsed
+						. arg.parsed
 	keys rule
 		condition sequence
 			. makeList alternatives
@@ -664,9 +661,11 @@ parser|
 					. character syntax.select
 					. lookup
 				result
-					arg|arg.[2]
+					arg|
+						parsed arg.parsed.[2]
 		result
-			arg|join arg
+			arg|
+				parsed join arg.parsed
 	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string

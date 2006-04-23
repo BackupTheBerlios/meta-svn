@@ -79,7 +79,8 @@ namespace Meta
 	{
 		private string message;
 		private Extent extent;
-		private List<Extent> invocationList = new List<Extent>();
+		private List<Position> invocationList = new List<Position>();
+		//private List<Extent> invocationList = new List<Extent>();
 
 
 		public MetaException(string message, Extent extent)
@@ -87,13 +88,20 @@ namespace Meta
 			this.message = message;
 			this.extent = extent;
 		}
-		public List<Extent> InvocationList
+		public List<Position> InvocationList
 		{
 			get
 			{
 				return invocationList;
 			}
 		}
+		//public List<Extent> InvocationList
+		//{
+		//    get
+		//    {
+		//        return invocationList;
+		//    }
+		//}
 		public override string ToString()
 		{
 			string message = Message;
@@ -101,10 +109,14 @@ namespace Meta
 			{
 				message += "\n\nStack trace:";
 			}
-			foreach (Extent extent in invocationList)
+			foreach (Position extent in invocationList)
 			{
-				message += "\n" + GetExtentText(extent);
+				message += "\n" + extent.ToString();
 			}
+			//foreach (Extent extent in invocationList)
+			//{
+			//    message += "\n" + GetExtentText(extent);
+			//}
 			return message;
 		}
 		public static string GetExtentText(Extent extent)
@@ -268,7 +280,8 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(this.code.Extent);
+				e.InvocationList.Add(current);
+				//e.InvocationList.Add(this.code.Extent);
 				throw e;
 			}
 			catch (Exception e)
