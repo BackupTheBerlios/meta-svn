@@ -376,7 +376,7 @@ parser|
 			. syntax.character
 		post character syntax.character
 	string prePost
-		pre syntax.string
+		pre character syntax.string
 		rule alternatives
 			. oneOrMore characterExcept
 				. syntax.unixNewLine
@@ -384,20 +384,32 @@ parser|
 				. syntax.string
 			. prePost
 				pre indentation
-				rule sequence
-					. stringLine
-					. zeroOrMore
-						. endOfLine
-						. sameIndentation
-						. sequence
-							. character syntax.unixNewLine
-							. stringLine
+				rule rule
+					condition sequence
+						. rule
+							condition stringLine
+							result
+								arg|
+									parsed
+										. arg.parsed
+						. zeroOrMore rule
+							condition sequence
+								. endOfLine
+								. sameIndentation
+								. rule
+									condition sequence
+										. character syntax.unixNewLine
+										. stringLine
+									result
+										arg|
+											parsed arg.parsed.[2]
+							result
+								arg|
+									parsed arg.parsed.[3]
+					result
+						arg|
+							parsed join arg.parsed
 				post stringDedentation
-		post syntax.string
-	string prePost
-		pre character syntax.string
-		rule zeroOrMore characterExcept
-			. syntax.string
 		post character syntax.string
 	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
@@ -773,3 +785,18 @@ parser|
 			shouldNotMatch sameIndentation
 				text "		"
 				indentationCount 5
+		stringLineTest stringLine
+			text "
+				hello hello hello
+				hi hi
+			"
+		longStringTest "
+			string
+				text "
+					"
+						hello hello hello
+						hello
+						hello hello
+					"
+				"
+		"
