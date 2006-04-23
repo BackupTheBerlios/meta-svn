@@ -168,7 +168,10 @@ parser|
 										then
 											|
 												nextResult implementation
-													parser ruleResult
+													parser
+														parsed 0
+														text ruleResult.text
+														indentationCount 0
 													rules rest arg.rules
 												current if
 													condition succeeded nextResult
@@ -385,13 +388,16 @@ parser|
 				. syntax.string
 			. rule
 				condition sequence
-					. newLine
-					. indentation
-					. stringLine
-				result
-					arg|
-						parsed arg.parsed.[3]
+					. rule
+						condition sequence
+							. newLine
+							. indentation
+							. stringLine
+						result
+							arg|
+								parsed arg.parsed.[3]
 		post sequence
+			. optional newLine
 			. optional character syntax.string
 	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
@@ -775,8 +781,8 @@ parser|
 				hello hello hello
 				hi hi
 			"
-		longStringTest "
-			string
+		longStringTest 
+			simple string
 				text "
 					"
 						hello hello hello
@@ -784,4 +790,13 @@ parser|
 				"
 				indentationCount 0
 				parsed 0
-		"
+			longer string
+				text "
+					"
+						hello
+						hello
+						hello
+					"
+				"
+				indentationCount 0
+				parsed 0
