@@ -187,7 +187,6 @@ parser|
 						parser parser
 						rules rules
 	prePost
-		documentation "Matches a rule and throws away the results of a preceding and a following rule."
 		arg|rule
 			condition
 				parser|
@@ -302,21 +301,20 @@ parser|
 					then
 						|subRuleResult
 					else
-						|
-							parsed 0
+						|parser
 	number rule
 		condition oneOrMore characterSet syntax.integer
 		result
 			parser|
 				parsed /.Meta.Number.Parse parser.parsed
-	newline alternatives
+	newLine alternatives
 		. character syntax.unixNewLine
 		. stringRule syntax.windowsNewLine
 	endOfLine sequence
 		. zeroOrMore characterSet
 			. character syntax.space
 			. character syntax.tab
-		. newline
+		. newLine
 	startOfFile 1
 	indentationCount 0
 	indentation rule
@@ -385,16 +383,16 @@ parser|
 				. syntax.unixNewLine
 				. syntax.windowsNewLine.[1]
 				. syntax.string
-			. prePost
-				pre indentation
-				rule rule
-					condition stringLine
-					result
-						arg|
-							parsed
-								. arg.parsed
-				post optional dedentation
-		post character syntax.string
+			. rule
+				condition sequence
+					. newLine
+					. indentation
+					. stringLine
+				result
+					arg|
+						parsed arg.parsed.[3]
+		post sequence
+			. optional character syntax.string
 	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
 		parser|
@@ -777,11 +775,13 @@ parser|
 				hello hello hello
 				hi hi
 			"
-		longStringTest string
-			text "
+		longStringTest "
+			string
+				text "
+					"
+						hello hello hello
+					"
 				"
-					hello hello hello
-				"
-			"
-			indentationCount 0
-			parsed 0
+				indentationCount 0
+				parsed 0
+		"
