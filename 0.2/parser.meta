@@ -131,9 +131,7 @@ parser|
 					current if
 						condition and
 							.
-								|hasKey
-									map loopResult
-									key "parsed"
+								|succeeded loopResult
 							.
 								|not zero loopResult.parsed
 						then
@@ -167,9 +165,7 @@ parser|
 								ruleResult rule
 									text text
 								current if
-									condition hasKey
-										map ruleResult
-										key "parsed"
+									condition succeeded ruleResult
 									then
 										|
 											$text ruleResult.text
@@ -192,31 +188,28 @@ parser|
 					preResult arg.pre
 						text parser.text
 					current if
-						condition hasKey
-							map preResult
-							key "parsed"
+						condition succeeded preResult
 						then
 							|
 								ruleResult arg.rule
 									text preResult.text
 								current if
-									condition hasKey
-										map ruleResult
-										key "parsed"
+									condition succeeded ruleResult
 									then
 										|
 											postResult arg.post
 												text ruleResult.text
 											current if
-												condition hasKey
-													map postResult
-													key "parsed"
+												condition succeeded postResult
 												then
 													|
 														parsed ruleResult.parsed
 														text postResult.text
+	succeeded
+		arg|hasKey
+			map arg
+			key "parsed"
 	alternatives
-		documentation "Matches one of several alternative rules."
 		alts|rule
 			condition
 				parser|
@@ -229,9 +222,7 @@ parser|
 								|
 									altResult arg.[1] parser
 									current if
-										condition hasKey
-											map altResult
-											key "parsed"
+										condition succeeded altResult
 										then
 											|
 												parsed altResult.parsed
@@ -250,9 +241,7 @@ parser|
 						array range arg.n
 						condition
 							|if
-								condition not hasKey
-									map arg.rule parser
-									key "parsed"
+								condition not succeeded arg.rule parser
 								then
 									|
 										$allMatched 0
@@ -275,9 +264,7 @@ parser|
 			parser|
 				map arg.condition parser
 				stuff if
-					condition hasKey
-						map map
-						key "parsed"
+					condition succeeded map
 					then
 						|
 							$map.parsed if
@@ -297,9 +284,7 @@ parser|
 			parser|
 				subRuleResult subRule parser
 				current if
-					condition hasKey
-						map subRuleResult
-						key "parsed"
+					condition succeeded subRuleResult
 					then
 						|subRuleResult
 					else
