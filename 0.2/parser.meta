@@ -222,11 +222,12 @@ parser|
 				parser|
 					implementation
 						arg|if
-							condition not zero arg.alts
+							condition hasKey
+								map arg
+								key 1
 							then
 								|
-									altResult arg.alts.[1]
-										text arg.text
+									altResult arg.[1] parser
 									current if
 										condition hasKey
 											map altResult
@@ -236,12 +237,8 @@ parser|
 												parsed altResult.parsed
 												text altResult.text
 										else
-											|implementation
-												text arg.text
-												alts rest arg.alts
-					current implementation
-						text parser.text
-						alts alts
+											|implementation rest arg
+					current implementation alts
 	nTimes
 		documentation "Matches a rule n times"
 		arg|rule
