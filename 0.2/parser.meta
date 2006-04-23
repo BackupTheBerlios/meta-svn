@@ -713,8 +713,10 @@ rule
 					key "parsed"
 				then
 					|
-						parsed arg.result map.parsed
-						text map.text
+						$map.parsed arg.result map.parsed
+						current merge
+							. parser
+							. map
 			current stuff
 optional
 	subRule|
@@ -729,5 +731,4 @@ optional
 					|subRuleResult
 				else
 					|
-						text parser.text
 						parsed 0
