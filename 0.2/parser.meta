@@ -137,20 +137,31 @@ parser|
 						then
 							|loopResult
 	zeroOrMore
-		arg|rule
+		loopRule|rule
 			condition
 				parser|
-					text parser.text
-					parsed while
-						condition
-							|succeeded arg
-								text text
-						function
-							|
-								argResult arg
-									text text
-								$text argResult.text
-								current argResult.parsed
+					implementation
+						p|
+							matched loopRule p
+							current if	
+								condition succeeded matched
+								then
+									|
+										nextMatched implementation matched
+										current if
+											condition succeeded nextMatched
+											then
+												|
+													parsed join
+														. 
+															. matched.parsed
+														. nextMatched.parsed
+													text nextMatched.text
+								else
+									|p
+					current implementation
+						parsed 0
+						text parser.text
 	sequence
 		rules|rule
 			condition
