@@ -259,13 +259,16 @@ parser|
 													n subtract
 														. impArg.n
 														. 1
-												current 
-													parsed join
-														. 
-															. res.parsed
-														. nextResult.parsed
-													text nextResult.text
-													indentationCount nextResult.indentationCount
+												current if
+													condition succeeded nextResult
+													then
+														|
+															parsed join
+																. 
+																	. res.parsed
+																. nextResult.parsed
+															text nextResult.text
+															indentationCount nextResult.indentationCount
 					current implementation
 						parser parser
 						n arg.n
@@ -284,7 +287,9 @@ parser|
 								then
 									|merge
 										. map
-										. arg.result map
+										. arg.result merge
+											. parser
+											. map
 								else
 									|map
 							current merge
@@ -318,20 +323,6 @@ parser|
 	startOfFile 1
 	indentationCount 0
 	indentation rule
-		condition sequence
-			. endOfLine
-			. 
-				parser|nTimes
-					n add
-						. indentationCount
-						. 1
-					rule character syntax.indentation
-		result
-			arg|
-				indentationCount add
-					. arg.indentationCount
-					. 1
-	indentation rule
 		condition
 			parser|
 				localRule nTimes
@@ -342,11 +333,27 @@ parser|
 				ruleResult localRule parser
 				current ruleResult
 		result
-			|"hello"
-	sameIndentation
-		|nTimes
-			n indentationCount
-			rule character syntax.indentation
+			arg|
+				indentationCount add
+					. arg.indentationCount
+					. 1
+	sameIndentation rule
+		condition
+			parser|
+				localRule nTimes
+					n parser.indentationCount
+					rule character syntax.indentation
+				ruleResult localRule parser
+				current ruleResult
+	dedentation rule
+		condition
+			|
+				parsed 0
+		result
+			arg|
+				indentationCount subtract
+					. arg.indentationCount
+					. 1
 	stringLine zeroOrMore characterExcept
 		. syntax.unixNewLine
 		. syntax.windowsNewLine.[1]
@@ -422,15 +429,6 @@ parser|
 			arg|
 				parsed
 					[arg.parsed.[2]] arg.parsed.[4]
-	dedentation rule
-		condition
-			|
-				parsed 0
-		result
-			arg|
-				indentationCount subtract
-					. arg.indentationCount
-					. 1
 	mapCore sequence
 		. rule
 			condition entry
@@ -753,3 +751,25 @@ parser|
 			shouldMatch indentation
 				text "	"
 				indentationCount 0
+		dedentationTest
+			shouldMatch
+				two dedentation
+					text "			"
+					indentationCount 2
+				one dedentation
+					text "		"
+					indentationCount 1
+			shouldNotMatch dedentation
+				text "		"
+				indentationCount 5
+		sameIndentationTest
+			shouldMatch
+				two sameIndentation
+					text "			"
+					indentationCount 2
+				one sameIndentation
+					text "		"
+					indentationCount 1
+			shouldNotMatch sameIndentation
+				text "		"
+				indentationCount 5
