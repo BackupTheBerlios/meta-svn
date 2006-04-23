@@ -291,4 +291,5 @@
 			object ["System.Windows.Forms"].Form 0
 			data
 				Text "hello world"
+		restTest rest "hello"
 	current test

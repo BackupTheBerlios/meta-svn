@@ -148,6 +148,7 @@
     <None Include="Library\or.meta" />
     <None Include="Library\print.meta" />
     <None Include="Library\range.meta" />
+    <None Include="Library\rest.meta" />
     <None Include="Library\reverse.meta" />
     <None Include="Library\serialize.meta" />
     <None Include="Library\slice.meta" />
@@ -163,7 +164,6 @@
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
     <None Include="Library\zero.meta" />
-    <None Include="rest.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="parser.meta" />

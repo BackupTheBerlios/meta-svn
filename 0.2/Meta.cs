@@ -1032,7 +1032,10 @@ namespace Meta
 	}
 	public class Library
 	{
-
+		public static Map Rest(Map arg)
+		{
+			return new StrategyMap(arg.Array.GetRange(1, arg.Array.Count - 1));
+		}
 		public static Map Last(Map arg)
 		{
 			return arg[arg.ArrayCount];
@@ -2370,9 +2373,9 @@ namespace Meta
 			{
 				Map map=Get();
 				List<Position> array = new List<Position>();
-				for (int i = 1; i < map.ArrayCount; i++)
+				for (int i = 0; i < map.ArrayCount; i++)
 				{
-					array.Add(new Position(this,i));
+					array.Add(new Position(this,i+1));
 				}
 				return array;
 			}

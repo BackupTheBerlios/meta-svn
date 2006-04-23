@@ -66,60 +66,55 @@ parser|
 		char|rule
 			condition
 				parser|if
-					condition not zero parser.text
-					then
-						|if
-							condition equal
+					condition and
+						.
+							|not zero parser.text
+						.
+							|equal
 								. first parser.text
 								. char
-							then
-								|
-									parsed first parser.text
-									text slice
-										array parser.text
-										start 2
-			result
-				char|char
+					then
+						|
+							parsed first parser.text
+							text slice
+								array parser.text
+								start 2
 	characterSet
 		documentation "Matches one character in a set."
 		chars|rule
 			condition
 				parser|if
-					condition not zero parser.text
-					then
-						|if
-							condition contains
-								value first parser.text
+					condition and
+						. 
+							|not zero parser.text
+						.
+							|contains
 								array chars
-							then
-								|
-									parsed first parser.text
-									text slice
-										array parser.text
-										start 2
-							else
-								|0
-			result
-				char|char
+								value first parser.text
+					then
+						|
+							parsed first parser.text
+							text slice
+								array parser.text
+								start 2
 	characterExcept
 		documentation "Matches one character that is not the provided character."
 		chars|rule
 			condition
 				parser|if
-					condition not zero parser.text
-					then
-						|if
-							condition not contains
+					condition and
+						. 
+							|not zero parser.text
+						.
+							|not contains
 								value first parser.text
 								array chars
-							then
-								|
-									parsed first parser.text
-									text slice
-										array parser.text
-										start 2
-			result
-				char|char
+					then
+						|
+							parsed first parser.text
+							text slice
+								array parser.text
+								start 2
 	stringRule
 		documentation "Matches the provided sequence of characters."
 		string|sequence apply
@@ -127,8 +122,6 @@ parser|
 			function
 				char|character char
 	oneOrMore
-		documentation "Matches one or more times."
-		status "untested"
 		arg|rule
 			condition
 				parser|
@@ -136,14 +129,15 @@ parser|
 					loopResult loop
 						text parser.text
 					current if
-						condition hasKey
-							map loopResult
-							key "parsed"
+						condition and
+							.
+								|hasKey
+									map loopResult
+									key "parsed"
+							.
+								|not zero loopResult.parsed
 						then
-							|if
-								condition not zero loopResult.parsed
-								then
-									|loopResult
+							|loopResult
 	zeroOrMore
 		arg|rule
 			condition
@@ -226,35 +220,28 @@ parser|
 		alts|rule
 			condition
 				parser|
-					parsed 0
-					text parser.text
-					matched 0
-					. apply
-						array alts
-						condition
-							alt|
-								applied alt
-									text parser.text
-								current if
-									condition hasKey
-										map applied
-										key "parsed"
-									then
-										|
-											$parsed applied.parsed
-											$text applied.text
-											$matched 1
-											current 0
-									else
-										|1
-						function
-							|0
-					current if
-						condition matched
-						then
-							|
-								parsed parsed
-								text text
+					implementation
+						arg|if
+							condition not zero arg.alts
+							then
+								|
+									altResult arg.alts.[1]
+										text arg.text
+									current if
+										condition hasKey
+											map altResult
+											key "parsed"
+										then
+											|
+												parsed altResult.parsed
+												text altResult.text
+										else
+											|implementation
+												text arg.text
+												alts rest arg.alts
+					current implementation
+						text parser.text
+						alts alts
 	nTimes
 		documentation "Matches a rule n times"
 		arg|rule
