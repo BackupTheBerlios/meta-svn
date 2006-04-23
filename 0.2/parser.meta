@@ -286,7 +286,7 @@ parser|
 										. map
 										. arg.result map
 								else
-									|map.parsed
+									|map
 							current merge
 								. parser
 								. map
