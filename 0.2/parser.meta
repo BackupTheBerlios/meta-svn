@@ -191,20 +191,17 @@ parser|
 		arg|rule
 			condition
 				parser|
-					preResult arg.pre
-						text parser.text
+					preResult arg.pre parser
 					current if
 						condition succeeded preResult
 						then
 							|
-								ruleResult arg.rule
-									text preResult.text
+								ruleResult arg.rule preResult
 								current if
 									condition succeeded ruleResult
 									then
 										|
-											postResult arg.post
-												text ruleResult.text
+											postResult arg.post ruleResult
 											current if
 												condition succeeded postResult
 												then
@@ -347,8 +344,14 @@ parser|
 				current ruleResult
 	dedentation rule
 		condition
-			|
-				parsed 0
+			parser|
+				localRule nTimes
+					n subtract
+						. parser.indentationCount
+						. 1
+					rule character syntax.indentation
+				localResult localRule parser
+				current localResult
 		result
 			arg|
 				indentationCount subtract
@@ -385,31 +388,12 @@ parser|
 			. prePost
 				pre indentation
 				rule rule
-					condition sequence
-						. rule
-							condition stringLine
-							result
-								arg|
-									parsed
-										. arg.parsed
-						. zeroOrMore rule
-							condition sequence
-								. endOfLine
-								. sameIndentation
-								. rule
-									condition sequence
-										. character syntax.unixNewLine
-										. stringLine
-									result
-										arg|
-											parsed arg.parsed.[2]
-							result
-								arg|
-									parsed arg.parsed.[3]
+					condition stringLine
 					result
 						arg|
-							parsed join arg.parsed
-				post stringDedentation
+							parsed
+								. arg.parsed
+				post optional dedentation
 		post character syntax.string
 	lookupString oneOrMore characterExcept syntax.lookupStringForbidden
 	value
@@ -768,12 +752,15 @@ parser|
 				two dedentation
 					text "			"
 					indentationCount 2
+					parsed 0
 				one dedentation
 					text "		"
 					indentationCount 1
+					parsed 0
 			shouldNotMatch dedentation
 				text "		"
 				indentationCount 5
+				parsed 0
 		sameIndentationTest
 			shouldMatch
 				two sameIndentation
@@ -790,13 +777,11 @@ parser|
 				hello hello hello
 				hi hi
 			"
-		longStringTest "
-			string
-				text "
-					"
-						hello hello hello
-						hello
-						hello hello
-					"
+		longStringTest string
+			text "
 				"
-		"
+					hello hello hello
+				"
+			"
+			indentationCount 0
+			parsed 0
