@@ -170,10 +170,17 @@ parser|
 						rules rules
 	prePost
 		arg|rule
-			condition sequence
-				. arg.pre
-				. arg.rule
-				. arg.post
+			condition sequence join
+				. 
+					. arg.pre
+					. arg.rule
+				. if
+					condition hasKey
+						map arg
+						key "post"
+					then
+						|
+							. arg.post
 			result
 				parser|
 					parsed parser.parsed.[2]
@@ -268,9 +275,9 @@ parser|
 		. sequence
 			. character syntax.carriageReturn
 			. character syntax.lineFeed
-	whitespace zeroOrMore alternatives
-		. character 9
-		. character ' '
+	whitespace zeroOrMore characterSet
+		. 9
+		. ' '
 	endOfLine sequence
 		. whitespace
 		. newLine
@@ -346,19 +353,21 @@ parser|
 			. alternatives
 				. lookupString
 				. lookupAnything
-			. optional whitespace
+			. whitespace
 			. value
 		result
 			arg|
 				parsed
 					[arg.parsed.[2]] arg.parsed.[4]
-	mapCore sequence
-		. rule
-			condition entry
+	makeList
+		subRule|rule
+			condition subRule
 			result
 				arg|
 					parsed
 						. arg.parsed
+	mapCore sequence
+		. makeList entry
 		. oneOrMore rule
 			condition sequence
 				. sameIndentation
@@ -439,22 +448,13 @@ parser|
 		. realLookup
 	select rule
 		condition sequence
-			. rule
-				condition alternatives
-					. root
-					. search
-					. lookup
-				result
-					arg|
-						parsed
-							. arg.parsed
-			. zeroOrMore rule
-				condition sequence
-					. character syntax.select
-					. lookup
-				result
-					arg|
-						parsed arg.parsed.[2]
+			. makeList alternatives
+				. root
+				. search
+				. lookup
+			. zeroOrMore prePost
+				pre character syntax.select
+				rule lookup
 		result
 			arg|
 				parsed
@@ -475,7 +475,7 @@ parser|
 		. rule
 			condition sequence
 				. keys
-				. optional whitespace
+				. whitespace
 				. expression
 				. endOfLine
 			result
@@ -544,13 +544,9 @@ parser|
 			arg|
 				parsed
 					[codeKeys.literal] arg.parsed
-	keysSearch rule
-		condition sequence
-			. character syntax.search
-			. search
-		result
-			arg|
-				parsed arg.parsed.[2]
+	keysSearch prePost
+		pre character syntax.search
+		rule search
 	autokeyLookup rule
 		condition character syntax.autokey
 		result
@@ -561,26 +557,15 @@ parser|
 				parsed
 					[codeKeys.lookup]
 						[codeKeys.literal] arg.defaultKey
-	makeList
-		subRule|rule
-			condition subRule
-			result
-				arg|
-					parsed
-						. arg.parsed
 	keys rule
 		condition sequence
 			. makeList alternatives
 				. keysSearch
 				. lookup
 				. autokeyLookup
-			. zeroOrMore rule
-				condition sequence
-					. character syntax.select
-					. lookup
-				result
-					arg|
-						parsed arg.parsed.[2]
+			. zeroOrMore prePost
+				pre character syntax.select
+				rule lookup
 		result
 			arg|
 				parsed join arg.parsed
