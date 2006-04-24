@@ -1245,19 +1245,19 @@ namespace Meta
 		{
 			return !arg.GetBoolean();
 		}
-		public static Map Or(Map arg)
-		{
-			bool or=false;
-			foreach (Map map in arg.Array)
-			{
-				if (map.GetBoolean())
-				{
-					or = true;
-					break;
-				}
-			}
-			return or;
-		}
+		//public static Map Or(Map arg)
+		//{
+		//    bool or=false;
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        if (map.GetBoolean())
+		//        {
+		//            or = true;
+		//            break;
+		//        }
+		//    }
+		//    return or;
+		//}
 		public static Map Try(Map arg)
 		{
 			Map result;
@@ -1378,6 +1378,21 @@ namespace Meta
 				}
 			}
 			return and;
+		}
+		public static Map Or(Map arg)
+		{
+			bool or = false;
+			Position argument = Call.lastArgument;
+			foreach (Position callable in argument.Array)
+			{
+				Map map = callable.Call(Map.Empty).Get();
+				if (map.GetBoolean())
+				{
+					or = true;
+					break;
+				}
+			}
+			return or;
 		}
 		//public static Map And(Map arg)
 		//{

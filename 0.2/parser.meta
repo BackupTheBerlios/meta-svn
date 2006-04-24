@@ -243,6 +243,48 @@ parser|
 					current implementation
 						parser parser
 						n arg.n parser
+	minMax
+		arg|rule
+			condition
+				parser|
+					implementation
+						impArg|if
+							condition and
+								.
+									|hasKey
+										map impArg
+										key "n"
+								.
+									|equal
+										. impArg.n
+										. 0
+							then
+								|impArg.parser
+							else
+								|
+									res arg.rule impArg.parser
+									current if
+										condition succeeded res
+										then
+											|
+												nextResult implementation
+													parser res
+													n subtract
+														. impArg.n
+														. 1
+												current if
+													condition succeeded nextResult
+													then
+														|
+															parsed join
+																. 
+																	. res.parsed
+																. nextResult.parsed
+															text nextResult.text
+															indentationCount nextResult.indentationCount
+					current implementation
+						parser parser
+						n arg.n parser
 	optional
 		subRule|
 			parser|merge
