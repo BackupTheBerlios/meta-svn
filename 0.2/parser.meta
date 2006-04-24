@@ -274,47 +274,26 @@ parser|
 	endOfLine sequence
 		. whitespace
 		. newLine
-	indentation rule
-		condition
-			parser|
-				localRule nTimes
-					n
-						|add
-							. parser.indentationCount
-							. 1
-					rule character syntax.indentation
-				ruleResult localRule parser
-				current ruleResult
-		result
-			arg|
-				indentationCount add
-					. arg.indentationCount
-					. 1
-	sameIndentation rule
-		condition
-			parser|
-				localRule nTimes
-					n
-						|parser.indentationCount
-					rule character syntax.indentation
-				ruleResult localRule parser
-				current ruleResult
-	dedentation rule
-		condition
-			parser|
-				localRule nTimes
-					n
-						|subtract
-							. parser.indentationCount
-							. 1
-					rule character syntax.indentation
-				localResult localRule parser
-				current localResult
-		result
-			arg|
-				indentationCount subtract
-					. arg.indentationCount
-					. 1
+	indentRule
+		change|rule
+			condition
+				parser|
+					localRule nTimes
+						n
+							|add
+								. parser.indentationCount
+								. change
+						rule character syntax.indentation
+					ruleResult localRule parser
+					current ruleResult
+			result
+				parser|
+					indentationCount add
+						. parser.indentationCount
+						. change
+	indentation indentRule 1
+	sameIndentation indentRule 0
+	dedentation indentRule -1
 	stringLine zeroOrMore characterExcept
 		. syntax.lineFeed
 		. syntax.carriageReturn
