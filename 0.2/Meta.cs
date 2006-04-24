@@ -39,7 +39,6 @@ using System.Web;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Drawing;
-//using Gtk;
 
 
 namespace Meta
@@ -47,7 +46,7 @@ namespace Meta
 	public class CodeKeys
 	{
 		public static readonly Map Expression="expression";
-		public static readonly Map ParameterName="parameterName";
+		public static readonly Map Parameter="parameter";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
 		public static readonly Map Lookup = "lookup";
@@ -429,7 +428,7 @@ namespace Meta
 		{
 			get
 			{
-				return code.ContainsKey(CodeKeys.ParameterName);
+				return code.ContainsKey(CodeKeys.Parameter);
 			}
 		}
 		bool hasConstantKeysOnly;
@@ -2825,7 +2824,7 @@ namespace Meta
 		{
 			if (ContainsKey(CodeKeys.Call))
 			{
-				return new Call(this[CodeKeys.Call],this.TryGetValue(CodeKeys.ParameterName));
+				return new Call(this[CodeKeys.Call],this.TryGetValue(CodeKeys.Parameter));
 			}
 			else if (ContainsKey(CodeKeys.Program))
 			{
@@ -3028,7 +3027,7 @@ namespace Meta
 			{
 				//FunctionBodyKey call;
 				arguments.Add(arg);
-				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg));
+				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
 				Position result = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
 				arguments.RemoveAt(arguments.Count - 1);
 				return result;
@@ -6454,7 +6453,7 @@ namespace Meta
 		//                        ExpressionData));
 		public static Rule Function = new Sequence(
 			new Action(new Assignment(
-				CodeKeys.ParameterName),
+				CodeKeys.Parameter),
 				new ZeroOrMore(
 				new Action(new Autokey(),
 					new CharacterExcept(

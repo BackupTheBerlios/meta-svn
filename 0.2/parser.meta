@@ -1,6 +1,6 @@
 parser|
 	codeKeys
-		parameterName "parameterName"
+		parameter "parameter"
 		root "root"
 		search "search"
 		lookup "lookup"
@@ -22,7 +22,6 @@ parser|
 		search '$'
 		negative '-'
 		fraction '/'
-		endOfFile 65535
 		indentation 9
 		unixNewLine 10
 		function '|'
@@ -42,21 +41,6 @@ parser|
 		windowsNewLine
 			. 13
 			. 10
-		lookupForbidden
-			. call
-			. indentation
-			. 13
-			. 10
-			. assignment
-			. select
-			. function
-			. string
-			. lookup.start
-			. lookup.end
-			. emptyMap
-			. search
-			. root
-			. character
 	rule
 		arg|
 			parser|
@@ -294,6 +278,21 @@ parser|
 						|subRuleResult
 					else
 						|parser
+	lookupForbidden characterExcept
+		. syntax.call
+		. syntax.indentation
+		. 13
+		. 10
+		. syntax.assignment
+		. syntax.select
+		. syntax.function
+		. syntax.string
+		. syntax.lookup.start
+		. syntax.lookup.end
+		. syntax.emptyMap
+		. syntax.search
+		. syntax.root
+		. syntax.character
 	number rule
 		condition oneOrMore characterSet syntax.integer
 		result
@@ -378,7 +377,7 @@ parser|
 		post sequence
 			. optional newLine
 			. optional character syntax.string
-	lookupString oneOrMore characterExcept syntax.lookupForbidden
+	lookupString oneOrMore lookupForbidden
 	value
 		parser|
 			rule alternatives
@@ -445,7 +444,7 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.parameterName] arg.parsed.[1]
+					[codeKeys.parameter] arg.parsed.[1]
 					[codeKeys.expression] arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence

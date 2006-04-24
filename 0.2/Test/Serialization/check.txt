@@ -23,7 +23,7 @@ license "
 	SOFTWARE.
 "
 function 
-	parameterName "commandLine"
+	parameter "commandLine"
 	expression 
 		program 
 			[1] 
@@ -74,7 +74,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										select 
 											[1] 
@@ -115,7 +115,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "argument"
+									parameter "argument"
 									expression 
 										program 
 											[1] 
@@ -170,7 +170,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName 0
+												parameter 0
 												expression 
 													select 
 														[1] 
@@ -769,7 +769,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName 0
+												parameter 0
 												expression 
 													program 
 														[1] 
@@ -800,7 +800,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName "newB"
+												parameter "newB"
 												expression 
 													program 
 														[1] 
@@ -860,7 +860,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName 0
+												parameter 0
 												expression 
 													program 
 														[1] 
@@ -969,7 +969,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -1031,7 +1031,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -1041,7 +1041,7 @@ function
 															literal "function"
 												value 
 													literal 
-														parameterName 0
+														parameter 0
 														expression 
 															select 
 																[1] 
@@ -1089,7 +1089,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "everything"
+									parameter "everything"
 									expression 
 										program 
 											[1] 
@@ -1185,7 +1185,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -1201,7 +1201,7 @@ function
 																		literal "function"
 															value 
 																literal 
-																	parameterName 0
+																	parameter 0
 																	expression 
 																		program 
 																			[1] 
@@ -1245,7 +1245,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "current"
+									parameter "current"
 									expression 
 										program 
 											[1] 
@@ -1321,7 +1321,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -1355,7 +1355,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										select 
 											[1] 
@@ -2063,7 +2063,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										literal 5
 			[101] 
@@ -2094,7 +2094,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -2117,7 +2117,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										select 
 											[1] 
@@ -2151,7 +2151,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -2161,7 +2161,7 @@ function
 															literal "function"
 												value 
 													literal 
-														parameterName 0
+														parameter 0
 														expression 
 															program 
 																[1] 
@@ -2213,7 +2213,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										select 
 											[1] 
@@ -2254,7 +2254,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2281,7 +2281,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -2333,7 +2333,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2363,7 +2363,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2416,7 +2416,7 @@ function
 												literal "function"
 									value 
 										literal 
-											parameterName "arg"
+											parameter "arg"
 											expression 
 												select 
 													[1] 
@@ -2486,7 +2486,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2605,7 +2605,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName 0
+												parameter 0
 												expression 
 													literal "then"
 						[2] 
@@ -2622,7 +2622,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameterName 0
+												parameter 0
 												expression 
 													literal "else"
 			[130] 
@@ -2721,7 +2721,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -3117,7 +3117,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "start"
+									parameter "start"
 									expression 
 										program 
 											[1] 
@@ -3179,7 +3179,7 @@ function
 																					literal "function"
 																		value 
 																			literal 
-																				parameterName "arg"
+																				parameter "arg"
 																				expression 
 																					call 
 																						callable 
@@ -3227,7 +3227,7 @@ function
 																					literal "function"
 																		value 
 																			literal 
-																				parameterName "arg"
+																				parameter "arg"
 																				expression 
 																					select 
 																						[1] 
@@ -3283,7 +3283,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -3324,7 +3324,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -3334,7 +3334,7 @@ function
 															literal "function"
 												value 
 													literal 
-														parameterName 0
+														parameter 0
 														expression 
 															literal "functionResult"
 			[164] 
@@ -3351,7 +3351,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										select 
 											[1] 
@@ -3371,7 +3371,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										program 
 											[1] 
@@ -3423,7 +3423,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName 0
+									parameter 0
 									expression 
 										literal "hello"
 			[168] 
@@ -3475,7 +3475,7 @@ function
 																literal "function"
 													value 
 														literal 
-															parameterName 0
+															parameter 0
 															expression 
 																program 
 																	[1] 
@@ -3519,7 +3519,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameterName "arg"
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -3536,7 +3536,7 @@ function
 																		literal "function"
 															value 
 																literal 
-																	parameterName 0
+																	parameter 0
 																	expression 
 																		program 
 																			[1] 
@@ -3771,7 +3771,7 @@ function
 								literal 9
 shortFunc 
 	function 
-		parameterName "arg"
+		parameter "arg"
 		expression 
 			select 
 				[1] 

@@ -498,7 +498,7 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"parameterName"
+										"parameter"
 									Value (StrategyMap):
 										"arg"
 								Entry (KeyValuePair`2)
@@ -650,7 +650,7 @@ Entry (KeyValuePair`2)
 					Value (StrategyMap):
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
-								"parameterName"
+								"parameter"
 							Value (StrategyMap):
 								"arg"
 						Entry (KeyValuePair`2)
