@@ -42,8 +42,9 @@ parser|
 				current if
 					condition succeeded map
 					then
-						|
-							$map if
+						|merge
+							. parser
+							. if
 								condition hasKey
 									map arg
 									key "result"
@@ -55,9 +56,6 @@ parser|
 											. map
 								else
 									|map
-							current merge
-								. parser
-								. map
 	charRule
 		comparison|rule
 			condition
@@ -66,27 +64,25 @@ parser|
 						.
 							|not null parser.text
 						. 
-							|comparison parser
+							|comparison first parser.text
 					then
 						|
 							parsed first parser.text
-							text slice
-								array parser.text
-								start 2
+							text rest parser.text
 	character
 		char|charRule
-			parser|equal
-				. first parser.text
+			input|equal
+				. input
 				. char
 	characterSet
 		chars|charRule
-			parser|contains
+			input|contains
 				array chars
-				value first parser.text
+				value input
 	characterExcept
 		chars|charRule
-			parser|not contains
-				value first parser.text
+			input|not contains
+				value input
 				array chars
 	stringRule
 		string|sequence apply
