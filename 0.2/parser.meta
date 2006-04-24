@@ -20,32 +20,26 @@ parser|
 		autokey '.'
 		root '/'
 		search '$'
-		negative '-'
-		fraction '/'
+		minus '-'
+		fractionBar '/'
 		indentation 9
-		unixNewLine 10
+		lineFeed 10
 		function '|'
 		string '"'
-		lookup
-			start '['
-			end ']'
+		lookupStart '['
+		lookupEnd ']'
 		emptyMap '0'
 		call ' '
 		select '.'
 		character 39
-		assignment ' '
-		space ' '
-		tab 9
 		mapCurrent "current"
 		integer "0123456789"
-		windowsNewLine
-			. 13
-			. 10
+		carriageReturn 13
 	rule
 		arg|
 			parser|
 				map arg.condition parser
-				stuff if
+				current if
 					condition succeeded map
 					then
 						|
@@ -64,7 +58,6 @@ parser|
 							current merge
 								. parser
 								. map
-				current stuff
 	charRule
 		comparison|rule
 			condition
@@ -283,12 +276,12 @@ parser|
 		. syntax.indentation
 		. 13
 		. 10
-		. syntax.assignment
+		. ' '
 		. syntax.select
 		. syntax.function
 		. syntax.string
-		. syntax.lookup.start
-		. syntax.lookup.end
+		. syntax.lookupStart
+		. syntax.lookupEnd
 		. syntax.emptyMap
 		. syntax.search
 		. syntax.root
@@ -299,12 +292,15 @@ parser|
 			parser|
 				parsed /.Meta.Number.Parse parser.parsed
 	newLine alternatives
-		. character syntax.unixNewLine
-		. stringRule syntax.windowsNewLine
+		. character syntax.lineFeed
+		. sequence
+			. character syntax.carriageReturn
+			. character syntax.lineFeed
+	whitespace zeroOrMore alternatives
+		. character 9
+		. character ' '
 	endOfLine sequence
-		. zeroOrMore characterSet
-			. character syntax.space
-			. character syntax.tab
+		. whitespace
 		. newLine
 	startOfFile 1
 	indentationCount 0
@@ -350,8 +346,8 @@ parser|
 					. arg.indentationCount
 					. 1
 	stringLine zeroOrMore characterExcept
-		. syntax.unixNewLine
-		. syntax.windowsNewLine.[1]
+		. syntax.lineFeed
+		. syntax.carriageReturn
 	characterDataExpression prePost
 		pre character syntax.character
 		rule characterExcept
@@ -361,8 +357,8 @@ parser|
 		pre character syntax.string
 		rule alternatives
 			. oneOrMore characterExcept
-				. syntax.unixNewLine
-				. syntax.windowsNewLine.[1]
+				. syntax.lineFeed
+				. syntax.carriageReturn
 				. syntax.string
 			. rule
 				condition sequence
@@ -388,10 +384,10 @@ parser|
 			current rule parser.text
 	lookupAnything rule
 		condition sequence
-			. character syntax.lookup.start
+			. character syntax.lookupStart
 			. value
 			. zeroOrMore syntax.indentation
-			. character syntax.lookup.end
+			. character syntax.lookupEnd
 		result
 			arg|
 				parsed arg.parsed.[2]
@@ -401,7 +397,7 @@ parser|
 			. alternatives
 				. lookupString
 				. lookupAnything
-			. optional character syntax.assignment
+			. optional whitespace
 			. value
 		result
 			arg|
@@ -438,7 +434,7 @@ parser|
 			. zeroOrMore characterExcept
 				. syntax.string
 				. syntax.function
-				. syntax.unixNewLine
+				. syntax.lineFeed
 			. sequence character syntax.function
 			. expression
 		result
@@ -448,10 +444,10 @@ parser|
 					[codeKeys.expression] arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence
-			. character syntax.lookup.start
+			. character syntax.lookupStart
 			. expression
 			. zeroOrMore character syntax.indentation
-			. character syntax.lookup.end
+			. character syntax.lookupEnd
 		result
 			arg|
 				parsed arg.parsed.[2]
@@ -530,7 +526,7 @@ parser|
 		. rule
 			condition sequence
 				. keys
-				. optional character syntax.assignment
+				. optional whitespace
 				. expression
 				. endOfLine
 			result
@@ -584,9 +580,6 @@ parser|
 					[codeKeys.call] 
 						[codeKeys.callable] arg.parsed.[1]
 						[codeKeys.argument] arg.parsed.[2]
-	whitespace zeroOrMore alternatives
-		. character syntax.tab
-		. character syntax.space
 	emptyMap rule
 		condition character syntax.emptyMap
 		result
