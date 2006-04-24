@@ -170,27 +170,6 @@ parser|
 						rules rules
 	prePost
 		arg|rule
-			condition
-				parser|
-					preResult arg.pre parser
-					current if
-						condition succeeded preResult
-						then
-							|
-								ruleResult arg.rule preResult
-								current if
-									condition succeeded ruleResult
-									then
-										|
-											postResult arg.post ruleResult
-											current if
-												condition succeeded postResult
-												then
-													|
-														parsed ruleResult.parsed
-														text postResult.text
-	prePost
-		arg|rule
 			condition sequence
 				. arg.pre
 				. arg.rule
@@ -259,14 +238,11 @@ parser|
 						n arg.n parser
 	optional
 		subRule|
-			parser|
-				subRuleResult subRule parser
-				current if
-					condition succeeded subRuleResult
-					then
-						|subRuleResult
-					else
-						|parser
+			parser|merge
+				.
+					parsed 0
+					text parser.text
+				. subRule parser
 	lookupForbidden characterExcept
 		. syntax.call
 		. syntax.indentation
@@ -298,8 +274,6 @@ parser|
 	endOfLine sequence
 		. whitespace
 		. newLine
-	startOfFile 1
-	indentationCount 0
 	indentation rule
 		condition
 			parser|
