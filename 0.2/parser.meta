@@ -1,23 +1,4 @@
 parser|
-	syntax
-		autokey '.'
-		root '/'
-		search '$'
-		minus '-'
-		fractionBar '/'
-		indentation 9
-		lineFeed 10
-		function '|'
-		string '"'
-		lookupStart '['
-		lookupEnd ']'
-		emptyMap '0'
-		call ' '
-		select '.'
-		character 39
-		mapCurrent "current"
-		integer "0123456789"
-		carriageReturn 13
 	rule
 		arg|
 			parser|
@@ -234,30 +215,29 @@ parser|
 					text parser.text
 				. subRule parser
 	lookupForbidden characterExcept
-		. syntax.call
-		. syntax.indentation
+		. ' '
+		. 9
 		. 13
 		. 10
 		. ' '
-		. syntax.select
-		. syntax.function
-		. syntax.string
-		. syntax.lookupStart
-		. syntax.lookupEnd
-		. syntax.emptyMap
-		. syntax.search
-		. syntax.root
-		. syntax.character
+		. '.'
+		. '"'
+		. '['
+		. ']'
+		. '0'
+		. '$'
+		. '/'
+		. 39
 	number rule
-		condition oneOrMore characterSet syntax.integer
+		condition oneOrMore characterSet "0123456789"
 		result
 			parser|
 				parsed /.Meta.Number.Parse parser.parsed
 	newLine alternatives
-		. character syntax.lineFeed
+		. character 10
 		. sequence
-			. character syntax.carriageReturn
-			. character syntax.lineFeed
+			. character 13
+			. character 10
 	whitespace zeroOrMore characterSet
 		. 9
 		. ' '
@@ -273,7 +253,7 @@ parser|
 							|add
 								. parser.indentationCount
 								. change
-						rule character syntax.indentation
+						rule character 9
 					ruleResult localRule parser
 					current ruleResult
 			result
@@ -285,21 +265,21 @@ parser|
 	sameIndentation indentRule 0
 	dedentation indentRule -1
 	stringLine zeroOrMore characterExcept
-		. syntax.lineFeed
-		. syntax.carriageReturn
-		. syntax.string
+		. 10
+		. 13
+		. '"'
 	characterDataExpression prePost
-		pre character syntax.character
+		pre character 39
 		rule characterExcept
-			. syntax.character
-		post character syntax.character
+			. 39
+		post character 39
 	string prePost
-		pre character syntax.string
+		pre character '"'
 		rule alternatives
 			. oneOrMore characterExcept
-				. syntax.lineFeed
-				. syntax.carriageReturn
-				. syntax.string
+				. 10
+				. 13
+				. '"'
 			. rule
 				condition sequence
 					. rule
@@ -312,7 +292,7 @@ parser|
 								parsed arg.parsed.[3]
 		post sequence
 			. optional newLine
-			. optional character syntax.string
+			. optional character '"'
 	lookupString oneOrMore lookupForbidden
 	value
 		parser|
@@ -324,10 +304,10 @@ parser|
 			current rule parser.text
 	lookupAnything rule
 		condition sequence
-			. character syntax.lookupStart
+			. character '['
 			. value
-			. zeroOrMore syntax.indentation
-			. character syntax.lookupEnd
+			. zeroOrMore 9
+			. character ']'
 		result
 			arg|
 				parsed arg.parsed.[2]
@@ -374,10 +354,10 @@ parser|
 	function rule
 		condition sequence
 			. zeroOrMore characterExcept
-				. syntax.string
-				. syntax.function
-				. syntax.lineFeed
-			. sequence character syntax.function
+				. '"'
+				. ' '
+				. 10
+			. sequence character ' '
 			. expression
 		result
 			arg|
@@ -386,10 +366,10 @@ parser|
 					expression arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence
-			. character syntax.lookupStart
+			. character '['
 			. expression
-			. zeroOrMore character syntax.indentation
-			. character syntax.lookupEnd
+			. zeroOrMore character 9
+			. character ']'
 		result
 			arg|
 				parsed arg.parsed.[2]
@@ -408,13 +388,13 @@ parser|
 				parsed
 					search arg.parsed
 	root rule
-		condition character syntax.root
+		condition character '/'
 		result
 			arg|
 				parsed
 					root 0
 	ruleCurrent rule
-		condition stringRule syntax.mapCurrent
+		condition stringRule "current"
 		result
 			|
 				parsed
@@ -437,7 +417,7 @@ parser|
 				. search
 				. lookup
 			. zeroOrMore prePost
-				pre character syntax.select
+				pre character '.'
 				rule lookup
 		result
 			arg|
@@ -500,8 +480,8 @@ parser|
 				. rule
 					condition sequence
 						. alternatives
-							. character syntax.call
-							. character syntax.indentation
+							. character ' '
+							. character 9
 						. expression
 					result
 						arg|
@@ -514,7 +494,7 @@ parser|
 						callable arg.parsed.[1]
 						argument arg.parsed.[2]
 	emptyMap rule
-		condition character syntax.emptyMap
+		condition character '0'
 		result
 			|
 				parsed 0
@@ -529,10 +509,10 @@ parser|
 				parsed
 					literal arg.parsed
 	keysSearch prePost
-		pre character syntax.search
+		pre character '$'
 		rule search
 	autokeyLookup rule
-		condition character syntax.autokey
+		condition character '.'
 		result
 			arg|
 				defaultKey add
@@ -548,7 +528,7 @@ parser|
 				. lookup
 				. autokeyLookup
 			. zeroOrMore prePost
-				pre character syntax.select
+				pre character '.'
 				rule lookup
 		result
 			arg|
