@@ -318,9 +318,19 @@ parser|
 			parsing
 				arg|
 					. arg
+	onePlusX
+		arg|rule
+			condition sequence
+				. makeList arg.first
+				. zeroOrMore rule
+					condition prePost
+						pre arg.delimiter
+						rule arg.step
+			parsing
+				arg|join arg
 	mapCore sequence
 		. makeList entry
-		. oneOrMore rule
+		. zeroOrMore rule
 			condition sequence
 				. sameIndentation
 				. entry
@@ -391,17 +401,16 @@ parser|
 		. ruleCurrent
 		. realLookup
 	select rule
-		condition sequence
-			. makeList alternatives
+		condition onePlusX
+			first alternatives
 				. root
 				. search
 				. lookup
-			. zeroOrMore prePost
-				pre character '.'
-				rule lookup
+			delimiter character '.'
+			step lookup
 		parsing
 			arg|
-				select join arg
+				select arg
 	functionExpression rule
 		condition function
 		parsing
