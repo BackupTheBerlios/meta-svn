@@ -1,21 +1,4 @@
 parser|
-	codeKeys
-		parameter "parameter"
-		root "root"
-		search "search"
-		lookup "lookup"
-		mapCurrent "current"
-		scope "scope"
-		literal "literal"
-		function "function"
-		call "call"
-		callable "callable"
-		argument "argument"
-		select "select"
-		program "program"
-		key "key"
-		value "value"
-		expression "expression"
 	syntax
 		autokey '.'
 		root '/'
@@ -243,48 +226,6 @@ parser|
 					current implementation
 						parser parser
 						n arg.n parser
-	minMax
-		arg|rule
-			condition
-				parser|
-					implementation
-						impArg|if
-							condition and
-								.
-									|hasKey
-										map impArg
-										key "n"
-								.
-									|equal
-										. impArg.n
-										. 0
-							then
-								|impArg.parser
-							else
-								|
-									res arg.rule impArg.parser
-									current if
-										condition succeeded res
-										then
-											|
-												nextResult implementation
-													parser res
-													n subtract
-														. impArg.n
-														. 1
-												current if
-													condition succeeded nextResult
-													then
-														|
-															parsed join
-																. 
-																	. res.parsed
-																. nextResult.parsed
-															text nextResult.text
-															indentationCount nextResult.indentationCount
-					current implementation
-						parser parser
-						n arg.n parser
 	optional
 		subRule|
 			parser|merge
@@ -346,6 +287,7 @@ parser|
 	stringLine zeroOrMore characterExcept
 		. syntax.lineFeed
 		. syntax.carriageReturn
+		. syntax.string
 	characterDataExpression prePost
 		pre character syntax.character
 		rule characterExcept
@@ -440,8 +382,8 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.parameter] arg.parsed.[1]
-					[codeKeys.expression] arg.parsed.[3]
+					parameter arg.parsed.[1]
+					expression arg.parsed.[3]
 	lookupAnythingExpression rule
 		condition sequence
 			. character syntax.lookupStart
@@ -456,7 +398,7 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.literal] arg.parsed
+					literal arg.parsed
 	search rule
 		condition alternatives
 			. lookupStringExpression
@@ -464,19 +406,19 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.search] arg.parsed
+					search arg.parsed
 	root rule
 		condition character syntax.root
 		result
 			arg|
 				parsed
-					[codeKeys.root] 0
+					root 0
 	ruleCurrent rule
 		condition stringRule syntax.mapCurrent
 		result
 			|
 				parsed
-					[codeKeys.mapCurrent] 0
+					["current"] 0
 	realLookup rule
 		condition alternatives
 			. lookupStringExpression
@@ -484,7 +426,7 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.lookup] arg.parsed
+					lookup arg.parsed
 	lookup alternatives
 		. ruleCurrent
 		. realLookup
@@ -500,18 +442,18 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.select] join arg.parsed
+					select join arg.parsed
 	functionExpression rule
 		condition function
 		result
 			arg|
 				parsed
-					[codeKeys.key]
+					key
 						.
-							[codeKeys.lookup]
-								[codeKeys.literal] codeKeys.function
-					[codeKeys.value]
-						[codeKeys.literal] arg.parsed
+							lookup
+								literal "function"
+					value
+						literal arg.parsed
 	statement alternatives
 		. functionExpression
 		. rule
@@ -523,8 +465,8 @@ parser|
 			result
 				arg|
 					parsed
-						[codeKeys.key] arg.parsed.[1]
-						[codeKeys.value] arg.parsed.[3]
+						key arg.parsed.[1]
+						value arg.parsed.[3]
 	program rule
 		condition sequence
 			.
@@ -550,7 +492,7 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.program] arg.parsed.[2]
+					program arg.parsed.[2]
 	call rule
 		condition sequence
 			. select
@@ -568,9 +510,9 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.call] 
-						[codeKeys.callable] arg.parsed.[1]
-						[codeKeys.argument] arg.parsed.[2]
+					call
+						callable arg.parsed.[1]
+						argument arg.parsed.[2]
 	emptyMap rule
 		condition character syntax.emptyMap
 		result
@@ -585,7 +527,7 @@ parser|
 		result
 			arg|
 				parsed
-					[codeKeys.literal] arg.parsed
+					literal arg.parsed
 	keysSearch prePost
 		pre character syntax.search
 		rule search
@@ -597,8 +539,8 @@ parser|
 					. arg.defaultKey
 					. 1
 				parsed
-					[codeKeys.lookup]
-						[codeKeys.literal] arg.defaultKey
+					lookup
+						literal arg.defaultKey
 	keys rule
 		condition sequence
 			. makeList alternatives
