@@ -4,27 +4,6 @@ parser|
 			arg|default.function merge
 				. default.argument
 				. arg			
-	rule
-		arg|
-			parser|
-				map arg.condition parser
-				current if
-					condition succeeded map
-					then
-						|merge
-							. parser
-							. if
-								condition hasKey
-									map arg
-									key "result"
-								then
-									|merge
-										. map
-										. arg.result merge
-											. parser
-											. map
-								else
-									|map
 	rule defaultFunction
 		function
 			arg|
@@ -40,9 +19,13 @@ parser|
 									. arg.result merge
 										. parser
 										. map
+									. 
+										parsed arg.parsing map.parsed
 		argument
 			result
 				|0
+			parsing
+				p|p
 	charRule
 		compare|rule
 			condition
@@ -168,9 +151,8 @@ parser|
 					then
 						|
 							. arg.post
-			result
-				parser|
-					parsed parser.parsed.[2]
+			parsing
+				arg|arg.[2]
 	succeeded
 		arg|hasKey
 			map arg
@@ -247,9 +229,8 @@ parser|
 		. ']'
 	number rule
 		condition oneOrMore characterSet "0123456789"
-		result
-			parser|
-				parsed /.Meta.Number.Parse parser.parsed
+		parsing
+			arg|/.Meta.Number.Parse arg
 	newLine alternatives
 		. character 10
 		. sequence
@@ -304,9 +285,8 @@ parser|
 							. newLine
 							. indentation
 							. stringLine
-						result
-							arg|
-								parsed arg.parsed.[3]
+						parsing
+							arg|arg.[3]
 		post sequence
 			. optional newLine
 			. optional character '"'
@@ -325,9 +305,8 @@ parser|
 			. value
 			. zeroOrMore 9
 			. character ']'
-		result
-			arg|
-				parsed arg.parsed.[2]
+		parsing
+			arg|arg.[2]
 	entry rule
 		condition sequence
 			. function
@@ -336,26 +315,23 @@ parser|
 				. lookupAnything
 			. whitespace
 			. value
-		result
+		parsing
 			arg|
-				parsed
-					[arg.parsed.[2]] arg.parsed.[4]
+				[arg.[2]] arg.[4]
 	makeList
 		subRule|rule
 			condition subRule
-			result
+			parsing
 				arg|
-					parsed
-						. arg.parsed
+					. arg
 	mapCore sequence
 		. makeList entry
 		. oneOrMore rule
 			condition sequence
 				. sameIndentation
 				. entry
-			result
-				arg|
-					parsed arg.parsed.[2]
+			parsing
+				arg|arg.[2]
 	map prePost
 		pre indentation
 		rule mapCore
@@ -376,54 +352,47 @@ parser|
 				. 10
 			. sequence character ' '
 			. expression
-		result
+		parsing
 			arg|
-				parsed
-					parameter arg.parsed.[1]
-					expression arg.parsed.[3]
+				parameter arg.[1]
+				expression arg.[3]
 	lookupAnythingExpression rule
 		condition sequence
 			. character '['
 			. expression
 			. zeroOrMore character 9
 			. character ']'
-		result
-			arg|
-				parsed arg.parsed.[2]
+		parsing
+			arg|arg.[2]
 	lookupStringExpression rule
 		condition lookupString
-		result
+		parsing
 			arg|
-				parsed
-					literal arg.parsed
+				literal arg
 	search rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
-		result
+		parsing
 			arg|
-				parsed
-					search arg.parsed
+				search arg
 	root rule
 		condition character '/'
-		result
-			arg|
-				parsed
-					root 0
+		parsing
+			|
+				root 0
 	ruleCurrent rule
 		condition stringRule "current"
-		result
+		parsing
 			|
-				parsed
-					["current"] 0
+				["current"] 0
 	realLookup rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
-		result
+		parsing
 			arg|
-				parsed
-					lookup arg.parsed
+				lookup arg
 	lookup alternatives
 		. ruleCurrent
 		. realLookup
@@ -436,21 +405,19 @@ parser|
 			. zeroOrMore prePost
 				pre character '.'
 				rule lookup
-		result
+		parsing
 			arg|
-				parsed
-					select join arg.parsed
+				select join arg
 	functionExpression rule
 		condition function
-		result
+		parsing
 			arg|
-				parsed
-					key
-						.
-							lookup
-								literal "function"
-					value
-						literal arg.parsed
+				key
+					.
+						lookup
+							literal "function"
+				value
+					literal arg
 	statement alternatives
 		. functionExpression
 		. rule
@@ -459,11 +426,10 @@ parser|
 				. whitespace
 				. expression
 				. endOfLine
-			result
+			parsing
 				arg|
-					parsed
-						key arg.parsed.[1]
-						value arg.parsed.[3]
+					key arg.[1]
+					value arg.[3]
 	program rule
 		condition sequence
 			.
@@ -475,10 +441,9 @@ parser|
 				. indentation
 				. rule
 					condition statement
-					result
+					parsing
 						arg|
-							parsed
-								. arg.parsed
+							. arg
 				. zeroOrMore sequence
 					. alternatives
 						. sameIndentation
@@ -486,10 +451,9 @@ parser|
 					. statement
 			. 
 				parser|"p.defaultKeys.Pop 0"
-		result
+		parsing
 			arg|
-				parsed
-					program arg.parsed.[2]
+				program arg.[2]
 	call rule
 		condition sequence
 			. select
@@ -500,31 +464,27 @@ parser|
 							. character ' '
 							. character 9
 						. expression
-					result
-						arg|
-							parsed arg.parsed.[2]
+					parsing
+						arg|arg.[2]
 				. program
-		result
+		parsing
 			arg|
-				parsed
-					call
-						callable arg.parsed.[1]
-						argument arg.parsed.[2]
+				call
+					callable arg.[1]
+					argument arg.[2]
 	emptyMap rule
 		condition character '0'
-		result
-			|
-				parsed 0
+		parsing
+			|0
 	literalExpression rule
 		condition alternatives
 			. emptyMap
 			. string
 			. number
 			. characterDataExpression
-		result
+		parsing
 			arg|
-				parsed
-					literal arg.parsed
+				literal arg
 	keysSearch prePost
 		pre character '$'
 		rule search
@@ -547,9 +507,8 @@ parser|
 			. zeroOrMore prePost
 				pre character '.'
 				rule lookup
-		result
-			arg|
-				parsed join arg.parsed
+		parsing
+			arg|join arg
 	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string
