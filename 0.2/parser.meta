@@ -312,30 +312,24 @@ parser|
 		parsing
 			arg|
 				[arg.[2]] arg.[4]
-	makeList
-		subRule|rule
-			condition subRule
-			parsing
-				arg|
-					. arg
 	onePlusX
 		arg|rule
 			condition sequence
-				. makeList arg.first
+				. rule
+					condition arg.first
+					parsing
+						arg|
+							. arg
 				. zeroOrMore rule
 					condition prePost
 						pre arg.delimiter
 						rule arg.step
 			parsing
 				arg|join arg
-	mapCore sequence
-		. makeList entry
-		. zeroOrMore rule
-			condition sequence
-				. sameIndentation
-				. entry
-			parsing
-				arg|arg.[2]
+	mapCore onePlusX
+		first entry
+		delimiter sameIndentation
+		step entry
 	map prePost
 		pre indentation
 		rule mapCore
@@ -501,17 +495,13 @@ parser|
 				parsed
 					lookup
 						literal arg.defaultKey
-	keys rule
-		condition sequence
-			. makeList alternatives
-				. keysSearch
-				. lookup
-				. autokeyLookup
-			. zeroOrMore prePost
-				pre character '.'
-				rule lookup
-		parsing
-			arg|join arg
+	keys onePlusX
+		first alternatives
+			. keysSearch
+			. lookup
+			. autokeyLookup
+		delimiter character '.'
+		step lookup
 	current /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine string
