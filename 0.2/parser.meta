@@ -59,32 +59,77 @@ parser|
 			array string
 			function
 				char|character char
-	zeroOrMore
-		loopRule|rule
+	loopRule
+		arg|rule
 			condition
 				parser|
 					implementation
-						p|
-							matched loopRule p
-							current if	
-								condition succeeded matched
-								then
-									|
-										nextMatched implementation matched
-										current if
-											condition succeeded nextMatched
-											then
-												|
-													parsed join
-														. 
-															. matched.parsed
-														. nextMatched.parsed
-													text nextMatched.text
-								else
-									|p
+						impArg|if
+							condition arg.tooMuch
+								count add
+									. impArg.n
+									. 1
+								parser impArg.parser
+							then
+								|impArg.parser
+							else
+								|
+									res arg.rule impArg.parser
+									current if
+										condition succeeded res
+										then
+											|
+												nextResult implementation
+													parser res
+													n add
+														. impArg.n
+														. 1
+												current if
+													condition succeeded nextResult
+													then
+														|
+															parsed join
+																. 
+																	. res.parsed
+																. nextResult.parsed
+															text nextResult.text
+															indentationCount if
+																condition hasKey
+																	map nextResult
+																	key "indentationCount"
+																then
+																	|nextResult.indentationCount
+										else
+											|if
+												condition not arg.tooFew
+													count impArg.n
+													parser impArg.parser
+												then
+													|impArg.parser
 					current implementation
-						parsed 0
-						text parser.text
+						parser merge
+							. parser
+							. 
+								parsed 0
+						n 0
+	nTimes
+		arg|loopRule
+			tooMuch
+				upperArg|strictlyIncreasing
+					. arg.n upperArg.parser
+					. upperArg.count
+			tooFew
+				lowerArg|strictlyIncreasing
+					. lowerArg.count
+					. arg.n lowerArg.parser
+			rule arg.rule
+	zeroOrMore
+		looped|loopRule
+			tooMuch
+				|0
+			tooFew
+				|0
+			rule looped
 	oneOrMore
 		arg|rule
 			condition
@@ -176,64 +221,6 @@ parser|
 										else
 											|implementation rest arg
 					current implementation alts
-	loopRule
-		arg|rule
-			condition
-				parser|
-					implementation
-						impArg|if
-							condition arg.tooMuch
-								count add
-									. impArg.n
-									. 1
-								parser impArg.parser
-							then
-								|impArg.parser
-							else
-								|
-									res arg.rule impArg.parser
-									current if
-										condition succeeded res
-										then
-											|
-												nextResult implementation
-													parser res
-													n add
-														. impArg.n
-														. 1
-												current if
-													condition succeeded nextResult
-													then
-														|
-															parsed join
-																. 
-																	. res.parsed
-																. nextResult.parsed
-															text nextResult.text
-															indentationCount nextResult.indentationCount
-										else
-											|if
-												condition not arg.tooFew
-													count subtract
-														. impArg.n
-														. 1
-													parser impArg.parser
-												then
-													|impArg.parser
-					current implementation
-						parser parser
-						n 0
-	nTimes
-		arg|loopRule
-			tooMuch
-				upperArg|strictlyIncreasing
-					. arg.n upperArg.parser
-					. upperArg.count
-			tooFew
-				lowerArg|strictlyIncreasing
-					. lowerArg.count
-					. arg.n lowerArg.parser
-			rule arg.rule
 	optional
 		subRule|
 			parser|merge
