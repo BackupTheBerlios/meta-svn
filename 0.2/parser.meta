@@ -295,14 +295,12 @@ parser|
 				. number
 				. characterDataExpression
 			current rule parser.text
-	lookupAnything rule
-		condition sequence
-			. character '['
-			. value
+	lookupAnything prePost
+		pre character '['
+		rule value
+		post sequence
 			. zeroOrMore 9
 			. character ']'
-		parsing
-			arg|arg.[2]
 	entry rule
 		condition sequence
 			. function
