@@ -6387,10 +6387,6 @@ namespace Meta
 		{
 			return Parser.Expression;
 		});
-		//public static Rule ExpressionData = new DelayedRule(delegate()
-		//{
-		//    return Parser.Expression;
-		//});
 
 		public static Rule Value = new Alternatives(
 			Map,
@@ -6426,46 +6422,11 @@ namespace Meta
 
 						// i dont understand this
 						bool match;
-						EndOfLine.Match(parser, out match);// == null && parser.Look() != Syntax.endOfFile)
-						//{
-						//    //parser.index -= 1;
-						//    //if (EndOfLine.Match(parser, out match) == null)
-						//    //{
-						//    //    parser.index -= 1;
-						//    //    if (EndOfLine.Match(parser, out match) == null)
-						//    //    {
-						//    //        parser.index += 2;
-						//    //        throw new SyntaxException("Expected newline.", parser);
-						//    //    }
-						//    //    else
-						//    //    {
-						//    //        parser.line--;
-						//    //    }
-						//    //}
-						//    //else
-						//    //{
-						//    //    parser.line--;
-						//    //}
-						//}
+						EndOfLine.Match(parser, out match);
 				}
 			}
 			return result;
 		});
-		//public static Rule Function = new Sequence(
-		//            new Action(new Assignment(
-		//                CodeKeys.ParameterName),
-		//                new ZeroOrMore(
-		//                new Action(new Autokey(),
-		//                    new CharacterExcept(
-		//                        Syntax.@string,
-		//                        Syntax.function,
-		//                        Syntax.unixNewLine)))),
-		//                new Action(
-		//                    new Match(),
-		//                        new Character(
-		//                            Syntax.function)),
-		//                    new Action(new ReferenceAssignment(),
-		//                        ExpressionData));
 		public static Rule Function = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Parameter),
@@ -6481,45 +6442,6 @@ namespace Meta
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData));
-		//public static Rule Function = new Sequence(
-		//        new Action(new Merge(),
-		//            new Sequence(
-		//                new Action(new Assignment(
-		//                    CodeKeys.ParameterName),
-		//                    new ZeroOrMore(
-		//                    new Action(new Autokey(),
-		//                        new CharacterExcept(
-		//                            Syntax.@string,
-		//                            Syntax.function,
-		//                            Syntax.unixNewLine)))))),
-		//        new Action(new Merge(),
-		//            new Sequence(
-		//                new Action(
-		//                new Match(),
-		//                    new Character(
-		//                        Syntax.function)),
-		//                new Action(new ReferenceAssignment(),
-		//                    ExpressionData))));
-
-		//public static Rule Function = new Sequence(
-		//        new Action(new Merge(),
-		//            new Sequence(
-		//                new Action(new Assignment(
-		//                    CodeKeys.ParameterName),
-		//                    new ZeroOrMore(
-		//                    new Action(new Autokey(),
-		//                        new CharacterExcept(
-		//                            Syntax.@string,
-		//                            Syntax.function,
-		//                            Syntax.unixNewLine)))))),
-		//        new Action(new Merge(),
-		//            new Sequence(
-		//                new Action(
-		//                new Match(),
-		//                    new Character(
-		//                        Syntax.function)),
-		//                new Action(new ReferenceAssignment(),
-		//                    ExpressionData))));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),

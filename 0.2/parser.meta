@@ -176,15 +176,17 @@ parser|
 										else
 											|implementation rest arg
 					current implementation alts
-	nTimes
+	loopRule
 		arg|rule
 			condition
 				parser|
 					implementation
 						impArg|if
-							condition equal
-								. impArg.n
-								. 0
+							condition arg.tooMuch
+								count add
+									. impArg.n
+									. 1
+								parser impArg.parser
 							then
 								|impArg.parser
 							else
@@ -196,7 +198,7 @@ parser|
 											|
 												nextResult implementation
 													parser res
-													n subtract
+													n add
 														. impArg.n
 														. 1
 												current if
@@ -209,9 +211,29 @@ parser|
 																. nextResult.parsed
 															text nextResult.text
 															indentationCount nextResult.indentationCount
+										else
+											|if
+												condition not arg.tooFew
+													count subtract
+														. impArg.n
+														. 1
+													parser impArg.parser
+												then
+													|impArg.parser
 					current implementation
 						parser parser
-						n arg.n parser
+						n 0
+	nTimes
+		arg|loopRule
+			tooMuch
+				upperArg|strictlyIncreasing
+					. arg.n upperArg.parser
+					. upperArg.count
+			tooFew
+				lowerArg|strictlyIncreasing
+					. lowerArg.count
+					. arg.n lowerArg.parser
+			rule arg.rule
 	optional
 		subRule|
 			parser|merge
@@ -354,14 +376,12 @@ parser|
 			arg|
 				parameter arg.[1]
 				expression arg.[3]
-	lookupAnythingExpression rule
-		condition sequence
-			. character '['
-			. expression
+	lookupAnythingExpression prePost
+		pre character '['
+		rule expression
+		post sequence
 			. zeroOrMore character 9
 			. character ']'
-		parsing
-			arg|arg.[2]
 	lookupStringExpression rule
 		condition lookupString
 		parsing
@@ -455,14 +475,12 @@ parser|
 		condition sequence
 			. select
 			. alternatives
-				. rule
-					condition sequence
+				. prePost
+					pre sequence
 						. alternatives
 							. character ' '
 							. character 9
-						. expression
-					parsing
-						arg|arg.[2]
+					rule expression
 				. program
 		parsing
 			arg|
