@@ -244,16 +244,12 @@ parser|
 		. newLine
 	indentRule
 		change|rule
-			condition
-				parser|
-					localRule nTimes
-						n
-							|add
-								. parser.indentationCount
-								. change
-						rule character 9
-					ruleResult localRule parser
-					current ruleResult
+			condition nTimes
+				n
+					parser|add
+						. parser.indentationCount
+						. change
+				rule character 9
 			result
 				parser|
 					indentationCount add
