@@ -1,4 +1,9 @@
 parser|
+	defaultFunction
+		default|
+			arg|default.function merge
+				. default.argument
+				. arg			
 	rule
 		arg|
 			parser|
@@ -20,18 +25,36 @@ parser|
 											. map
 								else
 									|map
+	rule defaultFunction
+		function
+			arg|
+				parser|
+					map arg.condition parser
+					current if
+						condition succeeded map
+						then
+							|merge
+								. parser
+								. merge
+									. map
+									. arg.result merge
+										. parser
+										. map
+		argument
+			result
+				|0
 	charRule
-		comparison|rule
+		compare|rule
 			condition
 				parser|if
 					condition and
 						.
 							|not null parser.text
 						. 
-							|comparison first parser.text
+							|compare parser.text.[1]
 					then
 						|
-							parsed first parser.text
+							parsed parser.text.[1]
 							text rest parser.text
 	character
 		char|charRule
@@ -219,15 +242,9 @@ parser|
 		. 9
 		. 13
 		. 10
-		. ' '
 		. '.'
-		. '"'
 		. '['
 		. ']'
-		. '0'
-		. '$'
-		. '/'
-		. 39
 	number rule
 		condition oneOrMore characterSet "0123456789"
 		result
