@@ -223,7 +223,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -309,7 +309,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -1106,7 +1106,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -1192,7 +1192,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -1887,7 +1887,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -1973,7 +1973,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -3031,7 +3031,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -3117,7 +3117,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -14579,7 +14579,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -14717,7 +14717,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -14872,7 +14872,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -15010,7 +15010,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -16308,7 +16308,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -16394,7 +16394,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -17253,7 +17253,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -17339,7 +17339,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -17494,7 +17494,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -17580,7 +17580,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -18146,7 +18146,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -18232,7 +18232,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -18695,7 +18695,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -18781,7 +18781,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -21052,7 +21052,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -21138,7 +21138,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -21660,7 +21660,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -21746,7 +21746,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -22269,7 +22269,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -22355,7 +22355,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -23381,7 +23381,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -23467,7 +23467,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -25495,7 +25495,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -25581,7 +25581,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -25736,7 +25736,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -26055,7 +26055,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -26210,7 +26210,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -26529,7 +26529,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -26684,7 +26684,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -27337,7 +27337,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -27748,7 +27748,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -28401,7 +28401,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -30279,7 +30279,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -30443,7 +30443,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -30906,7 +30906,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -31044,7 +31044,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -31507,7 +31507,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -31671,7 +31671,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -32049,7 +32049,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -32187,7 +32187,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -32565,7 +32565,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -32729,7 +32729,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -34014,7 +34014,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -34100,7 +34100,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -34932,7 +34932,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -35018,7 +35018,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -35704,7 +35704,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -35790,7 +35790,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -35945,7 +35945,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -35979,7 +35979,7 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"callable"
+																		1
 																	Value (StrategyMap):
 																		Extent (Extent):
 																			Start (SourcePosition):
@@ -36065,7 +36065,7 @@ Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"argument"
+																		2
 																	Value (StrategyMap):
 																		Extent (Extent):
 																			Start (SourcePosition):
@@ -36100,7 +36100,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -36693,7 +36693,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -36779,7 +36779,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -37739,7 +37739,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -37825,7 +37825,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -37962,7 +37962,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -38048,7 +38048,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -39060,7 +39060,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -39146,7 +39146,7 @@ Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -39481,7 +39481,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -39619,7 +39619,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -40022,7 +40022,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -40160,7 +40160,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -40315,7 +40315,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -40453,7 +40453,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -41416,7 +41416,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -41554,7 +41554,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -42193,7 +42193,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -42279,7 +42279,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -43324,7 +43324,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -43513,7 +43513,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -45070,7 +45070,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -45156,7 +45156,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -45311,7 +45311,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -45990,7 +45990,7 @@ Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -47575,7 +47575,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -47791,7 +47791,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -47928,7 +47928,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -48066,7 +48066,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -48497,7 +48497,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -48661,7 +48661,7 @@ hello!"
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -49217,7 +49217,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -49536,7 +49536,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -49691,7 +49691,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -49855,7 +49855,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -50062,7 +50062,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -50200,7 +50200,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -51388,9 +51388,9 @@ Schwaenzchen in die Hoeh."
 																													"18"
 																											End (SourcePosition):
 																												Line (Int32):
-																													"355"
+																													"354"
 																												Column (Int32):
-																													"1"
+																													"10"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -51405,14 +51405,14 @@ Schwaenzchen in die Hoeh."
 																															"18"
 																													End (SourcePosition):
 																														Line (Int32):
-																															"355"
+																															"354"
 																														Column (Int32):
-																															"1"
+																															"10"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -51498,7 +51498,7 @@ Schwaenzchen in die Hoeh."
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -51508,9 +51508,9 @@ Schwaenzchen in die Hoeh."
 																																	"21"
 																															End (SourcePosition):
 																																Line (Int32):
-																																	"355"
+																																	"354"
 																																Column (Int32):
-																																	"1"
+																																	"10"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
@@ -51525,26 +51525,26 @@ Schwaenzchen in die Hoeh."
 																																			"22"
 																																	End (SourcePosition):
 																																		Line (Int32):
-																																			"355"
+																																			"354"
 																																		Column (Int32):
-																																			"1"
+																																			"10"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
 																																			null
-																																		"callable"
+																																		1
 																																	Value (StrategyMap):
 																																		Extent (Extent):
 																																			Start (SourcePosition):
 																																				Line (Int32):
 																																					"352"
 																																				Column (Int32):
-																																					"22"
+																																					"23"
 																																			End (SourcePosition):
 																																				Line (Int32):
 																																					"352"
 																																				Column (Int32):
-																																					"27"
+																																					"28"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -51556,12 +51556,12 @@ Schwaenzchen in die Hoeh."
 																																						Line (Int32):
 																																							"352"
 																																						Column (Int32):
-																																							"22"
+																																							"23"
 																																					End (SourcePosition):
 																																						Line (Int32):
 																																							"352"
 																																						Column (Int32):
-																																							"27"
+																																							"28"
 																																				Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						Extent:
@@ -51573,12 +51573,12 @@ Schwaenzchen in die Hoeh."
 																																								Line (Int32):
 																																									"352"
 																																								Column (Int32):
-																																									"22"
+																																									"23"
 																																							End (SourcePosition):
 																																								Line (Int32):
 																																									"352"
 																																								Column (Int32):
-																																									"27"
+																																									"28"
 																																						Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								Extent:
@@ -51590,12 +51590,12 @@ Schwaenzchen in die Hoeh."
 																																										Line (Int32):
 																																											"352"
 																																										Column (Int32):
-																																											"22"
+																																											"23"
 																																									End (SourcePosition):
 																																										Line (Int32):
 																																											"352"
 																																										Column (Int32):
-																																											"27"
+																																											"28"
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -51607,30 +51607,30 @@ Schwaenzchen in die Hoeh."
 																																												Line (Int32):
 																																													"352"
 																																												Column (Int32):
-																																													"22"
+																																													"23"
 																																											End (SourcePosition):
 																																												Line (Int32):
 																																													"352"
 																																												Column (Int32):
-																																													"27"
+																																													"28"
 																																										"equal"
 																																Entry (KeyValuePair`2)
 																																	Key (StrategyMap):
 																																		Extent:
 																																			null
-																																		"argument"
+																																		2
 																																	Value (StrategyMap):
 																																		Extent (Extent):
 																																			Start (SourcePosition):
 																																				Line (Int32):
 																																					"352"
 																																				Column (Int32):
-																																					"27"
+																																					"28"
 																																			End (SourcePosition):
 																																				Line (Int32):
-																																					"355"
+																																					"354"
 																																				Column (Int32):
-																																					"1"
+																																					"9"
 																																		Entry (KeyValuePair`2)
 																																			Key (StrategyMap):
 																																				Extent:
@@ -51642,12 +51642,12 @@ Schwaenzchen in die Hoeh."
 																																						Line (Int32):
 																																							"352"
 																																						Column (Int32):
-																																							"27"
+																																							"28"
 																																					End (SourcePosition):
 																																						Line (Int32):
-																																							"355"
+																																							"354"
 																																						Column (Int32):
-																																							"1"
+																																							"9"
 																																				Entry (KeyValuePair`2)
 																																					Key (StrategyMap):
 																																						Extent:
@@ -51816,9 +51816,9 @@ Schwaenzchen in die Hoeh."
 																																									"1"
 																																							End (SourcePosition):
 																																								Line (Int32):
-																																									"355"
+																																									"354"
 																																								Column (Int32):
-																																									"1"
+																																									"9"
 																																						Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								Extent:
@@ -52200,9 +52200,9 @@ Schwaenzchen in die Hoeh."
 																																									"6"
 																																							End (SourcePosition):
 																																								Line (Int32):
-																																									"360"
+																																									"359"
 																																								Column (Int32):
-																																									"1"
+																																									"11"
 																																						Entry (KeyValuePair`2)
 																																							Key (StrategyMap):
 																																								Extent:
@@ -52217,9 +52217,9 @@ Schwaenzchen in die Hoeh."
 																																											"6"
 																																									End (SourcePosition):
 																																										Line (Int32):
-																																											"360"
+																																											"359"
 																																										Column (Int32):
-																																											"1"
+																																											"11"
 																																								Entry (KeyValuePair`2)
 																																									Key (StrategyMap):
 																																										Extent:
@@ -52252,9 +52252,9 @@ Schwaenzchen in die Hoeh."
 																																													"10"
 																																											End (SourcePosition):
 																																												Line (Int32):
-																																													"360"
+																																													"359"
 																																												Column (Int32):
-																																													"1"
+																																													"11"
 																																										Entry (KeyValuePair`2)
 																																											Key (StrategyMap):
 																																												Extent:
@@ -52269,14 +52269,14 @@ Schwaenzchen in die Hoeh."
 																																															"10"
 																																													End (SourcePosition):
 																																														Line (Int32):
-																																															"360"
+																																															"359"
 																																														Column (Int32):
-																																															"1"
+																																															"11"
 																																												Entry (KeyValuePair`2)
 																																													Key (StrategyMap):
 																																														Extent:
 																																															null
-																																														"callable"
+																																														1
 																																													Value (StrategyMap):
 																																														Extent (Extent):
 																																															Start (SourcePosition):
@@ -52362,7 +52362,7 @@ Schwaenzchen in die Hoeh."
 																																													Key (StrategyMap):
 																																														Extent:
 																																															null
-																																														"argument"
+																																														2
 																																													Value (StrategyMap):
 																																														Extent (Extent):
 																																															Start (SourcePosition):
@@ -52372,9 +52372,9 @@ Schwaenzchen in die Hoeh."
 																																																	"14"
 																																															End (SourcePosition):
 																																																Line (Int32):
-																																																	"360"
+																																																	"359"
 																																																Column (Int32):
-																																																	"1"
+																																																	"11"
 																																														Entry (KeyValuePair`2)
 																																															Key (StrategyMap):
 																																																Extent:
@@ -52389,26 +52389,26 @@ Schwaenzchen in die Hoeh."
 																																																			"15"
 																																																	End (SourcePosition):
 																																																		Line (Int32):
-																																																			"360"
+																																																			"359"
 																																																		Column (Int32):
-																																																			"1"
+																																																			"11"
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
 																																																			null
-																																																		"callable"
+																																																		1
 																																																	Value (StrategyMap):
 																																																		Extent (Extent):
 																																																			Start (SourcePosition):
 																																																				Line (Int32):
 																																																					"357"
 																																																				Column (Int32):
-																																																					"15"
+																																																					"16"
 																																																			End (SourcePosition):
 																																																				Line (Int32):
 																																																					"357"
 																																																				Column (Int32):
-																																																					"18"
+																																																					"19"
 																																																		Entry (KeyValuePair`2)
 																																																			Key (StrategyMap):
 																																																				Extent:
@@ -52420,12 +52420,12 @@ Schwaenzchen in die Hoeh."
 																																																						Line (Int32):
 																																																							"357"
 																																																						Column (Int32):
-																																																							"15"
+																																																							"16"
 																																																					End (SourcePosition):
 																																																						Line (Int32):
 																																																							"357"
 																																																						Column (Int32):
-																																																							"18"
+																																																							"19"
 																																																				Entry (KeyValuePair`2)
 																																																					Key (StrategyMap):
 																																																						Extent:
@@ -52437,12 +52437,12 @@ Schwaenzchen in die Hoeh."
 																																																								Line (Int32):
 																																																									"357"
 																																																								Column (Int32):
-																																																									"15"
+																																																									"16"
 																																																							End (SourcePosition):
 																																																								Line (Int32):
 																																																									"357"
 																																																								Column (Int32):
-																																																									"18"
+																																																									"19"
 																																																						Entry (KeyValuePair`2)
 																																																							Key (StrategyMap):
 																																																								Extent:
@@ -52454,12 +52454,12 @@ Schwaenzchen in die Hoeh."
 																																																										Line (Int32):
 																																																											"357"
 																																																										Column (Int32):
-																																																											"15"
+																																																											"16"
 																																																									End (SourcePosition):
 																																																										Line (Int32):
 																																																											"357"
 																																																										Column (Int32):
-																																																											"18"
+																																																											"19"
 																																																								Entry (KeyValuePair`2)
 																																																									Key (StrategyMap):
 																																																										Extent:
@@ -52471,30 +52471,30 @@ Schwaenzchen in die Hoeh."
 																																																												Line (Int32):
 																																																													"357"
 																																																												Column (Int32):
-																																																													"15"
+																																																													"16"
 																																																											End (SourcePosition):
 																																																												Line (Int32):
 																																																													"357"
 																																																												Column (Int32):
-																																																													"18"
+																																																													"19"
 																																																										"add"
 																																																Entry (KeyValuePair`2)
 																																																	Key (StrategyMap):
 																																																		Extent:
 																																																			null
-																																																		"argument"
+																																																		2
 																																																	Value (StrategyMap):
 																																																		Extent (Extent):
 																																																			Start (SourcePosition):
 																																																				Line (Int32):
 																																																					"357"
 																																																				Column (Int32):
-																																																					"18"
+																																																					"19"
 																																																			End (SourcePosition):
 																																																				Line (Int32):
-																																																					"360"
+																																																					"359"
 																																																				Column (Int32):
-																																																					"1"
+																																																					"10"
 																																																		Entry (KeyValuePair`2)
 																																																			Key (StrategyMap):
 																																																				Extent:
@@ -52506,12 +52506,12 @@ Schwaenzchen in die Hoeh."
 																																																						Line (Int32):
 																																																							"357"
 																																																						Column (Int32):
-																																																							"18"
+																																																							"19"
 																																																					End (SourcePosition):
 																																																						Line (Int32):
-																																																							"360"
+																																																							"359"
 																																																						Column (Int32):
-																																																							"1"
+																																																							"10"
 																																																				Entry (KeyValuePair`2)
 																																																					Key (StrategyMap):
 																																																						Extent:
@@ -52680,9 +52680,9 @@ Schwaenzchen in die Hoeh."
 																																																									"1"
 																																																							End (SourcePosition):
 																																																								Line (Int32):
-																																																									"360"
+																																																									"359"
 																																																								Column (Int32):
-																																																									"1"
+																																																									"10"
 																																																						Entry (KeyValuePair`2)
 																																																							Key (StrategyMap):
 																																																								Extent:
@@ -53184,7 +53184,7 @@ Schwaenzchen in die Hoeh."
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -53373,7 +53373,7 @@ Schwaenzchen in die Hoeh."
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -53579,7 +53579,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -53665,7 +53665,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -54257,7 +54257,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -54343,7 +54343,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -55612,7 +55612,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -55698,7 +55698,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -55710,12 +55710,12 @@ Schwaenzchen in die Hoeh."
 																Line (Int32):
 																	"376"
 																Column (Int32):
-																	"34"
+																	"32"
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																Extent:
 																	null
-																"call"
+																"select"
 															Value (StrategyMap):
 																Extent (Extent):
 																	Start (SourcePosition):
@@ -55727,12 +55727,12 @@ Schwaenzchen in die Hoeh."
 																		Line (Int32):
 																			"376"
 																		Column (Int32):
-																			"34"
+																			"32"
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
 																		Extent:
 																			null
-																		"callable"
+																		1
 																	Value (StrategyMap):
 																		Extent (Extent):
 																			Start (SourcePosition):
@@ -55749,7 +55749,7 @@ Schwaenzchen in die Hoeh."
 																			Key (StrategyMap):
 																				Extent:
 																					null
-																				"select"
+																				"search"
 																			Value (StrategyMap):
 																				Extent (Extent):
 																					Start (SourcePosition):
@@ -55766,7 +55766,7 @@ Schwaenzchen in die Hoeh."
 																					Key (StrategyMap):
 																						Extent:
 																							null
-																						1
+																						"literal"
 																					Value (StrategyMap):
 																						Extent (Extent):
 																							Start (SourcePosition):
@@ -55779,76 +55779,42 @@ Schwaenzchen in die Hoeh."
 																									"376"
 																								Column (Int32):
 																									"32"
-																						Entry (KeyValuePair`2)
-																							Key (StrategyMap):
-																								Extent:
-																									null
-																								"search"
-																							Value (StrategyMap):
-																								Extent (Extent):
-																									Start (SourcePosition):
-																										Line (Int32):
-																											"376"
-																										Column (Int32):
-																											"27"
-																									End (SourcePosition):
-																										Line (Int32):
-																											"376"
-																										Column (Int32):
-																											"32"
-																								Entry (KeyValuePair`2)
-																									Key (StrategyMap):
-																										Extent:
-																											null
-																										"literal"
-																									Value (StrategyMap):
-																										Extent (Extent):
-																											Start (SourcePosition):
-																												Line (Int32):
-																													"376"
-																												Column (Int32):
-																													"27"
-																											End (SourcePosition):
-																												Line (Int32):
-																													"376"
-																												Column (Int32):
-																													"32"
-																										"myArg"
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		Extent:
-																			null
-																		"argument"
-																	Value (StrategyMap):
-																		Extent (Extent):
-																			Start (SourcePosition):
-																				Line (Int32):
-																					"376"
-																				Column (Int32):
-																					"32"
-																			End (SourcePosition):
-																				Line (Int32):
-																					"376"
-																				Column (Int32):
-																					"34"
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				Extent:
-																					null
-																				"literal"
-																			Value (StrategyMap):
-																				Extent (Extent):
-																					Start (SourcePosition):
-																						Line (Int32):
-																							"376"
-																						Column (Int32):
-																							"33"
-																					End (SourcePosition):
-																						Line (Int32):
-																							"376"
-																						Column (Int32):
-																							"34"
-																				0
+																						"myArg"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														3
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"376"
+																Column (Int32):
+																	"32"
+															End (SourcePosition):
+																Line (Int32):
+																	"376"
+																Column (Int32):
+																	"34"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"376"
+																		Column (Int32):
+																			"33"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"376"
+																		Column (Int32):
+																			"34"
+																0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:
@@ -56360,7 +56326,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -56446,7 +56412,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -57330,7 +57296,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -57520,7 +57486,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -58333,7 +58299,7 @@ Schwaenzchen in die Hoeh."
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"callable"
+																														1
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -58419,7 +58385,7 @@ Schwaenzchen in die Hoeh."
 																													Key (StrategyMap):
 																														Extent:
 																															null
-																														"argument"
+																														2
 																													Value (StrategyMap):
 																														Extent (Extent):
 																															Start (SourcePosition):
@@ -58574,7 +58540,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -58660,7 +58626,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -59593,7 +59559,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"callable"
+														1
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):
@@ -60246,7 +60212,7 @@ Schwaenzchen in die Hoeh."
 													Key (StrategyMap):
 														Extent:
 															null
-														"argument"
+														2
 													Value (StrategyMap):
 														Extent (Extent):
 															Start (SourcePosition):

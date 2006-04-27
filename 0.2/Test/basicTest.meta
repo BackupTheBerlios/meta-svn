@@ -128,7 +128,7 @@ commandLine|
 				current.a "b"
 	a "default"
 	b 0
-	aSet object.SetA	0
+	aSet object.SetA 0
 	bSet object.SetB
 		value
 			x 7
@@ -349,14 +349,14 @@ commandLine|
 	whileCounter 0
 	loop
 		start|
-			whileDecision not equal
+			whileDecision not (equal
 				. start
-				. 10
+				. 10)
 			whileBranches
 				.
-					arg|loop add
+					arg|loop (add
 						. arg
-						. 1
+						. 1)
 				[0]
 					arg|arg
 			current whileBranches.[whileDecision] start

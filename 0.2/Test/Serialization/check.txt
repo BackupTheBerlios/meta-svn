@@ -32,12 +32,12 @@ function
 						current 0
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "merge"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -87,12 +87,12 @@ function
 							literal "shortFunctionTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "shortFunction"
-						argument 
+						[2] 
 							literal "hello"
 			[5] 
 				key 
@@ -135,12 +135,12 @@ function
 							literal 1
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "SetCounter"
-						argument 
+						[2] 
 							literal 5
 			[8] 
 				key 
@@ -203,12 +203,12 @@ function
 							literal "lexicalScoping"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "scopingTest"
-						argument 
+						[2] 
 							literal 0
 			[12] 
 				key 
@@ -893,7 +893,7 @@ function
 							literal "aSet"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -901,7 +901,7 @@ function
 								[2] 
 									lookup 
 										literal "SetA"
-						argument 
+						[2] 
 							literal 0
 			[49] 
 				key 
@@ -910,7 +910,7 @@ function
 							literal "bSet"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -918,7 +918,7 @@ function
 								[2] 
 									lookup 
 										literal "SetB"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -996,12 +996,12 @@ function
 							literal 4
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "scopeFunction"
-						argument 
+						[2] 
 							literal 0
 			[54] 
 				key 
@@ -1054,12 +1054,12 @@ function
 							literal "scopeFromFunction"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "scopeFunctionFunction"
-						argument 
+						[2] 
 							literal 0
 			[57] 
 				key 
@@ -1068,12 +1068,12 @@ function
 							literal "scopeFromFunctionTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "scopeFromFunction"
-						argument 
+						[2] 
 							literal 0
 			[58] 
 				key 
@@ -1108,12 +1108,12 @@ function
 							literal "everythingReturned"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "ReturnEverything"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1143,12 +1143,12 @@ function
 							literal "variableAsArgument"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "ReturnEverything"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1293,12 +1293,12 @@ function
 							literal "thisSet"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "SetCurrent"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1331,12 +1331,12 @@ function
 															literal 1
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
 																		literal "SecondLevel"
-														argument 
+														[2] 
 															select 
 																[1] 
 																	search 
@@ -1368,12 +1368,12 @@ function
 							literal "argTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "FirstLevel"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1433,12 +1433,12 @@ function
 							literal "testClass"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "TestClass"
-						argument 
+						[2] 
 							literal 0
 			[71] 
 				key 
@@ -1556,12 +1556,12 @@ function
 							literal "memberTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "MemberTest"
-						argument 
+						[2] 
 							literal 0
 			[79] 
 				key 
@@ -1570,7 +1570,7 @@ function
 							literal "stringOverload"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1589,7 +1589,7 @@ function
 											[3] 
 												lookup 
 													literal "String"
-						argument 
+						[2] 
 							literal "hello"
 			[80] 
 				key 
@@ -1598,7 +1598,7 @@ function
 							literal "integerOverload"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1617,7 +1617,7 @@ function
 											[3] 
 												lookup 
 													literal "Int32"
-						argument 
+						[2] 
 							literal 5
 			[81] 
 				key 
@@ -1626,7 +1626,7 @@ function
 							literal "memberTestOverload"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1667,7 +1667,7 @@ function
 														[3] 
 															lookup 
 																literal "Int32"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1693,7 +1693,7 @@ function
 							literal "memberTestOverload"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1734,7 +1734,7 @@ function
 														[3] 
 															lookup 
 																literal "Int32"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1845,7 +1845,7 @@ function
 							literal "positionalNoConversion"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -1855,7 +1855,7 @@ function
 								[3] 
 									lookup 
 										literal "PositionalNoConversion"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1885,7 +1885,7 @@ function
 							literal "positionalNoConversionConcatenated"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1893,7 +1893,7 @@ function
 								[2] 
 									lookup 
 										literal "Concatenate"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1923,7 +1923,7 @@ function
 							literal "namedNoConversion"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -1933,7 +1933,7 @@ function
 								[3] 
 									lookup 
 										literal "NamedNoConversion"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1956,7 +1956,7 @@ function
 							literal "namedNoConversionConcatenated"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -1964,7 +1964,7 @@ function
 								[2] 
 									lookup 
 										literal "Concatenate"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -1987,7 +1987,7 @@ function
 							literal "indexerNoConversion"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -1997,7 +1997,7 @@ function
 								[3] 
 									lookup 
 										literal "IndexerNoConversion"
-						argument 
+						[2] 
 							literal 0
 			[95] 
 				key 
@@ -2073,12 +2073,12 @@ function
 							literal "literalFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "literalFunction"
-						argument 
+						[2] 
 							literal 0
 			[102] 
 				key 
@@ -2130,12 +2130,12 @@ function
 							literal "callFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "callFunction"
-						argument 
+						[2] 
 							literal 0
 			[105] 
 				key 
@@ -2178,12 +2178,12 @@ function
 							literal "delayedFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "delayedFunction"
-						argument 
+						[2] 
 							literal 0
 			[107] 
 				key 
@@ -2191,7 +2191,18 @@ function
 						lookup 
 							literal "delayedFunctionDirect"
 				value 
-					literal "((delayedFunction 0) 0).x"
+					call 
+						[1] 
+							call 
+								[1] 
+									select 
+										[1] 
+											search 
+												literal "delayedFunction"
+								[2] 
+									literal 0
+						[2] 
+							literal 0
 			[108] 
 				key 
 					[1] 
@@ -2226,12 +2237,12 @@ function
 							literal "selectionFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "selectionFunction"
-						argument 
+						[2] 
 							literal 0
 			[111] 
 				key 
@@ -2291,12 +2302,12 @@ function
 															literal 1
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
 																		literal "SetUpperLevel"
-														argument 
+														[2] 
 															literal "changed"
 			[114] 
 				key 
@@ -2305,12 +2316,12 @@ function
 							literal 5
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "ChangeUpperLevel"
-						argument 
+						[2] 
 							literal 0
 			[115] 
 				key 
@@ -2373,12 +2384,12 @@ function
 															literal 1
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
 																		literal "ChangeStaticEvent"
-														argument 
+														[2] 
 															literal 1
 											[2] 
 												key 
@@ -2399,7 +2410,7 @@ function
 							literal 6
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2407,7 +2418,7 @@ function
 								[2] 
 									lookup 
 										literal "TakeDelegate"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -2432,7 +2443,7 @@ function
 							literal "resultFromDelegate"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2440,7 +2451,7 @@ function
 								[2] 
 									lookup 
 										literal "GetResultFromDelegate"
-						argument 
+						[2] 
 							literal 0
 			[120] 
 				key 
@@ -2449,7 +2460,7 @@ function
 							literal "staticEventResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2457,7 +2468,7 @@ function
 								[2] 
 									lookup 
 										literal "CallStaticEvent"
-						argument 
+						[2] 
 							select 
 								[1] 
 									search 
@@ -2515,7 +2526,7 @@ function
 							literal "instanceEventResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2523,7 +2534,7 @@ function
 								[2] 
 									lookup 
 										literal "CallInstanceEvent"
-						argument 
+						[2] 
 							literal 5
 			[124] 
 				key 
@@ -2560,12 +2571,12 @@ function
 							literal "firstIfCondition"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "equal"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -2632,7 +2643,7 @@ function
 							literal "firstIf"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2643,7 +2654,7 @@ function
 											[1] 
 												search 
 													literal "firstIfCondition"
-						argument 
+						[2] 
 							literal 0
 			[131] 
 				key 
@@ -2738,12 +2749,12 @@ function
 							literal "emptyFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "emptyFunction"
-						argument 
+						[2] 
 							literal 0
 			[138] 
 				key 
@@ -2752,7 +2763,7 @@ function
 							literal "font"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -2795,7 +2806,7 @@ function
 														[3] 
 															lookup 
 																literal "Single"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -2892,7 +2903,7 @@ function
 							literal "arrayList"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -2905,7 +2916,7 @@ function
 								[4] 
 									lookup 
 										literal 0
-						argument 
+						[2] 
 							literal 0
 			[147] 
 				key 
@@ -2914,7 +2925,7 @@ function
 							literal 7
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -2922,7 +2933,7 @@ function
 								[2] 
 									lookup 
 										literal "Add"
-						argument 
+						[2] 
 							literal "hello"
 			[148] 
 				key 
@@ -2947,7 +2958,7 @@ function
 							literal "textBox"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -2957,7 +2968,7 @@ function
 								[3] 
 									lookup 
 										literal "TextBox"
-						argument 
+						[2] 
 							literal 0
 			[150] 
 				key 
@@ -2995,7 +3006,7 @@ function
 							literal "alleMeineText"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -3014,7 +3025,7 @@ function
 											[3] 
 												lookup 
 													literal "Int32"
-						argument 
+						[2] 
 							literal 1
 			[153] 
 				key 
@@ -3023,7 +3034,7 @@ function
 							literal "form"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									root 0
@@ -3033,7 +3044,7 @@ function
 								[3] 
 									lookup 
 										literal "Form"
-						argument 
+						[2] 
 							literal 0
 			[154] 
 				key 
@@ -3045,7 +3056,7 @@ function
 							literal "Location"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -3053,7 +3064,7 @@ function
 								[2] 
 									lookup 
 										literal "Point"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 
@@ -3127,19 +3138,19 @@ function
 															literal "whileDecision"
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
 																		literal "not"
-														argument 
+														[2] 
 															call 
-																callable 
+																[1] 
 																	select 
 																		[1] 
 																			search 
 																				literal "equal"
-																argument 
+																[2] 
 																	program 
 																		[1] 
 																			key 
@@ -3182,19 +3193,19 @@ function
 																				parameter "arg"
 																				expression 
 																					call 
-																						callable 
+																						[1] 
 																							select 
 																								[1] 
 																									search 
 																										literal "loop"
-																						argument 
+																						[2] 
 																							call 
-																								callable 
+																								[1] 
 																									select 
 																										[1] 
 																											search 
 																												literal "add"
-																								argument 
+																								[2] 
 																									program 
 																										[1] 
 																											key 
@@ -3239,7 +3250,7 @@ function
 														current 0
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
@@ -3250,7 +3261,7 @@ function
 																			[1] 
 																				search 
 																					literal "whileDecision"
-														argument 
+														[2] 
 															select 
 																[1] 
 																	search 
@@ -3262,12 +3273,12 @@ function
 							literal "whileCounter"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "loop"
-						argument 
+						[2] 
 							literal 3
 			[161] 
 				key 
@@ -3303,12 +3314,12 @@ function
 							literal "literalAsArgument"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "returnInMap"
-						argument 
+						[2] 
 							literal 1
 			[163] 
 				key 
@@ -3388,20 +3399,18 @@ function
 							literal "funcReturnTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "returnArg"
-						argument 
-							call 
-								callable 
-									select 
-										[1] 
-											search 
-												literal "myArg"
-								argument 
-									literal 0
+						[2] 
+							select 
+								[1] 
+									search 
+										literal "myArg"
+						[3] 
+							literal 0
 			[167] 
 				key 
 					[1] 
@@ -3433,12 +3442,12 @@ function
 							literal "docFunctionResult"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "documentedFunction"
-						argument 
+						[2] 
 							literal 0
 			[169] 
 				key 
@@ -3492,7 +3501,7 @@ function
 							literal 8
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -3503,7 +3512,7 @@ function
 								[3] 
 									lookup 
 										literal "test"
-						argument 
+						[2] 
 							literal 0
 			[172] 
 				key 
@@ -3555,12 +3564,12 @@ function
 															literal 1
 												value 
 													call 
-														callable 
+														[1] 
 															select 
 																[1] 
 																	search 
 																		literal "innerFunction"
-														argument 
+														[2] 
 															literal 0
 			[173] 
 				key 
@@ -3569,12 +3578,12 @@ function
 							literal "outerFunctionTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
 										literal "outerFunction"
-						argument 
+						[2] 
 							literal "right"
 			[174] 
 				key 
@@ -3631,7 +3640,7 @@ function
 							literal "typeTest"
 				value 
 					call 
-						callable 
+						[1] 
 							select 
 								[1] 
 									search 
@@ -3671,7 +3680,7 @@ function
 														[2] 
 															lookup 
 																literal "Int32"
-						argument 
+						[2] 
 							program 
 								[1] 
 									key 

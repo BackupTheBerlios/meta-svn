@@ -511,7 +511,7 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"callable"
+														1
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -532,7 +532,7 @@ Entry (KeyValuePair`2)
 																						"join"
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"argument"
+														2
 													Value (StrategyMap):
 														Entry (KeyValuePair`2)
 															Key (StrategyMap):
@@ -640,10 +640,27 @@ Entry (KeyValuePair`2)
 																						"literal"
 																					Value (StrategyMap):
 																						"!"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"func"
-			Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														3
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"select"
+															Value (StrategyMap):
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		1
+																	Value (StrategyMap):
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				"search"
+																			Value (StrategyMap):
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						"literal"
+																					Value (StrategyMap):
+																						"func"
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"function"

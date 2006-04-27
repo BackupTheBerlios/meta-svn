@@ -55,8 +55,8 @@ namespace Meta
 		public static readonly Map Literal="literal";
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
-		public static readonly Map Callable="callable";
-		public static readonly Map Argument="argument";
+		//public static readonly Map Callable="callable";
+		//public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
@@ -203,18 +203,18 @@ namespace Meta
 		{
 			get;
 		}
-		public bool IsCall
-		{
-			get
-			{
-				return isCall;
-			}
-			set
-			{
-				isCall = value;
-			}
-		}
-		private bool isCall;
+		//public bool IsCall
+		//{
+		//    get
+		//    {
+		//        return isCall;
+		//    }
+		//    set
+		//    {
+		//        isCall = value;
+		//    }
+		//}
+		//private bool isCall;
 		public static List<Expression> expressions = new List<Expression>();
 		public Position Evaluate(Position context)
 		{
@@ -227,25 +227,6 @@ namespace Meta
 	}
 	public class Call : Expression
 	{
-		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-		//{
-		//    if (callable.Emit(il, keys))
-		//    {
-		//        if (argument.Emit(il, keys))
-		//        {
-		//            il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call", BindingFlags.Public | BindingFlags.Instance));
-		//        }
-		//        else
-		//        {
-		//            return false;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        return false;
-		//    }
-		//    return true;
-		//}
 		public override bool HasConstantKeysOnly
 		{
 			get
@@ -253,16 +234,18 @@ namespace Meta
 				return true;
 			}
 		}
-		private Expression callable;
-		public Expression argument;
+		//private Expression callable;
+		//public Expression argument;
 		private Map parameterName;
-		private Map code;
-		public Call(Map code,Map parameterName)
+		//private Map code;
+		List<Map> expressions;
+		public Call(Map code, Map parameterName)
 		{
-			this.code = code;
-			this.callable = code[CodeKeys.Callable].GetExpression();
-			this.argument = code[CodeKeys.Argument].GetExpression();
 			//this.code = code;
+			//this.callable = code[CodeKeys.Callable].GetExpression();
+			//this.argument = code[CodeKeys.Argument].GetExpression();
+			////this.code = code;
+			this.expressions = code.Array;
 			this.parameterName = parameterName;
 			//this.optimized = Optimize();
 		}
@@ -272,10 +255,22 @@ namespace Meta
 		{
 			try
 			{
-				argument.IsCall = true;
-				Position arg = argument.Evaluate(current);
-				lastArgument = arg;
-				return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+				Position callable=expressions[0].GetExpression().Evaluate(current);
+				for (int i = 1; i < expressions.Count; i++)
+				{
+					//Position argument;
+					//argument.IsCall = true;
+					Position arg = expressions[i].GetExpression().Evaluate(current);
+					lastArgument = arg;
+					callable = callable.Call(arg.Get());
+					//callable = callable.Get().GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+					//callable=callablePosition.get
+				}
+				return callable;
+				//argument.IsCall = true;
+				//Position arg = argument.Evaluate(current);
+				//lastArgument = arg;
+				//return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 			}
 			catch (MetaException e)
 			{
@@ -285,72 +280,156 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				throw new MetaException(e.ToString(), this.code.Extent);
+				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
 		//protected override Position EvaluateImplementation(Position current)
 		//{
-		//    //if (optimized != null)
-		//    //{
-		//    //    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
-		//    //}
-		//    //else
-		//    //{
+		//    try
+		//    {
 		//        argument.IsCall = true;
 		//        Position arg = argument.Evaluate(current);
 		//        lastArgument = arg;
 		//        return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-		//    //}
-		//}
-		//public OptimizedDelegate optimized;
-		//private OptimizedDelegate Optimize()
-		//{
-		//    Select select = argument as Select;
-		//    if (select != null)
-		//    {
-		//        if (select.Subselects.Count == 1)
-		//        {
-		//            Search search = select.Subselects[0].GetSubselect() as Search;
-		//            if (search != null)
-		//            {
-		//                Literal literal = search.Key as Literal;
-		//                if (literal != null)
-		//                {
-		//                    if (parameterName!=null && literal.Map.Equals(parameterName))
-		//                        //if (code.ContainsKey(CodeKeys.ParameterName) && literal.Map.Equals(code[CodeKeys.ParameterName]))
-		//                        {
-		//                        DynamicMethod method = new DynamicMethod("Optimized", typeof(Position),
-		//                            new Type[] { typeof(OptimizedCall), typeof(Map), typeof(Position) }, typeof(Map).Module);
-
-		//                        ILGenerator il = method.GetILGenerator();
-
-		//                        il.Emit(OpCodes.Ldarg_0);
-		//                        il.Emit(OpCodes.Ldfld, typeof(OptimizedCall).GetField("callable", BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public));
-		//                        il.Emit(OpCodes.Ldarg_2);
-		//                        il.Emit(OpCodes.Call, typeof(Expression).GetMethod("Evaluate"));
-		//                        il.Emit(OpCodes.Ldarg_1);
-		//                        //il.Emit(OpCodes.Ldarg_2);
-		//                        il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call"));
-		//                        il.Emit(OpCodes.Ret);
-
-		//                        return (OptimizedDelegate)method.CreateDelegate(typeof(OptimizedDelegate), new OptimizedCall(callable));
-		//                    }
-		//                }
-		//            }
-		//        }
 		//    }
-		//    return null;
-		//}
-
-		//public class OptimizedCall
-		//{
-		//    public Expression callable;
-		//    public OptimizedCall(Expression callable)
+		//    catch (MetaException e)
 		//    {
-		//        this.callable = callable;
+		//        e.InvocationList.Add(current);
+		//        //e.InvocationList.Add(this.code.Extent);
+		//        throw e;
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        throw new MetaException(e.ToString(), this.code.Extent);
 		//    }
 		//}
 	}
+	//public class Call : Expression
+	//{
+	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
+	//    //{
+	//    //    if (callable.Emit(il, keys))
+	//    //    {
+	//    //        if (argument.Emit(il, keys))
+	//    //        {
+	//    //            il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call", BindingFlags.Public | BindingFlags.Instance));
+	//    //        }
+	//    //        else
+	//    //        {
+	//    //            return false;
+	//    //        }
+	//    //    }
+	//    //    else
+	//    //    {
+	//    //        return false;
+	//    //    }
+	//    //    return true;
+	//    //}
+	//    public override bool HasConstantKeysOnly
+	//    {
+	//        get
+	//        {
+	//            return true;
+	//        }
+	//    }
+	//    private Expression callable;
+	//    public Expression argument;
+	//    private Map parameterName;
+	//    private Map code;
+	//    public Call(Map code,Map parameterName)
+	//    {
+	//        this.code = code;
+	//        this.callable = code[CodeKeys.Callable].GetExpression();
+	//        this.argument = code[CodeKeys.Argument].GetExpression();
+	//        //this.code = code;
+	//        this.parameterName = parameterName;
+	//        //this.optimized = Optimize();
+	//    }
+
+	//    public static Position lastArgument;
+	//    protected override Position EvaluateImplementation(Position current)
+	//    {
+	//        try
+	//        {
+	//            argument.IsCall = true;
+	//            Position arg = argument.Evaluate(current);
+	//            lastArgument = arg;
+	//            return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+	//        }
+	//        catch (MetaException e)
+	//        {
+	//            e.InvocationList.Add(current);
+	//            //e.InvocationList.Add(this.code.Extent);
+	//            throw e;
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            throw new MetaException(e.ToString(), this.code.Extent);
+	//        }
+	//    }
+	//    //protected override Position EvaluateImplementation(Position current)
+	//    //{
+	//    //    //if (optimized != null)
+	//    //    //{
+	//    //    //    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
+	//    //    //}
+	//    //    //else
+	//    //    //{
+	//    //        argument.IsCall = true;
+	//    //        Position arg = argument.Evaluate(current);
+	//    //        lastArgument = arg;
+	//    //        return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
+	//    //    //}
+	//    //}
+	//    //public OptimizedDelegate optimized;
+	//    //private OptimizedDelegate Optimize()
+	//    //{
+	//    //    Select select = argument as Select;
+	//    //    if (select != null)
+	//    //    {
+	//    //        if (select.Subselects.Count == 1)
+	//    //        {
+	//    //            Search search = select.Subselects[0].GetSubselect() as Search;
+	//    //            if (search != null)
+	//    //            {
+	//    //                Literal literal = search.Key as Literal;
+	//    //                if (literal != null)
+	//    //                {
+	//    //                    if (parameterName!=null && literal.Map.Equals(parameterName))
+	//    //                        //if (code.ContainsKey(CodeKeys.ParameterName) && literal.Map.Equals(code[CodeKeys.ParameterName]))
+	//    //                        {
+	//    //                        DynamicMethod method = new DynamicMethod("Optimized", typeof(Position),
+	//    //                            new Type[] { typeof(OptimizedCall), typeof(Map), typeof(Position) }, typeof(Map).Module);
+
+	//    //                        ILGenerator il = method.GetILGenerator();
+
+	//    //                        il.Emit(OpCodes.Ldarg_0);
+	//    //                        il.Emit(OpCodes.Ldfld, typeof(OptimizedCall).GetField("callable", BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public));
+	//    //                        il.Emit(OpCodes.Ldarg_2);
+	//    //                        il.Emit(OpCodes.Call, typeof(Expression).GetMethod("Evaluate"));
+	//    //                        il.Emit(OpCodes.Ldarg_1);
+	//    //                        //il.Emit(OpCodes.Ldarg_2);
+	//    //                        il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call"));
+	//    //                        il.Emit(OpCodes.Ret);
+
+	//    //                        return (OptimizedDelegate)method.CreateDelegate(typeof(OptimizedDelegate), new OptimizedCall(callable));
+	//    //                    }
+	//    //                }
+	//    //            }
+	//    //        }
+	//    //    }
+	//    //    return null;
+	//    //}
+
+	//    //public class OptimizedCall
+	//    //{
+	//    //    public Expression callable;
+	//    //    public OptimizedCall(Expression callable)
+	//    //    {
+	//    //        this.callable = callable;
+	//    //    }
+	//    //}
+	//}
 	public delegate Position OptimizedDelegate(Map argument,Position parent);
 	public delegate Map ProgramDelegate(Map argument,Position parent);
 	public class Program : Expression
@@ -6207,7 +6286,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression, Program, Call, Select);
+			return new Alternatives(LiteralExpression, Program, Call, Select,ExplicitCall);
 		});
 		public static Rule NewLine = 
 			new Alternatives(
@@ -6504,9 +6583,8 @@ namespace Meta
 					CodeKeys.Call),
 					new Sequence(
 						new Action(new Match(), new Character(Syntax.callStart)),
-						new Action(new Assignment(CodeKeys.Callable), Select),
-						new Action(new Assignment(
-							CodeKeys.Argument),
+						new Action(new Autokey(), Select),
+						new Action(new Autokey(),
 							new Alternatives(
 								new Sequence(
 									new Action(new Match(), new Character(Syntax.call)),
@@ -6514,26 +6592,101 @@ namespace Meta
 								Program)),
 						new Action(new Match(), new Character(Syntax.callEnd)))));
 		});
+		//public static Rule ExplicitCall = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Match(), new Character(Syntax.callStart)),
+		//                new Action(new Assignment(CodeKeys.Callable), Select),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Argument),
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            new Action(new Match(), new Character(Syntax.call)),
+		//                            new Action(new ReferenceAssignment(), Expression)),
+		//                        Program)),
+		//                new Action(new Match(), new Character(Syntax.callEnd)))));
+		//});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
 				new Action(new Assignment(
 					CodeKeys.Call),
-						new Sequence(
-							new Action(new Assignment(
-								CodeKeys.Callable),
-								new Alternatives(Select,ExplicitCall)),
-							new Action(new Assignment(
-								CodeKeys.Argument),
-								new Alternatives(
-									new Sequence(
-										new Action(new Match(),
-											new Alternatives(
-												new Character(Syntax.call),
-												new Character(Syntax.indentation))),
-										new Action(new ReferenceAssignment(),Expression)),
-									Program)))));
+					new TwoOrMore(
+						new Action(new Autokey(),
+							new Sequence(
+								new Action(new Match(), new Optional(new Character(' '))),
+								new Action(
+									new ReferenceAssignment(),
+									new Alternatives(
+										LiteralExpression,
+										Program,
+										Select,
+										ExplicitCall)))))));
 		});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+
+		//    return new TwoOrMore(
+		//        new Action(new Autokey(),
+		//            new Sequence(
+		//                new Action(new Match(),Whitespace),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new Alternatives(
+		//                        LiteralExpression,
+		//                        Program,
+		//                        Select,
+		//                        ExplicitCall)))));
+		//});
+//        public static Rule Call = new CustomRule(delegate(Parser pa, out bool matched)
+//        {
+//            bool m;
+//            Map map=new Alternatives(LiteralExpression, Program , Select,ExplicitCall).Match(pa,out m);
+//            if(m)
+//            {
+//                Map second=new Alternatives(LiteralExpression, Call, Program , Select,ExplicitCall).Match(pa,out m;
+//            return new Sequence(
+//                new Action(new Assignment(
+//                    CodeKeys.Call),
+//                        new Sequence(
+//                            new Action(new Assignment(
+//                                CodeKeys.Callable),
+//                                new Alternatives(Select, ExplicitCall)),
+//                            new Action(new Assignment(
+//                                CodeKeys.Argument),
+//                                new Alternatives(
+//                                    new Sequence(
+//                                        new Action(new Match(),
+//                                            new Alternatives(
+//                                                new Character(Syntax.call),
+//                                                new Character(Syntax.indentation))),
+//                                        new Action(new ReferenceAssignment(), Expression)),
+//                                    Program)))));
+//        });
+//return 
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//                new Sequence(
+		//                    new Action(new Assignment(
+		//                        CodeKeys.Callable),
+		//                        new Alternatives(Select,ExplicitCall)),
+		//                    new Action(new Assignment(
+		//                        CodeKeys.Argument),
+		//                        new Alternatives(
+		//                            new Sequence(
+		//                                new Action(new Match(),
+		//                                    new Alternatives(
+		//                                        new Character(Syntax.call),
+		//                                        new Character(Syntax.indentation))),
+		//                                new Action(new ReferenceAssignment(),Expression)),
+		//                            Program)))));
+		//});
 
 
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
@@ -6548,7 +6701,7 @@ namespace Meta
 			new Action(new Assignment(CodeKeys.Value), new Sequence(
 				new Action(new Assignment(CodeKeys.Literal), Function))));
 
-		private Rule Whitespace =
+		private static Rule Whitespace =
 			new ZeroOrMore(
 				new Action(new Match(),
 					new Alternatives(
@@ -7055,6 +7208,30 @@ namespace Meta
 				this.action = action;
 			}
 		}
+		public class TwoOrMore : Rule
+		{
+			protected override Map MatchImplementation(Parser parser, out bool matched)
+			{
+				Map list = parser.CreateMap(new ListStrategy());
+				int count=0;
+				while (true)
+				{
+					if (!action.Execute(parser, ref list))
+					{
+						break;
+					}
+					count++;
+					//matched = true;
+				}
+				matched=count>=2;
+				return list;
+			}
+			private Action action;
+			public TwoOrMore(Action action)
+			{
+				this.action = action;
+			}
+		}
 		public class Optional : Rule
 		{
 			private Rule rule;
@@ -7238,10 +7415,13 @@ namespace Meta
 				CodeKeys.Call,
 				new Set(
 					new KeyRule(
-						CodeKeys.Callable,
+			// completely wrong
+						"callable",
+						//CodeKeys.Callable,
 						Expression),
 					new KeyRule(
-						CodeKeys.Argument,
+						"argument",
+						//CodeKeys.Argument,
 						new Alternatives(
 							Program,
 							new Enclose(
@@ -7753,6 +7933,14 @@ namespace Meta
 					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
 				}
 			}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -7785,14 +7973,7 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 				}
 			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+
 			public static Map Run(string path,Map argument)
 			{
 				List<string> list=new List<string>();
@@ -7820,10 +8001,16 @@ namespace Meta
 				}
 				Map code = new StrategyMap(
 					CodeKeys.Call, new StrategyMap(
-						CodeKeys.Callable, new StrategyMap(
+						1, new StrategyMap(
 							CodeKeys.Select, lookups),
-						CodeKeys.Argument, new StrategyMap(
+						2, new StrategyMap(
 							CodeKeys.Literal, argument)));
+				//Map code = new StrategyMap(
+				//    CodeKeys.Call, new StrategyMap(
+				//        CodeKeys.Callable, new StrategyMap(
+				//            CodeKeys.Select, lookups),
+				//        CodeKeys.Argument, new StrategyMap(
+				//            CodeKeys.Literal, argument)));
 				Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
 				return position.Get();
 
