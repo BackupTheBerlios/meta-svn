@@ -1177,6 +1177,36 @@ namespace Meta
 			return new StrategyMap(list);
 		}
 		public delegate Map Test(Map arg);
+		//public static Test If (Map arg)
+		//{
+		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+		//    //Map result;
+		//    if (arg["condition"].GetBoolean())
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            //Position pos=MethodImplementation.currentPosition
+		//            Map result = Call.lastArgument["then"].Call(Map.Empty).Get();
+		//            return result;
+		//        });
+		//    }
+		//    else
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            Map result;
+		//            if (Call.lastArgument.Get().ContainsKey("else"))
+		//            {
+		//                result = Call.lastArgument["else"].Call(Map.Empty).Get();
+		//            }
+		//            else
+		//            {
+		//                result = Map.Empty;
+		//            }
+		//            return result;
+		//        });
+		//    }
+		//}
 		public static Test If = new Test(delegate(Map arg)
 		{
 			Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
@@ -6467,7 +6497,23 @@ namespace Meta
 									new CharacterExcept(Syntax.unixNewLine)))),
 						new Action(new Match(),EndOfLine)))),
 			new Action(new ReferenceAssignment(),Map));
-
+		public static Rule ExplicitCall = new DelayedRule(delegate()
+		{
+			return new Sequence(
+				new Action(new Assignment(
+					CodeKeys.Call),
+					new Sequence(
+						new Action(new Match(), new Character(Syntax.callStart)),
+						new Action(new Assignment(CodeKeys.Callable), Select),
+						new Action(new Assignment(
+							CodeKeys.Argument),
+							new Alternatives(
+								new Sequence(
+									new Action(new Match(), new Character(Syntax.call)),
+									new Action(new ReferenceAssignment(), Expression)),
+								Program)),
+						new Action(new Match(), new Character(Syntax.callEnd)))));
+		});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -6476,7 +6522,7 @@ namespace Meta
 						new Sequence(
 							new Action(new Assignment(
 								CodeKeys.Callable),
-								Select),
+								new Alternatives(Select,ExplicitCall)),
 							new Action(new Assignment(
 								CodeKeys.Argument),
 								new Alternatives(
@@ -6488,6 +6534,7 @@ namespace Meta
 										new Action(new ReferenceAssignment(),Expression)),
 									Program)))));
 		});
+
 
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
@@ -7698,14 +7745,6 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7728,6 +7767,14 @@ namespace Meta
 				{
 					level = 2;
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Profile : Test
