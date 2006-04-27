@@ -6,9 +6,9 @@ Extent (Extent):
 			"1"
 	End (SourcePosition):
 		Line (Int32):
-			"418"
+			"419"
 		Column (Int32):
-			"9"
+			"1"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		Extent (Extent):
@@ -35923,12 +35923,12 @@ Entry (KeyValuePair`2)
 												Line (Int32):
 													"256"
 												Column (Int32):
-													"51"
+													"45"
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												Extent:
 													null
-												"literal"
+												"call"
 											Value (StrategyMap):
 												Extent (Extent):
 													Start (SourcePosition):
@@ -35940,8 +35940,197 @@ Entry (KeyValuePair`2)
 														Line (Int32):
 															"256"
 														Column (Int32):
-															"51"
-												"((delayedFunction 0) 0).x"
+															"45"
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"callable"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"256"
+																Column (Int32):
+																	"24"
+															End (SourcePosition):
+																Line (Int32):
+																	"256"
+																Column (Int32):
+																	"43"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"call"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"256"
+																		Column (Int32):
+																			"24"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"256"
+																		Column (Int32):
+																			"43"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"callable"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"256"
+																				Column (Int32):
+																					"25"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"256"
+																				Column (Int32):
+																					"40"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"select"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"256"
+																						Column (Int32):
+																							"25"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"256"
+																						Column (Int32):
+																							"40"
+																				Entry (KeyValuePair`2)
+																					Key (StrategyMap):
+																						Extent:
+																							null
+																						1
+																					Value (StrategyMap):
+																						Extent (Extent):
+																							Start (SourcePosition):
+																								Line (Int32):
+																									"256"
+																								Column (Int32):
+																									"25"
+																							End (SourcePosition):
+																								Line (Int32):
+																									"256"
+																								Column (Int32):
+																									"40"
+																						Entry (KeyValuePair`2)
+																							Key (StrategyMap):
+																								Extent:
+																									null
+																								"search"
+																							Value (StrategyMap):
+																								Extent (Extent):
+																									Start (SourcePosition):
+																										Line (Int32):
+																											"256"
+																										Column (Int32):
+																											"25"
+																									End (SourcePosition):
+																										Line (Int32):
+																											"256"
+																										Column (Int32):
+																											"40"
+																								Entry (KeyValuePair`2)
+																									Key (StrategyMap):
+																										Extent:
+																											null
+																										"literal"
+																									Value (StrategyMap):
+																										Extent (Extent):
+																											Start (SourcePosition):
+																												Line (Int32):
+																													"256"
+																												Column (Int32):
+																													"25"
+																											End (SourcePosition):
+																												Line (Int32):
+																													"256"
+																												Column (Int32):
+																													"40"
+																										"delayedFunction"
+																Entry (KeyValuePair`2)
+																	Key (StrategyMap):
+																		Extent:
+																			null
+																		"argument"
+																	Value (StrategyMap):
+																		Extent (Extent):
+																			Start (SourcePosition):
+																				Line (Int32):
+																					"256"
+																				Column (Int32):
+																					"40"
+																			End (SourcePosition):
+																				Line (Int32):
+																					"256"
+																				Column (Int32):
+																					"42"
+																		Entry (KeyValuePair`2)
+																			Key (StrategyMap):
+																				Extent:
+																					null
+																				"literal"
+																			Value (StrategyMap):
+																				Extent (Extent):
+																					Start (SourcePosition):
+																						Line (Int32):
+																							"256"
+																						Column (Int32):
+																							"41"
+																					End (SourcePosition):
+																						Line (Int32):
+																							"256"
+																						Column (Int32):
+																							"42"
+																				0
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														Extent:
+															null
+														"argument"
+													Value (StrategyMap):
+														Extent (Extent):
+															Start (SourcePosition):
+																Line (Int32):
+																	"256"
+																Column (Int32):
+																	"43"
+															End (SourcePosition):
+																Line (Int32):
+																	"256"
+																Column (Int32):
+																	"45"
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																Extent:
+																	null
+																"literal"
+															Value (StrategyMap):
+																Extent (Extent):
+																	Start (SourcePosition):
+																		Line (Int32):
+																			"256"
+																		Column (Int32):
+																			"44"
+																	End (SourcePosition):
+																		Line (Int32):
+																			"256"
+																		Column (Int32):
+																			"45"
+																0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:

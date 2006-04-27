@@ -253,7 +253,7 @@ commandLine|
 			|
 				x "y"
 	delayedFunctionResult delayedFunction 0
-	delayedFunctionDirect "((delayedFunction 0) 0).x"
+	delayedFunctionDirect (delayedFunction 0) 0
 	value "xyz"
 	selectionFunction
 		|value

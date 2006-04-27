@@ -2005,7 +2005,11 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"delayedFunctionDirect"
 	Value (StrategyMap):
-		"((delayedFunction 0) 0).x"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"x"
+			Value (StrategyMap):
+				"y"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"value"
