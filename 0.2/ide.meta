@@ -71,9 +71,9 @@
 			save MenuItem.[String] "Save"
 			save.Activated
 				|if
-					condition not equal
+					condition not (equal
 						. file
-						. 0
+						. 0)
 					then
 						|File.WriteAllText
 							. file

@@ -74,11 +74,22 @@ namespace Meta
 		public static readonly Map Negative="negative";
 		public static readonly Map Denominator="denominator";
 	}
+	public class ExceptionLog
+	{
+		public ExceptionLog(Extent extent,Position position)
+		{
+			this.extent = extent;
+			this.position = position;
+		}
+		public Extent extent;
+		public Position position;
+	}
 	public class MetaException : Exception
 	{
 		private string message;
 		private Extent extent;
-		private List<Position> invocationList = new List<Position>();
+		private List<ExceptionLog> invocationList = new List<ExceptionLog>();
+		//private List<Position> invocationList = new List<Position>();
 		//private List<Extent> invocationList = new List<Extent>();
 
 
@@ -87,13 +98,20 @@ namespace Meta
 			this.message = message;
 			this.extent = extent;
 		}
-		public List<Position> InvocationList
+		public List<ExceptionLog> InvocationList
 		{
 			get
 			{
 				return invocationList;
 			}
 		}
+		//public List<Position> InvocationList
+		//{
+		//    get
+		//    {
+		//        return invocationList;
+		//    }
+		//}
 		//public List<Extent> InvocationList
 		//{
 		//    get
@@ -108,10 +126,14 @@ namespace Meta
 			{
 				message += "\n\nStack trace:";
 			}
-			foreach (Position extent in invocationList)
+			foreach (ExceptionLog log in invocationList)
 			{
-				message += "\n" + extent.ToString();
+				message += "\n" + log.position.ToString() + "   "+ GetExtentText(log.extent);
 			}
+			//foreach (Position extent in invocationList)
+			//{
+			//    message += "\n" + extent.ToString();
+			//}
 			//foreach (Extent extent in invocationList)
 			//{
 			//    message += "\n" + GetExtentText(extent);
@@ -274,7 +296,8 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(current);
+				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent,current));
+				//e.InvocationList.Add(current);
 				//e.InvocationList.Add(this.code.Extent);
 				throw e;
 			}
@@ -790,6 +813,9 @@ namespace Meta
 			//context.AddCall(literal, out calls);
 			//context.Get().AddCall(literal, out calls);
 			//Position position = new Position(context, calls);
+			if (literal.Equals(new StrategyMap("characterExcept")))
+			{
+			}
 			position.Get().Scope = position.Parent;
 			return position;
 		}
@@ -1102,10 +1128,16 @@ namespace Meta
 			{
 				selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
+			//if (selected.Get().Equals(new StrategyMap("characterExcept")))
+			//{
+			//}
 			//try
 			//{
 				Map val = value.GetExpression().Evaluate(context).Get();
-				keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+				//if (keys[0].GetExpression() is Literal && ((Literal)keys[0].GetExpression()).Map.Equals(new StrategyMap("characterExcept")))
+				//{
+				//}
+					keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
 			//}
 			//catch (ApplicationException e)
 			//{
@@ -7925,6 +7957,22 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			//public class ParserSerialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["parser"]);
+			//    }
+			//}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7955,14 +8003,6 @@ namespace Meta
 				{
 					level = 2;
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Profile : Test

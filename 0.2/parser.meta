@@ -11,9 +11,9 @@ parser|
 								. parser
 								. merge
 									. map
-									. arg.result merge
+									. arg.result (merge
 										. parser
-										. map
+										. map)
 									. 
 										parsed arg.parse map.parsed
 		argument
@@ -29,7 +29,7 @@ parser|
 				parser|if
 					condition and
 						.
-							|not null parser.text
+							|not (null parser.text)
 						. 
 							|compare parser.text.[1]
 					then
@@ -48,14 +48,14 @@ parser|
 				value input
 	characterExcept
 		chars|charRule
-			input|not contains
+			input|not (contains
 				value input
-				array chars
+				array chars)
 	stringRule
-		string|sequence apply
+		string|sequence (apply
 			array string
 			function
-				char|character char
+				char|character char)
 	loopRule
 		arg|rule
 			condition
@@ -98,9 +98,9 @@ parser|
 																	|nextResult.indentationCount
 										else
 											|if
-												condition not arg.tooFew
+												condition not (arg.tooFew
 													count impArg.n
-													parser impArg.parser
+													parser impArg.parser)
 												then
 													|impArg.parser
 					current implementation
@@ -176,7 +176,7 @@ parser|
 						rules rules
 	prePost
 		arg|rule
-			condition sequence join
+			condition sequence (join
 				. 
 					. arg.pre
 					. arg.rule
@@ -186,7 +186,7 @@ parser|
 						key "post"
 					then
 						|
-							. arg.post
+							. arg.post)
 			parse
 				arg|arg.[2]
 	succeeded
@@ -199,10 +199,16 @@ parser|
 				parser|
 					implementation
 						arg|if
-							condition not null arg
+							condition not (null arg)
 							then
 								|
-									altResult arg.[1] parser
+									altResult try
+										function
+											|arg.[1] parser
+										catch
+											|
+												. print arg
+												. console.readLine 0
 									current if
 										condition succeeded altResult
 										then
@@ -210,7 +216,7 @@ parser|
 												parsed altResult.parsed
 												text altResult.text
 										else
-											|implementation rest arg
+											|implementation (rest arg)
 					current implementation alts
 	optional
 		subRule|
@@ -228,7 +234,7 @@ parser|
 		. '['
 		. ']'
 	number rule
-		condition oneOrMore characterSet "0123456789"
+		condition oneOrMore (characterSet "0123456789")
 		parse
 			arg|/.Meta.Number.Parse arg
 	newLine alternatives
@@ -236,9 +242,9 @@ parser|
 		. sequence
 			. character 13
 			. character 10
-	whitespace zeroOrMore characterSet
+	whitespace zeroOrMore (characterSet
 		. 9
-		. ' '
+		. ' ')
 	endOfLine sequence
 		. whitespace
 		. newLine
@@ -258,10 +264,10 @@ parser|
 	indentation indentRule 1
 	sameIndentation indentRule 0
 	dedentation indentRule -1
-	stringLine zeroOrMore characterExcept
+	stringLine zeroOrMore (characterExcept
 		. 10
 		. 13
-		. '"'
+		. '"')
 	characterDataExpression prePost
 		pre character 39
 		rule characterExcept
@@ -270,10 +276,10 @@ parser|
 	string prePost
 		pre character '"'
 		rule alternatives
-			. oneOrMore characterExcept
+			. oneOrMore (characterExcept
 				. 10
 				. 13
-				. '"'
+				. '"')
 			. rule
 				condition sequence
 					. rule
@@ -285,7 +291,7 @@ parser|
 							arg|arg.[3]
 		post sequence
 			. optional newLine
-			. optional character '"'
+			. optional (character '"')
 	lookupString oneOrMore lookupForbidden
 	value
 		parser|
@@ -320,10 +326,10 @@ parser|
 					parse
 						arg|
 							. arg
-				. zeroOrMore rule
+				. zeroOrMore (rule
 					condition prePost
 						pre arg.delimiter
-						rule arg.step
+						rule arg.step)
 			parse
 				arg|join arg
 	mapCore onePlusX
@@ -344,10 +350,10 @@ parser|
 				text parser.text
 	function rule
 		condition sequence
-			. zeroOrMore characterExcept
+			. zeroOrMore (characterExcept
 				. '"'
 				. ' '
-				. 10
+				. 10)
 			. character '|'
 			. expression
 		parse
@@ -358,7 +364,7 @@ parser|
 		pre character '['
 		rule expression
 		post sequence
-			. zeroOrMore character 9
+			. zeroOrMore (character 9)
 			. character ']'
 	lookupStringExpression rule
 		condition lookupString
