@@ -118,6 +118,7 @@
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
     <None Include="Library\decreasing.meta" />
+    <None Include="Library\defaultFunction.meta" />
     <None Include="Library\divide.meta" />
     <None Include="Library\equal.meta" />
     <None Include="Library\filter.meta" />

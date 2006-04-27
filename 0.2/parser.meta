@@ -1,9 +1,4 @@
 parser|
-	defaultFunction
-		default|
-			arg|default.function merge
-				. default.argument
-				. arg			
 	rule defaultFunction
 		function
 			arg|
@@ -20,12 +15,14 @@ parser|
 										. parser
 										. map
 									. 
-										parsed arg.parsing map.parsed
+										parsed arg.parse map.parsed
 		argument
 			result
 				|0
-			parsing
+			parse
 				p|p
+			indenting
+				i|i
 	charRule
 		compare|rule
 			condition
@@ -131,20 +128,14 @@ parser|
 				|0
 			rule looped
 	oneOrMore
-		arg|rule
-			condition
-				parser|
-					loop zeroOrMore arg
-					loopResult loop
-						text parser.text
-					current if
-						condition and
-							.
-								|succeeded loopResult
-							.
-								|not null loopResult.parsed
-						then
-							|loopResult
+		arg|loopRule
+			tooMuch
+				|0
+			tooFew
+				arg|strictlyDecreasing
+					. 1
+					. arg.count
+			rule arg
 	sequence
 		rules|rule
 			condition
@@ -196,7 +187,7 @@ parser|
 					then
 						|
 							. arg.post
-			parsing
+			parse
 				arg|arg.[2]
 	succeeded
 		arg|hasKey
@@ -238,7 +229,7 @@ parser|
 		. ']'
 	number rule
 		condition oneOrMore characterSet "0123456789"
-		parsing
+		parse
 			arg|/.Meta.Number.Parse arg
 	newLine alternatives
 		. character 10
@@ -290,7 +281,7 @@ parser|
 							. newLine
 							. indentation
 							. stringLine
-						parsing
+						parse
 							arg|arg.[3]
 		post sequence
 			. optional newLine
@@ -318,7 +309,7 @@ parser|
 				. lookupAnything
 			. whitespace
 			. value
-		parsing
+		parse
 			arg|
 				[arg.[2]] arg.[4]
 	onePlusX
@@ -326,14 +317,14 @@ parser|
 			condition sequence
 				. rule
 					condition arg.first
-					parsing
+					parse
 						arg|
 							. arg
 				. zeroOrMore rule
 					condition prePost
 						pre arg.delimiter
 						rule arg.step
-			parsing
+			parse
 				arg|join arg
 	mapCore onePlusX
 		first entry
@@ -357,9 +348,9 @@ parser|
 				. '"'
 				. ' '
 				. 10
-			. sequence character ' '
+			. character '|'
 			. expression
-		parsing
+		parse
 			arg|
 				parameter arg.[1]
 				expression arg.[3]
@@ -371,31 +362,31 @@ parser|
 			. character ']'
 	lookupStringExpression rule
 		condition lookupString
-		parsing
+		parse
 			arg|
 				literal arg
 	search rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
-		parsing
+		parse
 			arg|
 				search arg
 	root rule
 		condition character '/'
-		parsing
+		parse
 			|
 				root 0
 	ruleCurrent rule
 		condition stringRule "current"
-		parsing
+		parse
 			|
 				["current"] 0
 	realLookup rule
 		condition alternatives
 			. lookupStringExpression
 			. lookupAnythingExpression
-		parsing
+		parse
 			arg|
 				lookup arg
 	lookup alternatives
@@ -409,12 +400,12 @@ parser|
 				. lookup
 			delimiter character '.'
 			step lookup
-		parsing
+		parse
 			arg|
 				select arg
 	functionExpression rule
 		condition function
-		parsing
+		parse
 			arg|
 				key
 					.
@@ -430,7 +421,7 @@ parser|
 				. whitespace
 				. expression
 				. endOfLine
-			parsing
+			parse
 				arg|
 					key arg.[1]
 					value arg.[3]
@@ -445,7 +436,7 @@ parser|
 				. indentation
 				. rule
 					condition statement
-					parsing
+					parse
 						arg|
 							. arg
 				. zeroOrMore sequence
@@ -455,7 +446,7 @@ parser|
 					. statement
 			. 
 				parser|"p.defaultKeys.Pop 0"
-		parsing
+		parse
 			arg|
 				program arg.[2]
 	call rule
@@ -469,14 +460,14 @@ parser|
 							. character 9
 					rule expression
 				. program
-		parsing
+		parse
 			arg|
 				call
 					callable arg.[1]
 					argument arg.[2]
 	emptyMap rule
 		condition character '0'
-		parsing
+		parse
 			|0
 	literalExpression rule
 		condition alternatives
@@ -484,7 +475,7 @@ parser|
 			. string
 			. number
 			. characterDataExpression
-		parsing
+		parse
 			arg|
 				literal arg
 	keysSearch prePost

@@ -1176,9 +1176,10 @@ namespace Meta
 			list.Reverse();
 			return new StrategyMap(list);
 		}
-		public static Map If(Map arg)
+		public delegate Map Test(Map arg);
+		public static Test If = new Test(delegate(Map arg)
 		{
-			Position argPosition=MethodImplementation.currentPosition.AddCall(arg);
+			Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
 			Map result;
 			if (arg["condition"].GetBoolean())
 			{
@@ -1193,7 +1194,7 @@ namespace Meta
 				result = Map.Empty;
 			}
 			return result;
-		}
+		});
 		public static Map Intersect(Map arg)
 		{
 			Dictionary<Map, object> keys = new Dictionary<Map, object>();
@@ -4182,6 +4183,17 @@ namespace Meta
 	}
 	public class ObjectMap: DotNetMap
 	{
+		public override Position Call(Map arg, Position position)
+		{
+			if (this.type.IsSubclassOf(typeof(Delegate)))
+			{
+				return new Method("Invoke", this.obj, this.type).Call(arg, position);
+			}
+			else
+			{
+				throw new ApplicationException("Object is not callable.");
+			}
+		}
 		public override bool Equals(object obj)
 		{
 			return obj is ObjectMap && ((ObjectMap)obj).obj.Equals(this.obj);
