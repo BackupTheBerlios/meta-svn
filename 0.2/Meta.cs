@@ -1350,14 +1350,12 @@ namespace Meta
 		public delegate Map Test(Map arg);
 		public static Test If(Map arg)
 		{
-			//Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-			//Map result;
 			if (arg.GetBoolean())
 			{
 				return new Test(delegate(Map a)
 				{
 					//Position pos=MethodImplementation.currentPosition
-					Map result = Call.LastArgument.Call(Map.Empty).Get();
+					Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
 					return result;
 				});
 			}
@@ -1378,6 +1376,39 @@ namespace Meta
 				});
 			}
 		}
+
+
+		//public static Test If(Map arg)
+		//{
+		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+		//    //Map result;
+		//    if (arg.GetBoolean())
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            //Position pos=MethodImplementation.currentPosition
+		//            Map result = Call.LastArgument.Call(Map.Empty).Get();
+		//            return result;
+		//        });
+		//    }
+		//    else
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            Map result;
+		//            if (Call.LastArgument.Get().ContainsKey("else"))
+		//            {
+		//                result = Call.LastArgument["else"].Call(Map.Empty).Get();
+		//            }
+		//            else
+		//            {
+		//                result = Map.Empty;
+		//            }
+		//            return result;
+		//        });
+		//    }
+		//}
+
 		//public static Test If (Map arg)
 		//{
 		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
@@ -8084,14 +8115,6 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
 			public class Parser : Test
 			{
 				public override object GetResult(out int level)
@@ -8100,6 +8123,15 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+
 			public class Library : Test
 			{
 				public override object GetResult(out int level)

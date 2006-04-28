@@ -91,7 +91,8 @@
 						|"wrong"
 				control "x"				
 			ifTest if 1
-				|"if test successful"
+				then
+					|"if test successful"
 			append join
 				. "abc, "
 				. "die Katze lief im Schnee."
@@ -160,12 +161,14 @@
 					argument|if (strictlyIncreasing
 						. argument.[1].x
 						. argument.[2].x)
-						|-1
+						then
+							|-1
 						else
 							|if (strictlyDecreasing
 								. argument.[1].x
 								. argument.[2].x)
-								|1
+								then
+									|1
 								else
 									|0
 				array

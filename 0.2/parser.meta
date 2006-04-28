@@ -1,34 +1,24 @@
 parser|
-	rule defaultFunction
+	conditional defaultFunction
 		function
-			arg|
-				parser|
-					map arg.condition parser
-					: if (succeeded map)
-						|merge
-							. parser
-							. merge
-								. map
-								. arg.result (merge
-									. parser
-									. map)
-								. 
-									parsed arg.parse map.parsed
+			arg|if (arg.function arg.value)
+				then
+					|arg.then arg.value
+				else
+					|arg.else arg.value
 		argument
-			result
+			else
 				|0
-			parse
-				|@
-			indenting
-				|@
+			function
+				|hasKey @ "parsed"
 	rule defaultFunction
 		function
 			arg|
-				parser|
-					map arg.condition parser
-					: if (succeeded map)
-						|merge (merge parser (merge map (arg.result (merge parser map))))
-							parsed arg.parse map.parsed
+				parser|conditional
+					value arg.condition parser
+					then
+						|merge (merge parser (merge @ (arg.result (merge parser @))))
+							parsed arg.parse @.parsed
 		argument
 			result
 				|0
@@ -54,9 +44,10 @@ parser|
 					|not (null parser.text)
 				. 
 					|compare parser.text.[1])
-				|
-					parsed parser.text.[1]
-					text rest parser.text) 0
+				then
+					|
+						parsed parser.text.[1]
+						text rest parser.text) 0
 	character
 		char|matchChar
 			|equal char @
@@ -74,25 +65,29 @@ parser|
 						impArg|if (arg.tooMuch
 							count add impArg.n 1
 							parser impArg.parser)
-							|impArg.parser
+							then
+								|impArg.parser
 							else
-								|
-									res arg.rule impArg.parser
-									: if (succeeded res)
-										|
+								|conditional
+									value arg.rule impArg.parser
+									then
+										res|
 											nextResult implementation
 												parser res
 												n add impArg.n 1
 											: if (succeeded nextResult)
-												|
-													parsed prepend res.parsed nextResult.parsed
-													text nextResult.text
-													indentationCount if (hasKey nextResult "indentationCount")
-														|nextResult.indentationCount
-										else
-											|if (not (arg.tooFew
-												count impArg.n
-												parser impArg.parser))
+												then
+													|
+														parsed prepend res.parsed nextResult.parsed
+														text nextResult.text
+														indentationCount if (hasKey nextResult "indentationCount")
+															then
+																|nextResult.indentationCount
+									else
+										res|if (not (arg.tooFew
+											count impArg.n
+											parser impArg.parser))
+											then
 												|impArg.parser
 					: implementation
 						parser merge parser
@@ -125,42 +120,54 @@ parser|
 				parser|
 					implementation
 						arg|if (hasKey arg.rules 1)
-							|
-								ruleResult arg.rules.[1] arg.parser
-								: if (succeeded ruleResult)
-									|
-										nextResult implementation
-											parser
-												parsed 0
-												text ruleResult.text
-												indentationCount 0
-											rules rest arg.rules
-										: if (succeeded nextResult)
-											|
-												text nextResult.text
-												parsed join
-													.
-														. ruleResult.parsed
-													. nextResult.parsed
-											else
-												|nextResult
+							then
+								|conditional
+									value arg.rules.[1] arg.parser
+									then
+										ruleResult|
+											nextResult implementation
+												parser
+													parsed 0
+													text ruleResult.text
+													indentationCount 0
+												rules rest arg.rules
+											: if (succeeded nextResult)
+												then
+													|
+														text nextResult.text
+														parsed prepend ruleResult.parsed nextResult.parsed
+												else
+													|nextResult
 							else
 								|arg.parser
 					: implementation
 						parser parser
 						rules rules
-	succeeded
-		|hasKey @ "parsed"
 	alternatives
 		alts|rule
 			condition
 				parser|
 					implementation
 						arg|if (not (equal arg 0))
-							|
-								altResult arg.[1] parser
-								: if (succeeded altResult)
-									|altResult
+							then
+								|conditional
+									value arg.[1] parser
+									then
+										|@
+									else
+										|implementation (rest arg)
+					: implementation alts
+	alternatives
+		alts|rule
+			condition
+				parser|
+					implementation
+						arg|if (not (equal arg 0))
+							then
+								|conditional
+									value arg.[1] parser
+									then
+										|@
 									else
 										|implementation (rest arg)
 					: implementation alts
