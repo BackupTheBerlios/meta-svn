@@ -100,13 +100,9 @@ parser|
 	nTimes
 		arg|loopRule
 			tooMuch
-				upperArg|strictlyIncreasing
-					. arg.n upperArg.parser
-					. upperArg.count
+				upperArg|smaller (arg.n upperArg.parser) upperArg.count
 			tooFew
-				lowerArg|strictlyIncreasing
-					. lowerArg.count
-					. arg.n lowerArg.parser
+				lowerArg|smaller lowerArg.count (arg.n lowerArg.parser)
 			rule arg.rule
 	zeroOrMore
 		looped|loopRule
@@ -120,9 +116,7 @@ parser|
 			tooMuch
 				|0
 			tooFew
-				arg|strictlyDecreasing
-					. 1
-					. arg.count
+				arg|greater 1 arg.count
 			rule arg
 	sequence
 		rules|rule
