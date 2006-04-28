@@ -1191,10 +1191,17 @@ namespace Meta
 		{
 			return arg[arg.ArrayCount];
 		}
-		public static Map Contains(Map arg)
+		public static Test Contains(Map arg)
 		{
-			return arg["array"].Array.Contains(arg["value"]);
+			return new Test(delegate(Map map)
+			{
+				return arg.Array.Contains(map);
+			});
 		}
+		//public static Map Contains(Map arg)
+		//{
+		//    return arg["array"].Array.Contains(arg["value"]);
+		//}
 		public static Test HasKey(Map arg)
 		{
 			return new Test(delegate(Map key)

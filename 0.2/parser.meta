@@ -25,31 +25,34 @@ parser|
 		condition|
 			parse|rule
 				condition condition
-				parse parse
-	charRule
-		compare|rule
-			condition
-				parser|if (and
+				parse merge
 					.
-						|not (null parser.text)
-					. 
-						|compare parser.text.[1])
-					|
-						parsed parser.text.[1]
-						text rest parser.text
+						|@
+					. parse
+	generalRule
+		condition|
+			result|rule
+				condition condition
+				result result
+	matchChar
+		compare|(specialRule
+			parser|if (and
+				.
+					|not (null parser.text)
+				. 
+					|compare parser.text.[1])
+				|
+					parsed parser.text.[1]
+					text rest parser.text) 0
 	character
-		char|charRule
-			input|equal input char
+		char|matchChar
+			|equal char @
 	characterSet
-		chars|charRule
-			input|contains
-				array chars
-				value input
+		chars|matchChar
+			|contains chars @
 	characterExcept
-		chars|charRule
-			input|not (contains
-				value input
-				array chars)
+		chars|matchChar
+			|not (contains chars @)
 	loopRule
 		arg|rule
 			condition
@@ -139,7 +142,7 @@ parser|
 						parser parser
 						rules rules
 	succeeded
-		arg|hasKey arg "parsed"
+		|hasKey @ "parsed"
 	alternatives
 		alts|rule
 			condition
@@ -147,26 +150,16 @@ parser|
 					implementation
 						arg|if (not (equal arg 0))
 							|
-								altResult try
-									function
-										|arg.[1] parser
-									catch
-										|
-											. print arg
-											. console.readLine 0
+								altResult arg.[1] parser
 								: if (succeeded altResult)
-									|
-										parsed altResult.parsed
-										text altResult.text
+									|altResult
 									else
 										|implementation (rest arg)
 					: implementation alts
 	optional
 		subRule|
 			parser|merge
-				.
-					parsed 0
-					text parser.text
+				. parser
 				. subRule parser
 	lookupForbidden characterExcept
 		. ' '
@@ -192,14 +185,12 @@ parser|
 		. whitespace
 		. newLine
 	indentRule
-		change|rule
-			condition nTimes
-				n
-					parser|add parser.indentationCount change
-				rule character 9
-			result
-				parser|
-					indentationCount add parser.indentationCount change
+		change|generalRule (nTimes
+			n
+				|add @.indentationCount change
+			rule character 9)
+			|
+				indentationCount add @.indentationCount change
 	indentation indentRule 1
 	sameIndentation indentRule 0
 	dedentation indentRule -1
@@ -279,146 +270,118 @@ parser|
 					. literalExpression
 			: localRule
 				text parser.text
-	function rule
-		condition sequence
-			. zeroOrMore (characterExcept
-				. '"'
-				. ' '
-				. 10)
-			. character '|'
-			. expression
-		parse
-			|
-				parameter @.[1]
-				expression @.[3]
+	function (specialRule (sequence
+		. zeroOrMore (characterExcept
+			. '"'
+			. ' '
+			. 10)
+		. character '|'
+		. expression))
+		|
+			parameter @.[1]
+			expression @.[3]
 	lookupAnythingExpression suffix (sequence
 		. zeroOrMore (character 9)
 		. character ']') (prefix (character '[') expression)
-	lookupStringExpression rule
-		condition lookupString
-		parse
-			|
-				literal @
-	search rule
-		condition alternatives
-			. lookupStringExpression
-			. lookupAnythingExpression
-		parse
-			|
-				search @
-	root rule
-		condition character '/'
-		parse
-			|
-				root 0
-	ruleCurrent rule
-		condition character ':'
-		parse
-			|
-				["current"] 0
-	realLookup rule
-		condition alternatives
-			. lookupStringExpression
-			. lookupAnythingExpression
-		parse
-			|
-				lookup @
+	lookupStringExpression specialRule lookupString
+		|
+			literal @
+	search (specialRule (alternatives
+		. lookupStringExpression
+		. lookupAnythingExpression))
+		|
+			search @
+	root specialRule (character '/')
+		|
+			root 0
+	ruleCurrent specialRule (character ':')
+		|
+			["current"] 0
+	realLookup (specialRule (alternatives
+		. lookupStringExpression
+		. lookupAnythingExpression))
+		|
+			lookup @
 	lookup alternatives
 		. ruleCurrent
 		. realLookup
-	select rule
-		condition onePlusX
-			first alternatives
-				. root
-				. search
-				. lookup
-			delimiter character '.'
-			step lookup
-		parse
-			|
-				select @
-	functionExpression rule
-		condition function
-		parse
-			|
-				key
-					.
-						lookup
-							literal "function"
-				value
-					literal @
+	select (specialRule (onePlusX
+		first alternatives
+			. root
+			. search
+			. lookup
+		delimiter character '.'
+		step lookup))
+		|
+			select @
+	functionExpression specialRule function
+		|
+			key
+				.
+					lookup
+						literal "function"
+			value
+				literal @
 	statement alternatives
 		. functionExpression
-		. rule
-			condition sequence
-				. keys
-				. whitespace
-				. expression
-				. endOfLine
-			parse
-				|
-					key @.[1]
-					value @.[3]
-	program rule
-		condition sequence
-			.
-				parser|
-					. "p.defaultKeys.Push 1"
-					parsed 0
-					text parser.text.text
-			. sequence
-				. indentation
-				. rule
-					condition statement
-					parse
-						|
-							. @
-				. zeroOrMore sequence
-					. alternatives
-						. sameIndentation
-						. dedentation
-					. statement
-			. 
-				parser|"p.defaultKeys.Pop 0"
-		parse
-			arg|
-				program arg.[2]
-	call rule
-		condition sequence
-			. select
-			. alternatives
-				. prefix (sequence
-					. alternatives
-						. character ' '
-						. character 9) expression
-				. program
-		parse
+		. specialRule (sequence
+			. keys
+			. whitespace
+			. expression
+			. endOfLine)
 			|
-				call
-					callable @.[1]
-					argument @.[2]
-	emptyMap rule
-		condition character '0'
-		parse
-			|0
-	literalExpression rule
-		condition alternatives
-			. emptyMap
-			. string
-			. number
-			. characterDataExpression
-		parse
-			arg|
-				literal arg
+				key @.[1]
+				value @.[3]
+	program (specialRule (sequence
+		.
+			parser|
+				. "p.defaultKeys.Push 1"
+				parsed 0
+				text parser.text.text
+		. sequence
+			. indentation
+			. rule
+				condition statement
+				parse
+					|
+						. @
+			. zeroOrMore sequence
+				. alternatives
+					. sameIndentation
+					. dedentation
+				. statement
+		. 
+			parser|"p.defaultKeys.Pop 0"))
+		|
+			program @.[2]
+	call (specialRule (sequence
+		. select
+		. alternatives
+			. prefix (sequence
+				. alternatives
+					. character ' '
+					. character 9) expression
+			. program))
+		|
+			call
+				callable @.[1]
+				argument @.[2]
+	emptyMap specialRule (character '0')
+		|0
+	literalExpression (specialRule (alternatives
+		. emptyMap
+		. string
+		. number
+		. characterDataExpression))
+		|
+			literal @
 	keysSearch prefix (character '$') search
-	autokeyLookup rule
-		condition character '.'
-		result
-			arg|
-				defaultKey add arg.defaultKey 1
-				parsed
-					lookup
-						literal arg.defaultKey
+	autokeyLookup generalRule (character '.')
+		|
+			defaultKey add @.defaultKey 1
+			parsed
+				lookup
+					literal @.defaultKey
 	keys onePlusX
 		first alternatives
 			. keysSearch
