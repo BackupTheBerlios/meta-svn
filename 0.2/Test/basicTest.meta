@@ -288,9 +288,7 @@ commandLine|
 	two 2
 	firstIf "unchanged"
 	secondIf "unchanged"
-	firstIfCondition equal
-		. 1
-		. one
+	firstIfCondition equal 1 one
 	firstIfBranches
 		.
 			|"then"
@@ -349,9 +347,7 @@ commandLine|
 	whileCounter 0
 	loop
 		start|
-			whileDecision not (equal
-				. start
-				. 10)
+			whileDecision not (equal start 10)
 			whileBranches
 				.
 					arg|loop (add arg 1)

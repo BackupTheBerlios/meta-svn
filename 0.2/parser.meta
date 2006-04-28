@@ -34,9 +34,7 @@ parser|
 						text rest parser.text
 	character
 		char|charRule
-			input|equal
-				. input
-				. char
+			input|equal input char
 	characterSet
 		chars|charRule
 			input|contains

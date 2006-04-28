@@ -1433,23 +1433,30 @@ namespace Meta
 			}
 			return new StrategyMap(new DictionaryStrategy(result));
 		}
-		public static Map Equal(Map arg)
+		public static Test Equal(Map arg)
 		{
-			bool equal = true;
-			if(arg.ArrayCount>1)
+			return new Test(delegate(Map map)
 			{
-				List<Map> array = arg.Array;
-				for (int i = 0; i<arg.Count-1; i++)
-				{
-					if (!array[i].Equals(array[i + 1]))
-					{
-						equal = false;
-						break;
-					}
-				}
-			}
-			return equal;
+				return arg.Equals(map);
+			});
 		}
+		//public static Map Equal(Map arg)
+		//{
+		//    bool equal = true;
+		//    if(arg.ArrayCount>1)
+		//    {
+		//        List<Map> array = arg.Array;
+		//        for (int i = 0; i<arg.Count-1; i++)
+		//        {
+		//            if (!array[i].Equals(array[i + 1]))
+		//            {
+		//                equal = false;
+		//                break;
+		//            }
+		//        }
+		//    }
+		//    return equal;
+		//}
 		public static Map Not(Map arg)
 		{
 			return !arg.GetBoolean();

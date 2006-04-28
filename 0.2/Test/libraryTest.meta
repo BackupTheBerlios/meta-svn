@@ -112,20 +112,16 @@
 				. "oiq"
 			equal 
 				map 
-					true equal
-						.
-							x "hello"
-							y "world"
-						.
-							x "hello"
-							y "world"
-					false equal
-						.
-							x "y"
-							y "z"
-						.
-							x "y"
-							y "a"
+					true (equal
+						x "hello"
+						y "world")
+						x "hello"
+						y "world"
+					false (equal
+						x "y"
+						y "z")
+						x "y"
+						y "a"
 			while
 				counter 0
 				SetCounter 
@@ -200,9 +196,7 @@
 				. 3
 				. 5
 				. 2
-			argument|equal
-				. argument
-				. 1
+			argument|equal argument 1
 		findTest find
 			array "hello hello hi"
 			value "he"
