@@ -1262,14 +1262,28 @@ namespace Meta
 		//    }
 		//    return result;
 		//}
-		public static Map Subtract(Map arg)
+		public static Test Subtract(Map arg)
 		{
-			return arg[1].GetNumber() - arg[2].GetNumber();
+			return new Test(delegate(Map map)
+			{
+				return map.GetNumber() - arg.GetNumber();
+			});
 		}
-		public static Map Divide(Map arg)
+		//public static Map Subtract(Map arg)
+		//{
+		//    return arg[1].GetNumber() - arg[2].GetNumber();
+		//}
+		public static Test Divide(Map arg)
 		{
-			return arg[1].GetNumber() / arg[2].GetNumber();
+			return new Test(delegate(Map map)
+			{
+				return map.GetNumber() / arg.GetNumber();
+			});
 		}
+		//public static Map Divide(Map arg)
+		//{
+		//    return arg[1].GetNumber() / arg[2].GetNumber();
+		//}
 		public static Map Parse(Map arg)
 		{
 			Map start = new StrategyMap();
@@ -1282,15 +1296,22 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Map Product(Map arg)
+		public static Test Multiply(Map arg)
 		{
-			Number result = 1;
-			foreach (Map number in arg.Array)
+			return new Test(delegate(Map map)
 			{
-				result *= number.GetNumber();
-			}
-			return result;
+				return arg.GetNumber() * map.GetNumber();
+			});
 		}
+		//public static Map Product(Map arg)
+		//{
+		//    Number result = 1;
+		//    foreach (Map number in arg.Array)
+		//    {
+		//        result *= number.GetNumber();
+		//    }
+		//    return result;
+		//}
 		public static Map BinaryOr(Map arg)
 		{
 		    int binaryOr = 0;
@@ -6671,39 +6692,6 @@ namespace Meta
 				new Action(new ReferenceAssignment(),Call),
 				new Action(new Match(), new Character(Syntax.callEnd)));
 		});
-		//public static Rule ExplicitCall = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(), new Character(Syntax.callStart)),
-		//                new Action(new Autokey(), Select),
-		//                new Action(new Autokey(),
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            new Action(new Match(), new Character(Syntax.call)),
-		//                            new Action(new ReferenceAssignment(), Expression)),
-		//                        Program)),
-		//                new Action(new Match(), new Character(Syntax.callEnd)))));
-		//});
-		//public static Rule ExplicitCall = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(), new Character(Syntax.callStart)),
-		//                new Action(new Assignment(CodeKeys.Callable), Select),
-		//                new Action(new Assignment(
-		//                    CodeKeys.Argument),
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            new Action(new Match(), new Character(Syntax.call)),
-		//                            new Action(new ReferenceAssignment(), Expression)),
-		//                        Program)),
-		//                new Action(new Match(), new Character(Syntax.callEnd)))));
-		//});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(

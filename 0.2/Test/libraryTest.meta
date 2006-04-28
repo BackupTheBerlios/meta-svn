@@ -52,21 +52,11 @@
 		numberTest 
 			positiveAdd add 100 1000
 			negativeAdd add -100 91
-			subtractTest add 1/4 (multiply
-				. 1/100
-				. -1)
-			subtractTest2 subtract
-				. 103
-				. 2
-			divideTest divide
-				. 103
-				. 5
-			multiplyInteger multiply
-				. 19
-				. 1023
-			multiplyFraction multiply
-				. 3/2
-				. 7/3
+			subtractTest add 1/4 (multiply 1/100 -1)
+			subtractTest2 subtract 2 103
+			divideTest divide 5 103
+			multiplyInteger multiply 19 1023
+			multiplyFraction multiply 3/2 7/3
 			smallerDecreasingTest strictlyDecreasing
 				. 4
 				. 1
@@ -87,9 +77,7 @@
 				. 2
 			smallerTest smaller 0 1
 			greaterTest greater 3 5
-			divide multiply
-				. 1000
-				. reciprocal 7
+			divide multiply 1000 (reciprocal 7)
 		bitwiseTest 
 			or bitwiseOr
 				. 8
