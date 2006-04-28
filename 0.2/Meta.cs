@@ -257,20 +257,12 @@ namespace Meta
 				return true;
 			}
 		}
-		//private Expression callable;
-		//public Expression argument;
 		private Map parameterName;
-		//private Map code;
 		List<Map> expressions;
 		public Call(Map code, Map parameterName)
 		{
-			//this.code = code;
-			//this.callable = code[CodeKeys.Callable].GetExpression();
-			//this.argument = code[CodeKeys.Argument].GetExpression();
-			////this.code = code;
 			this.expressions = code.Array;
 			this.parameterName = parameterName;
-			//this.optimized = Optimize();
 		}
 
 		private static Stack<Position> arguments = new Stack<Position>();
@@ -7998,14 +7990,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			//public class ParserSerialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["parser"]);
-			//    }
-			//}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -8030,14 +8022,7 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
+
 			public class Library : Test
 			{
 				public override object GetResult(out int level)
