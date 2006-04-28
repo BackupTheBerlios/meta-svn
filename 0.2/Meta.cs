@@ -1206,7 +1206,6 @@ namespace Meta
 		{
 			Gtk.Application.Init();
 			Gtk.Window win = new Gtk.Window("TextViewSample");
-			////win.SetDefaultSize(600, 400);
 			win.ShowAll();
 			return Map.Empty;
 		}
@@ -1251,17 +1250,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map SplitString(Map arg)
-		//{
-		//    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-		//    string[] split = arg["text"].GetString().Split(delimiters);
-		//    Map result = new StrategyMap(new ListStrategy(split.Length));
-		//    foreach (string text in split)
-		//    {
-		//        result.Append(text);
-		//    }
-		//    return result;
-		//}
 		public static Test Subtract(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -1269,10 +1257,6 @@ namespace Meta
 				return map.GetNumber() - arg.GetNumber();
 			});
 		}
-		//public static Map Subtract(Map arg)
-		//{
-		//    return arg[1].GetNumber() - arg[2].GetNumber();
-		//}
 		public static Test Divide(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -1280,10 +1264,6 @@ namespace Meta
 				return map.GetNumber() / arg.GetNumber();
 			});
 		}
-		//public static Map Divide(Map arg)
-		//{
-		//    return arg[1].GetNumber() / arg[2].GetNumber();
-		//}
 		public static Map Parse(Map arg)
 		{
 			Map start = new StrategyMap();
@@ -1303,15 +1283,6 @@ namespace Meta
 				return arg.GetNumber() * map.GetNumber();
 			});
 		}
-		//public static Map Product(Map arg)
-		//{
-		//    Number result = 1;
-		//    foreach (Map number in arg.Array)
-		//    {
-		//        result *= number.GetNumber();
-		//    }
-		//    return result;
-		//}
 		public static Map BinaryOr(Map arg)
 		{
 		    int binaryOr = 0;
@@ -8002,6 +7973,14 @@ namespace Meta
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			private static string BasicTest
 			{
 				get
@@ -8022,14 +8001,6 @@ namespace Meta
 				{
 					level = 2;
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Extents : Test

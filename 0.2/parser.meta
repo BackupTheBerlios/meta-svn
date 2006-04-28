@@ -236,11 +236,24 @@ parser|
 		. 10
 		. 13
 		. '"')
-	characterDataExpression prePost
-		pre character 39
-		rule characterExcept
-			. 39
-		post character 39
+	prefix
+		prefixRule|
+			realRule|rule
+				condition sequence
+					. prefixRule
+					. realRule
+				parse
+					|@.[2]
+	suffix
+		suffixRule|
+			realRule|rule
+				condition sequence
+					. realRule
+					. suffixRule
+				parse
+					|@.[1]
+	characterDataExpression suffix (character 39) (prefix (character 39) (characterExcept
+		. 39))
 	string prePost
 		pre character '"'
 		rule alternatives
@@ -269,12 +282,9 @@ parser|
 				. number
 				. characterDataExpression
 			: rule parser.text
-	lookupAnything prePost
-		pre character '['
-		rule value
-		post sequence
-			. zeroOrMore 9
-			. character ']'
+	lookupAnything suffix (sequence
+		. zeroOrMore 9
+		. character ']') (prefix (character '[') value)
 	entry rule
 		condition sequence
 			. function
@@ -452,9 +462,7 @@ parser|
 		parse
 			arg|
 				literal arg
-	keysSearch prePost
-		pre character '$'
-		rule search
+	keysSearch prefix (character '$') search
 	autokeyLookup rule
 		condition character '.'
 		result
