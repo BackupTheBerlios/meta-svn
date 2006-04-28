@@ -14,10 +14,9 @@
 		. 400
 	view TextView.[0] 0
 	view.KeyPressEvent
-		e|if
-			condition equal
-				. e.[2].Event.Key
-				. gdk-sharp.Key.Return
+		e|if (equal
+			. e.[2].Event.Key
+			. gdk-sharp.Key.Return)
 			then
 				|print "equal!!!"
 			else
@@ -59,10 +58,9 @@
 					dialog.Filter FileFilter.[0] 0
 					. dialog.Filter.AddPattern "*.meta"
 					result dialog.Run 0
-					. if
-						condition equal
-							. result
-							. ResponseType.Accept
+					. if (equal
+						. result
+						. ResponseType.Accept)
 						then
 							|
 								$file dialog.Filename
@@ -70,10 +68,9 @@
 					. dialog.Destroy 0
 			save MenuItem.[String] "Save"
 			save.Activated
-				|if
-					condition not (equal
-						. file
-						. 0)
+				|if (not (equal
+					. file
+					. 0))
 					then
 						|File.WriteAllText
 							. file

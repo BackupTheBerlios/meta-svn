@@ -4,8 +4,7 @@ parser|
 			arg|
 				parser|
 					map arg.condition parser
-					: if
-						condition succeeded map
+					: if (succeeded map)
 						then
 							|merge
 								. parser
@@ -26,12 +25,11 @@ parser|
 	charRule
 		compare|rule
 			condition
-				parser|if
-					condition and
-						.
-							|not (null parser.text)
-						. 
-							|compare parser.text.[1]
+				parser|if (and
+					.
+						|not (null parser.text)
+					. 
+						|compare parser.text.[1])
 					then
 						|
 							parsed parser.text.[1]
@@ -51,29 +49,22 @@ parser|
 			input|not (contains
 				value input
 				array chars)
-	stringRule
-		string|sequence (apply
-			array string
-			function
-				char|character char)
 	loopRule
 		arg|rule
 			condition
 				parser|
 					implementation
-						impArg|if
-							condition arg.tooMuch
-								count add
-									. impArg.n
-									. 1
-								parser impArg.parser
+						impArg|if (arg.tooMuch
+							count add
+								. impArg.n
+								. 1
+							parser impArg.parser)
 							then
 								|impArg.parser
 							else
 								|
 									res arg.rule impArg.parser
-									: if
-										condition succeeded res
+									: if (succeeded res)
 										then
 											|
 												nextResult implementation
@@ -81,8 +72,7 @@ parser|
 													n add
 														. impArg.n
 														. 1
-												: if
-													condition succeeded nextResult
+												: if (succeeded nextResult)
 													then
 														|
 															parsed join
@@ -90,17 +80,15 @@ parser|
 																	. res.parsed
 																. nextResult.parsed
 															text nextResult.text
-															indentationCount if
-																condition hasKey
-																	map nextResult
-																	key "indentationCount"
+															indentationCount if (hasKey
+																map nextResult
+																key "indentationCount")
 																then
 																	|nextResult.indentationCount
 										else
-											|if
-												condition not (arg.tooFew
-													count impArg.n
-													parser impArg.parser)
+											|if (not (arg.tooFew
+												count impArg.n
+												parser impArg.parser))
 												then
 													|impArg.parser
 					: implementation
@@ -141,15 +129,13 @@ parser|
 			condition
 				parser|
 					implementation
-						arg|if
-							condition hasKey
-								map arg.rules
-								key 1
+						arg|if (hasKey
+							map arg.rules
+							key 1)
 							then
 								|
 									ruleResult arg.rules.[1] arg.parser
-									: if
-										condition succeeded ruleResult
+									: if (succeeded ruleResult)
 										then
 											|
 												nextResult implementation
@@ -158,8 +144,7 @@ parser|
 														text ruleResult.text
 														indentationCount 0
 													rules rest arg.rules
-												: if
-													condition succeeded nextResult
+												: if (succeeded nextResult)
 													then
 														|
 															text nextResult.text
@@ -180,10 +165,9 @@ parser|
 				. 
 					. arg.pre
 					. arg.rule
-				. if
-					condition hasKey
-						map arg
-						key "post"
+				. if (hasKey
+					map arg
+					key "post")
 					then
 						|
 							. arg.post)
@@ -198,8 +182,7 @@ parser|
 			condition
 				parser|
 					implementation
-						arg|if
-							condition not (null arg)
+						arg|if (not (null arg))
 							then
 								|
 									altResult try
@@ -209,8 +192,7 @@ parser|
 											|
 												. print arg
 												. console.readLine 0
-									: if
-										condition succeeded altResult
+									: if (succeeded altResult)
 										then
 											|
 												parsed altResult.parsed

@@ -106,8 +106,7 @@
 					y
 						|"wrong"
 				control "x"				
-			ifTest if
-				condition 1
+			ifTest if 1
 				then
 					|"if test successful"
 			append join
@@ -182,17 +181,15 @@
 					argument|argument.ToString 0
 			sortTest sort
 				function
-					argument|if
-						condition strictlyIncreasing
-							. argument.[1].x
-							. argument.[2].x
+					argument|if (strictlyIncreasing
+						. argument.[1].x
+						. argument.[2].x)
 						then
 							|-1
 						else
-							|if
-								condition strictlyDecreasing
-									. argument.[1].x
-									. argument.[2].x
+							|if (strictlyDecreasing
+								. argument.[1].x
+								. argument.[2].x)
 								then
 									|1
 								else

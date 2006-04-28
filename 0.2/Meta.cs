@@ -1312,54 +1312,54 @@ namespace Meta
 			return new StrategyMap(list);
 		}
 		public delegate Map Test(Map arg);
-		//public static Test If (Map arg)
+		public static Test If (Map arg)
+		{
+		    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+		    //Map result;
+		    if (arg.GetBoolean())
+		    {
+		        return new Test(delegate(Map a)
+		        {
+		            //Position pos=MethodImplementation.currentPosition
+		            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
+		            return result;
+		        });
+		    }
+		    else
+		    {
+		        return new Test(delegate(Map a)
+		        {
+		            Map result;
+		            if (Call.LastArgument.Get().ContainsKey("else"))
+		            {
+		                result = Call.LastArgument["else"].Call(Map.Empty).Get();
+		            }
+		            else
+		            {
+		                result = Map.Empty;
+		            }
+		            return result;
+		        });
+		    }
+		}
+		//public static Test If = new Test(delegate(Map arg)
 		//{
-		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-		//    //Map result;
+		//    Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+		//    Map result;
 		//    if (arg["condition"].GetBoolean())
 		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            //Position pos=MethodImplementation.currentPosition
-		//            Map result = Call.lastArgument["then"].Call(Map.Empty).Get();
-		//            return result;
-		//        });
+		//        result = argPosition["then"].Call(Map.Empty).Get();
+		//    }
+		//    else if (arg.ContainsKey("else"))
+		//    {
+		//        result = argPosition["else"].Call(Map.Empty).Get();
 		//    }
 		//    else
 		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            Map result;
-		//            if (Call.lastArgument.Get().ContainsKey("else"))
-		//            {
-		//                result = Call.lastArgument["else"].Call(Map.Empty).Get();
-		//            }
-		//            else
-		//            {
-		//                result = Map.Empty;
-		//            }
-		//            return result;
-		//        });
+		//        result = Map.Empty;
 		//    }
-		//}
-		public static Test If = new Test(delegate(Map arg)
-		{
-			Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-			Map result;
-			if (arg["condition"].GetBoolean())
-			{
-				result = argPosition["then"].Call(Map.Empty).Get();
-			}
-			else if (arg.ContainsKey("else"))
-			{
-				result = argPosition["else"].Call(Map.Empty).Get();
-			}
-			else
-			{
-				result = Map.Empty;
-			}
-			return result;
-		});
+		//    return result;
+		//});
 		public static Map Intersect(Map arg)
 		{
 			Dictionary<Map, object> keys = new Dictionary<Map, object>();
@@ -7994,6 +7994,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Parser : Test
 			{
 				public override object GetResult(out int level)
@@ -8027,14 +8035,7 @@ namespace Meta
 				}
 			}
 
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			//public class Profile : Test
 			//{
 			//    public override object GetResult(out int level)
