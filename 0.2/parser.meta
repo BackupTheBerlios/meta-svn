@@ -305,19 +305,14 @@ parser|
 						|
 							. @
 				. zeroOrMore (rule
-					condition prePost
-						pre arg.delimiter
-						rule arg.step)
+					condition prefix arg.delimiter arg.step)
 			parse
 				|join @
 	mapCore onePlusX
 		first entry
 		delimiter sameIndentation
 		step entry
-	map prePost
-		pre indentation
-		rule mapCore
-		post dedentation
+	map suffix dedentation (prefix indentation mapCore)
 	file mapCore
 	expression
 		parser|
@@ -338,12 +333,9 @@ parser|
 			|
 				parameter @.[1]
 				expression @.[3]
-	lookupAnythingExpression prePost
-		pre character '['
-		rule expression
-		post sequence
-			. zeroOrMore (character 9)
-			. character ']'
+	lookupAnythingExpression suffix (sequence
+		. zeroOrMore (character 9)
+		. character ']') (prefix (character '[') expression)
 	lookupStringExpression rule
 		condition lookupString
 		parse
@@ -437,12 +429,10 @@ parser|
 		condition sequence
 			. select
 			. alternatives
-				. prePost
-					pre sequence
-						. alternatives
-							. character ' '
-							. character 9
-					rule expression
+				. prefix (sequence
+					. alternatives
+						. character ' '
+						. character 9) expression
 				. program
 		parse
 			|
