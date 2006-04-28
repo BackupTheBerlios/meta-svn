@@ -26,6 +26,13 @@ parser|
 				|@
 			indenting
 				|@
+	metaRule
+		imp|
+			mod|rule
+				condition
+					parser|imp
+						mod mod
+						parser parser
 	specialRule
 		condition|
 			parse|rule
@@ -111,63 +118,41 @@ parser|
 			tooFew
 				arg|greater 1 arg.count
 			rule arg
-	sequence
-		rules|rule
-			condition
-				parser|implementation
-					parser parser
-					rules rules
-		implementation
-			arg|if (hasKey arg.rules 1)
-				then
-					|conditional (arg.rules.[1] arg.parser)
-						then
-							result|conditional (implementation
-								parser
-									parsed 0
-									text result.text
-									indentationCount 0
-								rules rest arg.rules)
-								then
-									|
-										text @.text
-										parsed prepend result.parsed @.parsed
-								else
-									|@
-				else
-					|arg.parser
-	alternatives
-		alts|rule
-			condition
-				parser|
-					implementation
-						arg|if (not (equal arg 0))
+	sequence metaRule
+		meta|
+			implementation
+				arg|if (hasKey arg.rules 1)
+					then
+						|conditional (arg.rules.[1] arg.parser)
 							then
-								|conditional (arg.[1] parser)
+								result|conditional (implementation
+									parser
+										parsed 0
+										text result.text
+										indentationCount 0
+									rules rest arg.rules)
 									then
-										|@
+										|
+											text @.text
+											parsed prepend result.parsed @.parsed
 									else
-										|implementation (rest arg)
-					: implementation alts
-	alternatives
-		alts|rule
-			condition
-				parser|
-					implementation
-						arg|if (not (equal arg 0))
+										|@
+					else
+						|arg.parser
+			: implementation
+				parser meta.parser
+				rules meta.mod
+	alternatives metaRule
+		meta|
+			implementation
+				arg|if (not (equal arg 0))
+					then
+						|conditional (arg.[1] meta.parser)
 							then
-								|conditional (arg.[1] parser)
-									then
-										|@
-									else
-										|implementation (rest arg)
-					: implementation alts
-	metaRule
-		imp|
-			mod|
-				parser|imp
-					mod mod
-					parser parser
+								|@
+							else
+								|implementation (rest arg)
+			: implementation meta.mod
 	optional metaRule
 		|merge @.parser (@.mod @.parser)
 	lookupForbidden characterExcept
@@ -178,6 +163,9 @@ parser|
 		. '.'
 		. '['
 		. ']'
+	syntax
+		charDelimiter character 39
+		char characterExcept 39
 	number specialRule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.Number.Parse @
 	newLine alternatives
@@ -205,22 +193,17 @@ parser|
 		. '"')
 	prefix
 		prefixRule|
-			realRule|rule
-				condition sequence
-					. prefixRule
-					. realRule
-				parse
-					|@.[2]
+			realRule|specialRule (sequence
+				. prefixRule
+				. realRule)
+				|@.[2]
 	suffix
 		suffixRule|
-			realRule|rule
-				condition sequence
-					. realRule
-					. suffixRule
-				parse
-					|@.[1]
-	characterDataExpression prefix (character 39) (suffix (character 39) (characterExcept
-		. 39))
+			realRule|specialRule (sequence
+				. realRule
+				. suffixRule)
+				|@.[1]
+	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter syntax.char)
 	string suffix (sequence
 		. optional newLine
 		. optional (character '"')) (prefix (character '"') (alternatives
@@ -233,14 +216,14 @@ parser|
 				. newLine
 				. indentation) stringLine))
 	lookupString oneOrMore lookupForbidden
-	value
-		parser|
-			rule alternatives
-				. map
-				. string
-				. number
-				. characterDataExpression
-			: rule parser.text
+	delayed metaRule
+		meta|meta.mod 0 meta.parser
+	value delayed
+		|alternatives
+			. map
+			. string
+			. number
+			. characterDataExpression
 	lookupAnything prefix (character '[') (suffix (sequence
 		. zeroOrMore 9
 		. character ']') value)
@@ -268,13 +251,9 @@ parser|
 		step entry
 	map suffix dedentation (prefix indentation mapCore)
 	file mapCore
-	expression
-		parser|
-			localRule rule
-				condition alternatives
-					. literalExpression
-			: localRule
-				text parser.text
+	expression delayed
+		|alternatives
+			. literalExpression
 	function (specialRule (sequence
 		. zeroOrMore (characterExcept
 			. '"'
