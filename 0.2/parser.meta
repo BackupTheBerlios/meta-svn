@@ -238,7 +238,7 @@ parser|
 					. suffixRule
 				parse
 					|@.[1]
-	characterDataExpression suffix (character 39) (prefix (character 39) (characterExcept
+	characterDataExpression prefix (character 39) (suffix (character 39) (characterExcept
 		. 39))
 	string suffix (sequence
 		. optional newLine
@@ -260,9 +260,9 @@ parser|
 				. number
 				. characterDataExpression
 			: rule parser.text
-	lookupAnything suffix (sequence
+	lookupAnything prefix (character '[') (suffix (sequence
 		. zeroOrMore 9
-		. character ']') (prefix (character '[') value)
+		. character ']') value)
 	entry rule
 		condition sequence
 			. function
