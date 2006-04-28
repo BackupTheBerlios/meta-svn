@@ -38,25 +38,25 @@ parser|
 				condition condition
 				result result
 	matchChar
-		compare|(specialRule
-			parser|if (and
-				.
-					|not (null parser.text)
-				. 
-					|compare parser.text.[1])
-				then
-					|
-						parsed parser.text.[1]
-						text rest parser.text) 0
-	character
-		char|matchChar
-			|equal char @
-	characterSet
-		chars|matchChar
-			|contains chars @
-	characterExcept
-		chars|matchChar
-			|not (contains chars @)
+		compare|
+			mod|(specialRule
+				parser|if (and
+					.
+						|not (null parser.text)
+					. 
+						|compare
+							char parser.text.[1]
+							mod mod)
+					then
+						|
+							parsed parser.text.[1]
+							text rest parser.text) 0
+	character matchChar
+		|equal @.mod @.char
+	characterSet matchChar
+		|contains @.mod @.char
+	characterExcept matchChar
+		|not (contains @.mod @.char)
 	loopRule
 		arg|(specialRule
 			parser|
