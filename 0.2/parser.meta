@@ -12,7 +12,7 @@ parser|
 					|0
 				function
 					|hasKey @ "parsed"
-	rule defaultFunction
+	baseRule defaultFunction
 		function
 			arg|
 				parser|conditional (arg.condition parser)
@@ -28,25 +28,25 @@ parser|
 				|@
 	metaRule
 		imp|
-			mod|rule
+			mod|baseRule
 				condition
 					parser|imp
 						mod mod
 						parser parser
-	specialRule
+	rule
 		condition|
-			parse|rule
+			parse|baseRule
 				condition condition
 				parse (merge
 					|@) parse
 	generalRule
 		condition|
-			result|rule
+			result|baseRule
 				condition condition
 				result result
 	matchChar
 		compare|
-			mod|(specialRule
+			mod|(rule
 				parser|if (and
 					.
 						|not (null parser.text)
@@ -65,7 +65,7 @@ parser|
 	characterExcept matchChar
 		|not (contains @.mod @.char)
 	loopRule
-		arg|(specialRule
+		arg|(rule
 			parser|
 				implementation
 					impArg|if (arg.tooMuch
@@ -166,51 +166,64 @@ parser|
 	syntax
 		charDelimiter character 39
 		char characterExcept 39
-	number specialRule (oneOrMore (characterSet "0123456789"))
+		linefeed character 10
+		carriageReturn character 13
+		whitespace characterSet
+			. 9
+			. ' '
+		indentation character 9
+		string character '"'
+		stringLineText characterExcept
+			. 10
+			. 13
+			. '"'
+		lookupStart character '['
+		lookupEnd character ']'
+		function character '|'
+		root character '/'
+		current character ':'
+		select character '.'
+		tab character 9
+		space character ' '
+		emptyMap character '0'
+		search character '$'
+	number rule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.Number.Parse @
 	newLine alternatives
-		. character 10
+		. syntax.linefeed
 		. sequence
-			. character 13
-			. character 10
-	whitespace zeroOrMore (characterSet
-		. 9
-		. ' ')
+			. syntax.carriageReturn
+			. syntax.linefeed
+	whitespace zeroOrMore syntax.whitespace
 	endOfLine sequence
 		. whitespace
 		. newLine
 	indentRule
-		change|generalRule (nTimes (character 9)
+		change|generalRule (nTimes syntax.indentation
 			|add @.indentationCount change)
 			|
 				indentationCount add @.indentationCount change
 	indentation indentRule 1
 	sameIndentation indentRule 0
 	dedentation indentRule -1
-	stringLine zeroOrMore (characterExcept
-		. 10
-		. 13
-		. '"')
 	prefix
 		prefixRule|
-			realRule|specialRule (sequence
+			realRule|rule (sequence
 				. prefixRule
 				. realRule)
 				|@.[2]
 	suffix
 		suffixRule|
-			realRule|specialRule (sequence
+			realRule|rule (sequence
 				. realRule
 				. suffixRule)
 				|@.[1]
 	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter syntax.char)
+	stringLine zeroOrMore syntax.stringLineText
 	string suffix (sequence
 		. optional newLine
-		. optional (character '"')) (prefix (character '"') (alternatives
-		. oneOrMore (characterExcept
-			. 10
-			. 13
-			. '"')
+		. optional syntax.string) (prefix syntax.string (alternatives
+		. oneOrMore syntax.stringLineText
 		. sequence
 			. prefix (sequence
 				. newLine
@@ -224,10 +237,10 @@ parser|
 			. string
 			. number
 			. characterDataExpression
-	lookupAnything prefix (character '[') (suffix (sequence
+	lookupAnything prefix syntax.lookupStart (suffix (sequence
 		. zeroOrMore 9
-		. character ']') value)
-	entry (specialRule
+		. syntax.lookupEnd) value)
+	entry (rule
 		condition sequence
 			. function
 			. alternatives
@@ -238,11 +251,11 @@ parser|
 		|
 			[@.[2]] @.[4]
 	onePlusX
-		arg|(specialRule (sequence
-			. specialRule arg.first
+		arg|(rule (sequence
+			. rule arg.first
 				|
 					. @
-			. zeroOrMore (rule
+			. zeroOrMore (baseRule
 				condition prefix arg.delimiter arg.step)))
 			|join @
 	mapCore onePlusX
@@ -254,51 +267,50 @@ parser|
 	expression delayed
 		|alternatives
 			. literalExpression
-	function (specialRule (sequence
+	function rule (sequence
 		. zeroOrMore (characterExcept
-			. '"'
 			. ' '
 			. 10)
-		. character '|'
-		. expression))
+		. syntax.function
+		. expression)
 		|
 			parameter @.[1]
 			expression @.[3]
 	lookupAnythingExpression suffix (sequence
-		. zeroOrMore (character 9)
-		. character ']') (prefix (character '[') expression)
-	lookupStringExpression specialRule lookupString
+		. zeroOrMore syntax.indentation
+		. syntax.lookupEnd) (prefix syntax.lookupStart expression)
+	lookupStringExpression rule lookupString
 		|
 			literal @
-	search (specialRule (alternatives
+	search (rule (alternatives
 		. lookupStringExpression
 		. lookupAnythingExpression))
 		|
 			search @
-	root specialRule (character '/')
+	root rule syntax.root
 		|
 			root 0
-	ruleCurrent specialRule (character ':')
+	ruleCurrent rule syntax.current
 		|
 			["current"] 0
-	realLookup (specialRule (alternatives
+	realLookup rule (alternatives
 		. lookupStringExpression
-		. lookupAnythingExpression))
+		. lookupAnythingExpression)
 		|
 			lookup @
 	lookup alternatives
 		. ruleCurrent
 		. realLookup
-	select (specialRule (onePlusX
+	select (rule (onePlusX
 		first alternatives
 			. root
 			. search
 			. lookup
-		delimiter character '.'
+		delimiter syntax.select
 		step lookup))
 		|
 			select @
-	functionExpression specialRule function
+	functionExpression rule function
 		|
 			key
 				.
@@ -308,7 +320,7 @@ parser|
 				literal @
 	statement alternatives
 		. functionExpression
-		. specialRule (sequence
+		. rule (sequence
 			. keys
 			. whitespace
 			. expression
@@ -316,7 +328,7 @@ parser|
 			|
 				key @.[1]
 				value @.[3]
-	program (specialRule (sequence
+	program (rule (sequence
 		.
 			parser|
 				. "p.defaultKeys.Push 1"
@@ -324,11 +336,9 @@ parser|
 				text parser.text.text
 		. sequence
 			. indentation
-			. rule
-				condition statement
-				parse
-					|
-						. @
+			. rule statement
+				|
+					. @
 			. zeroOrMore sequence
 				. alternatives
 					. sameIndentation
@@ -338,29 +348,29 @@ parser|
 			parser|"p.defaultKeys.Pop 0"))
 		|
 			program @.[2]
-	call (specialRule (sequence
+	call rule (sequence
 		. select
 		. alternatives
 			. prefix (sequence
 				. alternatives
-					. character ' '
-					. character 9) expression
-			. program))
+					. syntax.space
+					. syntax.tab) expression
+			. program)
 		|
 			call
 				callable @.[1]
 				argument @.[2]
-	emptyMap specialRule (character '0')
+	emptyMap rule syntax.emptyMap
 		|0
-	literalExpression (specialRule (alternatives
+	literalExpression (rule (alternatives
 		. emptyMap
 		. string
 		. number
 		. characterDataExpression))
 		|
 			literal @
-	keysSearch prefix (character '$') search
-	autokeyLookup generalRule (character '.')
+	keysSearch prefix syntax.search search
+	autokeyLookup generalRule syntax.select
 		|
 			defaultKey add @.defaultKey 1
 			parsed
@@ -371,7 +381,7 @@ parser|
 			. keysSearch
 			. lookup
 			. autokeyLookup
-		delimiter character '.'
+		delimiter syntax.select
 		step lookup
 	: /.Meta.Serialize.ValueFunction
 		stringTest
