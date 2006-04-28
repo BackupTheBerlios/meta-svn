@@ -71,9 +71,7 @@ parser|
 															. res.parsed
 														. nextResult.parsed
 													text nextResult.text
-													indentationCount if (hasKey
-														map nextResult
-														key "indentationCount")
+													indentationCount if (hasKey nextResult "indentationCount")
 														|nextResult.indentationCount
 										else
 											|if (not (arg.tooFew
@@ -112,9 +110,7 @@ parser|
 			condition
 				parser|
 					implementation
-						arg|if (hasKey
-							map arg.rules
-							key 1)
+						arg|if (hasKey arg.rules 1)
 							|
 								ruleResult arg.rules.[1] arg.parser
 								: if (succeeded ruleResult)
@@ -140,9 +136,7 @@ parser|
 						parser parser
 						rules rules
 	succeeded
-		arg|hasKey
-			map arg
-			key "parsed"
+		arg|hasKey arg "parsed"
 	alternatives
 		alts|rule
 			condition

@@ -103,10 +103,9 @@
 						. 3
 					function
 						argument|add argument 1
-			contains hasKey
-				map 
-					x "hello"
-				key "x"
+			keyTestMap
+				x "hello"
+			contains hasKey keyTestMap "x"
 			keysTest keys
 				jjqwv "aeäquq"
 				oere "i ke"

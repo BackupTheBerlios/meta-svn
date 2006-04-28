@@ -1195,13 +1195,20 @@ namespace Meta
 		{
 			return arg["array"].Array.Contains(arg["value"]);
 		}
-		public static Map HasKey(Map arg)
+		public static Test HasKey(Map arg)
 		{
-			if (arg["key"].Equals(new StrategyMap("result")))
+			return new Test(delegate(Map key)
 			{
-			}
-			return arg["map"].ContainsKey(arg["key"]);
+				return arg.ContainsKey(key);
+			});
 		}
+		//public static Map HasKey(Map arg)
+		//{
+		//    if (arg["key"].Equals(new StrategyMap("result")))
+		//    {
+		//    }
+		//    return arg["map"].ContainsKey(arg["key"]);
+		//}
 		public static Map ShowGtk(Map arg)
 		{
 			Gtk.Application.Init();

@@ -154,6 +154,15 @@ Entry (KeyValuePair`2)
 				""
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"keyTestMap"
+			Value (StrategyMap):
+				Entry (KeyValuePair`2)
+					Key (StrategyMap):
+						"x"
+					Value (StrategyMap):
+						"hello"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"contains"
 			Value (StrategyMap):
 				1
