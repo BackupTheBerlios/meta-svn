@@ -149,20 +149,6 @@ parser|
 					: implementation
 						parser parser
 						rules rules
-	prePost
-		arg|rule
-			condition sequence (join
-				. 
-					. arg.pre
-					. arg.rule
-				. if (hasKey
-					map arg
-					key "post")
-					then
-						|
-							. arg.post)
-			parse
-				|@.[2]
 	succeeded
 		arg|hasKey
 			map arg
@@ -254,25 +240,17 @@ parser|
 					|@.[1]
 	characterDataExpression suffix (character 39) (prefix (character 39) (characterExcept
 		. 39))
-	string prePost
-		pre character '"'
-		rule alternatives
-			. oneOrMore (characterExcept
-				. 10
-				. 13
-				. '"')
-			. rule
-				condition sequence
-					. rule
-						condition sequence
-							. newLine
-							. indentation
-							. stringLine
-						parse
-							|@.[3]
-		post sequence
-			. optional newLine
-			. optional (character '"')
+	string suffix (sequence
+		. optional newLine
+		. optional (character '"')) (prefix (character '"') (alternatives
+		. oneOrMore (characterExcept
+			. 10
+			. 13
+			. '"')
+		. sequence
+			. prefix (sequence
+				. newLine
+				. indentation) stringLine))
 	lookupString oneOrMore lookupForbidden
 	value
 		parser|
