@@ -58,46 +58,45 @@ parser|
 		chars|matchChar
 			|not (contains chars @)
 	loopRule
-		arg|rule
-			condition
-				parser|
-					implementation
-						impArg|if (arg.tooMuch
-							count add impArg.n 1
-							parser impArg.parser)
-							then
-								|impArg.parser
-							else
-								|conditional
-									value arg.rule impArg.parser
-									then
-										res|conditional
-											value implementation
-												parser res
-												n add impArg.n 1
-											then
-												nextResult|
-													parsed prepend res.parsed nextResult.parsed
-													text nextResult.text
-													indentationCount if (hasKey nextResult "indentationCount")
-														then
-															|nextResult.indentationCount
-									else
-										res|if (not (arg.tooFew
-											count impArg.n
-											parser impArg.parser))
-											then
-												|impArg.parser
-					: implementation
-						parser merge parser
-							parsed 0
-						n 0
+		arg|(specialRule
+			parser|
+				implementation
+					impArg|if (arg.tooMuch
+						count add impArg.n 1
+						parser impArg.parser)
+						then
+							|impArg.parser
+						else
+							|conditional
+								value arg.rule impArg.parser
+								then
+									res|conditional
+										value implementation
+											parser res
+											n add impArg.n 1
+										then
+											nextResult|
+												parsed prepend res.parsed nextResult.parsed
+												text nextResult.text
+												indentationCount if (hasKey nextResult "indentationCount")
+													then
+														|nextResult.indentationCount
+								else
+									res|if (not (arg.tooFew
+										count impArg.n
+										parser impArg.parser))
+										then
+											|impArg.parser
+				: implementation
+					parser merge parser
+						parsed 0
+					n 0) 0
 	nTimes
 		arg|loopRule
 			tooMuch
-				upperArg|smaller (arg.n upperArg.parser) upperArg.count
+				@|smaller (arg.n @.parser) @.count
 			tooFew
-				lowerArg|smaller lowerArg.count (arg.n lowerArg.parser)
+				@|smaller @.count (arg.n @.parser)
 			rule arg.rule
 	zeroOrMore
 		looped|loopRule
@@ -116,31 +115,30 @@ parser|
 	sequence
 		rules|rule
 			condition
-				parser|
-					implementation
-						arg|if (hasKey arg.rules 1)
-							then
-								|conditional
-									value arg.rules.[1] arg.parser
-									then
-										ruleResult|conditional
-											value implementation
-												parser
-													parsed 0
-													text ruleResult.text
-													indentationCount 0
-												rules rest arg.rules
-											then
-												|
-													text @.text
-													parsed prepend ruleResult.parsed @.parsed
-											else
-												|@
-							else
-								|arg.parser
-					: implementation
-						parser parser
-						rules rules
+				parser|implementation
+					parser parser
+					rules rules
+		implementation
+			arg|if (hasKey arg.rules 1)
+				then
+					|conditional
+						value arg.rules.[1] arg.parser
+						then
+							ruleResult|conditional
+								value implementation
+									parser
+										parsed 0
+										text ruleResult.text
+										indentationCount 0
+									rules rest arg.rules
+								then
+									|
+										text @.text
+										parsed prepend ruleResult.parsed @.parsed
+								else
+									|@
+				else
+					|arg.parser
 	alternatives
 		alts|rule
 			condition
