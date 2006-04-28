@@ -85,10 +85,7 @@ parser|
 												n add impArg.n 1
 											: if (succeeded nextResult)
 												|
-													parsed join
-														. 
-															. res.parsed
-														. nextResult.parsed
+													parsed prepend res.parsed nextResult.parsed
 													text nextResult.text
 													indentationCount if (hasKey nextResult "indentationCount")
 														|nextResult.indentationCount

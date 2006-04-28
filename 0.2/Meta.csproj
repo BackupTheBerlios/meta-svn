@@ -112,11 +112,14 @@
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />
+    <None Include="Library\append.meta" />
     <None Include="Library\apply.meta" />
     <None Include="Library\bitwiseOr.meta" />
     <None Include="Library\characters.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
+    <None Include="Library\prepend.meta" />
+    <None Include="Library\join.meta" />
     <None Include="Library\smaller.meta" />
     <None Include="Library\decreasing.meta" />
     <None Include="Library\defaultFunction.meta" />

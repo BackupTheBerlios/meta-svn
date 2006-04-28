@@ -33,26 +33,23 @@ function
 				value 
 					call 
 						[1] 
-							select 
+							call 
 								[1] 
-									search 
-										literal "merge"
-						[2] 
-							program 
-								[1] 
-									key 
+									select 
 										[1] 
-											lookup 
-												literal 1
-									value 
-										program 
-											[1] 
-												key 
-													[1] 
-														lookup 
-															literal 1
-												value 
-													literal "AssignedToCurrent"
+											search 
+												literal "merge"
+								[2] 
+									program 
+										[1] 
+											key 
+												[1] 
+													lookup 
+														literal 1
+											value 
+												literal "AssignedToCurrent"
+						[2] 
+							literal 0
 			[2] 
 				key 
 					[1] 

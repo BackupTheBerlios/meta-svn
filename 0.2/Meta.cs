@@ -1190,6 +1190,25 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Test Prepend(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				Map result = new StrategyMap(1,arg);
+				result.AppendRange(map);
+				//result.Append(arg);
+				return result;
+			});
+		}
+		public static Test Append(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				Map result=map.Copy();
+				result.Append(arg);
+				return result;
+			});
+		}
 		public static Map Keys(Map arg)
 		{
 			return new StrategyMap(arg.Keys);
@@ -1744,7 +1763,7 @@ namespace Meta
 			}));
 			return new StrategyMap(array);
 		}
-		public static Map Append(Map arg)
+		public static Map Join(Map arg)
 		{
 			Map result = Map.Empty;
 			Number counter = 1;

@@ -1,2 +1,2 @@
 documentation "Concatenates arrays."
-argument|/.Meta.Library.Append argument
+argument|/.Meta.Library.Join argument
