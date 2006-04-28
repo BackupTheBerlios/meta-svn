@@ -1,21 +1,21 @@
 parser|
-	conditional defaultFunction
-		function
-			arg|if (arg.function arg.value)
-				then
-					|arg.then arg.value
-				else
-					|arg.else arg.value
-		argument
-			else
-				|0
+	conditional
+		value|defaultFunction
 			function
-				|hasKey @ "parsed"
+				arg|if (arg.function value)
+					then
+						|arg.then value
+					else
+						|arg.else value
+			argument
+				else
+					|0
+				function
+					|hasKey @ "parsed"
 	rule defaultFunction
 		function
 			arg|
-				parser|conditional
-					value arg.condition parser
+				parser|conditional (arg.condition parser)
 					then
 						|merge (merge parser (merge @ (arg.result (merge parser @))))
 							parsed arg.parse @.parsed
@@ -67,13 +67,11 @@ parser|
 						then
 							|impArg.parser
 						else
-							|conditional
-								value arg.rule impArg.parser
+							|conditional (arg.rule impArg.parser)
 								then
-									res|conditional
-										value implementation
-											parser res
-											n add impArg.n 1
+									res|conditional (implementation
+										parser res
+										n add impArg.n 1)
 										then
 											nextResult|
 												parsed prepend res.parsed nextResult.parsed
@@ -121,16 +119,14 @@ parser|
 		implementation
 			arg|if (hasKey arg.rules 1)
 				then
-					|conditional
-						value arg.rules.[1] arg.parser
+					|conditional (arg.rules.[1] arg.parser)
 						then
-							ruleResult|conditional
-								value implementation
-									parser
-										parsed 0
-										text ruleResult.text
-										indentationCount 0
-									rules rest arg.rules
+							ruleResult|conditional (implementation
+								parser
+									parsed 0
+									text ruleResult.text
+									indentationCount 0
+								rules rest arg.rules)
 								then
 									|
 										text @.text
@@ -146,8 +142,7 @@ parser|
 					implementation
 						arg|if (not (equal arg 0))
 							then
-								|conditional
-									value arg.[1] parser
+								|conditional (arg.[1] parser)
 									then
 										|@
 									else
@@ -160,8 +155,7 @@ parser|
 					implementation
 						arg|if (not (equal arg 0))
 							then
-								|conditional
-									value arg.[1] parser
+								|conditional (arg.[1] parser)
 									then
 										|@
 									else
