@@ -21,6 +21,11 @@ parser|
 				|@
 			indenting
 				|@
+	specialRule
+		condition|
+			parse|rule
+				condition condition
+				parse parse
 	charRule
 		compare|rule
 			condition
@@ -140,7 +145,7 @@ parser|
 			condition
 				parser|
 					implementation
-						arg|if (not (null arg))
+						arg|if (not (equal arg 0))
 							|
 								altResult try
 									function
@@ -243,29 +248,24 @@ parser|
 	lookupAnything prefix (character '[') (suffix (sequence
 		. zeroOrMore 9
 		. character ']') value)
-	entry rule
+	entry (specialRule
 		condition sequence
 			. function
 			. alternatives
 				. lookupString
 				. lookupAnything
 			. whitespace
-			. value
-		parse
-			|
-				[@.[2]] @.[4]
+			. value)
+		|
+			[@.[2]] @.[4]
 	onePlusX
-		arg|rule
-			condition sequence
-				. rule
-					condition arg.first
-					parse
-						|
-							. @
-				. zeroOrMore (rule
-					condition prefix arg.delimiter arg.step)
-			parse
-				|join @
+		arg|(specialRule (sequence
+			. specialRule arg.first
+				|
+					. @
+			. zeroOrMore (rule
+				condition prefix arg.delimiter arg.step)))
+			|join @
 	mapCore onePlusX
 		first entry
 		delimiter sameIndentation
