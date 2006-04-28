@@ -1,8 +1,5 @@
 |
-	: merge
-		. gtk-sharp
-		. pango-sharp
-		. mscorlib
+	: merge (merge gtk-sharp pango-sharp) mscorlib
 	. Application.Init 0
 	. console.create 0
 	. console.write "hi"

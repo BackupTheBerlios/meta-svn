@@ -22,9 +22,8 @@ license "
 	SOFTWARE.
 "
 commandLine|
-	: merge
-		.
-			. "AssignedToCurrent"
+	: (merge
+		. "AssignedToCurrent") 0
 	asdf "hello"
 	shortFunction
 		arg|asdf

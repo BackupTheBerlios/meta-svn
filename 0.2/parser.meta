@@ -21,14 +21,27 @@ parser|
 				|@
 			indenting
 				|@
+	rule defaultFunction
+		function
+			arg|
+				parser|
+					map arg.condition parser
+					: if (succeeded map)
+						|merge (merge parser (merge map (arg.result (merge parser map))))
+							parsed arg.parse map.parsed
+		argument
+			result
+				|0
+			parse
+				|@
+			indenting
+				|@
 	specialRule
 		condition|
 			parse|rule
 				condition condition
-				parse merge
-					.
-						|@
-					. parse
+				parse (merge
+					|@) parse
 	generalRule
 		condition|
 			result|rule
@@ -85,10 +98,8 @@ parser|
 												parser impArg.parser))
 												|impArg.parser
 					: implementation
-						parser merge
-							. parser
-							. 
-								parsed 0
+						parser merge parser
+							parsed 0
 						n 0
 	nTimes
 		arg|loopRule
@@ -158,9 +169,7 @@ parser|
 					: implementation alts
 	optional
 		subRule|
-			parser|merge
-				. parser
-				. subRule parser
+			parser|merge parser (subRule parser)
 	lookupForbidden characterExcept
 		. ' '
 		. 9

@@ -843,6 +843,17 @@ namespace Meta
 		}
 		public override void Assign(Position context, Map value, Position executionContext)
 		{
+			if (value.Scope != null)
+			{
+				if (executionContext.Get().Scope != null)
+				{
+					value.Scope = executionContext.Get().Scope;
+				}
+				else
+				{
+					value.Scope = executionContext.Parent;
+				}
+			}
 			executionContext.Assign(value);
 		}
 	}
@@ -1697,18 +1708,31 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
-		public static Map Merge(Map arg)
+		public static Test Merge(Map arg)
 		{
-			Map result = new StrategyMap();
-			foreach (Map map in arg.Array)
+			return new Test(delegate(Map map)
 			{
+
+				Map result = arg.Copy();
 				foreach (KeyValuePair<Map, Map> pair in map)
 				{
 					result[pair.Key] = pair.Value;
 				}
-			}
-			return result;
+				return result;
+			});
 		}
+		//public static Map Merge(Map arg)
+		//{
+		//    Map result = new StrategyMap();
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        foreach (KeyValuePair<Map, Map> pair in map)
+		//        {
+		//            result[pair.Key] = pair.Value;
+		//        }
+		//    }
+		//    return result;
+		//}
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg["array"].Array;
@@ -6616,9 +6640,11 @@ namespace Meta
 							Dedentation).Match(parser, out matched);
 						if (matched)
 						{
-							map = Library.Merge(new StrategyMap(
-								1, map,
-								2, Entry.Match(parser, out matched)));
+							map = Library.Merge(map)(Entry.Match(parser, out matched));
+
+							//map = Library.Merge(new StrategyMap(
+							//    1, map,
+							//    2, Entry.Match(parser, out matched)));
 						}
 						else
 						{
@@ -7049,7 +7075,8 @@ namespace Meta
 		{
 			public override void Execute(Parser parser, Map map, ref Map result)
 			{
-				result = Library.Merge(new StrategyMap(1, result, 2, map));
+				result = Library.Merge(result)(map);
+				//result = Library.Merge(new StrategyMap(1, result, 2, map));
 			}
 		}
 		public class CustomAction : Production
@@ -8024,14 +8051,6 @@ namespace Meta
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
 			private static string BasicTest
 			{
 				get
@@ -8044,6 +8063,22 @@ namespace Meta
 				get
 				{
 					return Path.Combine(TestPath, "libraryTest.meta");
+				}
+			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Library : Test
@@ -8070,14 +8105,7 @@ namespace Meta
 					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 
 
 			//public class Profile : Test
