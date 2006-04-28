@@ -1,5 +1,4 @@
 argument|if (hasKey
 	map argument.cases
 	key argument.control)
-	then
-		|argument.cases.[argument.control] 0
+	|argument.cases.[argument.control] 0

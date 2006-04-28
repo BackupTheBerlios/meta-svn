@@ -17,8 +17,7 @@
 		e|if (equal
 			. e.[2].Event.Key
 			. gdk-sharp.Key.Return)
-			then
-				|print "equal!!!"
+			|print "equal!!!"
 			else
 				|print "not equal!!"
 	menuBar MenuBar.[0] 0
@@ -61,20 +60,18 @@
 					. if (equal
 						. result
 						. ResponseType.Accept)
-						then
-							|
-								$file dialog.Filename
-								$view.Buffer.Text File.ReadAllText file
+						|
+							$file dialog.Filename
+							$view.Buffer.Text File.ReadAllText file
 					. dialog.Destroy 0
 			save MenuItem.[String] "Save"
 			save.Activated
 				|if (not (equal
 					. file
 					. 0))
-					then
-						|File.WriteAllText
-							. file
-							. view.Buffer.Text
+					|File.WriteAllText
+						. file
+						. view.Buffer.Text
 		edit
 			copy 0
 			cut 0

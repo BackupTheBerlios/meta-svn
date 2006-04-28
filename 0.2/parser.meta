@@ -5,16 +5,15 @@ parser|
 				parser|
 					map arg.condition parser
 					: if (succeeded map)
-						then
-							|merge
-								. parser
-								. merge
-									. map
-									. arg.result (merge
-										. parser
-										. map)
-									. 
-										parsed arg.parse map.parsed
+						|merge
+							. parser
+							. merge
+								. map
+								. arg.result (merge
+									. parser
+									. map)
+								. 
+									parsed arg.parse map.parsed
 		argument
 			result
 				|0
@@ -30,10 +29,9 @@ parser|
 						|not (null parser.text)
 					. 
 						|compare parser.text.[1])
-					then
-						|
-							parsed parser.text.[1]
-							text rest parser.text
+					|
+						parsed parser.text.[1]
+						text rest parser.text
 	character
 		char|charRule
 			input|equal
@@ -57,36 +55,31 @@ parser|
 						impArg|if (arg.tooMuch
 							count add impArg.n 1
 							parser impArg.parser)
-							then
-								|impArg.parser
+							|impArg.parser
 							else
 								|
 									res arg.rule impArg.parser
 									: if (succeeded res)
-										then
-											|
-												nextResult implementation
-													parser res
-													n add impArg.n 1
-												: if (succeeded nextResult)
-													then
-														|
-															parsed join
-																. 
-																	. res.parsed
-																. nextResult.parsed
-															text nextResult.text
-															indentationCount if (hasKey
-																map nextResult
-																key "indentationCount")
-																then
-																	|nextResult.indentationCount
+										|
+											nextResult implementation
+												parser res
+												n add impArg.n 1
+											: if (succeeded nextResult)
+												|
+													parsed join
+														. 
+															. res.parsed
+														. nextResult.parsed
+													text nextResult.text
+													indentationCount if (hasKey
+														map nextResult
+														key "indentationCount")
+														|nextResult.indentationCount
 										else
 											|if (not (arg.tooFew
 												count impArg.n
 												parser impArg.parser))
-												then
-													|impArg.parser
+												|impArg.parser
 					: implementation
 						parser merge
 							. parser
@@ -122,28 +115,25 @@ parser|
 						arg|if (hasKey
 							map arg.rules
 							key 1)
-							then
-								|
-									ruleResult arg.rules.[1] arg.parser
-									: if (succeeded ruleResult)
-										then
+							|
+								ruleResult arg.rules.[1] arg.parser
+								: if (succeeded ruleResult)
+									|
+										nextResult implementation
+											parser
+												parsed 0
+												text ruleResult.text
+												indentationCount 0
+											rules rest arg.rules
+										: if (succeeded nextResult)
 											|
-												nextResult implementation
-													parser
-														parsed 0
-														text ruleResult.text
-														indentationCount 0
-													rules rest arg.rules
-												: if (succeeded nextResult)
-													then
-														|
-															text nextResult.text
-															parsed join
-																.
-																	. ruleResult.parsed
-																. nextResult.parsed
-													else
-														|nextResult
+												text nextResult.text
+												parsed join
+													.
+														. ruleResult.parsed
+													. nextResult.parsed
+											else
+												|nextResult
 							else
 								|arg.parser
 					: implementation
@@ -159,22 +149,20 @@ parser|
 				parser|
 					implementation
 						arg|if (not (null arg))
-							then
-								|
-									altResult try
-										function
-											|arg.[1] parser
-										catch
-											|
-												. print arg
-												. console.readLine 0
-									: if (succeeded altResult)
-										then
-											|
-												parsed altResult.parsed
-												text altResult.text
-										else
-											|implementation (rest arg)
+							|
+								altResult try
+									function
+										|arg.[1] parser
+									catch
+										|
+											. print arg
+											. console.readLine 0
+								: if (succeeded altResult)
+									|
+										parsed altResult.parsed
+										text altResult.text
+									else
+										|implementation (rest arg)
 					: implementation alts
 	optional
 		subRule|

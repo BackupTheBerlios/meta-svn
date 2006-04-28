@@ -1304,36 +1304,66 @@ namespace Meta
 			return new StrategyMap(list);
 		}
 		public delegate Map Test(Map arg);
-		public static Test If (Map arg)
+		public static Test If(Map arg)
 		{
-		    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-		    //Map result;
-		    if (arg.GetBoolean())
-		    {
-		        return new Test(delegate(Map a)
-		        {
-		            //Position pos=MethodImplementation.currentPosition
-		            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
-		            return result;
-		        });
-		    }
-		    else
-		    {
-		        return new Test(delegate(Map a)
-		        {
-		            Map result;
-		            if (Call.LastArgument.Get().ContainsKey("else"))
-		            {
-		                result = Call.LastArgument["else"].Call(Map.Empty).Get();
-		            }
-		            else
-		            {
-		                result = Map.Empty;
-		            }
-		            return result;
-		        });
-		    }
+			//Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+			//Map result;
+			if (arg.GetBoolean())
+			{
+				return new Test(delegate(Map a)
+				{
+					//Position pos=MethodImplementation.currentPosition
+					Map result = Call.LastArgument.Call(Map.Empty).Get();
+					return result;
+				});
+			}
+			else
+			{
+				return new Test(delegate(Map a)
+				{
+					Map result;
+					if (Call.LastArgument.Get().ContainsKey("else"))
+					{
+						result = Call.LastArgument["else"].Call(Map.Empty).Get();
+					}
+					else
+					{
+						result = Map.Empty;
+					}
+					return result;
+				});
+			}
 		}
+		//public static Test If (Map arg)
+		//{
+		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+		//    //Map result;
+		//    if (arg.GetBoolean())
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            //Position pos=MethodImplementation.currentPosition
+		//            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
+		//            return result;
+		//        });
+		//    }
+		//    else
+		//    {
+		//        return new Test(delegate(Map a)
+		//        {
+		//            Map result;
+		//            if (Call.LastArgument.Get().ContainsKey("else"))
+		//            {
+		//                result = Call.LastArgument["else"].Call(Map.Empty).Get();
+		//            }
+		//            else
+		//            {
+		//                result = Map.Empty;
+		//            }
+		//            return result;
+		//        });
+		//    }
+		//}
 		public static Test Greater(Map arg)
 		{
 			return new Test(delegate(Map map)
