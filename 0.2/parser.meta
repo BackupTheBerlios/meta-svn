@@ -55,9 +55,7 @@ parser|
 				parser|
 					implementation
 						impArg|if (arg.tooMuch
-							count add
-								. impArg.n
-								. 1
+							count add impArg.n 1
 							parser impArg.parser)
 							then
 								|impArg.parser
@@ -69,9 +67,7 @@ parser|
 											|
 												nextResult implementation
 													parser res
-													n add
-														. impArg.n
-														. 1
+													n add impArg.n 1
 												: if (succeeded nextResult)
 													then
 														|
@@ -228,15 +224,11 @@ parser|
 		change|rule
 			condition nTimes
 				n
-					parser|add
-						. parser.indentationCount
-						. change
+					parser|add parser.indentationCount change
 				rule character 9
 			result
 				parser|
-					indentationCount add
-						. parser.indentationCount
-						. change
+					indentationCount add parser.indentationCount change
 	indentation indentRule 1
 	sameIndentation indentRule 0
 	dedentation indentRule -1
@@ -467,9 +459,7 @@ parser|
 		condition character '.'
 		result
 			arg|
-				defaultKey add
-					. arg.defaultKey
-					. 1
+				defaultKey add arg.defaultKey 1
 				parsed
 					lookup
 						literal arg.defaultKey

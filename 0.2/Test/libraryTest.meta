@@ -50,17 +50,11 @@
 					. 
 						|0
 		numberTest 
-			positiveAdd add
-				. 100
-				. 1000
-			negativeAdd add
-				. -100
-				. 91
-			subtractTest add
-				. 1/4
-				. multiply
-					. 1/100
-					. -1
+			positiveAdd add 100 1000
+			negativeAdd add -100 91
+			subtractTest add 1/4 (multiply
+				. 1/100
+				. -1)
 			subtractTest2 subtract
 				. 103
 				. 2
@@ -121,9 +115,7 @@
 						. 2
 						. 3
 					function
-						argument|add
-							. argument
-							. 1
+						argument|add argument 1
 			contains hasKey
 				map 
 					x "hello"

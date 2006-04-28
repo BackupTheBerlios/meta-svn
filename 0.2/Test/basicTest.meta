@@ -354,9 +354,7 @@ commandLine|
 				. 10)
 			whileBranches
 				.
-					arg|loop (add
-						. arg
-						. 1)
+					arg|loop (add arg 1)
 				[0]
 					arg|arg
 			: whileBranches.[whileDecision] start

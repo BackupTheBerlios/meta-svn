@@ -3205,24 +3205,12 @@ function
 																											search 
 																												literal "add"
 																								[2] 
-																									program 
+																									select 
 																										[1] 
-																											key 
-																												[1] 
-																													lookup 
-																														literal 1
-																											value 
-																												select 
-																													[1] 
-																														search 
-																															literal "arg"
-																										[2] 
-																											key 
-																												[1] 
-																													lookup 
-																														literal 2
-																											value 
-																												literal 1
+																											search 
+																												literal "arg"
+																								[3] 
+																									literal 1
 														[2] 
 															key 
 																[1] 

@@ -1,5 +1,2 @@
 choose
-	array|array.[/.Meta.Library.Random (add
-		. length array
-		. 1)
-	]
+	array|array.[/.Meta.Library.Random (add length array 1)]

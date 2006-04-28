@@ -1592,15 +1592,28 @@ namespace Meta
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
 		}
-		public static Map Sum(Map arg)
+		public static Test Add(Map arg)
 		{
-			Number result=0;
-			foreach (Map map in arg.Array)
+			return new Test(delegate(Map map)
 			{
-				result += map.GetNumber();
-			}
-			return result;
+				return arg.GetNumber() + map.GetNumber();
+			});
+			//Number result = 0;
+			//foreach (Map map in arg.Array)
+			//{
+			//    result += map.GetNumber();
+			//}
+			//return result;
 		}
+		//public static Map Sum(Map arg)
+		//{
+		//    Number result=0;
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        result += map.GetNumber();
+		//    }
+		//    return result;
+		//}
 		public static string writtenText = "";
 		public static void WriteLine(string text)
 		{
@@ -6654,19 +6667,26 @@ namespace Meta
 		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action(new Assignment(
-					CodeKeys.Call),
-					new Sequence(
-						new Action(new Match(), new Character(Syntax.callStart)),
-						new Action(new Autokey(), Select),
-						new Action(new Autokey(),
-							new Alternatives(
-								new Sequence(
-									new Action(new Match(), new Character(Syntax.call)),
-									new Action(new ReferenceAssignment(), Expression)),
-								Program)),
-						new Action(new Match(), new Character(Syntax.callEnd)))));
+				new Action(new Match(), new Character(Syntax.callStart)),
+				new Action(new ReferenceAssignment(),Call),
+				new Action(new Match(), new Character(Syntax.callEnd)));
 		});
+		//public static Rule ExplicitCall = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Match(), new Character(Syntax.callStart)),
+		//                new Action(new Autokey(), Select),
+		//                new Action(new Autokey(),
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            new Action(new Match(), new Character(Syntax.call)),
+		//                            new Action(new ReferenceAssignment(), Expression)),
+		//                        Program)),
+		//                new Action(new Match(), new Character(Syntax.callEnd)))));
+		//});
 		//public static Rule ExplicitCall = new DelayedRule(delegate()
 		//{
 		//    return new Sequence(
