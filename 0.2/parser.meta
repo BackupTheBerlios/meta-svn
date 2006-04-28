@@ -71,18 +71,17 @@ parser|
 								|conditional
 									value arg.rule impArg.parser
 									then
-										res|
-											nextResult implementation
+										res|conditional
+											value implementation
 												parser res
 												n add impArg.n 1
-											: if (succeeded nextResult)
-												then
-													|
-														parsed prepend res.parsed nextResult.parsed
-														text nextResult.text
-														indentationCount if (hasKey nextResult "indentationCount")
-															then
-																|nextResult.indentationCount
+											then
+												nextResult|
+													parsed prepend res.parsed nextResult.parsed
+													text nextResult.text
+													indentationCount if (hasKey nextResult "indentationCount")
+														then
+															|nextResult.indentationCount
 									else
 										res|if (not (arg.tooFew
 											count impArg.n
@@ -124,20 +123,19 @@ parser|
 								|conditional
 									value arg.rules.[1] arg.parser
 									then
-										ruleResult|
-											nextResult implementation
+										ruleResult|conditional
+											value implementation
 												parser
 													parsed 0
 													text ruleResult.text
 													indentationCount 0
 												rules rest arg.rules
-											: if (succeeded nextResult)
-												then
-													|
-														text nextResult.text
-														parsed prepend ruleResult.parsed nextResult.parsed
-												else
-													|nextResult
+											then
+												|
+													text @.text
+													parsed prepend ruleResult.parsed @.parsed
+											else
+												|@
 							else
 								|arg.parser
 					: implementation
