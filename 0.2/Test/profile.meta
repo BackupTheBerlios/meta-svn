@@ -9,7 +9,7 @@ getTabsMap
 			text text
 			delimiters
 				. characters.tab
-		current
+		:
 			[parts.[2]] parts.[1]
 |
 	lines getLines ["INPUT.txt"]
@@ -25,7 +25,7 @@ getTabsMap
 				arg|string.compare
 					. arg.[1]
 					. arg.[2]
-	current apply
+	: apply
 		array sort
 			array keys map
 			function

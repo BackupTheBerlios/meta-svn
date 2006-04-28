@@ -1,4 +1,4 @@
 documentation "Converts an integer to a string."
 argument|
 	map /.Meta.Number.[/.Meta.Map] argument
-	current map.ToString 0
+	: map.ToString 0

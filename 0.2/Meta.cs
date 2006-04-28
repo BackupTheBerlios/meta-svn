@@ -5922,9 +5922,9 @@ namespace Meta
 		public const char assignment = ' ';
 		public const char space = ' ';
 		public const char tab = '\t';
-		public const string current = "current";
+		public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {lastArgument, call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
 	}
 
 
@@ -6801,7 +6801,7 @@ namespace Meta
 					LookupString));
 
 		private static Rule Current = new Sequence(
-			new Action(new Match(),StringRule(Syntax.current)),
+			new Action(new Match(),new Character(Syntax.current)),
 			new Action(new ReferenceAssignment(),new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
 
 
@@ -7559,12 +7559,16 @@ namespace Meta
 					Expression),
 				Syntax.lookupEnd.ToString()));
 
-
 		public static Rule Current = new Equal(
 			new StrategyMap(
-				CodeKeys.Current, 
+				CodeKeys.Current,
 				Map.Empty),
 			Syntax.current.ToString());
+		//public static Rule Current = new Equal(
+		//    new StrategyMap(
+		//        CodeKeys.Current, 
+		//        Map.Empty),
+		//    Syntax.current.ToString());
 
 		public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal, Value));
 
@@ -8031,14 +8035,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Profile : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-				}
-			}
+			//public class Profile : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
+			//    }
+			//}
 
 			public static Map Run(string path,Map argument)
 			{

@@ -22,7 +22,7 @@ license "
 	SOFTWARE.
 "
 commandLine|
-	current merge
+	: merge
 		.
 			. "AssignedToCurrent"
 	asdf "hello"
@@ -119,13 +119,13 @@ commandLine|
 		SetB
 			newB|
 				$b.[1] newB.value
-				current "changed"
+				: "changed"
 		x
 			a "b"
 			c "d"
 		.
 			|
-				current.a "b"
+				:.a "b"
 	a "default"
 	b 0
 	aSet object.SetA 0
@@ -149,7 +149,7 @@ commandLine|
 	scopeFromFunctionTest scopeFromFunction 0
 	ReturnEverything
 		everything|
-			current everything
+			: everything
 	everythingReturned ReturnEverything
 		. "a"
 		. "b"
@@ -160,18 +160,18 @@ commandLine|
 		. "z"
 	ReturnFunction
 		|
-			current
+			:
 				|
-					current
+					:
 						. 1
 						. 2
 						. 3
 	SetCurrent
 		current|
-			current
+			:
 				asdf current
 				x current.symbol
-			current x
+			: x
 	thisSet SetCurrent
 		symbol "haha"
 	FirstLevel
@@ -244,7 +244,7 @@ commandLine|
 	literalFunctionResult literalFunction 0
 	someFunction
 		|
-			current "simple function this"
+			: "simple function this"
 	callFunction
 		|someFunction
 	callFunctionResult callFunction 0
@@ -273,7 +273,7 @@ commandLine|
 	TestClass.staticEvent
 		arg|
 			. ChangeStaticEvent 1
-			current arg.[1]
+			: arg.[1]
 	. TestClass.TakeDelegate
 		arg|arg.[1]
 	resultFromDelegate TestClass.GetResultFromDelegate 0
@@ -282,7 +282,7 @@ commandLine|
 	testClass.instanceEvent
 		arg|
 			$instanceEventChanged 1
-			current arg.[1]
+			: arg.[1]
 	instanceEventResult testClass.CallInstanceEvent 5
 	one 1
 	two 2
@@ -359,7 +359,7 @@ commandLine|
 						. 1)
 				[0]
 					arg|arg
-			current whileBranches.[whileDecision] start
+			: whileBranches.[whileDecision] start
 	whileCounter loop 3
 	returnInMap
 		arg|
@@ -389,7 +389,7 @@ commandLine|
 		arg|
 			innerFunction
 				|
-					current arg
+					: arg
 			. innerFunction 0
 	outerFunctionTest outerFunction "right"
 	newLines "

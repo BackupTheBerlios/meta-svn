@@ -1,5 +1,5 @@
 |
-	current merge
+	: merge
 		. gtk-sharp
 		. pango-sharp
 		. mscorlib

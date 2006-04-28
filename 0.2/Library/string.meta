@@ -3,15 +3,15 @@ replace
 trim
 	text|
 		object /.Meta.ObjectMap.[mscorlib.String] text
-		current object.Trim.[0] 0
+		: object.Trim.[0] 0
 lower
 	string|
 		object /.Meta.ObjectMap.[/.mscorlib.String] string
-		current object.ToLower.[0] 0
+		: object.ToLower.[0] 0
 upper
 	string|
 		object /.Meta.ObjectMap.[/.mscorlib.String] string
-		current object.ToUpper.[0] 0
+		: object.ToUpper.[0] 0
 split
 	arg|/.Meta.Library.SplitString arg
 compare
