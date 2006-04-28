@@ -90,7 +90,7 @@ Entry (KeyValuePair`2)
 				7/2
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"greater"
+				"smallerDecreasingTest"
 			Value (StrategyMap):
 				1
 		Entry (KeyValuePair`2)
@@ -105,7 +105,17 @@ Entry (KeyValuePair`2)
 				1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"smaller"
+				"strictlyIncreasingTest"
+			Value (StrategyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"smallerTest"
+			Value (StrategyMap):
+				1
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"greaterTest"
 			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)

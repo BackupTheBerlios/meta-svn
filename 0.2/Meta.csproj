@@ -117,6 +117,7 @@
     <None Include="Library\characters.meta" />
     <None Include="Library\console.meta" />
     <None Include="Library\contains.meta" />
+    <None Include="Library\smaller.meta" />
     <None Include="Library\decreasing.meta" />
     <None Include="Library\defaultFunction.meta" />
     <None Include="Library\divide.meta" />
@@ -126,6 +127,7 @@
     <None Include="Library\findFirst.meta" />
     <None Include="Library\first.meta" />
     <None Include="Library\foreach.meta" />
+    <None Include="Library\greater.meta" />
     <None Include="Library\hasKey.meta" />
     <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />

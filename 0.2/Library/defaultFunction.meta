@@ -1,0 +1,4 @@
+default|
+	arg|default.function (merge
+		. default.argument
+		. arg)

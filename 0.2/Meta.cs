@@ -1342,6 +1342,20 @@ namespace Meta
 		        });
 		    }
 		}
+		public static Test Greater(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				return arg.GetNumber() > map.GetNumber();
+			});
+		}
+		public static Test Smaller(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				return arg.GetNumber() < map.GetNumber();
+			});
+		}
 		//public static Test If = new Test(delegate(Map arg)
 		//{
 		//    Position argPosition = MethodImplementation.currentPosition.AddCall(arg);

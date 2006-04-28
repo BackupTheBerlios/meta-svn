@@ -73,7 +73,7 @@
 			multiplyFraction multiply
 				. 3/2
 				. 7/3
-			greater strictlyDecreasing
+			smallerDecreasingTest strictlyDecreasing
 				. 4
 				. 1
 			nonincreasingTest decreasing
@@ -88,9 +88,11 @@
 				. 4
 				. 5
 				. 6
-			smaller strictlyIncreasing
+			strictlyIncreasingTest strictlyIncreasing
 				. 23
 				. 2
+			smallerTest smaller 0 1
+			greaterTest greater 3 5
 			divide multiply
 				. 1000
 				. reciprocal 7
