@@ -90,12 +90,13 @@ parser|
 						parsed 0
 					n 0) 0
 	nTimes
-		arg|loopRule
-			tooMuch
-				@|smaller (arg.n @.parser) @.count
-			tooFew
-				@|smaller @.count (arg.n @.parser)
-			rule arg.rule
+		loopedRule|
+			n|loopRule
+				tooMuch
+					@|smaller (n @.parser) @.count
+				tooFew
+					@|smaller @.count (n @.parser)
+				rule loopedRule
 	zeroOrMore
 		looped|loopRule
 			tooMuch
@@ -121,16 +122,16 @@ parser|
 				then
 					|conditional (arg.rules.[1] arg.parser)
 						then
-							ruleResult|conditional (implementation
+							result|conditional (implementation
 								parser
 									parsed 0
-									text ruleResult.text
+									text result.text
 									indentationCount 0
 								rules rest arg.rules)
 								then
 									|
 										text @.text
-										parsed prepend ruleResult.parsed @.parsed
+										parsed prepend result.parsed @.parsed
 								else
 									|@
 				else
@@ -161,9 +162,14 @@ parser|
 									else
 										|implementation (rest arg)
 					: implementation alts
-	optional
-		subRule|
-			parser|merge parser (subRule parser)
+	metaRule
+		imp|
+			mod|
+				parser|imp
+					mod mod
+					parser parser
+	optional metaRule
+		|merge @.parser (@.mod @.parser)
 	lookupForbidden characterExcept
 		. ' '
 		. 9
@@ -186,10 +192,8 @@ parser|
 		. whitespace
 		. newLine
 	indentRule
-		change|generalRule (nTimes
-			n
-				|add @.indentationCount change
-			rule character 9)
+		change|generalRule (nTimes (character 9)
+			|add @.indentationCount change)
 			|
 				indentationCount add @.indentationCount change
 	indentation indentRule 1
