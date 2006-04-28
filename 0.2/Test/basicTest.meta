@@ -32,7 +32,7 @@ commandLine|
 	counter 0
 	SetCounter
 		argument|
-			$counter argument
+			$counter @
 	. SetCounter 5
 	scoping
 		test

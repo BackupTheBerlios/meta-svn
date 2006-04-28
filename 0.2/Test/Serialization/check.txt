@@ -126,8 +126,7 @@ function
 												value 
 													select 
 														[1] 
-															search 
-																literal "argument"
+															lastArgument 0
 			[7] 
 				key 
 					[1] 

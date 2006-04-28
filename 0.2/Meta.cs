@@ -45,6 +45,7 @@ namespace Meta
 {
 	public class CodeKeys
 	{
+		public static readonly Map LastArgument = "lastArgument";
 		public static readonly Map Expression="expression";
 		public static readonly Map Parameter="parameter";
 		public static readonly Map Root = "root";
@@ -272,7 +273,14 @@ namespace Meta
 			//this.optimized = Optimize();
 		}
 
-		public static Position lastArgument;
+		private static Stack<Position> arguments = new Stack<Position>();
+		public static Position LastArgument
+		{
+			get
+			{
+				return arguments.Peek();
+			}
+		}
 		protected override Position EvaluateImplementation(Position current)
 		{
 			try
@@ -283,8 +291,10 @@ namespace Meta
 					//Position argument;
 					//argument.IsCall = true;
 					Position arg = expressions[i].GetExpression().Evaluate(current);
-					lastArgument = arg;
+					//LastArgument = arg;
+					arguments.Push(arg);
 					callable = callable.Call(arg.Get());
+					arguments.Pop();
 					//callable = callable.Get().GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 					//callable=callablePosition.get
 				}
@@ -1061,6 +1071,28 @@ namespace Meta
 			}
 		}
 	}
+	public class LastArgument : Subselect
+	{
+		public override bool HasLiteralKeysOnly
+		{
+			get 
+			{
+				return false;
+			}
+		}
+		public override Position Evaluate(Position context, Position executionContext)
+		{
+			return Call.LastArgument;
+		}
+		public override void Assign(Position context, Map value, Position executionContext)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		//protected override Position EvaluateImplementation(Position context)
+		//{
+		//    return Call.lastArgument;
+		//}
+	}
 	public class Select : Expression
 	{
 		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
@@ -1403,7 +1435,7 @@ namespace Meta
 		public static Map Try(Map arg)
 		{
 			Map result;
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			try
 			{
 				result = argument.Get()["function"].Call(Map.Empty, argument).Get();
@@ -1508,7 +1540,7 @@ namespace Meta
 		public static Map And(Map arg)
 		{
 			bool and = true;
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 
 			foreach (Position callable in argument.Array)
 			{
@@ -1524,7 +1556,7 @@ namespace Meta
 		public static Map Or(Map arg)
 		{
 			bool or = false;
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			foreach (Position callable in argument.Array)
 			{
 				Map map = callable.Call(Map.Empty).Get();
@@ -1618,7 +1650,7 @@ namespace Meta
 		public static Map Sort(Map arg)
 		{
 			List<Map> array = arg["array"].Array;
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 			{
 				Map result = argument["function"].Call(new StrategyMap(1, a, 2, b)).Get();
@@ -1714,7 +1746,7 @@ namespace Meta
 		}
 		public static Map While(Map arg)
 		{
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			Map result = new StrategyMap(new ListStrategy());
 			while (argument["condition"].Call(Map.Empty).Get().GetBoolean())
 			{
@@ -1725,7 +1757,7 @@ namespace Meta
 		public static Map Apply(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			Map condition=arg.TryGetValue("condition");
 			foreach (Map map in arg["array"].Array)
 			{
@@ -1755,7 +1787,7 @@ namespace Meta
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			foreach (Map map in arg[1].Array)
 			{
 				if (argument.Get().Call(map, argument).Get().GetBoolean())
@@ -1786,7 +1818,7 @@ namespace Meta
 		public static Map Foreach(Map arg)
 		{
 			Map result = new StrategyMap();
-			Position argument = Call.lastArgument;
+			Position argument = Call.LastArgument;
 			foreach (KeyValuePair<Map, Map> entry in arg[1])
 			{
 				result[entry.Key]=(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
@@ -2971,6 +3003,10 @@ namespace Meta
 			else if (ContainsKey(CodeKeys.Call))
 			{
 				return new CallSubselect(this[CodeKeys.Call]);
+			}
+			else if (ContainsKey(CodeKeys.LastArgument))
+			{
+				return new LastArgument();
 			}
 			else
 			{
@@ -5871,6 +5907,7 @@ namespace Meta
 	}
 	public class Syntax
 	{
+		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callStart = '(';
 		public const char callEnd = ')';
@@ -5895,7 +5932,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const string current = "current";
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
+		public static char[] lookupStringForbidden = new char[] {lastArgument, call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
 	}
 
 
@@ -6776,6 +6813,9 @@ namespace Meta
 			new Action(new ReferenceAssignment(),new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
 
 
+		private static Rule LastArgument = new Sequence(
+			new Action(new Match(), new Character(Syntax.lastArgument)),
+			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.LastArgument, Meta.Map.Empty))));
 
 		private static Rule Root = new Sequence(
 			new Action(new Match(),new Character(Syntax.root)),
@@ -6808,6 +6848,7 @@ namespace Meta
 					new Action(new Assignment(
 						1),
 						new Alternatives(
+							LastArgument,
 							Root,
 							Search,
 							Lookup)),
@@ -7965,14 +8006,6 @@ namespace Meta
 			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["parser"]);
 			//    }
 			//}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
 			public class Extents : Test
 			{
 				public override object GetResult(out int level)
@@ -7995,6 +8028,14 @@ namespace Meta
 				{
 					level = 2;
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
 			public class Library : Test

@@ -1711,7 +1711,7 @@ Entry (KeyValuePair`2)
 																												Line (Int32):
 																													"35"
 																												Column (Int32):
-																													"21"
+																													"14"
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												Extent:
@@ -1728,7 +1728,7 @@ Entry (KeyValuePair`2)
 																														Line (Int32):
 																															"35"
 																														Column (Int32):
-																															"21"
+																															"14"
 																												Entry (KeyValuePair`2)
 																													Key (StrategyMap):
 																														Extent:
@@ -1745,42 +1745,16 @@ Entry (KeyValuePair`2)
 																																Line (Int32):
 																																	"35"
 																																Column (Int32):
-																																	"21"
+																																	"14"
 																														Entry (KeyValuePair`2)
 																															Key (StrategyMap):
 																																Extent:
 																																	null
-																																"search"
+																																"lastArgument"
 																															Value (StrategyMap):
-																																Extent (Extent):
-																																	Start (SourcePosition):
-																																		Line (Int32):
-																																			"35"
-																																		Column (Int32):
-																																			"13"
-																																	End (SourcePosition):
-																																		Line (Int32):
-																																			"35"
-																																		Column (Int32):
-																																			"21"
-																																Entry (KeyValuePair`2)
-																																	Key (StrategyMap):
-																																		Extent:
-																																			null
-																																		"literal"
-																																	Value (StrategyMap):
-																																		Extent (Extent):
-																																			Start (SourcePosition):
-																																				Line (Int32):
-																																					"35"
-																																				Column (Int32):
-																																					"13"
-																																			End (SourcePosition):
-																																				Line (Int32):
-																																					"35"
-																																				Column (Int32):
-																																					"21"
-																																		"argument"
+																																Extent:
+																																	null
+																																0
 						Entry (KeyValuePair`2)
 							Key (StrategyMap):
 								Extent:

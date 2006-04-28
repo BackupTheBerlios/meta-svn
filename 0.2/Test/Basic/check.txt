@@ -108,13 +108,9 @@ Entry (KeyValuePair`2)
 															Value (StrategyMap):
 																Entry (KeyValuePair`2)
 																	Key (StrategyMap):
-																		"search"
+																		"lastArgument"
 																	Value (StrategyMap):
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				"literal"
-																			Value (StrategyMap):
-																				"argument"
+																		0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"scoping"
