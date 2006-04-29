@@ -1,5 +1,3 @@
 documentation "Returns an array containing the values of a map."
-argument|apply
-	array keys argument
-	function
-		key|argument.[key]
+argument|apply (keys argument)
+	key|argument.[key]

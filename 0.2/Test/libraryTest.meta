@@ -97,13 +97,11 @@
 				. "abc, "
 				. "die Katze lief im Schnee."
 			apply 
-				: apply
-					array
-						. 1
-						. 2
-						. 3
-					function
-						argument|add argument 1
+				: (apply
+					. 1
+					. 2
+					. 3)
+					argument|add argument 1
 			keyTestMap
 				x "hello"
 			contains hasKey keyTestMap "x"

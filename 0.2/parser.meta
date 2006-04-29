@@ -2,7 +2,7 @@ parser|
 	conditional
 		value|defaultFunction
 			function
-				arg|if (arg.function value)
+				arg|if (@.function value)
 					then
 						|arg.then value
 					else
@@ -318,16 +318,17 @@ parser|
 						literal "function"
 			value
 				literal @
+	normalStatement rule (sequence
+		. keys
+		. whitespace
+		. expression
+		. endOfLine)
+		|
+			key @.[1]
+			value @.[3]
 	statement alternatives
 		. functionExpression
-		. rule (sequence
-			. keys
-			. whitespace
-			. expression
-			. endOfLine)
-			|
-				key @.[1]
-				value @.[3]
+		. normalStatement
 	program (rule (sequence
 		.
 			parser|
@@ -336,14 +337,11 @@ parser|
 				text parser.text.text
 		. sequence
 			. indentation
-			. rule statement
-				|
-					. @
-			. zeroOrMore sequence
-				. alternatives
-					. sameIndentation
-					. dedentation
-				. statement
+			. onePlusX
+				first statement
+				step statement
+				delimiter sameIndentation
+			. dedentation
 		. 
 			parser|"p.defaultKeys.Pop 0"))
 		|

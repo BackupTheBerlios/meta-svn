@@ -13,10 +13,8 @@ getTabsMap
 			[parts.[2]] parts.[1]
 |
 	lines getLines ["INPUT.txt"]
-	map invert apply
-		array lines
-		function
-			line|getTabsMap line
+	map invert (apply lines
+		line|getTabsMap line)
 	sorted foreach
 		. map
 		entry|sort
@@ -25,15 +23,13 @@ getTabsMap
 				arg|string.compare
 					. arg.[1]
 					. arg.[2]
-	: apply
-		array sort
-			array keys map
-			function
-				arg|string.compare
-					. arg.[1]
-					. arg.[2]
+	: apply (sort
+		array keys map
 		function
-			key|join
-				. 
-					. key
-				. sorted.[key]
+			arg|string.compare
+				. arg.[1]
+				. arg.[2])
+		key|join
+			. 
+				. key
+			. sorted.[key]
