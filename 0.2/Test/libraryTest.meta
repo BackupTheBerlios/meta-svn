@@ -142,46 +142,40 @@
 				space " "
 				delimiters 
 					. space.[1]
-			stringSplitTest string.split
-				text "hello world hello"
-				space " "
-				l "l"
-				delimiters 
-					. space.[1]
-					. l.[1]
+			stringSplitTest string.split "hello world hello"
+				. ' '
+				. 'l'
 			tryTest try
 				function 
 					|"hello"
 				catch 
 					argument|argument.ToString 0
-			sortTest sort
-				function
-					argument|if (strictlyIncreasing
-						. argument.[1].x
-						. argument.[2].x)
-						then
-							|-1
-						else
-							|if (strictlyDecreasing
-								. argument.[1].x
-								. argument.[2].x)
-								then
-									|1
-								else
-									|0
-				array
-					.
-						x 12
-						y 234
-					.
-						x 123
-						y 3245
-					.
-						x 12
-						y 234
-					.
-						x 245
-						y 98834
+			sortTest (sort
+				.
+					x 12
+					y 234
+				.
+					x 123
+					y 3245
+				.
+					x 12
+					y 234
+				.
+					x 245
+					y 98834)
+				argument|if (strictlyIncreasing
+					. argument.[1].x
+					. argument.[2].x)
+					then
+						|-1
+					else
+						|if (strictlyDecreasing
+							. argument.[1].x
+							. argument.[2].x)
+							then
+								|1
+							else
+								|0
 			integerToString integerToString 5
 			stringReplace string.replace
 				string "hello hello hi"
@@ -217,10 +211,9 @@
 		findFirstTest findFirst
 			value "hell"
 			array "he hi hello"
-		foreachTest foreach
-			.
-				x "hi"
-				y "hello"
+		foreachTest (foreach
+			x "hi"
+			y "hello")
 			entry|
 				[entry.value] entry.key
 		valuesTest values

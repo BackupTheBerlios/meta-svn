@@ -1262,21 +1262,42 @@ namespace Meta
 			}
 			return obj;
 		}
-		public static Map CompareString(Map arg)
+		public static Test CompareString(Map arg)
 		{
-			return arg[1].GetString().CompareTo(arg[2].GetString());
-		}
-		public static Map SplitString(Map arg)
-		{
-			char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-			string[] split = arg["text"].GetString().Split(delimiters);
-			Map result = new StrategyMap(new ListStrategy(split.Length));
-			foreach (string text in split)
+			return new Test(delegate(Map map)
 			{
-				result.Append(text);
-			}
-			return result;
+				return arg.GetString().CompareTo(map.GetString());
+			});
 		}
+		//public static Map CompareString(Map arg)
+		//{
+		//    return arg[1].GetString().CompareTo(arg[2].GetString());
+		//}
+		public static Test SplitString(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
+				string[] split = arg.GetString().Split(delimiters);
+				Map result = new StrategyMap(new ListStrategy(split.Length));
+				foreach (string text in split)
+				{
+					result.Append(text);
+				}
+				return result;
+			});
+		}
+		//public static Map SplitString(Map arg)
+		//{
+		//    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
+		//    string[] split = arg["text"].GetString().Split(delimiters);
+		//    Map result = new StrategyMap(new ListStrategy(split.Length));
+		//    foreach (string text in split)
+		//    {
+		//        result.Append(text);
+		//    }
+		//    return result;
+		//}
 		public static Map Invert(Map arg)
 		{
 			Map result = new StrategyMap();
@@ -1783,17 +1804,31 @@ namespace Meta
 		//    }
 		//    return result;
 		//}
-		public static Map Sort(Map arg)
+		public static Test Sort(Map arg)
 		{
-			List<Map> array = arg["array"].Array;
-			Position argument = Call.LastArgument;
-			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+			return new Test(delegate(Map map)
 			{
-				Map result = argument["function"].Call(new StrategyMap(1, a, 2, b)).Get();
-				return result.GetNumber().GetInt32();
-			}));
-			return new StrategyMap(array);
+				List<Map> array = arg.Array;
+				Position argument = Call.LastArgument;
+				array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+				{
+					Map result = map.Call(new StrategyMap(1, a, 2, b), argument).Get();
+					return result.GetNumber().GetInt32();
+				}));
+				return new StrategyMap(array);
+			});
 		}
+		//public static Map Sort(Map arg)
+		//{
+		//    List<Map> array = arg["array"].Array;
+		//    Position argument = Call.LastArgument;
+		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+		//    {
+		//        Map result = argument["function"].Call(new StrategyMap(1, a, 2, b)).Get();
+		//        return result.GetNumber().GetInt32();
+		//    }));
+		//    return new StrategyMap(array);
+		//}
 		public static Map Join(Map arg)
 		{
 			Map result = Map.Empty;
@@ -1965,16 +2000,30 @@ namespace Meta
 			}
 			return 0;
 		}
-		public static Map Foreach(Map arg)
+		public static Test Foreach(Map arg)
 		{
-			Map result = new StrategyMap();
-			Position argument = Call.LastArgument;
-			foreach (KeyValuePair<Map, Map> entry in arg[1])
+			return new Test(delegate(Map map)
 			{
-				result[entry.Key]=(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
-			}
-			return result;
+				Map result = new StrategyMap();
+				Position argument = Call.LastArgument;
+				foreach (KeyValuePair<Map, Map> entry in arg)
+				{
+					result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
+					//result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+				}
+				return result;
+			});
 		}
+		//public static Map Foreach(Map arg)
+		//{
+		//    Map result = new StrategyMap();
+		//    Position argument = Call.LastArgument;
+		//    foreach (KeyValuePair<Map, Map> entry in arg[1])
+		//    {
+		//        result[entry.Key]=(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+		//    }
+		//    return result;
+		//}
 		//public static Map Foreach(Map arg)
 		//{
 		//    Map result = new StrategyMap();
@@ -2530,7 +2579,7 @@ namespace Meta
 							//Console.ReadLine();
 							break;
 						case "-parser":
-							new MetaTest.Parser();
+							//new MetaTest.Parser();
 							break;
 						default:
 							Commands.Run(args);
@@ -8137,22 +8186,22 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 				}
 			}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+			//public class Parser : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+			//    }
+			//}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
 
 			public class Library : Test
 			{
@@ -8162,22 +8211,22 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Extents : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
-				}
-			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+			//public class Extents : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+			//    }
+			//}
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+			//    }
+			//}
 
 
 
