@@ -8,8 +8,6 @@
 			:
 				[parts.[2]] parts.[1])
 	sorted foreach map
-		entry|sort entry.value
-			arg|string.compare arg.[1] arg.[2]
-	: apply (sort (keys map)
-		arg|string.compare arg.[1] arg.[2])
+		entry|sort entry.value string.compare
+	: apply (sort (keys map) string.compare)
 		key|prepend key sorted.[key]

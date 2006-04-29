@@ -163,19 +163,20 @@
 				.
 					x 245
 					y 98834)
-				argument|if (strictlyIncreasing
-					. argument.[1].x
-					. argument.[2].x)
-					then
-						|-1
-					else
-						|if (strictlyDecreasing
-							. argument.[1].x
-							. argument.[2].x)
-							then
-								|1
-							else
-								|0
+				first|
+					second|if (strictlyIncreasing
+						. first.x
+						. second.x)
+						then
+							|-1
+						else
+							|if (strictlyDecreasing
+								. first.x
+								. second.x)
+								then
+									|1
+								else
+									|0
 			integerToString integerToString 5
 			stringReplace string.replace
 				string "hello hello hi"

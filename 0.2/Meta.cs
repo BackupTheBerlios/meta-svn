@@ -1812,12 +1812,26 @@ namespace Meta
 				Position argument = Call.LastArgument;
 				array.Sort(new Comparison<Map>(delegate(Map a, Map b)
 				{
-					Map result = map.Call(new StrategyMap(1, a, 2, b), argument).Get();
+					Map result = map.Call(a, argument).Call(b).Get();
 					return result.GetNumber().GetInt32();
 				}));
 				return new StrategyMap(array);
 			});
 		}
+		//public static Test Sort(Map arg)
+		//{
+		//    return new Test(delegate(Map map)
+		//    {
+		//        List<Map> array = arg.Array;
+		//        Position argument = Call.LastArgument;
+		//        array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+		//        {
+		//            Map result = argument.Call(new StrategyMap(1, a, 2, b)).Get();
+		//            return result.GetNumber().GetInt32();
+		//        }));
+		//        return new StrategyMap(array);
+		//    });
+		//}
 		//public static Map Sort(Map arg)
 		//{
 		//    List<Map> array = arg["array"].Array;
