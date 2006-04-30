@@ -144,6 +144,11 @@ parser|
 								else
 									|implementation (rest arg)
 				: implementation mod
+	alternative
+		first|
+			second|alternatives
+				. first
+				. second
 	optional
 		mod|
 			parser|merge parser (mod parser)
@@ -181,11 +186,9 @@ parser|
 		search character '$'
 	number rule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.Number.Parse @
-	newLine alternatives
-		. syntax.linefeed
-		. sequence
-			. syntax.carriageReturn
-			. syntax.linefeed
+	newLine alternative syntax.linefeed (sequence
+		. syntax.carriageReturn
+		. syntax.linefeed)
 	whitespace zeroOrMore syntax.whitespace
 	endOfLine sequence
 		. whitespace
@@ -214,12 +217,9 @@ parser|
 	stringLine zeroOrMore syntax.stringLineText
 	string suffix (sequence
 		. optional newLine
-		. optional syntax.string) (prefix syntax.string (alternatives
-		. oneOrMore syntax.stringLineText
-		. sequence
-			. prefix (sequence
-				. newLine
-				. indentation) stringLine))
+		. optional syntax.string) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) (prefix (sequence
+		. newLine
+		. indentation) stringLine)))
 	lookupString oneOrMore lookupForbidden
 	delayed
 		mod|
@@ -234,28 +234,15 @@ parser|
 		. zeroOrMore 9
 		. syntax.lookupEnd) value)
 	entry delayed
-		|rule (alternatives
-			. rule (alternatives
-				. alternatives
-					. lookupString
-					. lookupAnything
-				. alternatives
-					. prefix (oneOrMore syntax.whitespace) value
-					. map)
-				|
-					[@.[1]] @.[2]) 0
+		|rule (alternative function (rule (alternative (alternative (lookupString lookupAnything)) (alternative (prefix (oneOrMore syntax.whitespace) value) map)))
+			|
+				[@.[1]] @.[2]) 0
 	entry delayed
-		|rule (alternatives
-			. functionRule
-			. rule (sequence
-				. alternatives
-					. lookupString
-					. lookupAnything
-				. alternatives
-					. prefix (oneOrMore syntax.whitespace) value
-					. map)
-				|
-					[@.[1]] @.[2]) 0
+		|rule (alternative functionRule (rule (sequence
+			. alternative lookupString lookupAnything
+			. alternative (prefix (oneOrMore syntax.whitespace) value) map)
+			|
+				[@.[1]] @.[2])) 0
 	onePlusX
 		arg|(rule (sequence
 			. rule arg.first
