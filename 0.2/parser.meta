@@ -78,10 +78,10 @@ parser|
 													then
 														|nextResult.indentationCount
 								else
-									res|if (not (arg.tooFew
+									res|if (arg.tooFew
 										count impArg.n
-										parser impArg.parser))
-										then
+										parser impArg.parser)
+										else
 											|impArg.parser
 				: implementation
 					parser merge parser
@@ -151,6 +151,9 @@ parser|
 			. 10
 			. 13
 			. '"'
+		longStringLineText characterExcept
+			. 10
+			. 13
 		lookupStart character '['
 		lookupEnd character ']'
 		function character '|'
@@ -161,8 +164,14 @@ parser|
 		space character ' '
 		emptyMap character '0'
 		search character '$'
+	onePlusX
+		arg|(rule (sequence (rule arg.first
+			|
+				. @) (zeroOrMore (baseRule
+			condition prefix arg.delimiter arg.step))))
+			|sum @ join
 	number rule (oneOrMore (characterSet "0123456789"))
-		|/.Meta.Number.Parse @
+		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse @)
 	newLine alternative syntax.linefeed (sequence syntax.carriageReturn syntax.linefeed)
 	whitespace zeroOrMore syntax.whitespace
 	endOfLine sequence whitespace newLine
@@ -171,8 +180,8 @@ parser|
 			|add @.indentationCount change)
 			|
 				indentationCount add @.indentationCount change
-	indentation indentRule 1
-	sameIndentation indentRule 0
+	indentation sequence endOfLine (indentRule 1)
+	sameIndentation sequence endOfLine (indentRule 0)
 	dedentation indentRule -1
 	prefix
 		prefixRule|
@@ -184,7 +193,16 @@ parser|
 				|@.[1]
 	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter syntax.char)
 	stringLine zeroOrMore syntax.stringLineText
-	string suffix (sequence (optional newLine) (optional syntax.string)) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) (prefix (sequence newLine indentation) stringLine)))
+	longStringLine zeroOrMore syntax.longStringLineText
+	longString rule (onePlusX
+		first longStringLine
+		delimiter sameIndentation
+		step longStringLine)
+		|sum @
+			first|
+				second|join first ((join 
+					. 10) second)
+	string suffix (optional syntax.string) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) longString))
 	lookupString oneOrMore lookupForbidden
 	delayed
 		mod|
@@ -200,16 +218,11 @@ parser|
 		|rule (alternative functionRule (rule (sequence (alternative lookupString lookupAnything) (alternative (prefix (oneOrMore syntax.whitespace) value) map))
 			|
 				[@.[1]] @.[2])) 0
-	onePlusX
-		arg|(rule (sequence (rule arg.first
-			|
-				. @) (zeroOrMore (baseRule
-			condition prefix arg.delimiter arg.step))))
-			|join @
-	mapCore onePlusX
+	mapCore rule (onePlusX
 		first entry
 		delimiter sameIndentation
-		step entry
+		step entry)
+		|sum @ merge
 	map suffix dedentation (prefix indentation mapCore)
 	file mapCore
 	expression delayed
@@ -226,7 +239,7 @@ parser|
 			root 0
 	ruleCurrent rule syntax.current
 		|
-			["current"] 0
+			current 0
 	realLookup rule (alternative lookupStringExpression lookupAnythingExpression)
 		|
 			lookup @
@@ -252,10 +265,21 @@ parser|
 						literal "function"
 			value
 				literal @
-	normalStatement rule (sequence keys (sequence whitespace (sequence expression endOfLine)))
+	keysSearch prefix syntax.search search
+	autokeyLookup generalRule syntax.select
+		|
+			defaultKey add @.defaultKey 1
+			parsed
+				lookup
+					literal @.defaultKey
+	keysRule onePlusX
+		first alternative keysSearch (alternative lookup autokeyLookup)
+		delimiter syntax.select
+		step lookup
+	normalStatement rule (sequence keysRule (sequence whitespace expression))
 		|
 			key @.[1]
-			value @.[2].[2].[1]
+			value @.[2].[2]
 	statement alternative functionExpression normalStatement
 	program "
 		(rule (sequences
@@ -276,6 +300,12 @@ parser|
 			|
 				program @.[2]
 	"
+	program rule (suffix dedentation (prefix indentation (onePlusX
+		first statement
+		step statement
+		delimiter sameIndentation)))
+		|
+			program @
 	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
 		|
 			call @
@@ -284,17 +314,6 @@ parser|
 	literalExpression (rule (alternative emptyMap (alternative string (alternative number characterDataExpression))))
 		|
 			literal @
-	keysSearch prefix syntax.search search
-	autokeyLookup generalRule syntax.select
-		|
-			defaultKey add @.defaultKey 1
-			parsed
-				lookup
-					literal @.defaultKey
-	keys onePlusX
-		first alternative keysSearch (alternative lookup autokeyLookup)
-		delimiter syntax.select
-		step lookup
 	: /.Meta.Serialize.ValueFunction
 		stringTest
 			singleLine expression
@@ -354,7 +373,7 @@ parser|
 			simple expression
 				text "$hello"
 		keysTest
-			simple keys
+			simple keysRule
 				text "hello.hello"
 		callTest
 			simple call
@@ -382,7 +401,10 @@ parser|
 				text "			kj	"
 		indentationTest
 			shouldMatch indentation
-				text "	"
+				text "
+					
+						
+				"
 				indentationCount 0
 		dedentationTest
 			shouldMatch
@@ -401,10 +423,16 @@ parser|
 		sameIndentationTest
 			shouldMatch
 				two sameIndentation
-					text "			"
+					text "
+						
+									
+					"
 					indentationCount 2
 				one sameIndentation
-					text "		"
+					text "
+						
+								
+					"
 					indentationCount 1
 			shouldNotMatch sameIndentation
 				text "		"
@@ -463,7 +491,57 @@ parser|
 		mapTest
 			simple map
 				text "
-					asdf "hello"
-					qwerty "hi"
+					
+						asdf "hello"
+						qwerty "hi"
+						hi "hello"
 				"
 				indentationCount 0
+		statementTest
+			simple statement
+				text "
+					asdf "hello"
+				"
+				indentationCount 0
+		programTest
+			simple program
+				text "
+					
+						asdf "hello"
+						qwerty "hi"
+						hi "hello"
+				"
+				indentationCount 0
+		basicTest file
+			text "
+				license "
+					Copyright (c) 2005, 2006 Christian Staudenmeyer
+					
+					Permission is hereby granted, free of charge, to any person obtaining
+					a copy of this software and associated documentation files (the
+					"Software"), to deal in the Software without restriction, including
+					without limitation the rights to use, copy, modify, merge, publish,
+					distribute, sublicense, and/or sell copies of the Software, and to
+					permit persons to whom the Software is furnished to do so, subject to
+					the following conditions:
+					
+					The above copyright notice and this permission notice shall be
+					included in all copies or substantial portions of the Software.
+					
+					THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+					EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+					MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+					NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+					BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+					ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+					CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+					SOFTWARE.
+				"
+				commandLine|
+					asdf "hello"
+					shortFunction
+						arg|asdf
+					shortFunctionTest shortFunction "hello"
+					counter 0
+			"
+			indentationCount 0

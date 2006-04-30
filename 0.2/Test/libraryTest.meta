@@ -93,9 +93,7 @@
 			ifTest if 1
 				then
 					|"if test successful"
-			append join
-				. "abc, "
-				. "die Katze lief im Schnee."
+			append join "abc, " "die Katze lief im Schnee."
 			apply 
 				: (apply
 					. 1
@@ -218,6 +216,11 @@
 			key|
 				value|
 					[value] key
+		sumTest (sum 
+			. 2
+			. 5
+			. 6
+			. 8) add
 		valuesTest values
 			x "hi"
 			y "hello"
@@ -244,10 +247,7 @@
 				y "hello"
 				z 
 					a "x"
-					arg|join
-						. "hello "
-						. arg
-						. "!"
+					arg|join "hello " join arg "!"
 			func
 				arg|arg
 		"

@@ -1190,6 +1190,19 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Test Sum(Map arg)
+		{
+			return new Test(delegate(Map map)
+			{
+				Position argument = Call.LastArgument;
+				Map result = arg.Array[0].Copy();
+				foreach (Map m in arg.Array.GetRange(1,arg.Array.Count-1))
+				{
+					result = argument.Call(result).Call(m).Get();	
+				}
+				return result;
+			});
+		}
 		public static Test Prepend(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -1376,8 +1389,14 @@ namespace Meta
 				return new Test(delegate(Map a)
 				{
 					//Position pos=MethodImplementation.currentPosition
-					Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
-					return result;
+					if (Call.LastArgument.Get().ContainsKey("then"))
+					{
+						return Call.LastArgument["then"].Call(Map.Empty).Get();
+					}
+					else
+					{
+						return Map.Empty;
+					}
 				});
 			}
 			else
@@ -1778,16 +1797,25 @@ namespace Meta
 				return new StrategyMap(array);
 			});
 		}
-		public static Map Join(Map arg)
+		public static Test Join(Map arg)
 		{
-			Map result = Map.Empty;
-			Number counter = 1;
-			foreach (Map map in arg.Array)
+			return new Test(delegate(Map map)
 			{
+				Map result = arg.Copy();
 				result.AppendRange(map);
-			}
-			return result;
+				return result;
+			});
 		}
+		//public static Map Join(Map arg)
+		//{
+		//    Map result = Map.Empty;
+		//    Number counter = 1;
+		//    foreach (Map map in arg.Array)
+		//    {
+		//        result.AppendRange(map);
+		//    }
+		//    return result;
+		//}
 		public static Map Range(Map arg)
 		{
 			int end = arg.GetNumber().GetInt32();
@@ -2522,7 +2550,8 @@ namespace Meta
 							//Console.ReadLine();
 							break;
 						case "-parser":
-							//new MetaTest.Parser();
+							AllocConsole();
+							new MetaTest.Parser().RunTest();
 							break;
 						default:
 							Commands.Run(args);
@@ -8137,14 +8166,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
 				}
 			}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 
 			public class Library : Test
 			{
