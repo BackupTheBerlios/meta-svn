@@ -8121,14 +8121,14 @@ namespace Meta
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Profile : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
-				}
-			}
+			//public class Profile : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
+			//    }
+			//}
 			public class Parser : Test
 			{
 				public override object GetResult(out int level)

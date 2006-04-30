@@ -263,6 +263,9 @@ parser|
 	expression delayed
 		|alternatives
 			. literalExpression
+			. characterDataExpression
+			. emptyMap
+			. select
 	function rule (sequence
 		. zeroOrMore (characterExcept
 			. ' '
@@ -379,12 +382,12 @@ parser|
 		step lookup
 	: /.Meta.Serialize.ValueFunction
 		stringTest
-			singleLine string
+			singleLine expression
 				text "
 					"12344321 asdfasdf"
 				"
 		numberTest
-			integer number
+			integer expression
 				text "483821"
 		lookupStringTest
 			simple lookupStringExpression
@@ -397,13 +400,13 @@ parser|
 					"hello"
 				"
 		literalTest
-			stringTest literalExpression 
+			stringTest expression
 				text "
 					"hello"
 				"
-			characterTest literalExpression 
+			characterTest expression
 				text "'a'"
-			emptyMapTest literalExpression 
+			emptyMapTest expression
 				text "0"
 		lookupAnythingTest
 			simple lookupAnythingExpression
@@ -412,26 +415,26 @@ parser|
 				"
 		searchTest search
 			text "hello"
-		rootTest root
+		rootTest expression
 			text "/"
 		ruleCurrentTest 
-			shouldMatch ruleCurrent
+			shouldMatch expression
 				text ":"
 			shouldNotMatch ruleCurrent
 				text "hello"
 		lookupTest lookup
 			text "hello"
 		selectTest
-			singleTest select
+			singleTest expression
 				text "hello"
-			severalTest select
+			severalTest expression
 				text "hello.hello"
-			complexTest select
+			complexTest expression
 				text"
 					hello.["world"]
 				"
 		keysSearchTest
-			simple keysSearch
+			simple expression
 				text "$hello"
 		keysTest
 			simple keys
@@ -513,3 +516,6 @@ parser|
 				"
 				indentationCount 0
 				parsed 0
+		autokeyLookupTest autokeyLookup
+			text "."
+			defaultKey 1
