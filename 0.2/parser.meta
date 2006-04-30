@@ -22,13 +22,6 @@ parser|
 			|@
 		indenting
 			|@
-	metaRule
-		imp|
-			mod|baseRule
-				condition
-					parser|imp
-						mod mod
-						parser parser
 	rule
 		condition|
 			parse|baseRule
@@ -114,43 +107,46 @@ parser|
 			tooFew
 				arg|greater 1 arg.count
 			rule arg
-	sequence metaRule
-		meta|
-			implementation
-				arg|if (hasKey arg.rules 1)
-					then
-						|success (arg.rules.[1] arg.parser)
-							then
-								result|success (implementation
-									parser
-										parsed 0
-										text result.text
-										indentationCount 0
-									rules rest arg.rules)
-									then
-										|
-											text @.text
-											parsed prepend result.parsed @.parsed
-									else
-										|@
-					else
-						|arg.parser
-			: implementation
-				parser meta.parser
-				rules meta.mod
-	alternatives metaRule
-		meta|
-			implementation
-				arg|if (not (equal arg 0))
-					then
-						|success (arg.[1] meta.parser)
-							then
-								|@
-							else
-								|implementation (rest arg)
-			: implementation meta.mod
-	optional metaRule
-		|merge @.parser (@.mod @.parser)
+	sequence
+		mod|
+			parser|
+				implementation
+					arg|if (hasKey arg.rules 1)
+						then
+							|success (arg.rules.[1] arg.parser)
+								then
+									result|success (implementation
+										parser
+											parsed 0
+											text result.text
+											indentationCount 0
+										rules rest arg.rules)
+										then
+											|
+												text @.text
+												parsed prepend result.parsed @.parsed
+										else
+											|@
+						else
+							|arg.parser
+				: implementation
+					parser parser
+					rules mod
+	alternatives
+		mod|
+			parser|
+				implementation
+					arg|if (not (equal arg 0))
+						then
+							|success (arg.[1] parser)
+								then
+									|@
+								else
+									|implementation (rest arg)
+				: implementation mod
+	optional
+		mod|
+			parser|merge parser (mod parser)
 	lookupForbidden characterExcept
 		. ' '
 		. 9
@@ -225,27 +221,41 @@ parser|
 				. newLine
 				. indentation) stringLine))
 	lookupString oneOrMore lookupForbidden
-	delayed metaRule
-		meta|meta.mod 0 meta.parser
+	delayed
+		mod|
+			parser|mod 0 parser
 	value delayed
 		|alternatives
 			. number
 			. characterDataExpression
-			. map
 			. string
+			. map
 	lookupAnything prefix syntax.lookupStart (suffix (sequence
 		. zeroOrMore 9
 		. syntax.lookupEnd) value)
-	entry (rule
-		condition sequence
-			. function
-			. alternatives
-				. lookupString
-				. lookupAnything
-			. whitespace
-			. value)
-		|
-			[@.[2]] @.[4]
+	entry delayed
+		|rule (alternatives
+			. rule (alternatives
+				. alternatives
+					. lookupString
+					. lookupAnything
+				. alternatives
+					. prefix (oneOrMore syntax.whitespace) value
+					. map)
+				|
+					[@.[1]] @.[2]) 0
+	entry delayed
+		|rule (alternatives
+			. functionRule
+			. rule (sequence
+				. alternatives
+					. lookupString
+					. lookupAnything
+				. alternatives
+					. prefix (oneOrMore syntax.whitespace) value
+					. map)
+				|
+					[@.[1]] @.[2]) 0
 	onePlusX
 		arg|(rule (sequence
 			. rule arg.first
@@ -300,7 +310,7 @@ parser|
 		step lookup))
 		|
 			select @
-	function rule (sequence
+	functionRule rule (sequence
 		. zeroOrMore (characterExcept
 			. ' '
 			. 10
@@ -310,7 +320,7 @@ parser|
 		|
 			parameter @.[1]
 			expression @.[3]
-	functionExpression rule function
+	functionExpression rule functionRule
 		|
 			key
 				.
@@ -523,7 +533,7 @@ parser|
 			text "."
 			defaultKey 1
 		functionTest
-			simple function 
+			simple functionRule
 				text "asdf|hello"
 		functionTest
 			simple functionExpression
@@ -538,3 +548,18 @@ parser|
 				text "0928341"
 			characterTest value
 				text "'c'"
+		entryTest 
+			simple entry
+				text "
+					asdf "hello"
+				"
+				indentationCount 0
+			functionTest entry
+				text "asdf|hello"
+		mapTest
+			simple map
+				text "
+					asdf "hello"
+					qwerty "hi"
+				"
+				indentationCount 0
