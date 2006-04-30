@@ -229,10 +229,10 @@ parser|
 		meta|meta.mod 0 meta.parser
 	value delayed
 		|alternatives
-			. map
-			. string
 			. number
 			. characterDataExpression
+			. map
+			. string
 	lookupAnything prefix syntax.lookupStart (suffix (sequence
 		. zeroOrMore 9
 		. syntax.lookupEnd) value)
@@ -266,15 +266,6 @@ parser|
 			. characterDataExpression
 			. emptyMap
 			. select
-	function rule (sequence
-		. zeroOrMore (characterExcept
-			. ' '
-			. 10)
-		. syntax.function
-		. expression)
-		|
-			parameter @.[1]
-			expression @.[3]
 	lookupAnythingExpression suffix (sequence
 		. zeroOrMore syntax.indentation
 		. syntax.lookupEnd) (prefix syntax.lookupStart expression)
@@ -309,6 +300,16 @@ parser|
 		step lookup))
 		|
 			select @
+	function rule (sequence
+		. zeroOrMore (characterExcept
+			. ' '
+			. 10
+			. '|')
+		. syntax.function
+		. select)
+		|
+			parameter @.[1]
+			expression @.[3]
 	functionExpression rule function
 		|
 			key
@@ -413,6 +414,8 @@ parser|
 				text "
 					["hello"]
 				"
+			complex lookupAnythingExpression
+				text "[[hello]]"
 		searchTest search
 			text "hello"
 		rootTest expression
@@ -519,3 +522,19 @@ parser|
 		autokeyLookupTest autokeyLookup
 			text "."
 			defaultKey 1
+		functionTest
+			simple function 
+				text "asdf|hello"
+		functionTest
+			simple functionExpression
+				text "asdf|hello"
+		valueTest
+			stringTest value 
+				text "
+					"hello"
+				"
+				indentationCount 0
+			numberTest value
+				text "0928341"
+			characterTest value
+				text "'c'"
