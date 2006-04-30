@@ -164,6 +164,8 @@ parser|
 		space character ' '
 		emptyMap character '0'
 		search character '$'
+		callStart character '('
+		callEnd character ')'
 	onePlusX
 		arg|(rule (sequence (rule arg.first
 			|
@@ -225,8 +227,14 @@ parser|
 		|sum @ merge
 	map suffix dedentation (prefix indentation mapCore)
 	file mapCore
+	alternatives
+		alts|sum alts alternative
 	expression delayed
-		|alternative literalExpression (alternative characterDataExpression (alternative emptyMap select))
+		|alternatives
+			. literalExpression
+			. characterDataExpression
+			. emptyMap
+			. select
 	lookupAnythingExpression suffix (sequence (zeroOrMore syntax.indentation) syntax.lookupEnd) (prefix syntax.lookupStart expression)
 	lookupStringExpression rule lookupString
 		|
@@ -245,7 +253,10 @@ parser|
 			lookup @
 	lookup alternative ruleCurrent realLookup
 	select (rule (onePlusX
-		first alternative root (alternative search lookup)
+		first alternatives
+			. root 
+			. search
+			. lookup
 		delimiter syntax.select
 		step lookup))
 		|
@@ -273,7 +284,10 @@ parser|
 				lookup
 					literal @.defaultKey
 	keysRule onePlusX
-		first alternative keysSearch (alternative lookup autokeyLookup)
+		first alternatives 
+			. keysSearch 
+			. lookup
+			. autokeyLookup
 		delimiter syntax.select
 		step lookup
 	normalStatement rule (sequence keysRule (sequence whitespace expression))
@@ -309,9 +323,14 @@ parser|
 	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
 		|
 			call @
+	explicitCall suffix syntax.callEnd (prefix syntax.callStart call)
 	emptyMap rule syntax.emptyMap
 		|0
-	literalExpression (rule (alternative emptyMap (alternative string (alternative number characterDataExpression))))
+	literalExpression rule (alternatives
+		. emptyMap
+		. string
+		. number
+		. characterDataExpression)
 		|
 			literal @
 	: /.Meta.Serialize.ValueFunction
@@ -379,6 +398,10 @@ parser|
 			simple call
 				text "
 					hello "hi"
+				"
+			explicitCall explicitCall
+				text "
+					(hello "hi")
 				"
 		endOfLineTest
 			unix
