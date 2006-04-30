@@ -109,36 +109,17 @@ parser|
 			tooFew
 				arg|greater 1 arg.count
 			rule arg
-	sequences
-		mod|
-			parser|
-				implementation
-					arg|if (hasKey arg.rules 1)
-						then
-							|success (arg.rules.[1] arg.parser)
-								then
-									result|success (implementation
-										parser
-											parsed 0
-											text result.text
-											indentationCount 0
-										rules rest arg.rules)
-										then
-											|
-												text @.text
-												parsed prepend result.parsed @.parsed
-										else
-											|@
-						else
-							|arg.parser
-				: implementation
-					parser parser
-					rules mod
 	sequence
 		first|
-			second|sequences
-				. first
-				. second
+			second|
+				parser|success (first parser)
+					then
+						a|success (second a)
+							then
+								b|merge parser (merge b
+									parsed
+										[1] a.parsed
+										[2] b.parsed)
 	alternative
 		first|
 			second|
@@ -203,11 +184,7 @@ parser|
 				|@.[1]
 	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter syntax.char)
 	stringLine zeroOrMore syntax.stringLineText
-	string suffix (sequences
-		. optional newLine
-		. optional syntax.string) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) (prefix (sequences
-		. newLine
-		. indentation) stringLine)))
+	string suffix (sequence (optional newLine) (optional syntax.string)) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) (prefix (sequence newLine indentation) stringLine)))
 	lookupString oneOrMore lookupForbidden
 	delayed
 		mod|
@@ -260,16 +237,13 @@ parser|
 		step lookup))
 		|
 			select @
-	functionRule rule (sequences
-		. zeroOrMore (characterExcept
-			. ' '
-			. 10
-			. '|')
-		. syntax.function
-		. select)
+	functionRule rule (sequence (zeroOrMore (characterExcept
+		. ' '
+		. 10
+		. '|')) (sequence syntax.function select))
 		|
 			parameter @.[1]
-			expression @.[3]
+			expression @.[2].[2]
 	functionExpression rule functionRule
 		|
 			key
@@ -278,35 +252,31 @@ parser|
 						literal "function"
 			value
 				literal @
-	normalStatement rule (sequences
-		. keys
-		. whitespace
-		. expression
-		. endOfLine)
+	normalStatement rule (sequence keys (sequence whitespace (sequence expression endOfLine)))
 		|
 			key @.[1]
-			value @.[3]
+			value @.[2].[2].[1]
 	statement alternative functionExpression normalStatement
-	program (rule (sequences
-		.
-			parser|
-				. "p.defaultKeys.Push 1"
-				parsed 0
-				text parser.text.text
-		. sequences
-			. indentation
-			. onePlusX
-				first statement
-				step statement
-				delimiter sameIndentation
-			. dedentation
-		. 
-			parser|"p.defaultKeys.Pop 0"))
-		|
-			program @.[2]
-	call rule (sequences
-		. select
-		. alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program)
+	program "
+		(rule (sequences
+			.
+				parser|
+					. "p.defaultKeys.Push 1"
+					parsed 0
+					text parser.text.text
+			. sequences
+				. indentation
+				. onePlusX
+					first statement
+					step statement
+					delimiter sameIndentation
+				. dedentation
+			. 
+				parser|"p.defaultKeys.Pop 0"))
+			|
+				program @.[2]
+	"
+	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
 		|
 			call @
 	emptyMap rule syntax.emptyMap
