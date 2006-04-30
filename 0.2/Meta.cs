@@ -1699,19 +1699,6 @@ namespace Meta
 			}
 			return or;
 		}
-		//public static Map And(Map arg)
-		//{
-		//    bool and = true; ;
-		//    foreach (Map map in arg.Array)
-		//    {
-		//        if (!map.GetBoolean())
-		//        {
-		//            and = false;
-		//            break;
-		//        }
-		//    }
-		//    return and;
-		//}
 		public static Map Reciprocal(Map arg)
 		{
 			Number number = arg.GetNumber();
@@ -1723,22 +1710,7 @@ namespace Meta
 			{
 				return arg.GetNumber() + map.GetNumber();
 			});
-			//Number result = 0;
-			//foreach (Map map in arg.Array)
-			//{
-			//    result += map.GetNumber();
-			//}
-			//return result;
 		}
-		//public static Map Sum(Map arg)
-		//{
-		//    Number result=0;
-		//    foreach (Map map in arg.Array)
-		//    {
-		//        result += map.GetNumber();
-		//    }
-		//    return result;
-		//}
 		public static string writtenText = "";
 		public static void WriteLine(string text)
 		{
@@ -1792,18 +1764,6 @@ namespace Meta
 				return result;
 			});
 		}
-		//public static Map Merge(Map arg)
-		//{
-		//    Map result = new StrategyMap();
-		//    foreach (Map map in arg.Array)
-		//    {
-		//        foreach (KeyValuePair<Map, Map> pair in map)
-		//        {
-		//            result[pair.Key] = pair.Value;
-		//        }
-		//    }
-		//    return result;
-		//}
 		public static Test Sort(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -1818,31 +1778,6 @@ namespace Meta
 				return new StrategyMap(array);
 			});
 		}
-		//public static Test Sort(Map arg)
-		//{
-		//    return new Test(delegate(Map map)
-		//    {
-		//        List<Map> array = arg.Array;
-		//        Position argument = Call.LastArgument;
-		//        array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-		//        {
-		//            Map result = argument.Call(new StrategyMap(1, a, 2, b)).Get();
-		//            return result.GetNumber().GetInt32();
-		//        }));
-		//        return new StrategyMap(array);
-		//    });
-		//}
-		//public static Map Sort(Map arg)
-		//{
-		//    List<Map> array = arg["array"].Array;
-		//    Position argument = Call.LastArgument;
-		//    array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-		//    {
-		//        Map result = argument["function"].Call(new StrategyMap(1, a, 2, b)).Get();
-		//        return result.GetNumber().GetInt32();
-		//    }));
-		//    return new StrategyMap(array);
-		//}
 		public static Map Join(Map arg)
 		{
 			Map result = Map.Empty;
@@ -2022,31 +1957,25 @@ namespace Meta
 				Position argument = Call.LastArgument;
 				foreach (KeyValuePair<Map, Map> entry in arg)
 				{
-					result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
-					//result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+					result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
+					//result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
 				}
 				return result;
 			});
 		}
-		//public static Map Foreach(Map arg)
+		//public static Test Foreach(Map arg)
 		//{
-		//    Map result = new StrategyMap();
-		//    Position argument = Call.LastArgument;
-		//    foreach (KeyValuePair<Map, Map> entry in arg[1])
+		//    return new Test(delegate(Map map)
 		//    {
-		//        result[entry.Key]=(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
-		//    }
-		//    return result;
-		//}
-		//public static Map Foreach(Map arg)
-		//{
-		//    Map result = new StrategyMap();
-		//    PersistantPosition argument = Call.lastArgument;
-		//    foreach (KeyValuePair<Map, Map> entry in arg[1])
-		//    {
-		//        result.Append(argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
-		//    }
-		//    return result;
+		//        Map result = new StrategyMap();
+		//        Position argument = Call.LastArgument;
+		//        foreach (KeyValuePair<Map, Map> entry in arg)
+		//        {
+		//            result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
+		//            //result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+		//        }
+		//        return result;
+		//    });
 		//}
 	}
 	public class FileMap : StrategyMap
@@ -8200,14 +8129,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 				}
 			}
-			//public class Parser : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-			//    }
-			//}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			//public class Basic : Test
 			//{
 			//    public override object GetResult(out int level)

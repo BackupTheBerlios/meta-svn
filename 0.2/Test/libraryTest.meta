@@ -215,8 +215,9 @@
 		foreachTest (foreach
 			x "hi"
 			y "hello")
-			entry|
-				[entry.value] entry.key
+			key|
+				value|
+					[value] key
 		valuesTest values
 			x "hi"
 			y "hello"

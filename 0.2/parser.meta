@@ -1,31 +1,27 @@
 parser|
-	conditional
-		value|defaultFunction
-			function
-				arg|if (@.function value)
-					then
-						|arg.then value
-					else
-						|arg.else value
-			argument
+	success
+		value|(defaultFunction
+			arg|if (@.function value)
+				then
+					|arg.then value
 				else
-					|0
-				function
-					|hasKey @ "parsed"
-	baseRule defaultFunction
-		function
-			arg|
-				parser|conditional (arg.condition parser)
-					then
-						|merge (merge parser (merge @ (arg.result (merge parser @))))
-							parsed arg.parse @.parsed
-		argument
-			result
+					|arg.else value)
+			else
 				|0
-			parse
-				|@
-			indenting
-				|@
+			function
+				|hasKey @ "parsed"
+	baseRule (defaultFunction
+		arg|
+			parser|success (arg.condition parser)
+				then
+					|merge (merge parser (merge @ (arg.result (merge parser @))))
+						parsed arg.parse @.parsed)
+		result
+			|0
+		parse
+			|@
+		indenting
+			|@
 	metaRule
 		imp|
 			mod|baseRule
@@ -74,9 +70,9 @@ parser|
 						then
 							|impArg.parser
 						else
-							|conditional (arg.rule impArg.parser)
+							|success (arg.rule impArg.parser)
 								then
-									res|conditional (implementation
+									res|success (implementation
 										parser res
 										n add impArg.n 1)
 										then
@@ -123,9 +119,9 @@ parser|
 			implementation
 				arg|if (hasKey arg.rules 1)
 					then
-						|conditional (arg.rules.[1] arg.parser)
+						|success (arg.rules.[1] arg.parser)
 							then
-								result|conditional (implementation
+								result|success (implementation
 									parser
 										parsed 0
 										text result.text
@@ -147,7 +143,7 @@ parser|
 			implementation
 				arg|if (not (equal arg 0))
 					then
-						|conditional (arg.[1] meta.parser)
+						|success (arg.[1] meta.parser)
 							then
 								|@
 							else
