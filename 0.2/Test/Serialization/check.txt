@@ -1653,24 +1653,12 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							program 
+							select 
 								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										select 
-											[1] 
-												search 
-													literal "memberTest"
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal 3247
+									search 
+										literal "memberTest"
+						[3] 
+							literal 3247
 			[82] 
 				key 
 					[1] 
@@ -1709,24 +1697,12 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							program 
+							select 
 								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										select 
-											[1] 
-												search 
-													literal "memberTest"
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal 3247
+									search 
+										literal "memberTest"
+						[3] 
+							literal 3247
 			[83] 
 				key 
 					[1] 
@@ -1829,29 +1805,39 @@ function
 								[3] 
 									lookup 
 										literal "PositionalNoConversion"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
+								[5] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
+								[6] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
 						[2] 
-							program 
-								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										literal "m"
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal "n"
-								[3] 
-									key 
-										[1] 
-											lookup 
-												literal 3
-									value 
-										literal "o"
+							literal "m"
+						[3] 
+							literal "n"
+						[4] 
+							literal "o"
 			[91] 
 				key 
 					[1] 
@@ -1867,29 +1853,39 @@ function
 								[2] 
 									lookup 
 										literal "Concatenate"
-						[2] 
-							program 
-								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										literal "r"
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal "s"
 								[3] 
-									key 
-										[1] 
-											lookup 
-												literal 3
-									value 
-										literal "t"
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
+								[5] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "String"
+						[2] 
+							literal "r"
+						[3] 
+							literal "s"
+						[4] 
+							literal "t"
 			[92] 
 				key 
 					[1] 
@@ -1907,6 +1903,17 @@ function
 								[3] 
 									lookup 
 										literal "NamedNoConversion"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "Meta"
+											[3] 
+												lookup 
+													literal "Map"
 						[2] 
 							program 
 								[1] 
@@ -1938,6 +1945,17 @@ function
 								[2] 
 									lookup 
 										literal "Concatenate"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "Meta"
+											[3] 
+												lookup 
+													literal "Map"
 						[2] 
 							program 
 								[1] 
@@ -2392,6 +2410,20 @@ function
 								[2] 
 									lookup 
 										literal "TakeDelegate"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "Meta"
+											[3] 
+												lookup 
+													literal "TestClass"
+											[4] 
+												lookup 
+													literal "TestDelegate"
 						[2] 
 							program 
 								[1] 
@@ -2442,6 +2474,15 @@ function
 								[2] 
 									lookup 
 										literal "CallStaticEvent"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "Object"
 						[2] 
 							select 
 								[1] 
@@ -2508,6 +2549,15 @@ function
 								[2] 
 									lookup 
 										literal "CallInstanceEvent"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "Object"
 						[2] 
 							literal 5
 			[124] 
@@ -2758,21 +2808,9 @@ function
 												lookup 
 													literal "Single"
 						[2] 
-							program 
-								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										literal "Courier New"
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal 10
+							literal "Courier New"
+						[3] 
+							literal 10
 			[139] 
 				key 
 					[1] 
@@ -2881,6 +2919,15 @@ function
 								[2] 
 									lookup 
 										literal "Add"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "Object"
 						[2] 
 							literal "hello"
 			[148] 
@@ -3035,21 +3082,9 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							program 
-								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										literal 5
-								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal 1000
+							literal 5
+						[3] 
+							literal 1000
 			[155] 
 				key 
 					[1] 
@@ -3616,27 +3651,15 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							program 
+							select 
 								[1] 
-									key 
-										[1] 
-											lookup 
-												literal 1
-									value 
-										select 
-											[1] 
-												search 
-													literal "mscorlib"
-											[2] 
-												lookup 
-													literal "String"
+									search 
+										literal "mscorlib"
 								[2] 
-									key 
-										[1] 
-											lookup 
-												literal 2
-									value 
-										literal 5
+									lookup 
+										literal "String"
+						[3] 
+							literal 5
 			[178] 
 				key 
 					[1] 

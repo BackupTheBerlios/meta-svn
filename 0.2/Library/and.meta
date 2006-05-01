@@ -1,2 +1,2 @@
 documentation "Returns whether all booleans are true."
-arg|/.Meta.Library.And arg
+arg|/.Meta.Library.And.[/.Meta.Map] arg

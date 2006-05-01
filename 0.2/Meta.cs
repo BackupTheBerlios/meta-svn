@@ -1190,37 +1190,28 @@ namespace Meta
 	}
 	public class Library
 	{
-		public static Test Sum(Map arg)
+		public static Map Sum(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
+			Position argument = Call.LastArgument;
+			Map result = arg.Array[0].Copy();
+			foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
 			{
-				Position argument = Call.LastArgument;
-				Map result = arg.Array[0].Copy();
-				foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
-				{
-					result = argument.Call(result).Call(m).Get();
-				}
-				return result;
-			});
+				result = argument.Call(result).Call(m).Get();
+			}
+			return result;
 		}
-		public static Test Prepend(Map arg)
+		public static Map Prepend(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				Map result = new StrategyMap(1, arg);
-				result.AppendRange(map);
-				//result.Append(arg);
-				return result;
-			});
+			Map result = new StrategyMap(1, arg);
+			result.AppendRange(map);
+			//result.Append(arg);
+			return result;
 		}
-		public static Test Append(Map arg)
+		public static Map Append(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				Map result = map.Copy();
-				result.Append(arg);
-				return result;
-			});
+			Map result = map.Copy();
+			result.Append(arg);
+			return result;
 		}
 		public static Map Keys(Map arg)
 		{
@@ -1234,23 +1225,17 @@ namespace Meta
 		{
 			return arg[arg.ArrayCount];
 		}
-		public static Test Contains(Map arg)
+		public static Map Contains(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.Array.Contains(map);
-			});
+			return arg.Array.Contains(map);
 		}
 		//public static Map Contains(Map arg)
 		//{
 		//    return arg["array"].Array.Contains(arg["value"]);
 		//}
-		public static Test HasKey(Map arg)
+		public static Map HasKey(Map arg,Map map)
 		{
-			return new Test(delegate(Map key)
-			{
-				return arg.ContainsKey(key);
-			});
+			return arg.ContainsKey(map);
 		}
 		//public static Map HasKey(Map arg)
 		//{
@@ -1275,30 +1260,24 @@ namespace Meta
 			}
 			return obj;
 		}
-		public static Test CompareString(Map arg)
+		public static Map CompareString(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.GetString().CompareTo(map.GetString());
-			});
+			return arg.GetString().CompareTo(map.GetString());
 		}
 		//public static Map CompareString(Map arg)
 		//{
 		//    return arg[1].GetString().CompareTo(arg[2].GetString());
 		//}
-		public static Test SplitString(Map arg)
+		public static Map SplitString(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
+			char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
+			string[] split = arg.GetString().Split(delimiters);
+			Map result = new StrategyMap(new ListStrategy(split.Length));
+			foreach (string text in split)
 			{
-				char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
-				string[] split = arg.GetString().Split(delimiters);
-				Map result = new StrategyMap(new ListStrategy(split.Length));
-				foreach (string text in split)
-				{
-					result.Append(text);
-				}
-				return result;
-			});
+				result.Append(text);
+			}
+			return result;
 		}
 		//public static Map SplitString(Map arg)
 		//{
@@ -1328,19 +1307,13 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Test Subtract(Map arg)
+		public static Map Subtract(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return map.GetNumber() - arg.GetNumber();
-			});
+			return map.GetNumber() - arg.GetNumber();
 		}
-		public static Test Divide(Map arg)
+		public static Map Divide(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return map.GetNumber() / arg.GetNumber();
-			});
+			return map.GetNumber() / arg.GetNumber();
 		}
 		public static Map Parse(Map arg)
 		{
@@ -1354,12 +1327,9 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Test Multiply(Map arg)
+		public static Map Multiply(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.GetNumber() * map.GetNumber();
-			});
+			return arg.GetNumber() * map.GetNumber();
 		}
 		public static Map BinaryOr(Map arg)
 		{
@@ -1381,13 +1351,11 @@ namespace Meta
 			list.Reverse();
 			return new StrategyMap(list);
 		}
-		public delegate Map Test(Map arg);
-		public static Test If(Map arg)
+		//public delegate Map Test(Map arg);
+		public static Map If(Map arg,Map map)
 		{
 			if (arg.GetBoolean())
 			{
-				return new Test(delegate(Map a)
-				{
 					//Position pos=MethodImplementation.currentPosition
 					if (Call.LastArgument.Get().ContainsKey("then"))
 					{
@@ -1397,12 +1365,9 @@ namespace Meta
 					{
 						return Map.Empty;
 					}
-				});
 			}
 			else
 			{
-				return new Test(delegate(Map a)
-				{
 					Map result;
 					if (Call.LastArgument.Get().ContainsKey("else"))
 					{
@@ -1413,7 +1378,6 @@ namespace Meta
 						result = Map.Empty;
 					}
 					return result;
-				});
 			}
 		}
 
@@ -1479,19 +1443,13 @@ namespace Meta
 		//        });
 		//    }
 		//}
-		public static Test Greater(Map arg)
+		public static Map Greater(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
 				return arg.GetNumber() > map.GetNumber();
-			});
 		}
-		public static Test Smaller(Map arg)
+		public static Map Smaller(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.GetNumber() < map.GetNumber();
-			});
+			return arg.GetNumber() < map.GetNumber();
 		}
 		//public static Test If = new Test(delegate(Map arg)
 		//{
@@ -1541,7 +1499,7 @@ namespace Meta
 			}
 			return new StrategyMap(new DictionaryStrategy(result));
 		}
-		public static Map Equal(Map arg,Map map)
+		public static Map Equal(Map arg, Map map)
 		{
 			return arg.Equals(map);
 		}
@@ -1727,7 +1685,7 @@ namespace Meta
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
 		}
-		public static Map Add(Map arg,Map map)
+		public static Map Add(Map arg, Map map)
 		{
 			return arg.GetNumber() + map.GetNumber();
 		}
@@ -1801,10 +1759,8 @@ namespace Meta
 		//        return result;
 		//    });
 		//}
-		public static Test Sort(Map arg)
+		public static Map Sort(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
 				List<Map> array = arg.Array;
 				Position argument = Call.LastArgument;
 				array.Sort(new Comparison<Map>(delegate(Map a, Map b)
@@ -1813,16 +1769,12 @@ namespace Meta
 					return result.GetNumber().GetInt32();
 				}));
 				return new StrategyMap(array);
-			});
 		}
-		public static Test Join(Map arg)
+		public static Map Join(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
 				Map result = arg.Copy();
 				result.AppendRange(map);
 				return result;
-			});
 		}
 		//public static Map Join(Map arg)
 		//{
@@ -1920,10 +1872,8 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Test Apply(Map arg)
+		public static Map Apply(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
 				Position argument = Call.LastArgument;
 				Map result = new StrategyMap(new ListStrategy());
 				foreach (Map m in arg.Array)
@@ -1932,7 +1882,6 @@ namespace Meta
 					result.Append(pos.Get());
 				}
 				return result;
-			});
 		}
 		//public static Map Apply(Map arg)
 		//{
@@ -1995,10 +1944,8 @@ namespace Meta
 			}
 			return 0;
 		}
-		public static Test Foreach(Map arg)
+		public static Map Foreach(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
 				Map result = new StrategyMap();
 				Position argument = Call.LastArgument;
 				foreach (KeyValuePair<Map, Map> entry in arg)
@@ -2007,839 +1954,8 @@ namespace Meta
 					//result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
 				}
 				return result;
-			});
 		}
 	}
-	//public class Library
-	//{
-	//    public static Test Sum(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Position argument = Call.LastArgument;
-	//            Map result = arg.Array[0].Copy();
-	//            foreach (Map m in arg.Array.GetRange(1,arg.Array.Count-1))
-	//            {
-	//                result = argument.Call(result).Call(m).Get();	
-	//            }
-	//            return result;
-	//        });
-	//    }
-	//    public static Test Prepend(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Map result = new StrategyMap(1,arg);
-	//            result.AppendRange(map);
-	//            //result.Append(arg);
-	//            return result;
-	//        });
-	//    }
-	//    public static Test Append(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Map result=map.Copy();
-	//            result.Append(arg);
-	//            return result;
-	//        });
-	//    }
-	//    public static Map Keys(Map arg)
-	//    {
-	//        return new StrategyMap(arg.Keys);
-	//    }
-	//    public static Map Rest(Map arg)
-	//    {
-	//        return new StrategyMap(arg.Array.GetRange(1, arg.Array.Count - 1));
-	//    }
-	//    public static Map Last(Map arg)
-	//    {
-	//        return arg[arg.ArrayCount];
-	//    }
-	//    public static Test Contains(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.Array.Contains(map);
-	//        });
-	//    }
-	//    //public static Map Contains(Map arg)
-	//    //{
-	//    //    return arg["array"].Array.Contains(arg["value"]);
-	//    //}
-	//    public static Test HasKey(Map arg)
-	//    {
-	//        return new Test(delegate(Map key)
-	//        {
-	//            return arg.ContainsKey(key);
-	//        });
-	//    }
-	//    //public static Map HasKey(Map arg)
-	//    //{
-	//    //    if (arg["key"].Equals(new StrategyMap("result")))
-	//    //    {
-	//    //    }
-	//    //    return arg["map"].ContainsKey(arg["key"]);
-	//    //}
-	//    public static Map ShowGtk(Map arg)
-	//    {
-	//        Gtk.Application.Init();
-	//        Gtk.Window win = new Gtk.Window("TextViewSample");
-	//        win.ShowAll();
-	//        return Map.Empty;
-	//    }
-	//    public static Map With(Map arg)
-	//    {
-	//        Map obj = arg["object"];
-	//        foreach (KeyValuePair<Map, Map> entry in arg["data"])
-	//        {
-	//            obj[entry.Key] = entry.Value;
-	//        }
-	//        return obj;
-	//    }
-	//    public static Test CompareString(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.GetString().CompareTo(map.GetString());
-	//        });
-	//    }
-	//    //public static Map CompareString(Map arg)
-	//    //{
-	//    //    return arg[1].GetString().CompareTo(arg[2].GetString());
-	//    //}
-	//    public static Test SplitString(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
-	//            string[] split = arg.GetString().Split(delimiters);
-	//            Map result = new StrategyMap(new ListStrategy(split.Length));
-	//            foreach (string text in split)
-	//            {
-	//                result.Append(text);
-	//            }
-	//            return result;
-	//        });
-	//    }
-	//    //public static Map SplitString(Map arg)
-	//    //{
-	//    //    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-	//    //    string[] split = arg["text"].GetString().Split(delimiters);
-	//    //    Map result = new StrategyMap(new ListStrategy(split.Length));
-	//    //    foreach (string text in split)
-	//    //    {
-	//    //        result.Append(text);
-	//    //    }
-	//    //    return result;
-	//    //}
-	//    public static Map Invert(Map arg)
-	//    {
-	//        Map result = new StrategyMap();
-
-	//        foreach (Map map in arg.Array)
-	//        {
-	//            foreach (KeyValuePair<Map, Map> entry in map)
-	//            {
-	//                if(!result.ContainsKey(entry.Key))
-	//                {
-	//                    result[entry.Key] = new StrategyMap(new ListStrategy());
-	//                }
-	//                result[entry.Key].Append(entry.Value);
-	//            }
-	//        }
-	//        return result;
-	//    }
-	//    public static Test Subtract(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return map.GetNumber() - arg.GetNumber();
-	//        });
-	//    }
-	//    public static Test Divide(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return map.GetNumber() / arg.GetNumber();
-	//        });
-	//    }
-	//    public static Map Parse(Map arg)
-	//    {
-	//        Map start = new StrategyMap();
-	//        Parser parser = new Parser(arg.GetString(), "Parse function");
-	//        bool matched;
-	//        Map result = Parser.File.Match(parser, out matched);
-	//        if (parser.index != parser.text.Length)
-	//        {
-	//            throw new SyntaxException("Expected end of file.", parser);
-	//        }
-	//        return result;
-	//    }
-	//    public static Test Multiply(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.GetNumber() * map.GetNumber();
-	//        });
-	//    }
-	//    public static Map BinaryOr(Map arg)
-	//    {
-	//        int binaryOr = 0;
-	//        foreach (Map map in arg.Array)
-	//        {
-	//            binaryOr |= map.GetNumber().GetInt32();
-	//        }
-	//        return binaryOr;
-	//    }
-	//    private static Random random = new Random();
-	//    public static Map Random(Map arg)
-	//    {
-	//        return random.Next(1,arg.GetNumber().GetInt32());
-	//    }
-	//    public static Map Reverse(Map arg)
-	//    {
-	//        List<Map> list=new List<Map>(arg.Array);
-	//        list.Reverse();
-	//        return new StrategyMap(list);
-	//    }
-	//    public delegate Map Test(Map arg);
-	//    public static Test If(Map arg)
-	//    {
-	//        if (arg.GetBoolean())
-	//        {
-	//            return new Test(delegate(Map a)
-	//            {
-	//                //Position pos=MethodImplementation.currentPosition
-	//                if (Call.LastArgument.Get().ContainsKey("then"))
-	//                {
-	//                    return Call.LastArgument["then"].Call(Map.Empty).Get();
-	//                }
-	//                else
-	//                {
-	//                    return Map.Empty;
-	//                }
-	//            });
-	//        }
-	//        else
-	//        {
-	//            return new Test(delegate(Map a)
-	//            {
-	//                Map result;
-	//                if (Call.LastArgument.Get().ContainsKey("else"))
-	//                {
-	//                    result = Call.LastArgument["else"].Call(Map.Empty).Get();
-	//                }
-	//                else
-	//                {
-	//                    result = Map.Empty;
-	//                }
-	//                return result;
-	//            });
-	//        }
-	//    }
-
-
-	//    //public static Test If(Map arg)
-	//    //{
-	//    //    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-	//    //    //Map result;
-	//    //    if (arg.GetBoolean())
-	//    //    {
-	//    //        return new Test(delegate(Map a)
-	//    //        {
-	//    //            //Position pos=MethodImplementation.currentPosition
-	//    //            Map result = Call.LastArgument.Call(Map.Empty).Get();
-	//    //            return result;
-	//    //        });
-	//    //    }
-	//    //    else
-	//    //    {
-	//    //        return new Test(delegate(Map a)
-	//    //        {
-	//    //            Map result;
-	//    //            if (Call.LastArgument.Get().ContainsKey("else"))
-	//    //            {
-	//    //                result = Call.LastArgument["else"].Call(Map.Empty).Get();
-	//    //            }
-	//    //            else
-	//    //            {
-	//    //                result = Map.Empty;
-	//    //            }
-	//    //            return result;
-	//    //        });
-	//    //    }
-	//    //}
-
-	//    //public static Test If (Map arg)
-	//    //{
-	//    //    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-	//    //    //Map result;
-	//    //    if (arg.GetBoolean())
-	//    //    {
-	//    //        return new Test(delegate(Map a)
-	//    //        {
-	//    //            //Position pos=MethodImplementation.currentPosition
-	//    //            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
-	//    //            return result;
-	//    //        });
-	//    //    }
-	//    //    else
-	//    //    {
-	//    //        return new Test(delegate(Map a)
-	//    //        {
-	//    //            Map result;
-	//    //            if (Call.LastArgument.Get().ContainsKey("else"))
-	//    //            {
-	//    //                result = Call.LastArgument["else"].Call(Map.Empty).Get();
-	//    //            }
-	//    //            else
-	//    //            {
-	//    //                result = Map.Empty;
-	//    //            }
-	//    //            return result;
-	//    //        });
-	//    //    }
-	//    //}
-	//    public static Test Greater(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.GetNumber() > map.GetNumber();
-	//        });
-	//    }
-	//    public static Test Smaller(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.GetNumber() < map.GetNumber();
-	//        });
-	//    }
-	//    //public static Test If = new Test(delegate(Map arg)
-	//    //{
-	//    //    Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-	//    //    Map result;
-	//    //    if (arg["condition"].GetBoolean())
-	//    //    {
-	//    //        result = argPosition["then"].Call(Map.Empty).Get();
-	//    //    }
-	//    //    else if (arg.ContainsKey("else"))
-	//    //    {
-	//    //        result = argPosition["else"].Call(Map.Empty).Get();
-	//    //    }
-	//    //    else
-	//    //    {
-	//    //        result = Map.Empty;
-	//    //    }
-	//    //    return result;
-	//    //});
-	//    public static Map Intersect(Map arg)
-	//    {
-	//        Dictionary<Map, object> keys = new Dictionary<Map, object>();
-	//        foreach (Map map in arg.Array)
-	//        {
-	//            foreach (KeyValuePair<Map, Map> entry in map)
-	//            {
-	//                keys[entry.Key] = null;
-	//            }
-	//        }
-	//        Dictionary<Map,Map> result = new Dictionary<Map,Map>();
-	//        foreach (KeyValuePair<Map, object> entry in keys)
-	//        {
-	//            List<Map> args=arg.Array;
-	//            args.Reverse();
-	//            foreach(Map map in args)
-	//            {
-	//                if (map.ContainsKey(entry.Key))
-	//                {
-	//                    result[entry.Key] = map[entry.Key];
-	//                }
-	//                else
-	//                {
-	//                    result.Remove(entry.Key);
-	//                    break;
-	//                }
-	//            }
-	//        }
-	//        return new StrategyMap(new DictionaryStrategy(result));
-	//    }
-	//    public static Test Equal(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.Equals(map);
-	//        });
-	//    }
-	//    //public static Map Equal(Map arg)
-	//    //{
-	//    //    bool equal = true;
-	//    //    if(arg.ArrayCount>1)
-	//    //    {
-	//    //        List<Map> array = arg.Array;
-	//    //        for (int i = 0; i<arg.Count-1; i++)
-	//    //        {
-	//    //            if (!array[i].Equals(array[i + 1]))
-	//    //            {
-	//    //                equal = false;
-	//    //                break;
-	//    //            }
-	//    //        }
-	//    //    }
-	//    //    return equal;
-	//    //}
-	//    public static Map Not(Map arg)
-	//    {
-	//        return !arg.GetBoolean();
-	//    }
-	//    //public static Map Or(Map arg)
-	//    //{
-	//    //    bool or=false;
-	//    //    foreach (Map map in arg.Array)
-	//    //    {
-	//    //        if (map.GetBoolean())
-	//    //        {
-	//    //            or = true;
-	//    //            break;
-	//    //        }
-	//    //    }
-	//    //    return or;
-	//    //}
-	//    public static Map Try(Map arg)
-	//    {
-	//        Map result;
-	//        Position argument = Call.LastArgument;
-	//        try
-	//        {
-	//            result = argument.Get()["function"].Call(Map.Empty, argument).Get();
-	//        }
-	//        catch (Exception e)
-	//        {
-	//            result = argument.Get()["catch"].Call(new ObjectMap(e), argument).Get();
-	//        }
-	//        return result;
-	//    }
-	//    public static Map Split(Map arg)
-	//    {
-	//        Map arrays = new StrategyMap();
-	//        Map subArray = new StrategyMap();
-	//        List<Map> array = arg[1].Array;
-	//        List<Map> delimiters = arg["delimiters"].Array;
-	//        for (int i = 0; i < array.Count; i++)
-	//        {
-	//            Map map = array[i];
-	//            bool equal = false;
-	//            foreach (Map delimiter in delimiters)
-	//            {
-	//                if (map.Equals(delimiter))
-	//                {
-	//                    equal = true;
-	//                    break;
-	//                }
-	//            }
-	//            if (equal || i == array.Count - 1)
-	//            {
-	//                if (i == array.Count - 1)
-	//                {
-	//                    subArray.Append(map);
-	//                }
-	//                arrays.Append(subArray);
-	//                subArray = new StrategyMap();
-	//            }
-	//            else
-	//            {
-	//                subArray.Append(map);
-	//            }
-	//        }
-	//        return arrays;
-	//    }
-	//    public static Map CreateConsole(Map arg)
-	//    {
-	//        Interpreter.AllocConsole();
-	//        return Map.Empty;
-	//    }
-	//    public static Map StrictlyIncreasing(Map arg)
-	//    {
-	//        bool increasing = true;
-	//        for (int i = 1; i < arg.ArrayCount; i++)
-	//        {
-	//            if (!(arg[i + 1].GetNumber() > arg[i].GetNumber()))
-	//            {
-	//                increasing = false;
-	//                break;
-	//            }
-	//        }
-	//        return increasing;
-	//    }
-	//    public static Map StrictlyDecreasing(Map arg)
-	//    {
-	//        bool decreasing = true;
-	//        for (int i = 1; i < arg.ArrayCount; i++)
-	//        {
-	//            if (!(arg[i + 1].GetNumber() < arg[i].GetNumber()))
-	//            {
-	//                decreasing = false;
-	//                break;
-	//            }
-	//        }
-	//        return decreasing;
-	//    }
-	//    public static Map Decreasing(Map arg)
-	//    {
-	//        bool nonincreasing = true;
-	//        for (int i = 1; i  < arg.ArrayCount;i++)
-	//        {
-	//            if (arg[i + 1].GetNumber() > arg[i].GetNumber())
-	//            {
-	//                nonincreasing = false;
-	//                break;
-	//            }
-	//        }
-	//        return nonincreasing;
-	//    }
-	//    public static Map Increasing(Map arg)
-	//    {
-	//        bool nondecreasing = true;
-	//        for (int i = 1; i < arg.ArrayCount; i++)
-	//        {
-	//            if (arg[i + 1].GetNumber() < arg[i].GetNumber())
-	//            {
-	//                nondecreasing = false;
-	//                break;
-	//            }
-	//        }
-	//        return nondecreasing;
-	//    }
-	//    public static Map And(Map arg)
-	//    {
-	//        bool and = true;
-	//        Position argument = Call.LastArgument;
-
-	//        foreach (Position callable in argument.Array)
-	//        {
-	//            Map map = callable.Call(Map.Empty).Get();
-	//            if (!map.GetBoolean())
-	//            {
-	//                and = false;
-	//                break;
-	//            }
-	//        }
-	//        return and;
-	//    }
-	//    public static Map Or(Map arg)
-	//    {
-	//        bool or = false;
-	//        Position argument = Call.LastArgument;
-	//        foreach (Position callable in argument.Array)
-	//        {
-	//            Map map = callable.Call(Map.Empty).Get();
-	//            if (map.GetBoolean())
-	//            {
-	//                or = true;
-	//                break;
-	//            }
-	//        }
-	//        return or;
-	//    }
-	//    public static Map Reciprocal(Map arg)
-	//    {
-	//        Number number = arg.GetNumber();
-	//        return new Number(number.Denominator, number.Numerator);
-	//    }
-	//    public static Test Add(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            return arg.GetNumber() + map.GetNumber();
-	//        });
-	//    }
-	//    public static string writtenText = "";
-	//    public static void WriteLine(string text)
-	//    {
-	//        Write(text + Environment.NewLine);
-	//    }
-	//    public static void Write(string text)
-	//    {
-	//        writtenText += text;
-	//        Console.Write(text);
-	//    }
-	//    public static Map Maximum(Map arg)
-	//    {
-	//        Number maximum = arg[1].GetNumber();
-	//        foreach (Map map in arg.Array)
-	//        {
-	//            Number number = map.GetNumber();
-	//            if (number > maximum)
-	//            {
-	//                maximum = number;
-	//            }
-	//        }
-	//        return new StrategyMap(maximum);
-	//    }
-	//    public static Map Opposite(Map arg)
-	//    {
-	//        return arg.GetNumber()*-1;
-	//    }
-	//    public static Map Minimum(Map arg)
-	//    {
-	//        Number minumum = arg[1].GetNumber();
-	//        foreach (Map map in arg.Array)
-	//        {
-	//            Number number = map.GetNumber();
-	//            if (number < minumum)
-	//            {
-	//                minumum = number;
-	//            }
-	//        }
-	//        return new StrategyMap(minumum);
-	//    }
-	//    public static Map Merge(Map arg,Map map)
-	//    {
-	//        //return new Test(delegate(Map map)
-	//        //{
-	//            Map result = arg.Copy();
-	//            foreach (KeyValuePair<Map, Map> pair in map)
-	//            {
-	//                result[pair.Key] = pair.Value;
-	//            }
-	//            return result;
-	//        //});
-	//    }
-	//    //public static Test Merge(Map arg)
-	//    //{
-	//    //    return new Test(delegate(Map map)
-	//    //    {
-
-	//    //        Map result = arg.Copy();
-	//    //        foreach (KeyValuePair<Map, Map> pair in map)
-	//    //        {
-	//    //            result[pair.Key] = pair.Value;
-	//    //        }
-	//    //        return result;
-	//    //    });
-	//    //}
-	//    public static Test Sort(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            List<Map> array = arg.Array;
-	//            Position argument = Call.LastArgument;
-	//            array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-	//            {
-	//                Map result = map.Call(a, argument).Call(b).Get();
-	//                return result.GetNumber().GetInt32();
-	//            }));
-	//            return new StrategyMap(array);
-	//        });
-	//    }
-	//    public static Test Join(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Map result = arg.Copy();
-	//            result.AppendRange(map);
-	//            return result;
-	//        });
-	//    }
-	//    //public static Map Join(Map arg)
-	//    //{
-	//    //    Map result = Map.Empty;
-	//    //    Number counter = 1;
-	//    //    foreach (Map map in arg.Array)
-	//    //    {
-	//    //        result.AppendRange(map);
-	//    //    }
-	//    //    return result;
-	//    //}
-	//    public static Map Range(Map arg)
-	//    {
-	//        int end = arg.GetNumber().GetInt32();
-	//        Map result = new StrategyMap();
-	//        for (int i = 1; i <= end; i++)
-	//        {
-	//            result.Append(i);
-	//        }
-	//        return result;
-	//    }
-	//    public static Map Find(Map arg)
-	//    {
-	//        Map result = new StrategyMap(new ListStrategy());
-	//        string text = arg["array"].GetString();
-	//        string value = arg["value"].GetString();
-	//        for (int i = 0; ; i++)
-	//        {
-	//            i = text.IndexOf(value, i);
-	//            if (i == -1)
-	//            {
-	//                break;
-	//            }
-	//            else
-	//            {
-	//                result.Append(i + 1);
-	//            }
-	//        }
-	//        return result;
-	//    }
-	//    public static Map Slice(Map arg)
-	//    {
-	//        Map array = arg["array"];
-	//        int start;
-	//        if (arg.ContainsKey("start"))
-	//        {
-	//            start = arg["start"].GetNumber().GetInt32();
-	//        }
-	//        else
-	//        {
-	//            start = 1;
-	//        }
-	//        int end;
-	//        if (arg.ContainsKey("end"))
-	//        {
-	//            end = arg["end"].GetNumber().GetInt32();
-	//        }
-	//        else
-	//        {
-	//            end = array.ArrayCount;
-	//        }
-	//        Map result = new StrategyMap(new ListStrategy());
-	//        for (int i = start; i <= end; i++)
-	//        {
-	//            result.Append(array[i]);
-	//        }
-	//        return result;
-	//    }
-	//    public static Map StringReplace(Map arg)
-	//    {
-	//        return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
-	//    }
-	//    public static Map UrlDecode(Map arg)
-	//    {
-	//        string[] aSplit;
-	//        string sOutput;
-	//        string sConvert = arg.GetString();
-
-	//        sOutput = sConvert.Replace("+", " ");
-	//        aSplit = sOutput.Split('%');
-	//        sOutput = aSplit[0];
-	//        for (int i = 1; i < aSplit.Length; i++)
-	//        {
-	//            sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16) + aSplit[i].Substring(2);
-	//        }
-	//        return sOutput;
-	//    }
-	//    public static Map While(Map arg)
-	//    {
-	//        Position argument = Call.LastArgument;
-	//        Map result = new StrategyMap(new ListStrategy());
-	//        while (argument["condition"].Call(Map.Empty).Get().GetBoolean())
-	//        {
-	//            result.Append(argument["function"].Call(Map.Empty).Get());
-	//        }
-	//        return result;
-	//    }
-	//    public static Test Apply(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Position argument = Call.LastArgument;
-	//            Map result = new StrategyMap(new ListStrategy());
-	//            foreach (Map m in arg.Array)
-	//            {
-	//                Position pos = map.Call(m,argument);
-	//                result.Append(pos.Get());
-	//            }
-	//            return result;
-	//        });
-	//    }
-	//    //public static Map Apply(Map arg)
-	//    //{
-	//    //    Map result = new StrategyMap(new ListStrategy());
-	//    //    Position argument = Call.LastArgument;
-	//    //    Map condition=arg.TryGetValue("condition");
-	//    //    foreach (Map map in arg["array"].Array)
-	//    //    {
-	//    //        if (condition!=null)
-	//    //        {
-	//    //            if (!condition.Call(map, argument).Get().GetBoolean())
-	//    //            {
-	//    //                break;
-	//    //            }
-	//    //        }
-	//    //        Position pos = argument["function"].Call(map);
-	//    //        result.Append(pos.Get());
-	//    //    }
-	//    //    return result;
-	//    //}
-	//    //public static Map Apply(Map arg)
-	//    //{
-	//    //    Map result = new StrategyMap(new ListStrategy());
-	//    //    Position argument = Call.lastArgument;
-	//    //    foreach (Map map in arg["array"].Array)
-	//    //    {
-	//    //        Position pos = argument["function"].Call(map);
-	//    //        result.Append(pos.Get());
-	//    //    }
-	//    //    return result;
-	//    //}
-	//    public static Map Filter(Map arg)
-	//    {
-	//        Map result = new StrategyMap(new ListStrategy());
-	//        Position argument = Call.LastArgument;
-	//        foreach (Map map in arg[1].Array)
-	//        {
-	//            if (argument.Get().Call(map, argument).Get().GetBoolean())
-	//            {
-	//                result.Append(map);
-	//            }
-	//        }
-	//        return result;
-	//    }
-	//    public static Map FindFirst(Map arg)
-	//    {
-	//        Map result = new StrategyMap(new ListStrategy());
-	//        Map array = arg["array"];
-	//        Map value = arg["value"];
-	//        for (int i = 1; i <= array.ArrayCount; i++)
-	//        {
-	//            for (int k = 1; value[k].Equals(array[i + k - 1]); k++)
-	//            {
-	//                if (k == value.ArrayCount)
-	//                {
-	//                    return i;
-	//                }
-
-	//            }
-	//        }
-	//        return 0;
-	//    }
-	//    public static Test Foreach(Map arg)
-	//    {
-	//        return new Test(delegate(Map map)
-	//        {
-	//            Map result = new StrategyMap();
-	//            Position argument = Call.LastArgument;
-	//            foreach (KeyValuePair<Map, Map> entry in arg)
-	//            {
-	//                result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
-	//                //result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
-	//            }
-	//            return result;
-	//        });
-	//    }
-	//    //public static Test Foreach(Map arg)
-	//    //{
-	//    //    return new Test(delegate(Map map)
-	//    //    {
-	//    //        Map result = new StrategyMap();
-	//    //        Position argument = Call.LastArgument;
-	//    //        foreach (KeyValuePair<Map, Map> entry in arg)
-	//    //        {
-	//    //            result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
-	//    //            //result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
-	//    //        }
-	//    //        return result;
-	//    //    });
-	//    //}
-	//}
 	public class FileMap : StrategyMap
 	{
 		private string path;
