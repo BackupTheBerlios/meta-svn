@@ -1196,9 +1196,9 @@ namespace Meta
 			{
 				Position argument = Call.LastArgument;
 				Map result = arg.Array[0].Copy();
-				foreach (Map m in arg.Array.GetRange(1,arg.Array.Count-1))
+				foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
 				{
-					result = argument.Call(result).Call(m).Get();	
+					result = argument.Call(result).Call(m).Get();
 				}
 				return result;
 			});
@@ -1207,7 +1207,7 @@ namespace Meta
 		{
 			return new Test(delegate(Map map)
 			{
-				Map result = new StrategyMap(1,arg);
+				Map result = new StrategyMap(1, arg);
 				result.AppendRange(map);
 				//result.Append(arg);
 				return result;
@@ -1217,7 +1217,7 @@ namespace Meta
 		{
 			return new Test(delegate(Map map)
 			{
-				Map result=map.Copy();
+				Map result = map.Copy();
 				result.Append(arg);
 				return result;
 			});
@@ -1319,7 +1319,7 @@ namespace Meta
 			{
 				foreach (KeyValuePair<Map, Map> entry in map)
 				{
-					if(!result.ContainsKey(entry.Key))
+					if (!result.ContainsKey(entry.Key))
 					{
 						result[entry.Key] = new StrategyMap(new ListStrategy());
 					}
@@ -1363,21 +1363,21 @@ namespace Meta
 		}
 		public static Map BinaryOr(Map arg)
 		{
-		    int binaryOr = 0;
-		    foreach (Map map in arg.Array)
-		    {
-	            binaryOr |= map.GetNumber().GetInt32();
-		    }
-		    return binaryOr;
+			int binaryOr = 0;
+			foreach (Map map in arg.Array)
+			{
+				binaryOr |= map.GetNumber().GetInt32();
+			}
+			return binaryOr;
 		}
 		private static Random random = new Random();
 		public static Map Random(Map arg)
 		{
-			return random.Next(1,arg.GetNumber().GetInt32());
+			return random.Next(1, arg.GetNumber().GetInt32());
 		}
 		public static Map Reverse(Map arg)
 		{
-			List<Map> list=new List<Map>(arg.Array);
+			List<Map> list = new List<Map>(arg.Array);
 			list.Reverse();
 			return new StrategyMap(list);
 		}
@@ -1521,12 +1521,12 @@ namespace Meta
 					keys[entry.Key] = null;
 				}
 			}
-			Dictionary<Map,Map> result = new Dictionary<Map,Map>();
+			Dictionary<Map, Map> result = new Dictionary<Map, Map>();
 			foreach (KeyValuePair<Map, object> entry in keys)
 			{
-				List<Map> args=arg.Array;
+				List<Map> args = arg.Array;
 				args.Reverse();
-				foreach(Map map in args)
+				foreach (Map map in args)
 				{
 					if (map.ContainsKey(entry.Key))
 					{
@@ -1664,7 +1664,7 @@ namespace Meta
 		public static Map Decreasing(Map arg)
 		{
 			bool nonincreasing = true;
-			for (int i = 1; i  < arg.ArrayCount;i++)
+			for (int i = 1; i < arg.ArrayCount; i++)
 			{
 				if (arg[i + 1].GetNumber() > arg[i].GetNumber())
 				{
@@ -1755,7 +1755,7 @@ namespace Meta
 		}
 		public static Map Opposite(Map arg)
 		{
-			return arg.GetNumber()*-1;
+			return arg.GetNumber() * -1;
 		}
 		public static Map Minimum(Map arg)
 		{
@@ -1770,6 +1770,18 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
+		//public static Map Merge(Map arg, Map map)
+		//{
+		//    //return new Test(delegate(Map map)
+		//    //{
+		//    Map result = arg.Copy();
+		//    foreach (KeyValuePair<Map, Map> pair in map)
+		//    {
+		//        result[pair.Key] = pair.Value;
+		//    }
+		//    return result;
+		//    //});
+		//}
 		public static Test Merge(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -1910,7 +1922,7 @@ namespace Meta
 				Map result = new StrategyMap(new ListStrategy());
 				foreach (Map m in arg.Array)
 				{
-					Position pos = map.Call(m,argument);
+					Position pos = map.Call(m, argument);
 					result.Append(pos.Get());
 				}
 				return result;
@@ -1991,21 +2003,837 @@ namespace Meta
 				return result;
 			});
 		}
-		//public static Test Foreach(Map arg)
-		//{
-		//    return new Test(delegate(Map map)
-		//    {
-		//        Map result = new StrategyMap();
-		//        Position argument = Call.LastArgument;
-		//        foreach (KeyValuePair<Map, Map> entry in arg)
-		//        {
-		//            result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
-		//            //result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
-		//        }
-		//        return result;
-		//    });
-		//}
 	}
+	//public class Library
+	//{
+	//    public static Test Sum(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Position argument = Call.LastArgument;
+	//            Map result = arg.Array[0].Copy();
+	//            foreach (Map m in arg.Array.GetRange(1,arg.Array.Count-1))
+	//            {
+	//                result = argument.Call(result).Call(m).Get();	
+	//            }
+	//            return result;
+	//        });
+	//    }
+	//    public static Test Prepend(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Map result = new StrategyMap(1,arg);
+	//            result.AppendRange(map);
+	//            //result.Append(arg);
+	//            return result;
+	//        });
+	//    }
+	//    public static Test Append(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Map result=map.Copy();
+	//            result.Append(arg);
+	//            return result;
+	//        });
+	//    }
+	//    public static Map Keys(Map arg)
+	//    {
+	//        return new StrategyMap(arg.Keys);
+	//    }
+	//    public static Map Rest(Map arg)
+	//    {
+	//        return new StrategyMap(arg.Array.GetRange(1, arg.Array.Count - 1));
+	//    }
+	//    public static Map Last(Map arg)
+	//    {
+	//        return arg[arg.ArrayCount];
+	//    }
+	//    public static Test Contains(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.Array.Contains(map);
+	//        });
+	//    }
+	//    //public static Map Contains(Map arg)
+	//    //{
+	//    //    return arg["array"].Array.Contains(arg["value"]);
+	//    //}
+	//    public static Test HasKey(Map arg)
+	//    {
+	//        return new Test(delegate(Map key)
+	//        {
+	//            return arg.ContainsKey(key);
+	//        });
+	//    }
+	//    //public static Map HasKey(Map arg)
+	//    //{
+	//    //    if (arg["key"].Equals(new StrategyMap("result")))
+	//    //    {
+	//    //    }
+	//    //    return arg["map"].ContainsKey(arg["key"]);
+	//    //}
+	//    public static Map ShowGtk(Map arg)
+	//    {
+	//        Gtk.Application.Init();
+	//        Gtk.Window win = new Gtk.Window("TextViewSample");
+	//        win.ShowAll();
+	//        return Map.Empty;
+	//    }
+	//    public static Map With(Map arg)
+	//    {
+	//        Map obj = arg["object"];
+	//        foreach (KeyValuePair<Map, Map> entry in arg["data"])
+	//        {
+	//            obj[entry.Key] = entry.Value;
+	//        }
+	//        return obj;
+	//    }
+	//    public static Test CompareString(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.GetString().CompareTo(map.GetString());
+	//        });
+	//    }
+	//    //public static Map CompareString(Map arg)
+	//    //{
+	//    //    return arg[1].GetString().CompareTo(arg[2].GetString());
+	//    //}
+	//    public static Test SplitString(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
+	//            string[] split = arg.GetString().Split(delimiters);
+	//            Map result = new StrategyMap(new ListStrategy(split.Length));
+	//            foreach (string text in split)
+	//            {
+	//                result.Append(text);
+	//            }
+	//            return result;
+	//        });
+	//    }
+	//    //public static Map SplitString(Map arg)
+	//    //{
+	//    //    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
+	//    //    string[] split = arg["text"].GetString().Split(delimiters);
+	//    //    Map result = new StrategyMap(new ListStrategy(split.Length));
+	//    //    foreach (string text in split)
+	//    //    {
+	//    //        result.Append(text);
+	//    //    }
+	//    //    return result;
+	//    //}
+	//    public static Map Invert(Map arg)
+	//    {
+	//        Map result = new StrategyMap();
+
+	//        foreach (Map map in arg.Array)
+	//        {
+	//            foreach (KeyValuePair<Map, Map> entry in map)
+	//            {
+	//                if(!result.ContainsKey(entry.Key))
+	//                {
+	//                    result[entry.Key] = new StrategyMap(new ListStrategy());
+	//                }
+	//                result[entry.Key].Append(entry.Value);
+	//            }
+	//        }
+	//        return result;
+	//    }
+	//    public static Test Subtract(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return map.GetNumber() - arg.GetNumber();
+	//        });
+	//    }
+	//    public static Test Divide(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return map.GetNumber() / arg.GetNumber();
+	//        });
+	//    }
+	//    public static Map Parse(Map arg)
+	//    {
+	//        Map start = new StrategyMap();
+	//        Parser parser = new Parser(arg.GetString(), "Parse function");
+	//        bool matched;
+	//        Map result = Parser.File.Match(parser, out matched);
+	//        if (parser.index != parser.text.Length)
+	//        {
+	//            throw new SyntaxException("Expected end of file.", parser);
+	//        }
+	//        return result;
+	//    }
+	//    public static Test Multiply(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.GetNumber() * map.GetNumber();
+	//        });
+	//    }
+	//    public static Map BinaryOr(Map arg)
+	//    {
+	//        int binaryOr = 0;
+	//        foreach (Map map in arg.Array)
+	//        {
+	//            binaryOr |= map.GetNumber().GetInt32();
+	//        }
+	//        return binaryOr;
+	//    }
+	//    private static Random random = new Random();
+	//    public static Map Random(Map arg)
+	//    {
+	//        return random.Next(1,arg.GetNumber().GetInt32());
+	//    }
+	//    public static Map Reverse(Map arg)
+	//    {
+	//        List<Map> list=new List<Map>(arg.Array);
+	//        list.Reverse();
+	//        return new StrategyMap(list);
+	//    }
+	//    public delegate Map Test(Map arg);
+	//    public static Test If(Map arg)
+	//    {
+	//        if (arg.GetBoolean())
+	//        {
+	//            return new Test(delegate(Map a)
+	//            {
+	//                //Position pos=MethodImplementation.currentPosition
+	//                if (Call.LastArgument.Get().ContainsKey("then"))
+	//                {
+	//                    return Call.LastArgument["then"].Call(Map.Empty).Get();
+	//                }
+	//                else
+	//                {
+	//                    return Map.Empty;
+	//                }
+	//            });
+	//        }
+	//        else
+	//        {
+	//            return new Test(delegate(Map a)
+	//            {
+	//                Map result;
+	//                if (Call.LastArgument.Get().ContainsKey("else"))
+	//                {
+	//                    result = Call.LastArgument["else"].Call(Map.Empty).Get();
+	//                }
+	//                else
+	//                {
+	//                    result = Map.Empty;
+	//                }
+	//                return result;
+	//            });
+	//        }
+	//    }
+
+
+	//    //public static Test If(Map arg)
+	//    //{
+	//    //    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+	//    //    //Map result;
+	//    //    if (arg.GetBoolean())
+	//    //    {
+	//    //        return new Test(delegate(Map a)
+	//    //        {
+	//    //            //Position pos=MethodImplementation.currentPosition
+	//    //            Map result = Call.LastArgument.Call(Map.Empty).Get();
+	//    //            return result;
+	//    //        });
+	//    //    }
+	//    //    else
+	//    //    {
+	//    //        return new Test(delegate(Map a)
+	//    //        {
+	//    //            Map result;
+	//    //            if (Call.LastArgument.Get().ContainsKey("else"))
+	//    //            {
+	//    //                result = Call.LastArgument["else"].Call(Map.Empty).Get();
+	//    //            }
+	//    //            else
+	//    //            {
+	//    //                result = Map.Empty;
+	//    //            }
+	//    //            return result;
+	//    //        });
+	//    //    }
+	//    //}
+
+	//    //public static Test If (Map arg)
+	//    //{
+	//    //    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+	//    //    //Map result;
+	//    //    if (arg.GetBoolean())
+	//    //    {
+	//    //        return new Test(delegate(Map a)
+	//    //        {
+	//    //            //Position pos=MethodImplementation.currentPosition
+	//    //            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
+	//    //            return result;
+	//    //        });
+	//    //    }
+	//    //    else
+	//    //    {
+	//    //        return new Test(delegate(Map a)
+	//    //        {
+	//    //            Map result;
+	//    //            if (Call.LastArgument.Get().ContainsKey("else"))
+	//    //            {
+	//    //                result = Call.LastArgument["else"].Call(Map.Empty).Get();
+	//    //            }
+	//    //            else
+	//    //            {
+	//    //                result = Map.Empty;
+	//    //            }
+	//    //            return result;
+	//    //        });
+	//    //    }
+	//    //}
+	//    public static Test Greater(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.GetNumber() > map.GetNumber();
+	//        });
+	//    }
+	//    public static Test Smaller(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.GetNumber() < map.GetNumber();
+	//        });
+	//    }
+	//    //public static Test If = new Test(delegate(Map arg)
+	//    //{
+	//    //    Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
+	//    //    Map result;
+	//    //    if (arg["condition"].GetBoolean())
+	//    //    {
+	//    //        result = argPosition["then"].Call(Map.Empty).Get();
+	//    //    }
+	//    //    else if (arg.ContainsKey("else"))
+	//    //    {
+	//    //        result = argPosition["else"].Call(Map.Empty).Get();
+	//    //    }
+	//    //    else
+	//    //    {
+	//    //        result = Map.Empty;
+	//    //    }
+	//    //    return result;
+	//    //});
+	//    public static Map Intersect(Map arg)
+	//    {
+	//        Dictionary<Map, object> keys = new Dictionary<Map, object>();
+	//        foreach (Map map in arg.Array)
+	//        {
+	//            foreach (KeyValuePair<Map, Map> entry in map)
+	//            {
+	//                keys[entry.Key] = null;
+	//            }
+	//        }
+	//        Dictionary<Map,Map> result = new Dictionary<Map,Map>();
+	//        foreach (KeyValuePair<Map, object> entry in keys)
+	//        {
+	//            List<Map> args=arg.Array;
+	//            args.Reverse();
+	//            foreach(Map map in args)
+	//            {
+	//                if (map.ContainsKey(entry.Key))
+	//                {
+	//                    result[entry.Key] = map[entry.Key];
+	//                }
+	//                else
+	//                {
+	//                    result.Remove(entry.Key);
+	//                    break;
+	//                }
+	//            }
+	//        }
+	//        return new StrategyMap(new DictionaryStrategy(result));
+	//    }
+	//    public static Test Equal(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.Equals(map);
+	//        });
+	//    }
+	//    //public static Map Equal(Map arg)
+	//    //{
+	//    //    bool equal = true;
+	//    //    if(arg.ArrayCount>1)
+	//    //    {
+	//    //        List<Map> array = arg.Array;
+	//    //        for (int i = 0; i<arg.Count-1; i++)
+	//    //        {
+	//    //            if (!array[i].Equals(array[i + 1]))
+	//    //            {
+	//    //                equal = false;
+	//    //                break;
+	//    //            }
+	//    //        }
+	//    //    }
+	//    //    return equal;
+	//    //}
+	//    public static Map Not(Map arg)
+	//    {
+	//        return !arg.GetBoolean();
+	//    }
+	//    //public static Map Or(Map arg)
+	//    //{
+	//    //    bool or=false;
+	//    //    foreach (Map map in arg.Array)
+	//    //    {
+	//    //        if (map.GetBoolean())
+	//    //        {
+	//    //            or = true;
+	//    //            break;
+	//    //        }
+	//    //    }
+	//    //    return or;
+	//    //}
+	//    public static Map Try(Map arg)
+	//    {
+	//        Map result;
+	//        Position argument = Call.LastArgument;
+	//        try
+	//        {
+	//            result = argument.Get()["function"].Call(Map.Empty, argument).Get();
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            result = argument.Get()["catch"].Call(new ObjectMap(e), argument).Get();
+	//        }
+	//        return result;
+	//    }
+	//    public static Map Split(Map arg)
+	//    {
+	//        Map arrays = new StrategyMap();
+	//        Map subArray = new StrategyMap();
+	//        List<Map> array = arg[1].Array;
+	//        List<Map> delimiters = arg["delimiters"].Array;
+	//        for (int i = 0; i < array.Count; i++)
+	//        {
+	//            Map map = array[i];
+	//            bool equal = false;
+	//            foreach (Map delimiter in delimiters)
+	//            {
+	//                if (map.Equals(delimiter))
+	//                {
+	//                    equal = true;
+	//                    break;
+	//                }
+	//            }
+	//            if (equal || i == array.Count - 1)
+	//            {
+	//                if (i == array.Count - 1)
+	//                {
+	//                    subArray.Append(map);
+	//                }
+	//                arrays.Append(subArray);
+	//                subArray = new StrategyMap();
+	//            }
+	//            else
+	//            {
+	//                subArray.Append(map);
+	//            }
+	//        }
+	//        return arrays;
+	//    }
+	//    public static Map CreateConsole(Map arg)
+	//    {
+	//        Interpreter.AllocConsole();
+	//        return Map.Empty;
+	//    }
+	//    public static Map StrictlyIncreasing(Map arg)
+	//    {
+	//        bool increasing = true;
+	//        for (int i = 1; i < arg.ArrayCount; i++)
+	//        {
+	//            if (!(arg[i + 1].GetNumber() > arg[i].GetNumber()))
+	//            {
+	//                increasing = false;
+	//                break;
+	//            }
+	//        }
+	//        return increasing;
+	//    }
+	//    public static Map StrictlyDecreasing(Map arg)
+	//    {
+	//        bool decreasing = true;
+	//        for (int i = 1; i < arg.ArrayCount; i++)
+	//        {
+	//            if (!(arg[i + 1].GetNumber() < arg[i].GetNumber()))
+	//            {
+	//                decreasing = false;
+	//                break;
+	//            }
+	//        }
+	//        return decreasing;
+	//    }
+	//    public static Map Decreasing(Map arg)
+	//    {
+	//        bool nonincreasing = true;
+	//        for (int i = 1; i  < arg.ArrayCount;i++)
+	//        {
+	//            if (arg[i + 1].GetNumber() > arg[i].GetNumber())
+	//            {
+	//                nonincreasing = false;
+	//                break;
+	//            }
+	//        }
+	//        return nonincreasing;
+	//    }
+	//    public static Map Increasing(Map arg)
+	//    {
+	//        bool nondecreasing = true;
+	//        for (int i = 1; i < arg.ArrayCount; i++)
+	//        {
+	//            if (arg[i + 1].GetNumber() < arg[i].GetNumber())
+	//            {
+	//                nondecreasing = false;
+	//                break;
+	//            }
+	//        }
+	//        return nondecreasing;
+	//    }
+	//    public static Map And(Map arg)
+	//    {
+	//        bool and = true;
+	//        Position argument = Call.LastArgument;
+
+	//        foreach (Position callable in argument.Array)
+	//        {
+	//            Map map = callable.Call(Map.Empty).Get();
+	//            if (!map.GetBoolean())
+	//            {
+	//                and = false;
+	//                break;
+	//            }
+	//        }
+	//        return and;
+	//    }
+	//    public static Map Or(Map arg)
+	//    {
+	//        bool or = false;
+	//        Position argument = Call.LastArgument;
+	//        foreach (Position callable in argument.Array)
+	//        {
+	//            Map map = callable.Call(Map.Empty).Get();
+	//            if (map.GetBoolean())
+	//            {
+	//                or = true;
+	//                break;
+	//            }
+	//        }
+	//        return or;
+	//    }
+	//    public static Map Reciprocal(Map arg)
+	//    {
+	//        Number number = arg.GetNumber();
+	//        return new Number(number.Denominator, number.Numerator);
+	//    }
+	//    public static Test Add(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            return arg.GetNumber() + map.GetNumber();
+	//        });
+	//    }
+	//    public static string writtenText = "";
+	//    public static void WriteLine(string text)
+	//    {
+	//        Write(text + Environment.NewLine);
+	//    }
+	//    public static void Write(string text)
+	//    {
+	//        writtenText += text;
+	//        Console.Write(text);
+	//    }
+	//    public static Map Maximum(Map arg)
+	//    {
+	//        Number maximum = arg[1].GetNumber();
+	//        foreach (Map map in arg.Array)
+	//        {
+	//            Number number = map.GetNumber();
+	//            if (number > maximum)
+	//            {
+	//                maximum = number;
+	//            }
+	//        }
+	//        return new StrategyMap(maximum);
+	//    }
+	//    public static Map Opposite(Map arg)
+	//    {
+	//        return arg.GetNumber()*-1;
+	//    }
+	//    public static Map Minimum(Map arg)
+	//    {
+	//        Number minumum = arg[1].GetNumber();
+	//        foreach (Map map in arg.Array)
+	//        {
+	//            Number number = map.GetNumber();
+	//            if (number < minumum)
+	//            {
+	//                minumum = number;
+	//            }
+	//        }
+	//        return new StrategyMap(minumum);
+	//    }
+	//    public static Map Merge(Map arg,Map map)
+	//    {
+	//        //return new Test(delegate(Map map)
+	//        //{
+	//            Map result = arg.Copy();
+	//            foreach (KeyValuePair<Map, Map> pair in map)
+	//            {
+	//                result[pair.Key] = pair.Value;
+	//            }
+	//            return result;
+	//        //});
+	//    }
+	//    //public static Test Merge(Map arg)
+	//    //{
+	//    //    return new Test(delegate(Map map)
+	//    //    {
+
+	//    //        Map result = arg.Copy();
+	//    //        foreach (KeyValuePair<Map, Map> pair in map)
+	//    //        {
+	//    //            result[pair.Key] = pair.Value;
+	//    //        }
+	//    //        return result;
+	//    //    });
+	//    //}
+	//    public static Test Sort(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            List<Map> array = arg.Array;
+	//            Position argument = Call.LastArgument;
+	//            array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+	//            {
+	//                Map result = map.Call(a, argument).Call(b).Get();
+	//                return result.GetNumber().GetInt32();
+	//            }));
+	//            return new StrategyMap(array);
+	//        });
+	//    }
+	//    public static Test Join(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Map result = arg.Copy();
+	//            result.AppendRange(map);
+	//            return result;
+	//        });
+	//    }
+	//    //public static Map Join(Map arg)
+	//    //{
+	//    //    Map result = Map.Empty;
+	//    //    Number counter = 1;
+	//    //    foreach (Map map in arg.Array)
+	//    //    {
+	//    //        result.AppendRange(map);
+	//    //    }
+	//    //    return result;
+	//    //}
+	//    public static Map Range(Map arg)
+	//    {
+	//        int end = arg.GetNumber().GetInt32();
+	//        Map result = new StrategyMap();
+	//        for (int i = 1; i <= end; i++)
+	//        {
+	//            result.Append(i);
+	//        }
+	//        return result;
+	//    }
+	//    public static Map Find(Map arg)
+	//    {
+	//        Map result = new StrategyMap(new ListStrategy());
+	//        string text = arg["array"].GetString();
+	//        string value = arg["value"].GetString();
+	//        for (int i = 0; ; i++)
+	//        {
+	//            i = text.IndexOf(value, i);
+	//            if (i == -1)
+	//            {
+	//                break;
+	//            }
+	//            else
+	//            {
+	//                result.Append(i + 1);
+	//            }
+	//        }
+	//        return result;
+	//    }
+	//    public static Map Slice(Map arg)
+	//    {
+	//        Map array = arg["array"];
+	//        int start;
+	//        if (arg.ContainsKey("start"))
+	//        {
+	//            start = arg["start"].GetNumber().GetInt32();
+	//        }
+	//        else
+	//        {
+	//            start = 1;
+	//        }
+	//        int end;
+	//        if (arg.ContainsKey("end"))
+	//        {
+	//            end = arg["end"].GetNumber().GetInt32();
+	//        }
+	//        else
+	//        {
+	//            end = array.ArrayCount;
+	//        }
+	//        Map result = new StrategyMap(new ListStrategy());
+	//        for (int i = start; i <= end; i++)
+	//        {
+	//            result.Append(array[i]);
+	//        }
+	//        return result;
+	//    }
+	//    public static Map StringReplace(Map arg)
+	//    {
+	//        return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
+	//    }
+	//    public static Map UrlDecode(Map arg)
+	//    {
+	//        string[] aSplit;
+	//        string sOutput;
+	//        string sConvert = arg.GetString();
+
+	//        sOutput = sConvert.Replace("+", " ");
+	//        aSplit = sOutput.Split('%');
+	//        sOutput = aSplit[0];
+	//        for (int i = 1; i < aSplit.Length; i++)
+	//        {
+	//            sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16) + aSplit[i].Substring(2);
+	//        }
+	//        return sOutput;
+	//    }
+	//    public static Map While(Map arg)
+	//    {
+	//        Position argument = Call.LastArgument;
+	//        Map result = new StrategyMap(new ListStrategy());
+	//        while (argument["condition"].Call(Map.Empty).Get().GetBoolean())
+	//        {
+	//            result.Append(argument["function"].Call(Map.Empty).Get());
+	//        }
+	//        return result;
+	//    }
+	//    public static Test Apply(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Position argument = Call.LastArgument;
+	//            Map result = new StrategyMap(new ListStrategy());
+	//            foreach (Map m in arg.Array)
+	//            {
+	//                Position pos = map.Call(m,argument);
+	//                result.Append(pos.Get());
+	//            }
+	//            return result;
+	//        });
+	//    }
+	//    //public static Map Apply(Map arg)
+	//    //{
+	//    //    Map result = new StrategyMap(new ListStrategy());
+	//    //    Position argument = Call.LastArgument;
+	//    //    Map condition=arg.TryGetValue("condition");
+	//    //    foreach (Map map in arg["array"].Array)
+	//    //    {
+	//    //        if (condition!=null)
+	//    //        {
+	//    //            if (!condition.Call(map, argument).Get().GetBoolean())
+	//    //            {
+	//    //                break;
+	//    //            }
+	//    //        }
+	//    //        Position pos = argument["function"].Call(map);
+	//    //        result.Append(pos.Get());
+	//    //    }
+	//    //    return result;
+	//    //}
+	//    //public static Map Apply(Map arg)
+	//    //{
+	//    //    Map result = new StrategyMap(new ListStrategy());
+	//    //    Position argument = Call.lastArgument;
+	//    //    foreach (Map map in arg["array"].Array)
+	//    //    {
+	//    //        Position pos = argument["function"].Call(map);
+	//    //        result.Append(pos.Get());
+	//    //    }
+	//    //    return result;
+	//    //}
+	//    public static Map Filter(Map arg)
+	//    {
+	//        Map result = new StrategyMap(new ListStrategy());
+	//        Position argument = Call.LastArgument;
+	//        foreach (Map map in arg[1].Array)
+	//        {
+	//            if (argument.Get().Call(map, argument).Get().GetBoolean())
+	//            {
+	//                result.Append(map);
+	//            }
+	//        }
+	//        return result;
+	//    }
+	//    public static Map FindFirst(Map arg)
+	//    {
+	//        Map result = new StrategyMap(new ListStrategy());
+	//        Map array = arg["array"];
+	//        Map value = arg["value"];
+	//        for (int i = 1; i <= array.ArrayCount; i++)
+	//        {
+	//            for (int k = 1; value[k].Equals(array[i + k - 1]); k++)
+	//            {
+	//                if (k == value.ArrayCount)
+	//                {
+	//                    return i;
+	//                }
+
+	//            }
+	//        }
+	//        return 0;
+	//    }
+	//    public static Test Foreach(Map arg)
+	//    {
+	//        return new Test(delegate(Map map)
+	//        {
+	//            Map result = new StrategyMap();
+	//            Position argument = Call.LastArgument;
+	//            foreach (KeyValuePair<Map, Map> entry in arg)
+	//            {
+	//                result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
+	//                //result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
+	//            }
+	//            return result;
+	//        });
+	//    }
+	//    //public static Test Foreach(Map arg)
+	//    //{
+	//    //    return new Test(delegate(Map map)
+	//    //    {
+	//    //        Map result = new StrategyMap();
+	//    //        Position argument = Call.LastArgument;
+	//    //        foreach (KeyValuePair<Map, Map> entry in arg)
+	//    //        {
+	//    //            result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
+	//    //            //result[entry.Key] = (argument.Get().Call(new StrategyMap("key", entry.Key, "value", entry.Value), argument).Get());
+	//    //        }
+	//    //        return result;
+	//    //    });
+	//    //}
+	//}
 	public class FileMap : StrategyMap
 	{
 		private string path;
@@ -2551,7 +3379,7 @@ namespace Meta
 							break;
 						case "-parser":
 							AllocConsole();
-							new MetaTest.Parser().RunTest();
+							//new MetaTest.Parser().RunTest();
 							break;
 						default:
 							Commands.Run(args);
@@ -2994,6 +3822,18 @@ namespace Meta
 	public delegate void KeyChangedEventHandler(KeyChangedEventArgs e);
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
+		public List<Map> Values
+		{
+			get
+			{
+				List<Map> values = new List<Map>();
+				foreach (Map key in Keys)
+				{
+					values.Add(this[key]);
+				}
+				return values;
+			}
+		}
 		public override string ToString()
 		{
 			return Meta.Serialize.ValueFunction(this);
@@ -4124,6 +4964,10 @@ namespace Meta
 				return false;
 			}
 		}
+		//protected override Map CopyData()
+		//{
+		//    throw new ApplicationException("test");
+		//}
 		ParameterInfo[] parameters;
 		public override Position Call(Map argument, Position position)
 		{
@@ -4132,13 +4976,14 @@ namespace Meta
 			if (parameters.Length == 1)
 			{
 			}
-			if(argument.ContainsKey("rest"))
+			if (argument.ContainsKey("rest"))
 			{
 			}
 
 			object[] arguments = ConvertArgument(argument, out converted);
 			if (!converted)
 			{
+				//ConvertArgument(argument, out converted);
 				throw new Exception("Could not convert argument.");
 			}
 			try
@@ -4165,7 +5010,7 @@ namespace Meta
 				}
 			}
 		}
-		public object[] ConvertArgument(Map argument,out bool converted)
+		public object[] ConvertArgument(Map argument, out bool converted)
 		{
 			object[] arguments = new object[parameters.Length];
 			if (parameters.Length == 1)
@@ -4193,156 +5038,123 @@ namespace Meta
 			}
 			return arguments;
 		}
-		//public override PersistantPosition Call(Map argument, PersistantPosition position)
-		//{
-		//    currentPosition = position; // should copy this
-		//    ParameterInfo[] parameters = method.GetParameters();
-		//    object[] arguments = new object[parameters.Length];
-		//    if (parameters.Length == 1)
-		//    {
-		//        arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType);
-		//    }
-		//    else
-		//    {
-		//        for (int i = 0; i < parameters.Length; i++)
-		//        {
-		//            arguments[i] = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType);
-		//        }
-		//    }
-		//    try
-		//    {
-		//        Map result=Transform.ToMeta(
-		//            method is ConstructorInfo ?
-		//                ((ConstructorInfo)method).Invoke(arguments) :
-		//                 method.Invoke(obj, arguments));
-		//        FunctionBodyKey calls;
-		//        // this should really be a function of a position and return a new position
-		//        position.Get().AddCall(result, out calls);
-		//        //this.AddCall(result, out calls);
-		//        return new PersistantPosition(position, calls);
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        throw new ApplicationException("implementation exception: "+e.InnerException.ToString()+e.StackTrace,e.InnerException);
-		//    }
-		//}
 	}
 	public class Method : MethodImplementation
 	{
-		public override Position Call(Map argument, Position position)
+		protected override bool ContainsKeyImplementation(Map key)
 		{
-			if (Overloaded)
+			return overloads.ContainsKey(key);
+		}
+		protected override ICollection<Map> KeysImplementation
+		{
+			get 
 			{
-				MethodOverload overload=null;
-				foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
-				{
-					bool converted;
-					entry.Value.ConvertArgument(argument, out converted);
-					if (converted)
-					{
-						overload = entry.Value;
-						break;
-					}
-				}
-				if(overload==null)
-				{
-					throw new Exception("No matching overload found.");
-				}
-				else
-				{
-					return overload.Call(argument,position);
-				}
+				return overloads.Keys;
+			}
+		}
+		protected override void Set(Map key, Map val)
+		{
+			overloads[key] = val;
+		}
+		private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
+		protected override Map Get(Map key)
+		{
+			Map value;
+			overloads.TryGetValue(key,out value);
+			return value;
+		}
+		public static Map MethodData(string name, object obj, Type type)
+		{
+			Map map = new StrategyMap();
+			if (name == ".ctor" && type.Name=="Point")
+			{
+			}
+			List<MethodBase> members = new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
+			//List<MethodBase> members=new List<MemberInfo>(new type.GetMember(name, GetBindingFlags(obj, name))).ConvertAll<MethodBase>(new Converter<MemberInfo,MethodBase>);
+			members.Sort(new Comparison<MethodBase>(delegate(MethodBase a, MethodBase b)
+			{
+				return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
+			}));
+			Map result = new StrategyMap();
+			if (members.Count == 1)
+			{
+				result = new Method(members[0], obj, type);
 			}
 			else
 			{
-				return base.Call(argument, position);
-			}
-		}
-		//public override PersistantPosition Call(Map argument, PersistantPosition position)
-		//{
-		//    if (Overloaded)
-		//    {
-		//        foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
-		//        {
-		//        }
-		//        return null;
-		//    }
-		//    else
-		//    {
-		//        return base.Call(argument, position);
-		//    }
-		//}
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return overloadedMethods!=null && overloadedMethods.ContainsKey(key);
-		}
-	    private Dictionary<Map, MethodOverload> overloadedMethods;
-		// why overloads and method itself?
-	    private Method(Dictionary<Map, MethodOverload> overloadedMethods,MethodBase method,object obj,Type type):base(method,obj,type)
-	    {
-	        this.overloadedMethods = overloadedMethods;
-	    }
-		public bool Overloaded
-		{
-			get
-			{
-				return overloadedMethods != null;
-			}
-		}
-		// refactor
-		public Method(string name, object obj, Type type)
-			: base(GetSingleMethod(name, obj, type), obj, type)
-		{
-			MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
-			// refactor
-			if (methods.Length > 1)
-			{
-				this.overloadedMethods = new Dictionary<Map, MethodOverload>();
-				foreach (MethodBase method in methods)
+				foreach (MethodBase methodBase in members)
 				{
-					Map key;
-
-					ParameterInfo[] parameters = method.GetParameters();
-					if (parameters.Length == 1)
+					Map current = result;
+					ParameterInfo[] parameters = methodBase.GetParameters();
+					Map method = new Method(methodBase, obj, type);
+					if (parameters.Length == 0)
 					{
-						key = new TypeMap(parameters[0].ParameterType);
+						result = method;
 					}
 					else
 					{
-						key = new StrategyMap();
-						foreach (ParameterInfo parameter in parameters)
+						for (int i = 0; i < parameters.Length; i++)
 						{
-							key.Append(new TypeMap(parameter.ParameterType));
+							Map typeMap = new TypeMap(parameters[i].ParameterType);
+							if (i == parameters.Length - 1)
+							{
+								current[typeMap] = method;
+							}
+							else
+							{
+								if (!current.ContainsKey(typeMap))
+								{
+									current[typeMap] = new StrategyMap();
+								}
+								else
+								{
+								}
+								current = current[typeMap];
+							}
 						}
 					}
-					MethodOverload overload = new MethodOverload(method, obj, type);
-					overloadedMethods[key] = overload;
 				}
 			}
-			else
-			{
-				this.overloadedMethods = null;
-			}
+			return result;
 		}
-		public Method(Type type)
-			: this(".ctor", null, type)
+		//protected override bool ContainsKeyImplementation(Map key)
+		//{
+		//    return false;
+		//}
+		public Method(MethodBase method, object obj, Type type)
+			: this(method, obj, type,new Dictionary<Map,Map>())
 		{
 		}
-		private static MethodBase GetSingleMethod(string name, object obj, Type type)
+		public Method(MethodBase method, object obj, Type type,Dictionary<Map,Map> overloads)
+			: base(method, obj, type)
 		{
-			MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
-			if (members.Length == 1)
-			{
-				return (MethodBase)members[0];
-			}
-			else
-			{
-				return null;
-			}
+			this.overloads = new Dictionary<Map, Map>(overloads);
 		}
-		private static BindingFlags GetBindingFlags(object obj,string name)
+		//// refactor
+		//public Method(string name, object obj, Type type)
+		//    : base(GetSingleMethod(name, obj, type), obj, type)
+		//{
+
+		//}
+		//public Method(Type type)
+		//    : this(".ctor", null, type)
+		//{
+		//}
+		//private static MethodBase GetSingleMethod(string name, object obj, Type type)
+		//{
+		//    MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
+		//    if (members.Length == 1)
+		//    {
+		//        return (MethodBase)members[0];
+		//    }
+		//    else
+		//    {
+		//        return null;
+		//    }
+		//}
+		private static BindingFlags GetBindingFlags(object obj, string name)
 		{
-			if (name==".ctor" || obj != null)
+			if (name == ".ctor" || obj != null)
 			{
 				return BindingFlags.Public | BindingFlags.Instance;
 				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
@@ -4353,105 +5165,561 @@ namespace Meta
 				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 			}
 		}
-	    protected override ICollection<Map> KeysImplementation
-	    {
-	        get
-	        {
-				if (overloadedMethods != null)
-				{
-					return overloadedMethods.Keys;
-				}
-				else
-				{
-					return new List<Map>();
-				}
-	        }
-	    }
+		//protected override ICollection<Map> KeysImplementation
+		//{
+		//    get
+		//    {
+		//        //if (overloadedMethods != null)
+		//        //{
+		//        //    return overloadedMethods.Keys;
+		//        //}
+		//        //else
+		//        //{
+		//        return new List<Map>();
+		//        //}
+		//    }
+		//}
 
 		protected override Map CopyData()
 		{
-			return new Method(overloadedMethods, method, obj, type);
+			return new Method(method, obj, type,overloads);
 		}
-		protected override Map Get(Map key)
-		{
-			if (overloadedMethods == null)
-			{
-				return null;
-			}
-			else
-			{
-				MethodOverload value;
-				overloadedMethods.TryGetValue(key, out value);
-				return value;
-			}
-		}
-	    protected override void Set(Map key, Map val)
-	    {
-			throw new Exception("Method Set not implemented");
-	    }
+		//protected override Map Get(Map key)
+		//{
+		//    //if (overloadedMethods == null)
+		//    //{
+		//    return null;
+		//    //}
+		//    //else
+		//    //{
+		//    //    MethodOverload value;
+		//    //    overloadedMethods.TryGetValue(key, out value);
+		//    //    return value;
+		//    //}
+		//}
+		//protected override void Set(Map key, Map val)
+		//{
+		//    throw new Exception("Method Set not implemented");
+		//}
 	}
-	public class MethodOverload : MethodImplementation
-	{
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return false;
-		}
-		public MethodOverload(MethodBase method, object obj, Type type)
-			: base(method, obj, type)
-		{
-		}
-		// is that correct?
-	    protected override Map CopyData()
-	    {
-	        return new MethodOverload(this.method, this.obj, this.type);
-	    }
-	    protected override ICollection<Map> KeysImplementation
-	    {
-	        get
-	        {
-	            return new List<Map>();
-	        }
-	    }
-	    protected override Map Get(Map key)
-	    {
-			return null;
-	    }
-	    protected override void Set(Map key, Map val)
-	    {
-			throw new ApplicationException("Cannot set key in MethodOverload");
-	    }
-		public override bool Equals(object toCompare)
-		{
-			if (toCompare is MethodOverload)
-			{
-				MethodOverload Method = (MethodOverload)toCompare;
-				if (Method.obj == obj && Method.method.Name.Equals(method.Name) && Method.type.Equals(type))
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-	    public override int GetHashCode()
-	    {
-	        unchecked
-	        {
-	            int hash = method.Name.GetHashCode() * type.GetHashCode();
-	            if (obj != null)
-	            {
-	                hash = hash * obj.GetHashCode();
-	            }
-	            return hash;
-	        }
-	    }
-	}
+	//public class Method : MethodImplementation
+	//{
+	//    //public static Map MethodData(string name,object obj,Type type)
+	//    //{
+	//    //    Map map=new StrategyMap();
+	//    //    foreach (MethodInfo method in type.GetMember(name, GetBindingFlags(obj, name)))
+	//    //    {
+	//    //        Map current=map;
+	//    //        ParameterInfo[] parameters=method.GetParameters();
+	//    //        Map methodMap = new Method(method, obj, type);
+	//    //        if(parameters.Length==0)
+	//    //        {
+	//    //            map=
+	//    //        for(int i=0;i<parameters.Length;i++)
+	//    //        {
+	//    //            Map typeMap=new TypeMap(parameters[i].ParameterType);
+	//    //            if (!current.ContainsKey(typeMap))
+	//    //            {
+	//    //                current[typeMap] = Map.Empty;
+	//    //            }
+	//    //            current = current[typeMap];
+	//    //        }
+	//    //        current[new TypeMap(parameters[parameters.Length-1].ParameterType)]
+	//    //    }
+	//    //    return Map.Empty;
+	//    //}
+	//    public static Map MethodData(string name,object obj,Type type)
+	//    {
+	//        Map map=new StrategyMap();
+	//        List<MethodBase> members =new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
+	//        //List<MethodBase> members=new List<MemberInfo>(new type.GetMember(name, GetBindingFlags(obj, name))).ConvertAll<MethodBase>(new Converter<MemberInfo,MethodBase>);
+	//        members.Sort(new Comparison<MethodBase>(delegate(MethodBase a,MethodBase b)
+	//        {
+	//            return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
+	//        }));
+	//        Map result=new StrategyMap();
+	//        foreach (MethodBase methodBase in members)
+	//        {
+	//            Map current=result;
+	//            ParameterInfo[] parameters=methodBase.GetParameters();
+	//            Map method=new Method(methodBase,obj,type);
+	//            if(parameters.Length==0)
+	//            {
+	//                result=method;
+	//            }
+	//            else
+	//            {
+	//                for(int i=0;i<parameters.Length;i++)
+	//                {
+	//                    Map typeMap=new TypeMap(parameters[i].ParameterType);
+	//                    if(i==parameters.Length-1)
+	//                    {
+	//                        current[typeMap]=method;
+	//                    }
+	//                    else
+	//                    {
+	//                        if(!current.ContainsKey(method))
+	//                        {
+	//                            current[typeMap]=new StrategyMap();
+	//                        }
+	//                        current=current[typeMap];
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return result;
+	//    }
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return false;
+	//    }
+	//    public Method(MethodBase method, object obj, Type type)
+	//        : base(method, obj, type)
+	//    {
+	//    }
+	//    //// refactor
+	//    //public Method(string name, object obj, Type type)
+	//    //    : base(GetSingleMethod(name, obj, type), obj, type)
+	//    //{
+
+	//    //}
+	//    //public Method(Type type)
+	//    //    : this(".ctor", null, type)
+	//    //{
+	//    //}
+	//    //private static MethodBase GetSingleMethod(string name, object obj, Type type)
+	//    //{
+	//    //    MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
+	//    //    if (members.Length == 1)
+	//    //    {
+	//    //        return (MethodBase)members[0];
+	//    //    }
+	//    //    else
+	//    //    {
+	//    //        return null;
+	//    //    }
+	//    //}
+	//    private static BindingFlags GetBindingFlags(object obj, string name)
+	//    {
+	//        if (name == ".ctor" || obj != null)
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Instance;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+	//        }
+	//        else
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Static;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+	//        }
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            //if (overloadedMethods != null)
+	//            //{
+	//            //    return overloadedMethods.Keys;
+	//            //}
+	//            //else
+	//            //{
+	//            return new List<Map>();
+	//            //}
+	//        }
+	//    }
+
+	//    protected override Map CopyData()
+	//    {
+	//        return new Method(method, obj, type);
+	//    }
+	//    //protected override Map Get(Map key)
+	//    //{
+	//    //    //if (overloadedMethods == null)
+	//    //    //{
+	//    //    return null;
+	//    //    //}
+	//    //    //else
+	//    //    //{
+	//    //    //    MethodOverload value;
+	//    //    //    overloadedMethods.TryGetValue(key, out value);
+	//    //    //    return value;
+	//    //    //}
+	//    //}
+	//    //protected override void Set(Map key, Map val)
+	//    //{
+	//    //    throw new Exception("Method Set not implemented");
+	//    //}
+	//}
+	//public class Method : MethodImplementation
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return false;
+	//    }
+	//    //public override Position Call(Map argument, Position position)
+	//    //{
+	//    //    //if (Overloaded)
+	//    //    //{
+	//    //    //    MethodOverload overload = null;
+	//    //    //    foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
+	//    //    //    {
+	//    //    //        bool converted;
+	//    //    //        entry.Value.ConvertArgument(argument, out converted);
+	//    //    //        if (converted)
+	//    //    //        {
+	//    //    //            overload = entry.Value;
+	//    //    //            break;
+	//    //    //        }
+	//    //    //    }
+	//    //    //    if (overload == null)
+	//    //    //    {
+	//    //    //        throw new Exception("No matching overload found.");
+	//    //    //    }
+	//    //    //    else
+	//    //    //    {
+	//    //    //        return overload.Call(argument, position);
+	//    //    //    }
+	//    //    //}
+	//    //    //else
+	//    //    //{
+	//    //        return base.Call(argument, position);
+	//    //    //}
+	//    //}
+	//    //protected override bool ContainsKeyImplementation(Map key)
+	//    //{
+	//    //    return overloadedMethods != null && overloadedMethods.ContainsKey(key);
+	//    //}
+	//    //private Dictionary<Map, Map> overloadedMethods;
+	//    //private Dictionary<Map, MethodOverload> overloadedMethods;
+	//    // why overloads and method itself?
+	//    private Method(MethodBase method, object obj, Type type)
+	//        : base(method, obj, type)
+	//    {
+	//        //this.overloadedMethods = overloadedMethods;
+	//    }
+	//    //private Method(Dictionary<Map, MethodOverload> overloadedMethods, MethodBase method, object obj, Type type)
+	//    //    : base(method, obj, type)
+	//    //{
+	//    //    this.overloadedMethods = overloadedMethods;
+	//    //}
+	//    //public bool Overloaded
+	//    //{
+	//    //    get
+	//    //    {
+	//    //        return overloadedMethods != null;
+	//    //    }
+	//    //}
+	//    // refactor
+	//    public Method(string name, object obj, Type type)
+	//        : base(GetSingleMethod(name, obj, type), obj, type)
+	//    {
+	//        //MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
+	//        //// refactor
+	//        //if (methods.Length > 1)
+	//        //{
+	//        //    //this.overloadedMethods = new Dictionary<Map, MethodOverload>();
+	//        //    foreach (MethodBase method in methods)
+	//        //    {
+	//        //        Map key;
+
+	//        //        ParameterInfo[] parameters = method.GetParameters();
+	//        //        if (parameters.Length == 1)
+	//        //        {
+	//        //            key = new TypeMap(parameters[0].ParameterType);
+	//        //        }
+	//        //        else
+	//        //        {
+	//        //            key = new StrategyMap();
+	//        //            foreach (ParameterInfo parameter in parameters)
+	//        //            {
+	//        //                key.Append(new TypeMap(parameter.ParameterType));
+	//        //            }
+	//        //        }
+	//        //        MethodOverload overload = new MethodOverload(method, obj, type);
+	//        //        overloadedMethods[key] = overload;
+	//        //    }
+	//        //}
+	//        //else
+	//        //{
+	//        //    this.overloadedMethods = null;
+	//        //}
+	//    }
+	//    public Method(Type type)
+	//        : this(".ctor", null, type)
+	//    {
+	//    }
+	//    private static MethodBase GetSingleMethod(string name, object obj, Type type)
+	//    {
+	//        MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
+	//        if (members.Length == 1)
+	//        {
+	//            return (MethodBase)members[0];
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    private static BindingFlags GetBindingFlags(object obj, string name)
+	//    {
+	//        if (name == ".ctor" || obj != null)
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Instance;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+	//        }
+	//        else
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Static;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+	//        }
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            //if (overloadedMethods != null)
+	//            //{
+	//            //    return overloadedMethods.Keys;
+	//            //}
+	//            //else
+	//            //{
+	//                return new List<Map>();
+	//            //}
+	//        }
+	//    }
+
+	//    protected override Map CopyData()
+	//    {
+	//        return new Method( method, obj, type);
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        //if (overloadedMethods == null)
+	//        //{
+	//            return null;
+	//        //}
+	//        //else
+	//        //{
+	//        //    MethodOverload value;
+	//        //    overloadedMethods.TryGetValue(key, out value);
+	//        //    return value;
+	//        //}
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("Method Set not implemented");
+	//    }
+	//}
+	//public class Method : MethodImplementation
+	//{
+	//    public override Position Call(Map argument, Position position)
+	//    {
+	//        if (Overloaded)
+	//        {
+	//            MethodOverload overload=null;
+	//            foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
+	//            {
+	//                bool converted;
+	//                entry.Value.ConvertArgument(argument, out converted);
+	//                if (converted)
+	//                {
+	//                    overload = entry.Value;
+	//                    break;
+	//                }
+	//            }
+	//            if(overload==null)
+	//            {
+	//                throw new Exception("No matching overload found.");
+	//            }
+	//            else
+	//            {
+	//                return overload.Call(argument,position);
+	//            }
+	//        }
+	//        else
+	//        {
+	//            return base.Call(argument, position);
+	//        }
+	//    }
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return overloadedMethods!=null && overloadedMethods.ContainsKey(key);
+	//    }
+	//    private Dictionary<Map, MethodOverload> overloadedMethods;
+	//    // why overloads and method itself?
+	//    private Method(Dictionary<Map, MethodOverload> overloadedMethods,MethodBase method,object obj,Type type):base(method,obj,type)
+	//    {
+	//        this.overloadedMethods = overloadedMethods;
+	//    }
+	//    public bool Overloaded
+	//    {
+	//        get
+	//        {
+	//            return overloadedMethods != null;
+	//        }
+	//    }
+	//    // refactor
+	//    public Method(string name, object obj, Type type)
+	//        : base(GetSingleMethod(name, obj, type), obj, type)
+	//    {
+	//        MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
+	//        // refactor
+	//        if (methods.Length > 1)
+	//        {
+	//            this.overloadedMethods = new Dictionary<Map, MethodOverload>();
+	//            foreach (MethodBase method in methods)
+	//            {
+	//                Map key;
+
+	//                ParameterInfo[] parameters = method.GetParameters();
+	//                if (parameters.Length == 1)
+	//                {
+	//                    key = new TypeMap(parameters[0].ParameterType);
+	//                }
+	//                else
+	//                {
+	//                    key = new StrategyMap();
+	//                    foreach (ParameterInfo parameter in parameters)
+	//                    {
+	//                        key.Append(new TypeMap(parameter.ParameterType));
+	//                    }
+	//                }
+	//                MethodOverload overload = new MethodOverload(method, obj, type);
+	//                overloadedMethods[key] = overload;
+	//            }
+	//        }
+	//        else
+	//        {
+	//            this.overloadedMethods = null;
+	//        }
+	//    }
+	//    public Method(Type type)
+	//        : this(".ctor", null, type)
+	//    {
+	//    }
+	//    private static MethodBase GetSingleMethod(string name, object obj, Type type)
+	//    {
+	//        MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
+	//        if (members.Length == 1)
+	//        {
+	//            return (MethodBase)members[0];
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    private static BindingFlags GetBindingFlags(object obj,string name)
+	//    {
+	//        if (name==".ctor" || obj != null)
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Instance;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+	//        }
+	//        else
+	//        {
+	//            return BindingFlags.Public | BindingFlags.Static;
+	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+	//        }
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            if (overloadedMethods != null)
+	//            {
+	//                return overloadedMethods.Keys;
+	//            }
+	//            else
+	//            {
+	//                return new List<Map>();
+	//            }
+	//        }
+	//    }
+
+	//    protected override Map CopyData()
+	//    {
+	//        return new Method(overloadedMethods, method, obj, type);
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        if (overloadedMethods == null)
+	//        {
+	//            return null;
+	//        }
+	//        else
+	//        {
+	//            MethodOverload value;
+	//            overloadedMethods.TryGetValue(key, out value);
+	//            return value;
+	//        }
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("Method Set not implemented");
+	//    }
+	//}
+	//public class MethodOverload : MethodImplementation
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return false;
+	//    }
+	//    public MethodOverload(MethodBase method, object obj, Type type)
+	//        : base(method, obj, type)
+	//    {
+	//    }
+	//    // is that correct?
+	//    protected override Map CopyData()
+	//    {
+	//        return new MethodOverload(this.method, this.obj, this.type);
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            return new List<Map>();
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return null;
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new ApplicationException("Cannot set key in MethodOverload");
+	//    }
+	//    public override bool Equals(object toCompare)
+	//    {
+	//        if (toCompare is MethodOverload)
+	//        {
+	//            MethodOverload Method = (MethodOverload)toCompare;
+	//            if (Method.obj == obj && Method.method.Name.Equals(method.Name) && Method.type.Equals(type))
+	//            {
+	//                return true;
+	//            }
+	//            else
+	//            {
+	//                return false;
+	//            }
+	//        }
+	//        else
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override int GetHashCode()
+	//    {
+	//        unchecked
+	//        {
+	//            int hash = method.Name.GetHashCode() * type.GetHashCode();
+	//            if (obj != null)
+	//            {
+	//                hash = hash * obj.GetHashCode();
+	//            }
+	//            return hash;
+	//        }
+	//    }
+	//}
 	public class TypeMap: DotNetMap
 	{
 		public TypeMap(Type targetType)
@@ -4512,18 +5780,31 @@ namespace Meta
 		{
 			return new TypeMap(this.type);
 		}
-		private Method constructor;
-		private Method Constructor
+		private Map constructor;
+		private Map Constructor
 		{
 			get
 			{
 				if (constructor == null)
 				{
-					constructor = new Method(type);
+					constructor = Method.MethodData(".ctor",obj,type);
+					//constructor = new Method(type);
 				}
 				return constructor;
 			}
 		}
+		//private Method Constructor
+		//{
+		//    get
+		//    {
+		//        if (constructor == null)
+		//        {
+		//            constructor = new Method(type);
+		//            //constructor = new Method(type);
+		//        }
+		//        return constructor;
+		//    }
+		//}
 		public override Position Call(Map argument, Position position)
 		{
 			return Constructor.Call(argument, position);
@@ -4535,7 +5816,8 @@ namespace Meta
 		{
 			if (this.type.IsSubclassOf(typeof(Delegate)))
 			{
-				return new Method("Invoke", this.obj, this.type).Call(arg, position);
+				return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
+				//return new Method("Invoke", this.obj, this.type).Call(arg, position);
 			}
 			else
 			{
@@ -5488,56 +6770,20 @@ namespace Meta
 			get
 			{
 				throw new Exception("not implemented");
-				//List<Map> keys = new List<Map>();
-				//if (property.GetGetMethod() != null)
-				//{
-				//    keys.Add(DotNetKeys.Get);
-				//}
-				//if (property.GetSetMethod() != null)
-				//{
-				//    keys.Add(DotNetKeys.Set);
-				//}
-				//return keys;
 			}
 		}
-		//private Method get;
-		//private Method set;
 		protected override Map Get(Map key)
 		{
 			return Transform.ToMeta(property.GetValue(obj,new object[] {Transform.ToDotNet(key,parameters[0].ParameterType)}));
-			//return null;
-			//this.property.GetValue(
-			//if (key.Equals(DotNetKeys.Get))
-			//{
-			//    if (get == null)
-			//    {
-			//        get = new Method(property.GetGetMethod().Name, obj, type);
-			//    }
-			//    return get;
-			//}
-			//else if (key.Equals(DotNetKeys.Set))
-			//{
-			//    if (set == null)
-			//    {
-			//        set = new Method(property.GetSetMethod().Name, obj, type);
-			//    }
-			//    return set;
-			//}
-			//else
-			//{
-			//    return null;
-			//}
 		}
 		protected override void Set(Map key, Map val)
 		{
 			property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
 			int asdf = 0;
-			//throw new ApplicationException("Cannot assign in property.");
 		}
 		protected override Map CopyData()
 		{
 			return new IndexedProperty(property, obj, type);
-			//return new Property(property, obj, type);
 		}
 	}
 
@@ -5581,7 +6827,8 @@ namespace Meta
 					Map result;
 					if (member is MethodBase)
 					{
-						result=new Method(memberName, obj, type);
+						result = Method.MethodData(memberName, obj, type);
+						//result = new Method(memberName, obj, type);
 					}
 					else if (member is PropertyInfo)
 					{
@@ -5673,7 +6920,8 @@ namespace Meta
 				else if (member is EventInfo)
 				{
 					EventInfo eventInfo = (EventInfo)member;
-				    new Method(eventInfo.GetAddMethod().Name, obj, type).Call(value,MethodImplementation.currentPosition);
+					new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
+					//new Method(eventInfo.GetAddMethod().Name, obj, type).Call(value, MethodImplementation.currentPosition);
 				}
 				else
 				{
@@ -6725,6 +7973,7 @@ namespace Meta
 							Dedentation).Match(parser, out matched);
 						if (matched)
 						{
+							//map = Library.Merge(map,Entry.Match(parser, out matched));
 							map = Library.Merge(map)(Entry.Match(parser, out matched));
 
 							//map = Library.Merge(new StrategyMap(
@@ -7160,6 +8409,7 @@ namespace Meta
 		{
 			public override void Execute(Parser parser, Map map, ref Map result)
 			{
+				//result = Library.Merge(result,map);
 				result = Library.Merge(result)(map);
 				//result = Library.Merge(new StrategyMap(1, result, 2, map));
 			}
@@ -8158,14 +9408,14 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 			//    }
 			//}
-			public class Parser : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-				}
-			}
+			//public class Parser : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+			//    }
+			//}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -8183,22 +9433,22 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			//public class Extents : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
-			//    }
-			//}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}
+			public class Extents : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
+				}
+			}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
 
 
 

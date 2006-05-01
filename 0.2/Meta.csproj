@@ -131,7 +131,6 @@
     <None Include="Library\filter.meta" />
     <None Include="Library\find.meta" />
     <None Include="Library\findFirst.meta" />
-    <None Include="Library\first.meta" />
     <None Include="Library\foreach.meta" />
     <None Include="Library\greater.meta" />
     <None Include="Library\hasKey.meta" />

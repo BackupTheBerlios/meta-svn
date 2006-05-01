@@ -1632,37 +1632,26 @@ function
 										literal "OverloadedMethod"
 								[3] 
 									lookup 
-										program 
+										select 
 											[1] 
-												key 
-													[1] 
-														lookup 
-															literal 1
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "Meta"
-														[3] 
-															lookup 
-																literal "MemberTest"
+												root 0
 											[2] 
-												key 
-													[1] 
-														lookup 
-															literal 2
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "mscorlib"
-														[3] 
-															lookup 
-																literal "Int32"
+												lookup 
+													literal "Meta"
+											[3] 
+												lookup 
+													literal "MemberTest"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "Int32"
 						[2] 
 							program 
 								[1] 
@@ -1699,37 +1688,26 @@ function
 										literal "OverloadedMethod"
 								[3] 
 									lookup 
-										program 
+										select 
 											[1] 
-												key 
-													[1] 
-														lookup 
-															literal 1
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "Meta"
-														[3] 
-															lookup 
-																literal "MemberTest"
+												root 0
 											[2] 
-												key 
-													[1] 
-														lookup 
-															literal 2
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "mscorlib"
-														[3] 
-															lookup 
-																literal "Int32"
+												lookup 
+													literal "Meta"
+											[3] 
+												lookup 
+													literal "MemberTest"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "Int32"
 						[2] 
 							program 
 								[1] 
@@ -2759,37 +2737,26 @@ function
 										literal "Font"
 								[4] 
 									lookup 
-										program 
+										select 
 											[1] 
-												key 
-													[1] 
-														lookup 
-															literal 1
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "mscorlib"
-														[3] 
-															lookup 
-																literal "String"
+												root 0
 											[2] 
-												key 
-													[1] 
-														lookup 
-															literal 2
-												value 
-													select 
-														[1] 
-															root 0
-														[2] 
-															lookup 
-																literal "mscorlib"
-														[3] 
-															lookup 
-																literal "Single"
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "String"
+								[5] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "Single"
 						[2] 
 							program 
 								[1] 
@@ -2897,9 +2864,6 @@ function
 								[3] 
 									lookup 
 										literal "ArrayList"
-								[4] 
-									lookup 
-										literal 0
 						[2] 
 							literal 0
 			[147] 
@@ -3048,6 +3012,28 @@ function
 								[2] 
 									lookup 
 										literal "Point"
+								[3] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "Int32"
+								[4] 
+									lookup 
+										select 
+											[1] 
+												root 0
+											[2] 
+												lookup 
+													literal "mscorlib"
+											[3] 
+												lookup 
+													literal "Int32"
 						[2] 
 							program 
 								[1] 
@@ -3613,33 +3599,22 @@ function
 										literal "CreateInstance"
 								[4] 
 									lookup 
-										program 
+										select 
 											[1] 
-												key 
-													[1] 
-														lookup 
-															literal 1
-												value 
-													select 
-														[1] 
-															search 
-																literal "mscorlib"
-														[2] 
-															lookup 
-																literal "Type"
+												search 
+													literal "mscorlib"
 											[2] 
-												key 
-													[1] 
-														lookup 
-															literal 2
-												value 
-													select 
-														[1] 
-															search 
-																literal "mscorlib"
-														[2] 
-															lookup 
-																literal "Int32"
+												lookup 
+													literal "Type"
+								[5] 
+									lookup 
+										select 
+											[1] 
+												search 
+													literal "mscorlib"
+											[2] 
+												lookup 
+													literal "Int32"
 						[2] 
 							program 
 								[1] 

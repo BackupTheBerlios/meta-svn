@@ -199,16 +199,10 @@ commandLine|
 	memberTest MemberTest 0
 	stringOverload MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
 	integerOverload MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
-	memberTestOverload MemberTest.OverloadedMethod.[
-		. /.Meta.MemberTest
-		. /.mscorlib.Int32
-	]
+	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32]
 		. memberTest
 		. 3247
-	memberTestOverload MemberTest.OverloadedMethod.[
-		. /.Meta.MemberTest
-		. /.mscorlib.Int32
-	]
+	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32]
 		. memberTest
 		. 3247
 	MemberTest.classField "a"
@@ -306,10 +300,7 @@ commandLine|
 		|
 			x "hello"
 	emptyFunctionResult emptyFunction 0
-	font /.["System.Drawing"].Font.[
-		. /.mscorlib.String
-		. /.mscorlib.Single
-	]
+	font /.["System.Drawing"].Font.[/.mscorlib.String].[/.mscorlib.Single]
 		. "Courier New"		
 		. 10
 	decimalTest 5
@@ -323,7 +314,7 @@ commandLine|
 			hello world!
 			hello!
 		"
-	arrayList /.mscorlib.ArrayList.[0] 0
+	arrayList /.mscorlib.ArrayList 0
 	. arrayList.Add "hello"
 	arrayListResult arrayList.Item.[0]
 	textBox /.["System.Windows.Forms"].TextBox 0
@@ -337,7 +328,7 @@ commandLine|
 	lines textBox.Lines
 	alleMeineText lines.GetValue.[/.mscorlib.Int32] 1
 	form /.["System.Windows.Forms"].Form 0
-	form.Location ["System.Drawing"].Point
+	form.Location ["System.Drawing"].Point.[/.mscorlib.Int32].[/.mscorlib.Int32]
 		. 5
 		. 1000
 	automaticConversionTest form.Location
@@ -391,10 +382,7 @@ commandLine|
 	"
 	$["System.Windows.Forms"].Application.VisualStyleState ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
 	enumTest ["System.Windows.Forms"].Application.VisualStyleState
-	typeTest mscorlib.Array.CreateInstance.[
-		. mscorlib.Type
-		. mscorlib.Int32
-	]
+	typeTest mscorlib.Array.CreateInstance.[mscorlib.Type].[mscorlib.Int32]
 		. mscorlib.String
 		. 5
 	123hello "asdf"

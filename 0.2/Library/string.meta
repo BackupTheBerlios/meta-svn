@@ -7,11 +7,11 @@ trim
 lower
 	string|
 		object /.Meta.ObjectMap.[/.mscorlib.String] string
-		: object.ToLower.[0] 0
+		: object.ToLower 0
 upper
 	string|
 		object /.Meta.ObjectMap.[/.mscorlib.String] string
-		: object.ToUpper.[0] 0
+		: object.ToUpper 0
 split
 	arg|/.Meta.Library.SplitString arg
 compare
