@@ -1541,13 +1541,17 @@ namespace Meta
 			}
 			return new StrategyMap(new DictionaryStrategy(result));
 		}
-		public static Test Equal(Map arg)
+		public static Map Equal(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.Equals(map);
-			});
+			return arg.Equals(map);
 		}
+		//public static Test Equal(Map arg)
+		//{
+		//    return new Test(delegate(Map map)
+		//    {
+		//        return arg.Equals(map);
+		//    });
+		//}
 		//public static Map Equal(Map arg)
 		//{
 		//    bool equal = true;
@@ -1723,13 +1727,17 @@ namespace Meta
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
 		}
-		public static Test Add(Map arg)
+		public static Map Add(Map arg,Map map)
 		{
-			return new Test(delegate(Map map)
-			{
-				return arg.GetNumber() + map.GetNumber();
-			});
+			return arg.GetNumber() + map.GetNumber();
 		}
+		//public static Test Add(Map arg)
+		//{
+		//    return new Test(delegate(Map map)
+		//    {
+		//        return arg.GetNumber() + map.GetNumber();
+		//    });
+		//}
 		public static string writtenText = "";
 		public static void WriteLine(string text)
 		{
@@ -1770,31 +1778,29 @@ namespace Meta
 			}
 			return new StrategyMap(minumum);
 		}
-		//public static Map Merge(Map arg, Map map)
-		//{
-		//    //return new Test(delegate(Map map)
-		//    //{
-		//    Map result = arg.Copy();
-		//    foreach (KeyValuePair<Map, Map> pair in map)
-		//    {
-		//        result[pair.Key] = pair.Value;
-		//    }
-		//    return result;
-		//    //});
-		//}
-		public static Test Merge(Map arg)
+		public static Map Merge(Map arg, Map map)
 		{
-			return new Test(delegate(Map map)
+			Map result = arg.Copy();
+			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-
-				Map result = arg.Copy();
-				foreach (KeyValuePair<Map, Map> pair in map)
-				{
-					result[pair.Key] = pair.Value;
-				}
-				return result;
-			});
+				result[pair.Key] = pair.Value;
+			}
+			return result;
 		}
+
+		//public static Test Merge(Map arg)
+		//{
+		//    return new Test(delegate(Map map)
+		//    {
+
+		//        Map result = arg.Copy();
+		//        foreach (KeyValuePair<Map, Map> pair in map)
+		//        {
+		//            result[pair.Key] = pair.Value;
+		//        }
+		//        return result;
+		//    });
+		//}
 		public static Test Sort(Map arg)
 		{
 			return new Test(delegate(Map map)
@@ -4932,6 +4938,16 @@ namespace Meta
 			}
 		}
 	}
+	//public class SlowCall : Map
+	//{
+	//    private CallDelegate call;
+	//    public SlowCall(CallDelegate call)
+	//    {
+	//        this.call = call;
+	//    }
+	//}
+	public delegate Map CallDelegate(Map argument);
+
 	public abstract class MethodImplementation:Map
 	{
 		// this should actually be a stack
@@ -4964,28 +4980,59 @@ namespace Meta
 				return false;
 			}
 		}
-		//protected override Map CopyData()
-		//{
-		//    throw new ApplicationException("test");
-		//}
 		ParameterInfo[] parameters;
 		public override Position Call(Map argument, Position position)
 		{
+			//bool converted;
+			//object[] arguments = ConvertArgument(argument, out converted);
+			//if (!converted)
+			//{
+			//    //ConvertArgument(argument, out converted);
+			//    throw new Exception("Could not convert argument.");
+			//}
+			return DecideCall(argument, new List<object>(), position);
+
+		}
+
+		private Position DecideCall(Map argument, List<object> arguments, Position position)
+		{
+			if(parameters.Length==0)
+			{
+				return Invoke(argument, arguments.ToArray(), position);
+			}
+			else
+			{
+				bool converted;
+				//object[] arguments = ConvertArgument(argument, out converted);
+				object arg=Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
+				if (!converted)
+				{
+					throw new Exception("Could not convert argument.");
+				}
+				else
+				{
+					arguments.Add( arg);
+				}
+				if (arguments.Count == parameters.Length)
+				{
+					return Invoke(argument, arguments.ToArray(), position);
+				}
+				else
+				{
+					return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
+					{
+						//bool c;
+						//Map arg=Transform.ToDotNet(argument, parameters[0].ParameterType, out converted);
+						return DecideCall(map, arguments, position).Get();
+					})));
+				}
+			}
+		}
+
+		private Position Invoke(Map argument,object[] arguments, Position position)
+		{
 			currentPosition = position;
 			bool converted;
-			if (parameters.Length == 1)
-			{
-			}
-			if (argument.ContainsKey("rest"))
-			{
-			}
-
-			object[] arguments = ConvertArgument(argument, out converted);
-			if (!converted)
-			{
-				//ConvertArgument(argument, out converted);
-				throw new Exception("Could not convert argument.");
-			}
 			try
 			{
 				Map result = Transform.ToMeta(
@@ -5010,6 +5057,82 @@ namespace Meta
 				}
 			}
 		}
+		//public override Position Call(Map argument, Position position)
+		//{
+		//    currentPosition = position;
+		//    bool converted;
+			
+		//    object[] arguments = ConvertArgument(argument, out converted);
+		//    if (!converted)
+		//    {
+		//        //ConvertArgument(argument, out converted);
+		//        throw new Exception("Could not convert argument.");
+		//    }
+		//    try
+		//    {
+		//        Map result = Transform.ToMeta(
+		//            method is ConstructorInfo ?
+		//                ((ConstructorInfo)method).Invoke(arguments) :
+		//                 method.Invoke(obj, arguments));
+		//        //FunctionBodyKey calls;
+		//        return position.AddCall(result);
+		//        //position.AddCall(result, out calls);
+		//        //position.Get().AddCall(result, out calls);
+		//        //return new Position(position, calls);
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        if (e.InnerException != null)
+		//        {
+		//            throw e.InnerException;
+		//        }
+		//        else
+		//        {
+		//            throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+		//        }
+		//    }
+		//}
+		//public override Position Call(Map argument, Position position)
+		//{
+		//    currentPosition = position;
+		//    bool converted;
+		//    if (parameters.Length == 1)
+		//    {
+		//    }
+		//    if (argument.ContainsKey("rest"))
+		//    {
+		//    }
+
+		//    object[] arguments = ConvertArgument(argument, out converted);
+		//    if (!converted)
+		//    {
+		//        //ConvertArgument(argument, out converted);
+		//        throw new Exception("Could not convert argument.");
+		//    }
+		//    try
+		//    {
+		//        Map result = Transform.ToMeta(
+		//            method is ConstructorInfo ?
+		//                ((ConstructorInfo)method).Invoke(arguments) :
+		//                 method.Invoke(obj, arguments));
+		//        //FunctionBodyKey calls;
+		//        return position.AddCall(result);
+		//        //position.AddCall(result, out calls);
+		//        //position.Get().AddCall(result, out calls);
+		//        //return new Position(position, calls);
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        if (e.InnerException != null)
+		//        {
+		//            throw e.InnerException;
+		//        }
+		//        else
+		//        {
+		//            throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+		//        }
+		//    }
+		//}
 		public object[] ConvertArgument(Map argument, out bool converted)
 		{
 			object[] arguments = new object[parameters.Length];
@@ -5039,6 +5162,7 @@ namespace Meta
 			return arguments;
 		}
 	}
+	public delegate Position Partial(Map argument);
 	public class Method : MethodImplementation
 	{
 		protected override bool ContainsKeyImplementation(Map key)
@@ -5076,12 +5200,12 @@ namespace Meta
 				return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
 			}));
 			Map result = new StrategyMap();
-			if (members.Count == 1)
-			{
-				result = new Method(members[0], obj, type);
-			}
-			else
-			{
+			//if (members.Count == 1)
+			//{
+			//    result = new Method(members[0], obj, type);
+			//}
+			//else
+			//{
 				foreach (MethodBase methodBase in members)
 				{
 					Map current = result;
@@ -5114,7 +5238,7 @@ namespace Meta
 						}
 					}
 				}
-			}
+			//}
 			return result;
 		}
 		//protected override bool ContainsKeyImplementation(Map key)
@@ -5732,6 +5856,9 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
+			if (this.type.Name == "PositionalNoConversion")
+			{
+			}
 			if (type.IsGenericTypeDefinition)
 			{
 				List<Type> types=new List<Type>();
@@ -5816,7 +5943,11 @@ namespace Meta
 		{
 			if (this.type.IsSubclassOf(typeof(Delegate)))
 			{
-				return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
+				//type.GetMethod("Invoke",type).Invoke(obj,ar
+				return new Method(type.GetMethod("Invoke"), this.obj, this.type).Call(arg, position);
+				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
+				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
+				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
 				//return new Method("Invoke", this.obj, this.type).Call(arg, position);
 			}
 			else
@@ -7973,8 +8104,8 @@ namespace Meta
 							Dedentation).Match(parser, out matched);
 						if (matched)
 						{
-							//map = Library.Merge(map,Entry.Match(parser, out matched));
-							map = Library.Merge(map)(Entry.Match(parser, out matched));
+							map = Library.Merge(map, Entry.Match(parser, out matched));
+							//map = Library.Merge(map)(Entry.Match(parser, out matched));
 
 							//map = Library.Merge(new StrategyMap(
 							//    1, map,
@@ -8409,8 +8540,8 @@ namespace Meta
 		{
 			public override void Execute(Parser parser, Map map, ref Map result)
 			{
-				//result = Library.Merge(result,map);
-				result = Library.Merge(result)(map);
+				result = Library.Merge(result, map);
+				//result = Library.Merge(result)(map);
 				//result = Library.Merge(new StrategyMap(1, result, 2, map));
 			}
 		}

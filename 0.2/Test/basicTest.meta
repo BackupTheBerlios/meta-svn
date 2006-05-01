@@ -199,12 +199,8 @@ commandLine|
 	memberTest MemberTest 0
 	stringOverload MemberTest.OverloadedMethod.[/.mscorlib.String] "hello"
 	integerOverload MemberTest.OverloadedMethod.[/.mscorlib.Int32] 5
-	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32]
-		. memberTest
-		. 3247
-	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32]
-		. memberTest
-		. 3247
+	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32] memberTest 3247
+	memberTestOverload MemberTest.OverloadedMethod.[/.Meta.MemberTest].[/.mscorlib.Int32] memberTest 3247
 	MemberTest.classField "a"
 	memberTest.instanceField "b"
 	MemberTest.ClassProperty memberTest.InstanceProperty
@@ -212,18 +208,12 @@ commandLine|
 	memberTest.InstanceProperty MemberTest.ClassProperty
 	instancePropertyValue memberTest.InstanceProperty
 	interceptedSymbol "/hello/"
-	positionalNoConversion /.Meta.PositionalNoConversion
-		. "m"
-		. "n"
-		. "o"
-	positionalNoConversionConcatenated positionalNoConversion.Concatenate
-		. "r"
-		. "s"
-		. "t"
-	namedNoConversion /.Meta.NamedNoConversion
+	positionalNoConversion /.Meta.PositionalNoConversion.[mscorlib.String].[mscorlib.String].[mscorlib.String] "m" "n" "o"
+	positionalNoConversionConcatenated positionalNoConversion.Concatenate.[mscorlib.String].[mscorlib.String].[mscorlib.String] "r" "s" "t"
+	namedNoConversion /.Meta.NamedNoConversion.[/.Meta.Map]
 		. "m"
 		y "n"
-	namedNoConversionConcatenated namedNoConversion.Concatenate
+	namedNoConversionConcatenated namedNoConversion.Concatenate.[/.Meta.Map]
 		c "t"
 		. "r"
 	indexerNoConversion /.Meta.IndexerNoConversion 0
@@ -267,16 +257,16 @@ commandLine|
 		arg|
 			. ChangeStaticEvent 1
 			: arg.[1]
-	. TestClass.TakeDelegate
+	. TestClass.TakeDelegate.[/.Meta.TestClass.TestDelegate]
 		arg|arg.[1]
 	resultFromDelegate TestClass.GetResultFromDelegate 0
-	staticEventResult TestClass.CallStaticEvent testClass
+	staticEventResult TestClass.CallStaticEvent.[mscorlib.Object] testClass
 	instanceEventChanged 0
 	testClass.instanceEvent
 		arg|
 			$instanceEventChanged 1
 			: arg.[1]
-	instanceEventResult testClass.CallInstanceEvent 5
+	instanceEventResult testClass.CallInstanceEvent.[mscorlib.Object] 5
 	one 1
 	two 2
 	firstIf "unchanged"
@@ -300,9 +290,7 @@ commandLine|
 		|
 			x "hello"
 	emptyFunctionResult emptyFunction 0
-	font /.["System.Drawing"].Font.[/.mscorlib.String].[/.mscorlib.Single]
-		. "Courier New"		
-		. 10
+	font /.["System.Drawing"].Font.[/.mscorlib.String].[/.mscorlib.Single] "Courier New" 10
 	decimalTest 5
 	fractionTest 40
 	stringTest "hello"		
@@ -315,7 +303,7 @@ commandLine|
 			hello!
 		"
 	arrayList /.mscorlib.ArrayList 0
-	. arrayList.Add "hello"
+	. arrayList.Add.[mscorlib.Object] "hello"
 	arrayListResult arrayList.Item.[0]
 	textBox /.["System.Windows.Forms"].TextBox 0
 	textBox.Text "
@@ -328,9 +316,7 @@ commandLine|
 	lines textBox.Lines
 	alleMeineText lines.GetValue.[/.mscorlib.Int32] 1
 	form /.["System.Windows.Forms"].Form 0
-	form.Location ["System.Drawing"].Point.[/.mscorlib.Int32].[/.mscorlib.Int32]
-		. 5
-		. 1000
+	form.Location ["System.Drawing"].Point.[/.mscorlib.Int32].[/.mscorlib.Int32] 5 1000
 	automaticConversionTest form.Location
 	tabText "			hello"
 	escapedText "'#'n'''t"
@@ -382,9 +368,7 @@ commandLine|
 	"
 	$["System.Windows.Forms"].Application.VisualStyleState ["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
 	enumTest ["System.Windows.Forms"].Application.VisualStyleState
-	typeTest mscorlib.Array.CreateInstance.[mscorlib.Type].[mscorlib.Int32]
-		. mscorlib.String
-		. 5
+	typeTest mscorlib.Array.CreateInstance.[mscorlib.Type].[mscorlib.Int32] mscorlib.String 5
 	123hello "asdf"
 	copySourceData
 		x "y"

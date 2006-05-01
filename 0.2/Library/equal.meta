@@ -1,2 +1,2 @@
 documentation "Determines whether maps are identical."
-argument|/.Meta.Library.Equal argument
+argument|/.Meta.Library.Equal.[/.Meta.Map].[/.Meta.Map] argument

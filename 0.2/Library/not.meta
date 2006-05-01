@@ -1,2 +1,2 @@
 documentation "Negates a boolean."
-argument|/.Meta.Library.Not argument
+argument|/.Meta.Library.Not.[/.Meta.Map] argument
