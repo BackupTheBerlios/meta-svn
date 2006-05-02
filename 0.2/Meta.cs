@@ -308,26 +308,6 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
-		//protected override Position EvaluateImplementation(Position current)
-		//{
-		//    try
-		//    {
-		//        argument.IsCall = true;
-		//        Position arg = argument.Evaluate(current);
-		//        lastArgument = arg;
-		//        return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-		//    }
-		//    catch (MetaException e)
-		//    {
-		//        e.InvocationList.Add(current);
-		//        //e.InvocationList.Add(this.code.Extent);
-		//        throw e;
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        throw new MetaException(e.ToString(), this.code.Extent);
-		//    }
-		//}
 	}
 	//public class Call : Expression
 	//{
@@ -1229,21 +1209,10 @@ namespace Meta
 		{
 			return arg.Array.Contains(map);
 		}
-		//public static Map Contains(Map arg)
-		//{
-		//    return arg["array"].Array.Contains(arg["value"]);
-		//}
 		public static Map HasKey(Map arg,Map map)
 		{
 			return arg.ContainsKey(map);
 		}
-		//public static Map HasKey(Map arg)
-		//{
-		//    if (arg["key"].Equals(new StrategyMap("result")))
-		//    {
-		//    }
-		//    return arg["map"].ContainsKey(arg["key"]);
-		//}
 		public static Map ShowGtk(Map arg)
 		{
 			Gtk.Application.Init();
@@ -1264,10 +1233,6 @@ namespace Meta
 		{
 			return arg.GetString().CompareTo(map.GetString());
 		}
-		//public static Map CompareString(Map arg)
-		//{
-		//    return arg[1].GetString().CompareTo(arg[2].GetString());
-		//}
 		public static Map SplitString(Map arg,Map map)
 		{
 			char[] delimiters = (char[])Transform.ToDotNet(map, typeof(char[]));
@@ -1279,17 +1244,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map SplitString(Map arg)
-		//{
-		//    char[] delimiters = (char[])Transform.ToDotNet(arg["delimiters"], typeof(char[]));
-		//    string[] split = arg["text"].GetString().Split(delimiters);
-		//    Map result = new StrategyMap(new ListStrategy(split.Length));
-		//    foreach (string text in split)
-		//    {
-		//        result.Append(text);
-		//    }
-		//    return result;
-		//}
 		public static Map Invert(Map arg)
 		{
 			Map result = new StrategyMap();
@@ -1351,12 +1305,10 @@ namespace Meta
 			list.Reverse();
 			return new StrategyMap(list);
 		}
-		//public delegate Map Test(Map arg);
 		public static Map If(Map arg,Map map)
 		{
 			if (arg.GetBoolean())
 			{
-					//Position pos=MethodImplementation.currentPosition
 					if (Call.LastArgument.Get().ContainsKey("then"))
 					{
 						return Call.LastArgument["then"].Call(Map.Empty).Get();
@@ -1380,69 +1332,6 @@ namespace Meta
 					return result;
 			}
 		}
-
-
-		//public static Test If(Map arg)
-		//{
-		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-		//    //Map result;
-		//    if (arg.GetBoolean())
-		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            //Position pos=MethodImplementation.currentPosition
-		//            Map result = Call.LastArgument.Call(Map.Empty).Get();
-		//            return result;
-		//        });
-		//    }
-		//    else
-		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            Map result;
-		//            if (Call.LastArgument.Get().ContainsKey("else"))
-		//            {
-		//                result = Call.LastArgument["else"].Call(Map.Empty).Get();
-		//            }
-		//            else
-		//            {
-		//                result = Map.Empty;
-		//            }
-		//            return result;
-		//        });
-		//    }
-		//}
-
-		//public static Test If (Map arg)
-		//{
-		//    //Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-		//    //Map result;
-		//    if (arg.GetBoolean())
-		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            //Position pos=MethodImplementation.currentPosition
-		//            Map result = Call.LastArgument["then"].Call(Map.Empty).Get();
-		//            return result;
-		//        });
-		//    }
-		//    else
-		//    {
-		//        return new Test(delegate(Map a)
-		//        {
-		//            Map result;
-		//            if (Call.LastArgument.Get().ContainsKey("else"))
-		//            {
-		//                result = Call.LastArgument["else"].Call(Map.Empty).Get();
-		//            }
-		//            else
-		//            {
-		//                result = Map.Empty;
-		//            }
-		//            return result;
-		//        });
-		//    }
-		//}
 		public static Map Greater(Map arg,Map map)
 		{
 				return arg.GetNumber() > map.GetNumber();
@@ -1451,24 +1340,6 @@ namespace Meta
 		{
 			return arg.GetNumber() < map.GetNumber();
 		}
-		//public static Test If = new Test(delegate(Map arg)
-		//{
-		//    Position argPosition = MethodImplementation.currentPosition.AddCall(arg);
-		//    Map result;
-		//    if (arg["condition"].GetBoolean())
-		//    {
-		//        result = argPosition["then"].Call(Map.Empty).Get();
-		//    }
-		//    else if (arg.ContainsKey("else"))
-		//    {
-		//        result = argPosition["else"].Call(Map.Empty).Get();
-		//    }
-		//    else
-		//    {
-		//        result = Map.Empty;
-		//    }
-		//    return result;
-		//});
 		public static Map Intersect(Map arg)
 		{
 			Dictionary<Map, object> keys = new Dictionary<Map, object>();
@@ -1503,47 +1374,10 @@ namespace Meta
 		{
 			return arg.Equals(map);
 		}
-		//public static Test Equal(Map arg)
-		//{
-		//    return new Test(delegate(Map map)
-		//    {
-		//        return arg.Equals(map);
-		//    });
-		//}
-		//public static Map Equal(Map arg)
-		//{
-		//    bool equal = true;
-		//    if(arg.ArrayCount>1)
-		//    {
-		//        List<Map> array = arg.Array;
-		//        for (int i = 0; i<arg.Count-1; i++)
-		//        {
-		//            if (!array[i].Equals(array[i + 1]))
-		//            {
-		//                equal = false;
-		//                break;
-		//            }
-		//        }
-		//    }
-		//    return equal;
-		//}
 		public static Map Not(Map arg)
 		{
 			return !arg.GetBoolean();
 		}
-		//public static Map Or(Map arg)
-		//{
-		//    bool or=false;
-		//    foreach (Map map in arg.Array)
-		//    {
-		//        if (map.GetBoolean())
-		//        {
-		//            or = true;
-		//            break;
-		//        }
-		//    }
-		//    return or;
-		//}
 		public static Map Try(Map arg)
 		{
 			Map result;
@@ -1883,36 +1717,6 @@ namespace Meta
 				}
 				return result;
 		}
-		//public static Map Apply(Map arg)
-		//{
-		//    Map result = new StrategyMap(new ListStrategy());
-		//    Position argument = Call.LastArgument;
-		//    Map condition=arg.TryGetValue("condition");
-		//    foreach (Map map in arg["array"].Array)
-		//    {
-		//        if (condition!=null)
-		//        {
-		//            if (!condition.Call(map, argument).Get().GetBoolean())
-		//            {
-		//                break;
-		//            }
-		//        }
-		//        Position pos = argument["function"].Call(map);
-		//        result.Append(pos.Get());
-		//    }
-		//    return result;
-		//}
-		//public static Map Apply(Map arg)
-		//{
-		//    Map result = new StrategyMap(new ListStrategy());
-		//    Position argument = Call.lastArgument;
-		//    foreach (Map map in arg["array"].Array)
-		//    {
-		//        Position pos = argument["function"].Call(map);
-		//        result.Append(pos.Get());
-		//    }
-		//    return result;
-		//}
 		public static Map Filter(Map arg)
 		{
 			Map result = new StrategyMap(new ListStrategy());
@@ -2658,6 +2462,7 @@ namespace Meta
 		{
 			AllocConsole();
 			useConsole = true;
+			Console.SetBufferSize(80, 1000);
 		}
 		public static string InstallationPath
 		{
@@ -8655,14 +8460,14 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\profile.meta", Map.Empty);
 			//    }
 			//}
-			//public class Parser : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Run(@"C:\Meta\0.2\parser.meta", "1095423");
-			//    }
-			//}
+			public class Parser : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Run(@"C:\Meta\0.2\parser.meta", "1095423");
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)

@@ -111,7 +111,6 @@
   <ItemGroup>
     <None Include="Copy of ide.meta" />
     <None Include="Library\sum.meta" />
-    <None Include="parser2.meta" />
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />

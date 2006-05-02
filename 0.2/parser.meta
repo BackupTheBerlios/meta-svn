@@ -35,33 +35,32 @@ parser|
 			result|baseRule
 				condition condition
 				result result
-	matchChar
+	charRule
 		compare|
 			mod|(rule
 				parser|if (and
 					.
-						|not (null parser.text)
+						|not (equal 0 parser.text)
 					. 
-						|compare
-							char parser.text.[1]
-							mod mod)
+						|compare parser.text.[1] mod)
 					then
 						|
 							parsed parser.text.[1]
 							text rest parser.text) 0
-	character matchChar
-		|equal @.mod @.char
-	characterSet matchChar
-		|contains @.mod @.char
-	characterExcept matchChar
-		|not (contains @.mod @.char)
-	loopRule
+	character charRule
+		char|
+			mod|equal mod char
+	characterSet charRule
+		char|
+			mod|contains mod char
+	characterExcept charRule
+		char|
+			mod|not (contains mod char)
+	loopRule (defaultFunction
 		arg|(rule
 			parser|
 				implementation
-					impArg|if (arg.tooMuch
-						count add impArg.n 1
-						parser impArg.parser)
+					impArg|if (arg.tooMuch impArg.parser (add impArg.n 1))
 						then
 							|impArg.parser
 						else
@@ -78,36 +77,37 @@ parser|
 													then
 														|nextResult.indentationCount
 								else
-									res|if (arg.tooFew
-										count impArg.n
-										parser impArg.parser)
+									res|if (arg.tooFew impArg.parser impArg.n)
 										else
 											|impArg.parser
 				: implementation
 					parser merge parser
 						parsed 0
-					n 0) 0
+					n 0) 0)
+		tooMuch
+			|
+				|0
+		tooFew
+			|
+				|0
 	nTimes
 		loopedRule|
 			n|loopRule
 				tooMuch
-					@|smaller (n @.parser) @.count
+					parser|
+						count|smaller (n parser) count
 				tooFew
-					@|smaller @.count (n @.parser)
+					parser|
+						count|smaller count (n parser)
 				rule loopedRule
 	zeroOrMore
 		looped|loopRule
-			tooMuch
-				|0
-			tooFew
-				|0
 			rule looped
 	oneOrMore
 		arg|loopRule
-			tooMuch
-				|0
 			tooFew
-				arg|greater 1 arg.count
+				parser|
+					count|greater 1 count
 			rule arg
 	sequence
 		first|
@@ -118,8 +118,8 @@ parser|
 							then
 								b|merge parser (merge b
 									parsed
-										[1] a.parsed
-										[2] b.parsed)
+										. a.parsed
+										. b.parsed)
 	alternative
 		first|
 			second|
@@ -173,7 +173,7 @@ parser|
 			condition prefix arg.delimiter arg.step))))
 			|sum @ join
 	number rule (oneOrMore (characterSet "0123456789"))
-		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse @)
+		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse.[/.mscorlib.String] @)
 	newLine alternative syntax.linefeed (sequence syntax.carriageReturn syntax.linefeed)
 	whitespace zeroOrMore syntax.whitespace
 	endOfLine sequence whitespace newLine
@@ -333,7 +333,7 @@ parser|
 		. characterDataExpression)
 		|
 			literal @
-	: /.Meta.Serialize.ValueFunction
+	: /.Meta.Serialize.ValueFunction.[/.Meta.Map]
 		stringTest
 			singleLine expression
 				text "
@@ -535,36 +535,38 @@ parser|
 						hi "hello"
 				"
 				indentationCount 0
-		basicTest file
-			text "
-				license "
-					Copyright (c) 2005, 2006 Christian Staudenmeyer
-					
-					Permission is hereby granted, free of charge, to any person obtaining
-					a copy of this software and associated documentation files (the
-					"Software"), to deal in the Software without restriction, including
-					without limitation the rights to use, copy, modify, merge, publish,
-					distribute, sublicense, and/or sell copies of the Software, and to
-					permit persons to whom the Software is furnished to do so, subject to
-					the following conditions:
-					
-					The above copyright notice and this permission notice shall be
-					included in all copies or substantial portions of the Software.
-					
-					THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-					EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-					MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-					NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-					BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-					ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-					CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-					SOFTWARE.
+		basicTest "
+			file
+				text "
+					license "
+						Copyright (c) 2005, 2006 Christian Staudenmeyer
+						
+						Permission is hereby granted, free of charge, to any person obtaining
+						a copy of this software and associated documentation files (the
+						"Software"), to deal in the Software without restriction, including
+						without limitation the rights to use, copy, modify, merge, publish,
+						distribute, sublicense, and/or sell copies of the Software, and to
+						permit persons to whom the Software is furnished to do so, subject to
+						the following conditions:
+						
+						The above copyright notice and this permission notice shall be
+						included in all copies or substantial portions of the Software.
+						
+						THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+						EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+						MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+						NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+						BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+						ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+						CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+						SOFTWARE.
+					"
+					commandLine|
+						asdf "hello"
+						shortFunction
+							arg|asdf
+						shortFunctionTest shortFunction "hello"
+						counter 0
 				"
-				commandLine|
-					asdf "hello"
-					shortFunction
-						arg|asdf
-					shortFunctionTest shortFunction "hello"
-					counter 0
-			"
-			indentationCount 0
+				indentationCount 0
+		"
