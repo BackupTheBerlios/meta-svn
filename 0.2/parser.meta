@@ -137,16 +137,10 @@ parser|
 		. '.'
 		. '['
 		. ']'
-	syntax
-		charDelimiter character 39
-		char characterExcept 39
-		linefeed character 10
-		carriageReturn character 13
+	set
 		whitespace characterSet
 			. 9
 			. ' '
-		indentation character 9
-		string character '"'
 		stringLineText characterExcept
 			. 10
 			. 13
@@ -154,18 +148,28 @@ parser|
 		longStringLineText characterExcept
 			. 10
 			. 13
-		lookupStart character '['
-		lookupEnd character ']'
-		function character '|'
-		root character '/'
-		current character ':'
-		select character '.'
-		tab character 9
-		space character ' '
-		emptyMap character '0'
-		search character '$'
-		callStart character '('
-		callEnd character ')'
+		char characterExcept
+			. 39
+	syntax (foreach
+		charDelimiter 39
+		linefeed 10
+		carriageReturn 13
+		indentation 9
+		string '"'
+		lookupStart '['
+		lookupEnd ']'
+		function '|'
+		root '/'
+		current ':'
+		select '.'
+		tab 9
+		space ' '
+		emptyMap '0'
+		search '$'
+		callStart '('
+		callEnd ')')
+		key|
+			value|character value
 	onePlusX
 		arg|(rule (sequence (rule arg.first
 			|
@@ -175,7 +179,7 @@ parser|
 	number rule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse.[/.mscorlib.String] @)
 	newLine alternative syntax.linefeed (sequence syntax.carriageReturn syntax.linefeed)
-	whitespace zeroOrMore syntax.whitespace
+	whitespace zeroOrMore set.whitespace
 	endOfLine sequence whitespace newLine
 	indentRule
 		change|generalRule (nTimes syntax.indentation
@@ -193,9 +197,9 @@ parser|
 		suffixRule|
 			realRule|rule (sequence realRule suffixRule)
 				|@.[1]
-	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter syntax.char)
-	stringLine zeroOrMore syntax.stringLineText
-	longStringLine zeroOrMore syntax.longStringLineText
+	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter set.char)
+	stringLine zeroOrMore set.stringLineText
+	longStringLine zeroOrMore set.longStringLineText
 	longString rule (onePlusX
 		first longStringLine
 		delimiter sameIndentation
@@ -204,7 +208,7 @@ parser|
 			first|
 				second|join first ((join 
 					. 10) second)
-	string suffix (optional syntax.string) (prefix syntax.string (alternative (oneOrMore syntax.stringLineText) longString))
+	string suffix (optional syntax.string) (prefix syntax.string (alternative (oneOrMore set.stringLineText) longString))
 	lookupString oneOrMore lookupForbidden
 	delayed
 		mod|
@@ -213,11 +217,11 @@ parser|
 		|alternative number (alternative characterDataExpression (alternative string map))
 	lookupAnything prefix syntax.lookupStart (suffix (sequence (zeroOrMore 9) syntax.lookupEnd) value)
 	entry delayed
-		|rule (alternative function (rule (alternative (alternative (lookupString lookupAnything)) (alternative (prefix (oneOrMore syntax.whitespace) value) map)))
+		|rule (alternative function (rule (alternative (alternative (lookupString lookupAnything)) (alternative (prefix (oneOrMore set.whitespace) value) map)))
 			|
 				[@.[1]] @.[2]) 0
 	entry delayed
-		|rule (alternative functionRule (rule (sequence (alternative lookupString lookupAnything) (alternative (prefix (oneOrMore syntax.whitespace) value) map))
+		|rule (alternative functionRule (rule (sequence (alternative lookupString lookupAnything) (alternative (prefix (oneOrMore set.whitespace) value) map))
 			|
 				[@.[1]] @.[2])) 0
 	mapCore rule (onePlusX
