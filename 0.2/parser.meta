@@ -168,14 +168,16 @@ parser|
 		search '$'
 		callStart '('
 		callEnd ')')
-		key|
+		|
 			value|character value
 	onePlusX
-		arg|(rule (sequence (rule arg.first
-			|
-				. @) (zeroOrMore (baseRule
-			condition prefix arg.delimiter arg.step))))
-			|sum @ join
+		first|
+			step|
+				delimiter|(rule (sequence (rule first
+					|
+						. @) (zeroOrMore (baseRule
+					condition prefix delimiter step))))
+					|sum @ join
 	number rule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse.[/.mscorlib.String] @)
 	newLine alternative syntax.linefeed (sequence syntax.carriageReturn syntax.linefeed)
@@ -189,6 +191,10 @@ parser|
 	indentation sequence endOfLine (indentRule 1)
 	sameIndentation sequence endOfLine (indentRule 0)
 	dedentation indentRule -1
+	enclose
+		pre|
+			post|
+				subRule|suffix post (prefix pre subRule)
 	prefix
 		prefixRule|
 			realRule|rule (sequence prefixRule realRule)
@@ -197,39 +203,31 @@ parser|
 		suffixRule|
 			realRule|rule (sequence realRule suffixRule)
 				|@.[1]
-	characterDataExpression prefix syntax.charDelimiter (suffix syntax.charDelimiter set.char)
+	nothing
+		|0
+	characterDataExpression enclose syntax.charDelimiter syntax.charDelimiter set.char
 	stringLine zeroOrMore set.stringLineText
 	longStringLine zeroOrMore set.longStringLineText
-	longString rule (onePlusX
-		first longStringLine
-		delimiter sameIndentation
-		step longStringLine)
+	longString rule (onePlusX longStringLine longStringLine sameIndentation)
 		|sum @
 			first|
 				second|join first ((join 
 					. 10) second)
-	string suffix (optional syntax.string) (prefix syntax.string (alternative (oneOrMore set.stringLineText) longString))
+	string enclose syntax.string (optional syntax.string) (alternative (oneOrMore set.stringLineText) longString)
 	lookupString oneOrMore lookupForbidden
 	delayed
 		mod|
 			parser|mod 0 parser
 	value delayed
 		|alternative number (alternative characterDataExpression (alternative string map))
-	lookupAnything prefix syntax.lookupStart (suffix (sequence (zeroOrMore 9) syntax.lookupEnd) value)
-	entry delayed
-		|rule (alternative function (rule (alternative (alternative (lookupString lookupAnything)) (alternative (prefix (oneOrMore set.whitespace) value) map)))
-			|
-				[@.[1]] @.[2]) 0
+	lookupAnything enclose syntax.lookupStart (sequence (zeroOrMore 9) syntax.lookupEnd) value
 	entry delayed
 		|rule (alternative functionRule (rule (sequence (alternative lookupString lookupAnything) (alternative (prefix (oneOrMore set.whitespace) value) map))
 			|
 				[@.[1]] @.[2])) 0
-	mapCore rule (onePlusX
-		first entry
-		delimiter sameIndentation
-		step entry)
+	mapCore rule (onePlusX entry entry sameIndentation)
 		|sum @ merge
-	map suffix dedentation (prefix indentation mapCore)
+	map enclose indentation dedentation mapCore
 	file mapCore
 	alternatives
 		alts|sum alts alternative
@@ -239,7 +237,7 @@ parser|
 			. characterDataExpression
 			. emptyMap
 			. select
-	lookupAnythingExpression suffix (sequence (zeroOrMore syntax.indentation) syntax.lookupEnd) (prefix syntax.lookupStart expression)
+	lookupAnythingExpression enclose syntax.lookupStart (sequence (zeroOrMore syntax.indentation) syntax.lookupEnd) expression
 	lookupStringExpression rule lookupString
 		|
 			literal @
@@ -256,13 +254,10 @@ parser|
 		|
 			lookup @
 	lookup alternative ruleCurrent realLookup
-	select (rule (onePlusX
-		first alternatives
-			. root 
-			. search
-			. lookup
-		delimiter syntax.select
-		step lookup))
+	select (rule (onePlusX (alternatives
+		. root 
+		. search
+		. lookup) lookup syntax.select))
 		|
 			select @
 	functionRule rule (sequence (zeroOrMore (characterExcept
@@ -287,13 +282,10 @@ parser|
 			parsed
 				lookup
 					literal @.defaultKey
-	keysRule onePlusX
-		first alternatives 
-			. keysSearch 
-			. lookup
-			. autokeyLookup
-		delimiter syntax.select
-		step lookup
+	keysRule onePlusX (alternatives 
+		. keysSearch 
+		. lookup
+		. autokeyLookup) lookup syntax.select
 	normalStatement rule (sequence keysRule (sequence whitespace expression))
 		|
 			key @.[1]
@@ -318,16 +310,13 @@ parser|
 			|
 				program @.[2]
 	"
-	program rule (suffix dedentation (prefix indentation (onePlusX
-		first statement
-		step statement
-		delimiter sameIndentation)))
+	program rule (enclose indentation dedentation (onePlusX statement statement sameIndentation))
 		|
 			program @
 	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
 		|
 			call @
-	explicitCall suffix syntax.callEnd (prefix syntax.callStart call)
+	explicitCall enclose syntax.callStart syntax.callEnd call
 	emptyMap rule syntax.emptyMap
 		|0
 	literalExpression rule (alternatives
