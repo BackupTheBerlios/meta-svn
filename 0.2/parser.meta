@@ -1,7 +1,7 @@
 parser|
 	success
 		value|(defaultFunction
-			arg|if (@.function value)
+			arg|if (hasKey value "parsed")
 				then
 					|arg.then value
 				else
@@ -10,8 +10,6 @@ parser|
 				|@
 			else
 				|0
-			function
-				|hasKey @ "parsed"
 	baseRule (defaultFunction
 		arg|
 			parser|success (arg.condition parser)
@@ -175,8 +173,7 @@ parser|
 			step|
 				delimiter|(rule (sequence (rule first
 					|
-						. @) (zeroOrMore (baseRule
-					condition prefix delimiter step))))
+						. @) (zeroOrMore (prefix delimiter step))))
 					|sum @ join
 	number rule (oneOrMore (characterSet "0123456789"))
 		|/.Meta.StrategyMap.[/.Meta.Number] (/.Meta.Number.Parse.[/.mscorlib.String] @)
