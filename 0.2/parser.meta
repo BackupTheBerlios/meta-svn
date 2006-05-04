@@ -28,11 +28,18 @@ parser|
 				condition condition
 				parse (merge
 					|@) parse
+	rule
+		condition|
+			parse|generalRule condition 
+				parser|
+					parsed (((merge  
+						|@)parse) parser.parsed)
 	generalRule
 		condition|
-			result|baseRule
-				condition condition
-				result result
+			result|
+				parser|success (condition parser)
+					then
+						|merge parser (merge @ (result (merge parser @)))
 	charRule
 		compare|
 			mod|(rule
