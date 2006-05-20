@@ -174,6 +174,7 @@
     <None Include="Library\with.meta" />
     <None Include="newParser.meta" />
     <None Include="Test\basicTest.meta" />
+    <None Include="Test\newBasicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="parser.meta" />
     <None Include="Test\profile.meta" />
