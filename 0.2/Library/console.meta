@@ -1,7 +1,7 @@
 writeLine
-	argument|/.Meta.Library.WriteLine.[/.Meta.Map] argument
+	argument|/.Meta.Library.WriteLine.[/.mscorlib.String] argument
 write
-	argument|/.Meta.Library.Write.[/.Meta.Map] argument
+	argument|/.Meta.Library.Write.[/.mscorlib.String] argument
 readLine
 	|/.mscorlib.Console.ReadLine 0
 clear

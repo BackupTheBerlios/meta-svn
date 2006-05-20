@@ -216,11 +216,13 @@
 			key|
 				value|
 					[value] key
-		sumTest (sum 
-			. 2
-			. 5
-			. 6
-			. 8) add
+		sumTest call
+			. sum 
+				. 2
+				. 5
+				. 6
+				. 8
+			. add
 		valuesTest values
 			x "hi"
 			y "hello"

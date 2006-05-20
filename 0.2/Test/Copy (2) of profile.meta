@@ -1,0 +1,88 @@
+|
+	0
+	/
+		=
+			"
+				map
+			*
+				+ "
+					map
+				+ "
+					invert
+				*
+					+ "
+						apply
+					*
+						.
+							+ "
+								string
+							"
+								split
+						+ "
+							INPUT.txt
+		map invert (apply (string.split ["INPUT.txt"]
+			. characters.linefeed)
+			line|
+				parts string.split line
+					. characters.tab
+				:
+					[parts.[2]] parts.[1])
+		sorted foreach map
+			key|
+				value|sort value string.compare
+		: apply (sort (keys map) string.compare)
+			key|prepend key sorted.[key]
+			
+		
+		map invert
+		map invert
+			apply
+				string.split ["INPUT.txt"] (characters.linefeed)
+				|
+					parts string.split @
+						characters.tab
+					:
+						[parts.[2]] parts.[1]
+
+
+
+			
+		map invert
+			apply
+				string.split ["INPUT.txt"] (characters.linefeed)
+				|
+					parts string.split @
+						characters.tab
+					:
+						[parts.[2]] parts.[1]
+		map invert *
+			apply
+				string.split ["INPUT.txt"] characters.linefeed
+				|
+					parts string.split @
+						. chracters.tab
+					:
+						[parts.2] parts.1
+		
+		map invert *
+			apply
+				*
+					string.split
+					["INPUT.txt"]
+					characters.linefeed
+				|
+					parts string.split @
+						. chracters.tab
+					:
+						[parts.2] parts.1
+
+
+
+
+
+
+
+
+
+
+

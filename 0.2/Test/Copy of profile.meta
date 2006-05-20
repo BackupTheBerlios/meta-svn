@@ -1,0 +1,908 @@
+success
+	value|(defaultFunction
+		arg|if (hasKey value "parsed")
+			then
+				|arg.then value
+			else
+				|arg.else value)
+		then
+			|@
+		else
+			|0
+
+
+	arg|call
+		if
+		call
+			hasKey
+			value
+			parsed
+		program
+			=
+				then
+				|call
+					select
+						arg
+						"then"
+					value
+			=
+				else
+				|call
+					select
+						arg
+						"else"
+					value
+
+
+
+
+arg|arg.[
+	(
+		0 "else"
+		1 "then"
+	).[hasKey value "parsed"]] value
+
+
+
+	arg|*
+		.
+			arg
+			.
+				-
+					=
+						0
+						"else"
+					=
+						1
+						"then"
+				*
+					hasKey
+					value
+					"parsed"
+		value
+		
+			
+	arg|*
+		.
+			arg
+			.
+				-
+					=
+						0
+						"else"
+					=
+						1
+						"then"
+				*
+					hasKey
+					value
+					"parsed"
+		value
+
+
+
+
+
+success
+	value|(defaultFunction
+		arg|if (hasKey value "parsed")
+			then
+				|arg.then value
+			else
+				|arg.else value)
+		then
+			|@
+		else
+			|0
+
+
+=
+	"success"
+	value|*
+		defaultFunction
+		-
+			arg|*
+				.
+					arg
+					.
+						-
+							=
+								0
+								"else"
+							=
+								1
+								"then"
+						*
+							hasKey
+							value
+							"parsed"
+				value
+		-
+			=
+				"then"
+			-
+				|@
+			=
+				"else"
+			-
+				|0
+
+
+
+
+
+
+
+
+
+
+	arg|*
+		.
+			arg
+			.
+				-
+					=
+						0
+						"else"
+					=
+						1
+						"then"
+				*
+					hasKey
+					value
+					"parsed"
+		value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	arg|*
+		.
+			arg
+			.
+				:
+					=
+						0
+						"else"
+					=
+						1
+						"then"
+				*
+					hasKey
+					value
+					"parsed"
+		value
+
+	arg|call
+		select
+			arg
+			select
+				program
+					=
+						0
+						"else"
+					=
+						1
+						"then"
+				call
+					hasKey
+					value
+					parsed
+		value
+
+
+
+
+
+
+
+
+
+	arg|
+		call
+			if
+			call
+				hasKey
+				value
+				parsed
+			.
+				program
+					=
+						then
+						|
+							call
+								select
+									arg
+									"then"
+								value
+					=
+						else
+						|
+							call
+								.
+									select
+										arg
+										"else"
+								value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	arg|
+		call
+			if
+			call
+				hasKey
+				value
+				parsed
+			.
+				program
+					=
+						then
+						|
+							call
+								select
+									. arg
+									. "then"
+								value
+					=
+						else
+						|
+							call
+								.
+									select
+										. arg
+										. "else"
+								value
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+
+
+success
+	value|
+		call
+			defaultFunction
+			call
+				hasKey
+				value
+				parsed
+			.
+				program
+					.
+						=
+							then
+							.
+								|
+									call
+										select
+											. arg
+											. "then"
+										value
+						=
+							else
+							.
+								|
+									call
+										.
+											select
+												. arg
+												. "else"
+										value
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+
+
+
+success
+	value|
+		call
+			defaultFunction
+			call
+				hasKey
+				value
+				parsed
+			.
+				program
+					.
+						=
+							then
+							.
+								|
+										call
+											select
+												. arg
+												. "then"
+											"value"
+						=
+							else
+							.
+								program
+									function
+										call
+											.
+												select
+													. arg
+													. "else"
+											value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+success
+	value|
+		call
+			. defaultFunction
+			.
+				call
+					. hasKey
+					. value
+					. parsed
+			.
+				program
+					.
+						key
+							. then
+						value
+							.
+								|
+										call
+											. select
+												. arg
+												. "then"
+											. "value"
+						key
+							. "else"
+						value
+							.
+								program
+									function
+										call
+											.
+												select
+													. arg
+													. "else"
+											. value
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+											
+
+
+
+
+
+success
+	function
+		parameter "value"
+		call
+			.
+				search
+					literal "defaultFunction"
+			.
+				call
+					.
+						search
+							literal "hasKey"
+					.
+						lookup
+							literal "value"
+					.
+						literal "parsed"
+			.
+				program
+					.
+						key
+							.
+								literal "then"
+						value
+							.
+								program
+									function
+										call
+											. select
+												.
+													search
+														literal "arg"
+												.
+													literal "then"
+											. search
+												literal "value"
+						key
+							.
+								literal "else"
+						value
+							.
+								program
+									function
+										call
+											.
+												select
+													.
+														search
+															literal "arg"
+													.
+														literal "else"
+											.
+												search
+													literal "value"
+				
+
+
+success
+	value|(defaultFunction
+		arg|if (hasKey value "parsed")
+			then
+				|arg.then value
+			else
+				|arg.else value)
+		then
+			|@
+		else
+			|0
+
+
+
+
+
+
+
+
+
+
+
+
+
+not
+	|select
+		literal
+			[0] 1
+			[1] 0
+		argument 0
+not
+	|select @
+		[0] 1
+		[1] 0
+		
+
+
+|
+	map invert 
+		apply 
+			split ["INPUT.txt"] characters.linefeed
+			line|
+				parts string.split line
+					. characters.tab
+				:
+					[parts.[2]] parts.[1]))
+	sorted foreach map
+		key|
+			value|sort value string.compare
+		/
+	: apply (sort (keys map) string.compare)
+		key|prepend key sorted.[key]
+
+
+
+|
+	map=invert 
+		apply 
+			split
+				["INPUT.txt"]
+				characters.linefeed
+			.
+				line|
+					parts string.split
+						line
+						.
+							. characters.tab
+					:
+						[parts.[2]]=parts.[1]
+	sorted=foreach
+		map
+		.
+			key|
+				value|sort
+					value
+					string.compare
+	: apply
+		sort
+			keys
+				map
+			string.compare
+		key|prepend key sorted.[key]
+	apply
+		sort
+			keys
+				map
+			string.compare
+		key|preprend
+			key
+				sorted.[key]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|
+	=
+		map
+			invert
+				apply 
+					.
+						string
+						split
+					["INPUT.txt"]
+					=
+						.
+						.
+							characters
+							linefeed
+				line|
+						=
+							parts
+							.
+								string
+								split
+							line
+								=
+									.
+									characters.tab
+					:
+						=
+							[parts.[2]]
+							parts.[1]
+	=
+		sorted
+			foreach
+			map
+				key|
+					value|
+						sort
+						value
+						.
+							string
+							compare
+
+	:
+		apply
+			sort 
+				keys
+				map
+			.
+				string
+				compare
+			key|
+				prepend
+				key
+				.
+					sorted
+					[key]
+
+
+
+
+
+
+
+
+|/
+	map
+		invert
+			apply 
+				.
+					string
+					split
+				["INPUT.txt"]
+			/
+				. characters.linefeed
+		/
+			line|
+				parts string.split line
+					. characters.tab
+				:/
+					[parts.[2]]
+					parts.[1]
+
+	sorted
+	foreach map
+		key|
+			value|sort value string.compare
+
+	:
+		apply
+			sort 
+				keys map
+			.
+				string
+				compare
+		/
+			key|
+				prepend
+				key
+				.
+					sorted
+					[key]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+|
+	map=
+		invert
+		*
+			apply
+			*
+				string.split
+				["INPUT.txt"]
+				
+					. characters.linefeed
+
+			line|
+				parts *
+					string.split
+					line
+					
+						. characters.tab
+				:
+					[parts.[2]] parts.[1])
+	sorted
+		foreach
+		*
+		map
+		*
+			key|
+				value|sort value string.compare
+	:
+		apply
+		*
+			sort
+			*
+				keys
+				map
+			*
+			string.compare
+		*
+			key|
+				prepend
+				*
+				key
+				*
+					sorted
+					.
+					key
+apply
+*
+	sort
+	*
+		keys
+		*
+		map
+	*
+		string
+		.
+		compare
+	*
+		key|
+			prepend
+			*
+			key
+			*
+				sorted
+				.
+				key
+		
+
+
+
+
+|
+	map
+		invert
+		*
+			apply
+			*
+				string.split
+				*
+				["INPUT.txt"]
+				*
+					. characters.linefeed
+
+			line|
+				parts
+					string.split
+					*
+					line
+					*
+						. characters.tab
+				:
+					[parts.[2]] parts.[1])
+	sorted
+		foreach
+		*
+		map
+		*
+			key|
+				value|sort value string.compare
+	:
+		apply
+		*
+			sort
+			*
+				keys
+				*
+				map
+			string.compare
+		*		
+			key|prepend key sorted.[key]
+
+
+
+|
+	map=
+		invert
+		*
+			apply
+			*
+				string.split
+				*
+				["INPUT.txt"]
+				*
+					. characters.linefeed
+
+			line|
+				parts
+					string.split
+					*
+					line
+					*
+						. characters.tab
+				:
+					[parts.[2]] parts.[1])
+	sorted=
+		foreach
+		*
+		map
+		*
+			key|
+				value|sort value string.compare
+	:
+		apply
+		*
+			sort
+			*
+				keys
+				*
+				map
+			string.compare
+		*		
+			key|prepend key sorted.[key]

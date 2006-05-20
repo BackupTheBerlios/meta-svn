@@ -56,8 +56,6 @@ namespace Meta
 		public static readonly Map Literal="literal";
 		public static readonly Map Function="function";
 		public static readonly Map Call="call";
-		//public static readonly Map Callable="callable";
-		//public static readonly Map Argument="argument";
 		public static readonly Map Select="select";
 		public static readonly Map Program="program";
 		public static readonly Map Key="key";
@@ -248,6 +246,56 @@ namespace Meta
 		}
 		protected abstract Position EvaluateImplementation(Position context);
 	}
+ internal class HiPerfTimer
+    {
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceCounter(
+            out long lpPerformanceCount);
+
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryPerformanceFrequency(
+            out long lpFrequency);
+
+        private long startTime, stopTime;
+        private long freq;
+
+        // Constructor
+        public HiPerfTimer()
+        {
+            startTime = 0;
+            stopTime  = 0;
+
+            if (QueryPerformanceFrequency(out freq) == false)
+            {
+                // high-performance counter not supported
+                throw new ApplicationException();
+            }
+        }
+
+        // Start the timer
+        public void Start()
+        {
+            // lets do the waiting threads there work
+            Thread.Sleep(0);
+
+            QueryPerformanceCounter(out startTime);
+        }
+
+        // Stop the timer
+        public void Stop()
+        {
+            QueryPerformanceCounter(out stopTime);
+        }
+
+        // Returns the duration of the timer (in seconds)
+        public double Duration
+        {
+            get
+            {
+                return (double)(stopTime - startTime) / (double) freq;
+            }
+        }
+    }
 	public class Call : Expression
 	{
 		public override bool HasConstantKeysOnly
@@ -273,10 +321,18 @@ namespace Meta
 				return arguments.Peek();
 			}
 		}
+		public static Dictionary<string, double> calls = new Dictionary<string, double>();
+		//public static Dictionary<string, TimeSpan> calls = new Dictionary<string, TimeSpan>();
 		protected override Position EvaluateImplementation(Position current)
 		{
 			try
 			{
+				//DateTime start=DateTime.Now;
+				HiPerfTimer timer = new HiPerfTimer();
+				timer.Start();
+				//if (Interpreter.profiling)
+				//{
+				//}
 				Position callable=expressions[0].GetExpression().Evaluate(current);
 				for (int i = 1; i < expressions.Count; i++)
 				{
@@ -289,6 +345,17 @@ namespace Meta
 					arguments.Pop();
 					//callable = callable.Get().GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 					//callable=callablePosition.get
+				}
+				if (Interpreter.profiling)
+				{
+					timer.Stop();
+					//TimeSpan difference=DateTime.Now-start;
+					string special = SpecialString(current);
+					if (!calls.ContainsKey(special))
+					{
+						calls[special] = 0;
+					}
+					calls[special] += timer.Duration;
 				}
 				return callable;
 				//argument.IsCall = true;
@@ -308,206 +375,27 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
+		private string SpecialString(Position position)
+		{
+			string result="";
+			foreach (Map key in position.Keys)
+			{
+				if (key is FunctionBodyKey)
+				{
+					result += @"\";
+				}
+				else
+				{
+					result += key.ToString();
+				}
+			}
+			return result;
+		}
 	}
-	//public class Call : Expression
-	//{
-	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-	//    //{
-	//    //    if (callable.Emit(il, keys))
-	//    //    {
-	//    //        if (argument.Emit(il, keys))
-	//    //        {
-	//    //            il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call", BindingFlags.Public | BindingFlags.Instance));
-	//    //        }
-	//    //        else
-	//    //        {
-	//    //            return false;
-	//    //        }
-	//    //    }
-	//    //    else
-	//    //    {
-	//    //        return false;
-	//    //    }
-	//    //    return true;
-	//    //}
-	//    public override bool HasConstantKeysOnly
-	//    {
-	//        get
-	//        {
-	//            return true;
-	//        }
-	//    }
-	//    private Expression callable;
-	//    public Expression argument;
-	//    private Map parameterName;
-	//    private Map code;
-	//    public Call(Map code,Map parameterName)
-	//    {
-	//        this.code = code;
-	//        this.callable = code[CodeKeys.Callable].GetExpression();
-	//        this.argument = code[CodeKeys.Argument].GetExpression();
-	//        //this.code = code;
-	//        this.parameterName = parameterName;
-	//        //this.optimized = Optimize();
-	//    }
-
-	//    public static Position lastArgument;
-	//    protected override Position EvaluateImplementation(Position current)
-	//    {
-	//        try
-	//        {
-	//            argument.IsCall = true;
-	//            Position arg = argument.Evaluate(current);
-	//            lastArgument = arg;
-	//            return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-	//        }
-	//        catch (MetaException e)
-	//        {
-	//            e.InvocationList.Add(current);
-	//            //e.InvocationList.Add(this.code.Extent);
-	//            throw e;
-	//        }
-	//        catch (Exception e)
-	//        {
-	//            throw new MetaException(e.ToString(), this.code.Extent);
-	//        }
-	//    }
-	//    //protected override Position EvaluateImplementation(Position current)
-	//    //{
-	//    //    //if (optimized != null)
-	//    //    //{
-	//    //    //    return (Position)optimized(Map.arguments[Map.arguments.Count - 1], current);
-	//    //    //}
-	//    //    //else
-	//    //    //{
-	//    //        argument.IsCall = true;
-	//    //        Position arg = argument.Evaluate(current);
-	//    //        lastArgument = arg;
-	//    //        return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-	//    //    //}
-	//    //}
-	//    //public OptimizedDelegate optimized;
-	//    //private OptimizedDelegate Optimize()
-	//    //{
-	//    //    Select select = argument as Select;
-	//    //    if (select != null)
-	//    //    {
-	//    //        if (select.Subselects.Count == 1)
-	//    //        {
-	//    //            Search search = select.Subselects[0].GetSubselect() as Search;
-	//    //            if (search != null)
-	//    //            {
-	//    //                Literal literal = search.Key as Literal;
-	//    //                if (literal != null)
-	//    //                {
-	//    //                    if (parameterName!=null && literal.Map.Equals(parameterName))
-	//    //                        //if (code.ContainsKey(CodeKeys.ParameterName) && literal.Map.Equals(code[CodeKeys.ParameterName]))
-	//    //                        {
-	//    //                        DynamicMethod method = new DynamicMethod("Optimized", typeof(Position),
-	//    //                            new Type[] { typeof(OptimizedCall), typeof(Map), typeof(Position) }, typeof(Map).Module);
-
-	//    //                        ILGenerator il = method.GetILGenerator();
-
-	//    //                        il.Emit(OpCodes.Ldarg_0);
-	//    //                        il.Emit(OpCodes.Ldfld, typeof(OptimizedCall).GetField("callable", BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public));
-	//    //                        il.Emit(OpCodes.Ldarg_2);
-	//    //                        il.Emit(OpCodes.Call, typeof(Expression).GetMethod("Evaluate"));
-	//    //                        il.Emit(OpCodes.Ldarg_1);
-	//    //                        //il.Emit(OpCodes.Ldarg_2);
-	//    //                        il.Emit(OpCodes.Call, typeof(Position).GetMethod("Call"));
-	//    //                        il.Emit(OpCodes.Ret);
-
-	//    //                        return (OptimizedDelegate)method.CreateDelegate(typeof(OptimizedDelegate), new OptimizedCall(callable));
-	//    //                    }
-	//    //                }
-	//    //            }
-	//    //        }
-	//    //    }
-	//    //    return null;
-	//    //}
-
-	//    //public class OptimizedCall
-	//    //{
-	//    //    public Expression callable;
-	//    //    public OptimizedCall(Expression callable)
-	//    //    {
-	//    //        this.callable = callable;
-	//    //    }
-	//    //}
-	//}
 	public delegate Position OptimizedDelegate(Map argument,Position parent);
 	public delegate Map ProgramDelegate(Map argument,Position parent);
 	public class Program : Expression
 	{
-		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-		//{
-		//    il.BeginScope();
-		//    LocalBuilder local = il.DeclareLocal(typeof(Map));
-		//    int count=0;
-		//    foreach (Statement statement in statements)
-		//    {
-		//        if (statement.Keys.Count == 1)
-		//        {
-		//            Lookup lookup = statement.Keys[0].GetSubselect() as Lookup;
-		//            if (lookup != null)
-		//            {
-		//                Literal literal = lookup.Key as Literal;
-		//                if (literal != null)
-		//                {
-		//                    if (!keys.ContainsKey(literal.Map))
-		//                    {
-		//                        keys.Add(literal.Map, count);
-		//                        count++;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    return null;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                return null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            return null;
-		//        }
-		//    }
-		//    foreach (KeyValuePair<Map, int> entry in keys)
-		//    {
-		//        LocalBuilder local = il.DeclareLocal(typeof(Map));
-		//    }
-		//    foreach (Statement statement in statements.GetRange(0,statements.Count-1))
-		//    {
-		//        statement.Value.Emit(il, keys);
-		//    }
-		//    Statement lastStatement=statements[statements.Count-1];
-		//    if (lastStatement.Keys.Count == 0)
-		//    {
-		//        Current current = lastStatement.Keys[0].GetSubselect() as Current;
-		//        if (current != null)
-		//        {
-		//            if (lastStatement.Value.Emit(il, keys))
-		//            {
-		//                il.Emit(OpCodes.Ret);
-		//            }
-		//            else
-		//            {
-		//                return null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            return false;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        return false;
-		//    }
-		//}
 		public bool IsFunction
 		{
 			get
@@ -523,18 +411,9 @@ namespace Meta
 		{
 			this.code = code;
 			statements=code.Array.ConvertAll(new Converter<Map,Statement>(delegate(Map map) {return map.GetStatement();}));
-			//optimized = OptimizeCall();
 		}
-		//private ProgramDelegate optimized;
 		protected override Position EvaluateImplementation(Position parent)
 		{
-			//if (optimized != null)
-			//{
-			//    Map result = optimized(Map.arguments[Map.arguments.Count-1],parent);
-			//    return parent.AddCall(result);
-			//}
-			//else
-			//{
 				Position contextPosition=parent.AddCall(new StrategyMap());
 				foreach (Statement statement in statements)
 				{
@@ -542,150 +421,7 @@ namespace Meta
 				}
 				contextPosition.Get().Scope = parent;
 				return contextPosition;
-			//}
 		}
-		//private ProgramDelegate OptimizeCall()
-		//{
-		//    DynamicMethod method = new DynamicMethod("OptimizedProgram",
-		//        typeof(Map),
-		//        new Type[] { typeof(Program), typeof(Map), typeof(Position) },
-		//        typeof(Map).Module);
-
-		//    ILGenerator il = method.GetILGenerator();
-
-		//    Dictionary<Map, int> keys = new Dictionary<Map, int>();
-		//    int count=0;
-		//    foreach (Statement statement in statements.GetRange(0,statements.Count-1))
-		//    {
-		//        if (statement.Keys.Count == 1)
-		//        {
-		//            Lookup lookup = statement.Keys[0].GetSubselect() as Lookup;
-		//            if (lookup != null)
-		//            {
-		//                Literal literal = lookup.Key as Literal;
-		//                if (literal != null)
-		//                {
-		//                    if (!keys.ContainsKey(literal.Map))
-		//                    {
-		//                        keys.Add(literal.Map, count);
-		//                        count++;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    return null;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                return null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            return null;
-		//        }
-		//    }
-		//    foreach (KeyValuePair<Map, int> entry in keys)
-		//    {
-		//        LocalBuilder local = il.DeclareLocal(typeof(Map));
-		//    }
-		//    foreach (Statement statement in statements.GetRange(0,statements.Count-1))
-		//    {
-		//        statement.Value.Emit(il, keys);
-		//    }
-		//    Statement lastStatement=statements[statements.Count-1];
-		//    if (lastStatement.Keys.Count == 0)
-		//    {
-		//        Current current = lastStatement.Keys[0].GetSubselect() as Current;
-		//        if (current != null)
-		//        {
-		//            if (lastStatement.Value.Emit(il, keys))
-		//            {
-		//                il.Emit(OpCodes.Ret);
-		//            }
-		//            else
-		//            {
-		//                return null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            return null;
-		//        }
-		//    }
-		//    else
-		//    {
-		//        return null;
-		//    }
-		//    ProgramDelegate del = (ProgramDelegate)method.CreateDelegate(typeof(Program), this);
-		//    return del;
-		//}
-		//private OptimizedDelegate OptimizeCall()
-		//{
-		//    if (IsFunction && HasConstantKeysOnly)
-		//    {
-		//        return null;
-		//    }
-		//    else
-		//    {
-		//        return null;
-		//    }
-		//}
-		// dont try it, just do it
-		// maybe that would be better
-
-		//public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
-		//{
-			//MethodInfo invoke = delegateType.GetMethod("Invoke");
-			//ParameterInfo[] parameters = invoke.GetParameters();
-			//List<Type> arguments = new List<Type>();
-			//arguments.Add(typeof(MetaDelegate));
-			//foreach (ParameterInfo parameter in parameters)
-			//{
-			//    arguments.Add(parameter.ParameterType);
-			//}
-			//DynamicMethod hello = new DynamicMethod("EventHandler",
-			//    invoke.ReturnType,
-			//    arguments.ToArray(),
-			//    typeof(Map).Module);
-			//ILGenerator il = hello.GetILGenerator();
-
-			//LocalBuilder local = il.DeclareLocal(typeof(object[]));
-			//il.Emit(OpCodes.Ldc_I4, parameters.Length);
-			//il.Emit(OpCodes.Newarr, typeof(object));
-			//il.Emit(OpCodes.Stloc, local);
-
-			//for (int i = 0; i < parameters.Length; i++)
-			//{
-			//    il.Emit(OpCodes.Ldloc, local);
-			//    il.Emit(OpCodes.Ldc_I4, i);
-			//    il.Emit(OpCodes.Ldarg, i + 1);
-			//    il.Emit(OpCodes.Stelem_Ref);
-			//}
-			//il.Emit(OpCodes.Ldarg_0);
-			//il.Emit(OpCodes.Ldloc, local);
-			//il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
-
-			//if (invoke.ReturnType == typeof(void))
-			//{
-			//    il.Emit(OpCodes.Pop);
-			//    il.Emit(OpCodes.Ret);
-			//}
-			//else
-			//{
-			//    il.Emit(OpCodes.Castclass, invoke.ReturnType);
-			//    il.Emit(OpCodes.Ret);
-			//}
-			//FunctionBodyKey calls;
-			//// probably wrong
-			//MethodImplementation.currentPosition.Get().AddCall(code, out calls);
-			//Position position = new Position(MethodImplementation.currentPosition, calls);
-			//Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
-			////Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
-			//return del;
-		//}
-
 
 		bool constantKeysDetermined=false;
 		public override bool HasConstantKeysOnly
@@ -1426,7 +1162,7 @@ namespace Meta
 			}
 			return arrays;
 		}
-		public static Map CreateConsole(Map arg)
+		public static Map CreateConsole()
 		{
 			Interpreter.AllocConsole();
 			return Map.Empty;
@@ -2300,8 +2036,21 @@ namespace Meta
 							break;
 						case "-profile":
 							profiling = true;
+							//Commands.Test();
 							Commands.Profile();
 							//Console.ReadLine();
+							List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
+							profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
+							{
+								return a.Value.CompareTo(b.Value);
+							}));
+							profiled.Reverse();
+							for (int i = 0; i < profiled.Count; i++)
+							{
+								KeyValuePair<string,double> entry=profiled[i];
+								Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
+							}
+							Console.ReadLine();
 							break;
 						case "-parser":
 							AllocConsole();
@@ -2353,6 +2102,7 @@ namespace Meta
 				DateTime start = DateTime.Now;
 				AllocConsole();
 				int level;
+				new Test.MetaTest.Parser().RunTest();
 				//new Test.MetaTest.Profile().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			}
@@ -8424,13 +8174,6 @@ namespace Meta
 				return count;
 
 			}
-			//protected override string TestDirectory
-			//{
-			//    get
-			//    {
-			//        return Path.Combine(Interpreter.InstallationPath, "Test");
-			//    }
-			//}
 			public static string TestPath
 			{
 				get
@@ -8501,11 +8244,6 @@ namespace Meta
 					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
-
-
-
-
-
 			public static Map Run(string path,Map argument)
 			{
 				List<string> list=new List<string>();
@@ -8537,12 +8275,6 @@ namespace Meta
 							CodeKeys.Select, lookups),
 						2, new StrategyMap(
 							CodeKeys.Literal, argument)));
-				//Map code = new StrategyMap(
-				//    CodeKeys.Call, new StrategyMap(
-				//        CodeKeys.Callable, new StrategyMap(
-				//            CodeKeys.Select, lookups),
-				//        CodeKeys.Argument, new StrategyMap(
-				//            CodeKeys.Literal, argument)));
 				Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
 				return position.Get();
 

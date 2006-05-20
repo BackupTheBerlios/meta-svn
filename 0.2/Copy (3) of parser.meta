@@ -1,4 +1,250 @@
+parser|*
+	success
+	/
+		value|*
+			defaultFunction
+			/
+				arg|.
+					arg
+					.
+							[1] "then"
+							[0] "else"
+						hasKey value "parsed"
+			value
+	/
+		then /
+			|@
+		else /
+			|0
+|
+	hello
+	*
+		if
+		* equal hello "hello"
+		/
+			then /
+				|
+					*
+						.
+							console
+							writeLine
+						"you said hello!!"
+|
+	*
+		if
+		*
+			equal
+			@
+			1
+		
+hello|if (equal hello "hello")
+	then
+		|console.writeLine "you said hello"
+parser|*
+	success
+	/
+		value|*
+			defaultFunction
+			/
+				arg|.
+					arg
+					.
+							[1] "then"
+							[0] "else"
+						hasKey value "parsed"
+			value
+	/
+		then /
+			|@
+		else /
+			|0
 parser|
+	success
+		value|defaultFunction
+			arg|arg.
+					[1] "then"
+					[0] "else"
+				. hasKey value "parsed"
+			value
+			then
+				|@
+			else
+				|0
+	success
+		value|defaultFunction
+			arg|arg.
+					[1] "then"
+					[0] "else"
+				. hasKey value "parsed"
+			value
+			then
+				|@
+			else
+				|0
+	=
+		"success"
+		:
+			|
+				"value"
+				*
+					defaultFunction
+					:
+						|
+							"arg"
+							*
+								.
+									arg
+									.
+										:
+											=
+												0
+												"else"
+											=
+												1
+												"then"
+										*
+											hasKey
+											value
+											"parsed"
+								value
+					:
+						=
+							"then"
+							:
+								|
+									@
+						=
+							"else"
+							:
+								|
+									0
+	success
+		value|defaultFunction
+			arg|arg.[
+				[0] "else"
+				[1] "then"
+			.[hasKey value "parsed"]] value
+			then
+				|@
+			else
+				|0
+	=
+		success
+			value|*
+				defaultFunction
+					arg|*
+						.
+							arg
+							.
+									=
+										[0]
+										"else"
+									=
+										[1]
+										"then"
+								*
+									hasKey
+									value
+									"parsed"
+						value
+				:
+					then
+						|@
+					else
+						|0
+	=
+		factorial
+		:
+			n|*
+				.
+					:
+						=
+							[0]
+							:
+								|1
+						=
+							[1]
+							:
+								|*
+									factorial
+									*
+										subtract
+										n
+										1
+					*
+						equal
+						n
+						1
+				0
+				
+	success=
+		value|*
+			defaultFunction
+				arg|*
+					.
+						arg
+						.
+								[0]="else"
+								[1]="then"
+							*
+								hasKey
+								value
+								"parsed"
+					value
+			,
+				then
+					|@
+				else
+					|0
+	success=
+		value|defaultFunction*
+			arg|arg.[
+				[0]="else"
+				[1]="then"
+			.[hasKey*value*"parsed"]]*value
+		*
+			then
+				|@
+			else
+				|0
+	success=
+		value|defaultFunction*
+			arg|arg.[
+				[0]="else"
+				[1]="then"
+			.[hasKey*value*"parsed"]]*value
+		*
+			then
+				|@
+			else
+				|0
+	cube=
+		|multiply*@*@
+	cube=
+		|multiply*@*@
+	success=
+		value|defaultFunction*
+			arg|arg.[
+				[0]="else"
+				[1]="then"
+			.[hasKey*value*"parsed"]]*value
+		*
+			then
+				|@
+			else
+				|0
+	success hasKey*whatever*x
+	success
+		value|defaultFunction*
+			arg|arg.[
+				[0] "else"
+				[1] "then"
+			.[hasKey value "parsed"]]*value
+		*
+			then
+				|@
+			else
+				|0
 	success
 		value|(defaultFunction
 			arg|if (hasKey value "parsed")
@@ -10,6 +256,19 @@ parser|
 				|@
 			else
 				|0
+	rule
+		condition|
+			parse|generalRule condition
+				parser|
+					parsed (((merge  
+						|@)parse) parser.parsed)
+	rule=
+		condition|
+			parse|generalRule*condition*
+				parser|
+					parsed=merge*
+						|@
+					*parse*parser.parsed
 	rule
 		condition|
 			parse|generalRule condition 
@@ -34,6 +293,18 @@ parser|
 						|
 							parsed parser.text.[1]
 							text rest parser.text) 0
+	charRule=
+		compare|
+			mod|rule*
+				parser|if*and*
+					.
+						|not*equal**0**parser.text
+					. 
+						|compare*parser.text.[1]*mod
+					then=
+						|
+							parsed=parser.text.[1]
+							text=rest*parser.text*0
 	character charRule
 		char|
 			mod|equal mod char
@@ -43,6 +314,9 @@ parser|
 	characterExcept charRule
 		char|
 			mod|not (contains mod char)
+	characterExcept=charRule*
+		char|
+			mod|not*contains**mod**char
 	loopRule (defaultFunction
 		arg|(rule
 			parser|
@@ -96,6 +370,17 @@ parser|
 				parser|
 					count|greater 1 count
 			rule arg
+	sequence=
+		first|
+			second|
+				parser|success*first**parser
+					then
+						a|success*second**a
+							then=
+								b|merge*parser*merge**b**
+									parsed=
+										. a.parsed
+										. b.parsed
 	sequence
 		first|
 			second|
@@ -135,6 +420,12 @@ parser|
 		longStringLineText characterExcept
 			. 10
 			. 13
+		longStringLineText=characterExcept*
+			.=10
+			.=13
+		longStringLineText=characterExcept*
+			10
+			13
 		char characterExcept
 			. 39
 	syntax (foreach
@@ -185,11 +476,23 @@ parser|
 	prefix
 		prefixRule|
 			realRule|enclose prefixRule (optional nothing) realRule
+	prefix=
+		prefixRule|
+			realRule|enclose*prefixRule*optional**nothing*realRule
+	nothing=
+		|0
 	nothing
 		|0
+	characterDataExpression=enclose*syntax.charDelimiter*syntax.charDelimiter*set.char
 	characterDataExpression enclose syntax.charDelimiter syntax.charDelimiter set.char
 	stringLine zeroOrMore set.stringLineText
 	longStringLine zeroOrMore set.longStringLineText
+	longString*rule*onePlusX**longStringLine**longStringLine**sameIndentation
+		|sum*@*
+			first|
+				second|join*first*join**
+					. 10
+				**second..[1]
 	longString rule (onePlusX longStringLine longStringLine sameIndentation)
 		|sum @
 			first|
@@ -207,12 +510,71 @@ parser|
 		|rule (alternative functionRule (rule (sequence (alternative lookupString lookupAnything) (alternative (prefix (oneOrMore set.whitespace) value) map))
 			|
 				[@.[1]] @.[2])) 0
+	=
+		"mapCore"
+		*
+			rule
+			*
+				onePlusX
+				entry
+				entry
+				sameIndentation
+			:
+				|*
+					sum
+					@
+					merge
 	mapCore rule (onePlusX entry entry sameIndentation)
 		|sum @ merge
+	=
+		"map"
+		*
+			enclose
+			indentation
+			dedentation
+			mapCore
 	map enclose indentation dedentation mapCore
+	=
+		"file"
+		mapCore
 	file mapCore
+	=
+		"alternatives"
+		:
+			|
+				sum @ altnerative
 	alternatives
 		alts|sum alts alternative
+	=
+		"expression"
+		*
+			delayed
+			:
+				|
+					*
+						alternatives
+						.
+							literalExpression
+							characterDataExpression
+							emptyMap
+							select
+	=
+		"expression"
+		*
+			delayed
+			:
+				|
+					*
+						alternatives
+						:
+							=
+								literalExpression
+							=
+								characterDataExpression
+							=
+								emptyMap
+							=
+								select
 	expression delayed
 		|alternatives
 			. literalExpression
@@ -229,12 +591,21 @@ parser|
 	root rule syntax.root
 		|
 			root 0
-	ruleCurrent rule syntax.current
+	=
+		"ruleCurrent"
+		*
+			rule
+			syntax
+			current
+	ruleCurrent*rule*syntax.current*
 		|
-			current 0
-	realLookup rule (alternative lookupStringExpression lookupAnythingExpression)
+			current=0
+	ruleCurrent*rule*syntax.current*
 		|
-			lookup @
+			current=0
+	realLookup*rule*alternative**lookupStringExpression**lookupAnythingExpression
+		|
+			lookup=@
 	lookup alternative ruleCurrent realLookup
 	select (rule (onePlusX (alternatives
 		. root 
@@ -242,6 +613,42 @@ parser|
 		. lookup) lookup syntax.select))
 		|
 			select @
+	=
+		"functionRule"
+		*
+			rule
+			*
+				sequence
+				*
+					zeroOrMore
+					*
+						characterExcept
+						-
+							' '
+							10
+							'|'
+				*
+					sequence
+					.
+						syntax
+						"function"
+					select
+		:
+			 |
+				=
+					"parameter"
+					.
+						@
+						1
+				=
+					"expression"
+					.
+						@
+						2
+						2
+	=
+		program
+		
 	functionRule rule (sequence (zeroOrMore (characterExcept
 		. ' '
 		. 10
@@ -249,6 +656,62 @@ parser|
 		|
 			parameter @.[1]
 			expression @.[2].[2]
+
+		"functionExpression
+		*
+			"rule
+			functionRule
+			:
+				|
+					=
+						"key
+						:
+							=
+								1
+								:
+									=
+										"lookup
+										:
+											=
+												"literal
+												"function
+					=
+						"value
+						:
+							=
+								"literal
+								@
+	*
+		functionExpression
+		*
+			rule
+			functionRule
+			:
+				|
+					=
+						key
+						:
+							=
+								1
+								:
+									=
+										lookup
+										:
+											literal="function"
+					=
+						value
+						:
+							=
+								literal
+								@
+	functionExpression=rule*functionRule*
+		|
+			key=
+				[1]=
+					lookup=
+						literal="function"
+			value=
+				literal=@
 	functionExpression rule functionRule
 		|
 			key
@@ -258,6 +721,19 @@ parser|
 			value
 				literal @
 	keysSearch prefix syntax.search search
+	autokeyLookup=generalRule*
+		syntax.select
+			|
+				defaultKey=add**@.defaultKey*1
+				parsed=
+					lookup=
+						literal=@.defaultKey
+	autokeyLookup=generalRule*syntax.select*
+		|
+			defaultKey=add*@.defaultKey*1
+			parsed=
+				lookup=
+					literal=@.defaultKey
 	autokeyLookup generalRule syntax.select
 		|
 			defaultKey add @.defaultKey 1
@@ -292,15 +768,74 @@ parser|
 			|
 				program @.[2]
 	"
+	program=rule*enclose**indentation**dedentation**onePlusX***statement***statement***sameIndentation***
+		|
+			program=@
+	program=
+		*rule
+			*enclose
+			*indentation
+			*dedentation
+				*onePlusX
+				*statement
+				*statement
+				*sameIndentation
+		|
+			program=@
+	program=rule*enclose**indentation**dedentation**onePlusX***statement***statement***sameIndentation***
+		|
+			program=@
+	program=rule*enclose**indentation**dedentation**onePlusX***statement***statement***sameIndentation***
+		|
+			program=@
+	program=*
+		rule
+		*
+			enclose
+			indentation
+			dedentation
+			onePlusX
+			*
+				statement
+				statement
+				sameIndentation
+		|
+			program=@
+	program=rule*enclose**indentation**dedentation**onePlusX***statement***statement***sameIndentation
+		|
+			program=@
 	program rule (enclose indentation dedentation (onePlusX statement statement sameIndentation))
 		|
 			program @
+	call=rule*
+		sequence*
+			select
+			alternative*
+				prefix*
+					whitespace
+					expression
+				program*
+	call=rule*sequence**select**alternative***prefix***whitespace***expression**program*
+		|
+			call @
 	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
 		|
 			call @
+	explicitCall=enclose*
+		syntax.callStart
+		syntax.callEnd
+		call
+	explicitCall*enclose*syntax.callStart*syntax.callEnd*call
 	explicitCall enclose syntax.callStart syntax.callEnd call
 	emptyMap rule syntax.emptyMap
 		|0
+	literalExpression=rule*alternatives**
+		. emptyMap
+		. string
+		. number
+		. characterDataExpression)
+		|
+			literal @
 	literalExpression rule (alternatives
 		. emptyMap
 		. string
@@ -354,6 +889,15 @@ parser|
 				text "hello"
 		lookupTest lookup
 			text "hello"
+		selectTest=
+			singleTest=expression
+				text="hello"
+			severalTest=expression
+				text="hello.hello"
+			complexTest=expression
+				text="
+					hello.["world"]
+				"
 		selectTest
 			singleTest expression
 				text "hello"
@@ -440,6 +984,25 @@ parser|
 				hello hello hello
 				hi hi
 			"
+		longStringTest=
+			simple=string*
+				text="
+					"
+						hello hello hello
+					"
+				"
+				indentationCount=0
+				parsed=0
+			longer=string*
+				text="
+					"
+						hello
+						hello
+						hello
+					"
+				"
+				indentationCount=0
+				parsed=0
 		longStringTest 
 			simple string
 				text "

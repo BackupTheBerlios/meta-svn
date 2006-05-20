@@ -1,15 +1,285 @@
-parser|
-	success
-		value|(defaultFunction
-			arg|if (hasKey value "parsed")
+generalRule
+	condition|
+		result|
+			parser|success (
+				condition
+				parser
+			)
 				then
-					|arg.then value
+					|merge parser (merge @ (result (merge parser @)))
+generalRule
+	condition|
+		result|
+			parser|
+				success
+					condition
+					parser
+				/
+					then
+					/
+						|
+							merge
+							parser
+								merge
+								@
+									result
+									merge
+										parser
+										@
+=
+	generalRule
+	/
+		|
+			condition
+			/
+				|
+					result
+					/
+						|
+							parser
+							*
+								$success
+								*
+									$condition
+									parser
+								/
+									=
+										then
+										/
+											|
+												*
+													$merge
+													$parser
+													*
+														$merge
+														@
+														*
+															$result
+															*
+																$merge
+																$parser
+
+=
+	generalRule
+		|
+			condition
+				|
+					result
+						|
+							parser
+							*
+								success
+								*
+									condition
+									parser
+									=
+										then
+											|
+												*
+													merge
+													parser
+													*
+														merge
+														@
+														*
+															result
+															*
+																merge
+																parser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+arg|*
+	.
+		arg
+		.
+			/
+				0 "then"
+				1 "else"
+			hasKey value "parsed"
+	value
+
+
+
+
+
+
+
+parser|*
+	success
+		value|call
+			. defaultFunction
+			.
+				arg|if (hasKey value "parsed")
+					then
+						|arg.then value
+					else
+						|arg.else value)
+			.
+				then
+					|@
 				else
-					|arg.else value)
-			then
-				|@
-			else
-				|0
+					|0
+
+	success
+	=
+		success
+		/
+			|
+				value
+						|arg.then value
+					else
+						|arg.else value)
+			.
+				then
+					|@
+				else
+					|0
+
+
+
+			if (hasKey value "parsed")
+					then
+						|arg.then value
+					else
+						|arg.else value)
+	*
+		.
+			$arg
+			*
+				$if
+				*
+					$hasKey
+					$value
+					"parsed"
+				/
+					=
+						then
+						/
+							|then
+					=
+						else
+						/
+							|else
+		$value
+
+
+
+	*
+		.
+			$arg
+			*
+				$if
+				*
+					$hasKey
+					$value
+					"parsed"
+				/
+					=
+						then
+						/
+							|then
+					=
+						else
+						/
+							|else
+		$value
+
+
+
+if (hasKey value "parsed")
+	then
+		|arg.then value
+	else
+		|arg.else value)
+
+*
+	.
+		$arg
+		.
+			/
+				=
+					0
+					else
+				=
+					1
+					then
+			*
+				$hasKey
+				$value
+				"parsed"
+	$value
+
+
+
+
+
+
+
+	=
+		success
+		/
+			|
+				value
+				*
+					$defaultFunction
+					/
+						|
+							arg
+							*
+								$ if
+								*
+									$hasKey
+									$value
+									"parsed"
+								/
+									=
+										then
+										/
+											|*
+												.
+													$arg
+													then
+												$value
+									=
+										else
+										/
+											|*
+												.
+													$arg
+													else
+												$value
 	rule
 		condition|
 			parse|generalRule condition 
@@ -295,17 +565,46 @@ parser|
 	program rule (enclose indentation dedentation (onePlusX statement statement sameIndentation))
 		|
 			program @
-	call rule (sequence select (alternative (prefix (oneOrMore (alternative syntax.space syntax.tab)) expression) program))
-		|
-			call @
+	call *
+		rule
+		sequence *
+			select
+			*
+				alternative
+				*
+					prefix
+					*
+					oneOrMore
+					alternative syntax.space syntax.tab
+					expression
+				program
+			|
+				call @
 	explicitCall enclose syntax.callStart syntax.callEnd call
 	emptyMap rule syntax.emptyMap
 		|0
-	literalExpression rule (alternatives
-		. emptyMap
-		. string
-		. number
-		. characterDataExpression)
+	emptyMap *
+		rule
+		syntax.emptyMap
+		/
+			|0
+	literalExpression *
+		rule
+		*
+			alternatives
+			/
+				=
+					.
+					emptyMap
+				=
+					.
+					string
+				=
+					.
+					number
+				=
+					.
+					characterDataExpression
 		|
 			literal @
 	: /.Meta.Serialize.ValueFunction.[/.Meta.Map]

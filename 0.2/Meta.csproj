@@ -109,7 +109,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Copy of ide.meta" />
+    <None Include="interpreter.meta" />
+    <None Include="Library\call.meta" />
     <None Include="Library\sum.meta" />
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />
@@ -171,8 +172,8 @@
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
+    <None Include="newParser.meta" />
     <None Include="Test\basicTest.meta" />
-    <None Include="Test\Copy of basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
     <None Include="parser.meta" />
     <None Include="Test\profile.meta" />
