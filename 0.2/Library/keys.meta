@@ -1,2 +1,2 @@
 documentation "Returns the keys of a map in an array."
-map|/.Meta.Library.Keys.[/.Meta.Map] map
+|/.Meta.Library.Keys.[/.Meta.Map] @

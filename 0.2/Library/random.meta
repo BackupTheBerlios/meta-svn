@@ -1,2 +1,2 @@
 choose
-	array|array.[/.Meta.Library.Random.[/.Meta.Map] (add length array 1)]
+	|@.[/.Meta.Library.Random.[/.Meta.Map] (!add !length @ 1)]

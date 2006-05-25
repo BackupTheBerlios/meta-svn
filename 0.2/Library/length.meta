@@ -1,4 +1,4 @@
 documentation "Returns the length of an array."
-array|
-	object /.Meta.ObjectMap.[/.mscorlib.Object] array
+|
+	object /.Meta.ObjectMap.[/.mscorlib.Object] @
 	: object.ArrayCount
