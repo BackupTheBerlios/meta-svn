@@ -31,7 +31,7 @@ commandLine|
 	counter 0
 	SetCounter
 		argument|
-			$!counter @
+			!counter @
 	. !SetCounter 5
 	scoping
 		test
@@ -40,20 +40,20 @@ commandLine|
 	scopingValue "wrong"
 	scopingTest !scoping.test
 	lexicalScoping !scopingTest 0
-	$!["C:"].hello
+	!["C:"].hello
 		x "someTest"
 	cTest !["C:"].hello
-	$!["C:"].hello 0
+	!["C:"].hello 0
 	cTest2 !["C:"].hello
 	unicodeText "äaba"
-	$!testSubDir.x 0
+	!testSubDir.x 0
 	persistantDeleteTest !testSubDir.x
-	$!testSubDir.x
+	!testSubDir.x
 		a "b"
 		x
 			x "hello"
 			y "world"
-	$!testSubDir.x.a "hi"
+	!testSubDir.x.a "hi"
 	integerHashTest
 		[2] "correct hash content"
 		hashTestData
@@ -113,11 +113,11 @@ commandLine|
 		b 0
 		SetA
 			|
-				$!a "c"
-				$!autoSearch "changed"
+				!a "c"
+				!autoSearch "changed"
 		SetB
 			newB|
-				$!b.[1] !newB.value
+				!b.[1] !newB.value
 				: "changed"
 		x
 			a "b"
@@ -136,7 +136,7 @@ commandLine|
 	scopeFunction
 		inScope "right"
 		|
-			$!scopeTest !inScope
+			!scopeTest !inScope
 	inScope "wrong"
 	. !scopeFunction 0
 	scopeFromFunctionData "wrong"
@@ -244,7 +244,7 @@ commandLine|
 	upperLevel "unchanged"
 	SetUpperLevel
 		arg|
-			$!upperLevel !arg
+			!upperLevel !arg
 	ChangeUpperLevel
 		|
 			. !SetUpperLevel "changed"
@@ -252,7 +252,7 @@ commandLine|
 	staticEventChanged 0
 	ChangeStaticEvent
 		arg|
-			$!staticEventChanged !arg
+			!staticEventChanged !arg
 	TestClass.staticEvent
 		arg|
 			. !ChangeStaticEvent 1
@@ -264,7 +264,7 @@ commandLine|
 	instanceEventChanged 0
 	testClass.instanceEvent
 		arg|
-			$!instanceEventChanged 1
+			!instanceEventChanged 1
 			: !arg.[1]
 	instanceEventResult !testClass.CallInstanceEvent.[!mscorlib.Object] 5
 	one 1
@@ -353,7 +353,7 @@ commandLine|
 		map
 			test
 				|
-					$!topLevel "changed"
+					!topLevel "changed"
 	. !deep.map.test 0
 	outerFunction
 		arg|
@@ -366,7 +366,7 @@ commandLine|
 		
 		
 	"
-	$!["System.Windows.Forms"].Application.VisualStyleState !["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
+	!["System.Windows.Forms"].Application.VisualStyleState !["System.Windows.Forms"].VisualStyleState.ClientAreaEnabled
 	enumTest !["System.Windows.Forms"].Application.VisualStyleState
 	typeTest !mscorlib.Array.CreateInstance.[!mscorlib.Type].[!mscorlib.Int32] !mscorlib.String 5
 	123hello "asdf"

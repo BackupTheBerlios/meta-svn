@@ -270,4 +270,4 @@
 			data
 				Text "hello world"
 		restTest !rest "hello"
-	: test
+	: !test
