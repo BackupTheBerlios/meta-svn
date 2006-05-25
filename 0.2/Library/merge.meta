@@ -1,3 +1,2 @@
-documentation "Combines several maps into one."
-first|
+first|,
 	second|/.Meta.Library.Merge.[/.Meta.Map].[/.Meta.Map] !first !second

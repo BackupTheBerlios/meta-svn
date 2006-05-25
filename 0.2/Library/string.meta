@@ -1,18 +1,18 @@
-replace
+replace,
 	|/.Meta.Library.StringReplace.[/.Meta.Map] @
-trim
-	|
+trim,
+	|,
 		object /.Meta.ObjectMap.[mscorlib.String] @
 		: object.Trim.[0] 0
-lower
-	|
+lower,
+	|,
 		object /.Meta.ObjectMap.[/.mscorlib.String] @
 		: object.ToLower 0
-upper
-	|
+upper,
+	|,
 		object /.Meta.ObjectMap.[/.mscorlib.String] @
 		: object.ToUpper 0
-split
+split,
 	|/.Meta.Library.SplitString.[/.Meta.Map].[/.Meta.Map] @
-compare
+compare,
 	|/.Meta.Library.CompareString.[/.Meta.Map].[/.Meta.Map] @

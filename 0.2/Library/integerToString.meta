@@ -1,4 +1,3 @@
-documentation "Converts an integer to a string."
-|
+|,
 	map /.Meta.Number.[/.Meta.Map] @
 	: map.ToString 0

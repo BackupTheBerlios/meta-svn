@@ -1,2 +1,2 @@
-arg|!apply (!keys @)
+arg|!apply (!keys @),
 	key|!arg.[!key]

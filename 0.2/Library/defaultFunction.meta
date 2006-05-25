@@ -1,5 +1,5 @@
-default|
+default|,
 	arg|default.function (!merge !default.argument !arg)
-func|
-	argument|
+func|,
+	argument|,
 		arg|!func (!merge !argument !arg)
