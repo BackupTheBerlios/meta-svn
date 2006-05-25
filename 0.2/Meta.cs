@@ -6906,6 +6906,7 @@ namespace Meta
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData));
+
 		public static Rule Entry = new Alternatives(
 			new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
 			new CustomRule(delegate(Parser parser, out bool matched)
@@ -6924,6 +6925,24 @@ namespace Meta
 				}
 				return result;
 			}));
+		//public static Rule Entry = new Alternatives(
+		//    new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
+		//    new CustomRule(delegate(Parser parser, out bool matched)
+		//    {
+		//        Map result = new StrategyMap();
+		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+		//            Map value = Value.Match(parser, out matched);
+		//            result[key] = value;
+
+		//            // i dont understand this
+		//            bool match;
+		//            EndOfLine.Match(parser, out match);
+		//        }
+		//        return result;
+		//    }));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),
@@ -7100,6 +7119,7 @@ namespace Meta
 
 
 		private static Rule Search = new Sequence(
+			new Action(new Match(),new Character('!')),
 			new Action(new Assignment(
 				CodeKeys.Search),
 				new Alternatives(
@@ -9311,6 +9331,14 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -9335,14 +9363,7 @@ namespace Meta
 			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
 			//    }
 			//}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}
+
 			public static Map Run(string path,Map argument)
 			{
 				List<string> list=new List<string>();
