@@ -1,3 +1,3 @@
-|if (hasKey @.cases @.control)
+arg|!if (!hasKey @.cases @.control)
 	then
-		|@.cases.[@.control] 0
+		|!arg.cases.[!arg.control] 0
