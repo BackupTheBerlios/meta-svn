@@ -1686,6 +1686,7 @@ namespace Meta
 						Parser parser = new Parser(text, metaFile);
 						bool matched;
 						result = Parser.File.Match(parser, out matched);
+						//result = Parser.File.Match(parser, out matched);
 						if (parser.index != parser.text.Length)
 						{
 							throw new SyntaxException("Expected end of file.", parser);
@@ -6840,30 +6841,56 @@ namespace Meta
 					new Action(new Match(), new Character(Syntax.indentation)))),
 				new Action(new Match(), new Character(Syntax.lookupEnd)));
 
-		public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
-		{
-			Map result = new StrategyMap();
-			Map function = Parser.Function.Match(parser, out matched);
-			if (matched)
-			{
-				result[CodeKeys.Function] = function;
-			}
-			else
-			{
-				Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-				if (matched)
-				{
-					StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-					Map value = Value.Match(parser, out matched);
-					result[key] = value;
+		//public static Rule Entry = new Alternatives(
+		//    new Sequence(new Action(new Assignment(CodeKeys.Function),Function)),
+		//    new CustomRule(delegate(Parser parser, out bool matched)
+		//    {
+		//        Map result = new StrategyMap();
+		//        Map function = Parser.Function.Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            result[CodeKeys.Function] = function;
+		//        }
+		//        else
+		//        {
+		//            Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+		//            if (matched)
+		//            {
+		//                StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+		//                Map value = Value.Match(parser, out matched);
+		//                result[key] = value;
 
-					// i dont understand this
-					bool match;
-					EndOfLine.Match(parser, out match);
-				}
-			}
-			return result;
-		});
+		//                // i dont understand this
+		//                bool match;
+		//                EndOfLine.Match(parser, out match);
+		//            }
+		//        }
+		//        return result;
+		//    }));
+		//public static Rule Entry = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Map result = new StrategyMap();
+		//    Map function = Parser.Function.Match(parser, out matched);
+		//    if (matched)
+		//    {
+		//        result[CodeKeys.Function] = function;
+		//    }
+		//    else
+		//    {
+		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+		//            Map value = Value.Match(parser, out matched);
+		//            result[key] = value;
+
+		//            // i dont understand this
+		//            bool match;
+		//            EndOfLine.Match(parser, out match);
+		//        }
+		//    }
+		//    return result;
+		//});
 		public static Rule Function = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Parameter),
@@ -6879,6 +6906,32 @@ namespace Meta
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData));
+		public static Rule Entry = new Alternatives(
+			new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
+			new CustomRule(delegate(Parser parser, out bool matched)
+			{
+				Map result = new StrategyMap();
+				Map function = Parser.Function.Match(parser, out matched);
+				if (matched)
+				{
+					result[CodeKeys.Function] = function;
+				}
+				else
+				{
+					Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+					if (matched)
+					{
+						StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+						Map value = Value.Match(parser, out matched);
+						result[key] = value;
+
+						// i dont understand this
+						bool match;
+						EndOfLine.Match(parser, out match);
+					}
+				}
+				return result;
+			}));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),
@@ -9274,15 +9327,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)
