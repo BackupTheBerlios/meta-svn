@@ -6157,7 +6157,7 @@ namespace Meta
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
-		public const char search='$';
+		//public const char search='$';
 		public const char negative='-';
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
@@ -6169,7 +6169,8 @@ namespace Meta
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public const char emptyMap = '0';
-		public const char call = ' ';
+		public const char explicitCall = '*';
+		//public const char call = ' ';
 		public const char select = '.';
 		public const char character = '\'';
 		public const char assignment = ' ';
@@ -6177,7 +6178,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, call, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, search, root, callStart, callEnd ,character};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,','};
 	}
 
 
@@ -6963,6 +6964,28 @@ namespace Meta
 				new Action(new ReferenceAssignment(), Call),
 				new Action(new Match(), new Character(Syntax.callEnd)));
 		});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Match(), new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Match(), Indentation),
+		//                new Action(new ReferenceAssignment(),
+		//                    new TwoOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Match(), new Optional(new Character(' '))),
+		//                                new Action(
+		//                                    new ReferenceAssignment(),
+		//                                    new Alternatives(
+		//                                        LiteralExpression,
+		//                                        Program,
+		//                                        Select,
+		//                                        ExplicitCall)))))),
+		//                new Action(new Match(), Dedentation))));
+		//});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -7146,10 +7169,11 @@ namespace Meta
 									new Action(new ReferenceAssignment(),
 										Lookup))))))));
 
+		private static Rule KeysSearch = Search;
 
-		private static Rule KeysSearch = new Sequence(
-				new Action(new Match(), new Character(Syntax.search)),
-				new Action(new ReferenceAssignment(), Search));
+		//private static Rule KeysSearch = new Sequence(
+		//        new Action(new Match(), new Character(Syntax.search)),
+		//        new Action(new ReferenceAssignment(), Search));
 
 
 		private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
@@ -7200,8 +7224,8 @@ namespace Meta
 								CodeKeys.Value),
 								Expression))))),
 			new Action(new Match(), new Optional(EndOfLine)));
-
 		public static Rule Program = new Sequence(
+			new Action(new Match(), new Character(',')),
 			new Action(
 				new Assignment(CodeKeys.Program),
 				new PrePost(
@@ -7229,6 +7253,35 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
+
+		//public static Rule Program = new Sequence(
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//                new Action(
+		//                    new Match(),
+		//                    Indentation),
+		//                new Action(
+		//                    new Assignment(1),
+		//                    Statement),
+		//                new Action(
+		//                    new Append(),
+		//                    new ZeroOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Match(), new Alternatives(
+		//                                    SameIndentation,
+		//                                    Dedentation)),
+		//                                new Action(new ReferenceAssignment(), Statement)))))),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })));
 		public abstract class Production
 		{
 			public abstract void Execute(Parser parser, Map map, ref Map result);
@@ -8810,7 +8863,8 @@ namespace Meta
 						new Alternatives(
 							Program,
 							new Enclose(
-								Syntax.call.ToString(),
+								" ",
+								//Syntax.call.ToString(),
 								new Alternatives(
 									EmptyMap,
 									Expression),
@@ -9331,14 +9385,6 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -9355,7 +9401,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)

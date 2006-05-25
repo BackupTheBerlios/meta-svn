@@ -21,26 +21,26 @@ license "
 	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 "
-commandLine|
-	: (!merge
+commandLine|,
+	: (!merge,
 		. "AssignedToCurrent") 0
 	asdf "hello"
-	shortFunction
+	shortFunction,
 		arg|!asdf
 	shortFunctionTest !shortFunction "hello"
 	counter 0
-	SetCounter
-		argument|
+	SetCounter,
+		argument|,
 			!counter @
 	. !SetCounter 5
-	scoping
-		test
+	scoping,
+		test,
 			scopingValue "right"
 			|!scopingValue
 	scopingValue "wrong"
 	scopingTest !scoping.test
 	lexicalScoping !scopingTest 0
-	!["C:"].hello
+	!["C:"].hello,
 		x "someTest"
 	cTest !["C:"].hello
 	!["C:"].hello 0
@@ -48,16 +48,16 @@ commandLine|
 	unicodeText "äaba"
 	!testSubDir.x 0
 	persistantDeleteTest !testSubDir.x
-	!testSubDir.x
+	!testSubDir.x,
 		a "b"
-		x
+		x,
 			x "hello"
 			y "world"
 	!testSubDir.x.a "hi"
-	integerHashTest
+	integerHashTest,
 		[2] "correct hash content"
-		hashTestData
-			[0]
+		hashTestData,
+			[0],
 				[0] 0
 		hashTest ![!hashTestData]
 	negativeInteger 100
@@ -67,22 +67,22 @@ commandLine|
 	integerDecrementTest 5
 	integerDecrementTest !integerDecrementTest.[0]
 	negativeNumber -123
-	mapNumbers
-		integer
+	mapNumbers,
+		integer,
 			[0] 5
-		negative
+		negative,
 			[0] 5
 			negative 0
-		fraction
+		fraction,
 			[0] 5
 			denominator 7
-		negativeFraction
+		negativeFraction,
 			[0] 5
 			negative 0
 			denominator 7
 	fraction 3/2
 	persistenceTest !testSubDir.x
-	literalEscapeTest
+	literalEscapeTest,
 		. "asdf"
 		. "asdf"
 		. "
@@ -97,7 +97,7 @@ commandLine|
 	. "ImpliedAutokey"
 	. "Autokey"
 	commandLineArguments !commandLine
-	aMap
+	aMap,
 		a "a"
 	[!aMap] "Object"
 	["normal symbol"] "NormalSymbol"
@@ -107,78 +107,78 @@ commandLine|
 	lookedUpNormalSymbol !["normal symbol"]
 	lookedUpSymbol !lookupSymbol
 	lookedUpLongSymbol !["long key symbol"]
-	object
+	object,
 		a "default"
 		autoSearch "default"
 		b 0
-		SetA
-			|
+		SetA,
+			|,
 				!a "c"
 				!autoSearch "changed"
-		SetB
-			newB|
+		SetB,
+			newB|,
 				!b.[1] !newB.value
 				: "changed"
-		x
+		x,
 			a "b"
 			c "d"
-		.
-			|
+		.,
+			|,
 				:.a "b"
 	a "default"
 	b 0
 	aSet !object.SetA 0
-	bSet !object.SetB
-		value
+	bSet !object.SetB,
+		value,
 			x 7
 			z 1
 	scopeTest "default"
-	scopeFunction
+	scopeFunction,
 		inScope "right"
-		|
+		|,
 			!scopeTest !inScope
 	inScope "wrong"
 	. !scopeFunction 0
 	scopeFromFunctionData "wrong"
-	scopeFunctionFunction
+	scopeFunctionFunction,
 		scopeFromFunctionData "right"
-		|
+		|,
 			|!scopeFromFunctionData
 	scopeFromFunction !scopeFunctionFunction 0
 	scopeFromFunctionTest !scopeFromFunction 0
-	ReturnEverything
-		everything|
+	ReturnEverything,
+		everything|,
 			: !everything
-	everythingReturned !ReturnEverything
+	everythingReturned !ReturnEverything,
 		. "a"
 		. "b"
 		. "c"
-	variableAsArgument !ReturnEverything
+	variableAsArgument !ReturnEverything,
 		. "x"
 		. "y"
 		. "z"
-	ReturnFunction
-		|
-			:
-				|
-					:
+	ReturnFunction,
+		|,
+			:,
+				|,
+					:,
 						. 1
 						. 2
 						. 3
-	SetCurrent
-		current|
-			:
+	SetCurrent,
+		current|,
+			:,
 				asdf !current
 				x !current.symbol
 			: !x
-	thisSet !SetCurrent
+	thisSet !SetCurrent,
 		symbol "haha"
-	FirstLevel
-		arg|
+	FirstLevel,
+		arg|,
 			. !SecondLevel !arg
-	SecondLevel
+	SecondLevel,
 		arg|!arg
-	argTest !FirstLevel
+	argTest !FirstLevel,
 		a "z"
 	TestClass /.Meta.TestClass
 	TestClass.NestedClass.field 5
@@ -189,7 +189,7 @@ commandLine|
 	testClass.decimalValue 5
 	TestClass.boolTest 1
 	boolTest !TestClass.boolTest
-	strongNameTest ![
+	strongNameTest ![,
 		version "2.0.0.0"
 		publicKeyToken "b77a5c561934e089"
 		culture "Neutral"
@@ -210,10 +210,10 @@ commandLine|
 	interceptedSymbol "/hello/"
 	positionalNoConversion /.Meta.PositionalNoConversion.[!mscorlib.String].[!mscorlib.String].[!mscorlib.String] "m" "n" "o"
 	positionalNoConversionConcatenated !positionalNoConversion.Concatenate.[!mscorlib.String].[!mscorlib.String].[!mscorlib.String] "r" "s" "t"
-	namedNoConversion /.Meta.NamedNoConversion.[/.Meta.Map]
+	namedNoConversion /.Meta.NamedNoConversion.[/.Meta.Map],
 		. "m"
 		y "n"
-	namedNoConversionConcatenated !namedNoConversion.Concatenate.[/.Meta.Map]
+	namedNoConversionConcatenated !namedNoConversion.Concatenate.[/.Meta.Map],
 		c "t"
 		. "r"
 	indexerNoConversion /.Meta.IndexerNoConversion 0
@@ -222,48 +222,48 @@ commandLine|
 	interceptedSymbolTwo 1
 	k "hello"
 	xyz "w"
-	literalFunction
+	literalFunction,
 		|5
 	literalFunctionResult !literalFunction 0
-	someFunction
-		|
+	someFunction,
+		|,
 			: "simple function this"
-	callFunction
+	callFunction,
 		|!someFunction
 	callFunctionResult !callFunction 0
-	delayedFunction
-		|
-			|
+	delayedFunction,
+		|,
+			|,
 				x "y"
 	delayedFunctionResult !delayedFunction 0
 	delayedFunctionDirect (!delayedFunction 0) 0
 	value "xyz"
-	selectionFunction
+	selectionFunction,
 		|!value
 	selectionFunctionResult !selectionFunction 0
 	upperLevel "unchanged"
-	SetUpperLevel
-		arg|
+	SetUpperLevel,
+		arg|,
 			!upperLevel !arg
-	ChangeUpperLevel
-		|
+	ChangeUpperLevel,
+		|,
 			. !SetUpperLevel "changed"
 	. !ChangeUpperLevel 0
 	staticEventChanged 0
-	ChangeStaticEvent
-		arg|
+	ChangeStaticEvent,
+		arg|,
 			!staticEventChanged !arg
-	TestClass.staticEvent
-		arg|
+	TestClass.staticEvent,
+		arg|,
 			. !ChangeStaticEvent 1
 			: !arg.[1]
-	. !TestClass.TakeDelegate.[/.Meta.TestClass.TestDelegate]
+	. !TestClass.TakeDelegate.[/.Meta.TestClass.TestDelegate],
 		arg|!arg.[1]
 	resultFromDelegate !TestClass.GetResultFromDelegate 0
 	staticEventResult !TestClass.CallStaticEvent.[!mscorlib.Object] !testClass
 	instanceEventChanged 0
-	testClass.instanceEvent
-		arg|
+	testClass.instanceEvent,
+		arg|,
 			!instanceEventChanged 1
 			: !arg.[1]
 	instanceEventResult !testClass.CallInstanceEvent.[!mscorlib.Object] 5
@@ -272,22 +272,22 @@ commandLine|
 	firstIf "unchanged"
 	secondIf "unchanged"
 	firstIfCondition !equal 1 !one
-	firstIfBranches
-		.
+	firstIfBranches,
+		.,
 			|"then"
-		[0]
+		[0],
 			|"else"
 	firstIf !firstIfBranches.[!firstIfCondition] 0
 	bigNumber 50020202
 	secondSwitch "unchanged"
-	secondSwitchCases
+	secondSwitchCases,
 		. "one"
 		. "two"
 		. "three"
 	secondSwitch !secondSwitchCases.[3]
 	emptyMap 0
-	emptyFunction
-		|
+	emptyFunction,
+		|,
 			x "hello"
 	emptyFunctionResult !emptyFunction 0
 	font /.["System.Drawing"].Font.[/.mscorlib.String].[/.mscorlib.Single] "Courier New" 10
@@ -297,7 +297,7 @@ commandLine|
 	stringTest.[6] !stringTest.[1]
 	helloh "hi"
 	stringStrategyHashTest ![!stringTest]
-	x
+	x,
 		aLongText"
 			hello world!
 			hello!
@@ -321,44 +321,44 @@ commandLine|
 	tabText "			hello"
 	escapedText "'#'n'''t"
 	whileCounter 0
-	loop
-		start|
+	loop,
+		start|,
 			whileDecision !not (!equal !start 10)
-			whileBranches
-				.
+			whileBranches,
+				.,
 					arg|!loop (!add !arg 1)
-				[0]
+				[0],
 					arg|!arg
 			: !whileBranches.[!whileDecision] !start
 	whileCounter !loop 3
-	returnInMap
-		arg|
+	returnInMap,
+		arg|,
 			result !arg
 	literalAsArgument !returnInMap 1
-	returnFunction
-		|
+	returnFunction,
+		|,
 			|"functionResult"
-	returnArg
+	returnArg,
 		arg|!arg
-	myArg
-		|
+	myArg,
+		|,
 			hello "world"
 	funcReturnTest !returnArg !myArg 0
-	documentedFunction
+	documentedFunction,
 		doc "This function returns #hello ."
 		|"hello"
 	docFunctionResult !documentedFunction 0
 	topLevel "default"
-	deep
-		map
-			test
-				|
+	deep,
+		map,
+			test,
+				|,
 					!topLevel "changed"
 	. !deep.map.test 0
-	outerFunction
-		arg|
-			innerFunction
-				|
+	outerFunction,
+		arg|,
+			innerFunction,
+				|,
 					: !arg
 			. !innerFunction 0
 	outerFunctionTest !outerFunction "right"
@@ -370,12 +370,12 @@ commandLine|
 	enumTest !["System.Windows.Forms"].Application.VisualStyleState
 	typeTest !mscorlib.Array.CreateInstance.[!mscorlib.Type].[!mscorlib.Int32] !mscorlib.String 5
 	123hello "asdf"
-	copySourceData
+	copySourceData,
 		x "y"
 		z "a"
 	copiedData !copySourceData
 	copiedData.x "changed"
-	characterLiterals
+	characterLiterals,
 		a 'a'
 		space ' '
 		tab '	'
