@@ -6911,24 +6911,16 @@ namespace Meta
 			new CustomRule(delegate(Parser parser, out bool matched)
 			{
 				Map result = new StrategyMap();
-				Map function = Parser.Function.Match(parser, out matched);
+				Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
 				if (matched)
 				{
-					result[CodeKeys.Function] = function;
-				}
-				else
-				{
-					Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-					if (matched)
-					{
-						StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-						Map value = Value.Match(parser, out matched);
-						result[key] = value;
+					StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+					Map value = Value.Match(parser, out matched);
+					result[key] = value;
 
-						// i dont understand this
-						bool match;
-						EndOfLine.Match(parser, out match);
-					}
+					// i dont understand this
+					bool match;
+					EndOfLine.Match(parser, out match);
 				}
 				return result;
 			}));
