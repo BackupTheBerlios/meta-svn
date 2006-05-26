@@ -6977,9 +6977,10 @@ namespace Meta
 						new Action(new Match(), Indentation),
 						new Action(new ReferenceAssignment(), new Sequence(
 							new Action(new Assignment(1),Expression))),
-							new Action(new Match(),EndOfLine),
-							new Action(new Match(),SameIndentation),
-							new Action(new Assignment(2),Expression))));
+							new Action(new Join(),new OneOrMore(new Action(new Autokey(),new Sequence(
+								new Action(new Match(),EndOfLine),
+								new Action(new Match(),SameIndentation),
+								new Action(new ReferenceAssignment(),Expression))))))));
 
 			//)));
 			//new Action(new Match(), new Character(Syntax.explicitCall)))));
