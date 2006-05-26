@@ -6178,7 +6178,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$'};
 	}
 
 
@@ -7222,25 +7222,110 @@ namespace Meta
 					LookupStringExpression,
 					LookupAnythingExpression)));
 
-
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Select),
 				new Sequence(
-					new Action(new Assignment(
-						1),
+					new Action(new Match(), new Character('$')),
+					new Action(new Match(), Indentation),
+					new Action(new Assignment(1),
 						new Alternatives(
 							LastArgument,
 							Root,
 							Search,
 							Lookup)),
 					new Action(new Append(),
-						new ZeroOrMore(
-							new Action(new Autokey(),
-								new Sequence(
-									new Action(new Match(), new Character(Syntax.select)),
-									new Action(new ReferenceAssignment(),
-										Lookup))))))));
+						new ZeroOrMore(new Action(new Autokey(), new Sequence(
+							new Action(new Match(), new Optional(EndOfLine)),
+							new Action(new Match(), SameIndentation),
+							new Action(new ReferenceAssignment(), new Sequence(
+			//new Action(new Match(), new Character(Syntax.select)),
+								new Action(new ReferenceAssignment(),
+									Lookup))))))),
+					new Action(new Match(), new Optional(Dedentation)))));
+					//new Action(new Match(),Dedentation))));
+
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Match(),new Character('$')),
+		//            new Action(new Match(),Indentation),
+		//            new Action(new Assignment(1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(new Action(new Autokey(),new Sequence(
+		//                    new Action(new Match(),new Optional(EndOfLine)),
+		//                    new Action(new Match(),SameIndentation),
+		//                    new Action(new ReferenceAssignment(),new Sequence(
+		//                                new Action(new Match(), new Character(Syntax.select)),
+		//                                new Action(new ReferenceAssignment(),
+		//                                    Lookup))))))))));
+
+
+
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Match(), new Character('$')),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new Assignment(1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+		//                    new Action(new Match(), new Optional(EndOfLine)),
+		//                    new Action(new Match(), SameIndentation),
+		//                    new Action(new ReferenceAssignment(), new Sequence(
+		//            //new Action(new Match(), new Character(Syntax.select)),
+		//                        new Action(new ReferenceAssignment(),
+		//                            Lookup))))))))));
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            //new Action(new Match(),new Character('$')),
+		//            new Action(new Assignment(
+		//                1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(
+		//                    new Action(new Autokey(),
+		//                        new Sequence(
+		//                            new Action(new Match(), new Character(Syntax.select)),
+		//                            new Action(new ReferenceAssignment(),
+		//                                Lookup))))))));
+
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Assignment(
+		//                1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(
+		//                    new Action(new Autokey(),
+		//                        new Sequence(
+		//                            new Action(new Match(), new Character(Syntax.select)),
+		//                            new Action(new ReferenceAssignment(),
+		//                                Lookup))))))));
 
 		private static Rule KeysSearch = Search;
 

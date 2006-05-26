@@ -1,5 +1,19 @@
 first|,
 	second|*
-		/.Meta.Library.Merge.[/.Meta.Map].[/.Meta.Map]
-		!first
-		!second
+		$
+			/
+			Meta
+			Library
+			Merge
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		$
+			!first
+		$
+			!second
