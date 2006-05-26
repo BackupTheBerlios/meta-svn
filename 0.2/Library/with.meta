@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.With.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			With
+			[$
+				/
+				Meta
+				Map]
+		@

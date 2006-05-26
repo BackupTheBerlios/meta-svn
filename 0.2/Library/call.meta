@@ -1,8 +1,10 @@
-|*
-	!sum
-	@
-	,
-		first|,
-			second|*
-				!first
-				!second
+|
+	arg
+	*
+		!sum
+		@
+		,
+			first|,
+				second|*
+					!first
+					!second

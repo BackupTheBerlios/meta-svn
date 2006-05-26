@@ -1,3 +1,17 @@
-|*
-	/.Meta.Library.Apply.[/.Meta.Map].[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Apply
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		@

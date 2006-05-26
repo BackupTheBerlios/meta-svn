@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.BinaryOr.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			BinaryOr
+			[$
+				/
+				Meta
+				Map]
+		@

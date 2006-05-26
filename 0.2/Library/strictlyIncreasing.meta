@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.StrictlyIncreasing.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			StrictlyIncreasing
+			[$
+				/
+				Meta
+				Map]
+		@

@@ -1,7 +1,20 @@
-|,
-	map*
-		/.Meta.Number.[/.Meta.Map]
-		@
-	:*
-		map.ToString
-		0
+|
+	arg
+	,
+		=
+			map
+			*
+				$
+					/
+					Meta
+					Number
+					[$
+						/
+						Meta
+						Map]
+				@
+		:*
+			$
+				map
+				ToString
+			0

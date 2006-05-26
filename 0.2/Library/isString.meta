@@ -1,5 +1,20 @@
-|,
-	object*
-		/.Meta.ObjectMap.[/.mscorlib.Object]
-		@
-	: object.IsString
+|
+	arg
+	,
+		=
+			object
+			*
+				$
+					/
+					Meta
+					ObjectMap
+					[$
+						/
+						mscorlib
+						Object]
+				@
+		=
+			:
+			$
+				object
+				IsString

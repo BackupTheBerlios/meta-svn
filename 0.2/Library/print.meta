@@ -1,5 +1,17 @@
-|*
-	console.writeLine
+|
+	arg
 	*
-		/.Meta.Serialize.ValueFunction.[/.Meta.Map]
-		@
+		$
+			console
+			writeLine
+		*
+			$
+				/
+				Meta
+				Serialize
+				ValueFunction
+				[$
+					/
+					Meta
+					Map]
+			@

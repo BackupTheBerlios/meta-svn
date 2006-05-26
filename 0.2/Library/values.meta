@@ -1,7 +1,13 @@
-arg|*
-	!apply
+|
+	arg
 	*
-		!keys
-		@
-	,
-		key|!arg.[!key]
+		!apply
+		*
+			!keys
+			@
+		,
+			|
+				key
+				$
+					!arg
+					[!key]

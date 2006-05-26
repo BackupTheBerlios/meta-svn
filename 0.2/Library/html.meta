@@ -1,5 +1,15 @@
 url,
 	decode,
-		|*
-			/.Meta.Library.UrlDecode.[/.Meta.Map]
-			@
+		|
+			arg
+			*
+				$
+					/
+					Meta
+					Library
+					UrlDecode
+					[$
+						/
+						Meta
+						Map]
+				@

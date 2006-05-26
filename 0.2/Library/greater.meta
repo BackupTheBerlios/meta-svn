@@ -1,3 +1,17 @@
-|*
-	/.Meta.Library.Greater.[/.Meta.Map].[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Greater
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		@

@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.Maximum.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Maximum
+			[$
+				/
+				Meta
+				Map]
+		@

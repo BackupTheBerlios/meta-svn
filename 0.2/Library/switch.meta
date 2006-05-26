@@ -1,11 +1,26 @@
-arg|*
-	!if
+|
+	switchArg
 	*
-		!hasKey
-		@.cases
-		@.control
-	,
-		then,
-			|*
-				!arg.cases.[!arg.control]
-				0
+		!if
+		*
+			!hasKey
+			$
+				@
+				cases
+			$
+				@
+				control
+		,
+			=
+				then
+				,
+					|
+						arg
+						*
+							$
+								!switchArg
+								cases
+								[$
+									!switchArg
+									control]
+							0

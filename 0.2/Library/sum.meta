@@ -1,3 +1,17 @@
-|*
-	/.Meta.Library.Sum.[/.Meta.Map].[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Sum
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		@

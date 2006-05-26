@@ -1,3 +1,17 @@
-|*
-	/.Meta.Library.Join.[/.Meta.Map].[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Join
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		@

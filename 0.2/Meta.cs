@@ -7026,6 +7026,7 @@ namespace Meta
 			new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
 			new CustomRule(delegate(Parser parser, out bool matched)
 			{
+				//EndOfLine.Match(parser, out matched);
 				Map result = new StrategyMap();
 				Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
 				if (matched)

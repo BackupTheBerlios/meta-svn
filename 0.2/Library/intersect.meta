@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.Intersect.[/.Meta.Map]
-	@
+|	
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Intersect
+			[$
+				/
+				Meta
+				Map]
+		@

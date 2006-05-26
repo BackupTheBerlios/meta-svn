@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.FindFirst.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			FindFirst
+			[$
+				/
+				Meta
+				Map]
+		@

@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.Keys.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Keys
+			[$
+				/
+				Meta
+				Map]
+		@

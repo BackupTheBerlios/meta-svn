@@ -1,11 +1,22 @@
 choose,
-	|*
-		@.[*
-			/.Meta.Library.Random.[/.Meta.Map]
-			*
-				!add
+	|
+		arg
+		$
+			@
+			[*
+				$
+					/
+					Meta
+					Library
+					Random
+					[$
+						/
+						Meta
+						Map]
 				*
-					!length
-					@
-				1
-		]
+					!add
+					*
+						!length
+						@
+					1
+			]

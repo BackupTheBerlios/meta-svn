@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.Rest.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Rest
+			[$
+				/
+				Meta
+				Map]
+		@

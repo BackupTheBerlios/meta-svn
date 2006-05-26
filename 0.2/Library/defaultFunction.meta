@@ -1,15 +1,29 @@
-default|,
-	arg|*
-		default.function
-		*
-			!merge
-			!default.argument
-			!arg
-func|,
-	argument|,
-		arg|*
-			!func
+|
+	default
+	,
+		|
+			arg
 			*
-				!merge
-				!argument
-				!arg
+				$
+					default
+					function
+				*
+					!merge
+					$
+						!default
+						argument
+					!arg
+|
+	func
+	,
+		|
+			argument
+			,
+				|
+					arg
+					*
+						!func
+						*
+							!merge
+							!argument
+							!arg

@@ -1,5 +1,20 @@
-|,
-	object*
-		/.Meta.ObjectMap.[/.mscorlib.Object]
-		@
-	: object.ArrayCount
+|
+	arg
+	,
+		=
+			object
+			*
+				$
+					/
+					Meta
+					ObjectMap
+					[$
+						/
+						mscorlib
+						Object]
+				@
+		=
+			:
+			$
+				object
+				ArrayCount

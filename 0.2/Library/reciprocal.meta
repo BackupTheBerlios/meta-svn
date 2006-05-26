@@ -1,3 +1,13 @@
-|*
-	/.Meta.Library.Reciprocal.[/.Meta.Map]
-	@
+|
+	arg
+	*
+		$
+			/
+			Meta
+			Library
+			Reciprocal
+			[$
+				/
+				Meta
+				Map]
+		@
