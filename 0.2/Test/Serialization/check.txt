@@ -36,4 +36,6 @@ function
 							literal "hello"
 						[2] 
 							literal "hello"
+						[3] 
+							literal "hello"
 "

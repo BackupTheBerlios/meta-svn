@@ -6968,7 +6968,7 @@ namespace Meta
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action(new Match(), Indentation),
+				//new Action(new Match(), Indentation),
 				new Action(new Match(), new Character(Syntax.explicitCall)),
 				new Action(new Assignment(
 					CodeKeys.Call),
@@ -6978,9 +6978,12 @@ namespace Meta
 						new Action(new ReferenceAssignment(), new Sequence(
 							new Action(new Assignment(1),Expression))),
 							new Action(new Join(),new OneOrMore(new Action(new Autokey(),new Sequence(
-								new Action(new Match(),EndOfLine),
+								new Action(new Match(),new Optional(EndOfLine)),
 								new Action(new Match(),SameIndentation),
-								new Action(new ReferenceAssignment(),Expression))))))));
+								new Action(new ReferenceAssignment(),Expression))))),
+							new Action(new Match(),new Optional(EndOfLine)),
+							new Action(new Match(),new Optional(Dedentation))
+							)));
 
 			//)));
 			//new Action(new Match(), new Character(Syntax.explicitCall)))));
@@ -7130,7 +7133,12 @@ namespace Meta
 		//                            Program)))));
 		//});
 
-
+		//public static Rule DedentationMatch = new CustomRule(delegate(Parser pa, out bool matched)
+		//{
+		//    pa.indentationCount--;
+		//    matched = false;
+		//    return null;
+		//});
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			pa.indentationCount--;
@@ -7682,6 +7690,9 @@ namespace Meta
 				matched = false;
 				while (true)
 				{
+					if (parser.Rest.StartsWith("\t\t\"hello\""))
+					{
+					}
 					if (!action.Execute(parser, ref list))
 					{
 						break;
@@ -9467,14 +9478,14 @@ namespace Meta
 					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
