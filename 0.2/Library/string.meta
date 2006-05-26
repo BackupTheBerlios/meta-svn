@@ -1,18 +1,36 @@
 replace,
-	|/.Meta.Library.StringReplace.[/.Meta.Map] @
+	|*
+		/.Meta.Library.StringReplace.[/.Meta.Map]
+		@
 trim,
 	|,
-		object /.Meta.ObjectMap.[mscorlib.String] @
-		: object.Trim.[0] 0
+		object*
+			/.Meta.ObjectMap.[mscorlib.String]
+			@
+		:*
+			object.Trim.[0]
+			0
 lower,
 	|,
-		object /.Meta.ObjectMap.[/.mscorlib.String] @
-		: object.ToLower 0
+		object*
+			/.Meta.ObjectMap.[/.mscorlib.String]
+			@
+		:*
+			object.ToLower
+			0
 upper,
 	|,
-		object /.Meta.ObjectMap.[/.mscorlib.String] @
-		: object.ToUpper 0
+		object*
+			/.Meta.ObjectMap.[/.mscorlib.String]
+			@
+		:*
+			object.ToUpper
+			0
 split,
-	|/.Meta.Library.SplitString.[/.Meta.Map].[/.Meta.Map] @
+	|*
+		/.Meta.Library.SplitString.[/.Meta.Map].[/.Meta.Map]
+		@
 compare,
-	|/.Meta.Library.CompareString.[/.Meta.Map].[/.Meta.Map] @
+	|*
+		/.Meta.Library.CompareString.[/.Meta.Map].[/.Meta.Map]
+		@

@@ -1,10 +1,20 @@
 writeLine,
-	|/.Meta.Library.WriteLine.[/.mscorlib.String] @
+	|*
+		/.Meta.Library.WriteLine.[/.mscorlib.String]
+		@
 write,
-	|/.Meta.Library.Write.[/.mscorlib.String] @
+	|*
+		/.Meta.Library.Write.[/.mscorlib.String]
+		@
 readLine,
-	|/.mscorlib.Console.ReadLine 0
+	|*
+		/.mscorlib.Console.ReadLine
+		0
 clear,
-	|/.mscorlib.Console.Clear 0
+	|*
+		/.mscorlib.Console.Clear
+		0
 create,
-	|Meta.Library.CreateConsole 0
+	|*
+		Meta.Library.CreateConsole
+		0

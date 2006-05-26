@@ -1,3 +1,5 @@
 url,
 	decode,
-		|/.Meta.Library.UrlDecode.[/.Meta.Map] @
+		|*
+			/.Meta.Library.UrlDecode.[/.Meta.Map]
+			@

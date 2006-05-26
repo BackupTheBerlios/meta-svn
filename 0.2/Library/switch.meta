@@ -1,3 +1,11 @@
-arg|!if (!hasKey @.cases @.control),
-	then,
-		|!arg.cases.[!arg.control] 0
+arg|*
+	!if
+	*
+		!hasKey
+		@.cases
+		@.control
+	,
+		then,
+			|*
+				!arg.cases.[!arg.control]
+				0

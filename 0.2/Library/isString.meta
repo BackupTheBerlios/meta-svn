@@ -1,3 +1,5 @@
 |,
-	object /.Meta.ObjectMap.[/.mscorlib.Object] @
+	object*
+		/.Meta.ObjectMap.[/.mscorlib.Object]
+		@
 	: object.IsString

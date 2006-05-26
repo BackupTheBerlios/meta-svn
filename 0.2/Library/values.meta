@@ -1,2 +1,7 @@
-arg|!apply (!keys @),
-	key|!arg.[!key]
+arg|*
+	!apply
+	*
+		!keys
+		@
+	,
+		key|!arg.[!key]

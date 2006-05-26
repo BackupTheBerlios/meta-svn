@@ -1,2 +1,11 @@
 choose,
-	|@.[/.Meta.Library.Random.[/.Meta.Map] (!add !length @ 1)]
+	|*
+		@.[*
+			/.Meta.Library.Random.[/.Meta.Map]
+			*
+				!add
+				*
+					!length
+					@
+				1
+		]

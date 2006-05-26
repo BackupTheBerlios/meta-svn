@@ -1,2 +1,3 @@
-documentation "Returns whether all booleans are true."
-|/.Meta.Library.And.[/.Meta.Map] @
+|*
+	/.Meta.Library.And.[/.Meta.Map]
+	@
