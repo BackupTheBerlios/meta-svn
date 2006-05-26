@@ -35,10 +35,8 @@ function
 						[1] 
 							call 
 								[1] 
-									select 
-										[1] 
-											search 
-												literal "merge"
+									search 
+										literal "merge"
 								[2] 
 									program 
 										[1] 
@@ -73,10 +71,8 @@ function
 								literal 
 									parameter "arg"
 									expression 
-										select 
-											[1] 
-												search 
-													literal "asdf"
+										search 
+											literal "asdf"
 			[4] 
 				key 
 					[1] 
@@ -85,10 +81,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "shortFunction"
+							search 
+								literal "shortFunction"
 						[2] 
 							literal "hello"
 			[5] 
@@ -121,9 +115,7 @@ function
 														search 
 															literal "counter"
 												value 
-													select 
-														[1] 
-															lastArgument 0
+													lastArgument 0
 			[7] 
 				key 
 					[1] 
@@ -132,10 +124,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "SetCounter"
+							search 
+								literal "SetCounter"
 						[2] 
 							literal 5
 			[8] 
@@ -166,12 +156,10 @@ function
 													literal "function"
 										value 
 											literal 
-												parameter 0
+												parameter "arg"
 												expression 
-													select 
-														[1] 
-															search 
-																literal "scopingValue"
+													search 
+														literal "scopingValue"
 			[9] 
 				key 
 					[1] 
@@ -200,10 +188,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "scopingTest"
+							search 
+								literal "scopingTest"
 						[2] 
 							literal 0
 			[12] 
@@ -381,13 +367,9 @@ function
 									lookup 
 										literal "hashTest"
 							value 
-								select 
-									[1] 
-										search 
-											select 
-												[1] 
-													search 
-														literal "hashTestData"
+								search 
+									search 
+										literal "hashTestData"
 			[22] 
 				key 
 					[1] 
@@ -421,10 +403,8 @@ function
 						lookup 
 							literal 0
 				value 
-					select 
-						[1] 
-							search 
-								literal "integerIncrementTest"
+					search 
+						literal "integerIncrementTest"
 			[26] 
 				key 
 					[1] 
@@ -631,10 +611,8 @@ function
 						lookup 
 							literal "commandLineArguments"
 				value 
-					select 
-						[1] 
-							search 
-								literal "commandLine"
+					search 
+						literal "commandLine"
 			[36] 
 				key 
 					[1] 
@@ -653,10 +631,8 @@ function
 				key 
 					[1] 
 						lookup 
-							select 
-								[1] 
-									search 
-										literal "aMap"
+							search 
+								literal "aMap"
 				value 
 					literal "Object"
 			[38] 
@@ -686,43 +662,33 @@ function
 						lookup 
 							literal "lookedUpMap"
 				value 
-					select 
-						[1] 
-							search 
-								select 
-									[1] 
-										search 
-											literal "aMap"
+					search 
+						search 
+							literal "aMap"
 			[42] 
 				key 
 					[1] 
 						lookup 
 							literal "lookedUpNormalSymbol"
 				value 
-					select 
-						[1] 
-							search 
-								literal "normal symbol"
+					search 
+						literal "normal symbol"
 			[43] 
 				key 
 					[1] 
 						lookup 
 							literal "lookedUpSymbol"
 				value 
-					select 
-						[1] 
-							search 
-								literal "lookupSymbol"
+					search 
+						literal "lookupSymbol"
 			[44] 
 				key 
 					[1] 
 						lookup 
 							literal "lookedUpLongSymbol"
 				value 
-					select 
-						[1] 
-							search 
-								literal "long key symbol"
+					search 
+						literal "long key symbol"
 			[45] 
 				key 
 					[1] 
@@ -765,7 +731,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameter 0
+												parameter "arg"
 												expression 
 													program 
 														[1] 
@@ -856,7 +822,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameter 0
+												parameter "arg"
 												expression 
 													program 
 														[1] 
@@ -965,7 +931,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -974,10 +940,8 @@ function
 														search 
 															literal "scopeTest"
 												value 
-													select 
-														[1] 
-															search 
-																literal "inScope"
+													search 
+														literal "inScope"
 			[52] 
 				key 
 					[1] 
@@ -993,10 +957,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "scopeFunction"
+							search 
+								literal "scopeFunction"
 						[2] 
 							literal 0
 			[54] 
@@ -1027,7 +989,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -1037,12 +999,10 @@ function
 															literal "function"
 												value 
 													literal 
-														parameter 0
+														parameter "arg"
 														expression 
-															select 
-																[1] 
-																	search 
-																		literal "scopeFromFunctionData"
+															search 
+																literal "scopeFromFunctionData"
 			[56] 
 				key 
 					[1] 
@@ -1051,10 +1011,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "scopeFunctionFunction"
+							search 
+								literal "scopeFunctionFunction"
 						[2] 
 							literal 0
 			[57] 
@@ -1065,10 +1023,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "scopeFromFunction"
+							search 
+								literal "scopeFromFunction"
 						[2] 
 							literal 0
 			[58] 
@@ -1093,10 +1049,8 @@ function
 													[1] 
 														current 0
 												value 
-													select 
-														[1] 
-															search 
-																literal "everything"
+													search 
+														literal "everything"
 			[59] 
 				key 
 					[1] 
@@ -1105,10 +1059,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "ReturnEverything"
+							search 
+								literal "ReturnEverything"
 						[2] 
 							program 
 								[1] 
@@ -1140,10 +1092,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "ReturnEverything"
+							search 
+								literal "ReturnEverything"
 						[2] 
 							program 
 								[1] 
@@ -1181,7 +1131,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -1197,7 +1147,7 @@ function
 																		literal "function"
 															value 
 																literal 
-																	parameter 0
+																	parameter "arg"
 																	expression 
 																		program 
 																			[1] 
@@ -1256,10 +1206,8 @@ function
 																	lookup 
 																		literal "asdf"
 															value 
-																select 
-																	[1] 
-																		search 
-																			literal "current"
+																search 
+																	literal "current"
 														[2] 
 															key 
 																[1] 
@@ -1278,10 +1226,8 @@ function
 													[1] 
 														current 0
 												value 
-													select 
-														[1] 
-															search 
-																literal "x"
+													search 
+														literal "x"
 			[63] 
 				key 
 					[1] 
@@ -1290,10 +1236,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "SetCurrent"
+							search 
+								literal "SetCurrent"
 						[2] 
 							program 
 								[1] 
@@ -1328,15 +1272,11 @@ function
 												value 
 													call 
 														[1] 
-															select 
-																[1] 
-																	search 
-																		literal "SecondLevel"
+															search 
+																literal "SecondLevel"
 														[2] 
-															select 
-																[1] 
-																	search 
-																		literal "arg"
+															search 
+																literal "arg"
 			[65] 
 				key 
 					[1] 
@@ -1353,10 +1293,8 @@ function
 								literal 
 									parameter "arg"
 									expression 
-										select 
-											[1] 
-												search 
-													literal "arg"
+										search 
+											literal "arg"
 			[66] 
 				key 
 					[1] 
@@ -1365,10 +1303,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "FirstLevel"
+							search 
+								literal "FirstLevel"
 						[2] 
 							program 
 								[1] 
@@ -1430,10 +1366,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "TestClass"
+							search 
+								literal "TestClass"
 						[2] 
 							literal 0
 			[71] 
@@ -1553,10 +1487,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "MemberTest"
+							search 
+								literal "MemberTest"
 						[2] 
 							literal 0
 			[79] 
@@ -1653,10 +1585,8 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							select 
-								[1] 
-									search 
-										literal "memberTest"
+							search 
+								literal "memberTest"
 						[3] 
 							literal 3247
 			[82] 
@@ -1697,10 +1627,8 @@ function
 												lookup 
 													literal "Int32"
 						[2] 
-							select 
-								[1] 
-									search 
-										literal "memberTest"
+							search 
+								literal "memberTest"
 						[3] 
 							literal 3247
 			[83] 
@@ -2055,7 +1983,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										literal 5
 			[101] 
@@ -2066,10 +1994,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "literalFunction"
+							search 
+								literal "literalFunction"
 						[2] 
 							literal 0
 			[102] 
@@ -2086,7 +2012,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2109,12 +2035,10 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
-										select 
-											[1] 
-												search 
-													literal "someFunction"
+										search 
+											literal "someFunction"
 			[104] 
 				key 
 					[1] 
@@ -2123,10 +2047,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "callFunction"
+							search 
+								literal "callFunction"
 						[2] 
 							literal 0
 			[105] 
@@ -2143,7 +2065,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2153,7 +2075,7 @@ function
 															literal "function"
 												value 
 													literal 
-														parameter 0
+														parameter "arg"
 														expression 
 															program 
 																[1] 
@@ -2171,10 +2093,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "delayedFunction"
+							search 
+								literal "delayedFunction"
 						[2] 
 							literal 0
 			[107] 
@@ -2187,10 +2107,8 @@ function
 						[1] 
 							call 
 								[1] 
-									select 
-										[1] 
-											search 
-												literal "delayedFunction"
+									search 
+										literal "delayedFunction"
 								[2] 
 									literal 0
 						[2] 
@@ -2216,12 +2134,10 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
-										select 
-											[1] 
-												search 
-													literal "value"
+										search 
+											literal "value"
 			[110] 
 				key 
 					[1] 
@@ -2230,10 +2146,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "selectionFunction"
+							search 
+								literal "selectionFunction"
 						[2] 
 							literal 0
 			[111] 
@@ -2266,10 +2180,8 @@ function
 														search 
 															literal "upperLevel"
 												value 
-													select 
-														[1] 
-															search 
-																literal "arg"
+													search 
+														literal "arg"
 			[113] 
 				key 
 					[1] 
@@ -2284,7 +2196,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2295,10 +2207,8 @@ function
 												value 
 													call 
 														[1] 
-															select 
-																[1] 
-																	search 
-																		literal "SetUpperLevel"
+															search 
+																literal "SetUpperLevel"
 														[2] 
 															literal "changed"
 			[114] 
@@ -2309,10 +2219,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "ChangeUpperLevel"
+							search 
+								literal "ChangeUpperLevel"
 						[2] 
 							literal 0
 			[115] 
@@ -2345,10 +2253,8 @@ function
 														search 
 															literal "staticEventChanged"
 												value 
-													select 
-														[1] 
-															search 
-																literal "arg"
+													search 
+														literal "arg"
 			[117] 
 				key 
 					[1] 
@@ -2377,10 +2283,8 @@ function
 												value 
 													call 
 														[1] 
-															select 
-																[1] 
-																	search 
-																		literal "ChangeStaticEvent"
+															search 
+																literal "ChangeStaticEvent"
 														[2] 
 															literal 1
 											[2] 
@@ -2484,10 +2388,8 @@ function
 												lookup 
 													literal "Object"
 						[2] 
-							select 
-								[1] 
-									search 
-										literal "testClass"
+							search 
+								literal "testClass"
 			[121] 
 				key 
 					[1] 
@@ -2596,17 +2498,13 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "equal"
+							search 
+								literal "equal"
 						[2] 
 							literal 1
 						[3] 
-							select 
-								[1] 
-									search 
-										literal "one"
+							search 
+								literal "one"
 			[129] 
 				key 
 					[1] 
@@ -2628,7 +2526,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameter 0
+												parameter "arg"
 												expression 
 													literal "then"
 						[2] 
@@ -2645,7 +2543,7 @@ function
 													literal "function"
 										value 
 											literal 
-												parameter 0
+												parameter "arg"
 												expression 
 													literal "else"
 			[130] 
@@ -2662,10 +2560,8 @@ function
 										literal "firstIfBranches"
 								[2] 
 									lookup 
-										select 
-											[1] 
-												search 
-													literal "firstIfCondition"
+										search 
+											literal "firstIfCondition"
 						[2] 
 							literal 0
 			[131] 
@@ -2744,7 +2640,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -2762,10 +2658,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "emptyFunction"
+							search 
+								literal "emptyFunction"
 						[2] 
 							literal 0
 			[138] 
@@ -2861,13 +2755,9 @@ function
 						lookup 
 							literal "stringStrategyHashTest"
 				value 
-					select 
-						[1] 
-							search 
-								select 
-									[1] 
-										search 
-											literal "stringTest"
+					search 
+						search 
+							literal "stringTest"
 			[145] 
 				key 
 					[1] 
@@ -3144,22 +3034,16 @@ function
 												value 
 													call 
 														[1] 
-															select 
-																[1] 
-																	search 
-																		literal "not"
+															search 
+																literal "not"
 														[2] 
 															call 
 																[1] 
-																	select 
-																		[1] 
-																			search 
-																				literal "equal"
+																	search 
+																		literal "equal"
 																[2] 
-																	select 
-																		[1] 
-																			search 
-																				literal "start"
+																	search 
+																		literal "start"
 																[3] 
 																	literal 10
 											[2] 
@@ -3187,22 +3071,16 @@ function
 																				expression 
 																					call 
 																						[1] 
-																							select 
-																								[1] 
-																									search 
-																										literal "loop"
+																							search 
+																								literal "loop"
 																						[2] 
 																							call 
 																								[1] 
-																									select 
-																										[1] 
-																											search 
-																												literal "add"
+																									search 
+																										literal "add"
 																								[2] 
-																									select 
-																										[1] 
-																											search 
-																												literal "arg"
+																									search 
+																										literal "arg"
 																								[3] 
 																									literal 1
 														[2] 
@@ -3221,10 +3099,8 @@ function
 																			literal 
 																				parameter "arg"
 																				expression 
-																					select 
-																						[1] 
-																							search 
-																								literal "arg"
+																					search 
+																						literal "arg"
 											[3] 
 												key 
 													[1] 
@@ -3238,15 +3114,11 @@ function
 																		literal "whileBranches"
 																[2] 
 																	lookup 
-																		select 
-																			[1] 
-																				search 
-																					literal "whileDecision"
+																		search 
+																			literal "whileDecision"
 														[2] 
-															select 
-																[1] 
-																	search 
-																		literal "start"
+															search 
+																literal "start"
 			[160] 
 				key 
 					[1] 
@@ -3255,10 +3127,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "loop"
+							search 
+								literal "loop"
 						[2] 
 							literal 3
 			[161] 
@@ -3284,10 +3154,8 @@ function
 														lookup 
 															literal "result"
 												value 
-													select 
-														[1] 
-															search 
-																literal "arg"
+													search 
+														literal "arg"
 			[162] 
 				key 
 					[1] 
@@ -3296,10 +3164,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "returnInMap"
+							search 
+								literal "returnInMap"
 						[2] 
 							literal 1
 			[163] 
@@ -3316,7 +3182,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -3326,7 +3192,7 @@ function
 															literal "function"
 												value 
 													literal 
-														parameter 0
+														parameter "arg"
 														expression 
 															literal "functionResult"
 			[164] 
@@ -3345,10 +3211,8 @@ function
 								literal 
 									parameter "arg"
 									expression 
-										select 
-											[1] 
-												search 
-													literal "arg"
+										search 
+											literal "arg"
 			[165] 
 				key 
 					[1] 
@@ -3363,7 +3227,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										program 
 											[1] 
@@ -3381,15 +3245,11 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "returnArg"
+							search 
+								literal "returnArg"
 						[2] 
-							select 
-								[1] 
-									search 
-										literal "myArg"
+							search 
+								literal "myArg"
 						[3] 
 							literal 0
 			[167] 
@@ -3413,7 +3273,7 @@ function
 										literal "function"
 							value 
 								literal 
-									parameter 0
+									parameter "arg"
 									expression 
 										literal "hello"
 			[168] 
@@ -3424,10 +3284,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "documentedFunction"
+							search 
+								literal "documentedFunction"
 						[2] 
 							literal 0
 			[169] 
@@ -3465,7 +3323,7 @@ function
 																literal "function"
 													value 
 														literal 
-															parameter 0
+															parameter "arg"
 															expression 
 																program 
 																	[1] 
@@ -3526,7 +3384,7 @@ function
 																		literal "function"
 															value 
 																literal 
-																	parameter 0
+																	parameter "arg"
 																	expression 
 																		program 
 																			[1] 
@@ -3534,10 +3392,8 @@ function
 																					[1] 
 																						current 0
 																				value 
-																					select 
-																						[1] 
-																							search 
-																								literal "arg"
+																					search 
+																						literal "arg"
 											[2] 
 												key 
 													[1] 
@@ -3546,10 +3402,8 @@ function
 												value 
 													call 
 														[1] 
-															select 
-																[1] 
-																	search 
-																		literal "innerFunction"
+															search 
+																literal "innerFunction"
 														[2] 
 															literal 0
 			[173] 
@@ -3560,10 +3414,8 @@ function
 				value 
 					call 
 						[1] 
-							select 
-								[1] 
-									search 
-										literal "outerFunction"
+							search 
+								literal "outerFunction"
 						[2] 
 							literal "right"
 			[174] 
@@ -3694,10 +3546,8 @@ function
 						lookup 
 							literal "copiedData"
 				value 
-					select 
-						[1] 
-							search 
-								literal "copySourceData"
+					search 
+						literal "copySourceData"
 			[181] 
 				key 
 					[1] 
@@ -3740,8 +3590,6 @@ shortFunc
 	function 
 		parameter "arg"
 		expression 
-			select 
-				[1] 
-					search 
-						literal "arg"
+			search 
+				literal "arg"
 "

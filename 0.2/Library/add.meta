@@ -1,16 +1,18 @@
-|*
-	$
-		/
-		Meta
-		Library
-		Add
-		[$
+|
+	arg
+	*
+		$
 			/
 			Meta
-			Map]
-		[$
-			/
-			Meta
-			Map]
-	$
-		@
+			Library
+			Add
+			[$
+				/
+				Meta
+				Map]
+			[$
+				/
+				Meta
+				Map]
+		$
+			@

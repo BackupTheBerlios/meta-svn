@@ -111,6 +111,7 @@
   <ItemGroup>
     <None Include="interpreter.meta" />
     <None Include="Library\call.meta" />
+    <None Include="Library\first.meta" />
     <None Include="Library\sum.meta" />
     <None Include="ide.meta" />
     <None Include="Library\add.meta" />

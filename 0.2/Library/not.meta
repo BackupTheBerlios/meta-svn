@@ -1,12 +1,14 @@
-|*
-	$
-		/
-		Meta
-		Library
-		Not
-		[$
+|
+	arg
+	*
+		$
 			/
 			Meta
-			Map]
-	$
-		@
+			Library
+			Not
+			[$
+				/
+				Meta
+				Map]
+		$
+			@
