@@ -197,10 +197,10 @@ namespace Meta
 	public abstract class Expression
 	{
 		//public abstract bool Emit(ILGenerator il,Dictionary<Map,int> keys);
-		public abstract bool HasConstantKeysOnly
-		{
-			get;
-		}
+		//public abstract bool HasConstantKeysOnly
+		//{
+		//    get;
+		//}
 		//public bool IsCall
 		//{
 		//    get
@@ -275,13 +275,13 @@ namespace Meta
     }
 	public class Call : Expression
 	{
-		public override bool HasConstantKeysOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
+		//public override bool HasConstantKeysOnly
+		//{
+		//    get
+		//    {
+		//        return true;
+		//    }
+		//}
 		private Map parameterName;
 		List<Map> expressions;
 		public Call(Map code, Map parameterName)
@@ -401,35 +401,35 @@ namespace Meta
 		}
 
 		bool constantKeysDetermined=false;
-		public override bool HasConstantKeysOnly
-		{
-			get
-			{
-				if (!constantKeysDetermined)
-				{
-					hasConstantKeysOnly = true;
-					foreach (Statement statement in statements)
-					{
-						if (statement.Keys.Count == 1)
-						{
-							Subselect subselect = statement.Keys[0].GetSubselect();
-							if (!subselect.HasLiteralKeysOnly)
-							{
-								hasConstantKeysOnly = false;
-								break;
-							}
-						}
-						else
-						{
-							hasConstantKeysOnly = false;
-							break;
-						}
-					}
-					constantKeysDetermined = true;
-				}
-				return hasConstantKeysOnly;
-			}
-		}
+		//public override bool HasConstantKeysOnly
+		//{
+		//    get
+		//    {
+		//        if (!constantKeysDetermined)
+		//        {
+		//            hasConstantKeysOnly = true;
+		//            foreach (Statement statement in statements)
+		//            {
+		//                if (statement.Keys.Count == 1)
+		//                {
+		//                    Subselect subselect = statement.Keys[0].GetSubselect();
+		//                    //if (!subselect.HasLiteralKeysOnly)
+		//                    //{
+		//                    //    hasConstantKeysOnly = false;
+		//                    //    break;
+		//                    //}
+		//                }
+		//                else
+		//                {
+		//                    hasConstantKeysOnly = false;
+		//                    break;
+		//                }
+		//            }
+		//            constantKeysDetermined = true;
+		//        }
+		//        return hasConstantKeysOnly;
+		//    }
+		//}
 	}
 	public class Literal : Expression
 	{
@@ -444,13 +444,13 @@ namespace Meta
 				return literal;
 			}
 		}
-		public override bool HasConstantKeysOnly
-		{
-			get 
-			{
-				return true;
-			}
-		}
+		//public override bool HasConstantKeysOnly
+		//{
+		//    get 
+		//    {
+		//        return true;
+		//    }
+		//}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		private Map literal;
 		public Literal(Map code)
@@ -480,19 +480,19 @@ namespace Meta
 	}
 	public abstract class Subselect
 	{
-		public abstract bool HasLiteralKeysOnly
-		{
-			get;
-		}
+		//public abstract bool HasLiteralKeysOnly
+		//{
+		//    get;
+		//}
 		public abstract Position Evaluate(Position context, Position executionContext);
 		public abstract void Assign(Position context, Map value, Position executionContext);
 	}
-	public class Current:Subselect
+	public class Current : Subselect
 	{
-		public override bool HasLiteralKeysOnly
-		{
-			get { return true; }
-		}
+		//public override bool HasLiteralKeysOnly
+		//{
+		//    get { return true; }
+		//}
 		public override Position Evaluate(Position context, Position executionContext)
 		{
 			return context;
@@ -515,10 +515,10 @@ namespace Meta
 	}
 	public class Root : Subselect
 	{
-		public override bool HasLiteralKeysOnly
-		{
-			get { return true; }
-		}
+		//public override bool HasLiteralKeysOnly
+		//{
+		//    get { return true; }
+		//}
 		public override Position Evaluate(Position selected, Position context)
 		{
 			return RootPosition.rootPosition;
@@ -528,7 +528,7 @@ namespace Meta
 			throw new Exception("Cannot assign to argument.");
 		}
 	}
-	public class Lookup:Subselect
+	public class Lookup : Subselect
 	{
 		public Expression Key
 		{
@@ -537,10 +537,10 @@ namespace Meta
 				return keyExpression.GetExpression();
 			}
 		}
-		public override bool HasLiteralKeysOnly
-		{
-			get { return keyExpression.GetExpression() is Literal; }
-		}
+		//public override bool HasLiteralKeysOnly
+		//{
+		//    get { return keyExpression.GetExpression() is Literal; }
+		//}
 		private Map keyExpression;
 		public Lookup(Map keyExpression)
 		{
@@ -574,10 +574,10 @@ namespace Meta
 			}
 		}
 
-		public override bool HasLiteralKeysOnly
-		{
-			get { return keyExpression.GetExpression() is Literal; }
-		}
+		//public override bool HasLiteralKeysOnly
+		//{
+		//    get { return keyExpression.GetExpression() is Literal; }
+		//}
 		private Map keyExpression;
 		public Search(Map keyExpression)
 		{
@@ -795,13 +795,13 @@ namespace Meta
 
 	public class LastArgument : Subselect
 	{
-		public override bool HasLiteralKeysOnly
-		{
-			get
-			{
-				return false;
-			}
-		}
+		//public override bool HasLiteralKeysOnly
+		//{
+		//    get
+		//    {
+		//        return false;
+		//    }
+		//}
 		public override Position Evaluate(Position context, Position executionContext)
 		{
 			return Call.LastArgument;
@@ -884,13 +884,13 @@ namespace Meta
 				return subselects;
 			}
 		}
-		public override bool HasConstantKeysOnly
-		{
-			get
-			{
-				return true;
-			}
-		}
+		//public override bool HasConstantKeysOnly
+		//{
+		//    get
+		//    {
+		//        return true;
+		//    }
+		//}
 		private List<Map> subselects;
 		public Select(Map code)
 		{
