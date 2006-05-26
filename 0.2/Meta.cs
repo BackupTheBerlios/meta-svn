@@ -478,12 +478,16 @@ namespace Meta
 			return position;
 		}
 	}
-	public abstract class Subselect
+	public abstract class Subselect:Expression
 	{
 		//public abstract bool HasLiteralKeysOnly
 		//{
 		//    get;
 		//}
+		protected override Position EvaluateImplementation(Position context)
+		{
+			return Evaluate(context, context);
+		}
 		public abstract Position Evaluate(Position context, Position executionContext);
 		public abstract void Assign(Position context, Map value, Position executionContext);
 	}
@@ -834,43 +838,6 @@ namespace Meta
 	//    //    return Call.lastArgument;
 	//    //}
 	//}
-	//public class Select : Expression
-	//{
-	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-	//    //{
-	//    //    return false;
-	//    //}
-	//    public List<Map> Subselects
-	//    {
-	//        get
-	//        {
-	//            return subselects;
-	//        }
-	//    }
-	//    public override bool HasConstantKeysOnly
-	//    {
-	//        get
-	//        {
-	//            return true;
-	//        }
-	//    }
-	//    private List<Map> subselects;
-	//    public Select(Map code)
-	//    {
-	//        this.subselects = code.Array;
-	//    }
-	//    protected override Position EvaluateImplementation(Position context)
-	//    {
-	//        Position selected = subselects[0].GetExpression().Evaluate(context);
-	//        for(int i=1;i<subselects.Count;i++)
-	//        {
-	//            selected = subselects[i].GetSubselect().Evaluate(selected, context);
-	//        }
-	//        lastPosition = selected;
-	//        return selected;
-	//    }
-	//    public static Position lastPosition;
-	//}
 	public class Select : Expression
 	{
 		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
@@ -898,16 +865,53 @@ namespace Meta
 		}
 		protected override Position EvaluateImplementation(Position context)
 		{
-			Position selected = context;
-			foreach (Map subselect in subselects)
+			Position selected = subselects[0].GetExpression().Evaluate(context);
+			for (int i = 1; i < subselects.Count; i++)
 			{
-				selected = subselect.GetSubselect().Evaluate(selected, context);
+				selected = subselects[i].GetSubselect().Evaluate(selected, context);
 			}
 			lastPosition = selected;
 			return selected;
 		}
 		public static Position lastPosition;
 	}
+	//public class Select : Expression
+	//{
+	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
+	//    //{
+	//    //    return false;
+	//    //}
+	//    public List<Map> Subselects
+	//    {
+	//        get
+	//        {
+	//            return subselects;
+	//        }
+	//    }
+	//    //public override bool HasConstantKeysOnly
+	//    //{
+	//    //    get
+	//    //    {
+	//    //        return true;
+	//    //    }
+	//    //}
+	//    private List<Map> subselects;
+	//    public Select(Map code)
+	//    {
+	//        this.subselects = code.Array;
+	//    }
+	//    protected override Position EvaluateImplementation(Position context)
+	//    {
+	//        Position selected = context;
+	//        foreach (Map subselect in subselects)
+	//        {
+	//            selected = subselect.GetSubselect().Evaluate(selected, context);
+	//        }
+	//        lastPosition = selected;
+	//        return selected;
+	//    }
+	//    public static Position lastPosition;
+	//}
 	public class Statement
 	{
 		public Expression Value
@@ -2775,10 +2779,22 @@ namespace Meta
 			{
 				return new Select(this[CodeKeys.Select]);
 			}
-			//else if (ContainsKey(CodeKeys.LastArgument))
-			//{
-			//    return new LastArgument();
-			//}
+			else if (ContainsKey(CodeKeys.Lookup))
+			{
+				return new Lookup(this[CodeKeys.Lookup]);
+			}
+			else if (ContainsKey(CodeKeys.LastArgument))
+			{
+				return new LastArgument();
+			}
+			else if (ContainsKey(CodeKeys.Search))
+			{
+				return new Search(this[CodeKeys.Search]);
+			}
+			else if (ContainsKey(CodeKeys.Root))
+			{
+				return new Root();
+			}
 			else
 			{
 				throw new ApplicationException("Cannot compile map.");
