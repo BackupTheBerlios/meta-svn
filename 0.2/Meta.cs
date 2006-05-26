@@ -6958,27 +6958,101 @@ namespace Meta
 			matched = false;
 			return null;
 		});
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Match(), new Character('=')),
+		//                new Action(new Match(), Indentation),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Key),
+		//                    Keys),
+		//                new Action(new Match(), new Optional(EndOfLine)),
+		//                new Action(new Match(), SameIndentation),
+		//    //new Action(new Match(), new Optional(new Character(Syntax.assignment))),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Value),
+		//                    Expression)))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)));
+
 		public static Rule Function = new Sequence(
 			new Action(new Match(), new Character(Syntax.function)),
-			//new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
-			    CodeKeys.Parameter),
-			    new ZeroOrMore(
-			    new Action(new Autokey(),
-			        new CharacterExcept(
-			            Syntax.@string,
-			            Syntax.function,
+				CodeKeys.Parameter),
+				new ZeroOrMore(
+				new Action(new Autokey(),
+					new CharacterExcept(
+						Syntax.@string,
+						Syntax.function,
 						Syntax.windowsNewLine[0],
-			            Syntax.unixNewLine)))),
+						Syntax.unixNewLine)))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), SameIndentation),
-			//new Action(
-			//new Match(),
-			//    new Character(Syntax.function)),
-			    new Action(new Assignment(CodeKeys.Expression),
-			    ExpressionData),
-			new Action(new Match(), new Optional(Dedentation)));
+				new Action(new Assignment(CodeKeys.Expression),
+				ExpressionData),
+			new Action(new Match(), new Optional(EndOfLine))//,
+			//new Action(new Match(), new Optional(Dedentation)
+			);
+
+		//public static Rule Function = new Sequence(
+		//    new Action(new Match(), new Character(Syntax.function)),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        CodeKeys.Parameter),
+		//        new ZeroOrMore(
+		//        new Action(new Autokey(),
+		//            new CharacterExcept(
+		//                Syntax.@string,
+		//                Syntax.function,
+		//                Syntax.windowsNewLine[0],
+		//                Syntax.unixNewLine)))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//        new Action(new Assignment(CodeKeys.Expression),
+		//        ExpressionData),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)
+		//    ));
+
+
+
+
+
+
+
+
+
+
+
+		//public static Rule Function = new Sequence(
+		//    new Action(new Match(), new Character(Syntax.function)),
+		//    //new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        CodeKeys.Parameter),
+		//        new ZeroOrMore(
+		//        new Action(new Autokey(),
+		//            new CharacterExcept(
+		//                Syntax.@string,
+		//                Syntax.function,
+		//                Syntax.windowsNewLine[0],
+		//                Syntax.unixNewLine)))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//    //new Action(
+		//    //new Match(),
+		//    //    new Character(Syntax.function)),
+		//        new Action(new Assignment(CodeKeys.Expression),
+		//        ExpressionData),
+		//    new Action(new Match(), new Optional(new Sequence(
+		//        new Action(new Match(),EndOfLine),
+		//        new Action(new Match(),Dedentation)))));
+
+			//new Action(new Match(), new Optional(EndOfLine)),
+			//new Action(new Match(), new Optional(Dedentation)));
 
 		//public static Rule Function = new Sequence(
 		//    new Action(new Match(),new Character(Syntax.function)),
@@ -7488,19 +7562,64 @@ namespace Meta
 							new Action(new Match(), new Character(Syntax.select)),
 							new Action(new ReferenceAssignment(),
 								Lookup))))));
+
+
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Match(),new Character('='))
+		//                //new Action(new Match(),Indentation),
+		//                //new Action(new Assignment(
+		//                //    CodeKeys.Key),
+		//                //    Keys),
+		//                //new Action(new Match(),new Optional(EndOfLine)),
+		//                //new Action(new Match(),SameIndentation),
+		//                //new Action(new Assignment(
+		//                //    CodeKeys.Value),
+		//                //    Expression)))),
+		//    ))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(),new Optional(Dedentation)));
+
+
+
+
+
+
 		public static Rule Statement = new Sequence(
 			new Action(new ReferenceAssignment(),
 				new Alternatives(
 					FunctionExpression,
 					new Sequence(
+						new Action(new Match(), new Character('=')),
+						new Action(new Match(), Indentation),
 						new Action(new Assignment(
 							CodeKeys.Key),
 							Keys),
-						new Action(new Match(), new Optional(new Character(Syntax.assignment))),
+						new Action(new Match(), new Optional(EndOfLine)),
+						new Action(new Match(), SameIndentation),
+			//new Action(new Match(), new Optional(new Character(Syntax.assignment))),
 						new Action(new Assignment(
 							CodeKeys.Value),
 							Expression)))),
-			new Action(new Match(), new Optional(EndOfLine)));
+			new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), new Optional(Dedentation)));
+
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Assignment(
+		//                    CodeKeys.Key),
+		//                    Keys),
+		//                new Action(new Match(), new Optional(new Character(Syntax.assignment))),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Value),
+		//                    Expression)))),
+		//    new Action(new Match(), new Optional(EndOfLine)));
 
 		//public static Rule Statement = new Sequence(
 		//    new Action(new ReferenceAssignment(),
@@ -7516,6 +7635,7 @@ namespace Meta
 		//                        CodeKeys.Value),
 		//                        Expression))))),
 		//    new Action(new Match(), new Optional(EndOfLine)));
+
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
 			new Action(
@@ -7545,6 +7665,36 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
+
+		//public static Rule Program = new Sequence(
+		//    new Action(new Match(), new Character(',')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//                new Action(
+		//                    new Match(),
+		//                    Indentation),
+		//                new Action(
+		//                    new Assignment(1),
+		//                    Statement),
+		//                new Action(
+		//                    new Append(),
+		//                    new ZeroOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Match(), new Alternatives(
+		//                                    SameIndentation,
+		//                                    Dedentation)),
+		//                                new Action(new ReferenceAssignment(), Statement)))))),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })));
 
 		//public static Rule Program = new Sequence(
 		//    new Action(
