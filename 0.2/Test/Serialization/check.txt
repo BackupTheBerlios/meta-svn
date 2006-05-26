@@ -3586,10 +3586,4 @@ function
 										literal "tab"
 							value 
 								literal 9
-shortFunc 
-	function 
-		parameter "arg"
-		expression 
-			search 
-				literal "arg"
 "

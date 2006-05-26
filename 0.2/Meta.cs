@@ -6994,7 +6994,6 @@ namespace Meta
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData),
 			new Action(new Match(), new Optional(EndOfLine))//,
-			//new Action(new Match(), new Optional(Dedentation)
 			);
 
 		//public static Rule Function = new Sequence(
