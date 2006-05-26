@@ -22,4 +22,6 @@ license "
 	SOFTWARE.
 "
 commandLine|,
-	:*"hello""hello"
+	:
+		*
+			"hello"

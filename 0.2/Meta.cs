@@ -6601,7 +6601,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression, Program, Call, Select, ExplicitCall);
+			return new Alternatives(LiteralExpression, Call,Program, Select, ExplicitCall);
 		});
 		public static Rule NewLine =
 			new Alternatives(
@@ -6968,36 +6968,69 @@ namespace Meta
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
+				new Action(new Match(), Indentation),
 				new Action(new Match(), new Character(Syntax.explicitCall)),
 				new Action(new Assignment(
 					CodeKeys.Call),
 					new Sequence(
-						//new Action(new Match(), Indentation),
-						new Action( new ReferenceAssignment(), new Sequence(
-									new Action(new Append(),new Sequence(new Action(new Assignment(1),
-									Expression))),
-										//new Alternatives(
-										//                LiteralExpression,
-										//                Program,
-										//                Search,
-										//                Select,
-										//                ExplicitCall)))),
-									new Action(new Join(),new ZeroOrMore(
-										new Action(new Autokey(),
-											new Sequence(
-												//new Action(new Match(),EndOfLine),
-												//new Action(new Match(),SameIndentation),
-												//new Action(new Match(), new Optional(new Character(' '))),
-												new Action(
-													new ReferenceAssignment(),Expression)))))))
-													//new Alternatives(
-													//    LiteralExpression,
-													//    Program,
-													//    Select,
-													//    ExplicitCall)))))))),
-							)));
-									//new Action(new Match(), Dedentation))));
-});
+				//new Action(new Match(),EndOfLine),
+						new Action(new Match(), Indentation),
+                        new Action(new ReferenceAssignment(), new Sequence(
+                                    new Action(new Append(),new Sequence(new Action(new Assignment(1),
+                                    Expression))))))));
+
+							//)));
+			//new Action(new Match(), new Character(Syntax.explicitCall)))));
+		});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Match(), Indentation),
+		//        new Action(new Match(), new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//        //new Action(new Match(),EndOfLine),
+		//                new Action(new Match(), Indentation)
+		//                    )));
+		//                //new Action(new Match(), new Character(Syntax.explicitCall)))));
+		//});
+
+//        public static Rule Call = new DelayedRule(delegate()
+//        {
+//            return new Sequence(
+//                new Action(new Match(), Indentation),
+//                new Action(new Match(), new Character(Syntax.explicitCall)),
+//                new Action(new Assignment(
+//                    CodeKeys.Call),
+//                    new Sequence(
+//                        //new Action(new Match(),EndOfLine),
+//                        new Action(new Match(), Indentation),
+//                        new Action(new ReferenceAssignment(), new Sequence(
+//                                    new Action(new Append(),new Sequence(new Action(new Assignment(1),
+//                                    Expression))),
+//                                        //new Alternatives(
+//                                        //                LiteralExpression,
+//                                        //                Program,
+//                                        //                Search,
+//                                        //                Select,
+//                                        //                ExplicitCall)))),
+//                                    new Action(new Join(),new ZeroOrMore(
+//                                        new Action(new Autokey(),
+//                                            new Sequence(
+//                                                //new Action(new Match(),EndOfLine),
+//                                                //new Action(new Match(),SameIndentation),
+//                                                //new Action(new Match(), new Optional(new Character(' '))),
+//                                                new Action(
+//                                                    new ReferenceAssignment(),Expression)))))))
+//                                                    //new Alternatives(
+//                                                    //    LiteralExpression,
+//                                                    //    Program,
+//                                                    //    Select,
+//                                                    //    ExplicitCall)))))))),
+//                            )));
+//                                    //new Action(new Match(), Dedentation))));
+//});
 		//public static Rule Call = new DelayedRule(delegate()
 		//{
 		//    return new Sequence(
