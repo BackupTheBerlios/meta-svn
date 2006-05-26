@@ -513,27 +513,6 @@ namespace Meta
 			executionContext.Assign(value);
 		}
 	}
-	public class CallSubselect : Subselect
-	{
-		public override bool HasLiteralKeysOnly
-		{
-			get { return false; }
-		}
-		private Call call;
-		public CallSubselect(Map code)
-		{
-			this.call = new Call(code,null);
-		}
-		public override Position Evaluate(Position selected, Position context)
-		{
-			Position result = call.Evaluate(context);
-			return result;
-		}
-		public override void Assign(Position selected, Map value, Position context)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-	}
 	public class Root : Subselect
 	{
 		public override bool HasLiteralKeysOnly
@@ -813,11 +792,12 @@ namespace Meta
 	//        }
 	//    }
 	//}
+
 	public class LastArgument : Subselect
 	{
 		public override bool HasLiteralKeysOnly
 		{
-			get 
+			get
 			{
 				return false;
 			}
@@ -830,11 +810,67 @@ namespace Meta
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		//protected override Position EvaluateImplementation(Position context)
-		//{
-		//    return Call.lastArgument;
-		//}
 	}
+
+	//public class LastArgument : Subselect
+	//{
+	//    public override bool HasLiteralKeysOnly
+	//    {
+	//        get 
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override Position Evaluate(Position context, Position executionContext)
+	//    {
+	//        return Call.LastArgument;
+	//    }
+	//    public override void Assign(Position context, Map value, Position executionContext)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    //protected override Position EvaluateImplementation(Position context)
+	//    //{
+	//    //    return Call.lastArgument;
+	//    //}
+	//}
+	//public class Select : Expression
+	//{
+	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
+	//    //{
+	//    //    return false;
+	//    //}
+	//    public List<Map> Subselects
+	//    {
+	//        get
+	//        {
+	//            return subselects;
+	//        }
+	//    }
+	//    public override bool HasConstantKeysOnly
+	//    {
+	//        get
+	//        {
+	//            return true;
+	//        }
+	//    }
+	//    private List<Map> subselects;
+	//    public Select(Map code)
+	//    {
+	//        this.subselects = code.Array;
+	//    }
+	//    protected override Position EvaluateImplementation(Position context)
+	//    {
+	//        Position selected = subselects[0].GetExpression().Evaluate(context);
+	//        for(int i=1;i<subselects.Count;i++)
+	//        {
+	//            selected = subselects[i].GetSubselect().Evaluate(selected, context);
+	//        }
+	//        lastPosition = selected;
+	//        return selected;
+	//    }
+	//    public static Position lastPosition;
+	//}
 	public class Select : Expression
 	{
 		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
@@ -850,8 +886,8 @@ namespace Meta
 		}
 		public override bool HasConstantKeysOnly
 		{
-			get 
-			{ 
+			get
+			{
 				return true;
 			}
 		}
@@ -2712,10 +2748,6 @@ namespace Meta
 			{
 				return new Root();
 			}
-			else if (ContainsKey(CodeKeys.Call))
-			{
-				return new CallSubselect(this[CodeKeys.Call]);
-			}
 			else if (ContainsKey(CodeKeys.LastArgument))
 			{
 				return new LastArgument();
@@ -2743,6 +2775,10 @@ namespace Meta
 			{
 				return new Select(this[CodeKeys.Select]);
 			}
+			//else if (ContainsKey(CodeKeys.LastArgument))
+			//{
+			//    return new LastArgument();
+			//}
 			else
 			{
 				throw new ApplicationException("Cannot compile map.");
@@ -6601,8 +6637,12 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression, Call,Program, Select, ExplicitCall);
+			return new Alternatives(LiteralExpression,LastArgument, Call, Program, Select, ExplicitCall);
 		});
+		//public static Rule Expression = new DelayedRule(delegate()
+		//{
+		//    return new Alternatives(LiteralExpression, Call,Program, Select, ExplicitCall);
+		//});
 		public static Rule NewLine =
 			new Alternatives(
 				new Character(Syntax.unixNewLine),
