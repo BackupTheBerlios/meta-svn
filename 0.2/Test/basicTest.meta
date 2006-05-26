@@ -24,40 +24,33 @@ license "
 commandLine|,
 	:*
 		*
-			$
-				!merge
+			!merge
 			,
 				. "AssignedToCurrent"
 		0
 	asdf "hello"
 	shortFunction,
-		arg|$
-			!asdf
+		arg|!asdf
 	shortFunctionTest*
-		$
-			!shortFunction
+		!shortFunction
 		"hello"
 	counter 0
 	SetCounter,
 		argument|,
-			!counter$
-				@
+			!counter @
 	.*
-		$
-			!SetCounter
+		!SetCounter
 		5
 	scoping,
 		test,
 			scopingValue "right"
-			|$
-				!scopingValue
+			|!scopingValue
 	scopingValue "wrong"
 	scopingTest$
 		!scoping
 		test
 	lexicalScoping*
-		$
-			!scopingTest
+		!scopingTest
 		0
 	!["C:"].hello,
 		x "someTest"
@@ -84,14 +77,11 @@ commandLine|,
 		hashTestData,
 			[0],
 				[0] 0
-		hashTest$
-			![$
-				!hashTestData]
+		hashTest ![!hashTestData]
 	negativeInteger 100
 	negativeInteger.x "hello"
 	integerIncrementTest 5
-	integerIncrementTest.[0]$
-		!integerIncrementTest
+	integerIncrementTest.[0] !integerIncrementTest
 	integerDecrementTest 5
 	integerDecrementTest$
 		!integerDecrementTest
@@ -128,24 +118,17 @@ commandLine|,
 		"
 	. "ImpliedAutokey"
 	. "Autokey"
-	commandLineArguments$
-		!commandLine
+	commandLineArguments !commandLine
 	aMap,
 		a "a"
-	[$
-		!aMap] "Object"
+	[!aMap] "Object"
 	["normal symbol"] "NormalSymbol"
 	lookupSymbol "LookupSymbol"
 	["long key symbol"] "LookupExtendedSymbol"
-	lookedUpMap$
-		![$
-			!aMap]
-	lookedUpNormalSymbol$
-		!["normal symbol"]
-	lookedUpSymbol$
-		!lookupSymbol
-	lookedUpLongSymbol$
-		!["long key symbol"]
+	lookedUpMap ![!aMap]
+	lookedUpNormalSymbol !["normal symbol"]
+	lookedUpSymbol !lookupSymbol
+	lookedUpLongSymbol !["long key symbol"]
 	object,
 		a "default"
 		autoSearch "default"
@@ -185,41 +168,33 @@ commandLine|,
 	scopeFunction,
 		inScope "right"
 		|,
-			!scopeTest$
-				!inScope
+			!scopeTest !inScope
 	inScope "wrong"
 	.*
-		$
-			!scopeFunction
+		!scopeFunction
 		0
 	scopeFromFunctionData "wrong"
 	scopeFunctionFunction,
 		scopeFromFunctionData "right"
 		|,
-			|$
-				!scopeFromFunctionData
+			|!scopeFromFunctionData
 	scopeFromFunction*
-		$
-			!scopeFunctionFunction
+		!scopeFunctionFunction
 		0
 	scopeFromFunctionTest*
-		$
-			!scopeFromFunction
+		!scopeFromFunction
 		0
 	ReturnEverything,
 		everything|,
-			:$
-				!everything
+			:!everything
 	everythingReturned*
-		$
-			!ReturnEverything
+		!ReturnEverything
 		,
 			. "a"
 			. "b"
 			. "c"
 	variableAsArgument*
-		$
-			!ReturnEverything
+		!ReturnEverything
 		,
 			. "x"
 			. "y"
@@ -235,31 +210,24 @@ commandLine|,
 	SetCurrent,
 		current|,
 			:,
-				asdf$
-					!current
+				asdf !current
 				x$
 					!current
 					symbol
-			:$
-				!x
+			:!x
 	thisSet*
-		$
-			!SetCurrent
+		!SetCurrent
 		,
 			symbol "haha"
 	FirstLevel,
 		arg|,
 			.*
-				$
-					!SecondLevel
-				$
-					!arg
+				!SecondLevel
+				!arg
 	SecondLevel,
-		arg|$
-			!arg
+		arg|!arg
 	argTest*
-		$
-			!FirstLevel
+		!FirstLevel
 		,
 			a "z"
 	TestClass $
@@ -272,8 +240,7 @@ commandLine|,
 		NestedClass
 		field
 	testClass*
-		$
-			!TestClass
+		!TestClass
 		0
 	testClass.floatValue 3
 	testClass.doubleValue 4
@@ -295,8 +262,7 @@ commandLine|,
 		Meta
 		MemberTest
 	memberTest*
-		$
-			!MemberTest
+		!MemberTest
 		0
 	stringOverload*
 		$
@@ -328,8 +294,7 @@ commandLine|,
 				/
 				mscorlib
 				Int32]
-		$
-			!memberTest
+		!memberTest
 		3247
 	memberTestOverload*
 		$
@@ -343,8 +308,7 @@ commandLine|,
 				/
 				mscorlib
 				Int32]
-		$
-			!memberTest
+		!memberTest
 		3247
 	MemberTest.classField "a"
 	memberTest.instanceField "b"
@@ -434,66 +398,54 @@ commandLine|,
 	literalFunction,
 		|5
 	literalFunctionResult*
-		$
-			!literalFunction
+		!literalFunction
 		0
 	someFunction,
 		|,
 			: "simple function this"
 	callFunction,
-		|$
-			!someFunction
+		|!someFunction
 	callFunctionResult*
-		$
-			!callFunction
+		!callFunction
 		0
 	delayedFunction,
 		|,
 			|,
 				x "y"
 	delayedFunctionResult*
-		$
-			!delayedFunction
+		!delayedFunction
 		0
 	delayedFunctionDirect*
 		*
-			$
-				!delayedFunction
+			!delayedFunction
 			0
 		0
 	value "xyz"
 	selectionFunction,
-		|$
-			!value
+		|!value
 	selectionFunctionResult*
-		$
-			!selectionFunction
+		!selectionFunction
 		0
 	upperLevel "unchanged"
 	SetUpperLevel,
 		arg|,
-			!upperLevel$
-				!arg
+			!upperLevel !arg
 	ChangeUpperLevel,
 		|,
 			.*
-				$
-					!SetUpperLevel
+				!SetUpperLevel
 				"changed"
 	.*
-		$
-			!ChangeUpperLevel
+		!ChangeUpperLevel
 		0
 	staticEventChanged 0
 	ChangeStaticEvent,
 		arg|,
-			!staticEventChanged$
-				!arg
+			!staticEventChanged !arg
 	TestClass.staticEvent,
 		arg|,
 			.*
-				$
-					!ChangeStaticEvent
+				!ChangeStaticEvent
 				1
 			:$
 				!arg
@@ -523,8 +475,7 @@ commandLine|,
 			[$
 				!mscorlib
 				Object]
-		$
-			!testClass
+		!testClass
 	instanceEventChanged 0
 	testClass.instanceEvent,
 		arg|,
@@ -545,11 +496,9 @@ commandLine|,
 	firstIf "unchanged"
 	secondIf "unchanged"
 	firstIfCondition*
-		$
-			!equal
+		!equal
 		1
-		$
-			!one
+		!one
 	firstIfBranches,
 		.,
 			|"then"
@@ -558,8 +507,7 @@ commandLine|,
 	firstIf*
 		$
 			!firstIfBranches
-			[$
-				!firstIfCondition]
+			[!firstIfCondition]
 		0
 	bigNumber 50020202
 	secondSwitch "unchanged"
@@ -575,8 +523,7 @@ commandLine|,
 		|,
 			x "hello"
 	emptyFunctionResult*
-		$
-			!emptyFunction
+		!emptyFunction
 		0
 	font*
 		$
@@ -600,9 +547,7 @@ commandLine|,
 		!stringTest
 		[1]
 	helloh "hi"
-	stringStrategyHashTest$
-		![$
-			!stringTest]
+	stringStrategyHashTest ![!stringTest]
 	x,
 		aLongText"
 			hello world!
@@ -680,68 +625,52 @@ commandLine|,
 	loop,
 		start|,
 			whileDecision*
-				$
-					!not
+				!not
 				*
-					$
-						!equal
-					$
-						!start
+					!equal
+					!start
 					10
 			whileBranches,
 				.,
 					arg|*
-						$
-							!loop
+						!loop
 						*
-							$
-								!add
-							$
-								!arg
+							!add
+							!arg
 							1
 				[0],
-					arg|$
-						!arg
+					arg|!arg
 			:*
 				$
 					!whileBranches
-					[$
-						!whileDecision]
-				$
-					!start
+					[!whileDecision]
+				!start
 	whileCounter*
-		$
-			!loop
+		!loop
 		3
 	returnInMap,
 		arg|,
-			result$
-				!arg
+			result !arg
 	literalAsArgument*
-		$
-			!returnInMap
+		!returnInMap
 		1
 	returnFunction,
 		|,
 			|"functionResult"
 	returnArg,
-		arg|$
-			!arg
+		arg|!arg
 	myArg,
 		|,
 			hello "world"
 	funcReturnTest*
-		$
-			!returnArg
-		$
-			!myArg
+		!returnArg
+		!myArg
 		0
 	documentedFunction,
 		doc "This function returns #hello ."
 		|"hello"
 	docFunctionResult*
-		$
-			!documentedFunction
+		!documentedFunction
 		0
 	topLevel "default"
 	deep,
@@ -759,15 +688,12 @@ commandLine|,
 		arg|,
 			innerFunction,
 				|,
-					:$
-						!arg
+					:!arg
 			.*
-				$
-					!innerFunction
+				!innerFunction
 				0
 	outerFunctionTest*
-		$
-			!outerFunction
+		!outerFunction
 		"right"
 	newLines "
 		
@@ -800,13 +726,11 @@ commandLine|,
 	copySourceData,
 		x "y"
 		z "a"
-	copiedData$
-		!copySourceData
+	copiedData !copySourceData
 	copiedData.x "changed"
 	characterLiterals,
 		a 'a'
 		space ' '
 		tab '	'
 shortFunc
-	arg|$
-		!arg
+	arg|!arg

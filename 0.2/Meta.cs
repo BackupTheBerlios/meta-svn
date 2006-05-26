@@ -6653,7 +6653,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression,LastArgument, Call, Program, Select, ExplicitCall);
+			return new Alternatives(LiteralExpression,LastArgument, Call, Program, LastArgument, Search, Select, ExplicitCall);
 		});
 		//public static Rule Expression = new DelayedRule(delegate()
 		//{
