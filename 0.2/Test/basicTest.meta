@@ -97,7 +97,9 @@ shortFunc "
 				!scopingTest
 				0
 		=
-			!["C:"].hello
+			$
+				!["C:"]
+				hello
 			,
 				=
 					x
@@ -108,7 +110,9 @@ shortFunc "
 				!["C:"]
 				hello
 		=
-			!["C:"].hello
+			$
+				!["C:"]
+				hello
 			0
 		=
 			cTest2
@@ -119,7 +123,9 @@ shortFunc "
 			unicodeText
 			"äaba"
 		=
-			!testSubDir.x
+			$
+				!testSubDir
+				x
 			0
 		=
 			persistantDeleteTest
@@ -127,7 +133,9 @@ shortFunc "
 				!testSubDir
 				x
 		=
-			!testSubDir.x
+			$
+				!testSubDir
+				x
 			,
 				=
 					a
@@ -142,7 +150,10 @@ shortFunc "
 							y
 							"world"
 		=
-			!testSubDir.x.a
+			$
+				!testSubDir
+				x
+				a
 			"hi"
 		=
 			integerHashTest
@@ -166,13 +177,17 @@ shortFunc "
 			negativeInteger
 			100
 		=
-			negativeInteger.x
+			$
+				negativeInteger
+				x
 			"hello"
 		=
 			integerIncrementTest
 			5
 		=
-			integerIncrementTest.[0]
+			$
+				integerIncrementTest
+				[0]
 			!integerIncrementTest
 		=
 			integerDecrementTest
@@ -326,7 +341,9 @@ shortFunc "
 							newB
 							,
 								=
-									!b.[1]
+									$
+										!b
+										[1]
 									$
 										!newB
 										value
@@ -349,7 +366,9 @@ shortFunc "
 							arg
 							,
 								=
-									:.a
+									$
+										:
+										a
 									"b"
 		=
 			a
@@ -549,7 +568,10 @@ shortFunc "
 				Meta
 				TestClass
 		=
-			TestClass.NestedClass.field
+			$
+				TestClass
+				NestedClass
+				field
 			5
 		=
 			nestedClassTest
@@ -563,16 +585,24 @@ shortFunc "
 				!TestClass
 				0
 		=
-			testClass.floatValue
+			$
+				testClass
+				floatValue
 			3
 		=
-			testClass.doubleValue
+			$
+				testClass
+				doubleValue
 			4
 		=
-			testClass.decimalValue
+			$
+				testClass
+				decimalValue
 			5
 		=
-			TestClass.boolTest 
+			$
+				TestClass
+				boolTest 
 			1
 		=
 			boolTest
@@ -663,13 +693,19 @@ shortFunc "
 				!memberTest
 				3247
 		=
-			MemberTest.classField
+			$
+				MemberTest
+				classField
 			"a"
 		=
-			memberTest.instanceField
+			$
+				memberTest
+				instanceField
 			"b"
 		=
-			MemberTest.ClassProperty
+			$
+				MemberTest
+				ClassProperty
 			$
 				!memberTest
 				InstanceProperty
@@ -679,7 +715,9 @@ shortFunc "
 				!MemberTest
 				ClassProperty
 		=
-			memberTest.InstanceProperty
+			$
+				memberTest
+				InstanceProperty
 			$
 				!MemberTest
 				ClassProperty
@@ -772,7 +810,10 @@ shortFunc "
 					IndexerNoConversion
 				0
 		=
-			indexerNoConversion.Item.abc
+			$
+				indexerNoConversion
+				Item
+				abc
 			"hihi"
 		=
 			indexerNoConversionIndexed
@@ -899,7 +940,9 @@ shortFunc "
 							!staticEventChanged
 							!arg
 		=
-			TestClass.staticEvent
+			$
+				TestClass
+				staticEvent
 			,
 				|
 					arg
@@ -952,7 +995,9 @@ shortFunc "
 			instanceEventChanged
 			0
 		=
-			testClass.instanceEvent
+			$
+				testClass
+				instanceEvent
 			,
 				|
 					arg
@@ -1082,7 +1127,9 @@ shortFunc "
 			stringTest
 			"hello"		
 		=
-			stringTest.[6]
+			$
+				stringTest
+				[6]
 			$
 				!stringTest
 				[1]
@@ -1134,7 +1181,9 @@ shortFunc "
 					TextBox
 				0
 		=
-			textBox.Text
+			$
+				textBox
+				Text
 			"
 				Alle meine Entchen,
 				schwimmen auf dem See,
@@ -1167,7 +1216,9 @@ shortFunc "
 					Form
 				0
 		=
-			form.Location
+			$
+				form
+				Location
 			*
 				$
 					!["System.Drawing"]
@@ -1358,7 +1409,10 @@ shortFunc "
 				
 			"
 		=
-			!["System.Windows.Forms"].Application.VisualStyleState
+			$
+				!["System.Windows.Forms"]
+				Application
+				VisualStyleState
 			$
 				!["System.Windows.Forms"]
 				VisualStyleState
@@ -1402,7 +1456,9 @@ shortFunc "
 			copiedData
 			!copySourceData
 		=
-			copiedData.x
+			$
+				copiedData
+				x
 			"changed"
 		=
 			characterLiterals
