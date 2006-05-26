@@ -813,12 +813,13 @@
 								"hello"
 							|
 								key
-								|
-									value
-									,
-										=
-											[!value]
-											!key
+								,
+									|
+										value
+										,
+											=
+												[!value]
+												!key
 				=
 					sumTest
 					*
@@ -915,11 +916,11 @@
 						"HeLLo"
 				=
 					upperTest
-						*
-							$
-								!string
-								upper
-							"HeLLo"
+					*
+						$
+							!string
+							upper
+						"HeLLo"
 				=
 					parseTest
 					*
@@ -942,18 +943,6 @@
 							=
 								.
 								,
-									,
-										=
-											a
-											1
-										=
-											b
-											2
-										=
-											c
-											3
-							=
-								.
 									=
 										a
 										1
@@ -965,6 +954,19 @@
 										3
 							=
 								.
+								,
+									=
+										a
+										1
+									=
+										b
+										2
+									=
+										c
+										3
+							=
+								.
+								,
 									=
 										a
 										1
