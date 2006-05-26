@@ -9478,14 +9478,14 @@ namespace Meta
 					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
