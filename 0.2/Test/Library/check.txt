@@ -436,7 +436,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"sumTest"
 	Value (StrategyMap):
-		21
+		"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"valuesTest"
@@ -516,108 +516,6 @@ Entry (KeyValuePair`2)
 								"a"
 							Value (StrategyMap):
 								"x"
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"function"
-							Value (StrategyMap):
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										"parameter"
-									Value (StrategyMap):
-										"arg"
-								Entry (KeyValuePair`2)
-									Key (StrategyMap):
-										"expression"
-									Value (StrategyMap):
-										Entry (KeyValuePair`2)
-											Key (StrategyMap):
-												"call"
-											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"select"
-															Value (StrategyMap):
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		1
-																	Value (StrategyMap):
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				"search"
-																			Value (StrategyMap):
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						"literal"
-																					Value (StrategyMap):
-																						"join"
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														2
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"literal"
-															Value (StrategyMap):
-																"hello "
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														3
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"select"
-															Value (StrategyMap):
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		1
-																	Value (StrategyMap):
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				"search"
-																			Value (StrategyMap):
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						"literal"
-																					Value (StrategyMap):
-																						"join"
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														4
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"select"
-															Value (StrategyMap):
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		1
-																	Value (StrategyMap):
-																		Entry (KeyValuePair`2)
-																			Key (StrategyMap):
-																				"search"
-																			Value (StrategyMap):
-																				Entry (KeyValuePair`2)
-																					Key (StrategyMap):
-																						"literal"
-																					Value (StrategyMap):
-																						"arg"
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														5
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"literal"
-															Value (StrategyMap):
-																"!"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"func"
-			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
 						"function"
@@ -633,7 +531,7 @@ Entry (KeyValuePair`2)
 							Value (StrategyMap):
 								Entry (KeyValuePair`2)
 									Key (StrategyMap):
-										"select"
+										"call"
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
@@ -647,7 +545,51 @@ Entry (KeyValuePair`2)
 															Key (StrategyMap):
 																"literal"
 															Value (StrategyMap):
+																"join"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												2
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"literal"
+													Value (StrategyMap):
+														"hello "
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												3
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"search"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
+																"join"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												4
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"search"
+													Value (StrategyMap):
+														Entry (KeyValuePair`2)
+															Key (StrategyMap):
+																"literal"
+															Value (StrategyMap):
 																"arg"
+										Entry (KeyValuePair`2)
+											Key (StrategyMap):
+												5
+											Value (StrategyMap):
+												Entry (KeyValuePair`2)
+													Key (StrategyMap):
+														"literal"
+													Value (StrategyMap):
+														"!"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"invertTest"

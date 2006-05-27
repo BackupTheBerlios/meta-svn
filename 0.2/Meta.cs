@@ -978,7 +978,9 @@ namespace Meta
 			Map result = arg.Array[0].Copy();
 			foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
 			{
-				result = argument.Call(result).Call(m).Get();
+				Position firstCall=argument.Call(result);
+				result = firstCall.Call(m).Get();
+				//result = argument.Call(result).Call(m).Get();
 			}
 			return result;
 		}
