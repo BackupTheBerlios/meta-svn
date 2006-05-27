@@ -972,7 +972,7 @@ namespace Meta
 	}
 	public class Library
 	{
-		public static Map Sum(Map arg,Map map)
+		public static Map Sum(Map arg, Map map)
 		{
 			Position argument = Call.LastArgument;
 			Map result = arg.Array[0].Copy();
@@ -982,6 +982,16 @@ namespace Meta
 			}
 			return result;
 		}
+		//public static Map Sum(Map arg,Map map)
+		//{
+		//    Position argument = Call.LastArgument;
+		//    Map result = arg.Array[0].Copy();
+		//    foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
+		//    {
+		//        result = argument.Call(result).Call(m).Get();
+		//    }
+		//    return result;
+		//}
 		public static Map Prepend(Map arg,Map map)
 		{
 			Map result = new StrategyMap(1, arg);

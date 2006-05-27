@@ -598,6 +598,7 @@
 											=
 												y
 												98834
+								,
 									|
 										first
 										,
@@ -658,6 +659,27 @@
 																					|
 																						arg
 																						0
+						=
+							integerToString
+							*
+								!integerToString
+								5
+						=
+							stringReplace
+							*
+								$
+									!string
+									replace
+								,
+									=
+										string
+										"hello hello hi"
+									=
+										old
+										"he"
+									=
+										new
+										"i"
 				=
 					bitwiseTest
 					*
@@ -789,6 +811,7 @@
 							=
 								y
 								"hello"
+						,
 							|
 								key
 								,
@@ -798,6 +821,26 @@
 											=
 												[!value]
 												!key
+				=
+					sumTest
+					"
+						*
+							!sum 
+							,
+								=
+									.
+									2
+								=
+									.
+									5
+								=
+									.
+									6
+								=
+									.
+									8
+							!add
+					"
 				=
 					valuesTest
 					*
@@ -860,6 +903,20 @@
 									=
 										orange
 										"green"
+				=
+					lowerTest
+					*
+						$
+							!string
+							lower
+						"HeLLo"
+				=
+					upperTest
+					*
+						$
+							!string
+							upper
+						"HeLLo"
 				=
 					parseTest
 					*

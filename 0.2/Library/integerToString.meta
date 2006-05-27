@@ -13,8 +13,10 @@
 						Meta
 						Map]
 				@
-		:*
-			$
-				map
-				ToString
-			0
+		=
+			:
+			*
+				$
+					map
+					ToString
+				0
