@@ -6841,6 +6841,9 @@ namespace Meta
 		// refactor
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
+			if (parser.file.Contains("string.meta"))
+			{
+			}
 			new Sequence(
 				new Action(new Match(),new Optional(new Character(','))),
 				new Action(new Match(),Indentation)).Match(parser, out matched);
@@ -6853,6 +6856,9 @@ namespace Meta
 				{
 					while (true)
 					{
+						if (parser.file.Contains("string.meta"))
+						{
+						}
 						if (parser.Rest == "")
 						{
 							break;
@@ -7068,10 +7074,15 @@ namespace Meta
 		//        ExpressionData));
 
 		public static Rule Entry = new Alternatives(
-			new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
+			new Sequence(new Action(new Assignment(CodeKeys.Function), 
+				new Sequence(new Action(new ReferenceAssignment(),Function),
+			new Action(new Match(),new Optional(Dedentation))))),
 			new CustomRule(delegate(Parser parser, out bool matched)
 			{
 				//EndOfLine.Match(parser, out matched);
+				if (parser.file.Contains("string.meta"))
+				{
+				}
 				Map result = new StrategyMap();
 				new Sequence(
 					new Action(new Match(),new Character('=')),
@@ -7093,7 +7104,8 @@ namespace Meta
 							// i dont understand this
 							new Sequence(
 								new Action(new Match(), new Optional(EndOfLine)),
-								new Action(new Match(), new Optional(Dedentation))).Match(parser, out matched);
+								new Action(new Match(), new Optional(Dedentation)
+								)).Match(parser, out matched);
 							//bool match;
 							//EndOfLine.Match(parser, out match);
 						}

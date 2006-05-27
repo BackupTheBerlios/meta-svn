@@ -523,6 +523,20 @@
 													!space
 													[1]
 						=
+							stringSplitTest
+							*
+								$
+									!string
+									split
+								"hello world hello"
+								,
+									=
+										.
+										' '
+									=
+										.
+										'l'
+						=
 							tryTest
 							*
 								!try
