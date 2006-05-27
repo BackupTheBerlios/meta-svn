@@ -6841,7 +6841,9 @@ namespace Meta
 		// refactor
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
-			Indentation.Match(parser, out matched);
+			new Sequence(
+				new Action(new Match(),new Optional(new Character(','))),
+				new Action(new Match(),Indentation)).Match(parser, out matched);
 			Map map = new StrategyMap();
 			if (matched)
 			{
@@ -6882,6 +6884,49 @@ namespace Meta
 			}
 			return map;
 		});
+		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Indentation.Match(parser, out matched);
+		//    Map map = new StrategyMap();
+		//    if (matched)
+		//    {
+		//        parser.defaultKeys.Push(1);
+		//        map = Entry.Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            while (true)
+		//            {
+		//                if (parser.Rest == "")
+		//                {
+		//                    break;
+		//                }
+		//                new Alternatives(
+		//                    SameIndentation,
+		//                    Dedentation).Match(parser, out matched);
+		//                if (matched)
+		//                {
+		//                    map = Library.Merge(map, Entry.Match(parser, out matched));
+		//                    //map = Library.Merge(map)(Entry.Match(parser, out matched));
+
+		//                    //map = Library.Merge(new StrategyMap(
+		//                    //    1, map,
+		//                    //    2, Entry.Match(parser, out matched)));
+		//                }
+		//                else
+		//                {
+		//                    matched = true;
+		//                    break;
+		//                }
+		//                if (parser.Rest == "")
+		//                {
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        parser.defaultKeys.Pop();
+		//    }
+		//    return map;
+		//});
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
