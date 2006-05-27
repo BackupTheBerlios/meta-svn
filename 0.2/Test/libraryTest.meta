@@ -523,20 +523,6 @@
 													!space
 													[1]
 						=
-							stringSplitTest
-							*
-								$
-									!string
-									split
-								"hello world hello"
-								,
-									=
-										.
-										' '
-									=
-										.
-										'l'
-						=
 							tryTest
 							*
 								!try
@@ -658,27 +644,6 @@
 																					|
 																						arg
 																						0
-						=
-							integerToString
-							*
-								!integerToString
-								5
-						=
-							stringReplace
-							*
-								$
-									!string
-									replace
-								,
-									=
-										string
-										"hello hello hi"
-									=
-										old
-										"he"
-									=
-										new
-										"i"
 				=
 					bitwiseTest
 					*
@@ -820,31 +785,6 @@
 												[!value]
 												!key
 				=
-					sumTest
-					*
-						!call
-						,
-							=
-								.
-								*
-									!sum 
-									,
-										=
-											.
-											2
-										=
-											.
-											5
-										=
-											.
-											6
-										=
-											.
-											8
-							=
-								.
-								!add
-				=
 					valuesTest
 					*
 						!values
@@ -907,32 +847,33 @@
 										orange
 										"green"
 				=
-					lowerTest
-					*
-						$
-							!string
-							lower
-						"HeLLo"
-				=
-					upperTest
-					*
-						$
-							!string
-							upper
-						"HeLLo"
-				=
 					parseTest
 					*
 						!parse
 						"
-							asdf "hello"
-							x 
-								y "hello"
-								z 
-									a "x"
-									arg|!join "hello " !join !arg "!"
-							func
-								arg|!arg
+							=
+								asdf
+								"hello"
+							=
+								x 
+								,
+									=
+										y
+										"hello"
+									=
+										z
+										, 
+											=
+												a
+												"x"
+									|
+										arg
+										*
+											!join
+											"hello "
+											!join
+											!arg
+											"!"
 						"
 				=
 					invertTest
