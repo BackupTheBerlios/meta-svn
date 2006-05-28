@@ -1,4 +1,4 @@
-=
+:
 	replace
 	,
 		|
@@ -14,7 +14,7 @@
 						Meta
 						Map
 				@
-=
+:
 	trim
 	,
 		|
@@ -39,7 +39,7 @@
 							Trim
 							<0
 						0
-=
+:
 	lower
 	,
 		|
@@ -64,7 +64,7 @@
 							object
 							ToLower
 						0
-=
+:
 	upper
 	,
 		|
@@ -89,7 +89,7 @@
 							object
 							ToUpper
 						0
-=
+:
 	split
 	,
 		|
@@ -109,7 +109,7 @@
 						Meta
 						Map
 				@
-=
+:
 	compare
 	,
 		|

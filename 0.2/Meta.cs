@@ -7254,45 +7254,83 @@ namespace Meta
 		//        ExpressionData));
 
 		public static Rule Entry = new Alternatives(
-			new Sequence(new Action(new Assignment(CodeKeys.Function), 
-				new Sequence(new Action(new ReferenceAssignment(),Function),
-			new Action(new Match(),new Optional(Dedentation))))),
-			new CustomRule(delegate(Parser parser, out bool matched)
+	new Sequence(new Action(new Assignment(CodeKeys.Function),
+		new Sequence(new Action(new ReferenceAssignment(), Function),
+	new Action(new Match(), new Optional(Dedentation))))),
+	new CustomRule(delegate(Parser parser, out bool matched)
+	{
+		Map result = new StrategyMap();
+		new Sequence(
+			new Action(new Match(), new Character(':')),
+			new Action(new Match(), Indentation)).Match(parser, out matched);
+		if (matched)
+		{
+			Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+			if (matched)
 			{
-				//EndOfLine.Match(parser, out matched);
-				if (parser.file.Contains("string.meta"))
-				{
-				}
-				Map result = new StrategyMap();
 				new Sequence(
-					new Action(new Match(),new Character('=')),
-					new Action(new Match(),Indentation)).Match(parser, out matched);
+						new Action(new Match(), new Optional(EndOfLine)),
+						new Action(new Match(), SameIndentation)).Match(parser, out matched);
 				if (matched)
 				{
-					Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-					if (matched)
-					{
-						new Sequence(
-								new Action(new Match(), new Optional(EndOfLine)),
-								new Action(new Match(), SameIndentation)).Match(parser, out matched);
-						if (matched)
-						{
-							//StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-							Map value = Value.Match(parser, out matched);
-							result[key] = value;
+					//StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+					Map value = Value.Match(parser, out matched);
+					result[key] = value;
 
-							// i dont understand this
-							new Sequence(
-								new Action(new Match(), new Optional(EndOfLine)),
-								new Action(new Match(), new Optional(Dedentation)
-								)).Match(parser, out matched);
-							//bool match;
-							//EndOfLine.Match(parser, out match);
-						}
-					}
+					// i dont understand this
+					new Sequence(
+						new Action(new Match(), new Optional(EndOfLine)),
+						new Action(new Match(), new Optional(Dedentation)
+						)).Match(parser, out matched);
+					//bool match;
+					//EndOfLine.Match(parser, out match);
 				}
-				return result;
-			}));
+			}
+		}
+		return result;
+	}));
+
+		//public static Rule Entry = new Alternatives(
+		//    new Sequence(new Action(new Assignment(CodeKeys.Function), 
+		//        new Sequence(new Action(new ReferenceAssignment(),Function),
+		//    new Action(new Match(),new Optional(Dedentation))))),
+		//    new CustomRule(delegate(Parser parser, out bool matched)
+		//    {
+		//        //EndOfLine.Match(parser, out matched);
+		//        if (parser.file.Contains("string.meta"))
+		//        {
+		//        }
+		//        Map result = new StrategyMap();
+		//        new Sequence(
+		//            new Action(new Match(),new Character('=')),
+		//            new Action(new Match(),Indentation)).Match(parser, out matched);
+		//        if (matched)
+		//        {
+		//            Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+		//            if (matched)
+		//            {
+		//                new Sequence(
+		//                        new Action(new Match(), new Optional(EndOfLine)),
+		//                        new Action(new Match(), SameIndentation)).Match(parser, out matched);
+		//                if (matched)
+		//                {
+		//                    //StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+		//                    Map value = Value.Match(parser, out matched);
+		//                    result[key] = value;
+
+		//                    // i dont understand this
+		//                    new Sequence(
+		//                        new Action(new Match(), new Optional(EndOfLine)),
+		//                        new Action(new Match(), new Optional(Dedentation)
+		//                        )).Match(parser, out matched);
+		//                    //bool match;
+		//                    //EndOfLine.Match(parser, out match);
+		//                }
+		//            }
+		//        }
+		//        return result;
+		//    }));
+
 		//public static Rule Entry = new Alternatives(
 		//    new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
 		//    new CustomRule(delegate(Parser parser, out bool matched)
