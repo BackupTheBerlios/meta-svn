@@ -22,7 +22,6 @@
 		ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
-	"
 =
 	shortFunc
 	"
@@ -30,7 +29,6 @@
 			|
 				arg
 				!arg
-	"
 |
 	commandLine
 	,
@@ -42,11 +40,13 @@
 					,
 						=
 							.
-							"AssignedToCurrent"
+							"
+								AssignedToCurrent
 				0
 		=
 			asdf
-			"hello"
+			"
+				hello
 		=
 			shortFunction
 			,
@@ -57,7 +57,8 @@
 			shortFunctionTest
 			*
 				!shortFunction
-				"hello"
+				"
+					hello
 		=
 			counter
 			0
@@ -83,13 +84,15 @@
 					,
 						=
 							scopingValue
-							"right"
+							"
+								right
 						|
 							arg
 							!scopingValue
 		=
 			scopingValue
-			"wrong"
+			"
+				wrong
 		=
 			scopingTest
 			$
@@ -102,30 +105,36 @@
 				0
 		=
 			$
-				!<"C:"
+				!<"
+					C:
 				hello
 			,
 				=
 					x
-					"someTest"
+					"
+						someTest
 		=
 			cTest
 			$
-				!<"C:"
+				!<"
+					C:
 				hello
 		=
 			$
-				!<"C:"
+				!<"
+					C:
 				hello
 			0
 		=
 			cTest2
 			$
-				!<"C:"
+				!<"
+					C:
 				hello
 		=
 			unicodeText
-			"äaba"
+			"
+				äaba
 		=
 			$
 				!testSubDir
@@ -143,28 +152,33 @@
 			,
 				=
 					a
-					"b"
+					"
+						b
 				=
 					x
 					,
 						=
 							x
-							"hello"
+							"
+								hello
 						=
 							y
-							"world"
+							"
+								world
 		=
 			$
 				!testSubDir
 				x
 				a
-			"hi"
+			"
+				hi
 		=
 			integerHashTest
 			,
 				=
 					<2
-					"correct hash content"
+					"
+						correct hash content
 				=
 					hashTestData
 					,
@@ -184,7 +198,8 @@
 			$
 				negativeInteger
 				x
-			"hello"
+			"
+				hello
 		=
 			integerIncrementTest
 			5
@@ -256,31 +271,32 @@
 			,
 				=
 					.
-					"asdf"
+					"
+						asdf
 				=
 					.
-					"asdf"
+					"
+						asdf
 				=
 					.
 					"
 						as"'df
-					"
 				=
 					.
 					"
 						as"''df
-					"
 				=
 					.
 					"
 						as"''''''''''''''''df
-					"
 		=
 			.
-			"ImpliedAutokey"
+			"
+				ImpliedAutokey
 		=
 			.
-			"Autokey"
+			"
+				Autokey
 		=
 			commandLineArguments
 			!commandLine
@@ -289,40 +305,51 @@
 			,
 				=
 					a
-					"a"
+					"
+						a
 		=
 			<!aMap
-			"Object"
+			"
+				Object
 		=
-			<"normal symbol"
-			"NormalSymbol"
+			<"
+				normal symbol
+			"
+				NormalSymbol
 		=
 			lookupSymbol
-			"LookupSymbol"
+			"
+				LookupSymbol
 		=
-			<"long key symbol"
-			"LookupExtendedSymbol"
+			<"
+				long key symbol
+			"
+				LookupExtendedSymbol
 		=
 			lookedUpMap
 			!<!aMap
 		=
 			lookedUpNormalSymbol
-			!<"normal symbol"
+			!<"
+				normal symbol
 		=
 			lookedUpSymbol
 			!lookupSymbol
 		=
 			lookedUpLongSymbol
-			!<"long key symbol"
+			!<"
+				long key symbol
 		=
 			object
 			,
 				=
 					a
-					"default"
+					"
+						default
 				=
 					autoSearch
-					"default"
+					"
+						default
 				=
 					b
 					0
@@ -334,10 +361,12 @@
 							,
 								=
 									!a
-									"c"
+									"
+										c
 								=
 									!autoSearch
-									"changed"
+									"
+										changed
 				=
 					SetB
 					,
@@ -353,16 +382,19 @@
 										value
 								=
 									:
-									"changed"
+									"
+										changed
 				=
 					x
 					,
 						=
 							a
-							"b"
+							"
+								b
 						=
 							c
-							"d"
+							"
+								d
 				=
 					.
 					,
@@ -373,10 +405,12 @@
 									$
 										:
 										a
-									"b"
+									"
+										b
 		=
 			a
-			"default"
+			"
+				default
 		=
 			b
 			0
@@ -405,13 +439,15 @@
 								1
 		=
 			scopeTest
-			"default"
+			"
+				default
 		=
 			scopeFunction
 			,
 				=
 					inScope
-					"right"
+					"
+						right
 				|
 					arg
 					,
@@ -420,7 +456,8 @@
 							!inScope
 		=
 			inScope
-			"wrong"
+			"
+				wrong
 		=
 			.
 			*
@@ -428,13 +465,15 @@
 				0
 		=
 			scopeFromFunctionData
-			"wrong"
+			"
+				wrong
 		=
 			scopeFunctionFunction
 			,
 				=
 					scopeFromFunctionData
-					"right"
+					"
+						right
 				|
 					arg
 					,
@@ -467,13 +506,16 @@
 				,
 					=
 						.
-						"a"
+						"
+							a
 					=
 						.
-						"b"
+						"
+							b
 					=
 						.
-						"c"
+						"
+							c
 		=
 			variableAsArgument
 			*
@@ -481,13 +523,16 @@
 				,
 					=
 						.
-						"x"
+						"
+							x
 					=
 						.
-						"y"
+						"
+							y
 					=
 						.
-						"z"
+						"
+							z
 		=
 			ReturnFunction
 			,
@@ -539,7 +584,8 @@
 				,
 					=
 						symbol
-						"haha"
+						"
+							haha
 		=
 			FirstLevel
 			,
@@ -564,7 +610,8 @@
 				,
 					=
 						a
-						"z"
+						"
+							z
 		=
 			TestClass
 			$
@@ -619,16 +666,20 @@
 				!<,
 					=
 						version
-						"2.0.0.0"
+						"
+							2.0.0.0
 					=
 						publicKeyToken
-						"b77a5c561934e089"
+						"
+							b77a5c561934e089
 					=
 						culture
-						"Neutral"
+						"
+							Neutral
 					=
 						name
-						"mscorlib"
+						"
+							mscorlib
 				Int32
 		=
 			MemberTest
@@ -651,7 +702,8 @@
 						/
 						mscorlib
 						String
-				"hello"
+				"
+					hello
 		=
 			integerOverload
 			*
@@ -699,12 +751,14 @@
 			$
 				MemberTest
 				classField
-			"a"
+			"
+				a
 		=
 			$
 				memberTest
 				instanceField
-			"b"
+			"
+				b
 		=
 			$
 				MemberTest
@@ -731,7 +785,8 @@
 				InstanceProperty
 		=
 			interceptedSymbol
-			"/hello/"
+			"
+				/hello/
 		=
 			positionalNoConversion
 			*
@@ -748,9 +803,12 @@
 					<$
 						!mscorlib
 						String
-				"m"
-				"n"
-				"o"
+				"
+					m
+				"
+					n
+				"
+					o
 		=
 			positionalNoConversionConcatenated
 			*
@@ -766,9 +824,12 @@
 					<$
 						!mscorlib
 						String
-				"r"
-				"s"
-				"t"
+				"
+					r
+				"
+					s
+				"
+					t
 		=
 			namedNoConversion
 			*
@@ -783,10 +844,12 @@
 				,
 					=
 						.
-						"m"
+						"
+							m
 					=
 						y
-						"n"
+						"
+							n
 		=
 			namedNoConversionConcatenated
 			*
@@ -800,10 +863,12 @@
 				,
 					=
 						c
-						"t"
+						"
+							t
 					=
 						.
-						"r"
+						"
+							r
 		=
 			indexerNoConversion
 			*
@@ -817,22 +882,26 @@
 				indexerNoConversion
 				Item
 				abc
-			"hihi"
+			"
+				hihi
 		=
 			indexerNoConversionIndexed
 			$
 				!indexerNoConversion
 				Item
-				<"abc"
+				<"
+					abc
 		=
 			interceptedSymbolTwo
 			1
 		=
 			k
-			"hello"
+			"
+				hello
 		=
 			xyz
-			"w"
+			"
+				w
 		=
 			literalFunction
 			,
@@ -852,7 +921,8 @@
 					,
 						=
 							:
-							"simple function this"
+							"
+								simple function this
 		=
 			callFunction
 			,
@@ -875,7 +945,8 @@
 							,
 								=
 									x
-									"y"
+									"
+										y
 		=
 			delayedFunctionResult
 			*
@@ -890,7 +961,8 @@
 				0
 		=
 			value
-			"xyz"
+			"
+				xyz
 		=
 			selectionFunction
 			,
@@ -904,7 +976,8 @@
 				0
 		=
 			upperLevel
-			"unchanged"
+			"
+				unchanged
 		=
 			SetUpperLevel
 			,
@@ -924,7 +997,8 @@
 							.
 							*
 								!SetUpperLevel
-								"changed"
+								"
+									changed
 		=
 			.
 			*
@@ -1031,10 +1105,12 @@
 			2
 		=
 			firstIf
-			"unchanged"
+			"
+				unchanged
 		=
 			secondIf
-			"unchanged"
+			"
+				unchanged
 		=
 			firstIfCondition
 			*
@@ -1049,13 +1125,15 @@
 					,
 						|
 							arg
-							"then"
+							"
+								then
 				=
 					<0
 					,
 						|
 							arg
-							"else"
+							"
+								else
 		=
 			firstIf
 			*
@@ -1068,19 +1146,23 @@
 			50020202
 		=
 			secondSwitch
-			"unchanged"
+			"
+				unchanged
 		=
 			secondSwitchCases
 			,
 				=
 					.
-					"one"
+					"
+						one
 				=
 					.
-					"two"
+					"
+						two
 				=
 					.
-					"three"
+					"
+						three
 		=
 			secondSwitch
 			$
@@ -1097,7 +1179,8 @@
 					,
 						=
 							x
-							"hello"
+							"
+								hello
 		=
 			emptyFunctionResult
 			*
@@ -1108,7 +1191,8 @@
 			*
 				$
 					/
-					<"System.Drawing"
+					<"
+						System.Drawing
 					Font
 					<$
 						/
@@ -1118,7 +1202,8 @@
 						/
 						mscorlib
 						Single
-				"Courier New"
+				"
+					Courier New
 				10
 		=
 			decimalTest
@@ -1128,7 +1213,8 @@
 			40
 		=
 			stringTest
-			"hello"		
+			"
+				hello
 		=
 			$
 				stringTest
@@ -1138,7 +1224,8 @@
 				<1
 		=
 			helloh
-			"hi"
+			"
+				hi
 		=
 			stringStrategyHashTest
 			!<!stringTest
@@ -1150,7 +1237,6 @@
 					"
 						hello world!
 						hello!
-					"
 		=
 			arrayList
 			*
@@ -1168,7 +1254,8 @@
 					<$
 						!mscorlib
 						Object
-				"hello"
+				"
+					hello
 		=
 			arrayListResult
 			$
@@ -1180,7 +1267,8 @@
 			*
 				$
 					/
-					<"System.Windows.Forms"
+					<"
+						System.Windows.Forms
 					TextBox
 				0
 		=
@@ -1193,7 +1281,6 @@
 				schwimmen auf dem See,
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh.
-			"
 		=
 			lines
 			$
@@ -1215,7 +1302,8 @@
 			*
 				$
 					/
-					<"System.Windows.Forms"
+					<"
+						System.Windows.Forms
 					Form
 				0
 		=
@@ -1224,7 +1312,8 @@
 				Location
 			*
 				$
-					!<"System.Drawing"
+					!<"
+						System.Drawing
 					Point
 					<$
 						/
@@ -1243,10 +1332,12 @@
 				Location
 		=
 			tabText
-			"			hello"
+			"
+							hello
 		=
 			escapedText
-			"'#'n'''t"
+			"
+				'#'n'''t
 		=
 			whileCounter
 			0
@@ -1318,7 +1409,8 @@
 					,
 						|
 							arg
-							"functionResult"
+							"
+								functionResult
 		=
 			returnArg
 			,
@@ -1333,7 +1425,8 @@
 					,
 						=
 							hello
-							"world"
+							"
+								world
 		=
 			funcReturnTest
 			*
@@ -1345,10 +1438,12 @@
 			,
 				=
 					doc
-					"This function returns #hello ."
+					"
+						This function returns #hello .
 				|
 					arg
-					"hello"
+					"
+						hello
 		=
 			docFunctionResult
 			*
@@ -1356,7 +1451,8 @@
 				0
 		=
 			topLevel
-			"default"
+			"
+				default
 		=
 			deep
 			,
@@ -1371,7 +1467,8 @@
 									,
 										=
 											!topLevel
-											"changed"
+											"
+												changed
 		=
 			.
 			*
@@ -1404,26 +1501,29 @@
 			outerFunctionTest
 			*
 				!outerFunction
-				"right"
+				"
+					right
 		=
 			newLines
 			"
 				
 				
-			"
 		=
 			$
-				!<"System.Windows.Forms"
+				!<"
+					System.Windows.Forms
 				Application
 				VisualStyleState
 			$
-				!<"System.Windows.Forms"
+				!<"
+					System.Windows.Forms
 				VisualStyleState
 				ClientAreaEnabled
 		=
 			enumTest
 			$
-				!<"System.Windows.Forms"
+				!<"
+					System.Windows.Forms
 				Application
 				VisualStyleState
 		=
@@ -1445,16 +1545,19 @@
 				5
 		=
 			123hello
-			"asdf"
+			"
+				asdf
 		=
 			copySourceData
 			,
 				=
 					x
-					"y"
+					"
+						y
 				=
 					z
-					"a"
+					"
+						a
 		=
 			copiedData
 			!copySourceData
@@ -1462,7 +1565,8 @@
 			$
 				copiedData
 				x
-			"changed"
+			"
+				changed
 		=
 			characterLiterals
 			,

@@ -6900,7 +6900,7 @@ namespace Meta
 			Map map = new Sequence(
 				new Action(
 					new Match(),
-					EndOfLine),
+					new Optional(EndOfLine)),
 				new Action(new Match(), StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
 			if (matched)
 			{
@@ -6919,20 +6919,26 @@ namespace Meta
 				new Match(),
 				new Character(Syntax.character)));
 
+		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
+		{
+			pa.indentationCount--;
+			matched = false;
+			return null;
+		});
 		public static Rule String = new Alternatives(
-				new Sequence(
-					new Action(
-						new Match(), new Character(Syntax.@string)),
-					new Action(
-						new ReferenceAssignment(),
-						new OneOrMore(
-							new Action(
-								new Autokey(),
-								new CharacterExcept(
-									Syntax.unixNewLine,
-									Syntax.windowsNewLine[0],
-									Syntax.@string)))),
-					new Action(new Match(), new Character(Syntax.@string))),
+				//new Sequence(
+				//    new Action(
+				//        new Match(), new Character(Syntax.@string)),
+				//    new Action(
+				//        new ReferenceAssignment(),
+				//        new OneOrMore(
+				//            new Action(
+				//                new Autokey(),
+				//                new CharacterExcept(
+				//                    Syntax.unixNewLine,
+				//                    Syntax.windowsNewLine[0],
+				//                    Syntax.@string)))),
+				//    new Action(new Match(), new Character(Syntax.@string))),
 				new Sequence(
 					new Action(new Match(), new Character(Syntax.@string)),
 					new Action(new Match(), Indentation),
@@ -6949,8 +6955,44 @@ namespace Meta
 															new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
 															new Action(new Append(), StringLine)
 															)))))))),
-					new Action(new Match(), StringDedentation),
-					new Action(new Match(), new Character(Syntax.@string))));
+			new Action(new Match(),new Optional(EndOfLine)),
+			new Action(new Match(),new Optional(Dedentation))
+					//new Action(new Match(), StringDedentation),
+					//new Action(new Match(), new Character(Syntax.@string))
+			));
+
+		//public static Rule String = new Alternatives(
+		//        new Sequence(
+		//            new Action(
+		//                new Match(), new Character(Syntax.@string)),
+		//            new Action(
+		//                new ReferenceAssignment(),
+		//                new OneOrMore(
+		//                    new Action(
+		//                        new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.unixNewLine,
+		//                            Syntax.windowsNewLine[0],
+		//                            Syntax.@string)))),
+		//            new Action(new Match(), new Character(Syntax.@string))),
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//            new Action(new Match(), StringDedentation),
+		//            new Action(new Match(), new Character(Syntax.@string))));
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -7095,12 +7137,7 @@ namespace Meta
 					new Action(new Match(), new Character(Syntax.indentation)))),
 				new Action(new Match(), new Character(Syntax.lookupEnd)));
 
-		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
-		{
-			pa.indentationCount--;
-			matched = false;
-			return null;
-		});
+
 
 		public static Rule Function = new Sequence(
 			new Action(new Match(), new Character(Syntax.function)),
