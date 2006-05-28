@@ -325,16 +325,19 @@
 												,
 													|
 														arg
-														"right"
+														"
+															right
 											=
 												y
 												,
 													|
 														arg
-														"wrong"
+														"
+															wrong
 									=
 										control
-										"x"				
+										"
+											x
 						=
 							ifTest
 							*
@@ -346,13 +349,16 @@
 										,
 											|
 												arg
-												"if test successful"
+												"
+													if test successful
 						=
 							append
 							*
 								!join
-								"abc, "
-								"die Katze lief im Schnee."
+								"
+									abc, 
+								"
+									die Katze lief im Schnee.
 						=
 							apply 
 							,
@@ -382,13 +388,15 @@
 							,
 								=
 									x
-									"hello"
+									"
+										hello
 						=
 							contains
 							*
 								!hasKey
 								!keyTestMap
-								"x"
+								"
+									x
 						=
 							keysTest
 							*
@@ -396,13 +404,16 @@
 								,
 									=
 										jjqwv
-										"aeäquq"
+										"
+											aeäquq
 									=
 										oere
-										"i ke"
+										"
+											i ke
 									=
 										.
-										"oiq"
+										"
+											oiq
 						=
 							equal
 							,
@@ -416,17 +427,21 @@
 												,
 													=
 														x
-														"hello"
+														"
+															hello
 													=
 														y
-														"world"
+														"
+															world
 												,
 													=
 														x
-														"hello"
+														"
+															hello
 													=
 														y
-														"world"
+														"
+															world
 										=
 											false
 											*
@@ -434,17 +449,21 @@
 												,
 													=
 														x
-														"y"
+														"
+															y
 													=
 														y
-														"z"
+														"
+															z
 												,
 													=
 														x
-														"y"
+														"
+															y
 													=
 														y
-														"a"
+														"
+															a
 						=
 							while
 							,
@@ -497,12 +516,14 @@
 							lastTest
 							*
 								!last
-								"hello"
+								"
+									hello
 						=
 							firstTest
 							*
 								!first
-								"hello"
+								"
+									hello
 						=
 							splitTest
 							*
@@ -510,10 +531,12 @@
 								,
 									=
 										.
-										"hello world hello"
+										"
+											hello world hello
 									=
 										space
-										" "
+										"
+											 
 									=
 										delimiters 
 										,
@@ -528,7 +551,8 @@
 								$
 									!string
 									split
-								"hello world hello"
+								"
+									hello world hello
 								,
 									=
 										.
@@ -546,7 +570,8 @@
 										,
 											|
 												arg
-												"hello"
+												"
+													hello
 									=
 										catch 
 										,
@@ -673,13 +698,16 @@
 								,
 									=
 										string
-										"hello hello hi"
+										"
+											hello hello hi
 									=
 										old
-										"he"
+										"
+											he
 									=
 										new
-										"i"
+										"
+											i
 				=
 					bitwiseTest
 					*
@@ -692,7 +720,8 @@
 								.
 								$
 									/
-									<"System.Windows.Forms"
+									<"
+										System.Windows.Forms
 									Keys
 									Tab
 				=
@@ -731,10 +760,12 @@
 						,
 							=
 								array
-								"hello hello hi"
+								"
+									hello hello hi
 							=
 								value
-								"he"
+								"
+									he
 				=
 					findTest2
 					*
@@ -742,10 +773,12 @@
 						,
 							=
 								array
-								"test test"
+								"
+									test test
 							=
 								value
-								"test test"
+								"
+									test test
 				=
 					htmlTest 
 					,
@@ -759,7 +792,8 @@
 											!html
 											url
 											decode
-										"x%3D%22hello%22"
+										"
+											x%3D%22hello%22
 				=
 					sliceTest
 					*
@@ -767,7 +801,8 @@
 						,
 							=
 								array
-								"alle meine entchen"
+								"
+									alle meine entchen
 							=
 								start
 								5
@@ -778,7 +813,8 @@
 					firstTest
 					*
 						!first
-						"a"
+						"
+							a
 				=
 					rangeTest
 					*
@@ -788,7 +824,8 @@
 					reverseTest
 					*
 						!reverse
-						"hello"
+						"
+							hello
 				=
 					findFirstTest
 					*
@@ -796,10 +833,12 @@
 						,
 							=
 								value
-								"hell"
+								"
+									hell
 							=
 								array
-								"he hi hello"
+								"
+									he hi hello
 				=
 					foreachTest
 					*
@@ -807,10 +846,12 @@
 						,
 							=
 								x
-								"hi"
+								"
+									hi
 							=
 								y
-								"hello"
+								"
+									hello
 						,
 							|
 								key
@@ -855,10 +896,12 @@
 						,
 							=
 								x
-								"hi"
+								"
+									hi
 							=
 								y
-								"hello"
+								"
+									hello
 				=
 					isStringTest 
 					,
@@ -871,7 +914,8 @@
 							yes
 							*
 								!isString
-								"hi"
+								"
+									hi
 				=
 					intersectTest
 					*
@@ -882,48 +926,58 @@
 								,
 									=
 										apple
-										"green"
+										"
+											green
 									=
 										orange
-										"orange"
+										"
+											orange
 									=
 										banana
-										"yellow"
+										"
+											yellow
 							=
 								.
 								,
 									=
 										apple
-										"red"
+										"
+											red
 									=
 										orange
-										"yellow"
+										"
+											yellow
 									=
 										strawberries
-										"red"
+										"
+											red
 							=
 								.
 								,
 									=
 										apple
-										"last"
+										"
+											last
 									=
 										orange
-										"green"
+										"
+											green
 				=
 					lowerTest
 					*
 						$
 							!string
 							lower
-						"HeLLo"
+						"
+							HeLLo
 				=
 					upperTest
 					*
 						$
 							!string
 							upper
-						"HeLLo"
+						"
+							HeLLo
 				=
 					parseTest
 					*
@@ -931,28 +985,32 @@
 						"
 							=
 								asdf
-								"hello"
+								"
+									hello
 							=
 								x 
 								,
 									=
 										y
-										"hello"
+										"
+											hello
 									=
 										z
 										, 
 											=
 												a
-												"x"
+												"
+													x
 									|
 										arg
 										*
 											!join
-											"hello "
+											"
+												hello 
 											!join
 											!arg
-											"!"
-						"
+											"
+												!
 				=
 					invertTest
 					*
@@ -1000,7 +1058,8 @@
 								object
 								*
 									$
-										!<"System.Windows.Forms"
+										!<"
+											System.Windows.Forms
 										Form
 									0
 							=
@@ -1008,12 +1067,14 @@
 								,
 									=
 										Text
-										"hello world"
+										"
+											hello world
 				=
 					restTest
 					*
 						!rest
-						"hello"
+						"
+							hello
 		=
 			:
 			!test
