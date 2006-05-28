@@ -1,9 +1,11 @@
 |
 	switchArg
 	*
-		!if
+		!"
+			if
 		*
-			!hasKey
+			!"
+				hasKey
 			$
 				@
 				cases
@@ -18,9 +20,11 @@
 						arg
 						*
 							$
-								!switchArg
+								!"
+									switchArg
 								cases
 								<$
-									!switchArg
+									!"
+										switchArg
 									control
 							0

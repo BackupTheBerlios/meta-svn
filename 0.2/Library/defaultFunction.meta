@@ -8,11 +8,14 @@
 					default
 					function
 				*
-					!merge
+					!"
+						merge
 					$
-						!default
+						!"
+							default
 						argument
-					!arg
+					!"
+						arg
 |
 	func
 	,
@@ -22,8 +25,12 @@
 				|
 					arg
 					*
-						!func
+						!"
+							func
 						*
-							!merge
-							!argument
-							!arg
+							!"
+								merge
+							!"
+								argument
+							!"
+								arg

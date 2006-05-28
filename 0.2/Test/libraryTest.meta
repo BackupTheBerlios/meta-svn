@@ -13,12 +13,14 @@
 								=
 									true
 									*
-										!not
+										!"
+											not
 										0
 								=
 									false
 									*
-										!not
+										!"
+											not
 										1
 						=
 							and
@@ -26,7 +28,8 @@
 								=
 									true
 									*
-										!and
+										!"
+											and
 										,
 											=
 												.
@@ -55,7 +58,8 @@
 								=
 									false
 									*
-										!and
+										!"
+											and
 										,
 											=
 												. 
@@ -87,7 +91,8 @@
 								=
 									true
 									*
-										!or
+										!"
+											or
 										,
 											=
 												. 
@@ -110,7 +115,8 @@
 								=
 									false
 									*
-										!or
+										!"
+											or
 										,
 											=
 												. 
@@ -133,7 +139,8 @@
 								=
 									otherTrue
 									*
-										!or
+										!"
+											or
 										,
 											=
 												. 
@@ -171,52 +178,61 @@
 						=
 							positiveAdd
 							*
-								!add
+								!"
+									add
 								100
 								1000
 						=
 							negativeAdd
 							*
-								!add
+								!"
+									add
 								-100
 								91
 						=
 							subtractTest
 							*
-								!add
+								!"
+									add
 								1/4
 								*
-									!multiply
+									!"
+										multiply
 									1/100
 									-1
 						=
 							subtractTest2
 							*
-								!subtract
+								!"
+									subtract
 								2
 								103
 						=
 							divideTest
 							*
-								!divide
+								!"
+									divide
 								5
 								103
 						=
 							multiplyInteger
 							*
-								!multiply
+								!"
+									multiply
 								19
 								1023
 						=
 							multiplyFraction
 							*
-								!multiply
+								!"
+									multiply
 								3/2
 								7/3
 						=
 							smallerDecreasingTest
 							*
-								!strictlyDecreasing
+								!"
+									strictlyDecreasing
 								,
 									=
 										.
@@ -227,7 +243,8 @@
 						=
 							nonincreasingTest
 							*
-								!decreasing
+								!"
+									decreasing
 								,
 									=
 										.
@@ -244,7 +261,8 @@
 						=
 							nondecreasingTest
 							*
-								!increasing
+								!"
+									increasing
 								,
 									=
 										.
@@ -267,7 +285,8 @@
 						=
 							strictlyIncreasingTest
 							*
-								!strictlyIncreasing
+								!"
+									strictlyIncreasing
 								,
 									=
 										.
@@ -278,22 +297,26 @@
 						=
 							smallerTest
 							*
-								!smaller
+								!"
+									smaller
 								0
 								1
 						=
 							greaterTest
 							*
-								!greater
+								!"
+									greater
 								3
 								5
 						=
 							divide
 							*
-								!multiply
+								!"
+									multiply
 								1000
 								*
-									!reciprocal
+									!"
+										reciprocal
 									7
 				=
 					bitwiseTest
@@ -301,7 +324,8 @@
 						=			
 							or
 							*
-								!bitwiseOr
+								!"
+									bitwiseOr
 								,
 									=
 										.
@@ -315,7 +339,8 @@
 						=
 							switchTest
 							*
-								!switch
+								!"
+									switch
 								,
 									=
 										cases 
@@ -341,7 +366,8 @@
 						=
 							ifTest
 							*
-								!if
+								!"
+									if
 								1
 								,
 									=
@@ -354,7 +380,8 @@
 						=
 							append
 							*
-								!join
+								!"
+									join
 								"
 									abc, 
 								"
@@ -365,7 +392,8 @@
 								=
 									&
 									*
-										!apply
+										!"
+											apply
 										,
 											=
 												.
@@ -380,8 +408,10 @@
 											|
 												argument
 												*
-													!add
-													!argument
+													!"
+														add
+													!"
+														argument
 													1
 						=
 							keyTestMap
@@ -393,14 +423,17 @@
 						=
 							contains
 							*
-								!hasKey
-								!keyTestMap
+								!"
+									hasKey
+								!"
+									keyTestMap
 								"
 									x
 						=
 							keysTest
 							*
-								!keys
+								!"
+									keys
 								,
 									=
 										jjqwv
@@ -423,7 +456,8 @@
 										=
 											true
 											*
-												!equal
+												!"
+													equal
 												,
 													=
 														x
@@ -445,7 +479,8 @@
 										=
 											false
 											*
-												!equal
+												!"
+													equal
 												,
 													=
 														x
@@ -477,12 +512,15 @@
 											argument
 											,
 												=
-													!counter
-													!argument
+													!"
+														counter
+													!"
+														argument
 								=
 									test
 									*
-										!while
+										!"
+											while
 										,
 											=
 												condition
@@ -490,11 +528,13 @@
 													|
 														arg
 														*
-															!strictlyIncreasing
+															!"
+																strictlyIncreasing
 															,
 																=
 																	.
-																	!counter
+																	!"
+																		counter
 																=
 																	.
 																	10
@@ -504,30 +544,36 @@
 													|
 														arg
 														*
-															!SetCounter
+															!"
+																SetCounter
 															,
 																=
 																	<0
-																	!counter
+																	!"
+																		counter
 								=
 									&
-									!counter
+									!"
+										counter
 						=
 							lastTest
 							*
-								!last
+								!"
+									last
 								"
 									hello
 						=
 							firstTest
 							*
-								!first
+								!"
+									first
 								"
 									hello
 						=
 							splitTest
 							*
-								!split
+								!"
+									split
 								,
 									=
 										.
@@ -543,13 +589,15 @@
 											=
 												.
 												$
-													!space
+													!"
+														space
 													<1
 						=
 							stringSplitTest
 							*
 								$
-									!string
+									!"
+										string
 									split
 								"
 									hello world hello
@@ -563,7 +611,8 @@
 						=
 							tryTest
 							*
-								!try
+								!"
+									try
 								,
 									=
 										function 
@@ -579,13 +628,15 @@
 												argument
 												*
 													$
-														!argument
+														!"
+															argument
 														ToString
 													0
 						=
 							sortTest
 							*
-								!sort
+								!"
+									sort
 								,
 									=
 										.
@@ -630,19 +681,23 @@
 											|
 												second
 												*
-													!if
+													!"
+														if
 													*
-														!strictlyIncreasing
+														!"
+															strictlyIncreasing
 														,
 															=
 																.
 																$
-																	!first
+																	!"
+																		first
 																	x
 															=
 																.
 																$
-																	!second
+																	!"
+																		second
 																	x
 													,
 														=
@@ -657,19 +712,23 @@
 																|
 																	arg
 																	*
-																		!if
+																		!"
+																			if
 																		*
-																			!strictlyDecreasing
+																			!"
+																				strictlyDecreasing
 																			,
 																				=
 																					.
 																					$
-																						!first
+																						!"
+																							first
 																						x
 																				=
 																					.
 																					$
-																						!second
+																						!"
+																							second
 																						x
 																		,
 																			=
@@ -687,13 +746,15 @@
 						=
 							integerToString
 							*
-								!integerToString
+								!"
+									integerToString
 								5
 						=
 							stringReplace
 							*
 								$
-									!string
+									!"
+										string
 									replace
 								,
 									=
@@ -711,7 +772,8 @@
 				=
 					bitwiseTest
 					*
-						!bitwiseOr
+						!"
+							bitwiseOr
 						,
 							=
 								.
@@ -727,7 +789,8 @@
 				=
 					filterTest
 					*
-						!filter
+						!"
+							filter
 						,
 							=
 								.
@@ -750,13 +813,16 @@
 							|
 								argument
 								*
-									!equal
-									!argument
+									!"
+										equal
+									!"
+										argument
 									1
 				=
 					findTest
 					*
-						!find
+						!"
+							find
 						,
 							=
 								array
@@ -769,7 +835,8 @@
 				=
 					findTest2
 					*
-						!find
+						!"
+							find
 						,
 							=
 								array
@@ -789,7 +856,8 @@
 									decodeTest
 									*
 										$
-											!html
+											!"
+												html
 											url
 											decode
 										"
@@ -797,7 +865,8 @@
 				=
 					sliceTest
 					*
-						!slice
+						!"
+							slice
 						,
 							=
 								array
@@ -812,24 +881,28 @@
 				=
 					firstTest
 					*
-						!first
+						!"
+							first
 						"
 							a
 				=
 					rangeTest
 					*
-						!range
+						!"
+							range
 						10
 				=
 					reverseTest
 					*
-						!reverse
+						!"
+							reverse
 						"
 							hello
 				=
 					findFirstTest
 					*
-						!findFirst
+						!"
+							findFirst
 						,
 							=
 								value
@@ -842,7 +915,8 @@
 				=
 					foreachTest
 					*
-						!foreach
+						!"
+							foreach
 						,
 							=
 								x
@@ -860,12 +934,15 @@
 										value
 										,
 											=
-												<!value
-												!key
+												<!"
+													value
+												!"
+													key
 				=
 					sumTest
 					*
-						!sum 
+						!"
+							sum
 						,
 							=
 								.
@@ -886,13 +963,17 @@
 									|
 										second
 										*
-											!add
-											!first
-											!second
+											!"
+												add
+											!"
+												first
+											!"
+												second
 				=
 					valuesTest
 					*
-						!values
+						!"
+							values
 						,
 							=
 								x
@@ -908,18 +989,21 @@
 						=
 							no
 							*
-								!isString
+								!"
+									isString
 								2
 						=
 							yes
 							*
-								!isString
+								!"
+									isString
 								"
 									hi
 				=
 					intersectTest
 					*
-						!intersect
+						!"
+							intersect
 						,
 							=
 								.
@@ -966,7 +1050,8 @@
 					lowerTest
 					*
 						$
-							!string
+							!"
+								string
 							lower
 						"
 							HeLLo
@@ -974,14 +1059,16 @@
 					upperTest
 					*
 						$
-							!string
+							!"
+								string
 							upper
 						"
 							HeLLo
 				=
 					parseTest
 					*
-						!parse
+						!"
+							parse
 						"
 							:
 								"
@@ -1009,17 +1096,21 @@
 									|
 										arg
 										*
-											!join
+											!"
+												join
 											"
 												hello 
-											!join
-											!arg
+											!"
+												join
+											!"
+												arg
 											"
 												!
 				=
 					invertTest
 					*
-						!invert
+						!"
+							invert
 						,
 							=
 								.
@@ -1057,13 +1148,14 @@
 				=
 					withTest
 					*
-						!with
+						!"
+							with
 						,
 							=
 								object
 								*
 									$
-										!<"
+										!"
 											System.Windows.Forms
 										Form
 									0
@@ -1077,9 +1169,11 @@
 				=
 					restTest
 					*
-						!rest
+						!"
+							rest
 						"
 							hello
 		=
 			&
-			!test
+			!"
+				test
