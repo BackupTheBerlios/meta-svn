@@ -488,7 +488,7 @@
 															!SetCounter
 															,
 																=
-																	[0]
+																	<0
 																	!counter
 								=
 									:
@@ -521,7 +521,7 @@
 												.
 												$
 													!space
-													[1]
+													<1
 						=
 							stringSplitTest
 							*
@@ -692,7 +692,7 @@
 								.
 								$
 									/
-									["System.Windows.Forms"]
+									<"System.Windows.Forms"
 									Keys
 									Tab
 				=
@@ -819,7 +819,7 @@
 										value
 										,
 											=
-												[!value]
+												<!value
 												!key
 				=
 					sumTest
@@ -1000,7 +1000,7 @@
 								object
 								*
 									$
-										!["System.Windows.Forms"]
+										!<"System.Windows.Forms"
 										Form
 									0
 							=

@@ -9,10 +9,10 @@
 					Meta
 					Library
 					StringReplace
-					[$
+					<$
 						/
 						Meta
-						Map]
+						Map
 				@
 =
 	trim
@@ -27,9 +27,9 @@
 							/
 							Meta
 							ObjectMap
-							[$
+							<$
 								mscorlib
-								String]
+								String
 						@
 				=
 					:
@@ -37,7 +37,7 @@
 						$
 							object
 							Trim
-							[0]
+							<0
 						0
 =
 	lower
@@ -52,10 +52,10 @@
 							/
 							Meta
 							ObjectMap
-							[$
+							<$
 								/
 								mscorlib
-								String]
+								String
 						@
 				=
 					:
@@ -77,10 +77,10 @@
 							/
 							Meta
 							ObjectMap
-							[$
+							<$
 								/
 								mscorlib
-								String]
+								String
 						@
 				=
 					:
@@ -100,14 +100,14 @@
 					Meta
 					Library
 					SplitString
-					[$
+					<$
 						/
 						Meta
-						Map]
-					[$
+						Map
+					<$
 						/
 						Meta
-						Map]
+						Map
 				@
 =
 	compare
@@ -120,12 +120,12 @@
 					Meta
 					Library
 					CompareString
-					[$
+					<$
 						/
 						Meta
-						Map]
-					[$
+						Map
+					<$
 						/
 						Meta
-						Map]
+						Map
 				@

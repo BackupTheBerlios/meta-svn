@@ -5,12 +5,12 @@
 			!Meta
 			Library
 			Subtract
-			[$
+			<$
 				/
 				Meta
-				Map]
-			[$
+				Map
+			<$
 				/
 				Meta
-				Map]
+				Map
 		@

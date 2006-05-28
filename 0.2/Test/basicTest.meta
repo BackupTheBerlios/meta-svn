@@ -102,7 +102,7 @@
 				0
 		=
 			$
-				!["C:"]
+				!<"C:"
 				hello
 			,
 				=
@@ -111,17 +111,17 @@
 		=
 			cTest
 			$
-				!["C:"]
+				!<"C:"
 				hello
 		=
 			$
-				!["C:"]
+				!<"C:"
 				hello
 			0
 		=
 			cTest2
 			$
-				!["C:"]
+				!<"C:"
 				hello
 		=
 			unicodeText
@@ -163,20 +163,20 @@
 			integerHashTest
 			,
 				=
-					[2]
+					<2
 					"correct hash content"
 				=
 					hashTestData
 					,
 						=
-							[0]
+							<0
 							,
 								=
-									[0]
+									<0
 									0
 				=
 					hashTest
-					![!hashTestData]
+					!<!hashTestData
 		=
 			negativeInteger
 			100
@@ -191,7 +191,7 @@
 		=
 			$
 				integerIncrementTest
-				[0]
+				<0
 			!integerIncrementTest
 		=
 			integerDecrementTest
@@ -200,7 +200,7 @@
 			integerDecrementTest
 			$
 				!integerDecrementTest
-				[0]
+				<0
 		=
 			negativeNumber
 			-123
@@ -211,13 +211,13 @@
 					integer
 					,
 						=
-							[0]
+							<0
 							5
 				=
 					negative
 					,
 						=
-							[0]
+							<0
 							5
 						=
 							negative
@@ -226,7 +226,7 @@
 					fraction
 					,
 						=
-							[0]
+							<0
 							5
 						=
 							denominator
@@ -235,7 +235,7 @@
 					negativeFraction
 					,
 						=
-							[0]
+							<0
 							5
 						=
 							negative
@@ -291,29 +291,29 @@
 					a
 					"a"
 		=
-			[!aMap]
+			<!aMap
 			"Object"
 		=
-			["normal symbol"]
+			<"normal symbol"
 			"NormalSymbol"
 		=
 			lookupSymbol
 			"LookupSymbol"
 		=
-			["long key symbol"]
+			<"long key symbol"
 			"LookupExtendedSymbol"
 		=
 			lookedUpMap
-			![!aMap]
+			!<!aMap
 		=
 			lookedUpNormalSymbol
-			!["normal symbol"]
+			!<"normal symbol"
 		=
 			lookedUpSymbol
 			!lookupSymbol
 		=
 			lookedUpLongSymbol
-			!["long key symbol"]
+			!<"long key symbol"
 		=
 			object
 			,
@@ -347,7 +347,7 @@
 								=
 									$
 										!b
-										[1]
+										<1
 									$
 										!newB
 										value
@@ -616,7 +616,7 @@
 		=
 			strongNameTest
 			$
-				![,
+				!<,
 					=
 						version
 						"2.0.0.0"
@@ -629,7 +629,6 @@
 					=
 						name
 						"mscorlib"
-				]
 				Int32
 		=
 			MemberTest
@@ -648,10 +647,10 @@
 				$
 					!MemberTest
 					OverloadedMethod
-					[$
+					<$
 						/
 						mscorlib
-						String]
+						String
 				"hello"
 		=
 			integerOverload
@@ -659,10 +658,10 @@
 				$
 					!MemberTest
 					OverloadedMethod
-					[$
+					<$
 						/
 						mscorlib
-						Int32]
+						Int32
 				5
 		=
 			memberTestOverload
@@ -670,14 +669,14 @@
 				$
 					!MemberTest
 					OverloadedMethod
-					[$
+					<$
 						/
 						Meta
-						MemberTest]
-					[$
+						MemberTest
+					<$
 						/
 						mscorlib
-						Int32]
+						Int32
 				!memberTest
 				3247
 		=
@@ -686,14 +685,14 @@
 				$
 					!MemberTest
 					OverloadedMethod
-					[$
+					<$
 						/
 						Meta
-						MemberTest]
-					[$
+						MemberTest
+					<$
 						/
 						mscorlib
-						Int32]
+						Int32
 				!memberTest
 				3247
 		=
@@ -740,15 +739,15 @@
 					/
 					Meta
 					PositionalNoConversion
-					[$
+					<$
 						!mscorlib
-						String]
-					[$
+						String
+					<$
 						!mscorlib
-						String]
-					[$
+						String
+					<$
 						!mscorlib
-						String]
+						String
 				"m"
 				"n"
 				"o"
@@ -758,15 +757,15 @@
 				$
 					!positionalNoConversion
 					Concatenate
-					[$
+					<$
 						!mscorlib
-						String]
-					[$
+						String
+					<$
 						!mscorlib
-						String]
-					[$
+						String
+					<$
 						!mscorlib
-						String]
+						String
 				"r"
 				"s"
 				"t"
@@ -777,10 +776,10 @@
 					/
 					Meta
 					NamedNoConversion
-					[$
+					<$
 						/
 						Meta
-						Map]
+						Map
 				,
 					=
 						.
@@ -794,10 +793,10 @@
 				$
 					!namedNoConversion
 					Concatenate
-					[$
+					<$
 						/
 						Meta
-						Map]
+						Map
 				,
 					=
 						c
@@ -824,7 +823,7 @@
 			$
 				!indexerNoConversion
 				Item
-				["abc"]
+				<"abc"
 		=
 			interceptedSymbolTwo
 			1
@@ -960,24 +959,24 @@
 							:
 							$
 								!arg
-								[1]
+								<1
 		=
 			.
 			*
 				$
 					!TestClass
 					TakeDelegate
-					[$
+					<$
 						/
 						Meta
 						TestClass
-						TestDelegate]
+						TestDelegate
 				,
 					|
 						arg
 						$
 							!arg
-							[1]
+							<1
 		=
 			resultFromDelegate
 			*
@@ -991,9 +990,9 @@
 				$
 					!TestClass
 					CallStaticEvent
-					[$
+					<$
 						!mscorlib
-						Object]
+						Object
 				!testClass
 		=
 			instanceEventChanged
@@ -1013,16 +1012,16 @@
 							:
 							$
 								!arg
-								[1]
+								<1
 		=
 			instanceEventResult
 			*
 				$
 					!testClass
 					CallInstanceEvent
-					[$
+					<$
 						!mscorlib
-						Object]
+						Object
 				5
 		=
 			one
@@ -1052,7 +1051,7 @@
 							arg
 							"then"
 				=
-					[0]
+					<0
 					,
 						|
 							arg
@@ -1062,7 +1061,7 @@
 			*
 				$
 					!firstIfBranches
-					[!firstIfCondition]
+					<!firstIfCondition
 				0
 		=
 			bigNumber
@@ -1086,7 +1085,7 @@
 			secondSwitch
 			$
 				!secondSwitchCases
-				[3]
+				<3
 		=
 			emptyMap
 			0
@@ -1109,16 +1108,16 @@
 			*
 				$
 					/
-					["System.Drawing"]
+					<"System.Drawing"
 					Font
-					[$
+					<$
 						/
 						mscorlib
-						String]
-					[$
+						String
+					<$
 						/
 						mscorlib
-						Single]
+						Single
 				"Courier New"
 				10
 		=
@@ -1133,16 +1132,16 @@
 		=
 			$
 				stringTest
-				[6]
+				<6
 			$
 				!stringTest
-				[1]
+				<1
 		=
 			helloh
 			"hi"
 		=
 			stringStrategyHashTest
-			![!stringTest]
+			!<!stringTest
 		=
 			x
 			,
@@ -1166,22 +1165,22 @@
 				$
 					!arrayList
 					Add
-					[$
+					<$
 						!mscorlib
-						Object]
+						Object
 				"hello"
 		=
 			arrayListResult
 			$
 				!arrayList
 				Item
-				[0]
+				<0
 		=
 			textBox
 			*
 				$
 					/
-					["System.Windows.Forms"]
+					<"System.Windows.Forms"
 					TextBox
 				0
 		=
@@ -1206,17 +1205,17 @@
 				$
 					!lines
 					GetValue
-					[$
+					<$
 						/
 						mscorlib
-						Int32]
+						Int32
 				1
 		=
 			form
 			*
 				$
 					/
-					["System.Windows.Forms"]
+					<"System.Windows.Forms"
 					Form
 				0
 		=
@@ -1225,16 +1224,16 @@
 				Location
 			*
 				$
-					!["System.Drawing"]
+					!<"System.Drawing"
 					Point
-					[$
+					<$
 						/
 						mscorlib
-						Int32]
-					[$
+						Int32
+					<$
 						/
 						mscorlib
-						Int32]
+						Int32
 				5
 				1000
 		=
@@ -1280,7 +1279,7 @@
 													!arg
 													1
 								=
-									[0]
+									<0
 									,
 										|
 											arg
@@ -1290,7 +1289,7 @@
 							*
 								$
 									!whileBranches
-									[!whileDecision]
+									<!whileDecision
 								!start
 		=
 			whileCounter
@@ -1414,17 +1413,17 @@
 			"
 		=
 			$
-				!["System.Windows.Forms"]
+				!<"System.Windows.Forms"
 				Application
 				VisualStyleState
 			$
-				!["System.Windows.Forms"]
+				!<"System.Windows.Forms"
 				VisualStyleState
 				ClientAreaEnabled
 		=
 			enumTest
 			$
-				!["System.Windows.Forms"]
+				!<"System.Windows.Forms"
 				Application
 				VisualStyleState
 		=
@@ -1434,12 +1433,12 @@
 					!mscorlib
 					Array
 					CreateInstance
-					[$
+					<$
 						!mscorlib
-						Type]
-					[$
+						Type
+					<$
 						!mscorlib
-						Int32]
+						Int32
 				$
 					!mscorlib
 					String

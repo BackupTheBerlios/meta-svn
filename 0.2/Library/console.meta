@@ -7,10 +7,10 @@ writeLine,
 				Meta
 				Library
 				WriteLine
-				[$
+				<$
 					/
 					mscorlib
-					String]
+					String
 			@
 write,
 	|
@@ -21,10 +21,10 @@ write,
 				Meta
 				Library
 				Write
-				[$
+				<$
 					/
 					mscorlib
-					String]
+					String
 			@
 readLine,
 	|

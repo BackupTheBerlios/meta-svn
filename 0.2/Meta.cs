@@ -1714,6 +1714,17 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map value = null;
+			//if (cache.ContainsKey(key))
+			//{
+			//    value = cache[key];
+			//}
+			//else 
+
+			//if (key.Equals(new StrategyMap("localhost")))
+			//{
+			//    value = cache[key];
+			//}
+			//else
 			if (cache.ContainsKey(key))
 			{
 				value = cache[key];
@@ -1816,6 +1827,10 @@ namespace Meta
 					cache[key] = value;
 				}
 			}
+			//else if (cache.ContainsKey(key))
+			//{
+			//    value = cache[key];
+			//}
 			return value;
 		}
 		//protected override Map Get(Map key)
@@ -6352,7 +6367,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<'};
 	}
 
 
@@ -7064,6 +7079,14 @@ namespace Meta
 			CharacterDataExpression
 			);
 
+		//private static Rule LookupAnything =
+		//    new Sequence(
+		//        new Action(new Match(), new Character('<')),
+		//        //new Action(new Match(), new Character((Syntax.lookupStart))),
+		//        new Action(new ReferenceAssignment(), Value),
+		//        new Action(new Match(), new ZeroOrMore(
+		//            new Action(new Match(), new Character(Syntax.indentation)))),
+		//        new Action(new Match(), new Character(Syntax.lookupEnd)));
 		private static Rule LookupAnything =
 			new Sequence(
 				new Action(new Match(), new Character((Syntax.lookupStart))),
@@ -7514,11 +7537,21 @@ namespace Meta
 
 		private static Rule LookupAnythingExpression =
 			new Sequence(
-				new Action(new Match(), new Character((Syntax.lookupStart))),
-				new Action(new ReferenceAssignment(), Expression),
-				new Action(new Match(), new ZeroOrMore(
-					new Action(new Match(), new Character(Syntax.indentation)))),
-				new Action(new Match(), new Character(Syntax.lookupEnd)));
+				new Action(new Match(), new Character('<')),
+				//new Action(new Match(), new Character((Syntax.lookupStart))),
+				new Action(new ReferenceAssignment(), Expression)
+				//new Action(new Match(), new ZeroOrMore(
+				//    new Action(new Match(), new Character(Syntax.indentation)))),
+				//new Action(new Match(), new Character(Syntax.lookupEnd))
+			);
+
+		//private static Rule LookupAnythingExpression =
+		//    new Sequence(
+		//        new Action(new Match(), new Character((Syntax.lookupStart))),
+		//        new Action(new ReferenceAssignment(), Expression),
+		//        new Action(new Match(), new ZeroOrMore(
+		//            new Action(new Match(), new Character(Syntax.indentation)))),
+		//        new Action(new Match(), new Character(Syntax.lookupEnd)));
 
 		private static Rule LookupStringExpression =
 			new Sequence(

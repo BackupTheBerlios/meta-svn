@@ -6,12 +6,12 @@
 			Meta
 			Library
 			Append
-			[$
+			<$
 				/
 				Meta
-				Map]
-			[$
+				Map
+			<$
 				/
 				Meta
-				Map]
+				Map
 		@

@@ -20,7 +20,7 @@
 							$
 								!switchArg
 								cases
-								[$
+								<$
 									!switchArg
-									control]
+									control
 							0

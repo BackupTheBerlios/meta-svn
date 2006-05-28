@@ -10,4 +10,4 @@
 				key
 				$
 					!arg
-					[!key]
+					<!key

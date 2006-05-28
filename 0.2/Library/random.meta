@@ -3,20 +3,19 @@ choose,
 		arg
 		$
 			@
-			[*
+			<*
 				$
 					/
 					Meta
 					Library
 					Random
-					[$
+					<$
 						/
 						Meta
-						Map]
+						Map
 				*
 					!add
 					*
 						!length
 						@
 					1
-			]
