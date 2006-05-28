@@ -840,11 +840,14 @@
 								8
 						,
 							|
-								arg
+								first
 								,
 									|
-										arg
-										"hello"
+										second
+										*
+											!add
+											!first
+											!second
 				=
 					valuesTest
 					*
