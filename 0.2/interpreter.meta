@@ -106,7 +106,7 @@ do.something
 								*
 									null
 									selected
-					: *
+					& *
 						search
 						context
 		search
@@ -146,7 +146,7 @@ do.something
 								*
 									null
 									selected
-					: *
+					& *
 						search
 						context
 		search
@@ -185,7 +185,7 @@ do.something
 								*
 									null
 									selected
-					: *
+					& *
 						search
 						context
 		search
@@ -215,7 +215,7 @@ do.something
 																null selected.Scope
 												hasKey selected key
 								null selected
-					: search context
+					& search context
 		search
 			keyExpression|
 				context|
@@ -275,7 +275,7 @@ do.something
 		evaluate
 			code|
 				key (keys code).[1]
-				: expressions.[key] code.[key]
+				& expressions.[key] code.[key]
 					if (selection.Get().Scope != null)
 					{
 						selection = selection.Get().Scope;

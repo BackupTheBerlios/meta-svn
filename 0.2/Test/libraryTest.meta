@@ -363,7 +363,7 @@
 							apply 
 							,
 								=
-									:
+									&
 									*
 										!apply
 										,
@@ -510,7 +510,7 @@
 																	<0
 																	!counter
 								=
-									:
+									&
 									!counter
 						=
 							lastTest
@@ -1076,5 +1076,5 @@
 						"
 							hello
 		=
-			:
+			&
 			!test

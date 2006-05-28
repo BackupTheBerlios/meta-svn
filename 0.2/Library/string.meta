@@ -32,7 +32,7 @@
 								String
 						@
 				=
-					:
+					&
 					*
 						$
 							object
@@ -58,7 +58,7 @@
 								String
 						@
 				=
-					:
+					&
 					*
 						$
 							object
@@ -83,7 +83,7 @@
 								String
 						@
 				=
-					:
+					&
 					*
 						$
 							object

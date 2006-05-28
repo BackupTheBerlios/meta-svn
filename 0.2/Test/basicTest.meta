@@ -33,7 +33,7 @@
 	commandLine
 	,
 		=
-			:
+			&
 			*
 				*
 					!merge
@@ -381,7 +381,7 @@
 										!newB
 										value
 								=
-									:
+									&
 									"
 										changed
 				=
@@ -403,7 +403,7 @@
 							,
 								=
 									$
-										:
+										&
 										a
 									"
 										b
@@ -497,7 +497,7 @@
 					everything
 					,
 						=
-							:
+							&
 							!everything
 		=
 			everythingReturned
@@ -540,13 +540,13 @@
 					arg
 					,
 						=
-							:
+							&
 							,
 								|
 									arg
 									,
 										=
-											:
+											&
 											,
 												=
 													.
@@ -564,7 +564,7 @@
 					current
 					,
 						=
-							:
+							&
 							,
 								=
 									asdf
@@ -575,7 +575,7 @@
 										!current
 										symbol
 						=
-							:
+							&
 							!x
 		=
 			thisSet
@@ -920,7 +920,7 @@
 					arg
 					,
 						=
-							:
+							&
 							"
 								simple function this
 		=
@@ -1030,7 +1030,7 @@
 								!ChangeStaticEvent
 								1
 						=
-							:
+							&
 							$
 								!arg
 								<1
@@ -1083,7 +1083,7 @@
 							!instanceEventChanged
 							1
 						=
-							:
+							&
 							$
 								!arg
 								<1
@@ -1376,7 +1376,7 @@
 											arg
 											!arg
 						=
-							:
+							&
 							*
 								$
 									!whileBranches
@@ -1490,7 +1490,7 @@
 									arg
 									,
 										=
-											:
+											&
 											!arg
 						=
 							.

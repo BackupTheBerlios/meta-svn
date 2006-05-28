@@ -3,7 +3,7 @@
 		
 	=
 		"indented
-		:
+		&
 			|
 				whatever
 	=
@@ -17,7 +17,7 @@
 					"0123456789
 		=
 			"parse
-			:
+			&
 				|
 					*
 						.
@@ -31,7 +31,7 @@
 						@
 	=
 		indented
-		:
+		&
 		
 			|
 				*
@@ -44,7 +44,7 @@
 		"indents
 		*
 			apply
-			:
+			&
 				=
 					"program
 					':

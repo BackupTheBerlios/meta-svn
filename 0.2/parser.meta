@@ -67,7 +67,7 @@ parser|
 									res|if (arg.tooFew impArg.parser impArg.n)
 										else
 											|impArg.parser
-				: implementation
+				& implementation
 					parser merge parser
 						parsed 0
 					n 0) 0)
