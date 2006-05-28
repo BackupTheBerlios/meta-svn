@@ -1818,6 +1818,113 @@ namespace Meta
 			}
 			return value;
 		}
+		//protected override Map Get(Map key)
+		//{
+		//    Map value = null;
+		//    if (cache.ContainsKey(key))
+		//    {
+		//        value = cache[key];
+		//    }
+		//    else if (key.IsString)
+		//    {
+		//        string name = key.GetString();
+		//        if (directory.FullName != Interpreter.LibraryPath)
+		//        {
+		//            Directory.SetCurrentDirectory(directory.FullName);
+		//        }
+		//        string file = Path.Combine(directory.FullName, name);
+		//        string metaFile = Path.Combine(directory.FullName, name + ".meta");
+		//        string dllFile = Path.Combine(directory.FullName, name + ".dll");
+		//        string exeFile = Path.Combine(directory.FullName, name + ".exe");
+
+		//        if (File.Exists(metaFile))
+		//        {
+		//            string text = File.ReadAllText(metaFile, Encoding.Default);
+		//            Map result;
+		//            FileMap fileMap = new FileMap(metaFile);
+		//            if (text != "")
+		//            {
+		//                Map start = new StrategyMap();
+		//                Parser parser = new Parser(text, metaFile);
+		//                bool matched;
+		//                result = Parser.File.Match(parser, out matched);
+		//                //result = Parser.File.Match(parser, out matched);
+		//                if (parser.index != parser.text.Length)
+		//                {
+		//                    throw new SyntaxException("Expected end of file.", parser);
+		//                }
+		//                value = result;
+		//            }
+		//            else
+		//            {
+		//                value = Map.Empty;
+		//            }
+		//        }
+		//        else
+		//        {
+		//            bool dllLoaded = false;
+		//            if (File.Exists(dllFile))
+		//            {
+		//                try
+		//                {
+		//                    Assembly assembly = Assembly.LoadFile(dllFile);
+		//                    value = Gac.LoadAssembly(assembly);
+		//                    dllLoaded = true;
+		//                }
+		//                catch (Exception e)
+		//                {
+		//                    value = null;
+		//                }
+		//            }
+		//            else if (File.Exists(exeFile))
+		//            {
+		//                try
+		//                {
+		//                    Assembly assembly = Assembly.LoadFile(exeFile);
+		//                    value = Gac.LoadAssembly(assembly);
+		//                    dllLoaded = true;
+		//                }
+		//                catch (Exception e)
+		//                {
+		//                    value = null;
+		//                }
+		//            }
+		//            if (!dllLoaded)
+		//            {
+		//                if (File.Exists(file))
+		//                {
+		//                    switch (Path.GetExtension(file))
+		//                    {
+		//                        case ".txt":
+		//                        case ".meta":
+		//                            value = new StrategyMap(File.ReadAllText(file));
+		//                            break;
+		//                        default:
+		//                            value = new FileMap(file, new ListStrategy());
+		//                            break;
+		//                    }
+		//                }
+		//                else
+		//                {
+		//                    DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+		//                    if (subDir.Exists)
+		//                    {
+		//                        value = new DirectoryMap(subDir);
+		//                    }
+		//                    else
+		//                    {
+		//                        value = null;
+		//                    }
+		//                }
+		//            }
+		//        }
+		//        if (value != null)
+		//        {
+		//            cache[key] = value;
+		//        }
+		//    }
+		//    return value;
+		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)

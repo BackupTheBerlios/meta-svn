@@ -436,7 +436,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"sumTest"
 	Value (StrategyMap):
-		"hello"
+		21
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"valuesTest"
