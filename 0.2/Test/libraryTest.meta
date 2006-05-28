@@ -984,21 +984,26 @@
 						!parse
 						"
 							:
-								asdf
+								"
+									asdf
 								"
 									hello
 							:
-								x 
+								"
+									x
 								,
 									:
-										y
+										"
+											y
 										"
 											hello
 									:
-										z
+										"
+											z
 										, 
 											:
-												a
+												"
+													a
 												"
 													x
 									|

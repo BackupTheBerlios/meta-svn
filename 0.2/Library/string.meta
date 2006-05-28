@@ -1,5 +1,6 @@
 :
-	replace
+	"
+		replace
 	,
 		|
 			arg
@@ -15,7 +16,8 @@
 						Map
 				@
 :
-	trim
+	"
+		trim
 	,
 		|
 			arg
@@ -40,7 +42,8 @@
 							<0
 						0
 :
-	lower
+	"
+		lower
 	,
 		|
 			arg
@@ -65,7 +68,8 @@
 							ToLower
 						0
 :
-	upper
+	"
+		upper
 	,
 		|
 			arg
@@ -90,7 +94,8 @@
 							ToUpper
 						0
 :
-	split
+	"
+		split
 	,
 		|
 			arg
@@ -110,7 +115,8 @@
 						Map
 				@
 :
-	compare
+	"
+		compare
 	,
 		|
 			arg
