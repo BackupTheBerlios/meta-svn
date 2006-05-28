@@ -7662,12 +7662,20 @@ namespace Meta
 
 
 		private static Rule Search = new Sequence(
-			new Action(new Match(),new Character('!')),
+			new Action(new Match(), new Character('!')),
 			new Action(new Assignment(
-				CodeKeys.Search),
-				new Alternatives(
-					LookupStringExpression,
-					LookupAnythingExpression)));
+				CodeKeys.Search),Expression));
+				//new Alternatives(
+				//    Expression,
+				//    LookupAnythingExpression)));
+
+		//private static Rule Search = new Sequence(
+		//    new Action(new Match(),new Character('!')),
+		//    new Action(new Assignment(
+		//        CodeKeys.Search),
+		//        new Alternatives(
+		//            LookupStringExpression,
+		//            LookupAnythingExpression)));
 
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(

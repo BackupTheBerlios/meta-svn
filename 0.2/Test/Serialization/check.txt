@@ -26,7 +26,8 @@ shortFunc "
 	,
 		|
 			arg
-			!arg
+			!"
+				arg
 "
 function 
 	parameter "commandLine"

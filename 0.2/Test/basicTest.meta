@@ -30,7 +30,8 @@
 		,
 			|
 				arg
-				!arg
+				!"
+					arg
 |
 	commandLine
 	,
@@ -38,7 +39,8 @@
 			&
 			*
 				*
-					!merge
+					!"
+						merge
 					,
 						=
 							.
@@ -54,11 +56,13 @@
 			,
 				|
 					arg
-					!asdf
+					!"
+						asdf
 		=
 			shortFunctionTest
 			*
-				!shortFunction
+				!"
+					shortFunction
 				"
 					hello
 		=
@@ -71,12 +75,14 @@
 					argument
 					,
 						=
-							!counter
+							!"
+								counter
 							@
 		=
 			.
 			*
-				!SetCounter
+				!"
+					SetCounter
 				5
 		=
 			scoping
@@ -90,7 +96,8 @@
 								right
 						|
 							arg
-							!scopingValue
+							!"
+								scopingValue
 		=
 			scopingValue
 			"
@@ -98,16 +105,18 @@
 		=
 			scopingTest
 			$
-				!scoping
+				!"
+					scoping
 				test
 		=
 			lexicalScoping
 			*
-				!scopingTest
+				!"
+					scopingTest
 				0
 		=
 			$
-				!<"
+				!"
 					C:
 				hello
 			,
@@ -118,19 +127,19 @@
 		=
 			cTest
 			$
-				!<"
+				!"
 					C:
 				hello
 		=
 			$
-				!<"
+				!"
 					C:
 				hello
 			0
 		=
 			cTest2
 			$
-				!<"
+				!"
 					C:
 				hello
 		=
@@ -139,17 +148,20 @@
 				äaba
 		=
 			$
-				!testSubDir
+				!"
+					testSubDir
 				x
 			0
 		=
 			persistantDeleteTest
 			$
-				!testSubDir
+				!"
+					testSubDir
 				x
 		=
 			$
-				!testSubDir
+				!"
+					testSubDir
 				x
 			,
 				=
@@ -169,7 +181,8 @@
 								world
 		=
 			$
-				!testSubDir
+				!"
+					testSubDir
 				x
 				a
 			"
@@ -192,7 +205,8 @@
 									0
 				=
 					hashTest
-					!<!hashTestData
+					!!"
+						hashTestData
 		=
 			negativeInteger
 			100
@@ -209,14 +223,16 @@
 			$
 				integerIncrementTest
 				<0
-			!integerIncrementTest
+			!"
+				integerIncrementTest
 		=
 			integerDecrementTest
 			5
 		=
 			integerDecrementTest
 			$
-				!integerDecrementTest
+				!"
+					integerDecrementTest
 				<0
 		=
 			negativeNumber
@@ -266,7 +282,8 @@
 		=
 			persistenceTest
 			$
-				!testSubDir
+				!"
+					testSubDir
 				x
 		=
 			literalEscapeTest
@@ -301,7 +318,8 @@
 				Autokey
 		=
 			commandLineArguments
-			!commandLine
+			!"
+				commandLine
 		=
 			aMap
 			,
@@ -310,7 +328,8 @@
 					"
 						a
 		=
-			<!aMap
+			<!"
+				aMap
 			"
 				Object
 		=
@@ -329,17 +348,19 @@
 				LookupExtendedSymbol
 		=
 			lookedUpMap
-			!<!aMap
+			!!"
+				aMap
 		=
 			lookedUpNormalSymbol
-			!<"
+			!"
 				normal symbol
 		=
 			lookedUpSymbol
-			!lookupSymbol
+			!"
+				lookupSymbol
 		=
 			lookedUpLongSymbol
-			!<"
+			!"
 				long key symbol
 		=
 			object
@@ -362,11 +383,13 @@
 							arg
 							,
 								=
-									!a
+									!"
+										a
 									"
 										c
 								=
-									!autoSearch
+									!"
+										autoSearch
 									"
 										changed
 				=
@@ -377,10 +400,12 @@
 							,
 								=
 									$
-										!b
+										!"
+											b
 										<1
 									$
-										!newB
+										!"
+											newB
 										value
 								=
 									&
@@ -420,14 +445,16 @@
 			aSet
 			*
 				$
-					!object
+					!"
+						object
 					SetA
 				0
 		=
 			bSet
 			*
 				$
-					!object
+					!"
+						object
 					SetB
 				,
 					=
@@ -454,8 +481,10 @@
 					arg
 					,
 						=
-							!scopeTest
-							!inScope
+							!"
+								scopeTest
+							!"
+								inScope
 		=
 			inScope
 			"
@@ -463,7 +492,8 @@
 		=
 			.
 			*
-				!scopeFunction
+				!"
+					scopeFunction
 				0
 		=
 			scopeFromFunctionData
@@ -481,16 +511,19 @@
 					,
 						|
 							arg
-							!scopeFromFunctionData
+							!"
+								scopeFromFunctionData
 		=
 			scopeFromFunction
 			*
-				!scopeFunctionFunction
+				!"
+					scopeFunctionFunction
 				0
 		=
 			scopeFromFunctionTest
 			*
-				!scopeFromFunction
+				!"
+					scopeFromFunction
 				0
 		=
 			ReturnEverything
@@ -500,11 +533,13 @@
 					,
 						=
 							&
-							!everything
+							!"
+								everything
 		=
 			everythingReturned
 			*
-				!ReturnEverything
+				!"
+					ReturnEverything
 				,
 					=
 						.
@@ -521,7 +556,8 @@
 		=
 			variableAsArgument
 			*
-				!ReturnEverything
+				!"
+					ReturnEverything
 				,
 					=
 						.
@@ -570,19 +606,23 @@
 							,
 								=
 									asdf
-									!current
+									!"
+										current
 								=
 									x
 									$
-										!current
+										!"
+											current
 										symbol
 						=
 							&
-							!x
+							!"
+								x
 		=
 			thisSet
 			*
-				!SetCurrent
+				!"
+					SetCurrent
 				,
 					=
 						symbol
@@ -597,18 +637,22 @@
 						=
 							.
 							*
-								!SecondLevel
-								!arg
+								!"
+									SecondLevel
+								!"
+									arg
 		=
 			SecondLevel
 			,
 				|
 					arg
-					!arg
+					!"
+						arg
 		=
 			argTest
 			*
-				!FirstLevel
+				!"
+					FirstLevel
 				,
 					=
 						a
@@ -629,13 +673,15 @@
 		=
 			nestedClassTest
 			$
-				!TestClass
+				!"
+					TestClass
 				NestedClass
 				field
 		=
 			testClass
 			*
-				!TestClass
+				!"
+					TestClass
 				0
 		=
 			$
@@ -660,12 +706,13 @@
 		=
 			boolTest
 			$
-				!TestClass
+				!"
+					TestClass
 				boolTest
 		=
 			strongNameTest
 			$
-				!<,
+				!,
 					=
 						version
 						"
@@ -692,13 +739,15 @@
 		=
 			memberTest
 			*
-				!MemberTest
+				!"
+					MemberTest
 				0
 		=
 			stringOverload
 			*
 				$
-					!MemberTest
+					!"
+						MemberTest
 					OverloadedMethod
 					<$
 						/
@@ -710,7 +759,8 @@
 			integerOverload
 			*
 				$
-					!MemberTest
+					!"
+						MemberTest
 					OverloadedMethod
 					<$
 						/
@@ -721,7 +771,8 @@
 			memberTestOverload
 			*
 				$
-					!MemberTest
+					!"
+						MemberTest
 					OverloadedMethod
 					<$
 						/
@@ -731,13 +782,15 @@
 						/
 						mscorlib
 						Int32
-				!memberTest
+				!"
+					memberTest
 				3247
 		=
 			memberTestOverload
 			*
 				$
-					!MemberTest
+					!"
+						MemberTest
 					OverloadedMethod
 					<$
 						/
@@ -747,7 +800,8 @@
 						/
 						mscorlib
 						Int32
-				!memberTest
+				!"
+					memberTest
 				3247
 		=
 			$
@@ -766,24 +820,28 @@
 				MemberTest
 				ClassProperty
 			$
-				!memberTest
+				!"
+					memberTest
 				InstanceProperty
 		=
 			classPropertyValue
 			$
-				!MemberTest
+				!"
+					MemberTest
 				ClassProperty
 		=
 			$
 				memberTest
 				InstanceProperty
 			$
-				!MemberTest
+				!"
+					MemberTest
 				ClassProperty
 		=
 			instancePropertyValue
 			$
-				!memberTest
+				!"
+					memberTest
 				InstanceProperty
 		=
 			interceptedSymbol
@@ -797,13 +855,16 @@
 					Meta
 					PositionalNoConversion
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 				"
 					m
@@ -815,16 +876,20 @@
 			positionalNoConversionConcatenated
 			*
 				$
-					!positionalNoConversion
+					!"
+						positionalNoConversion
 					Concatenate
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						String
 				"
 					r
@@ -856,7 +921,8 @@
 			namedNoConversionConcatenated
 			*
 				$
-					!namedNoConversion
+					!"
+						namedNoConversion
 					Concatenate
 					<$
 						/
@@ -889,7 +955,8 @@
 		=
 			indexerNoConversionIndexed
 			$
-				!indexerNoConversion
+				!"
+					indexerNoConversion
 				Item
 				<"
 					abc
@@ -913,7 +980,8 @@
 		=
 			literalFunctionResult
 			*
-				!literalFunction
+				!"
+					literalFunction
 				0
 		=
 			someFunction
@@ -930,11 +998,13 @@
 			,
 				|
 					arg
-					!someFunction
+					!"
+						someFunction
 		=
 			callFunctionResult
 			*
-				!callFunction
+				!"
+					callFunction
 				0
 		=
 			delayedFunction
@@ -952,13 +1022,15 @@
 		=
 			delayedFunctionResult
 			*
-				!delayedFunction
+				!"
+					delayedFunction
 				0
 		=
 			delayedFunctionDirect
 			*
 				*
-					!delayedFunction
+					!"
+						delayedFunction
 					0
 				0
 		=
@@ -970,11 +1042,13 @@
 			,
 				|
 					arg
-					!value
+					!"
+						value
 		=
 			selectionFunctionResult
 			*
-				!selectionFunction
+				!"
+					selectionFunction
 				0
 		=
 			upperLevel
@@ -987,8 +1061,10 @@
 					arg
 					,
 						=
-							!upperLevel
-							!arg
+							!"
+								upperLevel
+							!"
+								arg
 		=
 			ChangeUpperLevel
 			,
@@ -998,13 +1074,15 @@
 						=
 							.
 							*
-								!SetUpperLevel
+								!"
+									SetUpperLevel
 								"
 									changed
 		=
 			.
 			*
-				!ChangeUpperLevel
+				!"
+					ChangeUpperLevel
 				0
 		=
 			staticEventChanged
@@ -1016,8 +1094,10 @@
 					arg
 					,
 						=
-							!staticEventChanged
-							!arg
+							!"
+								staticEventChanged
+							!"
+								arg
 		=
 			$
 				TestClass
@@ -1029,18 +1109,21 @@
 						=
 							.
 							*
-								!ChangeStaticEvent
+								!"
+									ChangeStaticEvent
 								1
 						=
 							&
 							$
-								!arg
+								!"
+									arg
 								<1
 		=
 			.
 			*
 				$
-					!TestClass
+					!"
+						TestClass
 					TakeDelegate
 					<$
 						/
@@ -1051,25 +1134,30 @@
 					|
 						arg
 						$
-							!arg
+							!"
+								arg
 							<1
 		=
 			resultFromDelegate
 			*
 				$
-					!TestClass
+					!"
+						TestClass
 					GetResultFromDelegate
 				0
 		=
 			staticEventResult
 			*
 				$
-					!TestClass
+					!"
+						TestClass
 					CallStaticEvent
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						Object
-				!testClass
+				!"
+					testClass
 		=
 			instanceEventChanged
 			0
@@ -1082,21 +1170,25 @@
 					arg
 					,
 						=
-							!instanceEventChanged
+							!"
+								instanceEventChanged
 							1
 						=
 							&
 							$
-								!arg
+								!"
+									arg
 								<1
 		=
 			instanceEventResult
 			*
 				$
-					!testClass
+					!"
+						testClass
 					CallInstanceEvent
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						Object
 				5
 		=
@@ -1116,9 +1208,11 @@
 		=
 			firstIfCondition
 			*
-				!equal
+				!"
+					equal
 				1
-				!one
+				!"
+					one
 		=
 			firstIfBranches
 			,
@@ -1140,8 +1234,10 @@
 			firstIf
 			*
 				$
-					!firstIfBranches
-					<!firstIfCondition
+					!"
+						firstIfBranches
+					<!"
+						firstIfCondition
 				0
 		=
 			bigNumber
@@ -1168,7 +1264,8 @@
 		=
 			secondSwitch
 			$
-				!secondSwitchCases
+				!"
+					secondSwitchCases
 				<3
 		=
 			emptyMap
@@ -1186,7 +1283,8 @@
 		=
 			emptyFunctionResult
 			*
-				!emptyFunction
+				!"
+					emptyFunction
 				0
 		=
 			font
@@ -1222,7 +1320,8 @@
 				stringTest
 				<6
 			$
-				!stringTest
+				!"
+					stringTest
 				<1
 		=
 			helloh
@@ -1230,7 +1329,8 @@
 				hi
 		=
 			stringStrategyHashTest
-			!<!stringTest
+			!!"
+				stringTest
 		=
 			x
 			,
@@ -1251,17 +1351,20 @@
 			.
 			*
 				$
-					!arrayList
+					!"
+						arrayList
 					Add
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						Object
 				"
 					hello
 		=
 			arrayListResult
 			$
-				!arrayList
+				!"
+					arrayList
 				Item
 				<0
 		=
@@ -1286,13 +1389,15 @@
 		=
 			lines
 			$
-				!textBox
+				!"
+					textBox
 				Lines
 		=
 			alleMeineText
 			*
 				$
-					!lines
+					!"
+						lines
 					GetValue
 					<$
 						/
@@ -1314,7 +1419,7 @@
 				Location
 			*
 				$
-					!<"
+					!"
 						System.Drawing
 					Point
 					<$
@@ -1330,7 +1435,8 @@
 		=
 			automaticConversionTest
 			$
-				!form
+				!"
+					form
 				Location
 		=
 			tabText
@@ -1352,10 +1458,13 @@
 						=
 							whileDecision
 							*
-								!not
+								!"
+									not
 								*
-									!equal
-									!start
+									!"
+										equal
+									!"
+										start
 									10
 						=
 							whileBranches
@@ -1366,28 +1475,36 @@
 										|
 											arg
 											*
-												!loop
+												!"
+													loop
 												*
-													!add
-													!arg
+													!"
+														add
+													!"
+														arg
 													1
 								=
 									<0
 									,
 										|
 											arg
-											!arg
+											!"
+												arg
 						=
 							&
 							*
 								$
-									!whileBranches
-									<!whileDecision
-								!start
+									!"
+										whileBranches
+									<!"
+										whileDecision
+								!"
+									start
 		=
 			whileCounter
 			*
-				!loop
+				!"
+					loop
 				3
 		=
 			returnInMap
@@ -1397,11 +1514,13 @@
 					,
 						=
 							result
-							!arg
+							!"
+								arg
 		=
 			literalAsArgument
 			*
-				!returnInMap
+				!"
+					returnInMap
 				1
 		=
 			returnFunction
@@ -1418,7 +1537,8 @@
 			,
 				|
 					arg
-					!arg
+					!"
+						arg
 		=
 			myArg
 			,
@@ -1432,8 +1552,10 @@
 		=
 			funcReturnTest
 			*
-				!returnArg
-				!myArg
+				!"
+					returnArg
+				!"
+					myArg
 				0
 		=
 			documentedFunction
@@ -1449,7 +1571,8 @@
 		=
 			docFunctionResult
 			*
-				!documentedFunction
+				!"
+					documentedFunction
 				0
 		=
 			topLevel
@@ -1468,14 +1591,16 @@
 									arg
 									,
 										=
-											!topLevel
+											!"
+												topLevel
 											"
 												changed
 		=
 			.
 			*
 				$
-					!deep
+					!"
+						deep
 					map
 					test
 				0
@@ -1493,16 +1618,19 @@
 									,
 										=
 											&
-											!arg
+											!"
+												arg
 						=
 							.
 							*
-								!innerFunction
+								!"
+									innerFunction
 								0
 		=
 			outerFunctionTest
 			*
-				!outerFunction
+				!"
+					outerFunction
 				"
 					right
 		=
@@ -1512,19 +1640,19 @@
 				
 		=
 			$
-				!<"
+				!"
 					System.Windows.Forms
 				Application
 				VisualStyleState
 			$
-				!<"
+				!"
 					System.Windows.Forms
 				VisualStyleState
 				ClientAreaEnabled
 		=
 			enumTest
 			$
-				!<"
+				!"
 					System.Windows.Forms
 				Application
 				VisualStyleState
@@ -1532,17 +1660,21 @@
 			typeTest
 			*
 				$
-					!mscorlib
+					!"
+						mscorlib
 					Array
 					CreateInstance
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						Type
 					<$
-						!mscorlib
+						!"
+							mscorlib
 						Int32
 				$
-					!mscorlib
+					!"
+						mscorlib
 					String
 				5
 		=
@@ -1562,7 +1694,8 @@
 						a
 		=
 			copiedData
-			!copySourceData
+			!"
+				copySourceData
 		=
 			$
 				copiedData
