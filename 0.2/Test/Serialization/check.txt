@@ -1410,7 +1410,7 @@ function
 			[74] 
 				key 
 					[1] 
-						lookup 
+						search 
 							literal "TestClass"
 					[2] 
 						lookup 

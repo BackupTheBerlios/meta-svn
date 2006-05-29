@@ -729,7 +729,7 @@
 				!"
 					TestClass
 				"
-					boolTest 
+					boolTest
 			1
 		=
 			boolTest
@@ -1409,16 +1409,13 @@
 			"
 				hello
 		=
-			x
-			"
-				=
-					$
-						stringTest
-						6
-					$
-						!"
-							stringTest
-						1
+			$
+				stringTest
+				6
+			$
+				!"
+					stringTest
+				1
 		=
 			helloh
 			"
