@@ -1,5 +1,6 @@
 |
-	arg
+	"
+		arg
 	,
 		=
 			test
@@ -35,25 +36,29 @@
 												.
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 								=
 									false
@@ -65,25 +70,29 @@
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 						=
 							orTest
@@ -98,19 +107,22 @@
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 								=
 									false
@@ -122,19 +134,22 @@
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 								=
 									otherTrue
@@ -146,31 +161,36 @@
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														1
 											=
 												. 
 												,
 													|
-														arg
+														"
+															arg
 														0
 				=
 					numberTest
@@ -349,14 +369,16 @@
 												x
 												,
 													|
-														arg
+														"
+															arg
 														"
 															right
 											=
 												y
 												,
 													|
-														arg
+														"
+															arg
 														"
 															wrong
 									=
@@ -374,7 +396,8 @@
 										then
 										,
 											|
-												arg
+												"
+													arg
 												"
 													if test successful
 						=
@@ -406,7 +429,8 @@
 												3
 										,
 											|
-												argument
+												"
+													argument
 												*
 													!"
 														add
@@ -509,7 +533,8 @@
 									SetCounter
 									,
 										|
-											argument
+											"
+												argument
 											,
 												=
 													!"
@@ -526,7 +551,8 @@
 												condition
 												,
 													|
-														arg
+														"
+															arg
 														*
 															!"
 																strictlyIncreasing
@@ -542,7 +568,8 @@
 												function
 												,
 													|
-														arg
+														"
+															arg
 														*
 															!"
 																SetCounter
@@ -619,14 +646,16 @@
 										function 
 										,
 											|
-												arg
+												"
+													arg
 												"
 													hello
 									=
 										catch 
 										,
 											|
-												argument
+												"
+													argument
 												*
 													$
 														!"
@@ -678,10 +707,12 @@
 												98834
 								,
 									|
-										first
+										"
+											first
 										,
 											|
-												second
+												"
+													second
 												*
 													!"
 														if
@@ -708,13 +739,15 @@
 															then
 															,
 																|
-																	arg
+																	"
+																		arg
 																	-1
 														=
 															else
 															,
 																|
-																	arg
+																	"
+																		arg
 																	*
 																		!"
 																			if
@@ -741,13 +774,15 @@
 																				then
 																				,
 																					|
-																						arg
+																						"
+																							arg
 																						1
 																			=
 																				else
 																				,
 																					|
-																						arg
+																						"
+																							arg
 																						0
 						=
 							integerToString
@@ -820,7 +855,8 @@
 										.
 										2
 							|
-								argument
+								"
+									argument
 								*
 									!"
 										equal
@@ -939,10 +975,12 @@
 									hello
 						,
 							|
-								key
+								"
+									key
 								,
 									|
-										value
+										"
+											value
 										,
 											=
 												<!"
@@ -969,10 +1007,12 @@
 								8
 						,
 							|
-								first
+								"
+									first
 								,
 									|
-										second
+										"
+											second
 										*
 											!"
 												add
@@ -1107,7 +1147,8 @@
 												"
 													x
 									|
-										arg
+										"
+											arg
 										*
 											!"
 												join

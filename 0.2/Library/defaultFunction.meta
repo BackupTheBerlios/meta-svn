@@ -1,8 +1,10 @@
 |
-	default
+	"
+		default
 	,
 		|
-			arg
+			"
+				arg
 			*
 				$
 					!"
@@ -20,13 +22,16 @@
 					!"
 						arg
 |
-	func
+	"
+		func
 	,
 		|
-			argument
+			"
+				argument
 			,
 				|
-					arg
+					"
+						arg
 					*
 						!"
 							func

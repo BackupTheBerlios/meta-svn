@@ -1,5 +1,6 @@
 |
-	switchArg
+	"
+		switchArg
 	*
 		!"
 			if
@@ -19,7 +20,8 @@
 				then
 				,
 					|
-						arg
+						"
+							arg
 						*
 							$
 								!"

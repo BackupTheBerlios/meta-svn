@@ -1,6 +1,7 @@
 writeLine,
 	|
-		arg
+		"
+			arg
 		*
 			$
 				/
@@ -19,7 +20,8 @@ writeLine,
 			@
 write,
 	|
-		arg
+		"
+			arg
 		*
 			$
 				/
@@ -38,7 +40,8 @@ write,
 			@
 readLine,
 	|
-		arg
+		"
+			arg
 		*
 			$
 				/
@@ -51,7 +54,8 @@ readLine,
 			0
 clear,
 	|
-		arg
+		"
+			arg
 		*
 			$
 				/
@@ -64,7 +68,8 @@ clear,
 			0
 create,
 	|
-		arg
+		"
+			arg
 		*
 			$
 				/

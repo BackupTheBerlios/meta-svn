@@ -1,8 +1,10 @@
 |
-	first
+	"
+		first
 	,
 		|
-			second
+			"
+				second
 			*
 				$
 					/

@@ -25,7 +25,8 @@ license "
 shortFunc "
 	,
 		|
-			arg
+			"
+				arg
 			!"
 				arg
 "

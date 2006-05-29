@@ -29,11 +29,13 @@
 	"
 		,
 			|
-				arg
+				"
+					arg
 				!"
 					arg
 |
-	commandLine
+	"
+		commandLine
 	,
 		=
 			&
@@ -55,7 +57,8 @@
 			shortFunction
 			,
 				|
-					arg
+					"
+						arg
 					!"
 						asdf
 		=
@@ -72,7 +75,8 @@
 			SetCounter
 			,
 				|
-					argument
+					"
+						argument
 					,
 						=
 							!"
@@ -95,7 +99,8 @@
 							"
 								right
 						|
-							arg
+							"
+								arg
 							!"
 								scopingValue
 		=
@@ -392,7 +397,8 @@
 					SetA
 					,
 						|
-							arg
+							"
+								arg
 							,
 								=
 									!"
@@ -408,7 +414,8 @@
 					SetB
 					,
 						|
-							newB
+							"
+								newB
 							,
 								=
 									$
@@ -439,7 +446,8 @@
 					.
 					,
 						|
-							arg
+							"
+								arg
 							,
 								=
 									$
@@ -494,7 +502,8 @@
 					"
 						right
 				|
-					arg
+					"
+						arg
 					,
 						=
 							!"
@@ -523,10 +532,12 @@
 					"
 						right
 				|
-					arg
+					"
+						arg
 					,
 						|
-							arg
+							"
+								arg
 							!"
 								scopeFromFunctionData
 		=
@@ -545,7 +556,8 @@
 			ReturnEverything
 			,
 				|
-					everything
+					"
+						everything
 					,
 						=
 							&
@@ -591,13 +603,15 @@
 			ReturnFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							&
 							,
 								|
-									arg
+									"
+										arg
 									,
 										=
 											&
@@ -615,7 +629,8 @@
 			SetCurrent
 			,
 				|
-					current
+					"
+						current
 					,
 						=
 							&
@@ -649,7 +664,8 @@
 			FirstLevel
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							.
@@ -662,7 +678,8 @@
 			SecondLevel
 			,
 				|
-					arg
+					"
+						arg
 					!"
 						arg
 		=
@@ -1052,7 +1069,8 @@
 			literalFunction
 			,
 				|
-					arg
+					"
+						arg
 					5
 		=
 			literalFunctionResult
@@ -1064,7 +1082,8 @@
 			someFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							&
@@ -1074,7 +1093,8 @@
 			callFunction
 			,
 				|
-					arg
+					"
+						arg
 					!"
 						someFunction
 		=
@@ -1087,10 +1107,12 @@
 			delayedFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						|
-							arg
+							"
+								arg
 							,
 								=
 									x
@@ -1118,7 +1140,8 @@
 			selectionFunction
 			,
 				|
-					arg
+					"
+						arg
 					!"
 						value
 		=
@@ -1135,7 +1158,8 @@
 			SetUpperLevel
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							!"
@@ -1146,7 +1170,8 @@
 			ChangeUpperLevel
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							.
@@ -1168,7 +1193,8 @@
 			ChangeStaticEvent
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							!"
@@ -1182,7 +1208,8 @@
 					staticEvent
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							.
@@ -1214,7 +1241,8 @@
 							TestDelegate
 				,
 					|
-						arg
+						"
+							arg
 						$
 							!"
 								arg
@@ -1253,7 +1281,8 @@
 					instanceEvent
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							!"
@@ -1308,14 +1337,16 @@
 					.
 					,
 						|
-							arg
+							"
+								arg
 							"
 								then
 				=
 					<0
 					,
 						|
-							arg
+							"
+								arg
 							"
 								else
 		=
@@ -1362,7 +1393,8 @@
 			emptyFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							x
@@ -1565,7 +1597,8 @@
 			loop
 			,
 				|
-					start
+					"
+						start
 					,
 						=
 							whileDecision
@@ -1585,7 +1618,8 @@
 									.
 									,
 										|
-											arg
+											"
+												arg
 											*
 												!"
 													loop
@@ -1599,7 +1633,8 @@
 									<0
 									,
 										|
-											arg
+											"
+												arg
 											!"
 												arg
 						=
@@ -1622,7 +1657,8 @@
 			returnInMap
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							result
@@ -1638,24 +1674,28 @@
 			returnFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						|
-							arg
+							"
+								arg
 							"
 								functionResult
 		=
 			returnArg
 			,
 				|
-					arg
+					"
+						arg
 					!"
 						arg
 		=
 			myArg
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							hello
@@ -1677,7 +1717,8 @@
 					"
 						This function returns #hello .
 				|
-					arg
+					"
+						arg
 					"
 						hello
 		=
@@ -1700,7 +1741,8 @@
 							test
 							,
 								|
-									arg
+									"
+										arg
 									,
 										=
 											!"
@@ -1722,13 +1764,15 @@
 			outerFunction
 			,
 				|
-					arg
+					"
+						arg
 					,
 						=
 							innerFunction
 							,
 								|
-									arg
+									"
+										arg
 									,
 										=
 											&

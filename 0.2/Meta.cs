@@ -7139,25 +7139,43 @@ namespace Meta
 				new Action(new Match(), new Character(Syntax.lookupEnd)));
 
 
-
 		public static Rule Function = new Sequence(
 			new Action(new Match(), new Character(Syntax.function)),
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				CodeKeys.Parameter),
-				new ZeroOrMore(
-				new Action(new Autokey(),
-					new CharacterExcept(
-						Syntax.@string,
-						Syntax.function,
-						Syntax.windowsNewLine[0],
-						Syntax.unixNewLine)))),
+			Value),
+				//new ZeroOrMore(
+				//new Action(new Autokey(),
+					//new CharacterExcept(
+					//    Syntax.@string,
+					//    Syntax.function,
+					//    Syntax.windowsNewLine[0],
+					//    Syntax.unixNewLine)))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), SameIndentation),
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData),
 			new Action(new Match(), new Optional(EndOfLine))//,
 			);
+		//public static Rule Function = new Sequence(
+		//    new Action(new Match(), new Character(Syntax.function)),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        CodeKeys.Parameter),
+		//        new ZeroOrMore(
+		//        new Action(new Autokey(),
+		//            new CharacterExcept(
+		//                Syntax.@string,
+		//                Syntax.function,
+		//                Syntax.windowsNewLine[0],
+		//                Syntax.unixNewLine)))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//        new Action(new Assignment(CodeKeys.Expression),
+		//        ExpressionData),
+		//    new Action(new Match(), new Optional(EndOfLine))//,
+		//    );
 
 		//public static Rule Function = new Sequence(
 		//    new Action(new Match(), new Character(Syntax.function)),
