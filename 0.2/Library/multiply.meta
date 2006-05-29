@@ -3,15 +3,22 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Multiply
-			<$
-				/
+			"
 				Meta
-				Map
-			<$
+			"
+				Library
+			"
+				Multiply
+			$
 				/
-				Meta
-				Map
+				"
+					Meta
+				"
+					Map
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

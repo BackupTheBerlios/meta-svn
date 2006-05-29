@@ -3,11 +3,16 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Invert
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Invert
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

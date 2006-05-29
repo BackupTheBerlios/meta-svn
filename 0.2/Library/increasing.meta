@@ -3,11 +3,16 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Increasing
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Increasing
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

@@ -7,13 +7,18 @@
 			*
 				$
 					/
-					Meta
-					Library
-					StringReplace
-					<$
-						/
+					"
 						Meta
-						Map
+					"
+						Library
+					"
+						StringReplace
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				@
 :
 	"
@@ -27,19 +32,24 @@
 					*
 						$
 							/
-							Meta
-							ObjectMap
-							<$
-								mscorlib
-								String
+							"
+								Meta
+							"
+								ObjectMap
+							$
+								!"
+									mscorlib
+								"
+									String
 						@
 				=
 					&
 					*
 						$
 							object
-							Trim
-							<0
+							"
+								Trim
+							0
 						0
 :
 	"
@@ -53,19 +63,24 @@
 					*
 						$
 							/
-							Meta
-							ObjectMap
-							<$
+							"
+								Meta
+							"
+								ObjectMap
+							$
 								/
-								mscorlib
-								String
+								"
+									mscorlib
+								"
+									String
 						@
 				=
 					&
 					*
 						$
 							object
-							ToLower
+							"
+								ToLower
 						0
 :
 	"
@@ -79,19 +94,25 @@
 					*
 						$
 							/
-							Meta
-							ObjectMap
-							<$
+							"
+								Meta
+							"
+								ObjectMap
+							$
 								/
-								mscorlib
-								String
+								"
+									mscorlib
+								"
+									String
 						@
 				=
 					&
 					*
 						$
-							object
-							ToUpper
+							!"
+								object
+							"
+								ToUpper
 						0
 :
 	"
@@ -102,17 +123,24 @@
 			*
 				$
 					/
-					Meta
-					Library
-					SplitString
-					<$
-						/
+					"
 						Meta
-						Map
-					<$
+					"
+						Library
+					"
+						SplitString
+					$
 						/
-						Meta
-						Map
+						"
+							Meta
+						"
+							Map
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				@
 :
 	"
@@ -123,15 +151,22 @@
 			*
 				$
 					/
-					Meta
-					Library
-					CompareString
-					<$
-						/
+					"
 						Meta
-						Map
-					<$
+					"
+						Library
+					"
+						CompareString
+					$
 						/
-						Meta
-						Map
+						"
+							Meta
+						"
+							Map
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				@

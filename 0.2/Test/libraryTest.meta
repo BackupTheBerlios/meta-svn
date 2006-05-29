@@ -591,14 +591,15 @@
 												$
 													!"
 														space
-													<1
+													1
 						=
 							stringSplitTest
 							*
 								$
 									!"
 										string
-									split
+									"
+										split
 								"
 									hello world hello
 								,
@@ -630,7 +631,8 @@
 													$
 														!"
 															argument
-														ToString
+														"
+															ToString
 													0
 						=
 							sortTest
@@ -692,13 +694,15 @@
 																$
 																	!"
 																		first
-																	x
+																	"
+																		x
 															=
 																.
 																$
 																	!"
 																		second
-																	x
+																	"
+																		x
 													,
 														=
 															then
@@ -723,13 +727,15 @@
 																					$
 																						!"
 																							first
-																						x
+																						"
+																							x
 																				=
 																					.
 																					$
 																						!"
 																							second
-																						x
+																						"
+																							x
 																		,
 																			=
 																				then
@@ -755,7 +761,8 @@
 								$
 									!"
 										string
-									replace
+									"
+										replace
 								,
 									=
 										string
@@ -782,10 +789,12 @@
 								.
 								$
 									/
-									<"
+									"
 										System.Windows.Forms
-									Keys
-									Tab
+									"
+										Keys
+									"
+										Tab
 				=
 					filterTest
 					*
@@ -858,8 +867,10 @@
 										$
 											!"
 												html
-											url
-											decode
+											"
+												url
+											"
+												decode
 										"
 											x%3D%22hello%22
 				=
@@ -1052,7 +1063,8 @@
 						$
 							!"
 								string
-							lower
+							"
+								lower
 						"
 							HeLLo
 				=
@@ -1061,7 +1073,8 @@
 						$
 							!"
 								string
-							upper
+							"
+								upper
 						"
 							HeLLo
 				=
@@ -1157,7 +1170,8 @@
 									$
 										!"
 											System.Windows.Forms
-										Form
+										"
+											Form
 									0
 							=
 								data

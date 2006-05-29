@@ -5,15 +5,18 @@
 			arg
 			*
 				$
-					default
-					function
+					!"
+						default
+					"
+						function
 				*
 					!"
 						merge
 					$
 						!"
 							default
-						argument
+						"
+							argument
 					!"
 						arg
 |

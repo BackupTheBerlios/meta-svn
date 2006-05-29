@@ -3,11 +3,16 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Parse
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Parse
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

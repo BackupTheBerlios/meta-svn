@@ -3,15 +3,22 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Foreach
-			<$
-				/
+			"
 				Meta
-				Map
-			<$
+			"
+				Library
+			"
+				Foreach
+			$
 				/
-				Meta
-				Map
+				"
+					Meta
+				"
+					Map
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

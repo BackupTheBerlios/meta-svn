@@ -4,13 +4,18 @@ writeLine,
 		*
 			$
 				/
-				Meta
-				Library
-				WriteLine
-				<$
+				"
+					Meta
+				"
+					Library
+				"
+					WriteLine
+				$
 					/
-					mscorlib
-					String
+					"
+						mscorlib
+					"
+						String
 			@
 write,
 	|
@@ -18,13 +23,18 @@ write,
 		*
 			$
 				/
-				Meta
-				Library
-				Write
-				<$
+				"
+					Meta
+				"
+					Library
+				"
+					Write
+				$
 					/
-					mscorlib
-					String
+					"
+						mscorlib
+					"
+						String
 			@
 readLine,
 	|
@@ -32,9 +42,12 @@ readLine,
 		*
 			$
 				/
-				mscorlib
-				Console
-				ReadLine
+				"
+					mscorlib
+				"
+					Console
+				"
+					ReadLine
 			0
 clear,
 	|
@@ -42,9 +55,12 @@ clear,
 		*
 			$
 				/
-				mscorlib
-				Console
-				Clear
+				"
+					mscorlib
+				"
+					Console
+				"
+					Clear
 			0
 create,
 	|
@@ -52,7 +68,10 @@ create,
 		*
 			$
 				/
+				"
 					Meta
+				"
 					Library
+				"
 					CreateConsole
 			0

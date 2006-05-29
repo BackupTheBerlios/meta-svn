@@ -3,16 +3,21 @@ choose,
 		arg
 		$
 			@
-			<*
+			*
 				$
 					/
-					Meta
-					Library
-					Random
-					<$
-						/
+					"
 						Meta
-						Map
+					"
+						Library
+					"
+						Random
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				*
 					!"
 						add

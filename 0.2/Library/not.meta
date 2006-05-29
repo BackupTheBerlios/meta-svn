@@ -3,12 +3,17 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Not
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Not
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		$
 			@

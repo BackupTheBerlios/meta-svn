@@ -3,15 +3,22 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Sort
-			<$
-				/
+			"
 				Meta
-				Map
-			<$
+			"
+				Library
+			"
+				Sort
+			$
 				/
-				Meta
-				Map
+				"
+					Meta
+				"
+					Map
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

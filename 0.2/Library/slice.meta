@@ -3,11 +3,16 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Slice
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Slice
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

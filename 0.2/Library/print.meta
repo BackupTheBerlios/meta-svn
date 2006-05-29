@@ -3,15 +3,21 @@
 	*
 		$
 			console
-			writeLine
+			"
+				writeLine
 		*
 			$
 				/
-				Meta
-				Serialize
-				ValueFunction
-				<$
-					/
+				"
 					Meta
-					Map
+				"
+					Serialize
+				"
+					ValueFunction
+				$
+					/
+					"
+						Meta
+					"
+						Map
 			@

@@ -3,11 +3,16 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Maximum
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Library
+			"
+				Maximum
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

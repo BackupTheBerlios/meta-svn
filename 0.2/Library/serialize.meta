@@ -2,11 +2,16 @@
 	*
 		$
 			/
-			Meta
-			Serialize
-			ValueFunction
-			<$
-				/
+			"
 				Meta
-				Map
+			"
+				Serialize
+			"
+				ValueFunction
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		@

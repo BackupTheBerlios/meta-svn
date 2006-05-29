@@ -107,7 +107,8 @@
 			$
 				!"
 					scoping
-				test
+				"
+					test
 		=
 			lexicalScoping
 			*
@@ -118,7 +119,8 @@
 			$
 				!"
 					C:
-				hello
+				"
+					hello
 			,
 				=
 					x
@@ -129,19 +131,22 @@
 			$
 				!"
 					C:
-				hello
+				"
+					hello
 		=
 			$
 				!"
 					C:
-				hello
+				"
+					hello
 			0
 		=
 			cTest2
 			$
 				!"
 					C:
-				hello
+				"
+					hello
 		=
 			unicodeText
 			"
@@ -150,19 +155,22 @@
 			$
 				!"
 					testSubDir
-				x
+				"
+					x
 			0
 		=
 			persistantDeleteTest
 			$
 				!"
 					testSubDir
-				x
+				"
+					x
 		=
 			$
 				!"
 					testSubDir
-				x
+				"
+					x
 			,
 				=
 					a
@@ -183,8 +191,10 @@
 			$
 				!"
 					testSubDir
-				x
-				a
+				"
+					x
+				"
+					a
 			"
 				hi
 		=
@@ -213,7 +223,8 @@
 		=
 			$
 				negativeInteger
-				x
+				"
+					x
 			"
 				hello
 		=
@@ -222,7 +233,7 @@
 		=
 			$
 				integerIncrementTest
-				<0
+				0
 			!"
 				integerIncrementTest
 		=
@@ -233,7 +244,7 @@
 			$
 				!"
 					integerDecrementTest
-				<0
+				0
 		=
 			negativeNumber
 			-123
@@ -284,7 +295,8 @@
 			$
 				!"
 					testSubDir
-				x
+				"
+					x
 		=
 			literalEscapeTest
 			,
@@ -402,11 +414,12 @@
 									$
 										!"
 											b
-										<1
+										1
 									$
 										!"
 											newB
-										value
+										"
+											value
 								=
 									&
 									"
@@ -431,7 +444,8 @@
 								=
 									$
 										&
-										a
+										"
+											a
 									"
 										b
 		=
@@ -447,7 +461,8 @@
 				$
 					!"
 						object
-					SetA
+					"
+						SetA
 				0
 		=
 			bSet
@@ -455,7 +470,8 @@
 				$
 					!"
 						object
-					SetB
+					"
+						SetB
 				,
 					=
 						value
@@ -613,7 +629,8 @@
 									$
 										!"
 											current
-										symbol
+										"
+											symbol
 						=
 							&
 							!"
@@ -662,21 +679,27 @@
 			TestClass
 			$
 				/
-				Meta
-				TestClass
+				"
+					Meta
+				"
+					TestClass
 		=
 			$
 				TestClass
-				NestedClass
-				field
+				"
+					NestedClass
+				"
+					field
 			5
 		=
 			nestedClassTest
 			$
 				!"
 					TestClass
-				NestedClass
-				field
+				"
+					NestedClass
+				"
+					field
 		=
 			testClass
 			*
@@ -686,29 +709,35 @@
 		=
 			$
 				testClass
-				floatValue
+				"
+					floatValue
 			3
 		=
 			$
 				testClass
-				doubleValue
+				"
+					doubleValue
 			4
 		=
 			$
 				testClass
-				decimalValue
+				"
+					decimalValue
 			5
 		=
 			$
-				TestClass
-				boolTest 
+				!"
+					TestClass
+				"
+					boolTest 
 			1
 		=
 			boolTest
 			$
 				!"
 					TestClass
-				boolTest
+				"
+					boolTest
 		=
 			strongNameTest
 			$
@@ -729,13 +758,16 @@
 						name
 						"
 							mscorlib
-				Int32
+				"
+					Int32
 		=
 			MemberTest
 			$
 				/
-				Meta
-				MemberTest
+				"
+					Meta
+				"
+					MemberTest
 		=
 			memberTest
 			*
@@ -748,11 +780,14 @@
 				$
 					!"
 						MemberTest
-					OverloadedMethod
-					<$
+					"
+						OverloadedMethod
+					$
 						/
-						mscorlib
-						String
+						"
+							mscorlib
+						"
+							String
 				"
 					hello
 		=
@@ -761,11 +796,14 @@
 				$
 					!"
 						MemberTest
-					OverloadedMethod
-					<$
+					"
+						OverloadedMethod
+					$
 						/
-						mscorlib
-						Int32
+						"
+							mscorlib
+						"
+							Int32
 				5
 		=
 			memberTestOverload
@@ -773,15 +811,20 @@
 				$
 					!"
 						MemberTest
-					OverloadedMethod
-					<$
+					"
+						OverloadedMethod
+					$
 						/
-						Meta
-						MemberTest
-					<$
+						"
+							Meta
+						"
+							MemberTest
+					$
 						/
-						mscorlib
-						Int32
+						"
+							mscorlib
+						"
+							Int32
 				!"
 					memberTest
 				3247
@@ -791,58 +834,71 @@
 				$
 					!"
 						MemberTest
-					OverloadedMethod
-					<$
+					"
+						OverloadedMethod
+					$
 						/
-						Meta
-						MemberTest
-					<$
+						"
+							Meta
+						"
+							MemberTest
+					$
 						/
-						mscorlib
-						Int32
+						"
+							mscorlib
+						"
+							Int32
 				!"
 					memberTest
 				3247
 		=
 			$
 				MemberTest
-				classField
+				"
+					classField
 			"
 				a
 		=
 			$
 				memberTest
-				instanceField
+				"
+					instanceField
 			"
 				b
 		=
 			$
 				MemberTest
-				ClassProperty
+				"
+					ClassProperty
 			$
 				!"
 					memberTest
-				InstanceProperty
+				"
+					InstanceProperty
 		=
 			classPropertyValue
 			$
 				!"
 					MemberTest
-				ClassProperty
+				"
+					ClassProperty
 		=
 			$
 				memberTest
-				InstanceProperty
+				"
+					InstanceProperty
 			$
 				!"
 					MemberTest
-				ClassProperty
+				"
+					ClassProperty
 		=
 			instancePropertyValue
 			$
 				!"
 					memberTest
-				InstanceProperty
+				"
+					InstanceProperty
 		=
 			interceptedSymbol
 			"
@@ -852,20 +908,25 @@
 			*
 				$
 					/
-					Meta
-					PositionalNoConversion
-					<$
+					"
+						Meta
+					"
+						PositionalNoConversion
+					$
 						!"
 							mscorlib
-						String
-					<$
+						"
+							String
+					$
 						!"
 							mscorlib
-						String
-					<$
+						"
+							String
+					$
 						!"
 							mscorlib
-						String
+						"
+							String
 				"
 					m
 				"
@@ -878,19 +939,23 @@
 				$
 					!"
 						positionalNoConversion
-					Concatenate
-					<$
+					"
+						Concatenate
+					$
 						!"
 							mscorlib
-						String
-					<$
+						"
+							String
+					$
 						!"
 							mscorlib
-						String
-					<$
+						"
+							String
+					$
 						!"
 							mscorlib
-						String
+						"
+							String
 				"
 					r
 				"
@@ -902,12 +967,16 @@
 			*
 				$
 					/
-					Meta
-					NamedNoConversion
-					<$
-						/
+					"
 						Meta
-						Map
+					"
+						NamedNoConversion
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				,
 					=
 						.
@@ -923,11 +992,14 @@
 				$
 					!"
 						namedNoConversion
-					Concatenate
-					<$
+					"
+						Concatenate
+					$
 						/
-						Meta
-						Map
+						"
+							Meta
+						"
+							Map
 				,
 					=
 						c
@@ -942,14 +1014,18 @@
 			*
 				$
 					/
-					Meta
-					IndexerNoConversion
+					"
+						Meta
+					"
+						IndexerNoConversion
 				0
 		=
 			$
 				indexerNoConversion
-				Item
-				abc
+				"
+					Item
+				"
+					abc
 			"
 				hihi
 		=
@@ -957,8 +1033,9 @@
 			$
 				!"
 					indexerNoConversion
-				Item
-				<"
+				"
+					Item
+				"
 					abc
 		=
 			interceptedSymbolTwo
@@ -1101,7 +1178,8 @@
 		=
 			$
 				TestClass
-				staticEvent
+				"
+					staticEvent
 			,
 				|
 					arg
@@ -1117,33 +1195,38 @@
 							$
 								!"
 									arg
-								<1
+								1
 		=
 			.
 			*
 				$
 					!"
 						TestClass
-					TakeDelegate
-					<$
+					"
+						TakeDelegate
+					$
 						/
-						Meta
-						TestClass
-						TestDelegate
+						"
+							Meta
+						"
+							TestClass
+						"
+							TestDelegate
 				,
 					|
 						arg
 						$
 							!"
 								arg
-							<1
+							1
 		=
 			resultFromDelegate
 			*
 				$
 					!"
 						TestClass
-					GetResultFromDelegate
+					"
+						GetResultFromDelegate
 				0
 		=
 			staticEventResult
@@ -1151,11 +1234,13 @@
 				$
 					!"
 						TestClass
-					CallStaticEvent
-					<$
+					"
+						CallStaticEvent
+					$
 						!"
 							mscorlib
-						Object
+						"
+							Object
 				!"
 					testClass
 		=
@@ -1164,7 +1249,8 @@
 		=
 			$
 				testClass
-				instanceEvent
+				"
+					instanceEvent
 			,
 				|
 					arg
@@ -1178,18 +1264,20 @@
 							$
 								!"
 									arg
-								<1
+								1
 		=
 			instanceEventResult
 			*
 				$
 					!"
 						testClass
-					CallInstanceEvent
-					<$
+					"
+						CallInstanceEvent
+					$
 						!"
 							mscorlib
-						Object
+						"
+							Object
 				5
 		=
 			one
@@ -1236,7 +1324,7 @@
 				$
 					!"
 						firstIfBranches
-					<!"
+					!"
 						firstIfCondition
 				0
 		=
@@ -1266,7 +1354,7 @@
 			$
 				!"
 					secondSwitchCases
-				<3
+				3
 		=
 			emptyMap
 			0
@@ -1291,17 +1379,22 @@
 			*
 				$
 					/
-					<"
+					"
 						System.Drawing
-					Font
-					<$
+					"
+						Font
+					$
 						/
-						mscorlib
-						String
-					<$
+						"
+							mscorlib
+						"
+							String
+					$
 						/
-						mscorlib
-						Single
+						"
+							mscorlib
+						"
+							Single
 				"
 					Courier New
 				10
@@ -1316,13 +1409,16 @@
 			"
 				hello
 		=
-			$
-				stringTest
-				<6
-			$
-				!"
-					stringTest
-				<1
+			x
+			"
+				=
+					$
+						stringTest
+						6
+					$
+						!"
+							stringTest
+						1
 		=
 			helloh
 			"
@@ -1344,8 +1440,10 @@
 			*
 				$
 					/
-					mscorlib
-					ArrayList
+					"
+						mscorlib
+					"
+						ArrayList
 				0
 		=
 			.
@@ -1353,11 +1451,13 @@
 				$
 					!"
 						arrayList
-					Add
-					<$
+					"
+						Add
+					$
 						!"
 							mscorlib
-						Object
+						"
+							Object
 				"
 					hello
 		=
@@ -1365,21 +1465,24 @@
 			$
 				!"
 					arrayList
-				Item
-				<0
+				"
+					Item
+				0
 		=
 			textBox
 			*
 				$
 					/
-					<"
+					"
 						System.Windows.Forms
-					TextBox
+					"
+						TextBox
 				0
 		=
 			$
 				textBox
-				Text
+				"
+					Text
 			"
 				Alle meine Entchen,
 				schwimmen auf dem See,
@@ -1391,45 +1494,56 @@
 			$
 				!"
 					textBox
-				Lines
+				"
+					Lines
 		=
 			alleMeineText
 			*
 				$
 					!"
 						lines
-					GetValue
-					<$
+					"
+						GetValue
+					$
 						/
-						mscorlib
-						Int32
+						"
+							mscorlib
+						"
+							Int32
 				1
 		=
 			form
 			*
 				$
 					/
-					<"
+					"
 						System.Windows.Forms
-					Form
+					"
+						Form
 				0
 		=
 			$
 				form
-				Location
+				"
+					Location
 			*
 				$
 					!"
 						System.Drawing
-					Point
-					<$
+					"
+						Point
+					$
 						/
-						mscorlib
-						Int32
-					<$
+						"
+							mscorlib
+						"
+							Int32
+					$
 						/
-						mscorlib
-						Int32
+						"
+							mscorlib
+						"
+							Int32
 				5
 				1000
 		=
@@ -1437,7 +1551,8 @@
 			$
 				!"
 					form
-				Location
+				"
+					Location
 		=
 			tabText
 			"
@@ -1496,7 +1611,7 @@
 								$
 									!"
 										whileBranches
-									<!"
+									!"
 										whileDecision
 								!"
 									start
@@ -1601,8 +1716,10 @@
 				$
 					!"
 						deep
-					map
-					test
+					"
+						map
+					"
+						test
 				0
 		=
 			outerFunction
@@ -1642,40 +1759,51 @@
 			$
 				!"
 					System.Windows.Forms
-				Application
-				VisualStyleState
+				"
+					Application
+				"
+					VisualStyleState
 			$
 				!"
 					System.Windows.Forms
-				VisualStyleState
-				ClientAreaEnabled
+				"
+					VisualStyleState
+				"
+					ClientAreaEnabled
 		=
 			enumTest
 			$
 				!"
 					System.Windows.Forms
-				Application
-				VisualStyleState
+				"
+					Application
+				"
+					VisualStyleState
 		=
 			typeTest
 			*
 				$
 					!"
 						mscorlib
-					Array
-					CreateInstance
-					<$
+					"
+						Array
+					"
+						CreateInstance
+					$
 						!"
 							mscorlib
-						Type
-					<$
+						"
+							Type
+					$
 						!"
 							mscorlib
-						Int32
+						"
+							Int32
 				$
 					!"
 						mscorlib
-					String
+					"
+						String
 				5
 		=
 			123hello
@@ -1699,7 +1827,8 @@
 		=
 			$
 				copiedData
-				x
+				"
+					x
 			"
 				changed
 		=

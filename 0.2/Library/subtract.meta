@@ -4,14 +4,20 @@
 		$
 			!"
 				Meta
-			Library
-			Subtract
-			<$
+			"
+				Library
+			"
+				Subtract
+			$
 				/
-				Meta
-				Map
-			<$
+				"
+					Meta
+				"
+					Map
+			$
 				/
-				Meta
-				Map
+				"
+					Meta
+				"
+					Map
 		@

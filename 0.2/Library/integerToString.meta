@@ -6,17 +6,22 @@
 			*
 				$
 					/
-					Meta
-					Number
-					<$
-						/
+					"
 						Meta
-						Map
+					"
+						Number
+					$
+						/
+						"
+							Meta
+						"
+							Map
 				@
 		=
 			&
 			*
 				$
 					map
-					ToString
+					"
+						ToString
 				0

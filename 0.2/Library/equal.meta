@@ -3,16 +3,23 @@
 	*
 		$
 			/
-			Meta
-			Library
-			Equal
-			<$
-				/
+			"
 				Meta
-				Map
-			<$
+			"
+				Library
+			"
+				Equal
+			$
 				/
-				Meta
-				Map
+				"
+					Meta
+				"
+					Map
+			$
+				/
+				"
+					Meta
+				"
+					Map
 		$
 			@
