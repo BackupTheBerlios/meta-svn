@@ -196,23 +196,6 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
-		//public abstract bool Emit(ILGenerator il,Dictionary<Map,int> keys);
-		//public abstract bool HasConstantKeysOnly
-		//{
-		//    get;
-		//}
-		//public bool IsCall
-		//{
-		//    get
-		//    {
-		//        return isCall;
-		//    }
-		//    set
-		//    {
-		//        isCall = value;
-		//    }
-		//}
-		//private bool isCall;
 		public static List<Expression> expressions = new List<Expression>();
 		public Position Evaluate(Position context)
 		{
@@ -401,42 +384,9 @@ namespace Meta
 		}
 
 		bool constantKeysDetermined=false;
-		//public override bool HasConstantKeysOnly
-		//{
-		//    get
-		//    {
-		//        if (!constantKeysDetermined)
-		//        {
-		//            hasConstantKeysOnly = true;
-		//            foreach (Statement statement in statements)
-		//            {
-		//                if (statement.Keys.Count == 1)
-		//                {
-		//                    Subselect subselect = statement.Keys[0].GetSubselect();
-		//                    //if (!subselect.HasLiteralKeysOnly)
-		//                    //{
-		//                    //    hasConstantKeysOnly = false;
-		//                    //    break;
-		//                    //}
-		//                }
-		//                else
-		//                {
-		//                    hasConstantKeysOnly = false;
-		//                    break;
-		//                }
-		//            }
-		//            constantKeysDetermined = true;
-		//        }
-		//        return hasConstantKeysOnly;
-		//    }
-		//}
 	}
 	public class Literal : Expression
 	{
-		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-		//{
-		//    return false;
-		//}
 		public Map Map
 		{
 			get
@@ -444,13 +394,6 @@ namespace Meta
 				return literal;
 			}
 		}
-		//public override bool HasConstantKeysOnly
-		//{
-		//    get 
-		//    {
-		//        return true;
-		//    }
-		//}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		private Map literal;
 		public Literal(Map code)
@@ -480,10 +423,6 @@ namespace Meta
 	}
 	public abstract class Subselect:Expression
 	{
-		//public abstract bool HasLiteralKeysOnly
-		//{
-		//    get;
-		//}
 		protected override Position EvaluateImplementation(Position context)
 		{
 			return Evaluate(context, context);
@@ -493,10 +432,6 @@ namespace Meta
 	}
 	public class Current : Subselect
 	{
-		//public override bool HasLiteralKeysOnly
-		//{
-		//    get { return true; }
-		//}
 		public override Position Evaluate(Position context, Position executionContext)
 		{
 			return context;
@@ -519,10 +454,6 @@ namespace Meta
 	}
 	public class Root : Subselect
 	{
-		//public override bool HasLiteralKeysOnly
-		//{
-		//    get { return true; }
-		//}
 		public override Position Evaluate(Position selected, Position context)
 		{
 			return RootPosition.rootPosition;
@@ -541,10 +472,6 @@ namespace Meta
 				return keyExpression.GetExpression();
 			}
 		}
-		//public override bool HasLiteralKeysOnly
-		//{
-		//    get { return keyExpression.GetExpression() is Literal; }
-		//}
 		private Map keyExpression;
 		public Lookup(Map keyExpression)
 		{
@@ -578,10 +505,6 @@ namespace Meta
 			}
 		}
 
-		//public override bool HasLiteralKeysOnly
-		//{
-		//    get { return keyExpression.GetExpression() is Literal; }
-		//}
 		private Map keyExpression;
 		public Search(Map keyExpression)
 		{
@@ -604,7 +527,6 @@ namespace Meta
 				}
 				else
 				{
-					//selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
 					if (selection.Get().Scope != null)
 					{
 						selection = selection.Get().Scope;
@@ -654,161 +576,8 @@ namespace Meta
 			}
 		}
 	}
-	//public class Search : Subselect
-	//{
-	//    public Expression Key
-	//    {
-	//        get
-	//        {
-	//            return keyExpression.GetExpression();
-	//        }
-	//    }
-
-	//    public override bool HasLiteralKeysOnly
-	//    {
-	//        get { return keyExpression.GetExpression() is Literal; }
-	//    }
-	//    private Map keyExpression;
-	//    public Search(Map keyExpression)
-	//    {
-	//        this.keyExpression = keyExpression;
-	//    }
-	//    //private Position lastEvaluated;
-	//    //private Map lastKey;
-	//    //private Position lastContext;
-	//    public override Position Evaluate(Position selected, Position context)
-	//    {
-	//        Position keyPosition = keyExpression.GetExpression().Evaluate(context);
-	//        Map key = keyPosition.Get();
-	//        if (key.Equals(new StrategyMap("win")))
-	//        {
-	//        }
-	//        //if (lastEvaluated != null && lastKey != null && lastKey.Equals(key))
-	//        //{
-	//        //    //bool constantKeys = false;
-	//        //    for (int i = Expression.expressions.Count - 1; i > 0; i--)
-	//        //    {
-	//        //        Expression expression = Expression.expressions[i];
-	//        //        if (expression.IsCall)
-	//        //        {
-	//        //            if (context.Keys.Count > (lastEvaluated.Keys.Count+(Expression.expressions.Count-i)))
-	//        //            {
-	//        //                return lastEvaluated;
-	//        //            }
-	//        //            else
-	//        //            {
-	//        //                break;
-	//        //            }
-	//        //        }
-	//        //        if (!expression.HasConstantKeysOnly)
-	//        //        {
-	//        //            break;
-	//        //        }
-	//        //    }
-	//        //    if ((lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
-	//        //    {
-	//        //        return lastEvaluated;
-	//        //    }
-	//        //    //if ((constantKeys && context.Keys.Count >= lastEvaluated.Keys.Count-1) || (lastContext.Parent.Parent.Equals(context.Parent.Parent) && context.Keys.Count > lastEvaluated.Keys.Count))
-	//        //    //{
-	//        //    //    return lastEvaluated;
-	//        //    //}
-	//        //    else
-	//        //    {
-	//        //        //context.Equals(lastContext);
-	//        //        lastEvaluated = null;
-	//        //        lastKey = null;
-	//        //    }
-	//        //}
-	//        //lastKey = key.Copy();
-	//        //lastContext = context;
-	//        Position selection = selected;
-	//        while (!selection.Get().ContainsKey(key))
-	//        {
-	//            if (selection.Parent == null)
-	//            {
-	//                selection = null;
-	//                break;
-	//            }
-	//            else
-	//            {
-	//                //selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
-	//                if (selection.Get().Scope != null)
-	//                {
-	//                    selection = selection.Get().Scope;
-	//                }
-	//                else
-	//                {
-	//                    selection = selection.Parent;
-	//                }
-	//            }
-	//        }
-	//        //try
-	//        //{
-	//        //    selection.Get().KeyChanged += new KeyChangedEventHandler(Search_KeyChanged);
-	//        //}
-	//        //catch(Exception e)
-	//        //{
-	//        //}
-	//        if (selection == null)
-	//        {
-	//            throw new KeyNotFound(key, keyExpression.Extent, null);
-	//        }
-	//        else
-	//        {
-	//            Position lastEvaluated = new Position(selection, key);
-	//            return lastEvaluated;
-	//        }
-	//    }
-
-	//    //void Search_KeyChanged(KeyChangedEventArgs e)
-	//    //{
-	//    //    if (lastKey != null && e.Key.Equals(lastKey))
-	//    //    {
-	//    //        lastEvaluated = null;
-	//    //        lastKey = null;
-	//    //        lastContext = null;
-	//    //    }
-	//    //}
-	//    public override void Assign(Position selected, Map value, Position context)
-	//    {
-	//        Position evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
-	//        Map key = evaluatedKeyPosition.Get();
-	//        if (key.Equals(new StrategyMap("result")))
-	//        {
-	//        }
-	//        Position selection = context;
-	//        while (selection != null && !selection.Get().ContainsKey(key))
-	//        {
-	//            if (selection.Get().Scope != null)
-	//            {
-	//                selection = selection.Get().Scope;
-	//            }
-	//            else
-	//            {
-	//                selection = selection.Parent;
-	//            }
-	//        }
-	//        if (selection == null)
-	//        {
-	//            throw new KeyNotFound(key, keyExpression.Extent, null);
-	//        }
-	//        else
-	//        {
-	//            selection.Assign(key, value);
-	//        }
-	//    }
-	//}
-
 	public class LastArgument : Subselect
 	{
-		//public override bool HasLiteralKeysOnly
-		//{
-		//    get
-		//    {
-		//        return false;
-		//    }
-		//}
 		public override Position Evaluate(Position context, Position executionContext)
 		{
 			return Call.LastArgument;
@@ -818,35 +587,8 @@ namespace Meta
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
-
-	//public class LastArgument : Subselect
-	//{
-	//    public override bool HasLiteralKeysOnly
-	//    {
-	//        get 
-	//        {
-	//            return false;
-	//        }
-	//    }
-	//    public override Position Evaluate(Position context, Position executionContext)
-	//    {
-	//        return Call.LastArgument;
-	//    }
-	//    public override void Assign(Position context, Map value, Position executionContext)
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    //protected override Position EvaluateImplementation(Position context)
-	//    //{
-	//    //    return Call.lastArgument;
-	//    //}
-	//}
 	public class Select : Expression
 	{
-		//public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-		//{
-		//    return false;
-		//}
 		public List<Map> Subselects
 		{
 			get
@@ -854,13 +596,6 @@ namespace Meta
 				return subselects;
 			}
 		}
-		//public override bool HasConstantKeysOnly
-		//{
-		//    get
-		//    {
-		//        return true;
-		//    }
-		//}
 		private List<Map> subselects;
 		public Select(Map code)
 		{
@@ -878,43 +613,6 @@ namespace Meta
 		}
 		public static Position lastPosition;
 	}
-	//public class Select : Expression
-	//{
-	//    //public override bool Emit(ILGenerator il, Dictionary<Map, int> keys)
-	//    //{
-	//    //    return false;
-	//    //}
-	//    public List<Map> Subselects
-	//    {
-	//        get
-	//        {
-	//            return subselects;
-	//        }
-	//    }
-	//    //public override bool HasConstantKeysOnly
-	//    //{
-	//    //    get
-	//    //    {
-	//    //        return true;
-	//    //    }
-	//    //}
-	//    private List<Map> subselects;
-	//    public Select(Map code)
-	//    {
-	//        this.subselects = code.Array;
-	//    }
-	//    protected override Position EvaluateImplementation(Position context)
-	//    {
-	//        Position selected = context;
-	//        foreach (Map subselect in subselects)
-	//        {
-	//            selected = subselect.GetSubselect().Evaluate(selected, context);
-	//        }
-	//        lastPosition = selected;
-	//        return selected;
-	//    }
-	//    public static Position lastPosition;
-	//}
 	public class Statement
 	{
 		public Expression Value
@@ -945,29 +643,8 @@ namespace Meta
 			{
 				selected = keys[i].GetSubselect().Evaluate(selected, context);
 			}
-			//if (selected.Get().Equals(new StrategyMap("characterExcept")))
-			//{
-			//}
-			//try
-			//{
 				Map val = value.GetExpression().Evaluate(context).Get();
-				//if (keys[0].GetExpression() is Literal && ((Literal)keys[0].GetExpression()).Map.Equals(new StrategyMap("characterExcept")))
-				//{
-				//}
 					keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-			//}
-			//catch (ApplicationException e)
-			//{
-			//    //if (e.InnerException != null && e.InnerException is MetaException)
-			//    //{
-			//    //    throw e.InnerException;
-			//    //}
-			//    //else
-			//    //{
-			//        throw new MetaException(e.ToString(), value.Extent);
-			//    //}
-			//    //throw new MetaException(e.ToString() + e.StackTrace, value.Extent);
-			//}
 		}
 	}
 	public class Library
@@ -980,25 +657,13 @@ namespace Meta
 			{
 				Position firstCall=argument.Call(result);
 				result = firstCall.Call(m).Get();
-				//result = argument.Call(result).Call(m).Get();
 			}
 			return result;
 		}
-		//public static Map Sum(Map arg,Map map)
-		//{
-		//    Position argument = Call.LastArgument;
-		//    Map result = arg.Array[0].Copy();
-		//    foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
-		//    {
-		//        result = argument.Call(result).Call(m).Get();
-		//    }
-		//    return result;
-		//}
 		public static Map Prepend(Map arg,Map map)
 		{
 			Map result = new StrategyMap(1, arg);
 			result.AppendRange(map);
-			//result.Append(arg);
 			return result;
 		}
 		public static Map Append(Map arg,Map map)
@@ -1337,13 +1002,6 @@ namespace Meta
 		{
 			return arg.GetNumber() + map.GetNumber();
 		}
-		//public static Test Add(Map arg)
-		//{
-		//    return new Test(delegate(Map map)
-		//    {
-		//        return arg.GetNumber() + map.GetNumber();
-		//    });
-		//}
 		public static string writtenText = "";
 		public static void WriteLine(string text)
 		{
@@ -1394,19 +1052,6 @@ namespace Meta
 			return result;
 		}
 
-		//public static Test Merge(Map arg)
-		//{
-		//    return new Test(delegate(Map map)
-		//    {
-
-		//        Map result = arg.Copy();
-		//        foreach (KeyValuePair<Map, Map> pair in map)
-		//        {
-		//            result[pair.Key] = pair.Value;
-		//        }
-		//        return result;
-		//    });
-		//}
 		public static Map Sort(Map arg,Map map)
 		{
 				List<Map> array = arg.Array;
@@ -1424,16 +1069,6 @@ namespace Meta
 				result.AppendRange(map);
 				return result;
 		}
-		//public static Map Join(Map arg)
-		//{
-		//    Map result = Map.Empty;
-		//    Number counter = 1;
-		//    foreach (Map map in arg.Array)
-		//    {
-		//        result.AppendRange(map);
-		//    }
-		//    return result;
-		//}
 		public static Map Range(Map arg)
 		{
 			int end = arg.GetNumber().GetInt32();
@@ -1569,7 +1204,6 @@ namespace Meta
 				foreach (KeyValuePair<Map, Map> entry in arg)
 				{
 					result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
-					//result[entry.Key] = (argument.Call(new StrategyMap("key", entry.Key, "value", entry.Value)).Get());
 				}
 				return result;
 		}
@@ -1714,17 +1348,6 @@ namespace Meta
 		protected override Map Get(Map key)
 		{
 			Map value = null;
-			//if (cache.ContainsKey(key))
-			//{
-			//    value = cache[key];
-			//}
-			//else 
-
-			//if (key.Equals(new StrategyMap("localhost")))
-			//{
-			//    value = cache[key];
-			//}
-			//else
 			if (cache.ContainsKey(key))
 			{
 				value = cache[key];
@@ -1752,7 +1375,6 @@ namespace Meta
 						Parser parser = new Parser(text, metaFile);
 						bool matched;
 						result = Parser.File.Match(parser, out matched);
-						//result = Parser.File.Match(parser, out matched);
 						if (parser.index != parser.text.Length)
 						{
 							throw new SyntaxException("Expected end of file.", parser);
@@ -1827,119 +1449,8 @@ namespace Meta
 					cache[key] = value;
 				}
 			}
-			//else if (cache.ContainsKey(key))
-			//{
-			//    value = cache[key];
-			//}
 			return value;
 		}
-		//protected override Map Get(Map key)
-		//{
-		//    Map value = null;
-		//    if (cache.ContainsKey(key))
-		//    {
-		//        value = cache[key];
-		//    }
-		//    else if (key.IsString)
-		//    {
-		//        string name = key.GetString();
-		//        if (directory.FullName != Interpreter.LibraryPath)
-		//        {
-		//            Directory.SetCurrentDirectory(directory.FullName);
-		//        }
-		//        string file = Path.Combine(directory.FullName, name);
-		//        string metaFile = Path.Combine(directory.FullName, name + ".meta");
-		//        string dllFile = Path.Combine(directory.FullName, name + ".dll");
-		//        string exeFile = Path.Combine(directory.FullName, name + ".exe");
-
-		//        if (File.Exists(metaFile))
-		//        {
-		//            string text = File.ReadAllText(metaFile, Encoding.Default);
-		//            Map result;
-		//            FileMap fileMap = new FileMap(metaFile);
-		//            if (text != "")
-		//            {
-		//                Map start = new StrategyMap();
-		//                Parser parser = new Parser(text, metaFile);
-		//                bool matched;
-		//                result = Parser.File.Match(parser, out matched);
-		//                //result = Parser.File.Match(parser, out matched);
-		//                if (parser.index != parser.text.Length)
-		//                {
-		//                    throw new SyntaxException("Expected end of file.", parser);
-		//                }
-		//                value = result;
-		//            }
-		//            else
-		//            {
-		//                value = Map.Empty;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            bool dllLoaded = false;
-		//            if (File.Exists(dllFile))
-		//            {
-		//                try
-		//                {
-		//                    Assembly assembly = Assembly.LoadFile(dllFile);
-		//                    value = Gac.LoadAssembly(assembly);
-		//                    dllLoaded = true;
-		//                }
-		//                catch (Exception e)
-		//                {
-		//                    value = null;
-		//                }
-		//            }
-		//            else if (File.Exists(exeFile))
-		//            {
-		//                try
-		//                {
-		//                    Assembly assembly = Assembly.LoadFile(exeFile);
-		//                    value = Gac.LoadAssembly(assembly);
-		//                    dllLoaded = true;
-		//                }
-		//                catch (Exception e)
-		//                {
-		//                    value = null;
-		//                }
-		//            }
-		//            if (!dllLoaded)
-		//            {
-		//                if (File.Exists(file))
-		//                {
-		//                    switch (Path.GetExtension(file))
-		//                    {
-		//                        case ".txt":
-		//                        case ".meta":
-		//                            value = new StrategyMap(File.ReadAllText(file));
-		//                            break;
-		//                        default:
-		//                            value = new FileMap(file, new ListStrategy());
-		//                            break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-		//                    if (subDir.Exists)
-		//                    {
-		//                        value = new DirectoryMap(subDir);
-		//                    }
-		//                    else
-		//                    {
-		//                        value = null;
-		//                    }
-		//                }
-		//            }
-		//        }
-		//        if (value != null)
-		//        {
-		//            cache[key] = value;
-		//        }
-		//    }
-		//    return value;
-		//}
 		protected override void Set(Map key, Map val)
 		{
 			if (key.IsString)
@@ -2198,23 +1709,6 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//object[] a = new object[] { "world" };
-			//typeof(Interpreter).GetMethod("ChangeRef").Invoke(null, a);
-			//int asdf = 0;
-
-			//Gtk.Application.Init();
-			//Gtk.Window win = new Gtk.Window("TextViewSample");
-			//////win.SetDefaultSize(600, 400);
-			//win.ShowAll();
-
-			//Application.Run();
-
-			//Form form=new Form();
-			//Size size;
-			//RichTextBox box;
-			//OpenFileDialog dialog;
-			//box.SelectedText
-			//form.KeyDown += new KeyEventHandler(form_KeyDown);
 			try
 			{
 				if (args.Length == 0)
@@ -2430,22 +1924,6 @@ namespace Meta
 			}
 		}
 	}
-	//public abstract class Position
-	//{
-	//    public abstract Map Get();
-	//}
-	//public class TemporaryPosition:Position
-	//{
-	//    private Map map;
-	//    public TemporaryPosition(Map map)
-	//    {
-	//        this.map = map;
-	//    }
-	//    public override Map Get()
-	//    {
-	//        return map;
-	//    }
-	//}
 	public delegate void BustOptimization();
 	public class Position
 	{
@@ -2470,13 +1948,6 @@ namespace Meta
 			got[call] = map;
 			return new Position(this, call);
 		}
-		//public void AddCall(Map map, out FunctionBodyKey call)
-		//{
-		//    Map got = Get();
-		//    got.numCalls++;
-		//    call = new FunctionBodyKey(got.numCalls);
-		//    got[call] = map;
-		//}
 		public Position Call(Map argument)
 		{
 			return Get().Call(argument, this);
@@ -2779,59 +2250,10 @@ namespace Meta
 				}
 			}
 		}
-		//public Map this[Map key]
-		//{
-		//    get
-		//    {
-		//        if (key is FunctionBodyKey)
-		//        {
-		//            if (TemporaryData.ContainsKey((FunctionBodyKey)key))
-		//            {
-		//                return TemporaryData[(FunctionBodyKey)key];
-		//            }
-		//            else
-		//            {
-		//                return null;
-		//            }
-		//        }
-		//        else
-		//        {
-		//            return Get(key);
-		//        }
-		//    }
-		//    set
-		//    {
-		//        if (value != null)
-		//        {
-		//            compiledCode = null;
-		//            Map val;
-		//            val = value.Copy();
-		//            if (key is FunctionBodyKey)
-		//            {
-		//                this.TemporaryData[(FunctionBodyKey)key] = val;
-		//            }
-		//            else
-		//            {
-		//                Set(key, val);
-		//            }
-		//            if (KeyChanged != null)
-		//            {
-		//                this.KeyChanged(new KeyChangedEventArgs(key));
-		//                this.KeyChanged = null;
-		//            }
-		//        }
-		//    }
-		//}
 		public event KeyChangedEventHandler KeyChanged;
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
 		public int numCalls = 0;
-		//public void AddCall(Map map, out FunctionBodyKey call)
-		//{
-		//    numCalls++;
-		//    call = new FunctionBodyKey(numCalls);
-		//    this[call] = map;
-		//}
 		public virtual void AppendRange(Map array)
 		{
 			AppendRangeDefault(array);
@@ -3127,22 +2549,6 @@ namespace Meta
 				return result;
 			}
 		}
-		//public virtual Position Call(Map arg, Position position)
-		//{
-		//    if (!ContainsKey(CodeKeys.Function))
-		//    {
-		//        throw new ApplicationException("Map is not a function");
-		//    }
-		//    else
-		//    {
-		//        //FunctionBodyKey call;
-		//        arguments.Add(arg);
-		//        Position bodyPosition=position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.ParameterName], arg));
-		//        Position result = this[CodeKeys.Function].GetExpression().Evaluate(bodyPosition);
-		//        arguments.RemoveAt(arguments.Count - 1);
-		//        return result;
-		//    }
-		//}
 		public ICollection<Map> Keys
 		{
 			get
@@ -3652,42 +3058,6 @@ namespace Meta
 								dotNet=list.ToArray(elementType);
 							}
 						}
-						//else // this is too much magic, remove if possible
-						//{
-						//    ObjectMap result;
-						//    // why non-public? is this even used
-						//    ConstructorInfo constructor = target.GetConstructor(BindingFlags.Public, null, new Type[] { }, new ParameterModifier[] { });
-						//    //ConstructorInfo constructor = target.GetConstructor(BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
-						//    if (constructor != null)
-						//    {
-						//        result = new ObjectMap(target.GetConstructor(new Type[] { }).Invoke(new object[] { }));
-						//    }
-						//    else if (target.IsValueType)
-						//    {
-						//        if (target.Equals(typeof(void)))
-						//        {
-						//            result = null;
-						//            break;
-						//        }
-						//        else
-						//        {
-						//            result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
-						//            //result = new ObjectMap(target.InvokeMember(".ctor", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Static, null, null, new object[] { }));
-						//        }
-						//    }
-						//    else
-						//    {
-						//        break;
-						//    }
-						//    foreach (KeyValuePair<Map, Map> pair in meta)
-						//    {
-						//        // passing null as position is dangerous, currentPosition is wrong
-						//        result[pair.Key]=pair.Value;//, MethodImplementation.currentPosition);
-						//        //((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, MethodImplementation.currentPosition);
-						//        //((Property)result[pair.Key])[DotNetKeys.Set].Call(pair.Value, null);
-						//    }
-						//    dotNet = result.Object;
-						//}
 						break;
 					case TypeCode.SByte:
 						if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))
@@ -3780,10 +3150,8 @@ namespace Meta
 						return new ObjectMap(dotNet);
 					case TypeCode.Decimal:
 						return Convert.ToInt32(dotNet);
-						//return (int)dotNet;
 					case TypeCode.Double:
 						return Convert.ToInt32(dotNet);
-						//return (int)dotNet;
 					case TypeCode.Int16:
 						return (short)dotNet;
 					case TypeCode.Int32:
@@ -3807,7 +3175,6 @@ namespace Meta
 						return (sbyte)dotNet;
 					case TypeCode.Single:
 						return Convert.ToInt32(dotNet);
-						//return (int)dotNet;
 					case TypeCode.String:
 						return (string)dotNet;
 					case TypeCode.UInt32:
@@ -3822,14 +3189,6 @@ namespace Meta
 			}
 		}
 	}
-	//public class SlowCall : Map
-	//{
-	//    private CallDelegate call;
-	//    public SlowCall(CallDelegate call)
-	//    {
-	//        this.call = call;
-	//    }
-	//}
 	public delegate Map CallDelegate(Map argument);
 
 	public abstract class MethodImplementation:Map
@@ -3923,11 +3282,7 @@ namespace Meta
 					method is ConstructorInfo ?
 						((ConstructorInfo)method).Invoke(arguments) :
 						 method.Invoke(obj, arguments));
-				//FunctionBodyKey calls;
 				return position.AddCall(result);
-				//position.AddCall(result, out calls);
-				//position.Get().AddCall(result, out calls);
-				//return new Position(position, calls);
 			}
 			catch (Exception e)
 			{
@@ -3941,82 +3296,6 @@ namespace Meta
 				}
 			}
 		}
-		//public override Position Call(Map argument, Position position)
-		//{
-		//    currentPosition = position;
-		//    bool converted;
-			
-		//    object[] arguments = ConvertArgument(argument, out converted);
-		//    if (!converted)
-		//    {
-		//        //ConvertArgument(argument, out converted);
-		//        throw new Exception("Could not convert argument.");
-		//    }
-		//    try
-		//    {
-		//        Map result = Transform.ToMeta(
-		//            method is ConstructorInfo ?
-		//                ((ConstructorInfo)method).Invoke(arguments) :
-		//                 method.Invoke(obj, arguments));
-		//        //FunctionBodyKey calls;
-		//        return position.AddCall(result);
-		//        //position.AddCall(result, out calls);
-		//        //position.Get().AddCall(result, out calls);
-		//        //return new Position(position, calls);
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        if (e.InnerException != null)
-		//        {
-		//            throw e.InnerException;
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
-		//        }
-		//    }
-		//}
-		//public override Position Call(Map argument, Position position)
-		//{
-		//    currentPosition = position;
-		//    bool converted;
-		//    if (parameters.Length == 1)
-		//    {
-		//    }
-		//    if (argument.ContainsKey("rest"))
-		//    {
-		//    }
-
-		//    object[] arguments = ConvertArgument(argument, out converted);
-		//    if (!converted)
-		//    {
-		//        //ConvertArgument(argument, out converted);
-		//        throw new Exception("Could not convert argument.");
-		//    }
-		//    try
-		//    {
-		//        Map result = Transform.ToMeta(
-		//            method is ConstructorInfo ?
-		//                ((ConstructorInfo)method).Invoke(arguments) :
-		//                 method.Invoke(obj, arguments));
-		//        //FunctionBodyKey calls;
-		//        return position.AddCall(result);
-		//        //position.AddCall(result, out calls);
-		//        //position.Get().AddCall(result, out calls);
-		//        //return new Position(position, calls);
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        if (e.InnerException != null)
-		//        {
-		//            throw e.InnerException;
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
-		//        }
-		//    }
-		//}
 		public object[] ConvertArgument(Map argument, out bool converted)
 		{
 			object[] arguments = new object[parameters.Length];
@@ -4138,28 +3417,6 @@ namespace Meta
 		{
 			this.overloads = new Dictionary<Map, Map>(overloads);
 		}
-		//// refactor
-		//public Method(string name, object obj, Type type)
-		//    : base(GetSingleMethod(name, obj, type), obj, type)
-		//{
-
-		//}
-		//public Method(Type type)
-		//    : this(".ctor", null, type)
-		//{
-		//}
-		//private static MethodBase GetSingleMethod(string name, object obj, Type type)
-		//{
-		//    MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
-		//    if (members.Length == 1)
-		//    {
-		//        return (MethodBase)members[0];
-		//    }
-		//    else
-		//    {
-		//        return null;
-		//    }
-		//}
 		private static BindingFlags GetBindingFlags(object obj, string name)
 		{
 			if (name == ".ctor" || obj != null)
@@ -4173,561 +3430,12 @@ namespace Meta
 				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 			}
 		}
-		//protected override ICollection<Map> KeysImplementation
-		//{
-		//    get
-		//    {
-		//        //if (overloadedMethods != null)
-		//        //{
-		//        //    return overloadedMethods.Keys;
-		//        //}
-		//        //else
-		//        //{
-		//        return new List<Map>();
-		//        //}
-		//    }
-		//}
 
 		protected override Map CopyData()
 		{
 			return new Method(method, obj, type,overloads);
 		}
-		//protected override Map Get(Map key)
-		//{
-		//    //if (overloadedMethods == null)
-		//    //{
-		//    return null;
-		//    //}
-		//    //else
-		//    //{
-		//    //    MethodOverload value;
-		//    //    overloadedMethods.TryGetValue(key, out value);
-		//    //    return value;
-		//    //}
-		//}
-		//protected override void Set(Map key, Map val)
-		//{
-		//    throw new Exception("Method Set not implemented");
-		//}
 	}
-	//public class Method : MethodImplementation
-	//{
-	//    //public static Map MethodData(string name,object obj,Type type)
-	//    //{
-	//    //    Map map=new StrategyMap();
-	//    //    foreach (MethodInfo method in type.GetMember(name, GetBindingFlags(obj, name)))
-	//    //    {
-	//    //        Map current=map;
-	//    //        ParameterInfo[] parameters=method.GetParameters();
-	//    //        Map methodMap = new Method(method, obj, type);
-	//    //        if(parameters.Length==0)
-	//    //        {
-	//    //            map=
-	//    //        for(int i=0;i<parameters.Length;i++)
-	//    //        {
-	//    //            Map typeMap=new TypeMap(parameters[i].ParameterType);
-	//    //            if (!current.ContainsKey(typeMap))
-	//    //            {
-	//    //                current[typeMap] = Map.Empty;
-	//    //            }
-	//    //            current = current[typeMap];
-	//    //        }
-	//    //        current[new TypeMap(parameters[parameters.Length-1].ParameterType)]
-	//    //    }
-	//    //    return Map.Empty;
-	//    //}
-	//    public static Map MethodData(string name,object obj,Type type)
-	//    {
-	//        Map map=new StrategyMap();
-	//        List<MethodBase> members =new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
-	//        //List<MethodBase> members=new List<MemberInfo>(new type.GetMember(name, GetBindingFlags(obj, name))).ConvertAll<MethodBase>(new Converter<MemberInfo,MethodBase>);
-	//        members.Sort(new Comparison<MethodBase>(delegate(MethodBase a,MethodBase b)
-	//        {
-	//            return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
-	//        }));
-	//        Map result=new StrategyMap();
-	//        foreach (MethodBase methodBase in members)
-	//        {
-	//            Map current=result;
-	//            ParameterInfo[] parameters=methodBase.GetParameters();
-	//            Map method=new Method(methodBase,obj,type);
-	//            if(parameters.Length==0)
-	//            {
-	//                result=method;
-	//            }
-	//            else
-	//            {
-	//                for(int i=0;i<parameters.Length;i++)
-	//                {
-	//                    Map typeMap=new TypeMap(parameters[i].ParameterType);
-	//                    if(i==parameters.Length-1)
-	//                    {
-	//                        current[typeMap]=method;
-	//                    }
-	//                    else
-	//                    {
-	//                        if(!current.ContainsKey(method))
-	//                        {
-	//                            current[typeMap]=new StrategyMap();
-	//                        }
-	//                        current=current[typeMap];
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return result;
-	//    }
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return false;
-	//    }
-	//    public Method(MethodBase method, object obj, Type type)
-	//        : base(method, obj, type)
-	//    {
-	//    }
-	//    //// refactor
-	//    //public Method(string name, object obj, Type type)
-	//    //    : base(GetSingleMethod(name, obj, type), obj, type)
-	//    //{
-
-	//    //}
-	//    //public Method(Type type)
-	//    //    : this(".ctor", null, type)
-	//    //{
-	//    //}
-	//    //private static MethodBase GetSingleMethod(string name, object obj, Type type)
-	//    //{
-	//    //    MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
-	//    //    if (members.Length == 1)
-	//    //    {
-	//    //        return (MethodBase)members[0];
-	//    //    }
-	//    //    else
-	//    //    {
-	//    //        return null;
-	//    //    }
-	//    //}
-	//    private static BindingFlags GetBindingFlags(object obj, string name)
-	//    {
-	//        if (name == ".ctor" || obj != null)
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Instance;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-	//        }
-	//        else
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Static;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-	//        }
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            //if (overloadedMethods != null)
-	//            //{
-	//            //    return overloadedMethods.Keys;
-	//            //}
-	//            //else
-	//            //{
-	//            return new List<Map>();
-	//            //}
-	//        }
-	//    }
-
-	//    protected override Map CopyData()
-	//    {
-	//        return new Method(method, obj, type);
-	//    }
-	//    //protected override Map Get(Map key)
-	//    //{
-	//    //    //if (overloadedMethods == null)
-	//    //    //{
-	//    //    return null;
-	//    //    //}
-	//    //    //else
-	//    //    //{
-	//    //    //    MethodOverload value;
-	//    //    //    overloadedMethods.TryGetValue(key, out value);
-	//    //    //    return value;
-	//    //    //}
-	//    //}
-	//    //protected override void Set(Map key, Map val)
-	//    //{
-	//    //    throw new Exception("Method Set not implemented");
-	//    //}
-	//}
-	//public class Method : MethodImplementation
-	//{
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return false;
-	//    }
-	//    //public override Position Call(Map argument, Position position)
-	//    //{
-	//    //    //if (Overloaded)
-	//    //    //{
-	//    //    //    MethodOverload overload = null;
-	//    //    //    foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
-	//    //    //    {
-	//    //    //        bool converted;
-	//    //    //        entry.Value.ConvertArgument(argument, out converted);
-	//    //    //        if (converted)
-	//    //    //        {
-	//    //    //            overload = entry.Value;
-	//    //    //            break;
-	//    //    //        }
-	//    //    //    }
-	//    //    //    if (overload == null)
-	//    //    //    {
-	//    //    //        throw new Exception("No matching overload found.");
-	//    //    //    }
-	//    //    //    else
-	//    //    //    {
-	//    //    //        return overload.Call(argument, position);
-	//    //    //    }
-	//    //    //}
-	//    //    //else
-	//    //    //{
-	//    //        return base.Call(argument, position);
-	//    //    //}
-	//    //}
-	//    //protected override bool ContainsKeyImplementation(Map key)
-	//    //{
-	//    //    return overloadedMethods != null && overloadedMethods.ContainsKey(key);
-	//    //}
-	//    //private Dictionary<Map, Map> overloadedMethods;
-	//    //private Dictionary<Map, MethodOverload> overloadedMethods;
-	//    // why overloads and method itself?
-	//    private Method(MethodBase method, object obj, Type type)
-	//        : base(method, obj, type)
-	//    {
-	//        //this.overloadedMethods = overloadedMethods;
-	//    }
-	//    //private Method(Dictionary<Map, MethodOverload> overloadedMethods, MethodBase method, object obj, Type type)
-	//    //    : base(method, obj, type)
-	//    //{
-	//    //    this.overloadedMethods = overloadedMethods;
-	//    //}
-	//    //public bool Overloaded
-	//    //{
-	//    //    get
-	//    //    {
-	//    //        return overloadedMethods != null;
-	//    //    }
-	//    //}
-	//    // refactor
-	//    public Method(string name, object obj, Type type)
-	//        : base(GetSingleMethod(name, obj, type), obj, type)
-	//    {
-	//        //MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
-	//        //// refactor
-	//        //if (methods.Length > 1)
-	//        //{
-	//        //    //this.overloadedMethods = new Dictionary<Map, MethodOverload>();
-	//        //    foreach (MethodBase method in methods)
-	//        //    {
-	//        //        Map key;
-
-	//        //        ParameterInfo[] parameters = method.GetParameters();
-	//        //        if (parameters.Length == 1)
-	//        //        {
-	//        //            key = new TypeMap(parameters[0].ParameterType);
-	//        //        }
-	//        //        else
-	//        //        {
-	//        //            key = new StrategyMap();
-	//        //            foreach (ParameterInfo parameter in parameters)
-	//        //            {
-	//        //                key.Append(new TypeMap(parameter.ParameterType));
-	//        //            }
-	//        //        }
-	//        //        MethodOverload overload = new MethodOverload(method, obj, type);
-	//        //        overloadedMethods[key] = overload;
-	//        //    }
-	//        //}
-	//        //else
-	//        //{
-	//        //    this.overloadedMethods = null;
-	//        //}
-	//    }
-	//    public Method(Type type)
-	//        : this(".ctor", null, type)
-	//    {
-	//    }
-	//    private static MethodBase GetSingleMethod(string name, object obj, Type type)
-	//    {
-	//        MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj, name));
-	//        if (members.Length == 1)
-	//        {
-	//            return (MethodBase)members[0];
-	//        }
-	//        else
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    private static BindingFlags GetBindingFlags(object obj, string name)
-	//    {
-	//        if (name == ".ctor" || obj != null)
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Instance;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-	//        }
-	//        else
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Static;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-	//        }
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            //if (overloadedMethods != null)
-	//            //{
-	//            //    return overloadedMethods.Keys;
-	//            //}
-	//            //else
-	//            //{
-	//                return new List<Map>();
-	//            //}
-	//        }
-	//    }
-
-	//    protected override Map CopyData()
-	//    {
-	//        return new Method( method, obj, type);
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        //if (overloadedMethods == null)
-	//        //{
-	//            return null;
-	//        //}
-	//        //else
-	//        //{
-	//        //    MethodOverload value;
-	//        //    overloadedMethods.TryGetValue(key, out value);
-	//        //    return value;
-	//        //}
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new Exception("Method Set not implemented");
-	//    }
-	//}
-	//public class Method : MethodImplementation
-	//{
-	//    public override Position Call(Map argument, Position position)
-	//    {
-	//        if (Overloaded)
-	//        {
-	//            MethodOverload overload=null;
-	//            foreach (KeyValuePair<Map, MethodOverload> entry in overloadedMethods)
-	//            {
-	//                bool converted;
-	//                entry.Value.ConvertArgument(argument, out converted);
-	//                if (converted)
-	//                {
-	//                    overload = entry.Value;
-	//                    break;
-	//                }
-	//            }
-	//            if(overload==null)
-	//            {
-	//                throw new Exception("No matching overload found.");
-	//            }
-	//            else
-	//            {
-	//                return overload.Call(argument,position);
-	//            }
-	//        }
-	//        else
-	//        {
-	//            return base.Call(argument, position);
-	//        }
-	//    }
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return overloadedMethods!=null && overloadedMethods.ContainsKey(key);
-	//    }
-	//    private Dictionary<Map, MethodOverload> overloadedMethods;
-	//    // why overloads and method itself?
-	//    private Method(Dictionary<Map, MethodOverload> overloadedMethods,MethodBase method,object obj,Type type):base(method,obj,type)
-	//    {
-	//        this.overloadedMethods = overloadedMethods;
-	//    }
-	//    public bool Overloaded
-	//    {
-	//        get
-	//        {
-	//            return overloadedMethods != null;
-	//        }
-	//    }
-	//    // refactor
-	//    public Method(string name, object obj, Type type)
-	//        : base(GetSingleMethod(name, obj, type), obj, type)
-	//    {
-	//        MemberInfo[] methods = type.GetMember(name, GetBindingFlags(obj, name));
-	//        // refactor
-	//        if (methods.Length > 1)
-	//        {
-	//            this.overloadedMethods = new Dictionary<Map, MethodOverload>();
-	//            foreach (MethodBase method in methods)
-	//            {
-	//                Map key;
-
-	//                ParameterInfo[] parameters = method.GetParameters();
-	//                if (parameters.Length == 1)
-	//                {
-	//                    key = new TypeMap(parameters[0].ParameterType);
-	//                }
-	//                else
-	//                {
-	//                    key = new StrategyMap();
-	//                    foreach (ParameterInfo parameter in parameters)
-	//                    {
-	//                        key.Append(new TypeMap(parameter.ParameterType));
-	//                    }
-	//                }
-	//                MethodOverload overload = new MethodOverload(method, obj, type);
-	//                overloadedMethods[key] = overload;
-	//            }
-	//        }
-	//        else
-	//        {
-	//            this.overloadedMethods = null;
-	//        }
-	//    }
-	//    public Method(Type type)
-	//        : this(".ctor", null, type)
-	//    {
-	//    }
-	//    private static MethodBase GetSingleMethod(string name, object obj, Type type)
-	//    {
-	//        MemberInfo[] members = type.GetMember(name, GetBindingFlags(obj,name));
-	//        if (members.Length == 1)
-	//        {
-	//            return (MethodBase)members[0];
-	//        }
-	//        else
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    private static BindingFlags GetBindingFlags(object obj,string name)
-	//    {
-	//        if (name==".ctor" || obj != null)
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Instance;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-	//        }
-	//        else
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Static;
-	//            //return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-	//        }
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            if (overloadedMethods != null)
-	//            {
-	//                return overloadedMethods.Keys;
-	//            }
-	//            else
-	//            {
-	//                return new List<Map>();
-	//            }
-	//        }
-	//    }
-
-	//    protected override Map CopyData()
-	//    {
-	//        return new Method(overloadedMethods, method, obj, type);
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        if (overloadedMethods == null)
-	//        {
-	//            return null;
-	//        }
-	//        else
-	//        {
-	//            MethodOverload value;
-	//            overloadedMethods.TryGetValue(key, out value);
-	//            return value;
-	//        }
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new Exception("Method Set not implemented");
-	//    }
-	//}
-	//public class MethodOverload : MethodImplementation
-	//{
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return false;
-	//    }
-	//    public MethodOverload(MethodBase method, object obj, Type type)
-	//        : base(method, obj, type)
-	//    {
-	//    }
-	//    // is that correct?
-	//    protected override Map CopyData()
-	//    {
-	//        return new MethodOverload(this.method, this.obj, this.type);
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            return new List<Map>();
-	//        }
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        return null;
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new ApplicationException("Cannot set key in MethodOverload");
-	//    }
-	//    public override bool Equals(object toCompare)
-	//    {
-	//        if (toCompare is MethodOverload)
-	//        {
-	//            MethodOverload Method = (MethodOverload)toCompare;
-	//            if (Method.obj == obj && Method.method.Name.Equals(method.Name) && Method.type.Equals(type))
-	//            {
-	//                return true;
-	//            }
-	//            else
-	//            {
-	//                return false;
-	//            }
-	//        }
-	//        else
-	//        {
-	//            return false;
-	//        }
-	//    }
-	//    public override int GetHashCode()
-	//    {
-	//        unchecked
-	//        {
-	//            int hash = method.Name.GetHashCode() * type.GetHashCode();
-	//            if (obj != null)
-	//            {
-	//                hash = hash * obj.GetHashCode();
-	//            }
-	//            return hash;
-	//        }
-	//    }
-	//}
 	public class TypeMap: DotNetMap
 	{
 		public TypeMap(Type targetType)
@@ -4804,18 +3512,6 @@ namespace Meta
 				return constructor;
 			}
 		}
-		//private Method Constructor
-		//{
-		//    get
-		//    {
-		//        if (constructor == null)
-		//        {
-		//            constructor = new Method(type);
-		//            //constructor = new Method(type);
-		//        }
-		//        return constructor;
-		//    }
-		//}
 		public override Position Call(Map argument, Position position)
 		{
 			return Constructor.Call(argument, position);
@@ -5206,13 +3902,7 @@ namespace Meta
 	}
 	public class ListStrategy : ArrayStrategy
 	{
-		//public override bool IsNumber
-		//{
-		//    get 
-		//    {
-		//        return false;
-		//    }
-		//}
+
 		protected override Map GetIndex(int i)
 		{
 			return list[i];
@@ -5664,87 +4354,6 @@ namespace Meta
 			}
 		}
 	}
-	//public class Event : Map
-	//{
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return key.Equals(DotNetKeys.Add);
-	//    }
-	//    Type type;
-	//    object obj;
-	//    EventInfo eventInfo;
-	//    public Event(EventInfo eventInfo, object obj, Type type)
-	//    {
-	//        this.eventInfo = eventInfo;
-	//        this.obj = obj;
-	//        this.type = type;
-	//    }
-	//    public override Position Call(Map argument, Position position)
-	//    {
-	//        MethodImplementation.currentPosition = position;
-	//        Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-	//        //Delegate eventDelegate = (Delegate)type.GetField(eventInfo.Name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance).GetValue(obj);
-	//        if (eventDelegate != null)
-	//        {
-	//            List<object> arguments = new List<object>();
-	//            ParameterInfo[] parameters = eventDelegate.Method.GetParameters();
-	//            if (parameters.Length == 2)
-	//            {
-	//                arguments.Add(Transform.TryToDotNet(argument, parameters[1].ParameterType));
-	//            }
-	//            else
-	//            {
-	//                for (int i = 1; i < parameters.Length; i++)
-	//                {
-	//                    arguments.Add(Transform.TryToDotNet(argument[i], parameters[i].ParameterType));
-	//                }
-	//            }
-	//            Map result = new ObjectMap(eventDelegate.DynamicInvoke(arguments.ToArray()));
-	//            return position.AddCall(result);
-	//        }
-	//        else
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    private Method add;
-	//    protected override Map Get(Map key)
-	//    {
-	//        if (key.Equals(DotNetKeys.Add))
-	//        {
-	//            if (add == null)
-	//            {
-	//                add = new Method(eventInfo.GetAddMethod().Name, obj, type);
-	//            }
-	//            return add;
-	//        }
-	//        else
-	//        {
-	//            return null;
-	//        }
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        throw new ApplicationException("Cannot assign in event " + eventInfo.Name + ".");
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            List<Map> keys = new List<Map>();
-	//            if (eventInfo.GetAddMethod() != null)
-	//            {
-	//                keys.Add(DotNetKeys.Add);
-	//            }
-
-	//            return keys;
-	//        }
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        return new Event(eventInfo, obj, type);
-	//    }
-	//}
 	public class IndexedProperty : Map
 	{
 		protected override bool ContainsKeyImplementation(Map key)
@@ -5906,17 +4515,6 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-
-			//form.WindowState=FormWindowState.
-			//box.SelectAll();
-			//box.Select(0, 0);
-			//dialog.filt
-			//box.SaveFile(
-			//new MenuItem(
-			//form.Menu=new MainMenu(;
-			//new Font(
-			//box.Font = new Font(
-			//form.Menu=new MainMenu(
 			string fieldName = key.GetString();
 			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
 			if (members.Length != 0)
@@ -5948,19 +4546,6 @@ namespace Meta
 				data[key] = value;
 			}
 		}
-		//protected override void Set(Map key, Map value)
-		//{
-		//    string fieldName = key.GetString();
-		//    FieldInfo field = type.GetField(fieldName, bindingFlags);
-		//    if (field != null)
-		//    {
-		//        field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-		//    }
-		//    else
-		//    {
-		//        data[key] = value;
-		//    }
-		//}
 		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return key.IsString && Get(key) != null;// this.type.GetMember(key.GetString(), bindingFlags).Length != 0;
@@ -6159,56 +4744,6 @@ namespace Meta
 				Console.ReadLine();
 			}
 		}
-		//public void Run()
-		//{
-		//    bool allTestsSucessful = true;
-		//    foreach(Type testType in this.GetType().GetNestedTypes())
-		//    {
-		//        if (testType.IsSubclassOf(typeof(Test)))
-		//        {
-		//            Test test=(Test)testType.GetConstructor(new Type[]{}).Invoke(null);
-		//            int level;
-		//            Console.Write(testType.Name + "...");
-
-
-		//            DateTime startTime = DateTime.Now;
-		//            object result=test.GetResult(out level);
-		//            TimeSpan duration = DateTime.Now - startTime;
-
-
-		//            string testDirectory = Path.Combine(TestDirectory, testType.Name);
-					
-		//            string resultPath = Path.Combine(testDirectory, "result.txt");
-		//            string checkPath = Path.Combine(testDirectory, "check.txt");
-
-		//            Directory.CreateDirectory(testDirectory);
-		//            if (!File.Exists(checkPath))
-		//            {
-		//                File.Create(checkPath).Close();
-		//            }
-
-		//            StringBuilder stringBuilder = new StringBuilder();
-		//            Serialize(result, "", stringBuilder, level);
-
-		//            File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
-		//            string successText;
-		//            if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
-		//            {
-		//                successText = "failed";
-		//                allTestsSucessful = false;
-		//            }
-		//            else
-		//            {
-		//                successText = "succeeded";
-		//            }
-		//            Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
-		//        }
-		//    }
-		//    if (!allTestsSucessful)
-		//    {
-		//        Console.ReadLine();
-		//    }
-		//}
 		public const char indentationChar = '\t';
 
 		private static bool UseToStringMethod(Type type)
@@ -6473,19 +5008,6 @@ namespace Meta
 		}
 		//protected Map cachedAssemblyInfo = new StrategyMap();
 	}
-	//public class FileSystem
-	//{
-	//    // combine gac into fileSystem
-
-	//    public static DirectoryMap fileSystem;
-	//    static FileSystem()
-	//    {
-	//        fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
-	//        DrivesMap drives = new DrivesMap();
-	//        FileSystem.fileSystem.cache["localhost"] = drives;
-	//        Gac.gac["filesystem"] = FileSystem.fileSystem;
-	//    }
-	//}
 	public class Number
 	{
 		public bool IsNatural
@@ -6927,19 +5449,6 @@ namespace Meta
 			return null;
 		});
 		public static Rule String = new Alternatives(
-				//new Sequence(
-				//    new Action(
-				//        new Match(), new Character(Syntax.@string)),
-				//    new Action(
-				//        new ReferenceAssignment(),
-				//        new OneOrMore(
-				//            new Action(
-				//                new Autokey(),
-				//                new CharacterExcept(
-				//                    Syntax.unixNewLine,
-				//                    Syntax.windowsNewLine[0],
-				//                    Syntax.@string)))),
-				//    new Action(new Match(), new Character(Syntax.@string))),
 				new Sequence(
 					new Action(new Match(), new Character(Syntax.@string)),
 					new Action(new Match(), Indentation),
@@ -6958,42 +5467,7 @@ namespace Meta
 															)))))))),
 			new Action(new Match(),new Optional(EndOfLine)),
 			new Action(new Match(),new Optional(Dedentation))
-					//new Action(new Match(), StringDedentation),
-					//new Action(new Match(), new Character(Syntax.@string))
 			));
-
-		//public static Rule String = new Alternatives(
-		//        new Sequence(
-		//            new Action(
-		//                new Match(), new Character(Syntax.@string)),
-		//            new Action(
-		//                new ReferenceAssignment(),
-		//                new OneOrMore(
-		//                    new Action(
-		//                        new Autokey(),
-		//                        new CharacterExcept(
-		//                            Syntax.unixNewLine,
-		//                            Syntax.windowsNewLine[0],
-		//                            Syntax.@string)))),
-		//            new Action(new Match(), new Character(Syntax.@string))),
-		//        new Sequence(
-		//            new Action(new Match(), new Character(Syntax.@string)),
-		//            new Action(new Match(), Indentation),
-		//            new Action(new ReferenceAssignment(), new Sequence(
-		//                        new Action(new Append(), StringLine),
-		//                        new Action(new Append(),
-		//                                new ZeroOrMore(
-		//                                    new Action(new Append(),
-		//                                        new Sequence(
-		//                                            new Action(new Match(), EndOfLine),
-		//                                            new Action(new Match(), SameIndentation),
-		//                                            new Action(new ReferenceAssignment(),
-		//                                                new Sequence(
-		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
-		//                                                    new Action(new Append(), StringLine)
-		//                                                    )))))))),
-		//            new Action(new Match(), StringDedentation),
-		//            new Action(new Match(), new Character(Syntax.@string))));
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -7067,49 +5541,6 @@ namespace Meta
 			}
 			return map;
 		});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    Indentation.Match(parser, out matched);
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        map = Entry.Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                if (parser.Rest == "")
-		//                {
-		//                    break;
-		//                }
-		//                new Alternatives(
-		//                    SameIndentation,
-		//                    Dedentation).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    map = Library.Merge(map, Entry.Match(parser, out matched));
-		//                    //map = Library.Merge(map)(Entry.Match(parser, out matched));
-
-		//                    //map = Library.Merge(new StrategyMap(
-		//                    //    1, map,
-		//                    //    2, Entry.Match(parser, out matched)));
-		//                }
-		//                else
-		//                {
-		//                    matched = true;
-		//                    break;
-		//                }
-		//                if (parser.Rest == "")
-		//                {
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
@@ -7121,15 +5552,6 @@ namespace Meta
 			Number,
 			CharacterDataExpression
 			);
-
-		//private static Rule LookupAnything =
-		//    new Sequence(
-		//        new Action(new Match(), new Character('<')),
-		//        //new Action(new Match(), new Character((Syntax.lookupStart))),
-		//        new Action(new ReferenceAssignment(), Value),
-		//        new Action(new Match(), new ZeroOrMore(
-		//            new Action(new Match(), new Character(Syntax.indentation)))),
-		//        new Action(new Match(), new Character(Syntax.lookupEnd)));
 		private static Rule LookupAnything =
 			new Sequence(
 				new Action(new Match(), new Character((Syntax.lookupStart))),
@@ -7145,132 +5567,12 @@ namespace Meta
 			new Action(new Assignment(
 				CodeKeys.Parameter),
 			Value),
-				//new ZeroOrMore(
-				//new Action(new Autokey(),
-					//new CharacterExcept(
-					//    Syntax.@string,
-					//    Syntax.function,
-					//    Syntax.windowsNewLine[0],
-					//    Syntax.unixNewLine)))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), SameIndentation),
 				new Action(new Assignment(CodeKeys.Expression),
 				ExpressionData),
 			new Action(new Match(), new Optional(EndOfLine))//,
 			);
-		//public static Rule Function = new Sequence(
-		//    new Action(new Match(), new Character(Syntax.function)),
-		//    new Action(new Match(), Indentation),
-		//    new Action(new Assignment(
-		//        CodeKeys.Parameter),
-		//        new ZeroOrMore(
-		//        new Action(new Autokey(),
-		//            new CharacterExcept(
-		//                Syntax.@string,
-		//                Syntax.function,
-		//                Syntax.windowsNewLine[0],
-		//                Syntax.unixNewLine)))),
-		//    new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), SameIndentation),
-		//        new Action(new Assignment(CodeKeys.Expression),
-		//        ExpressionData),
-		//    new Action(new Match(), new Optional(EndOfLine))//,
-		//    );
-
-		//public static Rule Function = new Sequence(
-		//    new Action(new Match(), new Character(Syntax.function)),
-		//    new Action(new Match(), Indentation),
-		//    new Action(new Assignment(
-		//        CodeKeys.Parameter),
-		//        new ZeroOrMore(
-		//        new Action(new Autokey(),
-		//            new CharacterExcept(
-		//                Syntax.@string,
-		//                Syntax.function,
-		//                Syntax.windowsNewLine[0],
-		//                Syntax.unixNewLine)))),
-		//    new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), SameIndentation),
-		//        new Action(new Assignment(CodeKeys.Expression),
-		//        ExpressionData),
-		//    new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), new Optional(Dedentation)
-		//    ));
-
-
-
-
-
-
-
-
-
-
-
-		//public static Rule Function = new Sequence(
-		//    new Action(new Match(), new Character(Syntax.function)),
-		//    //new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), Indentation),
-		//    new Action(new Assignment(
-		//        CodeKeys.Parameter),
-		//        new ZeroOrMore(
-		//        new Action(new Autokey(),
-		//            new CharacterExcept(
-		//                Syntax.@string,
-		//                Syntax.function,
-		//                Syntax.windowsNewLine[0],
-		//                Syntax.unixNewLine)))),
-		//    new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), SameIndentation),
-		//    //new Action(
-		//    //new Match(),
-		//    //    new Character(Syntax.function)),
-		//        new Action(new Assignment(CodeKeys.Expression),
-		//        ExpressionData),
-		//    new Action(new Match(), new Optional(new Sequence(
-		//        new Action(new Match(),EndOfLine),
-		//        new Action(new Match(),Dedentation)))));
-
-			//new Action(new Match(), new Optional(EndOfLine)),
-			//new Action(new Match(), new Optional(Dedentation)));
-
-		//public static Rule Function = new Sequence(
-		//    new Action(new Match(),new Character(Syntax.function)),
-		//    new Action(new Match(),new Optional(EndOfLine)),
-		//    new Action(new Match(),Indentation),
-		//    new Action(new Assignment(
-		//        CodeKeys.Parameter),
-		//        new ZeroOrMore(
-		//        new Action(new Autokey(),
-		//            new CharacterExcept(
-		//                Syntax.@string,
-		//                Syntax.function,
-		//                Syntax.unixNewLine)))),
-		//    new Action(new Match(),new Optional(EndOfLine)),
-		//    new Action(new Match(),SameIndentation),
-		//    //new Action(
-		//        //new Match(),
-		//        //    new Character(Syntax.function)),
-		//        new Action(new Assignment(CodeKeys.Expression),
-		//        ExpressionData),
-		//    new Action(new Match(),new Optional(Dedentation)));
-
-		//public static Rule Function = new Sequence(
-		//    new Action(new Assignment(
-		//        CodeKeys.Parameter),
-		//        new ZeroOrMore(
-		//        new Action(new Autokey(),
-		//            new CharacterExcept(
-		//                Syntax.@string,
-		//                Syntax.function,
-		//                Syntax.unixNewLine)))),
-		//    new Action(
-		//        new Match(),
-		//            new Character(
-		//                Syntax.function)),
-		//        new Action(new Assignment(CodeKeys.Expression),
-		//        ExpressionData));
-
 		public static Rule Entry = new Alternatives(
 	new Sequence(new Action(new Assignment(CodeKeys.Function),
 		new Sequence(new Action(new ReferenceAssignment(), Function),
@@ -7308,85 +5610,6 @@ namespace Meta
 		}
 		return result;
 	}));
-
-		//public static Rule Entry = new Alternatives(
-		//    new Sequence(new Action(new Assignment(CodeKeys.Function), 
-		//        new Sequence(new Action(new ReferenceAssignment(),Function),
-		//    new Action(new Match(),new Optional(Dedentation))))),
-		//    new CustomRule(delegate(Parser parser, out bool matched)
-		//    {
-		//        //EndOfLine.Match(parser, out matched);
-		//        if (parser.file.Contains("string.meta"))
-		//        {
-		//        }
-		//        Map result = new StrategyMap();
-		//        new Sequence(
-		//            new Action(new Match(),new Character('=')),
-		//            new Action(new Match(),Indentation)).Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-		//            if (matched)
-		//            {
-		//                new Sequence(
-		//                        new Action(new Match(), new Optional(EndOfLine)),
-		//                        new Action(new Match(), SameIndentation)).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    //StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-		//                    Map value = Value.Match(parser, out matched);
-		//                    result[key] = value;
-
-		//                    // i dont understand this
-		//                    new Sequence(
-		//                        new Action(new Match(), new Optional(EndOfLine)),
-		//                        new Action(new Match(), new Optional(Dedentation)
-		//                        )).Match(parser, out matched);
-		//                    //bool match;
-		//                    //EndOfLine.Match(parser, out match);
-		//                }
-		//            }
-		//        }
-		//        return result;
-		//    }));
-
-		//public static Rule Entry = new Alternatives(
-		//    new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
-		//    new CustomRule(delegate(Parser parser, out bool matched)
-		//    {
-		//        //EndOfLine.Match(parser, out matched);
-		//        Map result = new StrategyMap();
-		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-		//            Map value = Value.Match(parser, out matched);
-		//            result[key] = value;
-
-		//            // i dont understand this
-		//            bool match;
-		//            EndOfLine.Match(parser, out match);
-		//        }
-		//        return result;
-		//    }));
-		//public static Rule Entry = new Alternatives(
-		//    new Sequence(new Action(new Assignment(CodeKeys.Function), Function)),
-		//    new CustomRule(delegate(Parser parser, out bool matched)
-		//    {
-		//        Map result = new StrategyMap();
-		//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-		//            Map value = Value.Match(parser, out matched);
-		//            result[key] = value;
-
-		//            // i dont understand this
-		//            bool match;
-		//            EndOfLine.Match(parser, out match);
-		//        }
-		//        return result;
-		//    }));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),
@@ -7426,9 +5649,6 @@ namespace Meta
 							new Action(new Match(),new Optional(EndOfLine)),
 							new Action(new Match(),new Optional(Dedentation))
 							)));
-
-			//)));
-			//new Action(new Match(), new Character(Syntax.explicitCall)))));
 		});
 
 
@@ -7464,11 +5684,7 @@ namespace Meta
 		private static Rule LookupAnythingExpression =
 			new Sequence(
 				new Action(new Match(), new Character('<')),
-				//new Action(new Match(), new Character((Syntax.lookupStart))),
 				new Action(new ReferenceAssignment(), Expression)
-				//new Action(new Match(), new ZeroOrMore(
-				//    new Action(new Match(), new Character(Syntax.indentation)))),
-				//new Action(new Match(), new Character(Syntax.lookupEnd))
 			);
 
 		private static Rule LookupStringExpression =
@@ -7507,9 +5723,6 @@ namespace Meta
 			new Action(new Match(), new Character('!')),
 			new Action(new Assignment(
 				CodeKeys.Search),Expression));
-				//new Alternatives(
-				//    Expression,
-				//    LookupAnythingExpression)));
 
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
@@ -7529,11 +5742,6 @@ namespace Meta
 							new Action(new Match(), SameIndentation),
 							new Action(new Assignment(
 						CodeKeys.Lookup),Expression))))),
-
-			//                new Action(new ReferenceAssignment(), new Sequence(
-			////new Action(new Match(), new Character(Syntax.select)),
-			//                    new Action(new ReferenceAssignment(),
-			//                        Lookup))))))),
 					new Action(new Match(), new Optional(Dedentation)))));
 
 
@@ -7573,18 +5781,10 @@ namespace Meta
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				1),
-			//Expression),
 				new Alternatives(
 					KeysSearch,
 					Lookup,
 					AutokeyLookup)),
-			//new Action(new Append(),
-			//    new ZeroOrMore(
-			//        new Action(new Autokey(),
-			//            new Sequence(
-			//                new Action(new Match(), new Character(Syntax.select)),
-			//                new Action(new ReferenceAssignment(),
-			//                    Lookup))))));
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),
@@ -7592,108 +5792,8 @@ namespace Meta
 				new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), new Optional(SameIndentation)),
 									new Action(new Assignment(CodeKeys.Lookup),
-									//new Action(new ReferenceAssignment(),
 								Expression))))),
-
-							//new Action(new ReferenceAssignment(),
-							//    Lookup))))),
 			new Action(new Match(), new Optional(Dedentation))));
-
-		//private static Rule Keys = new Alternatives(
-		//    new Sequence(new Action(
-		//        new Assignment(
-		//            1),
-		//            new Alternatives(
-		//                KeysSearch,
-		//                Lookup,
-		//                AutokeyLookup))),
-		//    new Sequence(
-		//    new Action(new Match(), new Character('$')),
-		//    new Action(new Match(), Indentation),
-		//    new Action(new Assignment(
-		//        1),
-		//        new Alternatives(
-		//            KeysSearch,
-		//            Lookup,
-		//            AutokeyLookup)),
-		//    //new Action(new Append(),
-		//    //    new ZeroOrMore(
-		//    //        new Action(new Autokey(),
-		//    //            new Sequence(
-		//    //                new Action(new Match(), new Character(Syntax.select)),
-		//    //                new Action(new ReferenceAssignment(),
-		//    //                    Lookup))))));
-		//    new Action(new Append(),
-		//        new ZeroOrMore(
-		//            new Action(new Autokey(),
-		//                new Sequence(
-		//        new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), new Optional(SameIndentation)),
-		//                    new Action(new ReferenceAssignment(),
-		//                        Lookup))))),
-		//    new Action(new Match(), new Optional(Dedentation))));
-
-
-		//private static Rule Select = new Sequence(
-		//    new Action(new Assignment(
-		//        CodeKeys.Select),
-		//        new Sequence(
-		//            new Action(new Match(), new Character('$')),
-		//            new Action(new Match(), Indentation),
-		//            new Action(new Assignment(1),
-		//                new Alternatives(
-		//                    LastArgument,
-		//                    Root,
-		//                    Search,
-		//                    Lookup)),
-		//            new Action(new Append(),
-		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), SameIndentation),
-		//                    new Action(new ReferenceAssignment(), new Sequence(
-		//    //new Action(new Match(), new Character(Syntax.select)),
-		//                        new Action(new ReferenceAssignment(),
-		//                            Lookup))))))),
-		//            new Action(new Match(), new Optional(Dedentation)))));
-		////new Action(new Match(),Dedentation))));
-
-		//private static Rule Keys = new Sequence(
-		//    new Action(new Assignment(
-		//        1),
-		//        new Alternatives(
-		//            KeysSearch,
-		//            Lookup,
-		//            AutokeyLookup)),
-		//    new Action(new Append(),
-		//        new ZeroOrMore(
-		//            new Action(new Autokey(),
-		//                new Sequence(
-		//                    new Action(new Match(), new Character(Syntax.select)),
-		//                    new Action(new ReferenceAssignment(),
-		//                        Lookup))))));
-
-		//private static Rule Select = new Sequence(
-		//    new Action(new Assignment(
-		//        CodeKeys.Select),
-		//        new Sequence(
-		//            new Action(new Match(), new Character('$')),
-		//            new Action(new Match(), Indentation),
-		//            new Action(new Assignment(1),
-		//                new Alternatives(
-		//                    LastArgument,
-		//                    Root,
-		//                    Search,
-		//                    Lookup)),
-		//            new Action(new Append(),
-		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), SameIndentation),
-		//                    new Action(new ReferenceAssignment(), new Sequence(
-		//    //new Action(new Match(), new Character(Syntax.select)),
-		//                        new Action(new ReferenceAssignment(),
-		//                            Lookup))))))),
-		//            new Action(new Match(), new Optional(Dedentation)))));
-		////new Action(new Match(),Dedentation))));
 
 		public static Rule Statement = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -7742,65 +5842,6 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
-
-		//public static Rule Program = new Sequence(
-		//    new Action(new Match(), new Character(',')),
-		//    new Action(
-		//        new Assignment(CodeKeys.Program),
-		//        new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-		//            new Sequence(
-		//                new Action(
-		//                    new Match(),
-		//                    Indentation),
-		//                new Action(
-		//                    new Assignment(1),
-		//                    Statement),
-		//                new Action(
-		//                    new Append(),
-		//                    new ZeroOrMore(
-		//                        new Action(new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Match(), new Alternatives(
-		//                                    SameIndentation,
-		//                                    Dedentation)),
-		//                                new Action(new ReferenceAssignment(), Statement)))))),
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            })));
-
-		//public static Rule Program = new Sequence(
-		//    new Action(
-		//        new Assignment(CodeKeys.Program),
-		//        new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-		//            new Sequence(
-		//                new Action(
-		//                    new Match(),
-		//                    Indentation),
-		//                new Action(
-		//                    new Assignment(1),
-		//                    Statement),
-		//                new Action(
-		//                    new Append(),
-		//                    new ZeroOrMore(
-		//                        new Action(new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Match(), new Alternatives(
-		//                                    SameIndentation,
-		//                                    Dedentation)),
-		//                                new Action(new ReferenceAssignment(), Statement)))))),
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            })));
 		public abstract class Production
 		{
 			public abstract void Execute(Parser parser, Map map, ref Map result);
@@ -7872,8 +5913,6 @@ namespace Meta
 			public override void Execute(Parser parser, Map map, ref Map result)
 			{
 				result = Library.Join(result, map);
-				//result = Library.Merge(result)(map);
-				//result = Library.Merge(new StrategyMap(1, result, 2, map));
 			}
 		}
 		public class Merge : Production
@@ -7881,8 +5920,6 @@ namespace Meta
 			public override void Execute(Parser parser, Map map, ref Map result)
 			{
 				result = Library.Merge(result, map);
-				//result = Library.Merge(result)(map);
-				//result = Library.Merge(new StrategyMap(1, result, 2, map));
 			}
 		}
 		public class CustomAction : Production
@@ -9340,616 +7377,6 @@ namespace Meta
 					return text;
 				}
 			}
-			//private static string DoSerialize(Map map,string indentation)
-			//{
-			//    if (map.Count == 0)
-			//    {
-			//        return indentation+"0";
-			//    }
-			//    else if(map.IsNumber)
-			//    {
-			//        return indentation+map.GetNumber().ToString();
-			//    }
-			//    else if (map.IsString)
-			//    {
-			//        string text = indentation+"\""+Environment.NewLine;
-			//        foreach (string line in map.GetString().Split(new string[] { "\r\n", "\n" },StringSplitOptions.None))
-			//        {
-			//            text += indentation + "\t" + line+Environment.NewLine;
-			//        }
-			//        return text.Trim('\n','\r');
-			//        //return indentation + "\"" + Environment.NewLine + map.GetString();
-			//    }
-			//    else
-			//    {
-			//        string text;
-			//        if (indentation == "")
-			//        {
-			//            text = "";
-			//        }
-			//        else
-			//        {
-			//            text = indentation + "," + Environment.NewLine;
-			//        }
-			//        foreach (KeyValuePair<Map, Map> entry in map)
-			//        {
-			//            text+=indentation+"\t"+":"+Environment.NewLine+
-			//                DoSerialize(entry.Key, indentation + "\t\t") + Environment.NewLine +
-			//                DoSerialize(entry.Value, indentation + "\t\t") + Environment.NewLine;
-			//        }
-			//        return text;
-			//    }
-			//}
-			//private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
-			//private static Rule IntegerValue = new CustomSerialize(
-			//    delegate(Map map)
-			//    {
-			//        return map.IsNumber;
-			//    },
-			//    delegate(Map map)
-			//    {
-			//        return map.GetNumber().ToString();
-			//    });
-
-			//public static Rule TypeMap = new CustomSerialize(
-			//    delegate(Map map) { return map is TypeMap; },
-			//    delegate(Map map) { return "TypeMap: " + ((TypeMap)map).Type.ToString(); });
-
-			//public static Rule ObjectMap = new CustomSerialize(
-			//    delegate(Map map) { return map is ObjectMap; },
-			//    delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
-
-			//public static Rule MapValue = new CustomRule(delegate(Map asdf, string indent, out bool ma)
-			//{
-			//    string t;
-			//    t = Syntax.unixNewLine.ToString();
-			//    if (indent == null)
-			//    {
-			//        indent = "";
-			//    }
-			//    else
-			//    {
-			//        indent += Syntax.indentation;
-			//    }
-			//    t += new Alternatives(
-			//        TypeMap,
-			//        ObjectMap,
-			//        new CustomRule(delegate(Map map, string indentation, out bool matched)
-			//        {
-			//            string text = "";
-			//            foreach (KeyValuePair<Map, Map> entry in map)
-			//            {
-			//                if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
-			//                {
-			//                    bool m;
-			//                    text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
-			//                    if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-			//                    {
-			//                        text += Syntax.unixNewLine;
-			//                    }
-			//                }
-			//                else
-			//                {
-			//                    text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.assignment + Value.Match((Map)entry.Value, (indentation), out matched);
-			//                    if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-			//                    {
-			//                        text += Syntax.unixNewLine;
-			//                    }
-			//                }
-			//            }
-			//            matched = true;
-			//            return text;
-			//        })).Match(asdf, indent, out ma);
-			//    ma = true;
-			//    return t;
-			//});
-
-
-			//private static Rule StringValue = new CustomSerialize(
-			//    delegate(Map map)
-			//    {
-			//        return map.IsString;
-			//    },
-			//    delegate(Map map)
-			//    {
-			//        string text = Syntax.@string.ToString();
-			//        string mapString = map.GetString();
-			//        if (mapString.IndexOf(Syntax.@string) == -1 && mapString.IndexOf(Syntax.unixNewLine) == -1)
-			//        {
-			//            text += mapString;
-			//        }
-			//        else
-			//        {
-			//            string[] lines = map.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-			//            for (int i = 0; i < lines.Length; i++)
-			//            {
-			//                text += Syntax.unixNewLine.ToString() + Syntax.indentation + lines[i];
-			//            }
-			//            text += Syntax.unixNewLine.ToString();
-			//        }
-			//        text += Syntax.@string;
-			//        return text;
-			//    });
-			//private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
-
-
-			//public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
-
-			//private static Rule StringKey = new Alternatives(
-			//    LiteralKey,
-			//    new Enclose(Syntax.lookupStart.ToString(), StringValue, Syntax.lookupEnd.ToString()));
-
-
-			//public static Rule Call = new Set(
-			//    new KeyRule(
-			//        CodeKeys.Call,
-			//        new Set(
-			//            new KeyRule(
-			//    // completely wrong
-			//                "callable",
-			//    //CodeKeys.Callable,
-			//                Expression),
-			//            new KeyRule(
-			//                "argument",
-			//    //CodeKeys.Argument,
-			//                new Alternatives(
-			//                    Program,
-			//                    new Enclose(
-			//                        " ",
-			//    //Syntax.call.ToString(),
-			//                        new Alternatives(
-			//                            EmptyMap,
-			//                            Expression),
-			//                        ""))))));
-
-			//public static string Statement(Map code, string indentation, ref int autoKeys)
-			//{
-			//    Map key = code[CodeKeys.Key];
-			//    string text;
-			//    if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
-			//    {
-			//        bool matched;
-			//        text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation, out matched);
-			//    }
-			//    else
-			//    {
-			//        Map autoKey;
-			//        text = indentation;
-			//        Map value = code[CodeKeys.Value];
-			//        if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
-			//        {
-			//            autoKeys++;
-			//            if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
-			//            {
-			//                text += Syntax.assignment;
-			//            }
-			//        }
-			//        else
-			//        {
-			//            bool m;
-			//            text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.assignment;
-			//        }
-			//        bool matched;
-			//        text += Expression.Match(value, indentation, out matched);
-			//    }
-			//    return text;
-			//}
-			//private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
-			//{
-			//    string text = Lookup.Match(code[1], indentation, out matched);
-			//    for (int i = 2; code.ContainsKey(i); i++)
-			//    {
-			//        text += Syntax.select + Lookup.Match(code[i], indentation, out matched);
-			//    }
-			//    matched = true;
-			//    return text;
-			//});
-			//public static Rule Keys = SelectImplementation;
-
-			//public static Rule Select = new Set(
-			//    new KeyRule(
-			//        CodeKeys.Select,
-			//        SelectImplementation));
-
-			//public static Rule LookupSearchImplementation = new Alternatives(
-			//    new KeyRule(
-			//        CodeKeys.Literal,
-			//        Key),
-			//    new Enclose(
-			//        Syntax.lookupStart.ToString(),
-			//        new Alternatives(
-			//            new Enclose(
-			//                "",
-			//                Program,
-			//                new IndentationProduction()),
-			//            Expression),
-			//        Syntax.lookupEnd.ToString()));
-
-			//public static Rule Current = new Equal(
-			//    new StrategyMap(
-			//        CodeKeys.Current,
-			//        Map.Empty),
-			//    Syntax.current.ToString());
-			////public static Rule Current = new Equal(
-			////    new StrategyMap(
-			////        CodeKeys.Current, 
-			////        Map.Empty),
-			////    Syntax.current.ToString());
-
-			//public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal, Value));
-
-			//public static Rule Lookup = new Alternatives(
-			//        new Alternatives(
-			//            new Set(
-			//                new KeyRule(
-			//                    CodeKeys.Search,
-			//                    LookupSearchImplementation)),
-			//            new Set(
-			//                new KeyRule(
-			//                    CodeKeys.Lookup,
-			//                    LookupSearchImplementation))),
-			//        new Alternatives(
-			//            Current,
-			//            new Set(new KeyRule(CodeKeys.Literal, Key)),
-			//            new Enclose(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
-
-
-			//public static Rule Key = new Alternatives(
-			//    StringKey,
-			//    new Enclose(
-			//        Syntax.lookupStart.ToString(),
-			//        new Alternatives(
-			//            EmptyMap,
-			//            IntegerValue,
-			//            TypeMap,
-			//            ObjectMap,
-			//            MapValue),
-			//    Syntax.lookupEnd.ToString()));
-
-			//public class OneOrMore : Rule
-			//{
-			//    private Rule rule;
-			//    public OneOrMore(Rule rule)
-			//    {
-			//        this.rule = rule;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        matched = false;
-			//        string text = "";
-			//        foreach (Map m in map.Array)
-			//        {
-			//            text += rule.Match(m, indentation, out matched);
-			//            if (!matched)
-			//            {
-			//                break;
-			//            }
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public class CharacterExcept : Rule
-			//{
-			//    private char[] chars;
-			//    public CharacterExcept(params char[] chars)
-			//    {
-			//        this.chars = chars;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        string text = null;
-			//        matched = false;
-			//        if (Transform.IsIntegerInRange(map, char.MinValue, char.MaxValue))
-			//        {
-			//            char c = Convert.ToChar((int)map.GetNumber().Numerator);
-			//            if (c.ToString().IndexOfAny(chars) == -1)
-			//            {
-			//                matched = true;
-			//                text = c.ToString();
-			//            }
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public delegate string CustomRuleDelegate(Map map, string indentation, out bool matched);
-			//public class CustomRule : Rule
-			//{
-			//    private CustomRuleDelegate customRule;
-			//    public CustomRule(CustomRuleDelegate customRule)
-			//    {
-			//        this.customRule = customRule;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        return customRule(map, indentation, out matched);
-			//    }
-			//}
-			//public delegate Rule DelayedRuleDelegate();
-
-			//public class DelayedRule : Rule
-			//{
-			//    private Rule rule;
-			//    private DelayedRuleDelegate delayedRule;
-			//    public DelayedRule(DelayedRuleDelegate delayedRule)
-			//    {
-			//        this.delayedRule = delayedRule;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        if (rule == null)
-			//        {
-			//            rule = delayedRule();
-			//        }
-			//        return rule.Match(map, indentation, out matched);
-			//    }
-			//}
-			//public static Rule Expression = new DelayedRule(delegate()
-			//{
-			//    return new Alternatives(Call, EmptyMap, Program, LiteralProduction, Select);
-			//});
-
-			//public class KeyRule : Rule
-			//{
-			//    public Map key;
-			//    Rule value;
-			//    public KeyRule(Map key, Rule value)
-			//    {
-			//        this.key = key;
-			//        this.value = value;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        string text;
-			//        if (map.ContainsKey(key))
-			//        {
-			//            text = value.Match(map[key], indentation, out matched);
-			//        }
-			//        else
-			//        {
-			//            text = null;
-			//            matched = false;
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public class Set : Rule
-			//{
-			//    private Rule[] rules;
-			//    public Set(params Rule[] rules)
-			//    {
-			//        this.rules = rules;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        string text = "";
-			//        int keyCount = 0;
-			//        matched = true;
-			//        foreach (Rule rule in rules)
-			//        {
-			//            text += rule.Match(map, indentation, out matched);
-			//            if (rule is KeyRule)
-			//            {
-			//                keyCount++;
-			//            }
-			//            if (!matched)
-			//            {
-			//                break;
-			//            }
-			//        }
-			//        matched = map.Count == keyCount && matched;
-			//        return text;
-			//    }
-			//}
-			//public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
-			//{
-			//    string text;
-			//    if (!code.ContainsKey(CodeKeys.Program))
-			//    {
-			//        matched = false;
-			//        text = null;
-			//    }
-			//    else
-			//    {
-			//        code = code[CodeKeys.Program];
-			//        text = Syntax.unixNewLine.ToString();
-			//        int autoKeys = 0;
-			//        foreach (Map statement in code.Array)
-			//        {
-			//            text += Statement(statement, indentation + Syntax.indentation, ref autoKeys);
-			//            if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-			//            {
-			//                text += Syntax.unixNewLine;
-			//            }
-			//        }
-			//        matched = true;
-			//    }
-			//    return text;
-			//});
-			//public abstract class Production
-			//{
-			//    public static implicit operator Production(string text)
-			//    {
-			//        return new StringProduction(text);
-			//    }
-			//    public abstract string Get(string indentation);
-			//}
-			//public class StringProduction : Production
-			//{
-			//    private string text;
-			//    public StringProduction(string text)
-			//    {
-			//        this.text = text;
-			//    }
-			//    public override string Get(string indentation)
-			//    {
-			//        return text;
-			//    }
-			//}
-			//public class IndentationProduction : Production
-			//{
-			//    public override string Get(string indentation)
-			//    {
-			//        return indentation;
-			//    }
-			//}
-
-			//public class Enclose : Rule
-			//{
-			//    private Production start;
-			//    private Rule rule;
-			//    private Production end;
-			//    public Enclose(Production start, Rule rule, Production end)
-			//    {
-			//        this.start = start;
-			//        this.rule = rule;
-			//        this.end = end;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        string text = rule.Match(map, indentation, out matched);
-			//        if (matched)
-			//        {
-			//            text = start.Get(indentation) + text + end.Get(indentation);
-			//        }
-			//        else
-			//        {
-			//            text = null;
-			//            matched = false;
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public class Equal : Rule
-			//{
-			//    private Map map;
-			//    private string literal;
-			//    public Equal(Map map, string literal)
-			//    {
-			//        this.map = map;
-			//        this.literal = literal;
-			//    }
-			//    public override string Match(Map m, string indentation, out bool matched)
-			//    {
-			//        string text;
-			//        if (m.Equals(map))
-			//        {
-			//            text = literal;
-			//            matched = true;
-			//        }
-			//        else
-			//        {
-			//            text = null;
-			//            matched = false;
-			//        }
-			//        return text;
-			//    }
-			//}
-
-			//public abstract class Rule
-			//{
-			//    public abstract string Match(Map map, string indentation, out bool matched);
-			//}
-			//public static string ValueFunction(Map val)
-			//{
-			//    bool matched;
-			//    return Value.Match(val, null, out matched);
-			//}
-			//public class Literal : Rule
-			//{
-			//    private Rule rule;
-			//    private string literal;
-			//    public Literal(char c, Rule rule)
-			//        : this(c.ToString(), rule)
-			//    {
-			//    }
-			//    public Literal(string literal, Rule rule)
-			//    {
-			//        this.literal = literal;
-			//        this.rule = rule;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        rule.Match(map, indentation, out matched);
-			//        string text;
-			//        if (matched)
-			//        {
-			//            text = literal;
-			//        }
-			//        else
-			//        {
-			//            text = null;
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public class Alternatives : Rule
-			//{
-			//    private Rule[] rules;
-			//    public Alternatives(params Rule[] rules)
-			//    {
-			//        this.rules = rules;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        string text = null;
-			//        matched = false;
-			//        foreach (Rule rule in rules)
-			//        {
-			//            text = rule.Match(map, indentation, out matched);
-			//            if (matched)
-			//            {
-			//                break;
-			//            }
-			//        }
-			//        return text;
-			//    }
-			//}
-			//public delegate bool Matches(Map map);
-			//public delegate string GetMatch(Map map);
-			//public class CustomSerialize : Rule
-			//{
-			//    private Matches matches;
-			//    private GetMatch getMatch;
-			//    public CustomSerialize(Matches matches, GetMatch getMatch)
-			//    {
-			//        this.matches = matches;
-			//        this.getMatch = getMatch;
-			//    }
-			//    private Rule rule;
-			//    public CustomSerialize(Matches matches, Rule rule)
-			//    {
-			//        this.matches = matches;
-			//        this.rule = rule;
-			//    }
-			//    public override string Match(Map map, string indentation, out bool matched)
-			//    {
-			//        matched = matches(map);
-			//        string text;
-			//        if (matched)
-			//        {
-			//            string unIndented;
-			//            if (getMatch != null)
-			//            {
-			//                unIndented = getMatch(map);
-			//            }
-			//            else
-			//            {
-			//                unIndented = rule.Match(map, indentation, out matched);
-			//            }
-			//            string[] lines = unIndented.Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-			//            text = lines[0];
-			//            for (int i = 1; i < lines.Length; i++)
-			//            {
-			//                text += Syntax.unixNewLine.ToString() + indentation + lines[i];
-			//            }
-			//        }
-			//        else
-			//        {
-			//            text = null;
-			//        }
-			//        return text;
-			//    }
-			//}
 			catch (Exception e)
 			{
 				int asdf = 0;
@@ -9958,580 +7385,6 @@ namespace Meta
 
 		}
 	}
-	// refactor
-	//public class Serialize
-	//{
-	//    private static Rule EmptyMap = new Literal(Syntax.emptyMap, new Set());
-	//    private static Rule IntegerValue = new CustomSerialize(
-	//        delegate(Map map)
-	//        {
-	//            return map.IsNumber;
-	//        },
-	//        delegate(Map map)
-	//        {
-	//            return map.GetNumber().ToString();
-	//        });
-
-	//    public static Rule TypeMap = new CustomSerialize(
-	//        delegate(Map map) {return map is TypeMap;},
-	//        delegate(Map map) {return "TypeMap: " + ((TypeMap)map).Type.ToString();});
-
-	//    public static Rule ObjectMap = new CustomSerialize(
-	//        delegate(Map map) { return map is ObjectMap; },
-	//        delegate(Map map) { return "ObjectMap: " + ((ObjectMap)map).Object.ToString(); });
-
-	//    public static Rule MapValue = new CustomRule(delegate(Map asdf, string indent, out bool ma)
-	//    {
-	//        string t;
-	//        t = Syntax.unixNewLine.ToString();
-	//        if (indent == null)
-	//        {
-	//            indent = "";
-	//        }
-	//        else
-	//        {
-	//            indent += Syntax.indentation;
-	//        }
-	//        t+=new Alternatives(
-	//            TypeMap,
-	//            ObjectMap,
-	//            new CustomRule(delegate(Map map, string indentation, out bool matched)
-	//            {
-	//                string text = "";
-	//                foreach (KeyValuePair<Map, Map> entry in map)
-	//                {
-	//                    if (entry.Key.Equals(CodeKeys.Function) && entry.Value.Count == 1 && (entry.Value.ContainsKey(CodeKeys.Call) || entry.Value.ContainsKey(CodeKeys.Literal) || entry.Value.ContainsKey(CodeKeys.Program) || entry.Value.ContainsKey(CodeKeys.Select)))
-	//                    {
-	//                        bool m;
-	//                        text += indentation + Syntax.function + Expression.Match(entry.Value, indentation, out m);
-	//                        if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-	//                        {
-	//                            text += Syntax.unixNewLine;
-	//                        }
-	//                    }
-	//                    else
-	//                    {
-	//                        text += indentation + Key.Match((Map)entry.Key, indentation, out matched) + Syntax.assignment + Value.Match((Map)entry.Value, (indentation), out matched);
-	//                        if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-	//                        {
-	//                            text += Syntax.unixNewLine;
-	//                        }
-	//                    }
-	//                }
-	//                matched = true;
-	//                return text;
-	//            })).Match(asdf, indent, out ma);
-	//        ma = true;
-	//        return t;
-	//    });
-
-
-	//    private static Rule StringValue = new CustomSerialize(
-	//        delegate(Map map)
-	//        {
-	//            return map.IsString;
-	//        },
-	//        delegate(Map map)
-	//        {
-	//            string text = Syntax.@string.ToString();
-	//            string mapString = map.GetString();
-	//            if (mapString.IndexOf(Syntax.@string) == -1 && mapString.IndexOf(Syntax.unixNewLine) == -1)
-	//            {
-	//                text += mapString;
-	//            }
-	//            else
-	//            {
-	//                string[] lines = map.GetString().Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-	//                for (int i = 0; i < lines.Length; i++)
-	//                {
-	//                    text += Syntax.unixNewLine.ToString() + Syntax.indentation + lines[i];
-	//                }
-	//                text += Syntax.unixNewLine.ToString();
-	//            }
-	//            text += Syntax.@string;
-	//            return text;
-	//        });
-	//    private static Rule Value = new Alternatives(EmptyMap, StringValue, IntegerValue, MapValue);
-
-
-	//    public static Rule LiteralKey = new OneOrMore(new CharacterExcept(Syntax.lookupStringForbidden));
-
-	//    private static Rule StringKey = new Alternatives(
-	//        LiteralKey,
-	//        new Enclose(Syntax.lookupStart.ToString(), StringValue, Syntax.lookupEnd.ToString()));
-
-		
-	//    public static Rule Call = new Set(
-	//        new KeyRule(
-	//            CodeKeys.Call,
-	//            new Set(
-	//                new KeyRule(
-	//        // completely wrong
-	//                    "callable",
-	//                    //CodeKeys.Callable,
-	//                    Expression),
-	//                new KeyRule(
-	//                    "argument",
-	//                    //CodeKeys.Argument,
-	//                    new Alternatives(
-	//                        Program,
-	//                        new Enclose(
-	//                            " ",
-	//                            //Syntax.call.ToString(),
-	//                            new Alternatives(
-	//                                EmptyMap,
-	//                                Expression),
-	//                            ""))))));
-
-	//    public static string Statement(Map code, string indentation, ref int autoKeys)
-	//    {
-	//        Map key = code[CodeKeys.Key];
-	//        string text;
-	//        if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && key[1][CodeKeys.Lookup][CodeKeys.Literal].Equals(CodeKeys.Function) && code[CodeKeys.Value].ContainsKey(CodeKeys.Literal))
-	//        {
-	//            bool matched;
-	//            text = indentation + Syntax.function + Expression.Match(code[CodeKeys.Value][CodeKeys.Literal], indentation,out matched);
-	//        }
-	//        else
-	//        {
-	//            Map autoKey;
-	//            text = indentation;
-	//            Map value = code[CodeKeys.Value];
-	//            if (key.Count == 1 && key[1].ContainsKey(CodeKeys.Lookup) && key[1][CodeKeys.Lookup].ContainsKey(CodeKeys.Literal) && (autoKey = key[1][CodeKeys.Lookup][CodeKeys.Literal]) != null && autoKey.IsNumber && autoKey.GetNumber() == autoKeys + 1)
-	//            {
-	//                autoKeys++;
-	//                if (value.ContainsKey(CodeKeys.Program) && value[CodeKeys.Program].Count != 0)
-	//                {
-	//                    text += Syntax.assignment;
-	//                }
-	//            }
-	//            else
-	//            {
-	//                bool m;
-	//                text += Keys.Match(code[CodeKeys.Key], indentation, out m) + Syntax.assignment;
-	//            }
-	//            bool matched;
-	//            text += Expression.Match(value, indentation,out matched);
-	//        }
-	//        return text;
-	//    }
-	//    private static Rule SelectImplementation = new CustomRule(delegate(Map code, string indentation, out bool matched)
-	//    {
-	//        string text = Lookup.Match(code[1], indentation,out matched);
-	//        for (int i = 2; code.ContainsKey(i); i++)
-	//        {
-	//            text += Syntax.select + Lookup.Match(code[i], indentation,out matched);
-	//        }
-	//        matched = true;
-	//        return text;
-	//    });
-	//    public static Rule Keys = SelectImplementation;
-
-	//    public static Rule Select = new Set(
-	//        new KeyRule(
-	//            CodeKeys.Select,
-	//            SelectImplementation));
-
-	//    public static Rule LookupSearchImplementation = new Alternatives(
-	//        new KeyRule(
-	//            CodeKeys.Literal,
-	//            Key),
-	//        new Enclose(
-	//            Syntax.lookupStart.ToString(),
-	//            new Alternatives(
-	//                new Enclose(
-	//                    "",
-	//                    Program,
-	//                    new IndentationProduction()),
-	//                Expression),
-	//            Syntax.lookupEnd.ToString()));
-
-	//    public static Rule Current = new Equal(
-	//        new StrategyMap(
-	//            CodeKeys.Current,
-	//            Map.Empty),
-	//        Syntax.current.ToString());
-	//    //public static Rule Current = new Equal(
-	//    //    new StrategyMap(
-	//    //        CodeKeys.Current, 
-	//    //        Map.Empty),
-	//    //    Syntax.current.ToString());
-
-	//    public static Rule LiteralProduction = new Set(new KeyRule(CodeKeys.Literal, Value));
-
-	//    public static Rule Lookup = new Alternatives(
-	//            new Alternatives(
-	//                new Set(
-	//                    new KeyRule(
-	//                        CodeKeys.Search,
-	//                        LookupSearchImplementation)),
-	//                new Set(
-	//                    new KeyRule(
-	//                        CodeKeys.Lookup,
-	//                        LookupSearchImplementation))),
-	//            new Alternatives(
-	//                Current,
-	//                new Set(new KeyRule(CodeKeys.Literal, Key)),
-	//                new Enclose(Syntax.lookupStart.ToString(), Expression, Syntax.lookupEnd.ToString())));
-
-
-	//    public static Rule Key = new Alternatives(
-	//        StringKey,
-	//        new Enclose(
-	//            Syntax.lookupStart.ToString(),
-	//            new Alternatives(
-	//                EmptyMap,
-	//                IntegerValue,
-	//                TypeMap,
-	//                ObjectMap,
-	//                MapValue),
-	//        Syntax.lookupEnd.ToString()));
-
-	//    public class OneOrMore:Rule
-	//    {
-	//        private Rule rule;
-	//        public OneOrMore(Rule rule)
-	//        {
-	//            this.rule = rule;
-	//        }
-	//        public override string Match(Map map,string indentation, out bool matched)
-	//        {
-	//            matched = false;
-	//            string text = "";
-	//            foreach (Map m in map.Array)
-	//            {
-	//                text += rule.Match(m,indentation, out matched);
-	//                if (!matched)
-	//                {
-	//                    break;
-	//                }
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class CharacterExcept : Rule
-	//    {
-	//        private char[] chars;
-	//        public CharacterExcept(params char[] chars)
-	//        {
-	//            this.chars = chars;
-	//        }
-	//        public override string Match(Map map,string indentation,out bool matched)
-	//        {
-	//            string text = null;
-	//            matched = false;
-	//            if (Transform.IsIntegerInRange(map, char.MinValue, char.MaxValue))
-	//            {
-	//                char c = Convert.ToChar((int)map.GetNumber().Numerator);
-	//                if (c.ToString().IndexOfAny(chars) == -1)
-	//                {
-	//                    matched = true;
-	//                    text = c.ToString();
-	//                }
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public delegate string CustomRuleDelegate(Map map,string indentation, out bool matched);
-	//    public class CustomRule : Rule
-	//    {
-	//        private CustomRuleDelegate customRule;
-	//        public CustomRule(CustomRuleDelegate customRule)
-	//        {
-	//            this.customRule = customRule;
-	//        }
-	//        public override string Match(Map map,string indentation, out bool matched)
-	//        {
-	//            return customRule(map,indentation, out matched);
-	//        }
-	//    }
-	//    public delegate Rule DelayedRuleDelegate();
-
-	//    public class DelayedRule : Rule
-	//    {
-	//        private Rule rule;
-	//        private DelayedRuleDelegate delayedRule;
-	//        public DelayedRule(DelayedRuleDelegate delayedRule)
-	//        {
-	//            this.delayedRule = delayedRule;
-	//        }
-	//        public override string Match(Map map, string indentation, out bool matched)
-	//        {
-	//            if (rule == null)
-	//            {
-	//                rule = delayedRule();
-	//            }
-	//            return rule.Match(map, indentation, out matched);				
-	//        }
-	//    }
-	//    public static Rule Expression = new DelayedRule(delegate()
-	//    {
-	//        return new Alternatives(Call,EmptyMap, Program, LiteralProduction,Select);
-	//    });
-
-	//    public class KeyRule : Rule
-	//    {
-	//        public Map key;
-	//        Rule value;
-	//        public KeyRule(Map key, Rule value)
-	//        {
-	//            this.key = key;
-	//            this.value = value;
-	//        }
-	//        public override string Match(Map map,string indentation, out bool matched)
-	//        {
-	//            string text;
-	//            if (map.ContainsKey(key))
-	//            {
-	//                text = value.Match(map[key],indentation, out matched);
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//                matched = false;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Set:Rule
-	//    {
-	//        private Rule[] rules;
-	//        public Set(params Rule[] rules)
-	//        {
-	//            this.rules = rules;
-	//        }
-	//        public override string Match(Map map,string indentation, out bool matched)
-	//        {
-	//            string text = "";
-	//            int keyCount = 0;
-	//            matched = true;
-	//            foreach (Rule rule in rules)
-	//            {
-	//                text += rule.Match(map,indentation, out matched);
-	//                if (rule is KeyRule)
-	//                {
-	//                    keyCount++;
-	//                }
-	//                if (!matched)
-	//                {
-	//                    break;
-	//                }
-	//            }
-	//            matched = map.Count == keyCount && matched;
-	//            return text;
-	//        }
-	//    }
-	//    public static Rule Program = new CustomRule(delegate(Map code, string indentation, out bool matched)
-	//    {
-	//        string text;			
-	//        if (!code.ContainsKey(CodeKeys.Program))
-	//        {
-	//            matched = false;
-	//            text = null;
-	//        }
-	//        else
-	//        {
-	//            code = code[CodeKeys.Program];
-	//            text = Syntax.unixNewLine.ToString();
-	//            int autoKeys = 0;
-	//            foreach (Map statement in code.Array)
-	//            {
-	//                text += Statement(statement, indentation + Syntax.indentation, ref autoKeys);
-	//                if (!text.EndsWith(Syntax.unixNewLine.ToString()))
-	//                {
-	//                    text += Syntax.unixNewLine;
-	//                }
-	//            }
-	//            matched = true;
-	//        }
-	//        return text;
-	//    });
-	//    public abstract class Production
-	//    {
-	//        public static implicit operator Production(string text)
-	//        {
-	//            return new StringProduction(text);
-	//        }
-	//        public abstract string Get(string indentation);
-	//    }
-	//    public class StringProduction : Production
-	//    {
-	//        private string text;
-	//        public StringProduction(string text)
-	//        {
-	//            this.text = text;
-	//        }
-	//        public override string Get(string indentation)
-	//        {
-	//            return text;
-	//        }
-	//    }
-	//    public class IndentationProduction:Production
-	//    {
-	//        public override string  Get(string indentation)
-	//        {
-	//            return indentation;
-	//        }
-	//    }
-
-	//    public class Enclose : Rule
-	//    {
-	//        private Production start;
-	//        private Rule rule;
-	//        private Production end;
-	//        public Enclose(Production start, Rule rule, Production end)
-	//        {
-	//            this.start = start;
-	//            this.rule = rule;
-	//            this.end = end;
-	//        }
-	//        public override string Match(Map map, string indentation, out bool matched)
-	//        {
-	//            string text = rule.Match(map, indentation, out matched);
-	//            if (matched)
-	//            {
-	//                text = start.Get(indentation) + text + end.Get(indentation);
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//                matched = false;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Equal : Rule
-	//    {
-	//        private Map map;
-	//        private string literal;
-	//        public Equal(Map map, string literal)
-	//        {
-	//            this.map = map;
-	//            this.literal = literal;
-	//        }
-	//        public override string Match(Map m,string indentation, out bool matched)
-	//        {
-	//            string text;
-	//            if (m.Equals(map))
-	//            {
-	//                text = literal;
-	//                matched = true;
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//                matched = false;
-	//            }
-	//            return text;
-	//        }
-	//    }
-
-	//    public abstract class Rule
-	//    {
-	//        public abstract string Match(Map map, string indentation, out bool matched);
-	//    }
-	//    public static string ValueFunction(Map val)
-	//    {
-	//        bool matched;
-	//        return Value.Match(val, null, out matched);
-	//    }
-	//    public class Literal : Rule
-	//    {
-	//        private Rule rule;
-	//        private string literal;
-	//        public Literal(char c, Rule rule)
-	//            : this(c.ToString(), rule)
-	//        {
-	//        }
-	//        public Literal(string literal, Rule rule)
-	//        {
-	//            this.literal = literal;
-	//            this.rule = rule;
-	//        }
-	//        public override string Match(Map map, string indentation, out bool matched)
-	//        {
-	//            rule.Match(map, indentation, out matched);
-	//            string text;
-	//            if (matched)
-	//            {
-	//                text = literal;
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public class Alternatives : Rule
-	//    {
-	//        private Rule[] rules;
-	//        public Alternatives(params Rule[] rules)
-	//        {
-	//            this.rules = rules;
-	//        }
-	//        public override string Match(Map map, string indentation, out bool matched)
-	//        {
-	//            string text = null;
-	//            matched = false;
-	//            foreach (Rule rule in rules)
-	//            {
-	//                text = rule.Match(map, indentation, out matched);
-	//                if (matched)
-	//                {
-	//                    break;
-	//                }
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//    public delegate bool Matches(Map map);
-	//    public delegate string GetMatch(Map map);
-	//    public class CustomSerialize : Rule
-	//    {
-	//        private Matches matches;
-	//        private GetMatch getMatch;
-	//        public CustomSerialize(Matches matches, GetMatch getMatch)
-	//        {
-	//            this.matches = matches;
-	//            this.getMatch = getMatch;
-	//        }
-	//        private Rule rule;
-	//        public CustomSerialize(Matches matches, Rule rule)
-	//        {
-	//            this.matches = matches;
-	//            this.rule = rule;
-	//        }
-	//        public override string Match(Map map, string indentation, out bool matched)
-	//        {
-	//            matched = matches(map);
-	//            string text;
-	//            if (matched)
-	//            {
-	//                string unIndented;
-	//                if (getMatch != null)
-	//                {
-	//                    unIndented = getMatch(map);
-	//                }
-	//                else
-	//                {
-	//                    unIndented = rule.Match(map, indentation, out matched);
-	//                }
-	//                string[] lines = unIndented.Split(new string[] { Syntax.unixNewLine.ToString(), Syntax.windowsNewLine }, StringSplitOptions.None);
-	//                text = lines[0];
-	//                for (int i = 1; i < lines.Length; i++)
-	//                {
-	//                    text += Syntax.unixNewLine.ToString() + indentation + lines[i];
-	//                }
-	//            }
-	//            else
-	//            {
-	//                text = null;
-	//            }
-	//            return text;
-	//        }
-	//    }
-	//}
 	namespace Test
 	{
 		public class MetaTest : TestRunner
