@@ -7490,7 +7490,6 @@ namespace Meta
 			new Action(new Match(), new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
 
-
 		private static Rule Lookup =
 			new Alternatives(
 				Current,
@@ -7500,6 +7499,16 @@ namespace Meta
 						new Alternatives(
 							LookupStringExpression,
 							LookupAnythingExpression))));
+
+		//private static Rule Lookup =
+		//    new Alternatives(
+		//        Current,
+		//        new Sequence(
+		//            new Action(new Assignment(
+		//                CodeKeys.Lookup),
+		//                new Alternatives(
+		//                    LookupStringExpression,
+		//                    LookupAnythingExpression))));
 
 
 		private static Rule Search = new Sequence(
@@ -9915,7 +9924,14 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -9932,14 +9948,7 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)
