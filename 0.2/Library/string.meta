@@ -1,4 +1,4 @@
-replace:,
+"replace":,
 	arg|*
 		$
 			/
@@ -10,7 +10,7 @@ replace:,
 				"Meta"
 				"Map"
 		@
-trim:,
+"trim":,
 	arg|,
 		object=*
 			$
@@ -27,7 +27,7 @@ trim:,
 				"Trim"
 				0
 			0
-lower:,
+"lower":,
 	arg|,
 		object=*
 			$
@@ -44,7 +44,7 @@ lower:,
 				object
 				"ToLower"
 			0
-upper:,
+"upper":,
 	arg|,
 		object=*
 			$
@@ -61,7 +61,7 @@ upper:,
 				!"object"
 				"ToUpper"
 			0
-split:,
+"split":,
 	arg|*
 		$
 			/
@@ -77,7 +77,7 @@ split:,
 				"Meta"
 				"Map"
 		@
-compare:,
+"compare":,
 	arg|*
 		$
 			/

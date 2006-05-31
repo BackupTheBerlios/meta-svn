@@ -5632,7 +5632,8 @@ namespace Meta
 		new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			Map result = new StrategyMap();
-			Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+			Map key = Value.Match(parser, out matched);
+			//Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
 			//new Sequence(
 			//    new Action(new Match(), new Character(':')),
 			//    new Action(new Match(), Indentation)).Match(parser, out matched);
@@ -5943,8 +5944,7 @@ namespace Meta
 				new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(),SameIndentation),
 			//new Optional(SameIndentation)),
-			new Action(new Assignment(CodeKeys.Lookup),
-								Expression))))),
+			new Action(new Assignment(CodeKeys.Lookup),Expression))))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), new Optional(Dedentation)),
 			new Action(new Match(), new Optional(SameIndentation))));
@@ -6015,7 +6015,6 @@ namespace Meta
 		//                    Expression)))),
 		//    new Action(new Match(), new Optional(EndOfLine)),
 		//    new Action(new Match(), new Optional(Dedentation)));
-
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
 			new Action(
@@ -6045,6 +6044,36 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
+
+		//public static Rule Program = new Sequence(
+		//    new Action(new Match(), new Character(',')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//                new Action(
+		//                    new Match(),
+		//                    Indentation),
+		//                new Action(
+		//                    new Assignment(1),
+		//                    Statement),
+		//                new Action(
+		//                    new Append(),
+		//                    new ZeroOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Match(), new Alternatives(
+		//                                    SameIndentation,
+		//                                    Dedentation)),
+		//                                new Action(new ReferenceAssignment(), Statement)))))),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })));
 		public abstract class Production
 		{
 			public abstract void Execute(Parser parser, Map map, ref Map result);
@@ -7542,21 +7571,37 @@ namespace Meta
 					}
 					else
 					{
-						return GetIndentation(indentation) + "0";
+						return "0";
 					}
 				}
 				else if (map.IsNumber)
 				{
-					return GetIndentation(indentation) + map.GetNumber().ToString();
+					return map.GetNumber().ToString();
 				}
 				else if (map.IsString)
 				{
-					string text = GetIndentation(indentation) + "\"" + Environment.NewLine;
-					foreach (string line in map.GetString().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
+
+					string text=map.GetString();
+					if (text.Contains("\"") || text.Contains("\n"))
 					{
-						text += GetIndentation(indentation) + "\t" + line + Environment.NewLine;
+						string result = "\"" + Environment.NewLine;
+						foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
+						{
+							result += GetIndentation(indentation+1) + "\t" + line + Environment.NewLine;
+						}
+						return result.Trim('\n', '\r') + Environment.NewLine + GetIndentation(indentation) + "\"";
 					}
-					return text.Trim('\n', '\r');
+					else
+					{
+						return "\"" + text + "\"";
+					}
+
+					//string text = GetIndentation(indentation) + "\"" + Environment.NewLine;
+					//foreach (string line in map.GetString().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
+					//{
+					//    text += GetIndentation(indentation) + "\t" + line + Environment.NewLine;
+					//}
+					//return text.Trim('\n', '\r');
 					//return indentation + "\"" + Environment.NewLine + map.GetString();
 				}
 				else
@@ -7568,13 +7613,19 @@ namespace Meta
 					}
 					else
 					{
-						text = GetIndentation(indentation) + "," + Environment.NewLine;
+						text = "," + Environment.NewLine;
 					}
 					foreach (KeyValuePair<Map, Map> entry in map)
 					{
-						text += GetIndentation(indentation + 1) + ":" + Environment.NewLine +
-							DoSerialize(entry.Key, indentation + 2) + Environment.NewLine +
-							DoSerialize(entry.Value, indentation + 2) + Environment.NewLine;
+						text += 
+							GetIndentation(indentation+1)+ 
+							DoSerialize(entry.Key, indentation + 1)+
+							":" +
+							DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
+
+						//text += GetIndentation(indentation + 1) + ":" + Environment.NewLine +
+						//    DoSerialize(entry.Key, indentation + 2) + Environment.NewLine +
+						//    DoSerialize(entry.Value, indentation + 2) + Environment.NewLine;
 					}
 					return text;
 				}
@@ -7653,14 +7704,7 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -7677,7 +7721,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)

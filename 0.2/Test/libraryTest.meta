@@ -437,11 +437,11 @@ arg|,
 		parseTest=*
 			!"parse"
 			"
-				asdf:"hello"
-				x:,
-					y:"hello"
-					z:, 
-						a:"x"
+				"asdf":"hello"
+				"x":,
+					"y":"hello"
+					"z":, 
+						"a":"x"
 					arg|*
 						!"join"
 						"hello "
