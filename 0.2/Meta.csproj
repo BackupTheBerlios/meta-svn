@@ -173,7 +173,6 @@
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
     <None Include="Test\basicTest.meta" />
-    <None Include="Test\Copy %283%29 of basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

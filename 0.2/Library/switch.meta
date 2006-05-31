@@ -9,14 +9,12 @@ switchArg|*
 			@
 			"control"
 	,
-		=
-			then
-			,
-				arg|*
+		then=,
+			arg|*
+				$
+					!"switchArg"
+					"cases"
 					$
 						!"switchArg"
-						"cases"
-						$
-							!"switchArg"
-							"control"
-					0
+						"control"
+				0

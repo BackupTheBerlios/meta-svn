@@ -1,18 +1,14 @@
 arg|,
-	=
-		object
-		*
+	object=*
+		$
+			/
+			"Meta"
+			"ObjectMap"
 			$
 				/
-				"Meta"
-				"ObjectMap"
-				$
-					/
-					"mscorlib"
-					"Object"
-			@
-	=
-		&
-		$
-			object
-			"ArrayCount"
+				"mscorlib"
+				"Object"
+		@
+	&=$
+		object
+		"ArrayCount"

@@ -1,20 +1,16 @@
 arg|,
-	=
-		map
-		*
+	map=*
+		$
+			/
+			"Meta"
+			"Number"
 			$
 				/
 				"Meta"
-				"Number"
-				$
-					/
-					"Meta"
-					"Map"
-			@
-	=
-		&
-		*
-			$
-				map
-				"ToString"
-			0
+				"Map"
+		@
+	&=*
+		$
+			map
+			"ToString"
+		0

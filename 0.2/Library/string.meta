@@ -12,67 +12,55 @@ replace:,
 		@
 trim:,
 	arg|,
-		=
-			object
-			*
+		object=*
+			$
+				/
+				"Meta"
+				"ObjectMap"
 				$
-					/
-					"Meta"
-					"ObjectMap"
-					$
-						!"mscorlib"
-						"String"
-				@
-		=
-			&
-			*
-				$
-					!"object"
-					"Trim"
-					0
+					!"mscorlib"
+					"String"
+			@
+		&=*
+			$
+				!"object"
+				"Trim"
 				0
+			0
 lower:,
 	arg|,
-		=
-			object
-			*
+		object=*
+			$
+				/
+				"Meta"
+				"ObjectMap"
 				$
 					/
-					"Meta"
-					"ObjectMap"
-					$
-						/
-						"mscorlib"
-						"String"
-				@
-		=
-			&
-			*
-				$
-					object
-					"ToLower"
-				0
+					"mscorlib"
+					"String"
+			@
+		&=*
+			$
+				object
+				"ToLower"
+			0
 upper:,
 	arg|,
-		=
-			object
-			*
+		object=*
+			$
+				/
+				"Meta"
+				"ObjectMap"
 				$
 					/
-					"Meta"
-					"ObjectMap"
-					$
-						/
-						"mscorlib"
-						"String"
-				@
-		=
-			&
-			*
-				$
-					!"object"
-					"ToUpper"
-				0
+					"mscorlib"
+					"String"
+			@
+		&=*
+			$
+				!"object"
+				"ToUpper"
+			0
 split:,
 	arg|*
 		$

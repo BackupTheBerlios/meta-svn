@@ -4903,7 +4903,7 @@ namespace Meta
 		public const char current = '&';
 		//public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':','='};
 	}
 
 
@@ -5899,6 +5899,26 @@ namespace Meta
 			}
 		});
 
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Match(), new Character('$')),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new Assignment(1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+		//                    new Action(new Match(), new Optional(EndOfLine)),
+		//                    new Action(new Match(), SameIndentation),
+		//                    new Action(new Assignment(
+		//                CodeKeys.Lookup), Expression))))),
+		//            new Action(new Match(), new Optional(Dedentation)))));
+
 		private static Rule Keys = new Alternatives(
 			new Sequence(new Action(
 				new Assignment(
@@ -5921,27 +5941,61 @@ namespace Meta
 					new Action(new Autokey(),
 						new Sequence(
 				new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(SameIndentation)),
-									new Action(new Assignment(CodeKeys.Lookup),
+			new Action(new Match(),SameIndentation),
+			//new Optional(SameIndentation)),
+			new Action(new Assignment(CodeKeys.Lookup),
 								Expression))))),
-			new Action(new Match(), new Optional(Dedentation))));
+			new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), new Optional(Dedentation)),
+			new Action(new Match(), new Optional(SameIndentation))));
+
+
 		public static Rule Statement = new Sequence(
 			new Action(new ReferenceAssignment(),
 				new Alternatives(
 					FunctionExpression,
 					new Sequence(
-						new Action(new Match(), new Character('=')),
-						new Action(new Match(), Indentation),
 						new Action(new Assignment(
 							CodeKeys.Key),
 							Keys),
-						new Action(new Match(), new Optional(EndOfLine)),
-						new Action(new Match(), SameIndentation),
+						new Action(new Match(), new Character('=')),
 						new Action(new Assignment(
 							CodeKeys.Value),
 							Expression),
-						new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(Dedentation))))));
+						new Action(new Match(), new Optional(EndOfLine)))
+			//        new Sequence(
+			//            new Action(new Match(), new Character('=')),
+			//            new Action(new Match(), Indentation),
+			//            new Action(new Assignment(
+			//                CodeKeys.Key),
+			//                Keys),
+			//            new Action(new Match(), new Optional(EndOfLine)),
+			//            new Action(new Match(), SameIndentation),
+			//            new Action(new Assignment(
+			//                CodeKeys.Value),
+			//                Expression),
+			//            new Action(new Match(), new Optional(EndOfLine)),
+			//new Action(new Match(), new Optional(Dedentation)))
+			
+			)));
+
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Match(), new Character('=')),
+		//                new Action(new Match(), Indentation),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Key),
+		//                    Keys),
+		//                new Action(new Match(), new Optional(EndOfLine)),
+		//                new Action(new Match(), SameIndentation),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Value),
+		//                    Expression),
+		//                new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation))))));
 			//new Action(new Match(), new Optional(EndOfLine)),
 			//new Action(new Match(), new Optional(Dedentation)));
 		//public static Rule Statement = new Sequence(
@@ -6092,7 +6146,7 @@ namespace Meta
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
-				if (parser.Rest.StartsWith("Meta files *.meta|*.meta"))
+				if (parser.Rest.IndexOf("=0")<10)
 				{
 				}
 				Map result = MatchImplementation(parser, out matched);
