@@ -50,13 +50,11 @@
 								AssignedToCurrent
 				0
 		=
-			<"
-				asdf
+			asdf
 			"
 				hello
 		=
-			<"
-				shortFunction
+			shortFunction
 			,
 				|
 					"
@@ -64,20 +62,17 @@
 					!"
 						asdf
 		=
-			<"
-				shortFunctionTest
+			shortFunctionTest
 			*
 				!"
 					shortFunction
 				"
 					hello
 		=
-			<"
-				counter
+			counter
 			0
 		=
-			<"
-				SetCounter
+			SetCounter
 			,
 				|
 					"
@@ -94,16 +89,13 @@
 					SetCounter
 				5
 		=
-			<"
-				scoping
+			scoping
 			,
 				=
-					<"
-						test
+					test
 					,
 						=
-							<"
-								scopingValue
+							scopingValue
 							"
 								right
 						|
@@ -112,21 +104,18 @@
 							!"
 								scopingValue
 		=
-			<"
-				scopingValue
+			scopingValue
 			"
 				wrong
 		=
-			<"
-				scopingTest
+			scopingTest
 			$
 				!"
 					scoping
 				"
 					test
 		=
-			<"
-				lexicalScoping
+			lexicalScoping
 			*
 				!"
 					scopingTest
@@ -139,13 +128,11 @@
 					hello
 			,
 				=
-					<"
-						x
+					x
 					"
 						someTest
 		=
-			<"
-				cTest
+			cTest
 			$
 				!"
 					C:
@@ -159,16 +146,14 @@
 					hello
 			0
 		=
-			<"
-				cTest2
+			cTest2
 			$
 				!"
 					C:
 				"
 					hello
 		=
-			<"
-				unicodeText
+			unicodeText
 			"
 				äaba
 		=
@@ -179,8 +164,7 @@
 					x
 			0
 		=
-			<"
-				persistantDeleteTest
+			persistantDeleteTest
 			$
 				!"
 					testSubDir
@@ -194,22 +178,18 @@
 					x
 			,
 				=
-					<"
-						a
+					a
 					"
 						b
 				=
-					<"
-						x
+					x
 					,
 						=
-							<"
-								x
+							x
 							"
 								hello
 						=
-							<"
-								y
+							y
 							"
 								world
 		=
@@ -223,16 +203,14 @@
 			"
 				hi
 		=
-			<"
-				integerHashTest
+			integerHashTest
 			,
 				=
 					<2
 					"
 						correct hash content
 				=
-					<"
-						hashTestData
+					hashTestData
 					,
 						=
 							<0
@@ -241,13 +219,11 @@
 									<0
 									0
 				=
-					<"
-						hashTest
+					hashTest
 					!!"
 						hashTestData
 		=
-			<"
-				negativeInteger
+			negativeInteger
 			100
 		=
 			$
@@ -258,8 +234,7 @@
 			"
 				hello
 		=
-			<"
-				integerIncrementTest
+			integerIncrementTest
 			5
 		=
 			$
@@ -269,83 +244,68 @@
 			!"
 				integerIncrementTest
 		=
-			<"
-				integerDecrementTest
+			integerDecrementTest
 			5
 		=
-			<"
-				integerDecrementTest
+			integerDecrementTest
 			$
 				!"
 					integerDecrementTest
 				0
 		=
-			<"
-				negativeNumber
+			negativeNumber
 			-123
 		=
-			<"
-				mapNumbers
+			mapNumbers
 			,
 				=
-					<"
-						integer
+					integer
 					,
 						=
 							<0
 							5
 				=
-					<"
-						negative
+					negative
 					,
 						=
 							<0
 							5
 						=
-							<"
-								negative
+							negative
 							0
 				=
-					<"
-						fraction
+					fraction
 					,
 						=
 							<0
 							5
 						=
-							<"
-								denominator
+							denominator
 							7
 				=
-					<"
-						negativeFraction
+					negativeFraction
 					,
 						=
 							<0
 							5
 						=
-							<"
-								negative
+							negative
 							0
 						=
-							<"
-								denominator
+							denominator
 							7
 		=
-			<"
-				fraction
+			fraction
 			3/2
 		=
-			<"
-				persistenceTest
+			persistenceTest
 			$
 				!"
 					testSubDir
 				"
 					x
 		=
-			<"
-				literalEscapeTest
+			literalEscapeTest
 			,
 				=
 					.
@@ -376,17 +336,14 @@
 			"
 				Autokey
 		=
-			<"
-				commandLineArguments
+			commandLineArguments
 			!"
 				commandLine
 		=
-			<"
-				aMap
+			aMap
 			,
 				=
-					<"
-						a
+					a
 					"
 						a
 		=
@@ -400,8 +357,7 @@
 			"
 				NormalSymbol
 		=
-			<"
-				lookupSymbol
+			lookupSymbol
 			"
 				LookupSymbol
 		=
@@ -410,46 +366,37 @@
 			"
 				LookupExtendedSymbol
 		=
-			<"
-				lookedUpMap
+			lookedUpMap
 			!!"
 				aMap
 		=
-			<"
-				lookedUpNormalSymbol
+			lookedUpNormalSymbol
 			!"
 				normal symbol
 		=
-			<"
-				lookedUpSymbol
+			lookedUpSymbol
 			!"
 				lookupSymbol
 		=
-			<"
-				lookedUpLongSymbol
+			lookedUpLongSymbol
 			!"
 				long key symbol
 		=
-			<"
-				object
+			object
 			,
 				=
-					<"
-						a
+					a
 					"
 						default
 				=
-					<"
-						autoSearch
+					autoSearch
 					"
 						default
 				=
-					<"
-						b
+					b
 					0
 				=
-					<"
-						SetA
+					SetA
 					,
 						|
 							"
@@ -466,8 +413,7 @@
 									"
 										changed
 				=
-					<"
-						SetB
+					SetB
 					,
 						|
 							"
@@ -488,17 +434,14 @@
 									"
 										changed
 				=
-					<"
-						x
+					x
 					,
 						=
-							<"
-								a
+							a
 							"
 								b
 						=
-							<"
-								c
+							c
 							"
 								d
 				=
@@ -516,17 +459,14 @@
 									"
 										b
 		=
-			<"
-				a
+			a
 			"
 				default
 		=
-			<"
-				b
+			b
 			0
 		=
-			<"
-				aSet
+			aSet
 			*
 				$
 					!"
@@ -535,8 +475,7 @@
 						SetA
 				0
 		=
-			<"
-				bSet
+			bSet
 			*
 				$
 					!"
@@ -545,29 +484,23 @@
 						SetB
 				,
 					=
-						<"
-							value
+						value
 						,
 							=
-								<"
-									x
+								x
 								7
 							=
-								<"
-									z
+								z
 								1
 		=
-			<"
-				scopeTest
+			scopeTest
 			"
 				default
 		=
-			<"
-				scopeFunction
+			scopeFunction
 			,
 				=
-					<"
-						inScope
+					inScope
 					"
 						right
 				|
@@ -580,8 +513,7 @@
 							!"
 								inScope
 		=
-			<"
-				inScope
+			inScope
 			"
 				wrong
 		=
@@ -591,17 +523,14 @@
 					scopeFunction
 				0
 		=
-			<"
-				scopeFromFunctionData
+			scopeFromFunctionData
 			"
 				wrong
 		=
-			<"
-				scopeFunctionFunction
+			scopeFunctionFunction
 			,
 				=
-					<"
-						scopeFromFunctionData
+					scopeFromFunctionData
 					"
 						right
 				|
@@ -614,22 +543,19 @@
 							!"
 								scopeFromFunctionData
 		=
-			<"
-				scopeFromFunction
+			scopeFromFunction
 			*
 				!"
 					scopeFunctionFunction
 				0
 		=
-			<"
-				scopeFromFunctionTest
+			scopeFromFunctionTest
 			*
 				!"
 					scopeFromFunction
 				0
 		=
-			<"
-				ReturnEverything
+			ReturnEverything
 			,
 				|
 					"
@@ -640,8 +566,7 @@
 							!"
 								everything
 		=
-			<"
-				everythingReturned
+			everythingReturned
 			*
 				!"
 					ReturnEverything
@@ -659,8 +584,7 @@
 						"
 							c
 		=
-			<"
-				variableAsArgument
+			variableAsArgument
 			*
 				!"
 					ReturnEverything
@@ -678,8 +602,7 @@
 						"
 							z
 		=
-			<"
-				ReturnFunction
+			ReturnFunction
 			,
 				|
 					"
@@ -705,8 +628,7 @@
 													.
 													3
 		=
-			<"
-				SetCurrent
+			SetCurrent
 			,
 				|
 					"
@@ -716,13 +638,11 @@
 							&
 							,
 								=
-									<"
-										asdf
+									asdf
 									!"
 										current
 								=
-									<"
-										x
+									x
 									$
 										!"
 											current
@@ -733,20 +653,17 @@
 							!"
 								x
 		=
-			<"
-				thisSet
+			thisSet
 			*
 				!"
 					SetCurrent
 				,
 					=
-						<"
-							symbol
+						symbol
 						"
 							haha
 		=
-			<"
-				FirstLevel
+			FirstLevel
 			,
 				|
 					"
@@ -760,8 +677,7 @@
 								!"
 									arg
 		=
-			<"
-				SecondLevel
+			SecondLevel
 			,
 				|
 					"
@@ -769,20 +685,17 @@
 					!"
 						arg
 		=
-			<"
-				argTest
+			argTest
 			*
 				!"
 					FirstLevel
 				,
 					=
-						<"
-							a
+						a
 						"
 							z
 		=
-			<"
-				TestClass
+			TestClass
 			$
 				/
 				"
@@ -799,8 +712,7 @@
 					field
 			5
 		=
-			<"
-				nestedClassTest
+			nestedClassTest
 			$
 				!"
 					TestClass
@@ -809,30 +721,26 @@
 				"
 					field
 		=
-			<"
-				testClass
+			testClass
 			*
 				!"
 					TestClass
 				0
 		=
 			$
-				<"
-					testClass
+				testClass
 				"
 					floatValue
 			3
 		=
 			$
-				<"
-					testClass
+				testClass
 				"
 					doubleValue
 			4
 		=
 			$
-				<"
-					testClass
+				testClass
 				"
 					decimalValue
 			5
@@ -844,43 +752,36 @@
 					boolTest
 			1
 		=
-			<"
-				boolTest
+			boolTest
 			$
 				!"
 					TestClass
 				"
 					boolTest
 		=
-			<"
-				strongNameTest
+			strongNameTest
 			$
 				!,
 					=
-						<"
-							version
+						version
 						"
 							2.0.0.0
 					=
-						<"
-							publicKeyToken
+						publicKeyToken
 						"
 							b77a5c561934e089
 					=
-						<"
-							culture
+						culture
 						"
 							Neutral
 					=
-						<"
-							name
+						name
 						"
 							mscorlib
 				"
 					Int32
 		=
-			<"
-				MemberTest
+			MemberTest
 			$
 				/
 				"
@@ -888,15 +789,13 @@
 				"
 					MemberTest
 		=
-			<"
-				memberTest
+			memberTest
 			*
 				!"
 					MemberTest
 				0
 		=
-			<"
-				stringOverload
+			stringOverload
 			*
 				$
 					!"
@@ -912,8 +811,7 @@
 				"
 					hello
 		=
-			<"
-				integerOverload
+			integerOverload
 			*
 				$
 					!"
@@ -928,8 +826,7 @@
 							Int32
 				5
 		=
-			<"
-				memberTestOverload
+			memberTestOverload
 			*
 				$
 					!"
@@ -952,8 +849,7 @@
 					memberTest
 				3247
 		=
-			<"
-				memberTestOverload
+			memberTestOverload
 			*
 				$
 					!"
@@ -977,24 +873,21 @@
 				3247
 		=
 			$
-				<"
-					MemberTest
+				MemberTest
 				"
 					classField
 			"
 				a
 		=
 			$
-				<"
-					memberTest
+				memberTest
 				"
 					instanceField
 			"
 				b
 		=
 			$
-				<"
-					MemberTest
+				MemberTest
 				"
 					ClassProperty
 			$
@@ -1003,8 +896,7 @@
 				"
 					InstanceProperty
 		=
-			<"
-				classPropertyValue
+			classPropertyValue
 			$
 				!"
 					MemberTest
@@ -1012,8 +904,7 @@
 					ClassProperty
 		=
 			$
-				<"
-					memberTest
+				memberTest
 				"
 					InstanceProperty
 			$
@@ -1022,21 +913,18 @@
 				"
 					ClassProperty
 		=
-			<"
-				instancePropertyValue
+			instancePropertyValue
 			$
 				!"
 					memberTest
 				"
 					InstanceProperty
 		=
-			<"
-				interceptedSymbol
+			interceptedSymbol
 			"
 				/hello/
 		=
-			<"
-				positionalNoConversion
+			positionalNoConversion
 			*
 				$
 					/
@@ -1066,8 +954,7 @@
 				"
 					o
 		=
-			<"
-				positionalNoConversionConcatenated
+			positionalNoConversionConcatenated
 			*
 				$
 					!"
@@ -1096,8 +983,7 @@
 				"
 					t
 		=
-			<"
-				namedNoConversion
+			namedNoConversion
 			*
 				$
 					/
@@ -1117,13 +1003,11 @@
 						"
 							m
 					=
-						<"
-							y
+						y
 						"
 							n
 		=
-			<"
-				namedNoConversionConcatenated
+			namedNoConversionConcatenated
 			*
 				$
 					!"
@@ -1138,8 +1022,7 @@
 							Map
 				,
 					=
-						<"
-							c
+						c
 						"
 							t
 					=
@@ -1147,8 +1030,7 @@
 						"
 							r
 		=
-			<"
-				indexerNoConversion
+			indexerNoConversion
 			*
 				$
 					/
@@ -1159,8 +1041,7 @@
 				0
 		=
 			$
-				<"
-					indexerNoConversion
+				indexerNoConversion
 				"
 					Item
 				"
@@ -1168,8 +1049,7 @@
 			"
 				hihi
 		=
-			<"
-				indexerNoConversionIndexed
+			indexerNoConversionIndexed
 			$
 				!"
 					indexerNoConversion
@@ -1178,37 +1058,31 @@
 				"
 					abc
 		=
-			<"
-				interceptedSymbolTwo
+			interceptedSymbolTwo
 			1
 		=
-			<"
-				k
+			k
 			"
 				hello
 		=
-			<"
-				xyz
+			xyz
 			"
 				w
 		=
-			<"
-				literalFunction
+			literalFunction
 			,
 				|
 					"
 						arg
 					5
 		=
-			<"
-				literalFunctionResult
+			literalFunctionResult
 			*
 				!"
 					literalFunction
 				0
 		=
-			<"
-				someFunction
+			someFunction
 			,
 				|
 					"
@@ -1219,8 +1093,7 @@
 							"
 								simple function this
 		=
-			<"
-				callFunction
+			callFunction
 			,
 				|
 					"
@@ -1228,15 +1101,13 @@
 					!"
 						someFunction
 		=
-			<"
-				callFunctionResult
+			callFunctionResult
 			*
 				!"
 					callFunction
 				0
 		=
-			<"
-				delayedFunction
+			delayedFunction
 			,
 				|
 					"
@@ -1247,20 +1118,17 @@
 								arg
 							,
 								=
-									<"
-										x
+									x
 									"
 										y
 		=
-			<"
-				delayedFunctionResult
+			delayedFunctionResult
 			*
 				!"
 					delayedFunction
 				0
 		=
-			<"
-				delayedFunctionDirect
+			delayedFunctionDirect
 			*
 				*
 					!"
@@ -1268,13 +1136,11 @@
 					0
 				0
 		=
-			<"
-				value
+			value
 			"
 				xyz
 		=
-			<"	
-				selectionFunction
+			selectionFunction
 			,
 				|
 					"
@@ -1282,20 +1148,17 @@
 					!"
 						value
 		=
-			<"
-				selectionFunctionResult
+			selectionFunctionResult
 			*
 				!"
 					selectionFunction
 				0
 		=
-			<"
-				upperLevel
+			upperLevel
 			"
 				unchanged
 		=
-			<"
-				SetUpperLevel
+			SetUpperLevel
 			,
 				|
 					"
@@ -1307,8 +1170,7 @@
 							!"
 								arg
 		=
-			<"
-				ChangeUpperLevel
+			ChangeUpperLevel
 			,
 				|
 					"
@@ -1328,12 +1190,10 @@
 					ChangeUpperLevel
 				0
 		=
-			<"
-				staticEventChanged
+			staticEventChanged
 			0
 		=
-			<"
-				ChangeStaticEvent
+			ChangeStaticEvent
 			,
 				|
 					"
@@ -1346,8 +1206,7 @@
 								arg
 		=
 			$
-				<"
-					TestClass
+				TestClass
 				"
 					staticEvent
 			,
@@ -1392,8 +1251,7 @@
 								arg
 							1
 		=
-			<"
-				resultFromDelegate
+			resultFromDelegate
 			*
 				$
 					!"
@@ -1402,8 +1260,7 @@
 						GetResultFromDelegate
 				0
 		=
-			<"
-				staticEventResult
+			staticEventResult
 			*
 				$
 					!"
@@ -1418,13 +1275,11 @@
 				!"
 					testClass
 		=
-			<"
-				instanceEventChanged
+			instanceEventChanged
 			0
 		=
 			$
-				<"
-					testClass
+				testClass
 				"
 					instanceEvent
 			,
@@ -1443,8 +1298,7 @@
 									arg
 								1
 		=
-			<"
-				instanceEventResult
+			instanceEventResult
 			*
 				$
 					!"
@@ -1458,26 +1312,21 @@
 							Object
 				5
 		=
-			<"
-				one
+			one
 			1
 		=
-			<"
-				two
+			two
 			2
 		=
-			<"
-				firstIf
+			firstIf
 			"
 				unchanged
 		=
-			<"
-				secondIf
+			secondIf
 			"
 				unchanged
 		=
-			<"
-				firstIfCondition
+			firstIfCondition
 			*
 				!"
 					equal
@@ -1485,8 +1334,7 @@
 				!"
 					one
 		=
-			<"
-				firstIfBranches
+			firstIfBranches
 			,
 				=
 					.
@@ -1505,8 +1353,7 @@
 							"
 								else
 		=
-			<"
-				firstIf
+			firstIf
 			*
 				$
 					!"
@@ -1515,17 +1362,14 @@
 						firstIfCondition
 				0
 		=
-			<"
-				bigNumber
+			bigNumber
 			50020202
 		=
-			<"
-				secondSwitch
+			secondSwitch
 			"
 				unchanged
 		=
-			<"
-				secondSwitchCases
+			secondSwitchCases
 			,
 				=
 					.
@@ -1540,39 +1384,33 @@
 					"
 						three
 		=
-			<"
-				secondSwitch
+			secondSwitch
 			$
 				!"
 					secondSwitchCases
 				3
 		=
-			<"
-				emptyMap
+			emptyMap
 			0
 		=
-			<"
-				emptyFunction
+			emptyFunction
 			,
 				|
 					"
 						arg
 					,
 						=
-							<"
-								x
+							x
 							"
 								hello
 		=
-			<"
-				emptyFunctionResult
+			emptyFunctionResult
 			*
 				!"
 					emptyFunction
 				0
 		=
-			<"
-				font
+			font
 			*
 				$
 					/
@@ -1596,50 +1434,41 @@
 					Courier New
 				10
 		=
-			<"
-				decimalTest
+			decimalTest
 			5
 		=
-			<"
-				fractionTest
+			fractionTest
 			40
 		=
-			<"
-				stringTest
+			stringTest
 			"
 				hello
 		=
 			$
-				<"
-					stringTest
+				stringTest
 				6
 			$
 				!"
 					stringTest
 				1
 		=
-			<"
-				helloh
+			helloh
 			"
 				hi
 		=
-			<"
-				stringStrategyHashTest
+			stringStrategyHashTest
 			!!"
 				stringTest
 		=
-			<"
-				x
+			x
 			,
 				=
-					<"
-						aLongText
+					aLongText
 					"
 						hello world!
 						hello!
 		=
-			<"
-				arrayList
+			arrayList
 			*
 				$
 					/
@@ -1664,8 +1493,7 @@
 				"
 					hello
 		=
-			<"
-				arrayListResult
+			arrayListResult
 			$
 				!"
 					arrayList
@@ -1673,8 +1501,7 @@
 					Item
 				0
 		=
-			<"
-				textBox
+			textBox
 			*
 				$
 					/
@@ -1685,8 +1512,7 @@
 				0
 		=
 			$
-				<"
-					textBox
+				textBox
 				"
 					Text
 			"
@@ -1696,16 +1522,14 @@
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh.
 		=
-			<"
-				lines
+			lines
 			$
 				!"
 					textBox
 				"
 					Lines
 		=
-			<"
-				alleMeineText
+			alleMeineText
 			*
 				$
 					!"
@@ -1720,8 +1544,7 @@
 							Int32
 				1
 		=
-			<"
-				form
+			form
 			*
 				$
 					/
@@ -1732,8 +1555,7 @@
 				0
 		=
 			$
-				<"
-					form
+				form
 				"
 					Location
 			*
@@ -1757,38 +1579,32 @@
 				5
 				1000
 		=
-			<"
-				automaticConversionTest
+			automaticConversionTest
 			$
 				!"
 					form
 				"
 					Location
 		=
-			<"
-				tabText
+			tabText
 			"
 							hello
 		=
-			<"
-				escapedText
+			escapedText
 			"
 				'#'n'''t
 		=
-			<"
-				whileCounter
+			whileCounter
 			0
 		=
-			<"
-				loop
+			loop
 			,
 				|
 					"
 						start
 					,
 						=
-							<"
-								whileDecision
+							whileDecision
 							*
 								!"
 									not
@@ -1799,8 +1615,7 @@
 										start
 									10
 						=
-							<"
-								whileBranches
+							whileBranches
 							,
 								=
 									.
@@ -1836,35 +1651,30 @@
 								!"
 									start
 		=
-			<"
-				whileCounter
+			whileCounter
 			*
 				!"
 					loop
 				3
 		=
-			<"
-				returnInMap
+			returnInMap
 			,
 				|
 					"
 						arg
 					,
 						=
-							<"
-								result
+							result
 							!"
 								arg
 		=
-			<"
-				literalAsArgument
+			literalAsArgument
 			*
 				!"
 					returnInMap
 				1
 		=
-			<"
-				returnFunction
+			returnFunction
 			,
 				|
 					"
@@ -1876,8 +1686,7 @@
 							"
 								functionResult
 		=
-			<"
-				returnArg
+			returnArg
 			,
 				|
 					"
@@ -1885,21 +1694,18 @@
 					!"
 						arg
 		=
-			<"
-				myArg
+			myArg
 			,
 				|
 					"
 						arg
 					,
 						=
-							<"
-								hello
+							hello
 							"
 								world
 		=
-			<"
-				funcReturnTest
+			funcReturnTest
 			*
 				!"
 					returnArg
@@ -1907,12 +1713,10 @@
 					myArg
 				0
 		=
-			<"
-				documentedFunction
+			documentedFunction
 			,
 				=
-					<"
-						doc
+					doc
 					"
 						This function returns #hello .
 				|
@@ -1921,28 +1725,23 @@
 					"
 						hello
 		=
-			<"
-				docFunctionResult
+			docFunctionResult
 			*
 				!"
 					documentedFunction
 				0
 		=
-			<"
-				topLevel
+			topLevel
 			"
 				default
 		=
-			<"
-				deep
+			deep
 			,
 				=
-					<"
-						map
+					map
 					,
 						=
-							<"
-								test
+							test
 							,
 								|
 									"
@@ -1965,16 +1764,14 @@
 						test
 				0
 		=
-			<"
-				outerFunction
+			outerFunction
 			,
 				|
 					"
 						arg
 					,
 						=
-							<"
-								innerFunction
+							innerFunction
 							,
 								|
 									"
@@ -1991,16 +1788,14 @@
 									innerFunction
 								0
 		=
-			<"
-				outerFunctionTest
+			outerFunctionTest
 			*
 				!"
 					outerFunction
 				"
 					right
 		=
-			<"
-				newLines
+			newLines
 			"
 				
 				
@@ -2020,8 +1815,7 @@
 				"
 					ClientAreaEnabled
 		=
-			<"
-				enumTest
+			enumTest
 			$
 				!"
 					System.Windows.Forms
@@ -2030,8 +1824,7 @@
 				"
 					VisualStyleState
 		=
-			<"
-				typeTest
+			typeTest
 			*
 				$
 					!"
@@ -2057,17 +1850,14 @@
 						String
 				5
 		=
-			<"
-				123hello
+			123hello
 			"
 				asdf
 		=
-			<"
-				copySourceData
+			copySourceData
 			,
 				=
-					<"
-						x
+					x
 					"
 						y
 				=
@@ -2097,10 +1887,8 @@
 						a
 					'a'
 				=
-					<"
-						space
+					space
 					' '
 				=
-					<"
-						tab
+					tab
 					'	'
