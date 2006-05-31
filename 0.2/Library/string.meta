@@ -1,6 +1,5 @@
 :
-	"
-		replace
+	replace
 	,
 		|
 			"
@@ -22,8 +21,7 @@
 							Map
 				@
 :
-	"
-		trim
+	trim
 	,
 		|
 			"
@@ -55,8 +53,7 @@
 							0
 						0
 :
-	"
-		lower
+	lower
 	,
 		|
 			"
@@ -87,8 +84,7 @@
 								ToLower
 						0
 :
-	"
-		upper
+	upper
 	,
 		|
 			"
@@ -120,8 +116,7 @@
 								ToUpper
 						0
 :
-	"
-		split
+	split
 	,
 		|
 			"
@@ -149,8 +144,7 @@
 							Map
 				@
 :
-	"
-		compare
+	compare
 	,
 		|
 			"
