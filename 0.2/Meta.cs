@@ -206,7 +206,7 @@ namespace Meta
 		}
 		protected abstract Position EvaluateImplementation(Position context);
 	}
- internal class HiPerfTimer
+	internal class HiPerfTimer
     {
         [DllImport("Kernel32.dll")]
         private static extern bool QueryPerformanceCounter(
@@ -258,13 +258,6 @@ namespace Meta
     }
 	public class Call : Expression
 	{
-		//public override bool HasConstantKeysOnly
-		//{
-		//    get
-		//    {
-		//        return true;
-		//    }
-		//}
 		private Map parameterName;
 		List<Map> expressions;
 		public Call(Map code, Map parameterName)
@@ -282,34 +275,28 @@ namespace Meta
 			}
 		}
 		public static Dictionary<string, double> calls = new Dictionary<string, double>();
-		//public static Dictionary<string, TimeSpan> calls = new Dictionary<string, TimeSpan>();
 		protected override Position EvaluateImplementation(Position current)
 		{
 			try
 			{
-				//DateTime start=DateTime.Now;
-				HiPerfTimer timer = new HiPerfTimer();
-				timer.Start();
-				//if (Interpreter.profiling)
-				//{
-				//}
+				HiPerfTimer timer=null;
+				if (Interpreter.profiling)
+				{
+					timer = new HiPerfTimer();
+					timer.Start();
+				}
+
 				Position callable=expressions[0].GetExpression().Evaluate(current);
 				for (int i = 1; i < expressions.Count; i++)
 				{
-					//Position argument;
-					//argument.IsCall = true;
 					Position arg = expressions[i].GetExpression().Evaluate(current);
-					//LastArgument = arg;
 					arguments.Push(arg);
 					callable = callable.Call(arg.Get());
 					arguments.Pop();
-					//callable = callable.Get().GetExpression().Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
-					//callable=callablePosition.get
 				}
 				if (Interpreter.profiling)
 				{
 					timer.Stop();
-					//TimeSpan difference=DateTime.Now-start;
 					string special = SpecialString(current);
 					if (!calls.ContainsKey(special))
 					{
@@ -318,16 +305,10 @@ namespace Meta
 					calls[special] += timer.Duration;
 				}
 				return callable;
-				//argument.IsCall = true;
-				//Position arg = argument.Evaluate(current);
-				//lastArgument = arg;
-				//return callable.Evaluate(current).Get().Call(arg.Get(), Select.lastPosition);
 			}
 			catch (MetaException e)
 			{
 				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent,current));
-				//e.InvocationList.Add(current);
-				//e.InvocationList.Add(this.code.Extent);
 				throw e;
 			}
 			catch (Exception e)
@@ -409,14 +390,7 @@ namespace Meta
 		}
 		protected override Position EvaluateImplementation(Position context)
 		{
-			//FunctionBodyKey calls;
 			Position position=context.AddCall(literal);
-			//context.AddCall(literal, out calls);
-			//context.Get().AddCall(literal, out calls);
-			//Position position = new Position(context, calls);
-			if (literal.Equals(new StrategyMap("characterExcept")))
-			{
-			}
 			position.Get().Scope = position.Parent;
 			return position;
 		}
@@ -1336,14 +1310,6 @@ namespace Meta
 				return keys.Keys;
 			}
 		}
-		public static void TrashFile(string fname)
-		{
-			InteropSHFileOperation fo = new InteropSHFileOperation();
-			fo.wFunc = InteropSHFileOperation.FO_Func.FO_DELETE;
-			fo.fFlags.FOF_ALLOWUNDO = true;
-			fo.fFlags.FOF_NOCONFIRMATION = true;
-			fo.pFrom = fname;
-		}
 		public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		protected override Map Get(Map key)
 		{
@@ -1501,203 +1467,6 @@ namespace Meta
 		{
 			return this;
 		}
-		public class InteropSHFileOperation
-		{
-			public enum FO_Func : uint
-			{
-				FO_MOVE = 0x0001,
-				FO_COPY = 0x0002,
-				FO_DELETE = 0x0003,
-				FO_RENAME = 0x0004,
-			}
-
-			struct SHFILEOPSTRUCT
-			{
-				public IntPtr hwnd;
-				public FO_Func wFunc;
-				[MarshalAs(UnmanagedType.LPWStr)]
-				public string pFrom;
-				[MarshalAs(UnmanagedType.LPWStr)]
-				public string pTo;
-				public ushort fFlags;
-				public bool fAnyOperationsAborted;
-				public IntPtr hNameMappings;
-				[MarshalAs(UnmanagedType.LPWStr)]
-				public string lpszProgressTitle;
-
-			}
-
-			[DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-			static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
-
-			private SHFILEOPSTRUCT _ShFile;
-			public FILEOP_FLAGS fFlags;
-
-			public IntPtr hwnd
-			{
-				set
-				{
-					this._ShFile.hwnd = value;
-				}
-			}
-			public FO_Func wFunc
-			{
-				set
-				{
-					this._ShFile.wFunc = value;
-				}
-			}
-
-			public string pFrom
-			{
-				set
-				{
-					this._ShFile.pFrom = value + '\0' + '\0';
-				}
-			}
-			public string pTo
-			{
-				set
-				{
-					this._ShFile.pTo = value + '\0' + '\0';
-				}
-			}
-
-			public bool fAnyOperationsAborted
-			{
-				set
-				{
-					this._ShFile.fAnyOperationsAborted = value;
-				}
-			}
-			public IntPtr hNameMappings
-			{
-				set
-				{
-					this._ShFile.hNameMappings = value;
-				}
-			}
-			public string lpszProgressTitle
-			{
-				set
-				{
-					this._ShFile.lpszProgressTitle = value + '\0';
-				}
-			}
-
-			public InteropSHFileOperation()
-			{
-
-				this.fFlags = new FILEOP_FLAGS();
-				this._ShFile = new SHFILEOPSTRUCT();
-				this._ShFile.hwnd = IntPtr.Zero;
-				this._ShFile.wFunc = FO_Func.FO_COPY;
-				this._ShFile.pFrom = "";
-				this._ShFile.pTo = "";
-				this._ShFile.fAnyOperationsAborted = false;
-				this._ShFile.hNameMappings = IntPtr.Zero;
-				this._ShFile.lpszProgressTitle = "";
-
-			}
-
-			public bool Execute()
-			{
-				this._ShFile.fFlags = this.fFlags.Flag;
-				int ReturnValue = SHFileOperation(ref this._ShFile);
-				if (ReturnValue == 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			public class FILEOP_FLAGS
-			{
-				[Flags]
-				private enum FILEOP_FLAGS_ENUM : ushort
-				{
-					FOF_MULTIDESTFILES = 0x0001,
-					FOF_CONFIRMMOUSE = 0x0002,
-					FOF_SILENT = 0x0004,  // don't create progress/report
-					FOF_RENAMEONCOLLISION = 0x0008,
-					FOF_NOCONFIRMATION = 0x0010,  // Don't prompt the user.
-					FOF_WANTMAPPINGHANDLE = 0x0020,  // Fill in SHFILEOPSTRUCT.hNameMappings
-					// Must be freed using SHFreeNameMappings
-					FOF_ALLOWUNDO = 0x0040,
-					FOF_FILESONLY = 0x0080,  // on *.*, do only files
-					FOF_SIMPLEPROGRESS = 0x0100,  // means don't show names of files
-					FOF_NOCONFIRMMKDIR = 0x0200,  // don't confirm making any needed dirs
-					FOF_NOERRORUI = 0x0400,  // don't put up error UI
-					FOF_NOCOPYSECURITYATTRIBS = 0x0800,  // dont copy NT file Security Attributes
-					FOF_NORECURSION = 0x1000,  // don't recurse into directories.
-					FOF_NO_CONNECTED_ELEMENTS = 0x2000,  // don't operate on connected elements.
-					FOF_WANTNUKEWARNING = 0x4000,  // during delete operation, warn if nuking instead of recycling (partially overrides FOF_NOCONFIRMATION)
-					FOF_NORECURSEREPARSE = 0x8000,  // treat reparse points as objects, not containers
-				}
-
-				public bool FOF_MULTIDESTFILES = false;
-				public bool FOF_CONFIRMMOUSE = false;
-				public bool FOF_SILENT = false;
-				public bool FOF_RENAMEONCOLLISION = false;
-				public bool FOF_NOCONFIRMATION = false;
-				public bool FOF_WANTMAPPINGHANDLE = false;
-				public bool FOF_ALLOWUNDO = false;
-				public bool FOF_FILESONLY = false;
-				public bool FOF_SIMPLEPROGRESS = false;
-				public bool FOF_NOCONFIRMMKDIR = false;
-				public bool FOF_NOERRORUI = false;
-				public bool FOF_NOCOPYSECURITYATTRIBS = false;
-				public bool FOF_NORECURSION = false;
-				public bool FOF_NO_CONNECTED_ELEMENTS = false;
-				public bool FOF_WANTNUKEWARNING = false;
-				public bool FOF_NORECURSEREPARSE = false;
-				public ushort Flag
-				{
-					get
-					{
-						ushort ReturnValue = 0;
-
-						if (this.FOF_MULTIDESTFILES == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_MULTIDESTFILES;
-						if (this.FOF_CONFIRMMOUSE == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_CONFIRMMOUSE;
-						if (this.FOF_SILENT == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SILENT;
-						if (this.FOF_RENAMEONCOLLISION == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_RENAMEONCOLLISION;
-						if (this.FOF_NOCONFIRMATION == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMATION;
-						if (this.FOF_WANTMAPPINGHANDLE == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTMAPPINGHANDLE;
-						if (this.FOF_ALLOWUNDO == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_ALLOWUNDO;
-						if (this.FOF_FILESONLY == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_FILESONLY;
-						if (this.FOF_SIMPLEPROGRESS == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_SIMPLEPROGRESS;
-						if (this.FOF_NOCONFIRMMKDIR == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCONFIRMMKDIR;
-						if (this.FOF_NOERRORUI == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOERRORUI;
-						if (this.FOF_NOCOPYSECURITYATTRIBS == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NOCOPYSECURITYATTRIBS;
-						if (this.FOF_NORECURSION == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSION;
-						if (this.FOF_NO_CONNECTED_ELEMENTS == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NO_CONNECTED_ELEMENTS;
-						if (this.FOF_WANTNUKEWARNING == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_WANTNUKEWARNING;
-						if (this.FOF_NORECURSEREPARSE == true)
-							ReturnValue |= (ushort)FILEOP_FLAGS_ENUM.FOF_NORECURSEREPARSE;
-
-						return ReturnValue;
-					}
-				}
-			}
-		}
 	}
 	public class Interpreter
 	{
@@ -1724,16 +1493,13 @@ namespace Meta
 							break;
 						case "-test":
 							Commands.Test();
-							//Console.ReadLine();
 							break;
 						case "-help":
 							Commands.Help();
 							break;
 						case "-profile":
 							profiling = true;
-							//Commands.Test();
 							Commands.Profile();
-							//Console.ReadLine();
 							List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
 							profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
 							{
@@ -1785,10 +1551,6 @@ namespace Meta
 			}
 		}
 
-		static void form_KeyDown(object sender, KeyEventArgs e)
-		{
-			//e.KeyCode = Keys.Enter;
-		}
 		public class Commands
 		{
 
@@ -1818,10 +1580,7 @@ namespace Meta
 				Parser parser = new Parser("", "Interactive console");
 				parser.defaultKeys.Push(1);
 				Position position = new Position(new Position(RootPosition.rootPosition,"filesystem"), "localhost" );
-				//FunctionBodyKey calls;
 				Position local=position.AddCall(new StrategyMap());
-				//position.Get().AddCall(new StrategyMap(), out calls);
-				//Position local = new Position(position, calls);
 				while (true)
 				{
 					code = "";
@@ -1995,15 +1754,6 @@ namespace Meta
 			{
 				optimizations[key]();
 				optimizations.Remove(key);
-			}
-
-			try
-			{
-				//return Get()[key];
-			}
-			catch (Exception e)
-			{
-				//return Get()[key];
 			}
 		}
 		public void Assign(Map value)
@@ -2541,7 +2291,6 @@ namespace Meta
 			}
 			else
 			{
-				//FunctionBodyKey call;
 				arguments.Add(arg);
 				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
 				Position result = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
@@ -2907,11 +2656,7 @@ namespace Meta
 			FunctionBodyKey calls;
 			// probably wrong
 			Position position=MethodImplementation.currentPosition.AddCall(code);
-			//MethodImplementation.currentPosition.AddCall(code, out calls);
-			//MethodImplementation.currentPosition.Get().AddCall(code, out calls);
-			//Position position = new Position(MethodImplementation.currentPosition, calls);
 			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
-			//Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 			return del;
 		}
 		public class EventHandlerContainer
@@ -2925,7 +2670,6 @@ namespace Meta
 			{
 				// not really accurate, should keep its own scope in callable, maybe
 				return callable.Call(argument,MethodImplementation.currentPosition).Get();
-				//return callable.Call(argument);
 			}
 		}
 		public class MetaDelegate
@@ -3193,9 +2937,7 @@ namespace Meta
 
 	public abstract class MethodImplementation:Map
 	{
-		// this should actually be a stack
 		public static Position currentPosition;
-		//public static PersistantPosition currentPosition;
 		protected MethodBase method;
 		protected object obj;
 		protected Type type;
@@ -3226,15 +2968,7 @@ namespace Meta
 		ParameterInfo[] parameters;
 		public override Position Call(Map argument, Position position)
 		{
-			//bool converted;
-			//object[] arguments = ConvertArgument(argument, out converted);
-			//if (!converted)
-			//{
-			//    //ConvertArgument(argument, out converted);
-			//    throw new Exception("Could not convert argument.");
-			//}
 			return DecideCall(argument, new List<object>(), position);
-
 		}
 
 		private Position DecideCall(Map argument, List<object> arguments, Position position)
@@ -3357,57 +3091,45 @@ namespace Meta
 			{
 			}
 			List<MethodBase> members = new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
-			//List<MethodBase> members=new List<MemberInfo>(new type.GetMember(name, GetBindingFlags(obj, name))).ConvertAll<MethodBase>(new Converter<MemberInfo,MethodBase>);
 			members.Sort(new Comparison<MethodBase>(delegate(MethodBase a, MethodBase b)
 			{
 				return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
 			}));
 			Map result = new StrategyMap();
-			//if (members.Count == 1)
-			//{
-			//    result = new Method(members[0], obj, type);
-			//}
-			//else
-			//{
-				foreach (MethodBase methodBase in members)
+			foreach (MethodBase methodBase in members)
+			{
+				Map current = result;
+				ParameterInfo[] parameters = methodBase.GetParameters();
+				Map method = new Method(methodBase, obj, type);
+				if (parameters.Length == 0)
 				{
-					Map current = result;
-					ParameterInfo[] parameters = methodBase.GetParameters();
-					Map method = new Method(methodBase, obj, type);
-					if (parameters.Length == 0)
+					result = method;
+				}
+				else
+				{
+					for (int i = 0; i < parameters.Length; i++)
 					{
-						result = method;
-					}
-					else
-					{
-						for (int i = 0; i < parameters.Length; i++)
+						Map typeMap = new TypeMap(parameters[i].ParameterType);
+						if (i == parameters.Length - 1)
 						{
-							Map typeMap = new TypeMap(parameters[i].ParameterType);
-							if (i == parameters.Length - 1)
+							current[typeMap] = method;
+						}
+						else
+						{
+							if (!current.ContainsKey(typeMap))
 							{
-								current[typeMap] = method;
+								current[typeMap] = new StrategyMap();
 							}
 							else
 							{
-								if (!current.ContainsKey(typeMap))
-								{
-									current[typeMap] = new StrategyMap();
-								}
-								else
-								{
-								}
-								current = current[typeMap];
 							}
+							current = current[typeMap];
 						}
 					}
 				}
-			//}
+			}
 			return result;
 		}
-		//protected override bool ContainsKeyImplementation(Map key)
-		//{
-		//    return false;
-		//}
 		public Method(MethodBase method, object obj, Type type)
 			: this(method, obj, type,new Dictionary<Map,Map>())
 		{
@@ -3422,12 +3144,10 @@ namespace Meta
 			if (name == ".ctor" || obj != null)
 			{
 				return BindingFlags.Public | BindingFlags.Instance;
-				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 			}
 			else
 			{
 				return BindingFlags.Public | BindingFlags.Static;
-				//return BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 			}
 		}
 
@@ -3507,7 +3227,6 @@ namespace Meta
 				if (constructor == null)
 				{
 					constructor = Method.MethodData(".ctor",obj,type);
-					//constructor = new Method(type);
 				}
 				return constructor;
 			}
@@ -3523,12 +3242,7 @@ namespace Meta
 		{
 			if (this.type.IsSubclassOf(typeof(Delegate)))
 			{
-				//type.GetMethod("Invoke",type).Invoke(obj,ar
 				return new Method(type.GetMethod("Invoke"), this.obj, this.type).Call(arg, position);
-				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
-				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
-				//return Method.MethodData("Invoke", this.obj, this.type).Call(arg, position);
-				//return new Method("Invoke", this.obj, this.type).Call(arg, position);
 			}
 			else
 			{
@@ -4023,13 +3737,6 @@ namespace Meta
 		{
 			return new StrategyMap(new CloneStrategy(this));
 		}
-		//public override void AppendRange(Map array)
-		//{
-		//    foreach (Map map in array.Array)
-		//    {
-		//        this.list.Add(map.Copy());
-		//    }
-		//}
 	}
 	public class DictionaryStrategy:MapStrategy
 	{
@@ -4135,7 +3842,6 @@ namespace Meta
 		public override Map CopyData()
 		{
 			MapStrategy clone = new CloneStrategy(this.original);
-			//map.Strategy = new CloneStrategy(this.original);
 			return new StrategyMap(clone);
 		}
 		public override bool EqualStrategy(MapStrategy obj)
@@ -4193,7 +3899,6 @@ namespace Meta
 		}
 		public abstract void Remove(Map key,StrategyMap map);
 		// map is not really reliable, might have been copied
-
 		public abstract void Set(Map key, Map val,StrategyMap map);
 		public abstract Map Get(Map key);
 
@@ -4203,16 +3908,6 @@ namespace Meta
 		}
 
 		public abstract int GetArrayCount();
-		//{
-		//    return map.GetArrayCountDefault();
-		//}
-		//public virtual void AppendRange(Map array)
-		//{
-		//    map.AppendRangeDefault(array);
-		//}
-
-
-
 		public abstract Map CopyData();
 
 		// refactor
@@ -4231,10 +3926,6 @@ namespace Meta
 			Panic(newStrategy,map);
 			map.Strategy.Set(key, val,map); // why do it like this? this wont assign the parent, which is problematic!!!
 		}
-		//public abstract bool IsNumber
-		//{
-		//    get;
-		//}
 		public virtual bool IsNumber
 		{
 		    get
@@ -4323,7 +4014,6 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		//public abstract bool Equal(MapStrategy strategy);
 		public virtual bool EqualStrategy(MapStrategy obj)
 		{
 			return EqualDefault((MapStrategy)obj);
