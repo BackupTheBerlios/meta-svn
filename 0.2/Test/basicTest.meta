@@ -29,7 +29,7 @@
 commandLine|,
 	&=*
 		*
-			!"merge"
+			merge
 			,
 				.="AssignedToCurrent"
 		0

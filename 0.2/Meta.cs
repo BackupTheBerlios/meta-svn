@@ -979,10 +979,18 @@ namespace Meta
 		public static string writtenText = "";
 		public static void WriteLine(string text)
 		{
+			if (!Interpreter.useConsole)
+			{
+				Interpreter.UseConsole();
+			}
 			Write(text + Environment.NewLine);
 		}
 		public static void Write(string text)
 		{
+			if (!Interpreter.useConsole)
+			{
+				Interpreter.UseConsole();
+			}
 			writtenText += text;
 			Console.Write(text);
 		}
@@ -1600,6 +1608,7 @@ namespace Meta
 				string path = args[0];
 				string startDirectory = Path.GetDirectoryName(path);
 				Directory.SetCurrentDirectory(startDirectory);
+				//return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				MetaTest.Run(path, Map.Empty);
 			}
 		}
@@ -5208,11 +5217,22 @@ namespace Meta
 
 
 
-
 		private static Rule Search = new Sequence(
-			new Action(new Match(), new Character('!')),
-			new Action(new Assignment(
-				CodeKeys.Search),Expression));
+			new Action(
+		new Assignment(
+				CodeKeys.Search), new Alternatives(
+			new Sequence(
+				new Action(new Match(), new Character('!')),
+				new Action(
+					new ReferenceAssignment(),
+					Expression)),
+			new Alternatives(LookupStringExpression,LookupAnythingExpression))));
+
+
+		//private static Rule Search = new Sequence(
+		//    new Action(new Match(), new Character('!')),
+		//    new Action(new Assignment(
+		//        CodeKeys.Search),Expression));
 
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
@@ -5235,8 +5255,16 @@ namespace Meta
 					new Action(new Match(), new Optional(Dedentation)))));
 
 
-		private static Rule KeysSearch = Search;
-
+		//private static Rule KeysSearch = Search;
+		private static Rule KeysSearch = new Sequence(
+	new Action(
+new Assignment(
+		CodeKeys.Search), 
+	new Sequence(
+		new Action(new Match(), new Character('!')),
+		new Action(
+			new ReferenceAssignment(),
+			Expression))));
 
 
 		private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)

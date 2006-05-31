@@ -1,6 +1,6 @@
 arg|*
 	$
-		console
+		!"console"
 		"writeLine"
 	*
 		$
