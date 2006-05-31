@@ -1,25 +1,17 @@
 |
-	"
-		arg
+	"arg"
 	*
 		$
 			/
-			"
-				Meta
-			"
-				Library
-			"
-				Contains
+			"Meta"
+			"Library"
+			"Contains"
 			$
 				/
-				"
-					Meta
-				"
-					Map
+				"Meta"
+				"Map"
 			$
 				/
-				"
-					Meta
-				"
-					Map
+				"Meta"
+				"Map"
 		@

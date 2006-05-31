@@ -22,6 +22,7 @@
 		ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 		SOFTWARE.
+	"
 :
 	shortFunc
 	"
@@ -31,41 +32,34 @@
 					arg
 				!"
 					arg
-|
 	"
-		commandLine
+|
+	"commandLine"
 	,
 		=
 			&
 			*
 				*
-					!"
-						merge
+					!"merge"
 					,
 						=
 							.
-							"
-								AssignedToCurrent
+							"AssignedToCurrent"
 				0
 		=
 			asdf
-			"
-				hello
+			"hello"
 		=
 			shortFunction
 			,
 				|
-					"
-						arg
-					!"
-						asdf
+					"arg"
+					!"asdf"
 		=
 			shortFunctionTest
 			*
-				!"
-					shortFunction
-				"
-					hello
+				!"shortFunction"
+				"hello"
 		=
 			counter
 			0
@@ -73,18 +67,15 @@
 			SetCounter
 			,
 				|
-					"
-						argument
+					"argument"
 					,
 						=
-							!"
-								counter
+							!"counter"
 							@
 		=
 			.
 			*
-				!"
-					SetCounter
+				!"SetCounter"
 				5
 		=
 			scoping
@@ -94,119 +85,88 @@
 					,
 						=
 							scopingValue
-							"
-								right
+							"right"
 						|
-							"
-								arg
-							!"
-								scopingValue
+							"arg"
+							!"scopingValue"
 		=
 			scopingValue
-			"
-				wrong
+			"wrong"
 		=
 			scopingTest
 			$
-				!"
-					scoping
-				"
-					test
+				!"scoping"
+				"test"
 		=
 			lexicalScoping
 			*
-				!"
-					scopingTest
+				!"scopingTest"
 				0
 		=
 			$
-				!"
-					C:
-				"
-					hello
+				!"C:"
+				"hello"
 			,
 				=
 					x
-					"
-						someTest
+					"someTest"
 		=
 			cTest
 			$
-				!"
-					C:
-				"
-					hello
+				!"C:"
+				"hello"
 		=
 			$
-				!"
-					C:
-				"
-					hello
+				!"C:"
+				"hello"
 			0
 		=
 			cTest2
 			$
-				!"
-					C:
-				"
-					hello
+				!"C:"
+				"hello"
 		=
 			unicodeText
-			"
-				äaba
+			"äaba"
 		=
 			$
-				!"
-					testSubDir
-				"
-					x
+				!"testSubDir"
+				"x"
 			0
 		=
 			persistantDeleteTest
 			$
-				!"
-					testSubDir
-				"
-					x
+				!"testSubDir"
+				"x"
 		=
 			$
-				!"
-					testSubDir
-				"
-					x
+				!"testSubDir"
+				"x"
 			,
 				=
 					a
-					"
-						b
+					"b"
 				=
 					x
 					,
 						=
 							x
-							"
-								hello
+							"hello"
 						=
 							y
-							"
-								world
+							"world"
 		=
 			$
-				!"
-					testSubDir
-				"
-					x
-				"
-					a
-			"
-				hi
+				!"testSubDir"
+				"x"
+				"a"
+			"hi"
 		=
 			integerHashTest
 			,
 				=
 					<2
-					"
-						correct hash content
+					"correct hash content"
 				=
 					hashTestData
 					,
@@ -218,18 +178,15 @@
 									0
 				=
 					hashTest
-					!!"
-						hashTestData
+					!!"hashTestData"
 		=
 			negativeInteger
 			100
 		=
 			$
 				negativeInteger
-				"
-					x
-			"
-				hello
+				"x"
+			"hello"
 		=
 			integerIncrementTest
 			5
@@ -237,16 +194,14 @@
 			$
 				integerIncrementTest
 				0
-			!"
-				integerIncrementTest
+			!"integerIncrementTest"
 		=
 			integerDecrementTest
 			5
 		=
 			integerDecrementTest
 			$
-				!"
-					integerDecrementTest
+				!"integerDecrementTest"
 				0
 		=
 			negativeNumber
@@ -296,98 +251,80 @@
 		=
 			persistenceTest
 			$
-				!"
-					testSubDir
-				"
-					x
+				!"testSubDir"
+				"x"
 		=
 			literalEscapeTest
 			,
 				=
 					.
-					"
-						asdf
+					"asdf"
 				=
 					.
-					"
-						asdf
+					"asdf"
 				=
 					.
 					"
 						as"'df
+					"
 				=
 					.
 					"
 						as"''df
+					"
 				=
 					.
 					"
 						as"''''''''''''''''df
+					"
 		=
 			.
-			"
-				ImpliedAutokey
+			"ImpliedAutokey"
 		=
 			.
-			"
-				Autokey
+			"Autokey"
 		=
 			commandLineArguments
-			!"
-				commandLine
+			!"commandLine"
 		=
 			aMap
 			,
 				=
 					a
-					"
-						a
+					"a"
 		=
-			<!"
-				aMap
-			"
-				Object
+			<!"aMap"
+			"Object"
 		=
-			<"
-				normal symbol
-			"
-				NormalSymbol
+			<"normal symbol"
+			"NormalSymbol"
 		=
 			lookupSymbol
-			"
-				LookupSymbol
+			"LookupSymbol"
 		=
-			<"
-				long key symbol
-			"
-				LookupExtendedSymbol
+			<"long key symbol"
+			"LookupExtendedSymbol"
 		=
 			lookedUpMap
-			!!"
-				aMap
+			!!"aMap"
 		=
 			lookedUpNormalSymbol
-			!"
-				normal symbol
+			!"normal symbol"
 		=
 			lookedUpSymbol
-			!"
-				lookupSymbol
+			!"lookupSymbol"
 		=
 			lookedUpLongSymbol
-			!"
-				long key symbol
+			!"long key symbol"
 		=
 			object
 			,
 				=
 					a
-					"
-						default
+					"default"
 				=
 					autoSearch
-					"
-						default
+					"default"
 				=
 					b
 					0
@@ -395,69 +332,53 @@
 					SetA
 					,
 						|
-							"
-								arg
+							"arg"
 							,
 								=
-									!"
-										a
-									"
-										c
+									!"a"
+									"c"
 								=
-									!"
-										autoSearch
-									"
-										changed
+									!"autoSearch"
+									"changed"
 				=
 					SetB
 					,
 						|
-							"
-								newB
+							"newB"
 							,
 								=
 									$
-										!"
-											b
+										!"b"
 										1
 									$
-										!"
-											newB
-										"
-											value
+										!"newB"
+										"value"
 								=
 									&
-									"
-										changed
+									"changed"
 				=
 					x
 					,
 						=
 							a
-							"
-								b
+							"b"
 						=
 							c
-							"
-								d
+							"d"
 				=
 					.
 					,
 						|
-							"
-								arg
+							"arg"
 							,
 								=
 									$
 										&
-										"
-											a
-									"
-										b
+										"a"
+									"b"
 		=
 			a
-			"
-				default
+			"default"
 		=
 			b
 			0
@@ -465,19 +386,15 @@
 			aSet
 			*
 				$
-					!"
-						object
-					"
-						SetA
+					!"object"
+					"SetA"
 				0
 		=
 			bSet
 			*
 				$
-					!"
-						object
-					"
-						SetB
+					!"object"
+					"SetB"
 				,
 					=
 						value
@@ -490,126 +407,100 @@
 								1
 		=
 			scopeTest
-			"
-				default
+			"default"
 		=
 			scopeFunction
 			,
 				=
 					inScope
-					"
-						right
+					"right"
 				|
-					"
-						arg
+					"arg"
 					,
 						=
-							!"
-								scopeTest
-							!"
-								inScope
+							!"scopeTest"
+							!"inScope"
 		=
 			inScope
-			"
-				wrong
+			"wrong"
 		=
 			.
 			*
-				!"
-					scopeFunction
+				!"scopeFunction"
 				0
 		=
 			scopeFromFunctionData
-			"
-				wrong
+			"wrong"
 		=
 			scopeFunctionFunction
 			,
 				=
 					scopeFromFunctionData
-					"
-						right
+					"right"
 				|
-					"
-						arg
+					"arg"
 					,
 						|
-							"
-								arg
-							!"
-								scopeFromFunctionData
+							"arg"
+							!"scopeFromFunctionData"
 		=
 			scopeFromFunction
 			*
-				!"
-					scopeFunctionFunction
+				!"scopeFunctionFunction"
 				0
 		=
 			scopeFromFunctionTest
 			*
-				!"
-					scopeFromFunction
+				!"scopeFromFunction"
 				0
 		=
 			ReturnEverything
 			,
 				|
-					"
-						everything
+					"everything"
 					,
 						=
 							&
-							!"
-								everything
+							!"everything"
 		=
 			everythingReturned
 			*
-				!"
-					ReturnEverything
+				!"ReturnEverything"
 				,
 					=
 						.
-						"
-							a
+						"a"
 					=
 						.
-						"
-							b
+						"b"
 					=
 						.
-						"
-							c
+						"c"
 		=
 			variableAsArgument
 			*
-				!"
-					ReturnEverything
+				!"ReturnEverything"
 				,
 					=
 						.
-						"
-							x
+						"x"
 					=
 						.
-						"
-							y
+						"y"
 					=
 						.
-						"
-							z
+						"z"
 		=
 			ReturnFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							&
 							,
 								|
-									"
-										arg
+									"arg"
 									,
 										=
 											&
@@ -627,562 +518,419 @@
 			SetCurrent
 			,
 				|
-					"
-						current
+					"current"
 					,
 						=
 							&
 							,
 								=
 									asdf
-									!"
-										current
+									!"current"
 								=
 									x
 									$
-										!"
-											current
-										"
-											symbol
+										!"current"
+										"symbol"
 						=
 							&
-							!"
-								x
+							!"x"
 		=
 			thisSet
 			*
-				!"
-					SetCurrent
+				!"SetCurrent"
 				,
 					=
 						symbol
-						"
-							haha
+						"haha"
 		=
 			FirstLevel
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							.
 							*
-								!"
-									SecondLevel
-								!"
-									arg
+								!"SecondLevel"
+								!"arg"
 		=
 			SecondLevel
 			,
 				|
-					"
-						arg
-					!"
-						arg
+					"arg"
+					!"arg"
 		=
 			argTest
 			*
-				!"
-					FirstLevel
+				!"FirstLevel"
 				,
 					=
 						a
-						"
-							z
+						"z"
 		=
 			TestClass
 			$
 				/
-				"
-					Meta
-				"
-					TestClass
+				"Meta"
+				"TestClass"
 		=
 			$
 				TestClass
-				"
-					NestedClass
-				"
-					field
+				"NestedClass"
+				"field"
 			5
 		=
 			nestedClassTest
 			$
-				!"
-					TestClass
-				"
-					NestedClass
-				"
-					field
+				!"TestClass"
+				"NestedClass"
+				"field"
 		=
 			testClass
 			*
-				!"
-					TestClass
+				!"TestClass"
 				0
 		=
 			$
 				testClass
-				"
-					floatValue
+				"floatValue"
 			3
 		=
 			$
 				testClass
-				"
-					doubleValue
+				"doubleValue"
 			4
 		=
 			$
 				testClass
-				"
-					decimalValue
+				"decimalValue"
 			5
 		=
 			$
-				!"
-					TestClass
-				"
-					boolTest
+				!"TestClass"
+				"boolTest"
 			1
 		=
 			boolTest
 			$
-				!"
-					TestClass
-				"
-					boolTest
+				!"TestClass"
+				"boolTest"
 		=
 			strongNameTest
 			$
 				!,
 					=
 						version
-						"
-							2.0.0.0
+						"2.0.0.0"
 					=
 						publicKeyToken
-						"
-							b77a5c561934e089
+						"b77a5c561934e089"
 					=
 						culture
-						"
-							Neutral
+						"Neutral"
 					=
 						name
-						"
-							mscorlib
-				"
-					Int32
+						"mscorlib"
+				"Int32"
 		=
 			MemberTest
 			$
 				/
-				"
-					Meta
-				"
-					MemberTest
+				"Meta"
+				"MemberTest"
 		=
 			memberTest
 			*
-				!"
-					MemberTest
+				!"MemberTest"
 				0
 		=
 			stringOverload
 			*
 				$
-					!"
-						MemberTest
-					"
-						OverloadedMethod
+					!"MemberTest"
+					"OverloadedMethod"
 					$
 						/
-						"
-							mscorlib
-						"
-							String
-				"
-					hello
+						"mscorlib"
+						"String"
+				"hello"
 		=
 			integerOverload
 			*
 				$
-					!"
-						MemberTest
-					"
-						OverloadedMethod
+					!"MemberTest"
+					"OverloadedMethod"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
+						"mscorlib"
+						"Int32"
 				5
 		=
 			memberTestOverload
 			*
 				$
-					!"
-						MemberTest
-					"
-						OverloadedMethod
+					!"MemberTest"
+					"OverloadedMethod"
 					$
 						/
-						"
-							Meta
-						"
-							MemberTest
+						"Meta"
+						"MemberTest"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
-				!"
-					memberTest
+						"mscorlib"
+						"Int32"
+				!"memberTest"
 				3247
 		=
 			memberTestOverload
 			*
 				$
-					!"
-						MemberTest
-					"
-						OverloadedMethod
+					!"MemberTest"
+					"OverloadedMethod"
 					$
 						/
-						"
-							Meta
-						"
-							MemberTest
+						"Meta"
+						"MemberTest"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
-				!"
-					memberTest
+						"mscorlib"
+						"Int32"
+				!"memberTest"
 				3247
 		=
 			$
 				MemberTest
-				"
-					classField
-			"
-				a
+				"classField"
+			"a"
 		=
 			$
 				memberTest
-				"
-					instanceField
-			"
-				b
+				"instanceField"
+			"b"
 		=
 			$
 				MemberTest
-				"
-					ClassProperty
+				"ClassProperty"
 			$
-				!"
-					memberTest
-				"
-					InstanceProperty
+				!"memberTest"
+				"InstanceProperty"
 		=
 			classPropertyValue
 			$
-				!"
-					MemberTest
-				"
-					ClassProperty
+				!"MemberTest"
+				"ClassProperty"
 		=
 			$
 				memberTest
-				"
-					InstanceProperty
+				"InstanceProperty"
 			$
-				!"
-					MemberTest
-				"
-					ClassProperty
+				!"MemberTest"
+				"ClassProperty"
 		=
 			instancePropertyValue
 			$
-				!"
-					memberTest
-				"
-					InstanceProperty
+				!"memberTest"
+				"InstanceProperty"
 		=
 			interceptedSymbol
-			"
-				/hello/
+			"/hello/"
 		=
 			positionalNoConversion
 			*
 				$
 					/
-					"
-						Meta
-					"
-						PositionalNoConversion
+					"Meta"
+					"PositionalNoConversion"
 					$
-						!"
-							mscorlib
-						"
-							String
+						!"mscorlib"
+						"String"
 					$
-						!"
-							mscorlib
-						"
-							String
+						!"mscorlib"
+						"String"
 					$
-						!"
-							mscorlib
-						"
-							String
-				"
-					m
-				"
-					n
-				"
-					o
+						!"mscorlib"
+						"String"
+				"m"
+				"n"
+				"o"
 		=
 			positionalNoConversionConcatenated
 			*
 				$
-					!"
-						positionalNoConversion
-					"
-						Concatenate
+					!"positionalNoConversion"
+					"Concatenate"
 					$
-						!"
-							mscorlib
-						"
-							String
+						!"mscorlib"
+						"String"
 					$
-						!"
-							mscorlib
-						"
-							String
+						!"mscorlib"
+						"String"
 					$
-						!"
-							mscorlib
-						"
-							String
-				"
-					r
-				"
-					s
-				"
-					t
+						!"mscorlib"
+						"String"
+				"r"
+				"s"
+				"t"
 		=
 			namedNoConversion
 			*
 				$
 					/
-					"
-						Meta
-					"
-						NamedNoConversion
+					"Meta"
+					"NamedNoConversion"
 					$
 						/
-						"
-							Meta
-						"
-							Map
+						"Meta"
+						"Map"
 				,
 					=
 						.
-						"
-							m
+						"m"
 					=
 						y
-						"
-							n
+						"n"
 		=
 			namedNoConversionConcatenated
 			*
 				$
-					!"
-						namedNoConversion
-					"
-						Concatenate
+					!"namedNoConversion"
+					"Concatenate"
 					$
 						/
-						"
-							Meta
-						"
-							Map
+						"Meta"
+						"Map"
 				,
 					=
 						c
-						"
-							t
+						"t"
 					=
 						.
-						"
-							r
+						"r"
 		=
 			indexerNoConversion
 			*
 				$
 					/
-					"
-						Meta
-					"
-						IndexerNoConversion
+					"Meta"
+					"IndexerNoConversion"
 				0
 		=
 			$
 				indexerNoConversion
-				"
-					Item
-				"
-					abc
-			"
-				hihi
+				"Item"
+				"abc"
+			"hihi"
 		=
 			indexerNoConversionIndexed
 			$
-				!"
-					indexerNoConversion
-				"
-					Item
-				"
-					abc
+				!"indexerNoConversion"
+				"Item"
+				"abc"
 		=
 			interceptedSymbolTwo
 			1
 		=
 			k
-			"
-				hello
+			"hello"
 		=
 			xyz
-			"
-				w
+			"w"
 		=
 			literalFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					5
 		=
 			literalFunctionResult
 			*
-				!"
-					literalFunction
+				!"literalFunction"
 				0
 		=
 			someFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							&
-							"
-								simple function this
+							"simple function this"
 		=
 			callFunction
 			,
 				|
-					"
-						arg
-					!"
-						someFunction
+					"arg"
+					!"someFunction"
 		=
 			callFunctionResult
 			*
-				!"
-					callFunction
+				!"callFunction"
 				0
 		=
 			delayedFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						|
-							"
-								arg
+							"arg"
 							,
 								=
 									x
-									"
-										y
+									"y"
 		=
 			delayedFunctionResult
 			*
-				!"
-					delayedFunction
+				!"delayedFunction"
 				0
 		=
 			delayedFunctionDirect
 			*
 				*
-					!"
-						delayedFunction
+					!"delayedFunction"
 					0
 				0
 		=
 			value
-			"
-				xyz
+			"xyz"
 		=
 			selectionFunction
 			,
 				|
-					"
-						arg
-					!"
-						value
+					"arg"
+					!"value"
 		=
 			selectionFunctionResult
 			*
-				!"
-					selectionFunction
+				!"selectionFunction"
 				0
 		=
 			upperLevel
-			"
-				unchanged
+			"unchanged"
 		=
 			SetUpperLevel
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
-							!"
-								upperLevel
-							!"
-								arg
+							!"upperLevel"
+							!"arg"
 		=
 			ChangeUpperLevel
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							.
 							*
-								!"
-									SetUpperLevel
-								"
-									changed
+								!"SetUpperLevel"
+								"changed"
 		=
 			.
 			*
-				!"
-					ChangeUpperLevel
+				!"ChangeUpperLevel"
 				0
 		=
 			staticEventChanged
@@ -1191,120 +939,91 @@
 			ChangeStaticEvent
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
-							!"
-								staticEventChanged
-							!"
-								arg
+							!"staticEventChanged"
+							!"arg"
 		=
 			$
 				TestClass
-				"
-					staticEvent
+				"staticEvent"
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							.
 							*
-								!"
-									ChangeStaticEvent
+								!"ChangeStaticEvent"
 								1
 						=
 							&
 							$
-								!"
-									arg
+								!"arg"
 								1
 		=
 			.
 			*
 				$
-					!"
-						TestClass
-					"
-						TakeDelegate
+					!"TestClass"
+					"TakeDelegate"
 					$
 						/
-						"
-							Meta
-						"
-							TestClass
-						"
-							TestDelegate
+						"Meta"
+						"TestClass"
+						"TestDelegate"
 				,
 					|
-						"
-							arg
+						"arg"
 						$
-							!"
-								arg
+							!"arg"
 							1
 		=
 			resultFromDelegate
 			*
 				$
-					!"
-						TestClass
-					"
-						GetResultFromDelegate
+					!"TestClass"
+					"GetResultFromDelegate"
 				0
 		=
 			staticEventResult
 			*
 				$
-					!"
-						TestClass
-					"
-						CallStaticEvent
+					!"TestClass"
+					"CallStaticEvent"
 					$
-						!"
-							mscorlib
-						"
-							Object
-				!"
-					testClass
+						!"mscorlib"
+						"Object"
+				!"testClass"
 		=
 			instanceEventChanged
 			0
 		=
 			$
 				testClass
-				"
-					instanceEvent
+				"instanceEvent"
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
-							!"
-								instanceEventChanged
+							!"instanceEventChanged"
 							1
 						=
 							&
 							$
-								!"
-									arg
+								!"arg"
 								1
 		=
 			instanceEventResult
 			*
 				$
-					!"
-						testClass
-					"
-						CallInstanceEvent
+					!"testClass"
+					"CallInstanceEvent"
 					$
-						!"
-							mscorlib
-						"
-							Object
+						!"mscorlib"
+						"Object"
 				5
 		=
 			one
@@ -1314,20 +1033,16 @@
 			2
 		=
 			firstIf
-			"
-				unchanged
+			"unchanged"
 		=
 			secondIf
-			"
-				unchanged
+			"unchanged"
 		=
 			firstIfCondition
 			*
-				!"
-					equal
+				!"equal"
 				1
-				!"
-					one
+				!"one"
 		=
 			firstIfBranches
 			,
@@ -1335,54 +1050,43 @@
 					.
 					,
 						|
-							"
-								arg
-							"
-								then
+							"arg"
+							"then"
 				=
 					<0
 					,
 						|
-							"
-								arg
-							"
-								else
+							"arg"
+							"else"
 		=
 			firstIf
 			*
 				$
-					!"
-						firstIfBranches
-					!"
-						firstIfCondition
+					!"firstIfBranches"
+					!"firstIfCondition"
 				0
 		=
 			bigNumber
 			50020202
 		=
 			secondSwitch
-			"
-				unchanged
+			"unchanged"
 		=
 			secondSwitchCases
 			,
 				=
 					.
-					"
-						one
+					"one"
 				=
 					.
-					"
-						two
+					"two"
 				=
 					.
-					"
-						three
+					"three"
 		=
 			secondSwitch
 			$
-				!"
-					secondSwitchCases
+				!"secondSwitchCases"
 				3
 		=
 			emptyMap
@@ -1391,42 +1095,32 @@
 			emptyFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							x
-							"
-								hello
+							"hello"
 		=
 			emptyFunctionResult
 			*
-				!"
-					emptyFunction
+				!"emptyFunction"
 				0
 		=
 			font
 			*
 				$
 					/
-					"
-						System.Drawing
-					"
-						Font
+					"System.Drawing"
+					"Font"
 					$
 						/
-						"
-							mscorlib
-						"
-							String
+						"mscorlib"
+						"String"
 					$
 						/
-						"
-							mscorlib
-						"
-							Single
-				"
-					Courier New
+						"mscorlib"
+						"Single"
+				"Courier New"
 				10
 		=
 			decimalTest
@@ -1436,24 +1130,20 @@
 			40
 		=
 			stringTest
-			"
-				hello
+			"hello"
 		=
 			$
 				stringTest
 				6
 			$
-				!"
-					stringTest
+				!"stringTest"
 				1
 		=
 			helloh
-			"
-				hi
+			"hi"
 		=
 			stringStrategyHashTest
-			!!"
-				stringTest
+			!!"stringTest"
 		=
 			x
 			,
@@ -1462,132 +1152,103 @@
 					"
 						hello world!
 						hello!
+					"
 		=
 			arrayList
 			*
 				$
 					/
-					"
-						mscorlib
-					"
-						ArrayList
+					"mscorlib"
+					"ArrayList"
 				0
 		=
 			.
 			*
 				$
-					!"
-						arrayList
-					"
-						Add
+					!"arrayList"
+					"Add"
 					$
-						!"
-							mscorlib
-						"
-							Object
-				"
-					hello
+						!"mscorlib"
+						"Object"
+				"hello"
 		=
 			arrayListResult
 			$
-				!"
-					arrayList
-				"
-					Item
+				!"arrayList"
+				"Item"
 				0
 		=
 			textBox
 			*
 				$
 					/
-					"
-						System.Windows.Forms
-					"
-						TextBox
+					"System.Windows.Forms"
+					"TextBox"
 				0
 		=
 			$
 				textBox
-				"
-					Text
+				"Text"
 			"
 				Alle meine Entchen,
 				schwimmen auf dem See,
 				schwimmen auf dem See,
 				Köpfchen in das Wasser,
 				Schwaenzchen in die Hoeh.
+			"
 		=
 			lines
 			$
-				!"
-					textBox
-				"
-					Lines
+				!"textBox"
+				"Lines"
 		=
 			alleMeineText
 			*
 				$
-					!"
-						lines
-					"
-						GetValue
+					!"lines"
+					"GetValue"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
+						"mscorlib"
+						"Int32"
 				1
 		=
 			form
 			*
 				$
 					/
-					"
-						System.Windows.Forms
-					"
-						Form
+					"System.Windows.Forms"
+					"Form"
 				0
 		=
 			$
 				form
-				"
-					Location
+				"Location"
 			*
 				$
-					!"
-						System.Drawing
-					"
-						Point
+					!"System.Drawing"
+					"Point"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
+						"mscorlib"
+						"Int32"
 					$
 						/
-						"
-							mscorlib
-						"
-							Int32
+						"mscorlib"
+						"Int32"
 				5
 				1000
 		=
 			automaticConversionTest
 			$
-				!"
-					form
-				"
-					Location
+				!"form"
+				"Location"
 		=
 			tabText
-			"
-							hello
+			"			hello"
 		=
 			escapedText
-			"
-				'#'n'''t
+			"'#'n'''t"
 		=
 			whileCounter
 			0
@@ -1595,19 +1256,15 @@
 			loop
 			,
 				|
-					"
-						start
+					"start"
 					,
 						=
 							whileDecision
 							*
-								!"
-									not
+								!"not"
 								*
-									!"
-										equal
-									!"
-										start
+									!"equal"
+									!"start"
 									10
 						=
 							whileBranches
@@ -1616,119 +1273,92 @@
 									.
 									,
 										|
-											"
-												arg
+											"arg"
 											*
-												!"
-													loop
+												!"loop"
 												*
-													!"
-														add
-													!"
-														arg
+													!"add"
+													!"arg"
 													1
 								=
 									<0
 									,
 										|
-											"
-												arg
-											!"
-												arg
+											"arg"
+											!"arg"
 						=
 							&
 							*
 								$
-									!"
-										whileBranches
-									!"
-										whileDecision
-								!"
-									start
+									!"whileBranches"
+									!"whileDecision"
+								!"start"
 		=
 			whileCounter
 			*
-				!"
-					loop
+				!"loop"
 				3
 		=
 			returnInMap
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							result
-							!"
-								arg
+							!"arg"
 		=
 			literalAsArgument
 			*
-				!"
-					returnInMap
+				!"returnInMap"
 				1
 		=
 			returnFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						|
-							"
-								arg
-							"
-								functionResult
+							"arg"
+							"functionResult"
 		=
 			returnArg
 			,
 				|
-					"
-						arg
-					!"
-						arg
+					"arg"
+					!"arg"
 		=
 			myArg
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							hello
-							"
-								world
+							"world"
 		=
 			funcReturnTest
 			*
-				!"
-					returnArg
-				!"
-					myArg
+				!"returnArg"
+				!"myArg"
 				0
 		=
 			documentedFunction
 			,
 				=
 					doc
-					"
-						This function returns #hello .
+					"This function returns #hello ."
 				|
-					"
-						arg
-					"
-						hello
+					"arg"
+					"hello"
 		=
 			docFunctionResult
 			*
-				!"
-					documentedFunction
+				!"documentedFunction"
 				0
 		=
 			topLevel
-			"
-				default
+			"default"
 		=
 			deep
 			,
@@ -1739,137 +1369,102 @@
 							test
 							,
 								|
-									"
-										arg
+									"arg"
 									,
 										=
-											!"
-												topLevel
-											"
-												changed
+											!"topLevel"
+											"changed"
 		=
 			.
 			*
 				$
-					!"
-						deep
-					"
-						map
-					"
-						test
+					!"deep"
+					"map"
+					"test"
 				0
 		=
 			outerFunction
 			,
 				|
-					"
-						arg
+					"arg"
 					,
 						=
 							innerFunction
 							,
 								|
-									"
-										arg
+									"arg"
 									,
 										=
 											&
-											!"
-												arg
+											!"arg"
 						=
 							.
 							*
-								!"
-									innerFunction
+								!"innerFunction"
 								0
 		=
 			outerFunctionTest
 			*
-				!"
-					outerFunction
-				"
-					right
+				!"outerFunction"
+				"right"
 		=
 			newLines
 			"
 				
 				
+			"
 		=
 			$
-				!"
-					System.Windows.Forms
-				"
-					Application
-				"
-					VisualStyleState
+				!"System.Windows.Forms"
+				"Application"
+				"VisualStyleState"
 			$
-				!"
-					System.Windows.Forms
-				"
-					VisualStyleState
-				"
-					ClientAreaEnabled
+				!"System.Windows.Forms"
+				"VisualStyleState"
+				"ClientAreaEnabled"
 		=
 			enumTest
 			$
-				!"
-					System.Windows.Forms
-				"
-					Application
-				"
-					VisualStyleState
+				!"System.Windows.Forms"
+				"Application"
+				"VisualStyleState"
 		=
 			typeTest
 			*
 				$
-					!"
-						mscorlib
-					"
-						Array
-					"
-						CreateInstance
+					!"mscorlib"
+					"Array"
+					"CreateInstance"
 					$
-						!"
-							mscorlib
-						"
-							Type
+						!"mscorlib"
+						"Type"
 					$
-						!"
-							mscorlib
-						"
-							Int32
+						!"mscorlib"
+						"Int32"
 				$
-					!"
-						mscorlib
-					"
-						String
+					!"mscorlib"
+					"String"
 				5
 		=
 			123hello
-			"
-				asdf
+			"asdf"
 		=
 			copySourceData
 			,
 				=
 					x
-					"
-						y
+					"y"
 				=
 					z
-					"
-						a
+					"a"
 		=
 			copiedData
-			!"
-				copySourceData
+			!"copySourceData"
 		=
 			$
 				copiedData
-				"
-					x
-			"
-				changed
+				"x"
+			"changed"
 		=
 			characterLiterals
 			,

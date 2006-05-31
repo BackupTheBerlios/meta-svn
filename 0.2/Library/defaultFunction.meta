@@ -1,44 +1,29 @@
 |
-	"
-		default
+	"default"
 	,
 		|
-			"
-				arg
+			"arg"
 			*
 				$
-					!"
-						default
-					"
-						function
+					!"default"
+					"function"
 				*
-					!"
-						merge
+					!"merge"
 					$
-						!"
-							default
-						"
-							argument
-					!"
-						arg
+						!"default"
+						"argument"
+					!"arg"
 |
-	"
-		func
+	"func"
 	,
 		|
-			"
-				argument
+			"argument"
 			,
 				|
-					"
-						arg
+					"arg"
 					*
-						!"
-							func
+						!"func"
 						*
-							!"
-								merge
-							!"
-								argument
-							!"
-								arg
+							!"merge"
+							!"argument"
+							!"arg"

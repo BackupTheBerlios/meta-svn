@@ -1,9 +1,7 @@
 |
-	"
-		arg
+	"arg"
 	*
-		!"
-			sum
+		!"sum"
 		@
 		,
 			|
@@ -12,7 +10,5 @@
 					|
 						second
 						*
-							!"
-								first
-							!"
-								second
+							!"first"
+							!"second"

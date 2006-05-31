@@ -1,25 +1,17 @@
 |
-	"
-		arg
+	"arg"
 	*
 		$
 			/
-			"
-				Meta
-			"
-				Library
-			"
-				Multiply
+			"Meta"
+			"Library"
+			"Multiply"
 			$
 				/
-				"
-					Meta
-				"
-					Map
+				"Meta"
+				"Map"
 			$
 				/
-				"
-					Meta
-				"
-					Map
+				"Meta"
+				"Map"
 		@

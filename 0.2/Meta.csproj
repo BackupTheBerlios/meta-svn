@@ -109,11 +109,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="interpreter.meta" />
     <None Include="Library\call.meta" />
     <None Include="Library\first.meta" />
     <None Include="Library\sum.meta" />
-    <None Include="ide.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />
     <None Include="Library\append.meta" />
@@ -173,13 +171,8 @@
     <None Include="Library\values.meta" />
     <None Include="Library\while.meta" />
     <None Include="Library\with.meta" />
-    <None Include="newParser.meta" />
     <None Include="Test\basicTest.meta" />
-    <None Include="Test\Copy %282%29 of basicTest.meta" />
-    <None Include="Test\newBasicTest.meta" />
     <None Include="Test\libraryTest.meta" />
-    <None Include="parser.meta" />
-    <None Include="Test\profile.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

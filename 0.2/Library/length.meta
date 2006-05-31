@@ -1,26 +1,20 @@
 |
-	"
-		arg
+	"arg"
 	,
 		=
 			object
 			*
 				$
 					/
-					"
-						Meta
-					"
-						ObjectMap
+					"Meta"
+					"ObjectMap"
 					$
 						/
-						"
-							mscorlib
-						"
-							Object
+						"mscorlib"
+						"Object"
 				@
 		=
 			&
 			$
 				object
-				"
-					ArrayCount
+				"ArrayCount"

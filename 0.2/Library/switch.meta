@@ -1,36 +1,26 @@
 |
-	"
-		switchArg
+	"switchArg"
 	*
-		!"
-			if
+		!"if"
 		*
-			!"
-				hasKey
+			!"hasKey"
 			$
 				@
-				"
-					cases
+				"cases"
 			$
 				@
-				"
-					control
+				"control"
 		,
 			=
 				then
 				,
 					|
-						"
-							arg
+						"arg"
 						*
 							$
-								!"
-									switchArg
-								"
-									cases
+								!"switchArg"
+								"cases"
 								$
-									!"
-										switchArg
-									"
-										control
+									!"switchArg"
+									"control"
 							0

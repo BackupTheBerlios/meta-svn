@@ -5448,7 +5448,40 @@ namespace Meta
 			matched = false;
 			return null;
 		});
+		//public static Rule String = new Alternatives(
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//    new Action(new Match(),new Optional(EndOfLine)),
+		//    new Action(new Match(),new Optional(Dedentation))
+		//    ));
 		public static Rule String = new Alternatives(
+				new Sequence(
+					new Action(
+						new Match(), new Character(Syntax.@string)),
+					new Action(
+						new ReferenceAssignment(),
+						new OneOrMore(
+							new Action(
+								new Autokey(),
+								new CharacterExcept(
+									Syntax.unixNewLine,
+									Syntax.windowsNewLine[0],
+									Syntax.@string)))),
+					new Action(new Match(), new Character(Syntax.@string))),
 				new Sequence(
 					new Action(new Match(), new Character(Syntax.@string)),
 					new Action(new Match(), Indentation),
@@ -5465,9 +5498,8 @@ namespace Meta
 															new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
 															new Action(new Append(), StringLine)
 															)))))))),
-			new Action(new Match(),new Optional(EndOfLine)),
-			new Action(new Match(),new Optional(Dedentation))
-			));
+					new Action(new Match(), StringDedentation),
+					new Action(new Match(), new Character(Syntax.@string))));
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -6433,38 +6465,38 @@ namespace Meta
 //                new Match(),
 //                new Character(Syntax.character)));
 
-//        public static Rule String = new Alternatives(
-//                new Sequence(
-//                    new Action(
-//                        new Match(), new Character(Syntax.@string)),
-//                    new Action(
-//                        new ReferenceAssignment(),
-//                        new OneOrMore(
-//                            new Action(
-//                                new Autokey(),
-//                                new CharacterExcept(
-//                                    Syntax.unixNewLine,
-//                                    Syntax.windowsNewLine[0],
-//                                    Syntax.@string)))),
-//                    new Action(new Match(), new Character(Syntax.@string))),
-//                new Sequence(
-//                    new Action(new Match(), new Character(Syntax.@string)),
-//                    new Action(new Match(), Indentation),
-//                    new Action(new ReferenceAssignment(), new Sequence(
-//                                new Action(new Append(), StringLine),
-//                                new Action(new Append(),
-//                                        new ZeroOrMore(
-//                                            new Action(new Append(),
-//                                                new Sequence(
-//                                                    new Action(new Match(), EndOfLine),
-//                                                    new Action(new Match(), SameIndentation),
-//                                                    new Action(new ReferenceAssignment(),
-//                                                        new Sequence(
-//                                                            new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
-//                                                            new Action(new Append(), StringLine)
-//                                                            )))))))),
-//                    new Action(new Match(), StringDedentation),
-//                    new Action(new Match(), new Character(Syntax.@string))));
+		//public static Rule String = new Alternatives(
+		//        new Sequence(
+		//            new Action(
+		//                new Match(), new Character(Syntax.@string)),
+		//            new Action(
+		//                new ReferenceAssignment(),
+		//                new OneOrMore(
+		//                    new Action(
+		//                        new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.unixNewLine,
+		//                            Syntax.windowsNewLine[0],
+		//                            Syntax.@string)))),
+		//            new Action(new Match(), new Character(Syntax.@string))),
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//            new Action(new Match(), StringDedentation),
+		//            new Action(new Match(), new Character(Syntax.@string))));
 
 //        public static Rule Number = new Sequence(
 //            new Action(new ReferenceAssignment(),

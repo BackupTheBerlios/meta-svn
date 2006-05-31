@@ -1,19 +1,13 @@
 |	
-	"
-		arg
+	"arg"
 	*
 		$
 			/
-			"
-				Meta
-			"
-				Library
-			"
-				Increasing
+			"Meta"
+			"Library"
+			"Increasing"
 			$
 				/
-				"
-					Meta
-				"
-					Map
+				"Meta"
+				"Map"
 		@
