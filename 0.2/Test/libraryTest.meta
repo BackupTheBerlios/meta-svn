@@ -849,27 +849,17 @@ arg|,
 				*
 					!"parse"
 					"
-						:
-							asdf
-							"hello"
-						:
-							x
-							,
-								:
-									y
-									"hello"
-								:
-									z
-									, 
-										:
-											a
-											"x"
-								arg|*
-									!"join"
-									"hello "
-									!"join"
-									!"arg"
-									"!"
+						asdf:"hello"
+						x:,
+							y:"hello"
+							z:, 
+								a:"x"
+							arg|*
+								!"join"
+								"hello "
+								!"join"
+								!"arg"
+								"!"
 					"
 			=
 				<"invertTest"

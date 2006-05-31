@@ -1,119 +1,107 @@
-:
-	replace
-	,
-		arg|*
+replace:,
+	arg|*
+		$
+			/
+			"Meta"
+			"Library"
+			"StringReplace"
 			$
 				/
 				"Meta"
-				"Library"
-				"StringReplace"
+				"Map"
+		@
+trim:,
+	arg|,
+		=
+			object
+			*
 				$
 					/
 					"Meta"
-					"Map"
-			@
-:
-	trim
-	,
-		arg|,
-			=
-				object
-				*
+					"ObjectMap"
+					$
+						!"mscorlib"
+						"String"
+				@
+		=
+			&
+			*
+				$
+					!"object"
+					"Trim"
+					0
+				0
+lower:,
+	arg|,
+		=
+			object
+			*
+				$
+					/
+					"Meta"
+					"ObjectMap"
 					$
 						/
-						"Meta"
-						"ObjectMap"
-						$
-							!"mscorlib"
-							"String"
-					@
-			=
-				&
-				*
-					$
-						!"object"
-						"Trim"
-						0
-					0
-:
-	lower
-	,
-		arg|,
-			=
-				object
-				*
+						"mscorlib"
+						"String"
+				@
+		=
+			&
+			*
+				$
+					object
+					"ToLower"
+				0
+upper:,
+	arg|,
+		=
+			object
+			*
+				$
+					/
+					"Meta"
+					"ObjectMap"
 					$
 						/
-						"Meta"
-						"ObjectMap"
-						$
-							/
-							"mscorlib"
-							"String"
-					@
-			=
-				&
-				*
-					$
-						object
-						"ToLower"
-					0
-:
-	upper
-	,
-		arg|,
-			=
-				object
-				*
-					$
-						/
-						"Meta"
-						"ObjectMap"
-						$
-							/
-							"mscorlib"
-							"String"
-					@
-			=
-				&
-				*
-					$
-						!"object"
-						"ToUpper"
-					0
-:
-	split
-	,
-		arg|*
+						"mscorlib"
+						"String"
+				@
+		=
+			&
+			*
+				$
+					!"object"
+					"ToUpper"
+				0
+split:,
+	arg|*
+		$
+			/
+			"Meta"
+			"Library"
+			"SplitString"
 			$
 				/
 				"Meta"
-				"Library"
-				"SplitString"
-				$
-					/
-					"Meta"
-					"Map"
-				$
-					/
-					"Meta"
-					"Map"
-			@
-:
-	compare
-	,
-		arg|*
+				"Map"
 			$
 				/
 				"Meta"
-				"Library"
-				"CompareString"
-				$
-					/
-					"Meta"
-					"Map"
-				$
-					/
-					"Meta"
-					"Map"
-			@
+				"Map"
+		@
+compare:,
+	arg|*
+		$
+			/
+			"Meta"
+			"Library"
+			"CompareString"
+			$
+				/
+				"Meta"
+				"Map"
+			$
+				/
+				"Meta"
+				"Map"
+		@

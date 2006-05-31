@@ -1,17 +1,13 @@
-:
-	url
-	,
-		:
-			decode
-			,
-				arg|*
-					$
-						/
-						"Meta"
-						"Library"
-						"UrlDecode"
-						$
-							/
-							"Meta"
-							"Map"
-					@
+url:,
+	decode:,
+		arg|*
+			$
+				/
+				"Meta"
+				"Library"
+				"UrlDecode"
+				$
+					/
+					"Meta"
+					"Map"
+			@

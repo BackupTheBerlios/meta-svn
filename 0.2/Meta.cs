@@ -4903,7 +4903,7 @@ namespace Meta
 		public const char current = '&';
 		//public const char current = ':';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':'};
 	}
 
 
@@ -5625,44 +5625,84 @@ namespace Meta
 		//    );
 
 
-
-	public static Rule Entry = new Alternatives(
-	new Sequence(new Action(new Assignment(CodeKeys.Function),
-		new Sequence(new Action(new ReferenceAssignment(), Function)))),
-	//new Action(new Match(), new Optional(Dedentation)))))
-	new CustomRule(delegate(Parser parser, out bool matched)
-	{
-		Map result = new StrategyMap();
-		new Sequence(
-			new Action(new Match(), new Character(':')),
-			new Action(new Match(), Indentation)).Match(parser, out matched);
-		if (matched)
+		public static Rule Entry = new Alternatives(
+			new Sequence(new Action(new Assignment(CodeKeys.Function),
+				new Sequence(new Action(new ReferenceAssignment(), Function)))),
+				//new Action(new Match(), new Optional(Dedentation)))))
+		new CustomRule(delegate(Parser parser, out bool matched)
 		{
-			//Map key = Value.Match(parser, out matched);
+			Map result = new StrategyMap();
 			Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+			//new Sequence(
+			//    new Action(new Match(), new Character(':')),
+			//    new Action(new Match(), Indentation)).Match(parser, out matched);
 			if (matched)
 			{
+				//Map key = Value.Match(parser, out matched);
 				new Sequence(
-						new Action(new Match(), new Optional(EndOfLine)),
-						new Action(new Match(), SameIndentation)).Match(parser, out matched);
+					new Action(new Match(), new Character(':'))).Match(parser, out matched);
+				
 				if (matched)
 				{
-					//StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
-					Map value = Value.Match(parser, out matched);
-					result[key] = value;
+					//new Sequence(
+					//        new Action(new Match(), new Optional(EndOfLine)),
+					//        new Action(new Match(), SameIndentation)).Match(parser, out matched);
+					if (matched)
+					{
+						//StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+						Map value = Value.Match(parser, out matched);
+						result[key] = value;
 
-					// i dont understand this
-					new Sequence(
-						new Action(new Match(), new Optional(EndOfLine)),
-						new Action(new Match(), new Optional(Dedentation)
-						)).Match(parser, out matched);
-					//bool match;
-					//EndOfLine.Match(parser, out match);
+						// i dont understand this
+						new Sequence(
+							new Action(new Match(), new Optional(EndOfLine))
+							//new Action(new Match(), new Optional(Dedentation)
+							).Match(parser, out matched);
+						//bool match;
+						//EndOfLine.Match(parser, out match);
+					}
 				}
 			}
-		}
-		return result;
-	}));
+			return result;
+		}));
+
+	//public static Rule Entry = new Alternatives(
+	//new Sequence(new Action(new Assignment(CodeKeys.Function),
+	//    new Sequence(new Action(new ReferenceAssignment(), Function)))),
+	////new Action(new Match(), new Optional(Dedentation)))))
+	//new CustomRule(delegate(Parser parser, out bool matched)
+	//{
+	//    Map result = new StrategyMap();
+	//    new Sequence(
+	//        new Action(new Match(), new Character(':')),
+	//        new Action(new Match(), Indentation)).Match(parser, out matched);
+	//    if (matched)
+	//    {
+	//        //Map key = Value.Match(parser, out matched);
+	//        Map key = new Alternatives(LookupString, LookupAnything).Match(parser, out matched);
+	//        if (matched)
+	//        {
+	//            new Sequence(
+	//                    new Action(new Match(), new Optional(EndOfLine)),
+	//                    new Action(new Match(), SameIndentation)).Match(parser, out matched);
+	//            if (matched)
+	//            {
+	//                //StringRule(Syntax.assignment.ToString()).Match(parser, out matched);
+	//                Map value = Value.Match(parser, out matched);
+	//                result[key] = value;
+
+	//                // i dont understand this
+	//                new Sequence(
+	//                    new Action(new Match(), new Optional(EndOfLine)),
+	//                    new Action(new Match(), new Optional(Dedentation)
+	//                    )).Match(parser, out matched);
+	//                //bool match;
+	//                //EndOfLine.Match(parser, out match);
+	//            }
+	//        }
+	//    }
+	//    return result;
+	//}));
 
 	//    public static Rule Entry = new Alternatives(
 	//new Sequence(new Action(new Assignment(CodeKeys.Function),
@@ -7559,14 +7599,7 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -7583,7 +7616,14 @@ namespace Meta
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)
