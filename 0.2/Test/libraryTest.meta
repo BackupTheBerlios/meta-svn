@@ -3,38 +3,31 @@
 		arg
 	,
 		=
-			<"
-				test
+			test
 			,
 				=
-					<"
-						booleanTest
+					booleanTest
 					,
 						=
-							<"
-								not
+							not
 							,
 								=
-									<"
-										true
+									true
 									*
 										!"
 											not
 										0
 								=
-									<"
-										false
+									false
 									*
 										!"
 											not
 										1
 						=
-							<"
-								and
+							and
 							,
 								=
-									<"
-										true
+									true
 									*
 										!"
 											and
@@ -68,8 +61,7 @@
 															arg
 														1
 								=
-									<"
-										false
+									false
 									*
 										!"
 											and
@@ -103,12 +95,10 @@
 															arg
 														1
 						=
-							<"
-								orTest
+							orTest
 							,
 								=
-									<"
-										true
+									true
 									*
 										!"
 											or
@@ -135,8 +125,7 @@
 															arg
 														1
 								=
-									<"
-										false
+									false
 									*
 										!"
 											or
@@ -163,8 +152,7 @@
 															arg
 														0
 								=
-									<"
-										otherTrue
+									otherTrue
 									*
 										!"
 											or
@@ -205,28 +193,24 @@
 															arg
 														0
 				=
-					<"
-						numberTest
+					numberTest
 					,
 						=
-							<"
-								positiveAdd
+							positiveAdd
 							*
 								!"
 									add
 								100
 								1000
 						=
-							<"
-								negativeAdd
+							negativeAdd
 							*
 								!"
 									add
 								-100
 								91
 						=
-							<"
-								subtractTest
+							subtractTest
 							*
 								!"
 									add
@@ -237,40 +221,35 @@
 									1/100
 									-1
 						=
-							<"
-								subtractTest2
+							subtractTest2
 							*
 								!"
 									subtract
 								2
 								103
 						=
-							<"
-								divideTest
+							divideTest
 							*
 								!"
 									divide
 								5
 								103
 						=
-							<"
-								multiplyInteger
+							multiplyInteger
 							*
 								!"
 									multiply
 								19
 								1023
 						=
-							<"
-								multiplyFraction
+							multiplyFraction
 							*
 								!"
 									multiply
 								3/2
 								7/3
 						=
-							<"
-								smallerDecreasingTest
+							smallerDecreasingTest
 							*
 								!"
 									strictlyDecreasing
@@ -282,8 +261,7 @@
 										.
 										1
 						=
-							<"
-								nonincreasingTest
+							nonincreasingTest
 							*
 								!"
 									decreasing
@@ -301,8 +279,7 @@
 										.
 										1
 						=
-							<"
-								nondecreasingTest
+							nondecreasingTest
 							*
 								!"
 									increasing
@@ -326,8 +303,7 @@
 										.
 										6
 						=
-							<"
-								strictlyIncreasingTest
+							strictlyIncreasingTest
 							*
 								!"
 									strictlyIncreasing
@@ -339,24 +315,21 @@
 										.
 										2
 						=
-							<"
-								smallerTest
+							smallerTest
 							*
 								!"
 									smaller
 								0
 								1
 						=
-							<"
-								greaterTest
+							greaterTest
 							*
 								!"
 									greater
 								3
 								5
 						=
-							<"
-								divide
+							divide
 							*
 								!"
 									multiply
@@ -366,12 +339,10 @@
 										reciprocal
 									7
 				=
-					<"
-						bitwiseTest
+					bitwiseTest
 					,
 						=			
-							<"
-								or
+							or
 							*
 								!"
 									bitwiseOr
@@ -383,23 +354,19 @@
 										.
 										20
 				=
-					<"
-						mapTest
+					mapTest
 					,
 						=
-							<"
-								switchTest
+							switchTest
 							*
 								!"
 									switch
 								,
 									=
-										<"
-											cases
+										cases
 										,
 											=
-												<"
-													x
+												x
 												,
 													|
 														"
@@ -407,8 +374,7 @@
 														"
 															right
 											=
-												<"
-													y
+												y
 												,
 													|
 														"
@@ -416,21 +382,18 @@
 														"
 															wrong
 									=
-										<"
-											control
+										control
 										"
 											x
 						=
-							<"
-								ifTest
+							ifTest
 							*
 								!"
 									if
 								1
 								,
 									=
-										<"
-											then
+										then
 										,
 											|
 												"
@@ -438,8 +401,7 @@
 												"
 													if test successful
 						=
-							<"
-								append
+							append
 							*
 								!"
 									join
@@ -448,8 +410,7 @@
 								"
 									die Katze lief im Schnee.
 						=
-							<"
-								apply
+							apply
 							,
 								=
 									&
@@ -477,17 +438,14 @@
 														argument
 													1
 						=
-							<"
-								keyTestMap
+							keyTestMap
 							,
 								=
-									<"
-										x
+									x
 									"
 										hello
 						=
-							<"
-								contains
+							contains
 							*
 								!"
 									hasKey
@@ -496,20 +454,17 @@
 								"
 									x
 						=
-							<"
-								keysTest
+							keysTest
 							*
 								!"
 									keys
 								,
 									=
-										<"
-											jjqwv
+										jjqwv
 										"
 											aeäquq
 									=
-										<"
-											oere
+										oere
 										"
 											i ke
 									=
@@ -517,80 +472,65 @@
 										"
 											oiq
 						=
-							<"
-								equal
+							equal
 							,
 								=
-									<"
-										map
+									map
 									,
 										=
-											<"
-												true
+											true
 											*
 												!"
 													equal
 												,
 													=
-														<"
-															x
+														x
 														"
 															hello
 													=
-														<"
-															y
+														y
 														"
 															world
 												,
 													=
-														<"
-															x
+														x
 														"
 															hello
 													=
-														<"
-															y
+														y
 														"
 															world
 										=
-											<"
-												false
+											false
 											*
 												!"
 													equal
 												,
 													=
-														<"
-															x
+														x
 														"
 															y
 													=
-														<"
-															y
+														y
 														"
 															z
 												,
 													=
-														<"
-															x
+														x
 														"
 															y
 													=
-														<"
-															y
+														y
 														"
 															a
 						=
-							<"
-								while
+							while
 							,
 								=
-									<"
-										counter
+									counter
 									0
 								=
-									<"
-										SetCounter
+									SetCounter
 									,
 										|
 											"
@@ -602,15 +542,13 @@
 													!"
 														argument
 								=
-									<"
-										test
+									test
 									*
 										!"
 											while
 										,
 											=
-												<"
-													condition
+												condition
 												,
 													|
 														"
@@ -627,8 +565,7 @@
 																	.
 																	10
 											=
-												<"
-													function
+												function
 												,
 													|
 														"
@@ -646,24 +583,21 @@
 									!"
 										counter
 						=
-							<"
-								lastTest
+							lastTest
 							*
 								!"
 									last
 								"
 									hello
 						=
-							<"
-								firstTest
+							firstTest
 							*
 								!"
 									first
 								"
 									hello
 						=
-							<"
-								splitTest
+							splitTest
 							*
 								!"
 									split
@@ -673,13 +607,11 @@
 										"
 											hello world hello
 									=
-										<"
-											space
+										space
 										"
 											 
 									=
-										<"
-											delimiters
+										delimiters
 										,
 											=
 												.
@@ -688,8 +620,7 @@
 														space
 													1
 						=
-							<"
-								stringSplitTest
+							stringSplitTest
 							*
 								$
 									!"
@@ -706,15 +637,13 @@
 										.
 										'l'
 						=
-							<"
-								tryTest
+							tryTest
 							*
 								!"
 									try
 								,
 									=
-										<"
-											function
+										function
 										,
 											|
 												"
@@ -722,8 +651,7 @@
 												"
 													hello
 									=
-										<"
-											catch
+										catch
 										,
 											|
 												"
@@ -736,8 +664,7 @@
 															ToString
 													0
 						=
-							<"
-								sortTest
+							sortTest
 							*
 								!"
 									sort
@@ -746,45 +673,37 @@
 										.
 										,
 											=
-												<"
-													x
+												x
 												12
 											=
-												<"
-													y
+												y
 												234
 									=
 										.
 										,
 											=
-												<"
-													x
+												x
 												123
 											=
-												<"
-													y
+												y
 												3245
 									=
 										.
 										,
 											=
-												<"
-													x
+												x
 												12
 											=
-												<"
-													y
+												y
 												234
 									=
 										.
 										,	
 											=
-												<"
-													x
+												x
 												245
 											=
-												<"
-													y
+												y
 												98834
 								,
 									|
@@ -817,16 +736,14 @@
 																		x
 													,
 														=
-															<"
-																then
+															then
 															,
 																|
 																	"
 																		arg
 																	-1
 														=
-															<"
-																else
+															else
 															,
 																|
 																	"
@@ -854,31 +771,27 @@
 																							x
 																		,
 																			=
-																				<"
-																					then
+																				then
 																				,
 																					|
 																						"
 																							arg
 																						1
 																			=
-																				<"
-																					else
+																				else
 																				,
 																					|
 																						"
 																							arg
 																						0
 						=
-							<"
-								integerToString
+							integerToString
 							*
 								!"
 									integerToString
 								5
 						=
-							<"
-								stringReplace
+							stringReplace
 							*
 								$
 									!"
@@ -887,23 +800,19 @@
 										replace
 								,
 									=
-										<"
-											string
+										string
 										"
 											hello hello hi
 									=
-										<"
-											old
+										old
 										"
 											he
 									=
-										<"
-											new
+										new
 										"
 											i
 				=
-					<"
-						bitwiseTest
+					bitwiseTest
 					*
 						!"
 							bitwiseOr
@@ -922,8 +831,7 @@
 									"
 										Tab
 				=
-					<"
-						filterTest
+					filterTest
 					*
 						!"
 							filter
@@ -956,50 +864,41 @@
 										argument
 									1
 				=
-					<"
-						findTest
+					findTest
 					*
 						!"
 							find
 						,
 							=
-								<"
-									array
+								array
 								"
 									hello hello hi
 							=
-								<"
-									value
+								value
 								"
 									he
 				=
-					<"
-						findTest2
+					findTest2
 					*
 						!"
 							find
 						,
 							=
-								<"
-									array
+								array
 								"
 									test test
 							=
-								<"
-									value
+								value
 								"
 									test test
 				=
-					<"
-						htmlTest
+					htmlTest
 					,
 						=
-							<"
-								urlTest
+							urlTest
 							,
 								=
-									<"
-										decodeTest
+									decodeTest
 									*
 										$
 											!"
@@ -1011,80 +910,67 @@
 										"
 											x%3D%22hello%22
 				=
-					<"
-						sliceTest
+					sliceTest
 					*
 						!"
 							slice
 						,
 							=
-								<"
-									array
+								array
 								"
 									alle meine entchen
 							=
-								<"
-									start
+								start
 								5
 							=
-								<"
-									end
+								end
 								11
 				=
-					<"
-						firstTest
+					firstTest
 					*
 						!"
 							first
 						"
 							a
 				=
-					<"
-						rangeTest
+					rangeTest
 					*
 						!"
 							range
 						10
 				=
-					<"
-						reverseTest
+					reverseTest
 					*
 						!"
 							reverse
 						"
 							hello
 				=
-					<"
-						findFirstTest
+					findFirstTest
 					*
 						!"
 							findFirst
 						,
 							=
-								<"
-									value
+								value
 								"
 									hell
 							=
-								<"
-									array
+								array
 								"
 									he hi hello
 				=
-					<"
-						foreachTest
+					foreachTest
 					*
 						!"
 							foreach
 						,
 							=
-								<"
-									x
+								x
 								"
 									hi
 							=
-								<"
-									y
+								y
 								"
 									hello
 						,
@@ -1102,8 +988,7 @@
 												!"
 													key
 				=
-					<"
-						sumTest
+					sumTest
 					*
 						!"
 							sum
@@ -1136,44 +1021,37 @@
 											!"
 												second
 				=
-					<"
-						valuesTest
+					valuesTest
 					*
 						!"
 							values
 						,
 							=
-								<"
-									x
+								x
 								"
 									hi
 							=
-								<"
-									y
+								y
 								"
 									hello
 				=
-					<"
-						isStringTest
+					isStringTest
 					,
 						=
-							<"
-								no
+							no
 							*
 								!"
 									isString
 								2
 						=
-							<"
-								yes
+							yes
 							*
 								!"
 									isString
 								"
 									hi
 				=
-					<"
-						intersectTest
+					intersectTest
 					*
 						!"
 							intersect
@@ -1182,54 +1060,45 @@
 								.
 								,
 									=
-										<"
-											apple
+										apple
 										"
 											green
 									=
-										<"
-											orange
+										orange
 										"
 											orange
 									=
-										<"
-											banana
+										banana
 										"
 											yellow
 							=
 								.
 								,
 									=
-										<"
-											apple
+										apple
 										"
 											red
 									=
-										<"
-											orange
+										orange
 										"
 											yellow
 									=
-										<"
-											strawberries
+										strawberries
 										"
 											red
 							=
 								.
 								,
 									=
-										<"
-											apple
+										apple
 										"
 											last
 									=
-										<"
-											orange
+										orange
 										"
 											green
 				=
-					<"
-						lowerTest
+					lowerTest
 					*
 						$
 							!"
@@ -1239,8 +1108,7 @@
 						"
 							HeLLo
 				=
-					<"
-						upperTest
+					upperTest
 					*
 						$
 							!"
@@ -1250,8 +1118,7 @@
 						"
 							HeLLo
 				=
-					<"
-						parseTest
+					parseTest
 					*
 						!"
 							parse
@@ -1304,53 +1171,43 @@
 								.
 								,
 									=
-										<"
-											a
+										a
 										1
 									=
-										<"
-											b
+										b
 										2
 									=
-										<"
-											c
+										c
 										3
 							=
 								.
 								,
 									=
-										<"
-											a
+										a
 										1
 									=
-										<"
-											b
+										b
 										2
 									=
-										<"
-											c
+										c
 										3
 							=
 								.
 								,
 									=
-										<"
-											a
+										a
 										1
 									=
-										<"
-											b
+										b
 										2
 				=
-					<"
-						withTest
+					withTest
 					*
 						!"
 							with
 						,
 							=
-								<"
-									object
+								object
 								*
 									$
 										!"
@@ -1359,17 +1216,14 @@
 											Form
 									0
 							=
-								<"
-									data
+								data
 								,
 									=
-										<"
-											Text
+										Text
 										"
 											hello world
 				=
-					<"
-						restTest
+					restTest
 					*
 						!"
 							rest
