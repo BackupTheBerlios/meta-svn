@@ -1,29 +1,19 @@
-|
-	"default"
-	,
-		|
-			"arg"
+default|,
+	arg|*
+		$
+			!"default"
+			"function"
+		*
+			!"merge"
+			$
+				!"default"
+				"argument"
+			!"arg"
+func|,
+	argument|,
+		arg|*
+			!"func"
 			*
-				$
-					!"default"
-					"function"
-				*
-					!"merge"
-					$
-						!"default"
-						"argument"
-					!"arg"
-|
-	"func"
-	,
-		|
-			"argument"
-			,
-				|
-					"arg"
-					*
-						!"func"
-						*
-							!"merge"
-							!"argument"
-							!"arg"
+				!"merge"
+				!"argument"
+				!"arg"

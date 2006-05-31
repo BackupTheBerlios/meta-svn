@@ -1,13 +1,11 @@
-|
-	"arg"
-	*
+arg|*
+	$
+		/
+		"Meta"
+		"Library"
+		"Keys"
 		$
 			/
 			"Meta"
-			"Library"
-			"Keys"
-			$
-				/
-				"Meta"
-				"Map"
-		@
+			"Map"
+	@

@@ -1,20 +1,18 @@
-|
-	"arg"
-	,
-		=
-			object
-			*
+arg|,
+	=
+		object
+		*
+			$
+				/
+				"Meta"
+				"ObjectMap"
 				$
 					/
-					"Meta"
-					"ObjectMap"
-					$
-						/
-						"mscorlib"
-						"Object"
-				@
-		=
-			&
-			$
-				object
-				"IsNumber"
+					"mscorlib"
+					"Object"
+			@
+	=
+		&
+		$
+			object
+			"IsNumber"

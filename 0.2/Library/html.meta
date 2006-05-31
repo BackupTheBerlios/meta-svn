@@ -4,16 +4,14 @@
 		:
 			decode
 			,
-				|
-					"arg"
-					*
+				arg|*
+					$
+						/
+						"Meta"
+						"Library"
+						"UrlDecode"
 						$
 							/
 							"Meta"
-							"Library"
-							"UrlDecode"
-							$
-								/
-								"Meta"
-								"Map"
-						@
+							"Map"
+					@

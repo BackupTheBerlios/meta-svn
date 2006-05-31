@@ -1,13 +1,9 @@
-|
-	"arg"
+arg|*
+	!"apply"
 	*
-		!"apply"
-		*
-			!"keys"
-			@
-		,
-			|
-				"key"
-				$
-					!"arg"
-					!"key"
+		!"keys"
+		@
+	,
+		key|$
+			!"arg"
+			!"key"

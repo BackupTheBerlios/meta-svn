@@ -5592,19 +5592,37 @@ namespace Meta
 					new Action(new Match(), new Character(Syntax.indentation)))),
 				new Action(new Match(), new Character(Syntax.lookupEnd)));
 
-
 		public static Rule Function = new Sequence(
-			new Action(new Match(), new Character(Syntax.function)),
-			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				CodeKeys.Parameter),
-			Value),
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), SameIndentation),
+				new ZeroOrMore(
+				new Action(new Autokey(),
+					new CharacterExcept(
+						Syntax.@string,
+						Syntax.function,
+						Syntax.windowsNewLine[0],
+						Syntax.unixNewLine)))),
+			new Action(
+				new Match(),
+					new Character(
+						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
-				ExpressionData),
-			new Action(new Match(), new Optional(EndOfLine))//,
-			);
+				Expression),
+			new Action(new Match(),new Optional(EndOfLine)));//,new Action(new Match(),new Optional(EndOfLine)));
+				//ExpressionData));
+
+		//public static Rule Function = new Sequence(
+		//    new Action(new Match(), new Character(Syntax.function)),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        CodeKeys.Parameter),
+		//    Value),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//        new Action(new Assignment(CodeKeys.Expression),
+		//        ExpressionData),
+		//    new Action(new Match(), new Optional(EndOfLine))//,
+		//    );
 		public static Rule Entry = new Alternatives(
 	new Sequence(new Action(new Assignment(CodeKeys.Function),
 		new Sequence(new Action(new ReferenceAssignment(), Function),
@@ -5826,7 +5844,6 @@ namespace Meta
 									new Action(new Assignment(CodeKeys.Lookup),
 								Expression))))),
 			new Action(new Match(), new Optional(Dedentation))));
-
 		public static Rule Statement = new Sequence(
 			new Action(new ReferenceAssignment(),
 				new Alternatives(
@@ -5841,9 +5858,28 @@ namespace Meta
 						new Action(new Match(), SameIndentation),
 						new Action(new Assignment(
 							CodeKeys.Value),
-							Expression)))),
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(Dedentation)));
+							Expression),
+						new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), new Optional(Dedentation))))));
+			//new Action(new Match(), new Optional(EndOfLine)),
+			//new Action(new Match(), new Optional(Dedentation)));
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Match(), new Character('=')),
+		//                new Action(new Match(), Indentation),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Key),
+		//                    Keys),
+		//                new Action(new Match(), new Optional(EndOfLine)),
+		//                new Action(new Match(), SameIndentation),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Value),
+		//                    Expression)))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)));
 
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
@@ -6606,21 +6642,21 @@ namespace Meta
 //            }
 //            return result;
 //        });
-//        public static Rule Function = new Sequence(
-//            new Action(new Assignment(
-//                CodeKeys.Parameter),
-//                new ZeroOrMore(
-//                new Action(new Autokey(),
-//                    new CharacterExcept(
-//                        Syntax.@string,
-//                        Syntax.function,
-//                        Syntax.unixNewLine)))),
-//            new Action(
-//                new Match(),
-//                    new Character(
-//                        Syntax.function)),
-//                new Action(new Assignment(CodeKeys.Expression),
-//                ExpressionData));
+		//public static Rule Function = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Parameter),
+		//        new ZeroOrMore(
+		//        new Action(new Autokey(),
+		//            new CharacterExcept(
+		//                Syntax.@string,
+		//                Syntax.function,
+		//                Syntax.unixNewLine)))),
+		//    new Action(
+		//        new Match(),
+		//            new Character(
+		//                Syntax.function)),
+		//        new Action(new Assignment(CodeKeys.Expression),
+		//        ExpressionData));
 
 //        public static Rule File = new Sequence(
 //            new Action(new Match(),
@@ -7351,7 +7387,6 @@ namespace Meta
 		{
 			return DoSerialize(map);
 		}
-
 		public static string DoSerialize(Map map)
 		{
 			return DoSerialize(map,-1);
@@ -7483,7 +7518,6 @@ namespace Meta
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)

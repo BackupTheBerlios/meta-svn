@@ -1,131 +1,119 @@
 :
 	replace
 	,
-		|
-			"arg"
-			*
+		arg|*
+			$
+				/
+				"Meta"
+				"Library"
+				"StringReplace"
 				$
 					/
 					"Meta"
-					"Library"
-					"StringReplace"
-					$
-						/
-						"Meta"
-						"Map"
-				@
+					"Map"
+			@
 :
 	trim
 	,
-		|
-			"arg"
-			,
-				=
-					object
-					*
+		arg|,
+			=
+				object
+				*
+					$
+						/
+						"Meta"
+						"ObjectMap"
 						$
-							/
-							"Meta"
-							"ObjectMap"
-							$
-								!"mscorlib"
-								"String"
-						@
-				=
-					&
-					*
-						$
-							!"object"
-							"Trim"
-							0
+							!"mscorlib"
+							"String"
+					@
+			=
+				&
+				*
+					$
+						!"object"
+						"Trim"
 						0
+					0
 :
 	lower
 	,
-		|
-			"arg"
-			,
-				=
-					object
-					*
+		arg|,
+			=
+				object
+				*
+					$
+						/
+						"Meta"
+						"ObjectMap"
 						$
 							/
-							"Meta"
-							"ObjectMap"
-							$
-								/
-								"mscorlib"
-								"String"
-						@
-				=
-					&
-					*
-						$
-							object
-							"ToLower"
-						0
+							"mscorlib"
+							"String"
+					@
+			=
+				&
+				*
+					$
+						object
+						"ToLower"
+					0
 :
 	upper
 	,
-		|
-			"arg"
-			,
-				=
-					object
-					*
+		arg|,
+			=
+				object
+				*
+					$
+						/
+						"Meta"
+						"ObjectMap"
 						$
 							/
-							"Meta"
-							"ObjectMap"
-							$
-								/
-								"mscorlib"
-								"String"
-						@
-				=
-					&
-					*
-						$
-							!"object"
-							"ToUpper"
-						0
+							"mscorlib"
+							"String"
+					@
+			=
+				&
+				*
+					$
+						!"object"
+						"ToUpper"
+					0
 :
 	split
 	,
-		|
-			"arg"
-			*
+		arg|*
+			$
+				/
+				"Meta"
+				"Library"
+				"SplitString"
 				$
 					/
 					"Meta"
-					"Library"
-					"SplitString"
-					$
-						/
-						"Meta"
-						"Map"
-					$
-						/
-						"Meta"
-						"Map"
-				@
+					"Map"
+				$
+					/
+					"Meta"
+					"Map"
+			@
 :
 	compare
 	,
-		|
-			"arg"
-			*
+		arg|*
+			$
+				/
+				"Meta"
+				"Library"
+				"CompareString"
 				$
 					/
 					"Meta"
-					"Library"
-					"CompareString"
-					$
-						/
-						"Meta"
-						"Map"
-					$
-						/
-						"Meta"
-						"Map"
-				@
+					"Map"
+				$
+					/
+					"Meta"
+					"Map"
+			@
