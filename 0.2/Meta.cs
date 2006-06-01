@@ -939,20 +939,50 @@ namespace Meta
 		}
 		public static Map And(Map arg)
 		{
-			bool and = true;
-			Position argument = Call.LastArgument;
-
-			foreach (Position callable in argument.Array)
+			foreach (Map boolean in arg.Array)
 			{
-				Map map = callable.Call(Map.Empty).Get();
-				if (!map.GetBoolean())
+				if (!boolean.GetBoolean())
 				{
-					and = false;
-					break;
+					return false;
 				}
+				//Map map = callable.Call(Map.Empty).Get();
+				//if (!map.GetBoolean())
+				//{
+				//    and = false;
+				//    break;
+				//}
 			}
-			return and;
+			return true;
+			//bool and = true;
+			//Position argument = Call.LastArgument;
+
+			//foreach (Position callable in argument.Array)
+			//{
+			//    Map map = callable.Call(Map.Empty).Get();
+			//    if (!map.GetBoolean())
+			//    {
+			//        and = false;
+			//        break;
+			//    }
+			//}
+			//return and;
 		}
+		//public static Map And(Map arg)
+		//{
+		//    bool and = true;
+		//    Position argument = Call.LastArgument;
+
+		//    foreach (Position callable in argument.Array)
+		//    {
+		//        Map map = callable.Call(Map.Empty).Get();
+		//        if (!map.GetBoolean())
+		//        {
+		//            and = false;
+		//            break;
+		//        }
+		//    }
+		//    return and;
+		//}
 		public static Map Or(Map arg)
 		{
 			bool or = false;
@@ -1126,9 +1156,10 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Map StringReplace(Map arg)
+		public static Map StringReplace(Map text,Map old,Map replacement)
 		{
-			return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
+			return text.GetString().Replace(old.GetString(), replacement.GetString());
+			//return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
 		}
 		public static Map UrlDecode(Map arg)
 		{
@@ -5263,7 +5294,8 @@ namespace Meta
 							LastArgument,
 							Root,
 							Search,
-							Lookup)),
+							Lookup,
+							Call)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Match(), new Optional(EndOfLine)),

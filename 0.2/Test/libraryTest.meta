@@ -10,27 +10,19 @@ arg|,
 					1
 			and=,
 				true=*
-					!"and"
-					,
-						.=,
-							arg|1
-						.=,
-							arg|1
-						.=,
-							arg|1
-						.=,
-							arg|1
+					and
+					+
+						1
+						1
+						1
+						1
 				false=*
-					!"and"
-					,
-						.=,
-							arg|1
-						.=,
-							arg|0
-						.=,
-							arg|1
-						.=,
-							arg|1
+					and
+					+
+						1
+						0
+						1
+						1
 			orTest=,
 				true=*
 					!"or"
@@ -313,10 +305,9 @@ arg|,
 				$
 					!"string"
 					"replace"
-				,
-					string="hello hello hi"
-					old="he"
-					new="i"
+				"hello hello hi"
+				"he"
+				"i"
 		bitwiseTest=*
 			!"bitwiseOr"
 			,
