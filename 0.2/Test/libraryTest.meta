@@ -437,11 +437,11 @@ arg|,
 					a=1
 					b=2
 		withTest=*
-			!"with"
+			with
 			,
 				object=*
 					$
-						System.Windows.Forms
+						!<"System.Windows.Forms"
 						Form
 					0
 				data=,

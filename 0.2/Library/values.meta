@@ -6,4 +6,4 @@ arg|*
 	,
 		key|$
 			arg
-			key
+			<!"key"

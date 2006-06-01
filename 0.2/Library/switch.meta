@@ -14,7 +14,7 @@ switchArg|*
 				$
 					switchArg
 					cases
-					$
+					<$
 						switchArg
 						control
 				0

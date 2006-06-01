@@ -4610,15 +4610,24 @@ namespace Meta
 				}
 				else
 				{
-					Map version = key["version"];
-					Map publicKeyToken = key["publicKeyToken"];
-					Map culture = key["culture"];
-					Map name = key["name"];
-					if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+					if (key.ContainsKey("version") && key.ContainsKey("publicKeyToken") &&
+						key.ContainsKey("culture") &&
+						key.ContainsKey("name"))
 					{
-						Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-						value = LoadAssembly(assembly);
-						this[key] = value;
+						Map version = key["version"];
+						Map publicKeyToken = key["publicKeyToken"];
+						Map culture = key["culture"];
+						Map name = key["name"];
+						if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+						{
+							Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+							value = LoadAssembly(assembly);
+							this[key] = value;
+						}
+						else
+						{
+							value = null;
+						}
 					}
 					else
 					{
@@ -6176,7 +6185,14 @@ new Assignment(
 			//        return Run(@"C:\Meta\0.2\Test\newBasicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
@@ -6193,14 +6209,7 @@ new Assignment(
 					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)
