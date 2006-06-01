@@ -1,9 +1,9 @@
 arg|*
-	!"apply"
+	apply
 	*
-		!"keys"
+		keys
 		@
 	,
 		key|$
-			!"arg"
-			!"key"
+			arg
+			key

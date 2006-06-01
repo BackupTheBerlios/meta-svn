@@ -2,15 +2,15 @@ arg|,
 	map=*
 		$
 			/
-			"Meta"
-			"Number"
+			Meta
+			Number
 			$
 				/
-				"Meta"
-				"Map"
+				Meta
+				Map
 		@
 	&=*
 		$
 			map
-			"ToString"
+			ToString
 		0

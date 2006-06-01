@@ -1,14 +1,14 @@
 default|,
 	arg|*
 		$
-			!"default"
-			"function"
+			default
+			function
 		*
-			!"merge"
+			merge
 			$
-				!"default"
-				"argument"
-			!"arg"
+				default
+				argument
+			arg
 func|,
 	argument|,
 		arg|*

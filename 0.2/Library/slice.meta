@@ -1,11 +1,11 @@
 arg|*
 	$
 		/
-		"Meta"
-		"Library"
-		"Slice"
+		Meta
+		Library
+		Slice
 		$
 			/
-			"Meta"
-			"Map"
+			Meta
+			Map
 	@

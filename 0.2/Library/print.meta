@@ -1,15 +1,15 @@
 arg|*
 	$
-		!"console"
-		"writeLine"
+		console
+		writeLine
 	*
 		$
 			/
-			"Meta"
-			"Serialize"
-			"ValueFunction"
+			Meta
+			Serialize
+			ValueFunction
 			$
 				/
-				"Meta"
-				"Map"
+				Meta
+				Map
 		@

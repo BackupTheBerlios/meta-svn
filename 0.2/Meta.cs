@@ -5309,6 +5309,26 @@ namespace Meta
 		//    new Action(new Assignment(
 		//        CodeKeys.Search),Expression));
 
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Assignment(
+		//                1),
+
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup)),
+
+		//            new Action(new Append(),
+		//                new ZeroOrMore(
+		//                    new Action(new Autokey(),
+		//                        new Sequence(
+		//                            new Action(new Match(), new Character(Syntax.select)),
+		//                            new Action(new ReferenceAssignment(),
+		//                                Lookup))))))));
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Select),
@@ -5327,8 +5347,29 @@ namespace Meta
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), SameIndentation),
 							new Action(new Assignment(
-						CodeKeys.Lookup),Expression))))),
+						CodeKeys.Lookup), Lookup))))),
 					new Action(new Match(), new Optional(Dedentation)))));
+
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Match(), new Character('$')),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new Assignment(1),
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    Root,
+		//                    Search,
+		//                    Lookup,
+		//                    Call)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+		//                    new Action(new Match(), new Optional(EndOfLine)),
+		//                    new Action(new Match(), SameIndentation),
+		//                    new Action(new Assignment(
+		//                CodeKeys.Lookup), Expression))))),
+		//            new Action(new Match(), new Optional(Dedentation)))));
 
 
 		//private static Rule KeysSearch = Search;

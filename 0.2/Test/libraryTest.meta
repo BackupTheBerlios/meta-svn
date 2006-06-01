@@ -218,12 +218,12 @@ arg|,
 					space=" "
 					delimiters=,
 						.=$
-							!"space"
-							1
+							space
+							<1
 			stringSplitTest=*
 				$
-					!"string"
-					"split"
+					string
+					split
 				"hello world hello"
 				,
 					.=' '
@@ -236,8 +236,8 @@ arg|,
 					catch=,
 						argument|*
 							$
-								!"argument"
-								"ToString"
+								argument
+								ToString
 							0
 			sortTest=*
 				!"sort"
@@ -262,11 +262,11 @@ arg|,
 								!"strictlyIncreasing"
 								,
 									.=$
-										!"first"
-										"x"
+										first
+										x
 									.=$
-										!"second"
-										"x"
+										second
+										x
 							,
 								then=,
 									arg|-1
@@ -277,11 +277,11 @@ arg|,
 											!"strictlyDecreasing"
 											,
 												.=$
-													!"first"
-													"x"
+													first
+													x
 												.=$
-													!"second"
-													"x"
+													second
+													x
 										,
 											then=,
 												arg|1
@@ -292,8 +292,8 @@ arg|,
 				5
 			stringReplace=*
 				$
-					!"string"
-					"replace"
+					string
+					replace
 				"hello hello hi"
 				"he"
 				"i"
@@ -303,9 +303,9 @@ arg|,
 				.=20
 				.=$
 					/
-					"System.Windows.Forms"
-					"Keys"
-					"Tab"
+					<"System.Windows.Forms"
+					Keys
+					Tab
 		filterTest=*
 			!"filter"
 			,
@@ -399,13 +399,13 @@ arg|,
 					orange="green"
 		lowerTest=*
 			$
-				!"string"
-				"lower"
+				string
+				lower
 			"HeLLo"
 		upperTest=*
 			$
-				!"string"
-				"upper"
+				string
+				upper
 			"HeLLo"
 		parseTest=*
 			!"parse"
@@ -441,8 +441,8 @@ arg|,
 			,
 				object=*
 					$
-						!"System.Windows.Forms"
-						"Form"
+						System.Windows.Forms
+						Form
 					0
 				data=,
 					Text="hello world"

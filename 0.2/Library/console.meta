@@ -2,47 +2,47 @@ writeLine=,
 	arg|*
 		$
 			/
-			"Meta"
-			"Library"
-			"WriteLine"
+			Meta
+			Library
+			WriteLine
 			$
 				/
-				"mscorlib"
-				"String"
+				mscorlib
+				String
 		@
 write=,
 	arg|*
 		$
 			/
-			"Meta"
-			"Library"
-			"Write"
+			Meta
+			Library
+			Write
 			$
 				/
-				"mscorlib"
-				"String"
+				mscorlib
+				String
 		@
 readLine=,
 	arg|*
 		$
 			/
-			"mscorlib"
-			"Console"
-			"ReadLine"
+			mscorlib
+			Console
+			ReadLine
 		0
 clear=,
 	arg|*
 		$
 			/
-			"mscorlib"
-			"Console"
-			"Clear"
+			mscorlib
+			Console
+			Clear
 		0
 create=,
 	arg|*
 		$
 			/
-			"Meta"
-			"Library"
-			"CreateConsole"
+			Meta
+			Library
+			CreateConsole
 		0

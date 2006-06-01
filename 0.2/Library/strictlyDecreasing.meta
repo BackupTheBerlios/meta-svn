@@ -1,11 +1,11 @@
 arg|*
 	$
 		/
-		"Meta"
-		"Library"
-		"StrictlyDecreasing"
+		Meta
+		Library
+		StrictlyDecreasing
 		$
 			/
-			"Meta"
-			"Map"
+			Meta
+			Map
 	@
