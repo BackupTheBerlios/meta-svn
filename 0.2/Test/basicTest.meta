@@ -30,8 +30,8 @@ commandLine|,
 	&=*
 		*
 			merge
-			,
-				.="AssignedToCurrent"
+			+
+				"AssignedToCurrent"
 		0
 	asdf="hello"
 	shortFunction=,
@@ -49,7 +49,7 @@ commandLine|,
 	SetCounter=,
 		argument|,
 			!counter=@
-	.=*
+	<1=*
 		!"SetCounter"
 		5
 	scoping=,
@@ -137,20 +137,20 @@ commandLine|,
 	persistenceTest=$
 		!"testSubDir"
 		x
-	literalEscapeTest=,
-		.="asdf"
-		.="asdf"
-		.="
+	literalEscapeTest=+
+		"asdf"
+		"asdf"
+		"
 			as"'df
 		"
-		.="
+		"
 			as"''df
 		"
-		.="
+		"
 			as"''''''''''''''''df
 		"
-	.="ImpliedAutokey"
-	.="Autokey"
+	<2="ImpliedAutokey"
+	<3="Autokey"
 	commandLineArguments=!"commandLine"
 	aMap=,
 		a="a"
@@ -182,7 +182,7 @@ commandLine|,
 		x=,
 			a="b"
 			c="d"
-		.=,
+		<1=,
 			arg|,
 				$
 					&
@@ -209,7 +209,7 @@ commandLine|,
 		arg|,
 			!scopeTest=!"inScope"
 	inScope="wrong"
-	.=*
+	<4=*
 		!"scopeFunction"
 		0
 	scopeFromFunctionData="wrong"
@@ -228,24 +228,24 @@ commandLine|,
 			&=!"everything"
 	everythingReturned=*
 		!"ReturnEverything"
-		,
-			.="a"
-			.="b"
-			.="c"
+		+
+			"a"
+			"b"
+			"c"
 	variableAsArgument=*
 		!"ReturnEverything"
-		,
-			.="x"
-			.="y"
-			.="z"
+		+
+			"x"
+			"y"
+			"z"
 	ReturnFunction=,
 		arg|,
 			&=,
 				arg|,
-					&=,
-						.=1
-						.=2
-						.=3
+					&=+
+						1
+						2
+						3
 	SetCurrent=,
 		current|,
 			&=,
@@ -259,8 +259,8 @@ commandLine|,
 		,
 			symbol="haha"
 	FirstLevel=,
-		arg|,
-			.=*
+		arg|+
+			*
 				!"SecondLevel"
 				!"arg"
 	SecondLevel=,
@@ -434,7 +434,7 @@ commandLine|,
 				Meta
 				Map
 		,
-			.="m"
+			<1="m"
 			y="n"
 	namedNoConversionConcatenated=*
 		$
@@ -446,7 +446,7 @@ commandLine|,
 				Map
 		,
 			c="t"
-			.="r"
+			<1="r"
 	indexerNoConversion=*
 		$
 			/
@@ -502,10 +502,10 @@ commandLine|,
 			!upperLevel=!"arg"
 	ChangeUpperLevel=,
 		arg|,
-			.=*
+			<1=*
 				!"SetUpperLevel"
 				"changed"
-	.=*
+	<5=*
 		!"ChangeUpperLevel"
 		0
 	staticEventChanged=0
@@ -517,13 +517,13 @@ commandLine|,
 		staticEvent
 	=,
 		arg|,
-			.=*
+			<1=*
 				!"ChangeStaticEvent"
 				1
 			&=$
 				arg
 				<1
-	.=*
+	<6=*
 		$
 			TestClass
 			TakeDelegate
@@ -576,7 +576,7 @@ commandLine|,
 		1
 		!"one"
 	firstIfBranches=,
-		.=,
+		<1=,
 			arg|"then"
 		<0=,
 			arg|"else"
@@ -587,10 +587,10 @@ commandLine|,
 		0
 	bigNumber=50020202
 	secondSwitch="unchanged"
-	secondSwitchCases=,
-		.="one"
-		.="two"
-		.="three"
+	secondSwitchCases=+
+		"one"
+		"two"
+		"three"
 	secondSwitch=$
 		secondSwitchCases
 		<3
@@ -638,7 +638,7 @@ commandLine|,
 			mscorlib
 			ArrayList
 		0
-	.=*
+	<7=*
 		$
 			arrayList
 			Add
@@ -716,7 +716,7 @@ commandLine|,
 					!"start"
 					10
 			whileBranches=,
-				.=,
+				<1=,
 					arg|*
 						!"loop"
 						*
@@ -763,7 +763,7 @@ commandLine|,
 			test=,
 				arg|,
 					!topLevel="changed"
-	.=*
+	<8=*
 		$
 			deep
 			map
@@ -774,7 +774,7 @@ commandLine|,
 			innerFunction=,
 				arg|,
 					&=!"arg"
-			.=*
+			<1=*
 				!"innerFunction"
 				0
 	outerFunctionTest=*

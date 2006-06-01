@@ -447,6 +447,6 @@ arg|,
 				data=,
 					Text="hello world"
 		restTest=*
-			!"rest"
+			rest
 			"hello"
 	&=!"test"
