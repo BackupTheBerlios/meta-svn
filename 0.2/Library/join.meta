@@ -3,11 +3,7 @@ arg|*
 		/
 		"Meta"
 		"Library"
-		"Join"
-		$
-			/
-			"Meta"
-			"Map"
+		"JoinAll"
 		$
 			/
 			"Meta"

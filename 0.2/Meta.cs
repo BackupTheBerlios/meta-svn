@@ -626,6 +626,7 @@ namespace Meta
 		public static Map Sum(Map arg, Map map)
 		{
 			Position argument = Call.LastArgument;
+			//Map result = argument.Get().Array[0].Copy();
 			Map result = arg.Array[0].Copy();
 			foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
 			{
@@ -1044,6 +1045,23 @@ namespace Meta
 					return result.GetNumber().GetInt32();
 				}));
 				return new StrategyMap(array);
+		}
+		public static Map JoinAll(Map arg)
+		{
+			//Map result = arg[1].Copy();
+			//result.AppendRange(arg[2]);
+			//return Map.Empty;
+
+			Map result = new StrategyMap(new ListStrategy());
+			foreach (Map map in arg.Array)
+			{
+				result.AppendRange(map);
+				//foreach (Map entry in map.Array)
+				//{
+				//    result.Append(entry);//.AppendRange(map);
+				//}
+			}
+			return result;
 		}
 		public static Map Join(Map arg,Map map)
 		{
@@ -4486,7 +4504,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':','='};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':','=','+'};
 	}
 
 
@@ -4814,7 +4832,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression,LastArgument, Call, Program, LastArgument, Search, Select, ExplicitCall);
+			return new Alternatives(LiteralExpression,LastArgument, Call, Program, List, LastArgument, Search, Select, ExplicitCall);
 		});
 
 		public static Rule NewLine =
@@ -5329,6 +5347,67 @@ new Assignment(
 							Expression),
 						new Action(new Match(), new Optional(EndOfLine)))
 			)));
+		public static Rule List = new Sequence(
+			new Action(new Match(), new Character('+')),
+			new Action(
+				new Assignment(CodeKeys.Program),
+				new PrePost(
+					delegate(Parser p)
+					{
+						p.defaultKeys.Push(1);
+					},
+					new Sequence(
+						new Action(
+							new Match(),
+							Indentation),
+						new Action(
+							new CustomAction(
+		delegate(Parser p, Map map, ref Map result)
+		{
+			result[p.defaultKeys.Peek()] = new StrategyMap(
+				CodeKeys.Key, new StrategyMap(1,
+				new StrategyMap(
+					CodeKeys.Lookup,new StrategyMap(
+						CodeKeys.Literal, p.defaultKeys.Peek()))),
+				CodeKeys.Value, map);
+								p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+			return result;
+		}),
+							Expression),
+						new Action(
+							new Append(),
+							new ZeroOrMore(
+								new Action(new Autokey(),
+									new Sequence(
+										new Action(new Match(),new Optional(EndOfLine)),
+										new Action(new Match(), new Alternatives(
+											SameIndentation,
+											Dedentation)),
+										new Action(
+							new CustomAction(
+							delegate(Parser p, Map map, ref Map result)
+							{
+								result = new StrategyMap(
+									CodeKeys.Key, new StrategyMap(1,
+									new StrategyMap(
+										CodeKeys.Lookup, new StrategyMap(
+											CodeKeys.Literal, p.defaultKeys.Peek()))),
+									CodeKeys.Value, map);
+								p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+								return result;
+							}),Expression)
+		//    new Action(new CustomAction(delegate(Parser p, Map map, ref Map result)
+		//{
+		//    return result;
+		//}))
+			))))),
+					delegate(Parser p)
+					{
+						p.defaultKeys.Pop();
+					})));
+
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
 			new Action(

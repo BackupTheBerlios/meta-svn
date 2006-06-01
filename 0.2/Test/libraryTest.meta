@@ -158,9 +158,10 @@ arg|,
 					then=,
 						arg|"if test successful"
 			append=*
-				!"join"
-				"abc, "
-				"die Katze lief im Schnee."
+				join
+				,
+					.="abc, "
+					.="die Katze lief im Schnee."
 			apply=,
 				&=*
 					!"apply"

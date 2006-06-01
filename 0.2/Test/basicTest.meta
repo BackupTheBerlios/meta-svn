@@ -39,6 +39,12 @@ commandLine|,
 	shortFunctionTest=*
 		!"shortFunction"
 		"hello"
+	listTest=+
+		1
+		2
+		3
+		"hello"
+		asdf
 	counter=0
 	SetCounter=,
 		argument|,

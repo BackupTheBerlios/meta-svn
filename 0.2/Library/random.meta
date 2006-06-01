@@ -1,23 +1,19 @@
-:
-	choose
-	,
-		arg|
-			"arg"
+"select":,
+	arg|$
+		@
+		*
 			$
-				@
+				/
+				"Meta"
+				"Library"
+				"Random"
+				$
+					/
+					"Meta"
+					"Map"
+			*
+				!"add"
 				*
-					$
-						/
-						"Meta"
-						"Library"
-						"Random"
-						$
-							/
-							"Meta"
-							"Map"
-					*
-						!"add"
-						*
-							!"length"
-							@
-						1
+					!"length"
+					@
+				1

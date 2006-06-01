@@ -41,6 +41,35 @@ Entry (KeyValuePair`2)
 		"hello"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"listTest"
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				1
+			Value (StrategyMap):
+				1
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				2
+			Value (StrategyMap):
+				2
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				3
+			Value (StrategyMap):
+				3
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				4
+			Value (StrategyMap):
+				"hello"
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				5
+			Value (StrategyMap):
+				"hello"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"counter"
 	Value (StrategyMap):
 		5
