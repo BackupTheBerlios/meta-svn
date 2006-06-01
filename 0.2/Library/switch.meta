@@ -2,19 +2,19 @@ switchArg|*
 	if
 	*
 		hasKey
-		$
+		.
 			@
 			cases
-		$
+		.
 			@
 			control
 	,
 		then=,
 			arg|*
-				$
+				.
 					switchArg
 					cases
-					<$
+					<.
 						switchArg
 						control
 				0

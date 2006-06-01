@@ -5342,7 +5342,7 @@ namespace Meta
 			new Action(new Assignment(
 				CodeKeys.Select),
 				new Sequence(
-					new Action(new Match(), new Character('$')),
+					new Action(new Match(), new Character('.')),
 					new Action(new Match(), Indentation),
 					new Action(new Assignment(1),
 						new Alternatives(
@@ -5400,24 +5400,24 @@ new Assignment(
 			new Alternatives(LookupAnythingExpression,LookupStringExpression)))));
 
 
-		private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
-		{
-			bool m;
-			new Character(Syntax.autokey).Match(p, out m);
-			if (m)
-			{
-				Map map = p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+		//private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
+		//{
+		//    bool m;
+		//    new Character(Syntax.autokey).Match(p, out m);
+		//    if (m)
+		//    {
+		//        Map map = p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek()));
 
-				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-				matched = true;
-				return map;
-			}
-			else
-			{
-				matched = false;
-				return null;
-			}
-		});
+		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//        matched = true;
+		//        return map;
+		//    }
+		//    else
+		//    {
+		//        matched = false;
+		//        return null;
+		//    }
+		//});
 
 		//private static Rule Keys = new Alternatives(
 		//    new Sequence(new Action(
@@ -5453,17 +5453,17 @@ new Assignment(
 					1),
 					new Alternatives(
 						KeysSearch,
-						Lookup,
-						AutokeyLookup))),
+						Lookup))),
+						//AutokeyLookup))),
 			new Sequence(
-			new Action(new Match(), new Character('$')),
+			new Action(new Match(), new Character('.')),
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				1),
 				new Alternatives(
 					KeysSearch,
-					Lookup,
-					AutokeyLookup)),
+					Lookup)),
+					//AutokeyLookup)),
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),

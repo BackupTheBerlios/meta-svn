@@ -57,36 +57,36 @@ commandLine|,
 			scopingValue="right"
 			arg|!"scopingValue"
 	scopingValue="wrong"
-	scopingTest=$
+	scopingTest=.
 		scoping
 		test
 	lexicalScoping=*
 		!"scopingTest"
 		0
-	$
+	.
 		!<"C:"
 		hello
 	=,
 		x="someTest"
-	cTest=$
+	cTest=.
 		!"C:"
 		hello
-	$
+	.
 		!<"C:"
 		hello
 	=0
-	cTest2=$
+	cTest2=.
 		!"C:"
 		hello
 	unicodeText="äaba"
-	$
+	.
 		!testSubDir
 		x
 	=0
-	persistantDeleteTest=$
+	persistantDeleteTest=.
 		testSubDir
 		x
-	$
+	.
 		!<"testSubDir"
 		x
 	=,
@@ -94,7 +94,7 @@ commandLine|,
 		x=,
 			x="hello"
 			y="world"
-	$
+	.
 		!<"testSubDir"
 		x
 		a
@@ -106,17 +106,17 @@ commandLine|,
 				<0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	$
+	.
 		negativeInteger
 		x
 	="hello"
 	integerIncrementTest=5
-	$
+	.
 		integerIncrementTest
 		<0
 	=!"integerIncrementTest"
 	integerDecrementTest=5
-	integerDecrementTest=$
+	integerDecrementTest=.
 		!"integerDecrementTest"
 		<0
 	negativeNumber=-123
@@ -134,7 +134,7 @@ commandLine|,
 			negative=0
 			denominator=7
 	fraction=3/2
-	persistenceTest=$
+	persistenceTest=.
 		!"testSubDir"
 		x
 	literalEscapeTest=+
@@ -172,10 +172,10 @@ commandLine|,
 				!autoSearch="changed"
 		SetB=,
 			newB|,
-				$
+				.
 					!b
 					<1
-				=$
+				=.
 					!"newB"
 					value
 				&="changed"
@@ -184,19 +184,19 @@ commandLine|,
 			c="d"
 		<1=,
 			arg|,
-				$
+				.
 					&
 					a
 				="b"
 	a="default"
 	b=0
 	aSet=*
-		$
+		.
 			!"object"
 			SetA
 		0
 	bSet=*
-		$
+		.
 			!"object"
 			SetB
 		,
@@ -250,7 +250,7 @@ commandLine|,
 		current|,
 			&=,
 				asdf=!"current"
-				x=$
+				x=.
 					!"current"
 					symbol
 			&=!"x"
@@ -269,49 +269,49 @@ commandLine|,
 		!"FirstLevel"
 		,
 			a="z"
-	TestClass=$
+	TestClass=.
 		/
 		Meta
 		TestClass
-	$
+	.
 		TestClass
 		NestedClass
 		field
 	=5
-	nestedClassTest=$
+	nestedClassTest=.
 		TestClass
 		NestedClass
 		field
 	testClass=*
 		!"TestClass"
 		0
-	$
+	.
 		testClass
 		floatValue
 	=3
-	$
+	.
 		testClass
 		doubleValue
 	=4
-	$
+	.
 		testClass
 		decimalValue
 	=5
-	$
+	.
 		!TestClass
 		boolTest
 	=1
-	boolTest=$
+	boolTest=.
 		TestClass
 		boolTest
-	strongNameTest=$
+	strongNameTest=.
 		<,
 			version="2.0.0.0"
 			publicKeyToken="b77a5c561934e089"
 			culture="Neutral"
 			name="mscorlib"
 		Int32
-	MemberTest=$
+	MemberTest=.
 		/
 		Meta
 		MemberTest
@@ -319,117 +319,117 @@ commandLine|,
 		!"MemberTest"
 		0
 	stringOverload=*
-		$
+		.
 			MemberTest
 			OverloadedMethod
-			<$
+			<.
 				/
 				mscorlib
 				String
 		"hello"
 	integerOverload=*
-		$
+		.
 			MemberTest
 			OverloadedMethod
-			<$
+			<.
 				/
 				mscorlib
 				Int32
 		5
 	memberTestOverload=*
-		$
+		.
 			MemberTest
 			OverloadedMethod
-			<$
+			<.
 				/
 				Meta
 				MemberTest
-			<$
+			<.
 				/
 				mscorlib
 				Int32
 		memberTest
 		3247
 	memberTestOverload=*
-		$
+		.
 			MemberTest
 			OverloadedMethod
-			<$
+			<.
 				/
 				Meta
 				MemberTest
-			<$
+			<.
 				/
 				mscorlib
 				Int32
 		memberTest
 		3247
-	$
+	.
 		MemberTest
 		classField
 	="a"
-	$
+	.
 		memberTest
 		instanceField
 	="b"
-	$
+	.
 		MemberTest
 		ClassProperty
-	=$
+	=.
 		memberTest
 		InstanceProperty
-	classPropertyValue=$
+	classPropertyValue=.
 		MemberTest
 		ClassProperty
-	$
+	.
 		memberTest
 		InstanceProperty
-	=$
+	=.
 		MemberTest
 		ClassProperty
-	instancePropertyValue=$
+	instancePropertyValue=.
 		memberTest
 		InstanceProperty
 	interceptedSymbol="/hello/"
 	positionalNoConversion=*
-		$
+		.
 			/
 			Meta
 			PositionalNoConversion
-			<$
+			<.
 				mscorlib
 				String
-			<$
+			<.
 				mscorlib
 				String
-			<$
+			<.
 				mscorlib
 				String
 		"m"
 		"n"
 		"o"
 	positionalNoConversionConcatenated=*
-		$
+		.
 			positionalNoConversion
 			Concatenate
-			<$
+			<.
 				mscorlib
 				String
-			<$
+			<.
 				mscorlib
 				String
-			<$
+			<.
 				mscorlib
 				String
 		"r"
 		"s"
 		"t"
 	namedNoConversion=*
-		$
+		.
 			/
 			Meta
 			NamedNoConversion
-			<$
+			<.
 				/
 				Meta
 				Map
@@ -437,10 +437,10 @@ commandLine|,
 			<1="m"
 			y="n"
 	namedNoConversionConcatenated=*
-		$
+		.
 			namedNoConversion
 			Concatenate
-			<$
+			<.
 				/
 				Meta
 				Map
@@ -448,17 +448,17 @@ commandLine|,
 			c="t"
 			<1="r"
 	indexerNoConversion=*
-		$
+		.
 			/
 			Meta
 			IndexerNoConversion
 		0
-	$
+	.
 		indexerNoConversion
 		Item
 		abc
 	="hihi"
-	indexerNoConversionIndexed=$
+	indexerNoConversionIndexed=.
 		indexerNoConversion
 		Item
 		abc
@@ -512,7 +512,7 @@ commandLine|,
 	ChangeStaticEvent=,
 		arg|,
 			!staticEventChanged=!"arg"
-	$
+	.
 		TestClass
 		staticEvent
 	=,
@@ -520,50 +520,50 @@ commandLine|,
 			<1=*
 				!"ChangeStaticEvent"
 				1
-			&=$
+			&=.
 				arg
 				<1
 	<6=*
-		$
+		.
 			TestClass
 			TakeDelegate
-			<$
+			<.
 				/
 				Meta
 				TestClass
 				TestDelegate
 		,
-			arg|$
+			arg|.
 				arg
 				<1
 	resultFromDelegate=*
-		$
+		.
 			TestClass
 			GetResultFromDelegate
 		0
 	staticEventResult=*
-		$
+		.
 			TestClass
 			CallStaticEvent
-			<$
+			<.
 				mscorlib
 				Object
 		!"testClass"
 	instanceEventChanged=0
-	$
+	.
 		testClass
 		instanceEvent
 	=,
 		arg|,
 			!instanceEventChanged=1
-			&=$
+			&=.
 				arg
 				<1
 	instanceEventResult=*
-		$
+		.
 			testClass
 			CallInstanceEvent
-			<$
+			<.
 				mscorlib
 				Object
 		5
@@ -581,7 +581,7 @@ commandLine|,
 		<0=,
 			arg|"else"
 	firstIf=*
-		$
+		.
 			firstIfBranches
 			<firstIfCondition
 		0
@@ -591,7 +591,7 @@ commandLine|,
 		"one"
 		"two"
 		"three"
-	secondSwitch=$
+	secondSwitch=.
 		secondSwitchCases
 		<3
 	emptyMap=0
@@ -602,15 +602,15 @@ commandLine|,
 		!"emptyFunction"
 		0
 	font=*
-		$
+		.
 			/
 			<"System.Drawing"
 			Font
-			<$
+			<.
 				/
 				mscorlib
 				String
-			<$
+			<.
 				/
 				mscorlib
 				Single
@@ -619,10 +619,10 @@ commandLine|,
 	decimalTest=5
 	fractionTest=40
 	stringTest="hello"
-	$
+	.
 		stringTest
 		<6
-	=$
+	=.
 		stringTest
 		<1
 	helloh="hi"
@@ -633,30 +633,30 @@ commandLine|,
 			hello!
 		"
 	arrayList=*
-		$
+		.
 			/
 			mscorlib
 			ArrayList
 		0
 	<7=*
-		$
+		.
 			arrayList
 			Add
-			<$
+			<.
 				mscorlib
 				Object
 		"hello"
-	arrayListResult=$
+	arrayListResult=.
 		arrayList
 		Item
 		<0
 	textBox=*
-		$
+		.
 			/
 			<"System.Windows.Forms"
 			TextBox
 		0
-	$
+	.
 		textBox
 		Text
 	="
@@ -666,42 +666,42 @@ commandLine|,
 		Köpfchen in das Wasser,
 		Schwaenzchen in die Hoeh.
 	"
-	lines=$
+	lines=.
 		textBox
 		Lines
 	alleMeineText=*
-		$
+		.
 			lines
 			GetValue
-			<$
+			<.
 				/
 				mscorlib
 				Int32
 		1
 	form=*
-		$
+		.
 			/
 			<"System.Windows.Forms"
 			Form
 		0
-	$
+	.
 		form
 		Location
 	=*
-		$
+		.
 			<"System.Drawing"
 			Point
-			<$
+			<.
 				/
 				mscorlib
 				Int32
-			<$
+			<.
 				/
 				mscorlib
 				Int32
 		5
 		1000
-	automaticConversionTest=$
+	automaticConversionTest=.
 		form
 		Location
 	tabText="			hello"
@@ -726,7 +726,7 @@ commandLine|,
 				<0=,
 					arg|!"arg"
 			&=*
-				$
+				.
 					whileBranches
 					<whileDecision
 				start
@@ -764,7 +764,7 @@ commandLine|,
 				arg|,
 					!topLevel="changed"
 	<8=*
-		$
+		.
 			deep
 			map
 			test
@@ -784,30 +784,30 @@ commandLine|,
 		
 		
 	"
-	$
+	.
 		!<"System.Windows.Forms"
 		Application
 		VisualStyleState
-	=$
+	=.
 		<"System.Windows.Forms"
 		VisualStyleState
 		ClientAreaEnabled
-	enumTest=$
+	enumTest=.
 		!"System.Windows.Forms"
 		Application
 		VisualStyleState
 	typeTest=*
-		$
+		.
 			mscorlib
 			Array
 			CreateInstance
-			<$
+			<.
 				mscorlib
 				Type
-			<$
+			<.
 				mscorlib
 				Int32
-		$
+		.
 			mscorlib
 			String
 		5
@@ -816,7 +816,7 @@ commandLine|,
 		x="y"
 		z="a"
 	copiedData=!"copySourceData"
-	$
+	.
 		copiedData
 		x
 	="changed"

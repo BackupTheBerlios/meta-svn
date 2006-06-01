@@ -1,16 +1,16 @@
 arg|,
 	map=*
-		$
+		.
 			/
 			Meta
 			Number
-			<$
+			<.
 				/
 				Meta
 				Map
 		@
 	&=*
-		$
+		.
 			map
 			ToString
 		0

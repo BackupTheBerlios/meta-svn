@@ -1,13 +1,13 @@
 select=,
-	arg|$
+	arg|.
 		@
 		*
-			$
+			.
 				/
 				Meta
 				Library
 				Random
-				<$
+				<.
 					/
 					Meta
 					Map

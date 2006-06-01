@@ -1,14 +1,14 @@
 arg|,
 	object=*
-		$
+		.
 			/
 			Meta
 			ObjectMap
-			<$
+			<.
 				/
 				mscorlib
 				Object
 		@
-	&=$
+	&=.
 		object
 		IsString

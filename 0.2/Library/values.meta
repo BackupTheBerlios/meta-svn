@@ -4,6 +4,6 @@ arg|*
 		keys
 		@
 	,
-		key|$
+		key|.
 			arg
 			<!"key"

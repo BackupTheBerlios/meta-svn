@@ -217,11 +217,11 @@ arg|,
 					<1="hello world hello"
 					space=" "
 					delimiters=+
-						$
+						.
 							space
 							<1
 			stringSplitTest=*
-				$
+				.
 					string
 					split
 				"hello world hello"
@@ -235,7 +235,7 @@ arg|,
 						arg|"hello"
 					catch=,
 						argument|*
-							$
+							.
 								argument
 								ToString
 							0
@@ -261,10 +261,10 @@ arg|,
 							*
 								!"strictlyIncreasing"
 								+
-									$
+									.
 										first
 										x
-									$
+									.
 										second
 										x
 							,
@@ -276,10 +276,10 @@ arg|,
 										*
 											!"strictlyDecreasing"
 											+
-												$
+												.
 													first
 													x
-												$
+												.
 													second
 													x
 										,
@@ -291,7 +291,7 @@ arg|,
 				!"integerToString"
 				5
 			stringReplace=*
-				$
+				.
 					string
 					replace
 				"hello hello hi"
@@ -301,7 +301,7 @@ arg|,
 			!"bitwiseOr"
 			+
 				20
-				$
+				.
 					/
 					<"System.Windows.Forms"
 					Keys
@@ -398,12 +398,12 @@ arg|,
 					apple="last"
 					orange="green"
 		lowerTest=*
-			$
+			.
 				string
 				lower
 			"HeLLo"
 		upperTest=*
-			$
+			.
 				string
 				upper
 			"HeLLo"
@@ -440,7 +440,7 @@ arg|,
 			with
 			,
 				object=*
-					$
+					.
 						!"System.Windows.Forms"
 						Form
 					0
