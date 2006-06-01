@@ -1,7 +1,7 @@
 select=,
 	arg|.
 		@
-		*
+		-
 			.
 				/
 				Meta
@@ -11,9 +11,9 @@ select=,
 					/
 					Meta
 					Map
-			*
+			-
 				add
-				*
+				-
 					length
 					@
 				1

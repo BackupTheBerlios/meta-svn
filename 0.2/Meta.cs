@@ -4541,7 +4541,7 @@ namespace Meta
 		public const char lookupStart = '[';
 		public const char lookupEnd = ']';
 		public const char emptyMap = '0';
-		public const char explicitCall = '*';
+		public const char explicitCall = '-';
 		public const char select = '.';
 		public const char character = '\'';
 		public const char assignment = ' ';
@@ -4549,7 +4549,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<','=','+'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<','=','+','-'};
 	}
 
 

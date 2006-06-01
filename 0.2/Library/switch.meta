@@ -1,6 +1,6 @@
-switchArg|*
+switchArg|-
 	if
-	*
+	-
 		hasKey
 		.
 			@
@@ -10,7 +10,7 @@ switchArg|*
 			control
 	,
 		then=,
-			arg|*
+			arg|-
 				.
 					switchArg
 					cases

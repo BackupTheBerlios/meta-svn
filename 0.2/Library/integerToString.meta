@@ -1,5 +1,5 @@
 arg|,
-	map=*
+	map=-
 		.
 			/
 			Meta
@@ -9,7 +9,7 @@ arg|,
 				Meta
 				Map
 		@
-	&=*
+	&=-
 		.
 			map
 			ToString

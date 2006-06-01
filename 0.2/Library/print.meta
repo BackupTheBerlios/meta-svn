@@ -1,8 +1,8 @@
-arg|*
+arg|-
 	.
 		console
 		writeLine
-	*
+	-
 		.
 			/
 			Meta

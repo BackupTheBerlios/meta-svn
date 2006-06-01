@@ -1,8 +1,8 @@
-arg|*
+arg|-
 	!"sum"
 	@
 	,
 		first|,
-			second|*
+			second|-
 				!"first"
 				!"second"

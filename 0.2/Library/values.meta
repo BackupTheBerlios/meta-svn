@@ -1,6 +1,6 @@
-arg|*
+arg|-
 	apply
-	*
+	-
 		keys
 		@
 	,

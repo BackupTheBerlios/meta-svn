@@ -1,5 +1,5 @@
 writeLine=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta
@@ -11,7 +11,7 @@ writeLine=,
 				String
 		@
 write=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta
@@ -23,7 +23,7 @@ write=,
 				String
 		@
 readLine=,
-	arg|*
+	arg|-
 		.
 			/
 			mscorlib
@@ -31,7 +31,7 @@ readLine=,
 			ReadLine
 		0
 clear=,
-	arg|*
+	arg|-
 		.
 			/
 			mscorlib
@@ -39,7 +39,7 @@ clear=,
 			Clear
 		0
 create=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta

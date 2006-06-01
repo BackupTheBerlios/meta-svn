@@ -1,9 +1,9 @@
 default|,
-	arg|*
+	arg|-
 		.
 			default
 			function
-		*
+		-
 			merge
 			.
 				default
@@ -11,9 +11,9 @@ default|,
 			arg
 func|,
 	argument|,
-		arg|*
+		arg|-
 			!"func"
-			*
+			-
 				!"merge"
 				!"argument"
 				!"arg"

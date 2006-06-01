@@ -27,8 +27,8 @@ shortFunc="
 			arg
 "
 commandLine|,
-	&=*
-		*
+	&=-
+		-
 			merge
 			+
 				"AssignedToCurrent"
@@ -36,7 +36,7 @@ commandLine|,
 	asdf="hello"
 	shortFunction=,
 		arg|!"asdf"
-	shortFunctionTest=*
+	shortFunctionTest=-
 		!"shortFunction"
 		"hello"
 	listTest=+
@@ -49,7 +49,7 @@ commandLine|,
 	SetCounter=,
 		argument|,
 			!counter=@
-	<1=*
+	<1=-
 		!"SetCounter"
 		5
 	scoping=,
@@ -60,7 +60,7 @@ commandLine|,
 	scopingTest=.
 		scoping
 		test
-	lexicalScoping=*
+	lexicalScoping=-
 		!"scopingTest"
 		0
 	.
@@ -190,12 +190,12 @@ commandLine|,
 				="b"
 	a="default"
 	b=0
-	aSet=*
+	aSet=-
 		.
 			!"object"
 			SetA
 		0
-	bSet=*
+	bSet=-
 		.
 			!"object"
 			SetB
@@ -209,7 +209,7 @@ commandLine|,
 		arg|,
 			!scopeTest=!"inScope"
 	inScope="wrong"
-	<4=*
+	<4=-
 		!"scopeFunction"
 		0
 	scopeFromFunctionData="wrong"
@@ -217,22 +217,22 @@ commandLine|,
 		scopeFromFunctionData="right"
 		arg|,
 			arg|!"scopeFromFunctionData"
-	scopeFromFunction=*
+	scopeFromFunction=-
 		!"scopeFunctionFunction"
 		0
-	scopeFromFunctionTest=*
+	scopeFromFunctionTest=-
 		!"scopeFromFunction"
 		0
 	ReturnEverything=,
 		everything|,
 			&=!"everything"
-	everythingReturned=*
+	everythingReturned=-
 		!"ReturnEverything"
 		+
 			"a"
 			"b"
 			"c"
-	variableAsArgument=*
+	variableAsArgument=-
 		!"ReturnEverything"
 		+
 			"x"
@@ -254,18 +254,18 @@ commandLine|,
 					!"current"
 					symbol
 			&=!"x"
-	thisSet=*
+	thisSet=-
 		!"SetCurrent"
 		,
 			symbol="haha"
 	FirstLevel=,
 		arg|+
-			*
+			-
 				!"SecondLevel"
 				!"arg"
 	SecondLevel=,
 		arg|!"arg"
-	argTest=*
+	argTest=-
 		!"FirstLevel"
 		,
 			a="z"
@@ -282,7 +282,7 @@ commandLine|,
 		TestClass
 		NestedClass
 		field
-	testClass=*
+	testClass=-
 		!"TestClass"
 		0
 	.
@@ -315,10 +315,10 @@ commandLine|,
 		/
 		Meta
 		MemberTest
-	memberTest=*
+	memberTest=-
 		!"MemberTest"
 		0
-	stringOverload=*
+	stringOverload=-
 		.
 			MemberTest
 			OverloadedMethod
@@ -327,7 +327,7 @@ commandLine|,
 				mscorlib
 				String
 		"hello"
-	integerOverload=*
+	integerOverload=-
 		.
 			MemberTest
 			OverloadedMethod
@@ -336,7 +336,7 @@ commandLine|,
 				mscorlib
 				Int32
 		5
-	memberTestOverload=*
+	memberTestOverload=-
 		.
 			MemberTest
 			OverloadedMethod
@@ -350,7 +350,7 @@ commandLine|,
 				Int32
 		memberTest
 		3247
-	memberTestOverload=*
+	memberTestOverload=-
 		.
 			MemberTest
 			OverloadedMethod
@@ -391,7 +391,7 @@ commandLine|,
 		memberTest
 		InstanceProperty
 	interceptedSymbol="/hello/"
-	positionalNoConversion=*
+	positionalNoConversion=-
 		.
 			/
 			Meta
@@ -408,7 +408,7 @@ commandLine|,
 		"m"
 		"n"
 		"o"
-	positionalNoConversionConcatenated=*
+	positionalNoConversionConcatenated=-
 		.
 			positionalNoConversion
 			Concatenate
@@ -424,7 +424,7 @@ commandLine|,
 		"r"
 		"s"
 		"t"
-	namedNoConversion=*
+	namedNoConversion=-
 		.
 			/
 			Meta
@@ -436,7 +436,7 @@ commandLine|,
 		,
 			<1="m"
 			y="n"
-	namedNoConversionConcatenated=*
+	namedNoConversionConcatenated=-
 		.
 			namedNoConversion
 			Concatenate
@@ -447,7 +447,7 @@ commandLine|,
 		,
 			c="t"
 			<1="r"
-	indexerNoConversion=*
+	indexerNoConversion=-
 		.
 			/
 			Meta
@@ -467,7 +467,7 @@ commandLine|,
 	xyz="w"
 	literalFunction=,
 		arg|5
-	literalFunctionResult=*
+	literalFunctionResult=-
 		!"literalFunction"
 		0
 	someFunction=,
@@ -475,25 +475,25 @@ commandLine|,
 			&="simple function this"
 	callFunction=,
 		arg|!"someFunction"
-	callFunctionResult=*
+	callFunctionResult=-
 		!"callFunction"
 		0
 	delayedFunction=,
 		arg|,
 			arg|,
 				x="y"
-	delayedFunctionResult=*
+	delayedFunctionResult=-
 		!"delayedFunction"
 		0
-	delayedFunctionDirect=*
-		*
+	delayedFunctionDirect=-
+		-
 			!"delayedFunction"
 			0
 		0
 	value="xyz"
 	selectionFunction=,
 		arg|!"value"
-	selectionFunctionResult=*
+	selectionFunctionResult=-
 		!"selectionFunction"
 		0
 	upperLevel="unchanged"
@@ -502,10 +502,10 @@ commandLine|,
 			!upperLevel=!"arg"
 	ChangeUpperLevel=,
 		arg|,
-			<1=*
+			<1=-
 				!"SetUpperLevel"
 				"changed"
-	<5=*
+	<5=-
 		!"ChangeUpperLevel"
 		0
 	staticEventChanged=0
@@ -517,13 +517,13 @@ commandLine|,
 		staticEvent
 	=,
 		arg|,
-			<1=*
+			<1=-
 				!"ChangeStaticEvent"
 				1
 			&=.
 				arg
 				<1
-	<6=*
+	<6=-
 		.
 			TestClass
 			TakeDelegate
@@ -536,12 +536,12 @@ commandLine|,
 			arg|.
 				arg
 				<1
-	resultFromDelegate=*
+	resultFromDelegate=-
 		.
 			TestClass
 			GetResultFromDelegate
 		0
-	staticEventResult=*
+	staticEventResult=-
 		.
 			TestClass
 			CallStaticEvent
@@ -559,7 +559,7 @@ commandLine|,
 			&=.
 				arg
 				<1
-	instanceEventResult=*
+	instanceEventResult=-
 		.
 			testClass
 			CallInstanceEvent
@@ -571,7 +571,7 @@ commandLine|,
 	two=2
 	firstIf="unchanged"
 	secondIf="unchanged"
-	firstIfCondition=*
+	firstIfCondition=-
 		!"equal"
 		1
 		!"one"
@@ -580,7 +580,7 @@ commandLine|,
 			arg|"then"
 		<0=,
 			arg|"else"
-	firstIf=*
+	firstIf=-
 		.
 			firstIfBranches
 			<firstIfCondition
@@ -598,10 +598,10 @@ commandLine|,
 	emptyFunction=,
 		arg|,
 			x="hello"
-	emptyFunctionResult=*
+	emptyFunctionResult=-
 		!"emptyFunction"
 		0
-	font=*
+	font=-
 		.
 			/
 			<"System.Drawing"
@@ -632,13 +632,13 @@ commandLine|,
 			hello world!
 			hello!
 		"
-	arrayList=*
+	arrayList=-
 		.
 			/
 			mscorlib
 			ArrayList
 		0
-	<7=*
+	<7=-
 		.
 			arrayList
 			Add
@@ -650,7 +650,7 @@ commandLine|,
 		arrayList
 		Item
 		<0
-	textBox=*
+	textBox=-
 		.
 			/
 			<"System.Windows.Forms"
@@ -669,7 +669,7 @@ commandLine|,
 	lines=.
 		textBox
 		Lines
-	alleMeineText=*
+	alleMeineText=-
 		.
 			lines
 			GetValue
@@ -678,7 +678,7 @@ commandLine|,
 				mscorlib
 				Int32
 		1
-	form=*
+	form=-
 		.
 			/
 			<"System.Windows.Forms"
@@ -687,7 +687,7 @@ commandLine|,
 	.
 		form
 		Location
-	=*
+	=-
 		.
 			<"System.Drawing"
 			Point
@@ -709,34 +709,34 @@ commandLine|,
 	whileCounter=0
 	loop=,
 		start|,
-			whileDecision=*
+			whileDecision=-
 				!"not"
-				*
+				-
 					!"equal"
 					!"start"
 					10
 			whileBranches=,
 				<1=,
-					arg|*
+					arg|-
 						!"loop"
-						*
+						-
 							!"add"
 							!"arg"
 							1
 				<0=,
 					arg|!"arg"
-			&=*
+			&=-
 				.
 					whileBranches
 					<whileDecision
 				start
-	whileCounter=*
+	whileCounter=-
 		!"loop"
 		3
 	returnInMap=,
 		arg|,
 			result=!"arg"
-	literalAsArgument=*
+	literalAsArgument=-
 		!"returnInMap"
 		1
 	returnFunction=,
@@ -747,14 +747,14 @@ commandLine|,
 	myArg=,
 		arg|,
 			hello="world"
-	funcReturnTest=*
+	funcReturnTest=-
 		!"returnArg"
 		!"myArg"
 		0
 	documentedFunction=,
 		doc="This function returns #hello ."
 		arg|"hello"
-	docFunctionResult=*
+	docFunctionResult=-
 		!"documentedFunction"
 		0
 	topLevel="default"
@@ -763,7 +763,7 @@ commandLine|,
 			test=,
 				arg|,
 					!topLevel="changed"
-	<8=*
+	<8=-
 		.
 			deep
 			map
@@ -774,10 +774,10 @@ commandLine|,
 			innerFunction=,
 				arg|,
 					&=!"arg"
-			<1=*
+			<1=-
 				!"innerFunction"
 				0
-	outerFunctionTest=*
+	outerFunctionTest=-
 		!"outerFunction"
 		"right"
 	newLines="
@@ -796,7 +796,7 @@ commandLine|,
 		!"System.Windows.Forms"
 		Application
 		VisualStyleState
-	typeTest=*
+	typeTest=-
 		.
 			mscorlib
 			Array

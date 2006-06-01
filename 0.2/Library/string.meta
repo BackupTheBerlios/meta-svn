@@ -1,5 +1,5 @@
 replace=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta
@@ -20,7 +20,7 @@ replace=,
 		@
 trim=,
 	arg|,
-		object=*
+		object=-
 			.
 				/
 				Meta
@@ -29,7 +29,7 @@ trim=,
 					mscorlib
 					String
 			@
-		&=*
+		&=-
 			.
 				object
 				Trim
@@ -37,7 +37,7 @@ trim=,
 			0
 lower=,
 	arg|,
-		object=*
+		object=-
 			.
 				/
 				Meta
@@ -47,14 +47,14 @@ lower=,
 					mscorlib
 					String
 			@
-		&=*
+		&=-
 			.
 				object
 				ToLower
 			0
 upper=,
 	arg|,
-		object=*
+		object=-
 			.
 				/
 				Meta
@@ -64,13 +64,13 @@ upper=,
 					mscorlib
 					String
 			@
-		&=*
+		&=-
 			.
 				object
 				ToUpper
 			0
 split=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta
@@ -86,7 +86,7 @@ split=,
 				Map
 		@
 compare=,
-	arg|*
+	arg|-
 		.
 			/
 			Meta
