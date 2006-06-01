@@ -5097,11 +5097,19 @@ namespace Meta
 			);
 		private static Rule LookupAnything =
 			new Sequence(
-				new Action(new Match(), new Character((Syntax.lookupStart))),
-				new Action(new ReferenceAssignment(), Value),
-				new Action(new Match(), new ZeroOrMore(
-					new Action(new Match(), new Character(Syntax.indentation)))),
-				new Action(new Match(), new Character(Syntax.lookupEnd)));
+				new Action(new Match(), new Character(('<'))),
+				new Action(new ReferenceAssignment(), Value));
+				//new Action(new Match(), new ZeroOrMore(
+				//    new Action(new Match(), new Character(Syntax.indentation)))),
+				//new Action(new Match(), new Character(Syntax.lookupEnd)));
+
+		//private static Rule LookupAnything =
+		//    new Sequence(
+		//        new Action(new Match(), new Character((Syntax.lookupStart))),
+		//        new Action(new ReferenceAssignment(), Value),
+		//        new Action(new Match(), new ZeroOrMore(
+		//            new Action(new Match(), new Character(Syntax.indentation)))),
+		//        new Action(new Match(), new Character(Syntax.lookupEnd)));
 
 		public static Rule Function = new Sequence(
 			new Action(new Assignment(
@@ -5975,9 +5983,10 @@ new Assignment(
 					{
 						text += 
 							GetIndentation(indentation+1)+ 
-							DoSerialize(entry.Key, indentation + 1)+
-							":" +
+							"<"+DoSerialize(entry.Key, indentation + 1)+
+							"=" +
 							DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
+						text = text.TrimEnd('\r', '\n');
 					}
 					return text;
 				}
