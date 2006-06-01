@@ -5299,8 +5299,6 @@ namespace Meta
 							LookupStringExpression,
 							LookupAnythingExpression))));
 
-
-
 		private static Rule Search = new Sequence(
 			new Action(
 		new Assignment(
@@ -5310,7 +5308,19 @@ namespace Meta
 				new Action(
 					new ReferenceAssignment(),
 					Expression)),
-			new Alternatives(LookupStringExpression,LookupAnythingExpression))));
+			new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+
+
+		//private static Rule Search = new Sequence(
+		//    new Action(
+		//new Assignment(
+		//        CodeKeys.Search), new Alternatives(
+		//    new Sequence(
+		//        new Action(new Match(), new Character('!')),
+		//        new Action(
+		//            new ReferenceAssignment(),
+		//            Expression)),
+		//    new Alternatives(LookupStringExpression,LookupAnythingExpression))));
 
 
 		//private static Rule Search = new Sequence(
@@ -5419,12 +5429,24 @@ namespace Meta
 	new Action(
 new Assignment(
 		CodeKeys.Search),
+			new Alternatives(
 	new Sequence(
 		new Action(new Match(), new Character('!')),
 		new Action(
-			new ReferenceAssignment(),
+			new ReferenceAssignment(),Expression)),
 			//Lookup))));
-			new Alternatives(LookupAnythingExpression,LookupStringExpression)))));
+			new Alternatives(LookupStringExpression))));
+
+//        private static Rule KeysSearch = new Sequence(
+//    new Action(
+//new Assignment(
+//        CodeKeys.Search),
+//    new Sequence(
+//        new Action(new Match(), new Character('!')),
+//        new Action(
+//            new ReferenceAssignment(),
+//            //Lookup))));
+//            new Alternatives(LookupAnythingExpression,LookupStringExpression)))));
 
 
 		//private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
