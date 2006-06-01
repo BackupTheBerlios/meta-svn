@@ -5425,28 +5425,28 @@ namespace Meta
 
 
 		//private static Rule KeysSearch = Search;
-		private static Rule KeysSearch = new Sequence(
-	new Action(
-new Assignment(
-		CodeKeys.Search),
-			new Alternatives(
-	new Sequence(
-		new Action(new Match(), new Character('!')),
-		new Action(
-			new ReferenceAssignment(),Expression)),
-			//Lookup))));
-			new Alternatives(LookupStringExpression))));
-
 //        private static Rule KeysSearch = new Sequence(
 //    new Action(
 //new Assignment(
 //        CodeKeys.Search),
+//            new Alternatives(
 //    new Sequence(
 //        new Action(new Match(), new Character('!')),
 //        new Action(
-//            new ReferenceAssignment(),
+//            new ReferenceAssignment(),Expression)),
 //            //Lookup))));
-//            new Alternatives(LookupAnythingExpression,LookupStringExpression)))));
+//            new Alternatives(LookupAnythingExpression, LookupStringExpression))));
+
+		private static Rule KeysSearch = new Sequence(
+	new Action(
+new Assignment(
+		CodeKeys.Search),
+	new Sequence(
+		new Action(new Match(), new Character('!')),
+		new Action(
+			new ReferenceAssignment(),
+			//Lookup))));
+			new Alternatives(Expression,LookupAnythingExpression, LookupStringExpression)))));
 
 
 		//private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
@@ -5502,17 +5502,23 @@ new Assignment(
 					1),
 					new Alternatives(
 						KeysSearch,
-						Lookup))),
+						Lookup,
+			EmptyMap,
+			String,
+			LookupStringExpression
+			))),
 						//AutokeyLookup))),
 			new Sequence(
 			new Action(new Match(), new Character('.')),
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				1),
+				//new Alternatives(Number, Expression),
 				new Alternatives(
 					KeysSearch,
+					LookupStringExpression,
 					Lookup)),
-					//AutokeyLookup)),
+			//AutokeyLookup)),
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),
