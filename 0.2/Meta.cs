@@ -5127,7 +5127,11 @@ namespace Meta
 		new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			Map result = new StrategyMap();
-			Map key = Value.Match(parser, out matched);
+			Map key=new Alternatives(
+				LookupString,
+				LookupAnything).Match(parser, out matched);
+			//Map key = Value.Match(parser, out matched);
+
 			if (matched)
 			{
 				new Sequence(

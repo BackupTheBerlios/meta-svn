@@ -340,14 +340,6 @@ arg|,
 			,
 				array="test test"
 				value="test test"
-		htmlTest=,
-			urlTest=,
-				decodeTest=*
-					$
-						!"html"
-						"url"
-						"decode"
-					"x%3D%22hello%22"
 		sliceTest=*
 			!"slice"
 			,
@@ -429,11 +421,11 @@ arg|,
 		parseTest=*
 			!"parse"
 			"
-				"asdf"="hello"
-				"x"=,
-					"y"="hello"
-					"z"=, 
-						"a"="x"
+				asdf="hello"
+				x=,
+					y="hello"
+					z=, 
+						a="x"
 					arg|*
 						!"join"
 						"hello "

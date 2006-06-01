@@ -373,19 +373,6 @@ Entry (KeyValuePair`2)
 		""
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"htmlTest"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"urlTest"
-			Value (StrategyMap):
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						"decodeTest"
-					Value (StrategyMap):
-						"x="hello""
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"sliceTest"
 	Value (StrategyMap):
 		" meine "

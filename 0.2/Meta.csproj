@@ -135,7 +135,6 @@
     <None Include="Library\foreach.meta" />
     <None Include="Library\greater.meta" />
     <None Include="Library\hasKey.meta" />
-    <None Include="Library\html.meta" />
     <None Include="Library\if.meta" />
     <None Include="Library\increasing.meta" />
     <None Include="Library\integerToString.meta" />
