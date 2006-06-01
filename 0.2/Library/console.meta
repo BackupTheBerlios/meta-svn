@@ -1,4 +1,4 @@
-"writeLine":,
+"writeLine"=,
 	arg|*
 		$
 			/
@@ -10,7 +10,7 @@
 				"mscorlib"
 				"String"
 		@
-"write":,
+"write"=,
 	arg|*
 		$
 			/
@@ -22,7 +22,7 @@
 				"mscorlib"
 				"String"
 		@
-"readLine":,
+"readLine"=,
 	arg|*
 		$
 			/
@@ -30,7 +30,7 @@
 			"Console"
 			"ReadLine"
 		0
-"clear":,
+"clear"=,
 	arg|*
 		$
 			/
@@ -38,7 +38,7 @@
 			"Console"
 			"Clear"
 		0
-"create":,
+"create"=,
 	arg|*
 		$
 			/

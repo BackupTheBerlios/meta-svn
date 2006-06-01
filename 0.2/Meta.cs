@@ -1078,18 +1078,10 @@ namespace Meta
 		}
 		public static Map JoinAll(Map arg)
 		{
-			//Map result = arg[1].Copy();
-			//result.AppendRange(arg[2]);
-			//return Map.Empty;
-
 			Map result = new StrategyMap(new ListStrategy());
 			foreach (Map map in arg.Array)
 			{
 				result.AppendRange(map);
-				//foreach (Map entry in map.Array)
-				//{
-				//    result.Append(entry);//.AppendRange(map);
-				//}
 			}
 			return result;
 		}
@@ -1159,7 +1151,6 @@ namespace Meta
 		public static Map StringReplace(Map text,Map old,Map replacement)
 		{
 			return text.GetString().Replace(old.GetString(), replacement.GetString());
-			//return arg["string"].GetString().Replace(arg["old"].GetString(), arg["new"].GetString());
 		}
 		public static Map UrlDecode(Map arg)
 		{
@@ -1563,8 +1554,6 @@ namespace Meta
 				DateTime start = DateTime.Now;
 				AllocConsole();
 				int level;
-				//new Test.MetaTest.Parser().RunTest();
-				//new Test.MetaTest.Profile().GetResult(out level);
 				Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			}
 			public static void Help()
@@ -1657,7 +1646,6 @@ namespace Meta
 				string path = args[0];
 				string startDirectory = Path.GetDirectoryName(path);
 				Directory.SetCurrentDirectory(startDirectory);
-				//return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				MetaTest.Run(path, Map.Empty);
 			}
 		}
@@ -3992,6 +3980,7 @@ namespace Meta
 			else
 			{
 				throw new ApplicationException("Map is not an integer");
+				//throw new ApplicationException("Map is not an integer");
 			}
 			return number;
 		}
@@ -4535,7 +4524,7 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<',':','=','+'};
+		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<','=','+'};
 	}
 
 
@@ -5142,7 +5131,7 @@ namespace Meta
 			if (matched)
 			{
 				new Sequence(
-					new Action(new Match(), new Character(':'))).Match(parser, out matched);
+					new Action(new Match(), new Character('='))).Match(parser, out matched);
 				
 				if (matched)
 				{
