@@ -488,6 +488,9 @@ namespace Meta
 		{
 			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
+			if (key.Equals(new StrategyMap("data")))
+			{
+			}
 			Position selection = selected;
 			if(key.Equals(new StrategyMap("newB")))
 			{
@@ -627,13 +630,20 @@ namespace Meta
 		{
 			Position argument = Call.LastArgument;
 			//Map result = argument.Get().Array[0].Copy();
-			Map result = arg.Array[0].Copy();
-			foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
+			if (arg.ArrayCount > 0)
 			{
-				Position firstCall=argument.Call(result);
-				result = firstCall.Call(m).Get();
+				Map result = arg.Array[0].Copy();
+				foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
+				{
+					Position firstCall = argument.Call(result);
+					result = firstCall.Call(m).Get();
+				}
+				return result;
 			}
-			return result;
+			else
+			{
+				return Map.Empty;
+			}
 		}
 		public static Map Prepend(Map arg,Map map)
 		{
@@ -985,19 +995,39 @@ namespace Meta
 		//}
 		public static Map Or(Map arg)
 		{
-			bool or = false;
-			Position argument = Call.LastArgument;
-			foreach (Position callable in argument.Array)
+			//bool or = false;
+			//Position argument = Call.LastArgument;
+			foreach (Map map in arg.Array)
 			{
-				Map map = callable.Call(Map.Empty).Get();
 				if (map.GetBoolean())
 				{
-					or = true;
-					break;
+					return true;
 				}
+				//Map map = callable.Call(Map.Empty).Get();
+				//if (map.GetBoolean())
+				//{
+				//    or = true;
+				//    break;
+				//}
 			}
-			return or;
+			return false;
+			//return or;
 		}
+		//public static Map Or(Map arg)
+		//{
+		//    bool or = false;
+		//    Position argument = Call.LastArgument;
+		//    foreach (Position callable in argument.Array)
+		//    {
+		//        Map map = callable.Call(Map.Empty).Get();
+		//        if (map.GetBoolean())
+		//        {
+		//            or = true;
+		//            break;
+		//        }
+		//    }
+		//    return or;
+		//}
 		public static Map Reciprocal(Map arg)
 		{
 			Number number = arg.GetNumber();
@@ -1294,7 +1324,10 @@ namespace Meta
 			Dictionary<Map,string> keys = new Dictionary<Map,string>();
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
-				keys[subdir.Name]="";
+				if (!subdir.Name.StartsWith("."))
+				{
+					keys[subdir.Name] = "";
+				}
 			}
 			foreach (FileInfo file in directory.GetFiles("*.*"))
 			{
@@ -1442,14 +1475,6 @@ namespace Meta
 						}
 						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
 					}
-				}
-				else if (extension == ".txt" || extension == ".meta" || extension == ".html" || extension == ".htm")
-				{
-					File.WriteAllText(Path.Combine(directory.FullName, name), (string)Transform.TryToDotNet(val, typeof(string)));
-				}
-				else
-				{
-					File.WriteAllBytes(Path.Combine(directory.FullName, name), (byte[])Transform.TryToDotNet(val, typeof(byte[])));
 				}
 				cache[key] = val;
 			}
@@ -5310,12 +5335,13 @@ namespace Meta
 		private static Rule KeysSearch = new Sequence(
 	new Action(
 new Assignment(
-		CodeKeys.Search), 
+		CodeKeys.Search),
 	new Sequence(
 		new Action(new Match(), new Character('!')),
 		new Action(
 			new ReferenceAssignment(),
-			Expression))));
+			//Lookup))));
+			new Alternatives(LookupAnythingExpression,LookupStringExpression)))));
 
 
 		private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
@@ -5981,12 +6007,21 @@ new Assignment(
 					}
 					foreach (KeyValuePair<Map, Map> entry in map)
 					{
-						text += 
-							GetIndentation(indentation+1)+ 
-							"<"+DoSerialize(entry.Key, indentation + 1)+
-							"=" +
-							DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
-						text = text.TrimEnd('\r', '\n');
+						text +=
+							GetIndentation(indentation + 1);// +
+						string key;
+						if (entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1)
+						{
+							key = entry.Key.GetString();
+						}
+						else
+						{
+							key = "<" + DoSerialize(entry.Key, indentation + 1);
+						}
+					   text+=key+
+						   "=" +
+						   DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
+						text = text.TrimEnd('\r', '\n')+Environment.NewLine;
 					}
 					return text;
 				}
