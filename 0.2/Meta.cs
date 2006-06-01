@@ -5346,8 +5346,14 @@ namespace Meta
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), SameIndentation),
-							new Action(new Assignment(
-						CodeKeys.Lookup), Lookup))))),
+							new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression,LookupStringExpression)))))),
+
+					//new Action(new Append(),
+					//    new ZeroOrMore(new Action(new Autokey(), new Sequence(
+					//        new Action(new Match(), new Optional(EndOfLine)),
+					//        new Action(new Match(), SameIndentation),
+					//        new Action(new Assignment(
+					//    CodeKeys.Lookup), Lookup))))),
 					new Action(new Match(), new Optional(Dedentation)))));
 
 		//private static Rule Select = new Sequence(
@@ -5404,6 +5410,34 @@ new Assignment(
 			}
 		});
 
+		//private static Rule Keys = new Alternatives(
+		//    new Sequence(new Action(
+		//        new Assignment(
+		//            1),
+		//            new Alternatives(
+		//                KeysSearch,
+		//                Lookup,
+		//                AutokeyLookup))),
+		//    new Sequence(
+		//    new Action(new Match(), new Character('$')),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        1),
+		//        new Alternatives(
+		//            KeysSearch,
+		//            Lookup,
+		//            AutokeyLookup)),
+		//    new Action(new Append(),
+		//        new ZeroOrMore(
+		//            new Action(new Autokey(),
+		//                new Sequence(
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(),SameIndentation),
+		//    new Action(new Assignment(CodeKeys.Lookup),Expression))))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)),
+		//    new Action(new Match(), new Optional(SameIndentation))));
+
 		private static Rule Keys = new Alternatives(
 			new Sequence(new Action(
 				new Assignment(
@@ -5426,8 +5460,9 @@ new Assignment(
 					new Action(new Autokey(),
 						new Sequence(
 				new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(),SameIndentation),
-			new Action(new Assignment(CodeKeys.Lookup),Expression))))),
+			new Action(new Match(), SameIndentation),
+			new Action(new ReferenceAssignment(),Lookup))))),
+			//new Action(new Assignment(CodeKeys.Lookup), Expression))))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), new Optional(Dedentation)),
 			new Action(new Match(), new Optional(SameIndentation))));

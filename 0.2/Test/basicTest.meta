@@ -72,7 +72,7 @@ commandLine|,
 		!"C:"
 		hello
 	$
-		!"C:"
+		!<"C:"
 		hello
 	=0
 	cTest2=$
@@ -305,7 +305,7 @@ commandLine|,
 		TestClass
 		boolTest
 	strongNameTest=$
-		!<,
+		<,
 			version="2.0.0.0"
 			publicKeyToken="b77a5c561934e089"
 			culture="Neutral"
@@ -322,16 +322,16 @@ commandLine|,
 		$
 			MemberTest
 			OverloadedMethod
-			$
+			<$
 				/
 				mscorlib
 				String
-		hello
+		"hello"
 	integerOverload=*
 		$
 			MemberTest
 			OverloadedMethod
-			$
+			<$
 				/
 				mscorlib
 				Int32
@@ -340,11 +340,11 @@ commandLine|,
 		$
 			MemberTest
 			OverloadedMethod
-			$
+			<$
 				/
 				Meta
 				MemberTest
-			$
+			<$
 				/
 				mscorlib
 				Int32
@@ -354,11 +354,11 @@ commandLine|,
 		$
 			MemberTest
 			OverloadedMethod
-			$
+			<$
 				/
 				Meta
 				MemberTest
-			$
+			<$
 				/
 				mscorlib
 				Int32
@@ -429,7 +429,7 @@ commandLine|,
 			/
 			Meta
 			NamedNoConversion
-			$
+			<$
 				/
 				Meta
 				Map
@@ -440,7 +440,7 @@ commandLine|,
 		$
 			namedNoConversion
 			Concatenate
-			$
+			<$
 				/
 				Meta
 				Map
@@ -545,7 +545,7 @@ commandLine|,
 		$
 			TestClass
 			CallStaticEvent
-			$
+			<$
 				mscorlib
 				Object
 		!"testClass"
@@ -563,7 +563,7 @@ commandLine|,
 		$
 			testClass
 			CallInstanceEvent
-			$
+			<$
 				mscorlib
 				Object
 		5
@@ -606,11 +606,11 @@ commandLine|,
 			/
 			<"System.Drawing"
 			Font
-			$
+			<$
 				/
 				mscorlib
 				String
-			$
+			<$
 				/
 				mscorlib
 				Single
@@ -649,7 +649,7 @@ commandLine|,
 	arrayListResult=$
 		arrayList
 		Item
-		0
+		<0
 	textBox=*
 		$
 			/
@@ -673,7 +673,7 @@ commandLine|,
 		$
 			lines
 			GetValue
-			$
+			<$
 				/
 				mscorlib
 				Int32
@@ -785,7 +785,7 @@ commandLine|,
 		
 	"
 	$
-		<"System.Windows.Forms"
+		!<"System.Windows.Forms"
 		Application
 		VisualStyleState
 	=$
@@ -801,10 +801,10 @@ commandLine|,
 			mscorlib
 			Array
 			CreateInstance
-			$
+			<$
 				mscorlib
 				Type
-			$
+			<$
 				mscorlib
 				Int32
 		$

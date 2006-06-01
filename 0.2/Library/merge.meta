@@ -2,16 +2,16 @@ first|,
 	second|*
 		$
 			/
-			"Meta"
-			"Library"
-			"Merge"
-			$
+			Meta
+			Library
+			Merge
+			<$
 				/
-				"Meta"
-				"Map"
-			$
+				Meta
+				Map
+			<$
 				/
-				"Meta"
-				"Map"
+				Meta
+				Map
 		first
 		@
