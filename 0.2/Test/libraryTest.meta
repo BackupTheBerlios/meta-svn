@@ -441,7 +441,7 @@ arg|,
 			,
 				object=*
 					$
-						!<"System.Windows.Forms"
+						!"System.Windows.Forms"
 						Form
 					0
 				data=,
