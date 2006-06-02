@@ -357,7 +357,7 @@ arg|,
 			,
 				key|,
 					value|,
-						!"value"=!"key"
+						<value=key
 		sumTest=-
 			!"sum"
 			+

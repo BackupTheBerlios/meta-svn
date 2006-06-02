@@ -80,7 +80,7 @@ commandLine|,
 		hello
 	unicodeText="äaba"
 	.
-		!testSubDir
+		!"testSubDir"
 		x
 	=0
 	persistantDeleteTest=.
@@ -154,7 +154,7 @@ commandLine|,
 	commandLineArguments=!"commandLine"
 	aMap=,
 		a="a"
-	!"aMap"="Object"
+	<!"aMap"="Object"
 	"normal symbol"="NormalSymbol"
 	lookupSymbol="LookupSymbol"
 	"long key symbol"="LookupExtendedSymbol"
@@ -304,13 +304,6 @@ commandLine|,
 	boolTest=.
 		TestClass
 		boolTest
-	strongNameTest=.
-		,
-			version="2.0.0.0"
-			publicKeyToken="b77a5c561934e089"
-			culture="Neutral"
-			name="mscorlib"
-		Int32
 	MemberTest=.
 		/
 		Meta
@@ -583,7 +576,7 @@ commandLine|,
 	firstIf=-
 		.
 			firstIfBranches
-			firstIfCondition
+			<firstIfCondition
 		0
 	bigNumber=50020202
 	secondSwitch="unchanged"
@@ -689,7 +682,7 @@ commandLine|,
 		Location
 	=-
 		.
-			"System.Drawing"
+			!"System.Drawing"
 			Point
 			.
 				/
@@ -728,7 +721,7 @@ commandLine|,
 			&=-
 				.
 					whileBranches
-					whileDecision
+					<whileDecision
 				start
 	whileCounter=-
 		!"loop"
@@ -789,7 +782,7 @@ commandLine|,
 		Application
 		VisualStyleState
 	=.
-		"System.Windows.Forms"
+		!"System.Windows.Forms"
 		VisualStyleState
 		ClientAreaEnabled
 	enumTest=.
@@ -811,11 +804,11 @@ commandLine|,
 			mscorlib
 			String
 		5
-	123hello="asdf"
+	oneTwoThreeHello="asdf"
 	copySourceData=,
 		x="y"
 		z="a"
-	copiedData=!"copySourceData"
+	copiedData=copySourceData
 	.
 		copiedData
 		x

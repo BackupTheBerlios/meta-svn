@@ -4549,10 +4549,9 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] {current, lastArgument, explicitCall, indentation, '\r', '\n', assignment,select, function, @string, lookupStart, lookupEnd, emptyMap, '!' ,root, callStart, callEnd ,character,',','*','$','\\','<','=','+','-'};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-'};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
-
-
 	public class Gac : Map
 	{
 		public static readonly Map gac = new Gac();
@@ -5065,11 +5064,22 @@ namespace Meta
 							new Action(
 								new ReferenceAssignment(),
 								Integer)))));
-		public static Rule LookupString = new OneOrMore(
+
+		public static Rule LookupString = new Sequence(
 			new Action(
-				new Autokey(),
-					new CharacterExcept(
-					Syntax.lookupStringForbidden)));
+				new Assignment(1),
+				new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
+			new Action(new Append(),new ZeroOrMore(
+				new Action(
+					new Autokey(),
+						new CharacterExcept(
+						Syntax.lookupStringForbidden)))));
+
+		//public static Rule LookupString = new OneOrMore(
+		//    new Action(
+		//        new Autokey(),
+		//            new CharacterExcept(
+		//            Syntax.lookupStringForbidden)));
 
 		// refactor
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
@@ -5437,6 +5447,17 @@ namespace Meta
 //            //Lookup))));
 //            new Alternatives(LookupAnythingExpression, LookupStringExpression))));
 
+		//private static Rule Search = new Sequence(
+		//    new Action(
+		//new Assignment(
+		//        CodeKeys.Search), new Alternatives(
+		//    new Sequence(
+		//        new Action(new Match(), new Character('!')),
+		//        new Action(
+		//            new ReferenceAssignment(),
+		//            Expression)),
+		//    new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+
 		private static Rule KeysSearch = new Sequence(
 	new Action(
 new Assignment(
@@ -5446,7 +5467,7 @@ new Assignment(
 		new Action(
 			new ReferenceAssignment(),
 			//Lookup))));
-			new Alternatives(Expression,LookupAnythingExpression, LookupStringExpression)))));
+			new Alternatives(LookupStringExpression,LookupAnythingExpression, Expression)))));
 
 
 		//private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
@@ -5496,28 +5517,57 @@ new Assignment(
 		//    new Action(new Match(), new Optional(Dedentation)),
 		//    new Action(new Match(), new Optional(SameIndentation))));
 
+
+
+
 		private static Rule Keys = new Alternatives(
 			new Sequence(new Action(
 				new Assignment(
 					1),
 					new Alternatives(
-						KeysSearch,
 						Lookup,
+						KeysSearch,
+						new Sequence(new Action(
+							new Assignment(CodeKeys.Lookup),
+							LiteralExpression)),
 			EmptyMap,
 			String,
 			LookupStringExpression
 			))),
-						//AutokeyLookup))),
+
+			//        new Alternatives(
+			//            Lookup,
+			//            KeysSearch,
+			//            new Sequence(new Action(
+			//                new Assignment(CodeKeys.Lookup),
+			//                LiteralExpression)),
+			//EmptyMap,
+			//String,
+			//LookupStringExpression
+			//))),
+			//AutokeyLookup))),
 			new Sequence(
 			new Action(new Match(), new Character('.')),
 			new Action(new Match(), Indentation),
 			new Action(new Assignment(
 				1),
-				//new Alternatives(Number, Expression),
-				new Alternatives(
-					KeysSearch,
-					LookupStringExpression,
-					Lookup)),
+					new Alternatives(
+						Lookup,
+						KeysSearch,
+						new Sequence(new Action(
+							new Assignment(CodeKeys.Lookup),
+							LiteralExpression)),
+			EmptyMap,
+			String,
+			LookupStringExpression
+			)),
+			////new Alternatives(Number, Expression),
+			//    new Alternatives(
+			//        Lookup,
+			//        LookupStringExpression,
+			//        Expression,
+			//        KeysSearch
+			//)),
 			//AutokeyLookup)),
 			new Action(new Append(),
 				new ZeroOrMore(
@@ -5525,12 +5575,136 @@ new Assignment(
 						new Sequence(
 				new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), SameIndentation),
-			new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
+			new Action(new Assignment(CodeKeys.Lookup), 
+				new Alternatives(
+					LookupAnythingExpression, 
+					LookupStringExpression, 
+			Expression)))))),
 			//new Action(new ReferenceAssignment(),Lookup))))),
 			//new Action(new Assignment(CodeKeys.Lookup), Expression))))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), new Optional(Dedentation)),
 			new Action(new Match(), new Optional(SameIndentation))));
+
+		//private static Rule Keys = new Alternatives(
+		//    new Sequence(new Action(
+		//        new Assignment(
+		//            1),
+		//            new Alternatives(
+		//                Lookup,
+		//                KeysSearch,
+		//                new Sequence(new Action(
+		//                    new Assignment(CodeKeys.Lookup),
+		//                    LiteralExpression)),
+		//    EmptyMap,
+		//    String,
+		//    LookupStringExpression
+		//    ))),
+		//    //AutokeyLookup))),
+		//    new Sequence(
+		//    new Action(new Match(), new Character('.')),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        1),
+		//    //new Alternatives(Number, Expression),
+		//        new Alternatives(
+		//            Lookup,
+		//            LookupStringExpression,
+		//            Expression,
+		//            KeysSearch
+		//    )),
+		//    //AutokeyLookup)),
+		//    new Action(new Append(),
+		//        new ZeroOrMore(
+		//            new Action(new Autokey(),
+		//                new Sequence(
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+		//    //new Action(new ReferenceAssignment(),Lookup))))),
+		//    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)),
+		//    new Action(new Match(), new Optional(SameIndentation))));
+
+		//private static Rule Keys = new Alternatives(
+		//    new Sequence(new Action(
+		//        new Assignment(
+		//            1),
+		//            new Alternatives(
+		//                KeysSearch,
+		//                Lookup,
+		//                new Sequence(new Action(
+		//                    new Assignment(CodeKeys.Lookup),
+		//                    LiteralExpression)),
+
+		//    EmptyMap,
+		//    String,
+		//    LookupStringExpression
+		//    ))),
+		//    //AutokeyLookup))),
+		//    new Sequence(
+		//    new Action(new Match(), new Character('.')),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        1),
+		//    //new Alternatives(Number, Expression),
+		//        new Alternatives(
+		//            Expression,
+		//            LookupStringExpression,
+		//            KeysSearch,
+		//            Lookup
+		//    )),
+		//    //AutokeyLookup)),
+		//    new Action(new Append(),
+		//        new ZeroOrMore(
+		//            new Action(new Autokey(),
+		//                new Sequence(
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+		//    //new Action(new ReferenceAssignment(),Lookup))))),
+		//    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)),
+		//    new Action(new Match(), new Optional(SameIndentation))));
+
+		//private static Rule Keys = new Alternatives(
+		//    new Sequence(new Action(
+		//        new Assignment(
+		//            1),
+		//            new Alternatives(
+		//                KeysSearch,
+		//                Lookup,
+		//    EmptyMap,
+		//    String,
+		//    LookupStringExpression
+		//    ))),
+		//                //AutokeyLookup))),
+		//    new Sequence(
+		//    new Action(new Match(), new Character('.')),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        1),
+		//        //new Alternatives(Number, Expression),
+		//        new Alternatives(
+		//            LookupStringExpression,
+		//            KeysSearch,
+		//            Lookup,
+		//    Expression)),
+		//    //AutokeyLookup)),
+		//    new Action(new Append(),
+		//        new ZeroOrMore(
+		//            new Action(new Autokey(),
+		//                new Sequence(
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
+		//    //new Action(new ReferenceAssignment(),Lookup))))),
+		//    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)),
+		//    new Action(new Match(), new Optional(SameIndentation))));
 
 
 		public static Rule Statement = new Sequence(

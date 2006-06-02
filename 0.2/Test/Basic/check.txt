@@ -1535,11 +1535,6 @@ Entry (KeyValuePair`2)
 		1
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"strongNameTest"
-	Value (TypeMap):
-		System.Int32
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"MemberTest"
 	Value (TypeMap):
 		Meta.Test.TestClasses.MemberTest
@@ -3424,7 +3419,7 @@ Entry (KeyValuePair`2)
 		System.String[]
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"123hello"
+		"oneTwoThreeHello"
 	Value (StrategyMap):
 		"asdf"
 Entry (KeyValuePair`2)
