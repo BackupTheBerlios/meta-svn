@@ -39,7 +39,7 @@ using System.Web;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Drawing;
-
+using System.Security.Cryptography;
 
 namespace Meta
 {
@@ -626,6 +626,15 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Sha512(Map text)
+		{
+			//byte[] data = new byte[DATA_SIZE];
+			//byte[] result;
+			SHA256 sha = new SHA256Managed();
+			byte[] result = sha.ComputeHash(Encoding.Unicode.GetBytes(text.GetString()));
+			return BitConverter.ToString(result).Replace("-","").ToLower();
+			//text;
+		}
 		public static Map Sum(Map arg, Map map)
 		{
 			Position argument = Call.LastArgument;
@@ -1304,6 +1313,11 @@ namespace Meta
 	}
 	public class DirectoryMap : Map
 	{
+		//public void ClearCache()
+		//{
+		//    this.keys = null;
+		//    this.cache = new Dictionary<Map, Map>();
+		//}
 		private DirectoryInfo directory;
 		private Dictionary<Map,string> keys;
 		protected override bool ContainsKeyImplementation(Map key)
@@ -1490,6 +1504,13 @@ namespace Meta
 	}
 	public class Interpreter
 	{
+		public static void Init()
+		{
+			Gac.fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
+			DrivesMap drives = new DrivesMap();
+			Gac.fileSystem.cache["localhost"] = drives;
+			Gac.gac["filesystem"] = Gac.fileSystem;
+		}
 		public static bool profiling=false;
 		public static void ChangeRef(ref string text)
 		{
@@ -4558,10 +4579,11 @@ namespace Meta
 		public static DirectoryMap fileSystem;
 		static Gac()
 		{
-			fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
-			DrivesMap drives = new DrivesMap();
-			Gac.fileSystem.cache["localhost"] = drives;
-			Gac.gac["filesystem"] = Gac.fileSystem;
+			Interpreter.Init();
+			//fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
+			//DrivesMap drives = new DrivesMap();
+			//Gac.fileSystem.cache["localhost"] = drives;
+			//Gac.gac["filesystem"] = Gac.fileSystem;
 		}
 		private Gac()
 		{
@@ -6266,7 +6288,7 @@ new Assignment(
 		}
 		public static string DoSerialize(Map map)
 		{
-			return DoSerialize(map,-1);
+			return DoSerialize(map,-1).Trim();
 		}
 		private static string GetIndentation(int indentation)
 		{
@@ -6448,18 +6470,17 @@ new Assignment(
 			//        return Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"];
 			//    }
 			//}
-
-			public static Map Run(string path,Map argument)
+			public static Position GetPositionFromPath(string path)
 			{
-				List<string> list=new List<string>();
-				FileInfo file=new FileInfo(path);
+				List<string> list = new List<string>();
+				FileInfo file = new FileInfo(path);
 				list.Add(Path.GetFileNameWithoutExtension(file.FullName));
-				DirectoryInfo directory=file.Directory;
-				while(true)
+				DirectoryInfo directory = file.Directory;
+				while (true)
 				{
 					list.Add(directory.Name.Trim('\\'));
-					directory=directory.Parent;
-					if(directory==null)
+					directory = directory.Parent;
+					if (directory == null)
 					{
 						break;
 					}
@@ -6467,23 +6488,178 @@ new Assignment(
 				list.Add("localhost");
 				list.Add("filesystem");
 				list.Reverse();
-				Map lookups=new StrategyMap();
-				foreach(Map entry in list)
+				//Map lookups = new StrategyMap();
+				Position pos = RootPosition.rootPosition;
+				foreach (Map entry in list)
 				{
-					lookups.Append(new StrategyMap(
-					    CodeKeys.Lookup, new StrategyMap(
-				        CodeKeys.Literal, entry)));
+					//lookups.Append(new StrategyMap(
+					//    CodeKeys.Lookup, new StrategyMap(
+					//    CodeKeys.Literal, entry)));
+					pos = new Position(pos, entry);
 				}
-				Map code = new StrategyMap(
-					CodeKeys.Call, new StrategyMap(
-						1, new StrategyMap(
-							CodeKeys.Select, lookups),
-						2, new StrategyMap(
-							CodeKeys.Literal, argument)));
-				Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
-				return position.Get();
-
+				//Map code = new StrategyMap(
+				//    CodeKeys.Call, new StrategyMap(
+				//        1, new StrategyMap(
+				//            CodeKeys.Select, lookups),
+				//        2, new StrategyMap(
+				//            CodeKeys.Literal, argument)));
+				return pos;
 			}
+			public static Map Run(string path, Map argument)
+			{
+				return Run(GetPositionFromPath(path), argument);
+			}
+			public static Map Run(Position pos, Map argument)
+			{
+
+				//pos.Parent.Get()[pos.Keys[pos.Keys.Count - 1]] = null;
+
+				Position position = pos.Call(argument);
+				//Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
+				return position.Get();
+			}
+			//public static Map Run(string path, Map argument)
+			//{
+			//    List<string> list = new List<string>();
+			//    FileInfo file = new FileInfo(path);
+			//    list.Add(Path.GetFileNameWithoutExtension(file.FullName));
+			//    DirectoryInfo directory = file.Directory;
+			//    while (true)
+			//    {
+			//        list.Add(directory.Name.Trim('\\'));
+			//        directory = directory.Parent;
+			//        if (directory == null)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    list.Add("localhost");
+			//    list.Add("filesystem");
+			//    list.Reverse();
+			//    Map lookups = new StrategyMap();
+			//    Position pos = RootPosition.rootPosition;
+			//    foreach (Map entry in list)
+			//    {
+			//        lookups.Append(new StrategyMap(
+			//            CodeKeys.Lookup, new StrategyMap(
+			//            CodeKeys.Literal, entry)));
+			//        pos = new Position(pos, entry);
+			//    }
+			//    Map code = new StrategyMap(
+			//        CodeKeys.Call, new StrategyMap(
+			//            1, new StrategyMap(
+			//                CodeKeys.Select, lookups),
+			//            2, new StrategyMap(
+			//                CodeKeys.Literal, argument)));
+
+			//    Position position=pos.Call(argument);
+			//    position.Parent.Get()[position.Keys[position.Keys.Count - 1]] = null;
+			//    //Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
+			//    return position.Get();
+			//}
+			//public static Map Run(string path, Map argument)
+			//{
+			//    List<string> list = new List<string>();
+			//    FileInfo file = new FileInfo(path);
+			//    list.Add(Path.GetFileNameWithoutExtension(file.FullName));
+			//    DirectoryInfo directory = file.Directory;
+			//    while (true)
+			//    {
+			//        list.Add(directory.Name.Trim('\\'));
+			//        directory = directory.Parent;
+			//        if (directory == null)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    list.Add("localhost");
+			//    list.Add("filesystem");
+			//    list.Reverse();
+			//    Map lookups = new StrategyMap();
+			//    foreach (Map entry in list)
+			//    {
+			//        lookups.Append(new StrategyMap(
+			//            CodeKeys.Lookup, new StrategyMap(
+			//            CodeKeys.Literal, entry)));
+			//    }
+			//    Map code = new StrategyMap(
+			//        CodeKeys.Call, new StrategyMap(
+			//            1, new StrategyMap(
+			//                CodeKeys.Select, lookups),
+			//            2, new StrategyMap(
+			//                CodeKeys.Literal, argument)));
+			//    Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
+			//    return position.Get();
+			//}
+			//public static Map Run(string path, Map argument)
+			//{
+			//    List<string> list = new List<string>();
+			//    FileInfo file = new FileInfo(path);
+			//    list.Add(Path.GetFileNameWithoutExtension(file.FullName));
+			//    DirectoryInfo directory = file.Directory;
+			//    while (true)
+			//    {
+			//        list.Add(directory.Name.Trim('\\'));
+			//        directory = directory.Parent;
+			//        if (directory == null)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    list.Add("localhost");
+			//    list.Add("filesystem");
+			//    list.Reverse();
+			//    Map lookups = new StrategyMap();
+			//    foreach (Map entry in list)
+			//    {
+			//        lookups.Append(new StrategyMap(
+			//            CodeKeys.Lookup, new StrategyMap(
+			//            CodeKeys.Literal, entry)));
+			//    }
+			//    Map code = new StrategyMap(
+			//        CodeKeys.Call, new StrategyMap(
+			//            1, new StrategyMap(
+			//                CodeKeys.Select, lookups),
+			//            2, new StrategyMap(
+			//                CodeKeys.Literal, argument)));
+			//    Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
+			//    return position.Get();
+			//}
+			//public static Map Run(string path,Map argument)
+			//{
+			//    List<string> list=new List<string>();
+			//    FileInfo file=new FileInfo(path);
+			//    list.Add(Path.GetFileNameWithoutExtension(file.FullName));
+			//    DirectoryInfo directory=file.Directory;
+			//    while(true)
+			//    {
+			//        list.Add(directory.Name.Trim('\\'));
+			//        directory=directory.Parent;
+			//        if(directory==null)
+			//        {
+			//            break;
+			//        }
+			//    }
+			//    list.Add("localhost");
+			//    list.Add("filesystem");
+			//    list.Reverse();
+			//    Map lookups=new StrategyMap();
+			//    foreach(Map entry in list)
+			//    {
+			//        lookups.Append(new StrategyMap(
+			//            CodeKeys.Lookup, new StrategyMap(
+			//            CodeKeys.Literal, entry)));
+			//    }
+			//    Map code = new StrategyMap(
+			//        CodeKeys.Call, new StrategyMap(
+			//            1, new StrategyMap(
+			//                CodeKeys.Select, lookups),
+			//            2, new StrategyMap(
+			//                CodeKeys.Literal, argument)));
+			//    Position position = code.GetExpression().Evaluate(RootPosition.rootPosition);
+			//    return position.Get();
+
+			//}
 
 		}
 		namespace TestClasses

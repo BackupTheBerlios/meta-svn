@@ -113,6 +113,7 @@
     <None Include="Library\Copy of string.meta" />
     <None Include="Library\first.meta" />
     <None Include="Library\guid.meta" />
+    <None Include="Library\sha512.meta" />
     <None Include="Library\sum.meta" />
     <None Include="Library\add.meta" />
     <None Include="Library\and.meta" />

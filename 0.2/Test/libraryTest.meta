@@ -449,4 +449,7 @@ arg|,
 		restTest=-
 			rest
 			"hello"
+		shaTest=-
+			sha512
+			"hello!"
 	&=!"test"
