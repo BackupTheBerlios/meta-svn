@@ -611,3 +611,8 @@ Entry (KeyValuePair`2)
 		"shaTest"
 	Value (StrategyMap):
 		"6c1e6fa63f42068c8fd21b862967dcde65e46f826451cb6eee17abe28dae55ca"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"selectTest"
+	Value (StrategyMap):
+		"orange"

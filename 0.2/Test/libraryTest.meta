@@ -452,4 +452,13 @@ arg|,
 		shaTest=-
 			sha512
 			"hello!"
+		selectTest=-
+			select
+			,
+				orange="orange"
+				banana="yellow"
+				apple="red"
+				strawberries="red"
+			,
+				value|1
 	&=!"test"

@@ -626,14 +626,23 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Select(Map map, Map function)
+		{
+			Position pos=Call.LastArgument;
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				if (function.Call(pair.Value,pos).Get().GetBoolean())
+				{
+					return pair.Key;
+				}
+			}
+			return Map.Empty;
+		}
 		public static Map Sha512(Map text)
 		{
-			//byte[] data = new byte[DATA_SIZE];
-			//byte[] result;
 			SHA256 sha = new SHA256Managed();
 			byte[] result = sha.ComputeHash(Encoding.Unicode.GetBytes(text.GetString()));
 			return BitConverter.ToString(result).Replace("-","").ToLower();
-			//text;
 		}
 		public static Map Sum(Map arg, Map map)
 		{
@@ -654,6 +663,25 @@ namespace Meta
 				return Map.Empty;
 			}
 		}
+		//public static Map Sum(Map arg, Map map)
+		//{
+		//    Position argument = Call.LastArgument;
+		//    //Map result = argument.Get().Array[0].Copy();
+		//    if (arg.ArrayCount > 0)
+		//    {
+		//        Map result = arg.Array[0].Copy();
+		//        foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
+		//        {
+		//            Position firstCall = argument.Call(result);
+		//            result = firstCall.Call(m).Get();
+		//        }
+		//        return result;
+		//    }
+		//    else
+		//    {
+		//        return Map.Empty;
+		//    }
+		//}
 		public static Map Prepend(Map arg,Map map)
 		{
 			Map result = new StrategyMap(1, arg);
@@ -1140,24 +1168,39 @@ namespace Meta
 			}
 			return result;
 		}
+		//public static Map Find(Map array,Map function)
+		//{
+		//    //Map result = new StrategyMap(new ListStrategy());
+		//    //string text = arg["array"].GetString();
+		//    Position position=Call.LastArgument;
+		//    foreach (Map map in array.Array)
+		//    {
+		//        Map result = function.Call(map,position).Get();
+		//        if (result.ContainsKey("found"))
+		//        {
+		//            return result;
+		//        }
+		//    }
+		//    return Map.Empty;
+		//}
 		public static Map Find(Map arg)
 		{
-			Map result = new StrategyMap(new ListStrategy());
-			string text = arg["array"].GetString();
-			string value = arg["value"].GetString();
-			for (int i = 0; ; i++)
-			{
-				i = text.IndexOf(value, i);
-				if (i == -1)
-				{
-					break;
-				}
-				else
-				{
-					result.Append(i + 1);
-				}
-			}
-			return result;
+		    Map result = new StrategyMap(new ListStrategy());
+		    string text = arg["array"].GetString();
+		    string value = arg["value"].GetString();
+		    for (int i = 0; ; i++)
+		    {
+		        i = text.IndexOf(value, i);
+		        if (i == -1)
+		        {
+		            break;
+		        }
+		        else
+		        {
+		            result.Append(i + 1);
+		        }
+		    }
+		    return result;
 		}
 		public static Map Slice(Map arg)
 		{
