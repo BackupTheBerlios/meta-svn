@@ -76,14 +76,6 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gdk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="glib-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gtk-sharp, Version=2.4.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.84.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -176,6 +168,9 @@
     <None Include="Library\with.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Library\sendMail.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

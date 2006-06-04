@@ -34,12 +34,17 @@ using Meta.Test;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Net.Sockets;
-using ICSharpCode.SharpZipLib.Zip;
-using System.Web;
+//using ICSharpCode.SharpZipLib.Zip;
+//using System.Web;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Globalization;
+//using System.Web;
+//using System.Net;
+using System.Net.Mail;
+//using System.Web.Mail;
 
 namespace Meta
 {
@@ -626,6 +631,121 @@ namespace Meta
 	}
 	public class Library
 	{
+		
+		public static Map SendMail(Map map)
+		{
+			SmtpClient sentmail = new SmtpClient(map["server"].GetString(), 25);
+			MailMessage message = new MailMessage();
+			MailAddress adress = new MailAddress(map["from"].GetString());
+			MailAddress sempf = new MailAddress(map["to"].GetString());
+			NetworkCredential aut = new NetworkCredential(map["userName"].GetString(), map["password"].GetString());
+			message.From = adress;
+			message.To.Add(sempf);
+			message.IsBodyHtml = false;
+			message.Subject = map["subject"].GetString();
+			message.Body = map["body"].GetString();
+			sentmail.DeliveryMethod = SmtpDeliveryMethod.Network;
+			sentmail.UseDefaultCredentials = false;
+			sentmail.Credentials = aut;
+			//sentmail.Credentials = aut;
+			//sentmail.UseDefaultCredentials = false;
+			sentmail.Send(message);
+			//SmtpMail.SmtpServer=map["server"].GetString();
+			//SmtpMail.Send(
+			//        map["from"].GetString(),
+			//        map["to"].GetString(),
+			//        map["subject"].GetString(),
+			//        map["body"].GetString());
+			//return Map.Empty;
+			// Command line argument must the the SMTP host.
+			//SmtpClient client = new SmtpClient("smtp.1und1.de");
+			//// Specify the e-mail sender.
+			//// Create a mailing address that includes a UTF8 character
+			//// in the display name.
+			//MailAddress from = new MailAddress(
+			//    "christianstaudenmeyer@web.de", 
+			//   "Christian Staudenmeyer", 
+			//System.Text.Encoding.UTF8);
+			//// Set destinations for the e-mail message.
+			//MailAddress to = new MailAddress("christianstaudenmeyer@web.de");
+			//// Specify the message content.
+			//MailMessage message = new MailMessage(from, to);
+			//message.Body = "This is a test e-mail message sent by an application. ";
+			// Include some non-ASCII characters in body and subject.
+			//string someArrows = new string(new char[] {'\u2190', '\u2191', '\u2192', '\u2193'});
+			//message.Body += Environment.NewLine + someArrows;
+			//message.BodyEncoding =  System.Text.Encoding.UTF8;
+			//message.Subject = "test message 1" + someArrows;
+			//message.SubjectEncoding = System.Text.Encoding.UTF8;
+			// Set the method that is called back when the send operation ends.
+			//client.SendCompleted += new 
+			//SendCompletedEventHandler(SendCompletedCallback);
+			// The userState can be any object that allows your callback 
+			// method to identify this send operation.
+			// For this example, the userToken is a string constant.
+			//string userState = "test message1";
+			//client.SendAsync(message, userState);
+			//Console.WriteLine("Sending message... press c to cancel mail. Press any other key to exit.");
+			//string answer = Console.ReadLine();
+			//// If the user canceled the send, and mail hasn't been sent yet,
+			//// then cancel the pending operation.
+			////if (answer.StartsWith("c") && mailSent == false)
+			////{
+			////    client.SendAsyncCancel();
+			////}
+			//// Clean up.
+			//message.Dispose();
+			//Console.WriteLine("Goodbye.");
+			return Map.Empty;
+		}
+		//public static Map SendMail(Map map)
+		//{
+		//    SmtpMail.SmtpServer=map["server"].GetString();
+		//    SmtpMail.Send(
+		//            map["from"].GetString(),
+		//            map["to"].GetString(),
+		//            map["subject"].GetString(),
+		//            map["body"].GetString());
+		//    return Map.Empty;
+		//    //// Command line argument must the the SMTP host.
+		//    //SmtpClient client = new SmtpClient(args[0]);
+		//    //// Specify the e-mail sender.
+		//    //// Create a mailing address that includes a UTF8 character
+		//    //// in the display name.
+		//    //MailAddress from = new MailAddress("jane@contoso.com", 
+		//    //   "Jane " + (char)0xD8+ " Clayton", 
+		//    //System.Text.Encoding.UTF8);
+		//    //// Set destinations for the e-mail message.
+		//    //MailAddress to = new MailAddress("ben@contoso.com");
+		//    //// Specify the message content.
+		//    //MailMessage message = new MailMessage(from, to);
+		//    //message.Body = "This is a test e-mail message sent by an application. ";
+		//    //// Include some non-ASCII characters in body and subject.
+		//    //string someArrows = new string(new char[] {'\u2190', '\u2191', '\u2192', '\u2193'});
+		//    //message.Body += Environment.NewLine + someArrows;
+		//    //message.BodyEncoding =  System.Text.Encoding.UTF8;
+		//    //message.Subject = "test message 1" + someArrows;
+		//    //message.SubjectEncoding = System.Text.Encoding.UTF8;
+		//    //// Set the method that is called back when the send operation ends.
+		//    //client.SendCompleted += new 
+		//    //SendCompletedEventHandler(SendCompletedCallback);
+		//    //// The userState can be any object that allows your callback 
+		//    //// method to identify this send operation.
+		//    //// For this example, the userToken is a string constant.
+		//    //string userState = "test message1";
+		//    //client.SendAsync(message, userState);
+		//    //Console.WriteLine("Sending message... press c to cancel mail. Press any other key to exit.");
+		//    //string answer = Console.ReadLine();
+		//    //// If the user canceled the send, and mail hasn't been sent yet,
+		//    //// then cancel the pending operation.
+		//    //if (answer.StartsWith("c") && mailSent == false)
+		//    //{
+		//    //    client.SendAsyncCancel();
+		//    //}
+		//    //// Clean up.
+		//    //message.Dispose();
+		//    //Console.WriteLine("Goodbye.");
+		//}
 		public static Map Select(Map map, Map function)
 		{
 			Position pos=Call.LastArgument;
@@ -716,9 +836,9 @@ namespace Meta
 		}
 		public static Map ShowGtk(Map arg)
 		{
-			Gtk.Application.Init();
-			Gtk.Window win = new Gtk.Window("TextViewSample");
-			win.ShowAll();
+			//Gtk.Application.Init();
+			//Gtk.Window win = new Gtk.Window("TextViewSample");
+			//win.ShowAll();
 			return Map.Empty;
 		}
 		public static Map With(Map arg)
@@ -1425,7 +1545,7 @@ namespace Meta
 				string name = key.GetString();
 				if (directory.FullName != Interpreter.LibraryPath)
 				{
-					Directory.SetCurrentDirectory(directory.FullName);
+					//Directory.SetCurrentDirectory(directory.FullName);
 				}
 				string file = Path.Combine(directory.FullName, name);
 				string metaFile = Path.Combine(directory.FullName, name + ".meta");
@@ -1547,12 +1667,26 @@ namespace Meta
 	}
 	public class Interpreter
 	{
+
+		public static bool Initialized
+		{
+			get
+			{
+				return initialized;
+			}
+		}
+		private static bool initialized = false;
 		public static void Init()
 		{
+			Init(new DrivesMap());
+		}
+		public static void Init(Map root)
+		{
 			Gac.fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
-			DrivesMap drives = new DrivesMap();
-			Gac.fileSystem.cache["localhost"] = drives;
+			//DrivesMap drives = new DrivesMap();
+			Gac.fileSystem.cache["localhost"] = root;
 			Gac.gac["filesystem"] = Gac.fileSystem;
+			initialized = true;
 		}
 		public static bool profiling=false;
 		public static void ChangeRef(ref string text)
@@ -1562,6 +1696,29 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			Interpreter.Init();
+		//    //Library.SendMail(new StrategyMap(
+		//    //    "server", "smtp.web.de",
+		//    //    "subject", "Test subject",
+		//    //    "body", "Test body",
+		//    //    "to",   "christianstaudenmeyer@web.de",
+		//    //    "from", "christianstaudenmeyer@web.de"));
+			//SmtpClient sentmail = new SmtpClient("smtp.1und1.de", 25);
+			//MailMessage message = new MailMessage();
+			//MailAddress adress = new MailAddress("christianstaudenmeyer@web.de");
+			//MailAddress sempf = new MailAddress("christianstaudenmeyer@web.de");
+			//NetworkCredential aut = new NetworkCredential("staudenmeyer@s157163110.online.de", "psatsuvfus");
+			//message.From = adress;
+			//message.To.Add(sempf);
+			//message.IsBodyHtml = false;
+			//message.Subject = "sadsa";
+			//message.Body = "test body";
+			//sentmail.DeliveryMethod = SmtpDeliveryMethod.Network;
+			//sentmail.UseDefaultCredentials = false;
+			//sentmail.Credentials = aut;
+			////sentmail.Credentials = aut;
+			////sentmail.UseDefaultCredentials = false;
+			//sentmail.Send(message);
 			try
 			{
 				if (args.Length == 0)
@@ -1734,7 +1891,7 @@ namespace Meta
 			{
 				string path = args[0];
 				string startDirectory = Path.GetDirectoryName(path);
-				Directory.SetCurrentDirectory(startDirectory);
+				//Directory.SetCurrentDirectory(startDirectory);
 				MetaTest.Run(path, Map.Empty);
 			}
 		}
@@ -1750,11 +1907,16 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
+		private static string installationPath = @"C:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return installationPath;
+			}
+			set
+			{
+				installationPath = value;
 			}
 		}
 		public static string LibraryPath
@@ -1852,7 +2014,7 @@ namespace Meta
 				}
 				else
 				{
-					throw new Exception("Position does not exist");
+					throw new Exception("Position does not exist"+key.ToString());
 				}
 			}
 		}
@@ -4622,7 +4784,7 @@ namespace Meta
 		public static DirectoryMap fileSystem;
 		static Gac()
 		{
-			Interpreter.Init();
+			//Interpreter.Init();
 			//fileSystem = new DirectoryMap(new DirectoryInfo(Interpreter.LibraryPath));
 			//DrivesMap drives = new DrivesMap();
 			//Gac.fileSystem.cache["localhost"] = drives;
