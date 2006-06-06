@@ -2597,10 +2597,10 @@ namespace Meta
 				List<Map> keys=new List<Map>();
 				foreach (Map key in KeysImplementation)
 				{
-					if (!(key is FunctionBodyKey))
-					{
+                    //if (!(key is FunctionBodyKey))
+                    //{
 						keys.Add(key);
-					}
+                    //}
 				}
 				return keys;
 			}
@@ -2613,10 +2613,10 @@ namespace Meta
 		{
 			Map clone = CopyData();
 			// not really correct
-			foreach (KeyValuePair<FunctionBodyKey, Map> entry in TemporaryData)
-			{
-				clone.TemporaryData[entry.Key] = entry.Value;
-			}
+            //foreach (KeyValuePair<FunctionBodyKey, Map> entry in TemporaryData)
+            //{
+            //    clone.TemporaryData[entry.Key] = entry.Value;
+            //}
 			clone.numCalls = numCalls;
 			clone.Scope = Scope;
 			clone.Extent = Extent;
