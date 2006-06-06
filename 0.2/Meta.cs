@@ -326,14 +326,14 @@ namespace Meta
 			string result="";
 			foreach (Map key in position.Keys)
 			{
-				if (key is FunctionBodyKey)
-				{
-					result += @"\";
-				}
-				else
-				{
+				//if (key is FunctionBodyKey)
+				//{
+				//    result += @"\";
+				//}
+				//else
+				//{
 					result += key.ToString();
-				}
+				//}
 			}
 			return result;
 		}
@@ -1978,11 +1978,11 @@ namespace Meta
 	{
 		public Position AddCall(Map map)
 		{
-			Map got = Get();
-			got.numCalls++;
-			FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
-			got[call] = map;
-			return new TemporaryPosition(map,this, call);
+			//Map got = Get();
+			//got.numCalls++;
+			//FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
+			//got[call] = map;
+			return new TemporaryPosition(map,this, Map.Empty);
 			//return new Position(this, call);
 		}
 		//public Position AddCall(Map map)
@@ -2127,59 +2127,59 @@ namespace Meta
 			return Gac.gac;
 		}
 	}
-	public class FunctionBodyKey : Map
-	{
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return false;
-		}
-		public FunctionBodyKey(int id)
-		{
-			this.id = id;
-		}
-		private int id;
-		public override bool Equals(object obj)
-		{
-			return obj is FunctionBodyKey && ((FunctionBodyKey)obj).id==id;
-		}
-		public override int GetHashCode()
-		{
-			return id.GetHashCode();
-		}
-		protected override Map Get(Map key)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		protected override void Set(Map key, Map val)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		protected override Map CopyData()
-		{
-			return this;
-		}
-		protected override ICollection<Map> KeysImplementation
-		{
-			get 
-			{
-				return new List<Map>();
-			}
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return false;
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return false;
-			}
-		}
-	}
+	//public class FunctionBodyKey : Map
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return false;
+	//    }
+	//    public FunctionBodyKey(int id)
+	//    {
+	//        this.id = id;
+	//    }
+	//    private int id;
+	//    public override bool Equals(object obj)
+	//    {
+	//        return obj is FunctionBodyKey && ((FunctionBodyKey)obj).id==id;
+	//    }
+	//    public override int GetHashCode()
+	//    {
+	//        return id.GetHashCode();
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return this;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get 
+	//        {
+	//            return new List<Map>();
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//}
 	public class KeyChangedEventArgs : EventArgs
 	{
 		public KeyChangedEventArgs(Map key)
@@ -2214,34 +2214,34 @@ namespace Meta
 		{
 			return Meta.Serialize.ValueFunction(this);
 		}
-		private Dictionary<FunctionBodyKey, Map> TemporaryData
-		{
-			get
-			{
-				if (tempData == null)
-				{
-					tempData = new Dictionary<FunctionBodyKey, Map>();
-				}
-				return tempData;
-			}
-		}
+		//private Dictionary<FunctionBodyKey, Map> TemporaryData
+		//{
+		//    get
+		//    {
+		//        if (tempData == null)
+		//        {
+		//            tempData = new Dictionary<FunctionBodyKey, Map>();
+		//        }
+		//        return tempData;
+		//    }
+		//}
 		public Map TryGetValue(Map key)
 		{
-			if (key is FunctionBodyKey)
-			{
-				if (TemporaryData.ContainsKey((FunctionBodyKey)key))
-				{
-					return TemporaryData[(FunctionBodyKey)key];
-				}
-				else
-				{
-					return null;
-				}
-			}
-			else
-			{
+			//if (key is FunctionBodyKey)
+			//{
+			//    if (TemporaryData.ContainsKey((FunctionBodyKey)key))
+			//    {
+			//        return TemporaryData[(FunctionBodyKey)key];
+			//    }
+			//    else
+			//    {
+			//        return null;
+			//    }
+			//}
+			//else
+			//{
 				return Get(key);
-			}
+			//}
 		}
 		public Map this[Map key]
 		{
@@ -2261,14 +2261,14 @@ namespace Meta
 					compiledCode = null;
 					Map val;
 					val = value.Copy();
-					if (key is FunctionBodyKey)
-					{
-						this.TemporaryData[(FunctionBodyKey)key] = val;
-					}
-					else
-					{
+					//if (key is FunctionBodyKey)
+					//{
+					//    this.TemporaryData[(FunctionBodyKey)key] = val;
+					//}
+					//else
+					//{
 						Set(key, val);
-					}
+					//}
 					if (KeyChanged != null)
 					{
 						this.KeyChanged(new KeyChangedEventArgs(key));
@@ -2612,14 +2612,14 @@ namespace Meta
 		protected abstract Map CopyData();
 		public bool ContainsKey(Map key)
 		{
-			if (key is FunctionBodyKey)
-			{
-				return TemporaryData.ContainsKey((FunctionBodyKey)key);
-			}
-			else
-			{
+			//if (key is FunctionBodyKey)
+			//{
+			//    return TemporaryData.ContainsKey((FunctionBodyKey)key);
+			//}
+			//else
+			//{
 				return ContainsKeyImplementation(key);
-			}
+			//}
 		}
 		protected abstract bool ContainsKeyImplementation(Map key);
 		public override int GetHashCode()
@@ -2702,7 +2702,7 @@ namespace Meta
 			return new StrategyMap(text);
 		}
 		private Position scope;
-		private Dictionary<FunctionBodyKey, Map> tempData;
+		//private Dictionary<FunctionBodyKey, Map> tempData;
 	}
 	public class StrategyMap:Map
 	{
@@ -2932,7 +2932,7 @@ namespace Meta
 				il.Emit(OpCodes.Castclass, invoke.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			FunctionBodyKey calls;
+			//FunctionBodyKey calls;
 			// probably wrong
 			Position position=MethodImplementation.currentPosition.AddCall(code);
 			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
