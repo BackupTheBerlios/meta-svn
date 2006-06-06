@@ -1973,28 +1973,17 @@ namespace Meta
 			}
 		}
 	}
-	public delegate void BustOptimization();
-	//public abstract class PositionBase
-	//{
-	//}
+	//public delegate void BustOptimization();
 	public class Position
 	{
-		//public Position AddCall(Map map)
-		//{
-		//    //Map got = Get();
-		//    //got.numCalls++;
-		//    //FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
-		//    //got[call] = map;
-		//    return new TemporaryPosition(this,Map.Empty);
-		//    //return new Position(this, call);
-		//}
 		public Position AddCall(Map map)
 		{
 			Map got = Get();
 			got.numCalls++;
 			FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
 			got[call] = map;
-			return new Position(this, call);
+			return new TemporaryPosition(map,this, call);
+			//return new Position(this, call);
 		}
 		//public Position AddCall(Map map)
 		//{
@@ -2008,31 +1997,7 @@ namespace Meta
 		{
 			return Get().Call(argument, this);
 		}
-		//public Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
-		public List<Map> Keys
-		{
-			get
-			{
-				Position position = this;
-				List<Map> keys = new List<Map>();
-				while (position != null && position.key != null)
-				{
-					keys.Add(position.key);
-					position = position.Parent;
-				}
-				keys.Reverse();
-				return keys;
-			}
-		}
-		public override string ToString()
-		{
-			string text = "";
-			foreach (Map map in Keys)
-			{
-				text += map.ToString();
-			}
-			return text;
-		}
+
 		public override bool Equals(object obj)
 		{
 			Position position=(Position)obj;
@@ -2047,11 +2012,6 @@ namespace Meta
 		public void Assign(Map key, Map value)
 		{
 			Get()[key] = value;
-			//if (optimizations.ContainsKey(key))
-			//{
-			//    optimizations[key]();
-			//    optimizations.Remove(key);
-			//}
 		}
 		public virtual void Assign(Map value)
 		{
@@ -2083,39 +2043,13 @@ namespace Meta
 				return parent;
 			}
 		}
-		//private Map cached;
 		public virtual Map Get()
 		{
 			return DetermineMap();
-			//if (!CacheValid())
-			//{
-			//    cached = DetermineMap();
-			//}
-			//return cached;
 		}
-		//public virtual bool CacheValid()
-		//{
-		//    return cached != null;
-		//}
-		//public void AddOptimization(Map key,BustOptimization optimization)
-		//{
-		//    if (!optimizations.ContainsKey(key))
-		//    {
-		//        optimizations[key] = optimization;
-		//    }
-		//    else
-		//    {
-		//        optimizations[key] += optimization;
-		//    }
-		//}
-		//private void Bust()
-		//{
-		//    this.cached = null;
-		//}
 		public virtual Map DetermineMap()
 		{
 			Map map = parent.Get();
-			//parent.AddOptimization(key,new BustOptimization(Bust));
 			Map result = map[key];
 			if (result == null)
 			{
@@ -2123,9 +2057,29 @@ namespace Meta
 			}
 			return result;
 		}
-		void position_KeyChanged(KeyChangedEventArgs e)
-		{			
-			//this.cached = null;
+		public List<Map> Keys
+		{
+			get
+			{
+				Position position = this;
+				List<Map> keys = new List<Map>();
+				while (position != null && position.key != null)
+				{
+					keys.Add(position.key);
+					position = position.Parent;
+				}
+				keys.Reverse();
+				return keys;
+			}
+		}
+		public override string ToString()
+		{
+			string text = "";
+			foreach (Map map in Keys)
+			{
+				text += map.ToString();
+			}
+			return text;
 		}
 	}
 	public class TemporaryPosition : Position
@@ -2134,9 +2088,10 @@ namespace Meta
 		{
 			return map;
 		}
-		private Map map = new StrategyMap();
-		public TemporaryPosition(Position parent,Map key):base(parent,key)
+		private Map map;// = new StrategyMap();
+		public TemporaryPosition(Map map,Position parent,Map key):base(parent,key)
 		{
+			this.map = map.Copy();
 		}
 		public override void Assign(Map value)
 		{
@@ -5174,6 +5129,13 @@ namespace Meta
 	}
 	public class Parser
 	{
+		public bool End
+		{
+			get
+			{
+				return index >= text.Length - 1;
+			}
+		}
 		private bool negative = false;
 		public string text;
 		public int index;
@@ -5409,7 +5371,8 @@ namespace Meta
 						if (parser.file.Contains("string.meta"))
 						{
 						}
-						if (parser.Rest == "")
+						if (parser.End)//.Rest == "")
+						//if (parser.Rest == "")
 						{
 							break;
 						}
@@ -5425,7 +5388,7 @@ namespace Meta
 							matched = true;
 							break;
 						}
-						if (parser.Rest == "")
+						if (parser.End)//.Rest == "")
 						{
 							break;
 						}
@@ -6219,9 +6182,9 @@ new Assignment(
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
-				if (parser.Rest.IndexOf("=0")<10)
-				{
-				}
+				//if (parser.Rest.IndexOf("=0")<10)
+				//{
+				//}
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
 				{
@@ -6449,9 +6412,9 @@ new Assignment(
 				matched = false;
 				while (true)
 				{
-					if (parser.Rest.StartsWith("\t\t\"hello\""))
-					{
-					}
+					//if (parser.Rest.StartsWith("\t\t\"hello\""))
+					//{
+					//}
 					if (!action.Execute(parser, ref list))
 					{
 						break;
