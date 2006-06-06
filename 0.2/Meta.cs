@@ -1974,7 +1974,10 @@ namespace Meta
 		}
 	}
 	public delegate void BustOptimization();
-	public class Position
+	public abstract class PositionBase
+	{
+	}
+	public class Position:PositionBase
 	{
 		public List<Position> Array
 		{
