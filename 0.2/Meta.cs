@@ -1476,6 +1476,15 @@ namespace Meta
 	}
 	public class DirectoryMap : Map
 	{
+
+        public override bool IsNumber
+        {
+            get
+            {
+                // this isnt really accurate, but avoids a lot of problems
+                return false;
+            }
+        }
 		//public void ClearCache()
 		//{
 		//    this.keys = null;
@@ -1495,6 +1504,43 @@ namespace Meta
 		public DirectoryMap(DirectoryInfo directory)
 		{
 			this.directory = directory;
+			if (directory.Root.FullName!=directory.FullName)
+			//if (directory.Parent != null)
+			{
+				FileSystemWatcher watcher = new FileSystemWatcher(directory.FullName, "*.*");
+				watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+				watcher.Created += new FileSystemEventHandler(watcher_Created);
+				watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
+				watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+			}
+		}
+
+		void watcher_Renamed(object sender, RenamedEventArgs e)
+		{
+			// not implemented yet
+			//e.OldFullPath;
+		}
+		void watcher_Deleted(object sender, FileSystemEventArgs e)
+		{
+			keys = null;
+			if (cache.ContainsKey(e.Name))
+			{
+				cache.Remove(e.Name);
+			}
+			//e.Name;
+		}
+		void watcher_Created(object sender, FileSystemEventArgs e)
+		{
+			keys = null;
+			//e.Name;
+		}
+		void watcher_Changed(object sender, FileSystemEventArgs e)
+		{
+			keys = null;
+			if (cache.ContainsKey(e.Name))
+			{
+				cache.Remove(e.Name);
+			}
 		}
 		private Dictionary<Map,string> GetKeys()
 		{
@@ -1907,7 +1953,7 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"C:\Meta\0.2\";
+		private static string installationPath = @"D:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
@@ -2461,8 +2507,10 @@ namespace Meta
 		public Number GetNumberDefault()
 		{
 			Number number;
-			if (this.Equals(Map.Empty))
-			{
+            // Equals somehow does not get called sometimes?? (for DirectoryMap)
+            if (Count==0)
+            //if (this.Equals(Map.Empty))
+            {
 				number = 0;
 			}
 			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this[Map.Empty].IsNumber)
@@ -6648,7 +6696,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
 			public class Basic : Test
@@ -6656,7 +6704,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"C:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
 			public class Library : Test
@@ -6664,7 +6712,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"C:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+					return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
 			//public class Extents : Test
