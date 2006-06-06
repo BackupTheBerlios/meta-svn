@@ -360,13 +360,13 @@ namespace Meta
 		}
 		protected override Position EvaluateImplementation(Position parent)
 		{
-				Position contextPosition=parent.AddCall(new StrategyMap());
-				foreach (Statement statement in statements)
-				{
-					statement.Assign(contextPosition);
-				}
-				contextPosition.Get().Scope = parent;
-				return contextPosition;
+			Position contextPosition=parent.AddCall(new StrategyMap());
+			foreach (Statement statement in statements)
+			{
+				statement.Assign(contextPosition);
+			}
+			contextPosition.Get().Scope = parent;
+			return contextPosition;
 		}
 
 		bool constantKeysDetermined=false;
@@ -1974,24 +1974,20 @@ namespace Meta
 		}
 	}
 	public delegate void BustOptimization();
-	public abstract class PositionBase
+	//public abstract class PositionBase
+	//{
+	//}
+	public class Position
 	{
-	}
-	public class Position:PositionBase
-	{
-		public List<Position> Array
-		{
-			get
-			{
-				Map map=Get();
-				List<Position> array = new List<Position>();
-				for (int i = 0; i < map.ArrayCount; i++)
-				{
-					array.Add(new Position(this,i+1));
-				}
-				return array;
-			}
-		}
+		//public Position AddCall(Map map)
+		//{
+		//    //Map got = Get();
+		//    //got.numCalls++;
+		//    //FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
+		//    //got[call] = map;
+		//    return new TemporaryPosition(this,Map.Empty);
+		//    //return new Position(this, call);
+		//}
 		public Position AddCall(Map map)
 		{
 			Map got = Get();
@@ -2000,11 +1996,19 @@ namespace Meta
 			got[call] = map;
 			return new Position(this, call);
 		}
+		//public Position AddCall(Map map)
+		//{
+		//    Map got = Get();
+		//    got.numCalls++;
+		//    FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
+		//    got[call] = map;
+		//    return new Position(this, call);
+		//}
 		public Position Call(Map argument)
 		{
 			return Get().Call(argument, this);
 		}
-		private Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
+		//public Dictionary<Map, BustOptimization> optimizations = new Dictionary<Map, BustOptimization>();
 		public List<Map> Keys
 		{
 			get
@@ -2043,13 +2047,13 @@ namespace Meta
 		public void Assign(Map key, Map value)
 		{
 			Get()[key] = value;
-			if (optimizations.ContainsKey(key))
-			{
-				optimizations[key]();
-				optimizations.Remove(key);
-			}
+			//if (optimizations.ContainsKey(key))
+			//{
+			//    optimizations[key]();
+			//    optimizations.Remove(key);
+			//}
 		}
-		public void Assign(Map value)
+		public virtual void Assign(Map value)
 		{
 			Parent.Assign(key, value);
 		}
@@ -2079,38 +2083,39 @@ namespace Meta
 				return parent;
 			}
 		}
-		private Map cached;
+		//private Map cached;
 		public virtual Map Get()
 		{
-			if (!CacheValid())
-			{
-				cached = DetermineMap();
-			}
-			return cached;
+			return DetermineMap();
+			//if (!CacheValid())
+			//{
+			//    cached = DetermineMap();
+			//}
+			//return cached;
 		}
-		public virtual bool CacheValid()
-		{
-			return cached != null;
-		}
-		public void AddOptimization(Map key,BustOptimization optimization)
-		{
-			if (!optimizations.ContainsKey(key))
-			{
-				optimizations[key] = optimization;
-			}
-			else
-			{
-				optimizations[key] += optimization;
-			}
-		}
-		private void Bust()
-		{
-			this.cached = null;
-		}
+		//public virtual bool CacheValid()
+		//{
+		//    return cached != null;
+		//}
+		//public void AddOptimization(Map key,BustOptimization optimization)
+		//{
+		//    if (!optimizations.ContainsKey(key))
+		//    {
+		//        optimizations[key] = optimization;
+		//    }
+		//    else
+		//    {
+		//        optimizations[key] += optimization;
+		//    }
+		//}
+		//private void Bust()
+		//{
+		//    this.cached = null;
+		//}
 		public virtual Map DetermineMap()
 		{
 			Map map = parent.Get();
-			parent.AddOptimization(key,new BustOptimization(Bust));
+			//parent.AddOptimization(key,new BustOptimization(Bust));
 			Map result = map[key];
 			if (result == null)
 			{
@@ -2119,9 +2124,33 @@ namespace Meta
 			return result;
 		}
 		void position_KeyChanged(KeyChangedEventArgs e)
+		{			
+			//this.cached = null;
+		}
+	}
+	public class TemporaryPosition : Position
+	{
+		public override Map Get()
 		{
-			
-			this.cached = null;
+			return map;
+		}
+		private Map map = new StrategyMap();
+		public TemporaryPosition(Position parent,Map key):base(parent,key)
+		{
+		}
+		public override void Assign(Map value)
+		{
+			map = value;
+			//if (Parent.optimizations.ContainsKey(ey))
+			//{
+			//    optimizations[key]();
+			//    optimizations.Remove(key);
+			//}
+			//if (optimizations.ContainsKey(key))
+			//{
+			//    optimizations[key]();
+			//    optimizations.Remove(key);
+			//}
 		}
 	}
 	public class RootPosition : Position
@@ -2130,10 +2159,10 @@ namespace Meta
 		{
 			return obj is RootPosition;
 		}
-		public override bool CacheValid()
-		{
-			return true;
-		}
+		//public override bool CacheValid()
+		//{
+		//    return true;
+		//}
 		public static RootPosition rootPosition=new RootPosition();
 		private RootPosition()
 		{
