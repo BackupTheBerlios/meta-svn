@@ -1767,17 +1767,17 @@ namespace Meta
 			//sentmail.Send(message);
 			try
 			{
-				if (args.Length == 0)
-				{
-					Commands.Interactive();
-				}
-				else
-				{
+				//if (args.Length == 0)
+				//{
+				//    Commands.Interactive();
+				//}
+				//else
+				//{
 					switch (args[0])
 					{
-						case "-interactive":
-							Commands.Interactive();
-							break;
+						//case "-interactive":
+						//    Commands.Interactive();
+						//    break;
 						case "-test":
 							Commands.Test();
 							break;
@@ -1808,7 +1808,7 @@ namespace Meta
 							Commands.Run(args);
 							break;
 					}
-				}
+				//}
 			}
 			catch (MetaException e)
 			{
@@ -1854,79 +1854,79 @@ namespace Meta
 				Console.WriteLine("help");
 				Console.ReadLine();
 			}
-			public static void Interactive()
-			{
-				UseConsole();
-				Console.WriteLine("Interactive mode of Meta 0.2");
-				object x = Gac.fileSystem;
-				Map map = new StrategyMap();
-				string code;
+			//public static void Interactive()
+			//{
+			//    UseConsole();
+			//    Console.WriteLine("Interactive mode of Meta 0.2");
+			//    object x = Gac.fileSystem;
+			//    Map map = new StrategyMap();
+			//    string code;
 
-				Parser parser = new Parser("", "Interactive console");
-				parser.defaultKeys.Push(1);
-				Position position = new Position(new Position(RootPosition.rootPosition,"filesystem"), "localhost" );
-				Position local=position.AddCall(new StrategyMap());
-				while (true)
-				{
-					code = "";
-					Console.Write(parser.Line + " ");
-					int lines = 0;
-					while (true)
-					{
-						string input = Console.ReadLine();
-						if (input.Trim().Length != 0)
-						{
-							code += input + Syntax.unixNewLine;
-							char character = input[input.TrimEnd().Length - 1];
-							if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
-							{
-								break;
-							}
-						}
-						else
-						{
-							if (lines != 0)
-							{
-								break;
-							}
-						}
-						lines++;
-						Console.Write(parser.Line + lines + " ");
-						for (int i = 0; i < input.Length && input[i] == '\t'; i++)
-						{
-							SendKeys.SendWait("{TAB}");
-						}
-					}
-					try
-					{
-						bool matched;
-						parser.text += code;
-						Map statement = Parser.Statement.Match(parser, out matched);
-						int count=local.Get().ArrayCount;
-						if (matched)
-						{
-							if (parser.index == parser.text.Length)
-							{
-								statement.GetStatement().Assign(local);
-							}
-							else
-							{
-								parser.index = parser.text.Length;
-								throw new SyntaxException("Syntax error", parser);
-							}
-							if (local.Get().ArrayCount > count)
-							{
-								Library.WriteLine(Serialize.ValueFunction(local.Get()[local.Get().ArrayCount]));
-							}
-						}
-						Console.WriteLine();
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine(e.ToString());
-					}
-				}
-			}
+			//    Parser parser = new Parser("", "Interactive console");
+			//    parser.defaultKeys.Push(1);
+			//    Position position = new Position(new Position(RootPosition.rootPosition,"filesystem"), "localhost" );
+			//    Position local=position.AddCall(new StrategyMap());
+			//    while (true)
+			//    {
+			//        code = "";
+			//        Console.Write(parser.Line + " ");
+			//        int lines = 0;
+			//        while (true)
+			//        {
+			//            string input = Console.ReadLine();
+			//            if (input.Trim().Length != 0)
+			//            {
+			//                code += input + Syntax.unixNewLine;
+			//                char character = input[input.TrimEnd().Length - 1];
+			//                if (!(Char.IsLetter(character) || character == ']' || character == Syntax.lookupStart) && !input.StartsWith("\t") && character != '=')
+			//                {
+			//                    break;
+			//                }
+			//            }
+			//            else
+			//            {
+			//                if (lines != 0)
+			//                {
+			//                    break;
+			//                }
+			//            }
+			//            lines++;
+			//            Console.Write(parser.Line + lines + " ");
+			//            for (int i = 0; i < input.Length && input[i] == '\t'; i++)
+			//            {
+			//                SendKeys.SendWait("{TAB}");
+			//            }
+			//        }
+			//        try
+			//        {
+			//            bool matched;
+			//            parser.text += code;
+			//            Map statement = Parser.Statement.Match(parser, out matched);
+			//            int count=local.Get().ArrayCount;
+			//            if (matched)
+			//            {
+			//                if (parser.index == parser.text.Length)
+			//                {
+			//                    statement.GetStatement().Assign(local);
+			//                }
+			//                else
+			//                {
+			//                    parser.index = parser.text.Length;
+			//                    throw new SyntaxException("Syntax error", parser);
+			//                }
+			//                if (local.Get().ArrayCount > count)
+			//                {
+			//                    Library.WriteLine(Serialize.ValueFunction(local.Get()[local.Get().ArrayCount]));
+			//                }
+			//            }
+			//            Console.WriteLine();
+			//        }
+			//        catch (Exception e)
+			//        {
+			//            Console.WriteLine(e.ToString());
+			//        }
+			//    }
+			//}
 			public static void Test()
 			{
 				UseConsole();
@@ -1992,7 +1992,7 @@ namespace Meta
 				return array;
 			}
 		}
-			public Position AddCall(Map map)
+		public Position AddCall(Map map)
 		{
 			Map got = Get();
 			got.numCalls++;
