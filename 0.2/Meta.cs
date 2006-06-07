@@ -1696,7 +1696,10 @@ namespace Meta
 						{
 							text = text.Trim(Syntax.unixNewLine);
 						}
-						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text);
+						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text,Encoding.Default);
+						// bad performance, probably
+						this.keys = null;
+						//this.cache[key] = val;
 					}
 				}
 				cache[key] = val;
@@ -1988,7 +1991,7 @@ namespace Meta
 		//public Position AddCall(Map map)
 		//{
 		//    Map got = Get();
-		//    got.numCalls++;
+		//    got.numCalls++;f
 		//    FunctionBodyKey call = new FunctionBodyKey(got.numCalls);
 		//    got[call] = map;
 		//    return new Position(this, call);
@@ -6595,7 +6598,7 @@ new Assignment(
 						text +=
 							GetIndentation(indentation + 1);// +
 						string key;
-						if (entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1)
+						if (entry.Key.Count!=0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1)
 						{
 							key = entry.Key.GetString();
 						}

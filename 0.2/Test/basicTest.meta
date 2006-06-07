@@ -650,14 +650,14 @@ commandLine|,
 			TextBox
 		0
 	.
-		textBox
+		!"textBox"
 		Text
 	="
 		Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
 		Köpfchen in das Wasser,
-		Schwaenzchen in die Hoeh.
+		asdf in die Hoeh.
 	"
 	lines=.
 		textBox
