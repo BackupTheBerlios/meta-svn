@@ -1764,6 +1764,11 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
+			//foreach (KeyValuePair<Map, Map> entry in Gac.fileSystem["localhost"]["D:"]["Web"]["items"])//["Test"]["basicTest"]
+			//{
+			//    int asdf = 0;
+			//}
+			//return;
 		//    //Library.SendMail(new StrategyMap(
 		//    //    "server", "smtp.web.de",
 		//    //    "subject", "Test subject",
@@ -5339,22 +5344,20 @@ namespace Meta
 		//                                                    )))))))),
 		//            new Action(new Match(), StringDedentation),
 		//            new Action(new Match(), new Character(Syntax.@string))));
-		public static Rule StringImplementation = new Alternatives(
-				new Sequence(
-					new Action(
-						new Match(), new Character(Syntax.@string)),
-					new Action(
-						new ReferenceAssignment(),
-						new OneOrMore(
+
+		private static Rule SingleString = new OneOrMore(
 							new Action(
 								new Autokey(),
 								new CharacterExcept(
 									Syntax.unixNewLine,
 									Syntax.windowsNewLine[0],
-									Syntax.@string)))),
-					new Action(new Match(), new Character(Syntax.@string))),
+									Syntax.@string)));
+		public static Rule String = new Sequence(
+			new Action(new Match(), new Character(Syntax.@string)),
+			new Action(new ReferenceAssignment(),new Alternatives(
+			SingleString,
 				new Sequence(
-					new Action(new Match(), new Character(Syntax.@string)),
+					//new Action(new Match(), new Character(Syntax.@string)),
 					new Action(new Match(), Indentation),
 					new Action(new ReferenceAssignment(), new Sequence(
 								new Action(new Append(), StringLine),
@@ -5369,17 +5372,72 @@ namespace Meta
 															new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
 															new Action(new Append(), StringLine)
 															)))))))),
-					new Action(new Match(), StringDedentation),
-					new Action(new Match(), new Character(Syntax.@string))));
-		public static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
-		{
-			Map result = StringImplementation.Match(parser, out matched);
-			if (matched && result.Count!=0)
-			{
-				result = result.GetString();
-			}
-			return result;
-		});
+					new Action(new Match(), StringDedentation))))
+			,
+					new Action(new Match(), new Character(Syntax.@string)));
+					//new Action(new Match(), new Character(Syntax.@string))
+
+		//public static Rule String = new Alternatives(
+		//    SingleString,				
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//            new Action(new Match(), StringDedentation),
+		//            new Action(new Match(), new Character(Syntax.@string))));
+		//public static Rule String = new Alternatives(
+		//        new Sequence(
+		//            new Action(
+		//                new Match(), new Character(Syntax.@string)),
+		//            new Action(
+		//                new ReferenceAssignment(),
+		//                new OneOrMore(
+		//                    new Action(
+		//                        new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.unixNewLine,
+		//                            Syntax.windowsNewLine[0],
+		//                            Syntax.@string)))),
+		//            new Action(new Match(), new Character(Syntax.@string))),
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//            new Action(new Match(), StringDedentation),
+		//            new Action(new Match(), new Character(Syntax.@string))));
+		//public static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Map result = StringImplementation.Match(parser, out matched);
+		//    if (matched && result.Count!=0)
+		//    {
+		//        result = result.GetString();
+		//    }
+		//    return result;
+		//});
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -5406,18 +5464,9 @@ namespace Meta
 						new CharacterExcept(
 						Syntax.lookupStringForbidden)))));
 
-		//public static Rule LookupString = new OneOrMore(
-		//    new Action(
-		//        new Autokey(),
-		//            new CharacterExcept(
-		//            Syntax.lookupStringForbidden)));
-
 		// refactor
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
-			if (parser.file.Contains("string.meta"))
-			{
-			}
 			new Sequence(
 				new Action(new Match(),new Optional(new Character(','))),
 				new Action(new Match(),Indentation)).Match(parser, out matched);
@@ -6445,6 +6494,38 @@ new Assignment(
 				return literal;
 			}
 		}
+		//public class OneOrMoreString : ZeroOrMore
+		//{
+		//    public OneOrMoreString(Action action)
+		//        : base(action)
+		//    {
+		//    }
+		//    protected override Map MatchImplementation(Parser parser, out bool match)
+		//    {
+		//        Map result = base.MatchImplementation(parser, out match);
+		//        if (match && result.IsString)
+		//        {
+		//            result = result.GetString();
+		//        }
+		//        return result;
+		//    }
+		//}
+		public class ZeroOrMoreString : ZeroOrMore
+		{
+			public ZeroOrMoreString(Action action)
+				: base(action)
+			{
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				Map result = base.MatchImplementation(parser, out match);
+				if (match && result.IsString)
+				{
+					result = result.GetString();
+				}
+				return result;
+			}
+		}
 		public class ZeroOrMore : Rule
 		{
 			protected override Map MatchImplementation(Parser parser, out bool matched)
@@ -6458,6 +6539,10 @@ new Assignment(
 					}
 				}
 				matched = true;
+				//if (list.IsString)
+				//{
+				//    list = list.GetString();
+				//}
 				return list;
 			}
 			private Action action;
