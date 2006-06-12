@@ -1,4 +1,4 @@
-"license="
+ï»¿"license="
 		Copyright (c) 2005, 2006 Christian Staudenmeyer
 		
 		Permission is hereby granted, free of charge, to any person obtaining
@@ -298,7 +298,7 @@ function=,
 						lookup=,
 							literal="unicodeText"
 				value=,
-					literal="äaba"
+					literal="aba"
 			<18=,
 				key=,
 					<1=,
@@ -2864,7 +2864,7 @@ function=,
 			<150=,
 				key=,
 					<1=,
-						lookup=,
+						search=,
 							literal="textBox"
 					<2=,
 						lookup=,
@@ -2874,8 +2874,8 @@ function=,
 							Alle meine Entchen,
 							schwimmen auf dem See,
 							schwimmen auf dem See,
-							Köpfchen in das Wasser,
-							Schwaenzchen in die Hoeh.
+							Kpfchen in das Wasser,
+							asdf in die Hoeh.
 					"
 			<151=,
 				key=,

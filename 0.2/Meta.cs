@@ -1476,7 +1476,6 @@ namespace Meta
 	}
 	public class DirectoryMap : Map
 	{
-
         public override bool IsNumber
         {
             get
@@ -1491,14 +1490,22 @@ namespace Meta
 		//    this.cache = new Dictionary<Map, Map>();
 		//}
 		private DirectoryInfo directory;
-		private Dictionary<Map,string> keys;
+		private Dictionary<string, string> keys;
+		//private Dictionary<Map, string> keys;
 		protected override bool ContainsKeyImplementation(Map key)
 		{
-			if (keys == null)
+			if (key.IsString)
 			{
-				keys = GetKeys();
+				if (keys == null)
+				{
+					keys = GetKeys();
+				}
+				return keys.ContainsKey(key.GetString());
 			}
-			return keys.ContainsKey(key);
+			else
+			{
+				return false;
+			}
 		}
 
 		public DirectoryMap(DirectoryInfo directory)
@@ -1542,9 +1549,10 @@ namespace Meta
 				cache.Remove(e.Name);
 			}
 		}
-		private Dictionary<Map,string> GetKeys()
+		private Dictionary<string,string> GetKeys()
 		{
-			Dictionary<Map,string> keys = new Dictionary<Map,string>();
+			Dictionary<string, string> keys = new Dictionary<string, string>();
+			//Dictionary<Map, string> keys = new Dictionary<Map, string>();
 			foreach (DirectoryInfo subdir in directory.GetDirectories())
 			{
 				if (!subdir.Name.StartsWith("."))
@@ -1575,95 +1583,105 @@ namespace Meta
 				{
 					keys = GetKeys();
 				}
-				return keys.Keys;
+				List<Map> mapKeys = new List<Map>();
+				foreach (KeyValuePair<string,string> entry in keys)
+				{
+					mapKeys.Add(entry.Key);
+				}
+				return mapKeys;
 			}
 		}
-		public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+		public Dictionary<string, Map> cache = new Dictionary<string, Map>();
+		//public Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		protected override Map Get(Map key)
 		{
 			Map value = null;
-			if (cache.ContainsKey(key))
-			{
-				value = cache[key];
-			}
-			else if (key.IsString)
+			if (key.IsString)
 			{
 				string name = key.GetString();
-				if (directory.FullName != Interpreter.LibraryPath)
+				if (cache.ContainsKey(name))
 				{
-					//Directory.SetCurrentDirectory(directory.FullName);
-				}
-				string file = Path.Combine(directory.FullName, name);
-				string metaFile = Path.Combine(directory.FullName, name + ".meta");
-				string dllFile = Path.Combine(directory.FullName, name + ".dll");
-				string exeFile = Path.Combine(directory.FullName, name + ".exe");
-
-				if (File.Exists(metaFile))
-				{
-					string text = File.ReadAllText(metaFile, Encoding.Default);
-					Map result;
-					if (text != "")
-					{
-						Map start = new StrategyMap();
-						Parser parser = new Parser(text, metaFile);
-						bool matched;
-						result = Parser.File.Match(parser, out matched);
-						if (parser.index != parser.text.Length)
-						{
-							throw new SyntaxException("Expected end of file.", parser);
-						}
-						value = result;
-					}
-					else
-					{
-						value = Map.Empty;
-					}
+					value = cache[name];
 				}
 				else
 				{
-					bool dllLoaded = false;
-					if (File.Exists(dllFile))
+					if (directory.FullName != Interpreter.LibraryPath)
 					{
-						try
-						{
-							Assembly assembly = Assembly.LoadFile(dllFile);
-							value = Gac.LoadAssembly(assembly);
-							dllLoaded = true;
-						}
-						catch (Exception e)
-						{
-							value = null;
-						}
+						//Directory.SetCurrentDirectory(directory.FullName);
 					}
-					else if (File.Exists(exeFile))
+					string file = Path.Combine(directory.FullName, name);
+					string metaFile = Path.Combine(directory.FullName, name + ".meta");
+					string dllFile = Path.Combine(directory.FullName, name + ".dll");
+					string exeFile = Path.Combine(directory.FullName, name + ".exe");
+
+					if (File.Exists(metaFile))
 					{
-						try
+						string text = File.ReadAllText(metaFile, Encoding.UTF8);
+						//string text = File.ReadAllText(metaFile, Encoding.Default);
+						Map result;
+						if (text != "")
 						{
-							Assembly assembly = Assembly.LoadFile(exeFile);
-							value = Gac.LoadAssembly(assembly);
-							dllLoaded = true;
-						}
-						catch (Exception e)
-						{
-							value = null;
-						}
-					}
-					if (!dllLoaded)
-					{
-						DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
-						if (subDir.Exists)
-						{
-							value = new DirectoryMap(subDir);
+							Map start = new StrategyMap();
+							Parser parser = new Parser(text, metaFile);
+							bool matched;
+							result = Parser.File.Match(parser, out matched);
+							if (parser.index != parser.text.Length)
+							{
+								throw new SyntaxException("Expected end of file.", parser);
+							}
+							value = result;
 						}
 						else
 						{
-							value = null;
+							value = Map.Empty;
 						}
 					}
-				}
-				if (value != null)
-				{
-					cache[key] = value;
+					else
+					{
+						bool dllLoaded = false;
+						if (File.Exists(dllFile))
+						{
+							try
+							{
+								Assembly assembly = Assembly.LoadFile(dllFile);
+								value = Gac.LoadAssembly(assembly);
+								dllLoaded = true;
+							}
+							catch (Exception e)
+							{
+								value = null;
+							}
+						}
+						else if (File.Exists(exeFile))
+						{
+							try
+							{
+								Assembly assembly = Assembly.LoadFile(exeFile);
+								value = Gac.LoadAssembly(assembly);
+								dllLoaded = true;
+							}
+							catch (Exception e)
+							{
+								value = null;
+							}
+						}
+						if (!dllLoaded)
+						{
+							DirectoryInfo subDir = new DirectoryInfo(Path.Combine(directory.FullName, name));
+							if (subDir.Exists)
+							{
+								value = new DirectoryMap(subDir);
+							}
+							else
+							{
+								value = null;
+							}
+						}
+					}
+					if (value != null)
+					{
+						cache[name] = value;
+					}
 				}
 			}
 			return value;
@@ -1696,13 +1714,13 @@ namespace Meta
 						{
 							text = text.Trim(Syntax.unixNewLine);
 						}
-						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text,Encoding.Default);
+						File.WriteAllText(Path.Combine(directory.FullName, name + ".meta"), text,Encoding.UTF8);
 						// bad performance, probably
 						this.keys = null;
 						//this.cache[key] = val;
 					}
 				}
-				cache[key] = val;
+				cache[name] = val;
 			}
 			else
 			{
@@ -2030,7 +2048,7 @@ namespace Meta
 				}
 				else
 				{
-					throw new Exception("Position does not exist"+key.ToString());
+					throw new Exception("Position does not exist "+key.ToString()+" in "+this.ToString());
 				}
 			}
 		}
@@ -4626,7 +4644,7 @@ namespace Meta
 				StringBuilder stringBuilder = new StringBuilder();
 				Serialize(result, "", stringBuilder, level);
 
-				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.Default);
+				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.UTF8);
 				string successText;
 				if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
 				{
@@ -5289,7 +5307,39 @@ namespace Meta
 			matched = false;
 			return null;
 		});
-		public static Rule String = new Alternatives(
+		//public static Rule String = new Alternatives(
+		//        new Sequence(
+		//            new Action(
+		//                new Match(), new Character(Syntax.@string)),
+		//            new Action(
+		//                new ReferenceAssignment(),
+		//                new OneOrMore(
+		//                    new Action(
+		//                        new Autokey(),
+		//                        new CharacterExcept(
+		//                            Syntax.unixNewLine,
+		//                            Syntax.windowsNewLine[0],
+		//                            Syntax.@string)))),
+		//            new Action(new Match(), new Character(Syntax.@string))),
+		//        new Sequence(
+		//            new Action(new Match(), new Character(Syntax.@string)),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new ReferenceAssignment(), new Sequence(
+		//                        new Action(new Append(), StringLine),
+		//                        new Action(new Append(),
+		//                                new ZeroOrMore(
+		//                                    new Action(new Append(),
+		//                                        new Sequence(
+		//                                            new Action(new Match(), EndOfLine),
+		//                                            new Action(new Match(), SameIndentation),
+		//                                            new Action(new ReferenceAssignment(),
+		//                                                new Sequence(
+		//                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                                    new Action(new Append(), StringLine)
+		//                                                    )))))))),
+		//            new Action(new Match(), StringDedentation),
+		//            new Action(new Match(), new Character(Syntax.@string))));
+		public static Rule StringImplementation = new Alternatives(
 				new Sequence(
 					new Action(
 						new Match(), new Character(Syntax.@string)),
@@ -5321,6 +5371,15 @@ namespace Meta
 															)))))))),
 					new Action(new Match(), StringDedentation),
 					new Action(new Match(), new Character(Syntax.@string))));
+		public static Rule String = new CustomRule(delegate(Parser parser, out bool matched)
+		{
+			Map result = StringImplementation.Match(parser, out matched);
+			if (matched && result.Count!=0)
+			{
+				result = result.GetString();
+			}
+			return result;
+		});
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -6598,7 +6657,7 @@ new Assignment(
 						text +=
 							GetIndentation(indentation + 1);// +
 						string key;
-						if (entry.Key.Count!=0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1)
+						if (entry.Key.Count != 0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst)!=0)
 						{
 							key = entry.Key.GetString();
 						}
