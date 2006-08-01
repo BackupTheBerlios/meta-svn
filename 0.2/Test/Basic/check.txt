@@ -1,4 +1,4 @@
-Entry (KeyValuePair`2)
+﻿Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		1
 	Value (StrategyMap):
@@ -218,7 +218,7 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"unicodeText"
 	Value (StrategyMap):
-		"�aba"
+		"äaba"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"persistantDeleteTest"

@@ -630,8 +630,7 @@ namespace Meta
 		}
 	}
 	public class Library
-	{
-		
+	{		
 		public static Map SendMail(Map map)
 		{
 			SmtpClient sentmail = new SmtpClient(map["server"].GetString(), 25);
@@ -698,54 +697,6 @@ namespace Meta
 			//Console.WriteLine("Goodbye.");
 			return Map.Empty;
 		}
-		//public static Map SendMail(Map map)
-		//{
-		//    SmtpMail.SmtpServer=map["server"].GetString();
-		//    SmtpMail.Send(
-		//            map["from"].GetString(),
-		//            map["to"].GetString(),
-		//            map["subject"].GetString(),
-		//            map["body"].GetString());
-		//    return Map.Empty;
-		//    //// Command line argument must the the SMTP host.
-		//    //SmtpClient client = new SmtpClient(args[0]);
-		//    //// Specify the e-mail sender.
-		//    //// Create a mailing address that includes a UTF8 character
-		//    //// in the display name.
-		//    //MailAddress from = new MailAddress("jane@contoso.com", 
-		//    //   "Jane " + (char)0xD8+ " Clayton", 
-		//    //System.Text.Encoding.UTF8);
-		//    //// Set destinations for the e-mail message.
-		//    //MailAddress to = new MailAddress("ben@contoso.com");
-		//    //// Specify the message content.
-		//    //MailMessage message = new MailMessage(from, to);
-		//    //message.Body = "This is a test e-mail message sent by an application. ";
-		//    //// Include some non-ASCII characters in body and subject.
-		//    //string someArrows = new string(new char[] {'\u2190', '\u2191', '\u2192', '\u2193'});
-		//    //message.Body += Environment.NewLine + someArrows;
-		//    //message.BodyEncoding =  System.Text.Encoding.UTF8;
-		//    //message.Subject = "test message 1" + someArrows;
-		//    //message.SubjectEncoding = System.Text.Encoding.UTF8;
-		//    //// Set the method that is called back when the send operation ends.
-		//    //client.SendCompleted += new 
-		//    //SendCompletedEventHandler(SendCompletedCallback);
-		//    //// The userState can be any object that allows your callback 
-		//    //// method to identify this send operation.
-		//    //// For this example, the userToken is a string constant.
-		//    //string userState = "test message1";
-		//    //client.SendAsync(message, userState);
-		//    //Console.WriteLine("Sending message... press c to cancel mail. Press any other key to exit.");
-		//    //string answer = Console.ReadLine();
-		//    //// If the user canceled the send, and mail hasn't been sent yet,
-		//    //// then cancel the pending operation.
-		//    //if (answer.StartsWith("c") && mailSent == false)
-		//    //{
-		//    //    client.SendAsyncCancel();
-		//    //}
-		//    //// Clean up.
-		//    //message.Dispose();
-		//    //Console.WriteLine("Goodbye.");
-		//}
 		public static Map Select(Map map, Map function)
 		{
 			Position pos=Call.LastArgument;
@@ -1764,77 +1715,41 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
-			//foreach (KeyValuePair<Map, Map> entry in Gac.fileSystem["localhost"]["D:"]["Web"]["items"])//["Test"]["basicTest"]
-			//{
-			//    int asdf = 0;
-			//}
-			//return;
-		//    //Library.SendMail(new StrategyMap(
-		//    //    "server", "smtp.web.de",
-		//    //    "subject", "Test subject",
-		//    //    "body", "Test body",
-		//    //    "to",   "christianstaudenmeyer@web.de",
-		//    //    "from", "christianstaudenmeyer@web.de"));
-			//SmtpClient sentmail = new SmtpClient("smtp.1und1.de", 25);
-			//MailMessage message = new MailMessage();
-			//MailAddress adress = new MailAddress("christianstaudenmeyer@web.de");
-			//MailAddress sempf = new MailAddress("christianstaudenmeyer@web.de");
-			//NetworkCredential aut = new NetworkCredential("staudenmeyer@s157163110.online.de", "psatsuvfus");
-			//message.From = adress;
-			//message.To.Add(sempf);
-			//message.IsBodyHtml = false;
-			//message.Subject = "sadsa";
-			//message.Body = "test body";
-			//sentmail.DeliveryMethod = SmtpDeliveryMethod.Network;
-			//sentmail.UseDefaultCredentials = false;
-			//sentmail.Credentials = aut;
-			////sentmail.Credentials = aut;
-			////sentmail.UseDefaultCredentials = false;
-			//sentmail.Send(message);
 			try
 			{
-				//if (args.Length == 0)
-				//{
-				//    Commands.Interactive();
-				//}
-				//else
-				//{
-					switch (args[0])
-					{
-						//case "-interactive":
-						//    Commands.Interactive();
-						//    break;
-						case "-test":
-							Commands.Test();
-							break;
-						case "-help":
-							Commands.Help();
-							break;
-						case "-profile":
-							profiling = true;
-							Commands.Profile();
-							List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
-							profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
-							{
-								return a.Value.CompareTo(b.Value);
-							}));
-							profiled.Reverse();
-							for (int i = 0; i < profiled.Count; i++)
-							{
-								KeyValuePair<string,double> entry=profiled[i];
-								Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
-							}
-							Console.ReadLine();
-							break;
-						case "-parser":
-							AllocConsole();
-							//new MetaTest.Parser().RunTest();
-							break;
-						default:
-							Commands.Run(args);
-							break;
-					}
-				//}
+				switch (args[0])
+				{
+					case "-test":
+						Commands.Test();
+						break;
+					case "-help":
+						Commands.Help();
+						break;
+					case "-profile":
+						profiling = true;
+						Commands.Profile();
+						List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
+						profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
+						{
+							return a.Value.CompareTo(b.Value);
+						}));
+						profiled.Reverse();
+						for (int i = 0; i < profiled.Count; i++)
+						{
+							KeyValuePair<string,double> entry=profiled[i];
+							Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
+						}
+						Console.ReadLine();
+						break;
+					case "-parser":
+						AllocConsole();
+						//new MetaTest.Parser().RunTest();
+						break;
+					default:
+						//Commands.Test();
+						Commands.Run(args);
+						break;
+				}
 			}
 			catch (MetaException e)
 			{
@@ -1957,7 +1872,7 @@ namespace Meta
 			{
 				UseConsole();
 				new MetaTest().Run();
-				Console.ReadLine();
+				//Console.ReadLine();
 			}
 			public static void Run(string[] args)
 			{
@@ -5153,6 +5068,38 @@ namespace Meta
 			return Convert.ToInt64(numerator);
 		}
 	}
+	public class RealParser
+	{
+		public RealParser(string text, int index)
+		{
+			this.text = text;
+			this.index = index;
+		}
+		public string text;
+		public int index;
+
+		private bool MatchAny(string chars, out char c)
+		{
+			c = text[index];
+			if (chars.Contains(c.ToString()))
+			{
+				index++;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		private bool MatchExcept(string chars, out char c)
+		{
+			c = Look();
+			if (!chars.Contains(c.ToString()))
+			{
+				index++;
+				return false;
+			}
+			else
     public class Parser
     {
         private bool negative = false;
@@ -5185,6 +5132,1965 @@ namespace Meta
             new Alternatives(
                 new Character(Syntax.unixNewLine),
                 StringRule(Syntax.windowsNewLine));
+			{
+				return true;
+			}
+
+		}
+		private char Look()
+		{
+			return text[index];
+		}
+		private bool Match(char c)
+		{
+			return Match(c.ToString());
+		}
+		private bool Match(string s)
+		{
+			return text.Substring(index, s.Length) == s;
+		}
+		public bool NewLine()
+		{
+			return Match(Syntax.unixNewLine.ToString()) || Match(Syntax.windowsNewLine);
+		}
+		public bool EndOfLine()
+		{
+			Whitespace();
+			return NewLine();
+		}
+		private void Whitespace()
+		{
+			while (Match('\t') || Match(' ')) ;
+		}
+		public Map Integer()
+		{
+			string s = "";
+			if (Match('-'))
+			{
+				s += "-";
+			}
+			char c;
+			while (MatchAny("0123456789", out c))
+			{
+				s += c;
+			}
+			return Convert.ToInt32(s);
+		}
+		public bool Indentation()
+		{
+			if (EndOfLine())
+			{
+				if (Match("".PadLeft(indentationCount + 1, '\t')))
+				{
+					indentationCount++;
+					return true;
+				}
+			}
+			return false;
+		}
+		//private static Map EndOfLinePreserve()
+		//{
+		//            new ZeroOrMore(
+		//                    new Action(new Autokey(), new Alternatives(
+		//                        new Character(Syntax.space),
+		//                        new Character(Syntax.tab))))),
+		//        new Action(new Append(),
+		//            new Alternatives(
+		//                new Character(Syntax.unixNewLine),
+		//                StringRule(Syntax.windowsNewLine))));
+		//}
+		// refactor, include end of line
+		private int indentationCount = -1;
+		public bool SameIndentation()
+		{
+			return Match("".PadLeft(indentationCount, '\t'));
+		}
+		//private static Map StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+
+		public bool StringDedentation()
+		{
+			EndOfLine();
+			if (Match("".PadLeft(indentationCount - 1, '\t')))
+			{
+				indentationCount--;// useful?
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		public void Dedentation()
+		{
+			indentationCount--;
+		}
+		//private Map MatchStringLine()
+		//{
+		//    string text = "";
+		//    char c;
+		//    while(MatchExcept("\n\r",out c))
+		//    {
+		//        text+=c;
+		//    }
+		//    return text;
+		//}
+		private Map ShortString()
+		{
+			if (Match('"'))
+			{
+				string text = "";
+				char c;
+				while (MatchExcept("\n\r\"", out c))
+				{
+					text += c;
+				}
+				if (Look() == '"')
+				{
+					return text;
+				}
+			}
+			return null;
+		}
+		public delegate Map Parse();
+		public Map Try(params Parse[] parsers)
+		{
+			foreach (Parse parse in parsers)
+			{
+				Map value = parse();
+				if (value != null)
+				{
+					return value;
+				}
+			}
+			return null;
+		}
+		public Map String()
+		{
+			return Try(ShortString, LongString);
+		}
+		public Map LongString()
+		{
+			if (Match('"'))
+			{
+				if (Indentation())
+				{
+					string text = "";
+					while (true)
+					{
+						char c;
+						while (MatchExcept("\n\r", out c))
+						{
+							text += c;
+						}
+						if (EndOfLine() && SameIndentation())
+						{
+							text += '\n';
+						}
+						else
+						{
+							StringDedentation();
+							if (Match('"'))
+							{
+								return text;
+							}
+						}
+					}
+				}
+			}
+			return null;
+		}
+		private bool EndOfFile
+		{
+			get
+			{
+				return index >= text.Length;
+			}
+		}
+		public Map Map()
+		{
+			if (Indentation())
+			{
+				Map result = new StrategyMap();
+				for (int count = 1; ; count++)
+				{
+					Map entry = Entry();
+					if (entry != null)
+					{
+						result[count] = entry;
+					}
+					if (EndOfFile)
+					{
+						break;
+					}
+					if (!SameIndentation())
+					{
+						Dedentation();
+						break;
+					}
+				}
+				return result;
+			}
+			return null;
+		}
+		public Map Value()
+		{
+			return Try(Map, String, Integer);
+			//return Try(Map, String, Number);
+		}
+		public Map Entry()
+		{
+			Map key = Value();
+			if (key != null && Match('='))
+			{
+				Map value = Value();
+				if (value != null)
+				{
+					Map result = new StrategyMap();
+					result[key] = value;
+					return result;
+				}
+			}
+			return null;
+		}
+		private Map EmptyMap()
+		{
+			return Match("*") ? new StrategyMap() : null;
+		}
+	}
+	//public class RealParser
+	//{
+	//    public RealParser(string text, int index)
+	//    {
+	//        this.text = text;
+	//        this.index = index;
+	//    }
+	//    public string text;
+	//    public int index;
+
+	//    private bool MatchAny(string chars,out char c)
+	//    {
+	//        c = text[index];
+	//        if (chars.Contains(c.ToString()))
+	//        {
+	//            index++;
+	//            return true;
+	//        }
+	//        else
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    private bool MatchExcept(string chars, out char c)
+	//    {
+	//        c = Look();
+	//        if (!chars.Contains(c.ToString()))
+	//        {
+	//            index++;
+	//            return false;
+	//        }
+	//        else
+	//        {
+	//            return true;
+	//        }
+
+	//    }
+	//    private char Look()
+	//    {
+	//        return text[index];
+	//    }
+	//    private bool Match(char c)
+	//    {
+	//        return Match(c.ToString());
+	//    }
+	//    private bool Match(string s)
+	//    {
+	//        return text.Substring(index, s.Length)==s;
+	//    }
+	//    public bool NewLine()
+	//    {
+	//        return Match(Syntax.unixNewLine.ToString()) || Match(Syntax.windowsNewLine);
+	//    }
+	//    public bool EndOfLine()
+	//    {
+	//        Whitespace();
+	//        return NewLine();
+	//    }
+	//    private void Whitespace()
+	//    {
+	//        while (Match('\t') || Match(' ')) ;
+	//    }
+	//    public Map Integer()
+	//    {
+	//        string s="";
+	//        if(Match('-'))
+	//        {
+	//            s+="-";
+	//        }
+	//        char c;
+	//        while(MatchAny("0123456789",out c))
+	//        {
+	//            s+=c;
+	//        }
+	//        return Convert.ToInt32(s);
+	//    }
+	//    public bool Indentation()
+	//    {
+	//        if (EndOfLine())
+	//        {
+	//            if(Match("".PadLeft(indentationCount + 1, '\t')))
+	//            {
+	//                indentationCount++;
+	//                return true;
+	//            }
+	//        }
+	//        return false;
+	//    }
+	//    //private static Map EndOfLinePreserve()
+	//    //{
+	//    //            new ZeroOrMore(
+	//    //                    new Action(new Autokey(), new Alternatives(
+	//    //                        new Character(Syntax.space),
+	//    //                        new Character(Syntax.tab))))),
+	//    //        new Action(new Append(),
+	//    //            new Alternatives(
+	//    //                new Character(Syntax.unixNewLine),
+	//    //                StringRule(Syntax.windowsNewLine))));
+	//    //}
+	//    // refactor, include end of line
+	//    private int indentationCount = -1;
+	//    public bool SameIndentation()
+	//    {
+	//        return Match("".PadLeft(indentationCount, '\t'));
+	//    }
+	//    //private static Map StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+
+	//    public bool StringDedentation()
+	//    {
+	//        EndOfLine();
+	//        if (Match("".PadLeft(indentationCount - 1, '\t')))
+	//        {
+	//            indentationCount--;// useful?
+	//            return true;
+	//        }
+	//        else
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public void Dedentation()
+	//    {
+	//        indentationCount--;
+	//    }
+	//    //private Map MatchStringLine()
+	//    //{
+	//    //    string text = "";
+	//    //    char c;
+	//    //    while(MatchExcept("\n\r",out c))
+	//    //    {
+	//    //        text+=c;
+	//    //    }
+	//    //    return text;
+	//    //}
+	//    private Map ShortString()
+	//    {
+	//        if (Match('"'))
+	//        {
+	//            string text = "";
+	//            char c;
+	//            while (MatchExcept("\n\r\"", out c))
+	//            {
+	//                text += c;
+	//            }
+	//            if (Look() == '"')
+	//            {
+	//                return text;
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    public delegate Map Parse();
+	//    public Map Try(params Parse[] parsers)
+	//    {
+	//        foreach (Parse parse in parsers)
+	//        {
+	//            Map value=parse();
+	//            if (value != null)
+	//            {
+	//                return value;
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    public Map String()
+	//    {
+	//        return Try(ShortString, LongString);			
+	//    }
+	//    public Map LongString()
+	//    {
+	//        if(Match('"'))
+	//        {
+	//            if(Indentation())
+	//            {
+	//                string text = "";
+	//                while (true)
+	//                {
+	//                    char c;
+	//                    while (MatchExcept("\n\r", out c))
+	//                    {
+	//                        text += c;
+	//                    }
+	//                    if (EndOfLine() && SameIndentation())
+	//                    {
+	//                        text += '\n';
+	//                    }
+	//                    else
+	//                    {
+	//                        StringDedentation();
+	//                        if (Match('"'))
+	//                        {
+	//                            return text;
+	//                        }
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    private bool EndOfFile
+	//    {
+	//        get
+	//        {
+	//            return index >= text.Length;
+	//        }
+	//    }
+	//    public Map Map()
+	//    {
+	//        if(Indentation())
+	//        {
+	//            Map result=new StrategyMap();
+	//            for (int count = 1; ; count++)
+	//            {
+	//                Map entry = Entry();
+	//                if (entry != null)
+	//                {
+	//                    result[count] = entry;
+	//                }
+	//                if (EndOfFile)
+	//                {
+	//                    break;
+	//                }
+	//                if (!SameIndentation())
+	//                {
+	//                    Dedentation();
+	//                    break;
+	//                }
+	//            }
+	//            return result;
+	//        }
+	//        return null;
+	//    }
+	//    public Map Value()
+	//    {
+	//        return Try(Map, String, Integer);
+	//        //return Try(Map, String, Number);
+	//    }
+	//    public Map Entry()
+	//    {
+	//        Map key = Value();
+	//        if (key != null && Match('='))
+	//        {
+	//            Map value = Value();
+	//            if (value != null)
+	//            {
+	//                Map result = new StrategyMap();
+	//                result[key] = value;
+	//                return result;
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    private Map EmptyMap()
+	//    {
+	//        return Match("*") ? new StrategyMap(): null;
+	//    }
+	//}
+//    public class RealParser
+//    {
+//        public RealParser(string text,int index)
+//        {
+//            this.text=text;
+//            this.index=index;
+//        }
+//        public string text;
+//        public int index;
+
+
+//        //public Map Map()
+//        //{
+//        //    return Sequence(Indentation
+//        //    Entry
+//        //    SameIndentation,
+//        //    Dedentation
+//        //    Entry
+//        //}
+//        //public Map Entry()
+//        //{
+//        //}
+//        //public Map Number()
+//        //{
+//        //}
+//        //public Map Value()
+//        //{
+//        //}
+//        //public Map Key()
+//        //{
+//        //}
+//        //public Map File()
+//        //{
+//        //}
+
+//        private bool Match(string s)
+//        {
+//        }
+//        public bool NewLine()
+//        {
+//            return Match(Syntax.unixNewLine) || Match(Syntax.windowsNewLine);
+//        }
+//        public static bool EndOfLine()
+//        {
+//            new Sequence(
+//                new Action(new Match(), new ZeroOrMore(
+//                    new Action(new Match(), new Alternatives(
+//                        new Character(Syntax.space),
+//                        new Character(Syntax.tab))))),
+//                new Action(new Match(), NewLine));
+//        }
+
+//        public static Map Integer()
+//        {
+//            new Sequence(
+//                new Action(new CustomAction(
+//                    delegate(Parser p, Map map, ref Map result)
+//                    {
+//                        p.negative = map != null;
+//                        return null;
+//                    }),
+//                    new Optional(new Character(Syntax.negative))),
+//                new Action(
+//                    new ReferenceAssignment(),
+//                    new Sequence(
+//                        new Action(
+//                            new ReferenceAssignment(),
+//                            new OneOrMore(
+//                                new Action(
+//                                    new CustomAction(
+//                                    delegate(Parser p, Map map, ref Map result)
+//                                    {
+//                                        if (result == null)
+//                                        {
+//                                            result = p.CreateMap();
+//                                        }
+//                                        result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+//                                        return result;
+//                                    }),
+//                                    new Character(Syntax.integer)))),
+//                        new Action(
+//                            new CustomAction(delegate(Parser p, Map map, ref Map result)
+//                            {
+//                                if (result.GetNumber() > 0 && p.negative)
+//                                {
+//                                    result = 0 - result.GetNumber();
+//                                }
+//                                return null;
+//                            }),
+//                            new CustomRule(delegate(Parser p, out bool matched) { matched = true; return null; })
+//                            ))));
+//        }
+//        public static bool Indentation()
+//        {
+//            new Alternatives(
+//                new CustomRule(delegate(Parser p, out bool matched)
+//        {
+//            if (p.isStartOfFile)
+//            {
+//                p.isStartOfFile = false;
+//                p.indentationCount++;
+//                matched = true;
+//                return null;
+//            }
+//            else
+//            {
+//                matched = false;
+//                return null;
+//            }
+//        }),
+//                new Sequence(
+//                    new Action(new Match(), new Sequence(
+//                        new Action(new Match(), EndOfLine),
+//                        new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+//        {
+//            return StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
+//        })))),
+//                    new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+//        {
+//            p.indentationCount++;
+//            matched = true;
+//            return null;
+//        }))));
+//        }
+//        private static Map EndOfLinePreserve()
+//        {
+//            new Sequence(
+//                new Action(new Match(),
+//                    new ZeroOrMore(
+//                            new Action(new Autokey(), new Alternatives(
+//                                new Character(Syntax.space),
+//                                new Character(Syntax.tab))))),
+//                new Action(new Append(),
+//                    new Alternatives(
+//                        new Character(Syntax.unixNewLine),
+//                        StringRule(Syntax.windowsNewLine))));
+//        }
+//        // refactor, include end of line
+//        public static bool SameIndentation()
+//        {
+//            return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
+//        }
+//        private static Map StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+		
+//        public static void StringDedentation()
+//        {
+//            Map map = new Sequence(
+//                new Action(
+//                    new Match(),
+//                    new Optional(EndOfLine)),
+//                new Action(new Match(), StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
+//            if (matched)
+//            {
+//                pa.indentationCount--;
+//            }
+//            return map;
+//        }
+//        //public static Rule CharacterDataExpression = new Sequence(
+//        //    new Action(
+//        //        new Match(),
+//        //        new Character(Syntax.character)),
+//        //    new Action(
+//        //        new ReferenceAssignment(),
+//        //        new CharacterExcept(Syntax.character)),
+//        //    new Action(
+//        //        new Match(),
+//        //        new Character(Syntax.character)));
+
+//        public static void Dedentation()
+//        {
+//            pa.indentationCount--;
+//            matched = false;
+//            return null;
+//        }
+//        //public static Rule String = new Alternatives(
+//        //        new Sequence(
+//        //            new Action(
+//        //                new Match(), new Character(Syntax.@string)),
+//        //            new Action(
+//        //                new ReferenceAssignment(),
+//        //                new OneOrMore(
+//        //                    new Action(
+//        //                        new Autokey(),
+//        //                        new CharacterExcept(
+//        //                            Syntax.unixNewLine,
+//        //                            Syntax.windowsNewLine[0],
+//        //                            Syntax.@string)))),
+//        //            new Action(new Match(), new Character(Syntax.@string))),
+//        //        new Sequence(
+//        //            new Action(new Match(), new Character(Syntax.@string)),
+//        //            new Action(new Match(), Indentation),
+//        //            new Action(new ReferenceAssignment(), new Sequence(
+//        //                        new Action(new Append(), StringLine),
+//        //                        new Action(new Append(),
+//        //                                new ZeroOrMore(
+//        //                                    new Action(new Append(),
+//        //                                        new Sequence(
+//        //                                            new Action(new Match(), EndOfLine),
+//        //                                            new Action(new Match(), SameIndentation),
+//        //                                            new Action(new ReferenceAssignment(),
+//        //                                                new Sequence(
+//        //                                                    new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+//        //                                                    new Action(new Append(), StringLine)
+//        //                                                    )))))))),
+//        //            new Action(new Match(), StringDedentation),
+//        //            new Action(new Match(), new Character(Syntax.@string))));
+
+//        private static void MatchStringLine()
+//        {
+//            bool matching = true;
+//            for (; matching && parser.index < parser.text.Length; parser.index++)
+//            {
+//                char c = parser.Look();
+//                switch (c)
+//                {
+//                    case '\n':
+//                    case '\r':
+//                        matching = false;
+//                        break;
+//                    default:
+//                        text.Append(c);
+//                        break;
+//                }
+//            }
+//        }
+//        private static Map StringBeef()
+//        {
+//            StringBuilder result = new StringBuilder(100);
+//            MatchStringLine(parser, result);
+//            //bool match;
+//            matched = true;
+//            while (true)
+//            {
+//                bool lineMatched;
+//                new Sequence(new Action(new Match(), EndOfLine),
+//                    new Action(new Match(), SameIndentation)).Match(parser, out lineMatched);
+//                if (lineMatched)
+//                {
+//                    result.Append('\n');
+//                    MatchStringLine(parser, result);
+//                }
+//                else
+//                {
+//                    break;
+//                }
+//            }
+//            return result.ToString();
+//        }
+//        private static Map SingleString()
+//        {
+//            new Action(
+//                new Autokey(),
+//                new CharacterExcept(
+//                    Syntax.unixNewLine,
+//                    Syntax.windowsNewLine[0],
+//                    Syntax.@string));
+//        }
+//        public static Map String()
+//        {
+//            new Sequence(
+//            new Action(new Match(), new Character(Syntax.@string)),
+//            new Action(new ReferenceAssignment(), new Alternatives(
+//                SingleString,
+//                new Sequence(
+//                    new Action(new Match(), Indentation),
+//                    new Action(new ReferenceAssignment(), StringBeef),
+//                    new Action(new Match(), StringDedentation)))),
+//            new Action(new Match(), new Character(Syntax.@string)));
+//        }
+//        //public static Rule Number = new Sequence(
+//        //    new Action(new ReferenceAssignment(),
+//        //        Integer),
+//        //    new Action(
+//        //        new Assignment(
+//        //            NumberKeys.Denominator),
+//        //            new Optional(
+//        //                new Sequence(
+//        //                    new Action(
+//        //                        new Match(),
+//        //                        new Character(Syntax.fraction)),
+//        //                    new Action(
+//        //                        new ReferenceAssignment(),
+//        //                        Integer)))));
+
+//        //public static Rule LookupString = new Sequence(
+//        //    new Action(
+//        //        new Assignment(1),
+//        //        new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
+//        //    new Action(new Append(), new ZeroOrMore(
+//        //        new Action(
+//        //            new Autokey(),
+//        //                new CharacterExcept(
+//        //                Syntax.lookupStringForbidden)))));
+
+//        // refactor
+//        public static Map Map()
+//        {
+//            new Sequence(
+//                new Action(new Match(), new Optional(new Character(','))),
+//                new Action(new Match(), Indentation)).Match(parser, out matched);
+//            Map map = new StrategyMap();
+//            if (matched)
+//            {
+//                parser.defaultKeys.Push(1);
+//                map = Entry.Match(parser, out matched);
+//                if (matched)
+//                {
+//                    while (true)
+//                    {
+//                        if (parser.file.Contains("string.meta"))
+//                        {
+//                        }
+//                        if (parser.End)//.Rest == "")
+//                        //if (parser.Rest == "")
+//                        {
+//                            break;
+//                        }
+//                        new Alternatives(
+//                            SameIndentation,
+//                            Dedentation).Match(parser, out matched);
+//                        if (matched)
+//                        {
+//                            map = Library.Merge(map, Entry.Match(parser, out matched));
+//                        }
+//                        else
+//                        {
+//                            matched = true;
+//                            break;
+//                        }
+//                        if (parser.End)//.Rest == "")
+//                        {
+//                            break;
+//                        }
+//                    }
+//                }
+//                parser.defaultKeys.Pop();
+//            }
+//            return map;
+//        }
+//        //public static Rule ExpressionData = new DelayedRule(delegate()
+//        //{
+//        //    return Parser.Expression;
+//        //};
+
+//        public static Map Value()
+//        {
+//            Map
+//            String
+//            Number
+//            CharacterDataExpression
+//        }
+//        //private static Map LookupAnything()
+//        //{
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character(('<'))),
+//        //        new Action(new ReferenceAssignment(), Value));
+//        //}
+//        //public static Map Function()
+//        //{
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Parameter),
+//        //        new ZeroOrMore(
+//        //        new Action(new Autokey(),
+//        //            new CharacterExcept(
+//        //                Syntax.@string,
+//        //                Syntax.function,
+//        //                Syntax.windowsNewLine[0],
+//        //                Syntax.unixNewLine)))),
+//        //    new Action(
+//        //        new Match(),
+//        //            new Character(
+//        //                Syntax.function)),
+//        //        new Action(new Assignment(CodeKeys.Expression),
+//        //        Expression),
+//        //    new Action(new Match(), new Optional(EndOfLine)));
+//        //}
+
+//        public static Map Entry()
+//        {
+//            new Sequence(new Action(new Assignment(CodeKeys.Function),
+//                new Sequence(new Action(new ReferenceAssignment(), Function)))),
+//                new CustomRule(delegate(Parser parser, out bool matched)
+//                {
+//                    Map result = new StrategyMap();
+//                    Map key = new Alternatives(
+//                        LookupString,
+//                        LookupAnything).Match(parser, out matched);
+//                    //Map key = Value.Match(parser, out matched);
+
+//                    if (matched)
+//                    {
+//                        new Sequence(
+//                            new Action(new Match(), new Character('='))).Match(parser, out matched);
+
+//                        if (matched)
+//                        {
+//                            if (matched)
+//                            {
+//                                Map value = Value.Match(parser, out matched);
+//                                result[key] = value;
+
+//                                // i dont understand this
+//                                new Sequence(
+//                                    new Action(new Match(), new Optional(EndOfLine))
+//                                    ).Match(parser, out matched);
+//                            }
+//                        }
+//                    }
+//                    return result;
+//                })
+//        }
+
+
+//        //private static Rule Whitespace =
+//        //    new ZeroOrMore(
+//        //        new Action(new Match(),
+//        //            new Alternatives(
+//        //                new Character(Syntax.tab),
+//        //                new Character(Syntax.space))));
+
+//        private static Map EmptyMap()
+//        {
+//            new Sequence(
+//                new Action(new Match(),
+//                    new Character(Syntax.emptyMap)),
+//                new Action(new ReferenceAssignment(),
+//                    new LiteralRule(Meta.Map.Empty)));
+//        }
+
+//        //private static Rule LiteralExpression = new Sequence(
+//        //    new Action(
+//        //        new Assignment(
+//        //            CodeKeys.Literal),
+//        //        new Alternatives(
+//        //            Number,
+//        //            EmptyMap,
+//        //            String,
+//        //            CharacterDataExpression)));
+
+//        //private static Rule LookupAnythingExpression =
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character('<')),
+//        //        new Action(new ReferenceAssignment(), Expression)
+//        //    );
+
+//        //private static Rule LookupStringExpression =
+//        //    new Sequence(
+//        //        new Action(new Assignment(
+//        //            CodeKeys.Literal),
+//        //            LookupString));
+
+//        //private static Rule Current = new Sequence(
+//        //    new Action(new Match(), new Character(Syntax.current)),
+//        //    new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
+
+
+//        //private static Rule LastArgument = new Sequence(
+//        //    new Action(new Match(), new Character(Syntax.lastArgument)),
+//        //    new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.LastArgument, Meta.Map.Empty))));
+
+//        //private static Rule Root = new Sequence(
+//        //    new Action(new Match(), new Character(Syntax.root)),
+//        //    new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
+
+//        //private static Rule Lookup =
+//        //    new Alternatives(
+//        //        Current,
+//        //        new Sequence(
+//        //            new Action(new Assignment(
+//        //                CodeKeys.Lookup),
+//        //                new Alternatives(
+//        //                    LookupStringExpression,
+//        //                    LookupAnythingExpression))));
+
+//        //private static Rule Search = new Sequence(
+//        //    new Action(
+//        //new Assignment(
+//        //        CodeKeys.Search), new Alternatives(
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character('!')),
+//        //        new Action(
+//        //            new ReferenceAssignment(),
+//        //            Expression)),
+//        //    new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+
+
+//        //private static Rule Search = new Sequence(
+//        //    new Action(
+//        //new Assignment(
+//        //        CodeKeys.Search), new Alternatives(
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character('!')),
+//        //        new Action(
+//        //            new ReferenceAssignment(),
+//        //            Expression)),
+//        //    new Alternatives(LookupStringExpression,LookupAnythingExpression))));
+
+
+//        //private static Rule Search = new Sequence(
+//        //    new Action(new Match(), new Character('!')),
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Search),Expression));
+
+//        //private static Rule Select = new Sequence(
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Select),
+//        //        new Sequence(
+//        //            new Action(new Assignment(
+//        //                1),
+
+//        //                new Alternatives(
+//        //                    LastArgument,
+//        //                    Root,
+//        //                    Search,
+//        //                    Lookup)),
+
+//        //            new Action(new Append(),
+//        //                new ZeroOrMore(
+//        //                    new Action(new Autokey(),
+//        //                        new Sequence(
+//        //                            new Action(new Match(), new Character(Syntax.select)),
+//        //                            new Action(new ReferenceAssignment(),
+//        //                                Lookup))))))));
+//        //private static Rule Select = new Sequence(
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Select),
+//        //        new Sequence(
+//        //            new Action(new Match(), new Character('.')),
+//        //            new Action(new Match(), Indentation),
+//        //            new Action(new Assignment(1),
+//        //                new Alternatives(
+//        //                    LastArgument,
+//        //                    Root,
+//        //                    Search,
+//        //                    Lookup,
+//        //                    Call)),
+//        //            new Action(new Append(),
+//        //                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//        //                    new Action(new Match(), new Optional(EndOfLine)),
+//        //                    new Action(new Match(), SameIndentation),
+//        //                    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+
+//        //            //new Action(new Append(),
+//        //    //    new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//        //    //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    //        new Action(new Match(), SameIndentation),
+//        //    //        new Action(new Assignment(
+//        //    //    CodeKeys.Lookup), Lookup))))),
+//        //            new Action(new Match(), new Optional(Dedentation)))));
+
+//        //private static Rule Select = new Sequence(
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Select),
+//        //        new Sequence(
+//        //            new Action(new Match(), new Character('.')),
+//        //            new Action(new Match(), Indentation),
+//        //            new Action(new Assignment(1),
+//        //                new Alternatives(
+//        //                    LastArgument,
+//        //                    Root,
+//        //                    Search,
+//        //                    Lookup,
+//        //                    Call)),
+//        //            new Action(new Append(),
+//        //                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//        //                    new Action(new Match(), new Optional(EndOfLine)),
+//        //                    new Action(new Match(), SameIndentation),
+//        //                    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression,LookupStringExpression)))))),
+
+//        //            //new Action(new Append(),
+//        //            //    new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//        //            //        new Action(new Match(), new Optional(EndOfLine)),
+//        //            //        new Action(new Match(), SameIndentation),
+//        //            //        new Action(new Assignment(
+//        //            //    CodeKeys.Lookup), Lookup))))),
+//        //            new Action(new Match(), new Optional(Dedentation)))));
+
+//        //private static Rule Select = new Sequence(
+//        //    new Action(new Assignment(
+//        //        CodeKeys.Select),
+//        //        new Sequence(
+//        //            new Action(new Match(), new Character('$')),
+//        //            new Action(new Match(), Indentation),
+//        //            new Action(new Assignment(1),
+//        //                new Alternatives(
+//        //                    LastArgument,
+//        //                    Root,
+//        //                    Search,
+//        //                    Lookup,
+//        //                    Call)),
+//        //            new Action(new Append(),
+//        //                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//        //                    new Action(new Match(), new Optional(EndOfLine)),
+//        //                    new Action(new Match(), SameIndentation),
+//        //                    new Action(new Assignment(
+//        //                CodeKeys.Lookup), Expression))))),
+//        //            new Action(new Match(), new Optional(Dedentation)))));
+
+
+//        //private static Rule KeysSearch = Search;
+//        //        private static Rule KeysSearch = new Sequence(
+//        //    new Action(
+//        //new Assignment(
+//        //        CodeKeys.Search),
+//        //            new Alternatives(
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character('!')),
+//        //        new Action(
+//        //            new ReferenceAssignment(),Expression)),
+//        //            //Lookup))));
+//        //            new Alternatives(LookupAnythingExpression, LookupStringExpression))));
+
+//        //private static Rule Search = new Sequence(
+//        //    new Action(
+//        //new Assignment(
+//        //        CodeKeys.Search), new Alternatives(
+//        //    new Sequence(
+//        //        new Action(new Match(), new Character('!')),
+//        //        new Action(
+//        //            new ReferenceAssignment(),
+//        //            Expression)),
+//        //    new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+
+////        private static Rule KeysSearch = new Sequence(
+////    new Action(
+////new Assignment(
+////        CodeKeys.Search),
+////    new Sequence(
+////        new Action(new Match(), new Character('!')),
+////        new Action(
+////            new ReferenceAssignment(),
+////            //Lookup))));
+////            new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
+
+
+//        //private static Rule AutokeyLookup = new CustomRule(delegate(Parser p, out bool matched)
+//        //{
+//        //    bool m;
+//        //    new Character(Syntax.autokey).Match(p, out m);
+//        //    if (m)
+//        //    {
+//        //        Map map = p.CreateMap(CodeKeys.Lookup, p.CreateMap(CodeKeys.Literal, p.defaultKeys.Peek()));
+
+//        //        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+//        //        matched = true;
+//        //        return map;
+//        //    }
+//        //    else
+//        //    {
+//        //        matched = false;
+//        //        return null;
+//        //    }
+//        //});
+
+//        //private static Rule Keys = new Alternatives(
+//        //    new Sequence(new Action(
+//        //        new Assignment(
+//        //            1),
+//        //            new Alternatives(
+//        //                KeysSearch,
+//        //                Lookup,
+//        //                AutokeyLookup))),
+//        //    new Sequence(
+//        //    new Action(new Match(), new Character('$')),
+//        //    new Action(new Match(), Indentation),
+//        //    new Action(new Assignment(
+//        //        1),
+//        //        new Alternatives(
+//        //            KeysSearch,
+//        //            Lookup,
+//        //            AutokeyLookup)),
+//        //    new Action(new Append(),
+//        //        new ZeroOrMore(
+//        //            new Action(new Autokey(),
+//        //                new Sequence(
+//        //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(),SameIndentation),
+//        //    new Action(new Assignment(CodeKeys.Lookup),Expression))))),
+//        //    new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), new Optional(Dedentation)),
+//        //    new Action(new Match(), new Optional(SameIndentation))));
+
+
+
+
+//        //private static Rule Keys = new Alternatives(
+//        //    new Sequence(new Action(
+//        //        new Assignment(
+//        //            1),
+//        //            new Alternatives(
+//        //                Lookup,
+//        //                KeysSearch,
+//        //                new Sequence(new Action(
+//        //                    new Assignment(CodeKeys.Lookup),
+//        //                    LiteralExpression)),
+//        //    EmptyMap,
+//        //    String,
+//        //    LookupStringExpression
+//        //    ))),
+
+//        //    //        new Alternatives(
+//        //    //            Lookup,
+//        //    //            KeysSearch,
+//        //    //            new Sequence(new Action(
+//        //    //                new Assignment(CodeKeys.Lookup),
+//        //    //                LiteralExpression)),
+//        //    //EmptyMap,
+//        //    //String,
+//        //    //LookupStringExpression
+//        //    //))),
+//        //    //AutokeyLookup))),
+//        //    new Sequence(
+//        //    new Action(new Match(), new Character('.')),
+//        //    new Action(new Match(), Indentation),
+//        //    new Action(new Assignment(
+//        //        1),
+//        //            new Alternatives(
+//        //                Lookup,
+//        //                KeysSearch,
+//        //                new Sequence(new Action(
+//        //                    new Assignment(CodeKeys.Lookup),
+//        //                    LiteralExpression)),
+//        //    EmptyMap,
+//        //    String,
+//        //    LookupStringExpression
+//        //    )),
+//        //    ////new Alternatives(Number, Expression),
+//        //    //    new Alternatives(
+//        //    //        Lookup,
+//        //    //        LookupStringExpression,
+//        //    //        Expression,
+//        //    //        KeysSearch
+//        //    //)),
+//        //    //AutokeyLookup)),
+//        //    new Action(new Append(),
+//        //        new ZeroOrMore(
+//        //            new Action(new Autokey(),
+//        //                new Sequence(
+//        //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), SameIndentation),
+//        //    new Action(new Assignment(CodeKeys.Lookup),
+//        //        new Alternatives(
+//        //            LookupAnythingExpression,
+//        //            LookupStringExpression,
+//        //    Expression)))))),
+//        //    //new Action(new ReferenceAssignment(),Lookup))))),
+//        //    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+//        //    new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), new Optional(Dedentation)),
+//        //    new Action(new Match(), new Optional(SameIndentation))));
+
+//        //private static Rule Keys = new Alternatives(
+//        //    new Sequence(new Action(
+//        //        new Assignment(
+//        //            1),
+//        //            new Alternatives(
+//        //                Lookup,
+//        //                KeysSearch,
+//        //                new Sequence(new Action(
+//        //                    new Assignment(CodeKeys.Lookup),
+//        //                    LiteralExpression)),
+//        //    EmptyMap,
+//        //    String,
+//        //    LookupStringExpression
+//        //    ))),
+//        //    //AutokeyLookup))),
+//        //    new Sequence(
+//        //    new Action(new Match(), new Character('.')),
+//        //    new Action(new Match(), Indentation),
+//        //    new Action(new Assignment(
+//        //        1),
+//        //    //new Alternatives(Number, Expression),
+//        //        new Alternatives(
+//        //            Lookup,
+//        //            LookupStringExpression,
+//        //            Expression,
+//        //            KeysSearch
+//        //    )),
+//        //    //AutokeyLookup)),
+//        //    new Action(new Append(),
+//        //        new ZeroOrMore(
+//        //            new Action(new Autokey(),
+//        //                new Sequence(
+//        //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), SameIndentation),
+//        //    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+//        //    //new Action(new ReferenceAssignment(),Lookup))))),
+//        //    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+//        //    new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), new Optional(Dedentation)),
+//        //    new Action(new Match(), new Optional(SameIndentation))));
+
+//        //private static Rule Keys = new Alternatives(
+//        //    new Sequence(new Action(
+//        //        new Assignment(
+//        //            1),
+//        //            new Alternatives(
+//        //                KeysSearch,
+//        //                Lookup,
+//        //                new Sequence(new Action(
+//        //                    new Assignment(CodeKeys.Lookup),
+//        //                    LiteralExpression)),
+
+//        //    EmptyMap,
+//        //    String,
+//        //    LookupStringExpression
+//        //    ))),
+//        //    //AutokeyLookup))),
+//        //    new Sequence(
+//        //    new Action(new Match(), new Character('.')),
+//        //    new Action(new Match(), Indentation),
+//        //    new Action(new Assignment(
+//        //        1),
+//        //    //new Alternatives(Number, Expression),
+//        //        new Alternatives(
+//        //            Expression,
+//        //            LookupStringExpression,
+//        //            KeysSearch,
+//        //            Lookup
+//        //    )),
+//        //    //AutokeyLookup)),
+//        //    new Action(new Append(),
+//        //        new ZeroOrMore(
+//        //            new Action(new Autokey(),
+//        //                new Sequence(
+//        //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), SameIndentation),
+//        //    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+//        //    //new Action(new ReferenceAssignment(),Lookup))))),
+//        //    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+//        //    new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), new Optional(Dedentation)),
+//        //    new Action(new Match(), new Optional(SameIndentation))));
+
+//        //private static Rule Keys = new Alternatives(
+//        //    new Sequence(new Action(
+//        //        new Assignment(
+//        //            1),
+//        //            new Alternatives(
+//        //                KeysSearch,
+//        //                Lookup,
+//        //    EmptyMap,
+//        //    String,
+//        //    LookupStringExpression
+//        //    ))),
+//        //                //AutokeyLookup))),
+//        //    new Sequence(
+//        //    new Action(new Match(), new Character('.')),
+//        //    new Action(new Match(), Indentation),
+//        //    new Action(new Assignment(
+//        //        1),
+//        //        //new Alternatives(Number, Expression),
+//        //        new Alternatives(
+//        //            LookupStringExpression,
+//        //            KeysSearch,
+//        //            Lookup,
+//        //    Expression)),
+//        //    //AutokeyLookup)),
+//        //    new Action(new Append(),
+//        //        new ZeroOrMore(
+//        //            new Action(new Autokey(),
+//        //                new Sequence(
+//        //        new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), SameIndentation),
+//        //    new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
+//        //    //new Action(new ReferenceAssignment(),Lookup))))),
+//        //    //new Action(new Assignment(CodeKeys.Lookup), Expression))))),
+//        //    new Action(new Match(), new Optional(EndOfLine)),
+//        //    new Action(new Match(), new Optional(Dedentation)),
+//        //    new Action(new Match(), new Optional(SameIndentation))));
+
+
+//        //public static Rule Statement = new Sequence(
+//        //    new Action(new ReferenceAssignment(),
+//        //        new Alternatives(
+//        //            FunctionExpression,
+//        //            new Sequence(
+//        //                new Action(new Assignment(
+//        //                    CodeKeys.Key),
+//        //                    Keys),
+//        //                new Action(new Match(), new Character('=')),
+//        //                new Action(new Assignment(
+//        //                    CodeKeys.Value),
+//        //                    Expression),
+//        //                new Action(new Match(), new Optional(EndOfLine)))
+//        //    )));
+//        //public static Rule List = new Sequence(
+//        //    new Action(new Match(), new Character('+')),
+//        //    new Action(
+//        //        new Assignment(CodeKeys.Program),
+//        //        new PrePost(
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Push(1);
+//        //            },
+//        //            new Sequence(
+//        //                new Action(
+//        //                    new Match(),
+//        //                    Indentation),
+//        //                new Action(
+//        //                    new CustomAction(
+//        //delegate(Parser p, Map map, ref Map result)
+//        //{
+//        //    result[p.defaultKeys.Peek()] = new StrategyMap(
+//        //        CodeKeys.Key, new StrategyMap(1,
+//        //        new StrategyMap(
+//        //            CodeKeys.Lookup, new StrategyMap(
+//        //                CodeKeys.Literal, p.defaultKeys.Peek()))),
+//        //        CodeKeys.Value, map);
+//        //    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//        //    return result;
+//        //}),
+//        //                    Expression),
+//        //                new Action(
+//        //                    new Append(),
+//        //                    new ZeroOrMore(
+//        //                        new Action(new Autokey(),
+//        //                            new Sequence(
+//        //                                new Action(new Match(), new Optional(EndOfLine)),
+//        //                                new Action(new Match(), new Alternatives(
+//        //                                    SameIndentation,
+//        //                                    Dedentation)),
+//        //                                new Action(
+//        //                    new CustomAction(
+//        //                    delegate(Parser p, Map map, ref Map result)
+//        //                    {
+//        //                        result = new StrategyMap(
+//        //                            CodeKeys.Key, new StrategyMap(1,
+//        //                            new StrategyMap(
+//        //                                CodeKeys.Lookup, new StrategyMap(
+//        //                                    CodeKeys.Literal, p.defaultKeys.Peek()))),
+//        //                            CodeKeys.Value, map);
+//        //                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//        //                        return result;
+//        //                    }), Expression)
+//        //    //    new Action(new CustomAction(delegate(Parser p, Map map, ref Map result)
+//        //    //{
+//        //    //    return result;
+//        //    //}))
+//        //    ))))),
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Pop();
+//        //            })));
+
+//        //public static Rule Program = new Sequence(
+//        //    new Action(new Match(), new Character(',')),
+//        //    new Action(
+//        //        new Assignment(CodeKeys.Program),
+//        //        new PrePost(
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Push(1);
+//        //            },
+//        //            new Sequence(
+//        //                new Action(
+//        //                    new Match(),
+//        //                    Indentation),
+//        //                new Action(
+//        //                    new Assignment(1),
+//        //                    Statement),
+//        //                new Action(
+//        //                    new Append(),
+//        //                    new ZeroOrMore(
+//        //                        new Action(new Autokey(),
+//        //                            new Sequence(
+//        //                                new Action(new Match(), new Alternatives(
+//        //                                    SameIndentation,
+//        //                                    Dedentation)),
+//        //                                new Action(new ReferenceAssignment(), Statement)))))),
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Pop();
+//        //            })));
+//        //public abstract class Production
+//        //{
+//        //    public abstract void Execute(Parser parser, Map map, ref Map result);
+//        //}
+//        //public class Action
+//        //{
+//        //    private Rule rule;
+//        //    private Production production;
+//        //    public Action(Production production, Rule rule)
+//        //    {
+//        //        this.rule = rule;
+//        //        this.production = production;
+//        //    }
+//        //    public bool Execute(Parser parser, ref Map result)
+//        //    {
+//        //        bool matched;
+//        //        Map map = rule.Match(parser, out matched);
+//        //        if (matched)
+//        //        {
+//        //            production.Execute(parser, map, ref result);
+//        //        }
+//        //        return matched;
+//        //    }
+//        //}
+//        //public class Autokey : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        result.Append(map);
+//        //    }
+//        //}
+//        //public class Assignment : Production
+//        //{
+//        //    private Map key;
+//        //    public Assignment(Map key)
+//        //    {
+//        //        this.key = key;
+//        //    }
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        result[key] = map;
+//        //    }
+//        //}
+//        //public class Match : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //    }
+//        //}
+//        //public class ReferenceAssignment : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        result = map;
+//        //    }
+//        //}
+//        //public class Append : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        foreach (Map m in map.Array)
+//        //        {
+//        //            result.Append(m);
+//        //        }
+//        //    }
+//        //}
+//        //public class Join : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        result = Library.Join(result, map);
+//        //    }
+//        //}
+//        //public class Merge : Production
+//        //{
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        result = Library.Merge(result, map);
+//        //    }
+//        //}
+//        //public class CustomAction : Production
+//        //{
+//        //    private CustomActionDelegate action;
+//        //    public CustomAction(CustomActionDelegate action)
+//        //    {
+//        //        this.action = action;
+//        //    }
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        this.action(parser, map, ref result);
+//        //    }
+//        //}
+//        //public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
+
+//        //public abstract class Rule
+//        //{
+//        //    public Map Match(Parser parser, out bool matched)
+//        //    {
+//        //        int oldIndex = parser.index;
+//        //        int oldLine = parser.line;
+//        //        int oldColumn = parser.column;
+//        //        //if (parser.Rest.IndexOf("=0")<10)
+//        //        //{
+//        //        //}
+//        //        Map result = MatchImplementation(parser, out matched);
+//        //        if (!matched)
+//        //        {
+//        //            parser.index = oldIndex;
+//        //            parser.line = oldLine;
+//        //            parser.column = oldColumn;
+//        //        }
+//        //        else
+//        //        {
+//        //            if (result != null)
+//        //            {
+//        //                result.Extent = new Extent(oldLine, oldColumn, parser.line, parser.column, parser.file);
+//        //            }
+//        //        }
+//        //        return result;
+//        //    }
+//        //    protected abstract Map MatchImplementation(Parser parser, out bool match);
+//        //}
+//        //public class Character : CharacterRule
+//        //{
+//        //    public Character(params char[] characters)
+//        //        : base(characters)
+//        //    {
+//        //    }
+//        //    protected override bool MatchCharacer(char c)
+//        //    {
+//        //        return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
+//        //    }
+//        //}
+//        //public class CharacterExcept : CharacterRule
+//        //{
+//        //    public CharacterExcept(params char[] characters)
+//        //        : base(characters)
+//        //    {
+//        //    }
+//        //    protected override bool MatchCharacer(char c)
+//        //    {
+//        //        return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
+//        //    }
+//        //}
+//        //public abstract class CharacterRule : Rule
+//        //{
+//        //    public CharacterRule(char[] chars)
+//        //    {
+//        //        this.characters = chars;
+//        //    }
+//        //    protected char[] characters;
+//        //    protected abstract bool MatchCharacer(char c);
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        char character = parser.Look();
+//        //        if (MatchCharacer(character))
+//        //        {
+//        //            matched = true;
+//        //            parser.index++;
+//        //            parser.column++;
+//        //            if (character == Syntax.unixNewLine)
+//        //            {
+//        //                parser.line++;
+//        //                parser.column = 1;
+//        //            }
+//        //            return character;
+//        //        }
+//        //        else
+//        //        {
+//        //            matched = false;
+//        //            return null;
+//        //        }
+//        //    }
+//        //}
+//        //public delegate void PrePostDelegate(Parser parser);
+//        //public class PrePost : Rule
+//        //{
+//        //    private PrePostDelegate pre;
+//        //    private PrePostDelegate post;
+//        //    private Rule rule;
+//        //    public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
+//        //    {
+//        //        this.pre = pre;
+//        //        this.rule = rule;
+//        //        this.post = post;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        pre(parser);
+//        //        Map result = rule.Match(parser, out matched);
+//        //        post(parser);
+//        //        return result;
+//        //    }
+//        //}
+//        //public static Rule StringRule(string text)
+//        //{
+//        //    List<Action> actions = new List<Action>();
+//        //    foreach (char c in text)
+//        //    {
+//        //        actions.Add(new Action(new Match(), new Character(c)));
+//        //    }
+//        //    return new Sequence(actions.ToArray());
+//        //}
+//        //public delegate Map ParseFunction(Parser parser, out bool matched);
+//        //public class CustomRule : Rule
+//        //{
+//        //    private ParseFunction parseFunction;
+//        //    public CustomRule(ParseFunction parseFunction)
+//        //    {
+//        //        this.parseFunction = parseFunction;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        return parseFunction(parser, out matched);
+//        //    }
+//        //}
+//        //public delegate Rule RuleFunction();
+//        //public class DelayedRule : Rule
+//        //{
+//        //    private RuleFunction ruleFunction;
+//        //    private Rule rule;
+//        //    public DelayedRule(RuleFunction ruleFunction)
+//        //    {
+//        //        this.ruleFunction = ruleFunction;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        if (rule == null)
+//        //        {
+//        //            rule = ruleFunction();
+//        //        }
+//        //        return rule.Match(parser, out matched);
+//        //    }
+//        //}
+//        //public class Alternatives : Rule
+//        //{
+//        //    private Rule[] cases;
+//        //    public Alternatives(params Rule[] cases)
+//        //    {
+//        //        this.cases = cases;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        Map result = null;
+//        //        matched = false;
+//        //        foreach (Rule expression in cases)
+//        //        {
+//        //            result = (Map)expression.Match(parser, out matched);
+//        //            if (matched)
+//        //            {
+//        //                break;
+//        //            }
+//        //        }
+//        //        return result;
+//        //    }
+//        //}
+//        //public class Sequence : Rule
+//        //{
+//        //    private Action[] actions;
+//        //    public Sequence(params Action[] rules)
+//        //    {
+//        //        this.actions = rules;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool match)
+//        //    {
+//        //        Map result = parser.CreateMap();
+//        //        bool success = true;
+//        //        foreach (Action action in actions)
+//        //        {
+//        //            // refactor
+//        //            bool matched = action.Execute(parser, ref result);
+//        //            if (!matched)
+//        //            {
+//        //                success = false;
+//        //                break;
+//        //            }
+//        //        }
+//        //        if (!success)
+//        //        {
+//        //            match = false;
+//        //            return null;
+//        //        }
+//        //        else
+//        //        {
+//        //            match = true;
+//        //            return result;
+//        //        }
+//        //    }
+//        //}
+//        //public class LiteralRule : Rule
+//        //{
+//        //    private Map literal;
+//        //    public LiteralRule(Map literal)
+//        //    {
+//        //        this.literal = literal;
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        matched = true;
+//        //        return literal;
+//        //    }
+//        //}
+//        ////public class OneOrMoreString : ZeroOrMore
+//        ////{
+//        ////    public OneOrMoreString(Action action)
+//        ////        : base(action)
+//        ////    {
+//        ////    }
+//        ////    protected override Map MatchImplementation(Parser parser, out bool match)
+//        ////    {
+//        ////        Map result = base.MatchImplementation(parser, out match);
+//        ////        if (match && result.IsString)
+//        ////        {
+//        ////            result = result.GetString();
+//        ////        }
+//        ////        return result;
+//        ////    }
+//        ////}
+//        //public class ZeroOrMoreString : ZeroOrMore
+//        //{
+//        //    public ZeroOrMoreString(Action action)
+//        //        : base(action)
+//        //    {
+//        //    }
+//        //    protected override Map MatchImplementation(Parser parser, out bool match)
+//        //    {
+//        //        Map result = base.MatchImplementation(parser, out match);
+//        //        if (match && result.IsString)
+//        //        {
+//        //            result = result.GetString();
+//        //        }
+//        //        return result;
+//        //    }
+//        //}
+//        //public class ZeroOrMore : Rule
+//        //{
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        Map list = parser.CreateMap(new ListStrategy());
+//        //        while (true)
+//        //        {
+//        //            if (!action.Execute(parser, ref list))
+//        //            {
+//        //                break;
+//        //            }
+//        //        }
+//        //        matched = true;
+//        //        //if (list.IsString)
+//        //        //{
+//        //        //    list = list.GetString();
+//        //        //}
+//        //        return list;
+//        //    }
+//        //    private Action action;
+//        //    public ZeroOrMore(Action action)
+//        //    {
+//        //        this.action = action;
+//        //    }
+//        //}
+//        //public class OneOrMore : Rule
+//        //{
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        Map list = parser.CreateMap(new ListStrategy());
+//        //        matched = false;
+//        //        while (true)
+//        //        {
+//        //            //if (parser.Rest.StartsWith("\t\t\"hello\""))
+//        //            //{
+//        //            //}
+//        //            if (!action.Execute(parser, ref list))
+//        //            {
+//        //                break;
+//        //            }
+//        //            matched = true;
+//        //        }
+//        //        return list;
+//        //    }
+//        //    private Action action;
+//        //    public OneOrMore(Action action)
+//        //    {
+//        //        this.action = action;
+//        //    }
+//        //}
+//        //public class TwoOrMore : Rule
+//        //{
+//        //    protected override Map MatchImplementation(Parser parser, out bool matched)
+//        //    {
+//        //        Map list = parser.CreateMap(new ListStrategy());
+//        //        int count = 0;
+//        //        while (true)
+//        //        {
+//        //            if (!action.Execute(parser, ref list))
+//        //            {
+//        //                break;
+//        //            }
+//        //            count++;
+//        //            //matched = true;
+//        //        }
+//        //        matched = count >= 2;
+//        //        return list;
+//        //    }
+//        //    private Action action;
+//        //    public TwoOrMore(Action action)
+//        //    {
+//        //        this.action = action;
+//        //    }
+//        //}
+//        //public class Optional : Rule
+//        //{
+//        //    private Rule rule;
+//        //    public Optional(Rule rule)
+//        //    {
+//        //        this.rule = rule;
+//        //    }
+//        //    // somewhat unlogical, should be OptionalAssignment
+//        //    protected override Map MatchImplementation(Parser parser, out bool match)
+//        //    {
+//        //        Map matched = rule.Match(parser, out match);
+//        //        if (matched == null)
+//        //        {
+//        //            match = true;
+//        //            return null;
+//        //        }
+//        //        else
+//        //        {
+//        //            match = true;
+//        //            return matched;
+//        //        }
+//        //    }
+//        //}
+//        //public string FileName
+//        //{
+//        //    get
+//        //    {
+//        //        return file;
+//        //    }
+//        //}
+//        //public int Line
+//        //{
+//        //    get
+//        //    {
+//        //        return line;
+//        //    }
+//        //}
+//        //private string Rest
+//        //{
+//        //    get
+//        //    {
+//        //        return text.Substring(index);
+//        //    }
+//        //}
+//        //public int Column
+//        //{
+//        //    get
+//        //    {
+//        //        return column;
+//        //    }
+//        //}
+//        //private char Look()
+//        //{
+//        //    if (index < text.Length)
+//        //    {
+//        //        return text[index];
+//        //    }
+//        //    else
+//        //    {
+//        //        return Syntax.endOfFile;
+//        //    }
+//        //}
+//        //public Map CreateMap(params Map[] maps)
+//        //{
+//        //    return new StrategyMap(maps);
+//        //}
+//        //public Map CreateMap()
+//        //{
+//        //    return CreateMap(new EmptyStrategy());
+//        //}
+//        //public Map CreateMap(MapStrategy strategy)
+//        //{
+//        //    return new StrategyMap(strategy);
+//        //}
+//    }
+	public class Parser
+	{
+		public bool End
+		{
+			get
+			{
+				return index >= text.Length - 1;
+			}
+		}
+		private bool negative = false;
+		public string text;
+		public int index;
+		private string file;
+		private int line = 1;
+		private int column = 1;
+		private bool isStartOfFile = true;
+		private int indentationCount = -1;
+		public Stack<int> defaultKeys = new Stack<int>();
 
         public static Rule EndOfLine =
             new Sequence(
@@ -5437,6 +7343,20 @@ namespace Meta
         //    return result;
         //});
 
+		private static void MatchStringLine(Parser parser,StringBuilder text)
+		{
+			//string text = "";
+			bool matching = true;
+			for (; matching && parser.index < parser.text.Length; parser.index++)
+			{
+				char c = parser.Look();
+				switch (c)
+				{
+					case '\n':
+					case '\r':
+						matching = false;
+						break;
+					default:
         public static Rule Number = new Sequence(
             new Action(new ReferenceAssignment(),
                 Integer),
@@ -5451,6 +7371,102 @@ namespace Meta
                             new Action(
                                 new ReferenceAssignment(),
                                 Integer)))));
+						text.Append(c);
+						//text += c;
+						break;
+				}
+			}
+			//bool matching = true;
+			//for (; matching &&  parser.index<parser.text.Length; parser.index++)
+			//{
+			//    char c=parser.Look();
+			//    switch (c)
+			//    {
+			//        case '\n':
+			//        case '\r':
+			//            matching = false;
+			//            break;
+			//        default:
+			//            text.Append(c);
+			//            //text += c;
+			//            break;
+			//    }
+			//}
+			//return text;
+		}
+		private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
+		{
+			StringBuilder result = new StringBuilder(100);
+			MatchStringLine(parser,result);
+			//bool match;
+			matched = true;
+			while(true)
+			{
+				bool lineMatched;
+				new Sequence(new Action(new Match(),EndOfLine),
+					new Action(new Match(),SameIndentation)).Match(parser,out lineMatched);
+				if (lineMatched)
+				{
+					result.Append('\n');
+					MatchStringLine(parser,result);
+
+					//result += '\n';
+					//result += MatchStringLine(parser);
+				}
+				else
+				{
+					break;
+				}
+			}
+			return result.ToString();
+
+			//new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+			//string result = MatchStringLine(parser);
+			//Map result=new Sequence(
+			//    new Action(new Append(), StringLine),
+			//    new Action(new Append(),
+					//new ZeroOrMore(
+						//new Action(new Append(),
+							//new Sequence(
+								//new Action(new Match(), EndOfLine),
+								//new Action(new Match(), SameIndentation),
+								//new Action(new ReferenceAssignment(),
+									//new Sequence(
+										//new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+										//new Action(new Append(), StringLine)
+										//))))))).Match(parser,out matched);
+			//return result;
+		});
+		//private static Rule StringBeef = new Sequence(
+		//    new Action(new Append(), StringLine),
+		//    new Action(new Append(),
+		//            new ZeroOrMore(
+		//                new Action(new Append(),
+		//                    new Sequence(
+		//                        new Action(new Match(), EndOfLine),
+		//                        new Action(new Match(), SameIndentation),
+		//                        new Action(new ReferenceAssignment(),
+		//                            new Sequence(
+		//                                new Action(new Append(), new LiteralRule(Syntax.unixNewLine.ToString())),
+		//                                new Action(new Append(), StringLine)
+		//                                )))))));
+
+		private static Rule SingleString = new OneOrMore(
+			new Action(
+				new Autokey(),
+				new CharacterExcept(
+					Syntax.unixNewLine,
+					Syntax.windowsNewLine[0],
+					Syntax.@string)));
+		public static Rule String = new Sequence(
+			new Action(new Match(), new Character(Syntax.@string)),
+			new Action(new ReferenceAssignment(),new Alternatives(
+				SingleString,
+				new Sequence(
+					new Action(new Match(), Indentation),
+					new Action(new ReferenceAssignment(), StringBeef),
+					new Action(new Match(), StringDedentation)))),
+			new Action(new Match(), new Character(Syntax.@string)));
 
         public static Rule LookupString = new Sequence(
             new Action(
