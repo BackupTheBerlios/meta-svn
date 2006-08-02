@@ -171,12 +171,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\sendMail.meta" />
-    <None Include="Test\basicTestBase.meta" />
+    <None Include="Test\editTest.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>copy Meta.exe Meta.dll</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
