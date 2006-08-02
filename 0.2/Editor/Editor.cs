@@ -29,83 +29,137 @@ namespace Editor
 			Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
 			//map = Binary.Deserialize(fileName);
 			//text = map.ToString();
-			data = new MapElement(map);
-			//MapControl control = new MapControl(map);
-			//control.Location = new Point(100, 100);
-			//this.Controls.Add(control);
+			editor = new Element(map);
 		}
-		private Element data;
+		private Element editor;
 		private void panel_Paint(object sender, PaintEventArgs e)
 		{
-			if (data != null)
+			if (editor != null)
 			{
 				Point position = new Point(10, 10);
-				data.Draw(e.Graphics, ref position);
+				editor.Draw(e.Graphics, ref position);
 			}
 		}
 	}
-	public abstract class Element
+	public abstract class Display
 	{
+		public virtual Map GetMap()
+		{
+			return element.map;
+		}
+		protected Element element;
+		public Display(Element element)
+		{
+			this.element = element;
+		}
 		protected void Draw(Graphics graphics, ref Point position, string text)
 		{
 			graphics.DrawString(text,new Font("Arial",10),Brushes.Black,position);
 			position.Y += 18;
-
 		}
+		public abstract void Draw(Graphics graphics, ref Point position);
+	}
+	public class Element
+	{
+		public Map map;
+		Display display;
 
-		public abstract void Draw(Graphics graphics,ref Point position);
-		public abstract Map GetMap();
-		//public abstract void Edit();
-		public static Element GetElement(Map map)
+
+		public void Draw(Graphics graphics, ref Point position)
 		{
+			display.Draw(graphics, ref position);
+		}
+		public Map GetMap()
+		{
+			return display.GetMap();
+		}
+		public Element(Map map)
+		{
+			this.map = map;
 			if (map.Count == 0)
 			{
-				return new EmptyMapElement();
+				display=new EmptyMapElement(this);
 			}
 			if (map.IsNumber)
 			{
-				return new NumberElement(map);
+				display=new NumberElement(this);
 			}
 			else if (map.IsString)
 			{
-				return new StringElement(map);
+				display=new StringElement(this);
 			}
 			else
 			{
-				return new MapElement(map);
+				display=new MapElement(this);
 			}
 		}
 	}
-	public class StringElement : Element
+	//public abstract class Element
+	//{
+	//}
+	public class StringElement : Display
 	{
-		string text;
-		public StringElement(Map map)
+		public StringElement(Element element):base(element)
 		{
-			this.text=map.GetString();
 		}
 		public override void Draw(Graphics graphics, ref Point position)
 		{
-			Draw(graphics, ref position, '"' + text + '"');
+			Draw(graphics, ref position, '"' + element.map.GetString() + '"');
 		}
-		public override Map GetMap()
+		//public override Map GetMap()
+		//{
+		//    return new StrategyMap(text);
+		//}
+	}
+	public class NumberElement:Display
+	{
+		public NumberElement(Element element):base(element)
 		{
-			return new StrategyMap(text);
+		}
+		public override void Draw(Graphics graphics, ref Point position)
+		{
+			Draw(graphics,ref position,element.map.ToString());
 		}
 	}
-	public class NumberElement:Element
+
+	public class EmptyMapElement : Display
 	{
-		private Number number;
-		public NumberElement(Map map)
+		public EmptyMapElement(Element element)
+			: base(element)
 		{
-			this.number = map.GetNumber();
 		}
 		public override void Draw(Graphics graphics, ref Point position)
 		{
-			Draw(graphics,ref position,number.ToString());
+			Draw(graphics, ref position, "*");
 		}
-		public override Map GetMap()
+	}
+	public class MapElement : Display
+	{
+		//private Map map;
+		//public override Map GetMap()
+		//{
+		//    Map map = new StrategyMap();
+		//    foreach (Entry element in elements)
+		//    {
+		//        KeyValuePair<Map, Map> entry = element.GetEntry();
+		//        map[entry.Key] = entry.Value;
+		//    }
+		//    return map;
+		//}
+		public MapElement(Element element):base(element)
 		{
-			return new StrategyMap(number);
+			foreach (KeyValuePair<Map, Map> entry in element.map)
+			{
+				elements.Add(new Entry(entry.Key, entry.Value));
+			}
+		}
+		private List<Entry> elements = new List<Entry>();
+		public override void Draw(Graphics graphics, ref Point position)
+		{
+			foreach (Entry entry in elements)
+			{
+				entry.Draw(graphics, ref position);
+			}
 		}
 	}
 	public class Entry
@@ -114,8 +168,8 @@ namespace Editor
 		private Element value;
 		public Entry(Map key,Map value)
 		{
-			this.key=Element.GetElement(key);
-			this.value = Element.GetElement(value);
+			this.key=new Element(key);
+			this.value = new Element(value);
 		}
 		private Pen pen = new Pen(Brushes.Blue);
 		public void Draw(Graphics graphics, ref Point position)
@@ -131,46 +185,6 @@ namespace Editor
 		public KeyValuePair<Map, Map> GetEntry()
 		{
 			return new KeyValuePair<Map,Map>(key.GetMap(),value.GetMap());
-		}
-	}
-	public class EmptyMapElement : Element
-	{
-		public override Map GetMap()
-		{
-			return Map.Empty;
-		}
-		public override void Draw(Graphics graphics, ref Point position)
-		{
-			Draw(graphics, ref position, "*");
-		}
-	}
-	public class MapElement : Element
-	{
-		private Map map;
-		public override Map GetMap()
-		{
-			Map map = new StrategyMap();
-			foreach(Entry element in elements)
-			{
-				KeyValuePair<Map, Map> entry = element.GetEntry();
-				map[entry.Key]=entry.Value;
-			}
-			return map;
-		}
-		public MapElement(Map map)
-		{
-			foreach (KeyValuePair<Map, Map> entry in map)
-			{
-				elements.Add(new Entry(entry.Key,entry.Value));
-			}
-		}
-		private List<Entry> elements = new List<Entry>();
-		public override void Draw(Graphics graphics, ref Point position)
-		{
-			foreach (Entry entry in elements)
-			{
-				entry.Draw(graphics, ref position);
-			}
 		}
 	}
 	//public class MapControl:Control
