@@ -42,6 +42,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Aga.Controls.Tree;
 
 namespace Meta
 {
@@ -2142,7 +2143,7 @@ namespace Meta
 	}
 	public delegate void KeyChangedEventHandler(KeyChangedEventArgs e);
 	[Serializable]
-	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
+	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial,ITreeModel
 	{
 		public List<Map> Values
 		{

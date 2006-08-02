@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta.csproj", "{1C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{B1E091F5-8DE1-4AAC-94E0-88223AFFE3FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{7713BA01-8345-4950-B574-06135CF547EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aga.Controls", "TreeViewAdv\Aga.Controls\Aga.Controls.csproj", "{E73BB233-D88B-44A7-A98F-D71EE158381D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +22,14 @@ Global
 		{B1E091F5-8DE1-4AAC-94E0-88223AFFE3FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1E091F5-8DE1-4AAC-94E0-88223AFFE3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1E091F5-8DE1-4AAC-94E0-88223AFFE3FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7713BA01-8345-4950-B574-06135CF547EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7713BA01-8345-4950-B574-06135CF547EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7713BA01-8345-4950-B574-06135CF547EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7713BA01-8345-4950-B574-06135CF547EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73BB233-D88B-44A7-A98F-D71EE158381D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73BB233-D88B-44A7-A98F-D71EE158381D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73BB233-D88B-44A7-A98F-D71EE158381D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73BB233-D88B-44A7-A98F-D71EE158381D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

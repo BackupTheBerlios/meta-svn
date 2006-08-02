@@ -73,6 +73,10 @@
       <Project>{1C2D55D4-E1F8-481D-9F50-BFA5AF9B9213}</Project>
       <Name>Meta</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TreeViewAdv\Aga.Controls\Aga.Controls.csproj">
+      <Project>{E73BB233-D88B-44A7-A98F-D71EE158381D}</Project>
+      <Name>Aga.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
