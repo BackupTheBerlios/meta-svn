@@ -7,14 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using Meta;
 using System.Drawing.Drawing2D;
-using Aga.Controls.Tree;
+using SynapticEffect.Forms;
 
 namespace Editor
 {
 
 	public partial class Editor : Form
 	{
-		TreeModel model = new TreeModel();
+		//TreeModel model = new TreeModel();
 
 		public Editor()
 		{
@@ -34,280 +34,127 @@ namespace Editor
 		private void LoadFile(string fileName)
 		{
 			Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
-			foreach (KeyValuePair<Map, Map> pair in map)
-			{
-				model.Nodes.Add(new MetaNode(pair.Key.ToString(),pair.Value.ToString()));
-			}
-			tree.Model = model;
-			//map = Binary.Deserialize(fileName);
-			//text = map.ToString();
-			//editor = new Element(map);
+			View view = new View(new MapView(map));
+			//MapView view = new MapView(map);
+			view.Dock = DockStyle.Fill;
+			this.Controls.Add(view);
 		}
-		//public abstract class Display:Control
-		//{
-		//    public virtual Size Size
-		//    {
-		//        get
-		//        {
-		//            return new Size(18, 200);
-		//        }
-		//    }
-		//    public virtual Map GetMap()
-		//    {
-		//        return element.map;
-		//    }
-		//    protected Element element;
-		//    public Display(Element element)
-		//    {
-		//        this.element = element;
-		//    }
-		//    //protected Size Measure(string text)
-		//    //{
-		//    //}
-		//    protected void Draw(Graphics graphics, ref Point position, string text)
-		//    {
-		//        graphics.DrawString(text, new Font("Arial", 10), Brushes.Black, position);
-		//        position.Y += 18;
-		//    }
-		//    public abstract void Draw(Graphics graphics, ref Point position);
-		//}
-		//public class Element:Control
-		//{
-		//    public Map map;
-		//    Display display;
-
-		//    public Size Size
-		//    {
-		//        get
-		//        {
-		//            return display.Size;
-		//        }
-		//    }
-
-		//    public void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        display.Draw(graphics, ref position);
-		//    }
-		//    public Map GetMap()
-		//    {
-		//        return display.GetMap();
-		//    }
-		//    public Element(Map map)
-		//    {
-		//        this.map = map;
-		//        if (map.Count == 0)
-		//        {
-		//            display = new EmptyMapElement(this);
-		//        }
-		//        if (map.IsNumber)
-		//        {
-		//            display = new NumberElement(this);
-		//        }
-		//        else if (map.IsString)
-		//        {
-		//            display = new StringElement(this);
-		//        }
-		//        else
-		//        {
-		//            display = new MapElement(this);
-		//        }
-		//        this.Controls.Add(display);
-		//    }
-		//}
-		//public abstract class Element
-		//{
-		//}
-		//public class StringElement : Display
-		//{
-		//    public StringElement(Element element)
-		//        : base(element)
-		//    {
-		//    }
-		//    //public override Size Size
-		//    //{
-		//    //    get 
-		//    //    { 
-		//    //        return 
-		//    //    }
-		//    //}
-		//    public override void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        Draw(graphics, ref position, '"' + element.map.GetString() + '"');
-		//    }
-		//    //public override Map GetMap()
-		//    //{
-		//    //    return new StrategyMap(text);
-		//    //}
-		//}
-		//public class NumberElement : Display
-		//{
-		//    public NumberElement(Element element)
-		//        : base(element)
-		//    {
-		//    }
-		//    public override void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        Draw(graphics, ref position, element.map.ToString());
-		//    }
-		//}
-
-		//public class EmptyMapElement : Display
-		//{
-		//    public EmptyMapElement(Element element)
-		//        : base(element)
-		//    {
-		//    }
-		//    public override void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        Draw(graphics, ref position, "*");
-		//    }
-		//}
-		//public class MapElement : Display
-		//{
-		//    //private Map map;
-		//    //public override Map GetMap()
-		//    //{
-		//    //    Map map = new StrategyMap();
-		//    //    foreach (Entry element in elements)
-		//    //    {
-		//    //        KeyValuePair<Map, Map> entry = element.GetEntry();
-		//    //        map[entry.Key] = entry.Value;
-		//    //    }
-		//    //    return map;
-		//    //}
-		//    public MapElement(Element element)
-		//        : base(element)
-		//    {
-		//        foreach (KeyValuePair<Map, Map> entry in element.map)
-		//        {
-		//            Entry e=new Entry(entry.Key, entry.Value);
-		//            elements.Add(e);
-		//            this.Controls.Add(e);
-		//        }
-		//    }
-		//    private List<Entry> elements = new List<Entry>();
-		//    public override void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        foreach (Entry entry in elements)
-		//        {
-		//            entry.Draw(graphics, ref position);
-		//        }
-		//    }
-		//}
-		//public class Entry:Control
-		//{
-		//    protected override void OnClick(EventArgs e)
-		//    {
-		//        base.OnClick(e);
-		//    }
-		//    protected override void OnPaint(PaintEventArgs e)
-		//    {
-		//        base.OnPaint(e);
-		//    }
-		//    private Element key;
-		//    private Element value;
-		//    public Entry(Map key, Map value)
-		//    {
-		//        this.key = new Element(key);
-		//        this.value = new Element(value);
-		//    }
-		//    private Pen pen = new Pen(Brushes.Blue);
-		//    public void Draw(Graphics graphics, ref Point position)
-		//    {
-		//        Point oldPos = position;
-		//        key.Draw(graphics, ref position);
-		//        Point middlePos = position;
-		//        value.Draw(graphics, ref position);
-		//        graphics.DrawRectangle(pen, new Rectangle(oldPos, new Size(200, middlePos.Y - oldPos.Y)));
-		//        graphics.DrawRectangle(pen, new Rectangle(middlePos, new Size(200, position.Y - middlePos.Y)));
-		//        position.Y += 18;
-		//    }
-		//    public KeyValuePair<Map, Map> GetEntry()
-		//    {
-		//        return new KeyValuePair<Map, Map>(key.GetMap(), value.GetMap());
-		//    }
-		//}
-		//public class MapControl:Control
-		//{
-		//    public Map map;
-		//    public MapControl(Map map)
-		//    {
-		//        this.Dock = DockStyle.Fill;
-		//        this.map = map;
-		//    }
-		//    protected override void OnPaint(PaintEventArgs e)
-		//    {
-		//        int count=0;
-		//        foreach (KeyValuePair<Map, Map> entry in map)
-		//        {
-		//            Brush brush;
-		//            if(count==selected)
-		//            {
-		//                brush=Brushes.Red;
-		//            }
-		//            else
-		//            {
-		//                brush=Brushes.Black;
-		//            }
-		//            e.Graphics.DrawString(entry.Key.ToString(), Font, brush, new Point(20, count * (Font.Height + 5)+100));
-		//            count++;
-		//        }
-		//    }
-		//    int selected = 0;
-		//    protected override void OnClick(EventArgs e)
-		//    {
-		//        EditString("hello");
-		//    }
-		//    public string EditString(string text)
-		//    {
-		//        Form form = new Form();
-		//        TextBox box = new TextBox();
-		//        box.Dock = DockStyle.Fill;
-		//        box.Text = text;
-		//        form.Controls.Add(box);
-		//        form.ShowDialog();
-		//        return box.Text;
-		//    }
-		//}
-	}
-	public class MetaNode : Node
-	{
-		public string Key
+		public class View:Panel
 		{
-			get
+			private Control control;
+			public View(Control control)
 			{
-				return key;
+				this.AutoSize = true;
+				this.control = control;
+				control.Dock = DockStyle.Fill;
+				this.Controls.Add(control);
 			}
 		}
-		private string key;
-		private string value;
-		public string Value
+		public class MapView : TreeListView
 		{
-			get
+			public Map GetMap()
 			{
-				return value;
+				Map map=new StrategyMap();
+				foreach (TreeListNode node in nodes)
+				{
+					Map key=((IMapControl)node.SubItems[0]).GetMap();
+					Map value = ((IMapControl)node.SubItems[0]).GetMap();
+					map[key] = value;
+				}
+				return map;
+			}
+			public MapView(Map map)
+			{
+				this.Columns.Add("", 0 , HorizontalAlignment.Left);
+				this.Columns.Add("", 50, HorizontalAlignment.Left);
+				this.Columns.Add("key", 100, HorizontalAlignment.Left);
+				this.Columns.Add("value", 100, HorizontalAlignment.Left);
+
+				foreach (KeyValuePair<Map, Map> pair in map)
+				{
+					this.Nodes.Add(NewNode(pair.Key.GetString(),pair.Value.ToString()));
+				}
+			}
+			private TreeListNode NewNode(string key,string value)
+			{
+				TreeListNode node = new TreeListNode();
+				node.SubItems.Add(new ContainerSubListViewItem());
+				node.SubItems.Add( new StringView(key));
+				node.SubItems.Add(new StringView(value));
+
+				//node.SubItems.Add(new StringView(key));
+				//node.SubItems.Add(new StringView(value));
+				return node;
+			}
+			protected override void OnKeyDown(KeyEventArgs e)
+			{
+				if (e.KeyCode == Keys.Enter)
+				{
+					TreeListNode selected=this.SelectedNodes[0];
+					TreeListNode node=NewNode("","");
+					Nodes.Add(node);
+					//List<TreeListNode> n = new List<TreeListNode>();
+
+					//n.AddRange(nodes);
+					//nodes.Clear();
+					//n.Insert(selected.Index + 1, node);
+					//nodes.AddRange(n.ToArray());
+				}
 			}
 		}
-		public MetaNode(string key, string value)
+		public interface IMapControl
 		{
-			this.key = key;
-			this.value = value;
+			Map GetMap();
+			//void Keydown(KeyEventArgs e);
 		}
-	}
-	public class Model : ITreeModel
-	{
-		public event EventHandler<TreeModelEventArgs> NodesChanged;
-		public event EventHandler<TreeModelEventArgs> NodesInserted;
-		public event EventHandler<TreeModelEventArgs> NodesRemoved;
-		public event EventHandler<TreePathEventArgs> StructureChanged;
-
-		public System.Collections.IEnumerable GetChildren(TreePath path)
+		public class StringView : TextBox,IMapControl
 		{
-			return new List<Map>();
+			public StringView(string text)
+			{
+				this.BackColor = Color.LightBlue;
+				this.Text = text;
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(this.Text);
+			}
+			//protected override void OnKeyDown(KeyEventArgs e)
+			//{
+			//    Keydown(e);
+			//}
+			//public void Keydown(KeyEventArgs e)
+			//{
+			//    if (e.KeyCode == Keys.Enter)
+			//    {
+			//        if (this.Parent is IMapControl)
+			//        {
+			//            ((IMapControl)this.Parent).Keydown(e);
+			//            //this.Parent.Focus();
+			//        }
+			//    }
+			//}
 		}
-		public bool IsLeaf(TreePath treePath)
+		public class NumberView : MaskedTextBox, IMapControl
 		{
-			return true;
+			//public void Keydown(KeyEventArgs e)
+			//{
+			//    //if (e.KeyCode == Keys.Enter)
+			//    //{
+			//    //    ((IMapControl)Parent).Keydown(e);
+			//    //}
+			//}
+			//protected override void OnKeyDown(KeyEventArgs e)
+			//{
+			//    Keydown(e);
+			//}
+			public NumberView()
+			{
+				this.BackColor = Color.LightCyan;
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(Convert.ToInt32(this.Text));
+			}
 		}
 	}
 }
