@@ -11,19 +11,11 @@ using SynapticEffect.Forms;
 
 namespace Editor
 {
-
 	public partial class Editor : Form
 	{
-		//TreeModel model = new TreeModel();
-
 		public Editor()
 		{
 			InitializeComponent();
-			//TreeModel model = new TreeModel();
-			//Node root = new Node("Root");
-			//root.Nodes.Add(new Node("hello"));
-			//model.Nodes.Add(root);
-			//tree.Model = model;
 			LoadFile(@"D:\Meta\0.2\Test\basic.meta");
 		}
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -34,126 +26,170 @@ namespace Editor
 		private void LoadFile(string fileName)
 		{
 			Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
-			View view = new View(new MapView(map));
+			View view = new View(map);
+			//View view = new View(new MapView(map));
 			//MapView view = new MapView(map);
 			view.Dock = DockStyle.Fill;
 			this.Controls.Add(view);
 		}
 		public class View:Panel
 		{
-			private Control control;
-			public View(Control control)
+			public View(Map map)
 			{
 				this.AutoSize = true;
-				this.control = control;
-				control.Dock = DockStyle.Fill;
-				this.Controls.Add(control);
-			}
-		}
-		public class MapView : TreeListView
-		{
-			public Map GetMap()
-			{
-				Map map=new StrategyMap();
-				foreach (TreeListNode node in nodes)
+				//Control control = GetView(map);
+				//this.Controls.Add(control);
+				Control = GetView(map);
+				shortcuts[Keys.Alt | Keys.S] = delegate
 				{
-					Map key=((IMapControl)node.SubItems[0]).GetMap();
-					Map value = ((IMapControl)node.SubItems[0]).GetMap();
-					map[key] = value;
+					Control = new StringView("");
+				};
+				shortcuts[Keys.Alt | Keys.N] = delegate
+				{
+					Control = new NumberView(0);
+				};
+			}
+			public Control Control
+			{
+				get
+				{
+					return Controls[0];
 				}
-				return map;
-			}
-			public MapView(Map map)
-			{
-				this.Columns.Add("", 0 , HorizontalAlignment.Left);
-				this.Columns.Add("", 50, HorizontalAlignment.Left);
-				this.Columns.Add("key", 100, HorizontalAlignment.Left);
-				this.Columns.Add("value", 100, HorizontalAlignment.Left);
-
-				foreach (KeyValuePair<Map, Map> pair in map)
+				set
 				{
-					this.Nodes.Add(NewNode(pair.Key.GetString(),pair.Value.ToString()));
+					Controls.Clear();
+					value.KeyDown += new KeyEventHandler(control_KeyDown);
+					Controls.Add(value);
 				}
 			}
-			private TreeListNode NewNode(string key,string value)
+			private Dictionary<Keys, MethodInvoker> shortcuts = new Dictionary<Keys, MethodInvoker>();
+			void control_KeyDown(object sender, KeyEventArgs e)
 			{
-				TreeListNode node = new TreeListNode();
-				node.SubItems.Add(new ContainerSubListViewItem());
-				node.SubItems.Add( new StringView(key));
-				node.SubItems.Add(new StringView(value));
-
-				//node.SubItems.Add(new StringView(key));
-				//node.SubItems.Add(new StringView(value));
-				return node;
-			}
-			protected override void OnKeyDown(KeyEventArgs e)
-			{
-				if (e.KeyCode == Keys.Enter)
+				if (shortcuts.ContainsKey(e.KeyData))
 				{
-					TreeListNode selected=this.SelectedNodes[0];
-					TreeListNode node=NewNode("","");
-					Nodes.Add(node);
-					//List<TreeListNode> n = new List<TreeListNode>();
-
-					//n.AddRange(nodes);
-					//nodes.Clear();
-					//n.Insert(selected.Index + 1, node);
-					//nodes.AddRange(n.ToArray());
+					shortcuts[e.KeyData]();
+				}
+				else
+				{
+					OnKeyDown(e);
 				}
 			}
-		}
-		public interface IMapControl
-		{
-			Map GetMap();
-			//void Keydown(KeyEventArgs e);
-		}
-		public class StringView : TextBox,IMapControl
-		{
-			public StringView(string text)
+			private Control GetView(Map map)
 			{
-				this.BackColor = Color.LightBlue;
-				this.Text = text;
+				if (map.IsNumber)
+				{
+					return new NumberView(map.GetNumber());
+				}
+				else if (map.IsString)
+				{
+					return new StringView(map.GetString());
+				}
+				else
+				{
+					return new MapView(map);
+				}
 			}
-			public Map GetMap()
+			public class MapView : TreeListView, IMapView
 			{
-				return new StrategyMap(this.Text);
+				public MapView(Map map)
+				{
+					this.Dock = DockStyle.Fill;
+					this.Columns.Add("", 0, HorizontalAlignment.Left);
+					this.Columns.Add("key", 100, HorizontalAlignment.Left);
+					this.Columns.Add("value", 100, HorizontalAlignment.Left);
+					foreach (KeyValuePair<Map, Map> pair in map)
+					{
+						this.Nodes.Add(NewNode(pair.Key, pair.Value));
+					}
+				}
+				private Control NewView(Map map)
+				{
+					Control view=new View(map);
+					view.KeyDown+=new KeyEventHandler(view_KeyDown);
+					return view;
+				}
+				void view_KeyDown(object sender, KeyEventArgs e)
+				{
+					if (e.KeyCode == Keys.Enter)
+					{
+						TreeListNode selected = this.SelectedNodes[0];
+						TreeListNode node = NewNode("", "");
+						Nodes.Add(node);
+					}
+				}
+				private TreeListNode NewNode(Map key, Map value)
+				{
+					TreeListNode node = new TreeListNode();
+					node.SubItems.Add(NewView(key));
+					node.SubItems.Add(NewView(value));
+					return node;
+				}
+				//protected override void OnKeyDown(KeyEventArgs e)
+				//{
+				//    if (e.KeyCode == Keys.Enter)
+				//    {
+				//        TreeListNode selected = this.SelectedNodes[0];
+				//        TreeListNode node = NewNode("", "");
+				//        Nodes.Add(node);
+				//    }
+				//}
+				public Map GetMap()
+				{
+					Map map = new StrategyMap();
+					foreach (TreeListNode node in nodes)
+					{
+						Map key = ((IMapView)node.SubItems[0]).GetMap();
+						Map value = ((IMapView)node.SubItems[0]).GetMap();
+						map[key] = value;
+					}
+					return map;
+				}
 			}
-			//protected override void OnKeyDown(KeyEventArgs e)
-			//{
-			//    Keydown(e);
-			//}
-			//public void Keydown(KeyEventArgs e)
-			//{
-			//    if (e.KeyCode == Keys.Enter)
-			//    {
-			//        if (this.Parent is IMapControl)
-			//        {
-			//            ((IMapControl)this.Parent).Keydown(e);
-			//            //this.Parent.Focus();
-			//        }
-			//    }
-			//}
-		}
-		public class NumberView : MaskedTextBox, IMapControl
-		{
-			//public void Keydown(KeyEventArgs e)
-			//{
-			//    //if (e.KeyCode == Keys.Enter)
-			//    //{
-			//    //    ((IMapControl)Parent).Keydown(e);
-			//    //}
-			//}
-			//protected override void OnKeyDown(KeyEventArgs e)
-			//{
-			//    Keydown(e);
-			//}
-			public NumberView()
+			public interface IMapView
 			{
-				this.BackColor = Color.LightCyan;
+				Map GetMap();
+				//void Keydown(KeyEventArgs e);
 			}
-			public Map GetMap()
+			public class StringView : TextBox, IMapView
 			{
-				return new StrategyMap(Convert.ToInt32(this.Text));
+				public StringView(string text)
+				{
+					this.BackColor = Color.LightBlue;
+					this.Text = text;
+				}
+				public Map GetMap()
+				{
+					return new StrategyMap(this.Text);
+				}
+			}
+			public class NumberView : MaskedTextBox, IMapView
+			{
+				//protected override void OnKeyDown(KeyEventArgs e)
+				//{
+				//    if (char.IsDigit(Convert.ToChar(e.KeyValue)) || e.Control)
+				//    {
+				//        e.Handled = false;
+				//    }
+				//    else
+				//    {
+				//        //e.Handled = true;
+				//        e.SuppressKeyPress = true;
+				//    }
+				//    //if (Parent is View)
+				//    //{
+				//    //    ((View)Parent).OnKeyDown(e);
+				//    //}
+				//}
+				private Number number;
+				public NumberView(Number number)
+				{
+					this.BackColor = Color.LightCyan;
+					this.number = number;
+				}
+				public Map GetMap()
+				{
+					return new StrategyMap(Convert.ToInt32(this.Text));
+				}
 			}
 		}
 	}
