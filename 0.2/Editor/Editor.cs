@@ -72,10 +72,15 @@ namespace Editor
 		}
 		public interface IMapView
 		{
+			void Collapse();
 			Map GetMap();
 		}
 		public class View : Panel,IMapView
 		{
+			public void Collapse()
+			{
+				((IMapView)Control).Collapse();
+			}
 			public Map GetMap()
 			{
 				return ((IMapView)Control).GetMap();
@@ -174,6 +179,10 @@ namespace Editor
 			}
 			public class MapView : TreeListView, IMapView
 			{
+				public void Collapse()
+				{
+					this.Size = new Size(10, 10);
+				}
 				protected override void OnGotFocus(EventArgs e)
 				{
 					this.Size = new Size(100, 100);
@@ -270,6 +279,10 @@ namespace Editor
 			}
 			public class CallView : TreeListView, IMapView
 			{
+				public void Collapse()
+				{
+					Size = new Size(10, 10);
+				}
 				public Map GetMap()
 				{
 					Map map = new StrategyMap();
@@ -295,6 +308,10 @@ namespace Editor
 			}
 			public class SelectView : TreeListView, IMapView
 			{
+				public void Collapse()
+				{
+					Size = new Size(10, 10);
+				}
 				public Map GetMap()
 				{
 					Map map = new StrategyMap();
@@ -373,12 +390,6 @@ namespace Editor
 					control.KeyDown += new KeyEventHandler(parent.view_KeyDown);
 					return control;
 				}
-				//protected Control GetView(Map map, MapView parent)
-				//{
-				//    Control view = new View(map);
-				//    view.KeyDown += new KeyEventHandler(parent.view_KeyDown);
-				//    return view;
-				//}
 			}
 			public class EntryNode : EntryBaseNode
 			{
@@ -399,6 +410,11 @@ namespace Editor
 			}
 			public class StringView : TextBox, IMapView
 			{
+
+				public void Collapse()
+				{
+					Size = new Size(10, 10);
+				}
 				protected override void OnGotFocus(EventArgs e)
 				{
 					//base.OnGotFocus(e);
@@ -415,6 +431,10 @@ namespace Editor
 			}
 			public class EmptyMapView : TextBox, IMapView
 			{
+				public void Collapse()
+				{
+					Size = new Size(10, 10);
+				}
 				public Map GetMap()
 				{
 					return Map.Empty;
@@ -427,6 +447,10 @@ namespace Editor
 			}
 			public class LookupView : Panel, IMapView
 			{
+				public void Collapse()
+				{
+					Size = new Size(10, 10);
+				}
 				protected override void OnGotFocus(EventArgs e)
 				{
 					this.Size = new Size(100, 100);
@@ -466,6 +490,9 @@ namespace Editor
 
 			public class NumberView : MaskedTextBox, IMapView
 			{
+				public void Collapse()
+				{
+				}
 				protected override void OnKeyDown(KeyEventArgs e)
 				{
 					if (char.IsDigit(Convert.ToChar(e.KeyValue)) || char.IsControl(Convert.ToChar(e.KeyValue)))
