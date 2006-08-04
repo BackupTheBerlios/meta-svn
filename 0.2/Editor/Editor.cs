@@ -46,18 +46,17 @@ namespace Editor
 		{
 			mainView = new View(map);
 			mainView.Dock = DockStyle.Fill;
+			mainView.Controls[0].Dock = DockStyle.Fill;
 			if (Controls.Count > 1)
 			{
 				this.Controls.RemoveAt(1);
 			}
-			//this.Controls.Clear();
 			this.Controls.Add(mainView);
 		}
 		private void LoadFile(string path)
 		{
 			LoadFile(Binary.Deserialize(path));
 			this.path = path;
-			//Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
 		}
 		public class Shortcuts:Dictionary<Keys, MethodInvoker>
 		{
@@ -74,7 +73,6 @@ namespace Editor
 		public interface IMapView
 		{
 			Map GetMap();
-			//void Keydown(KeyEventArgs e);
 		}
 		public class View : Panel,IMapView
 		{
@@ -86,7 +84,13 @@ namespace Editor
 			{
 				this.AutoSize = true;
 				this.Control = control;
-				Control.Dock = DockStyle.Fill;
+				if (!(control is MapView))
+				{
+					Control.Dock = DockStyle.Fill;
+				}
+				else
+				{
+				}
 				shortcuts[Keys.Alt | Keys.S] = delegate
 				{
 					Control = new StringView("");
@@ -105,7 +109,6 @@ namespace Editor
 				shortcuts[Keys.Alt | Keys.L] = delegate
 				{
 					Control = new LookupView(new View(new StringView("")));
-					//Control.Focus();
 				};
 				shortcuts[Keys.Alt | Keys.M] = delegate
 				{
@@ -177,6 +180,7 @@ namespace Editor
 				}
 				public MapView()
 				{
+					this.Size = new Size(10, 10);
 					this.Columns.Add("", 0, HorizontalAlignment.Left);
 					this.Columns.Add("key", 100, HorizontalAlignment.Left);
 					this.Columns.Add("value", 200, HorizontalAlignment.Left);
@@ -198,14 +202,14 @@ namespace Editor
 					foreach (KeyValuePair<Map, Map> pair in map)
 					{
 						TreeListNode node;
-						if (pair.Key.Equals(CodeKeys.Function))
-						{
-							node = new FunctionNode(pair.Value,this);
-						}
-						else
-						{
+						//if (pair.Key.Equals(CodeKeys.Function))
+						//{
+						//    node = new FunctionNode(pair.Value,this);
+						//}
+						//else
+						//{
 							node = new EntryNode(pair.Key, pair.Value, this);
-						}
+						//}
 						this.Nodes.Add(node);
 					}
 				}
