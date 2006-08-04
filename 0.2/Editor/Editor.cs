@@ -11,25 +11,21 @@ using Aga.Controls.Tree;
 
 namespace Editor
 {
+
 	public partial class Editor : Form
 	{
-		public Element selected;
+		TreeModel model = new TreeModel();
+
 		public Editor()
 		{
 			InitializeComponent();
-			TreeModel model = new TreeModel();
-			Node root = new Node("Root");
-			root.Nodes.Add(new Node("hello"));
-			model.Nodes.Add(root);
-			//TreeViewAdv tree = new TreeViewAdv();
-			tree.Model = model;
-			tree.Visible = true;
-			//this.Controls.Add(tree);
-
+			//TreeModel model = new TreeModel();
+			//Node root = new Node("Root");
+			//root.Nodes.Add(new Node("hello"));
+			//model.Nodes.Add(root);
+			//tree.Model = model;
 			LoadFile(@"D:\Meta\0.2\Test\basic.meta");
 		}
-		//Map map;
-		//string text;
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			fileDialog.ShowDialog();
@@ -38,205 +34,199 @@ namespace Editor
 		private void LoadFile(string fileName)
 		{
 			Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				model.Nodes.Add(new MetaNode(pair.Key.ToString(),pair.Value.ToString()));
+			}
+			tree.Model = model;
 			//map = Binary.Deserialize(fileName);
 			//text = map.ToString();
-			editor = new Element(map);
-			//panel.Controls.Add(editor);
+			//editor = new Element(map);
 		}
-		private Element editor;
-		private void panel_Paint(object sender, PaintEventArgs e)
-		{
-			//if (editor != null)
-			//{
-			//    Point position = new Point(10, 10);
-			//    editor.Draw(e.Graphics, ref position);
-			//}
-		}
+		//public abstract class Display:Control
+		//{
+		//    public virtual Size Size
+		//    {
+		//        get
+		//        {
+		//            return new Size(18, 200);
+		//        }
+		//    }
+		//    public virtual Map GetMap()
+		//    {
+		//        return element.map;
+		//    }
+		//    protected Element element;
+		//    public Display(Element element)
+		//    {
+		//        this.element = element;
+		//    }
+		//    //protected Size Measure(string text)
+		//    //{
+		//    //}
+		//    protected void Draw(Graphics graphics, ref Point position, string text)
+		//    {
+		//        graphics.DrawString(text, new Font("Arial", 10), Brushes.Black, position);
+		//        position.Y += 18;
+		//    }
+		//    public abstract void Draw(Graphics graphics, ref Point position);
+		//}
+		//public class Element:Control
+		//{
+		//    public Map map;
+		//    Display display;
 
-		public abstract class Display:Control
-		{
-			public virtual Size Size
-			{
-				get
-				{
-					return new Size(18, 200);
-				}
-			}
-			public virtual Map GetMap()
-			{
-				return element.map;
-			}
-			protected Element element;
-			public Display(Element element)
-			{
-				this.element = element;
-			}
-			//protected Size Measure(string text)
-			//{
-			//}
-			protected void Draw(Graphics graphics, ref Point position, string text)
-			{
-				graphics.DrawString(text, new Font("Arial", 10), Brushes.Black, position);
-				position.Y += 18;
-			}
-			public abstract void Draw(Graphics graphics, ref Point position);
-		}
-		public class Element:Control
-		{
-			public Map map;
-			Display display;
+		//    public Size Size
+		//    {
+		//        get
+		//        {
+		//            return display.Size;
+		//        }
+		//    }
 
-			public Size Size
-			{
-				get
-				{
-					return display.Size;
-				}
-			}
-
-			public void Draw(Graphics graphics, ref Point position)
-			{
-				display.Draw(graphics, ref position);
-			}
-			public Map GetMap()
-			{
-				return display.GetMap();
-			}
-			public Element(Map map)
-			{
-				this.map = map;
-				if (map.Count == 0)
-				{
-					display = new EmptyMapElement(this);
-				}
-				if (map.IsNumber)
-				{
-					display = new NumberElement(this);
-				}
-				else if (map.IsString)
-				{
-					display = new StringElement(this);
-				}
-				else
-				{
-					display = new MapElement(this);
-				}
-				this.Controls.Add(display);
-			}
-		}
+		//    public void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        display.Draw(graphics, ref position);
+		//    }
+		//    public Map GetMap()
+		//    {
+		//        return display.GetMap();
+		//    }
+		//    public Element(Map map)
+		//    {
+		//        this.map = map;
+		//        if (map.Count == 0)
+		//        {
+		//            display = new EmptyMapElement(this);
+		//        }
+		//        if (map.IsNumber)
+		//        {
+		//            display = new NumberElement(this);
+		//        }
+		//        else if (map.IsString)
+		//        {
+		//            display = new StringElement(this);
+		//        }
+		//        else
+		//        {
+		//            display = new MapElement(this);
+		//        }
+		//        this.Controls.Add(display);
+		//    }
+		//}
 		//public abstract class Element
 		//{
 		//}
-		public class StringElement : Display
-		{
-			public StringElement(Element element)
-				: base(element)
-			{
-			}
-			//public override Size Size
-			//{
-			//    get 
-			//    { 
-			//        return 
-			//    }
-			//}
-			public override void Draw(Graphics graphics, ref Point position)
-			{
-				Draw(graphics, ref position, '"' + element.map.GetString() + '"');
-			}
-			//public override Map GetMap()
-			//{
-			//    return new StrategyMap(text);
-			//}
-		}
-		public class NumberElement : Display
-		{
-			public NumberElement(Element element)
-				: base(element)
-			{
-			}
-			public override void Draw(Graphics graphics, ref Point position)
-			{
-				Draw(graphics, ref position, element.map.ToString());
-			}
-		}
+		//public class StringElement : Display
+		//{
+		//    public StringElement(Element element)
+		//        : base(element)
+		//    {
+		//    }
+		//    //public override Size Size
+		//    //{
+		//    //    get 
+		//    //    { 
+		//    //        return 
+		//    //    }
+		//    //}
+		//    public override void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        Draw(graphics, ref position, '"' + element.map.GetString() + '"');
+		//    }
+		//    //public override Map GetMap()
+		//    //{
+		//    //    return new StrategyMap(text);
+		//    //}
+		//}
+		//public class NumberElement : Display
+		//{
+		//    public NumberElement(Element element)
+		//        : base(element)
+		//    {
+		//    }
+		//    public override void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        Draw(graphics, ref position, element.map.ToString());
+		//    }
+		//}
 
-		public class EmptyMapElement : Display
-		{
-			public EmptyMapElement(Element element)
-				: base(element)
-			{
-			}
-			public override void Draw(Graphics graphics, ref Point position)
-			{
-				Draw(graphics, ref position, "*");
-			}
-		}
-		public class MapElement : Display
-		{
-			//private Map map;
-			//public override Map GetMap()
-			//{
-			//    Map map = new StrategyMap();
-			//    foreach (Entry element in elements)
-			//    {
-			//        KeyValuePair<Map, Map> entry = element.GetEntry();
-			//        map[entry.Key] = entry.Value;
-			//    }
-			//    return map;
-			//}
-			public MapElement(Element element)
-				: base(element)
-			{
-				foreach (KeyValuePair<Map, Map> entry in element.map)
-				{
-					Entry e=new Entry(entry.Key, entry.Value);
-					elements.Add(e);
-					this.Controls.Add(e);
-				}
-			}
-			private List<Entry> elements = new List<Entry>();
-			public override void Draw(Graphics graphics, ref Point position)
-			{
-				foreach (Entry entry in elements)
-				{
-					entry.Draw(graphics, ref position);
-				}
-			}
-		}
-		public class Entry:Control
-		{
-			protected override void OnClick(EventArgs e)
-			{
-				base.OnClick(e);
-			}
-			protected override void OnPaint(PaintEventArgs e)
-			{
-				base.OnPaint(e);
-			}
-			private Element key;
-			private Element value;
-			public Entry(Map key, Map value)
-			{
-				this.key = new Element(key);
-				this.value = new Element(value);
-			}
-			private Pen pen = new Pen(Brushes.Blue);
-			public void Draw(Graphics graphics, ref Point position)
-			{
-				Point oldPos = position;
-				key.Draw(graphics, ref position);
-				Point middlePos = position;
-				value.Draw(graphics, ref position);
-				graphics.DrawRectangle(pen, new Rectangle(oldPos, new Size(200, middlePos.Y - oldPos.Y)));
-				graphics.DrawRectangle(pen, new Rectangle(middlePos, new Size(200, position.Y - middlePos.Y)));
-				position.Y += 18;
-			}
-			public KeyValuePair<Map, Map> GetEntry()
-			{
-				return new KeyValuePair<Map, Map>(key.GetMap(), value.GetMap());
-			}
-		}
+		//public class EmptyMapElement : Display
+		//{
+		//    public EmptyMapElement(Element element)
+		//        : base(element)
+		//    {
+		//    }
+		//    public override void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        Draw(graphics, ref position, "*");
+		//    }
+		//}
+		//public class MapElement : Display
+		//{
+		//    //private Map map;
+		//    //public override Map GetMap()
+		//    //{
+		//    //    Map map = new StrategyMap();
+		//    //    foreach (Entry element in elements)
+		//    //    {
+		//    //        KeyValuePair<Map, Map> entry = element.GetEntry();
+		//    //        map[entry.Key] = entry.Value;
+		//    //    }
+		//    //    return map;
+		//    //}
+		//    public MapElement(Element element)
+		//        : base(element)
+		//    {
+		//        foreach (KeyValuePair<Map, Map> entry in element.map)
+		//        {
+		//            Entry e=new Entry(entry.Key, entry.Value);
+		//            elements.Add(e);
+		//            this.Controls.Add(e);
+		//        }
+		//    }
+		//    private List<Entry> elements = new List<Entry>();
+		//    public override void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        foreach (Entry entry in elements)
+		//        {
+		//            entry.Draw(graphics, ref position);
+		//        }
+		//    }
+		//}
+		//public class Entry:Control
+		//{
+		//    protected override void OnClick(EventArgs e)
+		//    {
+		//        base.OnClick(e);
+		//    }
+		//    protected override void OnPaint(PaintEventArgs e)
+		//    {
+		//        base.OnPaint(e);
+		//    }
+		//    private Element key;
+		//    private Element value;
+		//    public Entry(Map key, Map value)
+		//    {
+		//        this.key = new Element(key);
+		//        this.value = new Element(value);
+		//    }
+		//    private Pen pen = new Pen(Brushes.Blue);
+		//    public void Draw(Graphics graphics, ref Point position)
+		//    {
+		//        Point oldPos = position;
+		//        key.Draw(graphics, ref position);
+		//        Point middlePos = position;
+		//        value.Draw(graphics, ref position);
+		//        graphics.DrawRectangle(pen, new Rectangle(oldPos, new Size(200, middlePos.Y - oldPos.Y)));
+		//        graphics.DrawRectangle(pen, new Rectangle(middlePos, new Size(200, position.Y - middlePos.Y)));
+		//        position.Y += 18;
+		//    }
+		//    public KeyValuePair<Map, Map> GetEntry()
+		//    {
+		//        return new KeyValuePair<Map, Map>(key.GetMap(), value.GetMap());
+		//    }
+		//}
 		//public class MapControl:Control
 		//{
 		//    public Map map;
@@ -279,5 +269,45 @@ namespace Editor
 		//        return box.Text;
 		//    }
 		//}
+	}
+	public class MetaNode : Node
+	{
+		public string Key
+		{
+			get
+			{
+				return key;
+			}
+		}
+		private string key;
+		private string value;
+		public string Value
+		{
+			get
+			{
+				return value;
+			}
+		}
+		public MetaNode(string key, string value)
+		{
+			this.key = key;
+			this.value = value;
+		}
+	}
+	public class Model : ITreeModel
+	{
+		public event EventHandler<TreeModelEventArgs> NodesChanged;
+		public event EventHandler<TreeModelEventArgs> NodesInserted;
+		public event EventHandler<TreeModelEventArgs> NodesRemoved;
+		public event EventHandler<TreePathEventArgs> StructureChanged;
+
+		public System.Collections.IEnumerable GetChildren(TreePath path)
+		{
+			return new List<Map>();
+		}
+		public bool IsLeaf(TreePath treePath)
+		{
+			return true;
+		}
 	}
 }

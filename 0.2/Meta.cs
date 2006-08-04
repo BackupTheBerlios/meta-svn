@@ -2143,7 +2143,7 @@ namespace Meta
 	}
 	public delegate void KeyChangedEventHandler(KeyChangedEventArgs e);
 	[Serializable]
-	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial,ITreeModel
+	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
 		public List<Map> Values
 		{
