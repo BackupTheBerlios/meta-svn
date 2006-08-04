@@ -32,6 +32,18 @@ namespace Editor
 			view.Dock = DockStyle.Fill;
 			this.Controls.Add(view);
 		}
+		public class Shortcuts:Dictionary<Keys, MethodInvoker>
+		{
+			public bool Evaluate(KeyEventArgs e)
+			{
+				bool contains=ContainsKey(e.KeyData);
+				if(contains)
+				{
+					this[e.KeyData]();
+				}
+				return contains;
+			}
+		}
 		public class View:Panel
 		{
 			public View(Map map)
@@ -40,13 +52,26 @@ namespace Editor
 				//Control control = GetView(map);
 				//this.Controls.Add(control);
 				Control = GetView(map);
+				Control.Dock = DockStyle.Fill;
 				shortcuts[Keys.Alt | Keys.S] = delegate
 				{
 					Control = new StringView("");
+					Control.Focus();
 				};
 				shortcuts[Keys.Alt | Keys.N] = delegate
 				{
 					Control = new NumberView(0);
+					Control.Focus();
+				};
+				shortcuts[Keys.Alt | Keys.M] = delegate
+				{
+					TreeListView view = new MapView(new StrategyMap("hello","world"));
+					view.Columns.Add("hello", 100, HorizontalAlignment.Left);
+					//view.Size = new Size(100, 100);
+					//view.Nodes.Add(node);
+					Control = view;
+					Control.BringToFront();
+					Control.Focus();
 				};
 			}
 			public Control Control
@@ -62,17 +87,21 @@ namespace Editor
 					Controls.Add(value);
 				}
 			}
-			private Dictionary<Keys, MethodInvoker> shortcuts = new Dictionary<Keys, MethodInvoker>();
+			private Shortcuts shortcuts = new Shortcuts();
+			//private Dictionary<Keys, MethodInvoker> shortcuts = new Dictionary<Keys, MethodInvoker>();
 			void control_KeyDown(object sender, KeyEventArgs e)
 			{
-				if (shortcuts.ContainsKey(e.KeyData))
-				{
-					shortcuts[e.KeyData]();
-				}
-				else
+				//if (shortcuts.ContainsKey(e.KeyData))
+				//{
+				//    shortcuts[e.KeyData]();
+				//}
+				//else
+				//{
+				if (!shortcuts.Evaluate(e))
 				{
 					OnKeyDown(e);
 				}
+				//}
 			}
 			private Control GetView(Map map)
 			{
@@ -91,39 +120,53 @@ namespace Editor
 			}
 			public class MapView : TreeListView, IMapView
 			{
+				protected override void OnGotFocus(EventArgs e)
+				{
+					this.Size = new Size(100, 100);
+				}
 				public MapView(Map map)
 				{
-					this.Dock = DockStyle.Fill;
+					//this.Dock = DockStyle.Fill;
 					this.Columns.Add("", 0, HorizontalAlignment.Left);
 					this.Columns.Add("key", 100, HorizontalAlignment.Left);
-					this.Columns.Add("value", 100, HorizontalAlignment.Left);
+					this.Columns.Add("value", 200, HorizontalAlignment.Left);
 					foreach (KeyValuePair<Map, Map> pair in map)
 					{
-						this.Nodes.Add(NewNode(pair.Key, pair.Value));
+						this.Nodes.Add(new EntryNode(pair.Key,pair.Value,this));
 					}
-				}
-				private Control NewView(Map map)
-				{
-					Control view=new View(map);
-					view.KeyDown+=new KeyEventHandler(view_KeyDown);
-					return view;
-				}
-				void view_KeyDown(object sender, KeyEventArgs e)
-				{
-					if (e.KeyCode == Keys.Enter)
+					shortcuts[Keys.Enter|Keys.Control]=delegate
 					{
-						TreeListNode selected = this.SelectedNodes[0];
-						TreeListNode node = NewNode("", "");
-						Nodes.Add(node);
+						Nodes.Add(new EntryNode("", "",this));
+						this.Invalidate();
+					};
+				}
+				Shortcuts shortcuts = new Shortcuts();
+				public void view_KeyDown(object sender, KeyEventArgs e)
+				{
+					shortcuts.Evaluate(e);
+
+				}
+				public class EntryNode : TreeListNode
+				{
+					public EntryNode(Map key,Map value,MapView view)
+					{
+						SubItems.Add(GetView(key,view));
+						SubItems.Add(GetView(value,view));
+					}
+					private Control GetView(Map map,MapView parent)
+					{
+						Control view = new View(map);
+						view.KeyDown += new KeyEventHandler(parent.view_KeyDown);
+						return view;
 					}
 				}
-				private TreeListNode NewNode(Map key, Map value)
-				{
-					TreeListNode node = new TreeListNode();
-					node.SubItems.Add(NewView(key));
-					node.SubItems.Add(NewView(value));
-					return node;
-				}
+				//private TreeListNode NewNode(Map key, Map value)
+				//{
+				//    TreeListNode node = new TreeListNode();
+				//    node.SubItems.Add(NewView(key));
+				//    node.SubItems.Add(NewView(value));
+				//    return node;
+				//}
 				//protected override void OnKeyDown(KeyEventArgs e)
 				//{
 				//    if (e.KeyCode == Keys.Enter)
@@ -152,6 +195,10 @@ namespace Editor
 			}
 			public class StringView : TextBox, IMapView
 			{
+				protected override void OnGotFocus(EventArgs e)
+				{
+					//base.OnGotFocus(e);
+				}
 				public StringView(string text)
 				{
 					this.BackColor = Color.LightBlue;
@@ -164,22 +211,19 @@ namespace Editor
 			}
 			public class NumberView : MaskedTextBox, IMapView
 			{
-				//protected override void OnKeyDown(KeyEventArgs e)
-				//{
-				//    if (char.IsDigit(Convert.ToChar(e.KeyValue)) || e.Control)
-				//    {
-				//        e.Handled = false;
-				//    }
-				//    else
-				//    {
-				//        //e.Handled = true;
-				//        e.SuppressKeyPress = true;
-				//    }
-				//    //if (Parent is View)
-				//    //{
-				//    //    ((View)Parent).OnKeyDown(e);
-				//    //}
-				//}
+				protected override void OnKeyDown(KeyEventArgs e)
+				{
+					if (char.IsDigit(Convert.ToChar(e.KeyValue)) || e.Control)
+					{
+						e.Handled = false;
+					}
+					else
+					{
+						//e.Handled = true;
+						e.SuppressKeyPress = true;
+					}
+					base.OnKeyDown(e);
+				}
 				private Number number;
 				public NumberView(Number number)
 				{
