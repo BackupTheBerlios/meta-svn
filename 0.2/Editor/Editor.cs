@@ -16,7 +16,7 @@ namespace Editor
 		public Editor()
 		{
 			InitializeComponent();
-			LoadFile(@"D:\Meta\0.2\Test\basic.meta");
+			LoadFile(@"D:\Meta\0.2\Test\edit.meta");
 		}
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -24,12 +24,40 @@ namespace Editor
 			LoadFile(fileDialog.FileName);
 		}
 		View mainView;
-		private void LoadFile(string fileName)
+		private void LoadFile()
 		{
-			Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
+			if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				LoadFile(fileDialog.FileName);
+			}
+		}
+		private void Save()
+		{
+			Binary.Serialize(mainView.GetMap(),path);
+		}
+		private void LoadTextFile(string path)
+		{
+			LoadFile(Parser.Parse(path));
+
+			this.path = path;
+		}
+		private string path;
+		private void LoadFile(Map map)
+		{
 			mainView = new View(map);
 			mainView.Dock = DockStyle.Fill;
+			if (Controls.Count > 1)
+			{
+				this.Controls.RemoveAt(1);
+			}
+			//this.Controls.Clear();
 			this.Controls.Add(mainView);
+		}
+		private void LoadFile(string path)
+		{
+			LoadFile(Binary.Deserialize(path));
+			this.path = path;
+			//Map map = Parser.Parse(@"D:\Meta\0.2\Test\editTest.meta");
 		}
 		public class Shortcuts:Dictionary<Keys, MethodInvoker>
 		{
@@ -464,12 +492,13 @@ namespace Editor
 		private void runToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Map map=mainView.GetMap();
-			//RootPosition.rootPosition.Get()["test"]=map;
-			//Position position=new Position(RootPosition.rootPosition,"test");
 			Interpreter.Init();
 			map.Call(Map.Empty, new Position(new Position(RootPosition.rootPosition, "filesystem"), "localhost"));
+		}
 
-			//position.Call(Map.Empty);
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Save();
 		}
 	}
 }
