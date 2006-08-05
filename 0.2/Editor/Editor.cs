@@ -16,15 +16,9 @@ namespace Editor
 		public Editor()
 		{
 			InitializeComponent();
-			LoadFile(@"D:\Meta\0.2\Test\edit.meta");
 			this.Size = new Size(800, 600);
+			LoadFile(@"D:\Meta\0.2\Test\edit.meta");
 		}
-		private void openToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			fileDialog.ShowDialog();
-			LoadFile(fileDialog.FileName);
-		}
-		View mainView;
 		private void LoadFile()
 		{
 			if (fileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -32,19 +26,9 @@ namespace Editor
 				LoadFile(fileDialog.FileName);
 			}
 		}
-		private void Save()
+		private void LoadFile(string path)
 		{
-			Binary.Serialize(mainView.GetMap(),path);
-		}
-		private void LoadTextFile(string path)
-		{
-			LoadFile(Parser.Parse(path));
-
-			this.path = path;
-		}
-		private string path;
-		private void LoadFile(Map map)
-		{
+			Map map=Binary.Deserialize(path);
 			mainView = new View(map);
 			mainView.Dock = DockStyle.Fill;
 			mainView.Controls[0].Dock = DockStyle.Fill;
@@ -53,11 +37,14 @@ namespace Editor
 				this.Controls.RemoveAt(1);
 			}
 			this.Controls.Add(mainView);
-		}
-		private void LoadFile(string path)
-		{
-			LoadFile(Binary.Deserialize(path));
 			this.path = path;
+		}
+		View mainView;
+		private string path;
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			fileDialog.ShowDialog();
+			LoadFile(fileDialog.FileName);
 		}
 		private void runToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -67,64 +54,99 @@ namespace Editor
 		}
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Save();
+			Binary.Serialize(mainView.GetMap(), path);
 		}
 	}
-	public class Shortcuts:Dictionary<Keys, MethodInvoker>
-	{
-		public Shortcuts(Control control)
-		{
-			control.KeyDown += delegate(object sender, KeyEventArgs e)
-			{
-				if (ContainsKey(e.KeyData))
-				{
-					this[e.KeyData]();
-					e.Handled = true;
-				}
-			};
-		}
-	}
-	public interface IMapView
+	public interface IStrategy
 	{
 		Map GetMap();
 	}
-	public class View : Panel,IMapView
+	//public class PairPart
+	//{
+	//    public static implicit operator PairPart(object o)
+	//    {
+	//        return new PairPart();
+	//    }
+	//}
+	//public class Pair<TKey,TValue>
+	//{
+	//    public Pair(TKey key,TValue value)
+	//    {
+	//        this.key = key;
+	//        this.value = value;
+	//    }
+	//    private TKey key;
+	//    private TValue value;
+	//}
+	//public class Pair
+	//{
+	//    private object a;
+	//    private object b;
+	//    public static Pair operator  -(object a,object ba)
+	//    {
+	//        return null;
+	//    }
+	//}
+	public class View : Panel,IStrategy
 	{
 		public Map GetMap()
 		{
-			return ((IMapView)Control).GetMap();
+			return ((IStrategy)Control).GetMap();
 		}
+		private void SetStrategy(Control control)
+		{
+			Control = control;
+			Control.Focus();
+		}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey[] keys,TValue values)
+		//{
+		//    Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
+		//    foreach(KeyValuePair<TKey,TValue> in . 
+		//    //return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6, TKey key7, TValue value7)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6, TKey key7, TValue value7, TKey key8, TValue value8)
+		//{
+		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//}
+
 		public View(Control control)
 		{
 			this.AutoSize = true;
 			this.Control = control;
-			shortcuts = new Shortcuts(control);
-
-			shortcuts[Keys.Alt | Keys.S] = delegate
-			{
-				Control = new StringView("");
-				Control.Focus();
-			};
-			shortcuts[Keys.Alt | Keys.E] = delegate
-			{
-				Control = new EmptyMapView();
-				Control.Focus();
-			};
-			shortcuts[Keys.Alt | Keys.N] = delegate
-			{
-				Control = new NumberView(0);
-				Control.Focus();
-			};
-			shortcuts[Keys.Alt | Keys.L] = delegate
-			{
-				Control = new LookupView(new View(new StringView("")));
-			};
-			shortcuts[Keys.Alt | Keys.M] = delegate
-			{
-				TreeListView view = new MapView(new StrategyMap("", ""));
-				Control = view;
-				Control.Focus();
-			};
+			Mapper m = new Mapper(control);
+			m[Keys.Alt | Keys.S]=delegate { SetStrategy(new StringView("")); };
+			m[Keys.Alt | Keys.E]=delegate { SetStrategy(new EmptyMapView()); };
+			m[Keys.Alt | Keys.N]=delegate { SetStrategy(new NumberView(0)); };
+			m[Keys.Alt | Keys.L]=delegate { SetStrategy(new LookupView(new View(new StringView("")))); };
+			m[Keys.Alt | Keys.M]=delegate { SetStrategy(new MapView(new StrategyMap("", ""))); };
 		}
 		public View(Map map):this(GetView(map))
 		{
@@ -138,20 +160,14 @@ namespace Editor
 			set
 			{
 				Controls.Clear();
-				value.KeyDown += new KeyEventHandler(control_KeyDown);
+				value.KeyDown += delegate(object sender, KeyEventArgs e)
+				{
+					if (!e.Handled)
+					{
+						OnKeyDown(e);
+					}
+				};
 				Controls.Add(value);
-			}
-		}
-		private Shortcuts shortcuts;
-		void control_KeyDown(object sender, KeyEventArgs e)
-		{
-			//if (!shortcuts.Evaluate(e))
-			//{
-			//    OnKeyDown(e);
-			//}
-			if (!e.Handled)
-			{
-				OnKeyDown(e);
 			}
 		}
 		public static Control GetView(Map map)
@@ -199,7 +215,7 @@ namespace Editor
 		public CurrentNode(MapView mapView)
 		{
 			SubItems.Add(new Panel());
-			SubItems.Add(WireView(new View(new StringView("")), mapView));
+			SubItems.Add(new View(new StringView("")));
 			this.BackColor = Color.Chartreuse;
 			this.UseItemStyleForSubItems = true;
 		}
@@ -223,18 +239,14 @@ namespace Editor
 			}
 		}
 	}
-	public class CallView : TreeListView, IMapView
+	public class CallView : TreeListView, IStrategy
 	{
-		protected override void OnGotFocus(EventArgs e)
-		{
-			this.Size = new Size(100, 100);
-		}
 		public Map GetMap()
 		{
 			Map map = new StrategyMap();
 			foreach (TreeListNode node in Nodes)
 			{
-				map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
+				map.Append(((IStrategy)node.SubItems[0].ItemControl).GetMap());
 			}
 			return new StrategyMap(CodeKeys.Call, map);
 		}
@@ -253,14 +265,14 @@ namespace Editor
 			}
 		}
 	}
-	public class SelectView : TreeListView, IMapView
+	public class SelectView : TreeListView, IStrategy
 	{
 		public Map GetMap()
 		{
 			Map map = new StrategyMap();
 			foreach (TreeListNode node in Nodes)
 			{
-				map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
+				map.Append(((IStrategy)node.SubItems[0].ItemControl).GetMap());
 			}
 			return new StrategyMap(CodeKeys.Select, map);
 		}
@@ -295,7 +307,7 @@ namespace Editor
 			SubItems.Add(new View(new StringView("")));
 		}
 	}
-	public class FunctionNode : EntryBaseNode, IMapView
+	public class FunctionNode : EntryBaseNode, IStrategy
 	{
 		public override Map GetKey()
 		{
@@ -303,14 +315,14 @@ namespace Editor
 		}
 		public override Map GetValue()
 		{
-			return ((IMapView)SubItems[1].ItemControl).GetMap();
+			return ((IStrategy)SubItems[1].ItemControl).GetMap();
 		}
 		public Map GetMap()
 		{
 			return null;
 		}
 		public FunctionNode(Map map, MapView mapView)
-			: this(WireView(map, mapView), mapView)
+			: this(new View(map), mapView)
 		{
 		}
 		public FunctionNode(Control view, MapView mapView)
@@ -325,34 +337,25 @@ namespace Editor
 	{
 		public abstract Map GetKey();
 		public abstract Map GetValue();
-		protected static Control WireView(Map map, MapView parent)
-		{
-			return WireView(new View(map), parent);
-		}
-		protected static Control WireView(Control control, MapView parent)
-		{
-			control.KeyDown += new KeyEventHandler(parent.view_KeyDown);
-			return control;
-		}
 	}
 	public class EntryNode : EntryBaseNode
 	{
 		public override Map GetKey()
 		{
-			return ((IMapView)this.SubItems[0].ItemControl).GetMap();
+			return ((IStrategy)this.SubItems[0].ItemControl).GetMap();
 		}
 		public override Map GetValue()
 		{
-			return ((IMapView)this.SubItems[1].ItemControl).GetMap();
+			return ((IStrategy)this.SubItems[1].ItemControl).GetMap();
 		}
 		public EntryNode(Map key, Map value, MapView view)
 		{
-			SubItems.Add(WireView(key, view));
-			SubItems.Add(WireView(value, view));
+			SubItems.Add(new View(key));
+			SubItems.Add(new View(value));
 		}
 
 	}
-	public class StringView : TextBox, IMapView
+	public class StringView : TextBox, IStrategy
 	{
 		public StringView(string text)
 		{
@@ -365,7 +368,7 @@ namespace Editor
 			return new StrategyMap(this.Text);
 		}
 	}
-	public class EmptyMapView : TextBox, IMapView
+	public class EmptyMapView : TextBox, IStrategy
 	{
 		public Map GetMap()
 		{
@@ -377,12 +380,12 @@ namespace Editor
 			this.BackColor = Color.Red;
 		}
 	}
-	public class LookupView : Panel, IMapView
+	public class LookupView : Panel, IStrategy
 	{
-		protected override void OnGotFocus(EventArgs e)
-		{
-			this.Size = new Size(100, 100);
-		}
+		//protected override void OnGotFocus(EventArgs e)
+		//{
+		//    this.Size = new Size(100, 100);
+		//}
 		private View View
 		{
 			get
@@ -415,7 +418,7 @@ namespace Editor
 			view.Controls[0].Focus();
 		}
 	}
-	public class NumberView : MaskedTextBox, IMapView
+	public class NumberView : MaskedTextBox, IStrategy
 	{
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
@@ -443,12 +446,12 @@ namespace Editor
 			return new StrategyMap(Convert.ToInt32(this.Text));
 		}
 	}
-	public class MapView : TreeListView, IMapView
+	public class MapView : TreeListView, IStrategy
 	{
-		protected override void OnGotFocus(EventArgs e)
-		{
-			this.Size = new Size(800, 600);
-		}
+		//protected override void OnGotFocus(EventArgs e)
+		//{
+		//    this.Size = new Size(800, 600);
+		//}
 		public MapView()
 		{
 			this.Size = new Size(10, 10);
@@ -459,14 +462,13 @@ namespace Editor
 
 			columns[0].ScaleStyle = ColumnScaleStyle.Slide;
 			this.ItemHeight = 30;
-			shortcuts = new Shortcuts(this);
-
-			shortcuts[Keys.Enter | Keys.Control] = delegate
+			Mapper m = new Mapper(this);
+			m[Keys.Enter | Keys.Control] = delegate
 			{
 				Nodes.Add(new EntryNode("", "", this));
 				this.Invalidate();
 			};
-			shortcuts[Keys.Enter | Keys.Control | Keys.Shift] = delegate
+			m[Keys.Enter | Keys.Control | Keys.Shift] = delegate
 			{
 				Nodes.Add(new FunctionNode(Map.Empty, this));
 				this.Invalidate();
@@ -498,11 +500,6 @@ namespace Editor
 				this.Nodes.Add(node);
 			}
 		}
-		Shortcuts shortcuts;
-		public void view_KeyDown(object sender, KeyEventArgs e)
-		{
-			//shortcuts.Evaluate(e);
-		}
 		public virtual Map GetMap()
 		{
 			Map map = new StrategyMap();
@@ -519,17 +516,15 @@ namespace Editor
 	public class BaseView
 	{
 	    private Control control;
-		Shortcuts shortcuts;
 	    public BaseView(Control control)
 	    {
-			shortcuts = new Shortcuts(control);
 	        this.control = control;
 			control.GotFocus+=delegate
 			{
 				foreach (TreeListNode node in ((MapView)control.Parent.Parent).Nodes)
 				{
 					Control c=node.SubItems[1].ItemControl;
-					if (c is IMapView)
+					if (c is IStrategy)
 					{
 						if (c.Size.Height > 30)
 						{
@@ -538,7 +533,8 @@ namespace Editor
 					}
 				}
 			};
-			shortcuts[Keys.Down] = delegate
+			Mapper m = new Mapper(control);
+			m[Keys.Down] = delegate
 			{
 				Control c = control;
 				while (true)
@@ -563,11 +559,21 @@ namespace Editor
 					c = c.Parent;
 				}
 			};
-			shortcuts[Keys.Alt | Keys.K] = shortcuts[Keys.Down];
-			//control.KeyDown += delegate(object sender, KeyEventArgs e)
-			//{
-			//};
-
+			m[Keys.Alt | Keys.K] = m[Keys.Down];
 	    }
+	}
+	public class Mapper : Dictionary<Keys, MethodInvoker>
+	{
+		public Mapper(Control control)
+		{
+			control.KeyDown += delegate(object sender, KeyEventArgs e)
+			{
+				if (ContainsKey(e.KeyData))
+				{
+					this[e.KeyData]();
+					e.Handled = true;
+				}
+			};
+		}
 	}
 }
