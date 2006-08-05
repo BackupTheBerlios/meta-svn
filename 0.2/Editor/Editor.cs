@@ -74,6 +74,10 @@ namespace Editor
 		{
 			void Collapse();
 			Map GetMap();
+			//BaseView BaseView
+			//{
+			//    get;
+			//}
 		}
 		public class View : Panel,IMapView
 		{
@@ -146,7 +150,7 @@ namespace Editor
 					OnKeyDown(e);
 				}
 			}
-			private static Control GetView(Map map)
+			public static Control GetView(Map map)
 			{
 				if (map.Count == 0)
 				{
@@ -177,359 +181,391 @@ namespace Editor
 				}
 				return new MapView(map);
 			}
-			public class MapView : TreeListView, IMapView
-			{
-				public void Collapse()
-				{
-					this.Size = new Size(10, 10);
-				}
-				protected override void OnGotFocus(EventArgs e)
-				{
-					this.Size = new Size(100, 100);
-				}
-				public MapView()
-				{
-					this.Size = new Size(10, 10);
-					this.Columns.Add("", 0, HorizontalAlignment.Left);
-					this.Columns.Add("key", 100, HorizontalAlignment.Left);
-					this.Columns.Add("value", 200, HorizontalAlignment.Left);
-					this.ItemHeight = 30;
+		}
 
-					shortcuts[Keys.Enter | Keys.Control] = delegate
-					{
-						Nodes.Add(new EntryNode("", "", this));
-						this.Invalidate();
-					};
-					shortcuts[Keys.Enter | Keys.Control | Keys.Shift] = delegate
-					{
-						Nodes.Add(new FunctionNode(Map.Empty,this));
-						this.Invalidate();
-					};
-				}
-				public MapView(Map map):this()
-				{
-					foreach (KeyValuePair<Map, Map> pair in map)
-					{
-						TreeListNode node;
-						//if (pair.Key.Equals(CodeKeys.Function))
-						//{
-						//    node = new FunctionNode(pair.Value,this);
-						//}
-						//else
-						//{
-							node = new EntryNode(pair.Key, pair.Value, this);
-						//}
-						this.Nodes.Add(node);
-					}
-				}
-				Shortcuts shortcuts = new Shortcuts();
-				public void view_KeyDown(object sender, KeyEventArgs e)
-				{
-					shortcuts.Evaluate(e);
-				}
-				public Map GetMap()
-				{
-					Map map = new StrategyMap();
-					foreach (TreeListNode node in nodes)
-					{
 
-						Map key = ((EntryBaseNode)node).GetKey();
-						Map value = ((EntryBaseNode)node).GetValue();
-						map[key] = value;
-					}
-					return map;
-				}
-			}
-			public class CurrentNode : EntryBaseNode
+		public class CurrentNode : EntryBaseNode
+		{
+			public override Map GetKey()
 			{
-				public override Map GetKey()
-				{
-					return null;
-				}
-				public override Map GetValue()
-				{
-					return null;
-				}
-				public CurrentNode(MapView mapView)
-				{
-					SubItems.Add(new Panel());
-					SubItems.Add(WireView(new View(new StringView("")), mapView));
-					this.BackColor = Color.Chartreuse;
-					this.UseItemStyleForSubItems=true;
-				}
+				return null;
 			}
-			public class ProgramView : MapView
+			public override Map GetValue()
 			{
-				public Map GetMap()
-				{
-					Map map = new StrategyMap();
-					foreach (EntryNode node in Nodes)
-					{
-						map.Append(new StrategyMap(node.GetKey(), node.GetValue()));
-					}
-					return new StrategyMap(CodeKeys.Program, map);
-				}
-				public ProgramView(Map map)
-				{
-					foreach (Map statement in map[CodeKeys.Program].Array)
-					{
-						this.Nodes.Add(new EntryNode(statement[CodeKeys.Key], statement[CodeKeys.Value], this));
-					}
-				}
+				return null;
 			}
-			public class CallView : TreeListView, IMapView
+			public CurrentNode(MapView mapView)
 			{
-				public void Collapse()
-				{
-					Size = new Size(10, 10);
-				}
-				public Map GetMap()
-				{
-					Map map = new StrategyMap();
-					foreach (TreeListNode node in Nodes)
-					{
-						map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
-					}
-					return new StrategyMap(CodeKeys.Call, map);
-				}
-				public CallView()
-				{
-					this.BackColor = Color.Goldenrod;
-				}
-				public CallView(Map map):this()
-				{
-					foreach(Map entry in map[CodeKeys.Call].Array)
-					{
-						TreeListNode node = new TreeListNode();
-						node.SubItems.Add(new View(GetView(entry)));
-						this.Nodes.Add(node);
-					}
-				}
+				SubItems.Add(new Panel());
+				SubItems.Add(WireView(new View(new StringView("")), mapView));
+				this.BackColor = Color.Chartreuse;
+				this.UseItemStyleForSubItems = true;
 			}
-			public class SelectView : TreeListView, IMapView
+		}
+		public class ProgramView : MapView
+		{
+			public Map GetMap()
 			{
-				public void Collapse()
+				Map map = new StrategyMap();
+				foreach (EntryNode node in Nodes)
 				{
-					Size = new Size(10, 10);
+					map.Append(new StrategyMap(node.GetKey(), node.GetValue()));
 				}
-				public Map GetMap()
-				{
-					Map map = new StrategyMap();
-					foreach (TreeListNode node in Nodes)
-					{
-						map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
-					}
-					return new StrategyMap(CodeKeys.Select, map);
-				}
-			    public SelectView()
-			    {
-					this.BackColor = Color.HotPink;
-			    }
-				public SelectView(Map map)
-				{
-					foreach (Map m in map[CodeKeys.Select].Array)
-					{
-						TreeListNode node = new TreeListNode();
-						node.SubItems.Add(GetView(m));
-						Nodes.Add(node);
-					}
-				}
+				return new StrategyMap(CodeKeys.Program, map);
 			}
-			public class SearchNode : EntryBaseNode
+			public ProgramView(Map map)
 			{
-				public override Map GetValue()
+				foreach (Map statement in map[CodeKeys.Program].Array)
 				{
-					return null;
-				}
-				public override Map GetKey()
-				{
-					return null;
-				}
-				public SearchNode(MapView mapView)
-				{
-					this.BackColor = Color.Maroon;
-					SubItems.Add(new View(new SelectView()));
-					SubItems.Add(new View(new StringView("")));
-				}
-			}
-			public class FunctionNode : EntryBaseNode,IMapView
-			{
-				public override Map GetKey()
-				{
-					return CodeKeys.Function;
-				}
-				public override Map GetValue()
-				{
-					return ((IMapView)SubItems[1].ItemControl).GetMap();
-				}
-				public Map GetMap()
-				{
-					return null;
-				}
-				public FunctionNode(Map map,MapView mapView):this(WireView(map,mapView),mapView)
-				{
-				}
-				public FunctionNode(Control view,MapView mapView)
-				{
-					SubItems.Add(new View(new StringView("")));
-					SubItems.Add(view);
-					this.BackColor = Color.Green;
-					this.UseItemStyleForSubItems = true;
-				}
-			}
-			public abstract class EntryBaseNode : TreeListNode
-			{
-				public abstract Map GetKey();
-				public abstract Map GetValue();
-				protected static Control WireView(Map map, MapView parent)
-				{
-					return WireView(new View(map), parent);
-				}
-				protected static Control WireView(Control control, MapView parent)
-				{
-					control.KeyDown += new KeyEventHandler(parent.view_KeyDown);
-					return control;
-				}
-			}
-			public class EntryNode : EntryBaseNode
-			{
-				public override Map GetKey()
-				{
-					return ((IMapView)this.SubItems[0].ItemControl).GetMap();
-				}
-				public override Map GetValue()
-				{
-					return ((IMapView)this.SubItems[1].ItemControl).GetMap();
-				}
-				public EntryNode(Map key, Map value, MapView view)
-				{
-					SubItems.Add(WireView(key, view));
-					SubItems.Add(WireView(value, view));
-				}
-
-			}
-			public class StringView : TextBox, IMapView
-			{
-
-				public void Collapse()
-				{
-					Size = new Size(10, 10);
-				}
-				protected override void OnGotFocus(EventArgs e)
-				{
-					//base.OnGotFocus(e);
-				}
-				public StringView(string text)
-				{
-					this.BackColor = Color.LightBlue;
-					this.Text = text;
-				}
-				public Map GetMap()
-				{
-					return new StrategyMap(this.Text);
-				}
-			}
-			public class EmptyMapView : TextBox, IMapView
-			{
-				public void Collapse()
-				{
-					Size = new Size(10, 10);
-				}
-				public Map GetMap()
-				{
-					return Map.Empty;
-				}
-				public EmptyMapView()
-				{
-					this.ReadOnly = true;
-					this.BackColor = Color.Red;
-				}
-			}
-			public class LookupView : Panel, IMapView
-			{
-				public void Collapse()
-				{
-					Size = new Size(10, 10);
-				}
-				protected override void OnGotFocus(EventArgs e)
-				{
-					this.Size = new Size(100, 100);
-				}
-				private View View
-				{
-					get
-					{
-						return (View)Controls[0];
-					}
-					set
-					{
-						Controls.Clear();
-						value.Dock = DockStyle.Fill;
-						Controls.Add(value);
-					}
-				}
-				public Map GetMap()
-				{
-					return new StrategyMap(CodeKeys.Lookup, View.GetMap());
-				}
-				public LookupView(Map map)
-					: this(GetView(map[CodeKeys.Lookup]))
-				{
-				}
-				public LookupView(Control view)
-				{
-					this.Dock = DockStyle.Fill;
-					this.View = new View(view);
-					this.BackColor = Color.Orange;
-					this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-					this.AutoSize = true;
-					this.Size = new Size(10, 10);
-					view.Controls[0].Focus();
-				}
-			}
-
-			public class NumberView : MaskedTextBox, IMapView
-			{
-				public void Collapse()
-				{
-				}
-				protected override void OnKeyDown(KeyEventArgs e)
-				{
-					if (char.IsDigit(Convert.ToChar(e.KeyValue)) || char.IsControl(Convert.ToChar(e.KeyValue)))
-					{
-						e.Handled = false;
-					}
-					else
-					{
-						//e.Handled = true;
-						e.SuppressKeyPress = true;
-					}
-					base.OnKeyDown(e);
-				}
-				private Number number;
-				public NumberView(Number number)
-				{
-					this.BackColor = Color.LightCyan;
-					this.number = number;
-					this.Text = number.ToString();
-				}
-				public Map GetMap()
-				{
-					return new StrategyMap(Convert.ToInt32(this.Text));
+					this.Nodes.Add(new EntryNode(statement[CodeKeys.Key], statement[CodeKeys.Value], this));
 				}
 			}
 		}
+		public class CallView : TreeListView, IMapView
+		{
+			public void Collapse()
+			{
+				Size = new Size(10, 10);
+			}
+			public Map GetMap()
+			{
+				Map map = new StrategyMap();
+				foreach (TreeListNode node in Nodes)
+				{
+					map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
+				}
+				return new StrategyMap(CodeKeys.Call, map);
+			}
+			public CallView()
+			{
+				this.BackColor = Color.Goldenrod;
+			}
+			public CallView(Map map)
+				: this()
+			{
+				foreach (Map entry in map[CodeKeys.Call].Array)
+				{
+					TreeListNode node = new TreeListNode();
+					node.SubItems.Add(new View(View.GetView(entry)));
+					this.Nodes.Add(node);
+				}
+			}
+		}
+		public class SelectView : TreeListView, IMapView
+		{
+			public void Collapse()
+			{
+				Size = new Size(10, 10);
+			}
+			public Map GetMap()
+			{
+				Map map = new StrategyMap();
+				foreach (TreeListNode node in Nodes)
+				{
+					map.Append(((IMapView)node.SubItems[0].ItemControl).GetMap());
+				}
+				return new StrategyMap(CodeKeys.Select, map);
+			}
+			public SelectView()
+			{
+				this.BackColor = Color.HotPink;
+			}
+			public SelectView(Map map)
+			{
+				foreach (Map m in map[CodeKeys.Select].Array)
+				{
+					TreeListNode node = new TreeListNode();
+					node.SubItems.Add(View.GetView(m));
+					Nodes.Add(node);
+				}
+			}
+		}
+		public class SearchNode : EntryBaseNode
+		{
+			public override Map GetValue()
+			{
+				return null;
+			}
+			public override Map GetKey()
+			{
+				return null;
+			}
+			public SearchNode(MapView mapView)
+			{
+				this.BackColor = Color.Maroon;
+				SubItems.Add(new View(new SelectView()));
+				SubItems.Add(new View(new StringView("")));
+			}
+		}
+		public class FunctionNode : EntryBaseNode, IMapView
+		{
+			public override Map GetKey()
+			{
+				return CodeKeys.Function;
+			}
+			public override Map GetValue()
+			{
+				return ((IMapView)SubItems[1].ItemControl).GetMap();
+			}
+			public Map GetMap()
+			{
+				return null;
+			}
+			public FunctionNode(Map map, MapView mapView)
+				: this(WireView(map, mapView), mapView)
+			{
+			}
+			public FunctionNode(Control view, MapView mapView)
+			{
+				SubItems.Add(new View(new StringView("")));
+				SubItems.Add(view);
+				this.BackColor = Color.Green;
+				this.UseItemStyleForSubItems = true;
+			}
+		}
+		public abstract class EntryBaseNode : TreeListNode
+		{
+			public abstract Map GetKey();
+			public abstract Map GetValue();
+			protected static Control WireView(Map map, MapView parent)
+			{
+				return WireView(new View(map), parent);
+			}
+			protected static Control WireView(Control control, MapView parent)
+			{
+				control.KeyDown += new KeyEventHandler(parent.view_KeyDown);
+				return control;
+			}
+		}
+		public class EntryNode : EntryBaseNode
+		{
+			public override Map GetKey()
+			{
+				return ((IMapView)this.SubItems[0].ItemControl).GetMap();
+			}
+			public override Map GetValue()
+			{
+				return ((IMapView)this.SubItems[1].ItemControl).GetMap();
+			}
+			public EntryNode(Map key, Map value, MapView view)
+			{
+				SubItems.Add(WireView(key, view));
+				SubItems.Add(WireView(value, view));
+			}
 
+		}
+		public class StringView : TextBox, IMapView
+		{
+			public void Collapse()
+			{
+				Size = new Size(10, 10);
+			}
+			//protected override void OnGotFocus(EventArgs e)
+			//{
+			//    //foreach (TreeListNode node in ((MapView)Parent.Parent).Nodes)
+			//    //{
+			//    //    Control control=node.SubItems[1].ItemControl;
+			//    //    if (control is IMapView)
+			//    //    {
+			//    //        ((IMapView)control).Collapse();
+			//    //    }
+			//    //}
+			//    base.OnGotFocus(e);
+			//}
+			public StringView(string text)
+			{
+				new BaseView(this);
+				this.BackColor = Color.LightBlue;
+				this.Text = text;
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(this.Text);
+			}
+		}
+		public class EmptyMapView : TextBox, IMapView
+		{
+			public void Collapse()
+			{
+				Size = new Size(10, 10);
+			}
+			public Map GetMap()
+			{
+				return Map.Empty;
+			}
+			public EmptyMapView()
+			{
+				this.ReadOnly = true;
+				this.BackColor = Color.Red;
+			}
+		}
+		public class LookupView : Panel, IMapView
+		{
+			public void Collapse()
+			{
+				Size = new Size(10, 10);
+			}
+			protected override void OnGotFocus(EventArgs e)
+			{
+				this.Size = new Size(100, 100);
+			}
+			private View View
+			{
+				get
+				{
+					return (View)Controls[0];
+				}
+				set
+				{
+					Controls.Clear();
+					value.Dock = DockStyle.Fill;
+					Controls.Add(value);
+				}
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(CodeKeys.Lookup, View.GetMap());
+			}
+			public LookupView(Map map)
+				: this(View.GetView(map[CodeKeys.Lookup]))
+			{
+			}
+			public LookupView(Control view)
+			{
+				this.Dock = DockStyle.Fill;
+				this.View = new View(view);
+				this.BackColor = Color.Orange;
+				this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+				this.AutoSize = true;
+				this.Size = new Size(10, 10);
+				view.Controls[0].Focus();
+			}
+		}
+
+		public class NumberView : MaskedTextBox, IMapView
+		{
+			public void Collapse()
+			{
+			}
+			protected override void OnKeyDown(KeyEventArgs e)
+			{
+				if (char.IsDigit(Convert.ToChar(e.KeyValue)) || char.IsControl(Convert.ToChar(e.KeyValue)))
+				{
+					e.Handled = false;
+				}
+				else
+				{
+					//e.Handled = true;
+					e.SuppressKeyPress = true;
+				}
+				base.OnKeyDown(e);
+			}
+			private Number number;
+			public NumberView(Number number)
+			{
+				new BaseView(this);
+				this.BackColor = Color.LightCyan;
+				this.number = number;
+				this.Text = number.ToString();
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(Convert.ToInt32(this.Text));
+			}
+		}
 		private void runToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Map map=mainView.GetMap();
 			Interpreter.Init();
 			map.Call(Map.Empty, new Position(new Position(RootPosition.rootPosition, "filesystem"), "localhost"));
 		}
-
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Save();
+		}
+		public class MapView : TreeListView, IMapView
+		{
+			public void Collapse()
+			{
+				this.Size = new Size(10, 10);
+			}
+			protected override void OnGotFocus(EventArgs e)
+			{
+				this.Size = new Size(800, 300);
+			}
+			public MapView()
+			{
+				this.Size = new Size(10, 10);
+				this.Columns.Add("", 0, HorizontalAlignment.Left);
+				this.Columns.Add("key", 100, HorizontalAlignment.Left);
+				this.Columns.Add("value", 200, HorizontalAlignment.Left);
+				this.ItemHeight = 30;
+
+				shortcuts[Keys.Enter | Keys.Control] = delegate
+				{
+					Nodes.Add(new EntryNode("", "", this));
+					this.Invalidate();
+				};
+				shortcuts[Keys.Enter | Keys.Control | Keys.Shift] = delegate
+				{
+					Nodes.Add(new FunctionNode(Map.Empty, this));
+					this.Invalidate();
+				};
+			}
+			public MapView(Map map)
+				: this()
+			{
+				foreach (KeyValuePair<Map, Map> pair in map)
+				{
+					TreeListNode node;
+					//if (pair.Key.Equals(CodeKeys.Function))
+					//{
+					//    node = new FunctionNode(pair.Value,this);
+					//}
+					//else
+					//{
+					node = new EntryNode(pair.Key, pair.Value, this);
+					//}
+					this.Nodes.Add(node);
+				}
+			}
+			Shortcuts shortcuts = new Shortcuts();
+			public void view_KeyDown(object sender, KeyEventArgs e)
+			{
+				shortcuts.Evaluate(e);
+			}
+			public Map GetMap()
+			{
+				Map map = new StrategyMap();
+				foreach (TreeListNode node in nodes)
+				{
+
+					Map key = ((EntryBaseNode)node).GetKey();
+					Map value = ((EntryBaseNode)node).GetValue();
+					map[key] = value;
+				}
+				return map;
+			}
+		}
+		public class BaseView
+		{
+		    private Control control;
+		    public BaseView(Control control)
+		    {
+		        this.control = control;
+				control.GotFocus+=delegate
+				{
+					foreach (TreeListNode node in ((MapView)control.Parent.Parent).Nodes)
+					{
+						Control c=node.SubItems[1].ItemControl;
+						if (c is IMapView)
+						{
+							((IMapView)c).Collapse();
+						}
+					}
+				};
+
+		    }
 		}
 	}
 }
