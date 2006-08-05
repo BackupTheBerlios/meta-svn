@@ -67,22 +67,13 @@ namespace Editor
 		{
 			return ((IStrategy)Control).GetMap();
 		}
-		//private void SetStrategy(Control control)
-		//{
-		//    Control = control;
-		//    Control.Focus();
-		//}
-		//private void SetStrategy(Control control)
-		//{
-		//    Control = control;
-		//    Control.Focus();
-		//}
 		public View(Control control)
 		{
 			this.AutoSize = true;
 			this.Control = control;
 			KeyMapper m = new KeyMapper(control);
-			m[Keys.Alt | Keys.S]=delegate { Control=new StringView(""); };
+			m[Keys.Alt | Keys.S]=delegate { 
+				Control=new StringView(""); };
 			m[Keys.Alt | Keys.E]=delegate { Control=new EmptyMapView(); };
 			m[Keys.Alt | Keys.N]=delegate { Control=new NumberView(0); };
 			m[Keys.Alt | Keys.L]=delegate { Control=new LookupView(new View(new StringView(""))); };
@@ -102,6 +93,9 @@ namespace Editor
 				Controls.Clear();
 				value.KeyDown += delegate(object sender, KeyEventArgs e)
 				{
+					if (e.KeyData == (Keys.S | Keys.Alt))
+					{
+					}
 					if (!e.Handled)
 					{
 						OnKeyDown(e);
@@ -187,7 +181,7 @@ namespace Editor
 			Map map = new StrategyMap();
 			foreach (TreeListNode node in Nodes)
 			{
-				map.Append(((IStrategy)node.SubItems[0].ItemControl).GetMap());
+				map.Append(((View)node.SubItems[0].ItemControl).GetMap());
 			}
 			return new StrategyMap(CodeKeys.Call, map);
 		}
@@ -213,7 +207,7 @@ namespace Editor
 			Map map = new StrategyMap();
 			foreach (TreeListNode node in Nodes)
 			{
-				map.Append(((IStrategy)node.SubItems[0].ItemControl).GetMap());
+				map.Append(((View)node.SubItems[0].ItemControl).GetMap());
 			}
 			return new StrategyMap(CodeKeys.Select, map);
 		}
@@ -256,7 +250,7 @@ namespace Editor
 		}
 		public override Map GetValue()
 		{
-			return ((IStrategy)SubItems[1].ItemControl).GetMap();
+			return ((View)SubItems[1].ItemControl).GetMap();
 		}
 		public Map GetMap()
 		{
@@ -276,30 +270,41 @@ namespace Editor
 	}
 	public abstract class EntryBaseNode : TreeListNode
 	{
+		public event KeyEventHandler KeyDown;
 		public abstract Map GetKey();
 		public abstract Map GetValue();
+		protected void AddView(Map map)
+		{
+			View view = new View(map);
+			view.KeyDown += delegate(object sender, KeyEventArgs e)
+			{
+				KeyDown(sender, e);
+			};
+			SubItems.Add(view);
+		}
 	}
 	public class EntryNode : EntryBaseNode
 	{
 		public override Map GetKey()
 		{
-			return ((IStrategy)this.SubItems[0].ItemControl).GetMap();
+			return ((View)this.SubItems[0].ItemControl).GetMap();
 		}
 		public override Map GetValue()
 		{
-			return ((IStrategy)this.SubItems[1].ItemControl).GetMap();
+			return ((View)this.SubItems[1].ItemControl).GetMap();
 		}
+
 		public EntryNode(Map key, Map value, MapView view)
 		{
-			SubItems.Add(new View(key));
-			SubItems.Add(new View(value));
+			AddView(key);
+			AddView(value);
 		}
 	}
 	public class StringView : TextBox, IStrategy
 	{
 		public StringView(string text)
 		{
-			new BaseView(this);
+			new Extender(this);
 			this.BackColor = Color.LightBlue;
 			this.Text = text;
 		}
@@ -316,6 +321,7 @@ namespace Editor
 		}
 		public EmptyMapView()
 		{
+			new Extender(this);
 			this.ReadOnly = true;
 			this.BackColor = Color.Red;
 		}
@@ -343,10 +349,11 @@ namespace Editor
 			: this(new View(map[CodeKeys.Lookup]))
 		{
 		}
-		public LookupView(Control view)
+		public LookupView(View view)
 		{
 			this.Dock = DockStyle.Fill;
-			this.View = new View(view);
+			this.View = view;
+			//this.View = new View(view);
 			this.BackColor = Color.Orange;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.AutoSize = true;
@@ -364,7 +371,7 @@ namespace Editor
 		private Number number;
 		public NumberView(Number number)
 		{
-			new BaseView(this);
+			new Extender(this);
 			this.BackColor = Color.LightCyan;
 			this.number = number;
 			this.Text = number.ToString();
@@ -384,17 +391,16 @@ namespace Editor
 			this.Columns.Add("", 200, HorizontalAlignment.Left);
 			this.SelectedIndexChanged += new EventHandler(MapView_SelectedIndexChanged);
 
-			//this.ItemHeight = 30;
 			KeyMapper m = new KeyMapper(this);
 			m[Keys.Enter | Keys.Control] = delegate
 			{
-				Nodes.Add(new EntryNode("", "", this));
-				this.Invalidate();
+				AddNode(new EntryNode("", "", this));
+				//Nodes.Add(new EntryNode("", "", this));
+				//this.Invalidate();
 			};
 			m[Keys.Enter | Keys.Control | Keys.Shift] = delegate
 			{
-				Nodes.Add(new FunctionNode(Map.Empty, this));
-				this.Invalidate();
+				AddNode(new FunctionNode(Map.Empty, this));
 			};
 		}
 		void MapView_SelectedIndexChanged(object sender, EventArgs e)
@@ -405,21 +411,33 @@ namespace Editor
 				node.SubItems[0].ItemControl.Focus();
 			}
 		}
+		private void AddNode(EntryBaseNode node)
+		{
+			node.KeyDown += delegate(object sender, KeyEventArgs e)
+			{
+				if (!e.Handled)
+				{
+					OnKeyDown(e);
+				}
+			};
+			this.Invalidate();
+			Nodes.Add(node);
+		}
 		public MapView(Map map)
 			: this()
 		{
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				TreeListNode node;
+				//TreeListNode node;
 				if (pair.Key.Equals(CodeKeys.Function))
 				{
-				    node = new FunctionNode(pair.Value,this);
+				    AddNode(new FunctionNode(pair.Value,this));
 				}
 				else
 				{
-					node = new EntryNode(pair.Key, pair.Value, this);
+					AddNode(new EntryNode(pair.Key, pair.Value, this));
 				}
-				this.Nodes.Add(node);
+				//this.Nodes.Add(node);
 			}
 		}
 		public virtual Map GetMap()
@@ -427,7 +445,6 @@ namespace Editor
 			Map map = new StrategyMap();
 			foreach (TreeListNode node in nodes)
 			{
-
 				Map key = ((EntryBaseNode)node).GetKey();
 				Map value = ((EntryBaseNode)node).GetValue();
 				map[key] = value;
@@ -435,25 +452,23 @@ namespace Editor
 			return map;
 		}
 	}
-	public class BaseView
+	public class Extender
 	{
-	    private Control control;
-	    public BaseView(Control control)
+	    public Extender(Control control)
 	    {
-	        this.control = control;
 			control.GotFocus+=delegate
 			{
-				foreach (TreeListNode node in ((MapView)control.Parent.Parent).Nodes)
-				{
-					Control c=node.SubItems[1].ItemControl;
-					if (c is IStrategy)
-					{
-						if (c.Size.Height > 30)
-						{
-							c.Controls[0].Size = new Size(10, 10);
-						}
-					}
-				}
+				//foreach (TreeListNode node in ((MapView)control.Parent.Parent).Nodes)
+				//{
+				//    Control c=node.SubItems[1].ItemControl;
+				//    if (c is IStrategy)
+				//    {
+				//        if (c.Size.Height > 30)
+				//        {
+				//            c.Controls[0].Size = new Size(10, 10);
+				//        }
+				//    }
+				//}
 			};
 			KeyMapper m = new KeyMapper(control);
 			m[Keys.Down] = delegate
@@ -490,10 +505,10 @@ namespace Editor
 		{
 			control.KeyDown += delegate(object sender, KeyEventArgs e)
 			{
-				if (ContainsKey(e.KeyData))
+				if (!e.Handled && ContainsKey(e.KeyData))
 				{
-					this[e.KeyData]();
 					e.Handled = true;
+					this[e.KeyData]();
 				}
 			};
 		}
