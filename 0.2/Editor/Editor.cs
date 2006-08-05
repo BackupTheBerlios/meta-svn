@@ -61,92 +61,32 @@ namespace Editor
 	{
 		Map GetMap();
 	}
-	//public class PairPart
-	//{
-	//    public static implicit operator PairPart(object o)
-	//    {
-	//        return new PairPart();
-	//    }
-	//}
-	//public class Pair<TKey,TValue>
-	//{
-	//    public Pair(TKey key,TValue value)
-	//    {
-	//        this.key = key;
-	//        this.value = value;
-	//    }
-	//    private TKey key;
-	//    private TValue value;
-	//}
-	//public class Pair
-	//{
-	//    private object a;
-	//    private object b;
-	//    public static Pair operator  -(object a,object ba)
-	//    {
-	//        return null;
-	//    }
-	//}
-	public class View : Panel,IStrategy
+	public class View : Panel
 	{
 		public Map GetMap()
 		{
 			return ((IStrategy)Control).GetMap();
 		}
-		private void SetStrategy(Control control)
-		{
-			Control = control;
-			Control.Focus();
-		}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey[] keys,TValue values)
+		//private void SetStrategy(Control control)
 		//{
-		//    Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
-		//    foreach(KeyValuePair<TKey,TValue> in . 
-		//    //return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//    Control = control;
+		//    Control.Focus();
 		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1)
+		//private void SetStrategy(Control control)
 		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
+		//    Control = control;
+		//    Control.Focus();
 		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6, TKey key7, TValue value7)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-		//public static Dictionary<TKey, TValue> Map<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5, TKey key6, TValue value6, TKey key7, TValue value7, TKey key8, TValue value8)
-		//{
-		//    return Map(new TKey[] { key1 }, new TValue[] { value1 });
-		//}
-
 		public View(Control control)
 		{
 			this.AutoSize = true;
 			this.Control = control;
-			Mapper m = new Mapper(control);
-			m[Keys.Alt | Keys.S]=delegate { SetStrategy(new StringView("")); };
-			m[Keys.Alt | Keys.E]=delegate { SetStrategy(new EmptyMapView()); };
-			m[Keys.Alt | Keys.N]=delegate { SetStrategy(new NumberView(0)); };
-			m[Keys.Alt | Keys.L]=delegate { SetStrategy(new LookupView(new View(new StringView("")))); };
-			m[Keys.Alt | Keys.M]=delegate { SetStrategy(new MapView(new StrategyMap("", ""))); };
+			KeyMapper m = new KeyMapper(control);
+			m[Keys.Alt | Keys.S]=delegate { Control=new StringView(""); };
+			m[Keys.Alt | Keys.E]=delegate { Control=new EmptyMapView(); };
+			m[Keys.Alt | Keys.N]=delegate { Control=new NumberView(0); };
+			m[Keys.Alt | Keys.L]=delegate { Control=new LookupView(new View(new StringView(""))); };
+			m[Keys.Alt | Keys.M]=delegate { Control=new MapView(new StrategyMap("", "")); };
 		}
 		public View(Map map):this(GetView(map))
 		{
@@ -168,9 +108,10 @@ namespace Editor
 					}
 				};
 				Controls.Add(value);
+				value.Focus();
 			}
 		}
-		public static Control GetView(Map map)
+		private static Control GetView(Map map)
 		{
 			if (map.Count == 0)
 			{
@@ -260,7 +201,7 @@ namespace Editor
 			foreach (Map entry in map[CodeKeys.Call].Array)
 			{
 				TreeListNode node = new TreeListNode();
-				node.SubItems.Add(new View(View.GetView(entry)));
+				node.SubItems.Add(new View(entry));
 				this.Nodes.Add(node);
 			}
 		}
@@ -285,7 +226,7 @@ namespace Editor
 			foreach (Map m in map[CodeKeys.Select].Array)
 			{
 				TreeListNode node = new TreeListNode();
-				node.SubItems.Add(View.GetView(m));
+				node.SubItems.Add(new View(m));
 				Nodes.Add(node);
 			}
 		}
@@ -353,7 +294,6 @@ namespace Editor
 			SubItems.Add(new View(key));
 			SubItems.Add(new View(value));
 		}
-
 	}
 	public class StringView : TextBox, IStrategy
 	{
@@ -382,10 +322,6 @@ namespace Editor
 	}
 	public class LookupView : Panel, IStrategy
 	{
-		//protected override void OnGotFocus(EventArgs e)
-		//{
-		//    this.Size = new Size(100, 100);
-		//}
 		private View View
 		{
 			get
@@ -404,7 +340,7 @@ namespace Editor
 			return new StrategyMap(CodeKeys.Lookup, View.GetMap());
 		}
 		public LookupView(Map map)
-			: this(View.GetView(map[CodeKeys.Lookup]))
+			: this(new View(map[CodeKeys.Lookup]))
 		{
 		}
 		public LookupView(Control view)
@@ -422,15 +358,7 @@ namespace Editor
 	{
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			if (char.IsDigit(Convert.ToChar(e.KeyValue)) || char.IsControl(Convert.ToChar(e.KeyValue)))
-			{
-				e.Handled = false;
-			}
-			else
-			{
-				//e.Handled = true;
-				e.SuppressKeyPress = true;
-			}
+			e.SuppressKeyPress = !char.IsDigit(Convert.ToChar(e.KeyValue)) || !char.IsControl(Convert.ToChar(e.KeyValue));
 			base.OnKeyDown(e);
 		}
 		private Number number;
@@ -448,10 +376,6 @@ namespace Editor
 	}
 	public class MapView : TreeListView, IStrategy
 	{
-		//protected override void OnGotFocus(EventArgs e)
-		//{
-		//    this.Size = new Size(800, 600);
-		//}
 		public MapView()
 		{
 			this.Size = new Size(10, 10);
@@ -460,9 +384,8 @@ namespace Editor
 			this.Columns.Add("", 200, HorizontalAlignment.Left);
 			this.SelectedIndexChanged += new EventHandler(MapView_SelectedIndexChanged);
 
-			columns[0].ScaleStyle = ColumnScaleStyle.Slide;
-			this.ItemHeight = 30;
-			Mapper m = new Mapper(this);
+			//this.ItemHeight = 30;
+			KeyMapper m = new KeyMapper(this);
 			m[Keys.Enter | Keys.Control] = delegate
 			{
 				Nodes.Add(new EntryNode("", "", this));
@@ -474,7 +397,6 @@ namespace Editor
 				this.Invalidate();
 			};
 		}
-
 		void MapView_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (SelectedNodes.Count != 0)
@@ -533,7 +455,7 @@ namespace Editor
 					}
 				}
 			};
-			Mapper m = new Mapper(control);
+			KeyMapper m = new KeyMapper(control);
 			m[Keys.Down] = delegate
 			{
 				Control c = control;
@@ -562,9 +484,9 @@ namespace Editor
 			m[Keys.Alt | Keys.K] = m[Keys.Down];
 	    }
 	}
-	public class Mapper : Dictionary<Keys, MethodInvoker>
+	public class KeyMapper : Dictionary<Keys, MethodInvoker>
 	{
-		public Mapper(Control control)
+		public KeyMapper(Control control)
 		{
 			control.KeyDown += delegate(object sender, KeyEventArgs e)
 			{
