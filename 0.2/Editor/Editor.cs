@@ -30,8 +30,9 @@ namespace Editor
 		{
 			Map map=Binary.Deserialize(path);
 			mainView = new View(map);
-			mainView.Dock = DockStyle.Fill;
-			mainView.Controls[0].Dock = DockStyle.Fill;
+			mainView.Location = new Point(100, 100);
+			//mainView.Dock = DockStyle.Fill;
+			//mainView.Controls[0].Dock = DockStyle.Fill;
 			if (Controls.Count > 1)
 			{
 				this.Controls.RemoveAt(1);
@@ -71,13 +72,15 @@ namespace Editor
 		{
 			this.AutoSize = true;
 			this.Control = control;
-			KeyMapper m = new KeyMapper(control);
-			m[Keys.Alt | Keys.S]=delegate { 
-				Control=new StringView(""); };
-			m[Keys.Alt | Keys.E]=delegate { Control=new EmptyMapView(); };
-			m[Keys.Alt | Keys.N]=delegate { Control=new NumberView(0); };
-			m[Keys.Alt | Keys.L]=delegate { Control=new LookupView(new View(new StringView(""))); };
-			m[Keys.Alt | Keys.M]=delegate { Control=new MapView(new StrategyMap("", "")); };
+			//KeyMapper m = new KeyMapper(control);
+			//m[Keys.Alt | Keys.S] =
+			//    delegate {Control = new StringView("");};
+			//m[Keys.Alt | Keys.E]=
+			//    delegate { Control=new EmptyMapView();};
+			//m[Keys.Alt | Keys.N]=
+			//    delegate {Control = new NumberView(0);};
+			//m[Keys.Alt | Keys.M]=
+			//    delegate {Control=new MapView(new StrategyMap("", ""));};
 		}
 		public View(Map map):this(GetView(map))
 		{
@@ -91,17 +94,24 @@ namespace Editor
 			set
 			{
 				Controls.Clear();
+				KeyMapper m = new KeyMapper(value);
 				value.KeyDown += delegate(object sender, KeyEventArgs e)
 				{
-					if (e.KeyData == (Keys.S | Keys.Alt))
-					{
-					}
 					if (!e.Handled)
 					{
 						OnKeyDown(e);
 					}
 				};
 				Controls.Add(value);
+				m[Keys.Alt | Keys.S] =
+					delegate { Control = new StringView(""); };
+				m[Keys.Alt | Keys.E] =
+					delegate { Control = new EmptyMapView(); };
+				m[Keys.Alt | Keys.N] =
+					delegate { Control = new NumberView(0); };
+				m[Keys.Alt | Keys.M] =
+					delegate { Control = new MapView(new StrategyMap("", "")); };
+
 				value.Focus();
 			}
 		}
@@ -119,163 +129,151 @@ namespace Editor
 			{
 				return new StringView(map.GetString());
 			}
-			else if (map.Count == 1)
-			{
-				if (map.ContainsKey(CodeKeys.Lookup))
-				{
-					return new LookupView(map);
-				}
-				else if (map.ContainsKey(CodeKeys.Select))
-				{
-					return new SelectView(map);
-				}
-				else if (map.ContainsKey(CodeKeys.Call))
-				{
-					return new CallView(map);
-				}
-			}
 			return new MapView(map);
 		}
 	}
-	public class CurrentNode : EntryBaseNode
-	{
-		public override Map GetKey()
-		{
-			return null;
-		}
-		public override Map GetValue()
-		{
-			return null;
-		}
-		public CurrentNode(MapView mapView)
-		{
-			SubItems.Add(new Panel());
-			SubItems.Add(new View(new StringView("")));
-			this.BackColor = Color.Chartreuse;
-			this.UseItemStyleForSubItems = true;
-		}
-	}
-	public class ProgramView : MapView
-	{
-		public override Map GetMap()
-		{
-			Map map = new StrategyMap();
-			foreach (EntryNode node in Nodes)
-			{
-				map.Append(new StrategyMap(node.GetKey(), node.GetValue()));
-			}
-			return new StrategyMap(CodeKeys.Program, map);
-		}
-		public ProgramView(Map map)
-		{
-			foreach (Map statement in map[CodeKeys.Program].Array)
-			{
-				this.Nodes.Add(new EntryNode(statement[CodeKeys.Key], statement[CodeKeys.Value], this));
-			}
-		}
-	}
-	public class CallView : TreeListView, IStrategy
-	{
-		public Map GetMap()
-		{
-			Map map = new StrategyMap();
-			foreach (TreeListNode node in Nodes)
-			{
-				map.Append(((View)node.SubItems[0].ItemControl).GetMap());
-			}
-			return new StrategyMap(CodeKeys.Call, map);
-		}
-		public CallView()
-		{
-			this.BackColor = Color.Goldenrod;
-		}
-		public CallView(Map map)
-			: this()
-		{
-			foreach (Map entry in map[CodeKeys.Call].Array)
-			{
-				TreeListNode node = new TreeListNode();
-				node.SubItems.Add(new View(entry));
-				this.Nodes.Add(node);
-			}
-		}
-	}
-	public class SelectView : TreeListView, IStrategy
-	{
-		public Map GetMap()
-		{
-			Map map = new StrategyMap();
-			foreach (TreeListNode node in Nodes)
-			{
-				map.Append(((View)node.SubItems[0].ItemControl).GetMap());
-			}
-			return new StrategyMap(CodeKeys.Select, map);
-		}
-		public SelectView()
-		{
-			this.BackColor = Color.HotPink;
-		}
-		public SelectView(Map map)
-		{
-			foreach (Map m in map[CodeKeys.Select].Array)
-			{
-				TreeListNode node = new TreeListNode();
-				node.SubItems.Add(new View(m));
-				Nodes.Add(node);
-			}
-		}
-	}
-	public class SearchNode : EntryBaseNode
-	{
-		public override Map GetValue()
-		{
-			return null;
-		}
-		public override Map GetKey()
-		{
-			return null;
-		}
-		public SearchNode(MapView mapView)
-		{
-			this.BackColor = Color.Maroon;
-			SubItems.Add(new View(new SelectView()));
-			SubItems.Add(new View(new StringView("")));
-		}
-	}
-	public class FunctionNode : EntryBaseNode, IStrategy
-	{
-		public override Map GetKey()
-		{
-			return CodeKeys.Function;
-		}
-		public override Map GetValue()
-		{
-			return ((View)SubItems[1].ItemControl).GetMap();
-		}
-		public Map GetMap()
-		{
-			return null;
-		}
-		public FunctionNode(Map map, MapView mapView)
-			: this(new View(map), mapView)
-		{
-		}
-		public FunctionNode(Control view, MapView mapView)
-		{
-			SubItems.Add(new View(new StringView("")));
-			SubItems.Add(view);
-			this.BackColor = Color.Green;
-			this.UseItemStyleForSubItems = true;
-		}
-	}
-	public abstract class EntryBaseNode : TreeListNode
+	//public class CurrentNode : EntryBaseNode
+	//{
+	//    public override Map GetKey()
+	//    {
+	//        return null;
+	//    }
+	//    public override Map GetValue()
+	//    {
+	//        return null;
+	//    }
+	//    public CurrentNode(MapView mapView)
+	//    {
+	//        SubItems.Add(new Panel());
+	//        SubItems.Add(new View(new StringView("")));
+	//        this.BackColor = Color.Chartreuse;
+	//        this.UseItemStyleForSubItems = true;
+	//    }
+	//}
+	//public class ProgramView : MapView
+	//{
+	//    public override Map GetMap()
+	//    {
+	//        Map map = new StrategyMap();
+	//        foreach (EntryNode node in Nodes)
+	//        {
+	//            map.Append(new StrategyMap(node.GetKey(), node.GetValue()));
+	//        }
+	//        return new StrategyMap(CodeKeys.Program, map);
+	//    }
+	//    public ProgramView(Map map)
+	//    {
+	//        foreach (Map statement in map[CodeKeys.Program].Array)
+	//        {
+	//            this.Nodes.Add(new EntryNode(statement[CodeKeys.Key], statement[CodeKeys.Value], this));
+	//        }
+	//    }
+	//}
+	//public class CallView : TreeListView, IStrategy
+	//{
+	//    public Map GetMap()
+	//    {
+	//        Map map = new StrategyMap();
+	//        foreach (TreeListNode node in Nodes)
+	//        {
+	//            map.Append(((View)node.SubItems[0].ItemControl).GetMap());
+	//        }
+	//        return new StrategyMap(CodeKeys.Call, map);
+	//    }
+	//    public CallView()
+	//    {
+	//        this.BackColor = Color.Goldenrod;
+	//    }
+	//    public CallView(Map map)
+	//        : this()
+	//    {
+	//        foreach (Map entry in map[CodeKeys.Call].Array)
+	//        {
+	//            TreeListNode node = new TreeListNode();
+	//            node.SubItems.Add(new View(entry));
+	//            this.Nodes.Add(node);
+	//        }
+	//    }
+	//}
+	//public class SelectView : TreeListView, IStrategy
+	//{
+	//    public Map GetMap()
+	//    {
+	//        Map map = new StrategyMap();
+	//        foreach (TreeListNode node in Nodes)
+	//        {
+	//            map.Append(((View)node.SubItems[0].ItemControl).GetMap());
+	//        }
+	//        return new StrategyMap(CodeKeys.Select, map);
+	//    }
+	//    public SelectView()
+	//    {
+	//        this.BackColor = Color.HotPink;
+	//    }
+	//    public SelectView(Map map)
+	//    {
+	//        foreach (Map m in map[CodeKeys.Select].Array)
+	//        {
+	//            TreeListNode node = new TreeListNode();
+	//            node.SubItems.Add(new View(m));
+	//            Nodes.Add(node);
+	//        }
+	//    }
+	//}
+	//public class SearchNode : EntryBaseNode
+	//{
+	//    public override Map GetValue()
+	//    {
+	//        return null;
+	//    }
+	//    public override Map GetKey()
+	//    {
+	//        return null;
+	//    }
+	//    public SearchNode(MapView mapView)
+	//    {
+	//        this.BackColor = Color.Maroon;
+	//        SubItems.Add(new View(new SelectView()));
+	//        SubItems.Add(new View(new StringView("")));
+	//    }
+	//}
+	//public class FunctionNode : EntryBaseNode, IStrategy
+	//{
+	//    public override Map GetKey()
+	//    {
+	//        return CodeKeys.Function;
+	//    }
+	//    public override Map GetValue()
+	//    {
+	//        return ((View)SubItems[1].ItemControl).GetMap();
+	//    }
+	//    public Map GetMap()
+	//    {
+	//        return null;
+	//    }
+	//    public FunctionNode(Map map, MapView mapView)
+	//        : this(new View(map), mapView)
+	//    {
+	//    }
+	//    public FunctionNode(Control view, MapView mapView)
+	//    {
+	//        SubItems.Add(new View(new StringView("")));
+	//        SubItems.Add(view);
+	//        this.BackColor = Color.Green;
+	//        this.UseItemStyleForSubItems = true;
+	//    }
+	//}
+	public abstract class EntryBaseNode : ContainerListViewItem
 	{
 		public event KeyEventHandler KeyDown;
 		public abstract Map GetKey();
 		public abstract Map GetValue();
 		protected void AddView(Map map)
 		{
-			View view = new View(map);
+			AddView(new View(map));
+		}
+		protected void AddView(View view)
+		{
 			view.KeyDown += delegate(object sender, KeyEventArgs e)
 			{
 				KeyDown(sender, e);
@@ -283,6 +281,24 @@ namespace Editor
 			SubItems.Add(view);
 		}
 	}
+	//public abstract class EntryBaseNode : TreeListNode
+	//{
+	//    public event KeyEventHandler KeyDown;
+	//    public abstract Map GetKey();
+	//    public abstract Map GetValue();
+	//    protected void AddView(Map map)
+	//    {
+	//        AddView(new View(map));
+	//    }
+	//    protected void AddView(View view)
+	//    {
+	//        view.KeyDown += delegate(object sender, KeyEventArgs e)
+	//        {
+	//            KeyDown(sender, e);
+	//        };
+	//        SubItems.Add(view);
+	//    }
+	//}
 	public class EntryNode : EntryBaseNode
 	{
 		public override Map GetKey()
@@ -293,8 +309,10 @@ namespace Editor
 		{
 			return ((View)this.SubItems[1].ItemControl).GetMap();
 		}
-
-		public EntryNode(Map key, Map value, MapView view)
+		public EntryNode(Map key, Map value):this(new View(key),new View(value))
+		{
+		}
+		public EntryNode(View key,View value)
 		{
 			AddView(key);
 			AddView(value);
@@ -304,10 +322,18 @@ namespace Editor
 	{
 		public StringView(string text)
 		{
-			new Extender(this);
+			new ViewExtender(this);
 			this.BackColor = Color.LightBlue;
 			this.Text = text;
+			this.Width = 50;
 		}
+		//protected override void OnKeyDown(KeyEventArgs e)
+		//{
+		//    if (e.KeyData == (Keys.Alt | Keys.N))
+		//    {
+		//    }
+		//    base.OnKeyDown(e);
+		//}
 		public Map GetMap()
 		{
 			return new StrategyMap(this.Text);
@@ -321,57 +347,58 @@ namespace Editor
 		}
 		public EmptyMapView()
 		{
-			new Extender(this);
+			new ViewExtender(this);
 			this.ReadOnly = true;
 			this.BackColor = Color.Red;
 		}
 	}
-	public class LookupView : Panel, IStrategy
-	{
-		private View View
-		{
-			get
-			{
-				return (View)Controls[0];
-			}
-			set
-			{
-				Controls.Clear();
-				value.Dock = DockStyle.Fill;
-				Controls.Add(value);
-			}
-		}
-		public Map GetMap()
-		{
-			return new StrategyMap(CodeKeys.Lookup, View.GetMap());
-		}
-		public LookupView(Map map)
-			: this(new View(map[CodeKeys.Lookup]))
-		{
-		}
-		public LookupView(View view)
-		{
-			this.Dock = DockStyle.Fill;
-			this.View = view;
-			//this.View = new View(view);
-			this.BackColor = Color.Orange;
-			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.AutoSize = true;
-			this.Size = new Size(10, 10);
-			view.Controls[0].Focus();
-		}
-	}
+	//public class LookupView : Panel, IStrategy
+	//{
+	//    private View View
+	//    {
+	//        get
+	//        {
+	//            return (View)Controls[0];
+	//        }
+	//        set
+	//        {
+	//            Controls.Clear();
+	//            value.Dock = DockStyle.Fill;
+	//            Controls.Add(value);
+	//        }
+	//    }
+	//    public Map GetMap()
+	//    {
+	//        return new StrategyMap(CodeKeys.Lookup, View.GetMap());
+	//    }
+	//    public LookupView(Map map)
+	//        : this(new View(map[CodeKeys.Lookup]))
+	//    {
+	//    }
+	//    public LookupView(View view)
+	//    {
+	//        this.Dock = DockStyle.Fill;
+	//        this.View = view;
+	//        //this.View = new View(view);
+	//        this.BackColor = Color.Orange;
+	//        this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+	//        this.AutoSize = true;
+	//        this.Size = new Size(10, 10);
+	//        view.Controls[0].Focus();
+	//    }
+	//}
 	public class NumberView : MaskedTextBox, IStrategy
 	{
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			e.SuppressKeyPress = !char.IsDigit(Convert.ToChar(e.KeyValue)) || !char.IsControl(Convert.ToChar(e.KeyValue));
+			//e.SuppressKeyPress = !char.IsDigit(Convert.ToChar(e.KeyValue)) || !char.IsControl(Convert.ToChar(e.KeyData));
 			base.OnKeyDown(e);
 		}
 		private Number number;
 		public NumberView(Number number)
 		{
-			new Extender(this);
+			this.Width = 50;
+			new ViewExtender(this);
 			this.BackColor = Color.LightCyan;
 			this.number = number;
 			this.Text = number.ToString();
@@ -381,35 +408,47 @@ namespace Editor
 			return new StrategyMap(Convert.ToInt32(this.Text));
 		}
 	}
-	public class MapView : TreeListView, IStrategy
+	public class MapView : ContainerListView, IStrategy
 	{
 		public MapView()
 		{
-			this.Size = new Size(10, 10);
-			this.Columns.Add("", 0, HorizontalAlignment.Left);
-			this.Columns.Add("", 100, HorizontalAlignment.Left);
-			this.Columns.Add("", 200, HorizontalAlignment.Left);
-			this.SelectedIndexChanged += new EventHandler(MapView_SelectedIndexChanged);
-
+			//this.ShowLines = true;
+			this.RowSelectColor = Color.Green;
+			this.GridLines = true;
+			this.GridLineColor = Color.Black;
+			this.FullRowSelect = true;
+			this.ColumnTracking = true;
+			this.RowTracking = true;
+			this.RowTrackColor = Color.Gray;
+			this.ColumnTrackColor = Color.Gray;
 			KeyMapper m = new KeyMapper(this);
+			this.Size = new Size(10, 10);
+			this.Columns.Add("", 20, HorizontalAlignment.Left);
+			this.Columns.Add("", 60, HorizontalAlignment.Left);
+			this.Columns.Add("", 60, HorizontalAlignment.Left);
+			this.SelectedIndexChanged += new EventHandler(MapView_SelectedIndexChanged);
+			new ViewExtender(this);
+
 			m[Keys.Enter | Keys.Control] = delegate
 			{
-				AddNode(new EntryNode("", "", this));
-				//Nodes.Add(new EntryNode("", "", this));
-				//this.Invalidate();
+				AddNode(new EntryNode(new View(new StringView("")),new View(new StringView(""))));
 			};
-			m[Keys.Enter | Keys.Control | Keys.Shift] = delegate
+			m[Keys.Control|Keys.Delete] = delegate
 			{
-				AddNode(new FunctionNode(Map.Empty, this));
+				//if (SelectedNodes[0] != null)
+				//{
+				//    Nodes.Remove(SelectedNodes[0]);
+				//    Invalidate();
+				//}
 			};
 		}
 		void MapView_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (SelectedNodes.Count != 0)
-			{
-				TreeListNode node = SelectedNodes[0];
-				node.SubItems[0].ItemControl.Focus();
-			}
+			//if (SelectedNodes.Count != 0)
+			//{
+			//    TreeListNode node = SelectedNodes[0];
+			//    node.SubItems[0].ItemControl.Focus();
+			//}
 		}
 		private void AddNode(EntryBaseNode node)
 		{
@@ -421,54 +460,67 @@ namespace Editor
 				}
 			};
 			this.Invalidate();
-			Nodes.Add(node);
+			Items.Add(node);
+			//Nodes.Add(node);
 		}
 		public MapView(Map map)
 			: this()
 		{
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				//TreeListNode node;
-				if (pair.Key.Equals(CodeKeys.Function))
-				{
-				    AddNode(new FunctionNode(pair.Value,this));
-				}
-				else
-				{
-					AddNode(new EntryNode(pair.Key, pair.Value, this));
-				}
-				//this.Nodes.Add(node);
+				AddNode(new EntryNode(pair.Key, pair.Value));
 			}
 		}
 		public virtual Map GetMap()
 		{
 			Map map = new StrategyMap();
-			foreach (TreeListNode node in nodes)
+			foreach (ContainerListViewItem node in Items)
 			{
-				Map key = ((EntryBaseNode)node).GetKey();
-				Map value = ((EntryBaseNode)node).GetValue();
-				map[key] = value;
+				//Map key = ((EntryBaseNode)node).GetKey();
+				//Map value = ((EntryBaseNode)node).GetValue();
+				//map[key] = value;
 			}
+
+			//foreach (TreeListNode node in nodes)
+			//{
+			//    Map key = ((EntryBaseNode)node).GetKey();
+			//    Map value = ((EntryBaseNode)node).GetValue();
+			//    map[key] = value;
+			//}
 			return map;
 		}
 	}
-	public class Extender
+	public class ViewExtender
 	{
-	    public Extender(Control control)
+	    public ViewExtender(Control control)
 	    {
 			control.GotFocus+=delegate
 			{
-				//foreach (TreeListNode node in ((MapView)control.Parent.Parent).Nodes)
-				//{
-				//    Control c=node.SubItems[1].ItemControl;
-				//    if (c is IStrategy)
-				//    {
-				//        if (c.Size.Height > 30)
-				//        {
-				//            c.Controls[0].Size = new Size(10, 10);
-				//        }
-				//    }
-				//}
+				if (control.Size.Width < 20)
+				{
+					control.Size = new Size(800, 600);
+				}
+				if (control.Parent.Parent is TreeListView)
+				{
+					TreeListView view=((TreeListView)control.Parent.Parent);
+					TreeListNode selected=null;
+					foreach (TreeListNode node in view.Nodes)
+					{
+						Control key=node.SubItems[0].ItemControl;
+						Control value=node.SubItems[1].ItemControl;
+						if (object.ReferenceEquals(key,control.Parent)||
+							object.ReferenceEquals(value, control.Parent))
+						{
+							selected = node;
+							break;
+						}
+					}
+					view.SelectedNodes.Clear();
+					if (selected != null)
+					{
+						view.SelectedNodes.Add(selected);
+					}
+				}
 			};
 			KeyMapper m = new KeyMapper(control);
 			m[Keys.Down] = delegate
@@ -482,16 +534,16 @@ namespace Editor
 					}
 					else if (c.Parent is MapView)
 					{
-						TreeListNode node=((MapView)c.Parent).SelectedNodes[0];
-						if (node != null)
-						{
-							TreeListNode sibling = (TreeListNode)node.NextSibling();
-							if (sibling != null)
-							{
-								node.Selected = false;
-								sibling.Selected = true;
-							}
-						}
+						//TreeListNode node=((MapView)c.Parent).SelectedNodes[0];
+						//if (node != null)
+						//{
+						//    TreeListNode sibling = (TreeListNode)node.NextSibling();
+						//    if (sibling != null)
+						//    {
+						//        node.Selected = false;
+						//        sibling.Selected = true;
+						//    }
+						//}
 					}
 					c = c.Parent;
 				}
@@ -505,10 +557,13 @@ namespace Editor
 		{
 			control.KeyDown += delegate(object sender, KeyEventArgs e)
 			{
-				if (!e.Handled && ContainsKey(e.KeyData))
+				if (ContainsKey(e.KeyData))
 				{
-					e.Handled = true;
-					this[e.KeyData]();
+					if (!e.Handled)
+					{
+						e.Handled = true;
+						this[e.KeyData]();
+					}
 				}
 			};
 		}

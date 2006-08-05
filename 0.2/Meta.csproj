@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\sendMail.meta" />
+    <None Include="Test\Copy %284%29 of basicTest.meta" />
     <None Include="Test\Copy of editTest.meta" />
     <None Include="Test\editTest.meta" />
   </ItemGroup>
