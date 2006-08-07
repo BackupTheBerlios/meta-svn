@@ -69,7 +69,7 @@ namespace Edit
 		private void UseMapView()
 		{
 			MapView view=new MapView();
-			view.NewEntry(0);
+			//view.NewEntry(0);
 			Strategy = view;
 		}
 		private static IView GetView(Map map)
@@ -86,13 +86,29 @@ namespace Edit
 			{
 				return new StringView(map.GetString());
 			}
-			//else if (map.Count == 1)
-			//{
-			//    if (map.ContainsKey(CodeKeys.Call))
-			//    {
-			//        return new CallView(map[CodeKeys.Call]);
-			//    }
-			//}
+			else if (map.Count == 1)
+			{
+				if (map.ContainsKey(CodeKeys.Call))
+				{
+					return new CallView(map[CodeKeys.Call]);
+				}
+				else if (map.ContainsKey(CodeKeys.Literal))
+				{
+					return new LiteralView(map);
+				}
+				else if (map.ContainsKey(CodeKeys.Search))
+				{
+					return new SearchView(map);
+				}
+				else if (map.ContainsKey(CodeKeys.Lookup))
+				{
+					return new LookupView(map);
+				}
+				else if (map.ContainsKey(CodeKeys.Select))
+				{
+					return new SelectView(map);
+				}
+			}
 			return new MapView(map);
 		}
 		public View(Map map):this(GetView(map))
@@ -108,6 +124,18 @@ namespace Edit
             s[Key.E] = UseEmptyView;
             s[Key.N] = UseNumberView;
 			s[Key.M] = UseMapView;
+			s[Key.F] = delegate
+			{
+				Strategy = new SearchView(new View(new StringView()));
+			};
+			s[Key.A] = delegate
+			{
+				//Strategy = new SelectView();
+			};
+			s[Key.C] = delegate
+			{
+				//Strategy = new CallView();
+			};
         }
     }
 	public class FunctionView : EntryBase
@@ -134,14 +162,113 @@ namespace Edit
 			Second = expression;
 		}
 	}
+	public class LookupView: SingleReal
+	{
+		protected override Map Key
+		{
+			get 
+			{
+				return CodeKeys.Lookup;
+			}
+		}
+		public LookupView(Map map)
+			: base(map)
+		{
+			this.Background = Brushes.MistyRose;
+		}
+	}
+	public class SearchView : SingleReal
+	{
+		protected override Map Key
+		{
+			get 
+			{
+				return CodeKeys.Search;
+			}
+		}
+		public SearchView(View view)
+			: base(view)
+		{
+		}
+		public SearchView(Map map):base(map)
+		{
+			this.Background = Brushes.DeepSkyBlue;
+		}
+	}
+	public class LiteralView : SingleReal
+	{
+		protected override Map Key
+		{
+			get 
+			{
+				return CodeKeys.Literal;
+			}
+		}
+		public LiteralView(Map map)
+			: base(map)
+		{
+			this.Background = Brushes.DarkViolet;
+		}
+	}
+	public abstract class SingleReal:SingleBase,IView
+	{
+		protected abstract Map Key
+		{
+			get;
+		}
+		public Map GetMap()
+		{
+			return new StrategyMap(Key, this.View.GetMap());
+
+		}
+		public SingleReal():base()
+		{
+			this.Orientation = Orientation.Horizontal;
+			this.Margin = new Thickness(5);
+		}
+		public SingleReal(View view):this()
+		{
+			View = view;
+		}
+		public SingleReal(Map map): this()
+		{
+			View=new View(map[Key]);
+		}
+	}
+	public abstract class SingleBase : StackPanel
+	{
+		protected View View
+		{
+			get
+			{
+				return (View)Children[0];
+			}
+			set
+			{
+				Children.Clear();
+				Children.Add(value);
+			}
+		}
+		public SingleBase()
+		{
+			this.Focusable = true;
+		}
+
+		public SingleBase(View view):this()
+		{
+			this.Children.Add(view);
+		}
+	}
 	public class CallView : TwoBase,IView
 	{
 		public Map GetMap()
 		{
-			return new StrategyMap(1, First.GetMap(), 2, Second.GetMap());
+			return new StrategyMap(CodeKeys.Call, new StrategyMap(1, First.GetMap(), 2, Second.GetMap()));
 		}
 		public CallView(Map map)
 		{
+			this.Background = Brushes.BurlyWood;
+			this.Margin = new Thickness(3);
 			First = new View(map[1]);
 			Second = new View(map[2]);
 		}
@@ -192,6 +319,47 @@ namespace Edit
 			view.NewFunction(view.Children.IndexOf(this) + 1);
 		}
 	}
+	public class SelectView : ListBase
+	{
+		public SelectView(Map map)
+			: base(map, CodeKeys.Select)
+		{
+			this.Background = Brushes.Chocolate;
+		}
+	}
+	public abstract class ListBase : StackPanel,IView
+	{
+		public Map GetMap()
+		{
+			Map map = new StrategyMap();
+			foreach(View view in Children)
+			{
+				map.Append(view.GetMap());
+			}
+			return new StrategyMap(key, map);
+		}
+		private Map key;
+		public ListBase(Map map,Map key)
+		{
+			this.key = key;
+			foreach (Map m in map[key].Array)
+			{
+				Children.Add(new View(m));
+			}
+		}
+		//public List<View> Views
+		//{
+		//    get
+		//    {
+		//        List<View> views = new List<View>();
+		//        foreach (View view in Children)
+		//        {
+		//            views.Add(view);
+		//        }
+		//        return views;
+		//    }
+		//}
+	}
 	public abstract class TwoBase: StackPanel
 	{
 		public void FocusFirst()
@@ -202,6 +370,7 @@ namespace Edit
 		public TwoBase()
 		{
 			this.Focusable = true;
+			this.Orientation = Orientation.Vertical;
 		}
 		protected View First
 		{
@@ -311,8 +480,9 @@ namespace Edit
             }
             return map;
         }
-		public MapView():this(Map.Empty)
+		public MapView()
 		{
+			this.NewEntry(0);
 		}
 		public void NewFunction(int index)
 		{
@@ -330,6 +500,7 @@ namespace Edit
         {
 			this.Focusable = true;
             this.Background = Brushes.LightBlue;
+			this.Margin = new Thickness(5);
             this.Orientation = Orientation.Vertical;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
