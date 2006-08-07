@@ -100,9 +100,6 @@
     <Compile Include="Meta.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="test.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\call.meta" />

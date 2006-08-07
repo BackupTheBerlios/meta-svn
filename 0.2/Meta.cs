@@ -1460,15 +1460,15 @@ namespace Meta
 		public DirectoryMap(DirectoryInfo directory)
 		{
 			this.directory = directory;
-			if (directory.Root.FullName!=directory.FullName)
-			//if (directory.Parent != null)
-			{
-				FileSystemWatcher watcher = new FileSystemWatcher(directory.FullName, "*.*");
-				watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-				watcher.Created += new FileSystemEventHandler(watcher_Created);
-				watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
-				watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
-			}
+			//if (directory.Root.FullName!=directory.FullName)
+			////if (directory.Parent != null)
+			//{
+			//    FileSystemWatcher watcher = new FileSystemWatcher(directory.FullName, "*.*");
+			//    watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+			//    watcher.Created += new FileSystemEventHandler(watcher_Created);
+			//    watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
+			//    watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+			//}
 		}
 
 		void watcher_Renamed(object sender, RenamedEventArgs e)
@@ -1500,29 +1500,36 @@ namespace Meta
 		}
 		private Dictionary<string,string> GetKeys()
 		{
-			Dictionary<string, string> keys = new Dictionary<string, string>();
-			//Dictionary<Map, string> keys = new Dictionary<Map, string>();
-			foreach (DirectoryInfo subdir in directory.GetDirectories())
+			try
 			{
-				if (!subdir.Name.StartsWith("."))
+				Dictionary<string, string> keys = new Dictionary<string, string>();
+				//Dictionary<Map, string> keys = new Dictionary<Map, string>();
+				foreach (DirectoryInfo subdir in directory.GetDirectories())
 				{
-					keys[subdir.Name] = "";
+					if (!subdir.Name.StartsWith("."))
+					{
+						keys[subdir.Name] = "";
+					}
 				}
+				foreach (FileInfo file in directory.GetFiles("*.*"))
+				{
+					string fileName;
+					if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
+					{
+						fileName = Path.GetFileNameWithoutExtension(file.FullName);
+					}
+					else
+					{
+						fileName = file.Name;
+					}
+					keys[fileName] = "";
+				}
+				return keys;
 			}
-			foreach (FileInfo file in directory.GetFiles("*.*"))
+			catch (Exception e)
 			{
-				string fileName;
-				if (file.Extension == ".meta" || file.Extension == ".dll" || file.Extension == ".exe")
-				{
-					fileName = Path.GetFileNameWithoutExtension(file.FullName);
-				}
-				else
-				{
-					fileName = file.Name;
-				}
-				keys[fileName]="";
+				throw e;
 			}
-			return keys;
 		}
 		protected override ICollection<Map> KeysImplementation
 		{
@@ -1895,7 +1902,7 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"D:\Meta\0.2\";
+		private static string installationPath = @"C:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
@@ -5362,6 +5369,7 @@ namespace Meta
 		public static Map Deserialize(string path)
 		{
 			using (FileStream stream = File.Open(path, FileMode.Open))
+			
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
 				object obj=formatter.Deserialize(stream);
@@ -6812,7 +6820,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta"));
+					return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
 					//return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 				}
 			}
@@ -6836,7 +6844,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\basicTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
 			public class Library : Test
@@ -6844,7 +6852,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\libraryTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
 			//public class Extents : Test
