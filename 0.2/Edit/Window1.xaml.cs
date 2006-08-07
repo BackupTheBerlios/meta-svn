@@ -86,6 +86,13 @@ namespace Edit
 			{
 				return new StringView(map.GetString());
 			}
+			//else if (map.Count == 1)
+			//{
+			//    if (map.ContainsKey(CodeKeys.Call))
+			//    {
+			//        return new CallView(map[CodeKeys.Call]);
+			//    }
+			//}
 			return new MapView(map);
 		}
 		public View(Map map):this(GetView(map))
@@ -110,8 +117,7 @@ namespace Edit
 			return new KeyValuePair<Map, Map>(
 				CodeKeys.Function,
 				new StrategyMap(
-					CodeKeys.Parameter,
-						new StrategyMap(CodeKeys.Literal, First.GetMap()),
+					CodeKeys.Parameter, First.GetMap(),
 					CodeKeys.Expression,Second.GetMap()));
 
 		}
@@ -128,11 +134,16 @@ namespace Edit
 			Second = expression;
 		}
 	}
-	public class Call : StackPanel
+	public class CallView : TwoBase,IView
 	{
-		public Call(
-		public Call(Map map)
+		public Map GetMap()
 		{
+			return new StrategyMap(1, First.GetMap(), 2, Second.GetMap());
+		}
+		public CallView(Map map)
+		{
+			First = new View(map[1]);
+			Second = new View(map[2]);
 		}
 	}
 	public class EntryView: EntryBase
@@ -151,55 +162,20 @@ namespace Edit
             Second = value;
         }
 	}
-    public abstract class EntryBase : StackPanel
-    {
-		public void FocusFirst()
-		{
-			this.Focus();
-			First.Focus();
-		}
+	public abstract class EntryBase : TwoBase
+	{
 		public abstract KeyValuePair<Map, Map> GetPair();
-        public EntryBase()
-        {
-            this.Background = Brushes.Yellow;
-            this.Orientation = Orientation.Horizontal;
-			this.Focusable=true;
+		public EntryBase():base()
+		{
+			this.Background = Brushes.Yellow;
+			this.Orientation = Orientation.Horizontal;
+
 			KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
 			s[System.Windows.Input.Key.Enter] = NewEntry;
 			s[System.Windows.Input.Key.Delete] = Delete;
 			KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
 			m[System.Windows.Input.Key.Enter] = NewFunction;
-        }
-        protected View First
-        {
-            get
-            {
-                return (View)Children[0];
-            }
-            set
-            {
-                if (Children.Count >= 1)
-                {
-                    Children.RemoveAt(0);
-                }
-                Children.Insert(0, value);
-            }
-        }
-        protected View Second
-        {
-            get
-            {
-                return (View)Children[1];
-            }
-            set
-            {
-                if (Children.Count >= 2)
-                {
-                    Children.RemoveAt(1);
-                }
-                Children.Insert(1, value);
-            }
-        }
+		}
 		private void Delete()
 		{
 			MapView view = (MapView)Parent;
@@ -215,7 +191,114 @@ namespace Edit
 			MapView view = ((MapView)Parent);
 			view.NewFunction(view.Children.IndexOf(this) + 1);
 		}
-    }
+	}
+	public abstract class TwoBase: StackPanel
+	{
+		public void FocusFirst()
+		{
+			this.Focus();
+			First.Focus();
+		}
+		public TwoBase()
+		{
+			this.Focusable = true;
+		}
+		protected View First
+		{
+			get
+			{
+				return (View)Children[0];
+			}
+			set
+			{
+				if (Children.Count >= 1)
+				{
+					Children.RemoveAt(0);
+				}
+				Children.Insert(0, value);
+			}
+		}
+		protected View Second
+		{
+			get
+			{
+				return (View)Children[1];
+			}
+			set
+			{
+				if (Children.Count >= 2)
+				{
+					Children.RemoveAt(1);
+				}
+				Children.Insert(1, value);
+			}
+		}
+	}
+	//public abstract class EntryBase : StackPanel
+	//{
+	//    public void FocusFirst()
+	//    {
+	//        this.Focus();
+	//        First.Focus();
+	//    }
+	//    public abstract KeyValuePair<Map, Map> GetPair();
+	//    public EntryBase()
+	//    {
+	//        this.Background = Brushes.Yellow;
+	//        this.Orientation = Orientation.Horizontal;
+	//        this.Focusable=true;
+	//        KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
+	//        s[System.Windows.Input.Key.Enter] = NewEntry;
+	//        s[System.Windows.Input.Key.Delete] = Delete;
+	//        KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
+	//        m[System.Windows.Input.Key.Enter] = NewFunction;
+	//    }
+	//    protected View First
+	//    {
+	//        get
+	//        {
+	//            return (View)Children[0];
+	//        }
+	//        set
+	//        {
+	//            if (Children.Count >= 1)
+	//            {
+	//                Children.RemoveAt(0);
+	//            }
+	//            Children.Insert(0, value);
+	//        }
+	//    }
+	//    protected View Second
+	//    {
+	//        get
+	//        {
+	//            return (View)Children[1];
+	//        }
+	//        set
+	//        {
+	//            if (Children.Count >= 2)
+	//            {
+	//                Children.RemoveAt(1);
+	//            }
+	//            Children.Insert(1, value);
+	//        }
+	//    }
+	//    private void Delete()
+	//    {
+	//        MapView view = (MapView)Parent;
+	//        view.Children.Remove(this);
+	//    }
+	//    private void NewEntry()
+	//    {
+	//        MapView view = ((MapView)Parent);
+	//        view.NewEntry(view.Children.IndexOf(this) + 1);
+	//    }
+	//    private void NewFunction()
+	//    {
+	//        MapView view = ((MapView)Parent);
+	//        view.NewFunction(view.Children.IndexOf(this) + 1);
+	//    }
+	//}
     public class MapView : StackPanel,IView
     {
         public Map GetMap()
