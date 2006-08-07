@@ -108,6 +108,7 @@ namespace Edit
         {
             this.Background = Brushes.Yellow;
             this.Orientation = Orientation.Horizontal;
+			this.Focusable=true;
         }
         public View Key
         {
@@ -149,7 +150,13 @@ namespace Edit
             Value = value;
             KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
             s[System.Windows.Input.Key.Enter] = NewEntry;
+			s[System.Windows.Input.Key.Delete] = Delete;
         }
+		private void Delete()
+		{
+			MapView view = (MapView)Parent;
+			view.Children.Remove(this);
+		}
 		private void NewEntry()
 		{
 			MapView view = ((MapView)Parent);
@@ -178,17 +185,12 @@ namespace Edit
 		}
         public MapView(Map map)
         {
+			this.Focusable = true;
             this.Background = Brushes.LightBlue;
             this.Orientation = Orientation.Vertical;
-			try
+			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				foreach (KeyValuePair<Map, Map> pair in map)
-				{
-					this.Children.Add(new EntryView(pair.Key, pair.Value));
-				}
-			}
-			catch (Exception e)
-			{
+				this.Children.Add(new EntryView(pair.Key, pair.Value));
 			}
         }
     }
