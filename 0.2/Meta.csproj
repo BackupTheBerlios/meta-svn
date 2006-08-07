@@ -76,6 +76,7 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Prodige.Drawing, Version=4.0.2813.1410, Culture=neutral, PublicKeyToken=81f0619c9a6f826c, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -98,6 +99,9 @@
     </Compile>
     <Compile Include="Meta.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="test.cs">
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
