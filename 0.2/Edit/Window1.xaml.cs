@@ -96,21 +96,81 @@ namespace Edit
             this.Strategy=view;
             KeyboardShortcuts s=new KeyboardShortcuts(this,ModifierKeys.Alt);
 
+
             s[Key.S] = UseStringView;
             s[Key.E] = UseEmptyView;
             s[Key.N] = UseNumberView;
 			s[Key.M] = UseMapView;
         }
     }
-    public class EntryView : StackPanel
+	public class FunctionView : EntryBase
+	{
+		public override KeyValuePair<Map, Map> GetPair()
+		{
+			return new KeyValuePair<Map, Map>(
+				CodeKeys.Function,
+				new StrategyMap(
+					CodeKeys.Parameter,
+						new StrategyMap(CodeKeys.Literal, First.GetMap()),
+					CodeKeys.Expression,Second.GetMap()));
+
+		}
+		public FunctionView(Map map):this(map[CodeKeys.Parameter].GetString(),new View(map[CodeKeys.Expression]))
+		{
+		}
+		public FunctionView():base()
+		{
+			this.Background = Brushes.Azure;
+		}
+		public FunctionView(string parameter, View expression):this()
+		{
+			First = new View(new StringView(parameter));
+			Second = expression;
+		}
+	}
+	public class Call : StackPanel
+	{
+		public Call(
+		public Call(Map map)
+		{
+		}
+	}
+	public class EntryView: EntryBase
+	{
+		public override KeyValuePair<Map, Map> GetPair()
+		{
+			return new KeyValuePair<Map, Map>(First.GetMap(), Second.GetMap());
+		}
+        public EntryView(Map key, Map value)
+            : this(new View(key),new View(value))
+        {
+        }
+        public EntryView(View key, View value):base()
+        {
+            First = key;
+            Second = value;
+        }
+	}
+    public abstract class EntryBase : StackPanel
     {
-        public EntryView()
+		public void FocusFirst()
+		{
+			this.Focus();
+			First.Focus();
+		}
+		public abstract KeyValuePair<Map, Map> GetPair();
+        public EntryBase()
         {
             this.Background = Brushes.Yellow;
             this.Orientation = Orientation.Horizontal;
 			this.Focusable=true;
+			KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
+			s[System.Windows.Input.Key.Enter] = NewEntry;
+			s[System.Windows.Input.Key.Delete] = Delete;
+			KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
+			m[System.Windows.Input.Key.Enter] = NewFunction;
         }
-        public View Key
+        protected View First
         {
             get
             {
@@ -125,7 +185,7 @@ namespace Edit
                 Children.Insert(0, value);
             }
         }
-        public View Value
+        protected View Second
         {
             get
             {
@@ -140,18 +200,6 @@ namespace Edit
                 Children.Insert(1, value);
             }
         }
-        public EntryView(Map key, Map value)
-            : this(new View(key),new View(value))
-        {
-        }
-        public EntryView(View key, View value):this()
-        {
-            Key = key;
-            Value = value;
-            KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
-            s[System.Windows.Input.Key.Enter] = NewEntry;
-			s[System.Windows.Input.Key.Delete] = Delete;
-        }
 		private void Delete()
 		{
 			MapView view = (MapView)Parent;
@@ -162,26 +210,38 @@ namespace Edit
 			MapView view = ((MapView)Parent);
 			view.NewEntry(view.Children.IndexOf(this) + 1);
 		}
+		private void NewFunction()
+		{
+			MapView view = ((MapView)Parent);
+			view.NewFunction(view.Children.IndexOf(this) + 1);
+		}
     }
     public class MapView : StackPanel,IView
     {
         public Map GetMap()
         {
             Map map=new StrategyMap();
-            foreach (EntryView entry in Children)
+            foreach (EntryBase entry in Children)
             {
-                map[entry.Key.GetMap()] = entry.Value.GetMap();
+				KeyValuePair<Map,Map> pair=entry.GetPair();
+                map[pair.Key] = pair.Value;
             }
             return map;
         }
 		public MapView():this(Map.Empty)
 		{
 		}
+		public void NewFunction(int index)
+		{
+			EntryBase entry = new FunctionView("arg",new View(new MapView()));
+			Children.Insert(index, entry);
+			entry.FocusFirst();
+		}
 		public void NewEntry(int index)
 		{
-			EntryView entry = new EntryView(new View(new StringView()), new View(new StringView()));
+			EntryBase entry = new EntryView(new View(new StringView()), new View(new StringView()));
 			Children.Insert(index, entry);
-			entry.Key.Children[0].Focus();
+			entry.FocusFirst();
 		}
         public MapView(Map map)
         {
@@ -190,7 +250,16 @@ namespace Edit
             this.Orientation = Orientation.Vertical;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				this.Children.Add(new EntryView(pair.Key, pair.Value));
+				EntryBase entry;
+				if (pair.Key.Equals(CodeKeys.Function))
+				{
+					entry = new FunctionView(pair.Value);
+				}
+				else
+				{
+					entry = new EntryView(pair.Key, pair.Value);
+				}
+				this.Children.Add(entry);
 			}
         }
     }
@@ -279,7 +348,19 @@ namespace Edit
         }
         private void Load()
         {
-            MainView = new MapView(Binary.Deserialize(path));
+			Map map = Binary.Deserialize(path);
+			////List<Map> keys=new List<Map>();
+			//int count = 0;
+			//Map realMap = new StrategyMap();
+			//foreach (Map key in map.Keys)
+			//{
+			//    if (count != 1)
+			//    {
+			//        realMap[key] = map[key];
+			//    }
+			//    count++;
+			//}
+            MainView = new MapView(map);
         }
         private string path;
         private void SaveAs()
