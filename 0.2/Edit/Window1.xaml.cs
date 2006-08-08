@@ -15,575 +15,623 @@ using Microsoft.Win32;
 
 namespace Edit
 {
-    public interface IView
-    {
-        Map GetMap();
-    }
-    public class EmptyView : TextBox, IView
-    {
-        public Map GetMap()
-        {
-            return Map.Empty;
-        }
-        public EmptyView()
-        {
-            this.Background = Brushes.Red;
-            this.PreviewTextInput += new TextCompositionEventHandler(EmptyView_PreviewTextInput);
-        }
-
-        void EmptyView_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = true;
-        }
-    }
-    public class View : StackPanel
-    {
-        public Map GetMap()
-        {
-            return Strategy.GetMap();
-        }
-        private IView Strategy
-        {
-            get
-            {
-                return (IView)this.Children[0];
-            }
-            set
-            {
-                this.Children.Clear();
-                this.Children.Add((UIElement)value);
-            }
-        }
-        private void UseEmptyView()
-        {
-            Strategy = new EmptyView();
-        }
-        private void UseStringView()
-        {
-            Strategy = new StringView("");
-        }
-        private void UseNumberView()
-        {
-            Strategy = new NumberView();
-        }
-		private void UseMapView()
+	public partial class Window1 : System.Windows.Window
+	{
+		public interface IView
 		{
-			MapView view=new MapView();
-			//view.NewEntry(0);
-			Strategy = view;
+			Map GetMap();
 		}
-		private static IView GetView(Map map)
+		public class EmptyView : TextBox, IView
 		{
-			if(map.Count==0)
+			public Map GetMap()
 			{
-				return new EmptyView();
+				return Map.Empty;
 			}
-			else if (map.IsNumber)
+			public EmptyView()
 			{
-				return new NumberView(map.GetNumber());
+				this.Background = Brushes.Red;
+				this.PreviewTextInput += new TextCompositionEventHandler(EmptyView_PreviewTextInput);
 			}
-			else if (map.IsString)
+
+			void EmptyView_PreviewTextInput(object sender, TextCompositionEventArgs e)
 			{
-				return new StringView(map.GetString());
+				e.Handled = true;
 			}
-			else if (map.Count == 1)
+		}
+		public class View : StackPanel
+		{
+			public Map GetMap()
 			{
-				if (map.ContainsKey(CodeKeys.Call))
+				return Strategy.GetMap();
+			}
+			private IView Strategy
+			{
+				get
 				{
-					return new CallView(map[CodeKeys.Call]);
+					return (IView)this.Children[0];
 				}
-				else if (map.ContainsKey(CodeKeys.Literal))
+				set
 				{
-					return new LiteralView(map);
-				}
-				else if (map.ContainsKey(CodeKeys.Search))
-				{
-					return new SearchView(map);
-				}
-				else if (map.ContainsKey(CodeKeys.Lookup))
-				{
-					return new LookupView(map);
-				}
-				else if (map.ContainsKey(CodeKeys.Select))
-				{
-					return new SelectView(map);
+					this.Children.Clear();
+					this.Children.Add((UIElement)value);
 				}
 			}
-			return new MapView(map);
-		}
-		public View(Map map):this(GetView(map))
-		{
-		}
-        public View(IView view)
-        {
-            this.Strategy=view;
-            KeyboardShortcuts s=new KeyboardShortcuts(this,ModifierKeys.Alt);
+			private void UseEmptyView()
+			{
+				Strategy = new EmptyView();
+			}
+			private void UseStringView()
+			{
+				Strategy = new StringView("");
+			}
+			private void UseNumberView()
+			{
+				Strategy = new NumberView();
+			}
+			private void UseMapView()
+			{
+				MapView view=new MapView();
+				//view.NewEntry(0);
+				Strategy = view;
+			}
+			private static IView GetView(Map map)
+			{
+				if(map.Count==0)
+				{
+					return new EmptyView();
+				}
+				else if (map.IsNumber)
+				{
+					return new NumberView(map.GetNumber());
+				}
+				else if (map.IsString)
+				{
+					return new StringView(map.GetString());
+				}
+				else if (map.Count == 1)
+				{
+					if (map.ContainsKey(CodeKeys.Call))
+					{
+						return new CallView(map[CodeKeys.Call]);
+					}
+					else if (map.ContainsKey(CodeKeys.Literal))
+					{
+						return new LiteralView(map);
+					}
+					else if (map.ContainsKey(CodeKeys.Search))
+					{
+						return SearchView(map);
+						//return new SearchView(map);
+					}
+					else if (map.ContainsKey(CodeKeys.Lookup))
+					{
+						return new LookupView(map);
+					}
+					else if (map.ContainsKey(CodeKeys.Select))
+					{
+						return new SelectView(map);
+					}
+				}
+				return new MapView(map);
+			}
+			public View(Map map):this(GetView(map))
+			{
+			}
+			public View(IView view)
+			{
+				this.Strategy=view;
+				KeyboardShortcuts s=new KeyboardShortcuts(this,ModifierKeys.Alt);
 
 
-            s[Key.S] = UseStringView;
-            s[Key.E] = UseEmptyView;
-            s[Key.N] = UseNumberView;
-			s[Key.M] = UseMapView;
-			s[Key.F] = delegate
-			{
-				Strategy = new SearchView(new View(new StringView()));
-			};
-			s[Key.A] = delegate
-			{
-				//Strategy = new SelectView();
-			};
-			s[Key.C] = delegate
-			{
-				//Strategy = new CallView();
-			};
-        }
-    }
-	public class FunctionView : EntryBase
-	{
-		public override KeyValuePair<Map, Map> GetPair()
+				s[Key.S] = UseStringView;
+				s[Key.E] = UseEmptyView;
+				s[Key.N] = UseNumberView;
+				s[Key.M] = UseMapView;
+				s[Key.F] = delegate
+				{
+					//Strategy = SearchView(new View(new StringView()));
+					//Strategy = new SearchView(new View(new StringView()));
+				};
+				s[Key.A] = delegate
+				{
+					//Strategy = new SelectView();
+				};
+				s[Key.C] = delegate
+				{
+					//Strategy = new CallView();
+				};
+			}
+		}
+		public class FunctionView : EntryBase
 		{
-			return new KeyValuePair<Map, Map>(
-				CodeKeys.Function,
-				new StrategyMap(
-					CodeKeys.Parameter, First.GetMap(),
-					CodeKeys.Expression,Second.GetMap()));
+			public override KeyValuePair<Map, Map> GetPair()
+			{
+				return new KeyValuePair<Map, Map>(
+					CodeKeys.Function,
+					new StrategyMap(
+						CodeKeys.Parameter, First.GetMap(),
+						CodeKeys.Expression,Second.GetMap()));
 
-		}
-		public FunctionView(Map map):this(map[CodeKeys.Parameter].GetString(),new View(map[CodeKeys.Expression]))
-		{
-		}
-		public FunctionView():base()
-		{
-			this.Background = Brushes.Azure;
-		}
-		public FunctionView(string parameter, View expression):this()
-		{
-			First = new View(new StringView(parameter));
-			Second = expression;
-		}
-	}
-	public class LookupView: SingleReal
-	{
-		protected override Map Key
-		{
-			get 
+			}
+			public FunctionView(Map map):this(map[CodeKeys.Parameter].GetString(),new View(map[CodeKeys.Expression]))
 			{
-				return CodeKeys.Lookup;
+			}
+			public FunctionView():base()
+			{
+				this.Background = Brushes.Azure;
+			}
+			public FunctionView(string parameter, View expression):this()
+			{
+				First = new View(new StringView(parameter));
+				Second = expression;
 			}
 		}
-		public LookupView(Map map)
-			: base(map)
+		public class LookupView: SingleReal
 		{
-			this.Background = Brushes.MistyRose;
-		}
-	}
-	public class SearchView : SingleReal
-	{
-		protected override Map Key
-		{
-			get 
+			protected override Map Key
 			{
-				return CodeKeys.Search;
+				get 
+				{
+					return CodeKeys.Lookup;
+				}
+			}
+			public LookupView(Map map)
+				: base(map)
+			{
+				this.Background = Brushes.MistyRose;
 			}
 		}
-		public SearchView(View view)
-			: base(view)
+		public static ViewControl SearchView(Map map)
 		{
+			return SingleBase(map,CodeKeys.Search, Brushes.DeepSkyBlue);
 		}
-		public SearchView(Map map):base(map)
-		{
-			this.Background = Brushes.DeepSkyBlue;
-		}
-	}
-	public class LiteralView : SingleReal
-	{
-		protected override Map Key
-		{
-			get 
-			{
-				return CodeKeys.Literal;
-			}
-		}
-		public LiteralView(Map map)
-			: base(map)
-		{
-			this.Background = Brushes.DarkViolet;
-		}
-	}
-	public abstract class SingleReal:SingleBase,IView
-	{
-		protected abstract Map Key
-		{
-			get;
-		}
-		public Map GetMap()
-		{
-			return new StrategyMap(Key, this.View.GetMap());
-
-		}
-		public SingleReal():base()
-		{
-			this.Orientation = Orientation.Horizontal;
-			this.Margin = new Thickness(5);
-		}
-		public SingleReal(View view):this()
-		{
-			View = view;
-		}
-		public SingleReal(Map map): this()
-		{
-			View=new View(map[Key]);
-		}
-	}
-	public abstract class SingleBase : StackPanel
-	{
-		protected View View
-		{
-			get
-			{
-				return (View)Children[0];
-			}
-			set
-			{
-				Children.Clear();
-				Children.Add(value);
-			}
-		}
-		public SingleBase()
-		{
-			this.Focusable = true;
-		}
-
-		public SingleBase(View view):this()
-		{
-			this.Children.Add(view);
-		}
-	}
-	public class CallView : TwoBase,IView
-	{
-		public Map GetMap()
-		{
-			return new StrategyMap(CodeKeys.Call, new StrategyMap(1, First.GetMap(), 2, Second.GetMap()));
-		}
-		public CallView(Map map)
-		{
-			this.Background = Brushes.BurlyWood;
-			this.Margin = new Thickness(3);
-			First = new View(map[1]);
-			Second = new View(map[2]);
-		}
-	}
-	public class EntryView: EntryBase
-	{
-		public override KeyValuePair<Map, Map> GetPair()
-		{
-			return new KeyValuePair<Map, Map>(First.GetMap(), Second.GetMap());
-		}
-        public EntryView(Map key, Map value)
-            : this(new View(key),new View(value))
-        {
-        }
-        public EntryView(View key, View value):base()
-        {
-            First = key;
-            Second = value;
-        }
-	}
-	public abstract class EntryBase : TwoBase
-	{
-		public abstract KeyValuePair<Map, Map> GetPair();
-		public EntryBase():base()
-		{
-			this.Background = Brushes.Yellow;
-			this.Orientation = Orientation.Horizontal;
-
-			KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
-			s[System.Windows.Input.Key.Enter] = NewEntry;
-			s[System.Windows.Input.Key.Delete] = Delete;
-			KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
-			m[System.Windows.Input.Key.Enter] = NewFunction;
-		}
-		private void Delete()
-		{
-			MapView view = (MapView)Parent;
-			view.Children.Remove(this);
-		}
-		private void NewEntry()
-		{
-			MapView view = ((MapView)Parent);
-			view.NewEntry(view.Children.IndexOf(this) + 1);
-		}
-		private void NewFunction()
-		{
-			MapView view = ((MapView)Parent);
-			view.NewFunction(view.Children.IndexOf(this) + 1);
-		}
-	}
-	public class SelectView : ListBase
-	{
-		public SelectView(Map map)
-			: base(map, CodeKeys.Select)
-		{
-			this.Background = Brushes.Chocolate;
-		}
-	}
-	public abstract class ListBase : StackPanel,IView
-	{
-		public Map GetMap()
-		{
-			Map map = new StrategyMap();
-			foreach(View view in Children)
-			{
-				map.Append(view.GetMap());
-			}
-			return new StrategyMap(key, map);
-		}
-		private Map key;
-		public ListBase(Map map,Map key)
-		{
-			this.key = key;
-			foreach (Map m in map[key].Array)
-			{
-				Children.Add(new View(m));
-			}
-		}
-		//public List<View> Views
+		//public class SearchView : SingleReal
 		//{
-		//    get
+		//    protected override Map Key
 		//    {
-		//        List<View> views = new List<View>();
-		//        foreach (View view in Children)
+		//        get 
 		//        {
-		//            views.Add(view);
+		//            return CodeKeys.Search;
 		//        }
-		//        return views;
+		//    }
+		//    public SearchView(View view)
+		//        : base(view)
+		//    {
+		//    }
+		//    public SearchView(Map map):base(map)
+		//    {
+		//        this.Background = Brushes.DeepSkyBlue;
 		//    }
 		//}
-	}
-	public abstract class TwoBase: StackPanel
-	{
-		public void FocusFirst()
+		public class LiteralView : SingleReal
 		{
-			this.Focus();
-			First.Focus();
-		}
-		public TwoBase()
-		{
-			this.Focusable = true;
-			this.Orientation = Orientation.Vertical;
-		}
-		protected View First
-		{
-			get
+			protected override Map Key
 			{
-				return (View)Children[0];
-			}
-			set
-			{
-				if (Children.Count >= 1)
+				get 
 				{
-					Children.RemoveAt(0);
+					return CodeKeys.Literal;
 				}
-				Children.Insert(0, value);
 			}
-		}
-		protected View Second
-		{
-			get
+			public LiteralView(Map map)
+				: base(map)
 			{
-				return (View)Children[1];
+				this.Background = Brushes.DarkViolet;
 			}
-			set
+		}
+		public static ViewControl SingleBase(Map map, Map key,Brush b)
+		{
+			return SingleBase(new View(map[key]),key,b);
+		}
+		public static ViewControl SingleBase(View view, Map key,Brush b)
+		{
+			StackPanel panel = new StackPanel();
+			panel.Orientation = Orientation.Horizontal;
+			panel.Margin = new Thickness(5);
+			panel.Focusable = true;
+			panel.Background = b;
+			panel.Children.Add(view);
+			return new ViewControl(panel, delegate { return new StrategyMap(key, view.GetMap()); });
+		}
+		public delegate Map MapDelegate();
+		public class ViewControl:StackPanel,IView
+		{
+			private MapDelegate m;
+			public Map GetMap()
 			{
-				if (Children.Count >= 2)
-				{
-					Children.RemoveAt(1);
-				}
-				Children.Insert(1, value);
+				return m();
 			}
-		}
-	}
-	//public abstract class EntryBase : StackPanel
-	//{
-	//    public void FocusFirst()
-	//    {
-	//        this.Focus();
-	//        First.Focus();
-	//    }
-	//    public abstract KeyValuePair<Map, Map> GetPair();
-	//    public EntryBase()
-	//    {
-	//        this.Background = Brushes.Yellow;
-	//        this.Orientation = Orientation.Horizontal;
-	//        this.Focusable=true;
-	//        KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
-	//        s[System.Windows.Input.Key.Enter] = NewEntry;
-	//        s[System.Windows.Input.Key.Delete] = Delete;
-	//        KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
-	//        m[System.Windows.Input.Key.Enter] = NewFunction;
-	//    }
-	//    protected View First
-	//    {
-	//        get
-	//        {
-	//            return (View)Children[0];
-	//        }
-	//        set
-	//        {
-	//            if (Children.Count >= 1)
-	//            {
-	//                Children.RemoveAt(0);
-	//            }
-	//            Children.Insert(0, value);
-	//        }
-	//    }
-	//    protected View Second
-	//    {
-	//        get
-	//        {
-	//            return (View)Children[1];
-	//        }
-	//        set
-	//        {
-	//            if (Children.Count >= 2)
-	//            {
-	//                Children.RemoveAt(1);
-	//            }
-	//            Children.Insert(1, value);
-	//        }
-	//    }
-	//    private void Delete()
-	//    {
-	//        MapView view = (MapView)Parent;
-	//        view.Children.Remove(this);
-	//    }
-	//    private void NewEntry()
-	//    {
-	//        MapView view = ((MapView)Parent);
-	//        view.NewEntry(view.Children.IndexOf(this) + 1);
-	//    }
-	//    private void NewFunction()
-	//    {
-	//        MapView view = ((MapView)Parent);
-	//        view.NewFunction(view.Children.IndexOf(this) + 1);
-	//    }
-	//}
-    public class MapView : StackPanel,IView
-    {
-        public Map GetMap()
-        {
-            Map map=new StrategyMap();
-            foreach (EntryBase entry in Children)
-            {
-				KeyValuePair<Map,Map> pair=entry.GetPair();
-                map[pair.Key] = pair.Value;
-            }
-            return map;
-        }
-		public MapView()
-		{
-			this.NewEntry(0);
-		}
-		public void NewFunction(int index)
-		{
-			EntryBase entry = new FunctionView("arg",new View(new MapView()));
-			Children.Insert(index, entry);
-			entry.FocusFirst();
-		}
-		public void NewEntry(int index)
-		{
-			EntryBase entry = new EntryView(new View(new StringView()), new View(new StringView()));
-			Children.Insert(index, entry);
-			entry.FocusFirst();
-		}
-        public MapView(Map map)
-        {
-			this.Focusable = true;
-            this.Background = Brushes.LightBlue;
-			this.Margin = new Thickness(5);
-            this.Orientation = Orientation.Vertical;
-			foreach (KeyValuePair<Map, Map> pair in map)
+			public ViewControl(UIElement control,MapDelegate m)
 			{
-				EntryBase entry;
-				if (pair.Key.Equals(CodeKeys.Function))
-				{
-					entry = new FunctionView(pair.Value);
-				}
-				else
-				{
-					entry = new EntryView(pair.Key, pair.Value);
-				}
-				this.Children.Add(entry);
+				this.Children.Add(control);
+				this.m = m;
 			}
-        }
-    }
-    public class StringView : TextBox,IView
-    {
-        public Map GetMap()
-        {
-            return Text;
-        
-        }
-        public StringView():this("")
-        {
-        }
-        public StringView(string text)
-        {
-            this.Text = text;
-            this.Background = Brushes.Fuchsia;
-        }
-    }
-    public class NumberView : TextBox,IView
-    {
-        public Map GetMap()
-        {
-            return Convert.ToInt32(Text);
-        }
-        public NumberView(Number number)
-        {
-            this.Background = Brushes.LightYellow;
-            this.Text = number.ToString();
-            this.PreviewTextInput += new TextCompositionEventHandler(NumberView_PreviewTextInput);
-        }
+		}
 
-        void NumberView_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            foreach (char c in e.Text)
-            {
-                if (!char.IsDigit(c))
-                {
-                    e.Handled = true;
-                    break;
-                }
-            }
-        }
-        public NumberView():this(1)
-        {
-        }
-    }
-    public delegate void MethodInvoker();
-    public class KeyboardShortcuts:Dictionary<Key,MethodInvoker>
-    {
-        public KeyboardShortcuts(UIElement control,ModifierKeys modifier)
-        {
-            control.KeyDown += delegate(object sender, KeyEventArgs e)
-            {
-                if (ContainsKey(e.SystemKey) && e.KeyboardDevice.Modifiers==modifier)
-                {
-                    this[e.SystemKey]();
-					e.Handled = true;
-                }
-                else if (ContainsKey(e.Key) && e.KeyboardDevice.Modifiers == modifier)
-                {
-                    this[e.Key]();
-					e.Handled = true;
-                }
-            };
-        }
-    }
-    public partial class Window1 : System.Windows.Window
-    {
-        public void Run()
+		public abstract class SingleReal:StackPanel,IView
+		{
+			protected View View
+			{
+				get
+				{
+					return (View)Children[0];
+				}
+				set
+				{
+					Children.Clear();
+					Children.Add(value);
+				}
+			}
+			protected abstract Map Key
+			{
+				get;
+			}
+			public Map GetMap()
+			{
+				return new StrategyMap(Key, this.View.GetMap());
+
+			}
+			public SingleReal()
+			{
+				this.Orientation = Orientation.Horizontal;
+				this.Margin = new Thickness(5);
+				this.Focusable = true;
+			}
+			public SingleReal(View view):this()
+			{
+				View = view;
+			}
+			public SingleReal(Map map): this()
+			{
+				View=new View(map[Key]);
+			}
+		}
+		//public abstract class SingleBase : StackPanel
+		//{
+		//    protected View View
+		//    {
+		//        get
+		//        {
+		//            return (View)Children[0];
+		//        }
+		//        set
+		//        {
+		//            Children.Clear();
+		//            Children.Add(value);
+		//        }
+		//    }
+		//    public SingleBase()
+		//    {
+		//        this.Focusable = true;
+		//    }
+
+		//    public SingleBase(View view):this()
+		//    {
+		//        this.Children.Add(view);
+		//    }
+		//}
+		public class CallView : TwoBase,IView
+		{
+			public Map GetMap()
+			{
+				return new StrategyMap(CodeKeys.Call, new StrategyMap(1, First.GetMap(), 2, Second.GetMap()));
+			}
+			public CallView(Map map)
+			{
+				this.Background = Brushes.BurlyWood;
+				this.Margin = new Thickness(3);
+				First = new View(map[1]);
+				Second = new View(map[2]);
+			}
+		}
+		public class EntryView: EntryBase
+		{
+			public override KeyValuePair<Map, Map> GetPair()
+			{
+				return new KeyValuePair<Map, Map>(First.GetMap(), Second.GetMap());
+			}
+			public EntryView(Map key, Map value)
+				: this(new View(key),new View(value))
+			{
+			}
+			public EntryView(View key, View value):base()
+			{
+				First = key;
+				Second = value;
+			}
+		}
+		public abstract class EntryBase : TwoBase
+		{
+			public abstract KeyValuePair<Map, Map> GetPair();
+			public EntryBase():base()
+			{
+				this.Background = Brushes.Yellow;
+				this.Orientation = Orientation.Horizontal;
+
+				KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
+				s[System.Windows.Input.Key.Enter] = NewEntry;
+				s[System.Windows.Input.Key.Delete] = Delete;
+				KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
+				m[System.Windows.Input.Key.Enter] = NewFunction;
+			}
+			private void Delete()
+			{
+				MapView view = (MapView)Parent;
+				view.Children.Remove(this);
+			}
+			private void NewEntry()
+			{
+				MapView view = ((MapView)Parent);
+				view.NewEntry(view.Children.IndexOf(this) + 1);
+			}
+			private void NewFunction()
+			{
+				MapView view = ((MapView)Parent);
+				view.NewFunction(view.Children.IndexOf(this) + 1);
+			}
+		}
+		public class SelectView : ListBase
+		{
+			public SelectView(Map map)
+				: base(map, CodeKeys.Select)
+			{
+				this.Background = Brushes.Chocolate;
+			}
+		}
+		public abstract class ListBase : StackPanel,IView
+		{
+			public Map GetMap()
+			{
+				Map map = new StrategyMap();
+				foreach(View view in Children)
+				{
+					map.Append(view.GetMap());
+				}
+				return new StrategyMap(key, map);
+			}
+			private Map key;
+			public ListBase(Map map,Map key)
+			{
+				this.key = key;
+				foreach (Map m in map[key].Array)
+				{
+					Children.Add(new View(m));
+				}
+			}
+			//public List<View> Views
+			//{
+			//    get
+			//    {
+			//        List<View> views = new List<View>();
+			//        foreach (View view in Children)
+			//        {
+			//            views.Add(view);
+			//        }
+			//        return views;
+			//    }
+			//}
+		}
+		public abstract class TwoBase: StackPanel
+		{
+			public void FocusFirst()
+			{
+				this.Focus();
+				First.Focus();
+			}
+			public TwoBase()
+			{
+				this.Focusable = true;
+				this.Orientation = Orientation.Vertical;
+			}
+			protected View First
+			{
+				get
+				{
+					return (View)Children[0];
+				}
+				set
+				{
+					if (Children.Count >= 1)
+					{
+						Children.RemoveAt(0);
+					}
+					Children.Insert(0, value);
+				}
+			}
+			protected View Second
+			{
+				get
+				{
+					return (View)Children[1];
+				}
+				set
+				{
+					if (Children.Count >= 2)
+					{
+						Children.RemoveAt(1);
+					}
+					Children.Insert(1, value);
+				}
+			}
+		}
+		//public abstract class EntryBase : StackPanel
+		//{
+		//    public void FocusFirst()
+		//    {
+		//        this.Focus();
+		//        First.Focus();
+		//    }
+		//    public abstract KeyValuePair<Map, Map> GetPair();
+		//    public EntryBase()
+		//    {
+		//        this.Background = Brushes.Yellow;
+		//        this.Orientation = Orientation.Horizontal;
+		//        this.Focusable=true;
+		//        KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
+		//        s[System.Windows.Input.Key.Enter] = NewEntry;
+		//        s[System.Windows.Input.Key.Delete] = Delete;
+		//        KeyboardShortcuts m = new KeyboardShortcuts(this, ModifierKeys.Control);
+		//        m[System.Windows.Input.Key.Enter] = NewFunction;
+		//    }
+		//    protected View First
+		//    {
+		//        get
+		//        {
+		//            return (View)Children[0];
+		//        }
+		//        set
+		//        {
+		//            if (Children.Count >= 1)
+		//            {
+		//                Children.RemoveAt(0);
+		//            }
+		//            Children.Insert(0, value);
+		//        }
+		//    }
+		//    protected View Second
+		//    {
+		//        get
+		//        {
+		//            return (View)Children[1];
+		//        }
+		//        set
+		//        {
+		//            if (Children.Count >= 2)
+		//            {
+		//                Children.RemoveAt(1);
+		//            }
+		//            Children.Insert(1, value);
+		//        }
+		//    }
+		//    private void Delete()
+		//    {
+		//        MapView view = (MapView)Parent;
+		//        view.Children.Remove(this);
+		//    }
+		//    private void NewEntry()
+		//    {
+		//        MapView view = ((MapView)Parent);
+		//        view.NewEntry(view.Children.IndexOf(this) + 1);
+		//    }
+		//    private void NewFunction()
+		//    {
+		//        MapView view = ((MapView)Parent);
+		//        view.NewFunction(view.Children.IndexOf(this) + 1);
+		//    }
+		//}
+		public class MapView : StackPanel,IView
+		{
+			public Map GetMap()
+			{
+				Map map=new StrategyMap();
+				foreach (EntryBase entry in Children)
+				{
+					KeyValuePair<Map,Map> pair=entry.GetPair();
+					map[pair.Key] = pair.Value;
+				}
+				return map;
+			}
+			public MapView()
+			{
+				this.NewEntry(0);
+			}
+			public void NewFunction(int index)
+			{
+				EntryBase entry = new FunctionView("arg",new View(new MapView()));
+				Children.Insert(index, entry);
+				entry.FocusFirst();
+			}
+			public void NewEntry(int index)
+			{
+				EntryBase entry = new EntryView(new View(new StringView()), new View(new StringView()));
+				Children.Insert(index, entry);
+				entry.FocusFirst();
+			}
+			public MapView(Map map)
+			{
+				this.Focusable = true;
+				this.Background = Brushes.LightBlue;
+				this.Margin = new Thickness(5);
+				this.Orientation = Orientation.Vertical;
+				foreach (KeyValuePair<Map, Map> pair in map)
+				{
+					EntryBase entry;
+					if (pair.Key.Equals(CodeKeys.Function))
+					{
+						entry = new FunctionView(pair.Value);
+					}
+					else
+					{
+						entry = new EntryView(pair.Key, pair.Value);
+					}
+					this.Children.Add(entry);
+				}
+			}
+		}
+		public class StringView : TextBox,IView
+		{
+			public Map GetMap()
+			{
+				return Text;
+	        
+			}
+			public StringView():this("")
+			{
+			}
+			public StringView(string text)
+			{
+				this.Text = text;
+				this.Background = Brushes.Fuchsia;
+			}
+		}
+		public class NumberView : TextBox,IView
+		{
+			public Map GetMap()
+			{
+				return Convert.ToInt32(Text);
+			}
+			public NumberView(Number number)
+			{
+				this.Background = Brushes.LightYellow;
+				this.Text = number.ToString();
+				this.PreviewTextInput += new TextCompositionEventHandler(NumberView_PreviewTextInput);
+			}
+
+			void NumberView_PreviewTextInput(object sender, TextCompositionEventArgs e)
+			{
+				foreach (char c in e.Text)
+				{
+					if (!char.IsDigit(c))
+					{
+						e.Handled = true;
+						break;
+					}
+				}
+			}
+			public NumberView():this(1)
+			{
+			}
+		}
+		public delegate void MethodInvoker();
+		public class KeyboardShortcuts:Dictionary<Key,MethodInvoker>
+		{
+			public KeyboardShortcuts(UIElement control,ModifierKeys modifier)
+			{
+				control.KeyDown += delegate(object sender, KeyEventArgs e)
+				{
+					if (ContainsKey(e.SystemKey) && e.KeyboardDevice.Modifiers==modifier)
+					{
+						this[e.SystemKey]();
+						e.Handled = true;
+					}
+					else if (ContainsKey(e.Key) && e.KeyboardDevice.Modifiers == modifier)
+					{
+						this[e.Key]();
+						e.Handled = true;
+					}
+				};
+			}
+		}
+			public void Run()
         {
             Map map=MainView.GetMap();
             Interpreter.Init();
