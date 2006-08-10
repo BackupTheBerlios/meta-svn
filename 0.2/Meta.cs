@@ -1747,7 +1747,7 @@ namespace Meta
 							KeyValuePair<string,double> entry=profiled[i];
 							Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
 						}
-						Console.ReadLine();
+						//Console.ReadLine();
 						break;
 					case "-parser":
 						AllocConsole();
@@ -1785,6 +1785,7 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
+			//Console.ReadLine();
 		}
 
 		public class Commands
@@ -6815,16 +6816,24 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Serialization : Test
+			public class Library : Test
 			{
 				public override object GetResult(out int level)
 				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
-					//return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+					level = 2;
+					return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			//public class BinarySerialization: Test
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Meta.Serialize.ValueFunction(Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta"));
+			//        //return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+			//    }
+			//}
+			//public class BinarySerialization : Test
 			//{
 			//    public override object GetResult(out int level)
 			//    {
@@ -6839,22 +6848,22 @@ new Assignment(
 			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 			//    }
 			//}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\basicTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\libraryTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
 			//public class Extents : Test
 			//{
 			//    public override object GetResult(out int level)
