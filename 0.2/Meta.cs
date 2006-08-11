@@ -2747,19 +2747,19 @@ namespace Meta
 		}
 		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
 		{
-			MethodInfo invoke = delegateType.GetMethod("Invoke");
-			ParameterInfo[] parameters = invoke.GetParameters();
+			MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
+			ParameterInfo[] parameters = invokeMethod.GetParameters();
 			List<Type> arguments = new List<Type>();
 			arguments.Add(typeof(MetaDelegate));
 			foreach (ParameterInfo parameter in parameters)
 			{
 				arguments.Add(parameter.ParameterType);
 			}
-			DynamicMethod hello = new DynamicMethod("EventHandler",
-				invoke.ReturnType,
+			DynamicMethod method = new DynamicMethod("EventHandler",
+				invokeMethod.ReturnType,
 				arguments.ToArray(),
 				typeof(Map).Module);
-			ILGenerator il = hello.GetILGenerator();
+			ILGenerator il = method.GetILGenerator();
 
 			LocalBuilder local = il.DeclareLocal(typeof(object[]));
 			il.Emit(OpCodes.Ldc_I4, parameters.Length);
@@ -2777,22 +2777,69 @@ namespace Meta
 			il.Emit(OpCodes.Ldloc, local);
 			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
 
-			if (invoke.ReturnType == typeof(void))
+			if (invokeMethod.ReturnType == typeof(void))
 			{
 				il.Emit(OpCodes.Pop);
 				il.Emit(OpCodes.Ret);
 			}
 			else
 			{
-				il.Emit(OpCodes.Castclass, invoke.ReturnType);
+				il.Emit(OpCodes.Castclass, invokeMethod.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			//FunctionBodyKey calls;
 			// probably wrong
-			Position position=MethodImplementation.currentPosition.AddCall(code);
-			Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
+			Position position = MethodImplementation.currentPosition.AddCall(code);
+			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(position, invokeMethod.ReturnType));
 			return del;
 		}
+		//public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
+		//{
+		//    MethodInfo invoke = delegateType.GetMethod("Invoke");
+		//    ParameterInfo[] parameters = invoke.GetParameters();
+		//    List<Type> arguments = new List<Type>();
+		//    arguments.Add(typeof(MetaDelegate));
+		//    foreach (ParameterInfo parameter in parameters)
+		//    {
+		//        arguments.Add(parameter.ParameterType);
+		//    }
+		//    DynamicMethod hello = new DynamicMethod("EventHandler",
+		//        invoke.ReturnType,
+		//        arguments.ToArray(),
+		//        typeof(Map).Module);
+		//    ILGenerator il = hello.GetILGenerator();
+
+		//    LocalBuilder local = il.DeclareLocal(typeof(object[]));
+		//    il.Emit(OpCodes.Ldc_I4, parameters.Length);
+		//    il.Emit(OpCodes.Newarr, typeof(object));
+		//    il.Emit(OpCodes.Stloc, local);
+
+		//    for (int i = 0; i < parameters.Length; i++)
+		//    {
+		//        il.Emit(OpCodes.Ldloc, local);
+		//        il.Emit(OpCodes.Ldc_I4, i);
+		//        il.Emit(OpCodes.Ldarg, i + 1);
+		//        il.Emit(OpCodes.Stelem_Ref);
+		//    }
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldloc, local);
+		//    il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
+		//    if (invoke.ReturnType == typeof(void))
+		//    {
+		//        il.Emit(OpCodes.Pop);
+		//        il.Emit(OpCodes.Ret);
+		//    }
+		//    else
+		//    {
+		//        il.Emit(OpCodes.Castclass, invoke.ReturnType);
+		//        il.Emit(OpCodes.Ret);
+		//    }
+		//    //FunctionBodyKey calls;
+		//    // probably wrong
+		//    Position position=MethodImplementation.currentPosition.AddCall(code);
+		//    Delegate del = (Delegate)hello.CreateDelegate(delegateType, new MetaDelegate(position, invoke.ReturnType));
+		//    return del;
+		//}
 		public class EventHandlerContainer
 		{
 			private Map callable;
@@ -2806,6 +2853,7 @@ namespace Meta
 				return callable.Call(argument,MethodImplementation.currentPosition).Get();
 			}
 		}
+		// rename!!
 		public class MetaDelegate
 		{
 			private Position callable;
@@ -2818,14 +2866,44 @@ namespace Meta
 			public object Call(object[] arguments)
 			{
 				Map arg = new StrategyMap();
+				Position pos = this.callable;
 				foreach (object argument in arguments)
 				{
-					arg.Append(Transform.ToSimpleMeta(argument));
+					pos=pos.Call(Transform.ToSimpleMeta(argument));
+					//arg.Append(Transform.ToSimpleMeta(argument));
 				}
-				Map result = this.callable.Get().Call(arg, this.callable).Get();
-				return Meta.Transform.TryToDotNet(result, this.returnType);
+				//Map result = this.callable.Get().Call(arg, this.callable).Get();
+				return Meta.Transform.TryToDotNet(pos.Get(), this.returnType);
+
+				//Map arg = new StrategyMap();
+				//foreach (object argument in arguments)
+				//{
+				//    arg.Append(Transform.ToSimpleMeta(argument));
+				//}
+				//Map result = this.callable.Get().Call(arg, this.callable).Get();
+				//return Meta.Transform.TryToDotNet(result, this.returnType);
 			}
 		}
+		//public class MetaDelegate
+		//{
+		//    private Position callable;
+		//    private Type returnType;
+		//    public MetaDelegate(Position callable, Type returnType)
+		//    {
+		//        this.callable = callable;
+		//        this.returnType = returnType;
+		//    }
+		//    public object Call(object[] arguments)
+		//    {
+		//        Map arg = new StrategyMap();
+		//        foreach (object argument in arguments)
+		//        {
+		//            arg.Append(Transform.ToSimpleMeta(argument));
+		//        }
+		//        Map result = this.callable.Get().Call(arg, this.callable).Get();
+		//        return Meta.Transform.TryToDotNet(result, this.returnType);
+		//    }
+		//}
 		public static object TryToDotNet(Map meta, Type target)
 		{
 			object dotNet = null;
@@ -2901,7 +2979,7 @@ namespace Meta
 						if (target.IsValueType)
 						{
 						}
-						if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
+						if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
 						{
 							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
 							//dotNet = constructor.Invoke(new object[] { });
@@ -2914,7 +2992,7 @@ namespace Meta
 							}
 
 						}
-						else if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
+						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
 						{
 							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
 							//dotNet = constructor.Invoke(new object[] { });
@@ -4531,7 +4609,8 @@ namespace Meta
 			}
 			else
 			{
-				Data[key] = value;
+				throw new KeyDoesNotExist(key, null, this);
+				//Data[key] = value;
 			}
 		}
 		protected override bool ContainsKeyImplementation(Map key)
@@ -7056,14 +7135,14 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Monster : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"D:\Meta\0.2\Test\monster.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+			//public class Monster : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"D:\Meta\0.2\Test\monster.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)

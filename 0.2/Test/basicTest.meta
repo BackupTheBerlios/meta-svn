@@ -465,17 +465,13 @@ commandLine|,
 			1=-
 				!"ChangeStaticEvent"
 				1
-			&=.
-				arg
-				1
+			&=arg
 	6=-
 		.
 			TestClass
 			TakeDelegate_TestDelegate
 		,
-			arg|.
-				arg
-				1
+			arg|arg
 	resultFromDelegate=-
 		.
 			TestClass
@@ -493,9 +489,7 @@ commandLine|,
 	=,
 		arg|,
 			!instanceEventChanged=1
-			&=.
-				arg
-				1
+			&=arg
 	instanceEventResult=-
 		.
 			testClass
