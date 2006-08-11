@@ -11,27 +11,24 @@
 		600
 		1
 	player=,
+		font=-
+			.
+				Font
+				Font_String_Int32
+			"C:\windows\fonts\Arial.ttf"
+			16
 		pos|,
 			down|,
 				up|,
 					&=-
 						object
+					score=0
 					incrementScore=,
-						asdf|,
+						|,
 							!score=-
 								add
 								score
 								1
-							x=-
-								print
-								score
-					score=0
-					font=-
-						.
-							Font
-							Font_String_Int32
-						"C:\windows\fonts\Arial.ttf"
-						16
 					.
 						hit
 						top
@@ -63,7 +60,10 @@
 										.
 											size
 											<2
-					bottom=,
+					.
+						p
+						bottom
+					=,
 						|-
 							add
 							.
@@ -73,31 +73,29 @@
 							.
 								size
 								<2
-					drawScore=,
-						|,
-							surface=-
-								.
-									font
-									Render_String_Color
-								-
-									integerToString
-									score
-								.
-									Color
-									Black
-							x=-
+					draw=,
+						drawScore=,
+							|-
 								.
 									screen
 									Blit_Surface_Point
-								surface
+								-
+									.
+										font
+										Render_String_Color
+									-
+										integerToString
+										score
+									.
+										Color
+										Black
 								+
 									.
 										pos
 										1
 									0
-					draw=,
-						|+
-							-
+						drawPaddle=,
+							|-
 								.
 									screen
 									DrawFilledBox_Rectangle_Color
@@ -107,6 +105,9 @@
 								.
 									Color
 									Red
+						|+
+							-
+								drawPaddle
 							-
 								drawScore
 					speed=5
@@ -162,26 +163,23 @@
 					|0
 				right=,
 					|0
-			left=,
-				|.
-					pos
-					1
-			top=,
-				|.
-					pos
-					2
-			right=,
-				|.
-					pos
-					1
-			bottom=,
-				|.
-					pos
-					2
-			realLeft=left
-			realTop=top
-			realRight=right
-			realBottom=bottom
+			p=,
+				left=,
+					|.
+						pos
+						1
+				top=,
+					|.
+						pos
+						2
+				right=,
+					|.
+						pos
+						1
+				bottom=,
+					|.
+						pos
+						2
 			move=,
 				|,
 					!pos=+
@@ -208,13 +206,17 @@
 								|-
 									smaller
 									-
-										realTop
+										.
+											p
+											top
 									0
 							bottom=,
 								|-
 									greater
 									-
-										realBottom
+										.
+											p
+											bottom
 									.
 										screen
 										Height
@@ -222,7 +224,9 @@
 								|-
 									smaller
 									-
-										realLeft
+										.
+											p
+											left
 									.
 										size
 										1
@@ -230,7 +234,9 @@
 								|-
 									greater
 									-
-										realRight
+										.
+											p
+											right
 									-
 										subtract
 										.
@@ -265,30 +271,31 @@
 				|-
 					setPos
 					initialPosition
-			top=,
-				|-
-					subtract
-					-
-						y
-					radius
-			bottom=,
-				|-
-					add
-					-
-						y
-					radius
-			left=,
-				|-
-					subtract
-					-
-						x
-					radius
-			right=,
-				|-
-					add
-					-
-						x
-					radius
+			p=,
+				top=,
+					|-
+						subtract
+						-
+							y
+						radius
+				bottom=,
+					|-
+						add
+						-
+							y
+						radius
+				left=,
+					|-
+						subtract
+						-
+							x
+						radius
+				right=,
+					|-
+						add
+						-
+							x
+						radius
 			draw=,
 				|-
 					.
@@ -338,11 +345,9 @@
 				+
 					speed
 					5
-			realBottom=bottom
-			realTop=top
 			hitIt=,
 				index|,
-					p=.
+					player=.
 						objects
 						<index
 					x=-
@@ -353,18 +358,24 @@
 								smaller
 								-
 									.
+										player
 										p
 										top
-								-
-									realBottom
-							-
-								greater
 								-
 									.
 										p
 										bottom
+							-
+								greater
 								-
-									realTop
+									.
+										player
+										p
+										bottom
+								-
+									.
+										p
+										top
 						,
 							then=,
 								|-
