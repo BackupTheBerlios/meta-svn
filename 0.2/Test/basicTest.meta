@@ -314,47 +314,23 @@ commandLine|,
 	stringOverload=-
 		.
 			MemberTest
-			OverloadedMethod
-			.
-				/
-				mscorlib
-				String
+			OverloadedMethod_String
 		"hello"
 	integerOverload=-
 		.
 			MemberTest
-			OverloadedMethod
-			.
-				/
-				mscorlib
-				Int32
+			OverloadedMethod_Int32
 		5
 	memberTestOverload=-
 		.
 			MemberTest
-			OverloadedMethod
-			.
-				/
-				Meta
-				MemberTest
-			.
-				/
-				mscorlib
-				Int32
+			OverloadedMethod_MemberTest_Int32
 		memberTest
 		3247
 	memberTestOverload=-
 		.
 			MemberTest
-			OverloadedMethod
-			.
-				/
-				Meta
-				MemberTest
-			.
-				/
-				mscorlib
-				Int32
+			OverloadedMethod_MemberTest_Int32
 		memberTest
 		3247
 	.
@@ -404,16 +380,7 @@ commandLine|,
 	positionalNoConversionConcatenated=-
 		.
 			positionalNoConversion
-			Concatenate
-			.
-				mscorlib
-				String
-			.
-				mscorlib
-				String
-			.
-				mscorlib
-				String
+			Concatenate_String_String_String
 		"r"
 		"s"
 		"t"
@@ -432,11 +399,7 @@ commandLine|,
 	namedNoConversionConcatenated=-
 		.
 			namedNoConversion
-			Concatenate
-			.
-				/
-				Meta
-				Map
+			Concatenate_Map
 		,
 			c="t"
 			1="r"
@@ -519,12 +482,7 @@ commandLine|,
 	6=-
 		.
 			TestClass
-			TakeDelegate
-			.
-				/
-				Meta
-				TestClass
-				TestDelegate
+			TakeDelegate_TestDelegate
 		,
 			arg|.
 				arg
@@ -537,10 +495,7 @@ commandLine|,
 	staticEventResult=-
 		.
 			TestClass
-			CallStaticEvent
-			.
-				mscorlib
-				Object
+			CallStaticEvent_Object
 		!"testClass"
 	instanceEventChanged=0
 	.
@@ -555,10 +510,7 @@ commandLine|,
 	instanceEventResult=-
 		.
 			testClass
-			CallInstanceEvent
-			.
-				mscorlib
-				Object
+			CallInstanceEvent_Object
 		5
 	one=1
 	two=2
@@ -634,10 +586,7 @@ commandLine|,
 	7=-
 		.
 			arrayList
-			Add
-			.
-				mscorlib
-				Object
+			Add_Object
 		"hello"
 	arrayListResult=.
 		arrayList
@@ -665,11 +614,7 @@ commandLine|,
 	alleMeineText=-
 		.
 			lines
-			GetValue
-			.
-				/
-				mscorlib
-				Int32
+			GetValue_Int32
 		1
 	form=-
 		.
@@ -793,13 +738,7 @@ commandLine|,
 		.
 			mscorlib
 			Array
-			CreateInstance
-			.
-				mscorlib
-				Type
-			.
-				mscorlib
-				Int32
+			CreateInstance_Type_Int32
 		.
 			mscorlib
 			String

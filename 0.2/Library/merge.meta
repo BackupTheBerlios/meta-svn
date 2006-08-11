@@ -4,14 +4,6 @@ first|,
 			/
 			Meta
 			Library
-			Merge
-			.
-				/
-				Meta
-				Map
-			.
-				/
-				Meta
-				Map
+			Merge_Map_Map
 		first
 		@

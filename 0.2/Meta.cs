@@ -4352,7 +4352,6 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : Map
 	{
-		// this shouldnt really be there
 		private Dictionary<Map, Map> data;
 		private Dictionary<Map, Map> Data
 		{
@@ -4363,7 +4362,17 @@ namespace Meta
 					data = new Dictionary<Map, Map>();
 					foreach (MethodBase method in this.type.GetMethods(bindingFlags))
 					{
-						data[method.Name]= Method.MethodData(method.Name, obj, type);
+						string name = method.Name;
+						//if (method.GetParameters().Length != 0)
+						//{
+						//}
+						foreach (ParameterInfo parameter in method.GetParameters())
+						{
+							name += "_"+parameter.ParameterType.Name;
+						}
+						data[name] = new Method(method, obj, type);
+						//data[name] = Method.MethodData(method.Name, obj, type);
+
 					}
 				}
 				return data;
@@ -6996,6 +7005,14 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Library : Test
 			{
 				public override object GetResult(out int level)
@@ -7028,14 +7045,7 @@ new Assignment(
 			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 			//    }
 			//}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
+
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
