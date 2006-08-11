@@ -1786,6 +1786,7 @@ namespace Meta
 				}
 			}
 			//Console.ReadLine();
+			Console.ReadLine();
 		}
 
 		public class Commands
@@ -1903,7 +1904,7 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"C:\Meta\0.2\";
+		private static string installationPath = @"D:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
@@ -4352,7 +4353,22 @@ namespace Meta
 	public abstract class DotNetMap : Map
 	{
 		// this shouldnt really be there
-		private Dictionary<Map, Map> data=new Dictionary<Map,Map>();
+		private Dictionary<Map, Map> data;
+		private Dictionary<Map, Map> Data
+		{
+			get
+			{
+				if (data == null)
+				{
+					data = new Dictionary<Map, Map>();
+					foreach (MethodBase method in this.type.GetMethods(bindingFlags))
+					{
+						data[method.Name]= Method.MethodData(method.Name, obj, type);
+					}
+				}
+				return data;
+			}
+		}
 		public object obj;
 		public Type type;
 		private BindingFlags bindingFlags;
@@ -4372,29 +4388,27 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			if (data.ContainsKey(key))
+			if (Data.ContainsKey(key))
 			{
-				return data[key];
+				return Data[key];
 			}
 			else if (key.IsString)
 			{
 				string memberName = key.GetString();
-				if (memberName.Contains("FileChooser"))
-				{
-				}
 				MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
 				if (foundMembers.Length != 0)
 				{
 					MemberInfo member = foundMembers[0];
 					Map result;
-					if (member is MethodBase)
-					{
-						result = Method.MethodData(memberName, obj, type);
-					}
-					else if (member is PropertyInfo)
+					//if (member is MethodBase)
+					//{
+					//    result = Method.MethodData(memberName, obj, type);
+					//}
+					//else 
+					if (member is PropertyInfo)
 					{
 						PropertyInfo property = (PropertyInfo)member;
-						ParameterInfo[] parameters=property.GetIndexParameters();
+						ParameterInfo[] parameters = property.GetIndexParameters();
 						if (parameters.Length != 0)
 						{
 							result = new IndexedProperty(property, obj, type);
@@ -4406,19 +4420,19 @@ namespace Meta
 					}
 					else if (member is FieldInfo)
 					{
-						result=Transform.ToMeta(type.GetField(memberName).GetValue(obj));
+						result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
 					}
 					else if (member is Type)
 					{
-						result=new TypeMap((Type)member);
+						result = new TypeMap((Type)member);
 					}
 					else
 					{
-						result=null;
+						result = null;
 					}
 					if (result != null)
 					{
-						data[key] = result;
+						Data[key] = result;
 					}
 					return result;
 				}
@@ -4447,7 +4461,7 @@ namespace Meta
 				else if (member is PropertyInfo)
 				{
 					PropertyInfo property = (PropertyInfo)member;
-					property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType),null);
+					property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType), null);
 				}
 				else if (member is EventInfo)
 				{
@@ -4461,7 +4475,7 @@ namespace Meta
 			}
 			else
 			{
-				data[key] = value;
+				Data[key] = value;
 			}
 		}
 		protected override bool ContainsKeyImplementation(Map key)
@@ -4514,6 +4528,172 @@ namespace Meta
 			return eventDelegate;
 		}
 	}
+	//[Serializable]
+	//public abstract class DotNetMap : Map
+	//{
+	//    // this shouldnt really be there
+	//    private Dictionary<Map, Map> data=new Dictionary<Map,Map>();
+	//    public object obj;
+	//    public Type type;
+	//    private BindingFlags bindingFlags;
+
+	//    public DotNetMap(object obj, Type type)
+	//    {
+	//        if (obj == null)
+	//        {
+	//            this.bindingFlags = BindingFlags.Public | BindingFlags.Static;
+	//        }
+	//        else
+	//        {
+	//            this.bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+	//        }
+	//        this.obj = obj;
+	//        this.type = type;
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        if (data.ContainsKey(key))
+	//        {
+	//            return data[key];
+	//        }
+	//        else if (key.IsString)
+	//        {
+	//            string memberName = key.GetString();
+	//            if (memberName.Contains("FileChooser"))
+	//            {
+	//            }
+	//            MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
+	//            if (foundMembers.Length != 0)
+	//            {
+	//                MemberInfo member = foundMembers[0];
+	//                Map result;
+	//                if (member is MethodBase)
+	//                {
+	//                    result = Method.MethodData(memberName, obj, type);
+	//                }
+	//                else if (member is PropertyInfo)
+	//                {
+	//                    PropertyInfo property = (PropertyInfo)member;
+	//                    ParameterInfo[] parameters=property.GetIndexParameters();
+	//                    if (parameters.Length != 0)
+	//                    {
+	//                        result = new IndexedProperty(property, obj, type);
+	//                    }
+	//                    else
+	//                    {
+	//                        result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
+	//                    }
+	//                }
+	//                else if (member is FieldInfo)
+	//                {
+	//                    result=Transform.ToMeta(type.GetField(memberName).GetValue(obj));
+	//                }
+	//                else if (member is Type)
+	//                {
+	//                    result=new TypeMap((Type)member);
+	//                }
+	//                else
+	//                {
+	//                    result=null;
+	//                }
+	//                if (result != null)
+	//                {
+	//                    data[key] = result;
+	//                }
+	//                return result;
+	//            }
+	//            else
+	//            {
+	//                return null;
+	//            }
+	//        }
+	//        else
+	//        {
+	//            return null;
+	//        }
+	//    }
+	//    protected override void Set(Map key, Map value)
+	//    {
+	//        string fieldName = key.GetString();
+	//        MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+	//        if (members.Length != 0)
+	//        {
+	//            MemberInfo member = members[0];
+	//            if (member is FieldInfo)
+	//            {
+	//                FieldInfo field = (FieldInfo)member;
+	//                field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+	//            }
+	//            else if (member is PropertyInfo)
+	//            {
+	//                PropertyInfo property = (PropertyInfo)member;
+	//                property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType),null);
+	//            }
+	//            else if (member is EventInfo)
+	//            {
+	//                EventInfo eventInfo = (EventInfo)member;
+	//                new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
+	//            }
+	//            else
+	//            {
+	//                throw new Exception("unknown member type");
+	//            }
+	//        }
+	//        else
+	//        {
+	//            data[key] = value;
+	//        }
+	//    }
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return key.IsString && Get(key) != null;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            List<Map> keys = new List<Map>();
+	//            foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
+	//            {
+	//                keys.Add(new StrategyMap(member.Name));
+	//            }
+	//            return keys;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+
+	//    public override string Serialize()
+	//    {
+	//        if (obj != null)
+	//        {
+	//            return this.obj.ToString();
+	//        }
+	//        else
+	//        {
+	//            return this.type.ToString();
+	//        }
+	//    }
+	//    public Delegate CreateEventDelegate(string name, Map code)
+	//    {
+	//        EventInfo eventInfo = type.GetEvent(name, BindingFlags.Public | BindingFlags.NonPublic |
+	//            BindingFlags.Static | BindingFlags.Instance);
+	//        Delegate eventDelegate = Transform.CreateDelegateFromCode(eventInfo.EventHandlerType, code);
+	//        return eventDelegate;
+	//    }
+	//}
 	public interface ISerializeEnumerableSpecial
 	{
 		string Serialize();
@@ -6824,15 +7004,15 @@ new Assignment(
 					return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta"));
-			//        //return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta"));
+					//return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
 			//public class BinarySerialization : Test
 			//{
 			//    public override object GetResult(out int level)
@@ -6848,14 +7028,14 @@ new Assignment(
 			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
 			//    }
 			//}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			//public class Library : Test
 			//{
 			//    public override object GetResult(out int level)
