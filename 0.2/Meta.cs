@@ -42,6 +42,7 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing;
 
 namespace Meta
 {
@@ -266,6 +267,10 @@ namespace Meta
 		public Call(Map code, Map parameterName)
 		{
 			this.expressions = code.Array;
+			if (expressions.Count == 1)
+			{
+				expressions.Add(new StrategyMap(CodeKeys.Literal, Map.Empty));
+			}
 			this.parameterName = parameterName;
 		}
 
@@ -282,14 +287,14 @@ namespace Meta
 		{
 			try
 			{
-				HiPerfTimer timer=null;
+				HiPerfTimer timer = null;
 				if (Interpreter.profiling)
 				{
 					timer = new HiPerfTimer();
 					timer.Start();
 				}
 
-				Position callable=expressions[0].GetExpression().Evaluate(current);
+				Position callable = expressions[0].GetExpression().Evaluate(current);
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Position arg = expressions[i].GetExpression().Evaluate(current);
@@ -311,7 +316,7 @@ namespace Meta
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent,current));
+				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
 				throw e;
 			}
 			catch (Exception e)
@@ -319,6 +324,47 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
+		//protected override Position EvaluateImplementation(Position current)
+		//{
+		//    try
+		//    {
+		//        HiPerfTimer timer=null;
+		//        if (Interpreter.profiling)
+		//        {
+		//            timer = new HiPerfTimer();
+		//            timer.Start();
+		//        }
+
+		//        Position callable=expressions[0].GetExpression().Evaluate(current);
+		//        for (int i = 1; i < expressions.Count; i++)
+		//        {
+		//            Position arg = expressions[i].GetExpression().Evaluate(current);
+		//            arguments.Push(arg);
+		//            callable = callable.Call(arg.Get());
+		//            arguments.Pop();
+		//        }
+		//        if (Interpreter.profiling)
+		//        {
+		//            timer.Stop();
+		//            string special = SpecialString(current);
+		//            if (!calls.ContainsKey(special))
+		//            {
+		//                calls[special] = 0;
+		//            }
+		//            calls[special] += timer.Duration;
+		//        }
+		//        return callable;
+		//    }
+		//    catch (MetaException e)
+		//    {
+		//        e.InvocationList.Add(new ExceptionLog(expressions[0].Extent,current));
+		//        throw e;
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        throw new MetaException(e.ToString(), this.expressions[0].Extent);
+		//    }
+		//}
 		private string SpecialString(Position position)
 		{
 			string result="";
@@ -644,55 +690,7 @@ namespace Meta
 			sentmail.DeliveryMethod = SmtpDeliveryMethod.Network;
 			sentmail.UseDefaultCredentials = false;
 			sentmail.Credentials = aut;
-			//sentmail.Credentials = aut;
-			//sentmail.UseDefaultCredentials = false;
 			sentmail.Send(message);
-			//SmtpMail.SmtpServer=map["server"].GetString();
-			//SmtpMail.Send(
-			//        map["from"].GetString(),
-			//        map["to"].GetString(),
-			//        map["subject"].GetString(),
-			//        map["body"].GetString());
-			//return Map.Empty;
-			// Command line argument must the the SMTP host.
-			//SmtpClient client = new SmtpClient("smtp.1und1.de");
-			//// Specify the e-mail sender.
-			//// Create a mailing address that includes a UTF8 character
-			//// in the display name.
-			//MailAddress from = new MailAddress(
-			//    "christianstaudenmeyer@web.de", 
-			//   "Christian Staudenmeyer", 
-			//System.Text.Encoding.UTF8);
-			//// Set destinations for the e-mail message.
-			//MailAddress to = new MailAddress("christianstaudenmeyer@web.de");
-			//// Specify the message content.
-			//MailMessage message = new MailMessage(from, to);
-			//message.Body = "This is a test e-mail message sent by an application. ";
-			// Include some non-ASCII characters in body and subject.
-			//string someArrows = new string(new char[] {'\u2190', '\u2191', '\u2192', '\u2193'});
-			//message.Body += Environment.NewLine + someArrows;
-			//message.BodyEncoding =  System.Text.Encoding.UTF8;
-			//message.Subject = "test message 1" + someArrows;
-			//message.SubjectEncoding = System.Text.Encoding.UTF8;
-			// Set the method that is called back when the send operation ends.
-			//client.SendCompleted += new 
-			//SendCompletedEventHandler(SendCompletedCallback);
-			// The userState can be any object that allows your callback 
-			// method to identify this send operation.
-			// For this example, the userToken is a string constant.
-			//string userState = "test message1";
-			//client.SendAsync(message, userState);
-			//Console.WriteLine("Sending message... press c to cancel mail. Press any other key to exit.");
-			//string answer = Console.ReadLine();
-			//// If the user canceled the send, and mail hasn't been sent yet,
-			//// then cancel the pending operation.
-			////if (answer.StartsWith("c") && mailSent == false)
-			////{
-			////    client.SendAsyncCancel();
-			////}
-			//// Clean up.
-			//message.Dispose();
-			//Console.WriteLine("Goodbye.");
 			return Map.Empty;
 		}
 		public static Map Select(Map map, Map function)
@@ -716,7 +714,6 @@ namespace Meta
 		public static Map Sum(Map arg, Map map)
 		{
 			Position argument = Call.LastArgument;
-			//Map result = argument.Get().Array[0].Copy();
 			if (arg.ArrayCount > 0)
 			{
 				Map result = arg.Array[0].Copy();
@@ -732,25 +729,6 @@ namespace Meta
 				return Map.Empty;
 			}
 		}
-		//public static Map Sum(Map arg, Map map)
-		//{
-		//    Position argument = Call.LastArgument;
-		//    //Map result = argument.Get().Array[0].Copy();
-		//    if (arg.ArrayCount > 0)
-		//    {
-		//        Map result = arg.Array[0].Copy();
-		//        foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
-		//        {
-		//            Position firstCall = argument.Call(result);
-		//            result = firstCall.Call(m).Get();
-		//        }
-		//        return result;
-		//    }
-		//    else
-		//    {
-		//        return Map.Empty;
-		//    }
-		//}
 		public static Map Prepend(Map arg,Map map)
 		{
 			Map result = new StrategyMap(1, arg);
@@ -782,13 +760,6 @@ namespace Meta
 		public static Map HasKey(Map arg,Map map)
 		{
 			return arg.ContainsKey(map);
-		}
-		public static Map ShowGtk(Map arg)
-		{
-			//Gtk.Application.Init();
-			//Gtk.Window win = new Gtk.Window("TextViewSample");
-			//win.ShowAll();
-			return Map.Empty;
 		}
 		public static Map With(Map arg)
 		{
@@ -833,11 +804,13 @@ namespace Meta
 		}
 		public static Map Subtract(Map arg,Map map)
 		{
-			return map.GetNumber() - arg.GetNumber();
+			return arg.GetNumber() - map.GetNumber();
+			//return map.GetNumber() - arg.GetNumber();
 		}
 		public static Map Divide(Map arg,Map map)
 		{
-			return map.GetNumber() / arg.GetNumber();
+			return arg.GetNumber() / map.GetNumber();
+			//return map.GetNumber() / arg.GetNumber();
 		}
 		public static Map Parse(Map arg)
 		{
@@ -1061,79 +1034,20 @@ namespace Meta
 				{
 					return false;
 				}
-				//Map map = callable.Call(Map.Empty).Get();
-				//if (!map.GetBoolean())
-				//{
-				//    and = false;
-				//    break;
-				//}
 			}
 			return true;
-			//bool and = true;
-			//Position argument = Call.LastArgument;
-
-			//foreach (Position callable in argument.Array)
-			//{
-			//    Map map = callable.Call(Map.Empty).Get();
-			//    if (!map.GetBoolean())
-			//    {
-			//        and = false;
-			//        break;
-			//    }
-			//}
-			//return and;
 		}
-		//public static Map And(Map arg)
-		//{
-		//    bool and = true;
-		//    Position argument = Call.LastArgument;
-
-		//    foreach (Position callable in argument.Array)
-		//    {
-		//        Map map = callable.Call(Map.Empty).Get();
-		//        if (!map.GetBoolean())
-		//        {
-		//            and = false;
-		//            break;
-		//        }
-		//    }
-		//    return and;
-		//}
 		public static Map Or(Map arg)
 		{
-			//bool or = false;
-			//Position argument = Call.LastArgument;
 			foreach (Map map in arg.Array)
 			{
 				if (map.GetBoolean())
 				{
 					return true;
 				}
-				//Map map = callable.Call(Map.Empty).Get();
-				//if (map.GetBoolean())
-				//{
-				//    or = true;
-				//    break;
-				//}
 			}
 			return false;
-			//return or;
 		}
-		//public static Map Or(Map arg)
-		//{
-		//    bool or = false;
-		//    Position argument = Call.LastArgument;
-		//    foreach (Position callable in argument.Array)
-		//    {
-		//        Map map = callable.Call(Map.Empty).Get();
-		//        if (map.GetBoolean())
-		//        {
-		//            or = true;
-		//            break;
-		//        }
-		//    }
-		//    return or;
-		//}
 		public static Map Reciprocal(Map arg)
 		{
 			Number number = arg.GetNumber();
@@ -1237,21 +1151,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map Find(Map array,Map function)
-		//{
-		//    //Map result = new StrategyMap(new ListStrategy());
-		//    //string text = arg["array"].GetString();
-		//    Position position=Call.LastArgument;
-		//    foreach (Map map in array.Array)
-		//    {
-		//        Map result = function.Call(map,position).Get();
-		//        if (result.ContainsKey("found"))
-		//        {
-		//            return result;
-		//        }
-		//    }
-		//    return Map.Empty;
-		//}
 		public static Map Find(Map arg)
 		{
 		    Map result = new StrategyMap(new ListStrategy());
@@ -2995,7 +2894,70 @@ namespace Meta
 						}
 						break;
 					case TypeCode.Object:
-						if (target == typeof(Type) && meta is TypeMap)
+						FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+						//ConstructorInfo constructor = target.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
+						//MemberInfo[] members=target.GetMembers();
+
+						if (target.IsValueType)
+						{
+						}
+						if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
+						{
+							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
+							//dotNet = constructor.Invoke(new object[] { });
+							meta = Library.Join(meta[1], meta[2]);
+							int index = 1;
+							foreach (FieldInfo field in fields)
+							{
+								field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+								index++;
+							}
+
+						}
+						else if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
+						{
+							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
+							//dotNet = constructor.Invoke(new object[] { });
+							int index = 1;
+							foreach (FieldInfo field in fields)
+							{
+								field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+								index++;
+							}
+
+						}
+
+
+						//if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
+						//{
+						//    dotNet=target.InvokeMember(".ctor",BindingFlags.CreateInstance|BindingFlags.Instance|BindingFlags.Public,null,null,new object[] {});
+						//    //dotNet = constructor.Invoke(new object[] { });
+						//    int index = 1;
+						//    foreach (FieldInfo field in fields)
+						//    {
+						//        field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+						//        index++;
+						//    }
+							
+						//}
+						//else if (target.IsValueType && meta.ArrayCount == meta.Count && meta.Count==2 && Library.Join(meta[1],meta[2]).ArrayCount==fields.Length)
+						//{
+						//    dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
+						//    //dotNet = constructor.Invoke(new object[] { });
+						//    meta = Library.Join(meta[1], meta[2]);
+						//    int index = 1;
+						//    foreach (FieldInfo field in fields)
+						//    {
+						//        field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+						//        index++;
+						//    }
+
+						//}
+						//else if (target == typeof(Point) && meta.Count == 2 && meta.ContainsKey(1) && meta.ContainsKey(2))
+						//{
+						//    dotNet = new Point(Convert.ToInt32(meta[1].GetNumber().Numerator), Convert.ToInt32(meta[2].GetNumber().Numerator));
+						//}
+						else if (target == typeof(Type) && meta is TypeMap)
 						{
 							dotNet = ((TypeMap)meta).type;
 						}
@@ -3170,7 +3132,7 @@ namespace Meta
 	}
 	public delegate Map CallDelegate(Map argument);
 	[Serializable]
-	public abstract class MethodImplementation:Map
+	public abstract class MethodImplementation : Map
 	{
 		public static Position currentPosition;
 		protected MethodBase method;
@@ -3206,42 +3168,36 @@ namespace Meta
 			return DecideCall(argument, new List<object>(), position);
 		}
 
-		private Position DecideCall(Map argument, List<object> arguments, Position position)
+		private Position DecideCall(Map argument, List<object> oldArguments, Position position)
 		{
-			if(parameters.Length==0)
-			{
-				return Invoke(argument, arguments.ToArray(), position);
-			}
-			else
+			List<object> arguments = new List<object>(oldArguments);
+			if (parameters.Length != 0)
 			{
 				bool converted;
-				//object[] arguments = ConvertArgument(argument, out converted);
-				object arg=Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
+				object arg = Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
 				if (!converted)
 				{
 					throw new Exception("Could not convert argument.");
 				}
 				else
 				{
-					arguments.Add( arg);
+					arguments.Add(arg);
 				}
-				if (arguments.Count == parameters.Length)
+			}
+			if (arguments.Count >= parameters.Length)
+			{
+				return Invoke(argument, arguments.ToArray(), position);
+			}
+			else
+			{
+				return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
 				{
-					return Invoke(argument, arguments.ToArray(), position);
-				}
-				else
-				{
-					return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
-					{
-						//bool c;
-						//Map arg=Transform.ToDotNet(argument, parameters[0].ParameterType, out converted);
-						return DecideCall(map, arguments, position).Get();
-					})));
-				}
+					return DecideCall(map, arguments, position).Get();
+				})));
 			}
 		}
 
-		private Position Invoke(Map argument,object[] arguments, Position position)
+		private Position Invoke(Map argument, object[] arguments, Position position)
 		{
 			currentPosition = position;
 			bool converted;
@@ -3265,35 +3221,105 @@ namespace Meta
 				}
 			}
 		}
-		public object[] ConvertArgument(Map argument, out bool converted)
-		{
-			object[] arguments = new object[parameters.Length];
-			if (parameters.Length == 1)
-			{
-				arguments[0] = Transform.ToDotNet(argument, parameters[0].ParameterType, out converted);
-			}
-			else
-			{
-				if (argument.ArrayCount == parameters.Length)
-				{
-					converted = true;
-					for (int i = 0; i < parameters.Length; i++)
-					{
-						arguments[i] = Transform.ToDotNet(argument[i + 1], parameters[i].ParameterType, out converted);
-						if (!converted)
-						{
-							break;
-						}
-					}
-				}
-				else
-				{
-					converted = false;
-				}
-			}
-			return arguments;
-		}
 	}
+	//[Serializable]
+	//public abstract class MethodImplementation:Map
+	//{
+	//    public static Position currentPosition;
+	//    protected MethodBase method;
+	//    protected object obj;
+	//    protected Type type;
+	//    public MethodImplementation(MethodBase method, object obj, Type type)
+	//    {
+	//        this.method = method;
+	//        this.obj = obj;
+	//        this.type = type;
+	//        if (method != null)
+	//        {
+	//            this.parameters = method.GetParameters();
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    ParameterInfo[] parameters;
+	//    public override Position Call(Map argument, Position position)
+	//    {
+	//        return DecideCall(argument, new List<object>(), position);
+	//    }
+
+	//    private Position DecideCall(Map argument, List<object> arguments, Position position)
+	//    {
+	//        if(parameters.Length==0)
+	//        {
+	//            return Invoke(argument, arguments.ToArray(), position);
+	//        }
+	//        else
+	//        {
+	//            bool converted;
+	//            //object[] arguments = ConvertArgument(argument, out converted);
+
+	//            object arg=Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
+	//            if (!converted)
+	//            {
+	//                throw new Exception("Could not convert argument.");
+	//            }
+	//            else
+	//            {
+	//                arguments.Add( arg);
+	//            }
+	//            if (arguments.Count == parameters.Length)
+	//            {
+	//                return Invoke(argument, arguments.ToArray(), position);
+	//            }
+	//            else
+	//            {
+	//                return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
+	//                {
+	//                    //bool c;
+	//                    //Map arg=Transform.ToDotNet(argument, parameters[0].ParameterType, out converted);
+	//                    return DecideCall(map, arguments, position).Get();
+	//                })));
+	//            }
+	//        }
+	//    }
+
+	//    private Position Invoke(Map argument,object[] arguments, Position position)
+	//    {
+	//        currentPosition = position;
+	//        bool converted;
+	//        try
+	//        {
+	//            Map result = Transform.ToMeta(
+	//                method is ConstructorInfo ?
+	//                    ((ConstructorInfo)method).Invoke(arguments) :
+	//                     method.Invoke(obj, arguments));
+	//            return position.AddCall(result);
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            if (e.InnerException != null)
+	//            {
+	//                throw e.InnerException;
+	//            }
+	//            else
+	//            {
+	//                throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+	//            }
+	//        }
+	//    }
+	//}
 	public delegate Position Partial(Map argument);
 	[Serializable]
 	public class Method : MethodImplementation
@@ -6141,7 +6167,7 @@ namespace Meta
 						new Action(new Match(), Indentation),
 						new Action(new ReferenceAssignment(), new Sequence(
 							new Action(new Assignment(1),Expression))),
-							new Action(new Join(),new OneOrMore(new Action(new Autokey(),new Sequence(
+							new Action(new Join(),new ZeroOrMore(new Action(new Autokey(),new Sequence(
 								new Action(new Match(),new Optional(EndOfLine)),
 								new Action(new Match(),SameIndentation),
 								new Action(new ReferenceAssignment(),Expression))))),
@@ -6944,6 +6970,10 @@ new Assignment(
 						return "\"" + text + "\"";
 					}
 				}
+				else if (map is DotNetMap)
+				{
+					return map.ToString();
+				}
 				else
 				{
 					string text;
@@ -6960,7 +6990,7 @@ new Assignment(
 						text +=
 							GetIndentation(indentation + 1);// +
 						string key;
-						if (entry.Key.Count != 0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst)!=0)
+						if (entry.Key.Count != 0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0)
 						{
 							key = entry.Key.GetString();
 						}
@@ -6968,10 +6998,10 @@ new Assignment(
 						{
 							key = "<" + DoSerialize(entry.Key, indentation + 1);
 						}
-					   text+=key+
-						   "=" +
-						   DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
-						text = text.TrimEnd('\r', '\n')+Environment.NewLine;
+						text += key +
+							"=" +
+							DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
+						text = text.TrimEnd('\r', '\n') + Environment.NewLine;
 					}
 					return text;
 				}
@@ -7026,6 +7056,14 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
+			public class Monster : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"D:\Meta\0.2\Test\monster.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
@@ -7034,6 +7072,7 @@ new Assignment(
 					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 				}
 			}
+
 			public class Library : Test
 			{
 				public override object GetResult(out int level)

@@ -1,4 +1,4 @@
-Entry (KeyValuePair`2)
+﻿Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"booleanTest"
 	Value (StrategyMap):
@@ -72,12 +72,12 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"subtractTest2"
 			Value (StrategyMap):
-				101
+				-101
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"divideTest"
 			Value (StrategyMap):
-				103/5
+				5/103
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"multiplyInteger"

@@ -172,9 +172,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\sendMail.meta" />
-    <None Include="Test\Copy %284%29 of basicTest.meta" />
+    <None Include="Test\monster.meta" />
     <None Include="Test\Copy of editTest.meta" />
     <None Include="Test\editTest.meta" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Library\concatenate.meta" />
+    <None Include="Library\flip.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
