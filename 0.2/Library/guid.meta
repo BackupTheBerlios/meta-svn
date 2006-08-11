@@ -1,0 +1,17 @@
+arg|-
+	.
+		string
+		replace
+	-
+		.
+			-
+				.
+					/
+					mscorlib
+					Guid
+					NewGuid
+				0
+			ToString
+		0
+	"-"
+	0

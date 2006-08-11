@@ -1,0 +1,6 @@
+func|,
+	firstArg|,
+		secondArg|-
+			func
+			secondArg
+			firstArg
