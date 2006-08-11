@@ -178,6 +178,10 @@
 				|.
 					pos
 					2
+			realLeft=left
+			realTop=top
+			realRight=right
+			realBottom=bottom
 			move=,
 				|,
 					!pos=+
@@ -198,68 +202,56 @@
 								velocity
 								<2
 					<1=-
-						if
-						-
-							smaller
-							-
-								top
-							0
+						foreach
 						,
-							then=,
+							top=,
 								|-
+									smaller
+									-
+										realTop
+									0
+							bottom=,
+								|-
+									greater
+									-
+										realBottom
 									.
-										hit
-										top
-					<1=-
-						if
-						-
-							greater
-							-
-								bottom
-							.
-								screen
-								Height
+										screen
+										Height
+							left=,
+								|-
+									smaller
+									-
+										realLeft
+									.
+										size
+										1
+							right=,
+								|-
+									greater
+									-
+										realRight
+									-
+										subtract
+										.
+											screen
+											Width
+										.
+											size
+											1
 						,
-							then=,
-								|-
-									.
-										hit
-										bottom
-					<1=-
-						if
-						-
-							smaller
-							-
-								left
-							.
-								size
-								1
-						,
-							then=,
-								|-
-									.
-										hit
-										left
-					<1=-
-						if
-						-
-							greater
-							-
-								right
-							-
-								subtract
-								.
-									screen
-									Width
-								.
-									size
-									1
-						,
-							then=,
-								|-
-									.
-										hit
-										right
+							key|,
+								value|-
+									if
+									-
+										value
+									,
+										then=,
+											|-
+												.
+													hit
+													<key
+							
 			keys=0
 	ball=,
 		radius=20
@@ -468,8 +460,8 @@
 		Events
 		Tick
 	=,
-		sender|,
-			e|+
+		|,
+			|+
 				-
 					.
 						Video
