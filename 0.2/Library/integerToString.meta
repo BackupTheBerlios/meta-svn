@@ -4,10 +4,7 @@ arg|,
 			/
 			Meta
 			Number
-			.
-				/
-				Meta
-				Map
+			Number_Map
 		@
 	&=-
 		.

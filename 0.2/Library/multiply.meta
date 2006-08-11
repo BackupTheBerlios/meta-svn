@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Multiply
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Multiply_Map_Map
 	@

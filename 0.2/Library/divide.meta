@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Divide
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Divide_Map_Map
 	@

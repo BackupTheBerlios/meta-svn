@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Sum
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Sum_Map_Map
 	@

@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Greater
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Greater_Map_Map
 	@

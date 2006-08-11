@@ -3405,9 +3405,6 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			if (this.type.Name == "PositionalNoConversion")
-			{
-			}
 			if (type.IsGenericTypeDefinition)
 			{
 				List<Type> types=new List<Type>();
@@ -3434,7 +3431,31 @@ namespace Meta
 			}
 			else
 			{
-				return this.Constructor.TryGetValue(key);
+				Map value;
+				Data.TryGetValue(key, out value);
+				return value;
+				//return this.Constructor.TryGetValue(key);
+			}
+		}
+		private Dictionary<Map, Map> data;
+		private Dictionary<Map, Map> Data
+		{
+			get
+			{
+				if (data == null)
+				{
+					data = new Dictionary<Map, Map>();
+					foreach (ConstructorInfo constructor in type.GetConstructors())
+					{
+						string name = type.Name;
+						foreach (ParameterInfo parameter in constructor.GetParameters())
+						{
+							name += "_" + parameter.ParameterType.Name;
+						}
+						data[name] = new Method(constructor, obj, type);
+					}
+				}
+				return data;
 			}
 		}
 		public Type Type
@@ -4380,7 +4401,7 @@ namespace Meta
 		}
 		public object obj;
 		public Type type;
-		private BindingFlags bindingFlags;
+		protected BindingFlags bindingFlags;
 
 		public DotNetMap(object obj, Type type)
 		{

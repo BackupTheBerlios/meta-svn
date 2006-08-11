@@ -4,11 +4,7 @@ writeLine=,
 			/
 			Meta
 			Library
-			WriteLine
-			.
-				/
-				mscorlib
-				String
+			WriteLine_String
 		@
 write=,
 	arg|-
@@ -16,11 +12,7 @@ write=,
 			/
 			Meta
 			Library
-			Write
-			.
-				/
-				mscorlib
-				String
+			Write_String
 		@
 readLine=,
 	arg|-

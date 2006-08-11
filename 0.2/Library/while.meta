@@ -3,9 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		While
-		.
-			/
-			Meta
-			Map
+		While_Map
 	@

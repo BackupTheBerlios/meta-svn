@@ -6,11 +6,7 @@ select=,
 				/
 				Meta
 				Library
-				Random
-				.
-					/
-					Meta
-					Map
+				Random_Map
 			-
 				add
 				-

@@ -3,9 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Invert
-		.
-			/
-			Meta
-			Map
+		Invert_Map
 	@

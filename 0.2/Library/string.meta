@@ -4,19 +4,7 @@ replace=,
 			/
 			Meta
 			Library
-			StringReplace
-			.
-				/
-				Meta
-				Map
-			.
-				/
-				Meta
-				Map
-			.
-				/
-				Meta
-				Map
+			StringReplace_Map_Map_Map
 		@
 trim=,
 	arg|,
@@ -24,10 +12,7 @@ trim=,
 			.
 				/
 				Meta
-				ObjectMap
-				.
-					mscorlib
-					String
+				ObjectMap_String
 			@
 		&=-
 			.
@@ -42,10 +27,7 @@ lower=,
 				/
 				Meta
 				ObjectMap
-				.
-					/
-					mscorlib
-					String
+				ObjectMap_String
 			@
 		&=-
 			.
@@ -59,10 +41,7 @@ upper=,
 				/
 				Meta
 				ObjectMap
-				.
-					/
-					mscorlib
-					String
+				ObjectMap_String
 			@
 		&=-
 			.
@@ -75,15 +54,7 @@ split=,
 			/
 			Meta
 			Library
-			SplitString
-			.
-				/
-				Meta
-				Map
-			.
-				/
-				Meta
-				Map
+			SplitString_Map_Map
 		@
 compare=,
 	arg|-
@@ -91,13 +62,5 @@ compare=,
 			/
 			Meta
 			Library
-			CompareString
-			.
-				/
-				Meta
-				Map
-			.
-				/
-				Meta
-				Map
+			CompareString_Map_Map
 		@

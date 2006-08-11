@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		HasKey
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		HasKey_Map_Map
 	@

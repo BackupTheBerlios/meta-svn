@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		If
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		If_Map_Map
 	@

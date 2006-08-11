@@ -365,15 +365,7 @@ commandLine|,
 			/
 			Meta
 			PositionalNoConversion
-			.
-				mscorlib
-				String
-			.
-				mscorlib
-				String
-			.
-				mscorlib
-				String
+			PositionalNoConversion_String_String_String
 		"m"
 		"n"
 		"o"
@@ -389,10 +381,7 @@ commandLine|,
 			/
 			Meta
 			NamedNoConversion
-			.
-				/
-				Meta
-				Map
+			NamedNoConversion_Map
 		,
 			1="m"
 			y="n"
@@ -551,14 +540,7 @@ commandLine|,
 			/
 			"System.Drawing"
 			Font
-			.
-				/
-				mscorlib
-				String
-			.
-				/
-				mscorlib
-				Single
+			Font_String_Single
 		"Courier New"
 		10
 	decimalTest=5
@@ -629,14 +611,7 @@ commandLine|,
 		.
 			!"System.Drawing"
 			Point
-			.
-				/
-				mscorlib
-				Int32
-			.
-				/
-				mscorlib
-				Int32
+			Point_Int32_Int32
 		5
 		1000
 	automaticConversionTest=.

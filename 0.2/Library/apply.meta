@@ -3,13 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Apply
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Apply_Map_Map
 	@

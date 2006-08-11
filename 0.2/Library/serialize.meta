@@ -4,9 +4,5 @@
 			/
 			Meta
 			Serialize
-			ValueFunction
-			.
-				/
-				Meta
-				Map
+			ValueFunction_Map
 		@

@@ -3,9 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		BinaryOr
-		.
-			/
-			Meta
-			Map
+		BinaryOr_Map
 	@

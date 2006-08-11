@@ -3,9 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		Rest
-		.
-			/
-			Meta
-			Map
+		Rest_Map
 	@

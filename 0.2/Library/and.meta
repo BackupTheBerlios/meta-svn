@@ -3,9 +3,5 @@ arg|-
 		/
 		Meta
 		Library
-		And
-		.
-			/
-			Meta
-			Map
+		And_Map
 	@

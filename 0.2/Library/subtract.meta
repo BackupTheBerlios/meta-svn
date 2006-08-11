@@ -2,13 +2,5 @@ arg|-
 	.
 		Meta
 		Library
-		Subtract
-		.
-			/
-			Meta
-			Map
-		.
-			/
-			Meta
-			Map
+		Subtract_Map_Map
 	@

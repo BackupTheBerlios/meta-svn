@@ -3,11 +3,7 @@ arg|,
 		.
 			/
 			Meta
-			ObjectMap
-			.
-				/
-				mscorlib
-				Object
+			ObjectMap_Object
 		@
 	&=.
 		object
