@@ -1026,16 +1026,17 @@ namespace Meta
 			}
 			return nondecreasing;
 		}
-		public static Map And(Map arg)
+		public static Map And(Map a,Map b)
 		{
-			foreach (Map boolean in arg.Array)
-			{
-				if (!boolean.GetBoolean())
-				{
-					return false;
-				}
-			}
-			return true;
+			return a.GetBoolean() && b.GetBoolean();
+			//foreach (Map boolean in arg.Array)
+			//{
+			//    if (!boolean.GetBoolean())
+			//    {
+			//        return false;
+			//    }
+			//}
+			//return true;
 		}
 		public static Map Or(Map arg)
 		{
@@ -1052,6 +1053,10 @@ namespace Meta
 		{
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
+		}
+		public static Map Modulo(Map arg, Map map)
+		{
+			return Convert.ToInt32(arg.GetNumber().Numerator % map.GetNumber().Numerator);
 		}
 		public static Map Add(Map arg, Map map)
 		{
@@ -6289,6 +6294,8 @@ namespace Meta
 			new Sequence(
 				new Action(new Match(), new Character('<')),
 				new Action(new ReferenceAssignment(), Expression)
+				//new Action(new Match(),new Optional(EndOfLine))
+
 			);
 
 		private static Rule LookupStringExpression =
@@ -6351,7 +6358,8 @@ namespace Meta
 							new Action(new Match(), SameIndentation),
 							new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
 
-					new Action(new Match(), new Optional(Dedentation)))));
+					new Action(new Match(), new Optional(Dedentation))
+			)));
 
 		private static Rule KeysSearch = new Sequence(
 	new Action(
@@ -7135,14 +7143,14 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			//public class Monster : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(@"D:\Meta\0.2\Test\monster.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Pong : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)

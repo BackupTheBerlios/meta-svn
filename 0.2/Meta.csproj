@@ -172,13 +172,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\sendMail.meta" />
-    <None Include="Test\monster.meta" />
-    <None Include="Test\Copy of editTest.meta" />
+    <None Include="Test\pong.meta" />
     <None Include="Test\editTest.meta" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Library\callIf.meta" />
     <None Include="Library\concatenate.meta" />
     <None Include="Library\flip.meta" />
+    <None Include="Library\modulo.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

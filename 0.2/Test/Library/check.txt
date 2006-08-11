@@ -85,6 +85,11 @@ Entry (KeyValuePair`2)
 				19437
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
+				"minusMultiply"
+			Value (StrategyMap):
+				2
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
 				"multiplyFraction"
 			Value (StrategyMap):
 				7/2

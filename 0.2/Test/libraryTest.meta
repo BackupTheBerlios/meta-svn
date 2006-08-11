@@ -72,6 +72,10 @@ arg|,
 				!"multiply"
 				19
 				1023
+			minusMultiply=-
+				multiply
+				-1
+				-2
 			multiplyFraction=-
 				!"multiply"
 				3/2
