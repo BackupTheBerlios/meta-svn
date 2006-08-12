@@ -177,10 +177,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\callIf.meta" />
+    <None Include="Library\case.meta" />
     <None Include="Library\concatenate.meta" />
     <None Include="Library\count.meta" />
     <None Include="Library\flip.meta" />
     <None Include="Library\modulo.meta" />
+    <None Include="Test\Copy of metaEdit.meta" />
     <None Include="Test\metaEdit.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

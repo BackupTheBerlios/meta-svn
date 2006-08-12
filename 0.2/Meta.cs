@@ -674,7 +674,25 @@ namespace Meta
 		}
 	}
 	public class Library
-	{		
+	{
+		public static Map Case(Map cases,Map def)
+		{
+			Position pos=Call.LastArgument;
+			Map result = null;
+			foreach (KeyValuePair<Map,Map> pair in cases)
+			{
+				if (pair.Key.Call(Map.Empty, pos).Get().GetBoolean())
+				{
+					result=pair.Value.Call(Map.Empty, pos).Get();
+					break;
+				}
+			}
+			if (result == null)
+			{
+				result = def.Call(Map.Empty, pos).Get();
+			}
+			return result;
+		}
 		public static Map SendMail(Map map)
 		{
 			SmtpClient sentmail = new SmtpClient(map["server"].GetString(), 25);
@@ -1697,7 +1715,6 @@ namespace Meta
 				}
 			}
 			//Console.ReadLine();
-			Console.ReadLine();
 		}
 
 		public class Commands
