@@ -25,6 +25,11 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
+				//ScrollViewer viewer= new ScrollViewer()
+				//viewer.Content=
+				Application app = new Application();
+				Window window = new Window();
+				StackPanel p;
 				return Map.Empty;
 			}
 			public EmptyView()
@@ -285,7 +290,6 @@ namespace Edit
 			{
 				this.Background = Brushes.Yellow;
 				this.Orientation = Orientation.Horizontal;
-				this.CommandBindings.Add(new CommandBinding().
 
 				KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.None);
 				s[System.Windows.Input.Key.Enter] = NewEntry;
@@ -502,7 +506,7 @@ namespace Edit
 				};
 			}
 		}
-			public void Run()
+		public void Run()
         {
             Map map=MainView.GetMap();
             Interpreter.Init();

@@ -11,18 +11,12 @@ arg|,
 			and=,
 				true=-
 					and
-					+
-						1
-						1
-						1
-						1
+					1
+					1
 				false=-
 					and
-					+
-						1
-						0
-						1
-						1
+					1
+					0
 			orTest=,
 				true=-
 					or
@@ -465,4 +459,11 @@ arg|,
 				strawberries="red"
 			,
 				value|1
+		countTest=-
+			count
+			,
+				orange="orange"
+				banana="yellow"
+				apple="red"
+				strawberries="red"
 	&=!"test"

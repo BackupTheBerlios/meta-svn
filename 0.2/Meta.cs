@@ -761,10 +761,9 @@ namespace Meta
 		{
 			return arg.ContainsKey(map);
 		}
-		public static Map With(Map arg)
+		public static Map With(Map obj,Map values)
 		{
-			Map obj = arg["object"];
-			foreach (KeyValuePair<Map, Map> entry in arg["data"])
+			foreach (KeyValuePair<Map, Map> entry in values)
 			{
 				obj[entry.Key] = entry.Value;
 			}
@@ -1276,13 +1275,20 @@ namespace Meta
 		}
 		public static Map Foreach(Map arg,Map map)
 		{
-				Map result = new StrategyMap();
-				Position argument = Call.LastArgument;
-				foreach (KeyValuePair<Map, Map> entry in arg)
-				{
-					result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
-				}
-				return result;
+			Map result = new StrategyMap();
+			Position argument = Call.LastArgument;
+			foreach (KeyValuePair<Map, Map> entry in arg)
+			{
+				result.Append(argument.Call(entry.Key).Call(entry.Value).Get());
+			}
+			return result;
+				//Map result = new StrategyMap();
+				//Position argument = Call.LastArgument;
+				//foreach (KeyValuePair<Map, Map> entry in arg)
+				//{
+				//    result[entry.Key] = argument.Call(entry.Key).Call(entry.Value).Get();
+				//}
+				//return result;
 		}
 	}
 	public class DrivesMap : Map
@@ -1624,6 +1630,7 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
+			//Map m = Binary.Deserialize(@"C:\asdf.meta");
 			//Binary.Serialize(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"], @"D:\Meta\0.2\Test\basic.meta");
 			//Map map = Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta");
 
@@ -1808,7 +1815,7 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"D:\Meta\0.2\";
+		private static string installationPath = @"C:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
@@ -3504,6 +3511,14 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
+		protected override object GlobalKey
+		{
+			get
+			{
+
+				return this;
+			}
+		}
 		public TypeMap(Type targetType)
 			: base(null, targetType)
 		{
@@ -3606,6 +3621,13 @@ namespace Meta
 	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
+		protected override object GlobalKey
+		{
+			get 
+			{
+				return obj;
+			}
+		}
 		public override Position Call(Map arg, Position position)
 		{
 			if (this.type.IsSubclassOf(typeof(Delegate)))
@@ -4482,6 +4504,10 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : Map
 	{
+		protected abstract object GlobalKey
+		{
+			get;
+		}
 		private Dictionary<Map, Map> data;
 		private Dictionary<Map, Map> Data
 		{
@@ -4530,6 +4556,10 @@ namespace Meta
 			if (Data.ContainsKey(key))
 			{
 				return Data[key];
+			}
+			else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
+			{
+				return global[GlobalKey][key];
 			}
 			else if (key.IsString)
 			{
@@ -4587,6 +4617,10 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
+			if (key.Equals(new StrategyMap("setStrategy")))
+			{
+			}
+
 			string fieldName = key.GetString();
 			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
 			if (members.Length != 0)
@@ -4614,10 +4648,17 @@ namespace Meta
 			}
 			else
 			{
-				throw new KeyDoesNotExist(key, null, this);
+
+				if (!global.ContainsKey(GlobalKey))
+				{
+					global[GlobalKey] = new Dictionary<Map, Map>();
+				}
+				global[GlobalKey][key] = value;
+				//throw new KeyDoesNotExist(key, null, this);
 				//Data[key] = value;
 			}
 		}
+		public static Dictionary<object,Dictionary<Map,Map>> global=new Dictionary<object,Dictionary<Map,Map>>();
 		protected override bool ContainsKeyImplementation(Map key)
 		{
 			return key.IsString && Get(key) != null;
@@ -7143,40 +7184,50 @@ new Assignment(
 					return Path.Combine(TestPath, "libraryTest.meta");
 				}
 			}
-			public class Pong : Test
+			//public class Pong : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+			public class MetaEdit : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"D:\Meta\0.2\Test\basicTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\metaEdit.meta"), new StrategyMap());
 				}
 			}
 
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(@"D:\Meta\0.2\Test\libraryTest.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
-				}
-			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta"));
-					//return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        //return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
+			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+			//    }
+			//}	
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\libraryTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\basicTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
+			//    }
+			//}
+
 			//public class BinarySerialization : Test
 			//{
 			//    public override object GetResult(out int level)
