@@ -3410,8 +3410,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"enumTest"
-	Value (StrategyMap):
-		2
+	Value (ObjectMap):
+		ClientAreaEnabled
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"typeTest"

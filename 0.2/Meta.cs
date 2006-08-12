@@ -43,6 +43,7 @@ using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
+using System.Xml.Serialization;
 
 namespace Meta
 {
@@ -675,6 +676,19 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map EnumerableToArray(Map map)
+		{
+			Map result = new StrategyMap();
+			foreach (object entry in (IEnumerable)((ObjectMap)map).obj)
+			{
+				result.Append(Transform.ToMeta(entry));
+			}
+			return result;
+		}
+		public static Map StringToInteger(Map map)
+		{
+			return Convert.ToInt32(map.GetString());
+		}
 		public static Map IsString(Map map)
 		{
 			return map.IsString;
@@ -2350,6 +2364,10 @@ namespace Meta
 		public virtual string GetString()
 		{
 			return GetStringDefault();
+			//if (test.StartsWith("\"") && test.EndsWith("\""))
+			//{
+			//}
+			//return test;
 		}
 		public virtual bool GetBoolean()
 		{
@@ -2448,6 +2466,7 @@ namespace Meta
 		{
 			throw new ApplicationException("Method not implemented");
 		}
+		[XmlIgnore]
 		public static List<Map> arguments = new List<Map>();
 		public virtual Position Call(Map arg, Position position)
 		{
@@ -2588,6 +2607,7 @@ namespace Meta
 		{
 			return new StrategyMap(text);
 		}
+		[NonSerialized]
 		private Position scope;
 		//private Dictionary<FunctionBodyKey, Map> tempData;
 	}
@@ -2690,6 +2710,10 @@ namespace Meta
 		public override string GetString()
 		{
 			return strategy.GetString();
+			//if (test.StartsWith("\"") && test.EndsWith("\""))
+			//{
+			//}
+			//return test;
 		}
 		public override int Count
 		{
@@ -2940,6 +2964,9 @@ namespace Meta
 		public static object TryToDotNet(Map meta, Type target)
 		{
 			object dotNet = null;
+			if (target.IsSubclassOf(typeof(Enum)))
+			{
+			}
 			if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
 			{
 				dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
@@ -3186,6 +3213,10 @@ namespace Meta
 			{
 				return Map.Empty;
 			}
+			else if (dotNet.GetType().IsSubclassOf(typeof(Enum)))
+			{
+				return new ObjectMap(dotNet);
+			}
 			else
 			{
 				switch(Type.GetTypeCode(dotNet.GetType()))
@@ -3211,11 +3242,14 @@ namespace Meta
 					case TypeCode.Int64:
 						return (long)dotNet;
 					case TypeCode.Object:
-						if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
-						{
-							return (int)Convert.ToInt32((Enum)dotNet);
-						}
-						else if(dotNet is Map)
+						//if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
+						//{
+						//    return new ObjectMap(dotNet);
+						//    //reutrn new 
+						//    //return (int)Convert.ToInt32((Enum)dotNet);
+						//}
+						//else 
+						if(dotNet is Map)
 						{
 							return (Map)dotNet;
 						}
@@ -3629,14 +3663,27 @@ namespace Meta
 			{
 				if (constructor == null)
 				{
-					constructor = Method.MethodData(".ctor",obj,type);
+					constructor = new Method(type.GetConstructor(new Type[] { }),obj,type);
 				}
 				return constructor;
 			}
 		}
+		//private Map Constructor
+		//{
+		//    get
+		//    {
+		//        if (constructor == null)
+		//        {
+		//            constructor = Method.MethodData(".ctor",obj,type);
+		//        }
+		//        return constructor;
+		//    }
+		//}
 		public override Position Call(Map argument, Position position)
 		{
-			return Constructor.Call(argument, position);
+			Map item=Constructor.Call(Map.Empty, position).Get();
+			Map result = Library.With(item, argument);
+			return position.AddCall(result);
 		}
 	}
 	[Serializable]
@@ -4626,15 +4673,34 @@ namespace Meta
 					}
 					return result;
 				}
-				else
-				{
-					return null;
-				}
+				//else
+				//{
+				//    return null;
+				//}
 			}
-			else
+			//else
+			//{
+			//    return null;
+			//}
+			if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator<((IList)obj).Count)
 			{
-				return null;
+				return Transform.ToMeta(((IList)obj)[Convert.ToInt32(key.GetNumber().Numerator)]);
 			}
+			//PropertyInfo[] properties=type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+			//foreach (PropertyInfo property in properties)
+			//{
+			//    ParameterInfo[] parameters=property.GetIndexParameters();
+			//    if (parameters.Length == 1)
+			//    {
+			//        object val=Transform.TryToDotNet(key, parameters[0].ParameterType);
+			//        if (val != null)
+			//        {
+			//            return Transform.ToMeta(property.GetValue(obj, new object[] { val }));
+			//        }
+			//    }
+			//}
+			return null;
+
 		}
 		protected override void Set(Map key, Map value)
 		{
@@ -4655,7 +4721,29 @@ namespace Meta
 				else if (member is PropertyInfo)
 				{
 					PropertyInfo property = (PropertyInfo)member;
-					property.SetValue(obj, Transform.ToDotNet(value, property.PropertyType), null);
+					if (property.PropertyType.Name.Contains("UIElementCollection"))
+					{
+					}
+					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
+					{
+						IList list = (IList)property.GetValue(obj,null);
+						list.Clear();
+						Type t=list.GetType().GetMethod("Add").GetParameters()[0].ParameterType;
+						foreach (Map map in value.Array)
+						{
+
+							list.Add(Transform.ToDotNet(map,t));
+						}
+					}
+					else
+					{
+					object converted=Transform.ToDotNet(value, property.PropertyType);
+					//if (converted != null)
+					//{
+						property.SetValue(obj, converted, null);
+					//}
+					}
+
 				}
 				else if (member is EventInfo)
 				{
@@ -4682,7 +4770,8 @@ namespace Meta
 		public static Dictionary<object,Dictionary<Map,Map>> global=new Dictionary<object,Dictionary<Map,Map>>();
 		protected override bool ContainsKeyImplementation(Map key)
 		{
-			return key.IsString && Get(key) != null;
+			return Get(key) != null;
+			//return key.IsString && Get(key) != null;
 		}
 		protected override ICollection<Map> KeysImplementation
 		{
@@ -5741,8 +5830,12 @@ namespace Meta
 	}
 	public class Binary
 	{
+		//private static void Find(Map map)
+		//{
+		//}
 		public static void Serialize(Map map,string path)
 		{
+			//Find(map);
 			using (FileStream stream = File.Create(path))
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
@@ -7222,32 +7315,33 @@ new Assignment(
 				}
 			}
 
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        //return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}	
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\libraryTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					//return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
+					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+				}
+			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"Test\basicTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"Test\libraryTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
+				}
+			}
 
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\basicTest.meta"), new StrategyMap(1, "first arg", 2, "second=arg"));
-			//    }
-			//}
+
 
 			//public class BinarySerialization : Test
 			//{

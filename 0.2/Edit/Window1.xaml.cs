@@ -25,12 +25,23 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
-				//ScrollViewer viewer= new ScrollViewer()
-				//viewer.Content=
 				Application app = new Application();
+
+				//Dock
+				//DockPanel p;
+				
+				//Button b;
+				//b.SetValue(DockPanel.DockProperty, Dock.Top);
 				Window window = new Window();
 				StackPanel p;
+				
+				//p.KeyDown += new KeyEventHandler(p_KeyDown);
 				return Map.Empty;
+			}
+
+			void p_KeyDown(object sender, KeyEventArgs e)
+			{
+				throw new Exception("The method or operation is not implemented.");
 			}
 			public EmptyView()
 			{
@@ -508,6 +519,14 @@ namespace Edit
 		}
 		public void Run()
         {
+			//Menu menu = new Menu();
+			//menu.Items.Add(
+			//MenuItem item=new MenuItem();
+			//item.Items.Add(
+			CommandBinding binding = new CommandBinding(ApplicationCommands.Paste, delegate { Console.WriteLine("Open the damn file."); });
+			//binding.Command=ApplicationCommands.Open;
+			//ApplicationCommands.Open;
+			StackPanel s;
             Map map=MainView.GetMap();
             Interpreter.Init();
             map.Call(Map.Empty, new Position(new Position(RootPosition.rootPosition, "filesystem"), "localhost"));
