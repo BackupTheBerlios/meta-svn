@@ -9,3 +9,10 @@ arg|,
 	&=.
 		object
 		IsString
+arg|-
+	.
+		/
+		Meta
+		Library
+		IsString_Map
+	arg

@@ -181,6 +181,7 @@
     <None Include="Library\concatenate.meta" />
     <None Include="Library\count.meta" />
     <None Include="Library\flip.meta" />
+    <None Include="Library\isEmpty.meta" />
     <None Include="Library\modulo.meta" />
     <None Include="Test\Copy of metaEdit.meta" />
     <None Include="Test\metaEdit.meta" />

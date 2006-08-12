@@ -675,21 +675,25 @@ namespace Meta
 	}
 	public class Library
 	{
-		public static Map Case(Map cases,Map def)
+		public static Map IsString(Map map)
+		{
+			return map.IsString;
+		}
+		public static Map Case(Map val,Map cases,Map def)
 		{
 			Position pos=Call.LastArgument;
 			Map result = null;
 			foreach (KeyValuePair<Map,Map> pair in cases)
 			{
-				if (pair.Key.Call(Map.Empty, pos).Get().GetBoolean())
+				if (pair.Key.Call(val, pos).Get().GetBoolean())
 				{
-					result=pair.Value.Call(Map.Empty, pos).Get();
+					result=pair.Value.Call(val, pos).Get();
 					break;
 				}
 			}
 			if (result == null)
 			{
-				result = def.Call(Map.Empty, pos).Get();
+				result = def.Call(val, pos).Get();
 			}
 			return result;
 		}
