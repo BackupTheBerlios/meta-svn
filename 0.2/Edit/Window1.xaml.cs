@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Meta;
 using Microsoft.Win32;
+using System.Windows;
 
 
 namespace Edit
@@ -29,8 +30,8 @@ namespace Edit
 
 				//Dock
 				//DockPanel p;
-				
-				//Button b;
+
+				Button b;
 				//b.SetValue(DockPanel.DockProperty, Dock.Top);
 				Window window = new Window();
 				StackPanel p;

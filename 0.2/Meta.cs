@@ -44,6 +44,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 using System.Xml.Serialization;
+using System.Windows;
 
 namespace Meta
 {
@@ -4704,67 +4705,74 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			if (key.Equals(new StrategyMap("setStrategy")))
+			//if (key.Equals(new StrategyMap("setStrategy")))
+			//{
+			//}
+			if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
 			{
-			}
-
-			string fieldName = key.GetString();
-			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
-			if (members.Length != 0)
-			{
-				MemberInfo member = members[0];
-				if (member is FieldInfo)
-				{
-					FieldInfo field = (FieldInfo)member;
-					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-				}
-				else if (member is PropertyInfo)
-				{
-					PropertyInfo property = (PropertyInfo)member;
-					if (property.PropertyType.Name.Contains("UIElementCollection"))
-					{
-					}
-					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
-					{
-						IList list = (IList)property.GetValue(obj,null);
-						list.Clear();
-						Type t=list.GetType().GetMethod("Add").GetParameters()[0].ParameterType;
-						foreach (Map map in value.Array)
-						{
-
-							list.Add(Transform.ToDotNet(map,t));
-						}
-					}
-					else
-					{
-					object converted=Transform.ToDotNet(value, property.PropertyType);
-					//if (converted != null)
-					//{
-						property.SetValue(obj, converted, null);
-					//}
-					}
-
-				}
-				else if (member is EventInfo)
-				{
-					EventInfo eventInfo = (EventInfo)member;
-					new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
-				}
-				else
-				{
-					throw new Exception("unknown member type");
-				}
+				((DependencyObject)obj).SetValue(((DependencyProperty)((ObjectMap)key).obj), Transform.ToDotNet(value,typeof(object)));
 			}
 			else
 			{
 
-				if (!global.ContainsKey(GlobalKey))
+				string fieldName = key.GetString();
+				MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+				if (members.Length != 0)
 				{
-					global[GlobalKey] = new Dictionary<Map, Map>();
+					MemberInfo member = members[0];
+					if (member is FieldInfo)
+					{
+						FieldInfo field = (FieldInfo)member;
+						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+					}
+					else if (member is PropertyInfo)
+					{
+						PropertyInfo property = (PropertyInfo)member;
+						if (property.PropertyType.Name.Contains("UIElementCollection"))
+						{
+						}
+						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
+						{
+							IList list = (IList)property.GetValue(obj, null);
+							list.Clear();
+							Type t = list.GetType().GetMethod("Add").GetParameters()[0].ParameterType;
+							foreach (Map map in value.Array)
+							{
+
+								list.Add(Transform.ToDotNet(map, t));
+							}
+						}
+						else
+						{
+							object converted = Transform.ToDotNet(value, property.PropertyType);
+							//if (converted != null)
+							//{
+							property.SetValue(obj, converted, null);
+							//}
+						}
+
+					}
+					else if (member is EventInfo)
+					{
+						EventInfo eventInfo = (EventInfo)member;
+						new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
+					}
+					else
+					{
+						throw new Exception("unknown member type");
+					}
 				}
-				global[GlobalKey][key] = value;
-				//throw new KeyDoesNotExist(key, null, this);
-				//Data[key] = value;
+				else
+				{
+
+					if (!global.ContainsKey(GlobalKey))
+					{
+						global[GlobalKey] = new Dictionary<Map, Map>();
+					}
+					global[GlobalKey][key] = value;
+					//throw new KeyDoesNotExist(key, null, this);
+					//Data[key] = value;
+				}
 			}
 		}
 		public static Dictionary<object,Dictionary<Map,Map>> global=new Dictionary<object,Dictionary<Map,Map>>();
