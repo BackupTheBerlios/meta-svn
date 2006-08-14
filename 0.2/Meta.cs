@@ -1669,6 +1669,8 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
+			Map m=Parser.Parse(@"C:\Meta\0.2\Test\test.meta");
+			Binary.Serialize(m,@"C:\Meta\0.2\Test\binaryTest.meta");
 			//Map m = Binary.Deserialize(@"C:\asdf.meta");
 			//Binary.Serialize(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"], @"D:\Meta\0.2\Test\basic.meta");
 			//Map map = Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta");
