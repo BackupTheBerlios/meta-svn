@@ -266,8 +266,10 @@ namespace Meta
 	{
 		private Map parameterName;
 		List<Map> expressions;
+		Map code;
 		public Call(Map code, Map parameterName)
 		{
+			this.code = code;
 			this.expressions = code.Array;
 			if (expressions.Count == 1)
 			{

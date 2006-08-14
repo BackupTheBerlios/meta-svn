@@ -238,7 +238,6 @@ namespace Edit
 			public Map GetMap()
 			{
 				return new StrategyMap(Key, this.View.GetMap());
-
 			}
 			public SingleReal()
 			{
@@ -266,7 +265,7 @@ namespace Edit
 			//panel.Children.Add(second);
 			return BaseTwo(new View(map[1]),new View(map[2]), CodeKeys.Call,1,2);
 		}
-		//public class CallView : TwoBase,IView
+		//public class CallView : TwoBase, IView
 		//{
 		//    public Map GetMap()
 		//    {
