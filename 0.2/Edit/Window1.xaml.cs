@@ -79,7 +79,8 @@ namespace Edit
 			}
 			private void UseStringView()
 			{
-				Strategy = new StringView("");
+				ComponentCommands.MoveFocusForward.Execute(null,this);
+				//Strategy = new StringView("");
 			}
 			private void UseNumberView()
 			{
@@ -524,6 +525,7 @@ namespace Edit
 			//menu.Items.Add(
 			//MenuItem item=new MenuItem();
 			//item.Items.Add(
+			//ApplicationCommands
 			CommandBinding binding = new CommandBinding(ApplicationCommands.Paste, delegate { Console.WriteLine("Open the damn file."); });
 			//binding.Command=ApplicationCommands.Open;
 			//ApplicationCommands.Open;
@@ -565,6 +567,7 @@ namespace Edit
         {
             if (path == null)
             {
+				//ModifierKeys.Control
                 SaveAs();
             }
             else

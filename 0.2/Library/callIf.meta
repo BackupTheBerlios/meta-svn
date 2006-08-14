@@ -1,13 +1,15 @@
-key|,
-	map|-
-		if
-		-
-			hasKey
-			map
-			key
-		,
-			then=,
-				|-
-					.
-						map
-						<key
+map|,
+	key|,
+		func|-
+			if
+			-
+				hasKey
+				map
+				key
+			,
+				then=,
+					|-
+						func
+						.
+							map
+							<key
