@@ -115,11 +115,7 @@ arg|,
 					!"reciprocal"
 					7
 		bitwiseTest=,
-			or=-
-				!"bitwiseOr"
-				+
-					8
-					20
+			or=0
 		mapTest=,
 			switchTest=-
 				!"switch"
@@ -295,15 +291,6 @@ arg|,
 				"hello hello hi"
 				"he"
 				"i"
-		bitwiseTest=-
-			!"bitwiseOr"
-			+
-				20
-				.
-					/
-					"System.Windows.Forms"
-					Keys
-					Tab
 		filterTest=-
 			!"filter"
 			,
@@ -436,14 +423,13 @@ arg|,
 					b=2
 		withTest=-
 			with
+			-
+				.
+					!"System.Windows.Forms"
+					Form
+				0
 			,
-				object=-
-					.
-						!"System.Windows.Forms"
-						Form
-					0
-				data=,
-					Text="hello world"
+				Text="hello world"
 		restTest=-
 			rest
 			"hello"

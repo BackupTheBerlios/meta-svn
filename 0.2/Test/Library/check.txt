@@ -132,7 +132,11 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"bitwiseTest"
 	Value (StrategyMap):
-		29
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"or"
+			Value (StrategyMap):
+				0
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"mapTest"
@@ -408,7 +412,7 @@ Entry (KeyValuePair`2)
 	Value (StrategyMap):
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"x"
+				1
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -417,7 +421,7 @@ Entry (KeyValuePair`2)
 						"x"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"y"
+				2
 			Value (StrategyMap):
 				Entry (KeyValuePair`2)
 					Key (StrategyMap):
@@ -621,3 +625,8 @@ Entry (KeyValuePair`2)
 		"selectTest"
 	Value (StrategyMap):
 		"orange"
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"countTest"
+	Value (StrategyMap):
+		4

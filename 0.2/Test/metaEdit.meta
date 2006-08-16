@@ -9,28 +9,32 @@
 			Meta
 		merge
 	emptyView=,
-		|,
-			&=-
+		|-
+			merge
+			-
 				textBox
-			Background=.
-				Brushes
-				Red
-			PreviewTextInput=,
-				|,
-					e|,
-						&=e
-						Handled=1
-			getMap=,
-				|0
+			,
+				Background=.
+					Brushes
+					Red
+				PreviewTextInput=,
+					|,
+						e|,
+							&=e
+							Handled=1
+				getMap=,
+					|0
 	textBox=,
-		|,
-			&=-
+		|-
+			merge
+			-
 				TextBox
-			AcceptsReturn=1
-			GotFocus=,
-				|,
-					|-
-						SelectAll
+			,
+				AcceptsReturn=1
+				GotFocus=,
+					|,
+						|-
+							SelectAll
 	horizontal=.
 		Orientation
 		Horizontal
@@ -39,64 +43,59 @@
 			|-
 				stringView
 				" "
-		text|,
-			&=-
-				multi
-				+
-					,
-						&=-
-							textBox
-						Text=text
-						Background=.
-							Brushes
-							Fuchsia
-						getMap=,
-							|Text
-	numberView=,
-		number|,
-			&=-
+		text|-
+			merge
+			-
 				textBox
-			Background=.
-				Brushes
-				LightYellow
-			Text=-
-				integerToString
-				number
-			getMap=,
-				|-
-					stringToInteger
-					Text
-			PreviewTextInput=,
-				|,
-					e|-
-						apply
-						.
-							e
-							Text
-						,
-							c|-
-								if
-								-
-									not
+			,
+				Text=text
+				Background=.
+					Brushes
+					Fuchsia
+				getMap=,
+					|Text
+	numberView=,
+		number|-
+			merge
+			-
+				textBox
+			,
+				Background=.
+					Brushes
+					LightYellow
+				Text=-
+					integerToString
+					number
+				getMap=,
+					|-
+						stringToInteger
+						Text
+				PreviewTextInput=,
+					|,
+						e|-
+							apply
+							.
+								e
+								Text
+							,
+								c|-
+									if
 									-
-										.
-											Char
-											IsDigit_Char
-										c
-								,
-									then=,
-										|,
-											&=e
-											Handled=1
+										not
+										-
+											.
+												Char
+												IsDigit_Char
+											c
+									,
+										then=,
+											|,
+												&=e
+												Handled=1
 	multi=,
 		views|,
-			panel=-
-				StackPanel
 			&=-
-				with
-				panel
-				,
-					panel=panel
+				StackPanel
 			Margin=-
 				.
 					Thickness
@@ -131,16 +130,11 @@
 						create
 		key|,
 			value|,
-				thisEntry=-
+				&=-
 					multi
 					+
 						key
 						value
-				&=-
-					with
-					thisEntry
-					,
-						thisEntry=thisEntry
 				getKey=,
 					|-
 						.
@@ -183,15 +177,10 @@
 											create
 	view=,
 		content|,
-			this=-
+			&=-
 				multi
 				+
 					content
-			&=-
-				with
-				this
-				,
-					this=this
 			Margin=-
 				.
 					Thickness
@@ -367,7 +356,7 @@
 					value=,
 						literal=" "
 		source|,
-			thisEntry=-
+			&=-
 				multi
 				+
 					-
@@ -381,11 +370,6 @@
 						.
 							source
 							value
-			&=-
-				with
-				thisEntry
-				,
-					thisEntry=thisEntry
 			getMap=,
 				|,
 					key=.
@@ -785,18 +769,20 @@
 						mapView
 						arg
 	load=,
-		|,
-			&=.
+		|-
+			merge
+			.
 				panel
 				Children
 				1
-			Content=-
-				parse
-				-
-					.
-						Binary
-						Deserialize_String
-					path
+			,
+				Content=-
+					parse
+					-
+						.
+							Binary
+							Deserialize_String
+						path
 	currentData=,
 		|-
 			.
@@ -831,31 +817,27 @@
 									asdf=-
 										load
 			SaveAs=,
-				|,
-					dialog=-
-						with
-						-
-							.
-								SaveFileDialog
-								SaveFileDialog
-						,
-							Filter="*.meta (Meta files)|*.meta"
-							DefaultExt=".meta"
-							AddExtension=1
-					asdf=-
-						if
-						-
-							.
-								dialog
-								ShowDialog
-						,
-							then=,
-								|,
-									!path=.
-										dialog
-										FileName
-									asdf=-
-										Save
+				|-
+					if
+					-
+						.
+							,
+								&=-
+									.
+										SaveFileDialog
+										SaveFileDialog
+								Filter="*.meta (Meta files)|*.meta"
+								DefaultExt=".meta"
+								AddExtension=1
+							ShowDialog
+					,
+						then=,
+							|,
+								!path=.
+									dialog
+									FileName
+								asdf=-
+									Save
 			Save=,
 				|-
 					if
