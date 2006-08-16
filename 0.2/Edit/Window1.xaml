@@ -4,6 +4,7 @@
     Title="Edit" Height="300" Width="300"
     >
     <Grid>
-    
+    <Button Margin="10,10,11,11" >Button</Button>
+    <TextBox Margin="22,22,25,21" x:XmlAttributeProperties.XmlSpace="preserve" AcceptsReturn="True"></TextBox>
   </Grid>
 </Window>

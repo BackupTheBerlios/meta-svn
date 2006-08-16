@@ -189,7 +189,7 @@ namespace Meta
 	public class KeyDoesNotExist : ExecutionException
 	{
 		public KeyDoesNotExist(Map key, Extent extent, Map map)
-			:base("Key does not exist: " + Serialize.ValueFunction(key), extent, map)
+			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in "+ Serialize.ValueFunction(map), extent, map)
 		{
 		}
 	}
@@ -511,7 +511,7 @@ namespace Meta
 			if (!selected.Get().ContainsKey(key))
 			{
 				object x = selected.Get().ContainsKey(key);
-				throw new KeyDoesNotExist(key, keyExpression.Extent, null);
+				throw new KeyDoesNotExist(key, keyExpression.Extent, selected.Get());
 			}
 			return new Position(selected, key);
 		}
@@ -2795,7 +2795,7 @@ namespace Meta
 			if (!converted)
 			{
 				object abc = ToDotNet(meta, target, out converted);
-				throw new ApplicationException("Cannot convert argument to "+target.ToString()+".");
+				throw new ApplicationException("Cannot convert " + Serialize.ValueFunction(meta)+" to "+target.ToString()+".");
 			}
 			return dotNet;
 		}

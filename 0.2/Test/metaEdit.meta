@@ -11,32 +11,51 @@
 	emptyView=,
 		|,
 			&=-
-				TextBox
-				,
-					Background=.
-						Brushes
-						Red
-					PreviewTextInput=,
-						|,
-							e|,
-								&=e
-								Handled=1
-			getMap=,
-				|0
-	stringView=,
-		text|,
-			&=-
-				TextBox
-			Text=text
+				textBox
 			Background=.
 				Brushes
-				Fuchsia
+				Red
+			PreviewTextInput=,
+				|,
+					e|,
+						&=e
+						Handled=1
 			getMap=,
-				|Text
+				|0
+	textBox=,
+		|,
+			&=-
+				TextBox
+			AcceptsReturn=1
+			GotFocus=,
+				|,
+					|-
+						SelectAll
+	horizontal=.
+		Orientation
+		Horizontal
+	stringView=,
+		create=,
+			|-
+				stringView
+				" "
+		text|,
+			&=-
+				multi
+				+
+					,
+						&=-
+							textBox
+						Text=text
+						Background=.
+							Brushes
+							Fuchsia
+						getMap=,
+							|Text
 	numberView=,
 		number|,
 			&=-
-				TextBox
+				textBox
 			Background=.
 				Brushes
 				LightYellow
@@ -70,23 +89,58 @@
 											&=e
 											Handled=1
 	multi=,
-		views|-
-			StackPanel
-			,
-				Margin=-
-					.
-						Thickness
-						Thickness_Double
-					5
-				Children=views
+		views|,
+			panel=-
+				StackPanel
+			&=-
+				with
+				panel
+				,
+					panel=panel
+			Margin=-
+				.
+					Thickness
+					Thickness_Double
+				4
+			Children=views
+			Focusable=1
+			Orientation=.
+				PresentationFramework
+				Orientation
+				Vertical
+			MouseLeftButtonDown=,
+				|,
+					e|,
+						&=e
+						Handled=1
+						asdf=-
+							.
+								panel
+								Focus
 	entry=,
+		create=,
+			|-
+				entry
+				-
+					.
+						stringView
+						create
+				-
+					.
+						stringView
+						create
 		key|,
 			value|,
-				&=-
+				thisEntry=-
 					multi
 					+
 						key
 						value
+				&=-
+					with
+					thisEntry
+					,
+						thisEntry=thisEntry
 				getKey=,
 					|-
 						.
@@ -100,17 +154,50 @@
 							Children
 							1
 							getMap
+				KeyDown=-
+					keyMapping
+					,
+						<.
+							ModifierKeys
+							Alt=,
+							<.
+								Key
+								Enter=,
+								|-
+									.
+										Parent
+										Children
+										Insert_Int32_UIElement
+									-
+										add
+										-
+											.
+												Parent
+												Children
+												IndexOf_UIElement
+											thisEntry
+										1
+									-
+										.
+											entry
+											create
 	view=,
 		content|,
-			&=-
+			this=-
 				multi
 				+
 					content
+			&=-
+				with
+				this
+				,
+					this=this
 			Margin=-
 				.
 					Thickness
 					Thickness_Double
 				0
+			Orientation=horizontal
 			getMap=,
 				|-
 					.
@@ -124,71 +211,114 @@
 			keys=,
 				<.
 					ModifierKeys
-					Control=,
+					None=,
 					<.
 						Key
-						W=,
-						|+
-							-
-								setView
-								-
-									stringView
-									0
-							-
+						Delete=,
+						|-
+							.
+								Keyboard
+								FocusedElement
+								Parent
+								Children
+								Remove_UIElement
+							.
+								Keyboard
+								FocusedElement
+				<.
+					ModifierKeys
+					Alt=-
+					merge
+					,
+						<.
+							Key
+							R=,
+							|-
 								.
-									Children
-									0
-									Focus
-					<.
-						Key
-						E=,
-						|+
-							-
-								setView
-								-
-									numberView
-									1
-							-
-								.
-									Children
-									0
-									Focus
-					<.
-						Key
-						R=,
-						|+
-							-
-								setView
-								-
-									emptyView
-									1
-							-
-								.
-									Children
-									0
-									Focus
-			KeyDown=,
-				sender|,
-					e|-
-						callIf
-						keys
-						.
-							e
-							KeyboardDevice
-							Modifiers
-						,
-							moreKeys|-
-								callIf
-								moreKeys
-								.
-									e
+									commands
+									Debug
+									Run
+					-
+						sum
+						-
+							foreach
+							,
+								<.
 									Key
-								,
-									func|,
-										asdf=-
-											func
-										&=e
-										Handled=1
+									U=stringView
+								<.
+									Key
+									L=.
+									literalView
+									create
+								<.
+									Key
+									N=numberView
+								<.
+									Key
+									E=emptyView
+								<.
+									Key
+									P=.
+									programView
+									create
+								<.
+									Key
+									S=.
+									selectView
+									create
+								<.
+									Key
+									F=.
+									searchView
+									create
+								<.
+									Key
+									C=.
+									callView
+									create
+							,
+								key|,
+									value|,
+										<key=,
+											|+
+												-
+													setView
+													-
+														value
+														0
+												-
+													.
+														Children
+														0
+														Focus
+						merge
+			KeyDown=-
+				keyMapping
+				keys
+	keyMapping=,
+		keys|,
+			sender|,
+				e|-
+					callIf
+					keys
+					.
+						e
+						KeyboardDevice
+						Modifiers
+					,
+						moreKeys|-
+							callIf
+							moreKeys
+							.
+								e
+								SystemKey
+							,
+								func|,
+									asdf=-
+										func
+									&=e
+									Handled=1
 	functionView=,
 		key|,
 			value|,
@@ -226,8 +356,18 @@
 					Brushes
 					Azure
 	statementView=,
+		create=,
+			|-
+				statementView
+				,
+					key=+
+						,
+							lookup=,
+								literal=" "
+					value=,
+						literal=" "
 		source|,
-			&=-
+			thisEntry=-
 				multi
 				+
 					-
@@ -241,10 +381,56 @@
 						.
 							source
 							value
+			&=-
+				with
+				thisEntry
+				,
+					thisEntry=thisEntry
+			getMap=,
+				|,
+					key=.
+						-
+							.
+								Children
+								0
+								getMap
+						select
+					value=-
+						.
+							Children
+							1
+							getMap
 			Focusable=1
 			Background=.
 				Brushes
 				Gray
+			KeyDown=-
+				keyMapping
+				,
+					<.
+						ModifierKeys
+						Alt=,
+						<.
+							Key
+							Enter=,
+							|-
+								.
+									Parent
+									Children
+									Insert_Int32_UIElement
+								-
+									add
+									-
+										.
+											Parent
+											Children
+											IndexOf_UIElement
+										thisEntry
+									1
+								-
+									.
+										statementView
+										create
 	functionStatementView=,
 		source|,
 			&=-
@@ -287,52 +473,64 @@
 				Brushes
 				Azure
 	programView=,
-		statements|,
+		create=,
+			|-
+				programView
+				,
+					program=+
+						,
+							key=+
+								,
+									lookup=,
+										literal=" "
+							value=,
+								literal=" "
+		source|,
 			&=-
 				multi
 				-
-					foreach
-					statements
+					apply
+					.
+						source
+						program
 					,
-						key|,
-							value|-
-								if
-								-
-									equal
-									.
-										key
-										key
-									,
-										literal="function"
+						statement|-
+							if
+							-
+								equal
+								.
+									statement
+									key
 								,
-									then=,
-										|-
-											functionStatementView
-											value
-									else=,
-										|-
-											statementView
-											value
+									literal="function"
+							,
+								then=,
+									|-
+										functionStatementView
+										statement
+								else=,
+									|-
+										statementView
+										statement
 			Focusable=1
 			getMap=,
-				|-
-					sum
-					-
+				|,
+					program=-
 						apply
 						-
 							enumerableToArray
 							Children
 						,
-							entry|,
-								<-
-									.
-										entry
-										getKey=-
-									.
-										entry
-										getValue								
-					merge
+							entry|-
+								.
+									entry
+									getMap
 	mapView=,
+		create=,
+			|-
+				mapView
+				,
+					"hello"="world"
 		entries|,
 			&=-
 				multi
@@ -382,6 +580,16 @@
 										getValue								
 					merge
 	callView=,
+		create=,
+			|-
+				callView
+				,
+					call=+
+						,
+							search=,
+								literal="hello"
+						,
+							literal="world"
 		source|,
 			&=-
 				multi
@@ -416,6 +624,12 @@
 									child
 									getMap
 	lookupView=,
+		create=,
+			|-
+				lookupView
+				,
+					lookup=,
+						literal="hello"				
 		source|,
 			&=-
 				multi
@@ -437,6 +651,12 @@
 				Brushes
 				MistyRose
 	searchView=,
+		create=,
+			|-
+				searchView
+				,
+					search=,
+						literal="hello"
 		source|,
 			&=-
 				multi
@@ -458,6 +678,11 @@
 				Brushes
 				DeepSkyBlue
 	literalView=,
+		create=,
+			|-
+				literalView
+				,
+					literal=" "
 		source|,
 			&=-
 				multi
@@ -479,6 +704,14 @@
 				Brushes
 				DarkViolet
 	selectView=,
+		create=,
+			|-
+				selectView
+				,
+					select=+
+						,
+							search=,
+								literal="hello"
 		source|,
 			&=-
 				multi
@@ -666,30 +899,34 @@
 				|0
 		Debug=,
 			Run=,
-				|-
-					.
+				|+
+					-
+						print
 						-
-							.
-								ObjectMap
-								ObjectMap_Map
-							-
-								currentData
-						Call_Map_Position
-					0
+							currentData
 					-
 						.
-							Position
-							Position_Position_Map
+							-
+								.
+									ObjectMap
+									ObjectMap_Map
+								-
+									currentData
+							Call_Map_Position
+						0
 						-
 							.
 								Position
 								Position_Position_Map
-							.
-								RootPosition
-								rootPosition
-							"filesystem"
-						"localhost"
-	
+							-
+								.
+									Position
+									Position_Position_Map
+								.
+									RootPosition
+									rootPosition
+								"filesystem"
+							"localhost"
 	menu=-
 		Menu
 		,

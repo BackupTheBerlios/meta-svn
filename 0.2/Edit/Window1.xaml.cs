@@ -11,7 +11,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Meta;
 using Microsoft.Win32;
-using System.Windows;
 
 
 namespace Edit
@@ -35,6 +34,7 @@ namespace Edit
 				//b.SetValue(DockPanel.DockProperty, Dock.Top);
 				Window window = new Window();
 				StackPanel p;
+				//Keyboard.Focus
 				
 				//p.KeyDown += new KeyEventHandler(p_KeyDown);
 				return Map.Empty;
@@ -136,6 +136,7 @@ namespace Edit
 			}
 			public View(IView view)
 			{
+				this.MouseLeftButtonDown += new MouseButtonEventHandler(View_MouseLeftButtonDown);
 				this.Strategy=view;
 				KeyboardShortcuts s=new KeyboardShortcuts(this,ModifierKeys.Alt);
 				s[Key.S] = UseStringView;
@@ -151,6 +152,13 @@ namespace Edit
 				s[Key.C] = delegate
 				{
 				};
+			}
+
+			void View_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+			{
+				Children[0].Focusable = true;
+				Children[0].Focus();
+				Keyboard.Focus(Children[0]);
 			}
 		}
 		public class FunctionView : EntryBase
@@ -201,6 +209,7 @@ namespace Edit
 			panel.Focusable = true;
 			panel.Background = b;
 			panel.Children.Add(view);
+			//panel.Children.Remove
 			return new ViewControl(panel, delegate { return new StrategyMap(key, view.GetMap()); });
 		}
 		public delegate Map MapDelegate();
@@ -451,7 +460,9 @@ namespace Edit
 					{
 						entry = new EntryView(pair.Key, pair.Value);
 					}
+					//this
 					this.Children.Add(entry);
+					//this.Children.Insert(
 				}
 			}
 		}
@@ -459,7 +470,14 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
+				this.GotFocus += new RoutedEventHandler(StringView_GotFocus);
 				return Text;
+			}
+
+			void StringView_GotFocus(object sender, RoutedEventArgs e)
+			{
+				this.SelectAll();
+				throw new Exception("The method or operation is not implemented.");
 			}
 			public StringView():this("")
 			{
@@ -588,13 +606,13 @@ namespace Edit
         public Window1()
         {
             InitializeComponent();
-            KeyboardShortcuts s = new KeyboardShortcuts(this,ModifierKeys.Control);
-            s[Key.R]=Run;
-            s[Key.O] = Open;
-            s[Key.S] = Save;
-            s[Key.A] = SaveAs;
-            path = @"C:\asdf.meta";
-            Load();
+			KeyboardShortcuts s = new KeyboardShortcuts(this, ModifierKeys.Control);
+			s[Key.R] = Run;
+			s[Key.O] = Open;
+			s[Key.S] = Save;
+			s[Key.A] = SaveAs;
+			path = @"C:\asdf.meta";
+			Load();
         }
     }
 }
