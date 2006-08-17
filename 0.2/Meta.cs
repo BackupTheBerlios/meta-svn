@@ -189,14 +189,21 @@ namespace Meta
 	public class KeyDoesNotExist : ExecutionException
 	{
 		public KeyDoesNotExist(Map key, Extent extent, Map map)
-			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in "+ Serialize.ValueFunction(map), extent, map)
+			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in " + Serialize.ValueFunction(map), extent, map)
 		{
 		}
 	}
+	//public class KeyDoesNotExist : ExecutionException
+	//{
+	//    public KeyDoesNotExist(Map key, Extent extent, Map map)
+	//        : base("Key does not exist: " + Serialize.ValueFunction(key) + " in "+ Serialize.ValueFunction(map), extent, map)
+	//    {
+	//    }
+	//}
 	public class KeyNotFound : ExecutionException
 	{
 		public KeyNotFound(Map key, Extent extent, Map map)
-			:base("Key not found: " + Serialize.ValueFunction(key), extent, map)
+			: base("Key not found: " + Serialize.ValueFunction(key) , extent, map)
 		{
 		}
 	}
@@ -287,40 +294,56 @@ namespace Meta
 			}
 		}
 		public static Dictionary<string, double> calls = new Dictionary<string, double>();
-		protected override Position EvaluateImplementation(Position current)
+		protected override Position EvaluateImplementation(Position parent)
 		{
 			try
 			{
-				HiPerfTimer timer = null;
-				if (Interpreter.profiling)
-				{
-					timer = new HiPerfTimer();
-					timer.Start();
-				}
+				Position contextPosition=parent.AddCall(new StrategyMap());
+				//foreach (Statement statement in statements)
+				//{
+				//    statement.Assign(contextPosition);
+				//}
+				//contextPosition.Get().Scope = parent;
+				//return contextPosition;
 
-				Position callable = expressions[0].GetExpression().Evaluate(current);
+				Position callable = expressions[0].GetExpression().Evaluate(contextPosition);
 				for (int i = 1; i < expressions.Count; i++)
 				{
-					Position arg = expressions[i].GetExpression().Evaluate(current);
+					Position arg = expressions[i].GetExpression().Evaluate(contextPosition);
 					arguments.Push(arg);
 					callable = callable.Call(arg.Get());
 					arguments.Pop();
 				}
-				if (Interpreter.profiling)
+
+				Map value = callable.Get();
+				if (value.Scope != null)
 				{
-					timer.Stop();
-					string special = SpecialString(current);
-					if (!calls.ContainsKey(special))
+					if (contextPosition.Get().Scope != null)
 					{
-						calls[special] = 0;
+						value.Scope = contextPosition.Get().Scope;
 					}
-					calls[special] += timer.Duration;
+					else
+					{
+						value.Scope = contextPosition.Parent;
+					}
 				}
+				contextPosition.Assign(value);
+
+				//if (Interpreter.profiling)
+				//{
+				//    timer.Stop();
+				//    string special = SpecialString(parent);
+				//    if (!calls.ContainsKey(special))
+				//    {
+				//        calls[special] = 0;
+				//    }
+				//    calls[special] += timer.Duration;
+				//}
 				return callable;
 			}
 			catch (MetaException e)
 			{
-				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
+				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, parent));
 				throw e;
 			}
 			catch (Exception e)
@@ -328,6 +351,47 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
+		//protected override Position EvaluateImplementation(Position current)
+		//{
+		//    try
+		//    {
+		//        HiPerfTimer timer = null;
+		//        if (Interpreter.profiling)
+		//        {
+		//            timer = new HiPerfTimer();
+		//            timer.Start();
+		//        }
+
+		//        Position callable = expressions[0].GetExpression().Evaluate(current);
+		//        for (int i = 1; i < expressions.Count; i++)
+		//        {
+		//            Position arg = expressions[i].GetExpression().Evaluate(current);
+		//            arguments.Push(arg);
+		//            callable = callable.Call(arg.Get());
+		//            arguments.Pop();
+		//        }
+		//        if (Interpreter.profiling)
+		//        {
+		//            timer.Stop();
+		//            string special = SpecialString(current);
+		//            if (!calls.ContainsKey(special))
+		//            {
+		//                calls[special] = 0;
+		//            }
+		//            calls[special] += timer.Duration;
+		//        }
+		//        return callable;
+		//    }
+		//    catch (MetaException e)
+		//    {
+		//        e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
+		//        throw e;
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        throw new MetaException(e.ToString(), this.expressions[0].Extent);
+		//    }
+		//}
 		//protected override Position EvaluateImplementation(Position current)
 		//{
 		//    try
@@ -541,7 +605,7 @@ namespace Meta
 		{
 			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
-			if (key.Equals(new StrategyMap("data")))
+			if (key.Equals(new StrategyMap("SdlDotNet")))
 			{
 			}
 			Position selection = selected;
@@ -682,7 +746,7 @@ namespace Meta
 		public static Map EnumerableToArray(Map map)
 		{
 			Map result = new StrategyMap();
-			foreach (object entry in (IEnumerable)((ObjectMap)map).obj)
+			foreach (object entry in (IEnumerable)((ObjectMap)map).Object)
 			{
 				result.Append(Transform.ToMeta(entry));
 			}
@@ -2289,7 +2353,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Cannot compile map.");
+				throw new ApplicationException("Cannot compile map "+Meta.Serialize.ValueFunction(this));
 			}
 		}
 		public virtual void Append(Map map)
@@ -2969,9 +3033,6 @@ namespace Meta
 		public static object TryToDotNet(Map meta, Type target)
 		{
 			object dotNet = null;
-			if (target.IsSubclassOf(typeof(Enum)))
-			{
-			}
 			if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
 			{
 				dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
@@ -3041,6 +3102,9 @@ namespace Meta
 						//ConstructorInfo constructor = target.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
 						//MemberInfo[] members=target.GetMembers();
 
+						if (target.Name.Contains("UIElement"))
+						{
+						}
 						if (target.IsValueType)
 						{
 						}
@@ -3102,16 +3166,16 @@ namespace Meta
 						//}
 						else if (target == typeof(Type) && meta is TypeMap)
 						{
-							dotNet = ((TypeMap)meta).type;
+							dotNet = ((TypeMap)meta).Type;
 						}
 						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 								&& meta.ContainsKey(CodeKeys.Function))
 						{
 							dotNet = CreateDelegateFromCode(target, meta);
 						}
-						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).type))
+						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
 						{
-							dotNet = ((ObjectMap)meta).obj;
+							dotNet = ((ObjectMap)meta).Object;
 						}
 						else if (target.IsAssignableFrom(meta.GetType()))
 						{
@@ -3186,7 +3250,7 @@ namespace Meta
 			}
 			if (dotNet == null)
 			{
-				if(meta is ObjectMap && ((ObjectMap)meta).type==target)
+				if(meta is ObjectMap && ((ObjectMap)meta).Type==target)
 				{
 					dotNet = ((ObjectMap)meta).Object;
 				}
@@ -3327,7 +3391,7 @@ namespace Meta
 				object arg = Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
 				if (!converted)
 				{
-					throw new Exception("Could not convert argument.");
+					throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
 				}
 				else
 				{
@@ -3571,6 +3635,10 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
+		public override string ToString()
+		{
+			return Type.ToString();
+		}
 		protected override object GlobalKey
 		{
 			get
@@ -3589,10 +3657,10 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			if (type.IsGenericTypeDefinition)
+			if (Type.IsGenericTypeDefinition)
 			{
 				List<Type> types=new List<Type>();
-				if (type.GetGenericArguments().Length == 1)
+				if (Type.GetGenericArguments().Length == 1)
 				{
 					types.Add(((TypeMap)key).Type);
 				}
@@ -3600,12 +3668,12 @@ namespace Meta
 				{
 					foreach (Map map in key.Array)
 					{
-						types.Add(((TypeMap)map).type);
+						types.Add(((TypeMap)map).Type);
 					}
 				}
-				return new TypeMap(type.MakeGenericType(types.ToArray()));
+				return new TypeMap(Type.MakeGenericType(types.ToArray()));
 			}
-			else if (type == typeof(Array) && key is TypeMap)
+			else if (Type == typeof(Array) && key is TypeMap)
 			{
 				return new TypeMap(((TypeMap)key).Type.MakeArrayType());
 			}
@@ -3629,37 +3697,37 @@ namespace Meta
 				if (data == null)
 				{
 					data = new Dictionary<Map, Map>();
-					foreach (ConstructorInfo constructor in type.GetConstructors())
+					foreach (ConstructorInfo constructor in Type.GetConstructors())
 					{
-						string name = type.Name;
-						foreach (ParameterInfo parameter in constructor.GetParameters())
-						{
-							name += "_" + parameter.ParameterType.Name;
-						}
-						data[name] = new Method(constructor, obj, type);
+						string name = GetConstructorName(constructor);
+						data[name] = new Method(constructor, this.Object, Type);
 					}
 				}
 				return data;
 			}
 		}
-		public Type Type
+
+		public static string GetConstructorName(ConstructorInfo constructor)
 		{
-			get
+			string name = constructor.DeclaringType.Name;
+			foreach (ParameterInfo parameter in constructor.GetParameters())
 			{
-				return type;
+				name += "_" + parameter.ParameterType.Name;
 			}
+			return name;
 		}
+
 		public override int GetHashCode()
 		{
-			return type.GetHashCode();
+			return Type.GetHashCode();
 		}
 		public override bool Equals(object obj)
 		{
-			return obj is TypeMap && ((TypeMap)obj).Type == this.type;
+			return obj is TypeMap && ((TypeMap)obj).Type == this.Type;
 		}
 		protected override Map CopyData()
 		{
-			return new TypeMap(this.type);
+			return new TypeMap(this.Type);
 		}
 		private Map constructor;
 		private Map Constructor
@@ -3668,7 +3736,7 @@ namespace Meta
 			{
 				if (constructor == null)
 				{
-					constructor = new Method(type.GetConstructor(new Type[] { }),obj,type);
+					constructor = new Method(Type.GetConstructor(new Type[] { }),Object,Type);
 				}
 				return constructor;
 			}
@@ -3698,14 +3766,14 @@ namespace Meta
 		{
 			get 
 			{
-				return obj;
+				return Object;
 			}
 		}
 		public override Position Call(Map arg, Position position)
 		{
-			if (this.type.IsSubclassOf(typeof(Delegate)))
+			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
-				return new Method(type.GetMethod("Invoke"), this.obj, this.type).Call(arg, position);
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, position);
 			}
 			else
 			{
@@ -3714,19 +3782,19 @@ namespace Meta
 		}
 		public override bool Equals(object obj)
 		{
-			return obj is ObjectMap && ((ObjectMap)obj).obj.Equals(this.obj);
+			return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
 		}
 		public override int GetHashCode()
 		{
-			return obj.GetHashCode();
+			return Object.GetHashCode();
 		}
-		public object Object
-		{
-			get
-			{
-				return obj;
-			}
-		}
+		//public object Object
+		//{
+		//    get
+		//    {
+		//        return obj;
+		//    }
+		//}
 		public ObjectMap(string text)
 			: this(text, text.GetType())
 		{
@@ -3744,11 +3812,11 @@ namespace Meta
 		}
 		public override string ToString()
 		{
-			return obj.ToString();
+			return Object.ToString();
 		}
 		protected override Map CopyData()
 		{
-			return new ObjectMap(obj);
+			return new ObjectMap(Object);
 		}
 	}
 	[Serializable]
@@ -4577,6 +4645,20 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : Map
 	{
+		public object Object
+		{
+			get
+			{
+				return obj;
+			}
+		}
+		public Type Type
+		{
+			get
+			{
+				return type;
+			}
+		}
 		protected abstract object GlobalKey
 		{
 			get;
@@ -4607,8 +4689,8 @@ namespace Meta
 				return data;
 			}
 		}
-		public object obj;
-		public Type type;
+		private object obj;
+		private Type type;
 		protected BindingFlags bindingFlags;
 
 		public DotNetMap(object obj, Type type)
@@ -4626,7 +4708,11 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
-			if (Data.ContainsKey(key))
+			if (obj!=null && key.Equals(new StrategyMap("this")))
+			{
+				return this;
+			}
+			else if (Data.ContainsKey(key))
 			{
 				return Data[key];
 			}
@@ -4709,7 +4795,7 @@ namespace Meta
 		}
 		protected override void Set(Map key, Map value)
 		{
-			//if (key.Equals(new StrategyMap("setStrategy")))
+			//if (key.Equals(new StrategyMap("VerticalAlignmentProperty")))
 			//{
 			//}
 			if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
@@ -5303,10 +5389,40 @@ namespace Meta
 						name = type.Name;
 					}
 					selected[type.Name] = new TypeMap(type);
+					foreach (ConstructorInfo constructor in type.GetConstructors())
+					{
+						if (constructor.GetParameters().Length != 0)
+						{
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor,null,type);
+						}
+
+					}
 				}
 			}
 			return val;
 		}
+		//public static Map LoadAssembly(Assembly assembly)
+		//{
+		//    Map val = new StrategyMap();
+		//    foreach (Type type in assembly.GetExportedTypes())
+		//    {
+		//        if (type.DeclaringType == null)
+		//        {
+		//            Map selected = val;
+		//            string name;
+		//            if (type.IsGenericTypeDefinition)
+		//            {
+		//                name = type.Name.Split('`')[0];
+		//            }
+		//            else
+		//            {
+		//                name = type.Name;
+		//            }
+		//            selected[type.Name] = new TypeMap(type);
+		//        }
+		//    }
+		//    return val;
+		//}
 		protected override Map Get(Map key)
 		{
 			Map value;
@@ -5319,7 +5435,7 @@ namespace Meta
 						value = LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
 						this[key] = value;
 					}
-					catch
+					catch(Exception e)
 					{
 						value = null;
 					}
@@ -6505,7 +6621,10 @@ namespace Meta
 					Expression)),
 			new Alternatives(LookupStringExpression, LookupAnythingExpression))));
 
-
+		public static Rule ProgramDelayed = new DelayedRule(delegate()
+		{
+			return Program;
+		});
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Select),
@@ -6515,6 +6634,7 @@ namespace Meta
 					new Action(new Assignment(1),
 						new Alternatives(
 							LastArgument,
+							ProgramDelayed,
 							Root,
 							Search,
 							Lookup,
@@ -6594,6 +6714,8 @@ new Assignment(
 						new Action(new Assignment(
 							CodeKeys.Key),
 							Keys),
+						new Action(new Match(), new Optional(EndOfLine)),
+						new Action(new Match(), new Optional(SameIndentation)),
 						new Action(new Match(), new Character('=')),
 						new Action(new Assignment(
 							CodeKeys.Value),
@@ -7191,7 +7313,15 @@ new Assignment(
 		{
 			try
 			{
-				if (map.Count == 0)
+				if (map is DotNetMap)
+				{
+					return map.ToString();
+				}
+				//else if (map is TypeMap)
+				//{
+				//    return ((TypeMap)map).type.ToString();
+				//}
+				else if (map.Count == 0)
 				{
 					if (indentation < 0)
 					{
@@ -7224,10 +7354,10 @@ new Assignment(
 						return "\"" + text + "\"";
 					}
 				}
-				else if (map is DotNetMap)
-				{
-					return map.ToString();
-				}
+				//else if (map is DotNetMap)
+				//{
+				//    return map.ToString();
+				//}
 				else
 				{
 					string text;
@@ -7263,7 +7393,7 @@ new Assignment(
 			catch (Exception e)
 			{
 				int asdf = 0;
-				return null;
+				throw e;
 			}
 
 		}
@@ -7320,11 +7450,11 @@ new Assignment(
 			//}
 			public class MetaEdit : Test
 			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath,@"Test\metaEdit.meta"), new StrategyMap());
-				}
+			    public override object GetResult(out int level)
+			    {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\metaEdit.meta"), new StrategyMap());
+			    }
 			}
 
 			public class Serialization : Test

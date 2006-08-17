@@ -174,7 +174,6 @@
   <ItemGroup>
     <None Include="Library\sendMail.meta" />
     <None Include="Test\pong.meta" />
-    <None Include="Test\editTest.meta" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\callIf.meta" />

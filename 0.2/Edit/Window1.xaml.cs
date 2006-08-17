@@ -25,15 +25,20 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
-				Application app = new Application();
+				//SdlDotNet.Events
+				//Application app = new Application();
 
 				//Dock
 				//DockPanel p;
 
-				Button b;
+				//Button b;
+				//StackPanel.VerticalAlignmentProperty
+				//System.Windows.VerticalAlignment
 				//b.SetValue(DockPanel.DockProperty, Dock.Top);
 				Window window = new Window();
 				StackPanel p;
+				//p.HorizontalAlignment=StackPanel.HorizontalAlignmentProperty
+				//StackPanel.VerticalAlignmentProperty
 				//Keyboard.Focus
 				
 				//p.KeyDown += new KeyEventHandler(p_KeyDown);
@@ -549,12 +554,14 @@ namespace Edit
 			StackPanel s;
             Map map=MainView.GetMap();
             Interpreter.Init();
+			//VerticalAlignment.Top
             map.Call(Map.Empty, new Position(new Position(RootPosition.rootPosition, "filesystem"), "localhost"));
 
         }
         private void Open()
         {
             OpenFileDialog dialog = new OpenFileDialog();
+			//dialog.FileOk += new System.ComponentModel.CancelEventHandler(dialog_FileOk);
             dialog.Filter = "*.meta (Meta files)|*.meta";
             if (dialog.ShowDialog()==true)
             {
@@ -562,6 +569,10 @@ namespace Edit
                 Load();
             }
         }
+
+		//void dialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		//{
+		//}
         private void Load()
         {
 			Map map = Binary.Deserialize(path);

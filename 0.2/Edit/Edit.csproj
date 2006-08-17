@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Programme\Microsoft Visual Studio 8\Common7\IDE\Cider\PresentationDesignDeveloper.DLL</HintPath>
     </Reference>
+    <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Programme\SdlDotNet\runtime\bin\SdlDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

@@ -9,32 +9,29 @@
 			Meta
 		merge
 	emptyView=,
-		|-
-			merge
-			-
+		|,
+			&=-
 				textBox
-			,
-				Background=.
-					Brushes
-					Red
-				PreviewTextInput=,
-					|,
-						e|,
-							&=e
+			Background=.
+				Brushes
+				Red
+			PreviewTextInput=,
+				|,
+					e|,
+						.
+							!e
 							Handled=1
-				getMap=,
-					|0
+			getMap=,
+				|0
 	textBox=,
-		|-
-			merge
-			-
+		|,
+			&=-
 				TextBox
-			,
-				AcceptsReturn=1
-				GotFocus=,
-					|,
-						|-
-							SelectAll
+			AcceptsReturn=1
+			GotFocus=,
+				|,
+					|-
+						SelectAll
 	horizontal=.
 		Orientation
 		Horizontal
@@ -43,75 +40,76 @@
 			|-
 				stringView
 				" "
-		text|-
-			merge
-			-
+		text|,
+			&=-
 				textBox
-			,
-				Text=text
-				Background=.
-					Brushes
-					Fuchsia
-				getMap=,
-					|Text
+			Text=text
+			Background=.
+				Brushes
+				Fuchsia
+			getMap=,
+				|Text
 	numberView=,
-		number|-
-			merge
-			-
+		number|,
+			&=-
 				textBox
-			,
-				Background=.
-					Brushes
-					LightYellow
-				Text=-
-					integerToString
-					number
-				getMap=,
-					|-
-						stringToInteger
-						Text
-				PreviewTextInput=,
-					|,
-						e|-
-							apply
-							.
-								e
-								Text
-							,
-								c|-
-									if
+			Background=.
+				Brushes
+				LightYellow
+			Text=-
+				integerToString
+				number
+			getMap=,
+				|-
+					stringToInteger
+					Text
+			PreviewTextInput=,
+				|,
+					e|-
+						apply
+						.
+							e
+							Text
+						,
+							c|-
+								if
+								-
+									not
 									-
-										not
-										-
+										.
+											Char
+											IsDigit_Char
+										c
+								,
+									then=,
+										|,
 											.
-												Char
-												IsDigit_Char
-											c
-									,
-										then=,
-											|,
-												&=e
+												!e
 												Handled=1
 	multi=,
 		views|,
 			&=-
 				StackPanel
 			Margin=-
-				.
-					Thickness
-					Thickness_Double
+				Thickness_Double
 				4
 			Children=views
-			Focusable=1
 			Orientation=.
 				PresentationFramework
 				Orientation
 				Vertical
+			<.
+				FrameworkElement
+				HorizontalAlignmentProperty=.
+				PresentationFramework
+				HorizontalAlignment
+				Left
 			MouseLeftButtonDown=,
 				|,
 					e|,
-						&=e
-						Handled=1
+						.
+							!e
+							Handled=1
 						asdf=-
 							.
 								panel
@@ -131,17 +129,20 @@
 		key|,
 			value|,
 				&=-
-					multi
+					control
 					+
 						key
 						value
+				Orientation=.
+					PresentationFramework
+					Orientation
+					Horizontal
 				getKey=,
 					|-
 						.
 							Children
 							0
 							getMap
-				Focusable=1
 				getValue=,
 					|-
 						.
@@ -169,7 +170,7 @@
 												Parent
 												Children
 												IndexOf_UIElement
-											thisEntry
+											this
 										1
 									-
 										.
@@ -182,11 +183,21 @@
 				+
 					content
 			Margin=-
-				.
-					Thickness
-					Thickness_Double
+				Thickness_Double
 				0
 			Orientation=horizontal
+			<.
+				FrameworkElement
+				HorizontalAlignmentProperty=.
+				PresentationFramework
+				HorizontalAlignment
+				Left
+			<.
+				FrameworkElement
+				VerticalAlignmentProperty=.
+				PresentationFramework
+				VerticalAlignment
+				Top
 			getMap=,
 				|-
 					.
@@ -200,22 +211,6 @@
 			keys=,
 				<.
 					ModifierKeys
-					None=,
-					<.
-						Key
-						Delete=,
-						|-
-							.
-								Keyboard
-								FocusedElement
-								Parent
-								Children
-								Remove_UIElement
-							.
-								Keyboard
-								FocusedElement
-				<.
-					ModifierKeys
 					Alt=-
 					merge
 					,
@@ -227,6 +222,15 @@
 									commands
 									Debug
 									Run
+						<.
+							Key
+							Delete=,
+							|-
+								.
+									Parent
+									Children
+									Remove_UIElement
+								this
 					-
 						sum
 						-
@@ -234,36 +238,56 @@
 							,
 								<.
 									Key
-									U=stringView
+									U
+								=stringView
 								<.
 									Key
-									L=.
+									V
+								=.
+									lookupView
+									create
+								<.
+									Key
+									L
+								=.
 									literalView
 									create
 								<.
 									Key
-									N=numberView
+									N
+								=numberView
 								<.
 									Key
-									E=emptyView
+									E
+								=emptyView
 								<.
 									Key
-									P=.
+									P
+								=.
 									programView
 									create
 								<.
 									Key
-									S=.
+									S
+								=.
 									selectView
 									create
 								<.
 									Key
-									F=.
+									T
+								=.
+									currentView
+									create
+								<.
+									Key
+									F
+								=.
 									searchView
 									create
 								<.
 									Key
-									C=.
+									C
+								=.
 									callView
 									create
 							,
@@ -296,23 +320,39 @@
 						KeyboardDevice
 						Modifiers
 					,
-						moreKeys|-
-							callIf
-							moreKeys
-							.
-								e
-								SystemKey
-							,
-								func|,
-									asdf=-
-										func
-									&=e
-									Handled=1
+						functions|+
+							-
+								print
+								"in keyMapping"
+							-
+								callIf
+								functions
+								.
+									e
+									SystemKey
+								,
+									func|,
+										asdf=-
+											print
+											.
+												e
+												SystemKey
+										asdf=-
+											func
+										.
+											!e
+											Handled=1
+	control=,
+		children|,
+			&=-
+				multi
+				children
+			Focusable=1
 	functionView=,
 		key|,
 			value|,
 				&=-
-					multi
+					control
 					+
 						-
 							view
@@ -326,7 +366,6 @@
 							.
 								value
 								expression
-				Focusable=1
 				getKey=,
 					|"function"
 				getValue=,
@@ -357,7 +396,7 @@
 						literal=" "
 		source|,
 			&=-
-				multi
+				control
 				+
 					-
 						parse
@@ -370,6 +409,10 @@
 						.
 							source
 							value
+			Orientation=.
+				PresentationFramework
+				Orientation
+				Horizontal
 			getMap=,
 				|,
 					key=.
@@ -384,7 +427,6 @@
 							Children
 							1
 							getMap
-			Focusable=1
 			Background=.
 				Brushes
 				Gray
@@ -397,28 +439,32 @@
 						<.
 							Key
 							Enter=,
-							|-
-								.
-									Parent
-									Children
-									Insert_Int32_UIElement
+							|+
 								-
-									add
-									-
-										.
-											Parent
-											Children
-											IndexOf_UIElement
-										thisEntry
-									1
+									print
+									"enter pressed"
 								-
 									.
-										statementView
-										create
+										Parent
+										Children
+										Insert_Int32_UIElement
+									-
+										add
+										-
+											.
+												Parent
+												Children
+												IndexOf_UIElement
+											this
+										1
+									-
+										.
+											statementView
+											create
 	functionStatementView=,
 		source|,
 			&=-
-				multi
+				control
 				+
 					-
 						view
@@ -436,7 +482,6 @@
 							value
 							literal
 							expression
-			Focusable=1
 			getMap=,
 				|,
 					key=,
@@ -471,7 +516,7 @@
 								literal=" "
 		source|,
 			&=-
-				multi
+				control
 				-
 					apply
 					.
@@ -479,24 +524,25 @@
 						program
 					,
 						statement|-
-							if
+							view
 							-
-								equal
-								.
-									statement
-									key
+								if
+								-
+									equal
+									.
+										statement
+										key
+									,
+										literal="function"
 								,
-									literal="function"
-							,
-								then=,
-									|-
-										functionStatementView
-										statement
-								else=,
-									|-
-										statementView
-										statement
-			Focusable=1
+									then=,
+										|-
+											functionStatementView
+											statement
+									else=,
+										|-
+											statementView
+											statement
 			getMap=,
 				|,
 					program=-
@@ -509,6 +555,28 @@
 								.
 									entry
 									getMap
+			keys=,
+				<.
+					ModifierKeys
+					Alt
+				=,
+					<.
+						Key
+						Enter
+					=,
+						|-
+							.
+								Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										statementView
+										create
+			KeyDown=-
+				keyMapping
+				keys
 	mapView=,
 		create=,
 			|-
@@ -517,7 +585,7 @@
 					"hello"="world"
 		entries|,
 			&=-
-				multi
+				control
 				-
 					foreach
 					entries
@@ -544,7 +612,6 @@
 											-
 												parse
 												value
-			Focusable=1
 			getMap=,
 				|-
 					sum
@@ -561,7 +628,7 @@
 										getKey=-
 									.
 										entry
-										getValue								
+										getValue
 					merge
 	callView=,
 		create=,
@@ -570,13 +637,15 @@
 				,
 					call=+
 						,
-							search=,
-								literal="hello"
+							select=+
+								,
+									search=,
+										literal="hello"
 						,
 							literal="world"
 		source|,
 			&=-
-				multi
+				control
 				-
 					apply
 					.
@@ -589,11 +658,8 @@
 			Background=.
 				Brushes
 				BurlyWood
-			Focusable=1
 			Margin=-
-				.
-					Thickness
-					Thickness_Double
+				Thickness_Double
 				3
 			getMap=,
 				|,
@@ -607,23 +673,42 @@
 								.
 									child
 									getMap
+			keys=,
+				<.
+					ModifierKeys
+					Alt
+				=,
+					<.
+						Key
+						Enter
+					=,
+						|-
+							.
+								Children
+								Add_UIElement
+							-
+								.
+									literalView
+									create
+			KeyDown=-
+				keyMapping
+				keys
 	lookupView=,
 		create=,
 			|-
 				lookupView
 				,
 					lookup=,
-						literal="hello"				
+						literal="hello"
 		source|,
 			&=-
-				multi
+				control
 				+
 					-
 						parse
 						.
 							source
 							lookup
-			Focusable=1
 			getMap=,
 				|,
 					lookup=-
@@ -643,14 +728,13 @@
 						literal="hello"
 		source|,
 			&=-
-				multi
+				control
 				+
 					-
 						parse
 						.
 							source
 							search
-			Focusable=1
 			getMap=,
 				|,
 					search=-
@@ -669,7 +753,7 @@
 					literal=" "
 		source|,
 			&=-
-				multi
+				control
 				+
 					-
 						parse
@@ -683,10 +767,28 @@
 							Children
 							0
 							getMap
-			Focusable=1
 			Background=.
 				Brushes
 				DarkViolet
+	currentView=,
+		create=,
+			|-
+				currentView
+		|,
+			&=-
+				textBox
+			Background=.
+				Brushes
+				White
+			PreviewTextInput=,
+				|,
+					e|,
+						.
+							!e
+							Handled=1
+			getMap=,
+				|,
+					current=0
 	selectView=,
 		create=,
 			|-
@@ -698,7 +800,7 @@
 								literal="hello"
 		source|,
 			&=-
-				multi
+				control
 				-
 					apply
 					.
@@ -708,7 +810,26 @@
 						arg|-
 							parse
 							arg
-			Focusable=1
+			keys=,
+				<.
+					ModifierKeys
+					Alt
+				=,
+					<.
+						Key
+						Enter
+					=,
+						|-
+							.
+								Children
+								Add_UIElement
+							-
+								.
+									lookupView
+									create
+			KeyDown=-
+				keyMapping
+				keys
 			getMap=,
 				|,
 					select=-
@@ -763,6 +884,11 @@
 						|-
 							hasKey
 							arg
+							"current"=currentView
+					<,
+						|-
+							hasKey
+							arg
 							"program"=programView
 				,
 					|-
@@ -794,50 +920,42 @@
 	commands=,
 		File=,
 			Open=,
-				|,
-					dialog=-
-						OpenFileDialog
-						OpenFileDialog
+				|-
 					.
-						dialog
-						Filter
-					="*.meta (Meta files)|*.meta"
-					asdf=-
-						if
-						-
-							.
-								dialog
-								ShowDialog
 						,
-							then=,
-								|,
-									!path=.
-										dialog
-										FileName
-									asdf=-
-										load
+							&=-
+								OpenFileDialog
+								OpenFileDialog
+							Filter="*.meta (Meta files)|*.meta"
+							FileOk=,
+								dialog|,
+									|,
+										!path=.
+											dialog
+											FileName
+										asdf=-
+											load
+						ShowDialog
 			SaveAs=,
 				|-
-					if
-					-
-						.
-							,
-								&=-
-									.
-										SaveFileDialog
-										SaveFileDialog
-								Filter="*.meta (Meta files)|*.meta"
-								DefaultExt=".meta"
-								AddExtension=1
-							ShowDialog
-					,
-						then=,
-							|,
-								!path=.
-									dialog
-									FileName
-								asdf=-
-									Save
+					.
+						,
+							&=-
+								.
+									SaveFileDialog
+									SaveFileDialog
+							Filter="*.meta (Meta files)|*.meta"
+							DefaultExt=".meta"
+							AddExtension=1
+							FileOk=,
+								dialog|,
+									|,
+										!path=.
+											dialog
+											FileName
+										asdf=-
+											Save
+						ShowDialog
 			Save=,
 				|-
 					if
@@ -889,21 +1007,15 @@
 					-
 						.
 							-
-								.
-									ObjectMap
-									ObjectMap_Map
+								ObjectMap_Map
 								-
 									currentData
 							Call_Map_Position
 						0
 						-
-							.
-								Position
-								Position_Position_Map
+							Position_Position_Map
 							-
-								.
-									Position
-									Position_Position_Map
+								Position_Position_Map
 								.
 									RootPosition
 									rootPosition
