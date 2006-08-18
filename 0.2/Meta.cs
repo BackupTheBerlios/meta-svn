@@ -1735,8 +1735,9 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
-			//level = 2;
-			//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"Test\metaEdit.meta"), new StrategyMap());
+			//int level = 2;
+			//new MetaTest.Basic().GetResult(out level);
+			////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"Test\metaEdit.meta"), new StrategyMap());
 			//return;
 
 			//Map m=Parser.Parse(@"C:\Meta\0.2\Test\test.meta");

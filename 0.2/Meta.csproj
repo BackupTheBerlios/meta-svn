@@ -192,6 +192,7 @@
     <None Include="Library\stringToInteger.meta" />
     <None Include="Test\Copy %282%29 of basicTest.meta" />
     <None Include="Test\Copy %282%29 of metaEdit.meta" />
+    <None Include="Test\Copy of metaEdit.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

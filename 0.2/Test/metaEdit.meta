@@ -299,7 +299,7 @@
 								setView
 								-
 									parse
-									copied
+									c
 						<.
 							Key
 							R=,
@@ -1074,107 +1074,99 @@
 				1
 				Content
 				getMap
-	commands=,
-		File=,
-			Open=,
-				|-
-					.
-						,
-							&=-
-								OpenFileDialog
-								OpenFileDialog
-							Filter="*.meta (Meta files)|*.meta"
-							FileOk=,
-								dialog|,
-									|,
-										!path=.
-											dialog
-											FileName
-										asdf=-
-											load
-						ShowDialog
-			SaveAs=,
-				|-
-					.
-						,
-							&=-
-								.
-									SaveFileDialog
-									SaveFileDialog
-							Filter="*.meta (Meta files)|*.meta"
-							DefaultExt=".meta"
-							AddExtension=1
-							FileOk=,
-								dialog|,
-									|,
-										!path=.
-											dialog
-											FileName
-										asdf=-
-											Save
-						ShowDialog
-			Save=,
-				|-
-					if
-					-
-						isEmpty
-						path
-					,
-						then=,
-							|-
-								SaveAs
-						else=,
-							|-
-								.
-									Binary
-									Serialize_Map_String
+	commands=+
+		,
+			header="File"
+			items=+
+				,
+					header="Open"
+					click=,
+						|-
+							.
+								,
+									&=-
+										OpenFileDialog
+										OpenFileDialog
+									Filter="*.meta (Meta files)|*.meta"
+									FileOk=,
+										dialog|,
+											|,
+												!path=.
+													dialog
+													FileName
+												asdf=-
+													load
+								ShowDialog
+				,
+					header="SaveAs"
+					click=,
+						|-
+							.
+								,
+									&=-
+										.
+											SaveFileDialog
+											SaveFileDialog
+									Filter="*.meta (Meta files)|*.meta"
+									DefaultExt=".meta"
+									AddExtension=1
+									FileOk=,
+										dialog|,
+											|,
+												!path=.
+													dialog
+													FileName
+												asdf=-
+													Save
+								ShowDialog
+				,
+					header="Save"
+					click=,
+						|-
+							if
+							-
+								isEmpty
+								path
+							,
+								then=,
+									|-
+										SaveAs
+								else=,
+									|-
+										.
+											Binary
+											Serialize_Map_String
+										-
+											currentData
+										path
+				,
+					header="Exit"
+					click=,
+						|-
+							.
+								window
+								Close
+		,
+			header="Debug"
+			items=+
+				,
+					header="Run"
+					click=,
+						|+
+							-
+								print
 								-
 									currentData
+							-
+								.
+									File
+									Save
+							-
+								.
+									Process
+									Start_String_String
+								"C:\Meta\0.2\Meta.exe"
 								path
-			Exit=,
-				|-
-					.
-						window
-						Close
-		Edit=,
-			Copy=,
-				|0
-			Pase=,
-				|0
-			String=,
-				|0
-			Number=,
-				|0
-			Map=,
-				|0
-			Empty=,
-				|0
-		View=,
-			Up=,
-				|0
-			Down=,
-				|0
-			Next=,
-				|0
-			Previous=,
-				|0
-		Debug=,
-			Run=,
-				|+
-					-
-						print
-						-
-							currentData
-					-
-						.
-							File
-							Save
-					-
-						.
-							Process
-							Start_String_String
-						"C:\Meta\0.2\Meta.exe"
-						path
 	menu=-
 		Menu
 		,
@@ -1184,26 +1176,32 @@
 				Dock
 				Top
 			Items=-
-				foreach
+				apply
 				commands
 				,
-					key|,
-						value|-
-							MenuItem
-							,
-								Header=key
-								Items=-
-									foreach
+					value|-
+						MenuItem
+						,
+							Header=.
+								value
+								header
+							Items=-
+								apply
+								.
 									value
-									,
-										key|,
-											value|-
-												.
-													MenuItem
-												,
-													Header=key
-													Click=,
-														sender|value
+									items
+								,
+									value|-
+										.
+											MenuItem
+										,
+											Header=.
+												value
+												header
+											Click=,
+												sender|.
+													value
+													click
 	panel=-
 		DockPanel
 		,

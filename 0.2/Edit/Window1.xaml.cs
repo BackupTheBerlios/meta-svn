@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Meta;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 
 namespace Edit
@@ -26,6 +27,9 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
+				Menu m;
+				//m.Items = null;
+				//ItemCollection i=new ItemCollection();
 				//Canvas.LeftProperty
 				//SdlDotNet.Events
 				//Application app = new Application();
@@ -98,6 +102,9 @@ namespace Edit
 			}
 			private void UseMapView()
 			{
+				DispatcherTimer timer= new DispatcherTimer();
+				//timer.Interval=new TimeSpan(
+				//    timer.Start
 				MapView view=new MapView();
 				Strategy = view;
 			}
