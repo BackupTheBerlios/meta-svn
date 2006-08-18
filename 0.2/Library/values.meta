@@ -2,7 +2,7 @@ arg|-
 	apply
 	-
 		keys
-		@
+		arg
 	,
 		key|.
 			arg

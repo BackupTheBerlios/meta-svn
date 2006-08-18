@@ -5,7 +5,7 @@ replace=,
 			Meta
 			Library
 			StringReplace_Map_Map_Map
-		@
+		arg
 trim=,
 	arg|,
 		object=-
@@ -13,7 +13,7 @@ trim=,
 				/
 				Meta
 				ObjectMap_String
-			@
+			arg
 		&=-
 			.
 				object
@@ -28,7 +28,7 @@ lower=,
 				Meta
 				ObjectMap
 				ObjectMap_String
-			@
+			arg
 		&=-
 			.
 				object
@@ -42,7 +42,7 @@ upper=,
 				Meta
 				ObjectMap
 				ObjectMap_String
-			@
+			arg
 		&=-
 			.
 				object
@@ -55,7 +55,7 @@ split=,
 			Meta
 			Library
 			SplitString_Map_Map
-		@
+		arg
 compare=,
 	arg|-
 		.
@@ -63,4 +63,4 @@ compare=,
 			Meta
 			Library
 			CompareString_Map_Map
-		@
+		arg

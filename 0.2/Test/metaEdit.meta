@@ -2,12 +2,81 @@
 	&=-
 		sum
 		+
+			System
 			PresentationFramework
 			PresentationCore
 			windowsbase
 			mscorlib
 			Meta
 		merge
+	listProgramView=,
+		create=,
+			|-
+				listProgramView
+				,
+					program=+
+						,
+							key=+
+								,
+									lookup=,
+										literal=1
+							value=,
+								literal=" "
+		source|,
+			&=-
+				control
+				-
+					apply
+					.
+						source
+						program
+					,
+						statement|-
+							parse
+							.
+								statement
+								value
+			Background=.
+				Brushes
+				Green
+			getMap=,
+				|,
+					program=-
+						foreach
+						-
+							enumerableToArray
+							Children
+						,
+							key|,
+								value|,
+									key=+
+										,
+											lookup=,
+												literal=key
+									value=-
+										.
+											value
+											getMap
+			keys=,
+				<.
+					ModifierKeys
+					Alt=,
+					<.
+						Key
+						Enter=,
+						|-
+							.
+								Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										literalView
+										create
+			KeyDown=-
+				keyMapping
+				keys
 	emptyView=,
 		|,
 			&=-
@@ -92,7 +161,7 @@
 				StackPanel
 			Margin=-
 				Thickness_Double
-				4
+				2
 			Children=views
 			Orientation=.
 				PresentationFramework
@@ -176,6 +245,7 @@
 										.
 											entry
 											create
+	copied=0
 	view=,
 		content|,
 			&=-
@@ -184,7 +254,7 @@
 					content
 			Margin=-
 				Thickness_Double
-				0
+				2
 			Orientation=horizontal
 			<.
 				FrameworkElement
@@ -214,6 +284,22 @@
 					Alt=-
 					merge
 					,
+						<.
+							Key
+							B
+						=,
+							|,
+								!copied=-
+									getMap
+						<.
+							Key
+							M
+						=,
+							|-
+								setView
+								-
+									parse
+									copied
 						<.
 							Key
 							R=,
@@ -260,6 +346,12 @@
 									Key
 									E
 								=emptyView
+								<.
+									Key
+									A
+								=.
+									listProgramView
+									create
 								<.
 									Key
 									P
@@ -383,6 +475,71 @@
 				Background=.
 					Brushes
 					Azure
+	statementBase=,
+		children|,
+			&=-
+				control
+				children
+			keys=,
+				<.
+					ModifierKeys
+					Alt
+				=,
+					<.
+						Key
+						Y
+					=,
+						|-
+							.
+								Parent
+								Parent
+								Children
+								Insert_Int32_UIElement
+							-
+								add
+								-
+									.
+										Parent
+										Parent
+										Children
+										IndexOf_UIElement
+									Parent
+								1
+							-
+								view
+								-
+									.
+										functionStatementView
+										create
+					<.
+						Key
+						Enter
+					=,
+						|-
+							.
+								Parent
+								Parent
+								Children
+								Insert_Int32_UIElement
+							-
+								add
+								-
+									.
+										Parent
+										Parent
+										Children
+										IndexOf_UIElement
+									Parent
+								1
+							-
+								view
+								-
+									.
+										statementView
+										create
+			KeyDown=-
+				keyMapping
+				keys
 	statementView=,
 		create=,
 			|-
@@ -396,7 +553,7 @@
 						literal=" "
 		source|,
 			&=-
-				control
+				statementBase
 				+
 					-
 						parse
@@ -430,41 +587,19 @@
 			Background=.
 				Brushes
 				Gray
-			KeyDown=-
-				keyMapping
-				,
-					<.
-						ModifierKeys
-						Alt=,
-						<.
-							Key
-							Enter=,
-							|+
-								-
-									print
-									"enter pressed"
-								-
-									.
-										Parent
-										Children
-										Insert_Int32_UIElement
-									-
-										add
-										-
-											.
-												Parent
-												Children
-												IndexOf_UIElement
-											this
-										1
-									-
-										.
-											statementView
-											create
 	functionStatementView=,
+		create=,
+			|-
+				functionStatementView
+				,
+					value=,
+						literal=,
+							parameter="arg"
+							expression=,
+								literal="hello"
 		source|,
 			&=-
-				control
+				statementBase
 				+
 					-
 						view
@@ -484,8 +619,10 @@
 							expression
 			getMap=,
 				|,
-					key=,
-						literal="function"
+					key=+
+						,
+							lookup=,
+								literal="function"
 					value=,
 						literal=,
 							parameter=-
@@ -532,8 +669,10 @@
 									.
 										statement
 										key
-									,
-										literal="function"
+									+
+										,
+											lookup=,
+												literal="function"
 								,
 									then=,
 										|-
@@ -543,6 +682,9 @@
 										|-
 											statementView
 											statement
+			Background=.
+				Brushes
+				Blue
 			getMap=,
 				|,
 					program=-
@@ -555,28 +697,6 @@
 								.
 									entry
 									getMap
-			keys=,
-				<.
-					ModifierKeys
-					Alt
-				=,
-					<.
-						Key
-						Enter
-					=,
-						|-
-							.
-								Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										statementView
-										create
-			KeyDown=-
-				keyMapping
-				keys
 	mapView=,
 		create=,
 			|-
@@ -658,9 +778,6 @@
 			Background=.
 				Brushes
 				BurlyWood
-			Margin=-
-				Thickness_Double
-				3
 			getMap=,
 				|,
 					call=-
@@ -687,9 +804,11 @@
 								Children
 								Add_UIElement
 							-
-								.
-									literalView
-									create
+								view
+								-
+									.
+										literalView
+										create
 			KeyDown=-
 				keyMapping
 				keys
@@ -824,9 +943,11 @@
 								Children
 								Add_UIElement
 							-
-								.
-									lookupView
-									create
+								view
+								-
+									.
+										lookupView
+										create
 			KeyDown=-
 				keyMapping
 				keys
@@ -887,9 +1008,45 @@
 							"current"=currentView
 					<,
 						|-
+							if
+							-
+								hasKey
+								arg
+								"program"
+							,
+								then=,
+									|-
+										sum
+										-
+											foreach
+											-
+												range
+												-
+													count
+													.
+														arg
+														program
+											,
+												key|,
+													value|-
+														equal
+														.
+															arg
+															program
+															<key
+															key
+														+
+															,
+																lookup=,
+																	literal=key
+										and
+					=listProgramView
+					<,
+						|-
 							hasKey
 							arg
-							"program"=programView
+							"program"
+					=programView
 				,
 					|-
 						mapView
@@ -980,6 +1137,10 @@
 						window
 						Close
 		Edit=,
+			Copy=,
+				|0
+			Pase=,
+				|0
 			String=,
 				|0
 			Number=,
@@ -1006,21 +1167,14 @@
 							currentData
 					-
 						.
-							-
-								ObjectMap_Map
-								-
-									currentData
-							Call_Map_Position
-						0
-						-
-							Position_Position_Map
-							-
-								Position_Position_Map
-								.
-									RootPosition
-									rootPosition
-								"filesystem"
-							"localhost"
+							File
+							Save
+					-
+						.
+							Process
+							Start_String_String
+						"C:\Meta\0.2\Meta.exe"
+						path
 	menu=-
 		Menu
 		,

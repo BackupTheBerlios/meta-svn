@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Meta;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 
 namespace Edit
@@ -25,20 +26,24 @@ namespace Edit
 		{
 			public Map GetMap()
 			{
+				//Canvas.LeftProperty
 				//SdlDotNet.Events
 				//Application app = new Application();
-
 				//Dock
 				//DockPanel p;
-
+				//Window w;
+				//Ellipse e = new Ellipse();
+				Canvas c;
 				//Button b;
 				//StackPanel.VerticalAlignmentProperty
 				//System.Windows.VerticalAlignment
 				//b.SetValue(DockPanel.DockProperty, Dock.Top);
 				Window window = new Window();
 				StackPanel p;
+				//p.SetValue(Canvas.LeftProperty.PropertyType
 				//p.HorizontalAlignment=StackPanel.HorizontalAlignmentProperty
 				//StackPanel.VerticalAlignmentProperty
+				//Keyboard.
 				//Keyboard.Focus
 				
 				//p.KeyDown += new KeyEventHandler(p_KeyDown);

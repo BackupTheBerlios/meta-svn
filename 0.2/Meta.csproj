@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Library\enumerableToArray.meta" />
+    <None Include="Library\isArray.meta" />
     <None Include="Library\stringToInteger.meta" />
     <None Include="Test\Copy %282%29 of basicTest.meta" />
     <None Include="Test\Copy %282%29 of metaEdit.meta" />

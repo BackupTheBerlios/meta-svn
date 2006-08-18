@@ -4,7 +4,7 @@ arg|,
 			/
 			Meta
 			ObjectMap_Object
-		@
+		arg
 	&=.
 		object
 		ArrayCount

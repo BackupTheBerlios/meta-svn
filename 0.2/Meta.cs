@@ -605,9 +605,7 @@ namespace Meta
 		{
 			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
-			if (key.Equals(new StrategyMap("SdlDotNet")))
-			{
-			}
+
 			Position selection = selected;
 			if(key.Equals(new StrategyMap("newB")))
 			{
@@ -743,6 +741,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map IsArray(Map map)
+		{
+			return map.Count == map.ArrayCount;
+		}
 		public static Map EnumerableToArray(Map map)
 		{
 			Map result = new StrategyMap();
@@ -1733,8 +1735,12 @@ namespace Meta
 		public static void Main(string[] args)
 		{
 			Interpreter.Init();
-			Map m=Parser.Parse(@"C:\Meta\0.2\Test\test.meta");
-			Binary.Serialize(m,@"C:\Meta\0.2\Test\binaryTest.meta");
+			//level = 2;
+			//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"Test\metaEdit.meta"), new StrategyMap());
+			//return;
+
+			//Map m=Parser.Parse(@"C:\Meta\0.2\Test\test.meta");
+			//Binary.Serialize(m,@"C:\Meta\0.2\Test\binaryTest.meta");
 			//Map m = Binary.Deserialize(@"C:\asdf.meta");
 			//Binary.Serialize(Gac.fileSystem["localhost"]["D:"]["Meta"]["0.2"]["Test"]["basicTest"], @"D:\Meta\0.2\Test\basic.meta");
 			//Map map = Binary.Deserialize(@"D:\Meta\0.2\Test\basic.meta");
@@ -1771,6 +1777,7 @@ namespace Meta
 						break;
 					default:
 						//Commands.Test();
+						//Commands.RunBinary(args);
 						Commands.Run(args);
 						break;
 				}
@@ -1901,11 +1908,29 @@ namespace Meta
 			}
 			public static void Run(string[] args)
 			{
-				string path = args[0];
-				string startDirectory = Path.GetDirectoryName(path);
+				//string path = args[0];
+				//string startDirectory = Path.GetDirectoryName(path);
 				//Directory.SetCurrentDirectory(startDirectory);
-				MetaTest.Run(path, Map.Empty);
+				string path=args[0];
+				Map map=Binary.Deserialize(path);
+				//List<string> arguments = new List<string>(args);
+				//arguments.RemoveAt(0);
+				Map arg = new StrategyMap();
+				for (int i = 1; i < args.Length; i++)
+				{
+					arg[i] = args[i];
+				}
+				map.Call(
+					new StrategyMap(arg),
+					new Position(new Position(RootPosition.rootPosition, "filesystem"), "localhost"));
 			}
+			//public static void Run(string[] args)
+			//{
+			//    string path = args[0];
+			//    string startDirectory = Path.GetDirectoryName(path);
+			//    //Directory.SetCurrentDirectory(startDirectory);
+			//    MetaTest.Run(path, Map.Empty);
+			//}
 		}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
 		public static extern bool AllocConsole();
@@ -2541,7 +2566,7 @@ namespace Meta
 		{
 			if (!ContainsKey(CodeKeys.Function))
 			{
-				throw new ApplicationException("Map is not a function");
+				throw new ApplicationException("Map is not a function: "+Meta.Serialize.ValueFunction(this));
 			}
 			else
 			{
@@ -3033,12 +3058,12 @@ namespace Meta
 		public static object TryToDotNet(Map meta, Type target)
 		{
 			object dotNet = null;
-			if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
-			{
-				dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
-			}
-			else
-			{
+			//if (target.IsSubclassOf(typeof(Enum)) && meta.IsNumber)
+			//{
+			//    dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
+			//}
+			//else
+			//{
 				switch (Type.GetTypeCode(target))
 				{
 					case TypeCode.Boolean:
@@ -3247,7 +3272,7 @@ namespace Meta
 					default:
 						throw new ApplicationException("not implemented");
 				}
-			}
+			//}
 			if (dotNet == null)
 			{
 				if(meta is ObjectMap && ((ObjectMap)meta).Type==target)
@@ -3379,6 +3404,7 @@ namespace Meta
 		ParameterInfo[] parameters;
 		public override Position Call(Map argument, Position position)
 		{
+
 			return DecideCall(argument, new List<object>(), position);
 		}
 
@@ -4800,7 +4826,9 @@ namespace Meta
 			//}
 			if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
 			{
-				((DependencyObject)obj).SetValue(((DependencyProperty)((ObjectMap)key).obj), Transform.ToDotNet(value,typeof(object)));
+				DependencyObject o = (DependencyObject)obj;
+				DependencyProperty property=(DependencyProperty)((ObjectMap)key).obj;
+				o.SetValue(property,Transform.ToDotNet(value,property.PropertyType));
 			}
 			else
 			{

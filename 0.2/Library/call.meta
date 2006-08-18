@@ -1,6 +1,6 @@
 arg|-
 	!"sum"
-	@
+	arg
 	,
 		first|,
 			second|-

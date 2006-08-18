@@ -5,7 +5,7 @@ arg|,
 			Meta
 			Number
 			Number_Map
-		@
+		arg
 	&=-
 		.
 			map
