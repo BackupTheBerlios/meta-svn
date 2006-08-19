@@ -10,18 +10,23 @@
 		800
 		600
 		1
+	font=-
+		.
+			Font
+			Font_String_Int32
+		"C:\windows\fonts\Arial.ttf"
+		16
 	player=,
-		font=-
-			.
-				Font
-				Font_String_Int32
-			"C:\windows\fonts\Arial.ttf"
-			16
+		playerSize=+
+			10
+			100		
 		pos|,
-			down|,
-				up|,
+			downKey|,
+				upKey|,
 					&=-
 						object
+						pos
+						playerSize
 					score=0
 					incrementScore=,
 						|,
@@ -35,47 +40,35 @@
 					=,
 						|-
 							setPos
-							+
-								.
-									-
-										getPos
-									<1
-								0
+							,
+								2=0
 					.
 						hit
 						bottom=,
-						asdf|,
-							hello=-
-								setPos
-								+
-									.
-										-
-											getPos
-										<1
-									-
-										subtract
-										.
-											screen
-											Height
-										.
-											size
-											<2
-					.
-						p
-						bottom
-					=,
 						|-
-							add
-							.
-								-
-									getPos
-								<2
-							.
-								size
-								<2
+							setPos
+							,
+								2=-
+									subtract
+									.
+										screen
+										Height
+									.
+										playerSize
+										<2
 					draw=,
-						drawScore=,
-							|-
+						|+
+							-
+								.
+									screen
+									DrawFilledBox_Rectangle_Color
+								+
+									pos
+									playerSize
+								.
+									Color
+									Red
+							-
 								.
 									screen
 									Blit_Surface_Point
@@ -94,208 +87,175 @@
 										pos
 										1
 									0
-						drawPaddle=,
-							|-
-								.
-									screen
-									DrawFilledBox_Rectangle_Color
-								+
-									pos
-									size
-								.
-									Color
-									Red
-						|+
-							-
-								drawPaddle
-							-
-								drawScore
 					speed=5
 					keys=,
-						<down=,
+						<downKey=,
 							|-
-								setVelocity
-								+
-									0
-									speed
-						<up=,
+								changeVelocity
+								,
+									2=speed
+						<upKey=,
 							|-
-								setVelocity
-								+
-									0
-									-
-										subtract
-										0
+								changeVelocity
+								,
+									2=-
+										minus
 										speed
 	object=,
 		pos|,
-			x=,
-				|.
-					pos
-					1
-			y=,
-				|.
-					pos
-					2
-			getPos=,
-				|pos
-			setPos=,
-				newPos|,
-					!pos=newPos
-			velocity=+
-				0
-				0
-			setVelocity=,
-				s|,
-					!velocity=s
-			getVelocity=,
-				|velocity
-			hit=,
-				top=,
-					|-
-						.
-							console
-							writeLine
-						"hit top"
-				bottom=,
-					|0
-				left=,
-					|0
-				right=,
-					|0
-			p=,
-				left=,
+			size|,
+				size=size
+				x=,
 					|.
 						pos
 						1
-				top=,
+				y=,
 					|.
 						pos
 						2
-				right=,
-					|.
-						pos
-						1
-				bottom=,
-					|.
-						pos
-						2
-			move=,
-				|,
-					!pos=+
-						-
+				getPos=,
+					|pos
+				setPos=,
+					newPos|,
+						!pos=-
+							merge
+							pos
+							newPos
+				velocity=+
+					0
+					0
+				changeVelocity=,
+					s|,
+						!velocity=-
+							merge
+							velocity
+							s
+				getVelocity=,
+					|velocity
+				hit=,
+					top=,
+						|0
+					bottom=,
+						|0
+					left=,
+						|0
+					right=,
+						|0
+				p=,
+					left=,
+						|.
+							pos
+							1
+					top=,
+						|.
+							pos
+							2
+					right=,
+						|-
 							add
 							.
 								pos
-								<1
+								1
 							.
-								velocity
-								<1
-						-
+								size
+								1
+					bottom=,
+						|-
 							add
 							.
 								pos
-								<2
+								2
 							.
-								velocity
-								<2
-					<1=-
-						foreach
-						,
-							top=,
-								|-
-									smaller
-									-
-										.
-											p
-											top
-									0
-							bottom=,
-								|-
-									greater
-									-
-										.
-											p
-											bottom
-									.
-										screen
-										Height
-							left=,
-								|-
-									smaller
-									-
-										.
-											p
-											left
-									.
-										size
-										1
-							right=,
-								|-
-									greater
-									-
-										.
-											p
-											right
-									-
-										subtract
+								size
+								2
+				move=,
+					|,
+						!pos=-
+							addArray
+							pos
+							velocity
+						<1=-
+							foreach
+							,
+								top=,
+									|-
+										smaller
+										-
+											.
+												p
+												top
+										0
+								bottom=,
+									|-
+										greater
+										-
+											.
+												p
+												bottom
 										.
 											screen
-											Width
+											Height
+								left=,
+									|-
+										smaller
+										-
+											.
+												p
+												left
 										.
-											size
+											player
+											playerSize
 											1
-						,
-							key|,
-								value|-
-									if
-									-
-										value
-									,
-										then=,
-											|-
-												.
-													hit
-													<key
-							
-			keys=0
+								right=,
+									|-
+										greater
+										-
+											.
+												p
+												right
+										-
+											subtract
+											.
+												screen
+												Width
+											.
+												player
+												playerSize
+												1
+							,
+								key|,
+									value|-
+										if
+										-
+											value
+										,
+											then=,
+												|-
+													.
+														hit
+														<key
+								
+				keys=0
 	ball=,
 		radius=20
 		initialPosition=+
 			200
 			150
+		ballSize=+
+			-
+				multiply
+				radius
+				2
+			<1
 		pos|,
 			&=-
 				object
+				initialPosition
+				ballSize
 			reset=,
 				|-
 					setPos
 					initialPosition
-			p=,
-				top=,
-					|-
-						subtract
-						-
-							y
-						radius
-				bottom=,
-					|-
-						add
-						-
-							y
-						radius
-				left=,
-					|-
-						subtract
-						-
-							x
-						radius
-				right=,
-					|-
-						add
-						-
-							x
-						radius
 			draw=,
 				|-
 					.
@@ -303,7 +263,12 @@
 						DrawFilledCircle_Circle_Color
 					+
 						-
-							getPos
+							addArray
+							-
+								getPos
+							+
+								radius
+								radius
 						+
 							radius
 					.
@@ -312,98 +277,84 @@
 			speed=-7
 			reverse=,
 				|-
-					setVelocity
-					+
-						.
-							-
-								getVelocity
-							<1
-						-
-							multiply
+					changeVelocity
+					,
+						2=-
+							minus
 							.
 								-
 									getVelocity
 								<2
-							-1
-			reverseY=,
-				|-
-					setVelocity
-					+
-						-
-							multiply
-							.
-								-
-									getVelocity
-								<1
-							-1
-						.
-							-
-								getVelocity
-							<2
 			1=-
-				setVelocity
+				changeVelocity
 				+
 					speed
 					5
 			hitIt=,
 				index|,
-					player=.
-						objects
-						<index
-					x=-
-						if
-						-
-							and
+					|,
+						object=.
+							objects
+							<index
+						x=-
+							if
 							-
-								smaller
+								and
 								-
-									.
-										player
-										p
-										top
-								-
-									.
-										p
-										bottom
-							-
-								greater
-								-
-									.
-										player
-										p
-										bottom
-								-
-									.
-										p
-										top
-						,
-							then=,
-								|-
-									reverseY
-							else=,
-								|+
+									smaller
 									-
 										.
-											objects
-											-
-												add
-												1
-												-
-													modulo
-													index
-													2
-											incrementScore
+											object
+											p
+											top
 									-
-										start
+										.
+											p
+											bottom
+								-
+									greater
+									-
+										.
+											object
+											p
+											bottom
+									-
+										.
+											p
+											top
+							,
+								then=,
+									|-
+										changeVelocity
+										+
+											-
+												minus
+												.
+													-
+														getVelocity
+													<1
+								else=,
+									|+
+										-
+											.
+												objects
+												-
+													add
+													1
+													-
+														modulo
+														index
+														2
+												incrementScore
+										-
+											start
 			hit=,
-				left=,
-					|-
-						hitIt
-						1
-				right=,
-					|-
-						hitIt
-						2
+				left=-
+					hitIt
+					1
+				right=-
+					hitIt
+					2
 				top=reverse
 				bottom=reverse
 	start=,
@@ -412,9 +363,6 @@
 				objects
 				3
 				reset
-	size=+
-		10
-		100		
 	objects=+
 		-
 			player
@@ -436,7 +384,8 @@
 						screen
 						Width
 					.
-						size
+						player
+						playerSize
 						1
 				100
 			.
@@ -462,11 +411,14 @@
 					object|-
 						callIf
 						.
-							e
-							Key
-						.
 							object
 							keys
+						.
+							e
+							Key
+						,
+							arg|-
+								arg
 	.
 		Events
 		Tick

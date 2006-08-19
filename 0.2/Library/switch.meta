@@ -3,10 +3,10 @@ switchArg|-
 	-
 		hasKey
 		.
-			arg
+			switchArg
 			cases
 		.
-			arg
+			switchArg
 			control
 	,
 		then=,

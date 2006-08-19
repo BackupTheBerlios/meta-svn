@@ -981,6 +981,12 @@
 							hasKey
 							arg
 							"call"=callView
+
+					<,
+						|-
+							hasKey
+							arg
+							"call"=callView
 					<,
 						|-
 							hasKey

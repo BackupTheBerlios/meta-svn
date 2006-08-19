@@ -189,10 +189,16 @@
   <ItemGroup>
     <None Include="Library\enumerableToArray.meta" />
     <None Include="Library\isArray.meta" />
+    <None Include="Library\minus.meta" />
     <None Include="Library\stringToInteger.meta" />
     <None Include="Test\Copy %282%29 of basicTest.meta" />
     <None Include="Test\Copy %282%29 of metaEdit.meta" />
     <None Include="Test\Copy of metaEdit.meta" />
+    <None Include="Test\Copy of pong.meta" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Library\addArray.meta" />
+    <None Include="Test\Copy %282%29 of pong.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

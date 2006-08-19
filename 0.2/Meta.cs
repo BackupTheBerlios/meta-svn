@@ -294,97 +294,56 @@ namespace Meta
 			}
 		}
 		public static Dictionary<string, double> calls = new Dictionary<string, double>();
-		protected override Position EvaluateImplementation(Position parent)
-		{
-			try
-			{
-				Position contextPosition=parent.AddCall(new StrategyMap());
-				//foreach (Statement statement in statements)
-				//{
-				//    statement.Assign(contextPosition);
-				//}
-				//contextPosition.Get().Scope = parent;
-				//return contextPosition;
-
-				Position callable = expressions[0].GetExpression().Evaluate(contextPosition);
-				for (int i = 1; i < expressions.Count; i++)
-				{
-					Position arg = expressions[i].GetExpression().Evaluate(contextPosition);
-					arguments.Push(arg);
-					callable = callable.Call(arg.Get());
-					arguments.Pop();
-				}
-
-				Map value = callable.Get();
-				if (value.Scope != null)
-				{
-					if (contextPosition.Get().Scope != null)
-					{
-						value.Scope = contextPosition.Get().Scope;
-					}
-					else
-					{
-						value.Scope = contextPosition.Parent;
-					}
-				}
-				contextPosition.Assign(value);
-
-				//if (Interpreter.profiling)
-				//{
-				//    timer.Stop();
-				//    string special = SpecialString(parent);
-				//    if (!calls.ContainsKey(special))
-				//    {
-				//        calls[special] = 0;
-				//    }
-				//    calls[special] += timer.Duration;
-				//}
-				return callable;
-			}
-			catch (MetaException e)
-			{
-				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, parent));
-				throw e;
-			}
-			catch (Exception e)
-			{
-				throw new MetaException(e.ToString(), this.expressions[0].Extent);
-			}
-		}
-		//protected override Position EvaluateImplementation(Position current)
+		//protected override Position EvaluateImplementation(Position parent)
 		//{
 		//    try
 		//    {
-		//        HiPerfTimer timer = null;
-		//        if (Interpreter.profiling)
-		//        {
-		//            timer = new HiPerfTimer();
-		//            timer.Start();
-		//        }
+		//        Position contextPosition=parent.AddCall(new StrategyMap());
+		//        //foreach (Statement statement in statements)
+		//        //{
+		//        //    statement.Assign(contextPosition);
+		//        //}
+		//        //contextPosition.Get().Scope = parent;
+		//        //return contextPosition;
 
-		//        Position callable = expressions[0].GetExpression().Evaluate(current);
+		//        Position callable = expressions[0].GetExpression().Evaluate(contextPosition);
 		//        for (int i = 1; i < expressions.Count; i++)
 		//        {
-		//            Position arg = expressions[i].GetExpression().Evaluate(current);
+		//            Position arg = expressions[i].GetExpression().Evaluate(contextPosition);
 		//            arguments.Push(arg);
 		//            callable = callable.Call(arg.Get());
 		//            arguments.Pop();
 		//        }
-		//        if (Interpreter.profiling)
+
+		//        Map value = callable.Get();
+		//        if (value.Scope != null)
 		//        {
-		//            timer.Stop();
-		//            string special = SpecialString(current);
-		//            if (!calls.ContainsKey(special))
+		//            if (contextPosition.Get().Scope != null)
 		//            {
-		//                calls[special] = 0;
+		//                value.Scope = contextPosition.Get().Scope;
 		//            }
-		//            calls[special] += timer.Duration;
+		//            else
+		//            {
+		//                value.Scope = contextPosition.Parent;
+		//            }
 		//        }
+		//        contextPosition.Assign(value);
+
+		//        //if (Interpreter.profiling)
+		//        //{
+		//        //    timer.Stop();
+		//        //    string special = SpecialString(parent);
+		//        //    if (!calls.ContainsKey(special))
+		//        //    {
+		//        //        calls[special] = 0;
+		//        //    }
+		//        //    calls[special] += timer.Duration;
+		//        //}
 		//        return callable;
 		//    }
 		//    catch (MetaException e)
 		//    {
-		//        e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
+		//        e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, parent));
 		//        throw e;
 		//    }
 		//    catch (Exception e)
@@ -392,6 +351,47 @@ namespace Meta
 		//        throw new MetaException(e.ToString(), this.expressions[0].Extent);
 		//    }
 		//}
+		protected override Position EvaluateImplementation(Position current)
+		{
+			try
+			{
+				HiPerfTimer timer = null;
+				if (Interpreter.profiling)
+				{
+					timer = new HiPerfTimer();
+					timer.Start();
+				}
+
+				Position callable = expressions[0].GetExpression().Evaluate(current);
+				for (int i = 1; i < expressions.Count; i++)
+				{
+					Position arg = expressions[i].GetExpression().Evaluate(current);
+					arguments.Push(arg);
+					callable = callable.Call(arg.Get());
+					arguments.Pop();
+				}
+				if (Interpreter.profiling)
+				{
+					timer.Stop();
+					string special = SpecialString(current);
+					if (!calls.ContainsKey(special))
+					{
+						calls[special] = 0;
+					}
+					calls[special] += timer.Duration;
+				}
+				return callable;
+			}
+			catch (MetaException e)
+			{
+				e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
+				throw e;
+			}
+			catch (Exception e)
+			{
+				throw new MetaException(e.ToString(), this.expressions[0].Extent);
+			}
+		}
 		//protected override Position EvaluateImplementation(Position current)
 		//{
 		//    try
@@ -607,7 +607,7 @@ namespace Meta
 			Map key = keyPosition.Get();
 
 			Position selection = selected;
-			if(key.Equals(new StrategyMap("newB")))
+			if (key.Equals(new StrategyMap("newB")))
 			{
 			}
 			while (!selection.Get().ContainsKey(key))
@@ -668,6 +668,88 @@ namespace Meta
 			}
 		}
 	}
+	//public class Search : Subselect
+	//{
+	//    public Expression Key
+	//    {
+	//        get
+	//        {
+	//            return keyExpression.GetExpression();
+	//        }
+	//    }
+
+	//    private Map keyExpression;
+	//    public Search(Map keyExpression)
+	//    {
+	//        this.keyExpression = keyExpression;
+	//    }
+	//    public override Position Evaluate(Position selected, Position context)
+	//    {
+	//        Position keyPosition = keyExpression.GetExpression().Evaluate(context);
+	//        Map key = keyPosition.Get();
+
+	//        Position selection = selected;
+	//        if(key.Equals(new StrategyMap("newB")))
+	//        {
+	//        }
+	//        while (!selection.Get().ContainsKey(key))
+	//        {
+	//            if (selection.Parent == null)
+	//            {
+	//                selection = null;
+	//                break;
+	//            }
+	//            else
+	//            {
+	//                if (selection.Get().Scope != null)
+	//                {
+	//                    selection = selection.Get().Scope;
+	//                }
+	//                else
+	//                {
+	//                    selection = selection.Parent;
+	//                }
+	//            }
+	//        }
+	//        if (selection == null)
+	//        {
+	//            throw new KeyNotFound(key, keyExpression.Extent, null);
+	//        }
+	//        else
+	//        {
+	//            Position lastEvaluated = new Position(selection, key);
+	//            return lastEvaluated;
+	//        }
+	//    }
+	//    public override void Assign(Position selected, Map value, Position context)
+	//    {
+	//        Position evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
+	//        Map key = evaluatedKeyPosition.Get();
+	//        if (key.Equals(new StrategyMap("result")))
+	//        {
+	//        }
+	//        Position selection = context;
+	//        while (selection != null && !selection.Get().ContainsKey(key))
+	//        {
+	//            if (selection.Get().Scope != null)
+	//            {
+	//                selection = selection.Get().Scope;
+	//            }
+	//            else
+	//            {
+	//                selection = selection.Parent;
+	//            }
+	//        }
+	//        if (selection == null)
+	//        {
+	//            throw new KeyNotFound(key, keyExpression.Extent, null);
+	//        }
+	//        else
+	//        {
+	//            selection.Assign(key, value);
+	//        }
+	//    }
+	//}
 	public class LastArgument : Subselect
 	{
 		public override Position Evaluate(Position context, Position executionContext)
@@ -1734,10 +1816,9 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			Interpreter.Init();
-			//int level = 2;
-			//new MetaTest.Basic().GetResult(out level);
-			////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"Test\metaEdit.meta"), new StrategyMap());
+	
+			//level = 2;
+			//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"Test\metaEdit.meta"), new StrategyMap());
 			//return;
 
 			//Map m=Parser.Parse(@"C:\Meta\0.2\Test\test.meta");
@@ -1748,6 +1829,9 @@ namespace Meta
 
 			try
 			{
+				Interpreter.Init();
+				MetaTest.Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
+				return;
 				switch (args[0])
 				{
 					case "-test":
@@ -1809,7 +1893,7 @@ namespace Meta
 					MessageBox.Show(text, "Meta exception");
 				}
 			}
-			//Console.ReadLine();
+			Console.ReadLine();
 		}
 
 		public class Commands
@@ -1945,7 +2029,7 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"C:\Meta\0.2\";
+		private static string installationPath = @"D:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
@@ -4825,14 +4909,14 @@ namespace Meta
 			//if (key.Equals(new StrategyMap("VerticalAlignmentProperty")))
 			//{
 			//}
-			if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
-			{
-				DependencyObject o = (DependencyObject)obj;
-				DependencyProperty property=(DependencyProperty)((ObjectMap)key).obj;
-				o.SetValue(property,Transform.ToDotNet(value,property.PropertyType));
-			}
-			else
-			{
+			//if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
+			//{
+			//    DependencyObject o = (DependencyObject)obj;
+			//    DependencyProperty property=(DependencyProperty)((ObjectMap)key).obj;
+			//    o.SetValue(property,Transform.ToDotNet(value,property.PropertyType));
+			//}
+			//else
+			//{
 
 				string fieldName = key.GetString();
 				MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
@@ -4892,7 +4976,7 @@ namespace Meta
 					//throw new KeyDoesNotExist(key, null, this);
 					//Data[key] = value;
 				}
-			}
+			//}
 		}
 		public static Dictionary<object,Dictionary<Map,Map>> global=new Dictionary<object,Dictionary<Map,Map>>();
 		protected override bool ContainsKeyImplementation(Map key)
@@ -7477,24 +7561,17 @@ new Assignment(
 			//        return Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-			public class MetaEdit : Test
-			{
-			    public override object GetResult(out int level)
-			    {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath,@"Test\metaEdit.meta"), new StrategyMap());
-			    }
-			}
 
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					//return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
-					return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-				}
-			}
+
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        //return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
+			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
+			//    }
+			//}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)
