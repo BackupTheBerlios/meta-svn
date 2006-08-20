@@ -26,6 +26,7 @@ shortFunc="
 		arg|!"
 			arg
 "
+1="hello"
 commandLine|,
 	&=-
 		-
