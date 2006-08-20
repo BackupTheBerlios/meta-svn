@@ -1,15 +1,17 @@
 ﻿commandLine|,
 	&=-
-		merge
-		<"System.Drawing"
-		SdlDotNet
-	screen=-
-		.
-			Video
-			SetVideoModeWindow_Int32_Int32_Boolean
-		800
-		600
-		1
+		mergeAll
+		+
+			<"System.Drawing"
+			SdlDotNet
+			-
+				.
+					SdlDotNet
+					Video
+					SetVideoModeWindow_Int32_Int32_Boolean
+				800
+				600
+				1
 	font=-
 		.
 			Font
@@ -17,16 +19,17 @@
 		"C:\windows\fonts\Arial.ttf"
 		16
 	player=,
-		playerSize=+
-			10
-			100		
 		pos|,
 			downKey|,
 				upKey|,
 					&=-
 						object
-						pos
-						playerSize
+						+
+							0
+							0
+						+
+							10
+							100
 					score=0
 					incrementScore=,
 						|,
@@ -36,7 +39,8 @@
 								1
 					.
 						hit
-						top
+						1
+						1
 					=,
 						|-
 							setPos
@@ -44,34 +48,32 @@
 								2=0
 					.
 						hit
-						bottom=,
+						2
+						1
+					=,
 						|-
 							setPos
 							,
 								2=-
 									subtract
+									Height
 									.
-										screen
-										Height
-									.
-										playerSize
+										-
+											getSize
 										<2
 					draw=,
 						|+
 							-
-								.
-									screen
-									DrawFilledBox_Rectangle_Color
+								DrawFilledBox_Rectangle_Color
 								+
 									pos
-									playerSize
+									-
+										getSize
 								.
 									Color
 									Red
 							-
-								.
-									screen
-									Blit_Surface_Point
+								Blit_Surface_Point
 								-
 									.
 										font
@@ -104,7 +106,6 @@
 	object=,
 		pos|,
 			size|,
-				size=size
 				x=,
 					|.
 						pos
@@ -113,6 +114,8 @@
 					|.
 						pos
 						2
+				getSize=,
+					|size
 				getPos=,
 					|pos
 				setPos=,
@@ -132,24 +135,45 @@
 							s
 				getVelocity=,
 					|velocity
-				hit=,
-					top=,
-						|0
-					bottom=,
-						|0
-					left=,
-						|0
-					right=,
-						|0
+				halfSize=,
+					|-
+						divideArray
+						size
+						2
+				hit=+
+					+
+						,
+							|0
+						,
+							|0
+					+
+						,
+							|0
+						,
+							|0
 				p=,
-					left=,
-						|.
-							pos
-							1
+					|+
+						-
+							subtractArray
+						+
+							subtract
+							.
+								pos
+								1
+							.
+								-
+									halfSize
+								1
 					top=,
-						|.
-							pos
-							2
+						|-
+							subtract
+							.
+								pos
+								2
+							.
+								-
+									halfSize
+								2
 					right=,
 						|-
 							add
@@ -157,7 +181,8 @@
 								pos
 								1
 							.
-								size
+								-
+									halfSize
 								1
 					bottom=,
 						|-
@@ -166,7 +191,8 @@
 								pos
 								2
 							.
-								size
+								-
+									halfSize
 								2
 				move=,
 					|,
@@ -177,7 +203,7 @@
 						<1=-
 							foreach
 							,
-								top=,
+								<,
 									|-
 										smaller
 										-
@@ -185,17 +211,23 @@
 												p
 												top
 										0
-								bottom=,
+								=.
+									hit
+									1
+									2
+								<,
 									|-
 										greater
 										-
 											.
 												p
 												bottom
-										.
-											screen
-											Height
-								left=,
+										Height
+								=.
+									hit
+									2
+									2
+								<,
 									|-
 										smaller
 										-
@@ -203,10 +235,13 @@
 												p
 												left
 										.
-											player
-											playerSize
+											size
 											1
-								right=,
+								=.
+									hit
+									1
+									1
+								<,
 									|-
 										greater
 										-
@@ -215,60 +250,47 @@
 												right
 										-
 											subtract
+											Width
 											.
-												screen
-												Width
-											.
-												player
-												playerSize
+												size
 												1
+								=.
+									hit
+									2
+									1
 							,
 								key|,
 									value|-
 										if
 										-
-											value
+											key
 										,
 											then=,
 												|-
-													.
-														hit
-														<key
-								
+													value
 				keys=0
 	ball=,
 		radius=20
 		initialPosition=+
 			200
 			150
-		ballSize=+
-			-
-				multiply
-				radius
-				2
-			<1
 		pos|,
 			&=-
 				object
-				initialPosition
-				ballSize
+				0
+				+
+					radius
+					radius
 			reset=,
 				|-
 					setPos
 					initialPosition
 			draw=,
 				|-
-					.
-						screen
-						DrawFilledCircle_Circle_Color
+					DrawFilledCircle_Circle_Color
 					+
 						-
-							addArray
-							-
-								getPos
-							+
-								radius
-								radius
+							getPos
 						+
 							radius
 					.
@@ -348,21 +370,26 @@
 												incrementScore
 										-
 											start
-			hit=,
-				left=-
-					hitIt
-					1
-				right=-
-					hitIt
-					2
-				top=reverse
-				bottom=reverse
+			hit=+
+				+
+					-
+						hitIt
+						1
+					reverse
+				+
+					-
+						hitIt
+						2
+					reverse
 	start=,
 		|-
 			.
 				objects
 				3
 				reset
+	size=+
+		10
+		100		
 	objects=+
 		-
 			player
@@ -380,12 +407,9 @@
 			+
 				-
 					subtract
+					Width
 					.
-						screen
-						Width
-					.
-						player
-						playerSize
+						size
 						1
 				100
 			.
@@ -447,9 +471,7 @@
 									obj
 									draw
 				-
-					.
-						screen
-						Flip
+					Flip
 	.
 		Events
 		Quit

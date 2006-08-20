@@ -48,7 +48,7 @@ commandLine|,
 	counter=0
 	SetCounter=,
 		argument|,
-			!counter=@
+			!counter=argument
 	1=-
 		!"SetCounter"
 		5
@@ -63,42 +63,7 @@ commandLine|,
 	lexicalScoping=-
 		!"scopingTest"
 		0
-	.
-		!"C:"
-		hello
-	=,
-		x="someTest"
-	cTest=.
-		!"C:"
-		hello
-	.
-		!"C:"
-		hello
-	=0
-	cTest2=.
-		!"C:"
-		hello
 	unicodeText="äaba"
-	.
-		!"testSubDir"
-		x
-	=0
-	persistantDeleteTest=.
-		testSubDir
-		x
-	.
-		!"testSubDir"
-		x
-	=,
-		a="b"
-		x=,
-			x="hello"
-			y="world"
-	.
-		!"testSubDir"
-		x
-		a
-	="hi"
 	integerHashTest=,
 		2="correct hash content"
 		hashTestData=,
@@ -134,9 +99,6 @@ commandLine|,
 			negative=0
 			denominator=7
 	fraction=3/2
-	persistenceTest=.
-		!"testSubDir"
-		x
 	literalEscapeTest=+
 		"asdf"
 		"asdf"

@@ -77,6 +77,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Prodige.Drawing, Version=4.0.2813.1410, Culture=neutral, PublicKeyToken=81f0619c9a6f826c, processorArchitecture=MSIL" />
+    <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
     <Reference Include="System">
       <Name>System</Name>
       <Private>False</Private>
@@ -103,102 +104,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\call.meta" />
-    <None Include="Library\Copy of string.meta" />
-    <None Include="Library\first.meta" />
-    <None Include="Library\guid.meta" />
-    <None Include="Library\select.meta" />
-    <None Include="Library\sha512.meta" />
-    <None Include="Library\sum.meta" />
-    <None Include="Library\add.meta" />
-    <None Include="Library\and.meta" />
-    <None Include="Library\append.meta" />
-    <None Include="Library\apply.meta" />
-    <None Include="Library\bitwiseOr.meta" />
-    <None Include="Library\characters.meta" />
-    <None Include="Library\console.meta" />
-    <None Include="Library\contains.meta" />
-    <None Include="Library\prepend.meta" />
-    <None Include="Library\join.meta" />
-    <None Include="Library\smaller.meta" />
-    <None Include="Library\decreasing.meta" />
-    <None Include="Library\defaultFunction.meta" />
-    <None Include="Library\divide.meta" />
-    <None Include="Library\equal.meta" />
-    <None Include="Library\filter.meta" />
-    <None Include="Library\find.meta" />
-    <None Include="Library\findFirst.meta" />
-    <None Include="Library\foreach.meta" />
-    <None Include="Library\greater.meta" />
-    <None Include="Library\hasKey.meta" />
-    <None Include="Library\if.meta" />
-    <None Include="Library\increasing.meta" />
-    <None Include="Library\integerToString.meta" />
-    <None Include="Library\intersect.meta" />
-    <None Include="Library\invert.meta" />
-    <None Include="Library\isNumber.meta" />
-    <None Include="Library\last.meta" />
-    <None Include="Library\multiply.meta" />
-    <None Include="Library\null.meta" />
-    <None Include="Library\parse.meta" />
-    <None Include="Library\random.meta" />
-    <None Include="Library\reciprocal.meta" />
-    <None Include="Library\isString.meta" />
-    <None Include="Library\keys.meta" />
-    <None Include="Library\length.meta" />
-    <None Include="Library\maximum.meta" />
-    <None Include="Library\merge.meta" />
-    <None Include="Library\minimum.meta" />
-    <None Include="Library\not.meta" />
-    <None Include="Library\or.meta" />
-    <None Include="Library\print.meta" />
-    <None Include="Library\range.meta" />
-    <None Include="Library\rest.meta" />
-    <None Include="Library\reverse.meta" />
-    <None Include="Library\serialize.meta" />
-    <None Include="Library\slice.meta" />
-    <None Include="Library\sort.meta" />
-    <None Include="Library\split.meta" />
-    <None Include="Library\strictlyDecreasing.meta" />
-    <None Include="Library\strictlyIncreasing.meta" />
-    <None Include="Library\string.meta" />
-    <None Include="Library\subtract.meta" />
-    <None Include="Library\switch.meta" />
-    <None Include="Library\try.meta" />
-    <None Include="Library\values.meta" />
-    <None Include="Library\while.meta" />
-    <None Include="Library\with.meta" />
     <None Include="Test\basicTest.meta" />
     <None Include="Test\libraryTest.meta" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\sendMail.meta" />
     <None Include="Test\pong.meta" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\callIf.meta" />
-    <None Include="Library\case.meta" />
-    <None Include="Library\concatenate.meta" />
-    <None Include="Library\count.meta" />
-    <None Include="Library\flip.meta" />
-    <None Include="Library\isEmpty.meta" />
-    <None Include="Library\modulo.meta" />
-    <None Include="Test\test.meta" />
     <None Include="Test\metaEdit.meta" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Library\enumerableToArray.meta" />
-    <None Include="Library\isArray.meta" />
-    <None Include="Library\minus.meta" />
-    <None Include="Library\stringToInteger.meta" />
-    <None Include="Test\Copy %282%29 of basicTest.meta" />
-    <None Include="Test\Copy %282%29 of metaEdit.meta" />
-    <None Include="Test\Copy of metaEdit.meta" />
-    <None Include="Test\Copy of pong.meta" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Library\addArray.meta" />
-    <None Include="Test\Copy %282%29 of pong.meta" />
+    <None Include="library.meta" />
+    <None Include="Test\learning.meta" />
+    <None Include="Test\relativity.learn" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -433,9 +433,6 @@ arg|,
 		restTest=-
 			rest
 			"hello"
-		shaTest=-
-			sha512
-			"hello!"
 		selectTest=-
 			select
 			,
