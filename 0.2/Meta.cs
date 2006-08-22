@@ -5732,36 +5732,64 @@ new Assignment(
 						p.defaultKeys.Pop();
 					})));
 
-		// refactor!!!!
 		public static Rule Program = new Sequence(
-			new Action(new Match(), new Character(',')),
-			new Action(
-				new Assignment(CodeKeys.Program),
-				new PrePost(
-					delegate(Parser p)
-					{
-						p.defaultKeys.Push(1);
-					},
-					new Sequence(
-						new Action(
-							new Match(),
-							Indentation),
-						new Action(
-							new Assignment(1),
-							new Alternatives(CurrentStatement,Statement)),
-						new Action(
-							new Append(),
-							new ZeroOrMore(
-								new Action(new Autokey(),
-									new Sequence(
-										new Action(new Match(), new Alternatives(
-											SameIndentation,
-											Dedentation)),
-										new Action(new ReferenceAssignment(),new Alternatives(CurrentStatement, Statement))))))),
-					delegate(Parser p)
-					{
-						p.defaultKeys.Pop();
-					})));
+	new Action(new Match(), new Character(',')),
+	new Action(
+		new Assignment(CodeKeys.Program),
+		new PrePost(
+			delegate(Parser p)
+			{
+				p.defaultKeys.Push(1);
+			},
+			new Sequence(
+				new Action(
+				new Match(),
+			EndOfLine),
+
+				new Action(
+					new Match(),
+					SmallIndentation),
+				new Action(new ReferenceAssignment(),
+					new ZeroOrMore(
+						new Action(new Autokey(),
+							new Sequence(
+								new Action(new Match(), new Alternatives(
+									SameIndentation,
+									Dedentation)),
+								new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, Statement))))))),
+			delegate(Parser p)
+			{
+				p.defaultKeys.Pop();
+			})));
+		//public static Rule Program = new Sequence(
+		//    new Action(new Match(), new Character(',')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//                new Action(
+		//                    new Match(),
+		//                    Indentation),
+		//                new Action(
+		//                    new Assignment(1),
+		//                    new Alternatives(CurrentStatement,Statement)),
+		//                new Action(
+		//                    new Append(),
+		//                    new ZeroOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Match(), new Alternatives(
+		//                                    SameIndentation,
+		//                                    Dedentation)),
+		//                                new Action(new ReferenceAssignment(),new Alternatives(CurrentStatement, Statement))))))),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })));
 		public abstract class Production
 		{
 			public abstract void Execute(Parser parser, Map map, ref Map result);
