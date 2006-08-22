@@ -98,17 +98,20 @@ arg|,
 				!"multiply"
 				1000
 				-
-					!"reciprocal"
+					divide
+					1
 					7
 		bitwiseTest=,
 			or=0
 		mapTest=,
 			ifTest=-
-				!"if"
-				1
-				,
-					then=,
-						arg|"if test successful"
+				.
+					,
+						1=,
+							arg|"if test successful"
+						0=,
+							|0
+					1
 			append=-
 				join
 				"abc, "
@@ -221,34 +224,34 @@ arg|,
 				,
 					first|,
 						second|-
-							!"if"
-							-
-								!"less"
-								.
-									first
-									x
-								.
-									second
-									x
-							,
-								then=,
-									arg|-1
-								else=,
-									arg|-
-										!"if"
-										-
-											!"less"
+							.
+								,
+									1=,
+										arg|-1
+									0=,
+										arg|-
 											.
-												first
-												x
-											.
-												second
-												x
-										,
-											then=,
-												arg|1
-											else=,
-												arg|0
+												,
+													1=,
+														arg|1
+													0=,
+														arg|0
+												-
+													!"less"
+													.
+														first
+														x
+													.
+														second
+														x
+								-
+									!"less"
+									.
+										first
+										x
+									.
+										second
+										x
 			integerToString=-
 				!"integerToString"
 				5
