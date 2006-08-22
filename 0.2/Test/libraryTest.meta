@@ -20,18 +20,14 @@ arg|,
 			orTest=,
 				true=-
 					or
-					+
-						1
-						1
-						1
+					1
+					1
 				false=-
 					or
-					+
-						0
-						0
-						0
+					0
+					0
 				otherTrue=-
-					or
+					orAll
 					+
 						0
 						1
@@ -117,6 +113,12 @@ arg|,
 				join
 				"abc, "
 				"die Katze lief im Schnee."
+			joinAllTest=-
+				joinAll
+				+
+					"abc, "
+					"die Katze lief im Schnee."
+					"die Katze lief im Schnee."
 			apply=,
 				&=-
 					!"apply"
@@ -178,9 +180,6 @@ arg|,
 								,
 									0=!"counter"
 				&=!"counter"
-			lastTest=-
-				!"last"
-				"hello"
 			firstTest=.
 				"hello"
 				1
@@ -193,14 +192,6 @@ arg|,
 						.
 							space
 							1
-			stringSplitTest=-
-				.
-					string
-					split
-				"hello world hello"
-				+
-					' '
-					'l'
 			tryTest=-
 				!"try"
 				,
@@ -261,13 +252,6 @@ arg|,
 			integerToString=-
 				!"integerToString"
 				5
-			stringReplace=-
-				.
-					string
-					replace
-				"hello hello hi"
-				"he"
-				"i"
 		rangeTest=-
 			!"range"
 			10
@@ -308,16 +292,6 @@ arg|,
 			yes=-
 				!"isString"
 				"hi"
-		lowerTest=-
-			.
-				string
-				lower
-			"HeLLo"
-		upperTest=-
-			.
-				string
-				upper
-			"HeLLo"
 		parseTest=-
 			!"parse"
 			"
@@ -333,20 +307,6 @@ arg|,
 						!"arg"
 						"!"
 			"
-		"invertTest"=-
-			!"invert"
-			+
-				,
-					a=1
-					b=2
-					c=3
-				,
-					a=1
-					b=2
-					c=3
-				,
-					a=1
-					b=2
 		withTest=-
 			.
 				!"System.Windows.Forms"

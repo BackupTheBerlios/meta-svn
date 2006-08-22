@@ -65,14 +65,6 @@ namespace Meta
 		public static readonly Map Key="key";
 		public static readonly Map Value="value";
 	}
-	public class DotNetKeys
-	{
-		public static readonly Map Add="add";
-		public static readonly Map Remove="remove";
-		public static readonly Map Get="get";
-		public static readonly Map Set="set";
-	}
-
 	public class NumberKeys
 	{
 		public static readonly Map Negative="negative";
@@ -595,6 +587,7 @@ namespace Meta
 	{
 		public static Map IsArray(Map map)
 		{
+			Form f;
 			return map.Count == map.ArrayCount;
 		}
 		public static Map EnumerableToArray(Map map)
@@ -737,6 +730,10 @@ namespace Meta
 		public static Map Divide(Map arg,Map map)
 		{
 			return arg.GetNumber() / map.GetNumber();
+		}
+		public static Map ParseFile(Map arg)
+		{
+			return Parser.Parse(arg.GetString());
 		}
 		public static Map Parse(Map arg)
 		{
@@ -953,9 +950,9 @@ namespace Meta
 			}
 			return nondecreasing;
 		}
-		public static Map And(Map a,Map b)
+		public static bool And(bool a,bool b)
 		{
-			return a.GetBoolean() && b.GetBoolean();
+			return a && b;
 		}
 		public static Map Or(Map arg)
 		{
@@ -973,10 +970,10 @@ namespace Meta
 			Number number = arg.GetNumber();
 			return new Number(number.Denominator, number.Numerator);
 		}
-		public static Map Modulo(Map arg, Map map)
-		{
-			return Convert.ToInt32(arg.GetNumber().Numerator % map.GetNumber().Numerator);
-		}
+		//public static Map Modulo(Map arg, Map map)
+		//{
+		//    return Convert.ToInt32(arg.GetNumber().Numerator % map.GetNumber().Numerator);
+		//}
 		public static Map Add(Map arg, Map map)
 		{
 			return arg.GetNumber() + map.GetNumber();
@@ -999,35 +996,9 @@ namespace Meta
 			writtenText += text;
 			Console.Write(text);
 		}
-		public static Map Maximum(Map arg)
-		{
-			Number maximum = arg[1].GetNumber();
-			foreach (Map map in arg.Array)
-			{
-				Number number = map.GetNumber();
-				if (number > maximum)
-				{
-					maximum = number;
-				}
-			}
-			return new StrategyMap(maximum);
-		}
 		public static Map Opposite(Map arg)
 		{
 			return arg.GetNumber() * -1;
-		}
-		public static Map Minimum(Map arg)
-		{
-			Number minumum = arg[1].GetNumber();
-			foreach (Map map in arg.Array)
-			{
-				Number number = map.GetNumber();
-				if (number < minumum)
-				{
-					minumum = number;
-				}
-			}
-			return new StrategyMap(minumum);
 		}
 		public static Map Merge(Map arg, Map map)
 		{
@@ -1038,17 +1009,16 @@ namespace Meta
 			}
 			return result;
 		}
-
 		public static Map Sort(Map arg,Map map)
 		{
-				List<Map> array = arg.Array;
-				Position argument = Call.LastArgument;
-				array.Sort(new Comparison<Map>(delegate(Map a, Map b)
-				{
-					Map result = map.Call(a, argument).Call(b).Get();
-					return result.GetNumber().GetInt32();
-				}));
-				return new StrategyMap(array);
+			List<Map> array = arg.Array;
+			Position argument = Call.LastArgument;
+			array.Sort(new Comparison<Map>(delegate(Map a, Map b)
+			{
+				Map result = map.Call(a, argument).Call(b).Get();
+				return result.GetNumber().GetInt32();
+			}));
+			return new StrategyMap(array);
 		}
 		public static Map JoinAll(Map arg)
 		{
@@ -1074,72 +1044,6 @@ namespace Meta
 				result.Append(i);
 			}
 			return result;
-		}
-		public static Map Find(Map arg)
-		{
-		    Map result = new StrategyMap(new ListStrategy());
-		    string text = arg["array"].GetString();
-		    string value = arg["value"].GetString();
-		    for (int i = 0; ; i++)
-		    {
-		        i = text.IndexOf(value, i);
-		        if (i == -1)
-		        {
-		            break;
-		        }
-		        else
-		        {
-		            result.Append(i + 1);
-		        }
-		    }
-		    return result;
-		}
-		public static Map Slice(Map arg)
-		{
-			Map array = arg["array"];
-			int start;
-			if (arg.ContainsKey("start"))
-			{
-				start = arg["start"].GetNumber().GetInt32();
-			}
-			else
-			{
-				start = 1;
-			}
-			int end;
-			if (arg.ContainsKey("end"))
-			{
-				end = arg["end"].GetNumber().GetInt32();
-			}
-			else
-			{
-				end = array.ArrayCount;
-			}
-			Map result = new StrategyMap(new ListStrategy());
-			for (int i = start; i <= end; i++)
-			{
-				result.Append(array[i]);
-			}
-			return result;
-		}
-		public static Map StringReplace(Map text,Map old,Map replacement)
-		{
-			return text.GetString().Replace(old.GetString(), replacement.GetString());
-		}
-		public static Map UrlDecode(Map arg)
-		{
-			string[] aSplit;
-			string sOutput;
-			string sConvert = arg.GetString();
-
-			sOutput = sConvert.Replace("+", " ");
-			aSplit = sOutput.Split('%');
-			sOutput = aSplit[0];
-			for (int i = 1; i < aSplit.Length; i++)
-			{
-				sOutput = sOutput + (char)Convert.ToInt32(aSplit[i].Substring(0, 2), 16) + aSplit[i].Substring(2);
-			}
-			return sOutput;
 		}
 		public static Map While(Map arg)
 		{
@@ -1208,24 +1112,37 @@ namespace Meta
 	{
 		static Interpreter()
 		{
-			Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+			Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty, RootPosition.rootPosition).Get();
 		}
 		public static bool profiling=false;
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//Library.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\relativity.learn"));
-			
-			TreeView t;
-			//t.Nodes
-			TreeNode n;
-			//t.CheckBoxes
-			MainMenu m;
+			MemberInfo[] members = typeof(Number).GetMembers();
 			try
 			{
-				//Parser.Parse(Path.Combine(Interpreter.InstallationPath,@"Test\learning.meta")).Call(Map.Empty,new Position(RootPosition.rootPosition,"library"));
+				//profiling = true;
+				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
+
+				//List<KeyValuePair<string, double>> profiled = new List<KeyValuePair<string, double>>(Call.calls);
+				//profiled.Sort(new Comparison<KeyValuePair<string, double>>(delegate(KeyValuePair<string, double> a, KeyValuePair<string, double> b)
+				//{
+				//    return a.Value.CompareTo(b.Value);
+				//}));
+				//profiled.Reverse();
+				//UseConsole();
+				//for (int i = 0; i < profiled.Count; i++)
+				//{
+				//    KeyValuePair<string, double> entry = profiled[i];
+				//    Console.WriteLine(entry.Key + " " + new TimeSpan(0, 0, Convert.ToInt32(entry.Value)).ToString());
+				//}
+				//Console.ReadLine();
+				//return;
+				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
 				//return;
 
+				char c;
+				//bool b;
 				switch (args[0])
 				{
 					case "-test":
@@ -1234,21 +1151,21 @@ namespace Meta
 					case "-help":
 						Commands.Help();
 						break;
-					case "-profile":
-						profiling = true;
-						Commands.Profile();
-						List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
-						profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
-						{
-							return a.Value.CompareTo(b.Value);
-						}));
-						profiled.Reverse();
-						for (int i = 0; i < profiled.Count; i++)
-						{
-							KeyValuePair<string,double> entry=profiled[i];
-							Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
-						}
-						break;
+					//case "-profile":
+					//    profiling = true;
+					//    Commands.Profile();
+					//    List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
+					//    profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
+					//    {
+					//        return a.Value.CompareTo(b.Value);
+					//    }));
+					//    profiled.Reverse();
+					//    for (int i = 0; i < profiled.Count; i++)
+					//    {
+					//        KeyValuePair<string,double> entry=profiled[i];
+					//        Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
+					//    }
+					//    break;
 					case "-parser":
 						AllocConsole();
 						break;
@@ -1284,6 +1201,14 @@ namespace Meta
 				}
 			}
 		}
+
+		static void t_AfterCheck(object sender, TreeViewEventArgs e)
+		{
+			//e.Node
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+
 
 		public class Commands
 		{
@@ -2320,13 +2245,11 @@ namespace Meta
 						//ConstructorInfo constructor = target.GetConstructor(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new Type[] { }, new ParameterModifier[] { });
 						//MemberInfo[] members=target.GetMembers();
 
-						if (target.Name.Contains("UIElement"))
+						if (target == typeof(Number) && meta.IsNumber)
 						{
+							dotNet = meta.GetNumber();
 						}
-						if (target.IsValueType)
-						{
-						}
-						if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
+						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
 						{
 							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
 							//dotNet = constructor.Invoke(new object[] { });
@@ -2532,13 +2455,10 @@ namespace Meta
 					case TypeCode.Int64:
 						return (long)dotNet;
 					case TypeCode.Object:
-						//if(dotNet.GetType().IsSubclassOf(typeof(Enum)))
-						//{
-						//    return new ObjectMap(dotNet);
-						//    //reutrn new 
-						//    //return (int)Convert.ToInt32((Enum)dotNet);
-						//}
-						//else 
+						if (dotNet is Number)
+						{
+							return new StrategyMap((Number)dotNet);
+						}
 						if(dotNet is Map)
 						{
 							return (Map)dotNet;
@@ -2601,6 +2521,9 @@ namespace Meta
 		public override Position Call(Map argument, Position position)
 		{
 
+			if (this.method.Name.Contains("op_Addition"))
+			{
+			}
 			return DecideCall(argument, new List<object>(), position);
 		}
 
@@ -4093,7 +4016,7 @@ namespace Meta
 		}
 		public abstract class Test
 		{
-			public void RunTest()
+			public bool RunTest()
 			{
 				int level;
 				Console.Write(this.GetType().Name + "...");
@@ -4120,7 +4043,8 @@ namespace Meta
 
 				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.UTF8);
 				string successText;
-				if (!File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath)))
+				bool success = !File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
+				if (success)
 				{
 					successText = "failed";
 				}
@@ -4129,6 +4053,7 @@ namespace Meta
 					successText = "succeeded";
 				}
 				Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
+				return success;
 			}
 			public abstract object GetResult(out int level);
 		}
@@ -4141,7 +4066,10 @@ namespace Meta
 				{
 					Test test = (Test)testType.GetConstructor(new Type[] { }).Invoke(null);
 					int level;
-					test.RunTest();
+					if (!test.RunTest())
+					{
+						allTestsSucessful = false;
+					}
 				}
 			}
 			if (!allTestsSucessful)
@@ -4542,6 +4470,10 @@ namespace Meta
 		private static double LeastCommonMultiple(Number a, Number b)
 		{
 			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
+		}
+		public static Number operator %(Number a, Number b)
+		{
+			return Convert.ToInt32(a.Numerator)%Convert.ToInt32(b.Numerator);
 		}
 		public static Number operator +(Number a, Number b)
 		{
@@ -5226,14 +5158,17 @@ namespace Meta
 		//            {
 		//                p.defaultKeys.Pop();
 		//            })));
-		public static Rule Value = new Alternatives(
+		public static Rule Value = new DelayedRule(delegate
+		{
+			return new Alternatives(
 			Map,
-			//ListMap, 
+			ListMap,
 			String,
 			Number,
 			CharacterDataExpression
 
 			);
+		});
 		private static Rule LookupAnything =
 			new Sequence(
 				new Action(new Match(), new Character(('<'))),
@@ -5436,6 +5371,7 @@ namespace Meta
 					new Action(new Assignment(1),
 						new Alternatives(
 							ProgramDelayed,
+							LiteralExpression,
 							Root,
 							Search,
 							Lookup,
@@ -5610,6 +5546,44 @@ new Assignment(
 				return null;
 			})));
 
+		public static Rule ListMap = new Sequence(
+			new Action(new Match(), new Character('+')),
+			new Action(
+				new ReferenceAssignment(),
+				new PrePost(
+					delegate(Parser p)
+					{
+						p.defaultKeys.Push(1);
+					},
+					new Sequence(
+			new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), SmallIndentation),
+						new Action(
+							new ReferenceAssignment(),
+							new ZeroOrMore(
+								new Action(new Autokey(),
+									new Sequence(
+										new Action(new Match(), new Optional(EndOfLine)),
+										new Action(new Match(), SameIndentation),
+										new Action(new ReferenceAssignment()
+							//delegate(Parser p, Map map, ref Map result)
+							//{
+							//    result = new StrategyMap(p.defaultKeys.Peek(), map);
+							//    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+							//    return map;
+							//}
+			, Value)
+			)))
+			)
+			,
+				new Action(new Match(), new Optional(EndOfLine)),
+				new Action(new Match(), new Optional(new Alternatives(Dedentation)))
+			),
+					delegate(Parser p)
+					{
+						p.defaultKeys.Pop();
+					})));
+
 		public static Rule List = new Sequence(
 			new Action(new Match(), new Character('+')),
 			new Action(
@@ -5653,53 +5627,6 @@ new Assignment(
 					{
 						p.defaultKeys.Pop();
 					})));
-
-		//public static Rule List = new Sequence(
-		//    new Action(new Match(), new Character('+')),
-		//    new Action(
-		//        new Assignment(CodeKeys.Program),
-		//        new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-		//            new Sequence(
-		//                new Action(
-		//                    new Match(),
-		//                    Indentation),
-		//                new Action(
-		//                    listProduction,
-		//                    Expression),
-		//                new Action(
-		//                    new Append(),
-		//                    new ZeroOrMore(
-		//                        new Action(new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Match(), new Optional(EndOfLine)),
-		//                                new Action(new Match(), new Alternatives(
-		//                                    SameIndentation,
-		//                                    Dedentation)),
-		//                                new Action(
-		//                    new CustomProduction(
-		//                    delegate(Parser p, Map map, ref Map result)
-		//                    {
-		//                        result = new StrategyMap(
-		//                            CodeKeys.Key, new StrategyMap(1,
-		//                            new StrategyMap(
-		//                                CodeKeys.Lookup, new StrategyMap(
-		//                                    CodeKeys.Literal, p.defaultKeys.Peek()))),
-		//                            CodeKeys.Value, map);
-		//                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-
-		//                        return result;
-		//                    }
-		//    ), Expression)
-		//    ))))),
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            })));
-
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
 			new Action(
@@ -6218,6 +6145,10 @@ new Assignment(
 		{
 			try
 			{
+				if (map is Gac)
+				{
+					return "Gac";
+				}
 				if (map is DotNetMap)
 				{
 					return map.ToString();
@@ -6345,15 +6276,15 @@ new Assignment(
 			//        return Run(@"D:\Meta\0.2\Test\pong.meta", new StrategyMap(1, "first arg", 2, "second=arg"));
 			//    }
 			//}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        //return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
-			//        return Meta.Serialize.ValueFunction(Gac.fileSystem["localhost"]["C:"]["Meta"]["0.2"]["Test"]["basicTest"]);
-			//    }
-			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					//return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
+					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath,@"Test\basicTest.meta")));
+				}
+			}
 			public class Basic : Test
 			{
 				public override object GetResult(out int level)

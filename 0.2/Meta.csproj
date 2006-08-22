@@ -114,6 +114,7 @@
     <None Include="Test\metaEdit.meta" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="libDesign.meta" />
     <None Include="library.meta" />
     <None Include="Test\learning.meta" />
     <None Include="Test\relativity.learn" />
