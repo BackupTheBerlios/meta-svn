@@ -112,7 +112,7 @@ arg|,
 						0=,
 							|0
 					1
-			append=-
+			joinTest=-
 				join
 				"abc, "
 				"die Katze lief im Schnee."
@@ -122,6 +122,10 @@ arg|,
 					"abc, "
 					"die Katze lief im Schnee."
 					"die Katze lief im Schnee."
+			appendTest=-
+				append
+				"hello"
+				32
 			apply=,
 				&=-
 					!"apply"
@@ -164,37 +168,22 @@ arg|,
 						,
 							x="y"
 							y="a"
-			while=,
-				counter=0
-				SetCounter=,
-					argument|,
-						!counter=argument
-				test=-
-					!"while"
-					,
-						condition=,
-							arg|-
-								!"less"
-								!"counter"
-								10
-						function=,
-							arg|-
-								!"SetCounter"
-								,
-									0=!"counter"
-				&=!"counter"
+			whileTest=-
+				while
+				,
+					arg|-
+						less
+						arg
+						10
+				,
+					arg|-
+						add
+						arg
+						1
+				1
 			firstTest=.
 				"hello"
 				1
-			splitTest=-
-				!"split"
-				,
-					1="hello world hello"
-					space=" "
-					delimiters=+
-						.
-							space
-							1
 			tryTest=-
 				!"try"
 				,
@@ -206,52 +195,6 @@ arg|,
 								argument
 								ToString
 							0
-			sortTest=-
-				!"sort"
-				+
-					,
-						x=12
-						y=234
-					,
-						x=123
-						y=3245
-					,
-						x=12
-						y=234
-					,	
-						x=245
-						y=98834
-				,
-					first|,
-						second|-
-							.
-								,
-									1=,
-										arg|-1
-									0=,
-										arg|-
-											.
-												,
-													1=,
-														arg|1
-													0=,
-														arg|0
-												-
-													!"less"
-													.
-														first
-														x
-													.
-														second
-														x
-								-
-									!"less"
-									.
-										first
-										x
-									.
-										second
-										x
 			integerToString=-
 				!"integerToString"
 				5
@@ -319,15 +262,6 @@ arg|,
 		restTest=-
 			rest
 			"hello"
-		selectTest=-
-			select
-			,
-				orange="orange"
-				banana="yellow"
-				apple="red"
-				strawberries="red"
-			,
-				value|1
 		countTest=-
 			count
 			,

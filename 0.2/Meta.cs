@@ -731,23 +731,23 @@ namespace Meta
 		{
 			return arg.GetNumber() / map.GetNumber();
 		}
-		public static Map ParseFile(Map arg)
-		{
-			return Parser.Parse(arg.GetString());
-		}
-		public static Map Parse(Map arg)
-		{
-			return Parser.ParseString(arg.GetString(),"in memory");
-			//Map start = new StrategyMap();
-			//Parser parser = new Parser(arg.GetString(), "Parse function");
-			//bool matched;
-			//Map result = Parser.File.Match(parser, out matched);
-			//if (parser.index != parser.text.Length)
-			//{
-			//    throw new SyntaxException("Expected end of file.", parser);
-			//}
-			//return result;
-		}
+		//public static Map ParseFile(Map arg)
+		//{
+		//    return Parser.Parse(arg.GetString());
+		//}
+		//public static Map Parse(Map arg)
+		//{
+		//    return Parser.ParseString(arg.GetString(),"in memory");
+		//    //Map start = new StrategyMap();
+		//    //Parser parser = new Parser(arg.GetString(), "Parse function");
+		//    //bool matched;
+		//    //Map result = Parser.File.Match(parser, out matched);
+		//    //if (parser.index != parser.text.Length)
+		//    //{
+		//    //    throw new SyntaxException("Expected end of file.", parser);
+		//    //}
+		//    //return result;
+		//}
 		public static Map Multiply(Map arg,Map map)
 		{
 			return arg.GetNumber() * map.GetNumber();
@@ -1112,17 +1112,27 @@ namespace Meta
 	{
 		static Interpreter()
 		{
-			Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty, RootPosition.rootPosition).Get();
+			try
+			{
+
+				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty, RootPosition.rootPosition).Get();
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
 		}
 		public static bool profiling=false;
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			MemberInfo[] members = typeof(Number).GetMembers();
 			try
 			{
 				//profiling = true;
+				//DateTime start = DateTime.Now;
 				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
+
+				//UseConsole();
 
 				//List<KeyValuePair<string, double>> profiled = new List<KeyValuePair<string, double>>(Call.calls);
 				//profiled.Sort(new Comparison<KeyValuePair<string, double>>(delegate(KeyValuePair<string, double> a, KeyValuePair<string, double> b)
@@ -1136,7 +1146,8 @@ namespace Meta
 				//    KeyValuePair<string, double> entry = profiled[i];
 				//    Console.WriteLine(entry.Key + " " + new TimeSpan(0, 0, Convert.ToInt32(entry.Value)).ToString());
 				//}
-				//Console.ReadLine();
+				//Console.WriteLine(DateTime.Now - start);
+				//Console.ReadLine();				//Console.ReadLine();
 				//return;
 				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
 				//return;

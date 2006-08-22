@@ -148,7 +148,7 @@ Entry (KeyValuePair`2)
 				"if test successful"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"append"
+				"joinTest"
 			Value (StrategyMap):
 				"abc, die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
@@ -156,6 +156,11 @@ Entry (KeyValuePair`2)
 				"joinAllTest"
 			Value (StrategyMap):
 				"abc, die Katze lief im Schnee.die Katze lief im Schnee."
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"appendTest"
+			Value (StrategyMap):
+				"hello "
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"apply"
@@ -214,9 +219,10 @@ Entry (KeyValuePair`2)
 								0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"while"
+				"whileTest"
 			Value (StrategyMap):
-				10
+				"
+	"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"firstTest"
@@ -224,88 +230,9 @@ Entry (KeyValuePair`2)
 				104
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
-				"splitTest"
-			Value (StrategyMap):
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						1
-					Value (StrategyMap):
-						"hello"
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						2
-					Value (StrategyMap):
-						"world"
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						3
-					Value (StrategyMap):
-						"hello"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
 				"tryTest"
 			Value (StrategyMap):
 				"hello"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"sortTest"
-			Value (StrategyMap):
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						1
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								12
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								234
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						2
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								12
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								234
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						3
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								123
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								3245
-				Entry (KeyValuePair`2)
-					Key (StrategyMap):
-						4
-					Value (StrategyMap):
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"x"
-							Value (StrategyMap):
-								245
-						Entry (KeyValuePair`2)
-							Key (StrategyMap):
-								"y"
-							Value (StrategyMap):
-								98834
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"integerToString"
@@ -488,11 +415,6 @@ Entry (KeyValuePair`2)
 		"restTest"
 	Value (StrategyMap):
 		"ello"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"selectTest"
-	Value (StrategyMap):
-		"orange"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"countTest"
