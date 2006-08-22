@@ -5218,61 +5218,6 @@ namespace Meta
 			return Parser.Expression;
 		});
 
-		//public static Rule List = new Sequence(
-		//    new Action(new Match(), new Character('+')),
-		//    new Action(
-		//        new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-		//            new Sequence(
-		//                new Action(
-		//                    new Match(),
-		//                    Indentation),
-		//                new Action(
-		//                    new CustomProduction(
-		//delegate(Parser p, Map map, ref Map result)
-		//{
-		//    result[p.defaultKeys.Peek()] = new StrategyMap(
-		//        CodeKeys.Key, new StrategyMap(1,
-		//        new StrategyMap(
-		//            CodeKeys.Lookup,new StrategyMap(
-		//                CodeKeys.Literal, p.defaultKeys.Peek()))),
-		//        CodeKeys.Value, map);
-		//                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-
-		//    return result;
-		//}),
-		//                    Expression),
-		//                new Action(
-		//                    new Append(),
-		//                    new ZeroOrMore(
-		//                        new Action(new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Match(),new Optional(EndOfLine)),
-		//                                new Action(new Match(), new Alternatives(
-		//                                    SameIndentation,
-		//                                    Dedentation)),
-		//                                new Action(
-		//                    new CustomProduction(
-		//                    delegate(Parser p, Map map, ref Map result)
-		//                    {
-		//                        result = new StrategyMap(
-		//                            CodeKeys.Key, new StrategyMap(1,
-		//                            new StrategyMap(
-		//                                CodeKeys.Lookup, new StrategyMap(
-		//                                    CodeKeys.Literal, p.defaultKeys.Peek()))),
-		//                            CodeKeys.Value, map);
-		//                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-
-		//                        return result;
-		//                    }),Expression)
-		//    ))))),
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            })));
 		public static Rule Value = new DelayedRule(delegate
 		{
 			return new Alternatives(
