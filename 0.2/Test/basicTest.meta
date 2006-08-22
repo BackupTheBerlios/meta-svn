@@ -27,6 +27,14 @@ shortFunc="
 			arg
 "
 1="hello"
+listTest=+
+	"this"
+	1
+	"is"
+	"a"
+	+
+		"long"
+		"list"
 commandLine|,
 	&=-
 		-

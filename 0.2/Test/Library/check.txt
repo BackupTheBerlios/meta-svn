@@ -97,17 +97,17 @@ Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"smallerDecreasingTest"
 			Value (StrategyMap):
-				1
+				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"nonincreasingTest"
 			Value (StrategyMap):
-				0
+				1
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"nondecreasingTest"
 			Value (StrategyMap):
-				1
+				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"strictlyIncreasingTest"
@@ -141,11 +141,6 @@ Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"mapTest"
 	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"switchTest"
-			Value (StrategyMap):
-				"right"
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"ifTest"
@@ -367,31 +362,6 @@ Entry (KeyValuePair`2)
 				"illo illo hi"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
-		"filterTest"
-	Value (StrategyMap):
-		""
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"findTest"
-	Value (StrategyMap):
-		""
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"findTest2"
-	Value (StrategyMap):
-		""
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"sliceTest"
-	Value (StrategyMap):
-		" meine "
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"firstTest"
-	Value (StrategyMap):
-		97
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
 		"rangeTest"
 	Value (StrategyMap):
 		"	
@@ -401,11 +371,6 @@ Entry (KeyValuePair`2)
 		"reverseTest"
 	Value (StrategyMap):
 		"olleh"
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"findFirstTest"
-	Value (StrategyMap):
-		7
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"foreachTest"
@@ -461,20 +426,6 @@ Entry (KeyValuePair`2)
 				"yes"
 			Value (StrategyMap):
 				1
-Entry (KeyValuePair`2)
-	Key (StrategyMap):
-		"intersectTest"
-	Value (StrategyMap):
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"apple"
-			Value (StrategyMap):
-				"green"
-		Entry (KeyValuePair`2)
-			Key (StrategyMap):
-				"orange"
-			Value (StrategyMap):
-				"green"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lowerTest"
@@ -625,3 +576,8 @@ Entry (KeyValuePair`2)
 		"countTest"
 	Value (StrategyMap):
 		4
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
+		"addArrayTest"
+	Value (StrategyMap):
+		""
