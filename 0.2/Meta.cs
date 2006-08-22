@@ -704,17 +704,17 @@ namespace Meta
 			list.Reverse();
 			return new StrategyMap(list);
 		}
-		public static Map Try(Map arg)
+		public static Map Try(Map tryFunction,Map catchFunction)
 		{
 			Map result;
-			Position argument = Call.LastArgument;
+			Position position = Call.LastArgument;
 			try
 			{
-				result = argument.Get()["function"].Call(Map.Empty, argument).Get();
+				return tryFunction.Call(Map.Empty,position).Get();
 			}
 			catch (Exception e)
 			{
-				result = argument.Get()["catch"].Call(new ObjectMap(e), argument).Get();
+				result = catchFunction.Call(new ObjectMap(e),position).Get();
 			}
 			return result;
 		}
@@ -772,28 +772,18 @@ namespace Meta
 		{
 			try
 			{
-				//profiling = true;
-				//DateTime start = DateTime.Now;
-				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
-
-				//UseConsole();
-
-				//Console.WriteLine(DateTime.Now - start);
-				//Console.ReadLine();				//Console.ReadLine();
-				//return;
-
-
 				switch (args[0])
 				{
 					case "-test":
-						Commands.Test();
-						break;
-					case "-help":
-						Commands.Help();
+						UseConsole();
+						new MetaTest().Run();
 						break;
 					case "-profile":
 						profiling = true;
-						Commands.Profile();
+						DateTime start = DateTime.Now;
+						AllocConsole();
+						int level;
+						Console.WriteLine((DateTime.Now - start).TotalSeconds);
 						List<KeyValuePair<string, double>> profiled = new List<KeyValuePair<string, double>>(Call.calls);
 						profiled.Sort(new Comparison<KeyValuePair<string, double>>(delegate(KeyValuePair<string, double> a, KeyValuePair<string, double> b)
 						{
@@ -806,11 +796,7 @@ namespace Meta
 							Console.WriteLine(entry.Key + " " + new TimeSpan(0, 0, Convert.ToInt32(entry.Value)).ToString());
 						}
 						break;
-					case "-parser":
-						AllocConsole();
-						break;
 					default:
-						Commands.Run(args);
 						break;
 				}
 			}
@@ -841,56 +827,9 @@ namespace Meta
 				}
 			}
 		}
-
-		static void t_AfterCheck(object sender, TreeViewEventArgs e)
-		{
-			//e.Node
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-
-
-		public class Commands
-		{
-
-			public static void Profile()
-			{
-				DateTime start = DateTime.Now;
-				AllocConsole();
-				int level;
-				Console.WriteLine((DateTime.Now - start).TotalSeconds);
-			}
-			public static void Help()
-			{
-				UseConsole();
-				Console.WriteLine("help");
-				Console.ReadLine();
-			}
-
-			public static void Test()
-			{
-				UseConsole();
-				new MetaTest().Run();
-			}
-			public static void Run(string[] args)
-			{
-				string path=args[0];
-				Map map=Binary.Deserialize(path);
-				Map arg = new StrategyMap();
-				for (int i = 1; i < args.Length; i++)
-				{
-					arg[i] = args[i];
-				}
-				map.Call(
-					new StrategyMap(arg),
-					new Position(RootPosition.rootPosition, "library"));
-			}
-		}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
 		public static extern bool AllocConsole();
 
-		[System.Runtime.InteropServices.DllImport("kernel32.dll")]
-		static extern IntPtr GetStdHandle(int nStdHandle);
 		public static bool useConsole = false;
 		public static void UseConsole()
 		{
@@ -898,23 +837,11 @@ namespace Meta
 			useConsole = true;
 			Console.SetBufferSize(80, 1000);
 		}
-		private static string installationPath = @"D:\Meta\0.2\";
 		public static string InstallationPath
 		{
 			get
 			{
-				return installationPath;
-			}
-			set
-			{
-				installationPath = value;
-			}
-		}
-		public static string LibraryPath
-		{
-			get
-			{
-				return Path.Combine(InstallationPath,"Library");
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -929,7 +856,6 @@ namespace Meta
 		{
 			return Get().Call(argument, this);
 		}
-
 		public override bool Equals(object obj)
 		{
 			Position position=(Position)obj;
@@ -1564,10 +1490,6 @@ namespace Meta
 			: this(new EmptyStrategy())
 		{
 		}
-		//public StrategyMap(double i)
-		//    : this(new Number(i))
-		//{
-		//}
 		public StrategyMap(Number number)
 			: this(new NumberStrategy(number))
 		{
@@ -1710,14 +1632,6 @@ namespace Meta
 				return dotNet;
 			}
 		}
-
-		// combine with method below
-		//public static object ToDotNet(Map meta, Type target,out bool converted)
-		//{
-		//    object dotNet = TryToDotNet(meta, target);
-		//    converted = dotNet != null;
-		//    return dotNet;
-		//}
 		public static Delegate CreateDelegateFromCode(Type delegateType, Map code)
 		{
 			MethodInfo invokeMethod = delegateType.GetMethod("Invoke");
@@ -1795,18 +1709,8 @@ namespace Meta
 				foreach (object argument in arguments)
 				{
 					pos=pos.Call(Transform.ToSimpleMeta(argument));
-					//arg.Append(Transform.ToSimpleMeta(argument));
 				}
-				//Map result = this.callable.Get().Call(arg, this.callable).Get();
 				return Meta.Transform.ToDotNet(pos.Get(), this.returnType);
-
-				//Map arg = new StrategyMap();
-				//foreach (object argument in arguments)
-				//{
-				//    arg.Append(Transform.ToSimpleMeta(argument));
-				//}
-				//Map result = this.callable.Get().Call(arg, this.callable).Get();
-				//return Meta.Transform.TryToDotNet(result, this.returnType);
 			}
 		}
 		public static object TryToDotNet(Map meta, Type target,out bool wasConverted)
@@ -2773,10 +2677,6 @@ namespace Meta
 	[Serializable]
 	public class ListStrategy : ArrayStrategy
 	{
-		//public override void AppendRange(IEnumerable<Map> array, StrategyMap parent)
-		//{
-		//    list.AddRange(array);
-		//}
 		protected override Map GetIndex(int i)
 		{
 			return list[i];
@@ -2969,11 +2869,6 @@ namespace Meta
 	[Serializable]
 	public class CloneStrategy : MapStrategy
 	{
-		//public override void AppendRange(IEnumerable<Map> array, StrategyMap parent)
-		//{
-		//    Panic(new DictionaryStrategy(), parent);
-		//    parent.AppendRange(array);
-		//}
 		public override int GetArrayCount()
 		{
 			return original.GetArrayCount();
@@ -3434,11 +3329,8 @@ namespace Meta
 								}
 								else
 								{
-									//Type t = list.GetType().GetMember("Add").GetParameters()[0].ParameterType;
-									//Type t = list.GetType().GetMethod("Add").GetParameters()[0].ParameterType;
 									foreach (Map map in value.Array)
 									{
-
 										list.Add(Transform.ToDotNet(map, t));
 									}
 								}
@@ -4398,10 +4290,6 @@ namespace Meta
 		{
 			return ParseString(System.IO.File.ReadAllText(file), file);
 		}
-		//public static Map ParseString(string text)
-		//{
-		//    return ParseString(text, "in memory");
-		//}
 		public static Map ParseString(string text, string fileName)
 		{
 			Parser parser = new Parser(text, fileName);
@@ -4844,11 +4732,6 @@ namespace Meta
 			new Action(new Match(), new Character(Syntax.current)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
 
-
-		//private static Rule LastArgument = new Sequence(
-		//    new Action(new Match(), new Character(Syntax.lastArgument)),
-		//    new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.LastArgument, Meta.Map.Empty))));
-
 		private static Rule Root = new Sequence(
 			new Action(new Match(), new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
@@ -5135,22 +5018,6 @@ new Assignment(
 				result.Append(map);
 			}
 		}
-		//public class ParseAssignment : Production
-		//{
-		//    private Action key;
-		//    public ParseAssignment(Action key)
-		//    {
-		//        this.key = key;
-		//    }
-		//    public override void Execute(Parser parser, Map map, ref Map result)
-		//    {
-		//        Map keyResult;
-		//        if (key.Execute(parser, keyResult))
-		//        {
-		//            result[key] = map;
-		//        }
-		//    }
-		//}
 		public class Assignment : Production
 		{
 			private Map key;

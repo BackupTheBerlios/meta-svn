@@ -187,14 +187,13 @@ arg|,
 			tryTest=-
 				!"try"
 				,
-					function=,
-						arg|"hello"
-					catch=,
-						argument|-
-							.
-								argument
-								ToString
-							0
+					arg|"hello"
+				,
+					argument|-
+						.
+							argument
+							ToString
+						0
 			integerToString=-
 				!"integerToString"
 				5
