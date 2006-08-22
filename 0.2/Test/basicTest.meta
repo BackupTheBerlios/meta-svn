@@ -57,7 +57,7 @@ commandLine|,
 	counter=0
 	SetCounter=,
 		argument|,
-			!counter=argument
+			!counter:argument
 	1=-
 		!"SetCounter"
 		5
@@ -83,12 +83,12 @@ commandLine|,
 	.
 		negativeInteger
 		x
-	="hello"
+	:"hello"
 	integerIncrementTest=5
 	.
 		integerIncrementTest
 		0
-	=!"integerIncrementTest"
+	:!"integerIncrementTest"
 	integerDecrementTest=5
 	integerDecrementTest=.
 		!"integerDecrementTest"
@@ -125,11 +125,11 @@ commandLine|,
 	commandLineArguments=!"commandLine"
 	aMap=,
 		a="a"
-	<!"aMap"="Object"
+	<!"aMap":"Object"
 	"normal symbol"="NormalSymbol"
 	lookupSymbol="LookupSymbol"
 	"long key symbol"="LookupExtendedSymbol"
-	lookedUpMap=!!"aMap"
+	lookedUpMap=!aMap
 	lookedUpNormalSymbol=!"normal symbol"
 	lookedUpSymbol=!"lookupSymbol"
 	lookedUpLongSymbol=!"long key symbol"
@@ -139,14 +139,14 @@ commandLine|,
 		b=0
 		SetA=,
 			arg|,
-				!a="c"
-				!autoSearch="changed"
+				!a:"c"
+				!autoSearch:"changed"
 		SetB=,
 			newB|,
 				.
 					!b
 					1
-				=.
+				:.
 					!"newB"
 					value
 				&="changed"
@@ -178,7 +178,7 @@ commandLine|,
 	scopeFunction=,
 		inScope="right"
 		arg|,
-			!scopeTest=!"inScope"
+			!scopeTest:!"inScope"
 	inScope="wrong"
 	4=-
 		!"scopeFunction"
@@ -248,7 +248,7 @@ commandLine|,
 		TestClass
 		NestedClass
 		field
-	=5
+	:5
 	nestedClassTest=.
 		TestClass
 		NestedClass
@@ -271,7 +271,7 @@ commandLine|,
 	.
 		!TestClass
 		boolTest
-	=1
+	:1
 	boolTest=.
 		TestClass
 		boolTest
@@ -307,15 +307,15 @@ commandLine|,
 	.
 		MemberTest
 		classField
-	="a"
+	:"a"
 	.
 		memberTest
 		instanceField
-	="b"
+	:"b"
 	.
 		MemberTest
 		ClassProperty
-	=.
+	:.
 		memberTest
 		InstanceProperty
 	classPropertyValue=.
@@ -373,7 +373,7 @@ commandLine|,
 		indexerNoConversion
 		Item
 		abc
-	="hihi"
+	:"hihi"
 	indexerNoConversionIndexed=.
 		indexerNoConversion
 		Item
@@ -415,7 +415,7 @@ commandLine|,
 	upperLevel="unchanged"
 	SetUpperLevel=,
 		arg|,
-			!upperLevel=!"arg"
+			!upperLevel:!"arg"
 	ChangeUpperLevel=,
 		arg|,
 			1=-
@@ -427,11 +427,11 @@ commandLine|,
 	staticEventChanged=0
 	ChangeStaticEvent=,
 		arg|,
-			!staticEventChanged=!"arg"
+			!staticEventChanged:!"arg"
 	.
 		TestClass
 		staticEvent
-	=,
+	:,
 		arg|,
 			1=-
 				!"ChangeStaticEvent"
@@ -457,9 +457,9 @@ commandLine|,
 	.
 		testClass
 		instanceEvent
-	=,
+	:,
 		arg|,
-			!instanceEventChanged=1
+			!instanceEventChanged:1
 			&=arg
 	instanceEventResult=-
 		.
@@ -514,7 +514,7 @@ commandLine|,
 	.
 		stringTest
 		6
-	=.
+	:.
 		stringTest
 		1
 	helloh="hi"
@@ -548,7 +548,7 @@ commandLine|,
 	.
 		!"textBox"
 		Text
-	="
+	:"
 		Alle meine Entchen,
 		schwimmen auf dem See,
 		schwimmen auf dem See,
@@ -572,7 +572,7 @@ commandLine|,
 	.
 		form
 		Location
-	=-
+	:-
 		.
 			!"System.Drawing"
 			Point
@@ -640,7 +640,7 @@ commandLine|,
 		map=,
 			test=,
 				arg|,
-					!topLevel="changed"
+					!topLevel:"changed"
 	8=-
 		.
 			deep
@@ -666,7 +666,7 @@ commandLine|,
 		!"System.Windows.Forms"
 		Application
 		VisualStyleState
-	=.
+	:.
 		!"System.Windows.Forms"
 		VisualStyleState
 		ClientAreaEnabled
@@ -691,7 +691,7 @@ commandLine|,
 	.
 		copiedData
 		x
-	="changed"
+	:"changed"
 	characterLiterals=,
 		a='a'
 		space=' '
