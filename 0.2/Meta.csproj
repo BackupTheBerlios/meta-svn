@@ -104,20 +104,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Test\basicTest.meta" />
-    <None Include="Test\libraryTest.meta" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Test\pong.meta" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Test\metaEdit.meta" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="basicTest.meta" />
     <None Include="libDesign.meta" />
     <None Include="library.meta" />
-    <None Include="Test\learning.meta" />
-    <None Include="Test\relativity.learn" />
+    <None Include="libraryTest.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

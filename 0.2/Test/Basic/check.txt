@@ -3181,8 +3181,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"enumTest"
-	Value (ObjectMap):
-		ClientAreaEnabled
+	Value (StrategyMap):
+		2
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"typeTest"
