@@ -600,17 +600,9 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"key"
+														"current"
 													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																1
-															Value (StrategyMap):
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		"current"
-																	Value (StrategyMap):
-																		0
+														0
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"value"
@@ -925,17 +917,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -1014,17 +998,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -1081,17 +1057,9 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
-																												"key"
+																												"current"
 																											Value (StrategyMap):
-																												Entry (KeyValuePair`2)
-																													Key (StrategyMap):
-																														1
-																													Value (StrategyMap):
-																														Entry (KeyValuePair`2)
-																															Key (StrategyMap):
-																																"current"
-																															Value (StrategyMap):
-																																0
+																												0
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												"value"
@@ -1217,17 +1185,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -1331,17 +1291,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -1634,17 +1586,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -1707,17 +1651,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -2745,17 +2681,9 @@ Entry (KeyValuePair`2)
 									Value (StrategyMap):
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
-												"key"
+												"current"
 											Value (StrategyMap):
-												Entry (KeyValuePair`2)
-													Key (StrategyMap):
-														1
-													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																"current"
-															Value (StrategyMap):
-																0
+												0
 										Entry (KeyValuePair`2)
 											Key (StrategyMap):
 												"value"
@@ -3228,17 +3156,9 @@ Entry (KeyValuePair`2)
 																									Value (StrategyMap):
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
-																												"key"
+																												"current"
 																											Value (StrategyMap):
-																												Entry (KeyValuePair`2)
-																													Key (StrategyMap):
-																														1
-																													Value (StrategyMap):
-																														Entry (KeyValuePair`2)
-																															Key (StrategyMap):
-																																"current"
-																															Value (StrategyMap):
-																																0
+																												0
 																										Entry (KeyValuePair`2)
 																											Key (StrategyMap):
 																												"value"
@@ -3334,17 +3254,9 @@ Entry (KeyValuePair`2)
 											Value (StrategyMap):
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
-														"key"
+														"current"
 													Value (StrategyMap):
-														Entry (KeyValuePair`2)
-															Key (StrategyMap):
-																1
-															Value (StrategyMap):
-																Entry (KeyValuePair`2)
-																	Key (StrategyMap):
-																		"current"
-																	Value (StrategyMap):
-																		0
+														0
 												Entry (KeyValuePair`2)
 													Key (StrategyMap):
 														"value"

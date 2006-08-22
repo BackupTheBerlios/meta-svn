@@ -191,6 +191,13 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public virtual bool Constant
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public abstract Position Evaluate(Position context);
 	}
 	internal class HiPerfTimer
@@ -329,16 +336,16 @@ namespace Meta
 			}
 		}
 		private Map code;
-		private List<Statement> statements;
+		private List<StatementBase> statements;
 		public Program(Map code)
 		{
 			this.code = code;
-			statements=code.Array.ConvertAll(new Converter<Map,Statement>(delegate(Map map) {return map.GetStatement();}));
+			statements=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();}));
 		}
 		public override Position Evaluate(Position parent)
 		{
 			Position contextPosition=parent.AddCall(new StrategyMap());
-			foreach (Statement statement in statements)
+			foreach (StatementBase statement in statements)
 			{
 				statement.Assign(contextPosition);
 			}
@@ -408,6 +415,13 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
+		public override bool Constant
+		{
+			get
+			{
+				return true;
+			}
+		}
 		public override Position Evaluate(Position selected)
 		{
 			return RootPosition.rootPosition;
@@ -523,6 +537,7 @@ namespace Meta
 			}
 		}
 	}
+	//public delegate Position SelectOptimization();
 	public class Select : Expression
 	{
 		public List<Map> Subselects
@@ -533,23 +548,65 @@ namespace Meta
 			}
 		}
 		private List<Map> subselects;
+		private Position optimized;
+		bool optimize;
 		public Select(Map code)
 		{
 			this.subselects = code.Array;
 		}
 		public override Position Evaluate(Position context)
 		{
-			Position selected = subselects[0].GetExpression().Evaluate(context);
-			for (int i = 1; i < subselects.Count; i++)
+			if (optimize && optimized != null)
 			{
-				selected = subselects[i].GetSubselect().Evaluate(selected, context);
+				return optimized;
 			}
-			lastPosition = selected;
-			return selected;
+			else
+			{
+				Position selected = subselects[0].GetExpression().Evaluate(context);
+				for (int i = 1; i < subselects.Count; i++)
+				{
+					selected = subselects[i].GetSubselect().Evaluate(selected, context);
+				}
+				lastPosition = selected;
+				if (optimize && optimized == null)
+				{
+					optimized = selected;
+				}
+				return selected;
+			}
 		}
 		public static Position lastPosition;
 	}
-	public class Statement
+	public class CurrentStatement : StatementBase
+	{
+		public CurrentStatement(Map code)
+		{
+			this.expression = code[CodeKeys.Value];
+		}
+		private Map expression;
+		public override void Assign(Position context)
+		{
+			Map value = expression.GetExpression().Evaluate(context).Get();
+
+			if (value.Scope != null)
+			{
+				if (context.Get().Scope != null)
+				{
+					value.Scope = context.Get().Scope;
+				}
+				else
+				{
+					value.Scope = context.Parent;
+				}
+			}
+			context.Assign(value);
+		}
+	}
+	public abstract class StatementBase
+	{
+		public abstract void Assign(Position context);
+	}
+	public class Statement:StatementBase
 	{
 		public Expression Value
 		{
@@ -572,7 +629,7 @@ namespace Meta
 			this.keys = code[CodeKeys.Key].Array;
 			this.value = code[CodeKeys.Value];
 		}
-		public void Assign(Position context)
+		public override void Assign(Position context)
 		{
 			Position selected = context;
 			for (int i = 0; i + 1 < keys.Count; i++)
@@ -654,7 +711,7 @@ namespace Meta
 		public static Map Prepend(Map arg,Map map)
 		{
 			Map result = new StrategyMap(1, arg);
-			result.AppendRange(map);
+			result.AppendRange(map.Array);
 			return result;
 		}
 		public static Map Append(Map arg,Map map)
@@ -1025,15 +1082,15 @@ namespace Meta
 			Map result = new StrategyMap(new ListStrategy());
 			foreach (Map map in arg.Array)
 			{
-				result.AppendRange(map);
+				result.AppendRange(map.Array);
 			}
 			return result;
 		}
 		public static Map Join(Map arg,Map map)
 		{
-				Map result = arg.Copy();
-				result.AppendRange(map);
-				return result;
+			Map result = arg.Copy();
+			result.AppendRange(map.Array);
+			return result;
 		}
 		public static Map Range(Map arg)
 		{
@@ -1134,26 +1191,11 @@ namespace Meta
 
 				//UseConsole();
 
-				//List<KeyValuePair<string, double>> profiled = new List<KeyValuePair<string, double>>(Call.calls);
-				//profiled.Sort(new Comparison<KeyValuePair<string, double>>(delegate(KeyValuePair<string, double> a, KeyValuePair<string, double> b)
-				//{
-				//    return a.Value.CompareTo(b.Value);
-				//}));
-				//profiled.Reverse();
-				//UseConsole();
-				//for (int i = 0; i < profiled.Count; i++)
-				//{
-				//    KeyValuePair<string, double> entry = profiled[i];
-				//    Console.WriteLine(entry.Key + " " + new TimeSpan(0, 0, Convert.ToInt32(entry.Value)).ToString());
-				//}
 				//Console.WriteLine(DateTime.Now - start);
 				//Console.ReadLine();				//Console.ReadLine();
 				//return;
-				//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"Test\learning.meta")).Call(Map.Empty, new Position(RootPosition.rootPosition, "library"));
-				//return;
 
-				char c;
-				//bool b;
+
 				switch (args[0])
 				{
 					case "-test":
@@ -1162,21 +1204,21 @@ namespace Meta
 					case "-help":
 						Commands.Help();
 						break;
-					//case "-profile":
-					//    profiling = true;
-					//    Commands.Profile();
-					//    List < KeyValuePair<string, double> >  profiled=new List<KeyValuePair<string, double>>(Call.calls);
-					//    profiled.Sort(new Comparison<KeyValuePair<string,double>>(delegate(KeyValuePair<string,double> a,KeyValuePair<string,double> b)
-					//    {
-					//        return a.Value.CompareTo(b.Value);
-					//    }));
-					//    profiled.Reverse();
-					//    for (int i = 0; i < profiled.Count; i++)
-					//    {
-					//        KeyValuePair<string,double> entry=profiled[i];
-					//        Console.WriteLine(entry.Key + " " + new TimeSpan(0,0,Convert.ToInt32(entry.Value)).ToString());
-					//    }
-					//    break;
+					case "-profile":
+						profiling = true;
+						Commands.Profile();
+						List<KeyValuePair<string, double>> profiled = new List<KeyValuePair<string, double>>(Call.calls);
+						profiled.Sort(new Comparison<KeyValuePair<string, double>>(delegate(KeyValuePair<string, double> a, KeyValuePair<string, double> b)
+						{
+							return a.Value.CompareTo(b.Value);
+						}));
+						profiled.Reverse();
+						for (int i = 0; i < profiled.Count; i++)
+						{
+							KeyValuePair<string, double> entry = profiled[i];
+							Console.WriteLine(entry.Key + " " + new TimeSpan(0, 0, Convert.ToInt32(entry.Value)).ToString());
+						}
+						break;
 					case "-parser":
 						AllocConsole();
 						break;
@@ -1488,14 +1530,14 @@ namespace Meta
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
 		public int numCalls = 0;
-		public virtual void AppendRange(Map array)
+		public virtual void AppendRange(IEnumerable<Map> array)
 		{
 			AppendRangeDefault(array);
 		}
-		public virtual void AppendRangeDefault(Map array)
+		public virtual void AppendRangeDefault(IEnumerable<Map> array)
 		{
 			int counter = ArrayCount + 1;
-			foreach (Map map in array.Array)
+			foreach (Map map in array)
 			{
 				this[counter] = map;
 				counter++;
@@ -1503,13 +1545,25 @@ namespace Meta
 		}
 		private object compiledCode;
 
-		public Statement GetStatement()
+		public StatementBase GetStatement()
 		{
 			if (compiledCode == null)
 			{
-				compiledCode = new Statement(this);
+				if (ContainsKey(CodeKeys.Key))
+				{
+					compiledCode = new Statement(this);
+
+				}
+				else if (ContainsKey(CodeKeys.Current))
+				{
+					compiledCode = new CurrentStatement(this);
+				}
+				else
+				{
+					throw new ApplicationException("Cannot compile map");
+				}
 			}
-			return (Statement)compiledCode;
+			return (StatementBase)compiledCode;
 		}
 		public Subselect GetSubselect()
 		{
@@ -3191,7 +3245,10 @@ namespace Meta
 	[Serializable]
 	public class ListStrategy : ArrayStrategy
 	{
-
+		//public override void AppendRange(IEnumerable<Map> array, StrategyMap parent)
+		//{
+		//    list.AddRange(array);
+		//}
 		protected override Map GetIndex(int i)
 		{
 			return list[i];
@@ -3384,6 +3441,11 @@ namespace Meta
 	[Serializable]
 	public class CloneStrategy : MapStrategy
 	{
+		//public override void AppendRange(IEnumerable<Map> array, StrategyMap parent)
+		//{
+		//    Panic(new DictionaryStrategy(), parent);
+		//    parent.AppendRange(array);
+		//}
 		public override int GetArrayCount()
 		{
 			return original.GetArrayCount();
@@ -3391,7 +3453,8 @@ namespace Meta
 		public override void Remove(Map key,StrategyMap map)
 		{
 			Panic(new DictionaryStrategy(),map);
-			Remove(key,map);
+			map.Remove(key);
+			//Remove(key, map);
 		}
 		private MapStrategy original;
 		public CloneStrategy(MapStrategy original)
@@ -3471,6 +3534,27 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		//public virtual void AppendRange(IEnumerable<Map> array, StrategyMap parent)
+		//{
+		//    //int counter = parent.ArrayCount + 1;
+		//    //foreach (Map map in array)
+		//    //{
+		//    //    //this.Append(map);
+		//    //    Append(map, parent);
+		//    //    //strategy.Set(counter,map,this);
+		//    //    counter++;
+		//    //}
+		//    ////int counter = parent.ArrayCount + 1;
+		//    ////foreach (Map map in array)
+		//    ////{
+		//    ////    Set(counter,map,parent);
+		//    ////    counter++;
+		//    ////}
+		//    foreach (Map item in array)
+		//    {
+		//        Append(item, parent);
+		//    }
+		//}
 		public virtual void Append(Map map,StrategyMap parent)
 		{
 		    this.Set(GetArrayCount() + 1,map,parent);
@@ -4811,7 +4895,7 @@ namespace Meta
 		//{
 		//    return ParseString(text, "in memory");
 		//}
-		public static Map ParseString(string text,string fileName)
+		public static Map ParseString(string text, string fileName)
 		{
 			Parser parser = new Parser(text, fileName);
 			bool matched;
@@ -4978,7 +5062,7 @@ namespace Meta
 			matched = false;
 			return null;
 		});
-		private static void MatchStringLine(Parser parser,StringBuilder text)
+		private static void MatchStringLine(Parser parser, StringBuilder text)
 		{
 			bool matching = true;
 			for (; matching && parser.index < parser.text.Length; parser.index++)
@@ -4999,17 +5083,17 @@ namespace Meta
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			StringBuilder result = new StringBuilder(100);
-			MatchStringLine(parser,result);
+			MatchStringLine(parser, result);
 			matched = true;
-			while(true)
+			while (true)
 			{
 				bool lineMatched;
-				new Sequence(new Action(new Match(),EndOfLine),
-					new Action(new Match(),SameIndentation)).Match(parser,out lineMatched);
+				new Sequence(new Action(new Match(), EndOfLine),
+					new Action(new Match(), SameIndentation)).Match(parser, out lineMatched);
 				if (lineMatched)
 				{
 					result.Append('\n');
-					MatchStringLine(parser,result);
+					MatchStringLine(parser, result);
 				}
 				else
 				{
@@ -5027,7 +5111,7 @@ namespace Meta
 					Syntax.@string)));
 		public static Rule String = new Sequence(
 			new Action(new Match(), new Character(Syntax.@string)),
-			new Action(new ReferenceAssignment(),new Alternatives(
+			new Action(new ReferenceAssignment(), new Alternatives(
 				SingleString,
 				new Sequence(
 					new Action(new Match(), Indentation),
@@ -5054,7 +5138,7 @@ namespace Meta
 			new Action(
 				new Assignment(1),
 				new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
-			new Action(new Append(),new ZeroOrMore(
+			new Action(new Append(), new ZeroOrMore(
 				new Action(
 					new Autokey(),
 						new CharacterExcept(
@@ -5063,8 +5147,8 @@ namespace Meta
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			new Sequence(
-				new Action(new Match(),new Optional(new Character(','))),
-				new Action(new Match(),Indentation)).Match(parser, out matched);
+				new Action(new Match(), new Optional(new Character(','))),
+				new Action(new Match(), Indentation)).Match(parser, out matched);
 			Map map = new StrategyMap();
 			if (matched)
 			{
@@ -5083,7 +5167,7 @@ namespace Meta
 							Dedentation).Match(parser, out matched);
 						if (matched)
 						{
-							Map entry =Entry.Match(parser, out matched);
+							Map entry = Entry.Match(parser, out matched);
 							if (matched)
 							{
 								map = Library.Merge(map, entry);
@@ -5201,7 +5285,7 @@ namespace Meta
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				Expression),
-			new Action(new Match(),new Optional(EndOfLine)));
+			new Action(new Match(), new Optional(EndOfLine)));
 
 		public static Rule Entry = new Alternatives(
 			new Sequence(
@@ -5209,51 +5293,51 @@ namespace Meta
 					new Assignment(CodeKeys.Function),
 					new Sequence(new Action(new ReferenceAssignment(), Function)))),
 			new Sequence(
-				new Action(new Assignment(1),new Alternatives(
+				new Action(new Assignment(1), new Alternatives(
 					Number,
-			        LookupString,
-			        LookupAnything)),
-				new Action(new Match(),new Character('=')),
+					LookupString,
+					LookupAnything)),
+				new Action(new Match(), new Character('=')),
 				new Action(new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result)
 					{
-						result=new StrategyMap(result[1],map);
+						result = new StrategyMap(result[1], map);
 						return result;
 					})
-					
-					,Value),
-             new Action(new Match(), new Optional(EndOfLine))));
-			//new CustomRule(delegate(Parser parser, out bool matched)
-			//{
-			//    Map result = new StrategyMap();
-			//    Map key=new Alternatives(
-			//        LookupString,
-			//        LookupAnything).Match(parser, out matched);
 
-			//    if (matched)
-			//    {
-			//        new Sequence(
-			//            new Action(new Match(), new Character('='))).Match(parser, out matched);
-					
-			//        if (matched)
-			//        {
-			//            if (matched)
-			//            {
-			//                //new Action(new CustomAction
-			//                Map value = Value.Match(parser, out matched);
-			//                result[key] = value;
+					, Value),
+			 new Action(new Match(), new Optional(EndOfLine))));
+		//new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    Map result = new StrategyMap();
+		//    Map key=new Alternatives(
+		//        LookupString,
+		//        LookupAnything).Match(parser, out matched);
 
-			//                //Map value = Value.Match(parser, out matched);
-			//                //result[key] = value;
+		//    if (matched)
+		//    {
+		//        new Sequence(
+		//            new Action(new Match(), new Character('='))).Match(parser, out matched);
 
-			//                new Sequence(
-			//                    new Action(new Match(), new Optional(EndOfLine))
-			//                    ).Match(parser, out matched);
-			//            }
-			//        }
-			//    }
-			//    return result;
-			//}));
+		//        if (matched)
+		//        {
+		//            if (matched)
+		//            {
+		//                //new Action(new CustomAction
+		//                Map value = Value.Match(parser, out matched);
+		//                result[key] = value;
+
+		//                //Map value = Value.Match(parser, out matched);
+		//                //result[key] = value;
+
+		//                new Sequence(
+		//                    new Action(new Match(), new Optional(EndOfLine))
+		//                    ).Match(parser, out matched);
+		//            }
+		//        }
+		//    }
+		//    return result;
+		//}));
 
 		public static Rule File = new Sequence(
 			new Action(new Match(),
@@ -5283,13 +5367,13 @@ namespace Meta
 					new Sequence(
 						new Action(new Match(), Indentation),
 						new Action(new ReferenceAssignment(), new Sequence(
-							new Action(new Assignment(1),Expression))),
-							new Action(new Join(),new ZeroOrMore(new Action(new Autokey(),new Sequence(
-								new Action(new Match(),new Optional(EndOfLine)),
-								new Action(new Match(),SameIndentation),
-								new Action(new ReferenceAssignment(),Expression))))),
-							new Action(new Match(),new Optional(EndOfLine)),
-							new Action(new Match(),new Optional(Dedentation))
+							new Action(new Assignment(1), Expression))),
+							new Action(new Join(), new ZeroOrMore(new Action(new Autokey(), new Sequence(
+								new Action(new Match(), new Optional(EndOfLine)),
+								new Action(new Match(), SameIndentation),
+								new Action(new ReferenceAssignment(), Expression))))),
+							new Action(new Match(), new Optional(EndOfLine)),
+							new Action(new Match(), new Optional(Dedentation))
 							)));
 		});
 
@@ -5391,7 +5475,7 @@ namespace Meta
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), SameIndentation),
-							new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
+							new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
 					new Action(new Match(), new Optional(Dedentation))
 			)));
@@ -5404,7 +5488,7 @@ new Assignment(
 		new Action(new Match(), new Character('!')),
 		new Action(
 			new ReferenceAssignment(),
-			new Alternatives(LookupStringExpression,LookupAnythingExpression, Expression)))));
+			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
 
 
 		private static Rule Keys = new Alternatives(
@@ -5443,14 +5527,23 @@ new Assignment(
 						new Sequence(
 				new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), SameIndentation),
-			new Action(new Assignment(CodeKeys.Lookup), 
+			new Action(new Assignment(CodeKeys.Lookup),
 				new Alternatives(
-					LookupAnythingExpression, 
-					LookupStringExpression, 
+					LookupAnythingExpression,
+					LookupStringExpression,
 			Expression)))))),
 			new Action(new Match(), new Optional(EndOfLine)),
 			new Action(new Match(), new Optional(Dedentation)),
 			new Action(new Match(), new Optional(SameIndentation))));
+
+
+		public static Rule CurrentStatement = new Sequence(
+			new Action(new Match(), StringRule("&=")),
+			new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
+			new Action(new Assignment(CodeKeys.Value), Expression),
+			new Action(new Match(), new Optional(EndOfLine))
+			);
+
 
 
 		public static Rule Statement = new Sequence(
@@ -5469,16 +5562,16 @@ new Assignment(
 							Expression),
 						new Action(new Match(), new Optional(EndOfLine)))
 			)));
-		private static CustomProduction listProduction=new CustomProduction(
+		private static CustomProduction listProduction = new CustomProduction(
 		delegate(Parser p, Map map, ref Map result)
 		{
 			result[p.defaultKeys.Peek()] = new StrategyMap(
 				CodeKeys.Key, new StrategyMap(1,
 				new StrategyMap(
-					CodeKeys.Lookup,new StrategyMap(
+					CodeKeys.Lookup, new StrategyMap(
 						CodeKeys.Literal, p.defaultKeys.Peek()))),
 				CodeKeys.Value, map);
-								p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+			p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 
 			return result;
 		});
@@ -5496,57 +5589,57 @@ new Assignment(
 		//}
 
 
-	//    public static Rule List = new Sequence(
-	//new Action(new Match(), new Character('+')),
-	//new Action(
-	//    new Assignment(CodeKeys.Program),
-	//    new PrePost(
-	//        delegate(Parser p)
-	//        {
-	//            p.defaultKeys.Push(1);
-	//        },
-	//        new Sequence(
-	//            new Action(
-	//                new Match(),
-	//                EndOfLine),
-	//            new Action(
-	//                new Match(),
-	//                StringRule("\t")),
-	//            //new Action(
-	//            //    listProduction,
-	//            //    Expression),
-	//            new Action(
-	//                new Append(),
-	//                new OneOrMore(
-	//                    new Action(new Autokey(),
-	//                        new Sequence(
-	//                            new Action(new Match(), new Optional(EndOfLine)),
-	//                            new Action(new Match(), new Alternatives(
-	//                                SameIndentation)),
-	//                            new Action(
-	//                new CustomProduction(
-	//                delegate(Parser p, Map map, ref Map result)
-	//                {
-	//                    result = new StrategyMap(
-	//                        CodeKeys.Key, new StrategyMap(1,
-	//                        new StrategyMap(
-	//                            CodeKeys.Lookup, new StrategyMap(
-	//                                CodeKeys.Literal, p.defaultKeys.Peek()))),
-	//                        CodeKeys.Value, map);
-	//                    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//    public static Rule List = new Sequence(
+		//new Action(new Match(), new Character('+')),
+		//new Action(
+		//    new Assignment(CodeKeys.Program),
+		//    new PrePost(
+		//        delegate(Parser p)
+		//        {
+		//            p.defaultKeys.Push(1);
+		//        },
+		//        new Sequence(
+		//            new Action(
+		//                new Match(),
+		//                EndOfLine),
+		//            new Action(
+		//                new Match(),
+		//                StringRule("\t")),
+		//            //new Action(
+		//            //    listProduction,
+		//            //    Expression),
+		//            new Action(
+		//                new Append(),
+		//                new OneOrMore(
+		//                    new Action(new Autokey(),
+		//                        new Sequence(
+		//                            new Action(new Match(), new Optional(EndOfLine)),
+		//                            new Action(new Match(), new Alternatives(
+		//                                SameIndentation)),
+		//                            new Action(
+		//                new CustomProduction(
+		//                delegate(Parser p, Map map, ref Map result)
+		//                {
+		//                    result = new StrategyMap(
+		//                        CodeKeys.Key, new StrategyMap(1,
+		//                        new StrategyMap(
+		//                            CodeKeys.Lookup, new StrategyMap(
+		//                                CodeKeys.Literal, p.defaultKeys.Peek()))),
+		//                        CodeKeys.Value, map);
+		//                    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 
-	//                    return result;
-	//                }
-	//), Expression)
-	//)))),
-	//        new Action(new Match(), new Optional(EndOfLine)),
-	//        new Action(new Match(), new Optional(Dedentation)			
-			
-	//        )),
-	//        delegate(Parser p)
-	//        {
-	//            p.defaultKeys.Pop();
-	//        })));
+		//                    return result;
+		//                }
+		//), Expression)
+		//)))),
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//        new Action(new Match(), new Optional(Dedentation)			
+
+		//        )),
+		//        delegate(Parser p)
+		//        {
+		//            p.defaultKeys.Pop();
+		//        })));
 
 		private static Rule SmallIndentation = new Sequence(
 
@@ -5577,12 +5670,12 @@ new Assignment(
 										new Action(new Match(), new Optional(EndOfLine)),
 										new Action(new Match(), SameIndentation),
 										new Action(new ReferenceAssignment()
-							//delegate(Parser p, Map map, ref Map result)
-							//{
-							//    result = new StrategyMap(p.defaultKeys.Peek(), map);
-							//    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-							//    return map;
-							//}
+			//delegate(Parser p, Map map, ref Map result)
+			//{
+			//    result = new StrategyMap(p.defaultKeys.Peek(), map);
+			//    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+			//    return map;
+			//}
 			, Value)
 			)))
 			)
@@ -5605,15 +5698,15 @@ new Assignment(
 						p.defaultKeys.Push(1);
 					},
 					new Sequence(
-			new Action(new Match(),new Optional(EndOfLine)),
-			new Action(new Match(),SmallIndentation),
+			new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), SmallIndentation),
 						new Action(
 							new Append(),
 							new ZeroOrMore(
 								new Action(new Autokey(),
 									new Sequence(
 										new Action(new Match(), new Optional(EndOfLine)),
-										new Action(new Match(),SameIndentation),
+										new Action(new Match(), SameIndentation),
 										new Action(
 							new CustomProduction(
 							delegate(Parser p, Map map, ref Map result)
@@ -5632,12 +5725,14 @@ new Assignment(
 			)
 			,
 				new Action(new Match(), new Optional(EndOfLine)),
-				new Action(new Match(), new Optional(new Alternatives(Dedentation))	)		
+				new Action(new Match(), new Optional(new Alternatives(Dedentation)))
 			),
 					delegate(Parser p)
 					{
 						p.defaultKeys.Pop();
 					})));
+
+		// refactor!!!!
 		public static Rule Program = new Sequence(
 			new Action(new Match(), new Character(',')),
 			new Action(
@@ -5653,7 +5748,7 @@ new Assignment(
 							Indentation),
 						new Action(
 							new Assignment(1),
-							Statement),
+							new Alternatives(CurrentStatement,Statement)),
 						new Action(
 							new Append(),
 							new ZeroOrMore(
@@ -5662,7 +5757,7 @@ new Assignment(
 										new Action(new Match(), new Alternatives(
 											SameIndentation,
 											Dedentation)),
-										new Action(new ReferenceAssignment(), Statement)))))),
+										new Action(new ReferenceAssignment(),new Alternatives(CurrentStatement, Statement))))))),
 					delegate(Parser p)
 					{
 						p.defaultKeys.Pop();
@@ -6138,6 +6233,1343 @@ new Assignment(
 			return new StrategyMap(strategy);
 		}
 	}
+//    public class Parser
+//    {
+//        public static Map Parse(string file)
+//        {
+//            return ParseString(System.IO.File.ReadAllText(file), file);
+//        }
+//        //public static Map ParseString(string text)
+//        //{
+//        //    return ParseString(text, "in memory");
+//        //}
+//        public static Map ParseString(string text,string fileName)
+//        {
+//            Parser parser = new Parser(text, fileName);
+//            bool matched;
+//            Map result = Parser.File.Match(parser, out matched);
+//            if (parser.index != parser.text.Length)
+//            {
+//                throw new SyntaxException("Expected end of file.", parser);
+//            }
+//            return result;
+//        }
+//        public bool End
+//        {
+//            get
+//            {
+//                return index >= text.Length - 1;
+//            }
+//        }
+//        private bool negative = false;
+//        public string text;
+//        public int index;
+//        private string file;
+//        private int line = 1;
+//        private int column = 1;
+//        private bool isStartOfFile = true;
+//        private int indentationCount = -1;
+//        public Stack<int> defaultKeys = new Stack<int>();
+
+//        public Parser(string text, string filePath)
+//        {
+//            this.index = 0;
+//            this.text = text;
+//            this.file = filePath;
+//        }
+//        public static Rule Expression = new DelayedRule(delegate()
+//        {
+//            return new Alternatives(LiteralExpression, Call, Program, List, Search, Select, ExplicitCall);
+//        });
+
+//        public static Rule NewLine =
+//            new Alternatives(
+//                new Character(Syntax.unixNewLine),
+//                StringRule(Syntax.windowsNewLine));
+
+//        public static Rule EndOfLine =
+//            new Sequence(
+//                new Action(new Match(), new ZeroOrMore(
+//                    new Action(new Match(), new Alternatives(
+//                        new Character(Syntax.space),
+//                        new Character(Syntax.tab))))),
+//                new Action(new Match(), NewLine));
+
+//        public static Rule Integer =
+//            new Sequence(
+//                new Action(new CustomProduction(
+//                    delegate(Parser p, Map map, ref Map result)
+//                    {
+//                        p.negative = map != null;
+//                        return null;
+//                    }),
+//                    new Optional(new Character(Syntax.negative))),
+//                new Action(
+//                    new ReferenceAssignment(),
+//                    new Sequence(
+//                        new Action(
+//                            new ReferenceAssignment(),
+//                            new OneOrMore(
+//                                new Action(
+//                                    new CustomProduction(
+//                                    delegate(Parser p, Map map, ref Map result)
+//                                    {
+//                                        if (result == null)
+//                                        {
+//                                            result = p.CreateMap();
+//                                        }
+//                                        result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+//                                        return result;
+//                                    }),
+//                                    new Character(Syntax.integer)))),
+//                        new Action(
+//                            new CustomProduction(delegate(Parser p, Map map, ref Map result)
+//                            {
+//                                if (result.GetNumber() > 0 && p.negative)
+//                                {
+//                                    result = 0 - result.GetNumber();
+//                                }
+//                                return null;
+//                            }),
+//                            new CustomRule(delegate(Parser p, out bool matched) { matched = true; return null; })
+//                            ))));
+//        public static Rule Indentation =
+//        new Alternatives(
+//            new CustomRule(delegate(Parser p, out bool matched)
+//    {
+//        if (p.isStartOfFile)
+//        {
+//            p.isStartOfFile = false;
+//            p.indentationCount++;
+//            matched = true;
+//            return null;
+//        }
+//        else
+//        {
+//            matched = false;
+//            return null;
+//        }
+//    }),
+//            new Sequence(
+//                new Action(new Match(), new Sequence(
+//                    new Action(new Match(), EndOfLine),
+//                    new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+//    {
+//        return StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
+//    })))),
+//                new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+//    {
+//        p.indentationCount++;
+//        matched = true;
+//        return null;
+//    }))));
+//        private static Rule EndOfLinePreserve =
+//            new Sequence(
+//                new Action(new Match(),
+//                    new ZeroOrMore(
+//                            new Action(new Autokey(), new Alternatives(
+//                                new Character(Syntax.space),
+//                                new Character(Syntax.tab))))),
+//                new Action(new Append(),
+//                    new Alternatives(
+//                        new Character(Syntax.unixNewLine),
+//                        StringRule(Syntax.windowsNewLine))));
+
+//        public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
+//        {
+//            return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
+//        });
+//        private static Rule StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+//        public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
+//        {
+//            Map map = new Sequence(
+//                new Action(
+//                    new Match(),
+//                    new Optional(EndOfLine)),
+//                new Action(new Match(), StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
+//            if (matched)
+//            {
+//                pa.indentationCount--;
+//            }
+//            return map;
+//        });
+//        public static Rule CharacterDataExpression = new Sequence(
+//            new Action(
+//                new Match(),
+//                new Character(Syntax.character)),
+//            new Action(
+//                new ReferenceAssignment(),
+//                new CharacterExcept(Syntax.character)),
+//            new Action(
+//                new Match(),
+//                new Character(Syntax.character)));
+
+//        public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
+//        {
+//            pa.indentationCount--;
+//            matched = false;
+//            return null;
+//        });
+//        private static void MatchStringLine(Parser parser,StringBuilder text)
+//        {
+//            bool matching = true;
+//            for (; matching && parser.index < parser.text.Length; parser.index++)
+//            {
+//                char c = parser.Look();
+//                switch (c)
+//                {
+//                    case '\n':
+//                    case '\r':
+//                        matching = false;
+//                        break;
+//                    default:
+//                        text.Append(c);
+//                        break;
+//                }
+//            }
+//        }
+//        private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
+//        {
+//            StringBuilder result = new StringBuilder(100);
+//            MatchStringLine(parser,result);
+//            matched = true;
+//            while(true)
+//            {
+//                bool lineMatched;
+//                new Sequence(new Action(new Match(),EndOfLine),
+//                    new Action(new Match(),SameIndentation)).Match(parser,out lineMatched);
+//                if (lineMatched)
+//                {
+//                    result.Append('\n');
+//                    MatchStringLine(parser,result);
+//                }
+//                else
+//                {
+//                    break;
+//                }
+//            }
+//            return result.ToString();
+//        });
+//        private static Rule SingleString = new OneOrMore(
+//            new Action(
+//                new Autokey(),
+//                new CharacterExcept(
+//                    Syntax.unixNewLine,
+//                    Syntax.windowsNewLine[0],
+//                    Syntax.@string)));
+//        public static Rule String = new Sequence(
+//            new Action(new Match(), new Character(Syntax.@string)),
+//            new Action(new ReferenceAssignment(),new Alternatives(
+//                SingleString,
+//                new Sequence(
+//                    new Action(new Match(), Indentation),
+//                    new Action(new ReferenceAssignment(), StringBeef),
+//                    new Action(new Match(), StringDedentation)))),
+//            new Action(new Match(), new Character(Syntax.@string)));
+
+//        public static Rule Number = new Sequence(
+//            new Action(new ReferenceAssignment(),
+//                Integer),
+//            new Action(
+//                new Assignment(
+//                    NumberKeys.Denominator),
+//                    new Optional(
+//                        new Sequence(
+//                            new Action(
+//                                new Match(),
+//                                new Character(Syntax.fraction)),
+//                            new Action(
+//                                new ReferenceAssignment(),
+//                                Integer)))));
+
+//        public static Rule LookupString = new Sequence(
+//            new Action(
+//                new Assignment(1),
+//                new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
+//            new Action(new Append(),new ZeroOrMore(
+//                new Action(
+//                    new Autokey(),
+//                        new CharacterExcept(
+//                        Syntax.lookupStringForbidden)))));
+
+//        public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+//        {
+//            new Sequence(
+//                new Action(new Match(),new Optional(new Character(','))),
+//                new Action(new Match(),Indentation)).Match(parser, out matched);
+//            Map map = new StrategyMap();
+//            if (matched)
+//            {
+//                parser.defaultKeys.Push(1);
+//                map = Entry.Match(parser, out matched);
+//                if (matched)
+//                {
+//                    while (true)
+//                    {
+//                        if (parser.End)
+//                        {
+//                            break;
+//                        }
+//                        new Alternatives(
+//                            SameIndentation,
+//                            Dedentation).Match(parser, out matched);
+//                        if (matched)
+//                        {
+//                            Map entry =Entry.Match(parser, out matched);
+//                            if (matched)
+//                            {
+//                                map = Library.Merge(map, entry);
+//                            }
+//                            else
+//                            {
+//                                matched = true;
+//                                break;
+//                            }
+//                        }
+//                        else
+//                        {
+//                            matched = true;
+//                            break;
+//                        }
+//                        if (parser.End)
+//                        {
+//                            break;
+//                        }
+//                    }
+//                }
+//                parser.defaultKeys.Pop();
+//            }
+//            return map;
+//        });
+//        public static Rule ExpressionData = new DelayedRule(delegate()
+//        {
+//            return Parser.Expression;
+//        });
+
+//        //public static Rule List = new Sequence(
+//        //    new Action(new Match(), new Character('+')),
+//        //    new Action(
+//        //        new PrePost(
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Push(1);
+//        //            },
+//        //            new Sequence(
+//        //                new Action(
+//        //                    new Match(),
+//        //                    Indentation),
+//        //                new Action(
+//        //                    new CustomProduction(
+//        //delegate(Parser p, Map map, ref Map result)
+//        //{
+//        //    result[p.defaultKeys.Peek()] = new StrategyMap(
+//        //        CodeKeys.Key, new StrategyMap(1,
+//        //        new StrategyMap(
+//        //            CodeKeys.Lookup,new StrategyMap(
+//        //                CodeKeys.Literal, p.defaultKeys.Peek()))),
+//        //        CodeKeys.Value, map);
+//        //                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//        //    return result;
+//        //}),
+//        //                    Expression),
+//        //                new Action(
+//        //                    new Append(),
+//        //                    new ZeroOrMore(
+//        //                        new Action(new Autokey(),
+//        //                            new Sequence(
+//        //                                new Action(new Match(),new Optional(EndOfLine)),
+//        //                                new Action(new Match(), new Alternatives(
+//        //                                    SameIndentation,
+//        //                                    Dedentation)),
+//        //                                new Action(
+//        //                    new CustomProduction(
+//        //                    delegate(Parser p, Map map, ref Map result)
+//        //                    {
+//        //                        result = new StrategyMap(
+//        //                            CodeKeys.Key, new StrategyMap(1,
+//        //                            new StrategyMap(
+//        //                                CodeKeys.Lookup, new StrategyMap(
+//        //                                    CodeKeys.Literal, p.defaultKeys.Peek()))),
+//        //                            CodeKeys.Value, map);
+//        //                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//        //                        return result;
+//        //                    }),Expression)
+//        //    ))))),
+//        //            delegate(Parser p)
+//        //            {
+//        //                p.defaultKeys.Pop();
+//        //            })));
+//        public static Rule Value = new DelayedRule(delegate
+//        {
+//            return new Alternatives(
+//            Map,
+//            ListMap,
+//            String,
+//            Number,
+//            CharacterDataExpression
+
+//            );
+//        });
+//        private static Rule LookupAnything =
+//            new Sequence(
+//                new Action(new Match(), new Character(('<'))),
+//                new Action(new ReferenceAssignment(), Value));
+
+//        public static Rule Function = new Sequence(
+//            new Action(new Assignment(
+//                CodeKeys.Parameter),
+//                new ZeroOrMore(
+//                new Action(new Autokey(),
+//                    new CharacterExcept(
+//                        Syntax.@string,
+//                        Syntax.function,
+//                        Syntax.windowsNewLine[0],
+//                        Syntax.unixNewLine)))),
+//            new Action(
+//                new Match(),
+//                    new Character(
+//                        Syntax.function)),
+//                new Action(new Assignment(CodeKeys.Expression),
+//                Expression),
+//            new Action(new Match(),new Optional(EndOfLine)));
+
+//        public static Rule Entry = new Alternatives(
+//            new Sequence(
+//                new Action(
+//                    new Assignment(CodeKeys.Function),
+//                    new Sequence(new Action(new ReferenceAssignment(), Function)))),
+//            new Sequence(
+//                new Action(new Assignment(1),new Alternatives(
+//                    Number,
+//                    LookupString,
+//                    LookupAnything)),
+//                new Action(new Match(),new Character('=')),
+//                new Action(new CustomProduction(
+//                    delegate(Parser parser, Map map, ref Map result)
+//                    {
+//                        result=new StrategyMap(result[1],map);
+//                        return result;
+//                    })
+					
+//                    ,Value),
+//             new Action(new Match(), new Optional(EndOfLine))));
+//            //new CustomRule(delegate(Parser parser, out bool matched)
+//            //{
+//            //    Map result = new StrategyMap();
+//            //    Map key=new Alternatives(
+//            //        LookupString,
+//            //        LookupAnything).Match(parser, out matched);
+
+//            //    if (matched)
+//            //    {
+//            //        new Sequence(
+//            //            new Action(new Match(), new Character('='))).Match(parser, out matched);
+					
+//            //        if (matched)
+//            //        {
+//            //            if (matched)
+//            //            {
+//            //                //new Action(new CustomAction
+//            //                Map value = Value.Match(parser, out matched);
+//            //                result[key] = value;
+
+//            //                //Map value = Value.Match(parser, out matched);
+//            //                //result[key] = value;
+
+//            //                new Sequence(
+//            //                    new Action(new Match(), new Optional(EndOfLine))
+//            //                    ).Match(parser, out matched);
+//            //            }
+//            //        }
+//            //    }
+//            //    return result;
+//            //}));
+
+//        public static Rule File = new Sequence(
+//            new Action(new Match(),
+//                new Optional(
+//                    new Sequence(
+//                        new Action(new Match(),
+//                            StringRule("#!")),
+//                        new Action(new Match(),
+//                            new ZeroOrMore(
+//                                new Action(new Match(),
+//                                    new CharacterExcept(Syntax.unixNewLine)))),
+//                        new Action(new Match(), EndOfLine)))),
+//            new Action(new ReferenceAssignment(), Map));
+//        public static Rule ExplicitCall = new DelayedRule(delegate()
+//        {
+//            return new Sequence(
+//                new Action(new Match(), new Character(Syntax.callStart)),
+//                new Action(new ReferenceAssignment(), Call),
+//                new Action(new Match(), new Character(Syntax.callEnd)));
+//        });
+//        public static Rule Call = new DelayedRule(delegate()
+//        {
+//            return new Sequence(
+//                new Action(new Match(), new Character(Syntax.explicitCall)),
+//                new Action(new Assignment(
+//                    CodeKeys.Call),
+//                    new Sequence(
+//                        new Action(new Match(), Indentation),
+//                        new Action(new ReferenceAssignment(), new Sequence(
+//                            new Action(new Assignment(1),Expression))),
+//                            new Action(new Join(),new ZeroOrMore(new Action(new Autokey(),new Sequence(
+//                                new Action(new Match(),new Optional(EndOfLine)),
+//                                new Action(new Match(),SameIndentation),
+//                                new Action(new ReferenceAssignment(),Expression))))),
+//                            new Action(new Match(),new Optional(EndOfLine)),
+//                            new Action(new Match(),new Optional(Dedentation))
+//                            )));
+//        });
+
+
+//        public static Rule FunctionExpression = new Sequence(
+//            new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+//            new Action(new Assignment(CodeKeys.Value), new Sequence(
+//                new Action(new Assignment(CodeKeys.Literal), Function))));
+
+//        private static Rule Whitespace =
+//            new ZeroOrMore(
+//                new Action(new Match(),
+//                    new Alternatives(
+//                        new Character(Syntax.tab),
+//                        new Character(Syntax.space))));
+
+//        private static Rule EmptyMap =
+//            new Sequence(
+//                new Action(new Match(),
+//                    new Character(Syntax.emptyMap)),
+//                new Action(new ReferenceAssignment(),
+//                    new LiteralRule(Meta.Map.Empty)));
+
+//        private static Rule LiteralExpression = new Sequence(
+//            new Action(
+//                new Assignment(
+//                    CodeKeys.Literal),
+//                new Alternatives(
+//                    Number,
+//                    EmptyMap,
+//                    String,
+//                    CharacterDataExpression)));
+
+//        private static Rule LookupAnythingExpression =
+//            new Sequence(
+//                new Action(new Match(), new Character('<')),
+//                new Action(new ReferenceAssignment(), Expression)
+//            );
+
+//        private static Rule LookupStringExpression =
+//            new Sequence(
+//                new Action(new Assignment(
+//                    CodeKeys.Literal),
+//                    LookupString));
+
+//        private static Rule Current = new Sequence(
+//            new Action(new Match(), new Character(Syntax.current)),
+//            new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
+
+
+//        //private static Rule LastArgument = new Sequence(
+//        //    new Action(new Match(), new Character(Syntax.lastArgument)),
+//        //    new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.LastArgument, Meta.Map.Empty))));
+
+//        private static Rule Root = new Sequence(
+//            new Action(new Match(), new Character(Syntax.root)),
+//            new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
+
+//        private static Rule Lookup =
+//            new Alternatives(
+//                Current,
+//                new Sequence(
+//                    new Action(new Assignment(
+//                        CodeKeys.Lookup),
+//                        new Alternatives(
+//                            LookupStringExpression,
+//                            LookupAnythingExpression))));
+
+//        private static Rule Search = new Sequence(
+//            new Action(
+//        new Assignment(
+//                CodeKeys.Search), new Alternatives(
+//            new Sequence(
+//                new Action(new Match(), new Character('!')),
+//                new Action(
+//                    new ReferenceAssignment(),
+//                    Expression)),
+//            new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+
+//        public static Rule ProgramDelayed = new DelayedRule(delegate()
+//        {
+//            return Program;
+//        });
+//        private static Rule Select = new Sequence(
+//            new Action(new Assignment(
+//                CodeKeys.Select),
+//                new Sequence(
+//                    new Action(new Match(), new Character('.')),
+//                    new Action(new Match(), Indentation),
+//                    new Action(new Assignment(1),
+//                        new Alternatives(
+//                            ProgramDelayed,
+//                            LiteralExpression,
+//                            Root,
+//                            Search,
+//                            Lookup,
+//                            Call)),
+//                    new Action(new Append(),
+//                        new ZeroOrMore(new Action(new Autokey(), new Sequence(
+//                            new Action(new Match(), new Optional(EndOfLine)),
+//                            new Action(new Match(), SameIndentation),
+//                            new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression,Expression)))))),
+
+//                    new Action(new Match(), new Optional(Dedentation))
+//            )));
+
+//        private static Rule KeysSearch = new Sequence(
+//    new Action(
+//new Assignment(
+//        CodeKeys.Search),
+//    new Sequence(
+//        new Action(new Match(), new Character('!')),
+//        new Action(
+//            new ReferenceAssignment(),
+//            new Alternatives(LookupStringExpression,LookupAnythingExpression, Expression)))));
+
+
+//        private static Rule Keys = new Alternatives(
+//            new Sequence(new Action(
+//                new Assignment(
+//                    1),
+//                    new Alternatives(
+//                        Lookup,
+//                        KeysSearch,
+//                        new Sequence(new Action(
+//                            new Assignment(CodeKeys.Lookup),
+//                            LiteralExpression)),
+//            EmptyMap,
+//            String,
+//            LookupStringExpression
+//            ))),
+
+//            new Sequence(
+//            new Action(new Match(), new Character('.')),
+//            new Action(new Match(), Indentation),
+//            new Action(new Assignment(
+//                1),
+//                    new Alternatives(
+//                        Lookup,
+//                        KeysSearch,
+//                        new Sequence(new Action(
+//                            new Assignment(CodeKeys.Lookup),
+//                            LiteralExpression)),
+//            EmptyMap,
+//            String,
+//            LookupStringExpression
+//            )),
+//            new Action(new Append(),
+//                new ZeroOrMore(
+//                    new Action(new Autokey(),
+//                        new Sequence(
+//                new Action(new Match(), new Optional(EndOfLine)),
+//            new Action(new Match(), SameIndentation),
+//            new Action(new Assignment(CodeKeys.Lookup), 
+//                new Alternatives(
+//                    LookupAnythingExpression, 
+//                    LookupStringExpression, 
+//            Expression)))))),
+//            new Action(new Match(), new Optional(EndOfLine)),
+//            new Action(new Match(), new Optional(Dedentation)),
+//            new Action(new Match(), new Optional(SameIndentation))));
+
+
+//        public static Rule Statement = new Sequence(
+//            new Action(new ReferenceAssignment(),
+//                new Alternatives(
+//                    FunctionExpression,
+//                    new Sequence(
+//                        new Action(new Assignment(
+//                            CodeKeys.Key),
+//                            Keys),
+//                        new Action(new Match(), new Optional(EndOfLine)),
+//                        new Action(new Match(), new Optional(SameIndentation)),
+//                        new Action(new Match(), new Character('=')),
+//                        new Action(new Assignment(
+//                            CodeKeys.Value),
+//                            Expression),
+//                        new Action(new Match(), new Optional(EndOfLine)))
+//            )));
+//        private static CustomProduction listProduction=new CustomProduction(
+//        delegate(Parser p, Map map, ref Map result)
+//        {
+//            result[p.defaultKeys.Peek()] = new StrategyMap(
+//                CodeKeys.Key, new StrategyMap(1,
+//                new StrategyMap(
+//                    CodeKeys.Lookup,new StrategyMap(
+//                        CodeKeys.Literal, p.defaultKeys.Peek()))),
+//                CodeKeys.Value, map);
+//                                p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//            return result;
+//        });
+//        //delegate(Parser p, Map map, ref Map result)
+//        //{
+//        //    result = new StrategyMap(
+//        //        CodeKeys.Key, new StrategyMap(1,
+//        //        new StrategyMap(
+//        //            CodeKeys.Lookup, new StrategyMap(
+//        //                CodeKeys.Literal, p.defaultKeys.Peek()))),
+//        //        CodeKeys.Value, map);
+//        //    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//        //    return result;
+//        //}
+
+
+//    //    public static Rule List = new Sequence(
+//    //new Action(new Match(), new Character('+')),
+//    //new Action(
+//    //    new Assignment(CodeKeys.Program),
+//    //    new PrePost(
+//    //        delegate(Parser p)
+//    //        {
+//    //            p.defaultKeys.Push(1);
+//    //        },
+//    //        new Sequence(
+//    //            new Action(
+//    //                new Match(),
+//    //                EndOfLine),
+//    //            new Action(
+//    //                new Match(),
+//    //                StringRule("\t")),
+//    //            //new Action(
+//    //            //    listProduction,
+//    //            //    Expression),
+//    //            new Action(
+//    //                new Append(),
+//    //                new OneOrMore(
+//    //                    new Action(new Autokey(),
+//    //                        new Sequence(
+//    //                            new Action(new Match(), new Optional(EndOfLine)),
+//    //                            new Action(new Match(), new Alternatives(
+//    //                                SameIndentation)),
+//    //                            new Action(
+//    //                new CustomProduction(
+//    //                delegate(Parser p, Map map, ref Map result)
+//    //                {
+//    //                    result = new StrategyMap(
+//    //                        CodeKeys.Key, new StrategyMap(1,
+//    //                        new StrategyMap(
+//    //                            CodeKeys.Lookup, new StrategyMap(
+//    //                                CodeKeys.Literal, p.defaultKeys.Peek()))),
+//    //                        CodeKeys.Value, map);
+//    //                    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+
+//    //                    return result;
+//    //                }
+//    //), Expression)
+//    //)))),
+//    //        new Action(new Match(), new Optional(EndOfLine)),
+//    //        new Action(new Match(), new Optional(Dedentation)			
+			
+//    //        )),
+//    //        delegate(Parser p)
+//    //        {
+//    //            p.defaultKeys.Pop();
+//    //        })));
+
+//        private static Rule SmallIndentation = new Sequence(
+
+//            new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+//            {
+//                p.indentationCount++;
+//                matched = true;
+//                return null;
+//            })));
+
+//        public static Rule ListMap = new Sequence(
+//            new Action(new Match(), new Character('+')),
+//            new Action(
+//                new ReferenceAssignment(),
+//                new PrePost(
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Push(1);
+//                    },
+//                    new Sequence(
+//            new Action(new Match(), new Optional(EndOfLine)),
+//            new Action(new Match(), SmallIndentation),
+//                        new Action(
+//                            new ReferenceAssignment(),
+//                            new ZeroOrMore(
+//                                new Action(new Autokey(),
+//                                    new Sequence(
+//                                        new Action(new Match(), new Optional(EndOfLine)),
+//                                        new Action(new Match(), SameIndentation),
+//                                        new Action(new ReferenceAssignment()
+//                            //delegate(Parser p, Map map, ref Map result)
+//                            //{
+//                            //    result = new StrategyMap(p.defaultKeys.Peek(), map);
+//                            //    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+//                            //    return map;
+//                            //}
+//            , Value)
+//            )))
+//            )
+//            ,
+//                new Action(new Match(), new Optional(EndOfLine)),
+//                new Action(new Match(), new Optional(new Alternatives(Dedentation)))
+//            ),
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Pop();
+//                    })));
+
+//        public static Rule List = new Sequence(
+//            new Action(new Match(), new Character('+')),
+//            new Action(
+//                new Assignment(CodeKeys.Program),
+//                new PrePost(
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Push(1);
+//                    },
+//                    new Sequence(
+//            new Action(new Match(),new Optional(EndOfLine)),
+//            new Action(new Match(),SmallIndentation),
+//                        new Action(
+//                            new Append(),
+//                            new ZeroOrMore(
+//                                new Action(new Autokey(),
+//                                    new Sequence(
+//                                        new Action(new Match(), new Optional(EndOfLine)),
+//                                        new Action(new Match(),SameIndentation),
+//                                        new Action(
+//                            new CustomProduction(
+//                            delegate(Parser p, Map map, ref Map result)
+//                            {
+//                                result = new StrategyMap(
+//                                    CodeKeys.Key, new StrategyMap(1,
+//                                    new StrategyMap(
+//                                        CodeKeys.Lookup, new StrategyMap(
+//                                            CodeKeys.Literal, p.defaultKeys.Peek()))),
+//                                    CodeKeys.Value, map);
+//                                p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+//                                return result;
+//                            }
+//            ), Expression)
+//            )))
+//            )
+//            ,
+//                new Action(new Match(), new Optional(EndOfLine)),
+//                new Action(new Match(), new Optional(new Alternatives(Dedentation))	)		
+//            ),
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Pop();
+//                    })));
+//        public static Rule Program = new Sequence(
+//            new Action(new Match(), new Character(',')),
+//            new Action(
+//                new Assignment(CodeKeys.Program),
+//                new PrePost(
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Push(1);
+//                    },
+//                    new Sequence(
+//                        new Action(
+//                            new Match(),
+//                            Indentation),
+//                        new Action(
+//                            new Assignment(1),
+//                            Statement),
+//                        new Action(
+//                            new Append(),
+//                            new ZeroOrMore(
+//                                new Action(new Autokey(),
+//                                    new Sequence(
+//                                        new Action(new Match(), new Alternatives(
+//                                            SameIndentation,
+//                                            Dedentation)),
+//                                        new Action(new ReferenceAssignment(), Statement)))))),
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Pop();
+//                    })));
+//        public abstract class Production
+//        {
+//            public abstract void Execute(Parser parser, Map map, ref Map result);
+//        }
+
+//        public class Action
+//        {
+//            private Rule rule;
+//            private Production production;
+//            public Action(Production production, Rule rule)
+//            {
+//                this.rule = rule;
+//                this.production = production;
+//            }
+//            public bool Execute(Parser parser, ref Map result)
+//            {
+//                bool matched;
+//                Map map = rule.Match(parser, out matched);
+//                if (matched)
+//                {
+//                    production.Execute(parser, map, ref result);
+//                }
+//                return matched;
+//            }
+//        }
+//        public class Autokey : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                result.Append(map);
+//            }
+//        }
+//        //public class ParseAssignment : Production
+//        //{
+//        //    private Action key;
+//        //    public ParseAssignment(Action key)
+//        //    {
+//        //        this.key = key;
+//        //    }
+//        //    public override void Execute(Parser parser, Map map, ref Map result)
+//        //    {
+//        //        Map keyResult;
+//        //        if (key.Execute(parser, keyResult))
+//        //        {
+//        //            result[key] = map;
+//        //        }
+//        //    }
+//        //}
+//        public class Assignment : Production
+//        {
+//            private Map key;
+//            public Assignment(Map key)
+//            {
+//                this.key = key;
+//            }
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                result[key] = map;
+//            }
+//        }
+//        public class Match : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//            }
+//        }
+//        public class ReferenceAssignment : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                result = map;
+//            }
+//        }
+//        public class Append : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                foreach (Map m in map.Array)
+//                {
+//                    result.Append(m);
+//                }
+//            }
+//        }
+//        public class Join : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                result = Library.Join(result, map);
+//            }
+//        }
+//        public class Merge : Production
+//        {
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                result = Library.Merge(result, map);
+//            }
+//        }
+//        public class CustomProduction : Production
+//        {
+//            private CustomActionDelegate action;
+//            public CustomProduction(CustomActionDelegate action)
+//            {
+//                this.action = action;
+//            }
+//            public override void Execute(Parser parser, Map map, ref Map result)
+//            {
+//                this.action(parser, map, ref result);
+//            }
+//        }
+//        public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
+
+//        public abstract class Rule
+//        {
+//            public Map Match(Parser parser, out bool matched)
+//            {
+//                int oldIndex = parser.index;
+//                int oldLine = parser.line;
+//                int oldColumn = parser.column;
+//                Map result = MatchImplementation(parser, out matched);
+//                if (!matched)
+//                {
+//                    parser.index = oldIndex;
+//                    parser.line = oldLine;
+//                    parser.column = oldColumn;
+//                }
+//                else
+//                {
+//                    if (result != null)
+//                    {
+//                        result.Extent = new Extent(oldLine, oldColumn, parser.line, parser.column, parser.file);
+//                    }
+//                }
+//                return result;
+//            }
+//            protected abstract Map MatchImplementation(Parser parser, out bool match);
+//        }
+//        public class Character : CharacterRule
+//        {
+//            public Character(params char[] characters)
+//                : base(characters)
+//            {
+//            }
+//            protected override bool MatchCharacer(char c)
+//            {
+//                return c.ToString().IndexOfAny(characters) != -1 && c != Syntax.endOfFile;
+//            }
+//        }
+//        public class CharacterExcept : CharacterRule
+//        {
+//            public CharacterExcept(params char[] characters)
+//                : base(characters)
+//            {
+//            }
+//            protected override bool MatchCharacer(char c)
+//            {
+//                return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
+//            }
+//        }
+//        public abstract class CharacterRule : Rule
+//        {
+//            public CharacterRule(char[] chars)
+//            {
+//                this.characters = chars;
+//            }
+//            protected char[] characters;
+//            protected abstract bool MatchCharacer(char c);
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                char character = parser.Look();
+//                if (MatchCharacer(character))
+//                {
+//                    matched = true;
+//                    parser.index++;
+//                    parser.column++;
+//                    if (character == Syntax.unixNewLine)
+//                    {
+//                        parser.line++;
+//                        parser.column = 1;
+//                    }
+//                    return character;
+//                }
+//                else
+//                {
+//                    matched = false;
+//                    return null;
+//                }
+//            }
+//        }
+//        public delegate void PrePostDelegate(Parser parser);
+//        public class PrePost : Rule
+//        {
+//            private PrePostDelegate pre;
+//            private PrePostDelegate post;
+//            private Rule rule;
+//            public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post)
+//            {
+//                this.pre = pre;
+//                this.rule = rule;
+//                this.post = post;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                pre(parser);
+//                Map result = rule.Match(parser, out matched);
+//                post(parser);
+//                return result;
+//            }
+//        }
+//        public static Rule StringRule(string text)
+//        {
+//            List<Action> actions = new List<Action>();
+//            foreach (char c in text)
+//            {
+//                actions.Add(new Action(new Match(), new Character(c)));
+//            }
+//            return new Sequence(actions.ToArray());
+//        }
+//        public delegate Map ParseFunction(Parser parser, out bool matched);
+//        public class CustomRule : Rule
+//        {
+//            private ParseFunction parseFunction;
+//            public CustomRule(ParseFunction parseFunction)
+//            {
+//                this.parseFunction = parseFunction;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                return parseFunction(parser, out matched);
+//            }
+//        }
+//        public delegate Rule RuleFunction();
+//        public class DelayedRule : Rule
+//        {
+//            private RuleFunction ruleFunction;
+//            private Rule rule;
+//            public DelayedRule(RuleFunction ruleFunction)
+//            {
+//                this.ruleFunction = ruleFunction;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                if (rule == null)
+//                {
+//                    rule = ruleFunction();
+//                }
+//                return rule.Match(parser, out matched);
+//            }
+//        }
+//        public class Alternatives : Rule
+//        {
+//            private Rule[] cases;
+//            public Alternatives(params Rule[] cases)
+//            {
+//                this.cases = cases;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                Map result = null;
+//                matched = false;
+//                foreach (Rule expression in cases)
+//                {
+//                    result = (Map)expression.Match(parser, out matched);
+//                    if (matched)
+//                    {
+//                        break;
+//                    }
+//                }
+//                return result;
+//            }
+//        }
+//        public class Sequence : Rule
+//        {
+//            private Action[] actions;
+//            public Sequence(params Action[] rules)
+//            {
+//                this.actions = rules;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool match)
+//            {
+//                Map result = parser.CreateMap();
+//                bool success = true;
+//                foreach (Action action in actions)
+//                {
+//                    bool matched = action.Execute(parser, ref result);
+//                    if (!matched)
+//                    {
+//                        success = false;
+//                        break;
+//                    }
+//                }
+//                if (!success)
+//                {
+//                    match = false;
+//                    return null;
+//                }
+//                else
+//                {
+//                    match = true;
+//                    return result;
+//                }
+//            }
+//        }
+//        public class LiteralRule : Rule
+//        {
+//            private Map literal;
+//            public LiteralRule(Map literal)
+//            {
+//                this.literal = literal;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                matched = true;
+//                return literal;
+//            }
+//        }
+//        public class ZeroOrMoreString : ZeroOrMore
+//        {
+//            public ZeroOrMoreString(Action action)
+//                : base(action)
+//            {
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool match)
+//            {
+//                Map result = base.MatchImplementation(parser, out match);
+//                if (match && result.IsString)
+//                {
+//                    result = result.GetString();
+//                }
+//                return result;
+//            }
+//        }
+//        public class ZeroOrMore : Rule
+//        {
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                Map list = parser.CreateMap(new ListStrategy());
+//                while (true)
+//                {
+//                    if (!action.Execute(parser, ref list))
+//                    {
+//                        break;
+//                    }
+//                }
+//                matched = true;
+//                return list;
+//            }
+//            private Action action;
+//            public ZeroOrMore(Action action)
+//            {
+//                this.action = action;
+//            }
+//        }
+//        public class OneOrMore : Rule
+//        {
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                Map list = parser.CreateMap(new ListStrategy());
+//                matched = false;
+//                while (true)
+//                {
+//                    if (!action.Execute(parser, ref list))
+//                    {
+//                        break;
+//                    }
+//                    matched = true;
+//                }
+//                return list;
+//            }
+//            private Action action;
+//            public OneOrMore(Action action)
+//            {
+//                this.action = action;
+//            }
+//        }
+//        public class TwoOrMore : Rule
+//        {
+//            protected override Map MatchImplementation(Parser parser, out bool matched)
+//            {
+//                Map list = parser.CreateMap(new ListStrategy());
+//                int count = 0;
+//                while (true)
+//                {
+//                    if (!action.Execute(parser, ref list))
+//                    {
+//                        break;
+//                    }
+//                    count++;
+//                }
+//                matched = count >= 2;
+//                return list;
+//            }
+//            private Action action;
+//            public TwoOrMore(Action action)
+//            {
+//                this.action = action;
+//            }
+//        }
+//        public class Optional : Rule
+//        {
+//            private Rule rule;
+//            public Optional(Rule rule)
+//            {
+//                this.rule = rule;
+//            }
+//            protected override Map MatchImplementation(Parser parser, out bool match)
+//            {
+//                Map matched = rule.Match(parser, out match);
+//                if (matched == null)
+//                {
+//                    match = true;
+//                    return null;
+//                }
+//                else
+//                {
+//                    match = true;
+//                    return matched;
+//                }
+//            }
+//        }
+//        public string FileName
+//        {
+//            get
+//            {
+//                return file;
+//            }
+//        }
+//        public int Line
+//        {
+//            get
+//            {
+//                return line;
+//            }
+//        }
+//        private string Rest
+//        {
+//            get
+//            {
+//                return text.Substring(index);
+//            }
+//        }
+//        public int Column
+//        {
+//            get
+//            {
+//                return column;
+//            }
+//        }
+//        private char Look()
+//        {
+//            if (index < text.Length)
+//            {
+//                return text[index];
+//            }
+//            else
+//            {
+//                return Syntax.endOfFile;
+//            }
+//        }
+//        public Map CreateMap(params Map[] maps)
+//        {
+//            return new StrategyMap(maps);
+//        }
+//        public Map CreateMap()
+//        {
+//            return CreateMap(new EmptyStrategy());
+//        }
+//        public Map CreateMap(MapStrategy strategy)
+//        {
+//            return new StrategyMap(strategy);
+//        }
+//    }
 	public class Serialize
 	{
 		public static string ValueFunction(Map map)
