@@ -1362,19 +1362,19 @@ namespace Meta
 			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(position, invokeMethod.ReturnType));
 			return del;
 		}
-		public class EventHandlerContainer
-		{
-			private Map callable;
-			public EventHandlerContainer(Map callable)
-			{
-				this.callable = callable;
-			}
-			public Map Raise(Map argument)
-			{
-				// not really accurate, should keep its own scope in callable, maybe
-				return callable.Call(argument,MethodImplementation.currentPosition).Get();
-			}
-		}
+		//public class EventHandlerContainer
+		//{
+		//    private Map callable;
+		//    public EventHandlerContainer(Map callable)
+		//    {
+		//        this.callable = callable;
+		//    }
+		//    public Map Raise(Map argument)
+		//    {
+		//        // not really accurate, should keep its own scope in callable, maybe
+		//        return callable.Call(argument,MethodImplementation.currentPosition).Get();
+		//    }
+		//}
 		// rename!!
 		public class MetaDelegate
 		{
