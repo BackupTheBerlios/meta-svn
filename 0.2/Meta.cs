@@ -270,7 +270,7 @@ namespace Meta
 			else
 			{
 				Position lastEvaluated = new Position(selection, key);
-				return lastEvaluated;
+				return selection.AddCall(lastEvaluated.Get());
 			}
 		}
 	}
@@ -445,7 +445,7 @@ namespace Meta
 		}
 		public static Map Merge(Map arg, Map map)
 		{
-			Map result = arg.Copy();
+			Map result = arg;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
 				result[pair.Key] = pair.Value;
@@ -454,9 +454,8 @@ namespace Meta
 		}
 		public static Map Join(Map arg,Map map)
 		{
-			Map result = arg.Copy();
-			result.AppendRange(map.Array);
-			return result;
+			arg.AppendRange(map.Array);
+			return arg;
 		}
 		public static Map Range(Map arg)
 		{
@@ -664,6 +663,7 @@ namespace Meta
 		public TemporaryPosition(Map map,Position parent,Map key):base(parent,key)
 		{
 			this.map = map.Copy();
+			//this.map = map.Copy();
 		}
 		public override void Assign(Map value)
 		{
@@ -742,7 +742,8 @@ namespace Meta
 				{
 					compiledCode = null;
 					Map val;
-					val = value.Copy();
+					val = value;
+					//val = value.Copy();
 					Set(key, val);
 					if (KeyChanged != null)
 					{
@@ -5206,30 +5207,30 @@ new Assignment(
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class Serialization : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 1;
-			//        return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-			//    }
-			//}
+			public class Serialization : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 1;
+					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+				}
+			}
 			public class Performance : Test
 			{
 				public override object GetResult(out int level)
