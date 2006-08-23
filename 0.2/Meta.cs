@@ -122,8 +122,12 @@ namespace Meta
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Position arg = expressions[i].GetExpression().Evaluate(current);
+					Position scope=callable.Get().Scope;
+					if ( scope== null)
+					{
+						scope=callable.Parent;
+					}
 					callable = callable.Get().Call(arg.Get(),callable);
-					//callable.Get().Scope = current;
 				}
 				if (Interpreter.profiling)
 				{
@@ -565,10 +569,6 @@ namespace Meta
 		{
 			return new TemporaryPosition(map,this, Map.Empty);
 		}
-		//public Position Call(Map argument)
-		//{
-		//    return Get().Call(argument, this);
-		//}
 		public override bool Equals(object obj)
 		{
 			Position position=(Position)obj;
@@ -5206,30 +5206,30 @@ new Assignment(
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Serialization : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 1;
-					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-				}
-			}
+			//public class Serialization : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 1;
+			//        return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+			//    }
+			//}
 			public class Performance : Test
 			{
 				public override object GetResult(out int level)
