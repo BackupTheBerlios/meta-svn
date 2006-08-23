@@ -4323,124 +4323,29 @@ namespace Meta
 						new CharacterExcept(
 						Syntax.lookupStringForbidden)))));
 
-	//    public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-	//{
-	//    new Sequence(
-	//        new Action(new Match(), new Optional(new Character(','))),
-	//        new Action(new Match(), EndOfLine),
-	//        new Action(new Match(),SmallIndentation)
-	//        //new Action(new Match(), Indentation)
-	//        ).Match(parser, out matched);
-	//    Map map = new StrategyMap();
-	//    if (matched)
-	//    {
-	//        parser.defaultKeys.Push(1);
-	//        //map = Entry.Match(parser, out matched);
-	//        if (matched)
-	//        {
-	//            while (true)
-	//            {
-	//                if (parser.End)
-	//                {
-	//                    break;
-	//                }
-	//                new Alternatives(
-	//                    SameIndentation).Match(parser, out matched);
-	//                if (matched)
-	//                {
-	//                    Map entry = Entry.Match(parser, out matched);
-	//                    if (matched)
-	//                    {
-	//                        map = Library.Merge(map, entry);
-	//                    }
-	//                    else
-	//                    {
-	//                        matched = true;
-	//                        break;
-	//                    }
-	//                }
-	//                else
-	//                {
-	//                    matched = true;
-	//                    break;
-	//                }
-	//                if (parser.End)
-	//                {
-	//                    break;
-	//                }
-	//            }
-	//            if (matched)
-	//            {
-	//                //Dedentation.Match(parser, out matched);
-	//            }
-	//        }
-	//        parser.defaultKeys.Pop();
-	//    }
-	//    return map;
-	//});
-		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		{
+		private static Rule SmallIndentation = new Sequence(
 
-			return new Sequence(
-				new Action(new Match(), new Optional(new Character(','))),
-				new Action(new Match(), new Alternatives(
-					StartOfFile,
-					new Sequence(
-					new Action(new Match(), EndOfLine),
-					new Action(new Match(), SmallIndentation)
-					))),
-			//)
-			
-			//.Match(parser, out matched);
+			new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+			{
+				p.indentationCount++;
+				matched = true;
+				return null;
+			})));
 
-			//Map map = new StrategyMap();
-			//if (matched)
-			//{
-				//map = 
-					new Action(new ReferenceAssignment(),new PrePost(
-					delegate(Parser p)
-					{
-						p.defaultKeys.Push(1);
-					},
 
-					new Sequence(
-						new Action(new ReferenceAssignment(),
-							new OneOrMore(new Action(
-							new Merge(),
-							new Sequence(
-								new Action(
-									new Match(), SameIndentation),
-								new Action(
-									new ReferenceAssignment(),
-									Entry))))),
-						new Action(new Match(), Dedentation)),
-					delegate(Parser p)
-					{
-						p.defaultKeys.Pop();
-					})))
-
-						.Match(parser, out matched);
-			//}
-			//return map;
-		});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
+		//public static Rule Map = new Sequence(
 		//        new Action(new Match(), new Optional(new Character(','))),
 		//        new Action(new Match(), new Alternatives(
 		//            StartOfFile,
 		//            new Sequence(
 		//            new Action(new Match(), EndOfLine),
 		//            new Action(new Match(), SmallIndentation)
-		//            )))
-		//    ).Match(parser, out matched);
+		//            ))),
 
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        map=new PrePost(
-		//            delegate{
-		//        parser.defaultKeys.Push(1);
+		//            new Action(new ReferenceAssignment(),new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
 		//            },
 
 		//            new Sequence(
@@ -4453,335 +4358,11 @@ namespace Meta
 		//                        new Action(
 		//                            new ReferenceAssignment(),
 		//                            Entry))))),
-		//                new Action(new Match(),Dedentation)),
-		//            delegate
+		//                new Action(new Match(), Dedentation)),
+		//            delegate(Parser p)
 		//            {
-		//                parser.defaultKeys.Pop();
-		//            })
-						
-		//                .Match(parser, out matched);
-		//    }
-		//    return map;
-		//});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(), new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(), EndOfLine),
-		//            new Action(new Match(), SmallIndentation)
-		//            )))
-		//    ).Match(parser, out matched);
-
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                Map entry=new Sequence(
-		//                    new Action(
-		//                        new Match(),SameIndentation),
-		//                    new Action(
-		//                        new ReferenceAssignment(),
-		//                        Entry)).Match(parser,out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        Dedentation.Match(parser, out matched);
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                //Map entry=new Sequence(
-		//                //    new Action(
-		//                //        new Match(),SameIndentation),
-		//                //    new Action(
-		//                //        new ReferenceAssignment(),
-		//                //        Entry)).Match(parser,out matched);
-		//                //    if (matched)
-		//                //    {
-		//                //        map = Library.Merge(map, entry);
-		//                //    }
-		//                //    else
-		//                //    {
-		//                //        Dedentation.Match(parser, out matched);
-		//                //        matched = true;
-		//                //        break;
-		//                //    }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(), new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(), EndOfLine),
-		//            new Action(new Match(), SmallIndentation)
-		//            )))
-		//    ).Match(parser, out matched);
-
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                SameIndentation.Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    Map entry = Entry.Match(parser, out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        Dedentation.Match(parser, out matched);
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    Dedentation.Match(parser, out matched);
-
-		//                    matched = true;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
-
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(), new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(), EndOfLine),
-		//            new Action(new Match(), SmallIndentation)
-		//            )))
-		//    ).Match(parser, out matched);
-
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                    SameIndentation.Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    Map entry = Entry.Match(parser, out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    Dedentation.Match(parser, out matched);
-
-		//                    matched = true;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(), new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(), EndOfLine),
-		//            new Action(new Match(), SmallIndentation)
-		//            )))
-		//    ).Match(parser, out matched);
-
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//                new Alternatives(
-		//                    SameIndentation,
-		//                    Dedentation
-		//                    ).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    Map entry = Entry.Match(parser, out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    matched = true;
-		//                    break;
-		//                }
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(),new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(),EndOfLine),
-		//            new Action(new Match(),SmallIndentation)
-		//            //new Action(new Match(),SameIndentation)
-		//            )))
-		//        //new Action(new Match(), Indentation)
-		//    ).Match(parser, out matched);
-
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        //map = Entry.Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//                new Alternatives(
-		//                    SameIndentation,
-		//                    Dedentation).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    Map entry = Entry.Match(parser, out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    matched = true;
-		//                    break;
-		//                }
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
-		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-
-
-		//        new Action(new Match(), Indentation)).Match(parser, out matched);
-		//    Map map = new StrategyMap();
-		//    if (matched)
-		//    {
-		//        parser.defaultKeys.Push(1);
-		//        map = Entry.Match(parser, out matched);
-		//        if (matched)
-		//        {
-		//            while (true)
-		//            {
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//                new Alternatives(
-		//                    SameIndentation,
-		//                    Dedentation).Match(parser, out matched);
-		//                if (matched)
-		//                {
-		//                    Map entry = Entry.Match(parser, out matched);
-		//                    if (matched)
-		//                    {
-		//                        map = Library.Merge(map, entry);
-		//                    }
-		//                    else
-		//                    {
-		//                        matched = true;
-		//                        break;
-		//                    }
-		//                }
-		//                else
-		//                {
-		//                    matched = true;
-		//                    break;
-		//                }
-		//                if (parser.End)
-		//                {
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        parser.defaultKeys.Pop();
-		//    }
-		//    return map;
-		//});
+		//                p.defaultKeys.Pop();
+		//            })));
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
@@ -4842,6 +4423,46 @@ namespace Meta
 					, Value),
 			 new Action(new Match(), new Optional(EndOfLine))));
 
+		public static Rule FullIndentation = new Alternatives(
+				StartOfFile,
+				new Sequence(
+				new Action(new Match(), EndOfLine),
+				new Action(new Match(), SmallIndentation)
+				));
+		public static Rule Map = new Sequence(
+			new Action(new Match(), new Optional(new Character(','))),
+			new Action(new Match(),
+				FullIndentation),
+
+			//, new Alternatives(
+			//    StartOfFile,
+			//    new Sequence(
+			//    new Action(new Match(), EndOfLine),
+			//    new Action(new Match(), SmallIndentation)
+			//    ))),
+
+				new Action(new ReferenceAssignment(), new PrePost(
+				delegate(Parser p)
+				{
+					p.defaultKeys.Push(1);
+				},
+				new Sequence(
+					new Action(new ReferenceAssignment(),
+						new OneOrMore(new Action(
+						new Merge(),
+						new Sequence(
+							new Action(
+								new Match(), SameIndentation),
+							new Action(
+								new ReferenceAssignment(),
+								Entry))))),
+					new Action(new Match(), Dedentation)),
+				delegate(Parser p)
+				{
+					p.defaultKeys.Pop();
+				})));
+
+
 		public static Rule File = new Sequence(
 			new Action(new Match(),
 				new Optional(
@@ -4854,6 +4475,7 @@ namespace Meta
 									new CharacterExcept(Syntax.unixNewLine)))),
 						new Action(new Match(), EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
+
 		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -4977,57 +4599,118 @@ new Assignment(
 			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
 
 
+
+
+
 		private static Rule Keys = new Alternatives(
-		new Sequence(new Action(
-			new Assignment(
-				1),
-				new Alternatives(
-					new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
-					KeysSearch,
-					new Sequence(new Action(
-						new ReferenceAssignment(),
+			new Sequence(new Action(
+				new Assignment(
+					1),
+					new Alternatives(
+						new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+						KeysSearch,
+						new Sequence(new Action(
+							new ReferenceAssignment(),
 
-						LiteralExpression)),
-		new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
-		EmptyMap,
-		String,
-		LookupStringExpression
-		))),
+							LiteralExpression)),
+			new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+			EmptyMap,
+			String,
+			LookupStringExpression
+			))),
 
-		new Sequence(
-		new Action(new Match(), new Character('.')),
-		new Action(new Match(), Indentation),
-		new Action(new Assignment(
-			1),
+			new Sequence(
+			new Action(new Match(), new Character('.')),
+			new Action(new Match(), FullIndentation),
+			//new Action(new Match(), SameIndentation),
+			//new Action(new Match(), Indentation),
+
+			//new Action(new Assignment(
+			//    1),
+			//        new Alternatives(
+			//            KeysSearch,
+			//            new Sequence(new Action(
+			//                new ReferenceAssignment(),
+			//                LiteralExpression)),
+			//EmptyMap,
+			//String,
+			//LookupStringExpression,
+			//    Call
+			//)),
+
+			new Action(new Append(),
+				new ZeroOrMore(
+					new Action(new Autokey(),
+						new Sequence(
+				new Action(new Match(), new Optional(EndOfLine)),
+			new Action(new Match(), SameIndentation),
+			new Action(new ReferenceAssignment(),
 				new Alternatives(
-					KeysSearch,
-					new Sequence(new Action(
-						new ReferenceAssignment(),
-						LiteralExpression)),
-		EmptyMap,
-		String,
-		LookupStringExpression,
-			Call
-		)),
-		new Action(new Append(),
-			new ZeroOrMore(
-				new Action(new Autokey(),
-					new Sequence(
+						KeysSearch,
+						new Sequence(new Action(
+							new ReferenceAssignment(),
+							LiteralExpression)),
+			EmptyMap,
+			String,
+			LookupStringExpression
+			)))))),
 			new Action(new Match(), new Optional(EndOfLine)),
-		new Action(new Match(), SameIndentation),
-		new Action(new ReferenceAssignment(),
-			new Alternatives(
-					KeysSearch,
-					new Sequence(new Action(
-						new ReferenceAssignment(),
-						LiteralExpression)),
-		EmptyMap,
-		String,
-		LookupStringExpression
-		)))))),
-		new Action(new Match(), new Optional(EndOfLine)),
-		new Action(new Match(), new Optional(Dedentation)),
-		new Action(new Match(), new Optional(SameIndentation))));
+			new Action(new Match(), new Optional(Dedentation)),
+			new Action(new Match(), new Optional(SameIndentation))));
+
+
+
+		//private static Rule Keys = new Alternatives(
+		//new Sequence(new Action(
+		//    new Assignment(
+		//        1),
+		//        new Alternatives(
+		//            new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+		//            KeysSearch,
+		//            new Sequence(new Action(
+		//                new ReferenceAssignment(),
+
+		//                LiteralExpression)),
+		//new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+		//EmptyMap,
+		//String,
+		//LookupStringExpression
+		//))),
+
+		//new Sequence(
+		//new Action(new Match(), new Character('.')),
+		//new Action(new Match(), Indentation),
+		//new Action(new Assignment(
+		//    1),
+		//        new Alternatives(
+		//            KeysSearch,
+		//            new Sequence(new Action(
+		//                new ReferenceAssignment(),
+		//                LiteralExpression)),
+		//EmptyMap,
+		//String,
+		//LookupStringExpression,
+		//    Call
+		//)),
+		//new Action(new Append(),
+		//    new ZeroOrMore(
+		//        new Action(new Autokey(),
+		//            new Sequence(
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//new Action(new Match(), SameIndentation),
+		//new Action(new ReferenceAssignment(),
+		//    new Alternatives(
+		//            KeysSearch,
+		//            new Sequence(new Action(
+		//                new ReferenceAssignment(),
+		//                LiteralExpression)),
+		//EmptyMap,
+		//String,
+		//LookupStringExpression
+		//)))))),
+		//new Action(new Match(), new Optional(EndOfLine)),
+		//new Action(new Match(), new Optional(Dedentation)),
+		//new Action(new Match(), new Optional(SameIndentation))));
 
 
 		public static Rule CurrentStatement = new Sequence(
@@ -5069,14 +4752,6 @@ new Assignment(
 			)));
 
 
-		private static Rule SmallIndentation = new Sequence(
-
-			new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-			{
-				p.indentationCount++;
-				matched = true;
-				return null;
-			})));
 
 		public static Rule ListMap = new Sequence(
 			new Action(new Match(), new Character('+')),
