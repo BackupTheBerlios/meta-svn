@@ -1010,15 +1010,14 @@ namespace Meta
 		}
 		public virtual Position Call(Map arg, Position position)
 		{
-			if (!ContainsKey(CodeKeys.Function))
+			if (ContainsKey(CodeKeys.Function))
 			{
-				throw new ApplicationException("Map is not a function: "+Meta.Serialize.ValueFunction(this));
+				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
+				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
 			}
 			else
 			{
-				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
-				Position into = bodyPosition.AddCall(new StrategyMap());
-				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(into);
+				throw new ApplicationException("Map is not a function: "+Meta.Serialize.ValueFunction(this));
 			}
 		}
 		public ICollection<Map> Keys
@@ -1358,7 +1357,8 @@ namespace Meta
 				il.Emit(OpCodes.Ret);
 			}
 			// probably wrong
-			Position position = MethodImplementation.currentPosition.AddCall(code);
+			Position position = code.Scope.AddCall(code);
+			//Position position = MethodImplementation.currentPosition.AddCall(code);
 			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(position, invokeMethod.ReturnType));
 			return del;
 		}
