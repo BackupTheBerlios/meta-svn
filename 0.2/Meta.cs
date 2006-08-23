@@ -445,12 +445,11 @@ namespace Meta
 		}
 		public static Map Merge(Map arg, Map map)
 		{
-			Map result = arg;
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
-				result[pair.Key] = pair.Value;
+				arg[pair.Key] = pair.Value;
 			}
-			return result;
+			return arg;
 		}
 		public static Map Join(Map arg,Map map)
 		{
@@ -488,6 +487,9 @@ namespace Meta
 		{
 			try
 			{
+				UseConsole();
+				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+				return;
 				switch (args[0])
 				{
 					case "-test":
