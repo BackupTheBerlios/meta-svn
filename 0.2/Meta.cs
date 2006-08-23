@@ -281,34 +281,19 @@ namespace Meta
 			}
 		}
 		private List<Map> subselects;
-		private Position optimized;
-		bool optimize;
 		public Select(Map code)
 		{
 			this.subselects = code.Array;
 		}
 		public override Position Evaluate(Position context)
 		{
-			if (optimize && optimized != null)
+			Position selected = subselects[0].GetExpression().Evaluate(context);
+			for (int i = 1; i < subselects.Count; i++)
 			{
-				return optimized;
+				selected = selected[subselects[i].GetExpression().Evaluate(context).Get()];
 			}
-			else
-			{
-				Position selected = subselects[0].GetExpression().Evaluate(context);
-				for (int i = 1; i < subselects.Count; i++)
-				{
-					selected = selected[subselects[i].GetExpression().Evaluate(context).Get()];
-				}
-				lastPosition = selected;
-				if (optimize && optimized == null)
-				{
-					optimized = selected;
-				}
-				return selected;
-			}
+			return selected;
 		}
-		public static Position lastPosition;
 	}
 	public class KeyStatement : StatementBase
 	{
@@ -379,44 +364,44 @@ namespace Meta
 		}
 		public override void Assign(Position context)
 		{
-				Position selected = context;
+			Position selected = context;
 
-				Position selection = selected;
-				Map key = keys[0].GetExpression().Evaluate(context).Get();
-				while (!selection.Get().ContainsKey(key))
+			Position selection = selected;
+			Map key = keys[0].GetExpression().Evaluate(context).Get();
+			while (!selection.Get().ContainsKey(key))
+			{
+				if (selection.Parent == null)
 				{
-					if (selection.Parent == null)
-					{
-						selection = null;
-						break;
-					}
-					else
-					{
-						if (selection.Get().Scope != null)
-						{
-							selection = selection.Get().Scope;
-						}
-						else
-						{
-							selection = selection.Parent;
-						}
-					}
-				}
-				if (selection == null)
-				{
-					throw new KeyNotFound(key, keys[0].Extent, null);
+					selection = null;
+					break;
 				}
 				else
 				{
-					selected = selection;
+					if (selection.Get().Scope != null)
+					{
+						selection = selection.Get().Scope;
+					}
+					else
+					{
+						selection = selection.Parent;
+					}
 				}
-				for (int i = 1; i < keys.Count; i++)
-				{
-					selected = selected[key];
-					key = keys[i].GetExpression().Evaluate(context).Get();
-				}
-				Map val = value.GetExpression().Evaluate(context).Get();
-				selected.Assign(key, val);
+			}
+			if (selection == null)
+			{
+				throw new KeyNotFound(key, keys[0].Extent, null);
+			}
+			else
+			{
+				selected = selection;
+			}
+			for (int i = 1; i < keys.Count; i++)
+			{
+				selected = selected[key];
+				key = keys[i].GetExpression().Evaluate(context).Get();
+			}
+			Map val = value.GetExpression().Evaluate(context).Get();
+			selected.Assign(key, val);
 		}
 	}
 	public class Library
