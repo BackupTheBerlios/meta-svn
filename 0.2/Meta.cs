@@ -53,13 +53,6 @@ namespace Meta
 		public virtual void Optimize()
 		{
 		}
-		//public virtual bool Constant
-		//{
-		//    get
-		//    {
-		//        return false;
-		//    }
-		//}
 		public abstract Position Evaluate(Position context);
 	}
 	internal class HiPerfTimer
@@ -4176,22 +4169,22 @@ namespace Meta
 			return null;
 		}
 	});
-		public static Rule Indentation =
-		new Alternatives(
-			StartOfFile,
-			new Sequence(
-				new Action(new Match(), new Sequence(
-					new Action(new Match(), EndOfLine),
-					new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-	{
-		return StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
-	})))),
-				new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-	{
-		p.indentationCount++;
-		matched = true;
-		return null;
-	}))));
+	//    public static Rule Indentation =
+	//    new Alternatives(
+	//        StartOfFile,
+	//        new Sequence(
+	//            new Action(new Match(), new Sequence(
+	//                new Action(new Match(), EndOfLine),
+	//                new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+	//{
+	//    return StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
+	//})))),
+	//            new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+	//{
+	//    p.indentationCount++;
+	//    matched = true;
+	//    return null;
+	//}))));
 		private static Rule EndOfLinePreserve =
 			new Sequence(
 				new Action(new Match(),
@@ -4203,6 +4196,23 @@ namespace Meta
 					new Alternatives(
 						new Character(Syntax.unixNewLine),
 						StringRule(Syntax.windowsNewLine))));
+
+		private static Rule SmallIndentation = new Sequence(
+
+			new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+			{
+				p.indentationCount++;
+				matched = true;
+				return null;
+			})));
+
+
+		public static Rule FullIndentation = new Alternatives(
+				StartOfFile,
+				new Sequence(
+				new Action(new Match(), EndOfLine),
+				new Action(new Match(), SmallIndentation)
+				));
 
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
@@ -4293,7 +4303,9 @@ namespace Meta
 			new Action(new ReferenceAssignment(), new Alternatives(
 				SingleString,
 				new Sequence(
-					new Action(new Match(), Indentation),
+					new Action(new Match(), FullIndentation),
+					new Action(new Match(), SameIndentation),
+					//new Action(new Match(), Indentation),
 					new Action(new ReferenceAssignment(), StringBeef),
 					new Action(new Match(), StringDedentation)))),
 			new Action(new Match(), new Character(Syntax.@string)));
@@ -4322,15 +4334,6 @@ namespace Meta
 					new Autokey(),
 						new CharacterExcept(
 						Syntax.lookupStringForbidden)))));
-
-		private static Rule SmallIndentation = new Sequence(
-
-			new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-			{
-				p.indentationCount++;
-				matched = true;
-				return null;
-			})));
 
 
 		//public static Rule Map = new Sequence(
@@ -4423,12 +4426,6 @@ namespace Meta
 					, Value),
 			 new Action(new Match(), new Optional(EndOfLine))));
 
-		public static Rule FullIndentation = new Alternatives(
-				StartOfFile,
-				new Sequence(
-				new Action(new Match(), EndOfLine),
-				new Action(new Match(), SmallIndentation)
-				));
 		public static Rule Map = new Sequence(
 			new Action(new Match(), new Optional(new Character(','))),
 			new Action(new Match(),
@@ -4503,69 +4500,6 @@ namespace Meta
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), new Optional(Dedentation)))));
 		});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Match(), new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(), FullIndentation),
-		//                //new Action(new Match(), SameIndentation),
-		//                new Action(new ReferenceAssignment(), new Sequence(
-		//                    //new Action(new Assignment(1), Expression)
-		//                    )),
-
-		//                    new Action(new Join(), new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                        new Action(new Match(), new Optional(EndOfLine)),
-		//                        new Action(new Match(), SameIndentation),
-		//                        new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), new Optional(Dedentation))
-		//                    )));
-		//});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Match(), new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(), FullIndentation),
-		//                new Action(new Match(), SameIndentation),
-		//                //new Action(new Match(), Indentation),
-		//                new Action(new ReferenceAssignment(), new Sequence(
-		//                    new Action(new Assignment(1), Expression))),
-
-		//                    new Action(new Join(), new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                        new Action(new Match(), new Optional(EndOfLine)),
-		//                        new Action(new Match(), SameIndentation),
-		//                        new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), new Optional(Dedentation))
-		//                    )));
-		//});
-
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Match(), new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Match(), Indentation),
-		//                new Action(new ReferenceAssignment(), new Sequence(
-		//                    new Action(new Assignment(1), Expression))),
-		//                    new Action(new Join(), new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                        new Action(new Match(), new Optional(EndOfLine)),
-		//                        new Action(new Match(), SameIndentation),
-		//                        new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), new Optional(Dedentation))
-		//                    )));
-		//});
-
 
 		public static Rule FunctionExpression = new Sequence(
 			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(CodeKeys.Literal, CodeKeys.Function))),
@@ -4637,7 +4571,9 @@ namespace Meta
 				CodeKeys.Select),
 				new Sequence(
 					new Action(new Match(), new Character('.')),
-					new Action(new Match(), Indentation),
+					new Action(new Match(), FullIndentation),
+					new Action(new Match(), SameIndentation),
+					//new Action(new Match(), Indentation),
 					new Action(new Assignment(1),
 						new Alternatives(
 							ProgramDelayed,
@@ -4653,6 +4589,27 @@ namespace Meta
 
 					new Action(new Match(), new Optional(Dedentation))
 			)));
+		//private static Rule Select = new Sequence(
+		//    new Action(new Assignment(
+		//        CodeKeys.Select),
+		//        new Sequence(
+		//            new Action(new Match(), new Character('.')),
+		//            new Action(new Match(), Indentation),
+		//            new Action(new Assignment(1),
+		//                new Alternatives(
+		//                    ProgramDelayed,
+		//                    LiteralExpression,
+		//                    Root,
+		//                    Search,
+		//                    Call)),
+		//            new Action(new Append(),
+		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
+		//                    new Action(new Match(), new Optional(EndOfLine)),
+		//                    new Action(new Match(), SameIndentation),
+		//                    new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+
+		//            new Action(new Match(), new Optional(Dedentation))
+		//    )));
 
 		private static Rule KeysSearch = new Sequence(
 	new Action(
