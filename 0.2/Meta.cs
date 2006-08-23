@@ -123,7 +123,7 @@ namespace Meta
 				{
 					Position arg = expressions[i].GetExpression().Evaluate(current);
 					callable = callable.Get().Call(arg.Get(),callable);
-					//callable = callable.Call(arg.Get());
+					//callable.Get().Scope = current;
 				}
 				if (Interpreter.profiling)
 				{
@@ -157,8 +157,6 @@ namespace Meta
 			return result;
 		}
 	}
-	public delegate Position OptimizedDelegate(Map argument,Position parent);
-	public delegate Map ProgramDelegate(Map argument,Position parent);
 	public class Program : Expression
 	{
 		public bool IsFunction
