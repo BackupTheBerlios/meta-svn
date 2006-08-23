@@ -48,157 +48,18 @@ using SdlDotNet;
 
 namespace Meta
 {
-	public class CodeKeys
-	{
-		public static readonly Map Key = "key";
-		public static readonly Map Expression="expression";
-		public static readonly Map Parameter="parameter";
-		public static readonly Map Root = "root";
-		public static readonly Map Search = "search";
-		//public static readonly Map Lookup = "lookup";
-		public static readonly Map Current="current";
-		public static readonly Map Scope="scope";
-		public static readonly Map Literal="literal";
-		public static readonly Map Function="function";
-		public static readonly Map Call="call";
-		public static readonly Map Select="select";
-		public static readonly Map Program="program";
-		public static readonly Map Keys="keys";
-		public static readonly Map Value="value";
-	}
-	public class NumberKeys
-	{
-		public static readonly Map Negative="negative";
-		public static readonly Map Denominator="denominator";
-	}
-	public class ExceptionLog
-	{
-		public ExceptionLog(Extent extent,Position position)
-		{
-			this.extent = extent;
-			this.position = position;
-		}
-		public Extent extent;
-		public Position position;
-	}
-	public class MetaException : Exception
-	{
-		private string message;
-		private Extent extent;
-		private List<ExceptionLog> invocationList = new List<ExceptionLog>();
-		public MetaException(string message, Extent extent)
-		{
-			this.message = message;
-			this.extent = extent;
-		}
-		public List<ExceptionLog> InvocationList
-		{
-			get
-			{
-				return invocationList;
-			}
-		}
-		public override string ToString()
-		{
-			string message = Message;
-			if (invocationList.Count != 0)
-			{
-				message += "\n\nStack trace:";
-			}
-			foreach (ExceptionLog log in invocationList)
-			{
-				message += "\n" + log.position.ToString() + "   "+ GetExtentText(log.extent);
-			}
-
-			return message;
-		}
-		public static string GetExtentText(Extent extent)
-		{
-			string text;
-			if (extent != null)
-			{
-				text = extent.FileName + ", line ";
-				text += extent.Start.Line + ", column " + extent.Start.Column;
-			}
-			else
-			{
-				text = "Unknown location";
-			}
-			return text;
-		}
-		public override string Message
-		{
-			get
-			{
-				return GetExtentText(extent) + ": " + message;
-			}
-		}
-		public Extent Extent
-		{
-			get
-			{
-				return extent;
-			}
-		}
-		public static int CountLeaves(Map map)
-		{
-			int count = 0;
-			foreach (KeyValuePair<Map, Map> pair in map)
-			{
-				if (pair.Value == null)
-				{
-					count++;
-				}
-				else if (pair.Value.IsNumber)
-				{
-					count++;
-				}
-				else
-				{
-					count += CountLeaves(pair.Value);
-				}
-			}
-			return count;
-		}
-	}
-	public class SyntaxException:MetaException
-	{
-		public SyntaxException(string message, Parser parser)
-			: base(message, new Extent(parser.Line, parser.Column,parser.Line,parser.Column,parser.FileName))
-		{
-		}
-	}
-	public class ExecutionException : MetaException
-	{
-		private Map context;
-		public ExecutionException(string message, Extent extent,Map context):base(message,extent)
-		{
-			this.context = context;
-		}
-	}
-	public class KeyDoesNotExist : ExecutionException
-	{
-		public KeyDoesNotExist(Map key, Extent extent, Map map)
-			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in " + Serialize.ValueFunction(map), extent, map)
-		{
-		}
-	}
-	public class KeyNotFound : ExecutionException
-	{
-		public KeyNotFound(Map key, Extent extent, Map map)
-			: base("Key not found: " + Serialize.ValueFunction(key) , extent, map)
-		{
-		}
-	}
 	public abstract class Expression
 	{
-		public virtual bool Constant
+		public virtual void Optimize()
 		{
-			get
-			{
-				return false;
-			}
 		}
+		//public virtual bool Constant
+		//{
+		//    get
+		//    {
+		//        return false;
+		//    }
+		//}
 		public abstract Position Evaluate(Position context);
 	}
 	internal class HiPerfTimer
@@ -385,13 +246,6 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
-		public override bool Constant
-		{
-			get
-			{
-				return true;
-			}
-		}
 		public override Position Evaluate(Position selected)
 		{
 			return RootPosition.rootPosition;
@@ -5676,6 +5530,149 @@ new Assignment(
 					}
 				}
 			}
+		}
+	}
+
+	public class CodeKeys
+	{
+		public static readonly Map Key = "key";
+		public static readonly Map Expression = "expression";
+		public static readonly Map Parameter = "parameter";
+		public static readonly Map Root = "root";
+		public static readonly Map Search = "search";
+		public static readonly Map Current = "current";
+		public static readonly Map Scope = "scope";
+		public static readonly Map Literal = "literal";
+		public static readonly Map Function = "function";
+		public static readonly Map Call = "call";
+		public static readonly Map Select = "select";
+		public static readonly Map Program = "program";
+		public static readonly Map Keys = "keys";
+		public static readonly Map Value = "value";
+	}
+	public class NumberKeys
+	{
+		public static readonly Map Negative = "negative";
+		public static readonly Map Denominator = "denominator";
+	}
+	public class ExceptionLog
+	{
+		public ExceptionLog(Extent extent, Position position)
+		{
+			this.extent = extent;
+			this.position = position;
+		}
+		public Extent extent;
+		public Position position;
+	}
+	public class MetaException : Exception
+	{
+		private string message;
+		private Extent extent;
+		private List<ExceptionLog> invocationList = new List<ExceptionLog>();
+		public MetaException(string message, Extent extent)
+		{
+			this.message = message;
+			this.extent = extent;
+		}
+		public List<ExceptionLog> InvocationList
+		{
+			get
+			{
+				return invocationList;
+			}
+		}
+		public override string ToString()
+		{
+			string message = Message;
+			if (invocationList.Count != 0)
+			{
+				message += "\n\nStack trace:";
+			}
+			foreach (ExceptionLog log in invocationList)
+			{
+				message += "\n" + log.position.ToString() + "   " + GetExtentText(log.extent);
+			}
+
+			return message;
+		}
+		public static string GetExtentText(Extent extent)
+		{
+			string text;
+			if (extent != null)
+			{
+				text = extent.FileName + ", line ";
+				text += extent.Start.Line + ", column " + extent.Start.Column;
+			}
+			else
+			{
+				text = "Unknown location";
+			}
+			return text;
+		}
+		public override string Message
+		{
+			get
+			{
+				return GetExtentText(extent) + ": " + message;
+			}
+		}
+		public Extent Extent
+		{
+			get
+			{
+				return extent;
+			}
+		}
+		public static int CountLeaves(Map map)
+		{
+			int count = 0;
+			foreach (KeyValuePair<Map, Map> pair in map)
+			{
+				if (pair.Value == null)
+				{
+					count++;
+				}
+				else if (pair.Value.IsNumber)
+				{
+					count++;
+				}
+				else
+				{
+					count += CountLeaves(pair.Value);
+				}
+			}
+			return count;
+		}
+	}
+	public class SyntaxException : MetaException
+	{
+		public SyntaxException(string message, Parser parser)
+			: base(message, new Extent(parser.Line, parser.Column, parser.Line, parser.Column, parser.FileName))
+		{
+		}
+	}
+	public class ExecutionException : MetaException
+	{
+		private Map context;
+		public ExecutionException(string message, Extent extent, Map context)
+			: base(message, extent)
+		{
+			this.context = context;
+		}
+	}
+	public class KeyDoesNotExist : ExecutionException
+	{
+		public KeyDoesNotExist(Map key, Extent extent, Map map)
+			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in " + Serialize.ValueFunction(map), extent, map)
+		{
+		}
+	}
+	public class KeyNotFound : ExecutionException
+	{
+		public KeyNotFound(Map key, Extent extent, Map map)
+			: base("Key not found: " + Serialize.ValueFunction(key), extent, map)
+		{
 		}
 	}
 }
