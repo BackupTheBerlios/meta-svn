@@ -383,37 +383,6 @@ namespace Meta
 			return position;
 		}
 	}
-	public abstract class Subselect:Expression
-	{
-		public override Position Evaluate(Position context)
-		{
-			return Evaluate(context, context);
-		}
-		public abstract Position Evaluate(Position context, Position executionContext);
-		public abstract void Assign(Position context, Map value, Position executionContext);
-	}
-	public class Current : Subselect
-	{
-		public override Position Evaluate(Position context, Position executionContext)
-		{
-			return context;
-		}
-		public override void Assign(Position context, Map value, Position executionContext)
-		{
-			if (value.Scope != null)
-			{
-				if (executionContext.Get().Scope != null)
-				{
-					value.Scope = executionContext.Get().Scope;
-				}
-				else
-				{
-					value.Scope = executionContext.Parent;
-				}
-			}
-			executionContext.Assign(value);
-		}
-	}
 	public class Root : Expression
 	{
 		public override bool Constant
@@ -428,39 +397,7 @@ namespace Meta
 			return RootPosition.rootPosition;
 		}
 	}
-	public class Lookup : Subselect
-	{
-		public Expression Key
-		{
-			get
-			{
-				return keyExpression.GetExpression();
-			}
-		}
-		private Map keyExpression;
-		public Lookup(Map keyExpression)
-		{
-			this.keyExpression = keyExpression;
-		}
-		public override Position Evaluate(Position selected, Position context)
-		{
-			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
-			Map key = keyPosition.Get();
-			if (!selected.Get().ContainsKey(key))
-			{
-				object x = selected.Get().ContainsKey(key);
-				throw new KeyDoesNotExist(key, keyExpression.Extent, selected.Get());
-			}
-			return new Position(selected, key);
-		}
-
-		public override void Assign(Position selected, Map value, Position context)
-		{
-			Map key = keyExpression.GetExpression().Evaluate(context).Get();
-			selected.Assign(key,value);
-		}
-	}
-	public class Search : Subselect
+	public class Search : Expression
 	{
 		public Expression Key
 		{
@@ -474,12 +411,12 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Position Evaluate(Position selected, Position context)
+		public override Position Evaluate(Position context)
 		{
 			Position keyPosition = keyExpression.GetExpression().Evaluate(context);
 			Map key = keyPosition.Get();
 
-			Position selection = selected;
+			Position selection = context;
 			while (!selection.Get().ContainsKey(key))
 			{
 				if (selection.Parent == null)
@@ -507,31 +444,6 @@ namespace Meta
 			{
 				Position lastEvaluated = new Position(selection, key);
 				return lastEvaluated;
-			}
-		}
-		public override void Assign(Position selected, Map value, Position context)
-		{
-			Position evaluatedKeyPosition = keyExpression.GetExpression().Evaluate(context);
-			Map key = evaluatedKeyPosition.Get();
-			Position selection = context;
-			while (selection != null && !selection.Get().ContainsKey(key))
-			{
-				if (selection.Get().Scope != null)
-				{
-					selection = selection.Get().Scope;
-				}
-				else
-				{
-					selection = selection.Parent;
-				}
-			}
-			if (selection == null)
-			{
-				throw new KeyNotFound(key, keyExpression.Extent, null);
-			}
-			else
-			{
-				selection.Assign(key, value);
 			}
 		}
 	}
@@ -572,27 +484,6 @@ namespace Meta
 				return selected;
 			}
 		}
-		//public override Position Evaluate(Position context)
-		//{
-		//    if (optimize && optimized != null)
-		//    {
-		//        return optimized;
-		//    }
-		//    else
-		//    {
-		//        Position selected = subselects[0].GetExpression().Evaluate(context);
-		//        for (int i = 1; i < subselects.Count; i++)
-		//        {
-		//            selected = subselects[i].GetSubselect().Evaluate(selected, context);
-		//        }
-		//        lastPosition = selected;
-		//        if (optimize && optimized == null)
-		//        {
-		//            optimized = selected;
-		//        }
-		//        return selected;
-		//    }
-		//}
 		public static Position lastPosition;
 	}
 	public class KeyStatement : StatementBase
@@ -664,15 +555,10 @@ namespace Meta
 		}
 		public override void Assign(Position context)
 		{
-			try
-			{
 				Position selected = context;
 
 				Position selection = selected;
 				Map key = keys[0].GetExpression().Evaluate(context).Get();
-				if (key.Equals(new StrategyMap("b")))
-				{
-				}
 				while (!selection.Get().ContainsKey(key))
 				{
 					if (selection.Parent == null)
@@ -700,12 +586,6 @@ namespace Meta
 				{
 					selected = selection;
 				}
-				//else
-				//{
-				//    selected = new Position(selection, key);
-				//}
-
-
 				for (int i = 1; i < keys.Count; i++)
 				{
 					selected = selected[key];
@@ -713,61 +593,8 @@ namespace Meta
 				}
 				Map val = value.GetExpression().Evaluate(context).Get();
 				selected.Assign(key, val);
-				//selected.Assign(keys[keys.Count - 1].GetExpression().Evaluate(context).Get(), val);
-				//Position selected = context;
-				//for (int i = 0; i + 1 < keys.Count; i++)
-				//{
-				//    selected = keys[i].GetSubselect().Evaluate(selected, context);
-				//}
-				//Map val = value.GetExpression().Evaluate(context).Get();
-				//    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-			}
-			catch (Exception e)
-			{
-			}
 		}
 	}
-	//public class Statement:StatementBase
-	//{
-	//    public Expression Value
-	//    {
-	//        get
-	//        {
-	//            return value.GetExpression();
-	//        }
-	//    }
-	//    private List<Map> keys;
-	//    public List<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            return keys;
-	//        }
-	//    }
-	//    private Map value;
-	//    public Statement(Map code)
-	//    {
-	//        this.keys = code[CodeKeys.Keys].Array;
-	//        this.value = code[CodeKeys.Value];
-	//    }
-	//    public override void Assign(Position context)
-	//    {
-	//        Position selected = context;
-	//        for (int i = 0; i + 1 < keys.Count; i++)
-	//        {
-	//            selected = keys[i].GetSubselect().Evaluate(selected, context);
-	//        }
-	//        Map val = value.GetExpression().Evaluate(context).Get();
-	//        keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-	//        //Position selected = context;
-	//        //for (int i = 0; i + 1 < keys.Count; i++)
-	//        //{
-	//        //    selected = keys[i].GetSubselect().Evaluate(selected, context);
-	//        //}
-	//        //Map val = value.GetExpression().Evaluate(context).Get();
-	//        //    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
-	//    }
-	//}
 	public class Library
 	{
 		public static Map EnumerableToArray(Map map)
@@ -1195,14 +1022,6 @@ namespace Meta
 			}
 			return (StatementBase)compiledCode;
 		}
-		//public Subselect GetSubselect()
-		//{
-		//    if (compiledCode == null)
-		//    {
-		//        compiledCode = CreateSubselect();
-		//    }
-		//    return (Subselect)compiledCode;
-		//}
 		public Expression GetExpression()
 		{
 			if (compiledCode == null)
@@ -1211,25 +1030,6 @@ namespace Meta
 			}
 			return (Expression)compiledCode;
 		}
-		//public Subselect CreateSubselect()
-		//{
-		//    if (ContainsKey(CodeKeys.Current))
-		//    {
-		//        return new Current();
-		//    }
-		//    else if (ContainsKey(CodeKeys.Search))
-		//    {
-		//        return new Search(this[CodeKeys.Search]);
-		//    }
-		//    //else if (ContainsKey(CodeKeys.Lookup))
-		//    //{
-		//    //    return new Lookup(this[CodeKeys.Lookup]);
-		//    //}
-		//    else
-		//    {
-		//        throw new Exception("Map is not a subselect.");
-		//    }
-		//}
 		public Expression CreateExpression()
 		{
 			if (ContainsKey(CodeKeys.Call))
@@ -1897,7 +1697,6 @@ namespace Meta
 						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
 						{
 							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-							//dotNet = constructor.Invoke(new object[] { });
 							meta = Library.Join(meta[1], meta[2]);
 							int index = 1;
 							foreach (FieldInfo field in fields)
@@ -1910,7 +1709,6 @@ namespace Meta
 						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
 						{
 							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-							//dotNet = constructor.Invoke(new object[] { });
 							int index = 1;
 							foreach (FieldInfo field in fields)
 							{
@@ -1948,7 +1746,6 @@ namespace Meta
 								bool c;
 								object o = Transform.TryToDotNet(m, elementType,out c);
 								if (c)
-								//if (o != null)
 								{
 									list.Add(o);
 								}
@@ -4804,16 +4601,6 @@ namespace Meta
 				new Action(new Assignment(CodeKeys.Literal), Function))));
 
 
-		//public static Rule FunctionExpression = new Sequence(
-		//    new Action(new Assignment(CodeKeys.Keys), new LiteralRule(new StrategyMap(CodeKeys.Literal, CodeKeys.Function))),
-		//    new Action(new Assignment(CodeKeys.Value), new Sequence(
-		//        new Action(new Assignment(CodeKeys.Literal), Function))));
-
-		//public static Rule FunctionExpression = new Sequence(
-		//    new Action(new Assignment(CodeKeys.Keys), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
-		//    new Action(new Assignment(CodeKeys.Value), new Sequence(
-		//        new Action(new Assignment(CodeKeys.Literal), Function))));
-
 		private static Rule Whitespace =
 			new ZeroOrMore(
 				new Action(new Match(),
@@ -4858,16 +4645,6 @@ namespace Meta
 			new Action(new Match(), new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
 
-		//private static Rule Lookup =
-		//    new Alternatives(
-		//        Current,
-		//        new Sequence(
-		//            new Action(new Assignment(
-		//                CodeKeys.Lookup),
-		//                new Alternatives(
-		//                    LookupStringExpression,
-		//                    LookupAnythingExpression))));
-
 		private static Rule Search = new Sequence(
 			new Action(
 		new Assignment(
@@ -4895,14 +4672,12 @@ namespace Meta
 							LiteralExpression,
 							Root,
 							Search,
-							//Lookup,
 							Call)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), SameIndentation),
 							new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
-							//new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
 					new Action(new Match(), new Optional(Dedentation))
 			)));
@@ -4917,47 +4692,6 @@ new Assignment(
 			new ReferenceAssignment(),
 			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
 
-		//private static Rule Keys = new Sequence(
-		//        new Action(new Match(), new Character('.')),
-		//        new Action(new Match(), Indentation),
-		//        new Action(
-		//            new Assignment(1),
-		//            new Alternatives(
-		//                KeysSearch,
-		//                LiteralExpression,
-		//                new Sequence(
-		//                    new Action(
-		//                        new Assignment(CodeKeys.Literal),
-		//                        new Alternatives(
-		//                            LookupString,
-		//                            Number))),
-		//                EmptyMap,
-		//                String,
-		//                LookupStringExpression
-		//                )),
-		//        new Action(new Append(),
-		//            new ZeroOrMore(
-		//                new Action(new Autokey(),
-		//                    new Sequence(
-		//            new Action(new Match(), new Optional(EndOfLine)),
-		//        new Action(new Match(), SameIndentation),
-		//        new Action(new ReferenceAssignment(),
-		//            new Alternatives(
-		//                LiteralExpression,
-		//                new Sequence(
-		//                    new Action(
-		//                        new Assignment(CodeKeys.Literal),
-		//                        new Alternatives(
-		//                            LookupString,
-		//                            Number))),
-		//                EmptyMap,
-		//                String,
-		//                LookupAnythingExpression,
-		//                LookupStringExpression,
-		//                Expression)))))),
-		//        new Action(new Match(), new Optional(EndOfLine)),
-		//        new Action(new Match(), new Optional(Dedentation)),
-		//        new Action(new Match(), new Optional(SameIndentation)));
 
 		private static Rule Keys = new Alternatives(
 		new Sequence(new Action(
@@ -4965,11 +4699,9 @@ new Assignment(
 				1),
 				new Alternatives(
 					new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
-			//Lookup,
 					KeysSearch,
 					new Sequence(new Action(
 						new ReferenceAssignment(),
-			//new Assignment(CodeKeys.Lookup),
 
 						LiteralExpression)),
 		new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
@@ -5000,7 +4732,6 @@ new Assignment(
 			new Action(new Match(), new Optional(EndOfLine)),
 		new Action(new Match(), SameIndentation),
 		new Action(new ReferenceAssignment(),
-			//new Action(new Assignment(CodeKeys.Lookup),
 			new Alternatives(
 					KeysSearch,
 					new Sequence(new Action(
@@ -5021,66 +4752,6 @@ new Assignment(
 			new Action(new Assignment(CodeKeys.Value), Expression),
 			new Action(new Match(), new Optional(EndOfLine))
 			);
-
-		//private static Rule Keys = new Alternatives(
-		//    new Sequence(new Action(
-		//        new Assignment(
-		//            1),
-		//            new Alternatives(
-		//                new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
-		//    //Lookup,
-		//                KeysSearch,
-		//                new Sequence(new Action(
-		//                    new ReferenceAssignment(),
-		//    //new Assignment(CodeKeys.Lookup),
-
-		//                    LiteralExpression)),
-		//    new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
-		//    EmptyMap,
-		//    String,
-		//    LookupStringExpression
-		//    ))),
-
-		//    new Sequence(
-		//    new Action(new Match(), new Character('.')),
-		//    new Action(new Match(), Indentation),
-		//    new Action(new Assignment(
-		//        1),
-		//            new Alternatives(
-		//    //Lookup,
-		//                KeysSearch,
-		//                new Sequence(new Action(
-		//                    new ReferenceAssignment(),
-		//    //new Assignment(CodeKeys.Lookup),
-		//                    LiteralExpression)),
-		//    EmptyMap,
-		//    String,
-		//    LookupStringExpression
-		//    )),
-		//    new Action(new Append(),
-		//        new ZeroOrMore(
-		//            new Action(new Autokey(),
-		//                new Sequence(
-		//        new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), SameIndentation),
-		//    new Action(new ReferenceAssignment(),
-		//    //new Action(new Assignment(CodeKeys.Lookup),
-		//        new Alternatives(
-		//            LookupAnythingExpression,
-		//            LookupStringExpression,
-		//    Expression)))))),
-		//    new Action(new Match(), new Optional(EndOfLine)),
-		//    new Action(new Match(), new Optional(Dedentation)),
-		//    new Action(new Match(), new Optional(SameIndentation))));
-
-
-		//public static Rule CurrentStatement = new Sequence(
-		//    new Action(new Match(), StringRule("&=")),
-		//    new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
-		//    new Action(new Assignment(CodeKeys.Value), Expression),
-		//    new Action(new Match(), new Optional(EndOfLine))
-		//    );
-
 
 
 		public static Rule KeysStatement = new Sequence(
@@ -5182,13 +4853,6 @@ new Assignment(
 								CodeKeys.Key, new StrategyMap(
 										CodeKeys.Literal, p.defaultKeys.Peek()),
 								CodeKeys.Value, map);
-
-							//result = new StrategyMap(
-							//    CodeKeys.Keys, new StrategyMap(1,
-							//    new StrategyMap(
-							//        CodeKeys.Lookup, new StrategyMap(
-							//            CodeKeys.Literal, p.defaultKeys.Peek()))),
-							//    CodeKeys.Value, map);
 							p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 							return result;
 						}
@@ -5825,7 +5489,6 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					//return Meta.Serialize.ValueFunction(Binary.Deserialize(Path.Combine(Interpreter.InstallationPath,@"Test\basic.meta")));
 					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath,@"basicTest.meta")));
 				}
 			}
