@@ -57,7 +57,7 @@ commandLine|,
 	counter=0
 	SetCounter=,
 		argument|,
-			!counter:argument
+			counter:argument
 	1=-
 		!"SetCounter"
 		5
@@ -88,7 +88,7 @@ commandLine|,
 	.
 		integerIncrementTest
 		0
-	:!"integerIncrementTest"
+	:integerIncrementTest
 	integerDecrementTest=5
 	integerDecrementTest=.
 		!"integerDecrementTest"
@@ -125,7 +125,7 @@ commandLine|,
 	commandLineArguments=!"commandLine"
 	aMap=,
 		a="a"
-	<!"aMap":"Object"
+	!"aMap"="Object"
 	"normal symbol"="NormalSymbol"
 	lookupSymbol="LookupSymbol"
 	"long key symbol"="LookupExtendedSymbol"
@@ -139,15 +139,15 @@ commandLine|,
 		b=0
 		SetA=,
 			arg|,
-				!a:"c"
-				!autoSearch:"changed"
+				a:"c"
+				autoSearch:"changed"
 		SetB=,
 			newB|,
 				.
-					!b
+					b
 					1
 				:.
-					!"newB"
+					newB
 					value
 				&="changed"
 		x=,
@@ -155,10 +155,7 @@ commandLine|,
 			c="d"
 		1=,
 			arg|,
-				.
-					&
-					a
-				="b"
+				a:"b"
 	a="default"
 	b=0
 	aSet=-
@@ -178,7 +175,7 @@ commandLine|,
 	scopeFunction=,
 		inScope="right"
 		arg|,
-			!scopeTest:!"inScope"
+			scopeTest:inScope
 	inScope="wrong"
 	4=-
 		!"scopeFunction"
@@ -269,7 +266,7 @@ commandLine|,
 		decimalValue
 	=5
 	.
-		!TestClass
+		TestClass
 		boolTest
 	:1
 	boolTest=.
@@ -415,7 +412,7 @@ commandLine|,
 	upperLevel="unchanged"
 	SetUpperLevel=,
 		arg|,
-			!upperLevel:!"arg"
+			upperLevel:arg
 	ChangeUpperLevel=,
 		arg|,
 			1=-
@@ -427,7 +424,7 @@ commandLine|,
 	staticEventChanged=0
 	ChangeStaticEvent=,
 		arg|,
-			!staticEventChanged:!"arg"
+			staticEventChanged:arg
 	.
 		TestClass
 		staticEvent
@@ -459,7 +456,7 @@ commandLine|,
 		instanceEvent
 	:,
 		arg|,
-			!instanceEventChanged:1
+			instanceEventChanged:1
 			&=arg
 	instanceEventResult=-
 		.
@@ -546,7 +543,7 @@ commandLine|,
 			TextBox
 		0
 	.
-		!"textBox"
+		"textBox"
 		Text
 	:"
 		Alle meine Entchen,
@@ -640,7 +637,7 @@ commandLine|,
 		map=,
 			test=,
 				arg|,
-					!topLevel:"changed"
+					topLevel:"changed"
 	8=-
 		.
 			deep
@@ -663,7 +660,7 @@ commandLine|,
 		
 	"
 	.
-		!"System.Windows.Forms"
+		"System.Windows.Forms"
 		Application
 		VisualStyleState
 	:.

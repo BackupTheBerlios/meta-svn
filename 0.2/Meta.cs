@@ -55,7 +55,7 @@ namespace Meta
 		public static readonly Map Parameter="parameter";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
-		public static readonly Map Lookup = "lookup";
+		//public static readonly Map Lookup = "lookup";
 		public static readonly Map Current="current";
 		public static readonly Map Scope="scope";
 		public static readonly Map Literal="literal";
@@ -480,9 +480,6 @@ namespace Meta
 			Map key = keyPosition.Get();
 
 			Position selection = selected;
-			if (key.Equals(new StrategyMap("newB")))
-			{
-			}
 			while (!selection.Get().ContainsKey(key))
 			{
 				if (selection.Parent == null)
@@ -565,7 +562,7 @@ namespace Meta
 				Position selected = subselects[0].GetExpression().Evaluate(context);
 				for (int i = 1; i < subselects.Count; i++)
 				{
-					selected = subselects[i].GetSubselect().Evaluate(selected, context);
+					selected = selected[subselects[i].GetExpression().Evaluate(context).Get()];
 				}
 				lastPosition = selected;
 				if (optimize && optimized == null)
@@ -575,6 +572,27 @@ namespace Meta
 				return selected;
 			}
 		}
+		//public override Position Evaluate(Position context)
+		//{
+		//    if (optimize && optimized != null)
+		//    {
+		//        return optimized;
+		//    }
+		//    else
+		//    {
+		//        Position selected = subselects[0].GetExpression().Evaluate(context);
+		//        for (int i = 1; i < subselects.Count; i++)
+		//        {
+		//            selected = subselects[i].GetSubselect().Evaluate(selected, context);
+		//        }
+		//        lastPosition = selected;
+		//        if (optimize && optimized == null)
+		//        {
+		//            optimized = selected;
+		//        }
+		//        return selected;
+		//    }
+		//}
 		public static Position lastPosition;
 	}
 	public class KeyStatement : StatementBase
@@ -621,7 +639,7 @@ namespace Meta
 	{
 		public abstract void Assign(Position context);
 	}
-	public class Statement:StatementBase
+	public class Statement : StatementBase
 	{
 		public Expression Value
 		{
@@ -646,15 +664,110 @@ namespace Meta
 		}
 		public override void Assign(Position context)
 		{
-			Position selected = context;
-			for (int i = 0; i + 1 < keys.Count; i++)
+			try
 			{
-				selected = keys[i].GetSubselect().Evaluate(selected, context);
-			}
+				Position selected = context;
+
+				Position selection = selected;
+				Map key = keys[0].GetExpression().Evaluate(context).Get();
+				if (key.Equals(new StrategyMap("b")))
+				{
+				}
+				while (!selection.Get().ContainsKey(key))
+				{
+					if (selection.Parent == null)
+					{
+						selection = null;
+						break;
+					}
+					else
+					{
+						if (selection.Get().Scope != null)
+						{
+							selection = selection.Get().Scope;
+						}
+						else
+						{
+							selection = selection.Parent;
+						}
+					}
+				}
+				if (selection == null)
+				{
+					throw new KeyNotFound(key, keys[0].Extent, null);
+				}
+				else
+				{
+					selected = selection;
+				}
+				//else
+				//{
+				//    selected = new Position(selection, key);
+				//}
+
+
+				for (int i = 1; i < keys.Count; i++)
+				{
+					selected = selected[key];
+					key = keys[i].GetExpression().Evaluate(context).Get();
+				}
 				Map val = value.GetExpression().Evaluate(context).Get();
-					keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+				selected.Assign(key, val);
+				//selected.Assign(keys[keys.Count - 1].GetExpression().Evaluate(context).Get(), val);
+				//Position selected = context;
+				//for (int i = 0; i + 1 < keys.Count; i++)
+				//{
+				//    selected = keys[i].GetSubselect().Evaluate(selected, context);
+				//}
+				//Map val = value.GetExpression().Evaluate(context).Get();
+				//    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+			}
+			catch (Exception e)
+			{
+			}
 		}
 	}
+	//public class Statement:StatementBase
+	//{
+	//    public Expression Value
+	//    {
+	//        get
+	//        {
+	//            return value.GetExpression();
+	//        }
+	//    }
+	//    private List<Map> keys;
+	//    public List<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return keys;
+	//        }
+	//    }
+	//    private Map value;
+	//    public Statement(Map code)
+	//    {
+	//        this.keys = code[CodeKeys.Keys].Array;
+	//        this.value = code[CodeKeys.Value];
+	//    }
+	//    public override void Assign(Position context)
+	//    {
+	//        Position selected = context;
+	//        for (int i = 0; i + 1 < keys.Count; i++)
+	//        {
+	//            selected = keys[i].GetSubselect().Evaluate(selected, context);
+	//        }
+	//        Map val = value.GetExpression().Evaluate(context).Get();
+	//        keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+	//        //Position selected = context;
+	//        //for (int i = 0; i + 1 < keys.Count; i++)
+	//        //{
+	//        //    selected = keys[i].GetSubselect().Evaluate(selected, context);
+	//        //}
+	//        //Map val = value.GetExpression().Evaluate(context).Get();
+	//        //    keys[keys.Count - 1].GetSubselect().Assign(selected, val, context);
+	//    }
+	//}
 	public class Library
 	{
 		public static Map EnumerableToArray(Map map)
@@ -1082,14 +1195,14 @@ namespace Meta
 			}
 			return (StatementBase)compiledCode;
 		}
-		public Subselect GetSubselect()
-		{
-			if (compiledCode == null)
-			{
-				compiledCode = CreateSubselect();
-			}
-			return (Subselect)compiledCode;
-		}
+		//public Subselect GetSubselect()
+		//{
+		//    if (compiledCode == null)
+		//    {
+		//        compiledCode = CreateSubselect();
+		//    }
+		//    return (Subselect)compiledCode;
+		//}
 		public Expression GetExpression()
 		{
 			if (compiledCode == null)
@@ -1098,25 +1211,25 @@ namespace Meta
 			}
 			return (Expression)compiledCode;
 		}
-		public Subselect CreateSubselect()
-		{
-			if (ContainsKey(CodeKeys.Current))
-			{
-				return new Current();
-			}
-			else if (ContainsKey(CodeKeys.Search))
-			{
-				return new Search(this[CodeKeys.Search]);
-			}
-			else if (ContainsKey(CodeKeys.Lookup))
-			{
-				return new Lookup(this[CodeKeys.Lookup]);
-			}
-			else
-			{
-				throw new Exception("Map is not a subselect.");
-			}
-		}
+		//public Subselect CreateSubselect()
+		//{
+		//    if (ContainsKey(CodeKeys.Current))
+		//    {
+		//        return new Current();
+		//    }
+		//    else if (ContainsKey(CodeKeys.Search))
+		//    {
+		//        return new Search(this[CodeKeys.Search]);
+		//    }
+		//    //else if (ContainsKey(CodeKeys.Lookup))
+		//    //{
+		//    //    return new Lookup(this[CodeKeys.Lookup]);
+		//    //}
+		//    else
+		//    {
+		//        throw new Exception("Map is not a subselect.");
+		//    }
+		//}
 		public Expression CreateExpression()
 		{
 			if (ContainsKey(CodeKeys.Call))
@@ -4685,12 +4798,21 @@ namespace Meta
 							new Action(new Match(), new Optional(Dedentation))
 							)));
 		});
-
-
 		public static Rule FunctionExpression = new Sequence(
-			new Action(new Assignment(CodeKeys.Keys), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(CodeKeys.Literal, CodeKeys.Function))),
 			new Action(new Assignment(CodeKeys.Value), new Sequence(
 				new Action(new Assignment(CodeKeys.Literal), Function))));
+
+
+		//public static Rule FunctionExpression = new Sequence(
+		//    new Action(new Assignment(CodeKeys.Keys), new LiteralRule(new StrategyMap(CodeKeys.Literal, CodeKeys.Function))),
+		//    new Action(new Assignment(CodeKeys.Value), new Sequence(
+		//        new Action(new Assignment(CodeKeys.Literal), Function))));
+
+		//public static Rule FunctionExpression = new Sequence(
+		//    new Action(new Assignment(CodeKeys.Keys), new LiteralRule(new StrategyMap(1, new StrategyMap(CodeKeys.Lookup, new StrategyMap(CodeKeys.Literal, CodeKeys.Function))))),
+		//    new Action(new Assignment(CodeKeys.Value), new Sequence(
+		//        new Action(new Assignment(CodeKeys.Literal), Function))));
 
 		private static Rule Whitespace =
 			new ZeroOrMore(
@@ -4736,15 +4858,15 @@ namespace Meta
 			new Action(new Match(), new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
 
-		private static Rule Lookup =
-			new Alternatives(
-				Current,
-				new Sequence(
-					new Action(new Assignment(
-						CodeKeys.Lookup),
-						new Alternatives(
-							LookupStringExpression,
-							LookupAnythingExpression))));
+		//private static Rule Lookup =
+		//    new Alternatives(
+		//        Current,
+		//        new Sequence(
+		//            new Action(new Assignment(
+		//                CodeKeys.Lookup),
+		//                new Alternatives(
+		//                    LookupStringExpression,
+		//                    LookupAnythingExpression))));
 
 		private static Rule Search = new Sequence(
 			new Action(
@@ -4773,13 +4895,14 @@ namespace Meta
 							LiteralExpression,
 							Root,
 							Search,
-							Lookup,
+							//Lookup,
 							Call)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Match(), new Optional(EndOfLine)),
 							new Action(new Match(), SameIndentation),
-							new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+							new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+							//new Action(new Assignment(CodeKeys.Lookup), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
 					new Action(new Match(), new Optional(Dedentation))
 			)));
@@ -4794,51 +4917,102 @@ new Assignment(
 			new ReferenceAssignment(),
 			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
 
+		//private static Rule Keys = new Sequence(
+		//        new Action(new Match(), new Character('.')),
+		//        new Action(new Match(), Indentation),
+		//        new Action(
+		//            new Assignment(1),
+		//            new Alternatives(
+		//                KeysSearch,
+		//                LiteralExpression,
+		//                new Sequence(
+		//                    new Action(
+		//                        new Assignment(CodeKeys.Literal),
+		//                        new Alternatives(
+		//                            LookupString,
+		//                            Number))),
+		//                EmptyMap,
+		//                String,
+		//                LookupStringExpression
+		//                )),
+		//        new Action(new Append(),
+		//            new ZeroOrMore(
+		//                new Action(new Autokey(),
+		//                    new Sequence(
+		//            new Action(new Match(), new Optional(EndOfLine)),
+		//        new Action(new Match(), SameIndentation),
+		//        new Action(new ReferenceAssignment(),
+		//            new Alternatives(
+		//                LiteralExpression,
+		//                new Sequence(
+		//                    new Action(
+		//                        new Assignment(CodeKeys.Literal),
+		//                        new Alternatives(
+		//                            LookupString,
+		//                            Number))),
+		//                EmptyMap,
+		//                String,
+		//                LookupAnythingExpression,
+		//                LookupStringExpression,
+		//                Expression)))))),
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//        new Action(new Match(), new Optional(Dedentation)),
+		//        new Action(new Match(), new Optional(SameIndentation)));
 
 		private static Rule Keys = new Alternatives(
-			new Sequence(new Action(
-				new Assignment(
-					1),
-					new Alternatives(
-						Lookup,
-						KeysSearch,
-						new Sequence(new Action(
-							new Assignment(CodeKeys.Lookup),
-							LiteralExpression)),
-			EmptyMap,
-			String,
-			LookupStringExpression
-			))),
-
-			new Sequence(
-			new Action(new Match(), new Character('.')),
-			new Action(new Match(), Indentation),
-			new Action(new Assignment(
+		new Sequence(new Action(
+			new Assignment(
 				1),
-					new Alternatives(
-						Lookup,
-						KeysSearch,
-						new Sequence(new Action(
-							new Assignment(CodeKeys.Lookup),
-							LiteralExpression)),
-			EmptyMap,
-			String,
-			LookupStringExpression
-			)),
-			new Action(new Append(),
-				new ZeroOrMore(
-					new Action(new Autokey(),
-						new Sequence(
-				new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), SameIndentation),
-			new Action(new Assignment(CodeKeys.Lookup),
 				new Alternatives(
-					LookupAnythingExpression,
-					LookupStringExpression,
-			Expression)))))),
+					new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+			//Lookup,
+					KeysSearch,
+					new Sequence(new Action(
+						new ReferenceAssignment(),
+			//new Assignment(CodeKeys.Lookup),
+
+						LiteralExpression)),
+		new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+		EmptyMap,
+		String,
+		LookupStringExpression
+		))),
+
+		new Sequence(
+		new Action(new Match(), new Character('.')),
+		new Action(new Match(), Indentation),
+		new Action(new Assignment(
+			1),
+				new Alternatives(
+					KeysSearch,
+					new Sequence(new Action(
+						new ReferenceAssignment(),
+						LiteralExpression)),
+		EmptyMap,
+		String,
+		LookupStringExpression,
+			Call
+		)),
+		new Action(new Append(),
+			new ZeroOrMore(
+				new Action(new Autokey(),
+					new Sequence(
 			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(Dedentation)),
-			new Action(new Match(), new Optional(SameIndentation))));
+		new Action(new Match(), SameIndentation),
+		new Action(new ReferenceAssignment(),
+			//new Action(new Assignment(CodeKeys.Lookup),
+			new Alternatives(
+					KeysSearch,
+					new Sequence(new Action(
+						new ReferenceAssignment(),
+						LiteralExpression)),
+		EmptyMap,
+		String,
+		LookupStringExpression
+		)))))),
+		new Action(new Match(), new Optional(EndOfLine)),
+		new Action(new Match(), new Optional(Dedentation)),
+		new Action(new Match(), new Optional(SameIndentation))));
 
 
 		public static Rule CurrentStatement = new Sequence(
@@ -4847,6 +5021,65 @@ new Assignment(
 			new Action(new Assignment(CodeKeys.Value), Expression),
 			new Action(new Match(), new Optional(EndOfLine))
 			);
+
+		//private static Rule Keys = new Alternatives(
+		//    new Sequence(new Action(
+		//        new Assignment(
+		//            1),
+		//            new Alternatives(
+		//                new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+		//    //Lookup,
+		//                KeysSearch,
+		//                new Sequence(new Action(
+		//                    new ReferenceAssignment(),
+		//    //new Assignment(CodeKeys.Lookup),
+
+		//                    LiteralExpression)),
+		//    new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
+		//    EmptyMap,
+		//    String,
+		//    LookupStringExpression
+		//    ))),
+
+		//    new Sequence(
+		//    new Action(new Match(), new Character('.')),
+		//    new Action(new Match(), Indentation),
+		//    new Action(new Assignment(
+		//        1),
+		//            new Alternatives(
+		//    //Lookup,
+		//                KeysSearch,
+		//                new Sequence(new Action(
+		//                    new ReferenceAssignment(),
+		//    //new Assignment(CodeKeys.Lookup),
+		//                    LiteralExpression)),
+		//    EmptyMap,
+		//    String,
+		//    LookupStringExpression
+		//    )),
+		//    new Action(new Append(),
+		//        new ZeroOrMore(
+		//            new Action(new Autokey(),
+		//                new Sequence(
+		//        new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), SameIndentation),
+		//    new Action(new ReferenceAssignment(),
+		//    //new Action(new Assignment(CodeKeys.Lookup),
+		//        new Alternatives(
+		//            LookupAnythingExpression,
+		//            LookupStringExpression,
+		//    Expression)))))),
+		//    new Action(new Match(), new Optional(EndOfLine)),
+		//    new Action(new Match(), new Optional(Dedentation)),
+		//    new Action(new Match(), new Optional(SameIndentation))));
+
+
+		//public static Rule CurrentStatement = new Sequence(
+		//    new Action(new Match(), StringRule("&=")),
+		//    new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
+		//    new Action(new Assignment(CodeKeys.Value), Expression),
+		//    new Action(new Match(), new Optional(EndOfLine))
+		//    );
 
 
 
@@ -4946,11 +5179,16 @@ new Assignment(
 						delegate(Parser p, Map map, ref Map result)
 						{
 							result = new StrategyMap(
-								CodeKeys.Keys, new StrategyMap(1,
-								new StrategyMap(
-									CodeKeys.Lookup, new StrategyMap(
-										CodeKeys.Literal, p.defaultKeys.Peek()))),
+								CodeKeys.Key, new StrategyMap(
+										CodeKeys.Literal, p.defaultKeys.Peek()),
 								CodeKeys.Value, map);
+
+							//result = new StrategyMap(
+							//    CodeKeys.Keys, new StrategyMap(1,
+							//    new StrategyMap(
+							//        CodeKeys.Lookup, new StrategyMap(
+							//            CodeKeys.Literal, p.defaultKeys.Peek()))),
+							//    CodeKeys.Value, map);
 							p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
 							return result;
 						}

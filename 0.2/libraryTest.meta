@@ -3,10 +3,10 @@ arg|,
 		booleanTest=,
 			not=,
 				true=-
-					!"not"
+					not
 					0
 				false=-
-					!"not"
+					not
 					1
 			and=,
 				true=-
@@ -36,30 +36,30 @@ arg|,
 						0
 		numberTest=,
 			positiveAdd=-
-				!"add"
+				add
 				100
 				1000
 			negativeAdd=-
-				!"add"
+				add
 				-100
 				91
 			subtractTest=-
-				!"add"
+				add
 				1/4
 				-
-					!"multiply"
+					multiply
 					1/100
 					-1
 			subtractTest2=-
-				!"subtract"
+				subtract
 				2
 				103
 			divideTest=-
-				!"divide"
+				divide
 				5
 				103
 			multiplyInteger=-
-				!"multiply"
+				multiply
 				19
 				1023
 			minusMultiply=-
@@ -67,35 +67,35 @@ arg|,
 				-1
 				-2
 			multiplyFraction=-
-				!"multiply"
+				multiply
 				3/2
 				7/3
 			smallerDecreasingTest=-
-				!"less"
+				less
 				4
 				1
 			nonincreasingTest=-
-				!"lessOrEqual"
+				lessOrEqual
 				1
 				1
 			nondecreasingTest=-
-				!"greaterOrEqual"
+				greaterOrEqual
 				1
 				2
 			strictlyIncreasingTest=-
-				!"greater"
+				greater
 				23
 				23
 			smallerTest=-
-				!"less"
+				less
 				0
 				1
 			greaterTest=-
-				!"greater"
+				greater
 				3
 				5
 			divide=-
-				!"multiply"
+				multiply
 				1000
 				-
 					divide
@@ -128,24 +128,24 @@ arg|,
 				32
 			apply=,
 				&=-
-					!"apply"
+					apply
 					+
 						1
 						2
 						3
 					,
 						argument|-
-							!"add"
-							!"argument"
+							add
+							argument
 							1
 			keyTestMap=,
 				x="hello"
 			contains=-
-				!"containsKey"
-				!"keyTestMap"
+				containsKey
+				keyTestMap
 				"x"
 			keysTest=-
-				!"keys"
+				keys
 				,
 					jjqwv="aeäquq"
 					oere="i ke"
@@ -153,7 +153,7 @@ arg|,
 			equal=,
 				map=,
 					true=-
-						!"equal"
+						equal
 						,
 							x="hello"
 							y="world"
@@ -161,7 +161,7 @@ arg|,
 							x="hello"
 							y="world"
 					false=-
-						!"equal"
+						equal
 						,
 							x="y"
 							y="z"
@@ -185,7 +185,7 @@ arg|,
 				"hello"
 				1
 			tryTest=-
-				!"try"
+				try
 				,
 					arg|"hello"
 				,
@@ -195,25 +195,25 @@ arg|,
 							ToString
 						0
 			integerToString=-
-				!"integerToString"
+				integerToString
 				5
 		rangeTest=-
-			!"range"
+			range
 			10
 		reverseTest=-
-			!"reverse"
+			reverse
 			"hello"
 		foreachTest=-
-			!"foreach"
+			foreach
 			,
 				x="hi"
 				y="hello"
 			,
 				key|,
 					value|,
-						<value:key
+						!"value"=key
 		sumTest=-
-			!"sum"
+			sum
 			+
 				2
 				5
@@ -222,23 +222,23 @@ arg|,
 			,
 				first|,
 					second|-
-						!"add"
-						!"first"
-						!"second"
+						add
+						first
+						second
 		valuesTest=-
-			!"values"
+			values
 			,
 				x="hi"
 				y="hello"
 		isStringTest=,
 			no=-
-				!"isString"
+				isString
 				2
 			yes=-
-				!"isString"
+				isString
 				"hi"
 		parseTest=-
-			!"parse"
+			parse
 			"
 				asdf="hello"
 				x=,
@@ -246,10 +246,10 @@ arg|,
 					z=, 
 						a="x"
 					arg|-
-						!"join"
+						join
 						"hello "
-						!"join"
-						!"arg"
+						join
+						arg
 						"!"
 			"
 		withTest=-
@@ -286,4 +286,4 @@ arg|,
 				5
 				6
 				7
-	&=!"test"
+	&=test
