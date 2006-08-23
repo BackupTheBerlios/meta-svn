@@ -1032,8 +1032,8 @@ namespace Meta
 			else
 			{
 				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
-				Position result = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
-				return result;
+				Position into = bodyPosition.AddCall(new StrategyMap());
+				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(into);
 			}
 		}
 		public ICollection<Map> Keys
