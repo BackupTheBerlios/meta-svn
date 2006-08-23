@@ -889,6 +889,7 @@ namespace Meta
 					compiledCode = null;
 					Map val;
 					val = value;
+					//val = value;
 					//val = value.Copy();
 					Set(key, val);
 					if (KeyChanged != null)
@@ -1324,11 +1325,11 @@ namespace Meta
 		{
 			strategy.Remove(key,this);
 		}
-		public StrategyMap(Map scope)
-			: this()
-		{
-			this.Scope = scope;
-		}
+		//public StrategyMap(Map scope)
+		//    : this()
+		//{
+		//    this.Scope = scope;
+		//}
 		//public StrategyMap(Position scope)
 		//    : this()
 		//{
@@ -1366,11 +1367,16 @@ namespace Meta
 			: this(new StringStrategy(text))
 		{
 		}
-		public StrategyMap(Map scope, params Map[] keysAndValues)
-			: this(keysAndValues)
-		{
-			this.Scope = scope;
-		}
+		//public StrategyMap(params Map[] keysAndValues)
+		//    : this(keysAndValues)
+		//{
+		//    //this.Scope = scope;
+		//}
+		//public StrategyMap(Map scope, params Map[] keysAndValues)
+		//    : this(keysAndValues)
+		//{
+		//    this.Scope = scope;
+		//}
 		//public StrategyMap(Position scope, params Map[] keysAndValues)
 		//    : this(keysAndValues)
 		//{
