@@ -4397,33 +4397,154 @@ namespace Meta
 				{
 					while (true)
 					{
-							SameIndentation.Match(parser, out matched);
-						if (matched)
-						{
-							Map entry = Entry.Match(parser, out matched);
+						Map entry=new Sequence(
+							new Action(
+								new Match(),SameIndentation),
+							new Action(
+								new ReferenceAssignment(),
+								Entry)).Match(parser,out matched);
 							if (matched)
 							{
 								map = Library.Merge(map, entry);
 							}
 							else
 							{
+								Dedentation.Match(parser, out matched);
 								matched = true;
 								break;
 							}
-						}
-						else
-						{
-							Dedentation.Match(parser, out matched);
+						//}
+						//else
+						//{
+						//    Dedentation.Match(parser, out matched);
 
-							matched = true;
-							break;
-						}
+						//    matched = true;
+						//    break;
+						//}
+						//SameIndentation.Match(parser, out matched);
+						//if (matched)
+						//{
+						//    Map entry = Entry.Match(parser, out matched);
+						//    if (matched)
+						//    {
+						//        map = Library.Merge(map, entry);
+						//    }
+						//    else
+						//    {
+						//        Dedentation.Match(parser, out matched);
+						//        matched = true;
+						//        break;
+						//    }
+						//}
+						//else
+						//{
+						//    Dedentation.Match(parser, out matched);
+
+						//    matched = true;
+						//    break;
+						//}
 					}
 				}
 				parser.defaultKeys.Pop();
 			}
 			return map;
 		});
+		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    new Sequence(
+		//        new Action(new Match(), new Optional(new Character(','))),
+		//        new Action(new Match(), new Alternatives(
+		//            StartOfFile,
+		//            new Sequence(
+		//            new Action(new Match(), EndOfLine),
+		//            new Action(new Match(), SmallIndentation)
+		//            )))
+		//    ).Match(parser, out matched);
+
+		//    Map map = new StrategyMap();
+		//    if (matched)
+		//    {
+		//        parser.defaultKeys.Push(1);
+		//        if (matched)
+		//        {
+		//            while (true)
+		//            {
+		//                SameIndentation.Match(parser, out matched);
+		//                if (matched)
+		//                {
+		//                    Map entry = Entry.Match(parser, out matched);
+		//                    if (matched)
+		//                    {
+		//                        map = Library.Merge(map, entry);
+		//                    }
+		//                    else
+		//                    {
+		//                        Dedentation.Match(parser, out matched);
+		//                        matched = true;
+		//                        break;
+		//                    }
+		//                }
+		//                else
+		//                {
+		//                    Dedentation.Match(parser, out matched);
+
+		//                    matched = true;
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        parser.defaultKeys.Pop();
+		//    }
+		//    return map;
+		//});
+
+		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    new Sequence(
+		//        new Action(new Match(), new Optional(new Character(','))),
+		//        new Action(new Match(), new Alternatives(
+		//            StartOfFile,
+		//            new Sequence(
+		//            new Action(new Match(), EndOfLine),
+		//            new Action(new Match(), SmallIndentation)
+		//            )))
+		//    ).Match(parser, out matched);
+
+		//    Map map = new StrategyMap();
+		//    if (matched)
+		//    {
+		//        parser.defaultKeys.Push(1);
+		//        if (matched)
+		//        {
+		//            while (true)
+		//            {
+		//                    SameIndentation.Match(parser, out matched);
+		//                if (matched)
+		//                {
+		//                    Map entry = Entry.Match(parser, out matched);
+		//                    if (matched)
+		//                    {
+		//                        map = Library.Merge(map, entry);
+		//                    }
+		//                    else
+		//                    {
+		//                        matched = true;
+		//                        break;
+		//                    }
+		//                }
+		//                else
+		//                {
+		//                    Dedentation.Match(parser, out matched);
+
+		//                    matched = true;
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        parser.defaultKeys.Pop();
+		//    }
+		//    return map;
+		//});
 		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		//{
 		//    new Sequence(
@@ -5081,12 +5202,16 @@ new Assignment(
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
+				bool isStartOfFile = parser.isStartOfFile;
+				//int indentationCount = parser.indentationCount;
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
 				{
 					parser.index = oldIndex;
 					parser.line = oldLine;
 					parser.column = oldColumn;
+					parser.isStartOfFile = isStartOfFile;
+					//parser.indentationCount = indentationCount;
 				}
 				else
 				{
