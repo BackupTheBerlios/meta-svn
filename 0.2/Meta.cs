@@ -1023,8 +1023,6 @@ namespace Meta
 		{
 			throw new ApplicationException("Method not implemented");
 		}
-		[XmlIgnore]
-		public static List<Map> arguments = new List<Map>();
 		public virtual Position Call(Map arg, Position position)
 		{
 			if (!ContainsKey(CodeKeys.Function))
@@ -1033,10 +1031,8 @@ namespace Meta
 			}
 			else
 			{
-				arguments.Add(arg);
 				Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
 				Position result = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
-				arguments.RemoveAt(arguments.Count - 1);
 				return result;
 			}
 		}
