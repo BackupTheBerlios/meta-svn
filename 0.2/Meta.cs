@@ -4396,34 +4396,19 @@ namespace Meta
 				parser.defaultKeys.Push(1);
 				if (matched)
 				{
-					while (true)
-					{
-						map=new OneOrMore(new Action(
-							new CustomProduction(
-							new CustomActionDelegate(delegate(Parser p,Map m,ref Map result)
-							{
-								result=Library.Merge(result,m);
-								return result;
-							})),
-							new Sequence(
-								new Action(
-									new Match(), SameIndentation),
-								new Action(
-									new ReferenceAssignment(),
-									Entry)
-								
-								))).Match(parser, out matched);
-						//if (matched)
-						//{
-						//    map = Library.Merge(map, entry);
-						//}
-						//else
-						//{
-							Dedentation.Match(parser, out matched);
-							matched = true;
-							break;
-						//}
-					}
+					map=new OneOrMore(new Action(
+						new Merge(),
+						new Sequence(
+							new Action(
+								new Match(), SameIndentation),
+							new Action(
+								new ReferenceAssignment(),
+								Entry)
+							
+							))).Match(parser, out matched);
+
+					Dedentation.Match(parser, out matched);
+					matched = true;
 				}
 				parser.defaultKeys.Pop();
 			}
