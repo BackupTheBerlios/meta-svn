@@ -50,9 +50,6 @@ namespace Meta
 {
 	public abstract class Expression
 	{
-		public virtual void Optimize()
-		{
-		}
 		public abstract Position Evaluate(Position context);
 	}
 	internal class HiPerfTimer
@@ -443,38 +440,38 @@ namespace Meta
 			}
 			return result;
 		}
-		public static Map Case(Map val,Map cases)
-		{
-			Position pos=Call.LastArgument;
-			Map result = null;
-			foreach (KeyValuePair<Map,Map> pair in cases)
-			{
-				if (pair.Key.Call(val, pos).Get().GetBoolean())
-				{
-					result=pair.Value.Call(val, pos).Get();
-					break;
-				}
-			}
-			return result;
-		}
-		public static Map Sum(Map arg, Map map)
-		{
-			Position argument = Call.LastArgument;
-			if (arg.ArrayCount > 0)
-			{
-				Map result = arg.Array[0].Copy();
-				foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
-				{
-					Position firstCall = argument.Call(result);
-					result = firstCall.Call(m).Get();
-				}
-				return result;
-			}
-			else
-			{
-				return Map.Empty;
-			}
-		}
+		//public static Map Case(Map val,Map cases)
+		//{
+		//    Position pos=Call.LastArgument;
+		//    Map result = null;
+		//    foreach (KeyValuePair<Map,Map> pair in cases)
+		//    {
+		//        if (pair.Key.Call(val, pos).Get().GetBoolean())
+		//        {
+		//            result=pair.Value.Call(val, pos).Get();
+		//            break;
+		//        }
+		//    }
+		//    return result;
+		//}
+		//public static Map Sum(Map arg, Map map)
+		//{
+		//    Position argument = Call.LastArgument;
+		//    if (arg.ArrayCount > 0)
+		//    {
+		//        Map result = arg.Array[0].Copy();
+		//        foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
+		//        {
+		//            Position firstCall = argument.Call(result);
+		//            result = firstCall.Call(m).Get();
+		//        }
+		//        return result;
+		//    }
+		//    else
+		//    {
+		//        return Map.Empty;
+		//    }
+		//}
 		public static Map Reverse(Map arg)
 		{
 			List<Map> list = new List<Map>(arg.Array);
@@ -4133,8 +4130,10 @@ namespace Meta
 								}
 								return null;
 							}),
-							new CustomRule(delegate(Parser p, out bool matched) { matched = true; return null; })
-							))));
+							new CustomRule(delegate(Parser p, out bool matched) { 
+								matched = true; return null; })
+							)
+			)));
 		public static Rule StartOfFile =
 			
 			new CustomRule(delegate(Parser p, out bool matched)
