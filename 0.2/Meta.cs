@@ -68,7 +68,6 @@ namespace Meta
         private long startTime, stopTime;
         private long freq;
 
-        // Constructor
         public HiPerfTimer()
         {
             startTime = 0;
@@ -76,27 +75,18 @@ namespace Meta
 
             if (QueryPerformanceFrequency(out freq) == false)
             {
-                // high-performance counter not supported
                 throw new ApplicationException();
             }
         }
-
-        // Start the timer
         public void Start()
         {
-            // lets do the waiting threads there work
             Thread.Sleep(0);
-
             QueryPerformanceCounter(out startTime);
         }
-
-        // Stop the timer
         public void Stop()
         {
             QueryPerformanceCounter(out stopTime);
         }
-
-        // Returns the duration of the timer (in seconds)
         public double Duration
         {
             get
@@ -1505,7 +1495,6 @@ namespace Meta
 					case TypeCode.Decimal:
 						if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue))
 						{
-							// add function, GetDecimal
 							dotNet = (decimal)(meta.GetNumber().GetInt64());
 						}
 						break;
@@ -2634,7 +2623,6 @@ namespace Meta
 		{
 			Panic(new DictionaryStrategy(),map);
 			map.Remove(key);
-			//Remove(key, map);
 		}
 		private MapStrategy original;
 		public CloneStrategy(MapStrategy original)
@@ -3046,11 +3034,6 @@ namespace Meta
 					else
 					{
 						result = null;
-					}
-					if (result != null)
-					{
-						//Data[key] = result;
-						//Data[key] = result;
 					}
 					return result;
 				}
@@ -4169,22 +4152,7 @@ namespace Meta
 			return null;
 		}
 	});
-	//    public static Rule Indentation =
-	//    new Alternatives(
-	//        StartOfFile,
-	//        new Sequence(
-	//            new Action(new Match(), new Sequence(
-	//                new Action(new Match(), EndOfLine),
-	//                new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-	//{
-	//    return StringRule("".PadLeft(p.indentationCount + 1, Syntax.indentation)).Match(p, out matched);
-	//})))),
-	//            new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
-	//{
-	//    p.indentationCount++;
-	//    matched = true;
-	//    return null;
-	//}))));
+
 		private static Rule EndOfLinePreserve =
 			new Sequence(
 				new Action(new Match(),
@@ -4247,7 +4215,6 @@ namespace Meta
 		{
 			pa.indentationCount--;
 			matched = true;
-			//matched = false;
 			return null;
 		});
 		private static void MatchStringLine(Parser parser, StringBuilder text)
@@ -4305,7 +4272,6 @@ namespace Meta
 				new Sequence(
 					new Action(new Match(), FullIndentation),
 					new Action(new Match(), SameIndentation),
-					//new Action(new Match(), Indentation),
 					new Action(new ReferenceAssignment(), StringBeef),
 					new Action(new Match(), StringDedentation)))),
 			new Action(new Match(), new Character(Syntax.@string)));
@@ -4336,36 +4302,7 @@ namespace Meta
 						Syntax.lookupStringForbidden)))));
 
 
-		//public static Rule Map = new Sequence(
-		//        new Action(new Match(), new Optional(new Character(','))),
-		//        new Action(new Match(), new Alternatives(
-		//            StartOfFile,
-		//            new Sequence(
-		//            new Action(new Match(), EndOfLine),
-		//            new Action(new Match(), SmallIndentation)
-		//            ))),
-
-		//            new Action(new ReferenceAssignment(),new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-
-		//            new Sequence(
-		//                new Action(new ReferenceAssignment(),
-		//                    new OneOrMore(new Action(
-		//                    new Merge(),
-		//                    new Sequence(
-		//                        new Action(
-		//                            new Match(), SameIndentation),
-		//                        new Action(
-		//                            new ReferenceAssignment(),
-		//                            Entry))))),
-		//                new Action(new Match(), Dedentation)),
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            })));
+		
 		public static Rule ExpressionData = new DelayedRule(delegate()
 		{
 			return Parser.Expression;
@@ -4430,14 +4367,6 @@ namespace Meta
 			new Action(new Match(), new Optional(new Character(','))),
 			new Action(new Match(),
 				FullIndentation),
-
-			//, new Alternatives(
-			//    StartOfFile,
-			//    new Sequence(
-			//    new Action(new Match(), EndOfLine),
-			//    new Action(new Match(), SmallIndentation)
-			//    ))),
-
 				new Action(new ReferenceAssignment(), new PrePost(
 				delegate(Parser p)
 				{
@@ -4573,7 +4502,6 @@ namespace Meta
 					new Action(new Match(), new Character('.')),
 					new Action(new Match(), FullIndentation),
 					new Action(new Match(), SameIndentation),
-					//new Action(new Match(), Indentation),
 					new Action(new Assignment(1),
 						new Alternatives(
 							ProgramDelayed,
@@ -4589,27 +4517,6 @@ namespace Meta
 
 					new Action(new Match(), new Optional(Dedentation))
 			)));
-		//private static Rule Select = new Sequence(
-		//    new Action(new Assignment(
-		//        CodeKeys.Select),
-		//        new Sequence(
-		//            new Action(new Match(), new Character('.')),
-		//            new Action(new Match(), Indentation),
-		//            new Action(new Assignment(1),
-		//                new Alternatives(
-		//                    ProgramDelayed,
-		//                    LiteralExpression,
-		//                    Root,
-		//                    Search,
-		//                    Call)),
-		//            new Action(new Append(),
-		//                new ZeroOrMore(new Action(new Autokey(), new Sequence(
-		//                    new Action(new Match(), new Optional(EndOfLine)),
-		//                    new Action(new Match(), SameIndentation),
-		//                    new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
-
-		//            new Action(new Match(), new Optional(Dedentation))
-		//    )));
 
 		private static Rule KeysSearch = new Sequence(
 	new Action(
@@ -4901,7 +4808,6 @@ new Assignment(
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
 				bool isStartOfFile = parser.isStartOfFile;
-				//int indentationCount = parser.indentationCount;
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
 				{
@@ -4909,7 +4815,6 @@ new Assignment(
 					parser.line = oldLine;
 					parser.column = oldColumn;
 					parser.isStartOfFile = isStartOfFile;
-					//parser.indentationCount = indentationCount;
 				}
 				else
 				{
