@@ -478,20 +478,31 @@ namespace Meta
 			list.Reverse();
 			return new StrategyMap(list);
 		}
-		public static Map Try(Map tryFunction,Map catchFunction)
+		public static Map Try(Map tryFunction, Map catchFunction)
 		{
-			Map result;
-			Position position = Call.LastArgument;
 			try
 			{
-				return tryFunction.Call(Map.Empty,position).Get();
+				return tryFunction.Call(Map.Empty, tryFunction.Scope).Get();
 			}
 			catch (Exception e)
 			{
-				result = catchFunction.Call(new ObjectMap(e),position).Get();
+				return catchFunction.Call(new ObjectMap(e), catchFunction.Scope).Get();
 			}
-			return result;
 		}
+		//public static Map Try(Map tryFunction,Map catchFunction)
+		//{
+		//    Map result;
+		//    Position position = Call.LastArgument;
+		//    try
+		//    {
+		//        return tryFunction.Call(Map.Empty,position).Get();
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        result = catchFunction.Call(new ObjectMap(e),position).Get();
+		//    }
+		//    return result;
+		//}
 		public static Map With(Map obj, Map values)
 		{
 			foreach (KeyValuePair<Map, Map> entry in values)
