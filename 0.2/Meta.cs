@@ -2921,12 +2921,31 @@ namespace Meta
 		protected override void Set(Map key, Map val)
 		{
 			property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
-			int asdf = 0;
 		}
 		protected override Map CopyData()
 		{
 			return new IndexedProperty(property, obj, type);
 		}
+	}
+
+	public class MethodCache
+	{
+		private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>>();
+		public static Dictionary<Map, MethodInfo> GetMethodData(Type type, BindingFlags bindingFlags)
+	    {
+	        KeyValuePair<Type,BindingFlags> key=new KeyValuePair<Type,BindingFlags>(type,bindingFlags);
+			if (!cache.ContainsKey(key))
+			{
+				Dictionary<Map, MethodInfo>data = new Dictionary<Map, MethodInfo>();
+				foreach (MethodInfo method in type.GetMethods(bindingFlags))
+				{
+					string name = TypeMap.GetMethodName(method);
+					data[name] = method;
+				}
+				cache[key] = data;
+			}
+			return cache[key];
+	    }
 	}
 
 	[Serializable]
@@ -2959,19 +2978,14 @@ namespace Meta
 			}
 			return name;
 		}
-		private Dictionary<Map, Map> data;
-		private Dictionary<Map, Map> Data
+		private Dictionary<Map, MethodInfo> data;
+		private Dictionary<Map, MethodInfo> Data
 		{
 			get
 			{
 				if (data == null)
 				{
-					data = new Dictionary<Map, Map>();
-					foreach (MethodInfo method in this.type.GetMethods(bindingFlags))
-					{
-						string name = GetMethodName(method);
-						data[name] = new Method(method, obj, type);
-					}
+					data = MethodCache.GetMethodData(type, bindingFlags);
 				}
 				return data;
 			}
@@ -3001,7 +3015,7 @@ namespace Meta
 			}
 			else if (Data.ContainsKey(key))
 			{
-				return Data[key];
+				return new Method(Data[key],obj,type);
 			}
 			else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
 			{
@@ -3042,7 +3056,8 @@ namespace Meta
 					}
 					if (result != null)
 					{
-						Data[key] = result;
+						//Data[key] = result;
+						//Data[key] = result;
 					}
 					return result;
 				}
@@ -5324,26 +5339,12 @@ new Assignment(
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			private static string BasicTest
-			{
-				get
-				{
-					return Path.Combine(TestPath, "basicTest.meta");
-				}
-			}
-			private static string LibraryTest
-			{
-				get
-				{
-					return Path.Combine(TestPath, "libraryTest.meta");
-				}
-			}
 			public class Serialization : Test
 			{
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath,@"basicTest.meta")));
+					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
 			public class Basic : Test
@@ -5351,7 +5352,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"),new StrategyMap(1,"first argument",2,"second argument"));
+					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
 				}
 			}
 			public class Library : Test
@@ -5359,7 +5360,15 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"),Map.Empty);
+					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+				}
+			}
+			public class Performance : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
 				}
 			}
 			public static Map Run(string path, Map argument)

@@ -116,13 +116,13 @@
 														key
 	load=,
 		file|,
-			!data=-
+			data:-
 				parseFile
 				file
 			.
-				!tree
+				tree
 				Nodes
-			=-
+			:-
 				getNodes
 				data
 			asdf=-
@@ -130,9 +130,9 @@
 	loadText=,
 		|,
 			.
-				!browser
+				browser
 				DocumentText
-			=-
+			:-
 				printNodes
 				.
 					tree
@@ -173,7 +173,7 @@
 					|+
 						-
 							load
-							"D:\Meta\0.2\Test\relativity.learn"
+							"D:\Meta\0.2\relativity.learn"
 						-
 							.
 								form
