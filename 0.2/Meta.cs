@@ -4236,7 +4236,8 @@ namespace Meta
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			pa.indentationCount--;
-			matched = false;
+			matched = true;
+			//matched = false;
 			return null;
 		});
 		private static void MatchStringLine(Parser parser, StringBuilder text)
@@ -4396,19 +4397,20 @@ namespace Meta
 				parser.defaultKeys.Push(1);
 				if (matched)
 				{
-					map=new OneOrMore(new Action(
-						new Merge(),
-						new Sequence(
-							new Action(
-								new Match(), SameIndentation),
-							new Action(
-								new ReferenceAssignment(),
-								Entry)
-							
-							))).Match(parser, out matched);
+					map=new Sequence(
+						new Action(new ReferenceAssignment(),
+							new OneOrMore(new Action(
+							new Merge(),
+							new Sequence(
+								new Action(
+									new Match(), SameIndentation),
+								new Action(
+									new ReferenceAssignment(),
+									Entry))))),
+						new Action(new Match(),Dedentation)).Match(parser, out matched);
 
-					Dedentation.Match(parser, out matched);
-					matched = true;
+					//Dedentation.Match(parser, out matched);
+					//matched = true;
 				}
 				parser.defaultKeys.Pop();
 			}
