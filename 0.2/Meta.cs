@@ -153,15 +153,15 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
-		private string SpecialString(Position position)
-		{
-			string result="";
-			foreach (Map key in position.Keys)
-			{
-				result += key.ToString();
-			}
-			return result;
-		}
+		//private string SpecialString(Position position)
+		//{
+		//    string result="";
+		//    foreach (Map key in position.Keys)
+		//    {
+		//        result += key.ToString();
+		//    }
+		//    return result;
+		//}
 	}
 	public class Program : Expression
 	{
@@ -704,130 +704,130 @@ namespace Meta
 		}
 	}
 	[Serializable]
-	public class Position
-	{
-		public Position AddCall(Map map)
-		{
-			return new TemporaryPosition(map,this, Map.Empty);
-		}
-		public override bool Equals(object obj)
-		{
-			Position position=(Position)obj;
-			return position.key != null && position.key.Equals(key) && position.parent.Equals(parent);
-		}
-		protected Position()
-		{
-		}
-		private Map key;
-		private Position parent;
+	//public class Position
+	//{
+	//    public Position AddCall(Map map)
+	//    {
+	//        return new TemporaryPosition(map,this, Map.Empty);
+	//    }
+	//    public override bool Equals(object obj)
+	//    {
+	//        Position position=(Position)obj;
+	//        return position.key != null && position.key.Equals(key) && position.parent.Equals(parent);
+	//    }
+	//    protected Position()
+	//    {
+	//    }
+	//    private Map key;
+	//    private Position parent;
 
-		public void Assign(Map key, Map value)
-		{
-			Get()[key] = value;
-		}
-		public virtual void Assign(Map value)
-		{
-			Parent.Assign(key, value);
-		}
-		public Position this[Map key]
-		{
-			get
-			{
-				if (Get().ContainsKey(key))
-				{
-					return new Position(this, key);
-				}
-				else
-				{
-					throw new Exception("Position does not exist "+key.ToString()+" in "+this.ToString());
-				}
-			}
-		}
-		public Position(Position parent, Map key)
-		{
-			this.parent = parent;
-			this.key = key;
-		}
-		public Position Parent
-		{
-			get
-			{
-				return parent;
-			}
-		}
-		public virtual Map Get()
-		{
-			return DetermineMap();
-		}
-		public virtual Map DetermineMap()
-		{
-			Map map = parent.Get();
-			Map result = map[key];
-			if (result == null)
-			{
-				throw new ApplicationException("Position does not exist");
-			}
-			return result;
-		}
-		public List<Map> Keys
-		{
-			get
-			{
-				Position position = this;
-				List<Map> keys = new List<Map>();
-				while (position != null && position.key != null)
-				{
-					keys.Add(position.key);
-					position = position.Parent;
-				}
-				keys.Reverse();
-				return keys;
-			}
-		}
-		public override string ToString()
-		{
-			string text = "";
-			foreach (Map map in Keys)
-			{
-				text += map.ToString();
-			}
-			return text;
-		}
-	}
-	[Serializable]
-	public class TemporaryPosition : Position
-	{
-		public override Map Get()
-		{
-			return map;
-		}
-		private Map map;
-		public TemporaryPosition(Map map,Position parent,Map key):base(parent,key)
-		{
-			this.map = map.Copy();
-			//this.map = map.Copy();
-		}
-		public override void Assign(Map value)
-		{
-			map = value;
-		}
-	}
-	[Serializable]
-	public class RootPosition : Position
-	{
-		public override bool Equals(object obj)
-		{
-			return obj is RootPosition;
-		}
-		public static RootPosition rootPosition=new RootPosition();
-		private RootPosition()
-		{
-		}
-		public override Map Get()
-		{
-			return Gac.gac;
-		}
-	}
+	//    public void Assign(Map key, Map value)
+	//    {
+	//        Get()[key] = value;
+	//    }
+	//    public virtual void Assign(Map value)
+	//    {
+	//        Parent.Assign(key, value);
+	//    }
+	//    public Position this[Map key]
+	//    {
+	//        get
+	//        {
+	//            if (Get().ContainsKey(key))
+	//            {
+	//                return new Position(this, key);
+	//            }
+	//            else
+	//            {
+	//                throw new Exception("Position does not exist "+key.ToString()+" in "+this.ToString());
+	//            }
+	//        }
+	//    }
+	//    public Position(Position parent, Map key)
+	//    {
+	//        this.parent = parent;
+	//        this.key = key;
+	//    }
+	//    public Position Parent
+	//    {
+	//        get
+	//        {
+	//            return parent;
+	//        }
+	//    }
+	//    public virtual Map Get()
+	//    {
+	//        return DetermineMap();
+	//    }
+	//    public virtual Map DetermineMap()
+	//    {
+	//        Map map = parent.Get();
+	//        Map result = map[key];
+	//        if (result == null)
+	//        {
+	//            throw new ApplicationException("Position does not exist");
+	//        }
+	//        return result;
+	//    }
+	//    public List<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            Position position = this;
+	//            List<Map> keys = new List<Map>();
+	//            while (position != null && position.key != null)
+	//            {
+	//                keys.Add(position.key);
+	//                position = position.Parent;
+	//            }
+	//            keys.Reverse();
+	//            return keys;
+	//        }
+	//    }
+	//    public override string ToString()
+	//    {
+	//        string text = "";
+	//        foreach (Map map in Keys)
+	//        {
+	//            text += map.ToString();
+	//        }
+	//        return text;
+	//    }
+	//}
+	//[Serializable]
+	//public class TemporaryPosition : Position
+	//{
+	//    public override Map Get()
+	//    {
+	//        return map;
+	//    }
+	//    private Map map;
+	//    public TemporaryPosition(Map map,Position parent,Map key):base(parent,key)
+	//    {
+	//        this.map = map.Copy();
+	//        //this.map = map.Copy();
+	//    }
+	//    public override void Assign(Map value)
+	//    {
+	//        map = value;
+	//    }
+	//}
+	//[Serializable]
+	//public class RootPosition : Position
+	//{
+	//    public override bool Equals(object obj)
+	//    {
+	//        return obj is RootPosition;
+	//    }
+	//    public static RootPosition rootPosition=new RootPosition();
+	//    private RootPosition()
+	//    {
+	//    }
+	//    public override Map Get()
+	//    {
+	//        return Gac.gac;
+	//    }
+	//}
 	public class KeyChangedEventArgs : EventArgs
 	{
 		public KeyChangedEventArgs(Map key)
@@ -1849,7 +1849,7 @@ namespace Meta
 	[Serializable]
 	public abstract class MethodImplementation : Map
 	{
-		public static Position currentPosition;
+		//public static Position currentPosition;
 		protected MethodBase method;
 		protected object obj;
 		protected Type type;
@@ -1994,7 +1994,7 @@ namespace Meta
 		//    }
 		//}
 	}
-	public delegate Position Partial(Map argument);
+	//public delegate Position Partial(Map argument);
 	[Serializable]
 	public class Method : MethodImplementation
 	{
@@ -5704,14 +5704,24 @@ new Assignment(
 	}
 	public class ExceptionLog
 	{
-		public ExceptionLog(Extent extent, Position position)
+		public ExceptionLog(Extent extent)
 		{
 			this.extent = extent;
-			this.position = position;
+			//this.position = position;
 		}
 		public Extent extent;
-		public Position position;
+		//public Position position;
 	}
+	//public class ExceptionLog
+	//{
+	//    public ExceptionLog(Extent extent, Position position)
+	//    {
+	//        this.extent = extent;
+	//        this.position = position;
+	//    }
+	//    public Extent extent;
+	//    public Position position;
+	//}
 	public class MetaException : Exception
 	{
 		private string message;
@@ -5738,7 +5748,8 @@ new Assignment(
 			}
 			foreach (ExceptionLog log in invocationList)
 			{
-				message += "\n" + log.position.ToString() + "   " + GetExtentText(log.extent);
+				message += "\n" + GetExtentText(log.extent);
+				//message += "\n" + log.position.ToString() + "   " + GetExtentText(log.extent);
 			}
 
 			return message;
