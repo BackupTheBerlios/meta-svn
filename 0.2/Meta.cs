@@ -4377,6 +4377,7 @@ namespace Meta
 	//    }
 	//    return map;
 	//});
+
 		public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			new Sequence(
@@ -4397,51 +4398,30 @@ namespace Meta
 				{
 					while (true)
 					{
-						Map entry=new Sequence(
-							new Action(
-								new Match(),SameIndentation),
-							new Action(
-								new ReferenceAssignment(),
-								Entry)).Match(parser,out matched);
-							if (matched)
+						map=new OneOrMore(new Action(
+							new CustomProduction(
+							new CustomActionDelegate(delegate(Parser p,Map m,ref Map result)
 							{
-								map = Library.Merge(map, entry);
-							}
-							else
-							{
-								Dedentation.Match(parser, out matched);
-								matched = true;
-								break;
-							}
-						//}
-						//else
-						//{
-						//    Dedentation.Match(parser, out matched);
-
-						//    matched = true;
-						//    break;
-						//}
-						//SameIndentation.Match(parser, out matched);
+								result=Library.Merge(result,m);
+								return result;
+							})),
+							new Sequence(
+								new Action(
+									new Match(), SameIndentation),
+								new Action(
+									new ReferenceAssignment(),
+									Entry)
+								
+								))).Match(parser, out matched);
 						//if (matched)
 						//{
-						//    Map entry = Entry.Match(parser, out matched);
-						//    if (matched)
-						//    {
-						//        map = Library.Merge(map, entry);
-						//    }
-						//    else
-						//    {
-						//        Dedentation.Match(parser, out matched);
-						//        matched = true;
-						//        break;
-						//    }
+						//    map = Library.Merge(map, entry);
 						//}
 						//else
 						//{
-						//    Dedentation.Match(parser, out matched);
-
-						//    matched = true;
-						//    break;
+							Dedentation.Match(parser, out matched);
+							matched = true;
+							break;
 						//}
 					}
 				}
@@ -4449,6 +4429,64 @@ namespace Meta
 			}
 			return map;
 		});
+		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    new Sequence(
+		//        new Action(new Match(), new Optional(new Character(','))),
+		//        new Action(new Match(), new Alternatives(
+		//            StartOfFile,
+		//            new Sequence(
+		//            new Action(new Match(), EndOfLine),
+		//            new Action(new Match(), SmallIndentation)
+		//            )))
+		//    ).Match(parser, out matched);
+
+		//    Map map = new StrategyMap();
+		//    if (matched)
+		//    {
+		//        parser.defaultKeys.Push(1);
+		//        if (matched)
+		//        {
+		//            while (true)
+		//            {
+		//                Map entry=new Sequence(
+		//                    new Action(
+		//                        new Match(),SameIndentation),
+		//                    new Action(
+		//                        new ReferenceAssignment(),
+		//                        Entry)).Match(parser,out matched);
+		//                    if (matched)
+		//                    {
+		//                        map = Library.Merge(map, entry);
+		//                    }
+		//                    else
+		//                    {
+		//                        Dedentation.Match(parser, out matched);
+		//                        matched = true;
+		//                        break;
+		//                    }
+		//                //Map entry=new Sequence(
+		//                //    new Action(
+		//                //        new Match(),SameIndentation),
+		//                //    new Action(
+		//                //        new ReferenceAssignment(),
+		//                //        Entry)).Match(parser,out matched);
+		//                //    if (matched)
+		//                //    {
+		//                //        map = Library.Merge(map, entry);
+		//                //    }
+		//                //    else
+		//                //    {
+		//                //        Dedentation.Match(parser, out matched);
+		//                //        matched = true;
+		//                //        break;
+		//                //    }
+		//            }
+		//        }
+		//        parser.defaultKeys.Pop();
+		//    }
+		//    return map;
+		//});
 		//public static Rule Map = new CustomRule(delegate(Parser parser, out bool matched)
 		//{
 		//    new Sequence(
