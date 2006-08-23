@@ -107,14 +107,6 @@ namespace Meta
 			}
 			this.parameterName = parameterName;
 		}
-		private static Stack<Position> arguments = new Stack<Position>();
-		public static Position LastArgument
-		{
-			get
-			{
-				return arguments.Peek();
-			}
-		}
 		public static Dictionary<string, double> calls = new Dictionary<string, double>();
 		public override Position Evaluate(Position current)
 		{
@@ -130,9 +122,7 @@ namespace Meta
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Position arg = expressions[i].GetExpression().Evaluate(current);
-					arguments.Push(arg);
 					callable = callable.Call(arg.Get());
-					arguments.Pop();
 				}
 				if (Interpreter.profiling)
 				{
@@ -440,38 +430,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public static Map Case(Map val,Map cases)
-		//{
-		//    Position pos=Call.LastArgument;
-		//    Map result = null;
-		//    foreach (KeyValuePair<Map,Map> pair in cases)
-		//    {
-		//        if (pair.Key.Call(val, pos).Get().GetBoolean())
-		//        {
-		//            result=pair.Value.Call(val, pos).Get();
-		//            break;
-		//        }
-		//    }
-		//    return result;
-		//}
-		//public static Map Sum(Map arg, Map map)
-		//{
-		//    Position argument = Call.LastArgument;
-		//    if (arg.ArrayCount > 0)
-		//    {
-		//        Map result = arg.Array[0].Copy();
-		//        foreach (Map m in arg.Array.GetRange(1, arg.Array.Count - 1))
-		//        {
-		//            Position firstCall = argument.Call(result);
-		//            result = firstCall.Call(m).Get();
-		//        }
-		//        return result;
-		//    }
-		//    else
-		//    {
-		//        return Map.Empty;
-		//    }
-		//}
 		public static Map Reverse(Map arg)
 		{
 			List<Map> list = new List<Map>(arg.Array);
@@ -489,20 +447,6 @@ namespace Meta
 				return catchFunction.Call(new ObjectMap(e), catchFunction.Scope).Get();
 			}
 		}
-		//public static Map Try(Map tryFunction,Map catchFunction)
-		//{
-		//    Map result;
-		//    Position position = Call.LastArgument;
-		//    try
-		//    {
-		//        return tryFunction.Call(Map.Empty,position).Get();
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        result = catchFunction.Call(new ObjectMap(e),position).Get();
-		//    }
-		//    return result;
-		//}
 		public static Map With(Map obj, Map values)
 		{
 			foreach (KeyValuePair<Map, Map> entry in values)
