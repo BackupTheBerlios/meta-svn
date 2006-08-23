@@ -122,7 +122,8 @@ namespace Meta
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Position arg = expressions[i].GetExpression().Evaluate(current);
-					callable = callable.Call(arg.Get());
+					callable = callable.Get().Call(arg.Get(),callable);
+					//callable = callable.Call(arg.Get());
 				}
 				if (Interpreter.profiling)
 				{
@@ -566,10 +567,10 @@ namespace Meta
 		{
 			return new TemporaryPosition(map,this, Map.Empty);
 		}
-		public Position Call(Map argument)
-		{
-			return Get().Call(argument, this);
-		}
+		//public Position Call(Map argument)
+		//{
+		//    return Get().Call(argument, this);
+		//}
 		public override bool Equals(object obj)
 		{
 			Position position=(Position)obj;
@@ -1356,12 +1357,9 @@ namespace Meta
 				il.Emit(OpCodes.Castclass, invokeMethod.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			// probably wrong
-			//Position position = code.Scope.AddCall(code);
 			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invokeMethod.ReturnType));
 			return del;
 		}
-		// rename!!
 		public class MetaDelegate
 		{
 			private Map callable;
@@ -1385,177 +1383,177 @@ namespace Meta
 		public static object TryToDotNet(Map meta, Type target,out bool wasConverted)
 		{
 			object dotNet = null;
-				switch (Type.GetTypeCode(target))
-				{
-					case TypeCode.Boolean:
-						if (meta.IsBoolean)
-						{
-							dotNet = meta.GetBoolean();
-						}
-						break;
-					case TypeCode.Byte:
-						if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue))
-						{
-							dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
-						}
-						break;
-					case TypeCode.Char:
-						if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue))
-						{
-							dotNet = Convert.ToChar(meta.GetNumber().GetInt32());
-						}
-						break;
-					case TypeCode.DateTime:
-						dotNet = null;
-						break;
-					case TypeCode.DBNull:
-						dotNet = null;
-						break;
-					case TypeCode.Decimal:
-						if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue))
-						{
-							dotNet = (decimal)(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.Double:
-						if (IsIntegerInRange(meta, double.MinValue, double.MaxValue))
-						{
-							// fix this
-							dotNet = (double)(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.Int16:
-						if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue))
-						{
-							dotNet = Convert.ToInt16(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.Int32:
-						if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue))
-						{
-							dotNet = meta.GetNumber().GetInt32();
-						}
-						break;
-					case TypeCode.Int64:
-						if (IsIntegerInRange(meta, new Number(Int64.MinValue), new Number(Int64.MaxValue)))
-						{
-							dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.Object:
-						FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+			switch (Type.GetTypeCode(target))
+			{
+				case TypeCode.Boolean:
+					if (meta.IsBoolean)
+					{
+						dotNet = meta.GetBoolean();
+					}
+					break;
+				case TypeCode.Byte:
+					if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue))
+					{
+						dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
+					}
+					break;
+				case TypeCode.Char:
+					if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue))
+					{
+						dotNet = Convert.ToChar(meta.GetNumber().GetInt32());
+					}
+					break;
+				case TypeCode.DateTime:
+					dotNet = null;
+					break;
+				case TypeCode.DBNull:
+					dotNet = null;
+					break;
+				case TypeCode.Decimal:
+					if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue))
+					{
+						dotNet = (decimal)(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.Double:
+					if (IsIntegerInRange(meta, double.MinValue, double.MaxValue))
+					{
+						// fix this
+						dotNet = (double)(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.Int16:
+					if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue))
+					{
+						dotNet = Convert.ToInt16(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.Int32:
+					if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue))
+					{
+						dotNet = meta.GetNumber().GetInt32();
+					}
+					break;
+				case TypeCode.Int64:
+					if (IsIntegerInRange(meta, new Number(Int64.MinValue), new Number(Int64.MaxValue)))
+					{
+						dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.Object:
+					FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
 
-						if (target == typeof(Number) && meta.IsNumber)
+					if (target == typeof(Number) && meta.IsNumber)
+					{
+						dotNet = meta.GetNumber();
+					}
+					else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
+					{
+						dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
+						meta = Library.Join(meta[1], meta[2]);
+						int index = 1;
+						foreach (FieldInfo field in fields)
 						{
-							dotNet = meta.GetNumber();
+							field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+							index++;
 						}
-						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
-						{
-							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-							meta = Library.Join(meta[1], meta[2]);
-							int index = 1;
-							foreach (FieldInfo field in fields)
-							{
-								field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
-								index++;
-							}
 
-						}
-						else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
+					}
+					else if (target!=typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
+					{
+						dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
+						int index = 1;
+						foreach (FieldInfo field in fields)
 						{
-							dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-							int index = 1;
-							foreach (FieldInfo field in fields)
-							{
-								field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
-								index++;
-							}
+							field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
+							index++;
+						}
 
-						}
-						else if (target == typeof(Type) && meta is TypeMap)
+					}
+					else if (target == typeof(Type) && meta is TypeMap)
+					{
+						dotNet = ((TypeMap)meta).Type;
+					}
+					else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+							&& meta.ContainsKey(CodeKeys.Function))
+					{
+						dotNet = CreateDelegateFromCode(target, meta);
+					}
+					else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
+					{
+						dotNet = ((ObjectMap)meta).Object;
+					}
+					else if (target.IsAssignableFrom(meta.GetType()))
+					{
+						dotNet = meta;
+					}
+					// maybe remove
+					else if (target.IsArray)
+					{
+						string[] asdf;
+						ArrayList list = new ArrayList();
+						bool converted=true;
+						Type elementType=target.GetElementType();
+						foreach (Map m in meta.Array)
 						{
-							dotNet = ((TypeMap)meta).Type;
-						}
-						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-								&& meta.ContainsKey(CodeKeys.Function))
-						{
-							dotNet = CreateDelegateFromCode(target, meta);
-						}
-						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
-						{
-							dotNet = ((ObjectMap)meta).Object;
-						}
-						else if (target.IsAssignableFrom(meta.GetType()))
-						{
-							dotNet = meta;
-						}
-						// maybe remove
-						else if (target.IsArray)
-						{
-							string[] asdf;
-							ArrayList list = new ArrayList();
-							bool converted=true;
-							Type elementType=target.GetElementType();
-							foreach (Map m in meta.Array)
+							bool c;
+							object o = Transform.TryToDotNet(m, elementType,out c);
+							if (c)
 							{
-								bool c;
-								object o = Transform.TryToDotNet(m, elementType,out c);
-								if (c)
-								{
-									list.Add(o);
-								}
-								else
-								{
-									converted=false;
-									break;
-								}
+								list.Add(o);
 							}
-							if (converted)
+							else
 							{
-								dotNet=list.ToArray(elementType);
+								converted=false;
+								break;
 							}
 						}
-						break;
-					case TypeCode.SByte:
-						if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))
+						if (converted)
 						{
-							dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());
+							dotNet=list.ToArray(elementType);
 						}
-						break;
-					case TypeCode.Single:
-						if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue))
-						{
-							// wrong
-							dotNet = (float)meta.GetNumber().GetInt64();
-						}
-						break;
-					case TypeCode.String:
-						if (meta.IsString)
-						{
-							dotNet = meta.GetString();
-						}
-						break;
-					case TypeCode.UInt16:
-						if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue))
-						{
-							dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.UInt32:
-						if (IsIntegerInRange(meta, new Number(UInt32.MinValue), new Number(UInt32.MaxValue)))
-						{
-							dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());
-						}
-						break;
-					case TypeCode.UInt64:
-						if (IsIntegerInRange(meta, new Number(UInt64.MinValue), new Number(UInt64.MaxValue)))
-						{
-							dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());
-						}
-						break;
-					default:
-						throw new ApplicationException("not implemented");
-				}
+					}
+					break;
+				case TypeCode.SByte:
+					if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))
+					{
+						dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.Single:
+					if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue))
+					{
+						// wrong
+						dotNet = (float)meta.GetNumber().GetInt64();
+					}
+					break;
+				case TypeCode.String:
+					if (meta.IsString)
+					{
+						dotNet = meta.GetString();
+					}
+					break;
+				case TypeCode.UInt16:
+					if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue))
+					{
+						dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.UInt32:
+					if (IsIntegerInRange(meta, new Number(UInt32.MinValue), new Number(UInt32.MaxValue)))
+					{
+						dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());
+					}
+					break;
+				case TypeCode.UInt64:
+					if (IsIntegerInRange(meta, new Number(UInt64.MinValue), new Number(UInt64.MaxValue)))
+					{
+						dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());
+					}
+					break;
+				default:
+					throw new ApplicationException("not implemented");
+			}
 			//}
 			if (dotNet == null)
 			{
