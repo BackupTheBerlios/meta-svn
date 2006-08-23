@@ -487,9 +487,9 @@ namespace Meta
 		{
 			try
 			{
-				UseConsole();
-				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-				return;
+				//UseConsole();
+				//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+				//return;
 				switch (args[0])
 				{
 					case "-test":
@@ -2282,7 +2282,8 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new CloneStrategy(this));
+			return new StrategyMap(new StringStrategy(text));
+			//return new StrategyMap(new CloneStrategy(this));
 		}
 		public override ICollection<Map> Keys
 		{
@@ -2307,10 +2308,10 @@ namespace Meta
 			{
 				return EqualArrayStrategy((ArrayStrategy)obj);
 			}
-			else if (obj is CloneStrategy)
-			{
-				return ((CloneStrategy)obj).EqualStrategy(this);
-			}
+			//else if (obj is CloneStrategy)
+			//{
+			//    return ((CloneStrategy)obj).EqualStrategy(this);
+			//}
 			else
 			{
 				return EqualDefault(obj);
@@ -2457,10 +2458,10 @@ namespace Meta
 				return keys;
 			}
 		}
-		public override Map CopyData()
-		{
-			return new StrategyMap(new CloneStrategy(this));
-		}
+		//public override Map CopyData()
+		//{
+		//    //return new StrategyMap(new CloneStrategy(this));
+		//}
 	}
 	[Serializable]
 	public class DictionaryStrategy:MapStrategy
@@ -2525,97 +2526,97 @@ namespace Meta
 				return dictionary.Count;
 			}
 		}
-		public override Map CopyData()
-		{
-			return new StrategyMap(new CloneStrategy(this));
-		}
+		//public override Map CopyData()
+		//{
+		//    return new StrategyMap(new CloneStrategy(this));
+		//}
 	}
-	[Serializable]
-	public class CloneStrategy : MapStrategy
-	{
-		public override int GetArrayCount()
-		{
-			return original.GetArrayCount();
-		}
-		public override void Remove(Map key,StrategyMap map)
-		{
-			Panic(new DictionaryStrategy(),map);
-			map.Remove(key);
-		}
-		private MapStrategy original;
-		public CloneStrategy(MapStrategy original)
-		{
-			this.original = original;
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				return original.Array;
-			}
-		}
-		public override bool ContainsKey(Map key)
-		{
-			return original.ContainsKey(key);
-		}
-		public override int Count
-		{
-			get
-			{
-				return original.Count;
-			}
-		}
-		public override Map CopyData()
-		{
-			MapStrategy clone = new CloneStrategy(this.original);
-			return new StrategyMap(clone);
-		}
-		public override bool EqualStrategy(MapStrategy obj)
-		{
-			return obj.EqualStrategy(original);
-		}
-		public override int GetHashCode()
-		{
-			return original.GetHashCode();
-		}
-		public override Number GetNumber()
-		{
-			return original.GetNumber();
-		}
-		public override string GetString()
-		{
-			return original.GetString();
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return original.IsNumber;
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return original.IsString;
-			}
-		}
-		public override ICollection<Map> Keys
-		{
-			get
-			{
-				return original.Keys;
-			}
-		}
-		public override Map Get(Map key)
-		{
-			return original.Get(key);
-		}
-		public override void Set(Map key, Map value,StrategyMap map)
-		{
-			Panic(key, value,map);
-		}
-	}
+	//[Serializable]
+	//public class CloneStrategy : MapStrategy
+	//{
+	//    public override int GetArrayCount()
+	//    {
+	//        return original.GetArrayCount();
+	//    }
+	//    public override void Remove(Map key,StrategyMap map)
+	//    {
+	//        Panic(new DictionaryStrategy(),map);
+	//        map.Remove(key);
+	//    }
+	//    private MapStrategy original;
+	//    public CloneStrategy(MapStrategy original)
+	//    {
+	//        this.original = original;
+	//    }
+	//    public override List<Map> Array
+	//    {
+	//        get
+	//        {
+	//            return original.Array;
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key)
+	//    {
+	//        return original.ContainsKey(key);
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return original.Count;
+	//        }
+	//    }
+	//    public override Map CopyData()
+	//    {
+	//        MapStrategy clone = new CloneStrategy(this.original);
+	//        return new StrategyMap(clone);
+	//    }
+	//    public override bool EqualStrategy(MapStrategy obj)
+	//    {
+	//        return obj.EqualStrategy(original);
+	//    }
+	//    public override int GetHashCode()
+	//    {
+	//        return original.GetHashCode();
+	//    }
+	//    public override Number GetNumber()
+	//    {
+	//        return original.GetNumber();
+	//    }
+	//    public override string GetString()
+	//    {
+	//        return original.GetString();
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return original.IsNumber;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return original.IsString;
+	//        }
+	//    }
+	//    public override ICollection<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            return original.Keys;
+	//        }
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        return original.Get(key);
+	//    }
+	//    public override void Set(Map key, Map value,StrategyMap map)
+	//    {
+	//        Panic(key, value,map);
+	//    }
+	//}
 
 	[Serializable]
 	public abstract class MapStrategy
@@ -2634,7 +2635,17 @@ namespace Meta
 		}
 
 		public abstract int GetArrayCount();
-		public abstract Map CopyData();
+		public virtual Map CopyData()
+		{
+			Map map = new StrategyMap();
+			foreach (Map key in Keys)
+			{
+				map[key] = this.Get(key).Copy();
+			}
+			return map;
+		}
+
+		//public abstract Map CopyData();
 
 		// refactor
 		public void Panic(MapStrategy newStrategy,StrategyMap map)
