@@ -1357,30 +1357,16 @@ namespace Meta
 				il.Emit(OpCodes.Ret);
 			}
 			// probably wrong
-			Position position = code.Scope.AddCall(code);
-			//Position position = MethodImplementation.currentPosition.AddCall(code);
-			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(position, invokeMethod.ReturnType));
+			//Position position = code.Scope.AddCall(code);
+			Delegate del = (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invokeMethod.ReturnType));
 			return del;
 		}
-		//public class EventHandlerContainer
-		//{
-		//    private Map callable;
-		//    public EventHandlerContainer(Map callable)
-		//    {
-		//        this.callable = callable;
-		//    }
-		//    public Map Raise(Map argument)
-		//    {
-		//        // not really accurate, should keep its own scope in callable, maybe
-		//        return callable.Call(argument,MethodImplementation.currentPosition).Get();
-		//    }
-		//}
 		// rename!!
 		public class MetaDelegate
 		{
-			private Position callable;
+			private Map callable;
 			private Type returnType;
-			public MetaDelegate(Position callable, Type returnType)
+			public MetaDelegate(Map callable, Type returnType)
 			{
 				this.callable = callable;
 				this.returnType = returnType;
@@ -1388,12 +1374,12 @@ namespace Meta
 			public object Call(object[] arguments)
 			{
 				Map arg = new StrategyMap();
-				Position pos = this.callable;
+				Map pos = this.callable;
 				foreach (object argument in arguments)
 				{
-					pos=pos.Call(Transform.ToSimpleMeta(argument));
+					pos = pos.Call(Transform.ToSimpleMeta(argument),pos.Scope).Get();
 				}
-				return Meta.Transform.ToDotNet(pos.Get(), this.returnType);
+				return Meta.Transform.ToDotNet(pos, this.returnType);
 			}
 		}
 		public static object TryToDotNet(Map meta, Type target,out bool wasConverted)
