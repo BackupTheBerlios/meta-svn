@@ -109,6 +109,7 @@
     <None Include="libDesign.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
+    <None Include="relativity.learn" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
