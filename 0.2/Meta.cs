@@ -675,11 +675,11 @@ namespace Meta
 			}
 		}
 		private Map code;
-		private List<StatementBase> statements;
+		private StatementBase[] statements;
 		public Program(Map code)
 		{
 			this.code = code;
-			statements=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();}));
+			statements=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
 		}
 		public override Map EvaluateImplementation(Map parent)
 		{
@@ -690,6 +690,38 @@ namespace Meta
 				statement.Assign(context);
 			}
 			return context;
+		}
+	}
+	public class Search : Expression
+	{
+		public Expression Key
+		{
+			get
+			{
+				return expression.GetExpression();
+			}
+		}
+		private Map expression;
+		public Search(Map keyExpression)
+		{
+			this.expression = keyExpression;
+		}
+		public override Map EvaluateImplementation(Map context)
+		{
+			Map key = expression.GetExpression().Evaluate(context);
+			Map selected = context;
+			while (!selected.ContainsKey(key))
+			{
+				if (selected.Scope != null)
+				{
+					selected = selected.Scope;
+				}
+				else
+				{
+					throw new KeyNotFound(key, expression.Extent, null);
+				}
+			}
+			return selected[key].Copy();
 		}
 	}
 	public class Literal : Expression
@@ -721,31 +753,6 @@ namespace Meta
 			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
 			il.Emit(OpCodes.Ret);
 		}
-		//public override void Emit(ILGenerator il, Expression expression)
-		//{
-		//    expression.literals.Add(literal);
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literals"));
-		//    il.Emit(OpCodes.Ldc_I4, expression.literals.Count-1);
-		//    il.Emit(OpCodes.Ldelem,typeof(Map));
-		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
-		//    il.Emit(OpCodes.Ret);
-		//}
-		//public override void Emit(ILGenerator il, Expression expression)
-		//{
-		//    expression.literals.Add(literal);
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
-		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
-		//    il.Emit(OpCodes.Ret);
-		//}
-		//public override void Emit(ILGenerator il,Expression expression)
-		//{
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
-		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
-		//    il.Emit(OpCodes.Ret);
-		//}
 	}
 	public class Root : Expression
 	{
@@ -759,46 +766,46 @@ namespace Meta
 			il.Emit(OpCodes.Ret);
 		}
 	}
-	public class Search : Expression
-	{
-		public Expression Key
-		{
-			get
-			{
-				return keyExpression.GetExpression();
-			}
-		}
-		private Map keyExpression;
-		public Search(Map keyExpression)
-		{
-			this.keyExpression = keyExpression;
-		}
-		public override Map EvaluateImplementation(Map context)
-		{
-			Map key = keyExpression.GetExpression().Evaluate(context);
-			Map selection = context;
-			while (!selection.ContainsKey(key))
-			{
-				if (selection.Scope != null)
-				{
-					selection = selection.Scope;
-				}
-				else
-				{
-					selection = null;
-					break;
-				}
-			}
-			if (selection == null)
-			{
-				throw new KeyNotFound(key, keyExpression.Extent, null);
-			}
-			else
-			{
-				return selection[key].Copy();
-			}
-		}
-	}
+	//public class Search : Expression
+	//{
+	//    public Expression Key
+	//    {
+	//        get
+	//        {
+	//            return keyExpression.GetExpression();
+	//        }
+	//    }
+	//    private Map keyExpression;
+	//    public Search(Map keyExpression)
+	//    {
+	//        this.keyExpression = keyExpression;
+	//    }
+	//    public override Map EvaluateImplementation(Map context)
+	//    {
+	//        Map key = keyExpression.GetExpression().Evaluate(context);
+	//        Map selection = context;
+	//        while (!selection.ContainsKey(key))
+	//        {
+	//            if (selection.Scope != null)
+	//            {
+	//                selection = selection.Scope;
+	//            }
+	//            else
+	//            {
+	//                selection = null;
+	//                break;
+	//            }
+	//        }
+	//        if (selection == null)
+	//        {
+	//            throw new KeyNotFound(key, keyExpression.Extent, null);
+	//        }
+	//        else
+	//        {
+	//            return selection[key].Copy();
+	//        }
+	//    }
+	//}
 	public class Select : Expression
 	{
 		private List<Map> subselects;
