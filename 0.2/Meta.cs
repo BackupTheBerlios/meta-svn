@@ -1562,10 +1562,6 @@ namespace Meta
 			}
 			return result;
 		}
-		//public Method(MethodBase method, object obj, Type type)
-		//    : this(method, obj, type, new Dictionary<Map, Map>())
-		//{
-		//}
 		public Method(MethodBase method, object obj, Type type, Dictionary<Map, Map> overloads)
 			: this(method, obj, type)
 		{
@@ -1619,10 +1615,6 @@ namespace Meta
 		{
 			return DecideCall(argument, new List<object>());
 		}
-		//public override Map Call(Map argument)
-		//{
-		//    return DecideCall(argument, new List<object>());
-		//}
 		private Map DecideCall(Map argument, List<object> oldArguments)
 		{
 			List<object> arguments = new List<object>(oldArguments);
@@ -1675,110 +1667,6 @@ namespace Meta
 			}
 		}
 	}
-	//[Serializable]
-	//public class Method : MethodImplementation
-	//{
-	//    public override int GetArrayCount()
-	//    {
-	//        return 0;
-	//    }
-	//    public override void Remove(Map key, StrategyMap map)
-	//    {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override bool ContainsKey(Map key)
-	//    {
-	//        return overloads.ContainsKey(key);
-	//    }
-	//    public override ICollection<Map> Keys
-	//    {
-	//        get {
-	//            return overloads.Keys;
-	//        }
-	//    }
-	//    public override void Set(Map key, Map val, StrategyMap parent)
-	//    {
-	//        overloads[key] = val;
-	//    }
-	//    private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
-	//    public override Map Get(Map key)
-	//    {
-	//        Map value;
-	//        overloads.TryGetValue(key,out value);
-	//        return value;
-	//    }
-	//    public static Map MethodData(string name, object obj, Type type)
-	//    {
-	//        Map map = new StrategyMap();
-	//        if (name == ".ctor" && type.Name=="Point")
-	//        {
-	//        }
-	//        List<MethodBase> members = new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
-	//        members.Sort(new Comparison<MethodBase>(delegate(MethodBase a, MethodBase b)
-	//        {
-	//            return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
-	//        }));
-	//        Map result = new StrategyMap();
-	//        foreach (MethodBase methodBase in members)
-	//        {
-	//            Map current = result;
-	//            ParameterInfo[] parameters = methodBase.GetParameters();
-	//            Map method = new StrategyMap(new Method(methodBase, obj, type));
-	//            if (parameters.Length == 0)
-	//            {
-	//                result = method;
-	//            }
-	//            else
-	//            {
-	//                for (int i = 0; i < parameters.Length; i++)
-	//                {
-	//                    Map typeMap = new TypeMap(parameters[i].ParameterType);
-	//                    if (i == parameters.Length - 1)
-	//                    {
-	//                        current[typeMap] = method;
-	//                    }
-	//                    else
-	//                    {
-	//                        if (!current.ContainsKey(typeMap))
-	//                        {
-	//                            current[typeMap] = new StrategyMap();
-	//                        }
-	//                        else
-	//                        {
-	//                        }
-	//                        current = current[typeMap];
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return result;
-	//    }
-	//    public Method(MethodBase method, object obj, Type type)
-	//        : this(method, obj, type,new Dictionary<Map,Map>())
-	//    {
-	//    }
-	//    public Method(MethodBase method, object obj, Type type,Dictionary<Map,Map> overloads)
-	//        : base(method, obj, type)
-	//    {
-	//        this.overloads = new Dictionary<Map, Map>(overloads);
-	//    }
-	//    private static BindingFlags GetBindingFlags(object obj, string name)
-	//    {
-	//        if (name == ".ctor" || obj != null)
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Instance;
-	//        }
-	//        else
-	//        {
-	//            return BindingFlags.Public | BindingFlags.Static;
-	//        }
-	//    }
-
-	//    public override Map CopyData()
-	//    {
-	//        return new StrategyMap(new Method(method, obj, type, overloads));
-	//    }
-	//}
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
