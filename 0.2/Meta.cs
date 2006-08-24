@@ -290,7 +290,8 @@ namespace Meta
 			}
 			else
 			{
-				return selection[key];
+				return selection[key].Copy();
+				//return selection[key];
 				//Position lastEvaluated = new Position(selection, key);
 				//return selection.AddCall(lastEvaluated.Get());
 			}
@@ -352,7 +353,8 @@ namespace Meta
 			{
 				selected = selected[subselects[i].GetExpression().Evaluate(context)];
 			}
-			return selected;
+			return selected.Copy();
+			//return selected;
 		}
 		//public override Map Evaluate(Map context)
 		//{
@@ -394,18 +396,19 @@ namespace Meta
 		{
 			Map value = expression.GetExpression().Evaluate(context);
 
-			if (value.Scope != null)
-			{
-				// completely unlogical, actually
-				if (context.Scope != null)
-				{
-					value.Scope = context.Scope;
-				}
-				else
-				{
-					//value.Scope = context.Parent;
-				}
-			}
+			// remove, this is stupid
+			//if (value.Scope != null)
+			//{
+			//    // completely unlogical, actually
+			//    if (context.Scope != null)
+			//    {
+			//        value.Scope = context.Scope;
+			//    }
+			//    else
+			//    {
+			//        //value.Scope = context.Parent;
+			//    }
+			//}
 			context.Nuke(value);
 		}
 		//public override void Assign(Map context)
@@ -1214,7 +1217,8 @@ namespace Meta
 			if (ContainsKey(CodeKeys.Function))
 			{
 				Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
-				argumentScope.Scope = this.Scope;
+				argumentScope.Scope = this;
+				//argumentScope.Scope = this.Scope;
 				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
 				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
 			}

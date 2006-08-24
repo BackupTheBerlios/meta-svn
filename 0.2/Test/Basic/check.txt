@@ -1918,8 +1918,72 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"staticEventResult"
-	Value (ObjectMap):
-		Meta.Test.TestClasses.TestClass
+	Value (StrategyMap):
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"CallInstanceEvent_Object"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"add_instanceEvent_IntEvent"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"remove_instanceEvent_IntEvent"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"GetType"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"ToString"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"Equals_Object"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"GetHashCode"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"instanceEvent"
+			Value (Method):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"doubleValue"
+			Value (StrategyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"floatValue"
+			Value (StrategyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"decimalValue"
+			Value (StrategyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"NestedClass"
+			Value (TypeMap):
+				Meta.Test.TestClasses.TestClass+NestedClass
+		Entry (KeyValuePair`2)
+			Key (StrategyMap):
+				"TestDelegate"
+			Value (TypeMap):
+				Meta.Test.TestClasses.TestClass+TestDelegate
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"instanceEventChanged"
