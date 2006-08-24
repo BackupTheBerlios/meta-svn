@@ -372,8 +372,9 @@ namespace Meta
 		public static Map EnumerableToArray(Map map)
 		{
 			Map result = new StrategyMap();
-			foreach (object entry in (IEnumerable)((ObjectMap)map).Object)
-			{
+			foreach (object entry in (IEnumerable)(((ObjectMap)((StrategyMap)map).Strategy)).Object)
+				//foreach (object entry in (IEnumerable)((ObjectMap)map).Object)
+				{
 				result.Append(Transform.ToMeta(entry));
 			}
 			return result;
@@ -392,7 +393,8 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				return catchFunction.Call(new ObjectMap(e));
+				return catchFunction.Call(new StrategyMap(new ObjectMap(e)));
+				//return catchFunction.Call(new ObjectMap(e));
 			}
 		}
 		public static Map With(Map obj, Map values)
@@ -446,6 +448,7 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			bool test=new StrategyMap(1).Equals(new StrategyMap(1));
 			try
 			{
 				//UseConsole();
@@ -665,7 +668,7 @@ namespace Meta
 				return new StrategyMap(new EmptyStrategy());
 			}
 		}
-		public virtual string Serialize()
+		public virtual string SerializeDefault()
 		{
 			string text;
 			if (this.Count == 0)
@@ -686,6 +689,31 @@ namespace Meta
 			}
 			return text;
 		}
+		public virtual string Serialize()
+		{
+			return SerializeDefault();
+		}
+		//public virtual string Serialize()
+		//{
+		//    string text;
+		//    if (this.Count == 0)
+		//    {
+		//        text = "0";
+		//    }
+		//    else if (this.IsString)
+		//    {
+		//        text = "\"" + this.GetString() + "\"";
+		//    }
+		//    else if (this.IsNumber)
+		//    {
+		//        text = this.GetNumber().ToString();
+		//    }
+		//    else
+		//    {
+		//        text = null;
+		//    }
+		//    return text;
+		//}
 		public virtual bool IsBoolean
 		{
 			get
@@ -972,6 +1000,10 @@ namespace Meta
 	[Serializable]
 	public class StrategyMap:Map
 	{
+		public override string Serialize()
+		{
+			return strategy.Serialize(this);
+		}
 		public override void Nuke(Map map)
 		{
 			this.strategy = new EmptyStrategy();
@@ -993,6 +1025,9 @@ namespace Meta
 			strategy.Remove(key,this);
 		}
 		protected MapStrategy strategy;
+		public StrategyMap(object o):this(new ObjectMap(o))
+		{
+		}
 		public StrategyMap(bool boolean)
 			: this(new Number((double)Convert.ToInt32(boolean)))
 		{
@@ -1308,18 +1343,22 @@ namespace Meta
 						}
 
 					}
-					else if (target == typeof(Type) && meta is TypeMap)
+					else if (target == typeof(Type) &&  ((StrategyMap)meta).Strategy is TypeMap)
+					//else if (target == typeof(Type) && meta is TypeMap)
 					{
-						dotNet = ((TypeMap)meta).Type;
+						dotNet = ((TypeMap)(((StrategyMap)meta).Strategy)).Type;
+						//dotNet = ((TypeMap)meta).Type;
 					}
 					else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 							&& meta.ContainsKey(CodeKeys.Function))
 					{
 						dotNet = CreateDelegateFromCode(target, meta);
 					}
-					else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
+					else if (((StrategyMap)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((StrategyMap)meta).Strategy).Type))
+					//else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
 					{
-						dotNet = ((ObjectMap)meta).Object;
+						dotNet = ((ObjectMap)((StrategyMap)meta).Strategy).Object;
+						//dotNet = ((ObjectMap)meta).Object;
 					}
 					else if (target.IsAssignableFrom(meta.GetType()))
 					{
@@ -1394,9 +1433,10 @@ namespace Meta
 			}
 			if (dotNet == null)
 			{
-				if(meta is ObjectMap && ((ObjectMap)meta).Type==target)
+				if (((StrategyMap)meta).Strategy is ObjectMap && ((DotNetMap)((StrategyMap)meta).Strategy).Type == target)
+					//if (meta is ObjectMap && ((ObjectMap)meta).Type == target)
 				{
-					dotNet = ((ObjectMap)meta).Object;
+					dotNet = ((ObjectMap)((StrategyMap)meta).Strategy).Object;
 				}
 			}
 			wasConverted = dotNet != null;
@@ -1410,7 +1450,8 @@ namespace Meta
 		{
 			if (dotNet == null)
 			{
-				return new ObjectMap(null, typeof(Object));
+				return new StrategyMap(new ObjectMap(null, typeof(Object)));
+				//return new ObjectMap(null, typeof(Object));
 			}
 			else if (dotNet is Map)
 			{
@@ -1418,7 +1459,8 @@ namespace Meta
 			}
 			else
 			{
-				return new ObjectMap(dotNet);
+				return new StrategyMap(new ObjectMap(dotNet));
+				//return new ObjectMap(dotNet);
 			}
 		}
 		public static Map ToMeta(object dotNet)
@@ -1438,9 +1480,10 @@ namespace Meta
 					case TypeCode.Char:
 						return (char)dotNet;
 					case TypeCode.DateTime:
-						return new ObjectMap(dotNet);
+						return new StrategyMap(new ObjectMap(dotNet));
+						//return new ObjectMap(dotNet);
 					case TypeCode.DBNull:
-						return new ObjectMap(dotNet);
+						return new StrategyMap(new ObjectMap(dotNet));
 					case TypeCode.Decimal:
 						return Convert.ToInt32(dotNet);
 					case TypeCode.Double:
@@ -1462,7 +1505,8 @@ namespace Meta
 						}
 						else
 						{
-							return new ObjectMap(dotNet);
+							return new StrategyMap(new ObjectMap(dotNet));
+							//return new ObjectMap(dotNet);
 						}
 					case TypeCode.SByte:
 						return (sbyte)dotNet;
@@ -1541,7 +1585,8 @@ namespace Meta
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						Map typeMap = new TypeMap(parameters[i].ParameterType);
+						Map typeMap = new StrategyMap(new TypeMap(parameters[i].ParameterType));
+						//Map typeMap = new TypeMap(parameters[i].ParameterType);
 						if (i == parameters.Length - 1)
 						{
 							current[typeMap] = method;
@@ -1637,10 +1682,11 @@ namespace Meta
 			}
 			else
 			{
-				return new ObjectMap(new CallDelegate(delegate(Map map)
+				return new StrategyMap(new ObjectMap(new CallDelegate(delegate(Map map)
+				//return new ObjectMap(new CallDelegate(delegate(Map map)
 				{
 					return DecideCall(map, arguments);
-				}));
+				})));
 			}
 		}
 		private Map Invoke(Map argument, object[] arguments)
@@ -1686,31 +1732,41 @@ namespace Meta
 			: base(null, targetType)
 		{
 		}
-		protected override bool ContainsKeyImplementation(Map key)
+		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null;
 		}
-		protected override Map Get(Map key)
+
+		//protected override bool ContainsKeyImplementation(Map key)
+		//{
+		//    return Get(key) != null;
+		//}
+		public override Map Get(Map key)
 		{
 			if (Type.IsGenericTypeDefinition)
 			{
 				List<Type> types=new List<Type>();
 				if (Type.GetGenericArguments().Length == 1)
 				{
-					types.Add(((TypeMap)key).Type);
+					types.Add(((TypeMap)((StrategyMap)key).Strategy).Type);
+					//types.Add(((TypeMap)key).Type);
 				}
 				else
 				{
 					foreach (Map map in key.Array)
 					{
-						types.Add(((TypeMap)map).Type);
+						types.Add(((TypeMap)((StrategyMap)map).Strategy).Type);
+						//types.Add(((TypeMap)map).Type);
 					}
 				}
-				return new TypeMap(Type.MakeGenericType(types.ToArray()));
+				return new StrategyMap(new TypeMap(Type.MakeGenericType(types.ToArray())));
+				//return new TypeMap(Type.MakeGenericType(types.ToArray()));
 			}
-			else if (Type == typeof(Array) && key is TypeMap)
+			else if (Type == typeof(Array) && ((StrategyMap)key).Strategy is TypeMap)
+			//else if (Type == typeof(Array) && key is TypeMap)
 			{
-				return new TypeMap(((TypeMap)key).Type.MakeArrayType());
+				return new StrategyMap(new TypeMap(((TypeMap)((StrategyMap)key).Strategy).Type.MakeArrayType()));
+				//return new TypeMap(((TypeMap)key).Type.MakeArrayType());
 			}
 			else if(base.Get(key)!=null)
 			{
@@ -1760,9 +1816,10 @@ namespace Meta
 		{
 			return obj is TypeMap && ((TypeMap)obj).Type == this.Type;
 		}
-		protected override Map CopyData()
+		public override Map CopyData()
 		{
-			return new TypeMap(this.Type);
+			return new StrategyMap(new TypeMap(this.Type));
+			//return new TypeMap(this.Type);
 		}
 		private Map constructor;
 		private Map Constructor
@@ -1777,12 +1834,19 @@ namespace Meta
 				return constructor;
 			}
 		}
-		public override Map Call(Map argument)
+		public override Map Call(Map argument, Map parent)
 		{
 			Map item = Constructor.Call(Map.Empty);
 			Map result = Library.With(item, argument);
 			return result;
+			//return base.Call(argument, parent);
 		}
+		//public override Map Call(Map argument,StrategyMap parent)
+		//{
+			//Map item = Constructor.Call(Map.Empty);
+			//Map result = Library.With(item, argument);
+			//return result;
+		//}
 	}
 	[Serializable]
 	public class ObjectMap: DotNetMap
@@ -1794,11 +1858,12 @@ namespace Meta
 				return Object;
 			}
 		}
-		public override Map Call(Map arg)
+		public override Map Call(Map arg,Map parent)
 		{
 			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
-				return new StrategyMap(new Method(Type.GetMethod("Invoke"), this.Object, this.Type)).Call(arg);
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg,parent);
+				//return new StrategyMap(new Method(Type.GetMethod("Invoke"), this.Object, this.Type)).Call(arg);
 				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);
 			}
 			else
@@ -1833,9 +1898,10 @@ namespace Meta
 		{
 			return Object.ToString();
 		}
-		protected override Map CopyData()
+		public override Map CopyData()
 		{
-			return new ObjectMap(Object);
+			return new StrategyMap(new ObjectMap(Object));
+			//return nnew ObjectMap(Object);
 		}
 	}
 	[Serializable]
@@ -2455,6 +2521,10 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		public virtual string Serialize(Map parent)
+		{
+			return parent.SerializeDefault();
+		}
 		public virtual Map Call(Map argument, Map parent)
 		{
 			return parent.CallDefault(argument);
@@ -2623,7 +2693,8 @@ namespace Meta
 		private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>>();
 		public static Dictionary<Map, MethodInfo> GetMethodData(Type type, BindingFlags bindingFlags)
 	    {
-	        KeyValuePair<Type,BindingFlags> key=new KeyValuePair<Type,BindingFlags>(type,bindingFlags);
+			KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
+			//KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
 			if (!cache.ContainsKey(key))
 			{
 				Dictionary<Map, MethodInfo>data = new Dictionary<Map, MethodInfo>();
@@ -2639,8 +2710,16 @@ namespace Meta
 	}
 
 	[Serializable]
-	public abstract class DotNetMap : Map
+	public abstract class DotNetMap : MapStrategy
 	{
+		public override void Remove(Map key, StrategyMap map)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
 		public object Object
 		{
 			get
@@ -2697,14 +2776,15 @@ namespace Meta
 			this.obj = obj;
 			this.type = type;
 		}
-		protected override Map Get(Map key)
+		public override Map Get(Map key)
 		{
 			if (key.Equals(new StrategyMap("instanceEvent")))
 			{
 			}
-			if (obj!=null && key.Equals(new StrategyMap("this")))
+			if (obj != null && key.Equals(new StrategyMap("this")))
 			{
-				return this;
+				return new StrategyMap(this);
+				//return this;
 			}
 			else if (Data.ContainsKey(key))
 			{
@@ -2750,7 +2830,8 @@ namespace Meta
 					}
 					else if (member is Type)
 					{
-						result = new TypeMap((Type)member);
+						result = new StrategyMap(new TypeMap((Type)member));
+						//result = new TypeMap((Type)member);
 					}
 					else if (member is EventInfo)
 					{
@@ -2765,13 +2846,13 @@ namespace Meta
 					return result;
 				}
 			}
-			if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator<((IList)obj).Count)
+			if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator < ((IList)obj).Count)
 			{
 				return Transform.ToMeta(((IList)obj)[Convert.ToInt32(key.GetNumber().Numerator)]);
 			}
 			return null;
 		}
-		protected override void Set(Map key, Map value)
+		public override void Set(Map key, Map value, StrategyMap parent)
 		{
 			//if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
 			//{
@@ -2782,69 +2863,70 @@ namespace Meta
 			//else
 			//{
 
-				string fieldName = key.GetString();
-				MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
-				if (members.Length != 0)
+			string fieldName = key.GetString();
+			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+			if (members.Length != 0)
+			{
+				MemberInfo member = members[0];
+				if (member is FieldInfo)
 				{
-					MemberInfo member = members[0];
-					if (member is FieldInfo)
+					FieldInfo field = (FieldInfo)member;
+					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+				}
+				else if (member is PropertyInfo)
+				{
+					PropertyInfo property = (PropertyInfo)member;
+					if (property.PropertyType.Name.Contains("UIElementCollection"))
 					{
-						FieldInfo field = (FieldInfo)member;
-						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
 					}
-					else if (member is PropertyInfo)
-					{
-						PropertyInfo property = (PropertyInfo)member;
-						if (property.PropertyType.Name.Contains("UIElementCollection"))
+					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((StrategyMap)value).Strategy is ObjectMap))
+						//if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
 						{
-						}
-						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
+						if (value.ArrayCount != 0)
 						{
-							if(value.ArrayCount!=0)
+							IList list = (IList)property.GetValue(obj, null);
+							list.Clear();
+							Type t = GetListAddFunctionType(list, value);
+							if (t == null)
 							{
-								IList list = (IList)property.GetValue(obj, null);
-								list.Clear();
-								Type t=GetListAddFunctionType(list, value);
-								if (t == null)
+								throw new ApplicationException("Cannot convert argument.");
+							}
+							else
+							{
+								foreach (Map map in value.Array)
 								{
-									throw new ApplicationException("Cannot convert argument.");
-								}
-								else
-								{
-									foreach (Map map in value.Array)
-									{
-										list.Add(Transform.ToDotNet(map, t));
-									}
+									list.Add(Transform.ToDotNet(map, t));
 								}
 							}
 						}
-						else
-						{
-							object converted = Transform.ToDotNet(value, property.PropertyType);
-							property.SetValue(obj, converted, null);
-						}
-
-					}
-					else if (member is EventInfo)
-					{
-						EventInfo eventInfo = (EventInfo)member;
-						new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
-						//new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 					}
 					else
 					{
-						throw new Exception("unknown member type");
+						object converted = Transform.ToDotNet(value, property.PropertyType);
+						property.SetValue(obj, converted, null);
 					}
+
+				}
+				else if (member is EventInfo)
+				{
+					EventInfo eventInfo = (EventInfo)member;
+					new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+					//new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 				}
 				else
 				{
-
-					if (!global.ContainsKey(GlobalKey))
-					{
-						global[GlobalKey] = new Dictionary<Map, Map>();
-					}
-					global[GlobalKey][key] = value;
+					throw new Exception("unknown member type");
 				}
+			}
+			else
+			{
+
+				if (!global.ContainsKey(GlobalKey))
+				{
+					global[GlobalKey] = new Dictionary<Map, Map>();
+				}
+				global[GlobalKey][key] = value;
+			}
 			//}
 		}
 		private static Type GetListAddFunctionType(IList list, Map value)
@@ -2853,15 +2935,15 @@ namespace Meta
 			{
 				if (member is MethodInfo)
 				{
-					MethodInfo method=(MethodInfo)member;
-					ParameterInfo[] parameters=method.GetParameters();
+					MethodInfo method = (MethodInfo)member;
+					ParameterInfo[] parameters = method.GetParameters();
 					if (parameters.Length == 1)
 					{
 						ParameterInfo parameter = parameters[0];
-						bool c=true;
+						bool c = true;
 						foreach (Map entry in value.Array)
 						{
-							Transform.TryToDotNet(entry,parameter.ParameterType,out c);
+							Transform.TryToDotNet(entry, parameter.ParameterType, out c);
 							if (!c)
 							{
 								break;
@@ -2876,12 +2958,16 @@ namespace Meta
 			}
 			return null;
 		}
-		public static Dictionary<object,Dictionary<Map,Map>> global=new Dictionary<object,Dictionary<Map,Map>>();
-		protected override bool ContainsKeyImplementation(Map key)
+		public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
+		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null;
 		}
-		protected override ICollection<Map> KeysImplementation
+		//protected override bool ContainsKeyImplementation(Map key)
+		//{
+		//    return Get(key) != null;
+		//}
+		public override ICollection<Map> Keys
 		{
 			get
 			{
@@ -2891,7 +2977,7 @@ namespace Meta
 					string name;
 					if (member is MethodInfo)
 					{
-						name=GetMethodName((MethodInfo)member);
+						name = GetMethodName((MethodInfo)member);
 					}
 					else if (member is ConstructorInfo)
 					{
@@ -2906,6 +2992,31 @@ namespace Meta
 				return keys;
 			}
 		}
+		//protected override ICollection<Map> KeysImplementation
+		//{
+		//    get
+		//    {
+		//        List<Map> keys = new List<Map>();
+		//        foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
+		//        {
+		//            string name;
+		//            if (member is MethodInfo)
+		//            {
+		//                name = GetMethodName((MethodInfo)member);
+		//            }
+		//            else if (member is ConstructorInfo)
+		//            {
+		//                continue;
+		//            }
+		//            else
+		//            {
+		//                name = member.Name;
+		//            }
+		//            keys.Add(name);
+		//        }
+		//        return keys;
+		//    }
+		//}
 		public override bool IsString
 		{
 			get
@@ -2920,7 +3031,7 @@ namespace Meta
 				return false;
 			}
 		}
-		public override string Serialize()
+		public override string Serialize(Map parent)
 		{
 			if (obj != null)
 			{
@@ -2939,6 +3050,307 @@ namespace Meta
 			return eventDelegate;
 		}
 	}
+	//[Serializable]
+	//public abstract class DotNetMap : Map
+	//{
+	//    public object Object
+	//    {
+	//        get
+	//        {
+	//            return obj;
+	//        }
+	//    }
+	//    public Type Type
+	//    {
+	//        get
+	//        {
+	//            return type;
+	//        }
+	//    }
+	//    protected abstract object GlobalKey
+	//    {
+	//        get;
+	//    }
+	//    public static string GetMethodName(MethodInfo method)
+	//    {
+	//        string name = method.Name;
+	//        foreach (ParameterInfo parameter in method.GetParameters())
+	//        {
+	//            name += "_" + parameter.ParameterType.Name;
+	//        }
+	//        return name;
+	//    }
+	//    private Dictionary<Map, MethodInfo> data;
+	//    private Dictionary<Map, MethodInfo> Data
+	//    {
+	//        get
+	//        {
+	//            if (data == null)
+	//            {
+	//                data = MethodCache.GetMethodData(type, bindingFlags);
+	//            }
+	//            return data;
+	//        }
+	//    }
+	//    private object obj;
+	//    private Type type;
+	//    protected BindingFlags bindingFlags;
+
+	//    public DotNetMap(object obj, Type type)
+	//    {
+	//        if (obj == null)
+	//        {
+	//            this.bindingFlags = BindingFlags.Public | BindingFlags.Static;
+	//        }
+	//        else
+	//        {
+	//            this.bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+	//        }
+	//        this.obj = obj;
+	//        this.type = type;
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        if (key.Equals(new StrategyMap("instanceEvent")))
+	//        {
+	//        }
+	//        if (obj != null && key.Equals(new StrategyMap("this")))
+	//        {
+	//            return this;
+	//        }
+	//        else if (Data.ContainsKey(key))
+	//        {
+	//            return new StrategyMap(new Method(Data[key], obj, type));
+	//            //return new Method(Data[key], obj, type);
+	//        }
+	//        else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
+	//        {
+	//            return global[GlobalKey][key];
+	//        }
+	//        else if (key.IsString)
+	//        {
+	//            string memberName = key.GetString();
+	//            MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
+	//            if (foundMembers.Length != 0)
+	//            {
+	//                MemberInfo member = foundMembers[0];
+	//                Map result;
+	//                if (member is PropertyInfo)
+	//                {
+	//                    PropertyInfo property = (PropertyInfo)member;
+	//                    ParameterInfo[] parameters = property.GetIndexParameters();
+	//                    if (parameters.Length == 0)
+	//                    {
+	//                        result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
+	//                    }
+	//                    else
+	//                    {
+	//                        result = 0;
+	//                    }
+	//                    //if (parameters.Length != 0)
+	//                    //{
+	//                    //    result = new IndexedProperty(property, obj, type);
+	//                    //}
+	//                    //else
+	//                    //{
+	//                    //    result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
+	//                    //}
+	//                }
+	//                else if (member is FieldInfo)
+	//                {
+	//                    result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
+	//                }
+	//                else if (member is Type)
+	//                {
+	//                    result = new TypeMap((Type)member);
+	//                }
+	//                else if (member is EventInfo)
+	//                {
+	//                    EventInfo eventInfo = (EventInfo)member;
+	//                    result = new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type));
+	//                    //result = new Method(eventInfo.GetAddMethod(), obj, type);
+	//                }
+	//                else
+	//                {
+	//                    result = null;
+	//                }
+	//                return result;
+	//            }
+	//        }
+	//        if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator < ((IList)obj).Count)
+	//        {
+	//            return Transform.ToMeta(((IList)obj)[Convert.ToInt32(key.GetNumber().Numerator)]);
+	//        }
+	//        return null;
+	//    }
+	//    protected override void Set(Map key, Map value)
+	//    {
+	//        //if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
+	//        //{
+	//        //    DependencyObject o = (DependencyObject)obj;
+	//        //    DependencyProperty property=(DependencyProperty)((ObjectMap)key).obj;
+	//        //    o.SetValue(property,Transform.ToDotNet(value,property.PropertyType));
+	//        //}
+	//        //else
+	//        //{
+
+	//        string fieldName = key.GetString();
+	//        MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+	//        if (members.Length != 0)
+	//        {
+	//            MemberInfo member = members[0];
+	//            if (member is FieldInfo)
+	//            {
+	//                FieldInfo field = (FieldInfo)member;
+	//                field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+	//            }
+	//            else if (member is PropertyInfo)
+	//            {
+	//                PropertyInfo property = (PropertyInfo)member;
+	//                if (property.PropertyType.Name.Contains("UIElementCollection"))
+	//                {
+	//                }
+	//                if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
+	//                {
+	//                    if (value.ArrayCount != 0)
+	//                    {
+	//                        IList list = (IList)property.GetValue(obj, null);
+	//                        list.Clear();
+	//                        Type t = GetListAddFunctionType(list, value);
+	//                        if (t == null)
+	//                        {
+	//                            throw new ApplicationException("Cannot convert argument.");
+	//                        }
+	//                        else
+	//                        {
+	//                            foreach (Map map in value.Array)
+	//                            {
+	//                                list.Add(Transform.ToDotNet(map, t));
+	//                            }
+	//                        }
+	//                    }
+	//                }
+	//                else
+	//                {
+	//                    object converted = Transform.ToDotNet(value, property.PropertyType);
+	//                    property.SetValue(obj, converted, null);
+	//                }
+
+	//            }
+	//            else if (member is EventInfo)
+	//            {
+	//                EventInfo eventInfo = (EventInfo)member;
+	//                new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+	//                //new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
+	//            }
+	//            else
+	//            {
+	//                throw new Exception("unknown member type");
+	//            }
+	//        }
+	//        else
+	//        {
+
+	//            if (!global.ContainsKey(GlobalKey))
+	//            {
+	//                global[GlobalKey] = new Dictionary<Map, Map>();
+	//            }
+	//            global[GlobalKey][key] = value;
+	//        }
+	//        //}
+	//    }
+	//    private static Type GetListAddFunctionType(IList list, Map value)
+	//    {
+	//        foreach (MemberInfo member in list.GetType().GetMember("Add"))
+	//        {
+	//            if (member is MethodInfo)
+	//            {
+	//                MethodInfo method = (MethodInfo)member;
+	//                ParameterInfo[] parameters = method.GetParameters();
+	//                if (parameters.Length == 1)
+	//                {
+	//                    ParameterInfo parameter = parameters[0];
+	//                    bool c = true;
+	//                    foreach (Map entry in value.Array)
+	//                    {
+	//                        Transform.TryToDotNet(entry, parameter.ParameterType, out c);
+	//                        if (!c)
+	//                        {
+	//                            break;
+	//                        }
+	//                    }
+	//                    if (c)
+	//                    {
+	//                        return parameter.ParameterType;
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            List<Map> keys = new List<Map>();
+	//            foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
+	//            {
+	//                string name;
+	//                if (member is MethodInfo)
+	//                {
+	//                    name = GetMethodName((MethodInfo)member);
+	//                }
+	//                else if (member is ConstructorInfo)
+	//                {
+	//                    continue;
+	//                }
+	//                else
+	//                {
+	//                    name = member.Name;
+	//                }
+	//                keys.Add(name);
+	//            }
+	//            return keys;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override string Serialize()
+	//    {
+	//        if (obj != null)
+	//        {
+	//            return this.obj.ToString();
+	//        }
+	//        else
+	//        {
+	//            return this.type.ToString();
+	//        }
+	//    }
+	//    public Delegate CreateEventDelegate(string name, Map code)
+	//    {
+	//        EventInfo eventInfo = type.GetEvent(name, BindingFlags.Public | BindingFlags.NonPublic |
+	//            BindingFlags.Static | BindingFlags.Instance);
+	//        Delegate eventDelegate = Transform.CreateDelegateFromCode(eventInfo.EventHandlerType, code);
+	//        return eventDelegate;
+	//    }
+	//}
 	public interface ISerializeEnumerableSpecial
 	{
 		string Serialize();
@@ -3247,7 +3659,8 @@ namespace Meta
 					{
 						name = type.Name;
 					}
-					selected[type.Name] = new TypeMap(type);
+					selected[type.Name] = new StrategyMap(new TypeMap(type));
+					//selected[type.Name] = new TypeMap(type);
 					foreach (ConstructorInfo constructor in type.GetConstructors())
 					{
 						if (constructor.GetParameters().Length != 0)
@@ -4897,13 +5310,14 @@ new Assignment(
 		{
 			try
 			{
-				if (map is Gac)
-				{
+				if (((StrategyMap)map).Strategy is Gac)
+					//if (map is Gac)
+					{
 					return "Gac";
 				}
-				if (map is DotNetMap)
+				if (((StrategyMap)map).Strategy is DotNetMap)
 				{
-					return map.ToString();
+					return ((StrategyMap)map).Strategy.ToString();
 				}
 				else if (map.Count == 0)
 				{

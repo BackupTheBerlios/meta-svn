@@ -1321,7 +1321,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"TestClass"
-	Value (TypeMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1331,7 +1331,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"testClass"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1346,12 +1346,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"MemberTest"
-	Value (TypeMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"memberTest"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1386,7 +1386,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"positionalNoConversion"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.PositionalNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1396,7 +1396,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"namedNoConversion"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.NamedNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1406,7 +1406,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"indexerNoConversion"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -1982,12 +1982,12 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"NestedClass"
-			Value (TypeMap):
+			Value (StrategyMap):
 				Meta.Test.TestClasses.TestClass+NestedClass
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"TestDelegate"
-			Value (TypeMap):
+			Value (StrategyMap):
 				Meta.Test.TestClasses.TestClass+TestDelegate
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -2161,7 +2161,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"font"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -2201,7 +2201,7 @@ hello!"
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"arrayList"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -2216,13 +2216,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"textBox"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		System.Windows.Forms.TextBox, Text: Alle meine Entchen,
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"lines"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		System.String[]
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -2232,12 +2232,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"form"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		System.Windows.Forms.Form, Text: 
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"automaticConversionTest"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		{X=5,Y=1000}
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
@@ -3102,7 +3102,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
 		"typeTest"
-	Value (ObjectMap):
+	Value (StrategyMap):
 		System.String[]
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
