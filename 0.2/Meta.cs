@@ -52,46 +52,6 @@ namespace Meta
 	{
 		public abstract Map Evaluate(Map context);
 	}
-	internal class HiPerfTimer
-    {
-        [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceCounter(
-            out long lpPerformanceCount);
-
-        [DllImport("Kernel32.dll")]
-        private static extern bool QueryPerformanceFrequency(
-            out long lpFrequency);
-
-        private long startTime, stopTime;
-        private long freq;
-
-        public HiPerfTimer()
-        {
-            startTime = 0;
-            stopTime  = 0;
-
-            if (QueryPerformanceFrequency(out freq) == false)
-            {
-                throw new ApplicationException();
-            }
-        }
-        public void Start()
-        {
-            Thread.Sleep(0);
-            QueryPerformanceCounter(out startTime);
-        }
-        public void Stop()
-        {
-            QueryPerformanceCounter(out stopTime);
-        }
-        public double Duration
-        {
-            get
-            {
-                return (double)(stopTime - startTime) / (double) freq;
-            }
-        }
-    }
 	public class Call : Expression
 	{
 		private Map parameterName;
@@ -112,33 +72,16 @@ namespace Meta
 		{
 			try
 			{
-				//HiPerfTimer timer = null;
-				//if (Interpreter.profiling)
-				//{
-				//    timer = new HiPerfTimer();
-				//    timer.Start();
-				//}
 				Map callable = expressions[0].GetExpression().Evaluate(current);
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Map arg = expressions[i].GetExpression().Evaluate(current);
 					callable = callable.Call(arg);
 				}
-				//if (Interpreter.profiling)
-				//{
-				//    timer.Stop();
-				//    string special = SpecialString(current);
-				//    if (!calls.ContainsKey(special))
-				//    {
-				//        calls[special] = 0;
-				//    }
-				//    calls[special] += timer.Duration;
-				//}
 				return callable;
 			}
 			catch (MetaException e)
 			{
-				//e.InvocationList.Add(new ExceptionLog(expressions[0].Extent, current));
 				throw e;
 			}
 			catch (Exception e)
@@ -146,15 +89,6 @@ namespace Meta
 				throw new MetaException(e.ToString(), this.expressions[0].Extent);
 			}
 		}
-		//private string SpecialString(Position position)
-		//{
-		//    string result="";
-		//    foreach (Map key in position.Keys)
-		//    {
-		//        result += key.ToString();
-		//    }
-		//    return result;
-		//}
 	}
 	public class Program : Expression
 	{
