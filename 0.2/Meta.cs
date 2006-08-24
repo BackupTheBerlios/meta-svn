@@ -829,6 +829,10 @@ namespace Meta
 		}
 		public virtual Map Call(Map arg)
 		{
+			return CallDefault(arg);
+		}
+		public Map CallDefault(Map arg)
+		{
 			if (ContainsKey(CodeKeys.Function))
 			{
 				Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
@@ -840,6 +844,19 @@ namespace Meta
 				throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
 			}
 		}
+		//public virtual Map Call(Map arg)
+		//{
+		//    if (ContainsKey(CodeKeys.Function))
+		//    {
+		//        Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
+		//        argumentScope.Scope = this;
+		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
+		//    }
+		//}
 		public ICollection<Map> Keys
 		{
 			get
@@ -962,6 +979,10 @@ namespace Meta
 			{
 				this[key] = map[key];
 			}
+		}
+		public override Map Call(Map arg)
+		{
+			return strategy.Call(arg, this);
 		}
 		public override void Append(Map map)
 		{
@@ -1550,6 +1571,92 @@ namespace Meta
 			}
 		}
 	}
+	//public abstract class MethodImplementation : Map
+	//{
+	//    protected MethodBase method;
+	//    protected object obj;
+	//    protected Type type;
+	//    public MethodImplementation(MethodBase method, object obj, Type type)
+	//    {
+	//        this.method = method;
+	//        this.obj = obj;
+	//        this.type = type;
+	//        if (method != null)
+	//        {
+	//            this.parameters = method.GetParameters();
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    ParameterInfo[] parameters;
+	//    public override Map Call(Map argument)
+	//    {
+	//        return DecideCall(argument, new List<object>());
+	//    }
+	//    private Map DecideCall(Map argument, List<object> oldArguments)
+	//    {
+	//        List<object> arguments = new List<object>(oldArguments);
+	//        if (parameters.Length != 0)
+	//        {
+	//            bool converted;
+	//            object arg = Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
+	//            if (!converted)
+	//            {
+	//                throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
+	//            }
+	//            else
+	//            {
+	//                arguments.Add(arg);
+	//            }
+	//        }
+	//        if (arguments.Count >= parameters.Length)
+	//        {
+	//            return Invoke(argument, arguments.ToArray());
+	//        }
+	//        else
+	//        {
+	//            return new ObjectMap(new CallDelegate(delegate(Map map)
+	//            {
+	//                return DecideCall(map, arguments);
+	//            }));
+	//        }
+	//    }
+	//    private Map Invoke(Map argument, object[] arguments)
+	//    {
+	//        bool converted;
+	//        try
+	//        {
+	//            Map result = Transform.ToMeta(
+	//                method is ConstructorInfo ?
+	//                    ((ConstructorInfo)method).Invoke(arguments) :
+	//                     method.Invoke(obj, arguments));
+	//            return result;
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            if (e.InnerException != null)
+	//            {
+	//                throw e.InnerException;
+	//            }
+	//            else
+	//            {
+	//                throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+	//            }
+	//        }
+	//    }
+	//}
 	[Serializable]
 	public class Method : MethodImplementation
 	{
@@ -2432,6 +2539,10 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		public virtual Map Call(Map argument, Map parent)
+		{
+			return parent.CallDefault(argument);
+		}
 		public virtual void Append(Map map,StrategyMap parent)
 		{
 		    this.Set(GetArrayCount() + 1,map,parent);
@@ -3249,29 +3360,7 @@ namespace Meta
 				}
 				else
 				{
-					if (key.ContainsKey("version") && key.ContainsKey("publicKeyToken") &&
-						key.ContainsKey("culture") &&
-						key.ContainsKey("name"))
-					{
-						Map version = key["version"];
-						Map publicKeyToken = key["publicKeyToken"];
-						Map culture = key["culture"];
-						Map name = key["name"];
-						if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
-						{
-							Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
-							value = LoadAssembly(assembly);
-							cache[key] = value;
-						}
-						else
-						{
-							value = null;
-						}
-					}
-					else
-					{
-						value = null;
-					}
+					value = null;
 				}
 			}
 			else
