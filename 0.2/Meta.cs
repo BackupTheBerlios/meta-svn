@@ -278,6 +278,7 @@ namespace Meta
 				}
 				else
 				{
+					selection = null;
 					break;
 					//selection = selection.Parent;
 				}
@@ -5516,7 +5517,11 @@ new Assignment(
 			}
 			public static Map Run(string path, Map argument)
 			{
-				return Parser.Parse(path).Call(argument);
+				//argument.Scope = Gac.gac["library"];
+				Map callable = Parser.Parse(path);
+				callable.Scope = Gac.gac["library"];
+				return callable.Call(argument);
+				//return Parser.Parse(path).Call(argument);
 				//return Parser.Parse(path).Call(argument, new Position(RootPosition.rootPosition, "library")).Get();
 			}
 		}
