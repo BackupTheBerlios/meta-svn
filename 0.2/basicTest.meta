@@ -366,15 +366,17 @@ commandLine|,
 			Meta
 			IndexerNoConversion
 		0
-	.
-		indexerNoConversion
-		Item
-		abc
-	:"hihi"
-	indexerNoConversionIndexed=.
-		indexerNoConversion
-		Item
-		abc
+	asdfasdf=-
+		.
+			indexerNoConversion
+			set_Item_String_String
+		"abc"
+		"hihi"
+	indexerNoConversionIndexed=-
+		.
+			indexerNoConversion
+			get_Item_String
+		"abc"
 	interceptedSymbolTwo=1
 	k="hello"
 	xyz="w"
@@ -532,9 +534,10 @@ commandLine|,
 			arrayList
 			Add_Object
 		"hello"
-	arrayListResult=.
-		arrayList
-		Item
+	arrayListResult=-
+		.
+			arrayList
+			get_Item_Int32
 		0
 	textBox=-
 		.

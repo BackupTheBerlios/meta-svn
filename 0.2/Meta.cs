@@ -276,9 +276,19 @@ namespace Meta
 			Map selected = subselects[0].GetExpression().Evaluate(context);
 			for (int i = 1; i < subselects.Count; i++)
 			{
-				selected = selected[subselects[i].GetExpression().Evaluate(context)];
+				Map key=subselects[i].GetExpression().Evaluate(context);
+				Map value= selected.TryGetValue(key);
+				if (value == null)
+				{
+					throw new KeyDoesNotExist(key, subselects[i].Extent, selected);
+				}
+				else
+				{
+					selected = value;
+				}
+				//selected = selected[subselects[i].GetExpression().Evaluate(context)];
 			}
-			return selected;//.Copy();
+			return selected;
 		}
 	}
 	public class KeyStatement : StatementBase
@@ -422,7 +432,7 @@ namespace Meta
 	{
 		static Interpreter()
 		{
-			try
+				try
 			{
 
 				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
@@ -439,9 +449,9 @@ namespace Meta
 		{
 			try
 			{
-				UseConsole();
-				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-				return;
+				//UseConsole();
+				//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+				//return;
 				switch (args[0])
 				{
 					case "-test":
@@ -515,22 +525,6 @@ namespace Meta
 			}
 		}
 	}
-	public class KeyChangedEventArgs : EventArgs
-	{
-		public KeyChangedEventArgs(Map key)
-		{
-			this.key = key;
-		}
-		private Map key;
-		public Map Key
-		{
-			get
-			{
-				return key;
-			}
-		}
-	}
-	public delegate void KeyChangedEventHandler(KeyChangedEventArgs e);
 	[Serializable]
 	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
@@ -577,15 +571,9 @@ namespace Meta
 					Map val;
 					val = value;
 					Set(key, val);
-					if (KeyChanged != null)
-					{
-						this.KeyChanged(new KeyChangedEventArgs(key));
-						this.KeyChanged = null;
-					}
 				}
 			}
 		}
-		public event KeyChangedEventHandler KeyChanged;
 		protected abstract Map Get(Map key);
 		protected abstract void Set(Map key, Map val);
 		public int numCalls = 0;
@@ -2603,62 +2591,62 @@ namespace Meta
 			}
 		}
 	}
-	[Serializable]
-	public class IndexedProperty : Map
-	{
-		protected override bool ContainsKeyImplementation(Map key)
-		{
-			return Get(key) != null;
-		}
-		private object obj;
-		private Type type;
-		private PropertyInfo property;
-		private ParameterInfo[] parameters;
-		public IndexedProperty(PropertyInfo property, object obj, Type type)
-		{
-			this.property = property;
-			this.obj = obj;
-			this.type = type;
-			this.parameters = property.GetIndexParameters();
-			if (parameters.Length != 1)
-			{
-				throw new Exception("invalid numbers of indexer parameters.");
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return false;
-			}
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return false;
-			}
-		}
-		protected override ICollection<Map> KeysImplementation
-		{
-			get
-			{
-				throw new Exception("not implemented");
-			}
-		}
-		protected override Map Get(Map key)
-		{
-			return Transform.ToMeta(property.GetValue(obj,new object[] {Transform.ToDotNet(key,parameters[0].ParameterType)}));
-		}
-		protected override void Set(Map key, Map val)
-		{
-			property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
-		}
-		protected override Map CopyData()
-		{
-			return new IndexedProperty(property, obj, type);
-		}
-	}
+	//[Serializable]
+	//public class IndexedProperty : Map
+	//{
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//    private object obj;
+	//    private Type type;
+	//    private PropertyInfo property;
+	//    private ParameterInfo[] parameters;
+	//    public IndexedProperty(PropertyInfo property, object obj, Type type)
+	//    {
+	//        this.property = property;
+	//        this.obj = obj;
+	//        this.type = type;
+	//        this.parameters = property.GetIndexParameters();
+	//        if (parameters.Length != 1)
+	//        {
+	//            throw new Exception("invalid numbers of indexer parameters.");
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            throw new Exception("not implemented");
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return Transform.ToMeta(property.GetValue(obj,new object[] {Transform.ToDotNet(key,parameters[0].ParameterType)}));
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return new IndexedProperty(property, obj, type);
+	//    }
+	//}
 
 	public class MethodCache
 	{
@@ -2768,14 +2756,22 @@ namespace Meta
 					{
 						PropertyInfo property = (PropertyInfo)member;
 						ParameterInfo[] parameters = property.GetIndexParameters();
-						if (parameters.Length != 0)
-						{
-							result = new IndexedProperty(property, obj, type);
-						}
-						else
+						if (parameters.Length == 0)
 						{
 							result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
 						}
+						else
+						{
+							result = 0;
+						}
+						//if (parameters.Length != 0)
+						//{
+						//    result = new IndexedProperty(property, obj, type);
+						//}
+						//else
+						//{
+						//    result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
+						//}
 					}
 					else if (member is FieldInfo)
 					{

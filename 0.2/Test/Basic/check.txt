@@ -1410,6 +1410,11 @@ Entry (KeyValuePair`2)
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StrategyMap):
+		"asdfasdf"
+	Value (StrategyMap):
+		0
+Entry (KeyValuePair`2)
+	Key (StrategyMap):
 		"indexerNoConversionIndexed"
 	Value (StrategyMap):
 		"abchihiunchangedYunchangedZabc"
