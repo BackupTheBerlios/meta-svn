@@ -286,7 +286,6 @@ namespace Meta
 				{
 					selected = value;
 				}
-				//selected = selected[subselects[i].GetExpression().Evaluate(context)];
 			}
 			return selected;
 		}
@@ -2591,62 +2590,6 @@ namespace Meta
 			}
 		}
 	}
-	//[Serializable]
-	//public class IndexedProperty : Map
-	//{
-	//    protected override bool ContainsKeyImplementation(Map key)
-	//    {
-	//        return Get(key) != null;
-	//    }
-	//    private object obj;
-	//    private Type type;
-	//    private PropertyInfo property;
-	//    private ParameterInfo[] parameters;
-	//    public IndexedProperty(PropertyInfo property, object obj, Type type)
-	//    {
-	//        this.property = property;
-	//        this.obj = obj;
-	//        this.type = type;
-	//        this.parameters = property.GetIndexParameters();
-	//        if (parameters.Length != 1)
-	//        {
-	//            throw new Exception("invalid numbers of indexer parameters.");
-	//        }
-	//    }
-	//    public override bool IsString
-	//    {
-	//        get
-	//        {
-	//            return false;
-	//        }
-	//    }
-	//    public override bool IsNumber
-	//    {
-	//        get
-	//        {
-	//            return false;
-	//        }
-	//    }
-	//    protected override ICollection<Map> KeysImplementation
-	//    {
-	//        get
-	//        {
-	//            throw new Exception("not implemented");
-	//        }
-	//    }
-	//    protected override Map Get(Map key)
-	//    {
-	//        return Transform.ToMeta(property.GetValue(obj,new object[] {Transform.ToDotNet(key,parameters[0].ParameterType)}));
-	//    }
-	//    protected override void Set(Map key, Map val)
-	//    {
-	//        property.SetValue(obj, Transform.ToDotNet(val, property.PropertyType), new object[] { Transform.ToDotNet(key, parameters[0].ParameterType) });
-	//    }
-	//    protected override Map CopyData()
-	//    {
-	//        return new IndexedProperty(property, obj, type);
-	//    }
-	//}
 
 	public class MethodCache
 	{
@@ -3241,12 +3184,21 @@ namespace Meta
 		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-',':'};
 		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
-	public class Gac : Map
+	public class Gac : MapStrategy
 	{
-		public static readonly Map gac = new Gac();
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
+		public override void Remove(Map key, StrategyMap map)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public static readonly Map gac = new StrategyMap(new Gac());
+		//public static readonly Map gac = new Gac();
 		private Gac()
 		{
-			this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		public static Map LoadAssembly(Assembly assembly)
@@ -3271,7 +3223,7 @@ namespace Meta
 					{
 						if (constructor.GetParameters().Length != 0)
 						{
-							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor,null,type);
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
 						}
 
 					}
@@ -3279,7 +3231,7 @@ namespace Meta
 			}
 			return val;
 		}
-		protected override Map Get(Map key)
+		public override Map Get(Map key)
 		{
 			Map value;
 			if (!cache.ContainsKey(key))
@@ -3289,9 +3241,10 @@ namespace Meta
 					try
 					{
 						value = LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
-						this[key] = value;
+						cache[key] = value;
+						//this[key] = value;
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						value = null;
 					}
@@ -3310,7 +3263,8 @@ namespace Meta
 						{
 							Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
 							value = LoadAssembly(assembly);
-							this[key] = value;
+							cache[key] = value;
+							//this[key] = value;
 						}
 						else
 						{
@@ -3329,26 +3283,195 @@ namespace Meta
 			}
 			return value;
 		}
-		protected override void Set(Map key, Map val)
+		//protected override Map Get(Map key)
+		//{
+		//    Map value;
+		//    if (!cache.ContainsKey(key))
+		//    {
+		//        if (key.IsString)
+		//        {
+		//            try
+		//            {
+		//                value = LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
+		//                this[key] = value;
+		//            }
+		//            catch (Exception e)
+		//            {
+		//                value = null;
+		//            }
+		//        }
+		//        else
+		//        {
+		//            if (key.ContainsKey("version") && key.ContainsKey("publicKeyToken") &&
+		//                key.ContainsKey("culture") &&
+		//                key.ContainsKey("name"))
+		//            {
+		//                Map version = key["version"];
+		//                Map publicKeyToken = key["publicKeyToken"];
+		//                Map culture = key["culture"];
+		//                Map name = key["name"];
+		//                if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+		//                {
+		//                    Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+		//                    value = LoadAssembly(assembly);
+		//                    this[key] = value;
+		//                }
+		//                else
+		//                {
+		//                    value = null;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                value = null;
+		//            }
+		//        }
+		//    }
+		//    else
+		//    {
+		//        value = cache[key];
+		//    }
+		//    return value;
+		//}
+		public override void Set(Map key, Map val, StrategyMap map)
 		{
 			cache[key] = val;
 		}
-		protected override Map CopyData()
+		public override Map CopyData()
 		{
-			return this;
+			return new StrategyMap(this);
 		}
-		protected override ICollection<Map> KeysImplementation
+		public override ICollection<Map> Keys
 		{
-			get
-			{
-				throw new ApplicationException("not implemented.");
+			get 
+			{ 
+				throw new Exception("The method or operation is not implemented."); 
 			}
 		}
-		protected override bool ContainsKeyImplementation(Map key)
+		//protected override ICollection<Map> KeysImplementation
+		//{
+		//    get
+		//    {
+		//        throw new ApplicationException("not implemented.");
+		//    }
+		//}
+		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null;
 		}
+		//protected override bool ContainsKeyImplementation(Map key)
+		//{
+		//    return Get(key) != null;
+		//}
 	}
+	//public class Gac : Map
+	//{
+	//    public static readonly Map gac = new Gac();
+	//    private Gac()
+	//    {
+	//        this["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+	//    }
+	//    private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+	//    public static Map LoadAssembly(Assembly assembly)
+	//    {
+	//        Map val = new StrategyMap();
+	//        foreach (Type type in assembly.GetExportedTypes())
+	//        {
+	//            if (type.DeclaringType == null)
+	//            {
+	//                Map selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition)
+	//                {
+	//                    name = type.Name.Split('`')[0];
+	//                }
+	//                else
+	//                {
+	//                    name = type.Name;
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//                foreach (ConstructorInfo constructor in type.GetConstructors())
+	//                {
+	//                    if (constructor.GetParameters().Length != 0)
+	//                    {
+	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor,null,type);
+	//                    }
+
+	//                }
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        Map value;
+	//        if (!cache.ContainsKey(key))
+	//        {
+	//            if (key.IsString)
+	//            {
+	//                try
+	//                {
+	//                    value = LoadAssembly(Assembly.LoadWithPartialName(key.GetString()));
+	//                    this[key] = value;
+	//                }
+	//                catch(Exception e)
+	//                {
+	//                    value = null;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                if (key.ContainsKey("version") && key.ContainsKey("publicKeyToken") &&
+	//                    key.ContainsKey("culture") &&
+	//                    key.ContainsKey("name"))
+	//                {
+	//                    Map version = key["version"];
+	//                    Map publicKeyToken = key["publicKeyToken"];
+	//                    Map culture = key["culture"];
+	//                    Map name = key["name"];
+	//                    if (version != null && version.IsString && publicKeyToken != null && publicKeyToken.IsString && culture != null && culture.IsString && name != null && name.IsString)
+	//                    {
+	//                        Assembly assembly = Assembly.Load(name.GetString() + ",Version=" + version.GetString() + ",Culture=" + culture.GetString() + ",Name=" + name.GetString());
+	//                        value = LoadAssembly(assembly);
+	//                        this[key] = value;
+	//                    }
+	//                    else
+	//                    {
+	//                        value = null;
+	//                    }
+	//                }
+	//                else
+	//                {
+	//                    value = null;
+	//                }
+	//            }
+	//        }
+	//        else
+	//        {
+	//            value = cache[key];
+	//        }
+	//        return value;
+	//    }
+	//    protected override void Set(Map key, Map val)
+	//    {
+	//        cache[key] = val;
+	//    }
+	//    protected override Map CopyData()
+	//    {
+	//        return this;
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            throw new ApplicationException("not implemented.");
+	//        }
+	//    }
+	//    protected override bool ContainsKeyImplementation(Map key)
+	//    {
+	//        return Get(key) != null;
+	//    }
+	//}
 	[Serializable]
 	public class Number
 	{
