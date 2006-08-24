@@ -586,10 +586,57 @@ namespace Meta
 		[NonSerialized]
 		private Map scope;
 	}
+	public delegate Map Eval(Map context);
 	public abstract class Expression
 	{
-		public abstract Map Evaluate(Map context);
+		Eval optimized;
+		public Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+		}
+		public abstract Map EvaluateImplementation(Map context);
+		public Eval Optimize()
+		{
+			//MethodInfo eval = this.GetType().GetMethod("EvaluateImplementation",BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
+			//ParameterInfo[] parameters = eval.GetParameters();// new ParameterInfo[] { typeof(Map) };
+			//ParameterInfo[] parameters = new ParameterInfo[] { typeof(Map) };
+			Type[] arguments = new Type[] { typeof(Expression), typeof(Map) };
+
+			DynamicMethod method = new DynamicMethod(
+				"Optimized",
+				typeof(Map),
+				arguments,
+				typeof(Map).Module);
+
+			ILGenerator il = method.GetILGenerator();
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Ldarg_1);
+			il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
+
+			il.Emit(OpCodes.Castclass, typeof(Map));
+			il.Emit(OpCodes.Ret);
+			return (Eval)method.CreateDelegate(typeof(Eval), this);
+		}
 	}
+	//public abstract class Expression
+	//{
+	//    public abstract Map Evaluate(Map context);
+	//    public Evaluate Optimize()
+	//    {
+
+	//    }
+	//}
 	public class Call : Expression
 	{
 		private Map parameterName;
@@ -606,7 +653,7 @@ namespace Meta
 			this.parameterName = parameterName;
 		}
 		public static Dictionary<string, double> calls = new Dictionary<string, double>();
-		public override Map Evaluate(Map current)
+		public override Map EvaluateImplementation(Map current)
 		{
 			try
 			{
@@ -644,7 +691,7 @@ namespace Meta
 			this.code = code;
 			statements=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();}));
 		}
-		public override Map Evaluate(Map parent)
+		public override Map EvaluateImplementation(Map parent)
 		{
 			Map context=new Map();
 			context.Scope = parent;
@@ -657,13 +704,6 @@ namespace Meta
 	}
 	public class Literal : Expression
 	{
-		public Map Map
-		{
-			get
-			{
-				return literal;
-			}
-		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		private Map literal;
 		public Literal(Map code)
@@ -674,17 +714,17 @@ namespace Meta
 			}
 			else
 			{
-				this.literal = code.Copy();
+				this.literal = code;
 			}
 		}
-		public override Map Evaluate(Map context)
+		public override Map EvaluateImplementation(Map context)
 		{
 			return literal.Copy();
 		}
 	}
 	public class Root : Expression
 	{
-		public override Map Evaluate(Map selected)
+		public override Map EvaluateImplementation(Map selected)
 		{
 			return Gac.gac;
 		}
@@ -703,7 +743,7 @@ namespace Meta
 		{
 			this.keyExpression = keyExpression;
 		}
-		public override Map Evaluate(Map context)
+		public override Map EvaluateImplementation(Map context)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context);
 			Map selection = context;
@@ -736,7 +776,7 @@ namespace Meta
 		{
 			this.subselects = code.Array;
 		}
-		public override Map Evaluate(Map context)
+		public override Map EvaluateImplementation(Map context)
 		{
 			Map selected = subselects[0].GetExpression().Evaluate(context);
 			for (int i = 1; i < subselects.Count; i++)
