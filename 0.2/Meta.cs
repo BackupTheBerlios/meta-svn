@@ -621,6 +621,7 @@ namespace Meta
 			il.Emit(OpCodes.Ldarg_1);
 			il.Emit(OpCodes.Stloc, context);
 			Emit(il, this, context);
+			il.Emit(OpCodes.Ret);
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		public virtual void Emit(ILGenerator il, Expression expression,LocalBuilder local)
@@ -632,13 +633,12 @@ namespace Meta
 			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
 			il.Emit(OpCodes.Ldarg_1);
 			il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
-			il.Emit(OpCodes.Ret);
 		}
 	}
 	public class Call : Expression
 	{
 		private Map parameterName;
-		List<Expression> calls;
+		public List<Expression> calls;
 		Map code;
 		public Call(Map code, Map parameterName)
 		{
@@ -652,30 +652,27 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map current)
 		{
-			try
+			Map callable = calls[0].Evaluate(current);
+			for (int i = 1; i < calls.Count; i++)
 			{
-				Map callable = calls[0].Evaluate(current);
-				for (int i = 1; i < calls.Count; i++)
-				{
-					callable = callable.Call(calls[i].Evaluate(current));
-				}
-				return callable;
+				callable = callable.Call(calls[i].Evaluate(current));
 			}
-			catch (MetaException e)
-			{
-				throw e;
-			}
+			return callable;
 		}
-		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder local)
-		//{
-		//    Map callable = calls[0].Evaluate(current);
-		//    for (int i = 1; i < calls.Count; i++)
-		//    {
-		//        callable = callable.Call(calls[i].Evaluate(current));
-		//    }
-		//    return callable;
-		//    //base.Emit(il, expression, local);
-		//}
+		public override void Emit(ILGenerator il, Expression expression, LocalBuilder current)
+		{
+			LocalBuilder callable = il.DeclareLocal(typeof(Map));
+			calls[0].Emit(il, expression, current);
+			il.Emit(OpCodes.Stloc, callable);
+			for (int i = 1; i < calls.Count; i++)
+			{
+				il.Emit(OpCodes.Ldloc, callable);
+				calls[i].Emit(il, expression, current);
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Call"));
+				il.Emit(OpCodes.Stloc, callable);
+			}
+			il.Emit(OpCodes.Ldloc, callable);
+		}
 	}
 	public class Search : Expression
 	{
@@ -754,7 +751,7 @@ namespace Meta
 				il.Emit(OpCodes.Callvirt, typeof(StatementBase).GetMethod("Assign"));
 			}
 			il.Emit(OpCodes.Ldloc, context);
-			il.Emit(OpCodes.Ret);
+			//il.Emit(OpCodes.Ret);
 		}
 	}
 	//public class Search : Expression
@@ -817,7 +814,7 @@ namespace Meta
 			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
 			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
 			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
-			il.Emit(OpCodes.Ret);
+			//il.Emit(OpCodes.Ret);
 		}
 	}
 	public class Root : Expression
@@ -829,7 +826,7 @@ namespace Meta
 		public override void Emit(ILGenerator il,Expression expression,LocalBuilder local)
 		{
 			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
-			il.Emit(OpCodes.Ret);
+			//il.Emit(OpCodes.Ret);
 		}
 	}
 	//public class Search : Expression
