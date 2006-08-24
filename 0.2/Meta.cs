@@ -619,29 +619,10 @@ namespace Meta
 			ILGenerator il = method.GetILGenerator();
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
 			il.Emit(OpCodes.Ldarg_1);
-			//il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("expressions"));
-
-			//il.Emit(OpCodes.Newobj, typeof(Map).GetConstructor(new Type[] { }));
 			il.Emit(OpCodes.Stloc, context);
-
-
 			Emit(il, this, context);
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		//public Eval Optimize()
-		//{
-		//    Type[] arguments = new Type[] { typeof(Expression), typeof(Map) };
-		//    DynamicMethod method = new DynamicMethod(
-		//        "Optimized",
-		//        typeof(Map),
-		//        arguments,
-		//        typeof(Map).Module);
-		//    ILGenerator il = method.GetILGenerator();
-		//    LocalBuilder local=il.DeclareLocal(typeof(Map));
-			
-		//    Emit(il,this,local);
-		//    return (Eval)method.CreateDelegate(typeof(Eval), this);
-		//}
 		public virtual void Emit(ILGenerator il, Expression expression,LocalBuilder local)
 		{
 			expression.expressions.Add(this);
@@ -657,15 +638,15 @@ namespace Meta
 	public class Call : Expression
 	{
 		private Map parameterName;
-		List<Map> calls;
+		List<Expression> calls;
 		Map code;
 		public Call(Map code, Map parameterName)
 		{
 			this.code = code;
-			this.calls = code.Array;
+			this.calls = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression();});
 			if (calls.Count == 1)
 			{
-				calls.Add(new Map(CodeKeys.Literal, Map.Empty));
+				calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty)));
 			}
 			this.parameterName = parameterName;
 		}
@@ -673,10 +654,10 @@ namespace Meta
 		{
 			try
 			{
-				Map callable = calls[0].GetExpression().Evaluate(current);
+				Map callable = calls[0].Evaluate(current);
 				for (int i = 1; i < calls.Count; i++)
 				{
-					callable = callable.Call(calls[i].GetExpression().Evaluate(current));
+					callable = callable.Call(calls[i].Evaluate(current));
 				}
 				return callable;
 			}
@@ -684,11 +665,17 @@ namespace Meta
 			{
 				throw e;
 			}
-			catch (Exception e)
-			{
-				throw new MetaException(e.ToString(), this.calls[0].Extent);
-			}
 		}
+		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder local)
+		//{
+		//    Map callable = calls[0].Evaluate(current);
+		//    for (int i = 1; i < calls.Count; i++)
+		//    {
+		//        callable = callable.Call(calls[i].Evaluate(current));
+		//    }
+		//    return callable;
+		//    //base.Emit(il, expression, local);
+		//}
 	}
 	public class Search : Expression
 	{
