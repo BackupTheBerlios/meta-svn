@@ -466,14 +466,14 @@ namespace Meta
 				//}
 				//else
 				//{
-					if (selection.Scope != null)
-					{
-						selection = selection.Scope;
-					}
-					else
-					{
-						//selection = selection.Parent;
-					}
+				if (selection.Scope != null)
+				{
+					selection = selection.Scope;
+				}
+				else
+				{
+					//selection = selection.Parent;
+				}
 				//}
 			}
 			Map selected;
@@ -491,9 +491,50 @@ namespace Meta
 				key = keys[i].GetExpression().Evaluate(context);
 			}
 			Map val = value.GetExpression().Evaluate(context);
-			selected[key]=val;
+			selected[key] = val;
 			//selected.Assign(key, val);
 		}
+		//public override void Assign(Map context)
+		//{
+		//    Map selection = context;
+		//    Map key = keys[0].GetExpression().Evaluate(context);
+		//    while (!selection.ContainsKey(key))
+		//    {
+		//        //if (selection.Parent == null)
+		//        //{
+		//        //    selection = null;
+		//        //    break;
+		//        //}
+		//        //else
+		//        //{
+		//            if (selection.Scope != null)
+		//            {
+		//                selection = selection.Scope;
+		//            }
+		//            else
+		//            {
+		//                //selection = selection.Parent;
+		//            }
+		//        //}
+		//    }
+		//    Map selected;
+		//    if (selection == null)
+		//    {
+		//        throw new KeyNotFound(key, keys[0].Extent, null);
+		//    }
+		//    else
+		//    {
+		//        selected = selection;
+		//    }
+		//    for (int i = 1; i < keys.Count; i++)
+		//    {
+		//        selected = selected[key];
+		//        key = keys[i].GetExpression().Evaluate(context);
+		//    }
+		//    Map val = value.GetExpression().Evaluate(context);
+		//    selected[key]=val;
+		//    //selected.Assign(key, val);
+		//}
 		//public override void Assign(Map context)
 		//{
 		//    Position selected = context;
@@ -615,6 +656,7 @@ namespace Meta
 			{
 
 				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
+				Gac.gac["library"].Scope = Gac.gac;
 				//Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty, RootPosition.rootPosition).Get();
 			}
 			catch (Exception e)
@@ -889,8 +931,8 @@ namespace Meta
 				{
 					compiledCode = null;
 					Map val;
+					//val = value.Copy();
 					val = value;
-					//val = value;
 					//val = value.Copy();
 					Set(key, val);
 					if (KeyChanged != null)
@@ -3181,6 +3223,9 @@ namespace Meta
 		}
 		protected override Map Get(Map key)
 		{
+			if (key.Equals(new StrategyMap("instanceEvent")))
+			{
+			}
 			if (obj!=null && key.Equals(new StrategyMap("this")))
 			{
 				return this;
@@ -3221,6 +3266,12 @@ namespace Meta
 					else if (member is Type)
 					{
 						result = new TypeMap((Type)member);
+					}
+					else if (member is EventInfo)
+					{
+						EventInfo eventInfo = (EventInfo)member;
+						result=new Method(eventInfo.GetAddMethod(), obj, type);//.Call(value);
+						//new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
 					}
 					else
 					{
