@@ -589,6 +589,7 @@ namespace Meta
 	public delegate Map Eval(Map context);
 	public abstract class Expression
 	{
+		public List<Map> literals = new List<Map>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -710,13 +711,41 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(ILGenerator il,Expression expression)
+		public override void Emit(ILGenerator il, Expression expression)
 		{
+			expression.literals.Add(literal);
 			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
+			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literals"));
+			il.Emit(OpCodes.Ldc_I4, expression.literals.Count - 1);
+			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
 			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
 			il.Emit(OpCodes.Ret);
 		}
+		//public override void Emit(ILGenerator il, Expression expression)
+		//{
+		//    expression.literals.Add(literal);
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literals"));
+		//    il.Emit(OpCodes.Ldc_I4, expression.literals.Count-1);
+		//    il.Emit(OpCodes.Ldelem,typeof(Map));
+		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
+		//    il.Emit(OpCodes.Ret);
+		//}
+		//public override void Emit(ILGenerator il, Expression expression)
+		//{
+		//    expression.literals.Add(literal);
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
+		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
+		//    il.Emit(OpCodes.Ret);
+		//}
+		//public override void Emit(ILGenerator il,Expression expression)
+		//{
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
+		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
+		//    il.Emit(OpCodes.Ret);
+		//}
 	}
 	public class Root : Expression
 	{
