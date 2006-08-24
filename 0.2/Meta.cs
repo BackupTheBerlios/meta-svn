@@ -103,7 +103,7 @@ namespace Meta
 			this.expressions = code.Array;
 			if (expressions.Count == 1)
 			{
-				expressions.Add(new StrategyMap(CodeKeys.Literal, Map.Empty));
+				expressions.Add(new Map(CodeKeys.Literal, Map.Empty));
 			}
 			this.parameterName = parameterName;
 		}
@@ -174,7 +174,7 @@ namespace Meta
 		}
 		public override Map Evaluate(Map parent)
 		{
-			Map context=new StrategyMap();
+			Map context=new Map();
 			context.Scope = parent;
 			foreach (StatementBase statement in statements)
 			{
@@ -371,8 +371,8 @@ namespace Meta
 	{
 		public static Map EnumerableToArray(Map map)
 		{
-			Map result = new StrategyMap();
-			foreach (object entry in (IEnumerable)(((ObjectMap)((StrategyMap)map).Strategy)).Object)
+			Map result = new Map();
+			foreach (object entry in (IEnumerable)(((ObjectMap)((Map)map).Strategy)).Object)
 				//foreach (object entry in (IEnumerable)((ObjectMap)map).Object)
 				{
 				result.Append(Transform.ToMeta(entry));
@@ -383,7 +383,7 @@ namespace Meta
 		{
 			List<Map> list = new List<Map>(arg.Array);
 			list.Reverse();
-			return new StrategyMap(list);
+			return new Map(list);
 		}
 		public static Map Try(Map tryFunction, Map catchFunction)
 		{
@@ -393,7 +393,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
-				return catchFunction.Call(new StrategyMap(new ObjectMap(e)));
+				return catchFunction.Call(new Map(new ObjectMap(e)));
 				//return catchFunction.Call(new ObjectMap(e));
 			}
 		}
@@ -421,7 +421,7 @@ namespace Meta
 		public static Map Range(Map arg)
 		{
 			int end = arg.GetNumber().GetInt32();
-			Map result = new StrategyMap();
+			Map result = new Map();
 			for (int i = 1; i <= end; i++)
 			{
 				result.Append(i);
@@ -448,7 +448,7 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			bool test=new StrategyMap(1).Equals(new StrategyMap(1));
+			bool test=new Map(1).Equals(new Map(1));
 			try
 			{
 				//UseConsole();
@@ -528,12 +528,182 @@ namespace Meta
 		}
 	}
 	[Serializable]
-	public abstract class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
+	public class Map: IEnumerable<KeyValuePair<Map,Map>>, ISerializeEnumerableSpecial
 	{
-		public virtual void Nuke(Map map)
+		public string Serialize()
 		{
-			throw new Exception("not implemented");
+			return strategy.Serialize(this);
 		}
+		public void Nuke(Map map)
+		{
+			this.strategy = new EmptyStrategy();
+			foreach (Map key in map.Keys)
+			{
+				this[key] = map[key];
+			}
+		}
+		public Map Call(Map arg)
+		{
+			return strategy.Call(arg, this);
+		}
+		public void Append(Map map)
+		{
+			strategy.Append(map, this);
+		}
+		public void Remove(Map key)
+		{
+			strategy.Remove(key, this);
+		}
+		protected MapStrategy strategy;
+
+		public Map(object o)
+			: this(new ObjectMap(o))
+		{
+		}
+		public Map(bool boolean)
+			: this(new Number((double)Convert.ToInt32(boolean)))
+		{
+		}
+		public Map(System.Collections.Generic.ICollection<Map> list)
+			: this(new ListStrategy())
+		{
+			int index = 1;
+			foreach (object entry in list)
+			{
+				this[index] = Transform.ToMeta(entry);
+				index++;
+			}
+		}
+		public Map(MapStrategy strategy)
+		{
+			this.strategy = strategy;
+		}
+		public Map()
+			: this(new EmptyStrategy())
+		{
+		}
+		public Map(Number number)
+			: this(new NumberStrategy(number))
+		{
+		}
+		public Map(string text)
+			: this(new StringStrategy(text))
+		{
+		}
+		public Map(params Map[] keysAndValues)
+			: this()
+		{
+			for (int i = 0; i <= keysAndValues.Length - 2; i += 2)
+			{
+				this[keysAndValues[i]] = keysAndValues[i + 1];
+			}
+		}
+
+		public int ArrayCount
+		{
+			get
+			{
+				return strategy.GetArrayCount();
+			}
+		}
+		public void InitFromStrategy(MapStrategy clone)
+		{
+			foreach (Map key in clone.Keys)
+			{
+				this[key] = clone.Get(key);
+			}
+		}
+		public bool IsString
+		{
+			get
+			{
+				return strategy.IsString;
+			}
+		}
+		public bool IsNumber
+		{
+			get
+			{
+				return strategy.IsNumber;
+			}
+		}
+		public Number GetNumber()
+		{
+			return strategy.GetNumber();
+		}
+		public string GetString()
+		{
+			return strategy.GetString();
+		}
+		public int Count
+		{
+			get
+			{
+				return strategy.Count;
+			}
+		}
+		public List<Map> Array
+		{
+			get
+			{
+				return strategy.Array;
+			}
+		}
+		protected Map Get(Map key)
+		{
+			return strategy.Get(key);
+		}
+		protected void Set(Map key, Map value)
+		{
+			strategy.Set(key, value, this);
+		}
+		protected Map CopyData()
+		{
+			return strategy.CopyData();
+		}
+		protected bool ContainsKeyImplementation(Map key)
+		{
+			return strategy.ContainsKey(key);
+		}
+		protected ICollection<Map> KeysImplementation
+		{
+			get
+			{
+				return strategy.Keys;
+			}
+		}
+		public override bool Equals(object toCompare)
+		{
+			bool isEqual;
+			if (Object.ReferenceEquals(toCompare, this))
+			{
+				isEqual = true;
+			}
+			else if (toCompare is Map)
+			{
+				isEqual = ((Map)toCompare).strategy.EqualStrategy(strategy);
+			}
+			else
+			{
+				isEqual = false;
+			}
+			return isEqual;
+		}
+		public MapStrategy Strategy
+		{
+			get
+			{
+				return strategy;
+			}
+			set
+			{
+				strategy = value;
+			}
+		}
+		//public virtual void Nuke(Map map)
+		//{
+		//    throw new Exception("not implemented");
+		//}
 		public List<Map> Values
 		{
 			get
@@ -576,8 +746,8 @@ namespace Meta
 				}
 			}
 		}
-		protected abstract Map Get(Map key);
-		protected abstract void Set(Map key, Map val);
+		//protected abstract Map Get(Map key);
+		//protected abstract void Set(Map key, Map val);
 		public int numCalls = 0;
 		public virtual void AppendRange(IEnumerable<Map> array)
 		{
@@ -657,15 +827,15 @@ namespace Meta
 				throw new ApplicationException("Cannot compile map "+Meta.Serialize.ValueFunction(this));
 			}
 		}
-		public virtual void Append(Map map)
-		{
-			this[ArrayCount + 1] = map;
-		}
+		//public virtual void Append(Map map)
+		//{
+		//    this[ArrayCount + 1] = map;
+		//}
 		public static Map Empty
 		{
 			get
 			{
-				return new StrategyMap(new EmptyStrategy());
+				return new Map(new EmptyStrategy());
 			}
 		}
 		public virtual string SerializeDefault()
@@ -689,10 +859,10 @@ namespace Meta
 			}
 			return text;
 		}
-		public virtual string Serialize()
-		{
-			return SerializeDefault();
-		}
+		//public virtual string Serialize()
+		//{
+		//    return SerializeDefault();
+		//}
 		//public virtual string Serialize()
 		//{
 		//    string text;
@@ -721,20 +891,20 @@ namespace Meta
 				return IsNumber && (GetNumber()==0 || GetNumber()==1);
 			}
 		}
-		public virtual bool IsNumber
-		{
-			get
-			{
-				return IsNumberDefault;
-			}
-		}
-		public virtual bool IsString
-		{
-			get
-			{
-				return IsStringDefault;
-			}
-		}
+		//public virtual bool IsNumber
+		//{
+		//    get
+		//    {
+		//        return IsNumberDefault;
+		//    }
+		//}
+		//public virtual bool IsString
+		//{
+		//    get
+		//    {
+		//        return IsStringDefault;
+		//    }
+		//}
 		public bool IsNumberDefault
 		{
 			get
@@ -752,14 +922,14 @@ namespace Meta
 				});
 			}
 		}
-		public virtual Number GetNumber()
-		{
-			return GetNumberDefault();
-		}
-		public virtual string GetString()
-		{
-			return GetStringDefault();
-		}
+		//public virtual Number GetNumber()
+		//{
+		//    return GetNumberDefault();
+		//}
+		//public virtual string GetString()
+		//{
+		//    return GetStringDefault();
+		//}
 		public virtual bool GetBoolean()
 		{
 			bool boolean;
@@ -815,20 +985,20 @@ namespace Meta
 				scope = value;
 			}
 		}
-		public virtual int Count
-		{
-			get
-			{
-				return Keys.Count;
-			}
-		}
-		public virtual int ArrayCount
-		{
-			get
-			{
-				return GetArrayCountDefault();
-			}
-		}
+		//public virtual int Count
+		//{
+		//    get
+		//    {
+		//        return Keys.Count;
+		//    }
+		//}
+		//public virtual int ArrayCount
+		//{
+		//    get
+		//    {
+		//        return GetArrayCountDefault();
+		//    }
+		//}
 		public int GetArrayCountDefault()
 		{
 			int i = 1;
@@ -837,33 +1007,33 @@ namespace Meta
 			}
 			return i - 1;
 		}
-		public virtual List<Map> Array
-		{
-			get
-			{
-				List<Map> array = new List<Map>(Count);
-				int index = 1;
-				while (this.ContainsKey(index))
-				{
-					array.Add(this[index]);
-				}
-				return array;
-			}
-		}
+		//public virtual List<Map> Array
+		//{
+		//    get
+		//    {
+		//        List<Map> array = new List<Map>(Count);
+		//        int index = 1;
+		//        while (this.ContainsKey(index))
+		//        {
+		//            array.Add(this[index]);
+		//        }
+		//        return array;
+		//    }
+		//}
 
-		public virtual void Remove(Map key)
-		{
-			throw new ApplicationException("Method not implemented");
-		}
-		public virtual Map Call(Map arg)
-		{
-			return CallDefault(arg);
-		}
+		//public virtual void Remove(Map key)
+		//{
+		//    throw new ApplicationException("Method not implemented");
+		//}
+		//public virtual Map Call(Map arg)
+		//{
+		//    return CallDefault(arg);
+		//}
 		public Map CallDefault(Map arg)
 		{
 			if (ContainsKey(CodeKeys.Function))
 			{
-				Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
+				Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
 				argumentScope.Scope = this;
 				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
 			}
@@ -876,7 +1046,7 @@ namespace Meta
 		//{
 		//    if (ContainsKey(CodeKeys.Function))
 		//    {
-		//        Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
+		//        Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
 		//        argumentScope.Scope = this;
 		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
 		//    }
@@ -897,10 +1067,10 @@ namespace Meta
 				return keys;
 			}
 		}
-		protected abstract ICollection<Map> KeysImplementation
-		{
-			get;
-		}
+		//protected abstract ICollection<Map> KeysImplementation
+		//{
+		//    get;
+		//}
 		public Map Copy()
 		{
 			Map clone = CopyData();
@@ -909,12 +1079,12 @@ namespace Meta
 			clone.Extent = Extent;
 			return clone;
 		}
-		protected abstract Map CopyData();
+		//protected abstract Map CopyData();
 		public bool ContainsKey(Map key)
 		{
 			return ContainsKeyImplementation(key);
 		}
-		protected abstract bool ContainsKeyImplementation(Map key);
+		//protected abstract bool ContainsKeyImplementation(Map key);
 		public override int GetHashCode()
 		{
 			if (IsNumber)
@@ -952,221 +1122,221 @@ namespace Meta
 		}
 		public static implicit operator Map(Number integer)
 		{
-			return new StrategyMap(integer);
+			return new Map(integer);
 		}
 		public static implicit operator Map(bool boolean)
 		{
-			return new StrategyMap(new Number((double)(boolean ? 1 : 0)));
+			return new Map(new Number((double)(boolean ? 1 : 0)));
 		}
 		public static implicit operator Map(char character)
 		{
-			return new StrategyMap(new Number((double)character));
+			return new Map(new Number((double)character));
 		}
 		public static implicit operator Map(byte integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(sbyte integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(uint integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(ushort integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(int integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(long integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(ulong integer)
 		{
-			return new StrategyMap(new Number((double)integer));
+			return new Map(new Number((double)integer));
 		}
 		public static implicit operator Map(string text)
 		{
-			return new StrategyMap(text);
+			return new Map(text);
 		}
 		[NonSerialized]
 		private Map scope;
 	}
-	[Serializable]
-	public class StrategyMap:Map
-	{
-		public override string Serialize()
-		{
-			return strategy.Serialize(this);
-		}
-		public override void Nuke(Map map)
-		{
-			this.strategy = new EmptyStrategy();
-			foreach (Map key in map.Keys)
-			{
-				this[key] = map[key];
-			}
-		}
-		public override Map Call(Map arg)
-		{
-			return strategy.Call(arg, this);
-		}
-		public override void Append(Map map)
-		{
-			strategy.Append(map,this);
-		}
-		public override void Remove(Map key)
-		{
-			strategy.Remove(key,this);
-		}
-		protected MapStrategy strategy;
-		public StrategyMap(object o):this(new ObjectMap(o))
-		{
-		}
-		public StrategyMap(bool boolean)
-			: this(new Number((double)Convert.ToInt32(boolean)))
-		{
-		}
-		public StrategyMap(System.Collections.Generic.ICollection<Map> list)
-			: this(new ListStrategy())
-		{
-			int index = 1;
-			foreach (object entry in list)
-			{
-				this[index] = Transform.ToMeta(entry);
-				index++;
-			}
-		}
-		public StrategyMap(MapStrategy strategy)
-		{
-			this.strategy = strategy;
-		}
-		public StrategyMap()
-			: this(new EmptyStrategy())
-		{
-		}
-		public StrategyMap(Number number)
-			: this(new NumberStrategy(number))
-		{
-		}
-		public StrategyMap(string text)
-			: this(new StringStrategy(text))
-		{
-		}
-		public StrategyMap(params Map[] keysAndValues):this()
-		{
-			for (int i = 0; i <= keysAndValues.Length - 2; i += 2)
-			{
-				this[keysAndValues[i]] = keysAndValues[i + 1];
-			}
-		}
-		public override int ArrayCount
-		{
-			get
-			{
-				return strategy.GetArrayCount();
-			}
-		}
-		public void InitFromStrategy(MapStrategy clone)
-		{
-			foreach (Map key in clone.Keys)
-			{
-				this[key] = clone.Get(key);
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return strategy.IsString;
-			}
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return strategy.IsNumber;
-			}
-		}
-		public override Number GetNumber()
-		{
-			return strategy.GetNumber();
-		}
-		public override string GetString()
-		{
-			return strategy.GetString();
-		}
-		public override int Count
-		{
-			get
-			{
-				return strategy.Count;
-			}
-		}
-		public override List<Map> Array
-		{
-			get
-			{
-				return strategy.Array;
-			}
-		}
-		protected override Map Get(Map key)
-		{
-			return strategy.Get(key);
-		}
-		protected override void Set(Map key, Map value)
-		{
-			strategy.Set(key, value,this); 
-		}
-		protected override Map CopyData() 
-		{ 
-			return strategy.CopyData(); 
-		}
-		protected override bool ContainsKeyImplementation(Map key) 
-		{ 
-			return strategy.ContainsKey(key); 
-		}
-		protected override ICollection<Map> KeysImplementation
-		{
-			get
-			{
-				return strategy.Keys;
-			}
-		}
-		public override bool Equals(object toCompare)
-		{
-			bool isEqual;
-			if (Object.ReferenceEquals(toCompare, this))
-			{
-				isEqual = true;
-			}
-			else if (toCompare is StrategyMap)
-			{
-				isEqual = ((StrategyMap)toCompare).strategy.EqualStrategy(strategy);
-			}
-			else
-			{
-				isEqual = false;
-			}
-			return isEqual;
-		}
-		public MapStrategy Strategy
-		{
-			get
-			{
-				return strategy;
-			}
-			set
-			{
-				strategy = value;
-			}
-		}
-	}
+	//[Serializable]
+	//public class Map:Map
+	//{
+	//    public override string Serialize()
+	//    {
+	//        return strategy.Serialize(this);
+	//    }
+	//    public override void Nuke(Map map)
+	//    {
+	//        this.strategy = new EmptyStrategy();
+	//        foreach (Map key in map.Keys)
+	//        {
+	//            this[key] = map[key];
+	//        }
+	//    }
+	//    public override Map Call(Map arg)
+	//    {
+	//        return strategy.Call(arg, this);
+	//    }
+	//    public override void Append(Map map)
+	//    {
+	//        strategy.Append(map,this);
+	//    }
+	//    public override void Remove(Map key)
+	//    {
+	//        strategy.Remove(key,this);
+	//    }
+	//    protected MapStrategy strategy;
+	//    public Map(object o):this(new ObjectMap(o))
+	//    {
+	//    }
+	//    public Map(bool boolean)
+	//        : this(new Number((double)Convert.ToInt32(boolean)))
+	//    {
+	//    }
+	//    public Map(System.Collections.Generic.ICollection<Map> list)
+	//        : this(new ListStrategy())
+	//    {
+	//        int index = 1;
+	//        foreach (object entry in list)
+	//        {
+	//            this[index] = Transform.ToMeta(entry);
+	//            index++;
+	//        }
+	//    }
+	//    public Map(MapStrategy strategy)
+	//    {
+	//        this.strategy = strategy;
+	//    }
+	//    public Map()
+	//        : this(new EmptyStrategy())
+	//    {
+	//    }
+	//    public Map(Number number)
+	//        : this(new NumberStrategy(number))
+	//    {
+	//    }
+	//    public Map(string text)
+	//        : this(new StringStrategy(text))
+	//    {
+	//    }
+	//    public Map(params Map[] keysAndValues):this()
+	//    {
+	//        for (int i = 0; i <= keysAndValues.Length - 2; i += 2)
+	//        {
+	//            this[keysAndValues[i]] = keysAndValues[i + 1];
+	//        }
+	//    }
+	//    public override int ArrayCount
+	//    {
+	//        get
+	//        {
+	//            return strategy.GetArrayCount();
+	//        }
+	//    }
+	//    public void InitFromStrategy(MapStrategy clone)
+	//    {
+	//        foreach (Map key in clone.Keys)
+	//        {
+	//            this[key] = clone.Get(key);
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return strategy.IsString;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return strategy.IsNumber;
+	//        }
+	//    }
+	//    public override Number GetNumber()
+	//    {
+	//        return strategy.GetNumber();
+	//    }
+	//    public override string GetString()
+	//    {
+	//        return strategy.GetString();
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return strategy.Count;
+	//        }
+	//    }
+	//    public override List<Map> Array
+	//    {
+	//        get
+	//        {
+	//            return strategy.Array;
+	//        }
+	//    }
+	//    protected override Map Get(Map key)
+	//    {
+	//        return strategy.Get(key);
+	//    }
+	//    protected override void Set(Map key, Map value)
+	//    {
+	//        strategy.Set(key, value,this); 
+	//    }
+	//    protected override Map CopyData() 
+	//    { 
+	//        return strategy.CopyData(); 
+	//    }
+	//    protected override bool ContainsKeyImplementation(Map key) 
+	//    { 
+	//        return strategy.ContainsKey(key); 
+	//    }
+	//    protected override ICollection<Map> KeysImplementation
+	//    {
+	//        get
+	//        {
+	//            return strategy.Keys;
+	//        }
+	//    }
+	//    public override bool Equals(object toCompare)
+	//    {
+	//        bool isEqual;
+	//        if (Object.ReferenceEquals(toCompare, this))
+	//        {
+	//            isEqual = true;
+	//        }
+	//        else if (toCompare is Map)
+	//        {
+	//            isEqual = ((Map)toCompare).strategy.EqualStrategy(strategy);
+	//        }
+	//        else
+	//        {
+	//            isEqual = false;
+	//        }
+	//        return isEqual;
+	//    }
+	//    public MapStrategy Strategy
+	//    {
+	//        get
+	//        {
+	//            return strategy;
+	//        }
+	//        set
+	//        {
+	//            strategy = value;
+	//        }
+	//    }
+	//}
 	public class Transform
 	{
 		public static object ToDotNet(Map meta, Type target)
@@ -1243,7 +1413,7 @@ namespace Meta
 			}
 			public object Call(object[] arguments)
 			{
-				Map arg = new StrategyMap();
+				Map arg = new Map();
 				Map pos = this.callable;
 				foreach (object argument in arguments)
 				{
@@ -1343,10 +1513,10 @@ namespace Meta
 						}
 
 					}
-					else if (target == typeof(Type) &&  ((StrategyMap)meta).Strategy is TypeMap)
+					else if (target == typeof(Type) &&  ((Map)meta).Strategy is TypeMap)
 					//else if (target == typeof(Type) && meta is TypeMap)
 					{
-						dotNet = ((TypeMap)(((StrategyMap)meta).Strategy)).Type;
+						dotNet = ((TypeMap)(((Map)meta).Strategy)).Type;
 						//dotNet = ((TypeMap)meta).Type;
 					}
 					else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
@@ -1354,10 +1524,10 @@ namespace Meta
 					{
 						dotNet = CreateDelegateFromCode(target, meta);
 					}
-					else if (((StrategyMap)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((StrategyMap)meta).Strategy).Type))
+					else if (((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type))
 					//else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type))
 					{
-						dotNet = ((ObjectMap)((StrategyMap)meta).Strategy).Object;
+						dotNet = ((ObjectMap)((Map)meta).Strategy).Object;
 						//dotNet = ((ObjectMap)meta).Object;
 					}
 					else if (target.IsAssignableFrom(meta.GetType()))
@@ -1433,10 +1603,10 @@ namespace Meta
 			}
 			if (dotNet == null)
 			{
-				if (((StrategyMap)meta).Strategy is ObjectMap && ((DotNetMap)((StrategyMap)meta).Strategy).Type == target)
+				if (((Map)meta).Strategy is ObjectMap && ((DotNetMap)((Map)meta).Strategy).Type == target)
 					//if (meta is ObjectMap && ((ObjectMap)meta).Type == target)
 				{
-					dotNet = ((ObjectMap)((StrategyMap)meta).Strategy).Object;
+					dotNet = ((ObjectMap)((Map)meta).Strategy).Object;
 				}
 			}
 			wasConverted = dotNet != null;
@@ -1450,7 +1620,7 @@ namespace Meta
 		{
 			if (dotNet == null)
 			{
-				return new StrategyMap(new ObjectMap(null, typeof(Object)));
+				return new Map(new ObjectMap(null, typeof(Object)));
 				//return new ObjectMap(null, typeof(Object));
 			}
 			else if (dotNet is Map)
@@ -1459,7 +1629,7 @@ namespace Meta
 			}
 			else
 			{
-				return new StrategyMap(new ObjectMap(dotNet));
+				return new Map(new ObjectMap(dotNet));
 				//return new ObjectMap(dotNet);
 			}
 		}
@@ -1480,10 +1650,10 @@ namespace Meta
 					case TypeCode.Char:
 						return (char)dotNet;
 					case TypeCode.DateTime:
-						return new StrategyMap(new ObjectMap(dotNet));
+						return new Map(new ObjectMap(dotNet));
 						//return new ObjectMap(dotNet);
 					case TypeCode.DBNull:
-						return new StrategyMap(new ObjectMap(dotNet));
+						return new Map(new ObjectMap(dotNet));
 					case TypeCode.Decimal:
 						return Convert.ToInt32(dotNet);
 					case TypeCode.Double:
@@ -1497,7 +1667,7 @@ namespace Meta
 					case TypeCode.Object:
 						if (dotNet is Number)
 						{
-							return new StrategyMap((Number)dotNet);
+							return new Map((Number)dotNet);
 						}
 						if(dotNet is Map)
 						{
@@ -1505,7 +1675,7 @@ namespace Meta
 						}
 						else
 						{
-							return new StrategyMap(new ObjectMap(dotNet));
+							return new Map(new ObjectMap(dotNet));
 							//return new ObjectMap(dotNet);
 						}
 					case TypeCode.SByte:
@@ -1534,7 +1704,7 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void Remove(Map key, StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -1549,7 +1719,7 @@ namespace Meta
 				return overloads.Keys;
 			}
 		}
-		public override void Set(Map key, Map val, StrategyMap parent)
+		public override void Set(Map key, Map val, Map parent)
 		{
 			overloads[key] = val;
 		}
@@ -1562,7 +1732,7 @@ namespace Meta
 		}
 		public static Map MethodData(string name, object obj, Type type)
 		{
-			Map map = new StrategyMap();
+			Map map = new Map();
 			if (name == ".ctor" && type.Name == "Point")
 			{
 			}
@@ -1571,12 +1741,12 @@ namespace Meta
 			{
 				return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
 			}));
-			Map result = new StrategyMap();
+			Map result = new Map();
 			foreach (MethodBase methodBase in members)
 			{
 				Map current = result;
 				ParameterInfo[] parameters = methodBase.GetParameters();
-				Map method = new StrategyMap(new Method(methodBase, obj, type));
+				Map method = new Map(new Method(methodBase, obj, type));
 				if (parameters.Length == 0)
 				{
 					result = method;
@@ -1585,7 +1755,7 @@ namespace Meta
 				{
 					for (int i = 0; i < parameters.Length; i++)
 					{
-						Map typeMap = new StrategyMap(new TypeMap(parameters[i].ParameterType));
+						Map typeMap = new Map(new TypeMap(parameters[i].ParameterType));
 						//Map typeMap = new TypeMap(parameters[i].ParameterType);
 						if (i == parameters.Length - 1)
 						{
@@ -1595,7 +1765,7 @@ namespace Meta
 						{
 							if (!current.ContainsKey(typeMap))
 							{
-								current[typeMap] = new StrategyMap();
+								current[typeMap] = new Map();
 							}
 							else
 							{
@@ -1626,7 +1796,7 @@ namespace Meta
 
 		public override Map CopyData()
 		{
-			return new StrategyMap(new Method(method, obj, type, overloads));
+			return new Map(new Method(method, obj, type, overloads));
 		}
 		protected MethodBase method;
 		protected object obj;
@@ -1682,7 +1852,7 @@ namespace Meta
 			}
 			else
 			{
-				return new StrategyMap(new ObjectMap(new CallDelegate(delegate(Map map)
+				return new Map(new ObjectMap(new CallDelegate(delegate(Map map)
 				//return new ObjectMap(new CallDelegate(delegate(Map map)
 				{
 					return DecideCall(map, arguments);
@@ -1748,24 +1918,24 @@ namespace Meta
 				List<Type> types=new List<Type>();
 				if (Type.GetGenericArguments().Length == 1)
 				{
-					types.Add(((TypeMap)((StrategyMap)key).Strategy).Type);
+					types.Add(((TypeMap)((Map)key).Strategy).Type);
 					//types.Add(((TypeMap)key).Type);
 				}
 				else
 				{
 					foreach (Map map in key.Array)
 					{
-						types.Add(((TypeMap)((StrategyMap)map).Strategy).Type);
+						types.Add(((TypeMap)((Map)map).Strategy).Type);
 						//types.Add(((TypeMap)map).Type);
 					}
 				}
-				return new StrategyMap(new TypeMap(Type.MakeGenericType(types.ToArray())));
+				return new Map(new TypeMap(Type.MakeGenericType(types.ToArray())));
 				//return new TypeMap(Type.MakeGenericType(types.ToArray()));
 			}
-			else if (Type == typeof(Array) && ((StrategyMap)key).Strategy is TypeMap)
+			else if (Type == typeof(Array) && ((Map)key).Strategy is TypeMap)
 			//else if (Type == typeof(Array) && key is TypeMap)
 			{
-				return new StrategyMap(new TypeMap(((TypeMap)((StrategyMap)key).Strategy).Type.MakeArrayType()));
+				return new Map(new TypeMap(((TypeMap)((Map)key).Strategy).Type.MakeArrayType()));
 				//return new TypeMap(((TypeMap)key).Type.MakeArrayType());
 			}
 			else if(base.Get(key)!=null)
@@ -1790,7 +1960,7 @@ namespace Meta
 					foreach (ConstructorInfo constructor in Type.GetConstructors())
 					{
 						string name = GetConstructorName(constructor);
-						data[name] = new StrategyMap(new Method(constructor, this.Object, Type));
+						data[name] = new Map(new Method(constructor, this.Object, Type));
 						//data[name] = new Method(constructor, this.Object, Type);
 					}
 				}
@@ -1818,7 +1988,7 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new TypeMap(this.Type));
+			return new Map(new TypeMap(this.Type));
 			//return new TypeMap(this.Type);
 		}
 		private Map constructor;
@@ -1828,7 +1998,7 @@ namespace Meta
 			{
 				if (constructor == null)
 				{
-					constructor = new StrategyMap(new Method(Type.GetConstructor(new Type[] { }), Object, Type));
+					constructor = new Map(new Method(Type.GetConstructor(new Type[] { }), Object, Type));
 					//constructor = new Method(Type.GetConstructor(new Type[] { }), Object, Type);
 				}
 				return constructor;
@@ -1841,7 +2011,7 @@ namespace Meta
 			return result;
 			//return base.Call(argument, parent);
 		}
-		//public override Map Call(Map argument,StrategyMap parent)
+		//public override Map Call(Map argument,Map parent)
 		//{
 			//Map item = Constructor.Call(Map.Empty);
 			//Map result = Library.With(item, argument);
@@ -1863,7 +2033,7 @@ namespace Meta
 			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
 				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg,parent);
-				//return new StrategyMap(new Method(Type.GetMethod("Invoke"), this.Object, this.Type)).Call(arg);
+				//return new Map(new Method(Type.GetMethod("Invoke"), this.Object, this.Type)).Call(arg);
 				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);
 			}
 			else
@@ -1900,7 +2070,7 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new ObjectMap(Object));
+			return new Map(new ObjectMap(Object));
 			//return nnew ObjectMap(Object);
 		}
 	}
@@ -1918,7 +2088,7 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void Remove(Map key,StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("Key cannot be removed because it does not exist.");
 		}
@@ -1935,9 +2105,9 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new EmptyStrategy());
+			return new Map(new EmptyStrategy());
 		}
-		public override void Set(Map key, Map val,StrategyMap map)
+		public override void Set(Map key, Map val, Map map)
 		{
 			if (key.IsNumber)
 			{
@@ -1968,7 +2138,7 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void  Remove(Map key,StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			if(key.Equals(Map.Empty))
 			{
@@ -2002,7 +2172,7 @@ namespace Meta
 				}
 				else if (key.Equals(NumberKeys.Denominator))
 				{
-					return new StrategyMap(new Number(number.Denominator));
+					return new Map(new Number(number.Denominator));
 				}
 				else
 				{
@@ -2014,7 +2184,7 @@ namespace Meta
 				return null;
 			}
 		}
-		public override void Set(Map key, Map value,StrategyMap map)
+		public override void Set(Map key, Map value, Map map)
 		{
 			if (key.Equals(Map.Empty) && value.IsNumber)
 			{
@@ -2059,7 +2229,7 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new NumberStrategy(number));
+			return new Map(new NumberStrategy(number));
 		}
 		public override bool IsNumber
 		{
@@ -2100,12 +2270,12 @@ namespace Meta
 				return base.EqualStrategy(obj);
 			}
 		}
-		public override void Remove(Map key,StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			Panic(new ListStrategy(),map);
 			map.Strategy.Remove(key,map);
 		}
-		public override void Set(Map key, Map val,StrategyMap map)
+		public override void Set(Map key, Map val, Map map)
 		{
 			Panic(key, val,map);
 		}
@@ -2178,11 +2348,11 @@ namespace Meta
 		}
 		//public override Map CopyData()
 		//{
-		//    return new StrategyMap(new CloneStrategy(this));
+		//    return new Map(new CloneStrategy(this));
 		//}
 		public override Map CopyData()
 		{
-			return new StrategyMap(new StringStrategy(text));
+			return new Map(new StringStrategy(text));
 		}
 		public override ICollection<Map> Keys
 		{
@@ -2243,17 +2413,17 @@ namespace Meta
 	{
 		public override Map CopyData()
 		{
-			return new StrategyMap(new CloneStrategy(this));
+			return new Map(new CloneStrategy(this));
 		}
 		protected override Map GetIndex(int i)
 		{
 			return list[i];
 		}
-		public override void Append(Map map,StrategyMap parent)
+		public override void Append(Map map, Map parent)
 		{
 			list.Add(map);
 		}
-		public override void Remove(Map key,StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -2283,7 +2453,7 @@ namespace Meta
 			}
 			return value;
 		}
-		public override void Set(Map key, Map val,StrategyMap map)
+		public override void Set(Map key, Map val, Map map)
 		{
 			if (key.IsNumber)
 			{
@@ -2355,7 +2525,7 @@ namespace Meta
 				int counter = 1;
 				foreach (Map value in list)
 				{
-					keys.Add(new StrategyMap(counter));
+					keys.Add(new Map(counter));
 					counter++;
 				}
 				return keys;
@@ -2367,7 +2537,7 @@ namespace Meta
 	{
 		public override Map CopyData()
 		{
-			return new StrategyMap(new CloneStrategy(this));
+			return new Map(new CloneStrategy(this));
 		}
 
 		public override bool IsNumber
@@ -2386,7 +2556,7 @@ namespace Meta
 			}
 			return i - 1;
 		}
-		public override void Remove(Map key,StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			dictionary.Remove(key);
 		}
@@ -2408,7 +2578,7 @@ namespace Meta
 			dictionary.TryGetValue(key, out val);
 			return val;
 		}
-		public override void Set(Map key, Map value,StrategyMap map)
+		public override void Set(Map key, Map value, Map map)
 		{
 			dictionary[key] = value;
 		}
@@ -2438,7 +2608,7 @@ namespace Meta
 		{
 			return original.GetArrayCount();
 		}
-		public override void Remove(Map key, StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			Panic(new DictionaryStrategy(), map);
 			map.Remove(key);
@@ -2469,7 +2639,7 @@ namespace Meta
 		public override Map CopyData()
 		{
 			MapStrategy clone = new CloneStrategy(this.original);
-			return new StrategyMap(clone);
+			return new Map(clone);
 		}
 		public override bool EqualStrategy(MapStrategy obj)
 		{
@@ -2512,7 +2682,7 @@ namespace Meta
 		{
 			return original.Get(key);
 		}
-		public override void Set(Map key, Map value, StrategyMap map)
+		public override void Set(Map key, Map value, Map map)
 		{
 			Panic(key, value, map);
 		}
@@ -2529,12 +2699,12 @@ namespace Meta
 		{
 			return parent.CallDefault(argument);
 		}
-		public virtual void Append(Map map,StrategyMap parent)
+		public virtual void Append(Map map, Map parent)
 		{
 		    this.Set(GetArrayCount() + 1,map,parent);
 		}
-		public abstract void Remove(Map key,StrategyMap map);
-		public abstract void Set(Map key, Map val,StrategyMap map);
+		public abstract void Remove(Map key, Map map);
+		public abstract void Set(Map key, Map val, Map map);
 		public abstract Map Get(Map key);
 
 		public virtual bool ContainsKey(Map key)
@@ -2545,7 +2715,7 @@ namespace Meta
 		public abstract int GetArrayCount();
 		public virtual Map CopyData()
 		{
-			Map map = new StrategyMap();
+			Map map = new Map();
 			foreach (Map key in Keys)
 			{
 				map[key] = this.Get(key).Copy();
@@ -2554,17 +2724,17 @@ namespace Meta
 		}
 
 		// refactor
-		public void Panic(MapStrategy newStrategy,StrategyMap map)
+		public void Panic(MapStrategy newStrategy, Map map)
 		{
 			map.Strategy = newStrategy;
 			map.InitFromStrategy(this);
 		}
 
-		protected void Panic(Map key, Map val,StrategyMap map)
+		protected void Panic(Map key, Map val, Map map)
 		{
 			Panic(key, val, new DictionaryStrategy(),map);
 		}
-		protected void Panic(Map key, Map val, MapStrategy newStrategy,StrategyMap map)
+		protected void Panic(Map key, Map val, MapStrategy newStrategy, Map map)
 		{
 			Panic(newStrategy,map);
 			map.Strategy.Set(key, val,map); // why do it like this? this wont assign the parent, which is problematic!!!
@@ -2712,7 +2882,7 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : MapStrategy
 	{
-		public override void Remove(Map key, StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -2778,17 +2948,17 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
-			if (key.Equals(new StrategyMap("instanceEvent")))
+			if (key.Equals(new Map("instanceEvent")))
 			{
 			}
-			if (obj != null && key.Equals(new StrategyMap("this")))
+			if (obj != null && key.Equals(new Map("this")))
 			{
-				return new StrategyMap(this);
+				return new Map(this);
 				//return this;
 			}
 			else if (Data.ContainsKey(key))
 			{
-				return new StrategyMap(new Method(Data[key], obj, type));
+				return new Map(new Method(Data[key], obj, type));
 				//return new Method(Data[key], obj, type);
 			}
 			else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
@@ -2830,13 +3000,13 @@ namespace Meta
 					}
 					else if (member is Type)
 					{
-						result = new StrategyMap(new TypeMap((Type)member));
+						result = new Map(new TypeMap((Type)member));
 						//result = new TypeMap((Type)member);
 					}
 					else if (member is EventInfo)
 					{
 						EventInfo eventInfo = (EventInfo)member;
-						result = new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type));
+						result = new Map(new Method(eventInfo.GetAddMethod(), obj, type));
 						//result = new Method(eventInfo.GetAddMethod(), obj, type);
 					}
 					else
@@ -2852,7 +3022,7 @@ namespace Meta
 			}
 			return null;
 		}
-		public override void Set(Map key, Map value, StrategyMap parent)
+		public override void Set(Map key, Map value, Map parent)
 		{
 			//if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
 			//{
@@ -2879,7 +3049,7 @@ namespace Meta
 					if (property.PropertyType.Name.Contains("UIElementCollection"))
 					{
 					}
-					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((StrategyMap)value).Strategy is ObjectMap))
+					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((Map)value).Strategy is ObjectMap))
 						//if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap))
 						{
 						if (value.ArrayCount != 0)
@@ -2910,7 +3080,7 @@ namespace Meta
 				else if (member is EventInfo)
 				{
 					EventInfo eventInfo = (EventInfo)member;
-					new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+					new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
 					//new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 				}
 				else
@@ -3111,16 +3281,16 @@ namespace Meta
 	//    }
 	//    protected override Map Get(Map key)
 	//    {
-	//        if (key.Equals(new StrategyMap("instanceEvent")))
+	//        if (key.Equals(new Map("instanceEvent")))
 	//        {
 	//        }
-	//        if (obj != null && key.Equals(new StrategyMap("this")))
+	//        if (obj != null && key.Equals(new Map("this")))
 	//        {
 	//            return this;
 	//        }
 	//        else if (Data.ContainsKey(key))
 	//        {
-	//            return new StrategyMap(new Method(Data[key], obj, type));
+	//            return new Map(new Method(Data[key], obj, type));
 	//            //return new Method(Data[key], obj, type);
 	//        }
 	//        else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
@@ -3167,7 +3337,7 @@ namespace Meta
 	//                else if (member is EventInfo)
 	//                {
 	//                    EventInfo eventInfo = (EventInfo)member;
-	//                    result = new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type));
+	//                    result = new Map(new Method(eventInfo.GetAddMethod(), obj, type));
 	//                    //result = new Method(eventInfo.GetAddMethod(), obj, type);
 	//                }
 	//                else
@@ -3240,7 +3410,7 @@ namespace Meta
 	//            else if (member is EventInfo)
 	//            {
 	//                EventInfo eventInfo = (EventInfo)member;
-	//                new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+	//                new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
 	//                //new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 	//            }
 	//            else
@@ -3632,11 +3802,11 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void Remove(Map key, StrategyMap map)
+		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
-		public static readonly Map gac = new StrategyMap(new Gac());
+		public static readonly Map gac = new Map(new Gac());
 		private Gac()
 		{
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
@@ -3644,7 +3814,7 @@ namespace Meta
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		public static Map LoadAssembly(Assembly assembly)
 		{
-			Map val = new StrategyMap();
+			Map val = new Map();
 			foreach (Type type in assembly.GetExportedTypes())
 			{
 				if (type.DeclaringType == null)
@@ -3659,13 +3829,13 @@ namespace Meta
 					{
 						name = type.Name;
 					}
-					selected[type.Name] = new StrategyMap(new TypeMap(type));
+					selected[type.Name] = new Map(new TypeMap(type));
 					//selected[type.Name] = new TypeMap(type);
 					foreach (ConstructorInfo constructor in type.GetConstructors())
 					{
 						if (constructor.GetParameters().Length != 0)
 						{
-							selected[TypeMap.GetConstructorName(constructor)] = new StrategyMap(new Method(constructor, null, type));
+							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));
 							//selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
 						}
 
@@ -3702,13 +3872,13 @@ namespace Meta
 			}
 			return value;
 		}
-		public override void Set(Map key, Map val, StrategyMap map)
+		public override void Set(Map key, Map val, Map map)
 		{
 			cache[key] = val;
 		}
 		public override Map CopyData()
 		{
-			return new StrategyMap(this);
+			return new Map(this);
 		}
 		public override ICollection<Map> Keys
 		{
@@ -4101,7 +4271,7 @@ namespace Meta
 		{
 			if (Indentation())
 			{
-				Map result = new StrategyMap();
+				Map result = new Map();
 				for (int count = 1; ; count++)
 				{
 					Map entry = Entry();
@@ -4135,7 +4305,7 @@ namespace Meta
 				Map value = Value();
 				if (value != null)
 				{
-					Map result = new StrategyMap();
+					Map result = new Map();
 					result[key] = value;
 					return result;
 				}
@@ -4144,7 +4314,7 @@ namespace Meta
 		}
 		private Map EmptyMap()
 		{
-			return Match("*") ? new StrategyMap() : null;
+			return Match("*") ? new Map() : null;
 		}
 	}
 	public class Binary
@@ -4163,7 +4333,7 @@ namespace Meta
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
 				object obj=formatter.Deserialize(stream);
-				return (StrategyMap)obj;
+				return (Map)obj;
 			}
 		}
 	}
@@ -4486,7 +4656,7 @@ namespace Meta
 				new Action(new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result)
 					{
-						result = new StrategyMap(result[1], map);
+						result = new Map(result[1], map);
 						return result;
 					})
 
@@ -4561,7 +4731,7 @@ namespace Meta
 		});
 
 		public static Rule FunctionExpression = new Sequence(
-			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new StrategyMap(CodeKeys.Literal, CodeKeys.Function))),
+			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new Map(CodeKeys.Literal, CodeKeys.Function))),
 			new Action(new Assignment(CodeKeys.Value), new Sequence(
 				new Action(new Assignment(CodeKeys.Literal), Function))));
 
@@ -4604,11 +4774,11 @@ namespace Meta
 
 		private static Rule Current = new Sequence(
 			new Action(new Match(), new Character(Syntax.current)),
-			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Current, Meta.Map.Empty))));
+			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Current, Meta.Map.Empty))));
 
 		private static Rule Root = new Sequence(
 			new Action(new Match(), new Character(Syntax.root)),
-			new Action(new ReferenceAssignment(), new LiteralRule(new StrategyMap(CodeKeys.Root, Meta.Map.Empty))));
+			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Root, Meta.Map.Empty))));
 
 		private static Rule Search = new Sequence(
 			new Action(
@@ -4796,8 +4966,8 @@ new Assignment(
 						new CustomProduction(
 						delegate(Parser p, Map map, ref Map result)
 						{
-							result = new StrategyMap(
-								CodeKeys.Key, new StrategyMap(
+							result = new Map(
+								CodeKeys.Key, new Map(
 										CodeKeys.Literal, p.defaultKeys.Peek()),
 								CodeKeys.Value, map);
 							p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
@@ -5281,7 +5451,7 @@ new Assignment(
 		}
 		public Map CreateMap(params Map[] maps)
 		{
-			return new StrategyMap(maps);
+			return new Map(maps);
 		}
 		public Map CreateMap()
 		{
@@ -5289,7 +5459,7 @@ new Assignment(
 		}
 		public Map CreateMap(MapStrategy strategy)
 		{
-			return new StrategyMap(strategy);
+			return new Map(strategy);
 		}
 	}
 	public class Serialize
@@ -5310,14 +5480,14 @@ new Assignment(
 		{
 			try
 			{
-				if (((StrategyMap)map).Strategy is Gac)
+				if (((Map)map).Strategy is Gac)
 					//if (map is Gac)
 					{
 					return "Gac";
 				}
-				if (((StrategyMap)map).Strategy is DotNetMap)
+				if (((Map)map).Strategy is DotNetMap)
 				{
-					return ((StrategyMap)map).Strategy.ToString();
+					return ((Map)map).Strategy.ToString();
 				}
 				else if (map.Count == 0)
 				{
@@ -5433,7 +5603,7 @@ new Assignment(
 				public override object GetResult(out int level)
 				{
 					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new StrategyMap(1, "first argument", 2, "second argument"));
+					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
 				}
 			}
 			public class Library : Test
@@ -5565,7 +5735,7 @@ new Assignment(
 			{
 				public NamedNoConversion(Map arg)
 				{
-					Map def = new StrategyMap();
+					Map def = new Map();
 					def[1] = "null";
 					def["y"] = "null";
 					def["p2"] = "null";
@@ -5587,7 +5757,7 @@ new Assignment(
 				}
 				public string Concatenate(Map arg)
 				{
-					Map def = new StrategyMap();
+					Map def = new Map();
 					def[1] = "null";
 					def["b"] = "null";
 					def["c"] = "null";

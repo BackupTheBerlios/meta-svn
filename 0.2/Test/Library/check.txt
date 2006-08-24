@@ -1,427 +1,427 @@
 ﻿Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"booleanTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"not"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"true"
-					Value (StrategyMap):
+					Value (Map):
 						1
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"false"
-					Value (StrategyMap):
+					Value (Map):
 						0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"and"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"true"
-					Value (StrategyMap):
+					Value (Map):
 						1
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"false"
-					Value (StrategyMap):
+					Value (Map):
 						0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"orTest"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"true"
-					Value (StrategyMap):
+					Value (Map):
 						1
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"false"
-					Value (StrategyMap):
+					Value (Map):
 						0
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"otherTrue"
-					Value (StrategyMap):
+					Value (Map):
 						1
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"numberTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"positiveAdd"
-			Value (StrategyMap):
+			Value (Map):
 				1100
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"negativeAdd"
-			Value (StrategyMap):
+			Value (Map):
 				-9
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"subtractTest"
-			Value (StrategyMap):
+			Value (Map):
 				6/25
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"subtractTest2"
-			Value (StrategyMap):
+			Value (Map):
 				-101
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"divideTest"
-			Value (StrategyMap):
+			Value (Map):
 				5/103
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"multiplyInteger"
-			Value (StrategyMap):
+			Value (Map):
 				19437
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"minusMultiply"
-			Value (StrategyMap):
+			Value (Map):
 				2
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"multiplyFraction"
-			Value (StrategyMap):
+			Value (Map):
 				7/2
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"smallerDecreasingTest"
-			Value (StrategyMap):
+			Value (Map):
 				0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"nonincreasingTest"
-			Value (StrategyMap):
+			Value (Map):
 				1
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"nondecreasingTest"
-			Value (StrategyMap):
+			Value (Map):
 				0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"strictlyIncreasingTest"
-			Value (StrategyMap):
+			Value (Map):
 				0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"smallerTest"
-			Value (StrategyMap):
+			Value (Map):
 				1
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"greaterTest"
-			Value (StrategyMap):
+			Value (Map):
 				0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"divide"
-			Value (StrategyMap):
+			Value (Map):
 				1000/7
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"bitwiseTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"or"
-			Value (StrategyMap):
+			Value (Map):
 				0
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"mapTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"ifTest"
-			Value (StrategyMap):
+			Value (Map):
 				"if test successful"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"joinTest"
-			Value (StrategyMap):
+			Value (Map):
 				"abc, die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"joinAllTest"
-			Value (StrategyMap):
+			Value (Map):
 				"abc, die Katze lief im Schnee.die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"appendTest"
-			Value (StrategyMap):
+			Value (Map):
 				"hello "
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"apply"
-			Value (StrategyMap):
+			Value (Map):
 				""
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"keyTestMap"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"x"
-					Value (StrategyMap):
+					Value (Map):
 						"hello"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"contains"
-			Value (StrategyMap):
+			Value (Map):
 				1
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"keysTest"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						1
-					Value (StrategyMap):
+					Value (Map):
 						"jjqwv"
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						2
-					Value (StrategyMap):
+					Value (Map):
 						"oere"
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						3
-					Value (StrategyMap):
+					Value (Map):
 						1
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"equal"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"map"
-					Value (StrategyMap):
+					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (StrategyMap):
+							Key (Map):
 								"true"
-							Value (StrategyMap):
+							Value (Map):
 								1
 						Entry (KeyValuePair`2)
-							Key (StrategyMap):
+							Key (Map):
 								"false"
-							Value (StrategyMap):
+							Value (Map):
 								0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"whileTest"
-			Value (StrategyMap):
+			Value (Map):
 				"
 	"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"firstTest"
-			Value (StrategyMap):
+			Value (Map):
 				104
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"tryTest"
-			Value (StrategyMap):
+			Value (Map):
 				"hello"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"integerToString"
-			Value (StrategyMap):
+			Value (Map):
 				"5"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"rangeTest"
-	Value (StrategyMap):
+	Value (Map):
 		"	
 "
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"reverseTest"
-	Value (StrategyMap):
+	Value (Map):
 		"olleh"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"foreachTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				1
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"hi"
-					Value (StrategyMap):
+					Value (Map):
 						"x"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				2
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"hello"
-					Value (StrategyMap):
+					Value (Map):
 						"y"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"sumTest"
-	Value (StrategyMap):
+	Value (Map):
 		21
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"valuesTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				1
-			Value (StrategyMap):
+			Value (Map):
 				"hi"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				2
-			Value (StrategyMap):
+			Value (Map):
 				"hello"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"isStringTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"no"
-			Value (StrategyMap):
+			Value (Map):
 				0
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"yes"
-			Value (StrategyMap):
+			Value (Map):
 				1
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"parseTest"
-	Value (StrategyMap):
+	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"asdf"
-			Value (StrategyMap):
+			Value (Map):
 				"hello"
 		Entry (KeyValuePair`2)
-			Key (StrategyMap):
+			Key (Map):
 				"x"
-			Value (StrategyMap):
+			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"y"
-					Value (StrategyMap):
+					Value (Map):
 						"hello"
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"z"
-					Value (StrategyMap):
+					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (StrategyMap):
+							Key (Map):
 								"a"
-							Value (StrategyMap):
+							Value (Map):
 								"x"
 				Entry (KeyValuePair`2)
-					Key (StrategyMap):
+					Key (Map):
 						"function"
-					Value (StrategyMap):
+					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (StrategyMap):
+							Key (Map):
 								"parameter"
-							Value (StrategyMap):
+							Value (Map):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (StrategyMap):
+							Key (Map):
 								"expression"
-							Value (StrategyMap):
+							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (StrategyMap):
+									Key (Map):
 										"call"
-									Value (StrategyMap):
+									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (StrategyMap):
+											Key (Map):
 												1
-											Value (StrategyMap):
+											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (StrategyMap):
+													Key (Map):
 														"search"
-													Value (StrategyMap):
+													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (StrategyMap):
+															Key (Map):
 																"literal"
-															Value (StrategyMap):
+															Value (Map):
 																"join"
 										Entry (KeyValuePair`2)
-											Key (StrategyMap):
+											Key (Map):
 												2
-											Value (StrategyMap):
+											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (StrategyMap):
+													Key (Map):
 														"literal"
-													Value (StrategyMap):
+													Value (Map):
 														"hello "
 										Entry (KeyValuePair`2)
-											Key (StrategyMap):
+											Key (Map):
 												3
-											Value (StrategyMap):
+											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (StrategyMap):
+													Key (Map):
 														"search"
-													Value (StrategyMap):
+													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (StrategyMap):
+															Key (Map):
 																"literal"
-															Value (StrategyMap):
+															Value (Map):
 																"join"
 										Entry (KeyValuePair`2)
-											Key (StrategyMap):
+											Key (Map):
 												4
-											Value (StrategyMap):
+											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (StrategyMap):
+													Key (Map):
 														"search"
-													Value (StrategyMap):
+													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (StrategyMap):
+															Key (Map):
 																"literal"
-															Value (StrategyMap):
+															Value (Map):
 																"arg"
 										Entry (KeyValuePair`2)
-											Key (StrategyMap):
+											Key (Map):
 												5
-											Value (StrategyMap):
+											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (StrategyMap):
+													Key (Map):
 														"literal"
-													Value (StrategyMap):
+													Value (Map):
 														"!"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"withTest"
-	Value (StrategyMap):
+	Value (Map):
 		System.Windows.Forms.Form, Text: hello world
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"restTest"
-	Value (StrategyMap):
+	Value (Map):
 		"ello"
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"countTest"
-	Value (StrategyMap):
+	Value (Map):
 		4
 Entry (KeyValuePair`2)
-	Key (StrategyMap):
+	Key (Map):
 		"addArrayTest"
-	Value (StrategyMap):
+	Value (Map):
 		""
