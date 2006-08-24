@@ -439,9 +439,9 @@ namespace Meta
 		{
 			try
 			{
-				//UseConsole();
-				//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-				//return;
+				UseConsole();
+				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+				return;
 				switch (args[0])
 				{
 					case "-test":
@@ -2100,6 +2100,10 @@ namespace Meta
 		{
 			return text.Length;
 		}
+		//public override Map CopyData()
+		//{
+		//    return new StrategyMap(new CloneStrategy(this));
+		//}
 		public override Map CopyData()
 		{
 			return new StrategyMap(new StringStrategy(text));
