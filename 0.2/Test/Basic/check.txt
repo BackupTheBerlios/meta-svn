@@ -1927,42 +1927,42 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"CallInstanceEvent_Object"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"add_instanceEvent_IntEvent"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"remove_instanceEvent_IntEvent"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"GetType"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"ToString"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"Equals_Object"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"GetHashCode"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):
 				"instanceEvent"
-			Value (Method):
+			Value (StrategyMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StrategyMap):

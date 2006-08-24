@@ -1007,7 +1007,6 @@ namespace Meta
 				index++;
 			}
 		}
-
 		public StrategyMap(MapStrategy strategy)
 		{
 			this.strategy = strategy;
@@ -1485,7 +1484,7 @@ namespace Meta
 	}
 	public delegate Map CallDelegate(Map argument);
 	[Serializable]
-	public abstract class MethodImplementation : Map
+	public abstract class MethodImplementation : MapStrategy
 	{
 		protected MethodBase method;
 		protected object obj;
@@ -1515,10 +1514,14 @@ namespace Meta
 			}
 		}
 		ParameterInfo[] parameters;
-		public override Map Call(Map argument)
+		public override Map Call(Map argument,Map parent)
 		{
 			return DecideCall(argument, new List<object>());
 		}
+		//public override Map Call(Map argument)
+		//{
+		//    return DecideCall(argument, new List<object>());
+		//}
 		private Map DecideCall(Map argument, List<object> oldArguments)
 		{
 			List<object> arguments = new List<object>(oldArguments);
@@ -1657,26 +1660,137 @@ namespace Meta
 	//        }
 	//    }
 	//}
+	//public abstract class MethodImplementation : Map
+	//{
+	//    protected MethodBase method;
+	//    protected object obj;
+	//    protected Type type;
+	//    public MethodImplementation(MethodBase method, object obj, Type type)
+	//    {
+	//        this.method = method;
+	//        this.obj = obj;
+	//        this.type = type;
+	//        if (method != null)
+	//        {
+	//            this.parameters = method.GetParameters();
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return false;
+	//        }
+	//    }
+	//    ParameterInfo[] parameters;
+	//    public override Map Call(Map argument)
+	//    {
+	//        return DecideCall(argument, new List<object>());
+	//    }
+	//    private Map DecideCall(Map argument, List<object> oldArguments)
+	//    {
+	//        List<object> arguments = new List<object>(oldArguments);
+	//        if (parameters.Length != 0)
+	//        {
+	//            bool converted;
+	//            object arg = Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
+	//            if (!converted)
+	//            {
+	//                throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
+	//            }
+	//            else
+	//            {
+	//                arguments.Add(arg);
+	//            }
+	//        }
+	//        if (arguments.Count >= parameters.Length)
+	//        {
+	//            return Invoke(argument, arguments.ToArray());
+	//        }
+	//        else
+	//        {
+	//            return new ObjectMap(new CallDelegate(delegate(Map map)
+	//            {
+	//                return DecideCall(map, arguments);
+	//            }));
+	//        }
+	//    }
+	//    private Map Invoke(Map argument, object[] arguments)
+	//    {
+	//        bool converted;
+	//        try
+	//        {
+	//            Map result = Transform.ToMeta(
+	//                method is ConstructorInfo ?
+	//                    ((ConstructorInfo)method).Invoke(arguments) :
+	//                     method.Invoke(obj, arguments));
+	//            return result;
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            if (e.InnerException != null)
+	//            {
+	//                throw e.InnerException;
+	//            }
+	//            else
+	//            {
+	//                throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+	//            }
+	//        }
+	//    }
+	//}
 	[Serializable]
 	public class Method : MethodImplementation
 	{
-		protected override bool ContainsKeyImplementation(Map key)
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
+		public override void Remove(Map key, StrategyMap map)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override bool ContainsKey(Map key)
 		{
 			return overloads.ContainsKey(key);
 		}
-		protected override ICollection<Map> KeysImplementation
+		public override ICollection<Map> Keys
 		{
-			get 
-			{
+			get {
 				return overloads.Keys;
 			}
 		}
-		protected override void Set(Map key, Map val)
+		//public ICollection<Map> KeysImplementation
+		//{
+		//    get
+		//    {
+		//        return overloads.Keys;
+		//    }
+		//}
+		//protected override bool ContainsKeyImplementation(Map key)
+		//{
+		//    return overloads.ContainsKey(key);
+		//}
+		//protected override ICollection<Map> KeysImplementation
+		//{
+		//    get 
+		//    {
+		//        return overloads.Keys;
+		//    }
+		//}
+		public override void Set(Map key, Map val, StrategyMap parent)
 		{
 			overloads[key] = val;
 		}
 		private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
-		protected override Map Get(Map key)
+		public override Map Get(Map key)
 		{
 			Map value;
 			overloads.TryGetValue(key,out value);
@@ -1698,7 +1812,8 @@ namespace Meta
 			{
 				Map current = result;
 				ParameterInfo[] parameters = methodBase.GetParameters();
-				Map method = new Method(methodBase, obj, type);
+				Map method = new StrategyMap(new Method(methodBase, obj, type));
+				//Map method = new Method(methodBase, obj, type);
 				if (parameters.Length == 0)
 				{
 					result = method;
@@ -1749,9 +1864,10 @@ namespace Meta
 			}
 		}
 
-		protected override Map CopyData()
+		public override Map CopyData()
 		{
-			return new Method(method, obj, type,overloads);
+			return new StrategyMap(new Method(method, obj, type, overloads));
+			//return new Method(method, obj, type, overloads);
 		}
 	}
 	[Serializable]
@@ -1821,7 +1937,8 @@ namespace Meta
 					foreach (ConstructorInfo constructor in Type.GetConstructors())
 					{
 						string name = GetConstructorName(constructor);
-						data[name] = new Method(constructor, this.Object, Type);
+						data[name] = new StrategyMap(new Method(constructor, this.Object, Type));
+						//data[name] = new Method(constructor, this.Object, Type);
 					}
 				}
 				return data;
@@ -1857,7 +1974,8 @@ namespace Meta
 			{
 				if (constructor == null)
 				{
-					constructor = new Method(Type.GetConstructor(new Type[] { }),Object,Type);
+					constructor = new StrategyMap(new Method(Type.GetConstructor(new Type[] { }), Object, Type));
+					//constructor = new Method(Type.GetConstructor(new Type[] { }), Object, Type);
 				}
 				return constructor;
 			}
@@ -1883,7 +2001,8 @@ namespace Meta
 		{
 			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);
+				return new StrategyMap(new Method(Type.GetMethod("Invoke"), this.Object, this.Type)).Call(arg);
+				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);
 			}
 			else
 			{
@@ -2792,7 +2911,8 @@ namespace Meta
 			}
 			else if (Data.ContainsKey(key))
 			{
-				return new Method(Data[key],obj,type);
+				return new StrategyMap(new Method(Data[key], obj, type));
+				//return new Method(Data[key], obj, type);
 			}
 			else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
 			{
@@ -2838,7 +2958,8 @@ namespace Meta
 					else if (member is EventInfo)
 					{
 						EventInfo eventInfo = (EventInfo)member;
-						result=new Method(eventInfo.GetAddMethod(), obj, type);
+						result = new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type));
+						//result = new Method(eventInfo.GetAddMethod(), obj, type);
 					}
 					else
 					{
@@ -2910,7 +3031,8 @@ namespace Meta
 					else if (member is EventInfo)
 					{
 						EventInfo eventInfo = (EventInfo)member;
-						new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
+						new StrategyMap(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+						//new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 					}
 					else
 					{
@@ -3333,7 +3455,8 @@ namespace Meta
 					{
 						if (constructor.GetParameters().Length != 0)
 						{
-							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
+							selected[TypeMap.GetConstructorName(constructor)] = new StrategyMap(new Method(constructor, null, type));
+							//selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
 						}
 
 					}
