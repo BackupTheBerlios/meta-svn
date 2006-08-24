@@ -122,14 +122,7 @@ namespace Meta
 				for (int i = 1; i < expressions.Count; i++)
 				{
 					Map arg = expressions[i].GetExpression().Evaluate(current);
-					//Position scope = callable.Scope;
-					//if (scope == null)
-					//{
-					//    scope = callable.Parent;
-					//}
 					callable = callable.Call(arg);
-					//callable = callable.Call(arg, callable);
-					//callable = callable.Call(arg, callable);
 				}
 				//if (Interpreter.profiling)
 				//{
@@ -187,19 +180,8 @@ namespace Meta
 			{
 				statement.Assign(context);
 			}
-			//contextPosition.Get().Scope = parent;
 			return context;
 		}
-		//public override Map Evaluate(Position parent)
-		//{
-		//    Position contextPosition=parent.AddCall(new StrategyMap());
-		//    foreach (StatementBase statement in statements)
-		//    {
-		//        statement.Assign(contextPosition);
-		//    }
-		//    contextPosition.Get().Scope = parent;
-		//    return contextPosition;
-		//}
 	}
 	public class Literal : Expression
 	{
@@ -227,19 +209,12 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		//public override Map Evaluate(Map context)
-		//{
-		//    Position position=context.AddCall(literal);
-		//    position.Get().Scope = position.Parent;
-		//    return position;
-		//}
 	}
 	public class Root : Expression
 	{
 		public override Map Evaluate(Map selected)
 		{
 			return Gac.gac;
-			//return RootPosition.rootPosition;
 		}
 	}
 	public class Search : Expression
@@ -259,19 +234,9 @@ namespace Meta
 		public override Map Evaluate(Map context)
 		{
 			Map key = keyExpression.GetExpression().Evaluate(context);
-			//Map key = keyPosition.Get();
-
 			Map selection = context;
 			while (!selection.ContainsKey(key))
 			{
-				//if (selection.Parent == null)
-				////if (selection.Parent == null)
-				//{
-				//    selection = null;
-				//    break;
-				//}
-				//else
-				//{
 				if (selection.Scope != null)
 				{
 					selection = selection.Scope;
@@ -280,9 +245,7 @@ namespace Meta
 				{
 					selection = null;
 					break;
-					//selection = selection.Parent;
 				}
-				//}
 			}
 			if (selection == null)
 			{
@@ -291,46 +254,8 @@ namespace Meta
 			else
 			{
 				return selection[key].Copy();
-				//return selection[key];
-				//Position lastEvaluated = new Position(selection, key);
-				//return selection.AddCall(lastEvaluated.Get());
 			}
 		}
-		//public override Map Evaluate(Map context)
-		//{
-		//    Position keyPosition = keyExpression.GetExpression().Evaluate(context);
-		//    Map key = keyPosition.Get();
-
-		//    Position selection = context;
-		//    while (!selection.Get().ContainsKey(key))
-		//    {
-		//        if (selection.Parent == null)
-		//        {
-		//            selection = null;
-		//            break;
-		//        }
-		//        else
-		//        {
-		//            if (selection.Get().Scope != null)
-		//            {
-		//                selection = selection.Get().Scope;
-		//            }
-		//            else
-		//            {
-		//                selection = selection.Parent;
-		//            }
-		//        }
-		//    }
-		//    if (selection == null)
-		//    {
-		//        throw new KeyNotFound(key, keyExpression.Extent, null);
-		//    }
-		//    else
-		//    {
-		//        Position lastEvaluated = new Position(selection, key);
-		//        return selection.AddCall(lastEvaluated.Get());
-		//    }
-		//}
 	}
 	public class Select : Expression
 	{
@@ -353,18 +278,8 @@ namespace Meta
 			{
 				selected = selected[subselects[i].GetExpression().Evaluate(context)];
 			}
-			return selected.Copy();
-			//return selected;
+			return selected;//.Copy();
 		}
-		//public override Map Evaluate(Map context)
-		//{
-		//    Position selected = subselects[0].GetExpression().Evaluate(context);
-		//    for (int i = 1; i < subselects.Count; i++)
-		//    {
-		//        selected = selected[subselects[i].GetExpression().Evaluate(context).Get()];
-		//    }
-		//    return selected;
-		//}
 	}
 	public class KeyStatement : StatementBase
 	{
@@ -379,11 +294,6 @@ namespace Meta
 		{
 			context[key.GetExpression().Evaluate(context)] = value.GetExpression().Evaluate(context);
 		}
-		//public override void Assign(Map context)
-		//{
-		//    Position selected = context;
-		//    context.Get()[key.GetExpression().Evaluate(context).Get()] = value.GetExpression().Evaluate(context).Get();
-		//}
 	}
 	public class CurrentStatement : StatementBase
 	{
@@ -395,39 +305,8 @@ namespace Meta
 		public override void Assign(Map context)
 		{
 			Map value = expression.GetExpression().Evaluate(context);
-
-			// remove, this is stupid
-			//if (value.Scope != null)
-			//{
-			//    // completely unlogical, actually
-			//    if (context.Scope != null)
-			//    {
-			//        value.Scope = context.Scope;
-			//    }
-			//    else
-			//    {
-			//        //value.Scope = context.Parent;
-			//    }
-			//}
 			context.Nuke(value);
 		}
-		//public override void Assign(Map context)
-		//{
-		//    Map value = expression.GetExpression().Evaluate(context).Get();
-
-		//    if (value.Scope != null)
-		//    {
-		//        if (context.Get().Scope != null)
-		//        {
-		//            value.Scope = context.Get().Scope;
-		//        }
-		//        else
-		//        {
-		//            value.Scope = context.Parent;
-		//        }
-		//    }
-		//    context.Assign(value);
-		//}
 	}
 	public abstract class StatementBase
 	{
@@ -460,125 +339,24 @@ namespace Meta
 		{
 			Map selection = context;
 			Map key = keys[0].GetExpression().Evaluate(context);
-			while (!selection.ContainsKey(key))
+			while (selection!=null && !selection.ContainsKey(key))
 			{
-				//if (selection.Parent == null)
-				//{
-				//    selection = null;
-				//    break;
-				//}
-				//else
-				//{
-				if (selection.Scope != null)
-				{
-					selection = selection.Scope;
-				}
-				else
-				{
-					//selection = selection.Parent;
-				}
-				//}
+				selection = selection.Scope;
 			}
-			Map selected;
 			if (selection == null)
 			{
 				throw new KeyNotFound(key, keys[0].Extent, null);
 			}
 			else
 			{
-				selected = selection;
+				for (int i = 1; i < keys.Count; i++)
+				{
+					selection = selection[key];
+					key = keys[i].GetExpression().Evaluate(context);
+				}
+				selection[key] = value.GetExpression().Evaluate(context);
 			}
-			for (int i = 1; i < keys.Count; i++)
-			{
-				selected = selected[key];
-				key = keys[i].GetExpression().Evaluate(context);
-			}
-			Map val = value.GetExpression().Evaluate(context);
-			selected[key] = val;
-			//selected.Assign(key, val);
 		}
-		//public override void Assign(Map context)
-		//{
-		//    Map selection = context;
-		//    Map key = keys[0].GetExpression().Evaluate(context);
-		//    while (!selection.ContainsKey(key))
-		//    {
-		//        //if (selection.Parent == null)
-		//        //{
-		//        //    selection = null;
-		//        //    break;
-		//        //}
-		//        //else
-		//        //{
-		//            if (selection.Scope != null)
-		//            {
-		//                selection = selection.Scope;
-		//            }
-		//            else
-		//            {
-		//                //selection = selection.Parent;
-		//            }
-		//        //}
-		//    }
-		//    Map selected;
-		//    if (selection == null)
-		//    {
-		//        throw new KeyNotFound(key, keys[0].Extent, null);
-		//    }
-		//    else
-		//    {
-		//        selected = selection;
-		//    }
-		//    for (int i = 1; i < keys.Count; i++)
-		//    {
-		//        selected = selected[key];
-		//        key = keys[i].GetExpression().Evaluate(context);
-		//    }
-		//    Map val = value.GetExpression().Evaluate(context);
-		//    selected[key]=val;
-		//    //selected.Assign(key, val);
-		//}
-		//public override void Assign(Map context)
-		//{
-		//    Position selected = context;
-
-		//    Position selection = selected;
-		//    Map key = keys[0].GetExpression().Evaluate(context).Get();
-		//    while (!selection.Get().ContainsKey(key))
-		//    {
-		//        if (selection.Parent == null)
-		//        {
-		//            selection = null;
-		//            break;
-		//        }
-		//        else
-		//        {
-		//            if (selection.Get().Scope != null)
-		//            {
-		//                selection = selection.Get().Scope;
-		//            }
-		//            else
-		//            {
-		//                selection = selection.Parent;
-		//            }
-		//        }
-		//    }
-		//    if (selection == null)
-		//    {
-		//        throw new KeyNotFound(key, keys[0].Extent, null);
-		//    }
-		//    else
-		//    {
-		//        selected = selection;
-		//    }
-		//    for (int i = 1; i < keys.Count; i++)
-		//    {
-		//        selected = selected[key];
-		//        key = keys[i].GetExpression().Evaluate(context).Get();
-		//    }
-		//    Map val = value.GetExpression().Evaluate(context).Get();
-		//    selected.Assign(key, val);
-		//}
 	}
 	public class Library
 	{
@@ -608,17 +386,6 @@ namespace Meta
 				return catchFunction.Call(new ObjectMap(e));
 			}
 		}
-		//public static Map Try(Map tryFunction, Map catchFunction)
-		//{
-		//    try
-		//    {
-		//        return tryFunction.Call(Map.Empty, tryFunction.Scope).Get();
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        return catchFunction.Call(new ObjectMap(e), catchFunction.Scope).Get();
-		//    }
-		//}
 		public static Map With(Map obj, Map values)
 		{
 			foreach (KeyValuePair<Map, Map> entry in values)
@@ -660,7 +427,6 @@ namespace Meta
 
 				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
 				Gac.gac["library"].Scope = Gac.gac;
-				//Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty, RootPosition.rootPosition).Get();
 			}
 			catch (Exception e)
 			{
@@ -749,131 +515,6 @@ namespace Meta
 			}
 		}
 	}
-	[Serializable]
-	//public class Position
-	//{
-	//    public Position AddCall(Map map)
-	//    {
-	//        return new TemporaryPosition(map,this, Map.Empty);
-	//    }
-	//    public override bool Equals(object obj)
-	//    {
-	//        Position position=(Position)obj;
-	//        return position.key != null && position.key.Equals(key) && position.parent.Equals(parent);
-	//    }
-	//    protected Position()
-	//    {
-	//    }
-	//    private Map key;
-	//    private Position parent;
-
-	//    public void Assign(Map key, Map value)
-	//    {
-	//        Get()[key] = value;
-	//    }
-	//    public virtual void Assign(Map value)
-	//    {
-	//        Parent.Assign(key, value);
-	//    }
-	//    public Position this[Map key]
-	//    {
-	//        get
-	//        {
-	//            if (Get().ContainsKey(key))
-	//            {
-	//                return new Position(this, key);
-	//            }
-	//            else
-	//            {
-	//                throw new Exception("Position does not exist "+key.ToString()+" in "+this.ToString());
-	//            }
-	//        }
-	//    }
-	//    public Position(Position parent, Map key)
-	//    {
-	//        this.parent = parent;
-	//        this.key = key;
-	//    }
-	//    public Position Parent
-	//    {
-	//        get
-	//        {
-	//            return parent;
-	//        }
-	//    }
-	//    public virtual Map Get()
-	//    {
-	//        return DetermineMap();
-	//    }
-	//    public virtual Map DetermineMap()
-	//    {
-	//        Map map = parent.Get();
-	//        Map result = map[key];
-	//        if (result == null)
-	//        {
-	//            throw new ApplicationException("Position does not exist");
-	//        }
-	//        return result;
-	//    }
-	//    public List<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            Position position = this;
-	//            List<Map> keys = new List<Map>();
-	//            while (position != null && position.key != null)
-	//            {
-	//                keys.Add(position.key);
-	//                position = position.Parent;
-	//            }
-	//            keys.Reverse();
-	//            return keys;
-	//        }
-	//    }
-	//    public override string ToString()
-	//    {
-	//        string text = "";
-	//        foreach (Map map in Keys)
-	//        {
-	//            text += map.ToString();
-	//        }
-	//        return text;
-	//    }
-	//}
-	//[Serializable]
-	//public class TemporaryPosition : Position
-	//{
-	//    public override Map Get()
-	//    {
-	//        return map;
-	//    }
-	//    private Map map;
-	//    public TemporaryPosition(Map map,Position parent,Map key):base(parent,key)
-	//    {
-	//        this.map = map.Copy();
-	//        //this.map = map.Copy();
-	//    }
-	//    public override void Assign(Map value)
-	//    {
-	//        map = value;
-	//    }
-	//}
-	//[Serializable]
-	//public class RootPosition : Position
-	//{
-	//    public override bool Equals(object obj)
-	//    {
-	//        return obj is RootPosition;
-	//    }
-	//    public static RootPosition rootPosition=new RootPosition();
-	//    private RootPosition()
-	//    {
-	//    }
-	//    public override Map Get()
-	//    {
-	//        return Gac.gac;
-	//    }
-	//}
 	public class KeyChangedEventArgs : EventArgs
 	{
 		public KeyChangedEventArgs(Map key)
@@ -934,9 +575,7 @@ namespace Meta
 				{
 					compiledCode = null;
 					Map val;
-					//val = value.Copy();
 					val = value;
-					//val = value.Copy();
 					Set(key, val);
 					if (KeyChanged != null)
 					{
@@ -1161,17 +800,6 @@ namespace Meta
 				scope = value;
 			}
 		}
-		//public Position Scope
-		//{
-		//    get
-		//    {
-		//        return scope;
-		//    }
-		//    set
-		//    {
-		//        scope = value;
-		//    }
-		//}
 		public virtual int Count
 		{
 			get
@@ -1218,27 +846,13 @@ namespace Meta
 			{
 				Map argumentScope = new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg);
 				argumentScope.Scope = this;
-				//argumentScope.Scope = this.Scope;
 				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
-				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
 			}
 			else
 			{
 				throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
 			}
 		}
-		//public virtual Position Call(Map arg, Position position)
-		//{
-		//    if (ContainsKey(CodeKeys.Function))
-		//    {
-		//        Position bodyPosition = position.AddCall(new StrategyMap(this[CodeKeys.Function][CodeKeys.Parameter], arg));
-		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(bodyPosition);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Map is not a function: "+Meta.Serialize.ValueFunction(this));
-		//    }
-		//}
 		public ICollection<Map> Keys
 		{
 			get
@@ -1350,7 +964,6 @@ namespace Meta
 		}
 		[NonSerialized]
 		private Map scope;
-		//private Position scope;
 	}
 	[Serializable]
 	public class StrategyMap:Map
@@ -1362,7 +975,6 @@ namespace Meta
 			{
 				this[key] = map[key];
 			}
-			//this.strategy = ((StrategyMap)map).strategy;
 		}
 		public override void Append(Map map)
 		{
@@ -1372,16 +984,6 @@ namespace Meta
 		{
 			strategy.Remove(key,this);
 		}
-		//public StrategyMap(Map scope)
-		//    : this()
-		//{
-		//    this.Scope = scope;
-		//}
-		//public StrategyMap(Position scope)
-		//    : this()
-		//{
-		//    this.Scope = scope;
-		//}
 		protected MapStrategy strategy;
 		public StrategyMap(bool boolean)
 			: this(new Number((double)Convert.ToInt32(boolean)))
@@ -1414,21 +1016,6 @@ namespace Meta
 			: this(new StringStrategy(text))
 		{
 		}
-		//public StrategyMap(params Map[] keysAndValues)
-		//    : this(keysAndValues)
-		//{
-		//    //this.Scope = scope;
-		//}
-		//public StrategyMap(Map scope, params Map[] keysAndValues)
-		//    : this(keysAndValues)
-		//{
-		//    this.Scope = scope;
-		//}
-		//public StrategyMap(Position scope, params Map[] keysAndValues)
-		//    : this(keysAndValues)
-		//{
-		//    this.Scope = scope;
-		//}
 		public StrategyMap(params Map[] keysAndValues):this()
 		{
 			for (int i = 0; i <= keysAndValues.Length - 2; i += 2)
@@ -1622,17 +1209,8 @@ namespace Meta
 				}
 				return Meta.Transform.ToDotNet(pos, this.returnType);
 			}
-			//public object Call(object[] arguments)
-			//{
-			//    Map arg = new StrategyMap();
-			//    Map pos = this.callable;
-			//    foreach (object argument in arguments)
-			//    {
-			//        pos = pos.Call(Transform.ToSimpleMeta(argument),pos.Scope).Get();
-			//    }
-			//    return Meta.Transform.ToDotNet(pos, this.returnType);
-			//}
 		}
+		// refactor
 		public static object TryToDotNet(Map meta, Type target,out bool wasConverted)
 		{
 			object dotNet = null;
@@ -1807,7 +1385,6 @@ namespace Meta
 				default:
 					throw new ApplicationException("not implemented");
 			}
-			//}
 			if (dotNet == null)
 			{
 				if(meta is ObjectMap && ((ObjectMap)meta).Type==target)
@@ -1902,7 +1479,6 @@ namespace Meta
 	[Serializable]
 	public abstract class MethodImplementation : Map
 	{
-		//public static Position currentPosition;
 		protected MethodBase method;
 		protected object obj;
 		protected Type type;
@@ -1934,7 +1510,6 @@ namespace Meta
 		public override Map Call(Map argument)
 		{
 			return DecideCall(argument, new List<object>());
-			//return DecideCall(argument, new List<object>(), position);
 		}
 		private Map DecideCall(Map argument, List<object> oldArguments)
 		{
@@ -1955,7 +1530,6 @@ namespace Meta
 			if (arguments.Count >= parameters.Length)
 			{
 				return Invoke(argument, arguments.ToArray());
-				//return Invoke(argument, arguments.ToArray(), position);
 			}
 			else
 			{
@@ -1963,43 +1537,10 @@ namespace Meta
 				{
 					return DecideCall(map, arguments);
 				}));
-				//return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
-				//{
-				//    return DecideCall(map, arguments, position).Get();
-				//})));
 			}
 		}
-		//private Position DecideCall(Map argument, List<object> oldArguments, Position position)
-		//{
-		//    List<object> arguments = new List<object>(oldArguments);
-		//    if (parameters.Length != 0)
-		//    {
-		//        bool converted;
-		//        object arg = Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
-		//        if (!converted)
-		//        {
-		//            throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
-		//        }
-		//        else
-		//        {
-		//            arguments.Add(arg);
-		//        }
-		//    }
-		//    if (arguments.Count >= parameters.Length)
-		//    {
-		//        return Invoke(argument, arguments.ToArray(), position);
-		//    }
-		//    else
-		//    {
-		//        return position.AddCall(new ObjectMap(new CallDelegate(delegate(Map map)
-		//        {
-		//            return DecideCall(map, arguments, position).Get();
-		//        })));
-		//    }
-		//}
 		private Map Invoke(Map argument, object[] arguments)
 		{
-			//currentPosition = position;
 			bool converted;
 			try
 			{
@@ -2008,7 +1549,6 @@ namespace Meta
 						((ConstructorInfo)method).Invoke(arguments) :
 						 method.Invoke(obj, arguments));
 				return result;
-				//return position.AddCall(result);
 			}
 			catch (Exception e)
 			{
@@ -2022,32 +1562,7 @@ namespace Meta
 				}
 			}
 		}
-		//private Position Invoke(Map argument, object[] arguments, Position position)
-		//{
-		//    currentPosition = position;
-		//    bool converted;
-		//    try
-		//    {
-		//        Map result = Transform.ToMeta(
-		//            method is ConstructorInfo ?
-		//                ((ConstructorInfo)method).Invoke(arguments) :
-		//                 method.Invoke(obj, arguments));
-		//        return position.AddCall(result);
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        if (e.InnerException != null)
-		//        {
-		//            throw e.InnerException;
-		//        }
-		//        else
-		//        {
-		//            throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
-		//        }
-		//    }
-		//}
 	}
-	//public delegate Position Partial(Map argument);
 	[Serializable]
 	public class Method : MethodImplementation
 	{
@@ -2256,10 +1771,8 @@ namespace Meta
 		public override Map Call(Map argument)
 		{
 			Map item = Constructor.Call(Map.Empty);
-			//Map item = Constructor.Call(Map.Empty, position).Get();
 			Map result = Library.With(item, argument);
 			return result;
-			//return position.AddCall(result);
 		}
 	}
 	[Serializable]
@@ -2277,7 +1790,6 @@ namespace Meta
 			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
 				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);
-				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, position);
 			}
 			else
 			{
@@ -2591,7 +2103,6 @@ namespace Meta
 		public override Map CopyData()
 		{
 			return new StrategyMap(new StringStrategy(text));
-			//return new StrategyMap(new CloneStrategy(this));
 		}
 		public override ICollection<Map> Keys
 		{
@@ -2766,10 +2277,6 @@ namespace Meta
 				return keys;
 			}
 		}
-		//public override Map CopyData()
-		//{
-		//    //return new StrategyMap(new CloneStrategy(this));
-		//}
 	}
 	[Serializable]
 	public class DictionaryStrategy:MapStrategy
@@ -2834,10 +2341,6 @@ namespace Meta
 				return dictionary.Count;
 			}
 		}
-		//public override Map CopyData()
-		//{
-		//    return new StrategyMap(new CloneStrategy(this));
-		//}
 	}
 	//[Serializable]
 	//public class CloneStrategy : MapStrategy
@@ -2952,8 +2455,6 @@ namespace Meta
 			}
 			return map;
 		}
-
-		//public abstract Map CopyData();
 
 		// refactor
 		public void Panic(MapStrategy newStrategy,StrategyMap map)
@@ -3274,8 +2775,7 @@ namespace Meta
 					else if (member is EventInfo)
 					{
 						EventInfo eventInfo = (EventInfo)member;
-						result=new Method(eventInfo.GetAddMethod(), obj, type);//.Call(value);
-						//new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
+						result=new Method(eventInfo.GetAddMethod(), obj, type);
 					}
 					else
 					{
@@ -3348,7 +2848,6 @@ namespace Meta
 					{
 						EventInfo eventInfo = (EventInfo)member;
 						new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
-						//new Method(eventInfo.GetAddMethod(), obj, type).Call(value, MethodImplementation.currentPosition);
 					}
 					else
 					{
@@ -5572,12 +5071,9 @@ new Assignment(
 			}
 			public static Map Run(string path, Map argument)
 			{
-				//argument.Scope = Gac.gac["library"];
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
 				return callable.Call(argument);
-				//return Parser.Parse(path).Call(argument);
-				//return Parser.Parse(path).Call(argument, new Position(RootPosition.rootPosition, "library")).Get();
 			}
 		}
 		namespace TestClasses
