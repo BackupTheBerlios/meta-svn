@@ -536,6 +536,18 @@ namespace Meta
 				extent = value;
 			}
 		}
+		public static implicit operator Map(double number)
+		{
+			return new Map(number);
+		}
+		public static implicit operator Map(float number)
+		{
+			return new Map(number);
+		}
+		public static implicit operator Map(decimal number)
+		{
+			return new Map(number);
+		}
 		public static implicit operator Map(Number integer)
 		{
 			return new Map(integer);
@@ -1003,7 +1015,6 @@ namespace Meta
 				foreach (object argument in arguments)
 				{
 					pos = pos.Call(Transform.ToMeta(argument));
-					//pos = pos.Call(Transform.ToSimpleMeta(argument));
 				}
 				if (returnType != typeof(void))
 				{
@@ -1203,22 +1214,6 @@ namespace Meta
 		{
 			return meta.IsNumber && meta.GetNumber()>=minValue && meta.GetNumber()<=maxValue;
 		}
-		//public static Map ToSimpleMeta(object dotNet)
-		//{
-		//    if (dotNet == null)
-		//    {
-		//        return Map.Empty;
-		//        //return new Map(new ObjectMap(null, typeof(Object)));
-		//    }
-		//    else if (dotNet is Map)
-		//    {
-		//        return (Map)dotNet;
-		//    }
-		//    else
-		//    {
-		//        return new Map(dotNet);
-		//    }
-		//}
 		public static Map ToMeta(object dotNet)
 		{
 			if (dotNet == null)
@@ -1227,34 +1222,47 @@ namespace Meta
 			}
 			else
 			{
-				switch(Type.GetTypeCode(dotNet.GetType()))
+				Type type = dotNet.GetType();
+				switch(Type.GetTypeCode(type))
 				{
 					case TypeCode.Boolean:
-						return Convert.ToInt32(((bool)dotNet));
+						return(Boolean)dotNet;
 					case TypeCode.Byte:
-						return (byte)dotNet;
+						return (Byte)dotNet;
 					case TypeCode.Char:
-						return (char)dotNet;
+						return (Char)dotNet;
+					case TypeCode.SByte:
+						return (SByte)dotNet;
+					case TypeCode.Single:
+						return (Single)dotNet;
+					case TypeCode.UInt16:
+						return (UInt16)dotNet;
+					case TypeCode.UInt32:
+						return (UInt32)dotNet;
+					case TypeCode.UInt64:
+						return (UInt64)dotNet;
+					case TypeCode.String:
+						return (String)dotNet;
+					case TypeCode.Decimal:
+						return (Decimal)dotNet;
+					case TypeCode.Double:
+						return (Double)dotNet;
+					case TypeCode.Int16:
+						return (Int16)dotNet;
+					case TypeCode.Int32:
+						return (Int32)dotNet;
+					case TypeCode.Int64:
+						return (Int64)dotNet;
 					case TypeCode.DateTime:
 						return new Map(dotNet);
 					case TypeCode.DBNull:
 						return new Map(dotNet);
-					case TypeCode.Decimal:
-						return Convert.ToInt32(dotNet);
-					case TypeCode.Double:
-						return Convert.ToInt32(dotNet);
-					case TypeCode.Int16:
-						return (short)dotNet;
-					case TypeCode.Int32:
-						return (int)dotNet;
-					case TypeCode.Int64:
-						return (long)dotNet;
 					case TypeCode.Object:
-						if (dotNet is Number)
+						if (type==typeof(Number))
 						{
-							return new Map((Number)dotNet);
+							return (Number)dotNet;
 						}
-						if(dotNet is Map)
+						else if(type==typeof(Map))
 						{
 							return (Map)dotNet;
 						}
@@ -1262,20 +1270,8 @@ namespace Meta
 						{
 							return new Map(dotNet);
 						}
-					case TypeCode.SByte:
-						return (sbyte)dotNet;
-					case TypeCode.Single:
-						return Convert.ToInt32(dotNet);
-					case TypeCode.String:
-						return (string)dotNet;
-					case TypeCode.UInt32:
-						return (uint)dotNet;
-					case TypeCode.UInt64:
-						return (ulong)dotNet;
-					case TypeCode.UInt16:
-						return (ushort)dotNet;
 					default:
-						throw new ApplicationException("not implemented");
+						throw new ApplicationException("Cannot convert object.");
 				}
 			}
 		}
@@ -1313,52 +1309,6 @@ namespace Meta
 			Map value;
 			overloads.TryGetValue(key, out value);
 			return value;
-		}
-		public static Map MethodData(string name, object obj, Type type)
-		{
-			Map map = new Map();
-			if (name == ".ctor" && type.Name == "Point")
-			{
-			}
-			List<MethodBase> members = new List<MethodBase>((MethodBase[])new ArrayList(type.GetMember(name, GetBindingFlags(obj, name))).ToArray(typeof(MethodBase)));
-			members.Sort(new Comparison<MethodBase>(delegate(MethodBase a, MethodBase b)
-			{
-				return a.GetParameters().Length.CompareTo(b.GetParameters().Length);
-			}));
-			Map result = new Map();
-			foreach (MethodBase methodBase in members)
-			{
-				Map current = result;
-				ParameterInfo[] parameters = methodBase.GetParameters();
-				Map method = new Map(new Method(methodBase, obj, type));
-				if (parameters.Length == 0)
-				{
-					result = method;
-				}
-				else
-				{
-					for (int i = 0; i < parameters.Length; i++)
-					{
-						Map typeMap = new Map(new TypeMap(parameters[i].ParameterType));
-						if (i == parameters.Length - 1)
-						{
-							current[typeMap] = method;
-						}
-						else
-						{
-							if (!current.ContainsKey(typeMap))
-							{
-								current[typeMap] = new Map();
-							}
-							else
-							{
-							}
-							current = current[typeMap];
-						}
-					}
-				}
-			}
-			return result;
 		}
 		public Method(MethodBase method, object obj, Type type, Dictionary<Map, Map> overloads)
 			: this(method, obj, type)
@@ -1419,8 +1369,6 @@ namespace Meta
 			if (parameters.Length != 0)
 			{
 				object arg;
-				;
-				//object arg = Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out converted);
 				if (!Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out arg))
 				{
 					throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
@@ -2090,7 +2038,6 @@ namespace Meta
 		{
 			return new Map(new CloneStrategy(this));
 		}
-
 		public override bool IsNumber
 		{
 			get
@@ -2098,12 +2045,12 @@ namespace Meta
 				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);
 			}
 		}
-
 		public override int GetArrayCount()
 		{
 			int i = 1;
-			for (; this.ContainsKey(i); i++)
+			while(this.ContainsKey(i))
 			{
+				i++;
 			}
 			return i - 1;
 		}
@@ -2498,9 +2445,6 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
-			if (key.Equals(new Map("instanceEvent")))
-			{
-			}
 			if (obj != null && key.Equals(new Map("this")))
 			{
 				return new Map(this);
@@ -2584,9 +2528,6 @@ namespace Meta
 				else if (member is PropertyInfo)
 				{
 					PropertyInfo property = (PropertyInfo)member;
-					if (property.PropertyType.Name.Contains("UIElementCollection"))
-					{
-					}
 					if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap))
 						{
 						if (value.ArrayCount != 0)
@@ -2786,27 +2727,19 @@ namespace Meta
 			{
 				int level;
 				Console.Write(this.GetType().Name + "...");
-
-
 				DateTime startTime = DateTime.Now;
 				object result = GetResult(out level);
 				TimeSpan duration = DateTime.Now - startTime;
-
-
 				string testDirectory = Path.Combine(TestDirectory, this.GetType().Name);
-
 				string resultPath = Path.Combine(testDirectory, "result.txt");
 				string checkPath = Path.Combine(testDirectory, "check.txt");
-
 				Directory.CreateDirectory(testDirectory);
 				if (!File.Exists(checkPath))
 				{
 					File.Create(checkPath).Close();
 				}
-
 				StringBuilder stringBuilder = new StringBuilder();
 				Serialize(result, "", stringBuilder, level);
-
 				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.UTF8);
 				string successText;
 				bool success = !File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
@@ -2974,35 +2907,6 @@ namespace Meta
 			}
 		}
 	}
-	public class Syntax
-	{
-		public const char lastArgument = '@';
-		public const char autokey = '.';
-		public const char callStart = '(';
-		public const char callEnd = ')';
-		public const char root = '/';
-		public const char negative='-';
-		public const char fraction = '/';
-		public const char endOfFile = (char)65535;
-		public const char indentation = '\t';
-		public const char unixNewLine = '\n';
-		public const string windowsNewLine = "\r\n";
-		public const char function = '|';
-		public const char @string = '\"';
-		public const char lookupStart = '[';
-		public const char lookupEnd = ']';
-		public const char emptyMap = '0';
-		public const char explicitCall = '-';
-		public const char select = '.';
-		public const char character = '\'';
-		public const char assignment = ' ';
-		public const char space = ' ';
-		public const char tab = '\t';
-		public const char current = '&';
-		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-',':'};
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-	}
 	public class Gac : MapStrategy
 	{
 		public override int GetArrayCount()
@@ -3087,9 +2991,9 @@ namespace Meta
 		}
 		public override ICollection<Map> Keys
 		{
-			get 
-			{ 
-				throw new Exception("The method or operation is not implemented."); 
+			get
+			{
+				throw new Exception("The method or operation is not implemented.");
 			}
 		}
 		public override bool ContainsKey(Map key)
@@ -3225,7 +3129,7 @@ namespace Meta
 		}
 		public static Number operator %(Number a, Number b)
 		{
-			return Convert.ToInt32(a.Numerator)%Convert.ToInt32(b.Numerator);
+			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
 		}
 		public static Number operator +(Number a, Number b)
 		{
@@ -3290,238 +3194,6 @@ namespace Meta
 			return Convert.ToInt64(numerator);
 		}
 	}
-	public class RealParser
-	{
-		public RealParser(string text, int index)
-		{
-			this.text = text;
-			this.index = index;
-		}
-		public string text;
-		public int index;
-
-		private bool MatchAny(string chars, out char c)
-		{
-			c = text[index];
-			if (chars.Contains(c.ToString()))
-			{
-				index++;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		private bool MatchExcept(string chars, out char c)
-		{
-			c = Look();
-			if (!chars.Contains(c.ToString()))
-			{
-				index++;
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-
-		}
-		private char Look()
-		{
-			return text[index];
-		}
-		private bool Match(char c)
-		{
-			return Match(c.ToString());
-		}
-		private bool Match(string s)
-		{
-			return text.Substring(index, s.Length) == s;
-		}
-		public bool NewLine()
-		{
-			return Match(Syntax.unixNewLine.ToString()) || Match(Syntax.windowsNewLine);
-		}
-		public bool EndOfLine()
-		{
-			Whitespace();
-			return NewLine();
-		}
-		private void Whitespace()
-		{
-			while (Match('\t') || Match(' ')) ;
-		}
-		public Map Integer()
-		{
-			string s = "";
-			if (Match('-'))
-			{
-				s += "-";
-			}
-			char c;
-			while (MatchAny("0123456789", out c))
-			{
-				s += c;
-			}
-			return Convert.ToInt32(s);
-		}
-		public bool Indentation()
-		{
-			if (EndOfLine())
-			{
-				if (Match("".PadLeft(indentationCount + 1, '\t')))
-				{
-					indentationCount++;
-					return true;
-				}
-			}
-			return false;
-		}
-		private int indentationCount = -1;
-		public bool SameIndentation()
-		{
-			return Match("".PadLeft(indentationCount, '\t'));
-		}
-		public bool StringDedentation()
-		{
-			EndOfLine();
-			if (Match("".PadLeft(indentationCount - 1, '\t')))
-			{
-				indentationCount--;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		public void Dedentation()
-		{
-			indentationCount--;
-		}
-		private Map ShortString()
-		{
-			if (Match('"'))
-			{
-				string text = "";
-				char c;
-				while (MatchExcept("\n\r\"", out c))
-				{
-					text += c;
-				}
-				if (Look() == '"')
-				{
-					return text;
-				}
-			}
-			return null;
-		}
-		public delegate Map Parse();
-		public Map Try(params Parse[] parsers)
-		{
-			foreach (Parse parse in parsers)
-			{
-				Map value = parse();
-				if (value != null)
-				{
-					return value;
-				}
-			}
-			return null;
-		}
-		public Map String()
-		{
-			return Try(ShortString, LongString);
-		}
-		public Map LongString()
-		{
-			if (Match('"'))
-			{
-				if (Indentation())
-				{
-					string text = "";
-					while (true)
-					{
-						char c;
-						while (MatchExcept("\n\r", out c))
-						{
-							text += c;
-						}
-						if (EndOfLine() && SameIndentation())
-						{
-							text += '\n';
-						}
-						else
-						{
-							StringDedentation();
-							if (Match('"'))
-							{
-								return text;
-							}
-						}
-					}
-				}
-			}
-			return null;
-		}
-		private bool EndOfFile
-		{
-			get
-			{
-				return index >= text.Length;
-			}
-		}
-		public Map Map()
-		{
-			if (Indentation())
-			{
-				Map result = new Map();
-				for (int count = 1; ; count++)
-				{
-					Map entry = Entry();
-					if (entry != null)
-					{
-						result[count] = entry;
-					}
-					if (EndOfFile)
-					{
-						break;
-					}
-					if (!SameIndentation())
-					{
-						Dedentation();
-						break;
-					}
-				}
-				return result;
-			}
-			return null;
-		}
-		public Map Value()
-		{
-			return Try(Map, String, Integer);
-		}
-		public Map Entry()
-		{
-			Map key = Value();
-			if (key != null && Match('='))
-			{
-				Map value = Value();
-				if (value != null)
-				{
-					Map result = new Map();
-					result[key] = value;
-					return result;
-				}
-			}
-			return null;
-		}
-		private Map EmptyMap()
-		{
-			return Match("*") ? new Map() : null;
-		}
-	}
 	public class Binary
 	{
 		public static void Serialize(Map map,string path)
@@ -3541,6 +3213,35 @@ namespace Meta
 				return (Map)obj;
 			}
 		}
+	}
+	public class Syntax
+	{
+		public const char lastArgument = '@';
+		public const char autokey = '.';
+		public const char callStart = '(';
+		public const char callEnd = ')';
+		public const char root = '/';
+		public const char negative = '-';
+		public const char fraction = '/';
+		public const char endOfFile = (char)65535;
+		public const char indentation = '\t';
+		public const char unixNewLine = '\n';
+		public const string windowsNewLine = "\r\n";
+		public const char function = '|';
+		public const char @string = '\"';
+		public const char lookupStart = '[';
+		public const char lookupEnd = ']';
+		public const char emptyMap = '0';
+		public const char explicitCall = '-';
+		public const char select = '.';
+		public const char character = '\'';
+		public const char assignment = ' ';
+		public const char space = ' ';
+		public const char tab = '\t';
+		public const char current = '&';
+		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
 	public class Parser
 	{
@@ -3594,11 +3295,11 @@ namespace Meta
 
 		public static Rule EndOfLine =
 			new Sequence(
-				new Action(new Match(), new ZeroOrMore(
-					new Action(new Match(), new Alternatives(
+				new Action(new ZeroOrMore(
+					new Action(new Alternatives(
 						new Character(Syntax.space),
 						new Character(Syntax.tab))))),
-				new Action(new Match(), NewLine));
+				new Action(NewLine));
 
 		public static Rule Integer =
 			new Sequence(
@@ -3660,8 +3361,7 @@ namespace Meta
 
 		private static Rule EndOfLinePreserve =
 			new Sequence(
-				new Action(new Match(),
-					new ZeroOrMore(
+				new Action(new ZeroOrMore(
 							new Action(new Autokey(), new Alternatives(
 								new Character(Syntax.space),
 								new Character(Syntax.tab))))),
@@ -3672,7 +3372,7 @@ namespace Meta
 
 		private static Rule SmallIndentation = new Sequence(
 
-			new Action(new Match(), new CustomRule(delegate(Parser p, out bool matched)
+			new Action(new CustomRule(delegate(Parser p, out bool matched)
 			{
 				p.indentationCount++;
 				matched = true;
@@ -3683,8 +3383,8 @@ namespace Meta
 		public static Rule FullIndentation = new Alternatives(
 				StartOfFile,
 				new Sequence(
-				new Action(new Match(), EndOfLine),
-				new Action(new Match(), SmallIndentation)
+				new Action(EndOfLine),
+				new Action(SmallIndentation)
 				));
 
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
@@ -3696,9 +3396,8 @@ namespace Meta
 		{
 			Map map = new Sequence(
 				new Action(
-					new Match(),
 					new Optional(EndOfLine)),
-				new Action(new Match(), StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
+				new Action(StringRule("".PadLeft(pa.indentationCount - 1, Syntax.indentation)))).Match(pa, out matched);
 			if (matched)
 			{
 				pa.indentationCount--;
@@ -3707,13 +3406,11 @@ namespace Meta
 		});
 		public static Rule CharacterDataExpression = new Sequence(
 			new Action(
-				new Match(),
 				new Character(Syntax.character)),
 			new Action(
 				new ReferenceAssignment(),
 				new CharacterExcept(Syntax.character)),
 			new Action(
-				new Match(),
 				new Character(Syntax.character)));
 
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched)
@@ -3748,8 +3445,8 @@ namespace Meta
 			while (true)
 			{
 				bool lineMatched;
-				new Sequence(new Action(new Match(), EndOfLine),
-					new Action(new Match(), SameIndentation)).Match(parser, out lineMatched);
+				new Sequence(new Action(EndOfLine),
+					new Action(SameIndentation)).Match(parser, out lineMatched);
 				if (lineMatched)
 				{
 					result.Append('\n');
@@ -3771,15 +3468,15 @@ namespace Meta
 					Syntax.@string)));
 
 		public static Rule String = new Sequence(
-			new Action(new Match(), new Character(Syntax.@string)),
+			new Action(new Character(Syntax.@string)),
 			new Action(new ReferenceAssignment(), new Alternatives(
 				SingleString,
 				new Sequence(
-					new Action(new Match(), FullIndentation),
-					new Action(new Match(), SameIndentation),
+					new Action( FullIndentation),
+					new Action( SameIndentation),
 					new Action(new ReferenceAssignment(), StringBeef),
-					new Action(new Match(), StringDedentation)))),
-			new Action(new Match(), new Character(Syntax.@string)));
+					new Action( StringDedentation)))),
+			new Action( new Character(Syntax.@string)));
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -3790,7 +3487,7 @@ namespace Meta
 					new Optional(
 						new Sequence(
 							new Action(
-								new Match(),
+								
 								new Character(Syntax.fraction)),
 							new Action(
 								new ReferenceAssignment(),
@@ -3826,7 +3523,7 @@ namespace Meta
 		});
 		private static Rule LookupAnything =
 			new Sequence(
-				new Action(new Match(), new Character(('<'))),
+				new Action( new Character(('<'))),
 				new Action(new ReferenceAssignment(), Value));
 
 		public static Rule Function = new Sequence(
@@ -3840,12 +3537,12 @@ namespace Meta
 						Syntax.windowsNewLine[0],
 						Syntax.unixNewLine)))),
 			new Action(
-				new Match(),
+				
 					new Character(
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				Expression),
-			new Action(new Match(), new Optional(EndOfLine)));
+			new Action( new Optional(EndOfLine)));
 
 		public static Rule Entry = new Alternatives(
 			new Sequence(
@@ -3857,7 +3554,7 @@ namespace Meta
 					Number,
 					LookupString,
 					LookupAnything)),
-				new Action(new Match(), new Character('=')),
+				new Action( new Character('=')),
 				new Action(new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result)
 					{
@@ -3866,11 +3563,11 @@ namespace Meta
 					})
 
 					, Value),
-			 new Action(new Match(), new Optional(EndOfLine))));
+			 new Action( new Optional(EndOfLine))));
 
 		public static Rule Map = new Sequence(
-			new Action(new Match(), new Optional(new Character(','))),
-			new Action(new Match(),
+			new Action( new Optional(new Character(','))),
+			new Action(
 				FullIndentation),
 				new Action(new ReferenceAssignment(), new PrePost(
 				delegate(Parser p)
@@ -3883,11 +3580,11 @@ namespace Meta
 						new Merge(),
 						new Sequence(
 							new Action(
-								new Match(), SameIndentation),
+								 SameIndentation),
 							new Action(
 								new ReferenceAssignment(),
 								Entry))))),
-					new Action(new Match(), Dedentation)),
+					new Action( Dedentation)),
 				delegate(Parser p)
 				{
 					p.defaultKeys.Pop();
@@ -3895,44 +3592,44 @@ namespace Meta
 
 
 		public static Rule File = new Sequence(
-			new Action(new Match(),
+			new Action(
 				new Optional(
 					new Sequence(
-						new Action(new Match(),
+						new Action(
 							StringRule("#!")),
-						new Action(new Match(),
+						new Action(
 							new ZeroOrMore(
-								new Action(new Match(),
+								new Action(
 									new CharacterExcept(Syntax.unixNewLine)))),
-						new Action(new Match(), EndOfLine)))),
+						new Action( EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
 
 		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action(new Match(), new Character(Syntax.callStart)),
+				new Action( new Character(Syntax.callStart)),
 				new Action(new ReferenceAssignment(), Call),
-				new Action(new Match(), new Character(Syntax.callEnd)));
+				new Action( new Character(Syntax.callEnd)));
 		});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action(new Match(), new Character(Syntax.explicitCall)),
+				new Action( new Character(Syntax.explicitCall)),
 				new Action(new Assignment(
 					CodeKeys.Call),
 					new Sequence(
-						new Action(new Match(), FullIndentation),
+						new Action( FullIndentation),
 						new Action(
 							new ReferenceAssignment(),
 							new OneOrMore(
 								new Action(
 									new Autokey(),
 									new Sequence(
-										new Action(new Match(), new Optional(EndOfLine)),
-										new Action(new Match(), SameIndentation),
+										new Action( new Optional(EndOfLine)),
+										new Action( SameIndentation),
 										new Action(new ReferenceAssignment(), Expression))))),
-							new Action(new Match(), new Optional(EndOfLine)),
-							new Action(new Match(), new Optional(Dedentation)))));
+							new Action( new Optional(EndOfLine)),
+							new Action( new Optional(Dedentation)))));
 		});
 
 		public static Rule FunctionExpression = new Sequence(
@@ -3943,14 +3640,14 @@ namespace Meta
 
 		private static Rule Whitespace =
 			new ZeroOrMore(
-				new Action(new Match(),
+				new Action(
 					new Alternatives(
 						new Character(Syntax.tab),
 						new Character(Syntax.space))));
 
 		private static Rule EmptyMap =
 			new Sequence(
-				new Action(new Match(),
+				new Action(
 					new Character(Syntax.emptyMap)),
 				new Action(new ReferenceAssignment(),
 					new LiteralRule(Meta.Map.Empty)));
@@ -3967,7 +3664,7 @@ namespace Meta
 
 		private static Rule LookupAnythingExpression =
 			new Sequence(
-				new Action(new Match(), new Character('<')),
+				new Action( new Character('<')),
 				new Action(new ReferenceAssignment(), Expression)
 			);
 
@@ -3978,11 +3675,11 @@ namespace Meta
 					LookupString));
 
 		private static Rule Current = new Sequence(
-			new Action(new Match(), new Character(Syntax.current)),
+			new Action( new Character(Syntax.current)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Current, Meta.Map.Empty))));
 
 		private static Rule Root = new Sequence(
-			new Action(new Match(), new Character(Syntax.root)),
+			new Action( new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Root, Meta.Map.Empty))));
 
 		private static Rule Search = new Sequence(
@@ -3990,7 +3687,7 @@ namespace Meta
 		new Assignment(
 				CodeKeys.Search), new Alternatives(
 			new Sequence(
-				new Action(new Match(), new Character('!')),
+				new Action( new Character('!')),
 				new Action(
 					new ReferenceAssignment(),
 					Expression)),
@@ -4004,9 +3701,9 @@ namespace Meta
 			new Action(new Assignment(
 				CodeKeys.Select),
 				new Sequence(
-					new Action(new Match(), new Character('.')),
-					new Action(new Match(), FullIndentation),
-					new Action(new Match(), SameIndentation),
+					new Action( new Character('.')),
+					new Action( FullIndentation),
+					new Action( SameIndentation),
 					new Action(new Assignment(1),
 						new Alternatives(
 							ProgramDelayed,
@@ -4016,11 +3713,11 @@ namespace Meta
 							Call)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
-							new Action(new Match(), new Optional(EndOfLine)),
-							new Action(new Match(), SameIndentation),
+							new Action( new Optional(EndOfLine)),
+							new Action( SameIndentation),
 							new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
-					new Action(new Match(), new Optional(Dedentation))
+					new Action( new Optional(Dedentation))
 			)));
 
 		private static Rule KeysSearch = new Sequence(
@@ -4028,7 +3725,7 @@ namespace Meta
 new Assignment(
 		CodeKeys.Search),
 	new Sequence(
-		new Action(new Match(), new Character('!')),
+		new Action( new Character('!')),
 		new Action(
 			new ReferenceAssignment(),
 			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
@@ -4053,14 +3750,14 @@ new Assignment(
 			))),
 
 			new Sequence(
-			new Action(new Match(), new Character('.')),
-			new Action(new Match(), FullIndentation),
+			new Action( new Character('.')),
+			new Action( FullIndentation),
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),
 						new Sequence(
-				new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), SameIndentation),
+				new Action( new Optional(EndOfLine)),
+			new Action( SameIndentation),
 			new Action(new ReferenceAssignment(),
 				new Alternatives(
 						KeysSearch,
@@ -4071,16 +3768,16 @@ new Assignment(
 			String,
 			LookupStringExpression
 			)))))),
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(Dedentation)),
-			new Action(new Match(), new Optional(SameIndentation))));
+			new Action( new Optional(EndOfLine)),
+			new Action( new Optional(Dedentation)),
+			new Action( new Optional(SameIndentation))));
 
 
 		public static Rule CurrentStatement = new Sequence(
-			new Action(new Match(), StringRule("&=")),
+			new Action( StringRule("&=")),
 			new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
 			new Action(new Assignment(CodeKeys.Value), Expression),
-			new Action(new Match(), new Optional(EndOfLine))
+			new Action( new Optional(EndOfLine))
 			);
 
 
@@ -4090,11 +3787,11 @@ new Assignment(
 				new Sequence(new Action(new Assignment(CodeKeys.Literal),LookupString)),
 
 				Expression)),
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(SameIndentation)),
-			new Action(new Match(), StringRule("=")),
+			new Action( new Optional(EndOfLine)),
+			new Action( new Optional(SameIndentation)),
+			new Action( StringRule("=")),
 			new Action(new Assignment(CodeKeys.Value), Expression),
-			new Action(new Match(), new Optional(EndOfLine)));
+			new Action( new Optional(EndOfLine)));
 
 
 		public static Rule Statement = new Sequence(
@@ -4105,19 +3802,19 @@ new Assignment(
 						new Action(new Assignment(
 							CodeKeys.Keys),
 							Keys),
-						new Action(new Match(), new Optional(EndOfLine)),
-						new Action(new Match(), new Optional(SameIndentation)),
-						new Action(new Match(), new Character(':')),
+						new Action( new Optional(EndOfLine)),
+						new Action( new Optional(SameIndentation)),
+						new Action( new Character(':')),
 						new Action(new Assignment(
 							CodeKeys.Value),
 							Expression),
-						new Action(new Match(), new Optional(EndOfLine)))
+						new Action( new Optional(EndOfLine)))
 			)));
 
 
 
 		public static Rule ListMap = new Sequence(
-			new Action(new Match(), new Character('+')),
+			new Action( new Character('+')),
 			new Action(
 				new ReferenceAssignment(),
 				new PrePost(
@@ -4126,22 +3823,22 @@ new Assignment(
 						p.defaultKeys.Push(1);
 					},
 					new Sequence(
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), SmallIndentation),
+			new Action( new Optional(EndOfLine)),
+			new Action( SmallIndentation),
 						new Action(
 							new ReferenceAssignment(),
 							new ZeroOrMore(
 								new Action(new Autokey(),
 									new Sequence(
-										new Action(new Match(), new Optional(EndOfLine)),
-										new Action(new Match(), SameIndentation),
+										new Action( new Optional(EndOfLine)),
+										new Action( SameIndentation),
 										new Action(new ReferenceAssignment()
 			, Value)
 			)))
 			)
 			,
-				new Action(new Match(), new Optional(EndOfLine)),
-				new Action(new Match(), new Optional(new Alternatives(Dedentation)))
+				new Action( new Optional(EndOfLine)),
+				new Action( new Optional(new Alternatives(Dedentation)))
 			),
 					delegate(Parser p)
 					{
@@ -4149,7 +3846,7 @@ new Assignment(
 					})));
 
 		public static Rule List = new Sequence(
-		new Action(new Match(), new Character('+')),
+		new Action( new Character('+')),
 		new Action(
 			new Assignment(CodeKeys.Program),
 			new PrePost(
@@ -4158,15 +3855,15 @@ new Assignment(
 					p.defaultKeys.Push(1);
 				},
 				new Sequence(
-		new Action(new Match(), new Optional(EndOfLine)),
-		new Action(new Match(), SmallIndentation),
+		new Action( new Optional(EndOfLine)),
+		new Action( SmallIndentation),
 					new Action(
 						new Append(),
 						new ZeroOrMore(
 							new Action(new Autokey(),
 								new Sequence(
-									new Action(new Match(), new Optional(EndOfLine)),
-									new Action(new Match(), SameIndentation),
+									new Action( new Optional(EndOfLine)),
+									new Action( SameIndentation),
 									new Action(
 						new CustomProduction(
 						delegate(Parser p, Map map, ref Map result)
@@ -4182,8 +3879,8 @@ new Assignment(
 		)))
 		)
 		,
-			new Action(new Match(), new Optional(EndOfLine)),
-			new Action(new Match(), new Optional(new Alternatives(Dedentation)))
+			new Action( new Optional(EndOfLine)),
+			new Action( new Optional(new Alternatives(Dedentation)))
 		),
 				delegate(Parser p)
 				{
@@ -4191,22 +3888,22 @@ new Assignment(
 				})));
 
 		public static Rule Program = new Sequence(
-	new Action(new Match(), new Character(',')),
+	new Action( new Character(',')),
 	new Action(
 		new Assignment(CodeKeys.Program),
 			new Sequence(
 				new Action(
-				new Match(),
+				
 			EndOfLine),
 
 				new Action(
-					new Match(),
+					
 					SmallIndentation),
 				new Action(new ReferenceAssignment(),
 					new ZeroOrMore(
 						new Action(new Autokey(),
 							new Sequence(
-								new Action(new Match(), new Alternatives(
+								new Action( new Alternatives(
 									SameIndentation,
 									Dedentation)),
 								new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement,KeysStatement, Statement)))))))));
@@ -4219,6 +3916,9 @@ new Assignment(
 		{
 			private Rule rule;
 			private Production production;
+			public Action(Rule rule):this(new Match(),rule)
+			{
+			}
 			public Action(Production production, Rule rule)
 			{
 				this.rule = rule;
@@ -4409,7 +4109,7 @@ new Assignment(
 			List<Action> actions = new List<Action>();
 			foreach (char c in text)
 			{
-				actions.Add(new Action(new Match(), new Character(c)));
+				actions.Add(new Action(new Character(c)));
 			}
 			return new Sequence(actions.ToArray());
 		}
