@@ -57,21 +57,12 @@ namespace Meta
 		}
 		public void Nuke(Map map)
 		{
-			//this.strategy = map.Strategy;
 			this.strategy=new EmptyStrategy();
 			foreach (Map key in map.Keys)
 			{
 				this[key] = map[key];
 			}
 		}
-		//public void Nuke(Map map)
-		//{
-		//    this.strategy = new EmptyStrategy();
-		//    foreach (Map key in map.Keys)
-		//    {
-		//        this[key] = map[key];
-		//    }
-		//}
 		public Map Call(Map arg)
 		{
 			return strategy.Call(arg, this);
@@ -3245,21 +3236,6 @@ namespace Meta
 	}
 	public class Parser
 	{
-		public static Map Parse(string file)
-		{
-			return ParseString(System.IO.File.ReadAllText(file), file);
-		}
-		public static Map ParseString(string text, string fileName)
-		{
-			Parser parser = new Parser(text, fileName);
-			bool matched;
-			Map result = Parser.File.Match(parser, out matched);
-			if (parser.index != parser.text.Length)
-			{
-				throw new SyntaxException("Expected end of file.", parser);
-			}
-			return result;
-		}
 		public bool End
 		{
 			get
@@ -3341,57 +3317,51 @@ namespace Meta
 								matched = true; return null; })
 							)
 			)));
-		public static Rule StartOfFile =
-			
-			new CustomRule(delegate(Parser p, out bool matched)
-	{
-		if (p.isStartOfFile)
+		public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched)
 		{
-			p.isStartOfFile = false;
-			p.indentationCount++;
-			matched = true;
+			if (p.isStartOfFile)
+			{
+				p.isStartOfFile = false;
+				p.indentationCount++;
+				matched = true;
+			}
+			else
+			{
+				matched = false;
+			}
 			return null;
-		}
-		else
-		{
-			matched = false;
-			return null;
-		}
-	});
+		});
 
-		private static Rule EndOfLinePreserve =
-			new Sequence(
-				new Action(new ZeroOrMore(
-							new Action(new Autokey(), new Alternatives(
-								new Character(Syntax.space),
-								new Character(Syntax.tab))))),
-				new Action(new Append(),
+		private static Rule EndOfLinePreserve = new Sequence(
+			new Action(
+				new ZeroOrMore(
+					new Action(new Autokey(), new Alternatives(
+						new Character(Syntax.space),
+						new Character(Syntax.tab))))),
+			new Action(
+				new Append(),
 					new Alternatives(
 						new Character(Syntax.unixNewLine),
 						StringRule(Syntax.windowsNewLine))));
 
-		private static Rule SmallIndentation = new Sequence(
-
-			new Action(new CustomRule(delegate(Parser p, out bool matched)
-			{
-				p.indentationCount++;
-				matched = true;
-				return null;
-			})));
-
-
+		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, out bool matched)
+		{
+			p.indentationCount++;
+			matched = true;
+			return null;
+		});
 		public static Rule FullIndentation = new Alternatives(
 				StartOfFile,
 				new Sequence(
 				new Action(EndOfLine),
 				new Action(SmallIndentation)
 				));
-
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
 		});
 		private static Rule StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
+		// remove
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			Map map = new Sequence(
@@ -3419,6 +3389,7 @@ namespace Meta
 			matched = true;
 			return null;
 		});
+		// remove
 		private static void MatchStringLine(Parser parser, StringBuilder text)
 		{
 			bool matching = true;
@@ -3437,6 +3408,7 @@ namespace Meta
 				}
 			}
 		}
+		// refactor
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			StringBuilder result = new StringBuilder(100);
@@ -3459,6 +3431,7 @@ namespace Meta
 			}
 			return result.ToString();
 		});
+		// refactor
 		private static Rule SingleString = new OneOrMore(
 			new Action(
 				new Autokey(),
@@ -3472,11 +3445,11 @@ namespace Meta
 			new Action(new ReferenceAssignment(), new Alternatives(
 				SingleString,
 				new Sequence(
-					new Action( FullIndentation),
-					new Action( SameIndentation),
+					new Action(FullIndentation),
+					new Action(SameIndentation),
 					new Action(new ReferenceAssignment(), StringBeef),
-					new Action( StringDedentation)))),
-			new Action( new Character(Syntax.@string)));
+					new Action(StringDedentation)))),
+			new Action(new Character(Syntax.@string)));
 
 		public static Rule Number = new Sequence(
 			new Action(new ReferenceAssignment(),
@@ -3523,14 +3496,15 @@ namespace Meta
 		});
 		private static Rule LookupAnything =
 			new Sequence(
-				new Action( new Character(('<'))),
+				new Action(new Character(('<'))),
 				new Action(new ReferenceAssignment(), Value));
 
 		public static Rule Function = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Parameter),
 				new ZeroOrMore(
-				new Action(new Autokey(),
+				new Action(
+					new Autokey(),
 					new CharacterExcept(
 						Syntax.@string,
 						Syntax.function,
@@ -3542,7 +3516,7 @@ namespace Meta
 						Syntax.function)),
 				new Action(new Assignment(CodeKeys.Expression),
 				Expression),
-			new Action( new Optional(EndOfLine)));
+			new Action(new Optional(EndOfLine)));
 
 		public static Rule Entry = new Alternatives(
 			new Sequence(
@@ -3554,7 +3528,7 @@ namespace Meta
 					Number,
 					LookupString,
 					LookupAnything)),
-				new Action( new Character('=')),
+				new Action(new Character('=')),
 				new Action(new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result)
 					{
@@ -3563,10 +3537,10 @@ namespace Meta
 					})
 
 					, Value),
-			 new Action( new Optional(EndOfLine))));
+			 new Action(new Optional(EndOfLine))));
 
 		public static Rule Map = new Sequence(
-			new Action( new Optional(new Character(','))),
+			new Action(new Optional(new Character(','))),
 			new Action(
 				FullIndentation),
 				new Action(new ReferenceAssignment(), new PrePost(
@@ -3584,7 +3558,7 @@ namespace Meta
 							new Action(
 								new ReferenceAssignment(),
 								Entry))))),
-					new Action( Dedentation)),
+					new Action(Dedentation)),
 				delegate(Parser p)
 				{
 					p.defaultKeys.Pop();
@@ -3601,35 +3575,35 @@ namespace Meta
 							new ZeroOrMore(
 								new Action(
 									new CharacterExcept(Syntax.unixNewLine)))),
-						new Action( EndOfLine)))),
+						new Action(EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
 
 		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action( new Character(Syntax.callStart)),
+				new Action(new Character(Syntax.callStart)),
 				new Action(new ReferenceAssignment(), Call),
-				new Action( new Character(Syntax.callEnd)));
+				new Action(new Character(Syntax.callEnd)));
 		});
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new Sequence(
-				new Action( new Character(Syntax.explicitCall)),
+				new Action(new Character(Syntax.explicitCall)),
 				new Action(new Assignment(
 					CodeKeys.Call),
 					new Sequence(
-						new Action( FullIndentation),
+						new Action(FullIndentation),
 						new Action(
 							new ReferenceAssignment(),
 							new OneOrMore(
 								new Action(
 									new Autokey(),
 									new Sequence(
-										new Action( new Optional(EndOfLine)),
-										new Action( SameIndentation),
+										new Action(new Optional(EndOfLine)),
+										new Action(SameIndentation),
 										new Action(new ReferenceAssignment(), Expression))))),
-							new Action( new Optional(EndOfLine)),
-							new Action( new Optional(Dedentation)))));
+							new Action(new Optional(EndOfLine)),
+							new Action(new Optional(Dedentation)))));
 		});
 
 		public static Rule FunctionExpression = new Sequence(
@@ -3645,12 +3619,11 @@ namespace Meta
 						new Character(Syntax.tab),
 						new Character(Syntax.space))));
 
-		private static Rule EmptyMap =
-			new Sequence(
-				new Action(
-					new Character(Syntax.emptyMap)),
-				new Action(new ReferenceAssignment(),
-					new LiteralRule(Meta.Map.Empty)));
+		private static Rule EmptyMap = new Sequence(
+			new Action(
+				new Character(Syntax.emptyMap)),
+			new Action(new ReferenceAssignment(),
+				new LiteralRule(Meta.Map.Empty)));
 
 		private static Rule LiteralExpression = new Sequence(
 			new Action(
@@ -3664,7 +3637,7 @@ namespace Meta
 
 		private static Rule LookupAnythingExpression =
 			new Sequence(
-				new Action( new Character('<')),
+				new Action(new Character('<')),
 				new Action(new ReferenceAssignment(), Expression)
 			);
 
@@ -3675,23 +3648,23 @@ namespace Meta
 					LookupString));
 
 		private static Rule Current = new Sequence(
-			new Action( new Character(Syntax.current)),
+			new Action(new Character(Syntax.current)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Current, Meta.Map.Empty))));
 
 		private static Rule Root = new Sequence(
-			new Action( new Character(Syntax.root)),
+			new Action(new Character(Syntax.root)),
 			new Action(new ReferenceAssignment(), new LiteralRule(new Map(CodeKeys.Root, Meta.Map.Empty))));
 
 		private static Rule Search = new Sequence(
 			new Action(
-		new Assignment(
-				CodeKeys.Search), new Alternatives(
-			new Sequence(
-				new Action( new Character('!')),
-				new Action(
-					new ReferenceAssignment(),
-					Expression)),
-			new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+				new Assignment(
+						CodeKeys.Search), new Alternatives(
+					new Sequence(
+						new Action(new Character('!')),
+						new Action(
+							new ReferenceAssignment(),
+							Expression)),
+					new Alternatives(LookupStringExpression, LookupAnythingExpression))));
 
 		public static Rule ProgramDelayed = new DelayedRule(delegate()
 		{
@@ -3701,9 +3674,9 @@ namespace Meta
 			new Action(new Assignment(
 				CodeKeys.Select),
 				new Sequence(
-					new Action( new Character('.')),
-					new Action( FullIndentation),
-					new Action( SameIndentation),
+					new Action(new Character('.')),
+					new Action(FullIndentation),
+					new Action(SameIndentation),
 					new Action(new Assignment(1),
 						new Alternatives(
 							ProgramDelayed,
@@ -3713,24 +3686,24 @@ namespace Meta
 							Call)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
-							new Action( new Optional(EndOfLine)),
-							new Action( SameIndentation),
+							new Action(new Optional(EndOfLine)),
+							new Action(SameIndentation),
 							new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
-					new Action( new Optional(Dedentation))
+					new Action(new Optional(Dedentation))
 			)));
 
 		private static Rule KeysSearch = new Sequence(
-	new Action(
-new Assignment(
-		CodeKeys.Search),
-	new Sequence(
-		new Action( new Character('!')),
-		new Action(
-			new ReferenceAssignment(),
-			new Alternatives(LookupStringExpression, LookupAnythingExpression, Expression)))));
-
-
+			new Action(
+				new Assignment(CodeKeys.Search),
+				new Sequence(
+					new Action(new Character('!')),
+					new Action(
+						new ReferenceAssignment(),
+						new Alternatives(
+							LookupStringExpression,
+							LookupAnythingExpression,
+							Expression)))));
 		
 		private static Rule Keys = new Alternatives(
 			new Sequence(new Action(
@@ -3741,7 +3714,6 @@ new Assignment(
 						KeysSearch,
 						new Sequence(new Action(
 							new ReferenceAssignment(),
-
 							LiteralExpression)),
 			new Sequence(new Action(new Assignment(CodeKeys.Literal), new Alternatives(LookupString, Number))),
 			EmptyMap,
@@ -3750,14 +3722,14 @@ new Assignment(
 			))),
 
 			new Sequence(
-			new Action( new Character('.')),
-			new Action( FullIndentation),
+			new Action(new Character('.')),
+			new Action(FullIndentation),
 			new Action(new Append(),
 				new ZeroOrMore(
 					new Action(new Autokey(),
 						new Sequence(
-				new Action( new Optional(EndOfLine)),
-			new Action( SameIndentation),
+				new Action(new Optional(EndOfLine)),
+			new Action(SameIndentation),
 			new Action(new ReferenceAssignment(),
 				new Alternatives(
 						KeysSearch,
@@ -3768,16 +3740,16 @@ new Assignment(
 			String,
 			LookupStringExpression
 			)))))),
-			new Action( new Optional(EndOfLine)),
-			new Action( new Optional(Dedentation)),
-			new Action( new Optional(SameIndentation))));
+			new Action(new Optional(EndOfLine)),
+			new Action(new Optional(Dedentation)),
+			new Action(new Optional(SameIndentation))));
 
 
 		public static Rule CurrentStatement = new Sequence(
-			new Action( StringRule("&=")),
+			new Action(StringRule("&=")),
 			new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
 			new Action(new Assignment(CodeKeys.Value), Expression),
-			new Action( new Optional(EndOfLine))
+			new Action(new Optional(EndOfLine))
 			);
 
 
@@ -3787,11 +3759,11 @@ new Assignment(
 				new Sequence(new Action(new Assignment(CodeKeys.Literal),LookupString)),
 
 				Expression)),
-			new Action( new Optional(EndOfLine)),
-			new Action( new Optional(SameIndentation)),
-			new Action( StringRule("=")),
+			new Action(new Optional(EndOfLine)),
+			new Action(new Optional(SameIndentation)),
+			new Action(StringRule("=")),
 			new Action(new Assignment(CodeKeys.Value), Expression),
-			new Action( new Optional(EndOfLine)));
+			new Action(new Optional(EndOfLine)));
 
 
 		public static Rule Statement = new Sequence(
@@ -3802,19 +3774,17 @@ new Assignment(
 						new Action(new Assignment(
 							CodeKeys.Keys),
 							Keys),
-						new Action( new Optional(EndOfLine)),
-						new Action( new Optional(SameIndentation)),
-						new Action( new Character(':')),
+						new Action(new Optional(EndOfLine)),
+						new Action(new Optional(SameIndentation)),
+						new Action(new Character(':')),
 						new Action(new Assignment(
 							CodeKeys.Value),
 							Expression),
-						new Action( new Optional(EndOfLine)))
+						new Action(new Optional(EndOfLine)))
 			)));
 
-
-
 		public static Rule ListMap = new Sequence(
-			new Action( new Character('+')),
+			new Action(new Character('+')),
 			new Action(
 				new ReferenceAssignment(),
 				new PrePost(
@@ -3823,95 +3793,87 @@ new Assignment(
 						p.defaultKeys.Push(1);
 					},
 					new Sequence(
-			new Action( new Optional(EndOfLine)),
-			new Action( SmallIndentation),
+			new Action(new Optional(EndOfLine)),
+			new Action(SmallIndentation),
 						new Action(
 							new ReferenceAssignment(),
 							new ZeroOrMore(
 								new Action(new Autokey(),
 									new Sequence(
-										new Action( new Optional(EndOfLine)),
-										new Action( SameIndentation),
-										new Action(new ReferenceAssignment()
-			, Value)
-			)))
-			)
-			,
-				new Action( new Optional(EndOfLine)),
-				new Action( new Optional(new Alternatives(Dedentation)))
-			),
+										new Action(new Optional(EndOfLine)),
+										new Action(SameIndentation),
+										new Action(
+											new ReferenceAssignment(), Value))))),
+				new Action(new Optional(EndOfLine)),
+				new Action(new Optional(new Alternatives(Dedentation)))),
 					delegate(Parser p)
 					{
 						p.defaultKeys.Pop();
 					})));
 
 		public static Rule List = new Sequence(
-		new Action( new Character('+')),
-		new Action(
-			new Assignment(CodeKeys.Program),
-			new PrePost(
-				delegate(Parser p)
-				{
-					p.defaultKeys.Push(1);
-				},
-				new Sequence(
-		new Action( new Optional(EndOfLine)),
-		new Action( SmallIndentation),
-					new Action(
-						new Append(),
-						new ZeroOrMore(
-							new Action(new Autokey(),
-								new Sequence(
-									new Action( new Optional(EndOfLine)),
-									new Action( SameIndentation),
-									new Action(
-						new CustomProduction(
-						delegate(Parser p, Map map, ref Map result)
-						{
-							result = new Map(
-								CodeKeys.Key, new Map(
-										CodeKeys.Literal, p.defaultKeys.Peek()),
-								CodeKeys.Value, map);
-							p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-							return result;
-						}
-		), Expression)
-		)))
-		)
-		,
-			new Action( new Optional(EndOfLine)),
-			new Action( new Optional(new Alternatives(Dedentation)))
-		),
-				delegate(Parser p)
-				{
-					p.defaultKeys.Pop();
-				})));
+			new Action(new Character('+')),
+			new Action(
+				new Assignment(CodeKeys.Program),
+				new PrePost(
+					delegate(Parser p)
+					{
+						p.defaultKeys.Push(1);
+					},
+					new Sequence(
+			new Action(new Optional(EndOfLine)),
+			new Action(SmallIndentation),
+						new Action(
+							new Append(),
+							new ZeroOrMore(
+								new Action(new Autokey(),
+									new Sequence(
+										new Action(new Optional(EndOfLine)),
+										new Action(SameIndentation),
+										new Action(
+							new CustomProduction(
+							delegate(Parser p, Map map, ref Map result)
+							{
+								result = new Map(
+									CodeKeys.Key, new Map(
+											CodeKeys.Literal, p.defaultKeys.Peek()),
+									CodeKeys.Value, map);
+								p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+								return result;
+							}
+			), Expression)
+			)))
+			)
+			,
+				new Action(new Optional(EndOfLine)),
+				new Action(new Optional(new Alternatives(Dedentation)))
+			),
+					delegate(Parser p)
+					{
+						p.defaultKeys.Pop();
+					})));
 
 		public static Rule Program = new Sequence(
-	new Action( new Character(',')),
-	new Action(
-		new Assignment(CodeKeys.Program),
-			new Sequence(
-				new Action(
-				
-			EndOfLine),
-
-				new Action(
-					
-					SmallIndentation),
-				new Action(new ReferenceAssignment(),
-					new ZeroOrMore(
-						new Action(new Autokey(),
-							new Sequence(
-								new Action( new Alternatives(
-									SameIndentation,
-									Dedentation)),
-								new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement,KeysStatement, Statement)))))))));
+			new Action(new Character(',')),
+			new Action(
+				new Assignment(CodeKeys.Program),
+					new Sequence(
+						new Action(EndOfLine),
+						new Action(SmallIndentation),
+						new Action(new ReferenceAssignment(),
+							new ZeroOrMore(
+								new Action(
+									new Autokey(),
+									new Sequence(
+										new Action(new Alternatives(
+											SameIndentation,
+											Dedentation)),
+										new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement,KeysStatement, Statement)))))))));
+		// Maybe make this a delegate instead of a class
 		public abstract class Production
 		{
 			public abstract void Execute(Parser parser, Map map, ref Map result);
 		}
-
 		public class Action
 		{
 			private Rule rule;
@@ -4365,6 +4327,21 @@ new Assignment(
 		public Map CreateMap(MapStrategy strategy)
 		{
 			return new Map(strategy);
+		}
+		public static Map Parse(string file)
+		{
+			return ParseString(System.IO.File.ReadAllText(file), file);
+		}
+		public static Map ParseString(string text, string fileName)
+		{
+			Parser parser = new Parser(text, fileName);
+			bool matched;
+			Map result = Parser.File.Match(parser, out matched);
+			if (parser.index != parser.text.Length)
+			{
+				throw new SyntaxException("Expected end of file.", parser);
+			}
+			return result;
 		}
 	}
 	public class Serialize
