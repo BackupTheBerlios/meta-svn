@@ -608,35 +608,24 @@ namespace Meta
 		public abstract Map EvaluateImplementation(Map context);
 		public Eval Optimize()
 		{
-			//MethodInfo eval = this.GetType().GetMethod("EvaluateImplementation",BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
-			//ParameterInfo[] parameters = eval.GetParameters();// new ParameterInfo[] { typeof(Map) };
-			//ParameterInfo[] parameters = new ParameterInfo[] { typeof(Map) };
 			Type[] arguments = new Type[] { typeof(Expression), typeof(Map) };
-
 			DynamicMethod method = new DynamicMethod(
 				"Optimized",
 				typeof(Map),
 				arguments,
 				typeof(Map).Module);
-
 			ILGenerator il = method.GetILGenerator();
+			Emit(il,this);
+			return (Eval)method.CreateDelegate(typeof(Eval), this);
+		}
+		public virtual void Emit(ILGenerator il,Expression expression)
+		{
 			il.Emit(OpCodes.Ldarg_0);
 			il.Emit(OpCodes.Ldarg_1);
 			il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
-
-			il.Emit(OpCodes.Castclass, typeof(Map));
 			il.Emit(OpCodes.Ret);
-			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 	}
-	//public abstract class Expression
-	//{
-	//    public abstract Map Evaluate(Map context);
-	//    public Evaluate Optimize()
-	//    {
-
-	//    }
-	//}
 	public class Call : Expression
 	{
 		private Map parameterName;
@@ -705,7 +694,7 @@ namespace Meta
 	public class Literal : Expression
 	{
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
-		private Map literal;
+		public Map literal;
 		public Literal(Map code)
 		{
 			if (code.Count!=0 && code.IsString)
@@ -721,12 +710,24 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
+		public override void Emit(ILGenerator il,Expression expression)
+		{
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
+			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
+			il.Emit(OpCodes.Ret);
+		}
 	}
 	public class Root : Expression
 	{
 		public override Map EvaluateImplementation(Map selected)
 		{
 			return Gac.gac;
+		}
+		public override void Emit(ILGenerator il,Expression expression)
+		{
+			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
+			il.Emit(OpCodes.Ret);
 		}
 	}
 	public class Search : Expression
