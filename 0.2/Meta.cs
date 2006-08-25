@@ -515,7 +515,7 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<StatementBase> statements = new List<StatementBase>();
-		public List<Expression> expressions= new List<Expression>();
+		public List<Literal> expressions= new List<Literal>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -554,23 +554,10 @@ namespace Meta
 				context.Assign(argument),
 				Get(this, context,new Argument(0,typeof(Expression))),
 				(Emit)Return);
-
-			//program.Add(context.Assign(argument));
-			//program.Add(Get(this, context,new Argument(0,typeof(Expression))));
-			//program.Add(Return);
 			program.Emit(method.GetILGenerator());
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
-		{
-			expression.expressions.Add(this);
-			return argument.Field(
-				"expressions").Call(
-					"get_Item",
-					expression.expressions.Count - 1).Call(
-							"EvaluateImplementation",
-							context);
-		}
+		public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
@@ -774,7 +761,7 @@ namespace Meta
 			}
 			return selected;
 		}
-		public override ILEmitter  Get(Expression expression, Local context, Argument argument)
+		public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
 		    ILProgram program = new ILProgram();
 		    Local selected = program.Declare();
