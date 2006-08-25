@@ -381,6 +381,11 @@ namespace Meta
 		{
 			get;
 		}
+		public ILExpression Get(string name)
+		{
+			return new InstanceField(this,Type.GetField(name));
+		}
+
 		public ILEmitter Call(string name, params ILEmitter[] arguments)
 		{
 			return new CustomEmitter(delegate(ILGenerator il)
@@ -424,13 +429,6 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Ret);
 		}
-		//public EmitterDelegate Return()
-		//{
-		//    return delegate(ILGenerator il)
-		//    {
-		//        il.Emit(OpCodes.Ret);
-		//    };
-		//}
 		public Eval Optimize()
 		{
 			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
@@ -573,13 +571,21 @@ namespace Meta
 				program.Add(
 					new InstanceCall(
 						new InstanceCall(
-							new InstanceField(
-								argument,
-								typeof(Literal).GetField("statements")),
+								argument.Get("statements"),
 							typeof(List<Map>).GetMethod("get_Item"),
 							new Integer(expression.statements.Count - 1)),
 						typeof(StatementBase).GetMethod("Assign"),
 						context));
+				//program.Add(
+				//    new InstanceCall(
+				//        new InstanceCall(
+				//            new InstanceField(
+				//                argument,
+				//                typeof(Literal).GetField("statements")),
+				//            typeof(List<Map>).GetMethod("get_Item"),
+				//            new Integer(expression.statements.Count - 1)),
+				//        typeof(StatementBase).GetMethod("Assign"),
+				//        context));
 			}
 			program.Add(context.Load);
 			return program;
