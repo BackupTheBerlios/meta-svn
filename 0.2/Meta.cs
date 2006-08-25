@@ -623,12 +623,14 @@ namespace Meta
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
 			e.Load(new Argument(1));
 			e.Store(context);
-			Emit(il,e, this, context);
+			Emit(il, e, this, new Argument(1));
+			//Emit(il, e, this, context);
 			e.Return();
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public virtual void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder local)
+		// refactor, remove il, pass arguments instead of local
+		public virtual void Emit(ILGenerator il, Emitter e, Expression expression, Argument context)
 		{
 			expression.expressions.Add(this);
 			e.Load(new Argument(0));
@@ -664,7 +666,7 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder current)
+		public override void Emit(ILGenerator il, Emitter e, Expression expression, Argument current)
 		{
 			LocalBuilder callable = e.DeclareMap();
 			calls[0].Emit(il, e, expression, current);
@@ -678,20 +680,6 @@ namespace Meta
 			}
 			e.Load(callable);
 		}
-		//public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder current)
-		//{
-		//    LocalBuilder callable = il.DeclareLocal(typeof(Map));
-		//    calls[0].Emit(il,e, expression, current);
-		//    il.Emit(OpCodes.Stloc, callable);
-		//    for (int i = 1; i < calls.Count; i++)
-		//    {
-		//        il.Emit(OpCodes.Ldloc, callable);
-		//        calls[i].Emit(il,e, expression, current);
-		//        il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Call"));
-		//        il.Emit(OpCodes.Stloc, callable);
-		//    }
-		//    il.Emit(OpCodes.Ldloc, callable);
-		//}
 	}
 	public class Search : Expression
 	{
@@ -915,13 +903,14 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder parent)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression, Argument parent)
 		{
 			LocalBuilder context=il.DeclareLocal(typeof(Map));
 			il.Emit(OpCodes.Newobj,typeof(Map).GetConstructor(new Type[]{}));
 			il.Emit(OpCodes.Stloc, context);
 			il.Emit(OpCodes.Ldloc,context);
-			il.Emit(OpCodes.Ldloc, parent);
+			il.Emit(OpCodes.Ldarg, parent.Index);
+			//il.Emit(OpCodes.Ldloc, parent);
 			il.Emit(OpCodes.Call, typeof(Map).GetMethod("set_Scope"));
 			foreach (StatementBase statement in statements)
 			{
@@ -955,7 +944,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression,Argument local)
 		{
 			expression.expressions.Add(this);
 			il.Emit(OpCodes.Ldarg_0);
@@ -972,7 +961,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(ILGenerator il,Emitter e,Expression expression,LocalBuilder local)
+		public override void Emit(ILGenerator il,Emitter e,Expression expression,Argument local)
 		{
 			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
 		}
