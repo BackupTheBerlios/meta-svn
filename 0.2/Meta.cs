@@ -96,10 +96,10 @@ namespace Meta
 			}
 			il.Emit(code, method);
 		}
-		public void Load(int integer)
-		{
-			il.Emit(OpCodes.Ldc_I4, integer);
-		}
+		//public void Load(int integer)
+		//{
+		//    il.Emit(OpCodes.Ldc_I4, integer);
+		//}
 		public void Load(FieldInfo field)
 		{
 			OpCode code;
@@ -178,6 +178,18 @@ namespace Meta
 				code = OpCodes.Call;
 			}
 			il.Emit(code, method);
+		}
+	}
+	public class Integer : ILExpression
+	{
+		private int integer;
+		public Integer(int integer)
+		{
+			this.integer = integer;
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldc_I4, integer);
 		}
 	}
 	public class InstanceField : ILExpression
@@ -364,7 +376,8 @@ namespace Meta
 			//e.Load(new Argument(0));
 			e.Emit(new InstanceField(typeof(Literal).GetField("expressions"),new Argument(0)));
 			//e.Load(typeof(Literal).GetField("expressions"));
-			e.Load(expression.expressions.Count - 1);
+			e.Emit(new Integer(expression.expressions.Count - 1));
+			//e.Load(expression.expressions.Count - 1);
 			e.Call(typeof(List<Map>).GetMethod("get_Item"));
 			e.Load(new Argument(1));
 			e.Call(this.GetType().GetMethod("EvaluateImplementation"));
@@ -500,7 +513,8 @@ namespace Meta
 			{
 				expression.statements.Add(statement);
 				e.Emit(new InstanceField(typeof(Literal).GetField("statements"),new Argument(0)));
-				e.Load(expression.statements.Count - 1);
+				e.Emit(new Integer(expression.statements.Count - 1));
+				//e.Load(expression.statements.Count - 1);
 				e.Call(typeof(List<Map>).GetMethod("get_Item"));
 				e.Load(context);
 				e.Call(typeof(StatementBase).GetMethod("Assign"));
@@ -531,7 +545,8 @@ namespace Meta
 		{
 			expression.expressions.Add(this);
 			e.Emit(new InstanceField(typeof(Literal).GetField("expressions"),new Argument(0)));
-			e.Load(expression.expressions.Count - 1);
+			e.Emit(new Integer(expression.expressions.Count - 1));
+			//e.Load(expression.expressions.Count - 1);
 			e.Call(typeof(List<Map>).GetMethod("get_Item"));
 			e.Load(typeof(Literal).GetField("literal"));
 			e.Call(typeof(Map).GetMethod("Copy"));
