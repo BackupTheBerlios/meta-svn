@@ -174,10 +174,10 @@ namespace Meta
 		{
 			local.Store(il);
 		}
-		public void Return()
-		{
-			il.Emit(OpCodes.Ret);
-		}
+		//public void Return()
+		//{
+		//    il.Emit(OpCodes.Ret);
+		//}
 	}
 	public abstract class Storage:ILExpression
 	{
@@ -389,6 +389,13 @@ namespace Meta
 			}
 		}
 		public abstract Map EvaluateImplementation(Map context);
+		public EmitterDelegate Return()
+		{
+			return delegate(ILGenerator il)
+			{
+				il.Emit(OpCodes.Ret);
+			};
+		}
 		public Eval Optimize()
 		{
 			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
@@ -400,17 +407,26 @@ namespace Meta
 
 			ILGenerator il = method.GetILGenerator();
 
-			Emitter e = new Emitter(il);
 			Local context = new Local();
 			Argument contextArgument = new Argument(1);
-			e.Emit(context.Declare);
-			e.Emit(new Assign(context, contextArgument));
-			e.Emit(Emit(this, context));
-			e.Return();
+			ILProgram program = new ILProgram();
+			program.Add(context.Declare);
+			program.Add(new Assign(context, contextArgument));
+			program.Add(GetEmitter(this, context));
+			program.Add(Return());
 
+			//Emitter e = new Emitter(il);
+			//Local context = new Local();
+			//Argument contextArgument = new Argument(1);
+			//e.Emit(context.Declare);
+			//e.Emit(new Assign(context, contextArgument));
+			//e.Emit(GetEmitter(this, context));
+			//e.Return();
+
+			program.Emit(il);
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public virtual ILEmitter Emit(Expression expression, Local context)
+		public virtual ILEmitter GetEmitter(Expression expression, Local context)
 		{
 			expression.expressions.Add(this);
 			return new InstanceCall(
@@ -446,19 +462,19 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override ILEmitter Emit(Expression expression, Local current)
+		public override ILEmitter GetEmitter(Expression expression, Local current)
 		{
 			Local callable = new Local();
 			ILProgram program = new ILProgram();
 			program.Add(callable.Declare);
-			program.Add(calls[0].Emit(expression,current));
+			program.Add(calls[0].GetEmitter(expression,current));
 			program.Add(callable.Store);
 			for (int i = 1; i < calls.Count; i++)
 			{
 				program.Add(
 					new Assign(
 						callable,
-						callable.Call("Call",calls[i].Emit(expression, current))));
+						callable.Call("Call",calls[i].GetEmitter(expression, current))));
 						//new InstanceCall(
 						//    callable,
 						//    typeof(Map).GetMethod("Call"),
@@ -651,7 +667,7 @@ namespace Meta
 			}
 			return context;
 		}
-		public override ILEmitter Emit(Expression expression, Local parent)
+		public override ILEmitter GetEmitter(Expression expression, Local parent)
 		{
 			Local context = new Local();
 			ILProgram program = new ILProgram();
@@ -702,7 +718,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override ILEmitter Emit(Expression expression, Local local)
+		public override ILEmitter GetEmitter(Expression expression, Local local)
 		{
 			expression.expressions.Add(this);
 			return new InstanceCall(
@@ -721,7 +737,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override ILEmitter Emit(Expression expression,Local local)
+		public override ILEmitter GetEmitter(Expression expression,Local local)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
 		}
