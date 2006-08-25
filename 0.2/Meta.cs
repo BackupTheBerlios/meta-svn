@@ -676,21 +676,16 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
-		public Expression Key
+		private Expression expression;
+		Map code;
+		public Search(Map code)
 		{
-			get
-			{
-				return expression.GetExpression();
-			}
-		}
-		private Map expression;
-		public Search(Map keyExpression)
-		{
-			this.expression = keyExpression;
+			this.expression = code.GetExpression();
+			this.code = code;
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
-			Map key = expression.GetExpression().Evaluate(context);
+			Map key = expression.Evaluate(context);
 			Map selected = context;
 			while (!selected.ContainsKey(key))
 			{
@@ -700,7 +695,7 @@ namespace Meta
 				}
 				else
 				{
-					throw new KeyNotFound(key, expression.Extent, null);
+					throw new KeyNotFound(key, code.Extent, null);
 				}
 			}
 			return selected[key].Copy();
@@ -751,41 +746,8 @@ namespace Meta
 				il.Emit(OpCodes.Callvirt, typeof(StatementBase).GetMethod("Assign"));
 			}
 			il.Emit(OpCodes.Ldloc, context);
-			//il.Emit(OpCodes.Ret);
 		}
 	}
-	//public class Search : Expression
-	//{
-	//    public Expression Key
-	//    {
-	//        get
-	//        {
-	//            return expression.GetExpression();
-	//        }
-	//    }
-	//    private Map expression;
-	//    public Search(Map keyExpression)
-	//    {
-	//        this.expression = keyExpression;
-	//    }
-	//    public override Map EvaluateImplementation(Map context)
-	//    {
-	//        Map key = expression.GetExpression().Evaluate(context);
-	//        Map selected = context;
-	//        while (!selected.ContainsKey(key))
-	//        {
-	//            if (selected.Scope != null)
-	//            {
-	//                selected = selected.Scope;
-	//            }
-	//            else
-	//            {
-	//                throw new KeyNotFound(key, expression.Extent, null);
-	//            }
-	//        }
-	//        return selected[key].Copy();
-	//    }
-	//}
 	public class Literal : Expression
 	{
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
@@ -814,7 +776,6 @@ namespace Meta
 			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
 			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
 			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
-			//il.Emit(OpCodes.Ret);
 		}
 	}
 	public class Root : Expression
@@ -826,49 +787,8 @@ namespace Meta
 		public override void Emit(ILGenerator il,Expression expression,LocalBuilder local)
 		{
 			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
-			//il.Emit(OpCodes.Ret);
 		}
 	}
-	//public class Search : Expression
-	//{
-	//    public Expression Key
-	//    {
-	//        get
-	//        {
-	//            return keyExpression.GetExpression();
-	//        }
-	//    }
-	//    private Map keyExpression;
-	//    public Search(Map keyExpression)
-	//    {
-	//        this.keyExpression = keyExpression;
-	//    }
-	//    public override Map EvaluateImplementation(Map context)
-	//    {
-	//        Map key = keyExpression.GetExpression().Evaluate(context);
-	//        Map selection = context;
-	//        while (!selection.ContainsKey(key))
-	//        {
-	//            if (selection.Scope != null)
-	//            {
-	//                selection = selection.Scope;
-	//            }
-	//            else
-	//            {
-	//                selection = null;
-	//                break;
-	//            }
-	//        }
-	//        if (selection == null)
-	//        {
-	//            throw new KeyNotFound(key, keyExpression.Extent, null);
-	//        }
-	//        else
-	//        {
-	//            return selection[key].Copy();
-	//        }
-	//    }
-	//}
 	public class Select : Expression
 	{
 		private List<Map> subselects;
