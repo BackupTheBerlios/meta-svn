@@ -170,13 +170,20 @@ namespace Meta
 	}
 	public class ILCall : ILExpression
 	{
-		private ILExpression[] arguments;
+		private List<ILExpression> arguments;
 		private MethodInfo method;
-		public ILCall(MethodInfo method,params ILExpression[] arguments)
+		public ILCall(ILExpression instance,MethodInfo method, params ILExpression[] arguments)
 		{
 			this.method = method;
-			this.arguments = arguments;
+			this.arguments = new List<ILExpression>();
+			this.arguments.Add(instance);
+			this.arguments.AddRange(arguments);
 		}
+		//public ILCall(MethodInfo method,params ILExpression[] arguments)
+		//{
+		//    this.method = method;
+		//    this.arguments = arguments;
+		//}
 		public override void Evaluate(ILGenerator il)
 		{
 			foreach (ILExpression argument in arguments)
@@ -532,27 +539,27 @@ namespace Meta
 		{
 			Local context = e.DeclareMap();
 			e.Emit(new Assignment(
-							context,
-							new New(typeof(Map).GetConstructor(new Type[] { }))));
-			//e.Assign(
-			//    context,
-			//    new New(typeof(Map).GetConstructor(new Type[] { })));
-			e.Emit(new ILCall(typeof(Map).GetMethod("set_Scope"), context, parent));
+				context,
+				new New(typeof(Map).GetConstructor(new Type[] { }))));
+			e.Emit(new ILCall(context,typeof(Map).GetMethod("set_Scope"), parent));
+			//e.Emit(new ILCall(typeof(Map).GetMethod("set_Scope"), context, parent));
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
+				
+				e.Emit(
+					new ILCall(
+					new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)),
+					typeof(List<Map>).GetMethod("get_Item"),
+					new Integer(expression.statements.Count - 1)));
 
-				e.Emit(new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)));
-				e.Emit(new Integer(expression.statements.Count - 1));
-				e.Call(typeof(List<Map>).GetMethod("get_Item"));
+					//new ILCall(
+					//typeof(List<Map>).GetMethod("get_Item"),
+					//new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)),
+					//new Integer(expression.statements.Count - 1)));
+			
 				e.Load(context);
 				e.Call(typeof(StatementBase).GetMethod("Assign"));
-
-				//e.Emit(new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)));
-				//e.Emit(new Integer(expression.statements.Count - 1));
-				//e.Call(typeof(List<Map>).GetMethod("get_Item"));
-				//e.Load(context);
-				//e.Call(typeof(StatementBase).GetMethod("Assign"));
 			}
 			e.Load(context);
 		}
@@ -598,12 +605,18 @@ namespace Meta
 			expression.expressions.Add(this);
 			e.Emit(
 				new ILCall(
-					typeof(Map).GetMethod("Copy"),
 					new InstanceField(
 						typeof(Literal).GetField("literal"),
-						new ILCall(typeof(List<Map>).GetMethod("get_Item"),
+						new ILCall(
 							new InstanceField(typeof(Literal).GetField("expressions"), new Argument(0)),
-							new Integer(expression.expressions.Count - 1)))));
+							typeof(List<Map>).GetMethod("get_Item"),
+							new Integer(expression.expressions.Count - 1))),
+					typeof(Map).GetMethod("Copy")
+					));
+
+						//new ILCall(typeof(List<Map>).GetMethod("get_Item"),
+						//    new InstanceField(typeof(Literal).GetField("expressions"), new Argument(0)),
+						//    new Integer(expression.expressions.Count - 1)))));
 		}
 	}
 	public class Root : Expression
