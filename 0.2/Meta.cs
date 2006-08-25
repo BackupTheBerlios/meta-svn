@@ -53,6 +53,10 @@ namespace Meta
 
 	public class Emitter
 	{
+		public void New(ConstructorInfo constructor)
+		{
+			il.Emit(OpCodes.Newobj, constructor);
+		}
 		public LocalBuilder DeclareMap()
 		{
 			return il.DeclareLocal(typeof(Map));
@@ -95,7 +99,7 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Ldarg, parameter.Position);
 		}
-		public void Emit(ILEmitter emitter, ILGenerator il, Emitter e, Expression expression, Argument argument)
+		public void Emit(ILEmitter emitter, ILGenerator il, Emitter e, Expression expression, LocalBuilder argument)
 		{
 			emitter.Emit(il, e, expression, argument);
 		}
@@ -147,13 +151,14 @@ namespace Meta
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
 			e.Load(new Argument(1));
 			e.Store(context);
-			Emit(il, e, this, new Argument(1));
+			Emit(il, e, this, context);
+			//Emit(il, e, this, new Argument(1));
 			e.Return();
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		// refactor, remove il, pass arguments instead of local
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, Argument context)
+		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder context)
 		{
 			expression.expressions.Add(this);
 			e.Load(new Argument(0));
@@ -189,7 +194,7 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, Argument current)
+		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder current)
 		{
 			LocalBuilder callable = e.DeclareMap();
 			e.Emit(calls[0], il, e, expression, current);
@@ -277,7 +282,7 @@ namespace Meta
 	}
 	public abstract class ILEmitter
 	{
-		public abstract void Emit(ILGenerator il, Emitter e, Expression expression, Argument argument);
+		public abstract void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder argument);
 	}
 	public class Program : Expression
 	{
@@ -305,15 +310,14 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, Argument parent)
+		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder parent)
 		{
 			LocalBuilder context = e.DeclareMap();
-			il.Emit(OpCodes.Newobj, typeof(Map).GetConstructor(new Type[] { }));
-			il.Emit(OpCodes.Stloc, context);
-			il.Emit(OpCodes.Ldloc, context);
-			il.Emit(OpCodes.Ldarg, parent.Index);
-			//il.Emit(OpCodes.Ldloc, parent);
-			il.Emit(OpCodes.Call, typeof(Map).GetMethod("set_Scope"));
+			e.New(typeof(Map).GetConstructor(new Type[] { }));
+			e.Store(context);
+			e.Load(context);
+			e.Load(parent);
+			e.Call(typeof(Map).GetMethod("set_Scope"));
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
@@ -367,7 +371,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(ILGenerator il,Emitter e, Expression expression,Argument local)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
 		{
 			expression.expressions.Add(this);
 			il.Emit(OpCodes.Ldarg_0);
@@ -384,7 +388,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(ILGenerator il,Emitter e,Expression expression,Argument local)
+		public override void Emit(ILGenerator il,Emitter e,Expression expression,LocalBuilder local)
 		{
 			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
 		}
