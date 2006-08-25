@@ -468,6 +468,52 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public Emit Until(ILEmitter condition, ILEmitter body)
+		{
+			return delegate(ILGenerator il)
+			{
+				Label end = il.DefineLabel();
+				Label start = il.DefineLabel();
+
+				il.MarkLabel(start);
+				condition.Emit(il);
+				il.Emit(OpCodes.Brtrue, end);
+				body.Emit(il);
+				il.Emit(OpCodes.Br, start);
+
+				il.MarkLabel(end);
+			};
+		}
+		public Emit If(ILEmitter condition, ILEmitter thenBranch, ILEmitter elseBranch)
+		{
+			return delegate(ILGenerator il)
+			{
+				Label not = il.DefineLabel();
+				Label end = il.DefineLabel();
+
+				condition.Emit(il);
+				il.Emit(OpCodes.Brfalse, not);
+				thenBranch.Emit(il);
+				il.Emit(OpCodes.Br, end);
+
+				il.MarkLabel(not);
+				elseBranch.Emit(il);
+
+				il.MarkLabel(end);
+			};
+		}
+		public Emit Throw(ILEmitter exception, Type type)
+		{
+			return delegate(ILGenerator il)
+			{
+				exception.Emit(il);
+				il.Emit(OpCodes.Throw);
+			};
+		}
+		public void Null(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldnull);
+		}
 		public List<StatementBase> statements = new List<StatementBase>();
 		public List<Expression> expressions= new List<Expression>();
 		Eval optimized;
@@ -573,52 +619,6 @@ namespace Meta
 			this.expression = code.GetExpression();
 			this.code = code;
 		}
-		public Emit Until(ILEmitter condition,ILEmitter body)
-		{
-			return delegate(ILGenerator il)
-			{
-				Label end=il.DefineLabel();
-				Label start=il.DefineLabel();
-
-				il.MarkLabel(start);
-				condition.Emit(il);
-				il.Emit(OpCodes.Brtrue, end);
-				body.Emit(il);
-				il.Emit(OpCodes.Br, start);
-
-				il.MarkLabel(end);
-			};
-		}
-		public Emit If(ILEmitter condition, ILEmitter thenBranch,ILEmitter elseBranch)
-		{
-			return delegate(ILGenerator il)
-			{
-				Label not=il.DefineLabel();
-				Label end=il.DefineLabel();
-
-				condition.Emit(il);
-				il.Emit(OpCodes.Brfalse, not);
-				thenBranch.Emit(il);
-				il.Emit(OpCodes.Br, end);
-
-				il.MarkLabel(not);
-				elseBranch.Emit(il);
-
-				il.MarkLabel(end);
-			};
-		}
-		public Emit Throw(ILEmitter exception,Type type)
-		{
-			return delegate(ILGenerator il)
-			{
-				exception.Emit(il);
-				il.Emit(OpCodes.Throw);
-			};
-		}
-		public void Null(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldnull);
-		}
 		public override Map EvaluateImplementation(Map context)
 		{
 			Map key = expression.Evaluate(context);
@@ -660,113 +660,6 @@ namespace Meta
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
-		//public override ILEmitter Get(Expression parentExpression, Local context, Argument argument)
-		//{
-		//    ILProgram program = new ILProgram();
-		//    Local key = program.Declare();
-		//    Local selected = program.Declare();
-		//    Local scope = program.Declare();
-		//    program.Add(key.Assign(expression.Get(expression, context, argument)));
-		//    //program.Add(key.Assign(expression.Get(expression, context, argument)));
-		//    program.Add(selected.Assign(context));
-		//    program.Add(
-		//        While(
-		//            selected.Call("ContainsKey", key),
-		//            If(
-		//                selected.Call("get_Scope"),
-		//                selected.Assign(selected.Call("get_Scope")),
-		//                Throw(
-		//                    new New(
-		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                        key,
-		//                        (Emit)Null,
-		//                        (Emit)Null),
-		//                        typeof(KeyNotFound)
-		//                        ))));
-		//    program.Add(selected.Call("get_Item", key).Call("Copy"));
-		//    return program;
-		//}
-
-
-		//public override ILEmitter Get(Expression expression, Local context, Argument argument)
-		//{
-		//    Local key = new Local();
-		//    Local selected = new Local();
-		//    Local scope = new Local();
-		//    ILProgram program = new ILProgram();
-		//    program.Add(key.Declare);
-		//    program.Add(selected.Declare);
-		//    program.Add(scope.Declare);
-		//    program.Add(key.Assign(expression.Get(expression, context, argument)));
-		//    program.Add(selected.Declare);
-		//    program.Add(selected.Assign(context));
-		//    program.Add(
-		//        While(
-		//            selected.Call("ContainsKey", key),
-		//            If(
-		//                selected.Call("get_Scope"),
-		//                selected.Assign(selected.Call("get_Scope")),
-		//                Throw(
-		//                    new New(
-		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                        key,
-		//                        (Emit)Null,
-		//                        (Emit)Null),
-		//                        typeof(KeyNotFound)
-		//                        ))));
-		//    program.Add(selected.Call("get_Item", key).Call("Copy"));
-		//    return program;
-		//}
-
-
-
-		//public override ILEmitter Emit(Expression parent, Local context)
-		//{
-		//    Local key = new Local();
-		//    ILProgram program = new ILProgram();
-		//    program.Add(key.Declare);
-		//    program.Add(
-		//        new Assign(
-		//            key,
-		//            expression.Emit(expression, context)));
-		//    Local selected = new Local();
-		//    program.Add(selected.Declare);
-		//    program.Add(
-		//        new Assign(
-		//            selected,
-		//            context));
-		//    Local scope = new Local();
-		//    program.Add(
-		//        While(
-		//            new InstanceCall(
-		//                selected,
-		//                typeof(Map).GetMethod("ContainsKey"),
-		//                key),
-		//            new ILProgram(
-		//                new CustomEmitter(scope.Declare),
-		//                new Assign(
-		//                    scope,
-		//                    new InstanceCall(
-		//                        selected,
-		//                        typeof(Map).GetMethod("get_Scope"))),
-		//                If(
-		//                    NotNull(scope),
-		//                    new Assign(selected, scope),
-		//                    Throw(
-		//                        new New(
-		//                            typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                            key,
-		//                            Null(),
-		//                            Null()))))));
-		//    program.Add(
-		//        new InstanceCall(
-		//            new InstanceCall(
-		//                selected,
-		//                typeof(Map).GetMethod("get_Item"),
-		//                key),
-		//            typeof(Map).GetMethod("Copy")));
-		//}
-
 	}
 	public class Program : Expression
 	{
@@ -779,17 +672,17 @@ namespace Meta
 			}
 		}
 		private Map code;
-		private StatementBase[] statements;
+		private StatementBase[] statementList;
 		public Program(Map code)
 		{
 			this.code = code;
-			statements=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
+			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
 		}
 		public override Map EvaluateImplementation(Map parent)
 		{
 			Map context=new Map();
 			context.Scope = parent;
-			foreach (StatementBase statement in statements)
+			foreach (StatementBase statement in statementList)
 			{
 				statement.Assign(context);
 			}
@@ -798,10 +691,10 @@ namespace Meta
 		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
 		{
 			ILProgram program = new ILProgram();
-			Local context =program.Declare();
+			Local context = program.Declare();
 			program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
 			program.Add(context.Call("set_Scope",parent));
-			foreach (StatementBase statement in statements)
+			foreach (StatementBase statement in statementList)
 			{
 				expression.statements.Add(statement);
 				program.Add(
@@ -834,7 +727,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override ILEmitter Get(Expression expression, Local local,Argument argument)
+		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			expression.expressions.Add(this);
 			// these will be literals, eventually, so this shouldnt be a problem, actually
@@ -858,21 +751,21 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		private List<Map> subselects;
+		private List<Expression> subselects;
 		public Select(Map code)
 		{
-			this.subselects = code.Array;
+			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression();});
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
-			Map selected = subselects[0].GetExpression().Evaluate(context);
+			Map selected = subselects[0].Evaluate(context);
 			for (int i = 1; i < subselects.Count; i++)
 			{
-				Map key=subselects[i].GetExpression().Evaluate(context);
-				Map value= selected.TryGetValue(key);
+				Map key = subselects[i].Evaluate(context);
+				Map value = selected.TryGetValue(key);
 				if (value == null)
 				{
-					throw new KeyDoesNotExist(key, subselects[i].Extent, selected);
+					throw new KeyDoesNotExist(key, null, selected);
 				}
 				else
 				{
@@ -880,6 +773,33 @@ namespace Meta
 				}
 			}
 			return selected;
+		}
+		public override ILEmitter  Get(Expression expression, Local context, Argument argument)
+		{
+		    ILProgram program = new ILProgram();
+		    Local selected = program.Declare();
+			program.Add(selected.Assign(subselects[0].Get(expression, context, argument)));
+			Local key = program.Declare();
+			Local value = program.Declare();
+		    for (int i = 1; i < subselects.Count; i++)
+		    {
+				program.Add(key.Assign(subselects[i].Get(expression,context,argument)));
+				program.Add(value.Assign(selected.Call("TryGetValue",key)));
+				program.Add(
+					If(
+						value,
+						selected.Assign(value),
+						Throw(
+							new New(
+								typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+								key,
+								(Emit)Null,
+								selected),
+								typeof(KeyNotFound)
+								)));
+		    }
+			program.Add(selected.Load);
+			return program;
 		}
 	}
 	public delegate void Ass(Map context);
