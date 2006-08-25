@@ -374,12 +374,12 @@ namespace Meta
 		public override void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
 		{
 			expression.expressions.Add(this);
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("expressions"));
-			il.Emit(OpCodes.Ldc_I4, expression.expressions.Count - 1);
-			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("literal"));
-			il.Emit(OpCodes.Call, typeof(Map).GetMethod("Copy"));
+			e.Load(new Argument(0));
+			e.Load(typeof(Literal).GetField("expressions"));
+			e.Load(expression.expressions.Count - 1);
+			e.Call(typeof(List<Map>).GetMethod("get_Item"));
+			e.Load(typeof(Literal).GetField("literal"));
+			e.Call(typeof(Map).GetMethod("Copy"));
 		}
 	}
 	public class Root : Expression
@@ -390,7 +390,8 @@ namespace Meta
 		}
 		public override void Emit(ILGenerator il,Emitter e,Expression expression,LocalBuilder local)
 		{
-			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
+			e.Load(typeof(Gac).GetField("gac"));
+			//il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
 		}
 	}
 	public class Select : Expression
