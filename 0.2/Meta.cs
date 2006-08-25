@@ -186,12 +186,13 @@ namespace Meta
 	}
 	public class InstanceCall : ILExpression
 	{
-		private List<ILExpression> arguments;
+		private List<ILEmitter> arguments;
+		//private List<ILExpression> arguments;
 		private MethodInfo method;
-		public InstanceCall(ILExpression instance,MethodInfo method, params ILExpression[] arguments)
+		public InstanceCall(ILExpression instance,MethodInfo method, params ILEmitter[] arguments)
 		{
 			this.method = method;
-			this.arguments = new List<ILExpression>();
+			this.arguments = new List<ILEmitter>();
 			this.arguments.Add(instance);
 			this.arguments.AddRange(arguments);
 		}
@@ -202,9 +203,9 @@ namespace Meta
 		//}
 		public override void Evaluate(ILGenerator il)
 		{
-			foreach (ILExpression argument in arguments)
+			foreach (ILEmitter argument in arguments)
 			{
-				argument.Evaluate(il);
+				argument.Emit(il);
 			}
 			OpCode code;
 			if (method.IsVirtual)
@@ -465,24 +466,33 @@ namespace Meta
 			}
 			return callable;
 		}
-		//public override void Emit(Emitter e, Expression expression, Local current)
-		//{
-		//    Local callable = e.DeclareMap();
-		//    ILProgram program = new ILProgram();
-		//    calls[0].Emit(e, expression, current);
-		//    program.Add(callable.Store);
-		//    //e.Store(callable);
-		//    e.Emit(program);
-		//    for (int i = 1; i < calls.Count; i++)
-		//    {
-		//        //program.Add(callable.Load);
-		//        e.Load(callable);
-		//        calls[i].Emit(e, expression, current);
-		//        e.Call(typeof(Map).GetMethod("Call"));
-		//        e.Store(callable);
-		//    }
-		//    e.Load(callable);
-		//}
+		public override ILEmitter Emit(Expression expression, Local current)
+		{
+			Local callable = new Local();
+			ILProgram program = new ILProgram();
+			program.Add(callable.Declare);
+			program.Add(calls[0].Emit(expression,current));
+			program.Add(callable.Store);
+			for (int i = 1; i < calls.Count; i++)
+			{
+				//calls[i].Emit(e, expression, current);
+				program.Add(new InstanceCall(
+					callable,					
+					typeof(Map).GetMethod("Call"),
+					calls[i].Emit(expression, current)
+					));
+				//e.Call(typeof(Map).GetMethod("Call"));
+				program.Add(callable.Store);
+
+				//e.Load(callable);
+				//calls[i].Emit(e, expression, current);
+				//e.Call(typeof(Map).GetMethod("Call"));
+				//e.Store(callable);
+			}
+			program.Add(callable.Load);
+			//e.Load(callable);
+			return program;
+		}
 	}
 	public class Search : Expression
 	{
@@ -568,10 +578,7 @@ namespace Meta
 		}
 		public override ILEmitter Emit(Expression expression, Local parent)
 		{
-			//Declaration declaration = new Declaration();
 			Local context = new Local();
-			//Local context = Local.DeclareMap();
-			//Local context = e.DeclareMap();
 			ILProgram program = new ILProgram();
 			program.Add(context.Declare);
 			program.Add(
@@ -599,7 +606,6 @@ namespace Meta
 			}
 			program.Add(context.Load);
 			return program;
-			//e.Emit(program);
 		}
 	}
 	public class Literal : Expression
