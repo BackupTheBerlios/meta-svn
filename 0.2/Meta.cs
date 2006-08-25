@@ -554,10 +554,7 @@ namespace Meta
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			expression.literals.Add(literal);
-			// these will be literals, eventually, so this shouldnt be a problem, actually
-			return argument.Field("literals").Call(
-						"get_Item",
-						expression.literals.Count - 1).Call("Copy");
+			return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
 		}
 	}
 	public class Root : Expression
@@ -682,6 +679,7 @@ namespace Meta
 			try
 			{
 				//UseConsole();
+				////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
 				//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
 				//return;
 				UseConsole();
