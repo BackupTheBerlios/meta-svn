@@ -617,23 +617,36 @@ namespace Meta
 				arguments,
 				typeof(Map).Module);
 			ILGenerator il = method.GetILGenerator();
+			Emitter e = new Emitter(il);
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
-			il.Emit(OpCodes.Ldarg_1);
-			il.Emit(OpCodes.Stloc, context);
-			Emit(il, this, context);
-			il.Emit(OpCodes.Ret);
+			e.LoadArgument(1);
+			e.StoreLocal(context);
+			Emit(il,e, this, context);
+			e.Return();
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public virtual void Emit(ILGenerator il, Expression expression,LocalBuilder local)
+		public virtual void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder local)
 		{
 			expression.expressions.Add(this);
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("expressions"));
-			il.Emit(OpCodes.Ldc_I4, expression.expressions.Count - 1);
-			il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-			il.Emit(OpCodes.Ldarg_1);
-			il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
+			e.LoadArgument(0);
+			e.LoadField(typeof(Literal).GetField("expressions"));
+			e.LoadInteger(expression.expressions.Count - 1);
+			e.Call(typeof(List<Map>).GetMethod("get_Item"));
+			//il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
+			e.LoadArgument(1);
+			e.Call(this.GetType().GetMethod("EvaluateImplementation"));
+			//il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
 		}
+		//public virtual void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
+		//{
+		//    expression.expressions.Add(this);
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("expressions"));
+		//    il.Emit(OpCodes.Ldc_I4, expression.expressions.Count - 1);
+		//    il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
+		//    il.Emit(OpCodes.Ldarg_1);
+		//    il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
+		//}
 	}
 	public class Call : Expression
 	{
@@ -659,15 +672,15 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(ILGenerator il, Expression expression, LocalBuilder current)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder current)
 		{
 			LocalBuilder callable = il.DeclareLocal(typeof(Map));
-			calls[0].Emit(il, expression, current);
+			calls[0].Emit(il,e, expression, current);
 			il.Emit(OpCodes.Stloc, callable);
 			for (int i = 1; i < calls.Count; i++)
 			{
 				il.Emit(OpCodes.Ldloc, callable);
-				calls[i].Emit(il, expression, current);
+				calls[i].Emit(il,e, expression, current);
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Call"));
 				il.Emit(OpCodes.Stloc, callable);
 			}
@@ -700,6 +713,71 @@ namespace Meta
 			}
 			return selected[key].Copy();
 		}
+		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder context)
+		//{
+		//    LocalBuilder key=il.DeclareLocal(typeof(Map));
+		//    expression.Emit(il, expression, local);
+		//    il.Emit(OpCodes.Stloc);
+		//    LocalBuilder selected = il.DeclareLocal(typeof(Map));
+		//    il.Emit(OpCodes.Ldloc, context);
+		//    il.Emit(OpCodes.Stloc, selected);
+		//    Label loopStart=il.DefineLabel();
+		//    Label loopEnd=il.DefineLabel();
+		//    Label keyNotFound=il.DefineLabel();
+		//    il.MarkLabel(loopStart);
+		//    il.Emit(OpCodes.Ldloc, selected);
+		//    il.Emit(OpCodes.Ldloc, key);
+		//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("ContainsKey"));
+		//    il.Emit(OpCodes.Brtrue, loopEnd);
+		//    il.Emit(OpCodes.Ldloc,selected);
+		//    il.Emit(OpCodes.Call,typeof(Map).GetMethod("get_Scope"));
+		//    il.Emit(OpCodes.Brfalse, keyNotFound);
+		//            selected = selected.Scope;
+		//        }
+		//        else
+		//        {
+		//            throw new KeyNotFound(key, code.Extent, null);
+		//        }
+		//    }
+		//    return selected[key].Copy();
+		//}
+
+	}
+	public class Emitter
+	{
+		private ILGenerator il;
+		public Emitter(ILGenerator il)
+		{
+			this.il = il;
+		}
+		public void Call(MethodInfo method)
+		{
+			il.Emit(OpCodes.Call, method);
+		}
+		public void LoadInteger(int integer)
+		{
+			il.Emit(OpCodes.Ldc_I4, integer);
+		}
+		public void LoadField(FieldInfo field)
+		{
+			il.Emit(OpCodes.Ldfld, field);
+		}
+		public void LoadArgument(int index)
+		{
+			il.Emit(OpCodes.Ldarg, index);
+		}
+		public void StoreLocal(LocalBuilder local)
+		{
+			il.Emit(OpCodes.Stloc, local);
+		}
+		public void LoadLocal(LocalBuilder local)
+		{
+			il.Emit(OpCodes.Ldloc, local);
+		}
+		public void Return()
+		{
+			il.Emit(OpCodes.Ret);
+		}
 	}
 	public class Program : Expression
 	{
@@ -727,7 +805,7 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(ILGenerator il, Expression expression, LocalBuilder parent)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder parent)
 		{
 			LocalBuilder context=il.DeclareLocal(typeof(Map));
 			il.Emit(OpCodes.Newobj,typeof(Map).GetConstructor(new Type[]{}));
@@ -767,7 +845,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(ILGenerator il, Expression expression,LocalBuilder local)
+		public override void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
 		{
 			expression.expressions.Add(this);
 			il.Emit(OpCodes.Ldarg_0);
@@ -784,7 +862,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(ILGenerator il,Expression expression,LocalBuilder local)
+		public override void Emit(ILGenerator il,Emitter e,Expression expression,LocalBuilder local)
 		{
 			il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
 		}
