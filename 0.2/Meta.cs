@@ -621,7 +621,6 @@ namespace Meta
 
 			Emitter e = new Emitter(il);
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
-			//e.Load(parent);
 			e.Load(new Argument(1));
 			e.Store(context);
 			Emit(il,e, this, context);
@@ -632,7 +631,6 @@ namespace Meta
 		public virtual void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder local)
 		{
 			expression.expressions.Add(this);
-			//new ParameterBuilder();
 			e.Load(new Argument(0));
 			e.Load(typeof(Literal).GetField("expressions"));
 			e.Load(expression.expressions.Count - 1);
@@ -666,20 +664,34 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder current)
+		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder current)
 		{
-			LocalBuilder callable = il.DeclareLocal(typeof(Map));
-			calls[0].Emit(il,e, expression, current);
-			il.Emit(OpCodes.Stloc, callable);
+			LocalBuilder callable = e.DeclareMap();
+			calls[0].Emit(il, e, expression, current);
+			e.Store(callable);
 			for (int i = 1; i < calls.Count; i++)
 			{
-				il.Emit(OpCodes.Ldloc, callable);
-				calls[i].Emit(il,e, expression, current);
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Call"));
-				il.Emit(OpCodes.Stloc, callable);
+				e.Load(callable);
+				calls[i].Emit(il, e, expression, current);
+				e.Call(typeof(Map).GetMethod("Call"));
+				e.Store(callable);
 			}
-			il.Emit(OpCodes.Ldloc, callable);
+			e.Load(callable);
 		}
+		//public override void Emit(ILGenerator il,Emitter e, Expression expression, LocalBuilder current)
+		//{
+		//    LocalBuilder callable = il.DeclareLocal(typeof(Map));
+		//    calls[0].Emit(il,e, expression, current);
+		//    il.Emit(OpCodes.Stloc, callable);
+		//    for (int i = 1; i < calls.Count; i++)
+		//    {
+		//        il.Emit(OpCodes.Ldloc, callable);
+		//        calls[i].Emit(il,e, expression, current);
+		//        il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Call"));
+		//        il.Emit(OpCodes.Stloc, callable);
+		//    }
+		//    il.Emit(OpCodes.Ldloc, callable);
+		//}
 	}
 	public class Search : Expression
 	{
@@ -754,6 +766,10 @@ namespace Meta
 	}
 	public class Emitter
 	{
+		public LocalBuilder DeclareMap()
+		{
+			return il.DeclareLocal(typeof(Map));
+		}
 		private ILGenerator il;
 		public Emitter(ILGenerator il)
 		{
@@ -761,7 +777,16 @@ namespace Meta
 		}
 		public void Call(MethodInfo method)
 		{
-			il.Emit(OpCodes.Call, method);
+			OpCode code;
+			if(method.IsVirtual)
+			{
+				code=OpCodes.Callvirt;
+			}
+			else
+			{
+				code=OpCodes.Call;
+			}
+			il.Emit(code, method);
 		}
 		public void Load(int integer)
 		{
