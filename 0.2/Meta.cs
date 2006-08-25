@@ -140,6 +140,10 @@ namespace Meta
 			}
 			il.Emit(code, field);
 		}
+		public void Emit(EmitterDelegate emitter)
+		{
+			Emit(new CustomEmitter(emitter));
+		}
 		public void Emit(ILEmitter expression)
 		{
 			expression.Emit(il);
@@ -292,21 +296,21 @@ namespace Meta
 			this.index = index;
 		}
 	}
-	public class Declaration : ILEmitter
-	{
-		public int Index
-		{
-			get
-			{
-				return local.LocalIndex;
-			}
-		}
-		LocalBuilder local;
-		public override void Emit(ILGenerator il)
-		{
-			local=il.DeclareLocal(typeof(Map));
-		}
-	}
+	//public class Declaration : ILEmitter
+	//{
+	//    public int Index
+	//    {
+	//        get
+	//        {
+	//            return local.LocalIndex;
+	//        }
+	//    }
+	//    LocalBuilder local;
+	//    public override void Emit(ILGenerator il)
+	//    {
+	//        local=il.DeclareLocal(typeof(Map));
+	//    }
+	//}
 	public class Local:Storage
 	{
 		public override void Evaluate(ILGenerator il)
@@ -315,17 +319,17 @@ namespace Meta
 		}
 		public override void Store(ILGenerator il)
 		{
-			il.Emit(OpCodes.Stloc, declaration.Index);
+			il.Emit(OpCodes.Stloc, local.LocalIndex);
 		}
 		public override void Load(ILGenerator il)
 		{
-			il.Emit(OpCodes.Ldloc, declaration.Index);
+			il.Emit(OpCodes.Ldloc, local.LocalIndex);
 		}
-		private Declaration declaration;
-		public Local(Declaration declaration)
+		public void Declare(ILGenerator il)
 		{
-			this.declaration = declaration;
+			local = il.DeclareLocal(typeof(Map));
 		}
+		LocalBuilder local;
 		//private LocalBuilder local;
 		//public Local(LocalBuilder local)
 		//{
@@ -413,11 +417,11 @@ namespace Meta
 			ILGenerator il = method.GetILGenerator();
 
 			Emitter e = new Emitter(il);
-			Declaration declaration = new Declaration();
-			Local context = new Local(declaration);
+			//Declaration declaration = new Declaration();
+			Local context = new Local();
 			//Local context = e.DeclareMap();
 			Argument contextArgument = new Argument(1);
-			e.Emit(declaration);
+			e.Emit(context.Declare);
 			e.Emit(new Assign(context, contextArgument));
 			e.Emit(Emit(this, context));
 			e.Return();
@@ -564,12 +568,12 @@ namespace Meta
 		}
 		public override ILEmitter Emit(Expression expression, Local parent)
 		{
-			Declaration declaration = new Declaration();
-			Local context = new Local(declaration);
+			//Declaration declaration = new Declaration();
+			Local context = new Local();
 			//Local context = Local.DeclareMap();
 			//Local context = e.DeclareMap();
 			ILProgram program = new ILProgram();
-			program.Add(declaration);
+			program.Add(context.Declare);
 			program.Add(
 				new Assign(
 					context,
