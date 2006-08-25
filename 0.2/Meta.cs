@@ -32,7 +32,6 @@ using System.Reflection.Emit;
 using Meta;
 using Meta.Test;
 using Microsoft.Win32;
-//using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
@@ -75,25 +74,6 @@ namespace Meta
 			il.Emit(OpCodes.Newobj, constructor);
 		}
 	}
-	//public class New:ILExpression
-	//{
-	//    public override Type Type
-	//    {
-	//        get 
-	//        {
-	//            return constructor.DeclaringType;
-	//        }
-	//    }
-	//    private ConstructorInfo constructor;
-	//    public New(ConstructorInfo constructor)
-	//    {
-	//        this.constructor = constructor;
-	//    }
-	//    public override void Evaluate(ILGenerator il)
-	//    {
-	//        il.Emit(OpCodes.Newobj, constructor);
-	//    }
-	//}
 	public class Load:ILEmitter
 	{
 		private Storage storage;
@@ -106,76 +86,6 @@ namespace Meta
 			storage.Load(il);
 		}
 	}
-	//public class Emitter
-	//{
-	//    public void New(ConstructorInfo constructor)
-	//    {
-	//        il.Emit(OpCodes.Newobj, constructor);
-	//    }
-	//    private ILGenerator il;
-	//    public Emitter(ILGenerator il)
-	//    {
-	//        this.il = il;
-	//    }
-	//    public void Call(MethodInfo method)
-	//    {
-	//        OpCode code;
-	//        if (method.IsVirtual)
-	//        {
-	//            code = OpCodes.Callvirt;
-	//        }
-	//        else
-	//        {
-	//            code = OpCodes.Call;
-	//        }
-	//        il.Emit(code, method);
-	//    }
-	//    public void Load(FieldInfo field)
-	//    {
-	//        OpCode code;
-	//        if (field.IsStatic)
-	//        {
-	//            code = OpCodes.Ldsfld;
-	//        }
-	//        else
-	//        {
-	//            code = OpCodes.Ldfld;
-	//        }
-	//        il.Emit(code, field);
-	//    }
-	//    public void Emit(EmitterDelegate emitter)
-	//    {
-	//        Emit(new CustomEmitter(emitter));
-	//    }
-	//    public void Emit(ILEmitter expression)
-	//    {
-	//        expression.Emit(il);
-	//    }
-	//    public void Load(Argument argument)
-	//    {
-	//        il.Emit(OpCodes.Ldarg, argument.Index);
-	//    }
-	//    public void Load(Local local)
-	//    {
-	//        local.Load(il);
-	//    }
-	//    public void Load(ParameterBuilder parameter)
-	//    {
-	//        il.Emit(OpCodes.Ldarg, parameter.Position);
-	//    }
-	//    //public void Emit(ILEmitter emitter, ILGenerator il, Emitter e, Expression expression, LocalBuilder argument)
-	//    //{
-	//    //    emitter.Emit(il, e, expression, argument);
-	//    //}
-	//    public void Store(Local local)
-	//    {
-	//        local.Store(il);
-	//    }
-	//    //public void Return()
-	//    //{
-	//    //    il.Emit(OpCodes.Ret);
-	//    //}
-	//}
 	public abstract class Storage:ILExpression
 	{
 		private Type type;
@@ -191,18 +101,6 @@ namespace Meta
 				Store(il);
 			};
 		}
-		//public ILEmitter Call(string name,params ILEmitter[] arguments)
-		//{
-		//    return new CustomEmitter(delegate(ILGenerator il)
-		//    {
-		//        Load(il);
-		//        foreach(ILEmitter argument in arguments)
-		//        {
-		//            argument.Emit(il);
-		//        }
-		//        il.Emit(OpCodes.Callvirt, type.GetMethod(name));
-		//    });
-		//}
 		public abstract void Store(ILGenerator il);
 		public abstract void Load(ILGenerator il);
 
@@ -238,26 +136,6 @@ namespace Meta
 			il.Emit(OpCodes.Callvirt, method);
 		}
 	}
-	//public class InstanceCall : ILEmitter
-	//{
-	//    private List<ILEmitter> arguments;
-	//    private MethodInfo method;
-	//    public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
-	//    {
-	//        this.method = method;
-	//        this.arguments = new List<ILEmitter>();
-	//        this.arguments.Add(instance);
-	//        this.arguments.AddRange(arguments);
-	//    }
-	//    public override void Emit(ILGenerator il)
-	//    {
-	//        foreach (ILEmitter argument in arguments)
-	//        {
-	//            argument.Emit(il);
-	//        }
-	//        il.Emit(OpCodes.Callvirt, method);
-	//    }
-	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
@@ -366,7 +244,6 @@ namespace Meta
 			get 
 			{
 				return type;
-				//return local.LocalType;
 			}
 		}
 		private Type type=typeof(Map);
@@ -515,8 +392,7 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<StatementBase> statements = new List<StatementBase>();
-		public List<Map> literals = new List<Map>();
-		//public List<Literal> expressions = new List<Literal>();
+		public List<Map> literals= new List<Map>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -533,7 +409,7 @@ namespace Meta
 				throw e;
 			}
 		}
-		//public abstract Map EvaluateImplementation(Map context);
+		public abstract Map EvaluateImplementation(Map context);
 		public void Return(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ret);
@@ -559,6 +435,16 @@ namespace Meta
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
+		//public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
+		//{
+		//    expression.expressions.Add(this);
+		//    return argument.Field(
+		//        "expressions").Call(
+		//            "get_Item",
+		//            expression.expressions.Count - 1).Call(
+		//                    "EvaluateImplementation",
+		//                    context);
+		//}
 	}
 	public class Call : Expression
 	{
@@ -574,6 +460,15 @@ namespace Meta
 				calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty)));
 			}
 			this.parameterName = parameterName;
+		}
+		public override Map EvaluateImplementation(Map current)
+		{
+			Map callable = calls[0].Evaluate(current);
+			for (int i = 1; i < calls.Count; i++)
+			{
+				callable = callable.Call(calls[i].Evaluate(current));
+			}
+			return callable;
 		}
 		public override ILEmitter Get(Expression expression, Local current,Argument argument)
 		{
@@ -597,6 +492,23 @@ namespace Meta
 		{
 			this.expression = code.GetExpression();
 			this.code = code;
+		}
+		public override Map EvaluateImplementation(Map context)
+		{
+			Map key = expression.Evaluate(context);
+			Map selected = context;
+			while (!selected.ContainsKey(key))
+			{
+				if (selected.Scope != null)
+				{
+					selected = selected.Scope;
+				}
+				else
+				{
+					throw new KeyNotFound(key, code.Extent, null);
+				}
+			}
+			return selected[key].Copy();
 		}
 		public override ILEmitter Get(Expression parentExpression, Local context, Argument argument)
 		{
@@ -640,6 +552,16 @@ namespace Meta
 			this.code = code;
 			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
 		}
+		public override Map EvaluateImplementation(Map parent)
+		{
+			Map context=new Map();
+			context.Scope = parent;
+			foreach (StatementBase statement in statementList)
+			{
+				statement.Assign(context);
+			}
+			return context;
+		}
 		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
 		{
 			ILProgram program = new ILProgram();
@@ -675,20 +597,25 @@ namespace Meta
 				this.literal = code;
 			}
 		}
+		public override Map EvaluateImplementation(Map context)
+		{
+			return literal.Copy();
+		}
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			expression.literals.Add(literal);
+			// these will be literals, eventually, so this shouldnt be a problem, actually
 			return argument.Field("literals").Call(
 						"get_Item",
 						expression.literals.Count - 1).Call("Copy");
-
-			//return argument.Field("expressions").Call(
-			//            "get_Item",
-			//            expression.expressions.Count - 1).Field("literal").Call("Copy");
 		}
 	}
 	public class Root : Expression
 	{
+		public override Map EvaluateImplementation(Map selected)
+		{
+			return Gac.gac;
+		}
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
@@ -701,7 +628,25 @@ namespace Meta
 		{
 			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression();});
 		}
-		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		public override Map EvaluateImplementation(Map context)
+		{
+			Map selected = subselects[0].Evaluate(context);
+			for (int i = 1; i < subselects.Count; i++)
+			{
+				Map key = subselects[i].Evaluate(context);
+				Map value = selected.TryGetValue(key);
+				if (value == null)
+				{
+					throw new KeyDoesNotExist(key, null, selected);
+				}
+				else
+				{
+					selected = value;
+				}
+			}
+			return selected;
+		}
+		public override ILEmitter  Get(Expression expression, Local context, Argument argument)
 		{
 		    ILProgram program = new ILProgram();
 		    Local selected = program.Declare();

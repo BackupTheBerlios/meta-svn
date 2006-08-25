@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy of relativity.learn" />
     <None Include="learning.meta" />
     <None Include="libDesign.meta" />
     <None Include="library.meta" />
