@@ -101,10 +101,10 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Newobj, constructor);
 		}
-		public Local DeclareMap()
-		{
-			return new Local(il.DeclareLocal(typeof(Map)));
-		}
+		//public Local DeclareMap()
+		//{
+		//    return new Local(il.DeclareLocal(typeof(Map)));
+		//}
 		private ILGenerator il;
 		public Emitter(ILGenerator il)
 		{
@@ -152,11 +152,11 @@ namespace Meta
 		{
 			local.Load(il);
 		}
-		public void Load(LocalBuilder local)
-		{
-			new Local(local).Load(il);
-			//il.Emit(OpCodes.Ldloc, local);
-		}
+		//public void Load(LocalBuilder local)
+		//{
+		//    new Local(local).Load(il);
+		//    //il.Emit(OpCodes.Ldloc, local);
+		//}
 		public void Load(ParameterBuilder parameter)
 		{
 			il.Emit(OpCodes.Ldarg, parameter.Position);
@@ -292,6 +292,21 @@ namespace Meta
 			this.index = index;
 		}
 	}
+	public class Declaration : ILEmitter
+	{
+		public int Index
+		{
+			get
+			{
+				return local.LocalIndex;
+			}
+		}
+		LocalBuilder local;
+		public override void Emit(ILGenerator il)
+		{
+			local=il.DeclareLocal(typeof(Map));
+		}
+	}
 	public class Local:Storage
 	{
 		public override void Evaluate(ILGenerator il)
@@ -300,17 +315,22 @@ namespace Meta
 		}
 		public override void Store(ILGenerator il)
 		{
-			il.Emit(OpCodes.Stloc, local.LocalIndex);
+			il.Emit(OpCodes.Stloc, declaration.Index);
 		}
 		public override void Load(ILGenerator il)
 		{
-			il.Emit(OpCodes.Ldloc, local.LocalIndex);
+			il.Emit(OpCodes.Ldloc, declaration.Index);
 		}
-		private LocalBuilder local;
-		public Local(LocalBuilder local)
+		private Declaration declaration;
+		public Local(Declaration declaration)
 		{
-			this.local = local;
+			this.declaration = declaration;
 		}
+		//private LocalBuilder local;
+		//public Local(LocalBuilder local)
+		//{
+		//    this.local = local;
+		//}
 	}
 	public delegate void EmitterDelegate(ILGenerator il);
 	public class CustomEmitter : ILEmitter
@@ -393,8 +413,11 @@ namespace Meta
 			ILGenerator il = method.GetILGenerator();
 
 			Emitter e = new Emitter(il);
-			Local context = e.DeclareMap();
+			Declaration declaration = new Declaration();
+			Local context = new Local(declaration);
+			//Local context = e.DeclareMap();
 			Argument contextArgument = new Argument(1);
+			e.Emit(declaration);
 			e.Emit(new Assign(context, contextArgument));
 			e.Emit(Emit(this, context));
 			e.Return();
@@ -539,36 +562,41 @@ namespace Meta
 			}
 			return context;
 		}
-		//public override ILEmitter Emit(Expression expression, Local parent)
-		//{
-		//    Local context = e.DeclareMap();
-		//    ILProgram program = new ILProgram();
-		//    program.Add(
-		//        new Assign(
-		//            context,
-		//            new New(typeof(Map).GetConstructor(new Type[0]))));
-		//    program.Add(
-		//        new InstanceCall(
-		//            context,
-		//            typeof(Map).GetMethod("set_Scope"),
-		//            parent));
-		//    foreach (StatementBase statement in statements)
-		//    {
-		//        expression.statements.Add(statement);
-		//        program.Add(
-		//            new InstanceCall(
-		//                new InstanceCall(
-		//                    new InstanceField(
-		//                        new Argument(0),
-		//                        typeof(Literal).GetField("statements")),
-		//                    typeof(List<Map>).GetMethod("get_Item"),
-		//                    new Integer(expression.statements.Count - 1)),
-		//                typeof(StatementBase).GetMethod("Assign"),
-		//                context));
-		//    }
-		//    program.Add(context.Load);
-		//    e.Emit(program);
-		//}
+		public override ILEmitter Emit(Expression expression, Local parent)
+		{
+			Declaration declaration = new Declaration();
+			Local context = new Local(declaration);
+			//Local context = Local.DeclareMap();
+			//Local context = e.DeclareMap();
+			ILProgram program = new ILProgram();
+			program.Add(declaration);
+			program.Add(
+				new Assign(
+					context,
+					new New(typeof(Map).GetConstructor(new Type[0]))));
+			program.Add(
+				new InstanceCall(
+					context,
+					typeof(Map).GetMethod("set_Scope"),
+					parent));
+			foreach (StatementBase statement in statements)
+			{
+				expression.statements.Add(statement);
+				program.Add(
+					new InstanceCall(
+						new InstanceCall(
+							new InstanceField(
+								new Argument(0),
+								typeof(Literal).GetField("statements")),
+							typeof(List<Map>).GetMethod("get_Item"),
+							new Integer(expression.statements.Count - 1)),
+						typeof(StatementBase).GetMethod("Assign"),
+						context));
+			}
+			program.Add(context.Load);
+			return program;
+			//e.Emit(program);
+		}
 	}
 	public class Literal : Expression
 	{
