@@ -392,7 +392,8 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<StatementBase> statements = new List<StatementBase>();
-		public List<Expression> expressions= new List<Expression>();
+		public List<Map> literals = new List<Map>();
+		//public List<Expression> expressions = new List<Expression>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -552,13 +553,11 @@ namespace Meta
 		}
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
-			expression.expressions.Add(this);
+			expression.literals.Add(literal);
 			// these will be literals, eventually, so this shouldnt be a problem, actually
-			return new InstanceField(
-					argument.Field("expressions").Call(
+			return argument.Field("literals").Call(
 						"get_Item",
-						expression.expressions.Count - 1),
-					typeof(Literal).GetField("literal")).Call("Copy");
+						expression.literals.Count - 1).Call("Copy");
 		}
 	}
 	public class Root : Expression
