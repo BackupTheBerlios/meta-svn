@@ -297,21 +297,6 @@ namespace Meta
 			this.index = index;
 		}
 	}
-	//public class Declaration : ILEmitter
-	//{
-	//    public int Index
-	//    {
-	//        get
-	//        {
-	//            return local.LocalIndex;
-	//        }
-	//    }
-	//    LocalBuilder local;
-	//    public override void Emit(ILGenerator il)
-	//    {
-	//        local=il.DeclareLocal(typeof(Map));
-	//    }
-	//}
 	public class Local:Storage
 	{
 		public override void Evaluate(ILGenerator il)
@@ -331,11 +316,6 @@ namespace Meta
 			local = il.DeclareLocal(typeof(Map));
 		}
 		LocalBuilder local;
-		//private LocalBuilder local;
-		//public Local(LocalBuilder local)
-		//{
-		//    this.local = local;
-		//}
 	}
 	public delegate void EmitterDelegate(ILGenerator il);
 	public class CustomEmitter : ILEmitter
@@ -418,9 +398,7 @@ namespace Meta
 			ILGenerator il = method.GetILGenerator();
 
 			Emitter e = new Emitter(il);
-			//Declaration declaration = new Declaration();
 			Local context = new Local();
-			//Local context = e.DeclareMap();
 			Argument contextArgument = new Argument(1);
 			e.Emit(context.Declare);
 			e.Emit(new Assign(context, contextArgument));
@@ -429,7 +407,6 @@ namespace Meta
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		// refactor, remove il, pass arguments instead of local
 		public virtual ILEmitter Emit(Expression expression, Local context)
 		{
 			expression.expressions.Add(this);
@@ -475,22 +452,15 @@ namespace Meta
 			program.Add(callable.Store);
 			for (int i = 1; i < calls.Count; i++)
 			{
-				//calls[i].Emit(e, expression, current);
-				program.Add(new InstanceCall(
-					callable,					
-					typeof(Map).GetMethod("Call"),
-					calls[i].Emit(expression, current)
-					));
-				//e.Call(typeof(Map).GetMethod("Call"));
-				program.Add(callable.Store);
-
-				//e.Load(callable);
-				//calls[i].Emit(e, expression, current);
-				//e.Call(typeof(Map).GetMethod("Call"));
-				//e.Store(callable);
+				program.Add(
+					new Assign(
+						callable,
+						new InstanceCall(
+							callable,					
+							typeof(Map).GetMethod("Call"),
+							calls[i].Emit(expression, current))));
 			}
 			program.Add(callable.Load);
-			//e.Load(callable);
 			return program;
 		}
 	}
@@ -520,6 +490,34 @@ namespace Meta
 			}
 			return selected[key].Copy();
 		}
+		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder context)
+		//{
+		//    LocalBuilder key=il.DeclareLocal(typeof(Map));
+		//    expression.Emit(il, expression, local);
+		//    il.Emit(OpCodes.Stloc);
+		//    LocalBuilder selected = il.DeclareLocal(typeof(Map));
+		//    il.Emit(OpCodes.Ldloc, context);
+		//    il.Emit(OpCodes.Stloc, selected);
+		//    Label loopStart=il.DefineLabel();
+		//    Label loopEnd=il.DefineLabel();
+		//    Label keyNotFound=il.DefineLabel();
+		//    il.MarkLabel(loopStart);
+		//    il.Emit(OpCodes.Ldloc, selected);
+		//    il.Emit(OpCodes.Ldloc, key);
+		//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("ContainsKey"));
+		//    il.Emit(OpCodes.Brtrue, loopEnd);
+		//    il.Emit(OpCodes.Ldloc,selected);
+		//    il.Emit(OpCodes.Call,typeof(Map).GetMethod("get_Scope"));
+		//    il.Emit(OpCodes.Brfalse, keyNotFound);
+		//            selected = selected.Scope;
+		//        }
+		//        else
+		//        {
+		//            throw new KeyNotFound(key, code.Extent, null);
+		//        }
+		//    }
+		//    return selected[key].Copy();
+		//}
 		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder context)
 		//{
 		//    LocalBuilder key=il.DeclareLocal(typeof(Map));
