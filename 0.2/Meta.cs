@@ -541,15 +541,17 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(Emitter e, Expression expression,Local local)
+		public override void Emit(Emitter e, Expression expression, Local local)
 		{
 			expression.expressions.Add(this);
-			e.Emit(new InstanceField(typeof(Literal).GetField("expressions"),new Argument(0)));
-			e.Emit(new Integer(expression.expressions.Count - 1));
-			//e.Load(expression.expressions.Count - 1);
-			e.Call(typeof(List<Map>).GetMethod("get_Item"));
-			e.Load(typeof(Literal).GetField("literal"));
-			e.Call(typeof(Map).GetMethod("Copy"));
+			e.Emit(
+				new ILCall(
+					typeof(Map).GetMethod("Copy"),
+					new InstanceField(
+						typeof(Literal).GetField("literal"),
+						new ILCall(typeof(List<Map>).GetMethod("get_Item"),
+							new InstanceField(typeof(Literal).GetField("expressions"), new Argument(0)),
+							new Integer(expression.expressions.Count - 1)))));
 		}
 	}
 	public class Root : Expression
