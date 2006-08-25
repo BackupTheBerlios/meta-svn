@@ -610,43 +610,37 @@ namespace Meta
 		public abstract Map EvaluateImplementation(Map context);
 		public Eval Optimize()
 		{
-			Type[] arguments = new Type[] { typeof(Expression), typeof(Map) };
+			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
 			DynamicMethod method = new DynamicMethod(
 				"Optimized",
 				typeof(Map),
-				arguments,
+				parameters,
 				typeof(Map).Module);
+
 			ILGenerator il = method.GetILGenerator();
+
 			Emitter e = new Emitter(il);
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
-			e.LoadArgument(1);
-			e.StoreLocal(context);
+			//e.Load(parent);
+			e.Load(new Argument(1));
+			e.Store(context);
 			Emit(il,e, this, context);
 			e.Return();
+
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		public virtual void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder local)
 		{
 			expression.expressions.Add(this);
-			e.LoadArgument(0);
-			e.LoadField(typeof(Literal).GetField("expressions"));
-			e.LoadInteger(expression.expressions.Count - 1);
+			//new ParameterBuilder();
+			e.Load(new Argument(0));
+			e.Load(typeof(Literal).GetField("expressions"));
+			e.Load(expression.expressions.Count - 1);
 			e.Call(typeof(List<Map>).GetMethod("get_Item"));
-			//il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-			e.LoadArgument(1);
+			e.Load(new Argument(1));
 			e.Call(this.GetType().GetMethod("EvaluateImplementation"));
-			//il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
 		}
-		//public virtual void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
-		//{
-		//    expression.expressions.Add(this);
-		//    il.Emit(OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("expressions"));
-		//    il.Emit(OpCodes.Ldc_I4, expression.expressions.Count - 1);
-		//    il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-		//    il.Emit(OpCodes.Ldarg_1);
-		//    il.Emit(OpCodes.Call, this.GetType().GetMethod("EvaluateImplementation", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic));
-		//}
+
 	}
 	public class Call : Expression
 	{
@@ -743,6 +737,21 @@ namespace Meta
 		//}
 
 	}
+	public class Argument
+	{
+		public int Index
+		{
+			get
+			{
+				return index;
+			}
+		}
+		private int index;
+		public Argument(int index)
+		{
+			this.index = index;
+		}
+	}
 	public class Emitter
 	{
 		private ILGenerator il;
@@ -754,31 +763,107 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Call, method);
 		}
-		public void LoadInteger(int integer)
+		public void Load(int integer)
 		{
 			il.Emit(OpCodes.Ldc_I4, integer);
 		}
-		public void LoadField(FieldInfo field)
+		public void Load(FieldInfo field)
 		{
 			il.Emit(OpCodes.Ldfld, field);
 		}
-		public void LoadArgument(int index)
+		public void Load(Argument argument)
 		{
-			il.Emit(OpCodes.Ldarg, index);
+			il.Emit(OpCodes.Ldarg, argument.Index);
 		}
-		public void StoreLocal(LocalBuilder local)
-		{
-			il.Emit(OpCodes.Stloc, local);
-		}
-		public void LoadLocal(LocalBuilder local)
+		public void Load(LocalBuilder local)
 		{
 			il.Emit(OpCodes.Ldloc, local);
+		}
+		public void Load(ParameterBuilder parameter)
+		{
+			il.Emit(OpCodes.Ldarg, parameter.Position);
+		}
+		public void Store(LocalBuilder local)
+		{
+			il.Emit(OpCodes.Stloc, local);
 		}
 		public void Return()
 		{
 			il.Emit(OpCodes.Ret);
 		}
 	}
+	//public class Emitter
+	//{
+	//    private ILGenerator il;
+	//    public Emitter(ILGenerator il)
+	//    {
+	//        this.il = il;
+	//    }
+	//    public void Call(MethodInfo method)
+	//    {
+	//        il.Emit(OpCodes.Call, method);
+	//    }
+	//    public void LoadInteger(int integer)
+	//    {
+	//        il.Emit(OpCodes.Ldc_I4, integer);
+	//    }
+	//    public void LoadField(FieldInfo field)
+	//    {
+	//        il.Emit(OpCodes.Ldfld, field);
+	//    }
+	//    public void LoadArgument(int index)
+	//    {
+	//        il.Emit(OpCodes.Ldarg, index);
+	//    }
+	//    public void LoadLocal(LocalBuilder local)
+	//    {
+	//        il.Emit(OpCodes.Ldloc, local);
+	//    }
+	//    public void StoreLocal(LocalBuilder local)
+	//    {
+	//        il.Emit(OpCodes.Stloc, local);
+	//    }
+	//    public void Return()
+	//    {
+	//        il.Emit(OpCodes.Ret);
+	//    }
+	//}
+	//public class Emitter
+	//{
+	//    private ILGenerator il;
+	//    public Emitter(ILGenerator il)
+	//    {
+	//        this.il = il;
+	//    }
+	//    public void Call(MethodInfo method)
+	//    {
+	//        il.Emit(OpCodes.Call, method);
+	//    }
+	//    public void LoadInteger(int integer)
+	//    {
+	//        il.Emit(OpCodes.Ldc_I4, integer);
+	//    }
+	//    public void LoadField(FieldInfo field)
+	//    {
+	//        il.Emit(OpCodes.Ldfld, field);
+	//    }
+	//    public void LoadArgument(int index)
+	//    {
+	//        il.Emit(OpCodes.Ldarg, index);
+	//    }
+	//    public void StoreLocal(LocalBuilder local)
+	//    {
+	//        il.Emit(OpCodes.Stloc, local);
+	//    }
+	//    public void LoadLocal(LocalBuilder local)
+	//    {
+	//        il.Emit(OpCodes.Ldloc, local);
+	//    }
+	//    public void Return()
+	//    {
+	//        il.Emit(OpCodes.Ret);
+	//    }
+	//}
 	public class Program : Expression
 	{
 		public bool IsFunction
