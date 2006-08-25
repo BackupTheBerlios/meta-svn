@@ -515,7 +515,8 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<StatementBase> statements = new List<StatementBase>();
-		public List<Literal> expressions= new List<Literal>();
+		public List<Map> literals = new List<Map>();
+		//public List<Literal> expressions = new List<Literal>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -532,7 +533,7 @@ namespace Meta
 				throw e;
 			}
 		}
-		public abstract Map EvaluateImplementation(Map context);
+		//public abstract Map EvaluateImplementation(Map context);
 		public void Return(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ret);
@@ -574,15 +575,6 @@ namespace Meta
 			}
 			this.parameterName = parameterName;
 		}
-		public override Map EvaluateImplementation(Map current)
-		{
-			Map callable = calls[0].Evaluate(current);
-			for (int i = 1; i < calls.Count; i++)
-			{
-				callable = callable.Call(calls[i].Evaluate(current));
-			}
-			return callable;
-		}
 		public override ILEmitter Get(Expression expression, Local current,Argument argument)
 		{
 			ILProgram program = new ILProgram();
@@ -605,23 +597,6 @@ namespace Meta
 		{
 			this.expression = code.GetExpression();
 			this.code = code;
-		}
-		public override Map EvaluateImplementation(Map context)
-		{
-			Map key = expression.Evaluate(context);
-			Map selected = context;
-			while (!selected.ContainsKey(key))
-			{
-				if (selected.Scope != null)
-				{
-					selected = selected.Scope;
-				}
-				else
-				{
-					throw new KeyNotFound(key, code.Extent, null);
-				}
-			}
-			return selected[key].Copy();
 		}
 		public override ILEmitter Get(Expression parentExpression, Local context, Argument argument)
 		{
@@ -665,16 +640,6 @@ namespace Meta
 			this.code = code;
 			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
 		}
-		public override Map EvaluateImplementation(Map parent)
-		{
-			Map context=new Map();
-			context.Scope = parent;
-			foreach (StatementBase statement in statementList)
-			{
-				statement.Assign(context);
-			}
-			return context;
-		}
 		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
 		{
 			ILProgram program = new ILProgram();
@@ -710,27 +675,20 @@ namespace Meta
 				this.literal = code;
 			}
 		}
-		public override Map EvaluateImplementation(Map context)
-		{
-			return literal.Copy();
-		}
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
-			expression.expressions.Add(this);
-			// these will be literals, eventually, so this shouldnt be a problem, actually
-			return new InstanceField(
-					argument.Field("expressions").Call(
+			expression.literals.Add(literal);
+			return argument.Field("literals").Call(
 						"get_Item",
-						expression.expressions.Count - 1),
-					typeof(Literal).GetField("literal")).Call("Copy");
+						expression.literals.Count - 1).Call("Copy");
+
+			//return argument.Field("expressions").Call(
+			//            "get_Item",
+			//            expression.expressions.Count - 1).Field("literal").Call("Copy");
 		}
 	}
 	public class Root : Expression
 	{
-		public override Map EvaluateImplementation(Map selected)
-		{
-			return Gac.gac;
-		}
 		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
@@ -742,24 +700,6 @@ namespace Meta
 		public Select(Map code)
 		{
 			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression();});
-		}
-		public override Map EvaluateImplementation(Map context)
-		{
-			Map selected = subselects[0].Evaluate(context);
-			for (int i = 1; i < subselects.Count; i++)
-			{
-				Map key = subselects[i].Evaluate(context);
-				Map value = selected.TryGetValue(key);
-				if (value == null)
-				{
-					throw new KeyDoesNotExist(key, null, selected);
-				}
-				else
-				{
-					selected = value;
-				}
-			}
-			return selected;
 		}
 		public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
