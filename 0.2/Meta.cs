@@ -66,15 +66,16 @@ namespace Meta
 	public class Assign : ILEmitter
 	{
 		private Storage a;
-		private ILExpression b;
-		public Assign(Storage a, ILExpression b)
+		private ILEmitter b;
+		public Assign(Storage a, ILEmitter b)
 		{
 			this.a = a;
 			this.b = b;
 		}
 		public override void Emit(ILGenerator il)
 		{
-			b.Evaluate(il);
+			b.Emit(il);
+			//b.Evaluate(il);
 			a.Store(il);
 		}
 	}
@@ -185,18 +186,18 @@ namespace Meta
 		{
 			type = typeof(Map);
 		}
-		//public ILEmitter Call(string name,ILEmitter[] arguments)
-		//{
-		//    return new CustomEmitter(delegate(ILEmitter il)
-		//    {
-		//        foreach(ILEmitter argument in arguments)
-		//        {
-		//            argument.Emit(il);
-		//        }
-		//        MethodInfo method=type.GetMethod(name);
-		//        il.Emit(method.IsVirtual?OpCodes.Callvirt:OpCodes.Call,
-		//    });
-		//}
+		public ILEmitter Call(string name,params ILEmitter[] arguments)
+		{
+		    return new CustomEmitter(delegate(ILGenerator il)
+		    {
+				Load(il);
+		        foreach(ILEmitter argument in arguments)
+		        {
+		            argument.Emit(il);
+		        }
+				il.Emit(OpCodes.Callvirt, type.GetMethod(name));
+		    });
+		}
 		public abstract void Store(ILGenerator il);
 		public abstract void Load(ILGenerator il);
 
@@ -457,10 +458,11 @@ namespace Meta
 				program.Add(
 					new Assign(
 						callable,
-						new InstanceCall(
-							callable,					
-							typeof(Map).GetMethod("Call"),
-							calls[i].Emit(expression, current))));
+						callable.Call("Call",calls[i].Emit(expression, current))));
+						//new InstanceCall(
+						//    callable,
+						//    typeof(Map).GetMethod("Call"),
+						//    calls[i].Emit(expression, current))));
 			}
 			program.Add(callable.Load);
 			return program;
