@@ -63,11 +63,11 @@ namespace Meta
 			il.Emit(OpCodes.Newobj, constructor);
 		}
 	}
-	public class Assignment : ILEmitter
+	public class Assign : ILEmitter
 	{
 		private Storage a;
 		private ILExpression b;
-		public Assignment(Storage a, ILExpression b)
+		public Assign(Storage a, ILExpression b)
 		{
 			this.a = a;
 			this.b = b;
@@ -76,6 +76,18 @@ namespace Meta
 		{
 			b.Evaluate(il);
 			a.Store(il);
+		}
+	}
+	public class Load:ILEmitter
+	{
+		private Storage storage;
+		public Load(Storage storage)
+		{
+			this.storage = storage;
+		}
+		public override void Emit(ILGenerator il)
+		{
+			storage.Load(il);
 		}
 	}
 	public class Emitter
@@ -300,9 +312,45 @@ namespace Meta
 			this.local = local;
 		}
 	}
+	public delegate void EmitterDelegate(ILGenerator il);
+	public class CustomEmitter : ILEmitter
+	{
+		private EmitterDelegate emitter;
+		public CustomEmitter(EmitterDelegate emitter)
+		{
+			this.emitter = emitter;
+		}
+		public override void Emit(ILGenerator il)
+		{
+			emitter(il);
+		}
+	}
 	public abstract class ILEmitter
 	{
 		public abstract void Emit(ILGenerator il);
+	}
+	public class ILProgram : ILEmitter
+	{
+		private List<ILEmitter> statements;
+		public ILProgram(params ILEmitter[] statements)
+		{
+			this.statements = new List<ILEmitter>(statements);
+		}
+		public void Add(EmitterDelegate emitter)
+		{
+			Add(new CustomEmitter(emitter));
+		}
+		public void Add(ILEmitter statement)
+		{
+			this.statements.Add(statement);
+		}
+		public override void Emit(ILGenerator il)
+		{
+			foreach (ILEmitter statement in statements)
+			{
+				statement.Emit(il);
+			}
+		}
 	}
 	public abstract class ILExpression:ILEmitter
 	{
@@ -347,7 +395,7 @@ namespace Meta
 			Emitter e = new Emitter(il);
 			Local context = e.DeclareMap();
 			Argument contextArgument = new Argument(1);
-			e.Emit(new Assignment(context, contextArgument));
+			e.Emit(new Assign(context, contextArgument));
 			Emit(e, this, context);
 			e.Return();
 
@@ -357,12 +405,35 @@ namespace Meta
 		public virtual void Emit(Emitter e, Expression expression, Local context)
 		{
 			expression.expressions.Add(this);
-			e.Emit(new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")));
-			e.Emit(new Integer(expression.expressions.Count - 1));
-			e.Call(typeof(List<Map>).GetMethod("get_Item"));
-			e.Load(new Argument(1));
-			e.Call(this.GetType().GetMethod("EvaluateImplementation"));
+			e.Emit(
+				new InstanceCall(
+					new InstanceCall(
+						new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
+						typeof(List<Map>).GetMethod("get_Item"),
+						new Integer(expression.expressions.Count - 1)),
+					this.GetType().GetMethod("EvaluateImplementation"),
+					new Argument(1)));
 		}
+		//public virtual void Emit(Emitter e, Expression expression, Local context)
+		//{
+		//    expression.expressions.Add(this);
+		//    e.Emit(
+		//        new InstanceCall(
+		//            new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
+		//            typeof(List<Map>).GetMethod("get_Item"),
+		//            new Integer(expression.expressions.Count - 1)));
+		//    e.Load(new Argument(1));
+		//    e.Call(this.GetType().GetMethod("EvaluateImplementation"));
+		//}
+		//public virtual void Emit(Emitter e, Expression expression, Local context)
+		//{
+		//    expression.expressions.Add(this);
+		//    e.Emit(new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")));
+		//    e.Emit(new Integer(expression.expressions.Count - 1));
+		//    e.Call(typeof(List<Map>).GetMethod("get_Item"));
+		//    e.Load(new Argument(1));
+		//    e.Call(this.GetType().GetMethod("EvaluateImplementation"));
+		//}
 	}
 	public class Call : Expression
 	{
@@ -391,10 +462,14 @@ namespace Meta
 		public override void Emit(Emitter e, Expression expression, Local current)
 		{
 			Local callable = e.DeclareMap();
+			ILProgram program = new ILProgram();
 			calls[0].Emit(e, expression, current);
-			e.Store(callable);
+			program.Add(callable.Store);
+			//e.Store(callable);
+			e.Emit(program);
 			for (int i = 1; i < calls.Count; i++)
 			{
+				//program.Add(callable.Load);
 				e.Load(callable);
 				calls[i].Emit(e, expression, current);
 				e.Call(typeof(Map).GetMethod("Call"));
@@ -402,6 +477,20 @@ namespace Meta
 			}
 			e.Load(callable);
 		}
+		//public override void Emit(Emitter e, Expression expression, Local current)
+		//{
+		//    Local callable = e.DeclareMap();
+		//    calls[0].Emit(e, expression, current);
+		//    e.Store(callable);
+		//    for (int i = 1; i < calls.Count; i++)
+		//    {
+		//        e.Load(callable);
+		//        calls[i].Emit(e, expression, current);
+		//        e.Call(typeof(Map).GetMethod("Call"));
+		//        e.Store(callable);
+		//    }
+		//    e.Load(callable);
+		//}
 	}
 	public class Search : Expression
 	{
@@ -488,23 +577,32 @@ namespace Meta
 		public override void Emit(Emitter e, Expression expression, Local parent)
 		{
 			Local context = e.DeclareMap();
-			e.Emit(new Assignment(
-				context,
-				new New(typeof(Map).GetConstructor(new Type[] { }))));
-			e.Emit(new InstanceCall(context,typeof(Map).GetMethod("set_Scope"), parent));
+			ILProgram program = new ILProgram();
+			program.Add(
+				new Assign(
+					context,
+					new New(typeof(Map).GetConstructor(new Type[0]))));
+			program.Add(
+				new InstanceCall(
+					context,
+					typeof(Map).GetMethod("set_Scope"),
+					parent));
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
-				e.Emit(
+				program.Add(
 					new InstanceCall(
 						new InstanceCall(
-							new InstanceField(new Argument(0), typeof(Literal).GetField("statements")),
+							new InstanceField(
+								new Argument(0),
+								typeof(Literal).GetField("statements")),
 							typeof(List<Map>).GetMethod("get_Item"),
 							new Integer(expression.statements.Count - 1)),
 						typeof(StatementBase).GetMethod("Assign"),
 						context));
 			}
-			e.Load(context);
+			program.Add(context.Load);
+			e.Emit(program);
 		}
 	}
 	public class Literal : Expression
