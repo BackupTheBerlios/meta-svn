@@ -63,13 +63,28 @@ namespace Meta
 			il.Emit(OpCodes.Newobj, constructor);
 		}
 	}
-	public class Emitter
+	public class Assignment : ILEmitter
 	{
-		public void Assign(Storage a, ILExpression b)
+		private Storage a;
+		private ILExpression b;
+		public Assignment(Storage a, ILExpression b)
+		{
+			this.a = a;
+			this.b = b;
+		}
+		public override void Emit(ILGenerator il)
 		{
 			b.Evaluate(il);
 			a.Store(il);
 		}
+	}
+	public class Emitter
+	{
+		//public void Assign(Storage a, ILExpression b)
+		//{
+		//    b.Evaluate(il);
+		//    a.Store(il);
+		//}
 		public void New(ConstructorInfo constructor)
 		{
 			il.Emit(OpCodes.Newobj, constructor);
@@ -113,9 +128,9 @@ namespace Meta
 			}
 			il.Emit(code, field);
 		}
-		public void Emit(ILExpression expression)
+		public void Emit(ILEmitter expression)
 		{
-			expression.Evaluate(il);
+			expression.Emit(il);
 		}
 		public void Load(Argument argument)
 		{
@@ -323,8 +338,16 @@ namespace Meta
 			this.local = local;
 		}
 	}
-	public abstract class ILExpression
+	public abstract class ILEmitter
 	{
+		public abstract void Emit(ILGenerator il);
+	}
+	public abstract class ILExpression:ILEmitter
+	{
+		public override void  Emit(ILGenerator il)
+		{
+			Evaluate(il);
+		}
 		public abstract void Evaluate(ILGenerator il);
 	}
 	public abstract class Expression
@@ -363,7 +386,8 @@ namespace Meta
 			Local context = e.DeclareMap();
 			//LocalBuilder context = il.DeclareLocal(typeof(Map));
 			Argument contextArgument = new Argument(1);
-			e.Assign(context, contextArgument);
+			e.Emit(new Assignment(context, contextArgument));
+			//e.Assign(context, contextArgument);
 			Emit(e, this, context);
 			e.Return();
 
@@ -507,20 +531,48 @@ namespace Meta
 		public override void Emit(Emitter e, Expression expression, Local parent)
 		{
 			Local context = e.DeclareMap();
-			e.Assign(context,new New(typeof(Map).GetConstructor(new Type[] { })));
+			e.Emit(new Assignment(
+							context,
+							new New(typeof(Map).GetConstructor(new Type[] { }))));
+			//e.Assign(
+			//    context,
+			//    new New(typeof(Map).GetConstructor(new Type[] { })));
 			e.Emit(new ILCall(typeof(Map).GetMethod("set_Scope"), context, parent));
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
-				e.Emit(new InstanceField(typeof(Literal).GetField("statements"),new Argument(0)));
+
+				e.Emit(new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)));
 				e.Emit(new Integer(expression.statements.Count - 1));
-				//e.Load(expression.statements.Count - 1);
 				e.Call(typeof(List<Map>).GetMethod("get_Item"));
 				e.Load(context);
 				e.Call(typeof(StatementBase).GetMethod("Assign"));
+
+				//e.Emit(new InstanceField(typeof(Literal).GetField("statements"), new Argument(0)));
+				//e.Emit(new Integer(expression.statements.Count - 1));
+				//e.Call(typeof(List<Map>).GetMethod("get_Item"));
+				//e.Load(context);
+				//e.Call(typeof(StatementBase).GetMethod("Assign"));
 			}
 			e.Load(context);
 		}
+		//public override void Emit(Emitter e, Expression expression, Local parent)
+		//{
+		//    Local context = e.DeclareMap();
+		//    e.Assign(context,new New(typeof(Map).GetConstructor(new Type[] { })));
+		//    e.Emit(new ILCall(typeof(Map).GetMethod("set_Scope"), context, parent));
+		//    foreach (StatementBase statement in statements)
+		//    {
+		//        expression.statements.Add(statement);
+		//        e.Emit(new InstanceField(typeof(Literal).GetField("statements"),new Argument(0)));
+		//        e.Emit(new Integer(expression.statements.Count - 1));
+		//        //e.Load(expression.statements.Count - 1);
+		//        e.Call(typeof(List<Map>).GetMethod("get_Item"));
+		//        e.Load(context);
+		//        e.Call(typeof(StatementBase).GetMethod("Assign"));
+		//    }
+		//    e.Load(context);
+		//}
 	}
 	public class Literal : Expression
 	{
@@ -595,17 +647,6 @@ namespace Meta
 	public abstract class StatementBase
 	{
 		public abstract void Assign(Map context);
-		//private Ass optimized;
-		//public Ass Optimize()
-		//{
-		//    if (optimized == null)
-		//    {
-		//        optimized
-		//    }
-		//}
-		//public virtual Ass Emit(Expression)
-		//{
-		//}
 	}
 	public class KeyStatement : StatementBase
 	{
