@@ -51,15 +51,32 @@ namespace Meta
 	public delegate Map Eval(Map context);
 
 
+	public class New:ILExpression
+	{
+		private ConstructorInfo constructor;
+		public New(ConstructorInfo constructor)
+		{
+			this.constructor = constructor;
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			il.Emit(OpCodes.Newobj, constructor);
+		}
+	}
 	public class Emitter
 	{
+		public void Assign(Storage a, ILExpression b)
+		{
+			b.Evaluate(il);
+			a.Store(il);
+		}
 		public void New(ConstructorInfo constructor)
 		{
 			il.Emit(OpCodes.Newobj, constructor);
 		}
-		public LocalBuilder DeclareMap()
+		public Local DeclareMap()
 		{
-			return il.DeclareLocal(typeof(Map));
+			return new Local(il.DeclareLocal(typeof(Map)));
 		}
 		private ILGenerator il;
 		public Emitter(ILGenerator il)
@@ -96,33 +113,207 @@ namespace Meta
 			}
 			il.Emit(code, field);
 		}
+		public void Emit(ILExpression expression)
+		{
+			expression.Evaluate(il);
+		}
 		public void Load(Argument argument)
 		{
 			il.Emit(OpCodes.Ldarg, argument.Index);
 		}
+		public void Load(Local local)
+		{
+			local.Load(il);
+		}
 		public void Load(LocalBuilder local)
 		{
-			il.Emit(OpCodes.Ldloc, local);
+			new Local(local).Load(il);
+			//il.Emit(OpCodes.Ldloc, local);
 		}
 		public void Load(ParameterBuilder parameter)
 		{
 			il.Emit(OpCodes.Ldarg, parameter.Position);
 		}
-		public void Emit(ILEmitter emitter, ILGenerator il, Emitter e, Expression expression, LocalBuilder argument)
+		//public void Emit(ILEmitter emitter, ILGenerator il, Emitter e, Expression expression, LocalBuilder argument)
+		//{
+		//    emitter.Emit(il, e, expression, argument);
+		//}
+		public void Store(Local local)
 		{
-			emitter.Emit(il, e, expression, argument);
-		}
-		public void Store(LocalBuilder local)
-		{
-			il.Emit(OpCodes.Stloc, local);
+			local.Store(il);
 		}
 		public void Return()
 		{
 			il.Emit(OpCodes.Ret);
 		}
 	}
-	public abstract class ILExpression : ILEmitter
+	public abstract class Storage:ILExpression
 	{
+		public abstract void Store(ILGenerator il);
+		public abstract void Load(ILGenerator il);
+
+	}
+	public class ILCall : ILExpression
+	{
+		private ILExpression[] arguments;
+		private MethodInfo method;
+		public ILCall(MethodInfo method,params ILExpression[] arguments)
+		{
+			this.method = method;
+			this.arguments = arguments;
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			foreach (ILExpression argument in arguments)
+			{
+				argument.Evaluate(il);
+			}
+			OpCode code;
+			if (method.IsVirtual)
+			{
+				code = OpCodes.Callvirt;
+			}
+			else
+			{
+				code = OpCodes.Call;
+			}
+			il.Emit(code, method);
+		}
+	}
+	public class InstanceField : ILExpression
+	{
+		private FieldInfo field;
+		private ILExpression instance;
+		public InstanceField(FieldInfo field,ILExpression instance)
+		{
+			this.field = field;
+			this.instance = instance;
+		}
+		//public void Store(ILGenerator il)
+		//{
+		//    instance.Evaluate(il);
+		//    il.Emit(OpCodes.Ldfld, field);
+		//}
+		public void Load(ILGenerator il)
+		{
+			instance.Evaluate(il);
+			il.Emit(OpCodes.Ldfld, field);
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			Load(il);
+		}
+	}
+	public class StaticField : Storage
+	{
+		private FieldInfo field;
+		public StaticField(FieldInfo field)
+		{
+			this.field = field;
+		}
+		public override void Store(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldsfld, field);
+		}
+		public override void Load(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldsfld, field);
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			Load(il);
+		}
+	}
+	//public class Field : Storage
+	//{
+	//    private FieldInfo field;
+	//    public Field(FieldInfo field)
+	//    {
+	//        this.field = field;
+	//    }
+	//    public override void Store(ILGenerator il)
+	//    {
+	//        OpCode code;
+	//        if (field.IsStatic)
+	//        {
+	//            code = OpCodes.Ldsfld;
+	//        }
+	//        else
+	//        {
+	//            code = OpCodes.Ldfld;
+	//        }
+	//        il.Emit(code, field);
+	//    }
+	//    public override void Load(ILGenerator il)
+	//    {
+	//        OpCode code;
+	//        if (field.IsStatic)
+	//        {
+	//            code = OpCodes.Ldsfld;
+	//        }
+	//        else
+	//        {
+	//            code = OpCodes.Ldfld;
+	//        }
+	//        il.Emit(code, field);
+	//    }
+	//    public override void Evaluate(ILGenerator il)
+	//    {
+	//    }
+	//    public void Load(FieldInfo field)
+	//    {
+	//    }
+	//}
+	public class Argument:Storage
+	{
+		public override void Evaluate(ILGenerator il)
+		{
+			Load(il);
+		}
+		public override void Store(ILGenerator il)
+		{
+			il.Emit(OpCodes.Starg, index);
+		}
+		public override void Load(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldarg, index);
+		}
+		public int Index
+		{
+			get
+			{
+				return index;
+			}
+		}
+		private int index;
+		public Argument(int index)
+		{
+			this.index = index;
+		}
+	}
+	public class Local:Storage
+	{
+		public override void Evaluate(ILGenerator il)
+		{
+			Load(il);
+		}
+		public override void Store(ILGenerator il)
+		{
+			il.Emit(OpCodes.Stloc, local.LocalIndex);
+		}
+		public override void Load(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldloc, local.LocalIndex);
+		}
+		private LocalBuilder local;
+		public Local(LocalBuilder local)
+		{
+			this.local = local;
+		}
+	}
+	public abstract class ILExpression
+	{
+		public abstract void Evaluate(ILGenerator il);
 	}
 	public abstract class Expression
 	{
@@ -157,21 +348,22 @@ namespace Meta
 			ILGenerator il = method.GetILGenerator();
 
 			Emitter e = new Emitter(il);
-			LocalBuilder context = il.DeclareLocal(typeof(Map));
-			e.Load(new Argument(1));
-			e.Store(context);
+			Local context = e.DeclareMap();
+			//LocalBuilder context = il.DeclareLocal(typeof(Map));
+			Argument contextArgument = new Argument(1);
+			e.Assign(context, contextArgument);
 			Emit(e, this, context);
-			//Emit(il, e, this, new Argument(1));
 			e.Return();
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		// refactor, remove il, pass arguments instead of local
-		public virtual void Emit(Emitter e, Expression expression, LocalBuilder context)
+		public virtual void Emit(Emitter e, Expression expression, Local context)
 		{
 			expression.expressions.Add(this);
-			e.Load(new Argument(0));
-			e.Load(typeof(Literal).GetField("expressions"));
+			//e.Load(new Argument(0));
+			e.Emit(new InstanceField(typeof(Literal).GetField("expressions"),new Argument(0)));
+			//e.Load(typeof(Literal).GetField("expressions"));
 			e.Load(expression.expressions.Count - 1);
 			e.Call(typeof(List<Map>).GetMethod("get_Item"));
 			e.Load(new Argument(1));
@@ -202,9 +394,9 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(Emitter e, Expression expression, LocalBuilder current)
+		public override void Emit(Emitter e, Expression expression, Local current)
 		{
-			LocalBuilder callable = e.DeclareMap();
+			Local callable = e.DeclareMap();
 			calls[0].Emit(e, expression, current);
 			e.Store(callable);
 			for (int i = 1; i < calls.Count; i++)
@@ -273,25 +465,6 @@ namespace Meta
 		//}
 
 	}
-	public class Argument
-	{
-		public int Index
-		{
-			get
-			{
-				return index;
-			}
-		}
-		private int index;
-		public Argument(int index)
-		{
-			this.index = index;
-		}
-	}
-	public abstract class ILEmitter
-	{
-		public abstract void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder argument);
-	}
 	public class Program : Expression
 	{
 		public bool IsFunction
@@ -318,19 +491,15 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(Emitter e, Expression expression, LocalBuilder parent)
+		public override void Emit(Emitter e, Expression expression, Local parent)
 		{
-			LocalBuilder context = e.DeclareMap();
-			e.New(typeof(Map).GetConstructor(new Type[] { }));
-			e.Store(context);
-			e.Load(context);
-			e.Load(parent);
-			e.Call(typeof(Map).GetMethod("set_Scope"));
+			Local context = e.DeclareMap();
+			e.Assign(context,new New(typeof(Map).GetConstructor(new Type[] { })));
+			e.Emit(new ILCall(typeof(Map).GetMethod("set_Scope"), context, parent));
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
-				e.Load(new Argument(0));
-				e.Load(typeof(Literal).GetField("statements"));
+				e.Emit(new InstanceField(typeof(Literal).GetField("statements"),new Argument(0)));
 				e.Load(expression.statements.Count - 1);
 				e.Call(typeof(List<Map>).GetMethod("get_Item"));
 				e.Load(context);
@@ -338,27 +507,6 @@ namespace Meta
 			}
 			e.Load(context);
 		}
-		//public override void Emit(ILGenerator il,Emitter e, Expression expression, Argument parent)
-		//{
-		//    LocalBuilder context=il.DeclareLocal(typeof(Map));
-		//    il.Emit(OpCodes.Newobj,typeof(Map).GetConstructor(new Type[]{}));
-		//    il.Emit(OpCodes.Stloc, context);
-		//    il.Emit(OpCodes.Ldloc,context);
-		//    il.Emit(OpCodes.Ldarg, parent.Index);
-		//    //il.Emit(OpCodes.Ldloc, parent);
-		//    il.Emit(OpCodes.Call, typeof(Map).GetMethod("set_Scope"));
-		//    foreach (StatementBase statement in statements)
-		//    {
-		//        expression.statements.Add(statement);
-		//        il.Emit(OpCodes.Ldarg_0);
-		//        il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("statements"));
-		//        il.Emit(OpCodes.Ldc_I4, expression.statements.Count - 1);
-		//        il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-		//        il.Emit(OpCodes.Ldloc, context);
-		//        il.Emit(OpCodes.Callvirt, typeof(StatementBase).GetMethod("Assign"));
-		//    }
-		//    il.Emit(OpCodes.Ldloc, context);
-		//}
 	}
 	public class Literal : Expression
 	{
@@ -379,11 +527,10 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(Emitter e, Expression expression,LocalBuilder local)
+		public override void Emit(Emitter e, Expression expression,Local local)
 		{
 			expression.expressions.Add(this);
-			e.Load(new Argument(0));
-			e.Load(typeof(Literal).GetField("expressions"));
+			e.Emit(new InstanceField(typeof(Literal).GetField("expressions"),new Argument(0)));
 			e.Load(expression.expressions.Count - 1);
 			e.Call(typeof(List<Map>).GetMethod("get_Item"));
 			e.Load(typeof(Literal).GetField("literal"));
@@ -396,10 +543,9 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(Emitter e,Expression expression,LocalBuilder local)
+		public override void Emit(Emitter e,Expression expression,Local local)
 		{
-			e.Load(typeof(Gac).GetField("gac"));
-			//il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
+			e.Emit(new StaticField(typeof(Gac).GetField("gac")));
 		}
 	}
 	public class Select : Expression
