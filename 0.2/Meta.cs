@@ -415,10 +415,20 @@ namespace Meta
 	}
 	public class ILProgram : ILEmitter
 	{
+		public Local Declare()
+		{
+			Local local = new Local();
+			Add((Emit)local.Declare);
+			return local;
+		}
 		private List<ILEmitter> statements;
 		public ILProgram(params ILEmitter[] statements)
 		{
 			this.statements = new List<ILEmitter>(statements);
+		}
+		public void AddRange(params ILEmitter[] statements)
+		{
+			this.statements.AddRange(statements);
 		}
 		public void Add(Emit emitter)
 		{
@@ -489,13 +499,19 @@ namespace Meta
 				typeof(Map),
 				parameters,
 				typeof(Map).Module);
-			Local context = new Local();
+
 			Argument argument = new Argument(1,typeof(Map));
-			ILProgram program = new ILProgram(
-				(Emit)context.Declare,
+			ILProgram program = new ILProgram();
+
+			Local context = program.Declare();
+			program.AddRange(
 				context.Assign(argument),
 				Get(this, context,new Argument(0,typeof(Expression))),
 				(Emit)Return);
+
+			//program.Add(context.Assign(argument));
+			//program.Add(Get(this, context,new Argument(0,typeof(Expression))));
+			//program.Add(Return);
 			program.Emit(method.GetILGenerator());
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
@@ -536,9 +552,8 @@ namespace Meta
 		}
 		public override ILEmitter Get(Expression expression, Local current,Argument argument)
 		{
-			Local callable = new Local();
 			ILProgram program = new ILProgram();
-			program.Add(callable.Declare);
+			Local callable = program.Declare();
 			program.Add(callable.Assign(calls[0].Get(expression, current,argument)));
 			for (int i = 1; i < calls.Count; i++)
 			{
@@ -597,14 +612,6 @@ namespace Meta
 				il.MarkLabel(end);
 			};
 		}
-		//public Emit NotNull(ILEmitter condition, ILEmitter body)
-		//{
-		//    return delegate(ILGenerator il)
-		//    {
-		//        condition.Emit(il);
-		//        body.Emit(il);
-		//    };
-		//}
 		public Emit Throw(ILEmitter exception,Type type)
 		{
 			return delegate(ILGenerator il)
@@ -617,6 +624,34 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Ldnull);
 		}
+		//public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local key =program.Declare();
+		//    Local selected =program.Declare();
+		//    Local scope =program.Declare();
+		//    program.Add(key.Assign(expression.Get(expression, context, argument)));
+		//    program.Add(selected.Declare);
+		//    program.Add(selected.Assign(context));
+		//    program.Add(
+		//        While(
+		//            selected.Call("ContainsKey", key),
+		//            If(
+		//                selected.Call("get_Scope"),
+		//                selected.Assign(selected.Call("get_Scope")),
+		//                Throw(
+		//                    new New(
+		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                        key,
+		//                        (Emit)Null,
+		//                        (Emit)Null),
+		//                        typeof(KeyNotFound)
+		//                        ))));
+		//    program.Add(selected.Call("get_Item", key).Call("Copy"));
+		//    return program;
+		//}
+
+
 		//public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		//{
 		//    Local key = new Local();
@@ -699,6 +734,7 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
+
 		public bool IsFunction
 		{
 			get
@@ -725,11 +761,9 @@ namespace Meta
 		}
 		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
 		{
-			Local context = new Local();
 			ILProgram program = new ILProgram();
-			program.Add(context.Declare);
+			Local context =program.Declare();
 			program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
-
 			program.Add(context.Call("set_Scope",parent));
 			foreach (StatementBase statement in statements)
 			{
