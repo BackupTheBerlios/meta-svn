@@ -180,6 +180,23 @@ namespace Meta
 	}
 	public abstract class Storage:ILExpression
 	{
+		private Type type;
+		public Storage()
+		{
+			type = typeof(Map);
+		}
+		//public ILEmitter Call(string name,ILEmitter[] arguments)
+		//{
+		//    return new CustomEmitter(delegate(ILEmitter il)
+		//    {
+		//        foreach(ILEmitter argument in arguments)
+		//        {
+		//            argument.Emit(il);
+		//        }
+		//        MethodInfo method=type.GetMethod(name);
+		//        il.Emit(method.IsVirtual?OpCodes.Callvirt:OpCodes.Call,
+		//    });
+		//}
 		public abstract void Store(ILGenerator il);
 		public abstract void Load(ILGenerator il);
 
@@ -187,7 +204,6 @@ namespace Meta
 	public class InstanceCall : ILExpression
 	{
 		private List<ILEmitter> arguments;
-		//private List<ILExpression> arguments;
 		private MethodInfo method;
 		public InstanceCall(ILExpression instance,MethodInfo method, params ILEmitter[] arguments)
 		{
@@ -196,27 +212,13 @@ namespace Meta
 			this.arguments.Add(instance);
 			this.arguments.AddRange(arguments);
 		}
-		//public ILCall(MethodInfo method,params ILExpression[] arguments)
-		//{
-		//    this.method = method;
-		//    this.arguments = arguments;
-		//}
 		public override void Evaluate(ILGenerator il)
 		{
 			foreach (ILEmitter argument in arguments)
 			{
 				argument.Emit(il);
 			}
-			OpCode code;
-			if (method.IsVirtual)
-			{
-				code = OpCodes.Callvirt;
-			}
-			else
-			{
-				code = OpCodes.Call;
-			}
-			il.Emit(code, method);
+			il.Emit(OpCodes.Callvirt, method);
 		}
 	}
 	public class Integer : ILExpression
