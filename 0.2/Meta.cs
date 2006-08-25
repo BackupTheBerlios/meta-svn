@@ -124,7 +124,7 @@ namespace Meta
 	public abstract class ILExpression : ILEmitter
 	{
 	}
-	public abstract class Expression:ILExpression
+	public abstract class Expression
 	{
 		public List<StatementBase> statements = new List<StatementBase>();
 		public List<Expression> expressions= new List<Expression>();
@@ -160,14 +160,14 @@ namespace Meta
 			LocalBuilder context = il.DeclareLocal(typeof(Map));
 			e.Load(new Argument(1));
 			e.Store(context);
-			Emit(il, e, this, context);
+			Emit(e, this, context);
 			//Emit(il, e, this, new Argument(1));
 			e.Return();
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		// refactor, remove il, pass arguments instead of local
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder context)
+		public virtual void Emit(Emitter e, Expression expression, LocalBuilder context)
 		{
 			expression.expressions.Add(this);
 			e.Load(new Argument(0));
@@ -177,7 +177,6 @@ namespace Meta
 			e.Load(new Argument(1));
 			e.Call(this.GetType().GetMethod("EvaluateImplementation"));
 		}
-
 	}
 	public class Call : Expression
 	{
@@ -203,15 +202,15 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder current)
+		public override void Emit(Emitter e, Expression expression, LocalBuilder current)
 		{
 			LocalBuilder callable = e.DeclareMap();
-			e.Emit(calls[0], il, e, expression, current);
+			calls[0].Emit(e, expression, current);
 			e.Store(callable);
 			for (int i = 1; i < calls.Count; i++)
 			{
 				e.Load(callable);
-				e.Emit(calls[i], il, e, expression, current);
+				calls[i].Emit(e, expression, current);
 				e.Call(typeof(Map).GetMethod("Call"));
 				e.Store(callable);
 			}
@@ -319,7 +318,7 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(ILGenerator il, Emitter e, Expression expression, LocalBuilder parent)
+		public override void Emit(Emitter e, Expression expression, LocalBuilder parent)
 		{
 			LocalBuilder context = e.DeclareMap();
 			e.New(typeof(Map).GetConstructor(new Type[] { }));
@@ -330,14 +329,14 @@ namespace Meta
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
-				il.Emit(OpCodes.Ldarg_0);
-				il.Emit(OpCodes.Ldfld, typeof(Literal).GetField("statements"));
-				il.Emit(OpCodes.Ldc_I4, expression.statements.Count - 1);
-				il.Emit(OpCodes.Call, typeof(List<Map>).GetMethod("get_Item"));
-				il.Emit(OpCodes.Ldloc, context);
-				il.Emit(OpCodes.Callvirt, typeof(StatementBase).GetMethod("Assign"));
+				e.Load(new Argument(0));
+				e.Load(typeof(Literal).GetField("statements"));
+				e.Load(expression.statements.Count - 1);
+				e.Call(typeof(List<Map>).GetMethod("get_Item"));
+				e.Load(context);
+				e.Call(typeof(StatementBase).GetMethod("Assign"));
 			}
-			il.Emit(OpCodes.Ldloc, context);
+			e.Load(context);
 		}
 		//public override void Emit(ILGenerator il,Emitter e, Expression expression, Argument parent)
 		//{
@@ -380,7 +379,7 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(ILGenerator il,Emitter e, Expression expression,LocalBuilder local)
+		public override void Emit(Emitter e, Expression expression,LocalBuilder local)
 		{
 			expression.expressions.Add(this);
 			e.Load(new Argument(0));
@@ -397,7 +396,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(ILGenerator il,Emitter e,Expression expression,LocalBuilder local)
+		public override void Emit(Emitter e,Expression expression,LocalBuilder local)
 		{
 			e.Load(typeof(Gac).GetField("gac"));
 			//il.Emit(OpCodes.Ldsfld, typeof(Gac).GetField("gac"));
