@@ -85,7 +85,16 @@ namespace Meta
 		}
 		public void Load(FieldInfo field)
 		{
-			il.Emit(OpCodes.Ldfld, field);
+			OpCode code;
+			if (field.IsStatic)
+			{
+				code = OpCodes.Ldsfld;
+			}
+			else
+			{
+				code = OpCodes.Ldfld;
+			}
+			il.Emit(code, field);
 		}
 		public void Load(Argument argument)
 		{
