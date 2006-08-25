@@ -32,7 +32,7 @@ using System.Reflection.Emit;
 using Meta;
 using Meta.Test;
 using Microsoft.Win32;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
@@ -50,26 +50,50 @@ namespace Meta
 {
 	public delegate Map Eval(Map context);
 
-
-	public class New:ILExpression
+	public class New : ILExpression
 	{
 		public override Type Type
 		{
-			get 
+			get
 			{
 				return constructor.DeclaringType;
 			}
 		}
 		private ConstructorInfo constructor;
-		public New(ConstructorInfo constructor)
+		private ILEmitter[] arguments;
+		public New(ConstructorInfo constructor,params ILEmitter[] arguments)
 		{
 			this.constructor = constructor;
+			this.arguments = arguments;
 		}
 		public override void Evaluate(ILGenerator il)
 		{
+			foreach (ILEmitter argument in arguments)
+			{
+				argument.Emit(il);
+			}
 			il.Emit(OpCodes.Newobj, constructor);
 		}
 	}
+	//public class New:ILExpression
+	//{
+	//    public override Type Type
+	//    {
+	//        get 
+	//        {
+	//            return constructor.DeclaringType;
+	//        }
+	//    }
+	//    private ConstructorInfo constructor;
+	//    public New(ConstructorInfo constructor)
+	//    {
+	//        this.constructor = constructor;
+	//    }
+	//    public override void Evaluate(ILGenerator il)
+	//    {
+	//        il.Emit(OpCodes.Newobj, constructor);
+	//    }
+	//}
 	public class Load:ILEmitter
 	{
 		private Storage storage;
@@ -379,6 +403,10 @@ namespace Meta
 	}
 	public abstract class ILEmitter
 	{
+		public static implicit operator ILEmitter(int del)
+		{
+			return new Integer(del);
+		}
 		public static implicit operator ILEmitter(Emit del)
 		{
 			return new CustomEmitter(del);
@@ -414,11 +442,11 @@ namespace Meta
 		{
 			get;
 		}
-		public ILExpression Get(string name)
+		public ILExpression Field(string name)
 		{
 			return new InstanceField(this,Type.GetField(name));
 		}
-		public ILEmitter Call(string name, params ILEmitter[] arguments)
+		public ILExpression Call(string name, params ILEmitter[] arguments)
 		{
 			return new InstanceCall(this, Type.GetMethod(name), arguments);
 		}
@@ -474,11 +502,12 @@ namespace Meta
 		public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
 			expression.expressions.Add(this);
-			return new InstanceCall(
-					new InstanceField(argument, typeof(Literal).GetField("expressions")).Call(
-						"get_Item",new Integer(expression.expressions.Count - 1)),
-				this.GetType().GetMethod("EvaluateImplementation"),
-				context);
+			return argument.Field(
+				"expressions").Call(
+					"get_Item",
+					expression.expressions.Count - 1).Call(
+							"EvaluateImplementation",
+							context);
 		}
 	}
 	public class Call : Expression
@@ -554,6 +583,119 @@ namespace Meta
 				body.Emit(il);
 			};
 		}
+		public Emit If(ILEmitter condition, ILEmitter thenBranch,ILEmitter elseBranch)
+		{
+			return delegate(ILGenerator il)
+			{
+				Label elseLabel=il.DefineLabel();
+				Label end=il.DefineLabel();
+				condition.Emit(il);
+				il.Emit(OpCodes.Brtrue, elseLabel);
+				thenBranch.Emit(il);
+				il.MarkLabel(elseLabel);
+				elseBranch.Emit(il);
+				il.MarkLabel(end);
+			};
+		}
+		//public Emit NotNull(ILEmitter condition, ILEmitter body)
+		//{
+		//    return delegate(ILGenerator il)
+		//    {
+		//        condition.Emit(il);
+		//        body.Emit(il);
+		//    };
+		//}
+		public Emit Throw(ILEmitter exception,Type type)
+		{
+			return delegate(ILGenerator il)
+			{
+				exception.Emit(il);
+				il.ThrowException(type);
+			};
+		}
+		public void Null(ILGenerator il)
+		{
+			il.Emit(OpCodes.Ldnull);
+		}
+		//public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		//{
+		//    Local key = new Local();
+		//    Local selected = new Local();
+		//    Local scope = new Local();
+		//    ILProgram program = new ILProgram();
+		//    program.Add(key.Declare);
+		//    program.Add(selected.Declare);
+		//    program.Add(scope.Declare);
+		//    program.Add(key.Assign(expression.Get(expression, context, argument)));
+		//    program.Add(selected.Declare);
+		//    program.Add(selected.Assign(context));
+		//    program.Add(
+		//        While(
+		//            selected.Call("ContainsKey", key),
+		//            If(
+		//                selected.Call("get_Scope"),
+		//                selected.Assign(selected.Call("get_Scope")),
+		//                Throw(
+		//                    new New(
+		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                        key,
+		//                        (Emit)Null,
+		//                        (Emit)Null),
+		//                        typeof(KeyNotFound)
+		//                        ))));
+		//    program.Add(selected.Call("get_Item", key).Call("Copy"));
+		//    return program;
+		//}
+
+
+
+		//public override ILEmitter Emit(Expression parent, Local context)
+		//{
+		//    Local key = new Local();
+		//    ILProgram program = new ILProgram();
+		//    program.Add(key.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            key,
+		//            expression.Emit(expression, context)));
+		//    Local selected = new Local();
+		//    program.Add(selected.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            selected,
+		//            context));
+		//    Local scope = new Local();
+		//    program.Add(
+		//        While(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("ContainsKey"),
+		//                key),
+		//            new ILProgram(
+		//                new CustomEmitter(scope.Declare),
+		//                new Assign(
+		//                    scope,
+		//                    new InstanceCall(
+		//                        selected,
+		//                        typeof(Map).GetMethod("get_Scope"))),
+		//                If(
+		//                    NotNull(scope),
+		//                    new Assign(selected, scope),
+		//                    Throw(
+		//                        new New(
+		//                            typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                            key,
+		//                            Null(),
+		//                            Null()))))));
+		//    program.Add(
+		//        new InstanceCall(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("get_Item"),
+		//                key),
+		//            typeof(Map).GetMethod("Copy")));
+		//}
+
 	}
 	public class Program : Expression
 	{
@@ -592,64 +734,16 @@ namespace Meta
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
-				//program.Add(
-				//    argument.Get("statements").Call(
-				//        "get_Item",
-				//        new Integer(expression.statements.Count - 1)),
-				//        typeof(StatementBase).GetMethod("Assign"),
-				//        context));
 				program.Add(
-					new InstanceCall(
-							argument.Get("statements").Call(
-								"get_Item",
-								new Integer(expression.statements.Count - 1)),
-						typeof(StatementBase).GetMethod("Assign"),
-						context));
-				//program.Add(
-				//    new InstanceCall(
-				//        new InstanceCall(
-				//            new InstanceField(
-				//                argument,
-				//                typeof(Literal).GetField("statements")),
-				//            typeof(List<Map>).GetMethod("get_Item"),
-				//            new Integer(expression.statements.Count - 1)),
-				//        typeof(StatementBase).GetMethod("Assign"),
-				//        context));
+					argument.Field("statements").Call(
+						"get_Item",
+						expression.statements.Count - 1).Call(
+							"Assign",
+							context));
 			}
 			program.Add(context.Load);
 			return program;
 		}
-		//public override ILEmitter GetEmitter(Expression expression, Local parent)
-		//{
-		//    Local context = new Local();
-		//    ILProgram program = new ILProgram();
-		//    program.Add(context.Declare);
-		//    program.Add(
-		//        new Assign(
-		//            context,
-		//            new New(typeof(Map).GetConstructor(new Type[0]))));
-		//    program.Add(
-		//        new InstanceCall(
-		//            context,
-		//            typeof(Map).GetMethod("set_Scope"),
-		//            parent));
-		//    foreach (StatementBase statement in statements)
-		//    {
-		//        expression.statements.Add(statement);
-		//        program.Add(
-		//            new InstanceCall(
-		//                new InstanceCall(
-		//                    new InstanceField(
-		//                        new Argument(0),
-		//                        typeof(Literal).GetField("statements")),
-		//                    typeof(List<Map>).GetMethod("get_Item"),
-		//                    new Integer(expression.statements.Count - 1)),
-		//                typeof(StatementBase).GetMethod("Assign"),
-		//                context));
-		//    }
-		//    program.Add(context.Load);
-		//    return program;
-		//}
 	}
 	public class Literal : Expression
 	{
@@ -673,14 +767,12 @@ namespace Meta
 		public override ILEmitter Get(Expression expression, Local local,Argument argument)
 		{
 			expression.expressions.Add(this);
-			return new InstanceCall(
-				new InstanceField(
-					new InstanceCall(
-						new InstanceField(argument, typeof(Literal).GetField("expressions")),
-						typeof(List<Map>).GetMethod("get_Item"),
-						new Integer(expression.expressions.Count - 1)), 
-					typeof(Literal).GetField("literal")),
-				typeof(Map).GetMethod("Copy"));
+			// these will be literals, eventually, so this shouldnt be a problem, actually
+			return new InstanceField(
+					argument.Field("expressions").Call(
+						"get_Item",
+						expression.expressions.Count - 1),
+					typeof(Literal).GetField("literal")).Call("Copy");
 		}
 	}
 	public class Root : Expression
@@ -819,7 +911,7 @@ namespace Meta
 			}
 			else
 			{
-				MessageBox.Show(text, "Meta exception");
+				System.Windows.Forms.MessageBox.Show(text, "Meta exception");
 			}
 		}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
