@@ -396,44 +396,23 @@ namespace Meta
 			Local context = e.DeclareMap();
 			Argument contextArgument = new Argument(1);
 			e.Emit(new Assign(context, contextArgument));
-			Emit(e, this, context);
+			e.Emit(Emit(this, context));
 			e.Return();
 
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		// refactor, remove il, pass arguments instead of local
-		public virtual void Emit(Emitter e, Expression expression, Local context)
+		public virtual ILEmitter Emit(Expression expression, Local context)
 		{
 			expression.expressions.Add(this);
-			e.Emit(
-				new InstanceCall(
+			return new InstanceCall(
 					new InstanceCall(
 						new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
 						typeof(List<Map>).GetMethod("get_Item"),
 						new Integer(expression.expressions.Count - 1)),
 					this.GetType().GetMethod("EvaluateImplementation"),
-					new Argument(1)));
+					new Argument(1));
 		}
-		//public virtual void Emit(Emitter e, Expression expression, Local context)
-		//{
-		//    expression.expressions.Add(this);
-		//    e.Emit(
-		//        new InstanceCall(
-		//            new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
-		//            typeof(List<Map>).GetMethod("get_Item"),
-		//            new Integer(expression.expressions.Count - 1)));
-		//    e.Load(new Argument(1));
-		//    e.Call(this.GetType().GetMethod("EvaluateImplementation"));
-		//}
-		//public virtual void Emit(Emitter e, Expression expression, Local context)
-		//{
-		//    expression.expressions.Add(this);
-		//    e.Emit(new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")));
-		//    e.Emit(new Integer(expression.expressions.Count - 1));
-		//    e.Call(typeof(List<Map>).GetMethod("get_Item"));
-		//    e.Load(new Argument(1));
-		//    e.Call(this.GetType().GetMethod("EvaluateImplementation"));
-		//}
 	}
 	public class Call : Expression
 	{
@@ -459,31 +438,17 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override void Emit(Emitter e, Expression expression, Local current)
-		{
-			Local callable = e.DeclareMap();
-			ILProgram program = new ILProgram();
-			calls[0].Emit(e, expression, current);
-			program.Add(callable.Store);
-			//e.Store(callable);
-			e.Emit(program);
-			for (int i = 1; i < calls.Count; i++)
-			{
-				//program.Add(callable.Load);
-				e.Load(callable);
-				calls[i].Emit(e, expression, current);
-				e.Call(typeof(Map).GetMethod("Call"));
-				e.Store(callable);
-			}
-			e.Load(callable);
-		}
 		//public override void Emit(Emitter e, Expression expression, Local current)
 		//{
 		//    Local callable = e.DeclareMap();
+		//    ILProgram program = new ILProgram();
 		//    calls[0].Emit(e, expression, current);
-		//    e.Store(callable);
+		//    program.Add(callable.Store);
+		//    //e.Store(callable);
+		//    e.Emit(program);
 		//    for (int i = 1; i < calls.Count; i++)
 		//    {
+		//        //program.Add(callable.Load);
 		//        e.Load(callable);
 		//        calls[i].Emit(e, expression, current);
 		//        e.Call(typeof(Map).GetMethod("Call"));
@@ -574,36 +539,36 @@ namespace Meta
 			}
 			return context;
 		}
-		public override void Emit(Emitter e, Expression expression, Local parent)
-		{
-			Local context = e.DeclareMap();
-			ILProgram program = new ILProgram();
-			program.Add(
-				new Assign(
-					context,
-					new New(typeof(Map).GetConstructor(new Type[0]))));
-			program.Add(
-				new InstanceCall(
-					context,
-					typeof(Map).GetMethod("set_Scope"),
-					parent));
-			foreach (StatementBase statement in statements)
-			{
-				expression.statements.Add(statement);
-				program.Add(
-					new InstanceCall(
-						new InstanceCall(
-							new InstanceField(
-								new Argument(0),
-								typeof(Literal).GetField("statements")),
-							typeof(List<Map>).GetMethod("get_Item"),
-							new Integer(expression.statements.Count - 1)),
-						typeof(StatementBase).GetMethod("Assign"),
-						context));
-			}
-			program.Add(context.Load);
-			e.Emit(program);
-		}
+		//public override ILEmitter Emit(Expression expression, Local parent)
+		//{
+		//    Local context = e.DeclareMap();
+		//    ILProgram program = new ILProgram();
+		//    program.Add(
+		//        new Assign(
+		//            context,
+		//            new New(typeof(Map).GetConstructor(new Type[0]))));
+		//    program.Add(
+		//        new InstanceCall(
+		//            context,
+		//            typeof(Map).GetMethod("set_Scope"),
+		//            parent));
+		//    foreach (StatementBase statement in statements)
+		//    {
+		//        expression.statements.Add(statement);
+		//        program.Add(
+		//            new InstanceCall(
+		//                new InstanceCall(
+		//                    new InstanceField(
+		//                        new Argument(0),
+		//                        typeof(Literal).GetField("statements")),
+		//                    typeof(List<Map>).GetMethod("get_Item"),
+		//                    new Integer(expression.statements.Count - 1)),
+		//                typeof(StatementBase).GetMethod("Assign"),
+		//                context));
+		//    }
+		//    program.Add(context.Load);
+		//    e.Emit(program);
+		//}
 	}
 	public class Literal : Expression
 	{
@@ -624,18 +589,17 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override void Emit(Emitter e, Expression expression, Local local)
+		public override ILEmitter Emit(Expression expression, Local local)
 		{
 			expression.expressions.Add(this);
-			e.Emit(
-				new InstanceCall(
-					new InstanceField(
-						new InstanceCall(
-							new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
-							typeof(List<Map>).GetMethod("get_Item"),
-							new Integer(expression.expressions.Count - 1)), 
-						typeof(Literal).GetField("literal")),
-					typeof(Map).GetMethod("Copy")));
+			return new InstanceCall(
+				new InstanceField(
+					new InstanceCall(
+						new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
+						typeof(List<Map>).GetMethod("get_Item"),
+						new Integer(expression.expressions.Count - 1)), 
+					typeof(Literal).GetField("literal")),
+				typeof(Map).GetMethod("Copy"));
 		}
 	}
 	public class Root : Expression
@@ -644,9 +608,9 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override void Emit(Emitter e,Expression expression,Local local)
+		public override ILEmitter Emit(Expression expression,Local local)
 		{
-			e.Emit(new StaticField(typeof(Gac).GetField("gac")));
+			return new StaticField(typeof(Gac).GetField("gac"));
 		}
 	}
 	public class Select : Expression
