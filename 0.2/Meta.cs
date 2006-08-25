@@ -335,6 +335,10 @@ namespace Meta
 	}
 	public abstract class ILEmitter
 	{
+		public static implicit operator ILEmitter(EmitterDelegate del)
+		{
+			return new CustomEmitter(del);
+		}
 		public abstract void Emit(ILGenerator il);
 	}
 	public class ILProgram : ILEmitter
@@ -389,13 +393,17 @@ namespace Meta
 			}
 		}
 		public abstract Map EvaluateImplementation(Map context);
-		public EmitterDelegate Return()
+		public void Return(ILGenerator il)
 		{
-			return delegate(ILGenerator il)
-			{
-				il.Emit(OpCodes.Ret);
-			};
+			il.Emit(OpCodes.Ret);
 		}
+		//public EmitterDelegate Return()
+		//{
+		//    return delegate(ILGenerator il)
+		//    {
+		//        il.Emit(OpCodes.Ret);
+		//    };
+		//}
 		public Eval Optimize()
 		{
 			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
@@ -409,20 +417,11 @@ namespace Meta
 
 			Local context = new Local();
 			Argument contextArgument = new Argument(1);
-			ILProgram program = new ILProgram();
-			program.Add(context.Declare);
-			program.Add(new Assign(context, contextArgument));
-			program.Add(GetEmitter(this, context));
-			program.Add(Return());
-
-			//Emitter e = new Emitter(il);
-			//Local context = new Local();
-			//Argument contextArgument = new Argument(1);
-			//e.Emit(context.Declare);
-			//e.Emit(new Assign(context, contextArgument));
-			//e.Emit(GetEmitter(this, context));
-			//e.Return();
-
+			ILProgram program = new ILProgram(
+				(CustomEmitter)context.Declare,
+				new Assign(context, contextArgument),
+				GetEmitter(this, context),
+				(CustomEmitter)Return);
 			program.Emit(il);
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
