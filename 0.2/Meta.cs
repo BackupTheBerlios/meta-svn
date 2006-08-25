@@ -490,33 +490,106 @@ namespace Meta
 			}
 			return selected[key].Copy();
 		}
-		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder context)
+		public EmitterDelegate While(ILEmitter condition,ILEmitter body)
+		{
+			return delegate(ILGenerator il)
+			{
+				condition.Emit(il);
+				body.Emit(il);
+			};
+		}
+		//public override ILEmitter Emit(Expression parent, Local context)
 		//{
-		//    LocalBuilder key=il.DeclareLocal(typeof(Map));
-		//    expression.Emit(il, expression, local);
-		//    il.Emit(OpCodes.Stloc);
-		//    LocalBuilder selected = il.DeclareLocal(typeof(Map));
-		//    il.Emit(OpCodes.Ldloc, context);
-		//    il.Emit(OpCodes.Stloc, selected);
-		//    Label loopStart=il.DefineLabel();
-		//    Label loopEnd=il.DefineLabel();
-		//    Label keyNotFound=il.DefineLabel();
-		//    il.MarkLabel(loopStart);
-		//    il.Emit(OpCodes.Ldloc, selected);
-		//    il.Emit(OpCodes.Ldloc, key);
-		//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("ContainsKey"));
-		//    il.Emit(OpCodes.Brtrue, loopEnd);
-		//    il.Emit(OpCodes.Ldloc,selected);
-		//    il.Emit(OpCodes.Call,typeof(Map).GetMethod("get_Scope"));
-		//    il.Emit(OpCodes.Brfalse, keyNotFound);
-		//            selected = selected.Scope;
-		//        }
-		//        else
-		//        {
-		//            throw new KeyNotFound(key, code.Extent, null);
-		//        }
-		//    }
-		//    return selected[key].Copy();
+		//    Local key = new Local();
+		//    ILProgram program = new ILProgram();
+		//    program.Add(key.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            key,
+		//            expression.Emit(expression, context)));
+		//    Local selected = new Local();
+		//    program.Add(selected.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            selected,
+		//            context));
+		//    Local scope = new Local();
+		//    program.Add(
+		//        While(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("ContainsKey"),
+		//                key),
+		//            new ILProgram(
+		//                new CustomEmitter(scope.Declare),
+		//                new Assign(
+		//                    scope,
+		//                    new InstanceCall(
+		//                        selected,
+		//                        typeof(Map).GetMethod("get_Scope"))),
+		//                If(
+		//                    NotNull(scope),
+		//                    new Assign(selected, scope),
+		//                    Throw(
+		//                        new New(
+		//                            typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                            key,
+		//                            Null(),
+		//                            Null()))))));
+		//    program.Add(
+		//        new InstanceCall(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("get_Item"),
+		//                key),
+		//            typeof(Map).GetMethod("Copy")));
+		//}
+
+		//public override ILEmitter Emit(Expression parent, Local context)
+		//{
+		//    Local key=new Local();
+		//    ILProgram program=new ILProgram();
+		//    program.Add(key.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            key,
+		//            expression.Emit(expression,context)));
+		//    Local selected=new Local();
+		//    program.Add(selected.Declare);
+		//    program.Add(
+		//        new Assign(
+		//            selected,
+		//            context));
+		//    Local scope=new Local();
+		//    program.Add(
+		//        While(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("ContainsKey"),
+		//                key),
+		//            new ILProgram(
+		//                new CustomEmitter(scope.Declare),
+		//                new Assign(
+		//                    scope,
+		//                    new InstanceCall(
+		//                        selected,
+		//                        typeof(Map).GetMethod("get_Scope"))),
+		//                If(
+		//                    NotNull(scope),
+		//                    new Assign(selected,scope),
+		//                    Throw(
+		//                        new New(
+		//                            typeof(KeyNotFound).GetConstructor(new Type[] {typeof(Map),typeof(Extent),typeof(Map)}),
+		//                            key,
+		//                            Null(),
+		//                            Null()))))));
+		//    program.Add(
+		//        new InstanceCall(
+		//            new InstanceCall(
+		//                selected,
+		//                typeof(Map).GetMethod("get_Item"),
+		//                key),
+		//            typeof(Map).GetMethod("Copy")));
 		//}
 		//public override void Emit(ILGenerator il, Expression expression, LocalBuilder context)
 		//{
