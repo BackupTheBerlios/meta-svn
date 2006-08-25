@@ -202,43 +202,7 @@ namespace Meta
 			}
 			il.Emit(OpCodes.Callvirt, method);
 		}
-		//public override void Evaluate(ILGenerator il)
-		//{
-		//    foreach (ILEmitter argument in arguments)
-		//    {
-		//        argument.Emit(il);
-		//    }
-		//    il.Emit(OpCodes.Callvirt, method);
-		//}
 	}
-	//public class InstanceCall : ILEmitter
-	//{
-	//    private List<ILEmitter> arguments;
-	//    private MethodInfo method;
-	//    public InstanceCall(ILExpression instance,MethodInfo method, params ILEmitter[] arguments)
-	//    {
-	//        this.method = method;
-	//        this.arguments = new List<ILEmitter>();
-	//        this.arguments.Add(instance);
-	//        this.arguments.AddRange(arguments);
-	//    }
-	//    public override void Emit(ILGenerator il)
-	//    {
-	//        foreach (ILEmitter argument in arguments)
-	//        {
-	//            argument.Emit(il);
-	//        }
-	//        il.Emit(OpCodes.Callvirt, method);
-	//    }
-	//    //public override void Evaluate(ILGenerator il)
-	//    //{
-	//    //    foreach (ILEmitter argument in arguments)
-	//    //    {
-	//    //        argument.Emit(il);
-	//    //    }
-	//    //    il.Emit(OpCodes.Callvirt, method);
-	//    //}
-	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
@@ -310,7 +274,7 @@ namespace Meta
 		{
 			get
 			{
-				throw new Exception("The method or operation is not implemented."); 
+				return type;
 			}
 		}
 		public override void Evaluate(ILGenerator il)
@@ -333,9 +297,11 @@ namespace Meta
 			}
 		}
 		private int index;
-		public Argument(int index)
+		private Type type;
+		public Argument(int index,Type type)
 		{
 			this.index = index;
+			this.type = type;
 		}
 	}
 	public class Local:Storage
@@ -425,7 +391,6 @@ namespace Meta
 					argument.Emit(il);
 				}
 				il.Emit(OpCodes.Callvirt, Type.GetMethod(name));
-				//il.Emit(OpCodes.Callvirt, type.GetMethod(name));
 			});
 		}
 		public override void  Emit(ILGenerator il)
@@ -475,25 +440,23 @@ namespace Meta
 				parameters,
 				typeof(Map).Module);
 			Local context = new Local();
-			Argument argument = new Argument(1);
+			Argument argument = new Argument(1,typeof(Map));
 			ILProgram program = new ILProgram(
 				(Emit)context.Declare,
 				context.Assign(argument),
-				Get(this, context),
+				Get(this, context,new Argument(0,typeof(Expression))),
 				(Emit)Return);
 			program.Emit(method.GetILGenerator());
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public virtual ILEmitter Get(Expression expression, Local context)
+		public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
 			expression.expressions.Add(this);
 			return new InstanceCall(
-					new InstanceCall(
-						new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
-						typeof(List<Map>).GetMethod("get_Item"),
-						new Integer(expression.expressions.Count - 1)),
-					this.GetType().GetMethod("EvaluateImplementation"),
-					new Argument(1));
+					new InstanceField(argument, typeof(Literal).GetField("expressions")).Call(
+						"get_Item",new Integer(expression.expressions.Count - 1)),
+				this.GetType().GetMethod("EvaluateImplementation"),
+				context);
 		}
 	}
 	public class Call : Expression
@@ -520,16 +483,16 @@ namespace Meta
 			}
 			return callable;
 		}
-		public override ILEmitter Get(Expression expression, Local current)
+		public override ILEmitter Get(Expression expression, Local current,Argument argument)
 		{
 			Local callable = new Local();
 			ILProgram program = new ILProgram();
 			program.Add(callable.Declare);
-			program.Add(callable.Assign(calls[0].Get(expression, current)));
+			program.Add(callable.Assign(calls[0].Get(expression, current,argument)));
 			for (int i = 1; i < calls.Count; i++)
 			{
 				program.Add(
-					callable.Assign(callable.Call("Call", calls[i].Get(expression, current))));
+					callable.Assign(callable.Call("Call", calls[i].Get(expression, current,argument))));
 			}
 			program.Add(callable.Load);
 			return program;
@@ -596,7 +559,7 @@ namespace Meta
 			}
 			return context;
 		}
-		public override ILEmitter Get(Expression expression, Local parent)
+		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
 		{
 			Local context = new Local();
 			ILProgram program = new ILProgram();
@@ -611,7 +574,7 @@ namespace Meta
 					new InstanceCall(
 						new InstanceCall(
 							new InstanceField(
-								new Argument(0),
+								argument,
 								typeof(Literal).GetField("statements")),
 							typeof(List<Map>).GetMethod("get_Item"),
 							new Integer(expression.statements.Count - 1)),
@@ -672,13 +635,13 @@ namespace Meta
 		{
 			return literal.Copy();
 		}
-		public override ILEmitter Get(Expression expression, Local local)
+		public override ILEmitter Get(Expression expression, Local local,Argument argument)
 		{
 			expression.expressions.Add(this);
 			return new InstanceCall(
 				new InstanceField(
 					new InstanceCall(
-						new InstanceField(new Argument(0), typeof(Literal).GetField("expressions")),
+						new InstanceField(argument, typeof(Literal).GetField("expressions")),
 						typeof(List<Map>).GetMethod("get_Item"),
 						new Integer(expression.expressions.Count - 1)), 
 					typeof(Literal).GetField("literal")),
@@ -691,7 +654,7 @@ namespace Meta
 		{
 			return Gac.gac;
 		}
-		public override ILEmitter Get(Expression expression,Local local)
+		public override ILEmitter Get(Expression expression, Local local, Argument argument)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
 		}
