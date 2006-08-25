@@ -183,8 +183,15 @@ namespace Meta
 		public abstract void Load(ILGenerator il);
 
 	}
-	public class InstanceCall : ILEmitter
+	public class InstanceCall : ILExpression
 	{
+		public override Type Type
+		{
+			get 
+			{
+				return method.ReturnType;
+			}
+		}
 		private List<ILEmitter> arguments;
 		private MethodInfo method;
 		public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
@@ -193,6 +200,10 @@ namespace Meta
 			this.arguments = new List<ILEmitter>();
 			this.arguments.Add(instance);
 			this.arguments.AddRange(arguments);
+		}
+		public override void Evaluate(ILGenerator il)
+		{
+			Emit(il);
 		}
 		public override void Emit(ILGenerator il)
 		{
@@ -203,6 +214,26 @@ namespace Meta
 			il.Emit(OpCodes.Callvirt, method);
 		}
 	}
+	//public class InstanceCall : ILEmitter
+	//{
+	//    private List<ILEmitter> arguments;
+	//    private MethodInfo method;
+	//    public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
+	//    {
+	//        this.method = method;
+	//        this.arguments = new List<ILEmitter>();
+	//        this.arguments.Add(instance);
+	//        this.arguments.AddRange(arguments);
+	//    }
+	//    public override void Emit(ILGenerator il)
+	//    {
+	//        foreach (ILEmitter argument in arguments)
+	//        {
+	//            argument.Emit(il);
+	//        }
+	//        il.Emit(OpCodes.Callvirt, method);
+	//    }
+	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
@@ -310,9 +341,11 @@ namespace Meta
 		{
 			get 
 			{
-				return local.LocalType;
+				return type;
+				//return local.LocalType;
 			}
 		}
+		private Type type=typeof(Map);
 		public override void Evaluate(ILGenerator il)
 		{
 			Load(il);
@@ -327,7 +360,7 @@ namespace Meta
 		}
 		public void Declare(ILGenerator il)
 		{
-			local = il.DeclareLocal(typeof(Map));
+			local = il.DeclareLocal(type);
 		}
 		LocalBuilder local;
 	}
@@ -385,18 +418,9 @@ namespace Meta
 		{
 			return new InstanceField(this,Type.GetField(name));
 		}
-
 		public ILEmitter Call(string name, params ILEmitter[] arguments)
 		{
-			return new CustomEmitter(delegate(ILGenerator il)
-			{
-				Evaluate(il);
-				foreach (ILEmitter argument in arguments)
-				{
-					argument.Emit(il);
-				}
-				il.Emit(OpCodes.Callvirt, Type.GetMethod(name));
-			});
+			return new InstanceCall(this, Type.GetMethod(name), arguments);
 		}
 		public override void  Emit(ILGenerator il)
 		{
@@ -568,12 +592,17 @@ namespace Meta
 			foreach (StatementBase statement in statements)
 			{
 				expression.statements.Add(statement);
+				//program.Add(
+				//    argument.Get("statements").Call(
+				//        "get_Item",
+				//        new Integer(expression.statements.Count - 1)),
+				//        typeof(StatementBase).GetMethod("Assign"),
+				//        context));
 				program.Add(
 					new InstanceCall(
-						new InstanceCall(
-								argument.Get("statements"),
-							typeof(List<Map>).GetMethod("get_Item"),
-							new Integer(expression.statements.Count - 1)),
+							argument.Get("statements").Call(
+								"get_Item",
+								new Integer(expression.statements.Count - 1)),
 						typeof(StatementBase).GetMethod("Assign"),
 						context));
 				//program.Add(
@@ -756,8 +785,14 @@ namespace Meta
 	{
 		static Interpreter()
 		{
-			Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
-			Gac.gac["library"].Scope = Gac.gac;
+			try
+			{
+				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
+				Gac.gac["library"].Scope = Gac.gac;
+			}
+			catch (Exception e)
+			{
+			}
 		}
 		[STAThread]
 		public static void Main(string[] args)
