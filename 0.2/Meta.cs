@@ -633,33 +633,63 @@ namespace Meta
 	}
 	public class Statement : StatementBase
 	{
-		private List<Map> keys;
+		private Expression key;
+		//private List<Map> keys;
 		private Map value;
 		public Statement(Map code)
 		{
-			this.keys = code[CodeKeys.Keys].Array;
+			this.key = code[CodeKeys.Keys].GetExpression();
 			this.value = code[CodeKeys.Value];
 		}
 		public override void Assign(Map context)
 		{
 			Map selected = context;
-			Map key = keys[0].GetExpression().Evaluate(context);
-			while(!selected.ContainsKey(key))
+			Map k = key.Evaluate(context);
+			while (!selected.ContainsKey(k))
 			{
 				selected = selected.Scope;
 				if (selected == null)
 				{
-					throw new KeyNotFound(key, keys[0].Extent, null);
+					throw new KeyNotFound(k, null, null);
 				}
 			}
-			for (int i = 1; i < keys.Count; i++)
-			{
-				selected = selected[key];
-				key = keys[i].GetExpression().Evaluate(context);
-			}
-			selected[key] = value.GetExpression().Evaluate(context);
+			//for (int i = 1; i < keys.Count; i++)
+			//{
+			//    selected = selected[key];
+			//    key = keys[i].GetExpression().Evaluate(context);
+			//}
+			selected[k] = value.GetExpression().Evaluate(context);
 		}
 	}
+	//public class Statement : StatementBase
+	//{
+	//    private List<Map> keys;
+	//    private Map value;
+	//    public Statement(Map code)
+	//    {
+	//        this.keys = code[CodeKeys.Keys].Array;
+	//        this.value = code[CodeKeys.Value];
+	//    }
+	//    public override void Assign(Map context)
+	//    {
+	//        Map selected = context;
+	//        Map key = keys[0].GetExpression().Evaluate(context);
+	//        while(!selected.ContainsKey(key))
+	//        {
+	//            selected = selected.Scope;
+	//            if (selected == null)
+	//            {
+	//                throw new KeyNotFound(key, keys[0].Extent, null);
+	//            }
+	//        }
+	//        for (int i = 1; i < keys.Count; i++)
+	//        {
+	//            selected = selected[key];
+	//            key = keys[i].GetExpression().Evaluate(context);
+	//        }
+	//        selected[key] = value.GetExpression().Evaluate(context);
+	//    }
+	//}
 	public class Interpreter
 	{
 		static Interpreter()
@@ -3561,7 +3591,11 @@ namespace Meta
 					new Sequence(
 						new Action(new Assignment(
 							CodeKeys.Keys),
-							Keys),
+							new Alternatives(
+				new Sequence(new Action(new Assignment(CodeKeys.Literal), LookupString)),
+
+				Expression)),
+							//Keys),
 						new Action(new Optional(EndOfLine)),
 						new Action(new Optional(SameIndentation)),
 						new Action(new Character(':')),

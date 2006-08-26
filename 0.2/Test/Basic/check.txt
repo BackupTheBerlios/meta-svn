@@ -104,13 +104,9 @@ Entry (KeyValuePair`2)
 											Value (Map):
 												Entry (KeyValuePair`2)
 													Key (Map):
-														1
+														"literal"
 													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"counter"
+														"counter"
 										Entry (KeyValuePair`2)
 											Key (Map):
 												"value"
@@ -451,13 +447,9 @@ Entry (KeyValuePair`2)
 													Value (Map):
 														Entry (KeyValuePair`2)
 															Key (Map):
-																1
+																"literal"
 															Value (Map):
-																Entry (KeyValuePair`2)
-																	Key (Map):
-																		"literal"
-																	Value (Map):
-																		"a"
+																"a"
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"value"
@@ -477,13 +469,9 @@ Entry (KeyValuePair`2)
 													Value (Map):
 														Entry (KeyValuePair`2)
 															Key (Map):
-																1
+																"literal"
 															Value (Map):
-																Entry (KeyValuePair`2)
-																	Key (Map):
-																		"literal"
-																	Value (Map):
-																		"autoSearch"
+																"autoSearch"
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"value"
@@ -524,13 +512,9 @@ Entry (KeyValuePair`2)
 													Value (Map):
 														Entry (KeyValuePair`2)
 															Key (Map):
-																1
+																"literal"
 															Value (Map):
-																Entry (KeyValuePair`2)
-																	Key (Map):
-																		"literal"
-																	Value (Map):
-																		"b"
+																"b"
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"value"
@@ -679,13 +663,9 @@ Entry (KeyValuePair`2)
 													Value (Map):
 														Entry (KeyValuePair`2)
 															Key (Map):
-																1
+																"literal"
 															Value (Map):
-																Entry (KeyValuePair`2)
-																	Key (Map):
-																		"literal"
-																	Value (Map):
-																		"a"
+																"a"
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"value"
@@ -756,13 +736,9 @@ Entry (KeyValuePair`2)
 											Value (Map):
 												Entry (KeyValuePair`2)
 													Key (Map):
-														1
+														"literal"
 													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"scopeTest"
+														"scopeTest"
 										Entry (KeyValuePair`2)
 											Key (Map):
 												"value"
@@ -1806,13 +1782,9 @@ Entry (KeyValuePair`2)
 											Value (Map):
 												Entry (KeyValuePair`2)
 													Key (Map):
-														1
+														"literal"
 													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"upperLevel"
+														"upperLevel"
 										Entry (KeyValuePair`2)
 											Key (Map):
 												"value"
@@ -1931,13 +1903,9 @@ Entry (KeyValuePair`2)
 											Value (Map):
 												Entry (KeyValuePair`2)
 													Key (Map):
-														1
+														"literal"
 													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"staticEventChanged"
+														"staticEventChanged"
 										Entry (KeyValuePair`2)
 											Key (Map):
 												"value"
@@ -2915,13 +2883,9 @@ Entry (KeyValuePair`2)
 															Value (Map):
 																Entry (KeyValuePair`2)
 																	Key (Map):
-																		1
+																		"literal"
 																	Value (Map):
-																		Entry (KeyValuePair`2)
-																			Key (Map):
-																				"literal"
-																			Value (Map):
-																				"topLevel"
+																		"topLevel"
 														Entry (KeyValuePair`2)
 															Key (Map):
 																"value"
