@@ -369,13 +369,32 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
-		public Emit Nothing()
+		public static Emit EmitSearch(Local key, Local selected)
+		{
+			return Until(
+				selected.Call("ContainsKey", key),
+				new ILProgram(
+					selected.Assign(selected.Call("get_Scope")),
+					If(
+						selected,
+						Nothing(),
+						Throw(
+							new New(
+								typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+								key,
+								(Emit)Null,
+								(Emit)Null),
+								typeof(KeyNotFound)
+								)
+							)));
+		}
+		public static Emit Nothing()
 		{
 			return delegate(ILGenerator il)
 			{
 			};
 		}
-		public Emit Until(ILEmitter condition, ILEmitter body)
+		public static Emit Until(ILEmitter condition, ILEmitter body)
 		{
 			return delegate(ILGenerator il)
 			{
@@ -391,7 +410,7 @@ namespace Meta
 				il.MarkLabel(end);
 			};
 		}
-		public Emit If(ILEmitter condition, ILEmitter thenBranch, ILEmitter elseBranch)
+		public static Emit If(ILEmitter condition, ILEmitter thenBranch, ILEmitter elseBranch)
 		{
 			return delegate(ILGenerator il)
 			{
@@ -409,7 +428,7 @@ namespace Meta
 				il.MarkLabel(end);
 			};
 		}
-		public Emit Throw(ILEmitter exception, Type type)
+		public static Emit Throw(ILEmitter exception, Type type)
 		{
 			return delegate(ILGenerator il)
 			{
@@ -417,7 +436,7 @@ namespace Meta
 				il.Emit(OpCodes.Throw);
 			};
 		}
-		public void Null(ILGenerator il)
+		public static void Null(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ldnull);
 		}
@@ -512,22 +531,7 @@ namespace Meta
 			program.Add(key.Assign(expression.Get(parentExpression, context, argument)));
 			program.Add(selected.Assign(context));
 			program.Add(
-				Until(
-					selected.Call("ContainsKey", key),
-					new ILProgram(
-						selected.Assign(selected.Call("get_Scope")),
-						If(
-							selected,
-							Nothing(),
-							Throw(
-								new New(
-									typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-									key,
-									(Emit)Null,
-									(Emit)Null),
-									typeof(KeyNotFound)
-									)
-								))));
+				EmitSearch(key, selected));
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
@@ -622,12 +626,11 @@ namespace Meta
 	public class Statement : StatementBase
 	{
 		private Expression key;
-		//private List<Map> keys;
-		private Map value;
+		private Expression value;
 		public Statement(Map code)
 		{
 			this.key = code[CodeKeys.Keys].GetExpression();
-			this.value = code[CodeKeys.Value];
+			this.value = code[CodeKeys.Value].GetExpression();
 		}
 		public override void Assign(Map context)
 		{
@@ -641,7 +644,18 @@ namespace Meta
 					throw new KeyNotFound(k, null, null);
 				}
 			}
-			selected[k] = value.GetExpression().Evaluate(context);
+			selected[k] = value.Evaluate(context);
+		}
+		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		{
+			ILProgram program = new ILProgram();
+			Local k=program.Declare();
+			Local selected = program.Declare();
+			program.Add(k.Assign(key.Get(expression, context, argument)));
+			program.Add(selected.Assign(context));
+			program.Add(Expression.EmitSearch(k, selected));
+			program.Add(selected.Call("set_Item",k,value.Get(expression, context, argument)));
+			return program;
 		}
 	}
 	public class Literal : Expression
