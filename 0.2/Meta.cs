@@ -528,19 +528,6 @@ namespace Meta
 									typeof(KeyNotFound)
 									)
 								))));
-				//Until(
-				//    selected.Call("ContainsKey", key),
-				//    If(
-				//        selected.Call("get_Scope"),
-				//        selected.Assign(selected.Call("get_Scope")),
-				//        Throw(
-				//            new New(
-				//                typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-				//                key,
-				//                (Emit)Null,
-				//                (Emit)Null),
-				//                typeof(KeyNotFound)
-				//                ))));
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
@@ -576,12 +563,6 @@ namespace Meta
 					constantKeys = false;
 				}
 				program.Add(statement.Get(expression,context,argument));
-				//program.Add(
-				//    argument.Field("statements").Call(
-				//        "get_Item",
-				//        expression.statements.Count - 1).Call(
-				//            "Assign",
-				//            context));
 			}
 			program.Add(context.Call("set_ConstantKeys", Convert.ToInt32(constantKeys)));
 			program.Add(context.Load);
@@ -600,6 +581,67 @@ namespace Meta
 							"Assign",
 							context);
 
+		}
+	}
+	public delegate void Ass(Map context);
+
+	public class KeyStatement : StatementBase
+	{
+		private Expression key;
+		private Expression value;
+		public KeyStatement(Map code)
+		{
+			this.key = code[CodeKeys.Key].GetExpression();
+			this.value = code[CodeKeys.Value].GetExpression();
+		}
+		public override void Assign(Map context)
+		{
+			context[key.Evaluate(context)] = value.Evaluate(context);
+		}
+		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		{
+			return context.Call("set_Item", key.Get(expression, context, argument), value.Get(expression, context, argument));
+		}
+	}
+	public class CurrentStatement : StatementBase
+	{
+		private Expression value;
+		public CurrentStatement(Map code)
+		{
+			this.value = code[CodeKeys.Value].GetExpression();
+		}
+		public override void Assign(Map context)
+		{
+			context.Nuke(value.Evaluate(context));
+		}
+		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		{
+			return context.Call("Nuke", value.Get(expression, context, argument));
+		}
+	}
+	public class Statement : StatementBase
+	{
+		private Expression key;
+		//private List<Map> keys;
+		private Map value;
+		public Statement(Map code)
+		{
+			this.key = code[CodeKeys.Keys].GetExpression();
+			this.value = code[CodeKeys.Value];
+		}
+		public override void Assign(Map context)
+		{
+			Map selected = context;
+			Map k = key.Evaluate(context);
+			while (!selected.ContainsKey(k))
+			{
+				selected = selected.Scope;
+				if (selected == null)
+				{
+					throw new KeyNotFound(k, null, null);
+				}
+			}
+			selected[k] = value.GetExpression().Evaluate(context);
 		}
 	}
 	public class Literal : Expression
@@ -665,63 +707,7 @@ namespace Meta
 			return program;
 		}
 	}
-	public delegate void Ass(Map context);
 
-	public class KeyStatement : StatementBase
-	{
-		private Expression key;
-		private Expression value;
-		public KeyStatement(Map code)
-		{
-			this.key = code[CodeKeys.Key].GetExpression();
-			this.value = code[CodeKeys.Value].GetExpression();
-		}
-		public override void Assign(Map context)
-		{
-			context[key.Evaluate(context)] = value.Evaluate(context);
-		}
-		public override ILEmitter Get(Expression expression, Local context, Argument argument)
-		{
-		    return context.Call("set_Item",key.Get(expression,context,argument),value.Get(expression,context,argument));
-		}
-	}
-	public class CurrentStatement : StatementBase
-	{
-		private Expression expression;
-		public CurrentStatement(Map code)
-		{
-			this.expression = code[CodeKeys.Value].GetExpression();
-		}
-		public override void Assign(Map context)
-		{
-			context.Nuke( expression.Evaluate(context));
-		}
-	}
-	public class Statement : StatementBase
-	{
-		private Expression key;
-		//private List<Map> keys;
-		private Map value;
-		public Statement(Map code)
-		{
-			this.key = code[CodeKeys.Keys].GetExpression();
-			this.value = code[CodeKeys.Value];
-		}
-		public override void Assign(Map context)
-		{
-			Map selected = context;
-			Map k = key.Evaluate(context);
-			while (!selected.ContainsKey(k))
-			{
-				selected = selected.Scope;
-				if (selected == null)
-				{
-					throw new KeyNotFound(k, null, null);
-				}
-			}
-			selected[k] = value.GetExpression().Evaluate(context);
-		}
-	}
 	public class Interpreter
 	{
 		static Interpreter()
