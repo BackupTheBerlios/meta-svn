@@ -136,6 +136,18 @@ namespace Meta
 			il.Emit(OpCodes.Callvirt, method);
 		}
 	}
+	//public class Bool : ILEmitter
+	//{
+	//    private bool integer;
+	//    public Bool(int integer)
+	//    {
+	//        this.integer = integer;
+	//    }
+	//    public override void Emit(ILGenerator il)
+	//    {
+	//        il.Emit(OpCodes.Ldc_z, integer);
+	//    }
+	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
@@ -522,18 +534,38 @@ namespace Meta
 			Local context = program.Declare();
 			program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
 			program.Add(context.Call("set_Scope",parent));
+			bool constantKeys = true;
 			foreach (StatementBase statement in statementList)
 			{
-				expression.statements.Add(statement);
-				program.Add(
-					argument.Field("statements").Call(
+				if (!(statement is KeyStatement))
+				{
+					constantKeys = false;
+				}
+				program.Add(statement.Get(expression,context,argument));
+				//program.Add(
+				//    argument.Field("statements").Call(
+				//        "get_Item",
+				//        expression.statements.Count - 1).Call(
+				//            "Assign",
+				//            context));
+			}
+			program.Add(context.Call("set_ConstantKeys", Convert.ToInt32(constantKeys)));
+			program.Add(context.Load);
+			return program;
+		}
+	}
+	public abstract class StatementBase
+	{
+		public abstract void Assign(Map context);
+		public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
+		{
+			expression.statements.Add(this);
+			return argument.Field("statements").Call(
 						"get_Item",
 						expression.statements.Count - 1).Call(
 							"Assign",
-							context));
-			}
-			program.Add(context.Load);
-			return program;
+							context);
+
 		}
 	}
 	public class Literal : Expression
@@ -600,10 +632,7 @@ namespace Meta
 		}
 	}
 	public delegate void Ass(Map context);
-	public abstract class StatementBase
-	{
-		public abstract void Assign(Map context);
-	}
+
 	public class KeyStatement : StatementBase
 	{
 		private Map key;
@@ -653,43 +682,9 @@ namespace Meta
 					throw new KeyNotFound(k, null, null);
 				}
 			}
-			//for (int i = 1; i < keys.Count; i++)
-			//{
-			//    selected = selected[key];
-			//    key = keys[i].GetExpression().Evaluate(context);
-			//}
 			selected[k] = value.GetExpression().Evaluate(context);
 		}
 	}
-	//public class Statement : StatementBase
-	//{
-	//    private List<Map> keys;
-	//    private Map value;
-	//    public Statement(Map code)
-	//    {
-	//        this.keys = code[CodeKeys.Keys].Array;
-	//        this.value = code[CodeKeys.Value];
-	//    }
-	//    public override void Assign(Map context)
-	//    {
-	//        Map selected = context;
-	//        Map key = keys[0].GetExpression().Evaluate(context);
-	//        while(!selected.ContainsKey(key))
-	//        {
-	//            selected = selected.Scope;
-	//            if (selected == null)
-	//            {
-	//                throw new KeyNotFound(key, keys[0].Extent, null);
-	//            }
-	//        }
-	//        for (int i = 1; i < keys.Count; i++)
-	//        {
-	//            selected = selected[key];
-	//            key = keys[i].GetExpression().Evaluate(context);
-	//        }
-	//        selected[key] = value.GetExpression().Evaluate(context);
-	//    }
-	//}
 	public class Interpreter
 	{
 		static Interpreter()
@@ -701,6 +696,7 @@ namespace Meta
 			}
 			catch (Exception e)
 			{
+				throw e;
 			}
 		}
 		[STAThread]
@@ -4722,6 +4718,18 @@ namespace Meta
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
+		private bool constantKeys=false;
+		public bool ConstantKeys
+		{
+			get
+			{
+				return constantKeys;
+			}
+			set
+			{
+				constantKeys = value;
+			}
+		}
 		public string Serialize()
 		{
 			return strategy.Serialize(this);
