@@ -80,15 +80,14 @@ commandLine|,
 				0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	.
+	negativeInteger=-
+		merge
 		negativeInteger
-		x
-	:"hello"
+		,
+			x="hello"
 	integerIncrementTest=5
-	.
-		integerIncrementTest
-		0
-	:integerIncrementTest
+	integerIncrementTest=,
+		0=integerIncrementTest
 	integerDecrementTest=5
 	integerDecrementTest=.
 		!"integerDecrementTest"
@@ -143,12 +142,13 @@ commandLine|,
 				autoSearch:"changed"
 		SetB=,
 			newB|,
-				.
+				b:-
+					merge
 					b
-					1
-				:.
-					newB
-					value
+					,
+						1=.
+							newB
+							value
 				&="changed"
 		x=,
 			a="b"
@@ -241,34 +241,21 @@ commandLine|,
 		/
 		Meta
 		TestClass
-	.
-		TestClass
-		NestedClass
-		field
-	:5
 	nestedClassTest=.
 		TestClass
 		NestedClass
 		field
 	testClass=-
 		!"TestClass"
-		0
-	.
-		testClass
-		floatValue
-	=3
-	.
-		testClass
-		doubleValue
-	=4
-	.
-		testClass
-		decimalValue
-	=5
-	.
+		,
+			floatValue=3
+			doubleValue=4
+			decimalValue=5
+	TestClass=-
+		merge
 		TestClass
-		boolTest
-	:1
+		,
+			boolTest=1
 	boolTest=.
 		TestClass
 		boolTest
@@ -301,20 +288,23 @@ commandLine|,
 			OverloadedMethod_MemberTest_Int32
 		memberTest
 		3247
-	.
+	MemberTest:-
+		merge
 		MemberTest
-		classField
-	:"a"
-	.
+		,
+			classField="a"
+	memberTest:-
+		merge
 		memberTest
-		instanceField
-	:"b"
-	.
+		,
+			instanceField="b"
+	MemberTest:-
+		merge
 		MemberTest
-		ClassProperty
-	:.
-		memberTest
-		InstanceProperty
+		,
+			ClassProperty=.
+				memberTest
+				InstanceProperty
 	classPropertyValue=.
 		MemberTest
 		ClassProperty
@@ -427,15 +417,16 @@ commandLine|,
 	ChangeStaticEvent=,
 		arg|,
 			staticEventChanged:arg
-	.
+	TestClass=-
+		merge
 		TestClass
-		staticEvent
-	:,
-		arg|,
-			1=-
-				!"ChangeStaticEvent"
-				1
-			&=arg
+		,
+			staticEvent=,
+				arg|,
+					1=-
+						!"ChangeStaticEvent"
+						1
+					&=arg
 	6=-
 		.
 			TestClass
@@ -453,13 +444,14 @@ commandLine|,
 			CallStaticEvent_Object
 		!"testClass"
 	instanceEventChanged=0
-	.
+	testClass:-
+		merge
 		testClass
-		instanceEvent
-	:,
-		arg|,
-			instanceEventChanged:1
-			&=arg
+		,
+			instanceEvent=,
+				arg|,
+					instanceEventChanged:1
+					&=arg
 	instanceEventResult=-
 		.
 			testClass
@@ -510,12 +502,13 @@ commandLine|,
 	decimalTest=5
 	fractionTest=40
 	stringTest="hello"
-	.
+	stringTest=-
+		merge
 		stringTest
-		6
-	:.
-		stringTest
-		1
+		,
+			6=.
+				stringTest
+				1
 	helloh="hi"
 	stringStrategyHashTest=!!"stringTest"
 	x=,
@@ -545,16 +538,17 @@ commandLine|,
 			"System.Windows.Forms"
 			TextBox
 		0
-	.
-		"textBox"
-		Text
-	:"
-		Alle meine Entchen,
-		schwimmen auf dem See,
-		schwimmen auf dem See,
-		Köpfchen in das Wasser,
-		asdf in die Hoeh.
-	"
+	textBox:-
+		merge
+		textBox
+		,
+			Text="
+				Alle meine Entchen,
+				schwimmen auf dem See,
+				schwimmen auf dem See,
+				Köpfchen in das Wasser,
+				asdf in die Hoeh.
+			"
 	lines=.
 		textBox
 		Lines
@@ -568,17 +562,14 @@ commandLine|,
 			/
 			"System.Windows.Forms"
 			Form
-		0
-	.
-		form
-		Location
-	:-
-		.
-			!"System.Drawing"
-			Point
-			Point_Int32_Int32
-		5
-		1000
+		,
+			Location=-
+				.
+					!"System.Drawing"
+					Point
+					Point_Int32_Int32
+				5
+				1000
 	automaticConversionTest=.
 		form
 		Location
@@ -662,14 +653,16 @@ commandLine|,
 		
 		
 	"
-	.
-		"System.Windows.Forms"
-		Application
-		VisualStyleState
-	:.
-		!"System.Windows.Forms"
-		VisualStyleState
-		ClientAreaEnabled
+	app=-
+		merge
+		.
+			<"System.Windows.Forms"
+			Application
+		,
+			VisualStyleState=.
+				!"System.Windows.Forms"
+				VisualStyleState
+				ClientAreaEnabled
 	enumTest=.
 		!"System.Windows.Forms"
 		Application
@@ -688,10 +681,11 @@ commandLine|,
 		x="y"
 		z="a"
 	copiedData=copySourceData
-	.
+	copiedData=-
+		merge
 		copiedData
-		x
-	:"changed"
+		,
+			x="changed"
 	characterLiterals=,
 		a='a'
 		space=' '

@@ -531,22 +531,13 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (Map):
 																		"b"
-														Entry (KeyValuePair`2)
-															Key (Map):
-																2
-															Value (Map):
-																Entry (KeyValuePair`2)
-																	Key (Map):
-																		"literal"
-																	Value (Map):
-																		1
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
 															Key (Map):
-																"select"
+																"call"
 															Value (Map):
 																Entry (KeyValuePair`2)
 																	Key (Map):
@@ -560,16 +551,71 @@ Entry (KeyValuePair`2)
 																					Key (Map):
 																						"literal"
 																					Value (Map):
-																						"newB"
+																						"merge"
 																Entry (KeyValuePair`2)
 																	Key (Map):
 																		2
 																	Value (Map):
 																		Entry (KeyValuePair`2)
 																			Key (Map):
-																				"literal"
+																				"search"
 																			Value (Map):
-																				"value"
+																				Entry (KeyValuePair`2)
+																					Key (Map):
+																						"literal"
+																					Value (Map):
+																						"b"
+																Entry (KeyValuePair`2)
+																	Key (Map):
+																		3
+																	Value (Map):
+																		Entry (KeyValuePair`2)
+																			Key (Map):
+																				"program"
+																			Value (Map):
+																				Entry (KeyValuePair`2)
+																					Key (Map):
+																						1
+																					Value (Map):
+																						Entry (KeyValuePair`2)
+																							Key (Map):
+																								"key"
+																							Value (Map):
+																								Entry (KeyValuePair`2)
+																									Key (Map):
+																										"literal"
+																									Value (Map):
+																										1
+																						Entry (KeyValuePair`2)
+																							Key (Map):
+																								"value"
+																							Value (Map):
+																								Entry (KeyValuePair`2)
+																									Key (Map):
+																										"select"
+																									Value (Map):
+																										Entry (KeyValuePair`2)
+																											Key (Map):
+																												1
+																											Value (Map):
+																												Entry (KeyValuePair`2)
+																													Key (Map):
+																														"search"
+																													Value (Map):
+																														Entry (KeyValuePair`2)
+																															Key (Map):
+																																"literal"
+																															Value (Map):
+																																"newB"
+																										Entry (KeyValuePair`2)
+																											Key (Map):
+																												2
+																											Value (Map):
+																												Entry (KeyValuePair`2)
+																													Key (Map):
+																														"literal"
+																													Value (Map):
+																														"value"
 										Entry (KeyValuePair`2)
 											Key (Map):
 												2
@@ -1327,17 +1373,12 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"nestedClassTest"
 	Value (Map):
-		5
+		0
 Entry (KeyValuePair`2)
 	Key (Map):
 		"testClass"
 	Value (Map):
 		Meta.Test.TestClasses.TestClass
-Entry (KeyValuePair`2)
-	Key (Map):
-		0
-	Value (Map):
-		5
 Entry (KeyValuePair`2)
 	Key (Map):
 		"boolTest"
@@ -1968,17 +2009,17 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"doubleValue"
 			Value (Map):
-				0
+				4
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"floatValue"
 			Value (Map):
-				0
+				3
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"decimalValue"
 			Value (Map):
-				0
+				5
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"NestedClass"
@@ -3094,6 +3135,11 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		"
 "
+Entry (KeyValuePair`2)
+	Key (Map):
+		"app"
+	Value (Map):
+		System.Windows.Forms.Application
 Entry (KeyValuePair`2)
 	Key (Map):
 		"enumTest"

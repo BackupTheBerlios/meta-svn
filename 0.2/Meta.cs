@@ -3570,6 +3570,22 @@ namespace Meta
 							Expression),
 						new Action(new Optional(EndOfLine)))
 			)));
+		//public static Rule Statement = new Sequence(
+		//    new Action(new ReferenceAssignment(),
+		//        new Alternatives(
+		//            FunctionExpression,
+		//            new Sequence(
+		//                new Action(new Assignment(
+		//                    CodeKeys.Keys),
+		//                    Keys),
+		//                new Action(new Optional(EndOfLine)),
+		//                new Action(new Optional(SameIndentation)),
+		//                new Action(new Character(':')),
+		//                new Action(new Assignment(
+		//                    CodeKeys.Value),
+		//                    Expression),
+		//                new Action(new Optional(EndOfLine)))
+		//    )));
 
 		public static Rule ListMap = new Sequence(
 			new Action(new Character('+')),

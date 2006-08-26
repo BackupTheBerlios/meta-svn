@@ -119,25 +119,27 @@
 			data:-
 				parseFile
 				file
-			.
+			tree:-
+				merge
 				tree
-				Nodes
-			:-
-				getNodes
-				data
+				,
+					Nodes=-
+						getNodes
+						data
 			asdf=-
 				loadText
 	loadText=,
 		|,
-			.
+			browser:-
+				merge
 				browser
-				DocumentText
-			:-
-				printNodes
-				.
-					tree
-					Nodes
-				data
+				,
+					DocumentText=-
+						printNodes
+						.
+							tree
+							Nodes
+						data
 	tree=-
 		TreeView
 		,
