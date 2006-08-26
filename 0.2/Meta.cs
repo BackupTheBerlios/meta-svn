@@ -136,18 +136,6 @@ namespace Meta
 			il.Emit(OpCodes.Callvirt, method);
 		}
 	}
-	//public class Bool : ILEmitter
-	//{
-	//    private bool integer;
-	//    public Bool(int integer)
-	//    {
-	//        this.integer = integer;
-	//    }
-	//    public override void Emit(ILGenerator il)
-	//    {
-	//        il.Emit(OpCodes.Ldc_z, integer);
-	//    }
-	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
@@ -353,14 +341,6 @@ namespace Meta
 	}
 	public abstract class ILExpression:ILEmitter
 	{
-		//public ILExpression Field(string name)
-		//{
-		//    return new InstanceField(this,Type.GetField(name));
-		//}
-		//public ILExpression Call(string name, params ILEmitter[] arguments)
-		//{
-		//    return new InstanceCall(this, Type.GetMethod(name), arguments);
-		//}
 		public override void  Emit(ILGenerator il)
 		{
 			Evaluate(il);
@@ -440,9 +420,7 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Ldnull);
 		}
-		public List<StatementBase> statements = new List<StatementBase>();
 		public List<Map> literals = new List<Map>();
-		//public List<Expression> expressions = new List<Expression>();
 		Eval optimized;
 		public Map Evaluate(Map context)
 		{
@@ -575,17 +553,7 @@ namespace Meta
 	}
 	public abstract class StatementBase
 	{
-		public abstract void Assign(Map context);
-		public virtual ILEmitter Get(Expression expression, Local context, Argument argument)
-		{
-			expression.statements.Add(this);
-			return argument.Field("statements").Call(
-						"get_Item",
-						expression.statements.Count - 1).Call(
-							"Assign",
-							context);
-
-		}
+		public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
 	}
 	public delegate void Ass(Map context);
 
@@ -598,10 +566,6 @@ namespace Meta
 			this.key = code[CodeKeys.Key].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override void Assign(Map context)
-		{
-			context[key.Evaluate(context)] = value.Evaluate(context);
-		}
 		public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
 			return context.Call("set_Item", key.Get(expression, context, argument), value.Get(expression, context, argument));
@@ -613,10 +577,6 @@ namespace Meta
 		public CurrentStatement(Map code)
 		{
 			this.value = code[CodeKeys.Value].GetExpression();
-		}
-		public override void Assign(Map context)
-		{
-			context.Nuke(value.Evaluate(context));
 		}
 		public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
@@ -631,20 +591,6 @@ namespace Meta
 		{
 			this.key = code[CodeKeys.Keys].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
-		}
-		public override void Assign(Map context)
-		{
-			Map selected = context;
-			Map k = key.Evaluate(context);
-			while (!selected.ContainsKey(k))
-			{
-				selected = selected.Scope;
-				if (selected == null)
-				{
-					throw new KeyNotFound(k, null, null);
-				}
-			}
-			selected[k] = value.Evaluate(context);
 		}
 		public override ILEmitter Get(Expression expression, Local context, Argument argument)
 		{
@@ -4752,6 +4698,25 @@ namespace Meta
 			return result;
 		}
 	}
+	//public class FunctionExpression:Expression
+	//{
+	//    private Map parameter;
+	//    private Map code;
+	//    public FunctionExpression(Map code)
+	//    {
+	//        this.parameter = code[CodeKeys.Function][CodeKeys.Parameter];
+	//        //Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
+	//        //argumentScope.Scope = this;
+	//        //return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
+
+	//    }
+	//    public override ILEmitter Get(Expression expression, Local context, Argument argument)
+	//    {
+	//        Map argument = new Map(parameter, arg);
+	//        argument.Scope = this;
+	//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
+	//    }
+	//}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
@@ -5185,6 +5150,19 @@ namespace Meta
 				throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
 			}
 		}
+		//public Map CallDefault(Map arg)
+		//{
+		//    if (ContainsKey(CodeKeys.Function))
+		//    {
+		//        Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
+		//        argumentScope.Scope = this;
+		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
+		//    }
+		//}
 		public ICollection<Map> Keys
 		{
 			get
