@@ -525,26 +525,29 @@ namespace Meta
 			program.Add(selected.Assign(context));
 
 
-			//bool optimize=false;
-			//ILProgram p = new ILProgram();
-			//if (expression is Literal)
-			//{
-			//    Map literal=((Literal)expression).literal;
-			//    while (statement!=null && statement.NeverContainsKey(literal))
-			//    {
-			//        statement = statement.Parent;
-			//        p.Add(selected.Assign(selected.Call("get_Scope")));
-			//    }
-			//    optimize=statement!=null && statement.AlwaysContainsKey(literal);
-			//}
-			//if (optimize)
-			//{
-			//    program.Add(p);
-			//}
-			//else
-			//{
+			bool optimize=false;
+			ILProgram p = new ILProgram();
+			if (expression is Literal)
+			{
+				Map literal=((Literal)expression).literal;
+				if (literal.Equals(new Map("not")))
+				{
+				}
+				while (statement!=null && statement.NeverContainsKey(literal))
+				{
+					statement = statement.Parent;
+					p.Add(selected.Assign(selected.Call("get_Scope")));
+				}
+				optimize=statement!=null && statement.AlwaysContainsKey(literal);
+			}
+			if (optimize)
+			{
+				program.Add(p);
+			}
+			else
+			{
 				program.Add(EmitSearch(key, selected));
-			//}
+			}
 
 
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
@@ -614,9 +617,14 @@ namespace Meta
 		public virtual bool NeverContainsKey(Map key)
 		{
 			bool neverContains = true;
+			int count = 0;
 			foreach (StatementBase statement in program.Statements)
 			{
-				if (statement is CurrentStatement)
+				if (statement == this)
+				{
+					break;
+				}
+				if (statement is CurrentStatement && count!=0 && count!=program.Statements.Length)
 				{
 					neverContains = false;
 					break;
@@ -630,10 +638,8 @@ namespace Meta
 						break;
 					}
 				}
-				if (statement == this)
-				{
-					break;
-				}
+
+				count++;
 			}
 			return neverContains;
 		}
@@ -642,6 +648,10 @@ namespace Meta
 			bool alwaysContains = false;
 			foreach (StatementBase statement in program.Statements)
 			{
+				if (statement == this)
+				{
+					break;
+				}
 				if (statement is KeyStatement)
 				{
 					Literal literal = ((KeyStatement)statement).key as Literal;
@@ -651,10 +661,7 @@ namespace Meta
 						break;
 					}
 				}
-				if (statement == this)
-				{
-					break;
-				}
+
 			}
 			return alwaysContains;
 		}
@@ -4839,7 +4846,14 @@ namespace Meta
 		{
 			get
 			{
-				return new PseudoStatement(map);
+				if (map.Scope == null)
+				{
+					return null;
+				}
+				else
+				{
+					return new PseudoStatement(map.Scope);
+				}
 			}
 		}
 		private Map map;
