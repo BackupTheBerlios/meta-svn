@@ -369,6 +369,12 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public Emit Nothing()
+		{
+			return delegate(ILGenerator il)
+			{
+			};
+		}
 		public Emit Until(ILEmitter condition, ILEmitter body)
 		{
 			return delegate(ILGenerator il)
@@ -508,17 +514,33 @@ namespace Meta
 			program.Add(
 				Until(
 					selected.Call("ContainsKey", key),
-					If(
-						selected.Call("get_Scope"),
+					new ILProgram(
 						selected.Assign(selected.Call("get_Scope")),
-						Throw(
-							new New(
-								typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-								key,
-								(Emit)Null,
-								(Emit)Null),
-								typeof(KeyNotFound)
+						If(
+							selected,
+							Nothing(),
+							Throw(
+								new New(
+									typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+									key,
+									(Emit)Null,
+									(Emit)Null),
+									typeof(KeyNotFound)
+									)
 								))));
+				//Until(
+				//    selected.Call("ContainsKey", key),
+				//    If(
+				//        selected.Call("get_Scope"),
+				//        selected.Assign(selected.Call("get_Scope")),
+				//        Throw(
+				//            new New(
+				//                typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+				//                key,
+				//                (Emit)Null,
+				//                (Emit)Null),
+				//                typeof(KeyNotFound)
+				//                ))));
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
@@ -665,14 +687,14 @@ namespace Meta
 	}
 	public class CurrentStatement : StatementBase
 	{
-		private Map expression;
+		private Expression expression;
 		public CurrentStatement(Map code)
 		{
-			this.expression = code[CodeKeys.Value];
+			this.expression = code[CodeKeys.Value].GetExpression();
 		}
 		public override void Assign(Map context)
 		{
-			context.Nuke( expression.GetExpression().Evaluate(context));
+			context.Nuke( expression.Evaluate(context));
 		}
 	}
 	public class Statement : StatementBase
