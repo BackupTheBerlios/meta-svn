@@ -292,6 +292,22 @@ namespace Meta
 	}
 	public abstract class ILEmitter
 	{
+		public virtual Type Type
+		{
+			get
+			{
+				return typeof(Map);
+			}
+		}
+		public ILExpression Field(string name)
+		{
+			return new InstanceField(this, Type.GetField(name));
+		}
+		public ILExpression Call(string name, params ILEmitter[] arguments)
+		{
+			return new InstanceCall(this, Type.GetMethod(name), arguments);
+		}
+
 		public static implicit operator ILEmitter(int del)
 		{
 			return new Integer(del);
@@ -337,18 +353,14 @@ namespace Meta
 	}
 	public abstract class ILExpression:ILEmitter
 	{
-		public abstract Type Type
-		{
-			get;
-		}
-		public ILExpression Field(string name)
-		{
-			return new InstanceField(this,Type.GetField(name));
-		}
-		public ILExpression Call(string name, params ILEmitter[] arguments)
-		{
-			return new InstanceCall(this, Type.GetMethod(name), arguments);
-		}
+		//public ILExpression Field(string name)
+		//{
+		//    return new InstanceField(this,Type.GetField(name));
+		//}
+		//public ILExpression Call(string name, params ILEmitter[] arguments)
+		//{
+		//    return new InstanceCall(this, Type.GetMethod(name), arguments);
+		//}
 		public override void  Emit(ILGenerator il)
 		{
 			Evaluate(il);
@@ -635,16 +647,20 @@ namespace Meta
 
 	public class KeyStatement : StatementBase
 	{
-		private Map key;
-		private Map value;
+		private Expression key;
+		private Expression value;
 		public KeyStatement(Map code)
 		{
-			this.key = code[CodeKeys.Key];
-			this.value = code[CodeKeys.Value];
+			this.key = code[CodeKeys.Key].GetExpression();
+			this.value = code[CodeKeys.Value].GetExpression();
 		}
 		public override void Assign(Map context)
 		{
-			context[key.GetExpression().Evaluate(context)] = value.GetExpression().Evaluate(context);
+			context[key.Evaluate(context)] = value.Evaluate(context);
+		}
+		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		{
+		    return context.Call("set_Item",key.Get(expression,context,argument),value.Get(expression,context,argument));
 		}
 	}
 	public class CurrentStatement : StatementBase
@@ -656,8 +672,7 @@ namespace Meta
 		}
 		public override void Assign(Map context)
 		{
-			Map value = expression.GetExpression().Evaluate(context);
-			context.Nuke(value);
+			context.Nuke( expression.GetExpression().Evaluate(context));
 		}
 	}
 	public class Statement : StatementBase
