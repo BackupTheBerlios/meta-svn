@@ -456,12 +456,13 @@ namespace Meta
 			Local context = program.Declare();
 			program.AddRange(
 				context.Assign(argument),
-				Get(this, context,new Argument(0,typeof(Expression))),
+				Get(this,null, context,new Argument(0,typeof(Expression))),
 				(Emit)Return);
 			program.Emit(method.GetILGenerator());
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
+		public abstract ILEmitter Get(Expression expression,StatementBase lastProgram, Local context, Argument argument);
+		//public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
@@ -478,15 +479,15 @@ namespace Meta
 			}
 			this.parameterName = parameterName;
 		}
-		public override ILEmitter Get(Expression expression, Local current,Argument argument)
+		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local current, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local callable = program.Declare();
-			program.Add(callable.Assign(calls[0].Get(expression, current,argument)));
+			program.Add(callable.Assign(calls[0].Get(expression,lastProgram, current,argument)));
 			for (int i = 1; i < calls.Count; i++)
 			{
 				program.Add(
-					callable.Assign(callable.Call("Call", calls[i].Get(expression, current,argument))));
+					callable.Assign(callable.Call("Call", calls[i].Get(expression,lastProgram, current,argument))));
 			}
 			program.Add(callable.Load);
 			return program;
@@ -501,15 +502,17 @@ namespace Meta
 			this.expression = code.GetExpression();
 			this.code = code;
 		}
-		public override ILEmitter Get(Expression parentExpression, Local context, Argument argument)
+		public override ILEmitter Get(Expression parentExpression, StatementBase lastProgram, Local context, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local key = program.Declare();
 			Local selected = program.Declare();
-			program.Add(key.Assign(expression.Get(parentExpression, context, argument)));
+			program.Add(key.Assign(expression.Get(parentExpression, lastProgram, context, argument)));
 			program.Add(selected.Assign(context));
-			program.Add(
-				EmitSearch(key, selected));
+
+			program.Add(EmitSearch(key, selected));
+
+
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
@@ -517,6 +520,13 @@ namespace Meta
 	public class Program : Expression
 	{
 
+		public Statement Statement
+		{
+			get
+			{
+				return null;
+			}
+		}
 		public bool IsFunction
 		{
 			get
@@ -529,9 +539,9 @@ namespace Meta
 		public Program(Map code)
 		{
 			this.code = code;
-			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement();})).ToArray();
+			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement(this);})).ToArray();
 		}
-		public override ILEmitter Get(Expression expression, Local parent,Argument argument)
+		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local context = program.Declare();
@@ -553,7 +563,12 @@ namespace Meta
 	}
 	public abstract class StatementBase
 	{
-		public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
+		protected Program program;
+		public StatementBase(Program program)
+		{
+			this.program = program;
+		}
+		public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
 	}
 	public delegate void Ass(Map context);
 
@@ -561,46 +576,48 @@ namespace Meta
 	{
 		private Expression key;
 		private Expression value;
-		public KeyStatement(Map code)
+		public KeyStatement(Map code,Program program):base(program)
 		{
 			this.key = code[CodeKeys.Key].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		public override ILEmitter Get(Expression expression,Local context, Argument argument)
 		{
-			return context.Call("set_Item", key.Get(expression, context, argument), value.Get(expression, context, argument));
+			return context.Call("set_Item", key.Get(expression,this, context, argument), value.Get(expression,this, context, argument));
 		}
 	}
 	public class CurrentStatement : StatementBase
 	{
 		private Expression value;
-		public CurrentStatement(Map code)
+		public CurrentStatement(Map code, Program program)
+			: base(program)
 		{
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		public override ILEmitter Get(Expression expression,Local context, Argument argument)
 		{
-			return context.Call("Nuke", value.Get(expression, context, argument));
+			return context.Call("Nuke", value.Get(expression,this, context, argument));
 		}
 	}
 	public class Statement : StatementBase
 	{
 		private Expression key;
 		private Expression value;
-		public Statement(Map code)
+		public Statement(Map code, Program program)
+			: base(program)
 		{
 			this.key = code[CodeKeys.Keys].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression, Local context, Argument argument)
+		public override ILEmitter Get(Expression expression,Local context, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local k=program.Declare();
 			Local selected = program.Declare();
-			program.Add(k.Assign(key.Get(expression, context, argument)));
+			program.Add(k.Assign(key.Get(expression,this, context, argument)));
 			program.Add(selected.Assign(context));
 			program.Add(Expression.EmitSearch(k, selected));
-			program.Add(selected.Call("set_Item",k,value.Get(expression, context, argument)));
+			program.Add(selected.Call("set_Item",k,value.Get(expression,this, context, argument)));
 			return program;
 		}
 	}
@@ -619,7 +636,7 @@ namespace Meta
 				this.literal = code;
 			}
 		}
-		public override ILEmitter Get(Expression expression, Local local, Argument argument)
+		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local local, Argument argument)
 		{
 			expression.literals.Add(literal);
 			return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
@@ -627,7 +644,7 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
-		public override ILEmitter Get(Expression expression, Local local, Argument argument)
+		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local local, Argument argument)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
 		}
@@ -639,16 +656,16 @@ namespace Meta
 		{
 			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression();});
 		}
-		public override ILEmitter  Get(Expression expression, Local context, Argument argument)
+		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local context, Argument argument)
 		{
 		    ILProgram program = new ILProgram();
 		    Local selected = program.Declare();
-			program.Add(selected.Assign(subselects[0].Get(expression, context, argument)));
+			program.Add(selected.Assign(subselects[0].Get(expression,lastProgram, context, argument)));
 			Local key = program.Declare();
 			Local value = program.Declare();
 		    for (int i = 1; i < subselects.Count; i++)
 		    {
-				program.Add(key.Assign(subselects[i].Get(expression,context,argument)));
+				program.Add(key.Assign(subselects[i].Get(expression,lastProgram,context,argument)));
 				program.Add(value.Assign(selected.Call("TryGetValue",key)));
 				program.Add(
 					If(
@@ -4959,22 +4976,22 @@ namespace Meta
 		}
 		private object compiledCode;
 
-		public StatementBase GetStatement()
+		public StatementBase GetStatement(Program program)
 		{
 			if (compiledCode == null)
 			{
 				if (ContainsKey(CodeKeys.Keys))
 				{
-					compiledCode = new Statement(this);
+					compiledCode = new Statement(this,program);
 
 				}
 				else if (ContainsKey(CodeKeys.Current))
 				{
-					compiledCode = new CurrentStatement(this);
+					compiledCode = new CurrentStatement(this,program);
 				}
 				else if (ContainsKey(CodeKeys.Key))
 				{
-					compiledCode = new KeyStatement(this);
+					compiledCode = new KeyStatement(this,program);
 				}
 				else
 				{
