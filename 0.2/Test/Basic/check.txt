@@ -1933,71 +1933,7 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"staticEventResult"
 	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"CallInstanceEvent_Object"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"add_instanceEvent_IntEvent"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"remove_instanceEvent_IntEvent"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"GetType"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"ToString"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"Equals_Object"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"GetHashCode"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"instanceEvent"
-			Value (Map):
-				0
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"doubleValue"
-			Value (Map):
-				4
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"floatValue"
-			Value (Map):
-				3
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"decimalValue"
-			Value (Map):
-				5
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"NestedClass"
-			Value (Map):
-				Meta.Test.TestClasses.TestClass+NestedClass
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"TestDelegate"
-			Value (Map):
-				Meta.Test.TestClasses.TestClass+TestDelegate
+		0
 Entry (KeyValuePair`2)
 	Key (Map):
 		"instanceEventChanged"
