@@ -280,6 +280,13 @@ namespace Meta
 	}
 	public abstract class ILEmitter
 	{
+		public static implicit operator ILEmitter(string text)
+		{
+			return (Emit)delegate(ILGenerator il)
+			{
+				il.Emit(OpCodes.Ldstr, text);
+			};
+		}
 		public virtual Type Type
 		{
 			get
@@ -361,7 +368,7 @@ namespace Meta
 		{
 			this.statement = statement;
 		}
-		public static Emit EmitSearch(Local key, Local selected)
+		public static Emit EmitSearch(Local key, Local selected, Extent extent)
 		{
 			return Until(
 				selected.Call("ContainsKey", key),
@@ -374,12 +381,35 @@ namespace Meta
 							new New(
 								typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
 								key,
-								(Emit)Null,
+								new New(
+									typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
+									extent.Start.Line,
+									extent.FileName),
+								//(Emit)Null,
 								(Emit)Null),
 								typeof(KeyNotFound)
 								)
 							)));
 		}
+		//public static Emit EmitSearch(Local key, Local selected,Extent extent)
+		//{
+		//    return Until(
+		//        selected.Call("ContainsKey", key),
+		//        new ILProgram(
+		//            selected.Assign(selected.Call("get_Scope")),
+		//            If(
+		//                selected,
+		//                Nothing(),
+		//                Throw(
+		//                    new New(
+		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                        key,
+		//                        (Emit)Null,
+		//                        (Emit)Null),
+		//                        typeof(KeyNotFound)
+		//                        )
+		//                    )));
+		//}
 		public static Emit Nothing()
 		{
 			return delegate(ILGenerator il)
@@ -566,13 +596,14 @@ namespace Meta
 				}
 				optimize=statement!=null && statement.AlwaysContainsKey(literal);
 			}
+			optimize = false;
 			if (optimize)
 			{
 				program.Add(p);
 			}
 			else
 			{
-				program.Add(EmitSearch(key, selected));
+				program.Add(EmitSearch(key, selected,code.Extent));
 			}
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
@@ -744,9 +775,11 @@ namespace Meta
 	{
 		private Expression key;
 		private Expression value;
+		Map code;
 		public Statement(Map code, Program program)
 			: base(program)
 		{
+			this.code = code;
 			this.key = code[CodeKeys.Keys].GetExpression(this);
 			this.value = code[CodeKeys.Value].GetExpression(this);
 		}
@@ -757,7 +790,7 @@ namespace Meta
 			Local selected = program.Declare();
 			program.Add(k.Assign(key.Emit(expression,this, context, argument)));
 			program.Add(selected.Assign(context));
-			program.Add(Expression.EmitSearch(k, selected));
+			program.Add(Expression.EmitSearch(k, selected,code.Extent));
 			program.Add(selected.Call("set_Item",k,value.Emit(expression,this, context, argument)));
 			return program;
 		}
@@ -841,22 +874,23 @@ namespace Meta
 				throw e;
 			}
 		}
-		private List<Expression> subselects;
+		private List<Map> subselects;
 		public Select(Map code,StatementBase statement):base(statement)
 		{
-			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression(statement);});
+			this.subselects = code.Array;//.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
+			//this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
 		}
 		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
 		{
-		    ILProgram program = new ILProgram();
-		    Local selected = program.Declare();
-			program.Add(selected.Assign(subselects[0].Emit(expression,lastProgram, context, argument)));
+			ILProgram program = new ILProgram();
+			Local selected = program.Declare();
+			program.Add(selected.Assign(subselects[0].GetExpression(Statement).Emit(expression, lastProgram, context, argument)));
 			Local key = program.Declare();
 			Local value = program.Declare();
-		    for (int i = 1; i < subselects.Count; i++)
-		    {
-				program.Add(key.Assign(subselects[i].Emit(expression,lastProgram,context,argument)));
-				program.Add(value.Assign(selected.Call("TryGetValue",key)));
+			for (int i = 1; i < subselects.Count; i++)
+			{
+				program.Add(key.Assign(subselects[i].GetExpression(Statement).Emit(expression, lastProgram, context, argument)));
+				program.Add(value.Assign(selected.Call("TryGetValue", key)));
 				program.Add(
 					If(
 						value,
@@ -865,14 +899,44 @@ namespace Meta
 							new New(
 								typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
 								key,
-								(Emit)Null,
+								new New(
+									typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
+									subselects[i].Extent.Start.Line,
+									subselects[i].Extent.FileName),
 								selected),
 								typeof(KeyNotFound)
 								)));
-		    }
+			}
 			program.Add(selected.Load);
 			return program;
 		}
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local selected = program.Declare();
+		//    program.Add(selected.Assign(subselects[0].Emit(expression,lastProgram, context, argument)));
+		//    Local key = program.Declare();
+		//    Local value = program.Declare();
+		//    for (int i = 1; i < subselects.Count; i++)
+		//    {
+		//        program.Add(key.Assign(subselects[i].Emit(expression,lastProgram,context,argument)));
+		//        program.Add(value.Assign(selected.Call("TryGetValue",key)));
+		//        program.Add(
+		//            If(
+		//                value,
+		//                selected.Assign(value),
+		//                Throw(
+		//                    new New(
+		//                        typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                        key,
+		//                        (Emit)Null,
+		//                        selected),
+		//                        typeof(KeyNotFound)
+		//                        )));
+		//    }
+		//    program.Add(selected.Load);
+		//    return program;
+		//}
 	}
 
 	public class Interpreter
@@ -2867,6 +2931,9 @@ namespace Meta
 	{
 		private SourcePosition start;
 		private SourcePosition end;
+		public Extent(int line,string fileName):this(new SourcePosition(line,0),new SourcePosition(line,0), fileName)
+		{
+		}
 		public Extent(SourcePosition start, SourcePosition end, string fileName)
 		{
 			this.start = start;

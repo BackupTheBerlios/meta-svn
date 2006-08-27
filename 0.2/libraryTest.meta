@@ -105,13 +105,12 @@ arg|,
 			or=0
 		mapTest=,
 			ifTest=-
-				.
-					,
-						1=,
-							arg|"if test successful"
-						0=,
-							|0
-					1
+				ifElse
+				1
+				,
+					arg|"if test successful"
+				,
+					|0
 			joinTest=-
 				join
 				"abc, "

@@ -39,6 +39,7 @@ commandLine|,
 	&=-
 		-
 			merge
+			0
 			+
 				"AssignedToCurrent"
 		0
