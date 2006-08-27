@@ -513,6 +513,11 @@
 					helper
 					first
 					1
+	merge=.
+		/
+		Meta
+		Library
+		Merge_Map_Map
 	enumerableToArray=.
 		/
 		Meta
