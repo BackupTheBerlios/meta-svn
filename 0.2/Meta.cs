@@ -1800,12 +1800,12 @@ namespace Meta
 		}
 	}
 	[Serializable]
-	public class StringStrategy : ArrayStrategy
+	public class StringStrategy : MapStrategy
 	{
-		protected override Map GetIndex(int i)
-		{
-			return text[i];
-		}
+		//protected override Map GetIndex(int i)
+		//{
+		//    return text[i];
+		//}
 		private string text;
 		public StringStrategy(string text)
 		{
@@ -1916,53 +1916,16 @@ namespace Meta
 		}
 	}
 	[Serializable]
-	public abstract class ArrayStrategy : MapStrategy
-	{
-		protected abstract Map GetIndex(int i);
-		public override bool Equal(MapStrategy obj)
-		{
-			if (obj is ArrayStrategy)
-			{
-				return EqualArrayStrategy((ArrayStrategy)obj);
-			}
-			else
-			{
-				return EqualDefault(obj);
-			}
-		}
-		private bool EqualArrayStrategy(ArrayStrategy strategy)
-		{
-			bool equal;
-			if (Count == strategy.Count)
-			{
-				equal = true;
-				for (int i = 0; i < strategy.Count; i++)
-				{
-					if (!GetIndex(i).Equals(strategy.GetIndex(i)))
-					{
-						equal = false;
-						break;
-					}
-				}
-			}
-			else
-			{
-				equal = false;
-			}
-			return equal;
-		}
-	}
-	[Serializable]
-	public class ListStrategy : ArrayStrategy
+	public class ListStrategy : MapStrategy
 	{
 		public override Map CopyData()
 		{
 			return new Map(new CloneStrategy(this));
 		}
-		protected override Map GetIndex(int i)
-		{
-			return list[i];
-		}
+		//protected override Map GetIndex(int i)
+		//{
+		//    return list[i];
+		//}
 		public override void Append(Map map, Map parent)
 		{
 			list.Add(map);
