@@ -103,11 +103,12 @@
 								arg
 							ToString
 				count=,
-					arg|.
-						-
-							Map_Object
-							arg
-						Count
+					arg|-
+						.
+							-
+								Map_Object
+								arg
+							get_Count
 				equal=,
 					arg|.
 						-
@@ -115,17 +116,19 @@
 							arg
 						Equals_Object
 				isNumber=,
-					arg|.
-						-
-							Map_Object
-							arg
-						IsNumber
+					arg|-
+						.
+							-
+								Map_Object
+								arg
+							get_IsNumber
 				isString=,
-					arg|.
-						-
-							Map_Object
-							arg
-						IsString
+					arg|-
+						.
+							-
+								Map_Object
+								arg
+							get_IsString
 				joinAll=,
 					arg|-
 						sum
@@ -134,17 +137,19 @@
 				keys=,
 					arg|-
 						<"Map_ICollection`1"
+						-
+							.
+								-
+									Map_Object
+									arg
+								get_Keys
+				length=,
+					arg|-
 						.
 							-
 								Map_Object
 								arg
-							Keys
-				length=,
-					arg|.
-						-
-							Map_Object
-							arg
-						ArrayCount
+							get_ArrayCount
 				mergeAll=,
 					arg|-
 						sum

@@ -672,10 +672,11 @@ commandLine|,
 			!"System.Windows.Forms"
 			VisualStyleState
 			ClientAreaEnabled
-	enumTest=.
-		!"System.Windows.Forms"
-		Application
-		VisualStyleState
+	enumTest=-
+		.
+			!"System.Windows.Forms"
+			Application
+			get_VisualStyleState
 	typeTest=-
 		.
 			mscorlib

@@ -2518,8 +2518,6 @@ namespace Meta
 			}
 			return cache[key];
 		}
-		//protected virtual Dictionary<Map,>
-
 		private Dictionary<Map, MethodInfo> Data
 		{
 			get
@@ -2577,20 +2575,21 @@ namespace Meta
 				{
 					MemberInfo member = foundMembers[0];
 					Map result;
-					if (member is PropertyInfo)
-					{
-						PropertyInfo property = (PropertyInfo)member;
-						ParameterInfo[] parameters = property.GetIndexParameters();
-						if (parameters.Length == 0)
-						{
-							result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
-						}
-						else
-						{
-							result = 0;
-						}
-					}
-					else if (member is FieldInfo)
+					//if (member is PropertyInfo)
+					//{
+					//    PropertyInfo property = (PropertyInfo)member;
+					//    ParameterInfo[] parameters = property.GetIndexParameters();
+					//    if (parameters.Length == 0)
+					//    {
+					//        result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
+					//    }
+					//    else
+					//    {
+					//        result = 0;
+					//    }
+					//}
+					//else 
+					if (member is FieldInfo)
 					{
 						result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
 					}
@@ -3420,8 +3419,6 @@ namespace Meta
 		public const string windowsNewLine = "\r\n";
 		public const char function = '|';
 		public const char @string = '\"';
-		//public const char lookupStart = '[';
-		//public const char lookupEnd = ']';
 		public const char emptyMap = '0';
 		public const char explicitCall = '-';
 		public const char select = '.';
@@ -3432,9 +3429,7 @@ namespace Meta
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
-		//public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
 		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		//public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, lookupStart, lookupEnd, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
 	public class Parser
 	{

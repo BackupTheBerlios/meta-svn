@@ -30,9 +30,10 @@
 													|,
 														value=.
 															entry
-															.
-																node
-																Text
+															-
+																.
+																	node
+																	get_Text
 														&=-
 															join
 															-
@@ -50,20 +51,23 @@
 																		value
 															-	
 																printNodes
-																.
-																	node
-																	Nodes
+																-
+																	.
+																		node
+																		get_Nodes
 																value
 											-
 												and
-												.
-													node
-													Checked
 												-
-													containedBy
 													.
 														node
-														Text
+														get_Checked
+												-
+													containedBy
+													-
+														.
+															node
+															get_Text
 													entry
 	data=0
 	getNodes=,
@@ -125,8 +129,10 @@
 				file
 			asdf=-
 				.
-					tree
-					Nodes
+					-
+						.
+							tree
+							get_Nodes
 					AddRange_TreeNode[]
 				-
 					getNodes
@@ -140,9 +146,10 @@
 				set_DocumentText_String
 			-
 				printNodes
-				.
-					tree
-					Nodes
+				-
+					.
+						tree
+						get_Nodes
 				data
 	tree=-
 		TreeView
