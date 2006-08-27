@@ -301,21 +301,26 @@ commandLine|,
 		merge
 		MemberTest
 		,
-			ClassProperty=.
-				memberTest
-				InstanceProperty
-	classPropertyValue=.
-		MemberTest
-		ClassProperty
-	.
-		memberTest
-		InstanceProperty
-	=.
-		MemberTest
-		ClassProperty
-	instancePropertyValue=.
-		memberTest
-		InstanceProperty
+			ClassProperty=-
+				.
+					memberTest
+					get_InstanceProperty
+	classPropertyValue=-
+		.
+			MemberTest
+			get_ClassProperty
+	asdf=-
+		.
+			memberTest
+			set_InstanceProperty_String
+		-
+			.
+				MemberTest
+				get_ClassProperty
+	instancePropertyValue=-
+		.
+			memberTest
+			get_InstanceProperty
 	interceptedSymbol="/hello/"
 	positionalNoConversion=-
 		.
@@ -416,16 +421,16 @@ commandLine|,
 	ChangeStaticEvent=,
 		arg|,
 			staticEventChanged:arg
-	TestClass=-
-		merge
-		TestClass
+	asdf=-
+		.
+			TestClass
+			add_staticEvent_NormalEvent
 		,
-			staticEvent=,
-				arg|,
-					1=-
-						!"ChangeStaticEvent"
-						1
-					&=arg
+			arg|,
+				1=-
+					!"ChangeStaticEvent"
+					1
+				&=arg
 	6=-
 		.
 			TestClass
@@ -443,14 +448,14 @@ commandLine|,
 			CallStaticEvent_Object
 		!"testClass"
 	instanceEventChanged=0
-	testClass:-
-		merge
-		testClass
+	asdf=-
+		.
+			testClass
+			add_instanceEvent_IntEvent
 		,
-			instanceEvent=,
-				arg|,
-					instanceEventChanged:1
-					&=arg
+			arg|,
+				instanceEventChanged:1
+				&=arg
 	instanceEventResult=-
 		.
 			testClass
@@ -537,17 +542,17 @@ commandLine|,
 			"System.Windows.Forms"
 			TextBox
 		0
-	textBox:-
-		merge
-		textBox
-		,
-			Text="
-				Alle meine Entchen,
-				schwimmen auf dem See,
-				schwimmen auf dem See,
-				Köpfchen in das Wasser,
-				asdf in die Hoeh.
-			"
+	asdf=-
+		.
+			textBox
+			set_Text
+		"
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			asdf in die Hoeh.
+		"
 	lines=.
 		textBox
 		Lines
@@ -562,13 +567,17 @@ commandLine|,
 			"System.Windows.Forms"
 			Form
 		,
-			Location=-
-				.
-					!"System.Drawing"
-					Point
-					Point_Int32_Int32
-				5
-				1000
+	asdf=-
+		.
+			form
+			set_Location
+		-
+			.
+				!"System.Drawing"
+				Point
+				Point_Int32_Int32
+			5
+			1000
 	automaticConversionTest=.
 		form
 		Location

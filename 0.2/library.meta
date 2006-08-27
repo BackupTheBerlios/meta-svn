@@ -229,9 +229,9 @@
 		arg|-
 			writeLine
 			-
-				maptoString
+				toString
 				arg
-	maptoString=.
+	toString=.
 		/
 		Meta
 		Serialize
@@ -396,11 +396,6 @@
 							0=else
 							1=then
 						<condition
-	merge=.
-		/
-		Meta
-		Library
-		Merge_Map_Map
 	merge=.
 		/
 		Meta

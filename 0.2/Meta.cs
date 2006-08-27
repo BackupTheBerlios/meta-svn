@@ -2491,17 +2491,20 @@ namespace Meta
 		{
 			if (obj == null)
 			{
-				this.bindingFlags = BindingFlags.Public | BindingFlags.Static;
+				this.bindingFlags = BindingFlags.Public | BindingFlags.Static|BindingFlags.NonPublic;
 			}
 			else
 			{
-				this.bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+				this.bindingFlags = BindingFlags.Public | BindingFlags.Instance|BindingFlags.NonPublic;
 			}
 			this.obj = obj;
 			this.type = type;
 		}
 		public override Map Get(Map key)
 		{
+			if (key.Equals(new Map("MemberwiseClone")))
+			{
+			}
 			if (obj != null && key.Equals(new Map("this")))
 			{
 				return new Map(this);
@@ -2675,21 +2678,57 @@ namespace Meta
 				List<Map> keys = new List<Map>();
 				foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
 				{
-					string name;
 					if (member is MethodInfo)
 					{
-						name = GetMethodName((MethodInfo)member);
+						keys.Add(GetMethodName((MethodInfo)member));
 					}
 					else if (member is ConstructorInfo)
 					{
 						continue;
 					}
+					//else if (member is PropertyInfo)
+					//{
+					//    PropertyInfo property = (PropertyInfo)member;
+					//    MethodInfo get=property.GetGetMethod();
+					//    MethodInfo set=property.GetSetMethod();
+					//    if (get != null)
+					//    {
+					//        keys.Add(GetMethodName(get));
+					//    }
+					//    if (set != null)
+					//    {
+					//        keys.ad
+
+					//    }
+					//}
 					else
 					{
-						name = member.Name;
+						keys.Add(member.Name);
 					}
-					keys.Add(name);
 				}
+				//foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
+				//{
+				//    string name;
+				//    if (member is MethodInfo)
+				//    {
+				//        name = GetMethodName((MethodInfo)member);
+				//    }
+				//    else if (member is ConstructorInfo)
+				//    {
+				//        continue;
+				//    }
+				//    else if (member is PropertyInfo)
+				//    {
+				//        PropertyInfo property=(PropertyInfo)member;
+				//        property.GetGetMethod();
+				//        property.GetSetMethod();
+				//    }
+				//    else
+				//    {
+				//        name = member.Name;
+				//    }
+				//    keys.Add(name);
+				//}
 				return keys;
 			}
 		}
