@@ -1421,6 +1421,22 @@ namespace Meta
 	[Serializable]
 	public class TypeMap: DotNetMap
 	{
+		private const BindingFlags bindingFlags=BindingFlags.Public | BindingFlags.Static|BindingFlags.NonPublic;
+		protected override BindingFlags BindingFlags
+		{
+			get 
+			{ 
+				return bindingFlags;
+			}
+		}
+		private static MemberCache cache=new MemberCache(bindingFlags);
+		protected override MemberCache MemberCache
+		{
+			get 
+			{
+				return cache;
+			}
+		}
 		public override string ToString()
 		{
 			return Type.ToString();
@@ -1536,6 +1552,22 @@ namespace Meta
 	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
+		const BindingFlags bindingFlags=BindingFlags.Public | BindingFlags.Instance|BindingFlags.NonPublic;
+		protected override BindingFlags  BindingFlags
+		{
+			get
+			{
+				return bindingFlags;
+			}
+		}
+		private MemberCache cache = new MemberCache(bindingFlags);
+		protected override MemberCache MemberCache
+		{
+			get 
+			{
+				return cache;
+			}
+		}
 		protected override object GlobalKey
 		{
 			get 
@@ -2389,10 +2421,38 @@ namespace Meta
 			return new Map(new Method(method,obj,method.DeclaringType));
 		}
 	}
+	public class MemberCache
+	{
+		private BindingFlags bindingFlags;
+		public MemberCache(BindingFlags bindingFlags)
+		{
+			this.bindingFlags = bindingFlags;
+		}
+		public Dictionary<Map, Member> GetMembers(Type type)
+		{
+			if (!cache.ContainsKey(type))
+			{
+				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
+				foreach (MethodInfo method in type.GetMethods(bindingFlags))
+				{
+					string name = TypeMap.GetMethodName(method);
+					data[name] = new MethodMember(method);
+				}
+				cache[type] = data;
+			}
+			return cache[type];
+		}
+		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
+
+	}
 
 	[Serializable]
 	public abstract class DotNetMap : MapStrategy
 	{
+		protected abstract BindingFlags BindingFlags
+		{
+			get;
+		}
 		public override void Remove(Map key, Map map)
 		{
 			throw new Exception("The method or operation is not implemented.");
@@ -2432,37 +2492,37 @@ namespace Meta
 
 		
 		
-		private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>>();
-		public static Dictionary<Map, Member> GetMethodData(Type type, BindingFlags bindingFlags)
-		{
-			KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
-			if (!cache.ContainsKey(key))
-			{
-				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
-				foreach (MethodInfo method in type.GetMethods(bindingFlags))
-				{
-					string name = TypeMap.GetMethodName(method);
-					data[name] = new MethodMember(method);
-					//data[name] = method;
-				}
-				cache[key] = data;
-			}
-			return cache[key];
-		}
-		private Dictionary<Map, Member> Data
+		//private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>>();
+		//public static Dictionary<Map, Member> GetMethodData(Type type, BindingFlags bindingFlags)
+		//{
+		//    KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
+		//    if (!cache.ContainsKey(key))
+		//    {
+		//        Dictionary<Map, Member> data = new Dictionary<Map, Member>();
+		//        foreach (MethodInfo method in type.GetMethods(bindingFlags))
+		//        {
+		//            string name = TypeMap.GetMethodName(method);
+		//            data[name] = new MethodMember(method);
+		//            //data[name] = method;
+		//        }
+		//        cache[key] = data;
+		//    }
+		//    return cache[key];
+		//}
+		private Dictionary<Map, Member> Members
 		{
 			get
 			{
 				if (data == null)
 				{
-					data = GetMembers();
+					data = MemberCache.GetMembers(type);
 				}
 				return data;
 			}
 		}
-		protected virtual Dictionary<Map, Member> GetMembers()
+		protected abstract MemberCache MemberCache
 		{
-			return GetMethodData(type, bindingFlags);
+			get;
 		}
 
 		private object obj;
@@ -2485,11 +2545,9 @@ namespace Meta
 		// cache all members
 		public override Map Get(Map key)
 		{
-			if (Data.ContainsKey(key))
+			if (Members.ContainsKey(key))
 			{
-				return Data[key].Get(obj);
-				//return new Map(Data[key].Get(obj));
-				//return new Map(new Method(Data[key], obj, type));
+				return Members[key].Get(obj);
 			}
 			if (key.IsString)
 			{
@@ -2517,10 +2575,6 @@ namespace Meta
 			if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
 			{
 				return global[GlobalKey][key];
-			}
-			if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator < ((IList)obj).Count)
-			{
-				return Transform.ToMeta(((IList)obj)[Convert.ToInt32(key.GetNumber().Numerator)]);
 			}
 			return null;
 		}
