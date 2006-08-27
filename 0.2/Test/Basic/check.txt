@@ -7,7 +7,7 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"asdf"
 	Value (Map):
-		"hello"
+		0
 Entry (KeyValuePair`2)
 	Key (Map):
 		"shortFunction"
@@ -684,7 +684,7 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"b"
 	Value (Map):
-		"b"
+		0
 Entry (KeyValuePair`2)
 	Key (Map):
 		"aSet"

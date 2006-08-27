@@ -297,25 +297,30 @@ commandLine|,
 		memberTest
 		,
 			instanceField="b"
-	MemberTest:-
-		merge
-		MemberTest
-		,
-			ClassProperty=.
+	asdf=-
+		.
+			MemberTest
+			set_ClassProperty_String
+		-
+			.
 				memberTest
-				InstanceProperty
-	classPropertyValue=.
-		MemberTest
-		ClassProperty
-	.
-		memberTest
-		InstanceProperty
-	=.
-		MemberTest
-		ClassProperty
-	instancePropertyValue=.
-		memberTest
-		InstanceProperty
+				get_InstanceProperty
+	classPropertyValue=-
+		.
+			MemberTest
+			get_ClassProperty
+	asdf=-
+		.
+			memberTest
+			set_InstanceProperty_String
+		-
+			.
+				MemberTest
+				get_ClassProperty
+	instancePropertyValue=-
+		.
+			memberTest
+			get_InstanceProperty
 	interceptedSymbol="/hello/"
 	positionalNoConversion=-
 		.
@@ -536,20 +541,21 @@ commandLine|,
 			"System.Windows.Forms"
 			TextBox
 		0
-	textBox:-
-		merge
-		textBox
-		,
-			Text="
-				Alle meine Entchen,
-				schwimmen auf dem See,
-				schwimmen auf dem See,
-				Köpfchen in das Wasser,
-				asdf in die Hoeh.
-			"
-	lines=.
-		textBox
-		Lines
+	asdf=-
+		.
+			textBox
+			set_Text_String
+		"
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			asdf in die Hoeh.
+		"
+	lines=-
+		.
+			textBox
+			get_Lines
 	alleMeineText=-
 		.
 			lines
@@ -560,17 +566,21 @@ commandLine|,
 			/
 			"System.Windows.Forms"
 			Form
-		,
-			Location=-
-				.
-					!"System.Drawing"
-					Point
-					Point_Int32_Int32
-				5
-				1000
-	automaticConversionTest=.
-		form
-		Location
+	asdf=-
+		.
+			form
+			set_Location_Point
+		-
+			.
+				!"System.Drawing"
+				Point
+				Point_Int32_Int32
+			5
+			1000
+	automaticConversionTest=-
+		.
+			form
+			get_Location
 	tabText="			hello"
 	escapedText="'#'n'''t"
 	whileCounter=0
