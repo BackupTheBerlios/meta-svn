@@ -940,7 +940,9 @@ namespace Meta
 		{
 			try
 			{
-				Gac.gac["library"] = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta")).Call(Map.Empty);
+				Map map=Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+				map.Scope=Gac.gac;
+				Gac.gac["library"] = map.Call(Map.Empty);
 				Gac.gac["library"].Scope = Gac.gac;
 			}
 			catch (Exception e)
@@ -1344,30 +1346,35 @@ namespace Meta
 		}
 		public override bool ContainsKey(Map key)
 		{
-			return overloads.ContainsKey(key);
+			return false;
+			//return overloads.ContainsKey(key);
 		}
 		public override ICollection<Map> Keys
 		{
 			get
 			{
-				return overloads.Keys;
+				return new List<Map>();
+				//return overloads.Keys;
 			}
 		}
 		public override void Set(Map key, Map val, Map parent)
 		{
-			overloads[key] = val;
+			throw new Exception("The method or operation is not implemented.");
+			//overloads[key] = val;
 		}
-		private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
+		//private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
 		public override Map Get(Map key)
 		{
-			Map value;
-			overloads.TryGetValue(key, out value);
-			return value;
+			return null;
+			//throw new Exception("The method or operation is not implemented.");
+			//Map value;
+			//overloads.TryGetValue(key, out value);
+			//return value;
 		}
 		public Method(MethodBase method, object obj, Type type, Dictionary<Map, Map> overloads)
 			: this(method, obj, type)
 		{
-			this.overloads = new Dictionary<Map, Map>(overloads);
+			//this.overloads = new Dictionary<Map, Map>(overloads);
 		}
 		private static BindingFlags GetBindingFlags(object obj, string name)
 		{
@@ -1383,7 +1390,8 @@ namespace Meta
 
 		public override Map CopyData()
 		{
-			return new Map(new Method(method, obj, type, overloads));
+			return new Map(this);
+			//return new Map(new Method(method, obj, type, overloads));
 		}
 		protected MethodBase method;
 		protected object obj;
@@ -5059,12 +5067,26 @@ namespace Meta
 		}
 		public void Nuke(Map map)
 		{
-			this.strategy = new EmptyStrategy();
-			foreach (Map key in map.Keys)
-			{
-				this[key] = map[key];
-			}
+			this.strategy = map.strategy;
+			//this.scope = map.scope;
+			//foreach (KeyValuePair<Map, Map> pair in this)
+			//{
+			//    pair.Value.scope = map.scope;
+			//}
+			//this.scope = map.scope;
+			//foreach (Map key in map.Keys)
+			//{
+			//    this[key] = map[key];
+			//}
 		}
+		//public void Nuke(Map map)
+		//{
+		//    this.strategy = new EmptyStrategy();
+		//    foreach (Map key in map.Keys)
+		//    {
+		//        this[key] = map[key];
+		//    }
+		//}
 		public Map Call(Map arg)
 		{
 			return strategy.Call(arg, this);

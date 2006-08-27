@@ -140,7 +140,7 @@ arg|,
 			keyTestMap=,
 				x="hello"
 			contains=-
-				contains
+				containedBy
 				"x"
 				keyTestMap
 			keysTest=-
