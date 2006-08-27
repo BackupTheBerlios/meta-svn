@@ -900,10 +900,10 @@ namespace Meta
 				{
 					try
 					{
-						//UseConsole();
-						////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-						//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-						//return;
+						UseConsole();
+						//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+						MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+						return;
 						UseConsole();
 						new MetaTest().Run();
 					}
@@ -1829,8 +1829,21 @@ namespace Meta
 		}
 		public override void Set(Map key, Map val, Map map)
 		{
-			Panic(key, val,map);
+			MapStrategy strategy;
+			if (key.Equals(new Map(Count + 1)))
+			{
+				strategy = new ListStrategy();
+			}
+			else
+			{
+				strategy = new DictionaryStrategy();
+			}
+			Panic(key, val,strategy, map);
 		}
+		//public override void Set(Map key, Map val, Map map)
+		//{
+		//    Panic(key, val,map);
+		//}
 		public override int Count
 		{
 			get
@@ -1922,10 +1935,6 @@ namespace Meta
 		{
 			return new Map(new CloneStrategy(this));
 		}
-		//protected override Map GetIndex(int i)
-		//{
-		//    return list[i];
-		//}
 		public override void Append(Map map, Map parent)
 		{
 			list.Add(map);
@@ -2190,7 +2199,17 @@ namespace Meta
 		}
 		public override void Set(Map key, Map value, Map map)
 		{
-			Panic(key, value, map);
+			MapStrategy strategy;
+			if (original is ListStrategy)
+			{
+				strategy = new ListStrategy();
+			}
+			else
+			{
+				strategy = new DictionaryStrategy();
+			}
+			Panic(key, value,strategy, map);
+			//Panic(key, value, map);
 		}
 	}
 
@@ -2228,22 +2247,20 @@ namespace Meta
 			}
 			return map;
 		}
-
+		protected void Panic(Map key, Map val, Map map)
+		{
+			Panic(key, val, new DictionaryStrategy(), map);
+		}
+		protected void Panic(Map key, Map val, MapStrategy newStrategy, Map map)
+		{
+			Panic(newStrategy, map);
+			map.Strategy.Set(key, val, map); // why do it like this? this wont assign the parent, which is problematic!!!
+		}
 		// refactor
 		public void Panic(MapStrategy newStrategy, Map map)
 		{
 			map.Strategy = newStrategy;
 			map.InitFromStrategy(this);
-		}
-
-		protected void Panic(Map key, Map val, Map map)
-		{
-			Panic(key, val, new DictionaryStrategy(),map);
-		}
-		protected void Panic(Map key, Map val, MapStrategy newStrategy, Map map)
-		{
-			Panic(newStrategy,map);
-			map.Strategy.Set(key, val,map); // why do it like this? this wont assign the parent, which is problematic!!!
 		}
 		public virtual bool IsNumber
 		{
@@ -4848,6 +4865,9 @@ namespace Meta
 		public static Map Append(Map array, Map item)
 		{
 			array.Append(item);
+			if (!(array.Strategy is ListStrategy))
+			{
+			}
 			return array;
 		}
 		public static Map EnumerableToArray(Map map)
