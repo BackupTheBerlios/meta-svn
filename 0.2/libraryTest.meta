@@ -52,8 +52,8 @@ arg|,
 					-1
 			subtractTest2=-
 				subtract
-				2
 				103
+				2
 			divideTest=-
 				divide
 				5
@@ -140,9 +140,9 @@ arg|,
 			keyTestMap=,
 				x="hello"
 			contains=-
-				containsKey
-				keyTestMap
+				contains
 				"x"
+				keyTestMap
 			keysTest=-
 				keys
 				,
@@ -167,19 +167,6 @@ arg|,
 						,
 							x="y"
 							y="a"
-			whileTest=-
-				while
-				,
-					arg|-
-						less
-						arg
-						10
-				,
-					arg|-
-						add
-						arg
-						1
-				1
 			firstTest=.
 				"hello"
 				1
@@ -196,21 +183,9 @@ arg|,
 			integerToString=-
 				integerToString
 				5
-		rangeTest=-
-			range
-			10
 		reverseTest=-
 			reverse
 			"hello"
-		foreachTest=-
-			foreach
-			,
-				x="hi"
-				y="hello"
-			,
-				key|,
-					value|,
-						!"value"=key
 		sumTest=-
 			sum
 			+
@@ -224,11 +199,6 @@ arg|,
 						add
 						first
 						second
-		valuesTest=-
-			values
-			,
-				x="hi"
-				y="hello"
 		isStringTest=,
 			no=-
 				isString
@@ -236,30 +206,12 @@ arg|,
 			yes=-
 				isString
 				"hi"
-		parseTest=-
-			parse
-			"
-				asdf="hello"
-				x=,
-					y="hello"
-					z=, 
-						a="x"
-					arg|-
-						join
-						"hello "
-						join
-						arg
-						"!"
-			"
 		withTest=-
 			.
 				!"System.Windows.Forms"
 				Form
 			,
 				Text="hello world"
-		restTest=-
-			rest
-			"hello"
 		countTest=-
 			count
 			,

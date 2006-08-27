@@ -60,11 +60,11 @@
 													node
 													Checked
 												-
-													containsKey
-													entry
+													contains
 													.
 														node
 														Text
+													entry
 	data=0
 	getNodes=,
 		data|,
@@ -111,13 +111,17 @@
 																			map
 																			<key
 													-
-														containsKey
-														map
+														contains
 														key
+														map
 	load=,
 		file|,
 			data:-
-				parseFile
+				.
+					/
+					Meta
+					Parser
+					Parse_String
 				file
 			tree:-
 				merge

@@ -1,5 +1,5 @@
 |,
-	containsKey=,
+	isContained=,
 		arg|.
 			-
 				.
@@ -8,6 +8,16 @@
 					Map_Object
 				arg
 			ContainsKey_Map
+	flip=,
+		func|,
+			a|,
+				b|-
+					func
+					b
+					a
+	contains=-
+		flip
+		isContained
 	add=.
 		/
 		Meta
@@ -34,22 +44,17 @@
 		Meta
 		Number
 		op_Division_Number_Number
-	divideAll=,
-		array|,
-			number|-
-				apply
-				array
-				,
-					item|-
-						divide
-						item
-						number
-
-	subtract=.
+	divideBy=-
+		flip
+		divide
+	subtractFrom=.
 		/
 		Meta
 		Number
 		op_Subtraction_Number_Number
+	subtract=-
+		flip
+		subtractFrom
 	greater=.
 		/
 		Meta
@@ -184,12 +189,12 @@
 			sum
 			arg
 			merge
-	minus=,
+	negate=,
 		arg|-
 			subtract
 			0
 			arg
-	modulus=.
+	modulo=.
 		/
 		Meta
 		Number
@@ -224,23 +229,13 @@
 		arg|-
 			writeLine
 			-
-				toString
+				maptoString
 				arg
-	toString=.
+	maptoString=.
 		/
 		Meta
 		Serialize
 		ValueFunction_Map
-	values=,
-		arg|-
-			apply
-			-
-				keys
-				arg
-			,
-				key|.
-					arg
-					!"key"
 	writeLine=,
 		arg|-
 			.
@@ -261,6 +256,9 @@
 		Meta
 		Library
 		Append_Map_Map
+	appendTo=-
+		flip
+		append
 	prepend=,
 		array|,
 			item|-
@@ -268,33 +266,9 @@
 				+
 					item
 				array
-	while=,
-		condition|,
-			do|,
-				start|,
-					helper=,
-						value|-
-							.
-								,
-									0=,
-										|0
-									1=,
-										|,
-											item=-
-												do
-												value
-											&=-
-												append
-												-
-													helper
-													item
-												item
-								-
-									condition
-									value
-					&=-
-						helper
-						start
+	prependTo=-
+		flip
+		prepend
 	apply=,
 		array|,
 			func|,
@@ -348,38 +322,6 @@
 							containsKey
 							map
 							key
-	foreach=,
-		map|,
-			func|-
-				apply
-				-
-					keys
-					map
-				,
-					key|-
-						func
-						key
-						.
-							map
-							<key
-	rest=,
-		arg|-
-			apply
-			-
-				range
-				-
-					subtract
-					-
-						length
-						arg
-					1
-			,
-				index|.
-					arg
-					-
-						add
-						1
-						index
 	join=.
 		/
 		Meta
@@ -432,30 +374,11 @@
 						-
 							length
 							array
-	range=.
-		/
-		Meta
-		Library
-		Range_Map
 	reverse=.
 		/
 		Meta
 		Library
 		Reverse_Map
-	parseFile=.
-		/
-		Meta
-		Parser
-		Parse_String
-	parse=,
-		arg|-
-			.
-				/
-				Meta
-				Parser
-				ParseString_String_String
-			arg
-			"in memory"
 	if=,
 		condition|,
 			then|-

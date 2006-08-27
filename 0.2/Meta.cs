@@ -596,7 +596,7 @@ namespace Meta
 				}
 				optimize=statement!=null && statement.AlwaysContainsKey(literal);
 			}
-			optimize = false;
+			//optimize = false;
 			if (optimize)
 			{
 				program.Add(p);
@@ -654,16 +654,11 @@ namespace Meta
 			Local context = program.Declare();
 			program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
 			program.Add(context.Call("set_Scope",parent));
-			bool constantKeys = true;
 			foreach (StatementBase statement in statementList)
 			{
-				if (!(statement is KeyStatement))
-				{
-					constantKeys = false;
-				}
 				program.Add(statement.Get(expression,context,argument));
 			}
-			program.Add(context.Call("set_ConstantKeys", Convert.ToInt32(constantKeys)));
+			//program.Add(context.Call("set_ConstantKeys", Convert.ToInt32(constantKeys)));
 			program.Add(context.Load);
 			return program;
 		}

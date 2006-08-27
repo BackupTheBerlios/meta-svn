@@ -219,12 +219,6 @@ Entry (KeyValuePair`2)
 								0
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"whileTest"
-			Value (Map):
-				"
-	"
-		Entry (KeyValuePair`2)
-			Key (Map):
 				"firstTest"
 			Value (Map):
 				104
@@ -240,56 +234,14 @@ Entry (KeyValuePair`2)
 				"5"
 Entry (KeyValuePair`2)
 	Key (Map):
-		"rangeTest"
-	Value (Map):
-		"	
-"
-Entry (KeyValuePair`2)
-	Key (Map):
 		"reverseTest"
 	Value (Map):
 		"olleh"
 Entry (KeyValuePair`2)
 	Key (Map):
-		"foreachTest"
-	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				1
-			Value (Map):
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"hi"
-					Value (Map):
-						"x"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				2
-			Value (Map):
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"hello"
-					Value (Map):
-						"y"
-Entry (KeyValuePair`2)
-	Key (Map):
 		"sumTest"
 	Value (Map):
 		21
-Entry (KeyValuePair`2)
-	Key (Map):
-		"valuesTest"
-	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				1
-			Value (Map):
-				"hi"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				2
-			Value (Map):
-				"hello"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"isStringTest"
@@ -306,115 +258,9 @@ Entry (KeyValuePair`2)
 				1
 Entry (KeyValuePair`2)
 	Key (Map):
-		"parseTest"
-	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"asdf"
-			Value (Map):
-				"hello"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"x"
-			Value (Map):
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"y"
-					Value (Map):
-						"hello"
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"z"
-					Value (Map):
-						Entry (KeyValuePair`2)
-							Key (Map):
-								"a"
-							Value (Map):
-								"x"
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"function"
-					Value (Map):
-						Entry (KeyValuePair`2)
-							Key (Map):
-								"parameter"
-							Value (Map):
-								"arg"
-						Entry (KeyValuePair`2)
-							Key (Map):
-								"expression"
-							Value (Map):
-								Entry (KeyValuePair`2)
-									Key (Map):
-										"call"
-									Value (Map):
-										Entry (KeyValuePair`2)
-											Key (Map):
-												1
-											Value (Map):
-												Entry (KeyValuePair`2)
-													Key (Map):
-														"search"
-													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"join"
-										Entry (KeyValuePair`2)
-											Key (Map):
-												2
-											Value (Map):
-												Entry (KeyValuePair`2)
-													Key (Map):
-														"literal"
-													Value (Map):
-														"hello "
-										Entry (KeyValuePair`2)
-											Key (Map):
-												3
-											Value (Map):
-												Entry (KeyValuePair`2)
-													Key (Map):
-														"search"
-													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"join"
-										Entry (KeyValuePair`2)
-											Key (Map):
-												4
-											Value (Map):
-												Entry (KeyValuePair`2)
-													Key (Map):
-														"search"
-													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"arg"
-										Entry (KeyValuePair`2)
-											Key (Map):
-												5
-											Value (Map):
-												Entry (KeyValuePair`2)
-													Key (Map):
-														"literal"
-													Value (Map):
-														"!"
-Entry (KeyValuePair`2)
-	Key (Map):
 		"withTest"
 	Value (Map):
 		System.Windows.Forms.Form, Text: hello world
-Entry (KeyValuePair`2)
-	Key (Map):
-		"restTest"
-	Value (Map):
-		"ello"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"countTest"
