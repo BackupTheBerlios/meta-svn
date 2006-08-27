@@ -2433,17 +2433,20 @@ namespace Meta
 			if (!cache.ContainsKey(type))
 			{
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
-				foreach (MethodInfo method in type.GetMethods(bindingFlags))
+				foreach (MemberInfo member in type.GetMembers(bindingFlags))
 				{
-					string name = TypeMap.GetMethodName(method);
-					data[name] = new MethodMember(method);
+					MethodInfo method = member as MethodInfo;
+					if (method!=null)
+					{
+						string name = TypeMap.GetMethodName(method);
+						data[name]= new MethodMember(method);
+					}
 				}
 				cache[type] = data;
 			}
 			return cache[type];
 		}
 		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
-
 	}
 
 	[Serializable]
@@ -2489,26 +2492,6 @@ namespace Meta
 			return name;
 		}
 		private Dictionary<Map, Member> data;
-
-		
-		
-		//private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>>();
-		//public static Dictionary<Map, Member> GetMethodData(Type type, BindingFlags bindingFlags)
-		//{
-		//    KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
-		//    if (!cache.ContainsKey(key))
-		//    {
-		//        Dictionary<Map, Member> data = new Dictionary<Map, Member>();
-		//        foreach (MethodInfo method in type.GetMethods(bindingFlags))
-		//        {
-		//            string name = TypeMap.GetMethodName(method);
-		//            data[name] = new MethodMember(method);
-		//            //data[name] = method;
-		//        }
-		//        cache[key] = data;
-		//    }
-		//    return cache[key];
-		//}
 		private Dictionary<Map, Member> Members
 		{
 			get
@@ -2527,18 +2510,8 @@ namespace Meta
 
 		private object obj;
 		private Type type;
-		protected BindingFlags bindingFlags;
-
 		public DotNetMap(object obj, Type type)
 		{
-			if (obj == null)
-			{
-				this.bindingFlags = BindingFlags.Public | BindingFlags.Static|BindingFlags.NonPublic;
-			}
-			else
-			{
-				this.bindingFlags = BindingFlags.Public | BindingFlags.Instance|BindingFlags.NonPublic;
-			}
 			this.obj = obj;
 			this.type = type;
 		}
@@ -2552,7 +2525,7 @@ namespace Meta
 			if (key.IsString)
 			{
 				string memberName = key.GetString();
-				MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
+				MemberInfo[] foundMembers = type.GetMember(memberName, BindingFlags);
 				if (foundMembers.Length != 0)
 				{
 					MemberInfo member = foundMembers[0];
@@ -2581,7 +2554,7 @@ namespace Meta
 		public override void Set(Map key, Map value, Map parent)
 		{
 			string fieldName = key.GetString();
-			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
+			MemberInfo[] members = type.GetMember(fieldName, BindingFlags);
 			if (members.Length != 0)
 			{
 				MemberInfo member = members[0];
@@ -2645,7 +2618,7 @@ namespace Meta
 			get
 			{
 				List<Map> keys = new List<Map>();
-				foreach (MemberInfo member in this.type.GetMembers(bindingFlags))
+				foreach (MemberInfo member in this.type.GetMembers(BindingFlags))
 				{
 					string name;
 					if (member is MethodInfo)
