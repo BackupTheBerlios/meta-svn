@@ -396,51 +396,19 @@
 							0=else
 							1=then
 						<condition
-	merge=,
-		first|,
-			second|,
-				keys=-
-					keys
-					second
-				length=-
-					length
-					second
-				helper=,
-					result|,
-						index|-
-							ifElse
-							-
-								lessOrEqual
-								index
-								length
-							,
-								|-
-									helper
-									,
-										&=result
-										.
-											keys
-											!"index"
-										=.
-											second
-											.
-												keys
-												!"index"
-									-
-										add
-										1
-										index
-							,
-								|result
-				&=-
-					helper
-					first
-					1
 	merge=.
 		/
 		Meta
 		Library
 		Merge_Map_Map
+	merge=.
+		/
+		Meta
+		Library
+		Merge_Map_Map
+	mergeWith=-
+		flip
+		merge
 	enumerableToArray=.
 		/
 		Meta
