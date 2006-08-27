@@ -1376,6 +1376,7 @@ namespace Meta
 				object arg;
 				if (!Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out arg))
 				{
+					bool asdf = argument.IsNumber;
 					throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
 				}
 				else
@@ -1560,7 +1561,7 @@ namespace Meta
 				return bindingFlags;
 			}
 		}
-		private MemberCache cache = new MemberCache(bindingFlags);
+		private static MemberCache cache = new MemberCache(bindingFlags);
 		protected override MemberCache MemberCache
 		{
 			get 
@@ -1636,7 +1637,7 @@ namespace Meta
 		{
 			throw new Exception("Key cannot be removed because it does not exist.");
 		}
-		public override bool EqualStrategy(MapStrategy obj)
+		public override bool Equal(MapStrategy obj)
 		{
 			return obj.Count == 0;
 		}
@@ -1693,9 +1694,16 @@ namespace Meta
  				throw new Exception("The method or operation is not implemented.");
 			}
 		}
-		public override bool EqualStrategy(MapStrategy obj)
+		public override bool Equal(MapStrategy obj)
 		{
-			return obj.IsNumber && obj.GetNumber().Equals(number);
+			if (obj.IsNumber && obj.GetNumber().Equals(number))
+			{
+				return true;
+			}
+			else
+			{
+				return EqualDefault(obj);
+			}
 		}
 		private Number number;
 		public NumberStrategy(Number number)
@@ -1803,7 +1811,7 @@ namespace Meta
 		{
 			this.text = text;
 		}
-		public override bool EqualStrategy(MapStrategy obj)
+		public override bool Equal(MapStrategy obj)
 		{
 			if(obj is StringStrategy)
 			{
@@ -1811,7 +1819,7 @@ namespace Meta
 			}
 			else
 			{
-				return base.EqualStrategy(obj);
+				return base.Equal(obj);
 			}
 		}
 		public override void Remove(Map key, Map map)
@@ -1834,7 +1842,7 @@ namespace Meta
 		{
 			get
 			{
-				return false;
+				return text.Length==0;
 			}
 		}
 		public override bool IsString
@@ -1911,7 +1919,7 @@ namespace Meta
 	public abstract class ArrayStrategy : MapStrategy
 	{
 		protected abstract Map GetIndex(int i);
-		public override bool EqualStrategy(MapStrategy obj)
+		public override bool Equal(MapStrategy obj)
 		{
 			if (obj is ArrayStrategy)
 			{
@@ -2176,9 +2184,9 @@ namespace Meta
 			MapStrategy clone = new CloneStrategy(this.original);
 			return new Map(clone);
 		}
-		public override bool EqualStrategy(MapStrategy obj)
+		public override bool Equal(MapStrategy obj)
 		{
-			return obj.EqualStrategy(original);
+			return obj.Equal(original);
 		}
 		public override int GetHashCode()
 		{
@@ -2362,17 +2370,13 @@ namespace Meta
 				return Keys.Count;
 			}
 		}
-		public virtual bool EqualStrategy(MapStrategy obj)
+		public virtual bool Equal(MapStrategy obj)
 		{
 			return EqualDefault((MapStrategy)obj);
 		}
 		public virtual bool EqualDefault(MapStrategy strategy)
 		{
-			if (Object.ReferenceEquals(strategy, this))
-			{
-				return true;
-			}
-			else if (((MapStrategy)strategy).Count != this.Count)
+			if (strategy.Count != this.Count)
 			{
 				return false;
 			}
@@ -2569,23 +2573,9 @@ namespace Meta
 			if(Members.ContainsKey(key))
 			{
 				Members[key].Set(obj,value);
-			//MemberInfo[] members = type.GetMember(fieldName, BindingFlags);
-			//if (members.Length != 0)
-			//{
-			//    MemberInfo member = members[0];
-			//    if (member is FieldInfo)
-			//    {
-			//        FieldInfo field = (FieldInfo)member;
-			//        field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-			//    }
-			//    else
-			//    {
-			//        throw new Exception("unknown member type");
-			//    }
 			}
 			else
 			{
-
 				if (!global.ContainsKey(GlobalKey))
 				{
 					global[GlobalKey] = new Dictionary<Map, Map>();
@@ -4043,6 +4033,24 @@ namespace Meta
 				{
 					if (result != null)
 					{
+						if (result.IsString)
+						{
+							result = new Map(result.GetString());
+							////if (!newResult.GetHashCode().Equals(result.GetHashCode()))
+							//if (!result.Equals(newResult))
+							//////if (!newResult.Equals(result))
+							//{
+							//    object a = result.Equals(newResult);
+							//    //object x = newResult.GetHashCode().Equals(result.GetHashCode());
+							//}
+
+							//Map newResult=new Map(result.GetString());
+							//if (!newResult.Equals(result))
+							//{
+							//    object x = !newResult.Equals(result);
+							//}
+
+						}
 						result.Extent = new Extent(oldLine, oldColumn, parser.line, parser.column, parser.file);
 					}
 				}
@@ -5181,21 +5189,25 @@ namespace Meta
 		}
 		public override bool Equals(object toCompare)
 		{
-			bool isEqual;
-			if (Object.ReferenceEquals(toCompare, this))
-			{
-				isEqual = true;
-			}
-			else if (toCompare is Map)
-			{
-				isEqual = ((Map)toCompare).strategy.EqualStrategy(strategy);
-			}
-			else
-			{
-				isEqual = false;
-			}
-			return isEqual;
+			return ((Map)toCompare).strategy.Equal(strategy);
 		}
+		//public override bool Equals(object toCompare)
+		//{
+		//    bool isEqual;
+		//    if (Object.ReferenceEquals(toCompare, this))
+		//    {
+		//        isEqual = true;
+		//    }
+		//    else if (toCompare is Map)
+		//    {
+		//        isEqual = ((Map)toCompare).strategy.Equal(strategy);
+		//    }
+		//    else
+		//    {
+		//        isEqual = false;
+		//    }
+		//    return isEqual;
+		//}
 		public MapStrategy Strategy
 		{
 			get
