@@ -2395,7 +2395,24 @@ namespace Meta
 
 	public abstract class Member
 	{
+		public abstract void Set(object obj, Map value);
 		public abstract Map Get(object obj);
+	}
+	public class TypeMember: Member
+	{
+		public override void Set(object obj, Map value)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		private Type type;
+		public TypeMember(Type type)
+		{
+			this.type = type;
+		}
+		public override Map Get(object obj)
+		{
+			return new Map(new TypeMap(type));
+		}
 	}
 	public class FieldMember:Member
 	{
@@ -2403,6 +2420,10 @@ namespace Meta
 		public FieldMember(FieldInfo field)
 		{
 			this.field=field;
+		}
+		public override void Set(object obj, Map value)
+		{
+			field.SetValue(obj, Transform.ToDotNet(value,field.FieldType));
 		}
 		public override Map Get(object obj)
 		{
@@ -2415,6 +2436,10 @@ namespace Meta
 		public MethodMember(MethodInfo method)
 		{
 			this.method=method;
+		}
+		public override void Set(object obj, Map value)
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 		public override Map Get(object obj)
 		{
@@ -2440,6 +2465,16 @@ namespace Meta
 					{
 						string name = TypeMap.GetMethodName(method);
 						data[name]= new MethodMember(method);
+					}
+					FieldInfo field = member as FieldInfo;
+					if (field != null)
+					{
+						data[field.Name] = new FieldMember(field);
+					}
+					Type t = member as Type;
+					if (t!=null)
+					{
+						data[t.Name] = new TypeMember(t);
 					}
 				}
 				cache[type] = data;
@@ -2522,29 +2557,6 @@ namespace Meta
 			{
 				return Members[key].Get(obj);
 			}
-			if (key.IsString)
-			{
-				string memberName = key.GetString();
-				MemberInfo[] foundMembers = type.GetMember(memberName, BindingFlags);
-				if (foundMembers.Length != 0)
-				{
-					MemberInfo member = foundMembers[0];
-					Map result;
-					if (member is FieldInfo)
-					{
-						result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
-					}
-					else if (member is Type)
-					{
-						result = new Map(new TypeMap((Type)member));
-					}
-					else
-					{
-						result = null;
-					}
-					return result;
-				}
-			}
 			if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
 			{
 				return global[GlobalKey][key];
@@ -2554,19 +2566,22 @@ namespace Meta
 		public override void Set(Map key, Map value, Map parent)
 		{
 			string fieldName = key.GetString();
-			MemberInfo[] members = type.GetMember(fieldName, BindingFlags);
-			if (members.Length != 0)
+			if(Members.ContainsKey(key))
 			{
-				MemberInfo member = members[0];
-				if (member is FieldInfo)
-				{
-					FieldInfo field = (FieldInfo)member;
-					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-				}
-				else
-				{
-					throw new Exception("unknown member type");
-				}
+				Members[key].Set(obj,value);
+			//MemberInfo[] members = type.GetMember(fieldName, BindingFlags);
+			//if (members.Length != 0)
+			//{
+			//    MemberInfo member = members[0];
+			//    if (member is FieldInfo)
+			//    {
+			//        FieldInfo field = (FieldInfo)member;
+			//        field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+			//    }
+			//    else
+			//    {
+			//        throw new Exception("unknown member type");
+			//    }
 			}
 			else
 			{
@@ -2578,6 +2593,33 @@ namespace Meta
 				global[GlobalKey][key] = value;
 			}
 		}
+		//public override void Set(Map key, Map value, Map parent)
+		//{
+		//    string fieldName = key.GetString();
+		//    MemberInfo[] members = type.GetMember(fieldName, BindingFlags);
+		//    if (members.Length != 0)
+		//    {
+		//        MemberInfo member = members[0];
+		//        if (member is FieldInfo)
+		//        {
+		//            FieldInfo field = (FieldInfo)member;
+		//            field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+		//        }
+		//        else
+		//        {
+		//            throw new Exception("unknown member type");
+		//        }
+		//    }
+		//    else
+		//    {
+
+		//        if (!global.ContainsKey(GlobalKey))
+		//        {
+		//            global[GlobalKey] = new Dictionary<Map, Map>();
+		//        }
+		//        global[GlobalKey][key] = value;
+		//    }
+		//}
 		public static Type GetListAddFunctionType(IList list, Map value)
 		{
 			foreach (MemberInfo member in list.GetType().GetMember("Add"))
