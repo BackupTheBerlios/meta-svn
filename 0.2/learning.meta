@@ -123,27 +123,27 @@
 					Parser
 					Parse_String
 				file
-			tree:-
-				merge
-				tree
-				,
-					Nodes=-
-						getNodes
-						data
+			asdf=-
+				.
+					tree
+					Nodes
+					AddRange_TreeNode[]
+				-
+					getNodes
+					data
 			asdf=-
 				loadText
 	loadText=,
-		|,
-			browser:-
-				merge
+		|-
+			.
 				browser
-				,
-					DocumentText=-
-						printNodes
-						.
-							tree
-							Nodes
-						data
+				set_DocumentText_String
+			-
+				printNodes
+				.
+					tree
+					Nodes
+				data
 	tree=-
 		TreeView
 		,
