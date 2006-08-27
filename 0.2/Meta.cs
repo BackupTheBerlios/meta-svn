@@ -589,6 +589,9 @@ namespace Meta
 			if (expression is Literal)
 			{
 				Map literal=((Literal)expression).literal;
+				if (literal.Equals(new Map("length")))
+				{
+				}
 				while (statement!=null && statement.NeverContainsKey(literal))
 				{
 					statement = statement.Parent;

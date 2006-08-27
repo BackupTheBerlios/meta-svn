@@ -244,6 +244,11 @@ Entry (KeyValuePair`2)
 		21
 Entry (KeyValuePair`2)
 	Key (Map):
+		"lengthTest"
+	Value (Map):
+		5
+Entry (KeyValuePair`2)
+	Key (Map):
 		"isStringTest"
 	Value (Map):
 		Entry (KeyValuePair`2)

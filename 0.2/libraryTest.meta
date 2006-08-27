@@ -199,6 +199,14 @@ arg|,
 						add
 						first
 						second
+		lengthTest=-
+			length
+			+
+				1
+				2
+				3
+				4
+				5
 		isStringTest=,
 			no=-
 				isString
