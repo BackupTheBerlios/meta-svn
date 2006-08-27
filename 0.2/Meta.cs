@@ -385,31 +385,11 @@ namespace Meta
 									typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
 									extent.Start.Line,
 									extent.FileName),
-								//(Emit)Null,
 								(Emit)Null),
 								typeof(KeyNotFound)
 								)
 							)));
 		}
-		//public static Emit EmitSearch(Local key, Local selected,Extent extent)
-		//{
-		//    return Until(
-		//        selected.Call("ContainsKey", key),
-		//        new ILProgram(
-		//            selected.Assign(selected.Call("get_Scope")),
-		//            If(
-		//                selected,
-		//                Nothing(),
-		//                Throw(
-		//                    new New(
-		//                        typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                        key,
-		//                        (Emit)Null,
-		//                        (Emit)Null),
-		//                        typeof(KeyNotFound)
-		//                        )
-		//                    )));
-		//}
 		public static Emit Nothing()
 		{
 			return delegate(ILGenerator il)
@@ -504,7 +484,6 @@ namespace Meta
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
 		public abstract ILEmitter Emit(Expression expression,StatementBase lastProgram, Local context, Argument argument);
-		//public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
@@ -530,11 +509,9 @@ namespace Meta
 		{
 			this.code = code;
 			this.calls = code.Array.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
-			//this.calls = code.Array.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(); });
 			if (calls.Count == 1)
 			{
 				calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty),statement));
-				//calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty)));
 			}
 			this.parameterName = parameterName;
 		}
@@ -658,7 +635,6 @@ namespace Meta
 			{
 				program.Add(statement.Get(expression,context,argument));
 			}
-			//program.Add(context.Call("set_ConstantKeys", Convert.ToInt32(constantKeys)));
 			program.Add(context.Load);
 			return program;
 		}
@@ -672,13 +648,6 @@ namespace Meta
 				return program.Statement;
 			}
 		}
-		//public virtual StatementBase Parent
-		//{
-		//    get
-		//    {
-		//        return null;
-		//    }
-		//}
 		public virtual bool NeverContainsKey(Map key)
 		{
 			bool neverContains = true;
@@ -872,8 +841,7 @@ namespace Meta
 		private List<Map> subselects;
 		public Select(Map code,StatementBase statement):base(statement)
 		{
-			this.subselects = code.Array;//.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
-			//this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
+			this.subselects = code.Array;
 		}
 		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
 		{
@@ -905,35 +873,7 @@ namespace Meta
 			program.Add(selected.Load);
 			return program;
 		}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
-		//{
-		//    ILProgram program = new ILProgram();
-		//    Local selected = program.Declare();
-		//    program.Add(selected.Assign(subselects[0].Emit(expression,lastProgram, context, argument)));
-		//    Local key = program.Declare();
-		//    Local value = program.Declare();
-		//    for (int i = 1; i < subselects.Count; i++)
-		//    {
-		//        program.Add(key.Assign(subselects[i].Emit(expression,lastProgram,context,argument)));
-		//        program.Add(value.Assign(selected.Call("TryGetValue",key)));
-		//        program.Add(
-		//            If(
-		//                value,
-		//                selected.Assign(value),
-		//                Throw(
-		//                    new New(
-		//                        typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                        key,
-		//                        (Emit)Null,
-		//                        selected),
-		//                        typeof(KeyNotFound)
-		//                        )));
-		//    }
-		//    program.Add(selected.Load);
-		//    return program;
-		//}
 	}
-
 	public class Interpreter
 	{
 		static Interpreter()
@@ -1360,34 +1300,25 @@ namespace Meta
 		public override bool ContainsKey(Map key)
 		{
 			return false;
-			//return overloads.ContainsKey(key);
 		}
 		public override ICollection<Map> Keys
 		{
 			get
 			{
 				return new List<Map>();
-				//return overloads.Keys;
 			}
 		}
 		public override void Set(Map key, Map val, Map parent)
 		{
 			throw new Exception("The method or operation is not implemented.");
-			//overloads[key] = val;
 		}
-		//private Dictionary<Map, Map> overloads = new Dictionary<Map, Map>();
 		public override Map Get(Map key)
 		{
 			return null;
-			//throw new Exception("The method or operation is not implemented.");
-			//Map value;
-			//overloads.TryGetValue(key, out value);
-			//return value;
 		}
 		public Method(MethodBase method, object obj, Type type, Dictionary<Map, Map> overloads)
 			: this(method, obj, type)
 		{
-			//this.overloads = new Dictionary<Map, Map>(overloads);
 		}
 		private static BindingFlags GetBindingFlags(object obj, string name)
 		{
@@ -1404,7 +1335,6 @@ namespace Meta
 		public override Map CopyData()
 		{
 			return new Map(this);
-			//return new Map(new Method(method, obj, type, overloads));
 		}
 		protected MethodBase method;
 		protected object obj;
@@ -2575,20 +2505,6 @@ namespace Meta
 				{
 					MemberInfo member = foundMembers[0];
 					Map result;
-					//if (member is PropertyInfo)
-					//{
-					//    PropertyInfo property = (PropertyInfo)member;
-					//    ParameterInfo[] parameters = property.GetIndexParameters();
-					//    if (parameters.Length == 0)
-					//    {
-					//        result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
-					//    }
-					//    else
-					//    {
-					//        result = 0;
-					//    }
-					//}
-					//else 
 					if (member is FieldInfo)
 					{
 						result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
@@ -2619,89 +2535,8 @@ namespace Meta
 			}
 			return null;
 		}
-		//public override Map Get(Map key)
-		//{
-		//    if (Data.ContainsKey(key))
-		//    {
-		//        return new Map(new Method(Data[key], obj, type));
-		//    }
-		//    else if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key))
-		//    {
-		//        return global[GlobalKey][key];
-		//    }
-		//    else if (key.IsString)
-		//    {
-		//        string memberName = key.GetString();
-		//        List<MemberInfo> foundMembers = new List<MemberInfo>(type.GetMember(memberName, bindingFlags));
-		//        foundMembers.Sort(delegate(MemberInfo a, MemberInfo b)
-		//        {
-		//            int result=0;
-		//            if (a is EventInfo)
-		//            {
-		//                result--;
-		//            }
-		//            if (b is EventInfo)
-		//            {
-		//                result++;
-		//            }
-		//            return result;
-
-		//        });
-		//        //MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
-		//        if (foundMembers.Count != 0)
-		//        {
-		//            MemberInfo member = foundMembers[0];
-		//            Map result;
-		//            if (member is PropertyInfo)
-		//            {
-		//                PropertyInfo property = (PropertyInfo)member;
-		//                ParameterInfo[] parameters = property.GetIndexParameters();
-		//                if (parameters.Length == 0)
-		//                {
-		//                    result = Transform.ToMeta(((PropertyInfo)member).GetValue(obj, null));
-		//                }
-		//                else
-		//                {
-		//                    result = 0;
-		//                }
-		//            }
-		//            else if (member is FieldInfo)
-		//            {
-		//                result = Transform.ToMeta(type.GetField(memberName).GetValue(obj));
-		//            }
-		//            else if (member is Type)
-		//            {
-		//                result = new Map(new TypeMap((Type)member));
-		//            }
-		//            else if (member is EventInfo)
-		//            {
-		//                EventInfo eventInfo = (EventInfo)member;
-		//                result = new Map(new Method(eventInfo.GetAddMethod(), obj, type));
-		//            }
-		//            else
-		//            {
-		//                result = null;
-		//            }
-		//            return result;
-		//        }
-		//    }
-		//    if (obj != null && obj is IList && key.IsNumber && key.GetNumber().Numerator < ((IList)obj).Count)
-		//    {
-		//        return Transform.ToMeta(((IList)obj)[Convert.ToInt32(key.GetNumber().Numerator)]);
-		//    }
-		//    return null;
-		//}
 		public override void Set(Map key, Map value, Map parent)
 		{
-			//if (obj is DependencyObject && key is ObjectMap && ((ObjectMap)key).obj is DependencyProperty)
-			//{
-			//    DependencyObject o = (DependencyObject)obj;
-			//    DependencyProperty property=(DependencyProperty)((ObjectMap)key).obj;
-			//    o.SetValue(property,Transform.ToDotNet(value,property.PropertyType));
-			//}
-			//else
-			//{
-
 			string fieldName = key.GetString();
 			MemberInfo[] members = type.GetMember(fieldName, bindingFlags);
 			if (members.Length != 0)
@@ -2712,36 +2547,6 @@ namespace Meta
 					FieldInfo field = (FieldInfo)member;
 					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
 				}
-				//else if (member is PropertyInfo)
-				//{
-				//    PropertyInfo property = (PropertyInfo)member;
-				//    if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap))
-				//        {
-				//        if (value.ArrayCount != 0)
-				//        {
-				//            IList list = (IList)property.GetValue(obj, null);
-				//            list.Clear();
-				//            Type t = GetListAddFunctionType(list, value);
-				//            if (t == null)
-				//            {
-				//                throw new ApplicationException("Cannot convert argument.");
-				//            }
-				//            else
-				//            {
-				//                foreach (Map map in value.Array)
-				//                {
-				//                    list.Add(Transform.ToDotNet(map, t));
-				//                }
-				//            }
-				//        }
-				//    }
-				//    else
-				//    {
-				//        object converted = Transform.ToDotNet(value, property.PropertyType);
-				//        property.SetValue(obj, converted, null);
-				//    }
-
-				//}
 				else if (member is EventInfo)
 				{
 					EventInfo eventInfo = (EventInfo)member;
@@ -2761,7 +2566,6 @@ namespace Meta
 				}
 				global[GlobalKey][key] = value;
 			}
-			//}
 		}
 		public static Type GetListAddFunctionType(IList list, Map value)
 		{
@@ -3974,7 +3778,6 @@ namespace Meta
 				new Sequence(new Action(new Assignment(CodeKeys.Literal), LookupString)),
 
 				Expression)),
-							//Keys),
 						new Action(new Optional(EndOfLine)),
 						new Action(new Optional(SameIndentation)),
 						new Action(new Character(':')),
@@ -3983,23 +3786,6 @@ namespace Meta
 							Expression),
 						new Action(new Optional(EndOfLine)))
 			)));
-		//public static Rule Statement = new Sequence(
-		//    new Action(new ReferenceAssignment(),
-		//        new Alternatives(
-		//            FunctionExpression,
-		//            new Sequence(
-		//                new Action(new Assignment(
-		//                    CodeKeys.Keys),
-		//                    Keys),
-		//                new Action(new Optional(EndOfLine)),
-		//                new Action(new Optional(SameIndentation)),
-		//                new Action(new Character(':')),
-		//                new Action(new Assignment(
-		//                    CodeKeys.Value),
-		//                    Expression),
-		//                new Action(new Optional(EndOfLine)))
-		//    )));
-
 		public static Rule ListMap = new Sequence(
 			new Action(new Character('+')),
 			new Action(
@@ -5126,80 +4912,9 @@ namespace Meta
 				{
 					// we should really throw an exception here
 				}
-
-
-				//if (member.Length != 0)
-				//{
-				//    if (member[0] is PropertyInfo)
-				//    {
-				//        PropertyInfo property = (PropertyInfo)member[0];
-				//        property.SetValue(obj, Transform.ToDotNet(entry.Value, property.PropertyType), null);
-				//    }
-				//    else if (member[0] is FieldInfo)
-				//    {
-				//        FieldInfo field = (FieldInfo)member[0];
-				//        field.SetValue(obj, Transform.ToDotNet(entry.Value, field.FieldType));
-				//    }
-				//    else if (member[0] is EventInfo)
-				//    {
-				//        new Map(new Method(((EventInfo)member[0]).GetAddMethod(), obj, type)).Call(entry.Value);
-				//        //new Map(new Method(((EventInfo)member[0]).GetAddMethod(), obj, type)).Call(value);
-				//    }
-				//    //else
-				//    //{
-				//    //    throw new Exception("Cannot set value.");
-				//    //}
-				}
-				//else
-				//{
-				//    throw new Exception("Cannot set value.");
-				//}
+			}
 			return o;
 		}
-		//public static Map With(Map o, Map values)
-		//{
-		//    object obj=((ObjectMap)o.Strategy).Object;
-		//    Type type=obj.GetType();
-		//    foreach (KeyValuePair<Map, Map> entry in values)
-		//    {
-		//        MemberInfo[] member=type.GetMember(entry.Key.GetString());
-		//        if (member.Length != 0)
-		//        {
-		//            if (member[0] is PropertyInfo)
-		//            {
-		//                PropertyInfo property = (PropertyInfo)member[0];
-		//                property.SetValue(obj, Transform.ToDotNet(entry.Value, property.PropertyType), null);
-		//            }
-		//            else if (member[0] is FieldInfo)
-		//            {
-		//                FieldInfo field = (FieldInfo)member[0];
-		//                field.SetValue(obj, Transform.ToDotNet(entry.Value, field.FieldType));
-		//            }
-		//            else if (member[0] is EventInfo)
-		//            {
-		//                new Map(new Method(((EventInfo)member[0]).GetAddMethod(), obj, type)).Call(entry.Value);
-		//                //new Map(new Method(((EventInfo)member[0]).GetAddMethod(), obj, type)).Call(value);
-		//            }
-		//            else
-		//            {
-		//                throw new Exception("Cannot set value.");
-		//            }
-		//        }
-		//        else
-		//        {
-		//            throw new Exception("Cannot set value.");
-		//        }
-		//    }
-		//    return o;
-		//}
-		//public static Map With(Map obj, Map values)
-		//{
-		//    foreach (KeyValuePair<Map, Map> entry in values)
-		//    {
-		//        obj[entry.Key] = entry.Value;
-		//    }
-		//    return obj;
-		//}
 		public static Map Merge(Map arg, Map map)
 		{
 			foreach (KeyValuePair<Map, Map> pair in map)
@@ -5224,25 +4939,6 @@ namespace Meta
 			return result;
 		}
 	}
-	//public class FunctionExpression:Expression
-	//{
-	//    private Map parameter;
-	//    private Map code;
-	//    public FunctionExpression(Map code)
-	//    {
-	//        this.parameter = code[CodeKeys.Function][CodeKeys.Parameter];
-	//        //Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
-	//        //argumentScope.Scope = this;
-	//        //return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
-
-	//    }
-	//    public override ILEmitter Get(Expression expression, Local context, Argument argument)
-	//    {
-	//        Map argument = new Map(parameter, arg);
-	//        argument.Scope = this;
-	//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
-	//    }
-	//}
 	public class PseudoStatement : StatementBase
 	{
 		public override StatementBase Parent
@@ -5299,25 +4995,7 @@ namespace Meta
 		public void Nuke(Map map)
 		{
 			this.strategy = map.strategy;
-			//this.scope = map.scope;
-			//foreach (KeyValuePair<Map, Map> pair in this)
-			//{
-			//    pair.Value.scope = map.scope;
-			//}
-			//this.scope = map.scope;
-			//foreach (Map key in map.Keys)
-			//{
-			//    this[key] = map[key];
-			//}
 		}
-		//public void Nuke(Map map)
-		//{
-		//    this.strategy = new EmptyStrategy();
-		//    foreach (Map key in map.Keys)
-		//    {
-		//        this[key] = map[key];
-		//    }
-		//}
 		public Map Call(Map arg)
 		{
 			return strategy.Call(arg, this);
@@ -5718,39 +5396,12 @@ namespace Meta
 				Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
 				argumentScope.Scope = this;
 				return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argumentScope)).Evaluate(argumentScope);
-				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
 			}
 			else
 			{
 				throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
 			}
 		}
-		//public Map CallDefault(Map arg)
-		//{
-		//    if (ContainsKey(CodeKeys.Function))
-		//    {
-		//        Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
-		//        argumentScope.Scope = this;
-		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
-		//    }
-		//}
-		//public Map CallDefault(Map arg)
-		//{
-		//    if (ContainsKey(CodeKeys.Function))
-		//    {
-		//        Map argumentScope = new Map(this[CodeKeys.Function][CodeKeys.Parameter], arg);
-		//        argumentScope.Scope = this;
-		//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argumentScope);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
-		//    }
-		//}
 		public ICollection<Map> Keys
 		{
 			get
