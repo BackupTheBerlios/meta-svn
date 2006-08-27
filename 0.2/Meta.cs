@@ -433,8 +433,8 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<Map> literals = new List<Map>();
-		Eval optimized;
-		public Map Evaluate(Map context)
+		protected Eval optimized;
+		public virtual Map Evaluate(Map context)
 		{
 			if (optimized == null)
 			{
@@ -468,16 +468,31 @@ namespace Meta
 			Local context = program.Declare();
 			program.AddRange(
 				context.Assign(argument),
-				Get(this,null, context,new Argument(0,typeof(Expression))),
+				Emit(this,null, context,new Argument(0,typeof(Expression))),
 				(Emit)Return);
 			program.Emit(method.GetILGenerator());
 			return (Eval)method.CreateDelegate(typeof(Eval), this);
 		}
-		public abstract ILEmitter Get(Expression expression,StatementBase lastProgram, Local context, Argument argument);
+		public abstract ILEmitter Emit(Expression expression,StatementBase lastProgram, Local context, Argument argument);
 		//public abstract ILEmitter Get(Expression expression, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		private Map parameterName;
 		public List<Expression> calls;
 		Map code;
@@ -493,15 +508,15 @@ namespace Meta
 			}
 			this.parameterName = parameterName;
 		}
-		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local current, Argument argument)
+		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local current, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local callable = program.Declare();
-			program.Add(callable.Assign(calls[0].Get(expression,lastProgram, current,argument)));
+			program.Add(callable.Assign(calls[0].Emit(expression,lastProgram, current,argument)));
 			for (int i = 1; i < calls.Count; i++)
 			{
 				program.Add(
-					callable.Assign(callable.Call("Call", calls[i].Get(expression,lastProgram, current,argument))));
+					callable.Assign(callable.Call("Call", calls[i].Emit(expression,lastProgram, current,argument))));
 			}
 			program.Add(callable.Load);
 			return program;
@@ -509,6 +524,21 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		private Expression expression;
 		Map code;
 		public Search(Map code,StatementBase statement):base(statement)
@@ -516,23 +546,19 @@ namespace Meta
 			this.expression = code.GetExpression(statement);
 			this.code = code;
 		}
-		public override ILEmitter Get(Expression parentExpression, StatementBase statement, Local context, Argument argument)
+		public override ILEmitter Emit(Expression parentExpression, StatementBase statement, Local context, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local key = program.Declare();
 			Local selected = program.Declare();
-			program.Add(key.Assign(expression.Get(parentExpression, statement, context, argument)));
+			program.Add(key.Assign(expression.Emit(parentExpression, statement, context, argument)));
 			program.Add(selected.Assign(context));
-
 
 			bool optimize=false;
 			ILProgram p = new ILProgram();
 			if (expression is Literal)
 			{
 				Map literal=((Literal)expression).literal;
-				if (literal.Equals(new Map("not")))
-				{
-				}
 				while (statement!=null && statement.NeverContainsKey(literal))
 				{
 					statement = statement.Parent;
@@ -548,14 +574,27 @@ namespace Meta
 			{
 				program.Add(EmitSearch(key, selected));
 			}
-
-
 			program.Add(selected.Call("get_Item", key).Call("Copy"));
 			return program;
 		}
 	}
 	public class Program : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 
 		public StatementBase[] Statements
 		{
@@ -578,7 +617,7 @@ namespace Meta
 			this.code = code;
 			statementList=code.Array.ConvertAll(new Converter<Map,StatementBase>(delegate(Map map) {return map.GetStatement(this);})).ToArray();
 		}
-		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
+		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
 		{
 			ILProgram program = new ILProgram();
 			Local context = program.Declare();
@@ -685,7 +724,7 @@ namespace Meta
 		}
 		public override ILEmitter Get(Expression expression,Local context, Argument argument)
 		{
-			return context.Call("set_Item", key.Get(expression,this, context, argument), value.Get(expression,this, context, argument));
+			return context.Call("set_Item", key.Emit(expression,this, context, argument), value.Emit(expression,this, context, argument));
 		}
 	}
 	public class CurrentStatement : StatementBase
@@ -698,7 +737,7 @@ namespace Meta
 		}
 		public override ILEmitter Get(Expression expression,Local context, Argument argument)
 		{
-			return context.Call("Nuke", value.Get(expression,this, context, argument));
+			return context.Call("Nuke", value.Emit(expression,this, context, argument));
 		}
 	}
 	public class Statement : StatementBase
@@ -716,15 +755,30 @@ namespace Meta
 			ILProgram program = new ILProgram();
 			Local k=program.Declare();
 			Local selected = program.Declare();
-			program.Add(k.Assign(key.Get(expression,this, context, argument)));
+			program.Add(k.Assign(key.Emit(expression,this, context, argument)));
 			program.Add(selected.Assign(context));
 			program.Add(Expression.EmitSearch(k, selected));
-			program.Add(selected.Call("set_Item",k,value.Get(expression,this, context, argument)));
+			program.Add(selected.Call("set_Item",k,value.Emit(expression,this, context, argument)));
 			return program;
 		}
 	}
 	public class Literal : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public Literal(Map code,StatementBase statement):base(statement)
@@ -738,7 +792,7 @@ namespace Meta
 				this.literal = code;
 			}
 		}
-		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local local, Argument argument)
+		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
 		{
 			expression.literals.Add(literal);
 			return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
@@ -746,32 +800,62 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		public Root(StatementBase statement)
 			: base(statement)
 		{
 		}
-		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local local, Argument argument)
+		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
 		{
 			return new StaticField(typeof(Gac).GetField("gac"));
 		}
 	}
 	public class Select : Expression
 	{
+		public override Map Evaluate(Map context)
+		{
+			if (optimized == null)
+			{
+				optimized = Optimize();
+			}
+			try
+			{
+				return optimized(context);
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		private List<Expression> subselects;
 		public Select(Map code,StatementBase statement):base(statement)
 		{
 			this.subselects = code.Array.ConvertAll<Expression>(delegate(Map m){return m.GetExpression(statement);});
 		}
-		public override ILEmitter Get(Expression expression, StatementBase lastProgram, Local context, Argument argument)
+		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
 		{
 		    ILProgram program = new ILProgram();
 		    Local selected = program.Declare();
-			program.Add(selected.Assign(subselects[0].Get(expression,lastProgram, context, argument)));
+			program.Add(selected.Assign(subselects[0].Emit(expression,lastProgram, context, argument)));
 			Local key = program.Declare();
 			Local value = program.Declare();
 		    for (int i = 1; i < subselects.Count; i++)
 		    {
-				program.Add(key.Assign(subselects[i].Get(expression,lastProgram,context,argument)));
+				program.Add(key.Assign(subselects[i].Emit(expression,lastProgram,context,argument)));
 				program.Add(value.Assign(selected.Call("TryGetValue",key)));
 				program.Add(
 					If(
