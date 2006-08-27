@@ -2428,37 +2428,43 @@ namespace Meta
 			}
 			return name;
 		}
-		private Dictionary<Map, MethodInfo> data;
+		private Dictionary<Map, Member> data;
 
 		
 		
-		private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, MethodInfo>>();
-		public static Dictionary<Map, MethodInfo> GetMethodData(Type type, BindingFlags bindingFlags)
+		private static Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>> cache = new Dictionary<KeyValuePair<Type, BindingFlags>, Dictionary<Map, Member>>();
+		public static Dictionary<Map, Member> GetMethodData(Type type, BindingFlags bindingFlags)
 		{
 			KeyValuePair<Type, BindingFlags> key = new KeyValuePair<Type, BindingFlags>(type, bindingFlags);
 			if (!cache.ContainsKey(key))
 			{
-				Dictionary<Map, MethodInfo> data = new Dictionary<Map, MethodInfo>();
+				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
 				foreach (MethodInfo method in type.GetMethods(bindingFlags))
 				{
 					string name = TypeMap.GetMethodName(method);
-					data[name] = method;
+					data[name] = new MethodMember(method);
+					//data[name] = method;
 				}
 				cache[key] = data;
 			}
 			return cache[key];
 		}
-		private Dictionary<Map, MethodInfo> Data
+		private Dictionary<Map, Member> Data
 		{
 			get
 			{
 				if (data == null)
 				{
-					data = GetMethodData(type, bindingFlags);
+					data = GetMembers();
 				}
 				return data;
 			}
 		}
+		protected virtual Dictionary<Map, Member> GetMembers()
+		{
+			return GetMethodData(type, bindingFlags);
+		}
+
 		private object obj;
 		private Type type;
 		protected BindingFlags bindingFlags;
@@ -2481,27 +2487,15 @@ namespace Meta
 		{
 			if (Data.ContainsKey(key))
 			{
-				return new Map(new Method(Data[key], obj, type));
+				return Data[key].Get(obj);
+				//return new Map(Data[key].Get(obj));
+				//return new Map(new Method(Data[key], obj, type));
 			}
 			if (key.IsString)
 			{
 				string memberName = key.GetString();
-				List<MemberInfo> foundMembers = new List<MemberInfo>(type.GetMember(memberName, bindingFlags));
-				foundMembers.Sort(delegate(MemberInfo a, MemberInfo b)
-				{
-					int result = 0;
-					if (a is EventInfo)
-					{
-						result--;
-					}
-					if (b is EventInfo)
-					{
-						result++;
-					}
-					return result;
-
-				});
-				if (foundMembers.Count != 0)
+				MemberInfo[] foundMembers = type.GetMember(memberName, bindingFlags);
+				if (foundMembers.Length != 0)
 				{
 					MemberInfo member = foundMembers[0];
 					Map result;
@@ -2512,11 +2506,6 @@ namespace Meta
 					else if (member is Type)
 					{
 						result = new Map(new TypeMap((Type)member));
-					}
-					else if (member is EventInfo)
-					{
-						EventInfo eventInfo = (EventInfo)member;
-						result = new Map(new Method(eventInfo.GetAddMethod(), obj, type));
 					}
 					else
 					{
@@ -2546,11 +2535,6 @@ namespace Meta
 				{
 					FieldInfo field = (FieldInfo)member;
 					field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-				}
-				else if (member is EventInfo)
-				{
-					EventInfo eventInfo = (EventInfo)member;
-					new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
 				}
 				else
 				{
