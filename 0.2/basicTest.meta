@@ -422,14 +422,14 @@ commandLine|,
 		arg|,
 			staticEventChanged:arg
 	asdf="hello"
-	TestClass=-
-		merge
-		TestClass
+	asdf=-
+		.
+			TestClass
+			add_staticEvent_NormalEvent
 		,
-			staticEvent=,
-				arg|-
-					ChangeStaticEvent
-					1
+			arg|-
+				ChangeStaticEvent
+				1
 	6=-
 		.
 			TestClass
@@ -447,14 +447,14 @@ commandLine|,
 			CallStaticEvent_Object
 		!"testClass"
 	instanceEventChanged=0
-	testClass:-
-		merge
-		testClass
+	asdf=-
+		.
+			testClass
+			add_instanceEvent_IntEvent
 		,
-			instanceEvent=,
-				arg|,
-					instanceEventChanged:1
-					&=arg
+			arg|,
+				instanceEventChanged:1
+				&=arg
 	instanceEventResult=-
 		.
 			testClass
@@ -661,16 +661,17 @@ commandLine|,
 		
 		
 	"
-	app=-
-		merge
+	app=.
+		<"System.Windows.Forms"
+		Application
+	asdf=-
 		.
-			<"System.Windows.Forms"
-			Application
-		,
-			VisualStyleState=.
-				!"System.Windows.Forms"
-				VisualStyleState
-				ClientAreaEnabled
+			app
+			set_VisualStyleState_VisualStyleState
+		.
+			!"System.Windows.Forms"
+			VisualStyleState
+			ClientAreaEnabled
 	enumTest=.
 		!"System.Windows.Forms"
 		Application

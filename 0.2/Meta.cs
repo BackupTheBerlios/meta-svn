@@ -5059,11 +5059,11 @@ namespace Meta
 		}
 		public void Nuke(Map map)
 		{
-				this.strategy = new EmptyStrategy();
-				foreach (Map key in map.Keys)
-				{
-					this[key] = map[key];
-				}
+			this.strategy = new EmptyStrategy();
+			foreach (Map key in map.Keys)
+			{
+				this[key] = map[key];
+			}
 		}
 		public Map Call(Map arg)
 		{
