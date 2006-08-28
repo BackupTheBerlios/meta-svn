@@ -1644,26 +1644,71 @@ namespace Meta
 		{
 			return new Map(new EmptyStrategy());
 		}
-		public override void Set(Map key, Map val, Map map)
+		public override MapStrategy DeepCopy(Map key, Map value, Map map)
 		{
 			if (key.IsNumber)
 			{
-				if (key.Equals(Map.Empty) && val.IsNumber)
+				if (key.Equals(Map.Empty) && value.IsNumber)
 				{
-					Panic(key, val, new NumberStrategy(0),map);
+					NumberStrategy number = new NumberStrategy(0);
+					number.Set(key, value, map);
+					return number;
+					//Panic(key, val, new NumberStrategy(0), map);
 				}
 				else
 				{
-					// that is not logical, maybe ListStrategy is not suitable for this, only if key==1
-					Panic(key, val, new ListStrategy(),map);
+					if (key.Equals(new Map(1)))
+					{
+						ListStrategy list = new ListStrategy();
+						list.Set(key, value, map);
+						return list;
+						// that is not logical, maybe ListStrategy is not suitable for this, only if key==1
+						//Panic(key, val, new ListStrategy(), map);
+					}
 				}
 			}
-			else
-			{
-				Panic(key, val,new DictionaryStrategy(), map);
-				//Panic(key, val, map);
-			}
+			return base.DeepCopy(key,value,map);
+			//        else
+			//        {
+			//            Panic(key, val, new DictionaryStrategy(), map);
+			//        }
+			//    }
+			//}
+			//else
+			//{
+			//    Panic(key, val, new DictionaryStrategy(), map);
+			//}
 		}
+		public override void Set(Map key, Map val, Map map)
+		{
+			map.Strategy=DeepCopy(key,val,map);
+		}
+		//public override void Set(Map key, Map val, Map map)
+		//{
+		//    if (key.IsNumber)
+		//    {
+		//        if (key.Equals(Map.Empty) && val.IsNumber)
+		//        {
+		//            Panic(key, val, new NumberStrategy(0),map);
+		//        }
+		//        else
+		//        {
+		//            if (key.Equals(new Map(1)))
+		//            {
+		//                // that is not logical, maybe ListStrategy is not suitable for this, only if key==1
+		//                Panic(key, val, new ListStrategy(), map);
+		//            }
+		//            else
+		//            {
+		//                Panic(key, val, new DictionaryStrategy(), map);
+		//            }
+		//        }
+		//    }
+		//    else
+		//    {
+		//        Panic(key, val,new DictionaryStrategy(), map);
+		//    }
+		//}
 		public override Map Get(Map key)
 		{
 			return null;
@@ -2180,33 +2225,8 @@ namespace Meta
 		}
 		public override void Set(Map key, Map value, Map map)
 		{
-			MapStrategy strategy=original.DeepCopy(key,value,map);
-			//if (original is ListStrategy)
-			//{
-			//    strategy = new ListStrategy();
-			//}
-			//else
-			//{
-			//    strategy = new DictionaryStrategy();
-			//}
-			//Panic(key, value, strategy, map);
-			map.Strategy = strategy;
-			//Panic(key, value, map);
+			map.Strategy = original.DeepCopy(key,value,map);
 		}
-		//public override void Set(Map key, Map value, Map map)
-		//{
-		//    MapStrategy strategy;
-		//    if (original is ListStrategy)
-		//    {
-		//        strategy = new ListStrategy();
-		//    }
-		//    else
-		//    {
-		//        strategy = new DictionaryStrategy();
-		//    }
-		//    Panic(key, value,strategy, map);
-		//    //Panic(key, value, map);
-		//}
 	}
 
 	[Serializable]
@@ -5317,13 +5337,21 @@ namespace Meta
 				throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(this));
 			}
 		}
+		private static Map empty = new Map(new EmptyStrategy());
 		public static Map Empty
 		{
 			get
 			{
-				return new Map(new EmptyStrategy());
+				return empty;
 			}
 		}
+		//public static Map Empty
+		//{
+		//    get
+		//    {
+		//        return new Map(new EmptyStrategy());
+		//    }
+		//}
 		public virtual string SerializeDefault()
 		{
 			string text;
