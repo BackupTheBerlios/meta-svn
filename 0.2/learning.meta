@@ -187,6 +187,10 @@
 						-
 							load
 							"D:\Meta\0.2\relativity.learn"
+						-
+							.
+								form
+								Close
 			Menu=-
 				<"MainMenu_MenuItem[]"
 				+

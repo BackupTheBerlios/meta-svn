@@ -900,10 +900,10 @@ namespace Meta
 				{
 					try
 					{
-						UseConsole();
-						//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-						MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-						return;
+						//UseConsole();
+						////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+						//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+						//return;
 						UseConsole();
 						new MetaTest().Run();
 					}
@@ -1293,10 +1293,6 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void Remove(Map key, Map map)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
 		public override bool ContainsKey(Map key)
 		{
 			return false;
@@ -1633,10 +1629,6 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override void Remove(Map key, Map map)
-		{
-			throw new Exception("Key cannot be removed because it does not exist.");
-		}
 		public override bool Equal(MapStrategy obj)
 		{
 			return obj.Count == 0;
@@ -1668,7 +1660,8 @@ namespace Meta
 			}
 			else
 			{
-				Panic(key, val,map);
+				Panic(key, val,new DictionaryStrategy(), map);
+				//Panic(key, val, map);
 			}
 		}
 		public override Map Get(Map key)
@@ -1682,17 +1675,6 @@ namespace Meta
 		public override int GetArrayCount()
 		{
 			return 0;
-		}
-		public override void Remove(Map key, Map map)
-		{
-			if(key.Equals(Map.Empty))
-			{
-				this.number=new Number(0);
-			}
-			else
-			{
- 				throw new Exception("The method or operation is not implemented.");
-			}
 		}
 		public override bool Equal(MapStrategy obj)
 		{
@@ -1755,7 +1737,7 @@ namespace Meta
 			}
 			else
 			{
-				Panic(key, value,map);
+				Panic(key, value,new DictionaryStrategy(),map);
 			}
 		}
 
@@ -1821,11 +1803,6 @@ namespace Meta
 			{
 				return base.Equal(obj);
 			}
-		}
-		public override void Remove(Map key, Map map)
-		{
-			Panic(new ListStrategy(),map);
-			map.Strategy.Remove(key,map);
 		}
 		public override void Set(Map key, Map val, Map map)
 		{
@@ -1939,10 +1916,6 @@ namespace Meta
 		{
 			list.Add(map);
 		}
-		public override void Remove(Map key, Map map)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
 		private List<Map> list;
 
 		public ListStrategy():this(5)
@@ -1984,12 +1957,12 @@ namespace Meta
 				}
 				else
 				{
-					Panic(key, val,map);
+					Panic(key, val,new DictionaryStrategy(),map);
 				}
 			}
 			else
 			{
-				Panic(key, val,map);
+				Panic(key, val,new DictionaryStrategy(),map);
 			}
 		}
 
@@ -2071,10 +2044,6 @@ namespace Meta
 			}
 			return i - 1;
 		}
-		public override void Remove(Map key, Map map)
-		{
-			dictionary.Remove(key);
-		}
 		private Dictionary<Map, Map> dictionary;
 		public DictionaryStrategy():this(2)
 		{
@@ -2122,11 +2091,6 @@ namespace Meta
 		public override int GetArrayCount()
 		{
 			return original.GetArrayCount();
-		}
-		public override void Remove(Map key, Map map)
-		{
-			Panic(new DictionaryStrategy(), map);
-			map.Remove(key);
 		}
 		private MapStrategy original;
 		public CloneStrategy(MapStrategy original)
@@ -2199,18 +2163,33 @@ namespace Meta
 		}
 		public override void Set(Map key, Map value, Map map)
 		{
-			MapStrategy strategy;
-			if (original is ListStrategy)
-			{
-				strategy = new ListStrategy();
-			}
-			else
-			{
-				strategy = new DictionaryStrategy();
-			}
-			Panic(key, value,strategy, map);
+			MapStrategy strategy=original.DeepCopy(key,value,map);
+			//if (original is ListStrategy)
+			//{
+			//    strategy = new ListStrategy();
+			//}
+			//else
+			//{
+			//    strategy = new DictionaryStrategy();
+			//}
+			//Panic(key, value, strategy, map);
+			map.Strategy = strategy;
 			//Panic(key, value, map);
 		}
+		//public override void Set(Map key, Map value, Map map)
+		//{
+		//    MapStrategy strategy;
+		//    if (original is ListStrategy)
+		//    {
+		//        strategy = new ListStrategy();
+		//    }
+		//    else
+		//    {
+		//        strategy = new DictionaryStrategy();
+		//    }
+		//    Panic(key, value,strategy, map);
+		//    //Panic(key, value, map);
+		//}
 	}
 
 	[Serializable]
@@ -2228,7 +2207,6 @@ namespace Meta
 		{
 		    this.Set(GetArrayCount() + 1,map,parent);
 		}
-		public abstract void Remove(Map key, Map map);
 		public abstract void Set(Map key, Map val, Map map);
 		public abstract Map Get(Map key);
 
@@ -2247,21 +2225,29 @@ namespace Meta
 			}
 			return map;
 		}
-		protected void Panic(Map key, Map val, Map map)
+		protected virtual void Panic(Map key, Map val, MapStrategy strategy, Map map)
 		{
-			Panic(key, val, new DictionaryStrategy(), map);
+			map.Strategy = strategy;
+			foreach (Map k in Keys)
+			{
+				strategy.Set(k,Get(k).Copy(),map);
+			}
+			map.Strategy.Set(key, val, map);
 		}
-		protected void Panic(Map key, Map val, MapStrategy newStrategy, Map map)
+		public virtual MapStrategy DeepCopy(Map key,Map value,Map map)
 		{
-			Panic(newStrategy, map);
-			map.Strategy.Set(key, val, map); // why do it like this? this wont assign the parent, which is problematic!!!
+			MapStrategy strategy=new DictionaryStrategy();
+			foreach (Map k in Keys)
+			{
+				strategy.Set(k, Get(k).Copy(), map);
+			}
+			strategy.Set(key, value,map);
+			return strategy;
 		}
-		// refactor
-		public void Panic(MapStrategy newStrategy, Map map)
-		{
-			map.Strategy = newStrategy;
-			map.InitFromStrategy(this);
-		}
+		//protected virtual MapStrategy ChooseStrategy()
+		//{
+		//}
+
 		public virtual bool IsNumber
 		{
 		    get
@@ -2474,10 +2460,6 @@ namespace Meta
 		protected abstract BindingFlags BindingFlags
 		{
 			get;
-		}
-		public override void Remove(Map key, Map map)
-		{
-			throw new Exception("The method or operation is not implemented.");
 		}
 		public override int GetArrayCount()
 		{
@@ -2929,10 +2911,6 @@ namespace Meta
 		public override int GetArrayCount()
 		{
 			return 0;
-		}
-		public override void Remove(Map key, Map map)
-		{
-			throw new Exception("The method or operation is not implemented.");
 		}
 		public static readonly Map gac = new Map(new Gac());
 		private Gac()
@@ -5048,10 +5026,10 @@ namespace Meta
 		{
 			strategy.Append(map, this);
 		}
-		public void Remove(Map key)
-		{
-			strategy.Remove(key, this);
-		}
+		//public void Remove(Map key)
+		//{
+		//    strategy.Remove(key, this);
+		//}
 		protected MapStrategy strategy;
 
 		public Map(object o)
@@ -5104,13 +5082,13 @@ namespace Meta
 				return strategy.GetArrayCount();
 			}
 		}
-		public void InitFromStrategy(MapStrategy clone)
-		{
-			foreach (Map key in clone.Keys)
-			{
-				this[key] = clone.Get(key);
-			}
-		}
+		//public void InitFromStrategy(MapStrategy clone)
+		//{
+		//    foreach (Map key in clone.Keys)
+		//    {
+		//        this[key] = clone.Get(key);
+		//    }
+		//}
 		public bool IsString
 		{
 			get
