@@ -1352,7 +1352,7 @@ namespace Meta
 		{
 			get
 			{
-				return new List<Map>();
+				yield break;
 			}
 		}
 		public override void Set(Map key, Map val, Map parent)
@@ -1717,7 +1717,8 @@ namespace Meta
 		{
 			get
 			{
-				return new List<Map>(0);
+				yield break;
+				//return new List<Map>(0);
 			}
 		}
 		public override Map CopyData()
@@ -1830,25 +1831,27 @@ namespace Meta
 				Panic(key, value,new DictionaryStrategy(),map);
 			}
 		}
-
 		public override IEnumerable<Map> Keys
 		{
 			get
 			{
-				List<Map> keys = new List<Map>();
+				//List<Map> keys = new List<Map>();
 				if (number != 0)
 				{
-					keys.Add(Map.Empty);
+					yield return Map.Empty;
+					//keys.Add(Map.Empty);
 				}
 				if (number < 0)
 				{
-					keys.Add(NumberKeys.Negative);
+					yield return NumberKeys.Negative;
+					//keys.Add(NumberKeys.Negative);
 				}
 				if (number.Denominator != 1.0d)
 				{
-					keys.Add(NumberKeys.Denominator);
+					yield return NumberKeys.Denominator;
+					//keys.Add(NumberKeys.Denominator);
 				}
-				return keys;
+				//return keys;
 			}
 		}
 		public override Map CopyData()
@@ -1985,14 +1988,14 @@ namespace Meta
 		public override IEnumerable<Map> Keys
 		{
 			get 
-			{
-			
-				List<Map> keys = new List<Map>(text.Length);
+			{			
+				//List<Map> keys = new List<Map>(text.Length);
 				for (int i = 1; i <= text.Length; i++)
 				{
-					keys.Add(i);
+					yield return i;
+					//keys.Add(i);
 				}
-				return keys;
+				//return keys;
 			}
 		}
 	}
@@ -2118,37 +2121,14 @@ namespace Meta
 		{
 			get
 			{
-				//for (int i = 1; i < list.Count; i++)
-				//{
-				//    yield return new Map(new Number(i));
-				//}
-				List<Map> keys = new List<Map>();
-				int counter = 1;
-				foreach (Map value in list)
+				for(int i=1;i<=list.Count;i++)
 				{
-					yield return new Map(counter);
-					//keys.Add(new Map(counter));
-					counter++;
+					yield return i;
 				}
-				//return keys;
 			}
 		}
-			//public override IEnumerable<Map> Keys
-			//{
-			//    get
-			//    {
-			//        List<Map> keys = new List<Map>();
-			//        int counter = 1;
-			//        foreach (Map value in list)
-			//        {
-			//            keys.Add(new Map(counter));
-			//            counter++;
-			//        }
-			//        return keys;
-			//    }
-			//}
-		}
-		[Serializable]
+	}
+	[Serializable]
 	public class DictionaryStrategy:MapStrategy
 	{
 		public override Map CopyData()
