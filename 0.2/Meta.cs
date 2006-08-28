@@ -444,7 +444,7 @@ namespace Meta
 		{
 			il.Emit(OpCodes.Ret);
 		}
-		public virtual Expression Optimize(Map scope)
+		public virtual Expression Optimize(Map scope,List<StatementBase> statement)
 		{
 			return this;
 		}
@@ -472,6 +472,14 @@ namespace Meta
 	}
 	public class Call : Expression
 	{
+		public override Expression Optimize(Map scope, List<StatementBase> statements)
+		{
+			for (int i = 0; i < calls.Count; i++)
+			{
+				calls[i] = calls[i].Optimize(scope, statements);
+			}
+			return this;
+		}
 		private Map parameterName;
 		public List<Expression> calls;
 		Map code;
@@ -529,7 +537,7 @@ namespace Meta
 			{
 				selected = selected.Scope;
 			}
-			return selected[key];
+			return selected[key].Copy();
 		}
 	}
 	public class Search : Expression
@@ -551,13 +559,29 @@ namespace Meta
 			}
 			return selected[key].Copy();
 		}
-		public override Expression Optimize(Map scope)
+		public override Expression Optimize(Map scope,List<StatementBase> statements)
 		{
 			if (expression is Literal)
 			{
 				Map key = ((Literal)expression).literal;
 				int count = 0;
 				Map s = scope;
+				for (int i = statements.Count - 1; i >= 0; i--)
+				{
+					if (statements[i].AlwaysContainsKey(key))
+					{
+						return new OptimizedSearch(count, key);
+					}
+					else if (statements[i].NeverContainsKey(key))
+					{
+						count++;
+					}
+					else
+					{
+						return this;
+					}
+
+				}
 				while (s!=null)
 				{
 					if (s.ContainsKey(key))
@@ -616,6 +640,20 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
+		public override Expression Optimize(Map scope, List<StatementBase> statements)
+		{
+			foreach (StatementBase statement in statementList)
+			{
+				statements.Add(statement);
+				if (statement.value is Search)
+				{
+				}
+				statement.value = statement.value.Optimize(scope, statements);
+				statements.RemoveAt(statements.Count - 1);
+			}
+			return this;
+			//return base.Optimize(scope, statement);
+		}
 		public override Map Evaluate(Map parent)
 		{
 			Map context = new Map();
@@ -759,7 +797,14 @@ namespace Meta
 			return alwaysContains;
 		}
 		protected Program program;
-		protected Expression value;
+		//public Expression Value
+		//{
+		//    get
+		//    {
+		//        return value;
+		//    }
+		//}
+		public Expression value;
 		public StatementBase(Program program,Map code)
 		{
 			this.program = program;
@@ -890,6 +935,14 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
+		public override Expression Optimize(Map scope, List<StatementBase> statements)
+		{
+			for(int i=0;i<subs.Count;i++)
+			{
+				subs[i] = subs[i].Optimize(scope, statements);
+			}
+			return this;
+		}
 		public override Map Evaluate(Map context)
 		{
 			Map selected = subs[0].Evaluate(context);
@@ -5112,6 +5165,16 @@ namespace Meta
 			}
 			return (StatementBase)expression;
 		}
+		private Expression optimized;
+		public Expression Optimize(Map scope)
+		{
+			if(optimized==null)
+			{
+				optimized = GetExpression().Optimize(scope, new List<StatementBase>());
+				//optimized = GetExpression().Optimize(scope, statement);
+			}
+			return optimized;
+		}
 		public Expression GetExpression()
 		{
 			if (expression == null)
@@ -5171,6 +5234,7 @@ namespace Meta
 			}
 			return i - 1;
 		}
+
 		public Map CallDefault(Map arg)
 		{
 			if (ContainsKey(CodeKeys.Function))
@@ -5178,7 +5242,8 @@ namespace Meta
 				Map argument = new Map(new DictionaryStrategy());
 				argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
 				argument.Scope = this;
-				Expression expression=this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Optimize(argument);
+				Expression expression = this[CodeKeys.Function][CodeKeys.Expression].Optimize(argument);
+				//Expression expression = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Optimize(argument);
 				return expression.Evaluate(argument);
 				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argument);
 				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argument)).Evaluate(argument);
