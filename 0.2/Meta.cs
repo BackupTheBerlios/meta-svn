@@ -540,6 +540,35 @@ namespace Meta
 			return selected[key].Copy();
 		}
 	}
+	public class EmittedExpression : Expression
+	{
+		Eval eval;
+		public EmittedExpression(ILEmitter emitter)
+		{
+			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
+			DynamicMethod method = new DynamicMethod(
+				"Optimized",
+				typeof(Map),
+				parameters,
+				typeof(Map).Module);
+
+			Argument argument = new Argument(1, typeof(Map));
+			ILProgram program = new ILProgram();
+
+			Local context = program.Declare();
+			program.AddRange(
+				context.Assign(argument),
+				emitter,
+				//Emit(this, null, context, new Argument(0, typeof(Expression))),
+				(Emit)Return);
+			program.Emit(method.GetILGenerator());
+			eval=(Eval)method.CreateDelegate(typeof(Eval), this);
+		}
+		public override Map Evaluate(Map context)
+		{
+			return eval(context);
+		}
+	}
 	public class Search : Expression
 	{
 		public override Map Evaluate(Map context)
@@ -586,7 +615,33 @@ namespace Meta
 				{
 					if (s.ContainsKey(key))
 					{
-						return new OptimizedSearch(count, key);
+						if (s.Strategy is OptimizedMap)
+						{
+						}
+						else
+						{
+						}
+						if (key.IsString)
+						{
+							ILProgram program = new ILProgram();
+							Local selected = program.Declare();
+							program.Add(selected.Assign(new Argument(1,typeof(Map))));
+							//Map selected = context;
+							for (int i = 0; i < count; i++)
+							{
+								program.Add(selected.Assign(selected.Call("get_Scope")));
+								//selected = selected.Scope;
+							}
+							program.Add(selected.Call("get_Item", 
+								new New(typeof(Map).GetConstructor(new Type[] {typeof(string)}),
+								key.GetString())).Call("Copy"));
+							//return selected[key].Copy();
+							return new EmittedExpression(program);
+						}
+						else
+						{
+							return new OptimizedSearch(count, key);
+						}
 					}
 					else if (s.activeProgram != null && !s.activeProgram.WillNotAddKey(key,s.activeStatement))
 					{
