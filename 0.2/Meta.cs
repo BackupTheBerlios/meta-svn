@@ -1618,11 +1618,30 @@ namespace Meta
 	[Serializable]
 	public class EmptyStrategy : MapStrategy
 	{
+		//public override bool Equal(MapStrategy strategy)
+		//{
+
+		//    else
+		//    {
+		//        return base.Equal(strategy);
+		//    }
+		//}
+		public static EmptyStrategy empty = new EmptyStrategy();
+		private EmptyStrategy()
+		{
+		}
 		public override bool IsNumber
 		{
 			get 
 			{
 				return true;
+			}
+		}
+		public override int Count
+		{
+			get
+			{
+				return 0;
 			}
 		}
 		public override int GetArrayCount()
@@ -1642,73 +1661,38 @@ namespace Meta
 		}
 		public override Map CopyData()
 		{
-			return new Map(new EmptyStrategy());
+			return new Map(this);
+			//return new Map(new EmptyStrategy());
 		}
 		public override MapStrategy DeepCopy(Map key, Map value, Map map)
 		{
 			if (key.IsNumber)
 			{
-				if (key.Equals(Map.Empty) && value.IsNumber)
+				if (key.Count==0 && value.IsNumber)
+				//if (key.Equals(Map.Empty) && value.IsNumber)
 				{
 					NumberStrategy number = new NumberStrategy(0);
 					number.Set(key, value, map);
 					return number;
-					//Panic(key, val, new NumberStrategy(0), map);
 				}
 				else
 				{
 					if (key.Equals(new Map(1)))
 					{
 						ListStrategy list = new ListStrategy();
-						list.Set(key, value, map);
+						list.Append(value,map);
 						return list;
-						// that is not logical, maybe ListStrategy is not suitable for this, only if key==1
-						//Panic(key, val, new ListStrategy(), map);
 					}
 				}
 			}
-			return base.DeepCopy(key,value,map);
-			//        else
-			//        {
-			//            Panic(key, val, new DictionaryStrategy(), map);
-			//        }
-			//    }
-			//}
-			//else
-			//{
-			//    Panic(key, val, new DictionaryStrategy(), map);
-			//}
+			DictionaryStrategy dictionary = new DictionaryStrategy();
+			dictionary.Set(key, value, map);
+			return dictionary;
 		}
 		public override void Set(Map key, Map val, Map map)
 		{
 			map.Strategy=DeepCopy(key,val,map);
 		}
-		//public override void Set(Map key, Map val, Map map)
-		//{
-		//    if (key.IsNumber)
-		//    {
-		//        if (key.Equals(Map.Empty) && val.IsNumber)
-		//        {
-		//            Panic(key, val, new NumberStrategy(0),map);
-		//        }
-		//        else
-		//        {
-		//            if (key.Equals(new Map(1)))
-		//            {
-		//                // that is not logical, maybe ListStrategy is not suitable for this, only if key==1
-		//                Panic(key, val, new ListStrategy(), map);
-		//            }
-		//            else
-		//            {
-		//                Panic(key, val, new DictionaryStrategy(), map);
-		//            }
-		//        }
-		//    }
-		//    else
-		//    {
-		//        Panic(key, val,new DictionaryStrategy(), map);
-		//    }
-		//}
 		public override Map Get(Map key)
 		{
 			return null;
@@ -4379,10 +4363,10 @@ namespace Meta
 		{
 			return new Map(maps);
 		}
-		public Map CreateMap()
-		{
-			return CreateMap(new EmptyStrategy());
-		}
+		//public Map CreateMap()
+		//{
+		//    return CreateMap(new EmptyStrategy());
+		//}
 		public Map CreateMap(MapStrategy strategy)
 		{
 			return new Map(strategy);
@@ -5092,7 +5076,7 @@ namespace Meta
 			this.strategy = strategy;
 		}
 		public Map()
-			: this(new EmptyStrategy())
+			: this(EmptyStrategy.empty)
 		{
 		}
 		public Map(Number number)
@@ -5337,7 +5321,7 @@ namespace Meta
 				throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(this));
 			}
 		}
-		private static Map empty = new Map(new EmptyStrategy());
+		private static Map empty = new Map(EmptyStrategy.empty);
 		public static Map Empty
 		{
 			get
