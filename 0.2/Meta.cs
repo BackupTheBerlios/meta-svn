@@ -432,42 +432,43 @@ namespace Meta
 		}
 		public List<Map> literals = new List<Map>();
 		protected Eval optimized;
-		public virtual Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = EmitCode();
-			}
-			return optimized(context);
-		}
+		public abstract Map Evaluate(Map context);
+		//{
+		//    if (optimized == null)
+		//    {
+		//        optimized = EmitCode();
+		//    }
+		//    return optimized(context);
+		//}
 		public void Return(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ret);
 		}
-		public virtual void Optimize()
+		public virtual Expression Optimize(Map scope)
 		{
+			return this;
 		}
-		public Eval EmitCode()
-		{
-			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
-			DynamicMethod method = new DynamicMethod(
-				"Optimized",
-				typeof(Map),
-				parameters,
-				typeof(Map).Module);
+		//public Eval EmitCode()
+		//{
+		//    Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
+		//    DynamicMethod method = new DynamicMethod(
+		//        "Optimized",
+		//        typeof(Map),
+		//        parameters,
+		//        typeof(Map).Module);
 
-			Argument argument = new Argument(1,typeof(Map));
-			ILProgram program = new ILProgram();
+		//    Argument argument = new Argument(1,typeof(Map));
+		//    ILProgram program = new ILProgram();
 
-			Local context = program.Declare();
-			program.AddRange(
-				context.Assign(argument),
-				Emit(this,null, context,new Argument(0,typeof(Expression))),
-				(Emit)Return);
-			program.Emit(method.GetILGenerator());
-			return (Eval)method.CreateDelegate(typeof(Eval), this);
-		}
-		public abstract ILEmitter Emit(Expression expression,StatementBase lastProgram, Local context, Argument argument);
+		//    Local context = program.Declare();
+		//    program.AddRange(
+		//        context.Assign(argument),
+		//        Emit(this,null, context,new Argument(0,typeof(Expression))),
+		//        (Emit)Return);
+		//    program.Emit(method.GetILGenerator());
+		//    return (Eval)method.CreateDelegate(typeof(Eval), this);
+		//}
+		//public abstract ILEmitter Emit(Expression expression,StatementBase lastProgram, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
@@ -498,18 +499,37 @@ namespace Meta
 			return callable;
 
 		}
-		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local current, Argument argument)
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local current, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local callable = program.Declare();
+		//    program.Add(callable.Assign(calls[0].Emit(expression,lastProgram, current,argument)));
+		//    for (int i = 1; i < calls.Count; i++)
+		//    {
+		//        program.Add(
+		//            callable.Assign(callable.Call("Call", calls[i].Emit(expression,lastProgram, current,argument))));
+		//    }
+		//    program.Add(callable.Load);
+		//    return program;
+		//}
+	}
+	public class OptimizedSearch : Expression
+	{
+		private int count;
+		private Map key;
+		public OptimizedSearch(int count,Map key)
 		{
-			ILProgram program = new ILProgram();
-			Local callable = program.Declare();
-			program.Add(callable.Assign(calls[0].Emit(expression,lastProgram, current,argument)));
-			for (int i = 1; i < calls.Count; i++)
+			this.count = count;
+			this.key = key;
+		}
+		public override Map Evaluate(Map context)
+		{
+			Map selected = context;
+			for (int i = 0; i < count; i++)
 			{
-				program.Add(
-					callable.Assign(callable.Call("Call", calls[i].Emit(expression,lastProgram, current,argument))));
+				selected = selected.Scope;
 			}
-			program.Add(callable.Load);
-			return program;
+			return selected[key];
 		}
 	}
 	public class Search : Expression
@@ -531,6 +551,29 @@ namespace Meta
 			}
 			return selected[key].Copy();
 		}
+		public override Expression Optimize(Map scope)
+		{
+			if (expression is Literal)
+			{
+				Map key = ((Literal)expression).literal;
+				int count = 0;
+				Map s = scope;
+				while (s!=null)
+				{
+					if (s.ContainsKey(key))
+					{
+						return new OptimizedSearch(count, key);
+					}
+					else if (s.activeProgram != null)
+					{
+						break;
+					}
+					s = s.Scope;
+					count++;
+				}
+			}
+			return this;
+		}
 		private Expression expression;
 		Map code;
 		public Search(Map code)
@@ -538,38 +581,38 @@ namespace Meta
 			this.expression = code.GetExpression();
 			this.code = code;
 		}
-		public override ILEmitter Emit(Expression parentExpression, StatementBase statement, Local context, Argument argument)
-		{
-			ILProgram program = new ILProgram();
-			Local key = program.Declare();
-			Local selected = program.Declare();
-			program.Add(key.Assign(expression.Emit(parentExpression, statement, context, argument)));
-			program.Add(selected.Assign(context));
+		//public override ILEmitter Emit(Expression parentExpression, StatementBase statement, Local context, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local key = program.Declare();
+		//    Local selected = program.Declare();
+		//    program.Add(key.Assign(expression.Emit(parentExpression, statement, context, argument)));
+		//    program.Add(selected.Assign(context));
 
-			bool optimize=false;
-			ILProgram p = new ILProgram();
-			//if (expression is Literal)
-			//{
-			//    Map literal=((Literal)expression).literal;
-			//    StatementBase s = statement;
-			//    while (s!=null && s.NeverContainsKey(literal))
-			//    {
-			//        //s = s.Parent;
-			//        p.Add(selected.Assign(selected.Call("get_Scope")));
-			//    }
-			//    optimize=s!=null && s.AlwaysContainsKey(literal);
-			//}
-			//if (optimize)
-			//{
-			//    program.Add(p);
-			//}
-			//else
-			//{
-				program.Add(EmitSearch(key, selected,code.Extent));
-			//}
-			program.Add(selected.Call("get_Item", key).Call("Copy"));
-			return program;
-		}
+		//    bool optimize=false;
+		//    ILProgram p = new ILProgram();
+		//    //if (expression is Literal)
+		//    //{
+		//    //    Map literal=((Literal)expression).literal;
+		//    //    StatementBase s = statement;
+		//    //    while (s!=null && s.NeverContainsKey(literal))
+		//    //    {
+		//    //        //s = s.Parent;
+		//    //        p.Add(selected.Assign(selected.Call("get_Scope")));
+		//    //    }
+		//    //    optimize=s!=null && s.AlwaysContainsKey(literal);
+		//    //}
+		//    //if (optimize)
+		//    //{
+		//    //    program.Add(p);
+		//    //}
+		//    //else
+		//    //{
+		//        program.Add(EmitSearch(key, selected,code.Extent));
+		//    //}
+		//    program.Add(selected.Call("get_Item", key).Call("Copy"));
+		//    return program;
+		//}
 	}
 	public class Program : Expression
 	{
@@ -579,6 +622,7 @@ namespace Meta
 			context.Scope = parent;
 			foreach (StatementBase statement in statementList)
 			{
+				context.activeProgram = this;
 				statement.Assign(ref context);
 			}
 			return context;
@@ -608,53 +652,53 @@ namespace Meta
 				statementList.Add(m.GetStatement(this));
 			}
 		}
-		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
-		{
-			//bool literal = true;
-			//foreach (StatementBase statement in statementList)
-			//{
-			//    if (statement is KeyStatement)
-			//    {
-			//        KeyStatement s = (KeyStatement)statement;
-			//        if (s.key is Literal && s.value is Literal)
-			//        {
-			//            continue;
-			//        }
-			//    }
-			//    literal = false;
-			//}
-			//if (literal)
-			//{
-			//    Map l = new Map();
-			//    foreach (KeyStatement s in statementList)
-			//    {
-			//        l[((Literal)s.key).literal] = ((Literal)s.value).literal;
-			//    }
-			//    expression.literals.Add(l);
-			//    ILProgram program = new ILProgram();
-			//    Local result=program.Declare();
-			//    program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
-			//    //program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
-			//    program.Add(result.Call("set_Scope", parent));
-			//    program.Add(result.Load);
-			//    return program;
-			//}
-			//else
-			////{
-			//{
-				ILProgram program = new ILProgram();
-				Local context = program.Declare();
-				program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
-				program.Add(context.Call("set_Scope", parent));
-				foreach (StatementBase statement in statementList)
-				{
-					program.Add(statement.Get(expression, context, argument));
-				}
-				program.Add(context.Load);
-				return program;
-			//}
-			//}
-		}
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
+		//{
+		//    //bool literal = true;
+		//    //foreach (StatementBase statement in statementList)
+		//    //{
+		//    //    if (statement is KeyStatement)
+		//    //    {
+		//    //        KeyStatement s = (KeyStatement)statement;
+		//    //        if (s.key is Literal && s.value is Literal)
+		//    //        {
+		//    //            continue;
+		//    //        }
+		//    //    }
+		//    //    literal = false;
+		//    //}
+		//    //if (literal)
+		//    //{
+		//    //    Map l = new Map();
+		//    //    foreach (KeyStatement s in statementList)
+		//    //    {
+		//    //        l[((Literal)s.key).literal] = ((Literal)s.value).literal;
+		//    //    }
+		//    //    expression.literals.Add(l);
+		//    //    ILProgram program = new ILProgram();
+		//    //    Local result=program.Declare();
+		//    //    program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
+		//    //    //program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
+		//    //    program.Add(result.Call("set_Scope", parent));
+		//    //    program.Add(result.Load);
+		//    //    return program;
+		//    //}
+		//    //else
+		//    ////{
+		//    //{
+		//        ILProgram program = new ILProgram();
+		//        Local context = program.Declare();
+		//        program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
+		//        program.Add(context.Call("set_Scope", parent));
+		//        foreach (StatementBase statement in statementList)
+		//        {
+		//            program.Add(statement.Get(expression, context, argument));
+		//        }
+		//        program.Add(context.Load);
+		//        return program;
+		//    //}
+		//    //}
+		//}
 	}
 	public abstract class StatementBase
 	{
@@ -721,7 +765,7 @@ namespace Meta
 			this.program = program;
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
+		//public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
 	}
 	public delegate void Ass(Map context);
 
@@ -739,30 +783,28 @@ namespace Meta
 			this.key = code[CodeKeys.Key].GetExpression();
 			//this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		{
-			return context.Call("set_Item", key.Emit(expression,this, context, argument), value.Emit(expression,this, context, argument));
-		}
+		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
+		//{
+		//    return context.Call("set_Item", key.Emit(expression,this, context, argument), value.Emit(expression,this, context, argument));
+		//}
 	}
 	public class CurrentStatement : StatementBase
 	{
 		public override void AssignImplementation(ref Map context,Map value)
 		{
-			//Map val = value.Evaluate(context);
 			Map val=value.Copy();
 			val.Scope = context.Scope;
 			context=val;
 		}
-		//private Expression value;
 		public CurrentStatement(Map code, Program program)
 			: base(program,code)
 		{
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		{
-			return context.Call("set_Strategy",value.Emit(expression, this, context, argument).Call("get_Strategy"));
-		}
+		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
+		//{
+		//    return context.Call("set_Strategy",value.Emit(expression, this, context, argument).Call("get_Strategy"));
+		//}
 	}
 	public class Statement : StatementBase
 	{
@@ -795,17 +837,17 @@ namespace Meta
 			this.key = code[CodeKeys.Keys].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		{
-			ILProgram program = new ILProgram();
-			Local k=program.Declare();
-			Local selected = program.Declare();
-			program.Add(k.Assign(key.Emit(expression,this, context, argument)));
-			program.Add(selected.Assign(context));
-			program.Add(Expression.EmitSearch(k, selected,code.Extent));
-			program.Add(selected.Call("set_Item",k,value.Emit(expression,this, context, argument)));
-			return program;
-		}
+		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local k=program.Declare();
+		//    Local selected = program.Declare();
+		//    program.Add(k.Assign(key.Emit(expression,this, context, argument)));
+		//    program.Add(selected.Assign(context));
+		//    program.Add(Expression.EmitSearch(k, selected,code.Extent));
+		//    program.Add(selected.Call("set_Item",k,value.Emit(expression,this, context, argument)));
+		//    return program;
+		//}
 	}
 	public class Literal : Expression
 	{
@@ -826,11 +868,11 @@ namespace Meta
 				this.literal = code;
 			}
 		}
-		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
-		{
-			expression.literals.Add(literal);
-			return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
-		}
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
+		//{
+		//    expression.literals.Add(literal);
+		//    return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
+		//}
 	}
 	public class Root : Expression
 	{
@@ -841,10 +883,10 @@ namespace Meta
 		//public Root(StatementBase statement)
 		//{
 		//}
-		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
-		{
-			return new StaticField(typeof(Gac).GetField("gac"));
-		}
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
+		//{
+		//    return new StaticField(typeof(Gac).GetField("gac"));
+		//}
 	}
 	public class Select : Expression
 	{
@@ -876,36 +918,36 @@ namespace Meta
 				subs.Add(m.GetExpression());
 			}
 		}
-		public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
-		{
-			ILProgram program = new ILProgram();
-			Local selected = program.Declare();
-			program.Add(selected.Assign(subselects[0].GetExpression().Emit(expression, lastProgram, context, argument)));
-			Local key = program.Declare();
-			Local value = program.Declare();
-			for (int i = 1; i < subselects.Count; i++)
-			{
-				program.Add(key.Assign(subselects[i].GetExpression().Emit(expression, lastProgram, context, argument)));
-				program.Add(value.Assign(selected.Call("TryGetValue", key)));
-				program.Add(
-					If(
-						value,
-						selected.Assign(value),
-						Throw(
-							new New(
-								typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-								key,
-								new New(
-									typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
-									subselects[i].Extent.Start.Line,
-									subselects[i].Extent.FileName),
-								selected),
-								typeof(KeyNotFound)
-								)));
-			}
-			program.Add(selected.Load);
-			return program;
-		}
+		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
+		//{
+		//    ILProgram program = new ILProgram();
+		//    Local selected = program.Declare();
+		//    program.Add(selected.Assign(subselects[0].GetExpression().Emit(expression, lastProgram, context, argument)));
+		//    Local key = program.Declare();
+		//    Local value = program.Declare();
+		//    for (int i = 1; i < subselects.Count; i++)
+		//    {
+		//        program.Add(key.Assign(subselects[i].GetExpression().Emit(expression, lastProgram, context, argument)));
+		//        program.Add(value.Assign(selected.Call("TryGetValue", key)));
+		//        program.Add(
+		//            If(
+		//                value,
+		//                selected.Assign(value),
+		//                Throw(
+		//                    new New(
+		//                        typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
+		//                        key,
+		//                        new New(
+		//                            typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
+		//                            subselects[i].Extent.Start.Line,
+		//                            subselects[i].Extent.FileName),
+		//                        selected),
+		//                        typeof(KeyNotFound)
+		//                        )));
+		//    }
+		//    program.Add(selected.Load);
+		//    return program;
+		//}
 	}
 	public class Interpreter
 	{
@@ -4970,6 +5012,7 @@ namespace Meta
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
+		public Program activeProgram;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list):this(new ListStrategy(new List<Map>(list)))
 		{
@@ -5135,8 +5178,7 @@ namespace Meta
 				Map argument = new Map(new DictionaryStrategy());
 				argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
 				argument.Scope = this;
-				Expression expression=this[CodeKeys.Function][CodeKeys.Expression].GetExpression();
-				expression.Optimize();
+				Expression expression=this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Optimize(argument);
 				return expression.Evaluate(argument);
 				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argument);
 				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argument)).Evaluate(argument);
