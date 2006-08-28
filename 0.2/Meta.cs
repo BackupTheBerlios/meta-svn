@@ -588,7 +588,7 @@ namespace Meta
 					{
 						return new OptimizedSearch(count, key);
 					}
-					else if (s.activeProgram != null)
+					else if (s.activeProgram != null && !s.activeProgram.WillNotAddKey(key,s.activeStatement))
 					{
 						break;
 					}
@@ -640,6 +640,38 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
+		public bool WillNotAddKey(Map key, StatementBase statement)
+		{
+			int index=0;
+			foreach (StatementBase s in statementList)
+			{
+				if (s == statement)
+				{
+					for (int i = index; i < statementList.Count; i++)
+					{
+						KeyStatement keyStatement = statementList[i] as KeyStatement;
+						if (keyStatement != null)
+						{
+							Literal literal = keyStatement.key as Literal;
+							if (literal != null && literal.literal.Equals(key))
+							{
+								return false;
+							}
+						}
+						else if (statementList[i] is CurrentStatement)
+						{
+						}
+						else
+						{
+							return false;
+						}
+					}
+					return true;
+				}
+				index++;
+			}
+			return false;
+		}
 		public override Expression Optimize(Map scope, List<StatementBase> statements)
 		{
 			foreach (StatementBase statement in statementList)
@@ -661,6 +693,7 @@ namespace Meta
 			foreach (StatementBase statement in statementList)
 			{
 				context.activeProgram = this;
+				context.activeStatement = statement;
 				statement.Assign(ref context);
 			}
 			return context;
@@ -5066,6 +5099,7 @@ namespace Meta
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
 		public Program activeProgram;
+		public StatementBase activeStatement;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list):this(new ListStrategy(new List<Map>(list)))
 		{
