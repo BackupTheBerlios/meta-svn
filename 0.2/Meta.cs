@@ -1908,6 +1908,19 @@ namespace Meta
 	[Serializable]
 	public class ListStrategy : MapStrategy
 	{
+		public override MapStrategy DeepCopy(Map key, Map value, Map map)
+		{
+			if (key.Equals(new Map(Count + 1)))
+			{
+				List<Map> newList = new List<Map>(this.list);
+				newList.Add(value);
+				return new ListStrategy(newList);
+			}
+			else
+			{
+				return base.DeepCopy(key, value, map);
+			}
+		}
 		public override Map CopyData()
 		{
 			return new Map(new CloneStrategy(this));
@@ -1920,6 +1933,10 @@ namespace Meta
 
 		public ListStrategy():this(5)
 		{
+		}
+		public ListStrategy(List<Map> list)
+		{
+			this.list = list;
 		}
 		public ListStrategy(int capacity)
 		{
