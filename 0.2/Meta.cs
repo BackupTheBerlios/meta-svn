@@ -672,14 +672,113 @@ namespace Meta
 			}
 			return false;
 		}
+		private bool AllLiteralKeys()
+		{
+			int count = 0;
+			foreach(StatementBase statement in statementList)
+			{
+				KeyStatement keyStatement=statement as KeyStatement;
+				if (keyStatement != null && keyStatement.key is Literal && ((Literal)keyStatement.key).literal.IsString && ((Literal)keyStatement.key).literal.Count!=0 || statement is CurrentStatement && count == statementList.Count - 1)
+				{
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		public Type type;
+		private Type CreateType()
+		{
+			try
+			{
+				int count = 0;
+
+				//Type ivType = null;
+				//Type[] ctorParams = new Type[] { typeof(int),
+				//                            typeof(int),
+				//                 typeof(int)};
+
+				AppDomain myDomain = Thread.GetDomain();
+				AssemblyName myAsmName = new AssemblyName();
+				myAsmName.Name = "Test";
+
+				AssemblyBuilder myAsmBuilder = myDomain.DefineDynamicAssembly(myAsmName, AssemblyBuilderAccess.RunAndSave);
+
+				ModuleBuilder IntVectorModule = myAsmBuilder.DefineDynamicModule("IntVectorModule",
+												"Vector.dll");
+
+				TypeBuilder ivTypeBld = IntVectorModule.DefineType("IntVector",
+											   TypeAttributes.Public);
+
+
+
+				//    Type objType = Type.GetType("System.Object"); 
+				//    ConstructorInfo objCtor = objType.GetConstructor(new Type[0]);
+
+				//ConstructorBuilder ivCtor = ivTypeBld.DefineConstructor(
+				//               MethodAttributes.Public,
+				//               CallingConventions.Standard,
+				//               ctorParams);
+				//ILGenerator ctorIL = ivCtor.GetILGenerator();
+				//    ctorIL.Emit(OpCodes.Ldarg_0);
+				//    ctorIL.Emit(OpCodes.Call, objCtor);
+				//    ctorIL.Emit(OpCodes.Ldarg_0);
+				//    ctorIL.Emit(OpCodes.Ldarg_1);
+				//    ctorIL.Emit(OpCodes.Stfld, xField); 
+				//    ctorIL.Emit(OpCodes.Ldarg_0);
+				//    ctorIL.Emit(OpCodes.Ldarg_2);
+				//    ctorIL.Emit(OpCodes.Stfld, yField); 
+				//    ctorIL.Emit(OpCodes.Ldarg_0);
+				//    ctorIL.Emit(OpCodes.Ldarg_3);
+				//    ctorIL.Emit(OpCodes.Stfld, zField); 
+				//ctorIL.Emit(OpCodes.Ret); 
+
+
+
+				foreach (StatementBase statement in statementList)
+				{
+					try
+					{
+						KeyStatement keyStatement = statement as KeyStatement;
+						if ((keyStatement != null && keyStatement.key is Literal))
+						{
+							FieldBuilder xField = ivTypeBld.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(Map), FieldAttributes.Public);
+						}
+					}
+					catch (Exception e)
+					{
+						KeyStatement keyStatement = statement as KeyStatement;
+						if ((keyStatement != null && keyStatement.key is Literal) || (statement is CurrentStatement && count == statementList.Count - 1))
+						{
+							FieldBuilder xField = ivTypeBld.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(int), FieldAttributes.Public);
+						}
+					}
+				}
+				return ivTypeBld.CreateType();
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
+		}
 		public override Expression Optimize(Map scope, List<StatementBase> statements)
 		{
+			if (AllLiteralKeys())
+			{
+				type = CreateType();
+			}
+			else
+			{
+			}
 			foreach (StatementBase statement in statementList)
 			{
 				statements.Add(statement);
 				statement.value = statement.value.Optimize(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
 			}
+
 			//bool isLiteral = true;
 			//foreach (StatementBase statement in statementList)
 			//{
@@ -754,7 +853,15 @@ namespace Meta
 		//}
 		public override Map Evaluate(Map parent)
 		{
-			Map context = new Map();
+			Map context;
+			if (type != null)
+			{
+			    context=new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
+			}
+			else
+			{
+				context = new Map();
+			}
 			context.Scope = parent;
 			foreach (StatementBase statement in statementList)
 			{
@@ -1795,6 +1902,47 @@ namespace Meta
 			return result;
 		}
 	}
+	public class OptimizedMap : MapStrategy
+	{
+		public override int GetArrayCount()
+		{
+			return 0;
+		}
+		public override IEnumerable<Map> Keys
+		{
+			get 
+			{
+				foreach (FieldInfo field in type.GetFields())
+				{
+					yield return field.Name;
+				}
+			}
+		}
+		public object obj;
+		private Type type;
+		public OptimizedMap(object obj)
+		{
+			this.obj=obj;
+			this.type = obj.GetType();
+		}
+		//const BindingFlags bindingFlags=BindingFlags.Instance|BindingFlags.Public;
+		public override void Set(Map key, Map val, Map map)
+		{
+			type.GetField(key.GetString()).SetValue(obj, val);
+		}
+		public override Map Get(Map key)
+		{
+			if (key.IsString)
+			{
+				FieldInfo field = type.GetField(key.GetString());
+				if (field != null)
+				{
+					return (Map)field.GetValue(obj);
+				}
+			}
+			return null;
+		}
+	}
 	[Serializable]
 	public class ObjectMap: DotNetMap
 	{
@@ -1829,7 +1977,8 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Object is not callable.");
+				return base.Call(arg, parent);// ("Object is not callable.");
+				//throw new ApplicationException("Object is not callable.");
 			}
 		}
 		//public override Map Call(Map arg,Map parent)
