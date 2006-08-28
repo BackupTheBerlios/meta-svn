@@ -677,15 +677,81 @@ namespace Meta
 			foreach (StatementBase statement in statementList)
 			{
 				statements.Add(statement);
-				if (statement.value is Search)
-				{
-				}
 				statement.value = statement.value.Optimize(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
 			}
-			return this;
+			//bool isLiteral = true;
+			//foreach (StatementBase statement in statementList)
+			//{
+			//    KeyStatement s = statement as KeyStatement;
+			//    if (s != null && s.key is Literal && s.value is Literal)
+			//    {
+			//        continue;
+			//    }
+			//    else
+			//    {
+			//        isLiteral = false;
+			//        break;
+			//    }
+			//}
+			//if (isLiteral)
+			//{
+			//    Map result = this.Evaluate(null);
+			//    return new OptimizedProgram(result);
+			//}
+			//else
+			{
+				return this;
+			}
+			//}
 			//return base.Optimize(scope, statement);
 		}
+		//public class OptimizedProgram:Expression
+		//{
+		//    private Map result;
+		//    public OptimizedProgram(Map result)
+		//    {
+		//        this.re
+		//    }
+		//    public override Map Evaluate(Map context)
+		//    {
+		//        Map map=result.Copy();
+		//        map.Scope = context;
+		//        return map;
+		//    }
+		//}
+		//public override Expression Optimize(Map scope, List<StatementBase> statements)
+		//{
+		//    bool isLiteral = true;
+		//    foreach (StatementBase statement in statementList)
+		//    {
+		//        KeyStatement s = statement as KeyStatement;
+		//        if (s != null && s.key is Literal && s.value is Literal)
+		//        {
+		//            continue;
+		//        }
+		//        else
+		//        {
+		//            isLiteral = false;
+		//            break;
+		//        }
+		//    }
+		//    if (isLiteral)
+		//    {
+		//        return new Literal(this.Evaluate(scope));
+		//    }
+		//    else
+		//    {
+		//        foreach (StatementBase statement in statementList)
+		//        {
+		//            statements.Add(statement);
+		//            statement.value = statement.value.Optimize(scope, statements);
+		//            statements.RemoveAt(statements.Count - 1);
+		//        }
+		//        return this;
+		//        //return base.Optimize(scope, statement);
+		//    }
+		//}
 		public override Map Evaluate(Map parent)
 		{
 			Map context = new Map();
@@ -851,6 +917,14 @@ namespace Meta
 	{
 		public override void AssignImplementation(ref Map context,Map value)
 		{
+			//value.Scope = context;
+			//if(value.ContainsKey("autoSearch"))
+			//{
+			//}
+			//if (value.Scope == null)
+			//{
+			//    value.Scope = context;
+			//}
 			context[key.Evaluate(context)] = value;
 			//context[key.GetExpression().Evaluate(context)] = value.GetExpression().Evaluate(context);
 		}
@@ -931,7 +1005,17 @@ namespace Meta
 	{
 		public override Map Evaluate(Map context)
 		{
-			return literal.Copy();
+			Map result=literal.Copy();
+			//if (result.ContainsKey(CodeKeys.Function))
+			//{
+			//    result.Scope = context;
+			//}
+			//if (result.Scope == null)
+			//{
+			//    result.Scope = context;
+			//}
+			//result.Scope = context;
+			return result;
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
@@ -1545,12 +1629,18 @@ namespace Meta
 			}
 			else
 			{
-				return new Map(new CallDelegate(delegate(Map map)
+				CallDelegate call = new CallDelegate(delegate(Map map)
 				{
 					return DecideCall(map, arguments);
-				}));
+				});
+				return new Map(new Method(invokeMethod, call, typeof(CallDelegate)));
+				//return new Map(new CallDelegate(delegate(Map map)
+				//{
+				//    return DecideCall(map, arguments);
+				//}));
 			}
 		}
+		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
 		private Map Invoke(Map argument, object[] arguments)
 		{
 			try
@@ -1731,17 +1821,28 @@ namespace Meta
 				return Object;
 			}
 		}
-		public override Map Call(Map arg,Map parent)
+		public override Map Call(Map arg, Map parent)
 		{
 			if (this.Type.IsSubclassOf(typeof(Delegate)))
 			{
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg,parent);
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, parent);
 			}
 			else
 			{
 				throw new ApplicationException("Object is not callable.");
 			}
 		}
+		//public override Map Call(Map arg,Map parent)
+		//{
+		//    if (this.Type.IsSubclassOf(typeof(Delegate)))
+		//    {
+		//        return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg,parent);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Object is not callable.");
+		//    }
+		//}
 		public override bool Equals(object obj)
 		{
 			return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
@@ -2607,10 +2708,10 @@ namespace Meta
 				foreach (MemberInfo member in type.GetMembers(bindingFlags))
 				{
 					MethodInfo method = member as MethodInfo;
-					if (method!=null)
+					if (method != null)
 					{
 						string name = TypeMap.GetMethodName(method);
-						data[name]= new MethodMember(method);
+						data[name] = new MethodMember(method);
 					}
 					FieldInfo field = member as FieldInfo;
 					if (field != null)
@@ -2618,12 +2719,15 @@ namespace Meta
 						data[field.Name] = new FieldMember(field);
 					}
 					Type t = member as Type;
-					if (t!=null)
+					if (t != null)
 					{
 						data[t.Name] = new TypeMember(t);
 					}
 				}
 				cache[type] = data;
+			}
+			else
+			{
 			}
 			return cache[type];
 		}
@@ -5292,6 +5396,8 @@ namespace Meta
 			Map clone = strategy.CopyData();
 			clone.Scope = Scope;
 			clone.Extent = Extent;
+			//clone.expression = expression;
+			//clone.optimized = optimized;
 			return clone;
 		}
 		public override int GetHashCode()
