@@ -444,20 +444,13 @@ namespace Meta
 		}
 		public List<Map> literals = new List<Map>();
 		protected Eval optimized;
-		public virtual Map Evaluate(Map context)
+		public Map Evaluate(Map context)
 		{
 			if (optimized == null)
 			{
 				optimized = Optimize();
 			}
-			try
-			{
-				return optimized(context);
-			}
-			catch(Exception e)
-			{
-				throw e;
-			}
+			return optimized(context);
 		}
 		public void Return(ILGenerator il)
 		{
@@ -487,21 +480,6 @@ namespace Meta
 	}
 	public class Call : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
 		private Map parameterName;
 		public List<Expression> calls;
 		Map code;
@@ -513,7 +491,6 @@ namespace Meta
 			{
 				calls.Add(m.GetExpression(statement));
 			}
-			//this.calls = code.Array.ConvertAll<Expression>(delegate(Map m) { return m.GetExpression(statement); });
 			if (calls.Count == 1)
 			{
 				calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty),statement));
@@ -536,21 +513,6 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
 		private Expression expression;
 		Map code;
 		public Search(Map code,StatementBase statement):base(statement)
@@ -600,22 +562,6 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw new MetaException(e.ToString(),code.Extent);
-			}
-		}
-
 		public IEnumerable<StatementBase> Statements
 		{
 			get
@@ -812,21 +758,6 @@ namespace Meta
 	}
 	public class Literal : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public Literal(Map code,StatementBase statement):base(statement)
@@ -848,21 +779,6 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
 		public Root(StatementBase statement)
 			: base(statement)
 		{
@@ -874,21 +790,6 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			if (optimized == null)
-			{
-				optimized = Optimize();
-			}
-			try
-			{
-				return optimized(context);
-			}
-			catch (Exception e)
-			{
-				throw e;
-			}
-		}
 		private List<Map> subselects;
 		public Select(Map code, StatementBase statement)
 			: base(statement)
@@ -2268,6 +2169,45 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		public virtual Expression CreateExpression(StatementBase statement, Map map)
+		{
+			return CreateExpressionDefault(statement,map);
+		}
+		public Expression CreateExpressionDefault(StatementBase statement,Map map)
+		{
+			if (ContainsKey(CodeKeys.Call))
+			{
+				return new Call(this.Get(CodeKeys.Call), this.Get(CodeKeys.Parameter), statement);
+			}
+			else if (ContainsKey(CodeKeys.Program))
+			{
+				return new Program(this.Get(CodeKeys.Program), statement);
+			}
+			else if (ContainsKey(CodeKeys.Literal))
+			{
+				return new Literal(this.Get(CodeKeys.Literal), statement);
+			}
+			else if (ContainsKey(CodeKeys.Select))
+			{
+				return new Select(this.Get(CodeKeys.Select), statement);
+			}
+			else if (ContainsKey(CodeKeys.Search))
+			{
+				return new Search(this.Get(CodeKeys.Search), statement);
+			}
+			else if (ContainsKey(CodeKeys.Root))
+			{
+				return new Root(statement);
+			}
+			//else if(ContainsKey(CodeKeys.Function))
+			//{
+			//    return new FunctionExpression(this.Get(CodeKeys.Function),statement);
+			//}
+			else
+			{
+				throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(map));
+			}
+		}
 		public virtual string Serialize(Map parent)
 		{
 			return parent.SerializeDefault();
@@ -5069,6 +5009,30 @@ namespace Meta
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
+	//public class FunctionExpression : Expression
+	//{
+	//    private string parameter;
+	//    private Expression expression;
+	//    public FunctionExpression(Map code, StatementBase statement):base(statement)
+	//    {
+	//        this.parameter = code[CodeKeys.Parameter].GetString();
+	//        this.expression = code[CodeKeys.Expression].GetExpression(statement);
+	//    }
+	//    public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
+	//    {
+	//        ILProgram program = new ILProgram();
+	//        Local argument=program.Declare();
+	//        program.Add(argument.Assign(
+	//            new New(typeof(Map).GetConstructor(new Type[]{typeof(Map[])}),
+	//            new New(
+	//                typeof(Map).GetConstructor(new Type[] {typeof(string)})
+	//                parameter),
+	//            context);
+	//        argument.Scope = this;
+	//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argument)).Evaluate(argument);
+
+	//    }
+	//}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
@@ -5182,35 +5146,39 @@ namespace Meta
 		}
 		public Expression CreateExpression(StatementBase statement)
 		{
-			if (ContainsKey(CodeKeys.Call))
-			{
-				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter),statement);
-			}
-			else if (ContainsKey(CodeKeys.Program))
-			{
-				return new Program(this[CodeKeys.Program],statement);
-			}
-			else if (ContainsKey(CodeKeys.Literal))
-			{
-				return new Literal(this[CodeKeys.Literal],statement);
-			}
-			else if (ContainsKey(CodeKeys.Select))
-			{
-				return new Select(this[CodeKeys.Select],statement);
-			}
-			else if (ContainsKey(CodeKeys.Search))
-			{
-				return new Search(this[CodeKeys.Search],statement);
-			}
-			else if (ContainsKey(CodeKeys.Root))
-			{
-				return new Root(statement);
-			}
-			else
-			{
-				throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(this));
-			}
+			return strategy.CreateExpression(statement,this);
 		}
+		//public Expression CreateExpression(StatementBase statement)
+		//{
+		//    if (ContainsKey(CodeKeys.Call))
+		//    {
+		//        return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter),statement);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Program))
+		//    {
+		//        return new Program(this[CodeKeys.Program],statement);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Literal))
+		//    {
+		//        return new Literal(this[CodeKeys.Literal],statement);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Select))
+		//    {
+		//        return new Select(this[CodeKeys.Select],statement);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Search))
+		//    {
+		//        return new Search(this[CodeKeys.Search],statement);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Root))
+		//    {
+		//        return new Root(statement);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(this));
+		//    }
+		//}
 
 		public Map Scope{get{return scope;}set{scope = value;}}
 
@@ -5228,6 +5196,7 @@ namespace Meta
 		{
 			if (ContainsKey(CodeKeys.Function))
 			{
+				//this.GetExpression(null).Evaluate(arg);
 				Map argument = new Map(new DictionaryStrategy());
 				argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
 				argument.Scope = this;
