@@ -136,7 +136,7 @@
 						join
 				keys=,
 					arg|-
-						<"Map_ICollection`1"
+						<"Map_IEnumerable`1"
 						-
 							.
 								-

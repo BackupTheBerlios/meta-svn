@@ -890,7 +890,6 @@ namespace Meta
 			}
 		}
 		private List<Map> subselects;
-		//private List<Map> subselects;
 		public Select(Map code, StatementBase statement)
 			: base(statement)
 		{
@@ -1349,7 +1348,7 @@ namespace Meta
 		{
 			return false;
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -1670,6 +1669,10 @@ namespace Meta
 	[Serializable]
 	public class EmptyStrategy : MapStrategy
 	{
+		public override bool ContainsKey(Map key)
+		{
+			return false;
+		}
 		public override void Append(Map map, Map parent)
 		{
 			ListStrategy list = new ListStrategy();
@@ -1710,7 +1713,7 @@ namespace Meta
 		{
 			return obj.Count == 0;
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -1828,7 +1831,7 @@ namespace Meta
 			}
 		}
 
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -1979,7 +1982,7 @@ namespace Meta
 		{
 			return new Map(new StringStrategy(text));
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get 
 			{
@@ -2078,7 +2081,7 @@ namespace Meta
 				return list.Count;
 			}
 		}
-		public override List<Map> Array
+		public override IEnumerable<Map> Array
 		{
 			get
 			{
@@ -2111,22 +2114,41 @@ namespace Meta
 			}
 			return containsKey;
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
+				//for (int i = 1; i < list.Count; i++)
+				//{
+				//    yield return new Map(new Number(i));
+				//}
 				List<Map> keys = new List<Map>();
 				int counter = 1;
 				foreach (Map value in list)
 				{
-					keys.Add(new Map(counter));
+					yield return new Map(counter);
+					//keys.Add(new Map(counter));
 					counter++;
 				}
-				return keys;
+				//return keys;
 			}
 		}
-	}
-	[Serializable]
+			//public override IEnumerable<Map> Keys
+			//{
+			//    get
+			//    {
+			//        List<Map> keys = new List<Map>();
+			//        int counter = 1;
+			//        foreach (Map value in list)
+			//        {
+			//            keys.Add(new Map(counter));
+			//            counter++;
+			//        }
+			//        return keys;
+			//    }
+			//}
+		}
+		[Serializable]
 	public class DictionaryStrategy:MapStrategy
 	{
 		public override Map CopyData()
@@ -2175,7 +2197,7 @@ namespace Meta
 		{
 			return dictionary.ContainsKey(key);
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -2202,7 +2224,7 @@ namespace Meta
 		{
 			this.original = original;
 		}
-		public override List<Map> Array
+		public override IEnumerable<Map> Array
 		{
 			get
 			{
@@ -2255,7 +2277,7 @@ namespace Meta
 				return original.IsString;
 			}
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -2292,7 +2314,14 @@ namespace Meta
 
 		public virtual bool ContainsKey(Map key)
 		{
-			return Keys.Contains(key);
+			foreach (Map k in Keys)
+			{
+				if (k.Equals(key))
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public abstract int GetArrayCount();
@@ -2347,10 +2376,18 @@ namespace Meta
 		{
 			get
 			{
-				return GetArrayCount() == Count && this.Array.TrueForAll(delegate(Map map)
+				if(GetArrayCount() != Count)
 				{
-					return Transform.IsIntegerInRange(map, (int)Char.MinValue, (int)Char.MaxValue);
-				});
+					return false;
+				}
+				foreach(Map m in Array)
+				{
+					if(!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue))
+					{
+						return false;
+					}
+				}
+				return true;
 			}
 		}
 		public string GetStringDefault()
@@ -2387,27 +2424,31 @@ namespace Meta
 			}
 			return number;
 		}
-		public abstract ICollection<Map> Keys
+		public abstract IEnumerable<Map> Keys
 		{
 			get;
 		}
-		public virtual List<Map> Array
+		public virtual IEnumerable<Map> Array
 		{
 			get
 			{
-				List<Map> array = new List<Map>();
 				for (int i = 1; this.ContainsKey(i); i++)
 				{
-					array.Add(this.Get(i));
+					yield return Get(i);
 				}
-				return array;
 			}
 		}
 		public virtual int Count
 		{
 			get
 			{
-				return Keys.Count;
+				int count=0;
+				foreach (Map key in Keys)
+				{
+					count++;
+				}
+				return count;
+				//return Keys.Count;
 			}
 		}
 		public virtual bool Equal(MapStrategy obj)
@@ -2681,7 +2722,7 @@ namespace Meta
 		{
 			return Get(key) != null;
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -3058,7 +3099,7 @@ namespace Meta
 		{
 			return new Map(this);
 		}
-		public override ICollection<Map> Keys
+		public override IEnumerable<Map> Keys
 		{
 			get
 			{
@@ -5079,6 +5120,9 @@ namespace Meta
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
 		private MapStrategy strategy;
+		public Map(IEnumerable<Map> list):this(new ListStrategy(new List<Map>(list)))
+		{
+		}
 		public Map(System.Collections.Generic.ICollection<Map> list)
 			: this(new ListStrategy())
 		{
@@ -5121,7 +5165,7 @@ namespace Meta
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
 		public override bool Equals(object toCompare) { return strategy.Equal(((Map)toCompare).Strategy); }
 		public Map TryGetValue(Map key) { return strategy.Get(key); }
-		public ICollection<Map> Keys { get { return strategy.Keys; } }
+		public IEnumerable<Map> Keys { get { return strategy.Keys; } }
 
 		public Map this[Map key]
 		{
