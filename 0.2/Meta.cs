@@ -1718,7 +1718,6 @@ namespace Meta
 			get
 			{
 				yield break;
-				//return new List<Map>(0);
 			}
 		}
 		public override Map CopyData()
@@ -1835,23 +1834,18 @@ namespace Meta
 		{
 			get
 			{
-				//List<Map> keys = new List<Map>();
 				if (number != 0)
 				{
 					yield return Map.Empty;
-					//keys.Add(Map.Empty);
 				}
 				if (number < 0)
 				{
 					yield return NumberKeys.Negative;
-					//keys.Add(NumberKeys.Negative);
 				}
 				if (number.Denominator != 1.0d)
 				{
 					yield return NumberKeys.Denominator;
-					//keys.Add(NumberKeys.Denominator);
 				}
-				//return keys;
 			}
 		}
 		public override Map CopyData()
@@ -1989,13 +1983,10 @@ namespace Meta
 		{
 			get 
 			{			
-				//List<Map> keys = new List<Map>(text.Length);
 				for (int i = 1; i <= text.Length; i++)
 				{
 					yield return i;
-					//keys.Add(i);
 				}
-				//return keys;
 			}
 		}
 	}
@@ -2706,25 +2697,7 @@ namespace Meta
 		{
 			get
 			{
-				List<Map> keys = new List<Map>();
-				foreach (MemberInfo member in this.type.GetMembers(BindingFlags))
-				{
-					string name;
-					if (member is MethodInfo)
-					{
-						name = GetMethodName((MethodInfo)member);
-					}
-					else if (member is ConstructorInfo)
-					{
-						continue;
-					}
-					else
-					{
-						name = member.Name;
-					}
-					keys.Add(name);
-				}
-				return keys;
+				return Members.Keys;
 			}
 		}
 		public override bool IsString
