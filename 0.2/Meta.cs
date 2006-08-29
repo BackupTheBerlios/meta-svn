@@ -35,15 +35,15 @@ using Microsoft.Win32;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
-using System.Drawing;
+//using System.Drawing;
 using System.Security.Cryptography;
 using System.Globalization;
 using System.Net.Mail;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
-using System.Windows;
-using SdlDotNet;
+//using System.Xml.Serialization;
+//using System.Windows;
+//using SdlDotNet;
 
 namespace Meta
 {
@@ -164,12 +164,25 @@ namespace Meta
 				//}
 			}
 		}
+		public ILEmitter Assign(ILEmitter b)
+		{
+			return (CustomEmitter)delegate(ILGenerator il)
+			{
+				b.Emit(il);
+				Store(il);
+			};
+		}
 		private FieldInfo field;
 		private ILEmitter instance;
 		public InstanceField(ILEmitter instance, FieldInfo field)
 		{
 			this.field = field;
 			this.instance = instance;
+		}
+		public void Store(ILGenerator il)
+		{
+			instance.Emit(il);
+			il.Emit(OpCodes.Stfld, field);
 		}
 		public void Load(ILGenerator il)
 		{
@@ -331,7 +344,7 @@ namespace Meta
 				return typeof(Map);
 			}
 		}
-		public ILExpression Field(string name)
+		public InstanceField Field(string name)
 		{
 			return new InstanceField(this, Type.GetField(name));
 		}
@@ -636,7 +649,28 @@ namespace Meta
 				{
 					if (statements[i].AlwaysContainsKey(key))
 					{
-						return new OptimizedSearch(count, key);
+						if (statements[i].program.type != null)
+						{
+							ILProgram program = new ILProgram();
+							Local selected = program.Declare();
+							program.Add(selected.Assign(new Argument(1, typeof(Map))));
+							//Map selected = context;
+							for (int a = 0; a < i-1; a++)
+							{
+								program.Add(selected.Assign(selected.Call("get_Scope")));
+							}
+							FieldInfo field = statements[i].program.type.GetField(key.GetString());
+							program.Add(selected.Call("get_Item",new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())).Call("Copy"));
+							//program.Add(selected.Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
+							return new EmittedExpression(program);
+							//return new OptimizedSearch(count, key);
+						}
+						else
+						{
+							return new OptimizedSearch(count, key);
+						}
 					}
 					else if (statements[i].NeverContainsKey(key))
 					{
@@ -956,7 +990,7 @@ namespace Meta
 			Map context;
 			if (type != null)
 			{
-			    context=new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
+			    context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
 			}
 			else
 			{
@@ -1107,7 +1141,7 @@ namespace Meta
 			}
 			return alwaysContains;
 		}
-		protected Program program;
+		public Program program;
 		//public Expression Value
 		//{
 		//    get
@@ -1162,16 +1196,18 @@ namespace Meta
 		{
 			if (program.type != null && key is Literal && ((Literal)key).literal.IsString)
 			{
-				ILProgram p = new ILProgram();
+				//ILProgram p = new ILProgram();
 				//context[key.Evaluate(context)] = value;
 
 				Argument context=new Argument(0,typeof(Map));
 				Argument value=new Argument(1,typeof(Map));
-				p.Add(context.Call("set_Item",
-					new New(
-						typeof(Map).GetConstructor(new Type[] { typeof(string) }),
-						((Literal)key).literal.GetString()),
-					value));
+				ILEmitter p=context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(((Literal)key).literal.GetString()).Assign(value);
+				//p.Add(context. program.type.GetField(
+				//p.Add(context.Call("set_Item",
+				//    new New(
+				//        typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+				//        ((Literal)key).literal.GetString()),
+				//    value));
 				return new EmittedStatement(p, program, code);
 			}
 			else
@@ -1404,7 +1440,7 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			MemberInfo[] members = typeof(System.Windows.Forms.TreeNodeCollection).GetMember("AddRange");
+			//MemberInfo[] members = typeof(System.Windows.Forms.TreeNodeCollection).GetMember("AddRange");
 			if (args.Length != 0)
 			{
 				if (args[0] == "-test")
@@ -2063,6 +2099,82 @@ namespace Meta
 	}
 	public class OptimizedMap : MapStrategy
 	{
+		public override Map Call(Map argument, Map parent)
+		{
+			return base.Call(argument, parent);
+		}
+		//public override Map CopyData()
+		//{
+		//    return base.CopyData();
+		//}
+		//public override int Count
+		//{
+		//    get
+		//    {
+		//        return base.Count;
+		//    }
+		//}
+		//public override MapStrategy DeepCopy(Map key, Map value, Map map)
+		//{
+		//    return base.DeepCopy(key, value, map);
+		//}
+		//public override bool Equal(MapStrategy obj)
+		//{
+		//    return base.Equal(obj);
+		//}
+		//public override Number GetNumber()
+		//{
+		//    return base.GetNumber();
+		//}
+		//public override int GetHashCode()
+		//{
+		//    return base.GetHashCode();
+		//}
+		//public override bool Equals(object obj)
+		//{
+		//    return base.Equals(obj);
+		//}
+		//public override string GetString()
+		//{
+		//    return base.GetString();
+		//}
+		//public override bool IsNumber
+		//{
+		//    get
+		//    {
+		//        return base.IsNumber;
+		//    }
+		//}
+		//public override bool IsString
+		//{
+		//    get
+		//    {
+		//        return base.IsString;
+		//    }
+		//}
+		//protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
+		//{
+		//    base.Panic(key, val, strategy, map);
+		//}
+		//public override IEnumerable<Map> Array
+		//{
+		//    get
+		//    {
+		//        yield break;
+		//    }
+		//}
+		//public override void Append(Map map, Map parent)
+		//{
+		//    throw new Exception("not implemented");
+		//}
+		public override bool ContainsKey(Map key)
+		{
+			return Get(key) != null;
+			//if(key.IsString)
+			//{
+			//    FieldInfo field=type.GetField(key.GetString());
+			//    field.GetValue(
+		}
 		public override int GetArrayCount()
 		{
 			return 0;
@@ -2091,7 +2203,7 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
-			if (key.IsString)
+			if (key.IsString && key.Count!=0)
 			{
 				FieldInfo field = type.GetField(key.GetString());
 				if (field != null)
