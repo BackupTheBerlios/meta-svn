@@ -659,23 +659,23 @@ namespace Meta
 							{
 								program.Add(selected.Assign(selected.Call("get_Scope")));
 							}
-							FieldInfo field = statements[i].program.type.GetField(key.GetString());
-							program.Add(selected.Call("get_Item", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())).Call("Copy"));
+							//FieldInfo field = statements[i].program.type.GetField(key.GetString());
+
+							program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
+
+							//program.Add(
+							//    selected.Call(
+							//        "get_Item",
+							//        new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+							//        key.GetString())
+							//).Call("Copy"));
+
+
 							//program.Add(selected.Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
 							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
 							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
 							return new EmittedExpression(program);
-
-							//ILProgram program = new ILProgram();
-							//Local selected = program.Declare();
-							//program.Add(selected.Assign(new Argument(1, typeof(Map))));
-							//for (int a = 0; a < count; a++)
-							//{
-							//    program.Add(selected.Assign(selected.Call("get_Scope")));
-							//    selected = selected.Scope;
-							//}
-							//return selected[key].Copy();
-							return new OptimizedSearch(count, key);
+							//return new OptimizedSearch(count, key);
 						}
 						else
 						{
@@ -716,14 +716,7 @@ namespace Meta
 							OptimizedMap o=(OptimizedMap)s.Strategy;
 
 
-							FieldInfo field=o.type.GetField(key.GetString());
-							if(field==null)
-							{
-								throw new Exception("whatever");
-							}
-							else
-							{
-							}
+							//FieldInfo field=o.type.GetField(key.GetString());
 							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()));
 							return new EmittedExpression(program);
 						}
