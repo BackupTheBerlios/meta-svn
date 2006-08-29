@@ -154,7 +154,14 @@ namespace Meta
 		{
 			get 
 			{
-				return field.FieldType;
+				//try
+				//{
+					return field.FieldType;
+				//}
+				//catch (Exception e)
+				//{
+				//    throw e;
+				//}
 			}
 		}
 		private FieldInfo field;
@@ -278,8 +285,38 @@ namespace Meta
 			emitter(il);
 		}
 	}
+	public class Cast:ILEmitter
+	{
+		public override Type  Type
+		{
+			get 
+			{ 
+				 return type;
+			}
+		}
+		private Type type;
+		private ILEmitter emitter;
+		public Cast(ILEmitter emitter,Type type)
+		{
+			this.emitter=emitter;
+			this.type = type;
+		}
+		public override void Emit(ILGenerator il)
+		{
+			emitter.Emit(il);
+			il.Emit(OpCodes.Castclass,type);
+		}
+	}
 	public abstract class ILEmitter
 	{
+		public ILEmitter Cast(Type type)
+		{
+			return new Cast(this, type);
+			//return (Emit)delegate(ILGenerator il)
+			//{
+			//    il.Emit(OpCodes.Ldstr, text);
+			//};
+		}
 		public static implicit operator ILEmitter(string text)
 		{
 			return (Emit)delegate(ILGenerator il)
@@ -615,13 +652,13 @@ namespace Meta
 				{
 					if (s.ContainsKey(key))
 					{
+						//if (s.Strategy is OptimizedMap)
+						//{
+						//}
+						//else
+						//{
+						//}
 						if (s.Strategy is OptimizedMap)
-						{
-						}
-						else
-						{
-						}
-						if (key.IsString)
 						{
 							ILProgram program = new ILProgram();
 							Local selected = program.Declare();
@@ -632,9 +669,48 @@ namespace Meta
 								program.Add(selected.Assign(selected.Call("get_Scope")));
 								//selected = selected.Scope;
 							}
-							program.Add(selected.Call("get_Item", 
-								new New(typeof(Map).GetConstructor(new Type[] {typeof(string)}),
-								key.GetString())).Call("Copy"));
+							OptimizedMap o=(OptimizedMap)s.Strategy;
+
+
+							FieldInfo field=o.type.GetField(key.GetString());
+							if(field==null)
+							{
+								throw new Exception("whatever");
+							}
+							else
+							{
+							}
+							//program.Add(new InstanceField(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)), field).Load);
+							//program.Add(new InstanceField(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)), field).Load);
+
+
+							//program.Add(new InstanceField(selected, o.type.GetField(key.GetString())).Load).Call("Copy"));
+							//program.Add(new CustomEmitter(((Emit)new InstanceField(selected, o.type.GetField(key.GetString())).Load)).Call("Copy"));
+
+
+							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()));
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field(key.GetString()).Call("Copy"));
+
+
+
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Call("Get",
+							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+							//    key.GetString())).Call("Copy"));
+
+
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Call("Get",
+							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+							//    key.GetString())).Call("Copy"));
+
+
+							//program.Add(selected.Cast(typeof(Map)).Call("get_Item",
+							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+							//    key.GetString())).Call("Copy"));
+
+
+							//program.Add(selected.Call("get_Item",
+							//    new New(typeof(Map).GetConstructor(new Type[] {typeof(string)}),
+							//    key.GetString())).Call("Copy"));
 							//return selected[key].Copy();
 							return new EmittedExpression(program);
 						}
@@ -794,22 +870,22 @@ namespace Meta
 
 				foreach (StatementBase statement in statementList)
 				{
-					try
-					{
+					//try
+					//{
 						KeyStatement keyStatement = statement as KeyStatement;
 						if ((keyStatement != null && keyStatement.key is Literal))
 						{
 							FieldBuilder xField = ivTypeBld.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(Map), FieldAttributes.Public);
 						}
-					}
-					catch (Exception e)
-					{
-						KeyStatement keyStatement = statement as KeyStatement;
-						if ((keyStatement != null && keyStatement.key is Literal) || (statement is CurrentStatement && count == statementList.Count - 1))
-						{
-							FieldBuilder xField = ivTypeBld.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(int), FieldAttributes.Public);
-						}
-					}
+					//}
+					//catch (Exception e)
+					//{
+					//    KeyStatement keyStatement = statement as KeyStatement;
+					//    if ((keyStatement != null && keyStatement.key is Literal) || (statement is CurrentStatement && count == statementList.Count - 1))
+					//    {
+					//        FieldBuilder xField = ivTypeBld.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(int), FieldAttributes.Public);
+					//    }
+					//}
 				}
 				return ivTypeBld.CreateType();
 			}
@@ -1974,7 +2050,7 @@ namespace Meta
 			}
 		}
 		public object obj;
-		private Type type;
+		public Type type;
 		public OptimizedMap(object obj)
 		{
 			this.obj=obj;
@@ -5448,7 +5524,7 @@ namespace Meta
 		public string GetString() { return strategy.GetString(); }
 
 
-		public Map Call(Map arg) { return strategy.Call(arg, this); }
+		public Map Call(Map arg) {return strategy.Call(arg, this); }
 		public void Append(Map map) { strategy.Append(map, this); }
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
 		public override bool Equals(object toCompare) { return strategy.Equal(((Map)toCompare).Strategy); }
