@@ -1,4 +1,5 @@
 //	Copyright (c) 2005, 2006 Christian Staudenmeyer
+//
 //	Permission is hereby granted, free of charge, to any person obtaining
 //	a copy of this software and associated documentation files (the
 //	"Software"), to deal in the Software without restriction, including
@@ -6,6 +7,7 @@
 //	distribute, sublicense, and/or sell copies of the Software, and to
 //	permit persons to whom the Software is furnished to do so, subject to
 //	the following conditions:
+//
 //	The above copyright notice and this permission notice shall be
 //	included in all copies or substantial portions of the Software.
 //	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
@@ -16,6 +18,7 @@
 //	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
+
 using Meta;
 using Meta.Test;
 using System;
@@ -75,31 +78,6 @@ namespace Meta
 			return result;
 		}
 	}
-	//public class InstanceCall : ILEmitter
-	//{
-	//    public override Type Type { get { return method.ReturnType; } }
-	//    private List<ILEmitter> arguments;
-	//    private MethodInfo method;
-	//    public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
-	//    {
-	//        this.method = method;
-	//        this.arguments = Prepend(instance, arguments);
-	//    }
-	//    public override void Emit(ILGenerator il)
-	//    {
-	//        foreach (ILEmitter argument in arguments)
-	//        {
-	//            argument.Emit(il);
-	//        }
-	//        il.Emit(OpCodes.Callvirt, method);
-	//    }
-	//}
-	public class Integer : ILEmitter
-	{
-		private int integer;
-		public Integer(int integer){this.integer = integer;}
-		public override void Emit(ILGenerator il){il.Emit(OpCodes.Ldc_I4, integer);}
-	}
 	public class InstanceField : ILEmitter
 	{
 		public override Type Type { get { return field.FieldType; } }
@@ -138,29 +116,35 @@ namespace Meta
 		public CustomEmitter(Emit emitter){this.emitter = emitter;}
 		public override void Emit(ILGenerator il) { emitter(il); }
 	}
-	public class Cast:ILEmitter
-	{
-		public override Type Type{get { return type; } }
-		private Type type;
-		private ILEmitter emitter;
-		public Cast(ILEmitter emitter,Type type){this.emitter=emitter;this.type = type;}
-		public override void Emit(ILGenerator il)
-		{emitter.Emit(il);il.Emit(OpCodes.Castclass,type);}
-	}
-
 	public abstract class ILEmitter : MetaBase
 	{
-		public static implicit operator ILEmitter(OpCode code) { return (Emit)delegate(ILGenerator il) { il.Emit(code); }; }
-		public static implicit operator ILEmitter(string text){ return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldstr, text); }; }
-		public static implicit operator ILEmitter(int del) { return new Integer(del); }
-		public static implicit operator ILEmitter(Emit del) { return new CustomEmitter(del); }
+		public static implicit operator ILEmitter(OpCode code)
+		{ 
+			return (Emit)delegate(ILGenerator il) { il.Emit(code); }; 
+		}
+		public static implicit operator ILEmitter(string text) 
+		{ 
+			return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldstr, text); }; 
+		}
+		public static implicit operator ILEmitter(int integer)
+		{ 
+			return (Emit) delegate(ILGenerator il){il.Emit(OpCodes.Ldc_I4, integer);};
+		}
+		public static implicit operator ILEmitter(Emit del)
+		{ 
+			return new CustomEmitter(del); 
+		}
 
-		public ILEmitter Cast(Type type) { return new Cast(this, type); }
+		public ILEmitter Cast(Type type)
+		{ 
+			return new ILExpression(
+				type,
+				Make<ILEmitter>(
+					this,
+					(Emit)delegate(ILGenerator il){il.Emit(OpCodes.Castclass,type);}));
+		}
 		public virtual Type Type { get { return typeof(Map); } }
 		public InstanceField Field(string name){return new InstanceField(this, Type.GetField(name));}
-		//public ILEmitter Call(string name, params ILEmitter[] arguments){
-		//    return new InstanceCall(this, Type.GetMethod(name), arguments);
-		//}
 
 		public ILEmitter Call(string name,params ILEmitter[] arguments)
 		{
@@ -184,8 +168,14 @@ namespace Meta
 		}
 		private List<ILEmitter> statements;
 		public ILProgram(params ILEmitter[] statements){this.statements = new List<ILEmitter>(statements);}
-		public void Add(Emit emitter){Add(new CustomEmitter(emitter));}
-		public void Add(ILEmitter statement){this.statements.Add(statement);}
+		public void Add(Emit emitter)
+		{
+			Add(new CustomEmitter(emitter));
+		}
+		public void Add(ILEmitter statement)
+		{
+			this.statements.Add(statement);
+		}
 		public override void Emit(ILGenerator il) { statements.ForEach(delegate(ILEmitter e) { e.Emit(il); }); }
 	}
 	public class ILExpression : ILEmitter
@@ -193,16 +183,11 @@ namespace Meta
 		private IEnumerable<ILEmitter> emitters;
 		public override Type Type { get { return type; } }
 		private Type type;
-		
 		public ILExpression(Type type, IEnumerable<ILEmitter> emitters)
-
 		{
 			this.type = type;
-			this.emitters = emitters; }
-		//{ this.emitters = Prepend(e, emitters); }
-
-		//public ILExpression(Type type,ILEmitter e, params ILEmitter[] emitters)
-		//{ this.emitters = Prepend(e,emitters);}
+			this.emitters = emitters; 
+		}
 		public override void Emit(ILGenerator il)
 		{ 
 			foreach (ILEmitter emitter in emitters)
@@ -213,6 +198,26 @@ namespace Meta
 	}
 	public abstract class Expression:MetaBase
 	{
+		public Expression EmittedExpression(ILEmitter emitter)
+		{
+			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
+			DynamicMethod method = new DynamicMethod(
+				"Optimized",
+				typeof(Map),
+				parameters,
+				typeof(Map).Module);
+
+			Argument argument = new Argument(1, typeof(Map));
+			ILProgram program = new ILProgram();
+
+			Local context = program.Declare();
+			program.Add(context.Assign(argument));
+			program.Add(emitter);
+			program.Add(OpCodes.Ret);
+			//program.Add((Emit)Return);
+			program.Emit(method.GetILGenerator());
+			return new CustomExpression((Evaluate)method.CreateDelegate(typeof(Evaluate), this));
+		}
 		public ILEmitter New(ConstructorInfo constructor, params ILEmitter[] arguments)
 		{
 			return new ILExpression(
@@ -220,11 +225,6 @@ namespace Meta
 				Prepend<ILEmitter>(
 					(Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Newobj, constructor); },
 					arguments));
-
-			//return new ILExpression(
-			//    constructor.DeclaringType,
-			//    (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Newobj, constructor); },
-			//    arguments);
 		}
 		protected Evaluate optimized;
 		public abstract Map Evaluate(Map context);
@@ -267,19 +267,6 @@ namespace Meta
 			return callable;
 
 		}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local current, Argument argument)
-		//{
-		//    ILProgram program = new ILProgram();
-		//    Local callable = program.Declare();
-		//    program.Add(callable.Assign(calls[0].Emit(expression,lastProgram, current,argument)));
-		//    for (int i = 1; i < calls.Count; i++)
-		//    {
-		//        program.Add(
-		//            callable.Assign(callable.Call("Call", calls[i].Emit(expression,lastProgram, current,argument))));
-		//    }
-		//    program.Add(callable.Load);
-		//    return program;
-		//}
 	}
 	public class OptimizedSearch : Expression
 	{
@@ -300,34 +287,46 @@ namespace Meta
 			return selected[key].Copy();
 		}
 	}
-	public class EmittedExpression : Expression
+	public class CustomExpression : Expression
 	{
 		Evaluate eval;
-		public EmittedExpression(ILEmitter emitter)
+		public CustomExpression(Evaluate eval)
 		{
-			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
-			DynamicMethod method = new DynamicMethod(
-				"Optimized",
-				typeof(Map),
-				parameters,
-				typeof(Map).Module);
-
-			Argument argument = new Argument(1, typeof(Map));
-			ILProgram program = new ILProgram();
-
-			Local context = program.Declare();
-			program.Add(context.Assign(argument));
-			program.Add(emitter);
-			program.Add(OpCodes.Ret);
-			//program.Add((Emit)Return);
-			program.Emit(method.GetILGenerator());
-			eval=(Evaluate)method.CreateDelegate(typeof(Evaluate), this);
+			this.eval = eval;
 		}
 		public override Map Evaluate(Map context)
 		{
 			return eval(context);
 		}
 	}
+	//public class EmittedExpression : Expression
+	//{
+	//    Evaluate eval;
+	//    public EmittedExpression(ILEmitter emitter)
+	//    {
+	//        Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
+	//        DynamicMethod method = new DynamicMethod(
+	//            "Optimized",
+	//            typeof(Map),
+	//            parameters,
+	//            typeof(Map).Module);
+
+	//        Argument argument = new Argument(1, typeof(Map));
+	//        ILProgram program = new ILProgram();
+
+	//        Local context = program.Declare();
+	//        program.Add(context.Assign(argument));
+	//        program.Add(emitter);
+	//        program.Add(OpCodes.Ret);
+	//        //program.Add((Emit)Return);
+	//        program.Emit(method.GetILGenerator());
+	//        eval=(Evaluate)method.CreateDelegate(typeof(Evaluate), this);
+	//    }
+	//    public override Map Evaluate(Map context)
+	//    {
+	//        return eval(context);
+	//    }
+	//}
 	public class Search : Expression
 	{
 		public override Map Evaluate(Map context)
@@ -352,9 +351,6 @@ namespace Meta
 			if (expression is Literal)
 			{
 				Map key = ((Literal)expression).literal;
-				if (key.Equals(new Map("lib")))
-				{
-				}
 				int count = 0;
 				Map s = scope;
 				for (int i = statements.Count - 1; i >= 0; i--)
@@ -366,28 +362,12 @@ namespace Meta
 							ILProgram program = new ILProgram();
 							Local selected = program.Declare();
 							program.Add(selected.Assign(new Argument(1, typeof(Map))));
-							//Map selected = context;
 							for (int a = 0; a < count; a++)
 							{
 								program.Add(selected.Assign(selected.Call("get_Scope")));
 							}
-							//FieldInfo field = statements[i].program.type.GetField(key.GetString());
-
 							program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
-
-							//program.Add(
-							//    selected.Call(
-							//        "get_Item",
-							//        new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
-							//        key.GetString())
-							//).Call("Copy"));
-
-
-							//program.Add(selected.Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Call("Get", new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }), key.GetString())));
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
-							return new EmittedExpression(program);
-							//return new OptimizedSearch(count, key);
+							return EmittedExpression(program);
 						}
 						else
 						{
@@ -430,7 +410,7 @@ namespace Meta
 
 							//FieldInfo field=o.type.GetField(key.GetString());
 							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()));
-							return new EmittedExpression(program);
+							return EmittedExpression(program);
 						}
 						else
 						{
