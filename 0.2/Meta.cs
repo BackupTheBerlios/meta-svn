@@ -1,5 +1,4 @@
 //	Copyright (c) 2005, 2006 Christian Staudenmeyer
-//
 //	Permission is hereby granted, free of charge, to any person obtaining
 //	a copy of this software and associated documentation files (the
 //	"Software"), to deal in the Software without restriction, including
@@ -7,10 +6,8 @@
 //	distribute, sublicense, and/or sell copies of the Software, and to
 //	permit persons to whom the Software is furnished to do so, subject to
 //	the following conditions:
-//	
 //	The above copyright notice and this permission notice shall be
 //	included in all copies or substantial portions of the Software.
-//
 //	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 //	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 //	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,105 +31,105 @@ using System.Threading;
 namespace Meta
 {
 	public delegate Map Evaluate(Map context);
-	public abstract class Storage:ILExpression
+	public abstract class Storage:ILEmitter
 	{
 		private Type type;
-		public Storage()
-		{
-			type = typeof(Map);
-		}
+		public Storage(){type = typeof(Map);}
 		public ILEmitter Assign(ILEmitter b)
 		{
-			return (CustomEmitter)delegate(ILGenerator il)
-			{
-				b.Emit(il);
-				Store(il);
-			};
+			return new ILExpression(null,Make<ILEmitter>( b, (Emit)Store));
+			//return new ILExpression(null, b, (Emit)Store);
 		}
 		public abstract void Store(ILGenerator il);
 		public abstract void Load(ILGenerator il);
-
 	}
-	public class InstanceCall : ILExpression
+	public abstract class MetaBase
 	{
-		public override Type Type
+		public static List<T> Join<T>(ICollection<T> a, ICollection<T> b)
 		{
-			get 
-			{
-				return method.ReturnType;
-			}
+			List<T> result = new List<T>();
+			result.AddRange(a);
+			result.AddRange(b);
+			return result;
 		}
-		private List<ILEmitter> arguments;
-		private MethodInfo method;
-		public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
+		public static List<T> Make<T>(T a, T b)
 		{
-			this.method = method;
-			this.arguments = new List<ILEmitter>();
-			this.arguments.Add(instance);
-			this.arguments.AddRange(arguments);
+			List<T> result = new List<T>();
+			result.Add(a);
+			result.Add(b);
+			return result;
 		}
-		public override void Evaluate(ILGenerator il)
+
+		public static List<T> Append<T>(T t, ICollection<T> collection)
 		{
-			Emit(il);
+			List<T> result = new List<T>();
+			result.AddRange(collection);
+			result.Add(t);
+			return result;
 		}
-		public override void Emit(ILGenerator il)
+		public static List<T> Prepend<T>(T t, ICollection<T> collection)
 		{
-			foreach (ILEmitter argument in arguments)
-			{
-				argument.Emit(il);
-			}
-			il.Emit(OpCodes.Callvirt, method);
+			List<T> result = new List<T>();
+			result.Add(t);
+			result.AddRange(collection);
+			return result;
 		}
 	}
+	//public class InstanceCall : ILEmitter
+	//{
+	//    public override Type Type { get { return method.ReturnType; } }
+	//    private List<ILEmitter> arguments;
+	//    private MethodInfo method;
+	//    public InstanceCall(ILEmitter instance, MethodInfo method, params ILEmitter[] arguments)
+	//    {
+	//        this.method = method;
+	//        this.arguments = Prepend(instance, arguments);
+	//    }
+	//    public override void Emit(ILGenerator il)
+	//    {
+	//        foreach (ILEmitter argument in arguments)
+	//        {
+	//            argument.Emit(il);
+	//        }
+	//        il.Emit(OpCodes.Callvirt, method);
+	//    }
+	//}
 	public class Integer : ILEmitter
 	{
 		private int integer;
 		public Integer(int integer){this.integer = integer;}
 		public override void Emit(ILGenerator il){il.Emit(OpCodes.Ldc_I4, integer);}
 	}
-	public class InstanceField : ILExpression
+	public class InstanceField : ILEmitter
 	{
 		public override Type Type { get { return field.FieldType; } }
-		public ILEmitter Assign(ILEmitter b)
-		{return (CustomEmitter)delegate(ILGenerator il)
-			{instance.Emit(il);b.Emit(il);il.Emit(OpCodes.Stfld, field);};}
+		public ILEmitter Assign(ILEmitter b){return (CustomEmitter)delegate(ILGenerator il){instance.Emit(il);b.Emit(il);il.Emit(OpCodes.Stfld, field);};}
 		private FieldInfo field;
 		private ILEmitter instance;
-		public InstanceField(ILEmitter instance, FieldInfo field)
-		{this.field = field;this.instance = instance;}
-		public void Load(ILGenerator il)
-		{
-			instance.Emit(il);
-			il.Emit(OpCodes.Ldfld, field);
-		}
-		public override void Evaluate(ILGenerator il)
-		{
-			Load(il);
-		}
+		public InstanceField(ILEmitter instance, FieldInfo field){this.field = field;this.instance = instance;}
+		public void Load(ILGenerator il){instance.Emit(il);il.Emit(OpCodes.Ldfld, field);}
+		public override void Emit(ILGenerator il) { Load(il); }
 	}
 	public class Argument:Storage
 	{
-		public override Type Type
-		{
-			get{return type;}
-		}
-		public override void Evaluate(ILGenerator il) { Load(il); }
+		public override Type Type{get{return type;}}
+		public override void Emit(ILGenerator il) { Load(il); }
 		public override void Store(ILGenerator il) { il.Emit(OpCodes.Starg, index); }
 		public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldarg, index); }
 		public int Index { get { return index; } }
+		public Argument(int index, Type type) { this.index = index; this.type = type; }
 		private int index;
 		private Type type;
-		public Argument(int index, Type type) { this.index = index; this.type = type; }
 	}
 	public class Local:Storage
 	{
 		public override Type Type { get { return type; } }
 		private Type type=typeof(Map);
-		public override void Evaluate(ILGenerator il) { Load(il); }
+		public override void Emit(ILGenerator il) { Load(il); }
 		public override void Store(ILGenerator il) { il.Emit(OpCodes.Stloc, local.LocalIndex); }
 		public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldloc, local.LocalIndex); }
 		public void Declare(ILGenerator il) { local = il.DeclareLocal(type); }
-		LocalBuilder local;
+		private LocalBuilder local;
 	}
 	public delegate void Emit(ILGenerator il);
 	public class CustomEmitter : ILEmitter
@@ -150,8 +147,10 @@ namespace Meta
 		public override void Emit(ILGenerator il)
 		{emitter.Emit(il);il.Emit(OpCodes.Castclass,type);}
 	}
-	public abstract class ILEmitter 
+
+	public abstract class ILEmitter : MetaBase
 	{
+		public static implicit operator ILEmitter(OpCode code) { return (Emit)delegate(ILGenerator il) { il.Emit(code); }; }
 		public static implicit operator ILEmitter(string text){ return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldstr, text); }; }
 		public static implicit operator ILEmitter(int del) { return new Integer(del); }
 		public static implicit operator ILEmitter(Emit del) { return new CustomEmitter(del); }
@@ -159,158 +158,77 @@ namespace Meta
 		public ILEmitter Cast(Type type) { return new Cast(this, type); }
 		public virtual Type Type { get { return typeof(Map); } }
 		public InstanceField Field(string name){return new InstanceField(this, Type.GetField(name));}
-		public ILExpression Call(string name, params ILEmitter[] arguments){return new InstanceCall(this, Type.GetMethod(name), arguments);}
+		//public ILEmitter Call(string name, params ILEmitter[] arguments){
+		//    return new InstanceCall(this, Type.GetMethod(name), arguments);
+		//}
 
+		public ILEmitter Call(string name,params ILEmitter[] arguments)
+		{
+			MethodInfo method=Type.GetMethod(name);
+			return new ILExpression(
+				method.ReturnType,
+				Join<ILEmitter>(
+					Make<ILEmitter>(
+						this,
+						(Emit)delegate(ILGenerator il){il.Emit(OpCodes.Callvirt, method);}),
+					arguments));
+		}
 		public abstract void Emit(ILGenerator il);
 	}
 	public class ILProgram : ILEmitter
 	{
-		public Local Declare(){
+		public Local Declare() {
 			Local local = new Local();
 			Add((Emit)local.Declare);
 			return local;
 		}
 		private List<ILEmitter> statements;
 		public ILProgram(params ILEmitter[] statements){this.statements = new List<ILEmitter>(statements);}
-		//public void AddRange(params ILEmitter[] statements){
-		//    this.statements.AddRange(statements);
-		//}
-		public void Add(Emit emitter)
+		public void Add(Emit emitter){Add(new CustomEmitter(emitter));}
+		public void Add(ILEmitter statement){this.statements.Add(statement);}
+		public override void Emit(ILGenerator il) { statements.ForEach(delegate(ILEmitter e) { e.Emit(il); }); }
+	}
+	public class ILExpression : ILEmitter
+	{
+		private IEnumerable<ILEmitter> emitters;
+		public override Type Type { get { return type; } }
+		private Type type;
+		
+		public ILExpression(Type type, IEnumerable<ILEmitter> emitters)
+
 		{
-			Add(new CustomEmitter(emitter));
-		}
-		public void Add(ILEmitter statement)
-		{
-			this.statements.Add(statement);
-		}
+			this.type = type;
+			this.emitters = emitters; }
+		//{ this.emitters = Prepend(e, emitters); }
+
+		//public ILExpression(Type type,ILEmitter e, params ILEmitter[] emitters)
+		//{ this.emitters = Prepend(e,emitters);}
 		public override void Emit(ILGenerator il)
-		{
-			foreach (ILEmitter statement in statements)
+		{ 
+			foreach (ILEmitter emitter in emitters)
 			{
-				statement.Emit(il);
+				emitter.Emit(il);
 			}
 		}
 	}
-	public abstract class ILExpression:ILEmitter
+	public abstract class Expression:MetaBase
 	{
-		public override void  Emit(ILGenerator il)
+		public ILEmitter New(ConstructorInfo constructor, params ILEmitter[] arguments)
 		{
-			Evaluate(il);
-		}
-		public abstract void Evaluate(ILGenerator il);
-	}
-	public abstract class Expression
-	{
-		public class New : ILExpression
-		{
-			public override Type Type
-			{
-				get
-				{
-					return constructor.DeclaringType;
-				}
-			}
-			private ConstructorInfo constructor;
-			private ILEmitter[] arguments;
-			public New(ConstructorInfo constructor, params ILEmitter[] arguments)
-			{
-				this.constructor = constructor;
-				this.arguments = arguments;
-			}
-			public override void Evaluate(ILGenerator il)
-			{
-				foreach (ILEmitter argument in arguments)
-				{
-					argument.Emit(il);
-				}
-				il.Emit(OpCodes.Newobj, constructor);
-			}
-		}
-		public static Emit EmitSearch(Local key, Local selected, Extent extent)
-		{
-			return Until(
-				selected.Call("ContainsKey", key),
-				new ILProgram(
-					selected.Assign(selected.Call("get_Scope")),
-					If(
-						selected,
-						Nothing(),
-						Throw(
-							new New(
-								typeof(KeyNotFound).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-								key,
-								new New(
-									typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
-									extent.Start.Line,
-									extent.FileName),
-								(Emit)Null),
-								typeof(KeyNotFound)
-								)
-							)));
-		}
-		public static Emit Nothing()
-		{
-			return delegate(ILGenerator il)
-			{
-			};
-		}
-		public static Emit Until(ILEmitter condition, ILEmitter body)
-		{
-			return delegate(ILGenerator il)
-			{
-				Label end = il.DefineLabel();
-				Label start = il.DefineLabel();
+			return new ILExpression(
+				constructor.DeclaringType,
+				Prepend<ILEmitter>(
+					(Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Newobj, constructor); },
+					arguments));
 
-				il.MarkLabel(start);
-				condition.Emit(il);
-				il.Emit(OpCodes.Brtrue, end);
-				body.Emit(il);
-				il.Emit(OpCodes.Br, start);
-
-				il.MarkLabel(end);
-			};
+			//return new ILExpression(
+			//    constructor.DeclaringType,
+			//    (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Newobj, constructor); },
+			//    arguments);
 		}
-		public static Emit If(ILEmitter condition, ILEmitter thenBranch, ILEmitter elseBranch)
-		{
-			return delegate(ILGenerator il)
-			{
-				Label not = il.DefineLabel();
-				Label end = il.DefineLabel();
-
-				condition.Emit(il);
-				il.Emit(OpCodes.Brfalse, not);
-				thenBranch.Emit(il);
-				il.Emit(OpCodes.Br, end);
-
-				il.MarkLabel(not);
-				elseBranch.Emit(il);
-
-				il.MarkLabel(end);
-			};
-		}
-		public static Emit Throw(ILEmitter exception, Type type)
-		{
-			return delegate(ILGenerator il)
-			{
-				exception.Emit(il);
-				il.Emit(OpCodes.Throw);
-			};
-		}
-		public static void Null(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldnull);
-		}
-		public List<Map> literals = new List<Map>();
 		protected Evaluate optimized;
 		public abstract Map Evaluate(Map context);
-		public static void Return(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ret);
-		}
-		public virtual Expression Optimize(Map scope,List<StatementBase> statement)
-		{
-			return this;
-		}
+		public virtual Expression Optimize(Map scope,List<StatementBase> statement){return this;}
 	}
 	public class Call : Expression
 	{
@@ -400,7 +318,8 @@ namespace Meta
 			Local context = program.Declare();
 			program.Add(context.Assign(argument));
 			program.Add(emitter);
-			program.Add((Emit)Return);
+			program.Add(OpCodes.Ret);
+			//program.Add((Emit)Return);
 			program.Emit(method.GetILGenerator());
 			eval=(Evaluate)method.CreateDelegate(typeof(Evaluate), this);
 		}
@@ -946,13 +865,7 @@ namespace Meta
 			Local context = p.Declare();
 			p.Add(context.Assign(argument));
 			p.Add(emitter);
-			p.Add((Emit)Expression.Return);
-
-			//p.AddRange(
-			//    context.Assign(argument),
-			//    emitter,
-			//    (Emit)Expression.Return
-			//    );
+			p.Add(OpCodes.Ret);
 			p.Emit(method.GetILGenerator());
 			ass = (Ass)method.CreateDelegate(typeof(Ass), this);
 		}
