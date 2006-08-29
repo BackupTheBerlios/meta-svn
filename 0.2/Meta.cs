@@ -1041,7 +1041,7 @@ namespace Meta
 			}
 			return context;
 		}
-		public IEnumerable<StatementBase> Statements
+		public ICollection<StatementBase> Statements
 		{
 			get
 			{
@@ -1064,57 +1064,8 @@ namespace Meta
 			foreach (Map m in code.Array)
 			{
 				statementList.Add(m.GetStatement(this));
-				//statementList.Add(m.GetStatement(this).Optimize());
-				//statementList.Add(m.GetStatement(this));
 			}
 		}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
-		//{
-		//    //bool literal = true;
-		//    //foreach (StatementBase statement in statementList)
-		//    //{
-		//    //    if (statement is KeyStatement)
-		//    //    {
-		//    //        KeyStatement s = (KeyStatement)statement;
-		//    //        if (s.key is Literal && s.value is Literal)
-		//    //        {
-		//    //            continue;
-		//    //        }
-		//    //    }
-		//    //    literal = false;
-		//    //}
-		//    //if (literal)
-		//    //{
-		//    //    Map l = new Map();
-		//    //    foreach (KeyStatement s in statementList)
-		//    //    {
-		//    //        l[((Literal)s.key).literal] = ((Literal)s.value).literal;
-		//    //    }
-		//    //    expression.literals.Add(l);
-		//    //    ILProgram program = new ILProgram();
-		//    //    Local result=program.Declare();
-		//    //    program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
-		//    //    //program.Add(result.Assign(argument.Field("literals").Call("get_Item", expression.literals.Count - 1).Call("Copy")));
-		//    //    program.Add(result.Call("set_Scope", parent));
-		//    //    program.Add(result.Load);
-		//    //    return program;
-		//    //}
-		//    //else
-		//    ////{
-		//    //{
-		//        ILProgram program = new ILProgram();
-		//        Local context = program.Declare();
-		//        program.Add(context.Assign(new New(typeof(Map).GetConstructor(new Type[0]))));
-		//        program.Add(context.Call("set_Scope", parent));
-		//        foreach (StatementBase statement in statementList)
-		//        {
-		//            program.Add(statement.Get(expression, context, argument));
-		//        }
-		//        program.Add(context.Load);
-		//        return program;
-		//    //}
-		//    //}
-		//}
 	}
 	public abstract class StatementBase
 	{
@@ -1137,7 +1088,7 @@ namespace Meta
 				{
 					break;
 				}
-				if (statement is CurrentStatement && count!=0)// && count!=program.Statements.Length)
+				if (statement is CurrentStatement && count!=program.Statements.Count-1)
 				{
 					neverContains = false;
 					break;
@@ -1178,20 +1129,12 @@ namespace Meta
 			return alwaysContains;
 		}
 		public Program program;
-		//public Expression Value
-		//{
-		//    get
-		//    {
-		//        return value;
-		//    }
-		//}
 		public Expression value;
 		public StatementBase(Program program,Map code)
 		{
 			this.program = program;
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		//public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
 	}
 	public delegate void Ass(Map context,Map value);
 
@@ -1220,36 +1163,11 @@ namespace Meta
 			p.AddRange(
 				context.Assign(argument),
 				emitter,
-				//,
-				//Emit(this, null, context, new Argument(0, typeof(Expression))),
 				(Emit)Expression.Return
 				);
 			p.Emit(method.GetILGenerator());
 			ass = (Ass)method.CreateDelegate(typeof(Ass), this);
 		}
-		//public EmittedStatement(ILEmitter emitter,Program program,Map code):base(program,code)
-		//{
-		//    Type[] parameters = new Type[] { typeof(EmittedStatement),typeof(Map), typeof(Map) };
-		//    DynamicMethod method = new DynamicMethod(
-		//        "Optimized",
-		//        typeof(void),
-		//        parameters,
-		//        typeof(Map).Module);
-
-		//    Argument argument = new Argument(1, typeof(Map));
-		//    ILProgram p = new ILProgram();
-
-		//    Local context = p.Declare();
-		//    p.AddRange(
-		//        context.Assign(argument),
-		//        emitter
-		//        //,
-		//        //Emit(this, null, context, new Argument(0, typeof(Expression))),
-		//        //(Emit)Return
-		//        );
-		//    p.Emit(method.GetILGenerator());
-		//    ass=(Ass)method.CreateDelegate(typeof(Ass), this);
-		//}
 	}
 	public class KeyStatement : StatementBase
 	{
@@ -1281,17 +1199,11 @@ namespace Meta
 			context[key.Evaluate(context)] = value;
 		}
 		public Expression key;
-		//public Expression value;
 		public KeyStatement(Map code,Program program):base(program,code)
 		{
 			this.code = code;
 			this.key = code[CodeKeys.Key].GetExpression();
-			//this.value = code[CodeKeys.Value].GetExpression();
 		}
-		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		//{
-		//    return context.Call("set_Item", key.Emit(expression,this, context, argument), value.Emit(expression,this, context, argument));
-		//}
 	}
 	public class CurrentStatement : StatementBase
 	{
@@ -1306,10 +1218,6 @@ namespace Meta
 		{
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		//{
-		//    return context.Call("set_Strategy",value.Emit(expression, this, context, argument).Call("get_Strategy"));
-		//}
 	}
 	public class Statement : StatementBase
 	{
@@ -1325,15 +1233,9 @@ namespace Meta
 					throw new KeyNotFound(key, code.Extent, null);
 				}
 			}
-			//for (int i = 1; i < keys.Count; i++)
-			//{
-			//    selected = selected[key];
-			//    key = keys[i].GetExpression().Evaluate(context);
-			//}
-			selected[key] = value;//.Evaluate(context);
+			selected[key] = value;
 		}
 		private Expression key;
-		//private Expression value;
 		Map code;
 		public Statement(Map code, Program program)
 			: base(program,code)
@@ -1342,38 +1244,13 @@ namespace Meta
 			this.key = code[CodeKeys.Keys].GetExpression();
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
-		//public override ILEmitter Get(Expression expression,Local context, Argument argument)
-		//{
-		//    ILProgram program = new ILProgram();
-		//    Local k=program.Declare();
-		//    Local selected = program.Declare();
-		//    program.Add(k.Assign(key.Emit(expression,this, context, argument)));
-		//    program.Add(selected.Assign(context));
-		//    program.Add(Expression.EmitSearch(k, selected,code.Extent));
-		//    program.Add(selected.Call("set_Item",k,value.Emit(expression,this, context, argument)));
-		//    return program;
-		//}
 	}
 	public class Literal : Expression
 	{
-		public override Map Evaluate(Map context)
-		{
-			Map result=literal.Copy();
-			//if (result.ContainsKey(CodeKeys.Function))
-			//{
-			//    result.Scope = context;
-			//}
-			//if (result.Scope == null)
-			//{
-			//    result.Scope = context;
-			//}
-			//result.Scope = context;
-			return result;
-		}
+		public override Map Evaluate(Map context){return literal.Copy();}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public Literal(Map code)
-		{
+		public Literal(Map code){
 			if (code.Count!=0 && code.IsString)
 			{
 				this.literal = code.GetString();
@@ -1383,25 +1260,10 @@ namespace Meta
 				this.literal = code;
 			}
 		}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
-		//{
-		//    expression.literals.Add(literal);
-		//    return argument.Field("literals").Call("get_Item",expression.literals.Count - 1).Call("Copy");
-		//}
 	}
 	public class Root : Expression
 	{
-		public override Map Evaluate(Map selected)
-		{
-			return Gac.gac;
-		}
-		//public Root(StatementBase statement)
-		//{
-		//}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local local, Argument argument)
-		//{
-		//    return new StaticField(typeof(Gac).GetField("gac"));
-		//}
+		public override Map Evaluate(Map selected){return Gac.gac;}
 	}
 	public class Select : Expression
 	{
@@ -1441,36 +1303,6 @@ namespace Meta
 				subs.Add(m.GetExpression());
 			}
 		}
-		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
-		//{
-		//    ILProgram program = new ILProgram();
-		//    Local selected = program.Declare();
-		//    program.Add(selected.Assign(subselects[0].GetExpression().Emit(expression, lastProgram, context, argument)));
-		//    Local key = program.Declare();
-		//    Local value = program.Declare();
-		//    for (int i = 1; i < subselects.Count; i++)
-		//    {
-		//        program.Add(key.Assign(subselects[i].GetExpression().Emit(expression, lastProgram, context, argument)));
-		//        program.Add(value.Assign(selected.Call("TryGetValue", key)));
-		//        program.Add(
-		//            If(
-		//                value,
-		//                selected.Assign(value),
-		//                Throw(
-		//                    new New(
-		//                        typeof(KeyDoesNotExist).GetConstructor(new Type[] { typeof(Map), typeof(Extent), typeof(Map) }),
-		//                        key,
-		//                        new New(
-		//                            typeof(Extent).GetConstructor(new Type[] {typeof(int),typeof(string)}),
-		//                            subselects[i].Extent.Start.Line,
-		//                            subselects[i].Extent.FileName),
-		//                        selected),
-		//                        typeof(KeyNotFound)
-		//                        )));
-		//    }
-		//    program.Add(selected.Load);
-		//    return program;
-		//}
 	}
 	public class Interpreter
 	{
@@ -1491,7 +1323,6 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//MemberInfo[] members = typeof(System.Windows.Forms.TreeNodeCollection).GetMember("AddRange");
 			if (args.Length != 0)
 			{
 				if (args[0] == "-test")
@@ -1987,10 +1818,6 @@ namespace Meta
 					return DecideCall(map, arguments);
 				});
 				return new Map(new Method(invokeMethod, call, typeof(CallDelegate)));
-				//return new Map(new CallDelegate(delegate(Map map)
-				//{
-				//    return DecideCall(map, arguments);
-				//}));
 			}
 		}
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
@@ -2219,18 +2046,8 @@ namespace Meta
 			throw new Exception("not implemented");
 		}
 
-		public override bool ContainsKey(Map key)
-		{
-			return Get(key) != null;
-			//if(key.IsString)
-			//{
-			//    FieldInfo field=type.GetField(key.GetString());
-			//    field.GetValue(
-		}
-		public override int GetArrayCount()
-		{
-			return 0;
-		}
+		public override bool ContainsKey(Map key){return Get(key) != null;}
+		public override int GetArrayCount(){return 0;}
 		public override IEnumerable<Map> Keys
 		{
 			get 
@@ -2248,7 +2065,6 @@ namespace Meta
 			this.obj=obj;
 			this.type = obj.GetType();
 		}
-		//const BindingFlags bindingFlags=BindingFlags.Instance|BindingFlags.Public;
 		public override void Set(Map key, Map val, Map map)
 		{
 			type.GetField(key.GetString()).SetValue(obj, val);
@@ -2300,21 +2116,9 @@ namespace Meta
 			}
 			else
 			{
-				return base.Call(arg, parent);// ("Object is not callable.");
-				//throw new ApplicationException("Object is not callable.");
+				return base.Call(arg, parent);
 			}
 		}
-		//public override Map Call(Map arg,Map parent)
-		//{
-		//    if (this.Type.IsSubclassOf(typeof(Delegate)))
-		//    {
-		//        return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg,parent);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Object is not callable.");
-		//    }
-		//}
 		public override bool Equals(object obj)
 		{
 			return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
@@ -2641,7 +2445,6 @@ namespace Meta
 		public override Map CopyData()
 		{
 			return new Map(this);
-			//return new Map(new StringStrategy(text));
 		}
 		public override IEnumerable<Map> Keys
 		{
@@ -4006,7 +3809,7 @@ namespace Meta
 									{
 										if (result == null)
 										{
-											result = new Map();// p.CreateMap();
+											result = new Map();
 										}
 										result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
 										return result;
@@ -5647,30 +5450,6 @@ namespace Meta
 			return result;
 		}
 	}
-	//public class FunctionExpression : Expression
-	//{
-	//    private string parameter;
-	//    private Expression expression;
-	//    public FunctionExpression(Map code, StatementBase statement):base(statement)
-	//    {
-	//        this.parameter = code[CodeKeys.Parameter].GetString();
-	//        this.expression = code[CodeKeys.Expression].GetExpression(statement);
-	//    }
-	//    public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local context, Argument argument)
-	//    {
-	//        ILProgram program = new ILProgram();
-	//        Local argument=program.Declare();
-	//        program.Add(argument.Assign(
-	//            new New(typeof(Map).GetConstructor(new Type[]{typeof(Map[])}),
-	//            new New(
-	//                typeof(Map).GetConstructor(new Type[] {typeof(string)})
-	//                parameter),
-	//            context);
-	//        argument.Scope = this;
-	//        return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argument)).Evaluate(argument);
-
-	//    }
-	//}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
@@ -5781,10 +5560,10 @@ namespace Meta
 			if(optimized==null)
 			{
 				optimized = GetExpression().Optimize(scope, new List<StatementBase>());
-				//optimized = GetExpression().Optimize(scope, statement);
 			}
 			return optimized;
 		}
+		// refactor? always optimize?, maybe do more analysis
 		public Expression GetExpression()
 		{
 			if (expression == null)
@@ -5793,14 +5572,6 @@ namespace Meta
 			}
 			return (Expression)expression;
 		}
-		//public Expression GetExpression(StatementBase statement)
-		//{
-		//    if (expression == null)
-		//    {
-		//        expression = CreateExpression(statement);
-		//    }
-		//    return (Expression)expression;
-		//}
 		public Expression CreateExpression()
 		{
 			if (ContainsKey(CodeKeys.Call))
@@ -5853,10 +5624,7 @@ namespace Meta
 				argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
 				argument.Scope = this;
 				Expression expression = this[CodeKeys.Function][CodeKeys.Expression].Optimize(argument);
-				//Expression expression = this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Optimize(argument);
 				return expression.Evaluate(argument);
-				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression().Evaluate(argument);
-				//return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(new PseudoStatement(argument)).Evaluate(argument);
 			}
 			else
 			{
@@ -5868,8 +5636,6 @@ namespace Meta
 			Map clone = strategy.CopyData();
 			clone.Scope = Scope;
 			clone.Extent = Extent;
-			//clone.expression = expression;
-			//clone.optimized = optimized;
 			return clone;
 		}
 		public override int GetHashCode()
