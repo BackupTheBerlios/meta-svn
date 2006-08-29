@@ -680,38 +680,7 @@ namespace Meta
 							else
 							{
 							}
-							//program.Add(new InstanceField(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)), field).Load);
-							//program.Add(new InstanceField(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)), field).Load);
-
-
-							//program.Add(new InstanceField(selected, o.type.GetField(key.GetString())).Load).Call("Copy"));
-							//program.Add(new CustomEmitter(((Emit)new InstanceField(selected, o.type.GetField(key.GetString())).Load)).Call("Copy"));
-
-
 							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()));
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field(key.GetString()).Call("Copy"));
-
-
-
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Call("Get",
-							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
-							//    key.GetString())).Call("Copy"));
-
-
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Call("Get",
-							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
-							//    key.GetString())).Call("Copy"));
-
-
-							//program.Add(selected.Cast(typeof(Map)).Call("get_Item",
-							//    new New(typeof(Map).GetConstructor(new Type[] { typeof(string) }),
-							//    key.GetString())).Call("Copy"));
-
-
-							//program.Add(selected.Call("get_Item",
-							//    new New(typeof(Map).GetConstructor(new Type[] {typeof(string)}),
-							//    key.GetString())).Call("Copy"));
-							//return selected[key].Copy();
 							return new EmittedExpression(program);
 						}
 						else
@@ -1024,7 +993,8 @@ namespace Meta
 			statementList = new List<StatementBase>();
 			foreach (Map m in code.Array)
 			{
-				statementList.Add(m.GetStatement(this));
+				statementList.Add(m.GetStatement(this).Optimize());
+				//statementList.Add(m.GetStatement(this));
 			}
 		}
 		//public override ILEmitter Emit(Expression expression, StatementBase lastProgram, Local parent, Argument argument)
@@ -1077,6 +1047,10 @@ namespace Meta
 	}
 	public abstract class StatementBase
 	{
+		public virtual StatementBase Optimize()
+		{
+			return this;
+		}
 		public void Assign(ref Map context)
 		{
 			AssignImplementation(ref context, value.Evaluate(context));
@@ -1149,10 +1123,63 @@ namespace Meta
 		}
 		//public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
 	}
-	public delegate void Ass(Map context);
+	public delegate void Ass(ref Map context,Map value);
 
+	public class EmittedStatement:StatementBase
+	{
+		Ass ass;
+		public override void AssignImplementation(ref Map context, Map value)
+		{
+			ass(ref context,value);
+		}
+		public EmittedStatement(ILEmitter emitter,Program program,Map code):base(program,code)
+		{
+			Type[] parameters = new Type[] { typeof(StatementBase), typeof(Map) };
+			DynamicMethod method = new DynamicMethod(
+				"Optimized",
+				typeof(Map),
+				parameters,
+				typeof(Map).Module);
+
+			Argument argument = new Argument(1, typeof(Map));
+			ILProgram p = new ILProgram();
+
+			Local context = p.Declare();
+			p.AddRange(
+				context.Assign(argument),
+				emitter
+				//,
+				//Emit(this, null, context, new Argument(0, typeof(Expression))),
+				//(Emit)Return
+				);
+			p.Emit(method.GetILGenerator());
+			ass=(Ass)method.CreateDelegate(typeof(Ass), this);
+		}
+	}
 	public class KeyStatement : StatementBase
 	{
+		public override StatementBase Optimize()
+		{
+			if (program.type != null && key is Literal && ((Literal)key).literal.IsString)
+			{
+				ILProgram p = new ILProgram();
+				//context[key.Evaluate(context)] = value;
+
+				Argument context=new Argument(0,typeof(Map));
+				Argument value=new Argument(1,typeof(Map));
+				p.Add(context.Call("set_Item",
+					new New(
+						typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+						((Literal)key).literal.GetString()),
+					value));
+				return new EmittedStatement(p, program, code);
+			}
+			else
+			{
+				return this;
+			}
+		}
+		private Map code;
 		public override void AssignImplementation(ref Map context,Map value)
 		{
 			//value.Scope = context;
@@ -1170,6 +1197,7 @@ namespace Meta
 		//public Expression value;
 		public KeyStatement(Map code,Program program):base(program,code)
 		{
+			this.code = code;
 			this.key = code[CodeKeys.Key].GetExpression();
 			//this.value = code[CodeKeys.Value].GetExpression();
 		}
