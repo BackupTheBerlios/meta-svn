@@ -168,8 +168,11 @@ namespace Meta
 		{
 			return (CustomEmitter)delegate(ILGenerator il)
 			{
+				instance.Emit(il);
 				b.Emit(il);
-				Store(il);
+				il.Emit(OpCodes.Stfld, field);
+				//b.Emit(il);
+				//Store(il);
 			};
 		}
 		private FieldInfo field;
@@ -177,13 +180,16 @@ namespace Meta
 		public InstanceField(ILEmitter instance, FieldInfo field)
 		{
 			this.field = field;
+			if (field == null)
+			{
+			}
 			this.instance = instance;
 		}
-		public void Store(ILGenerator il)
-		{
-			instance.Emit(il);
-			il.Emit(OpCodes.Stfld, field);
-		}
+		//public void Store(ILGenerator il)
+		//{
+		//    instance.Emit(il);
+		//    il.Emit(OpCodes.Stfld, field);
+		//}
 		public void Load(ILGenerator il)
 		{
 			instance.Emit(il);
@@ -490,7 +496,7 @@ namespace Meta
 		//    }
 		//    return optimized(context);
 		//}
-		public void Return(ILGenerator il)
+		public static void Return(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ret);
 		}
@@ -809,7 +815,7 @@ namespace Meta
 			}
 			return false;
 		}
-		private bool AllLiteralKeys()
+		public bool AllLiteralKeys()
 		{
 			int count = 0;
 			foreach(StatementBase statement in statementList)
@@ -909,11 +915,14 @@ namespace Meta
 			else
 			{
 			}
-			foreach (StatementBase statement in statementList)
+			for(int i=0;i<statementList.Count;i++)
 			{
+				StatementBase statement = statementList[i];
 				statements.Add(statement);
 				statement.value = statement.value.Optimize(scope, statements);
+				//statement.value = statement.value.Optimize(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
+				statementList[i] = statement.Optimize();
 			}
 
 			//bool isLiteral = true;
@@ -1030,7 +1039,8 @@ namespace Meta
 			statementList = new List<StatementBase>();
 			foreach (Map m in code.Array)
 			{
-				statementList.Add(m.GetStatement(this).Optimize());
+				statementList.Add(m.GetStatement(this));
+				//statementList.Add(m.GetStatement(this).Optimize());
 				//statementList.Add(m.GetStatement(this));
 			}
 		}
@@ -1160,21 +1170,22 @@ namespace Meta
 		}
 		//public abstract ILEmitter Get(Expression expression,Local context, Argument argument);
 	}
-	public delegate void Ass(ref Map context,Map value);
+	public delegate void Ass(Map context,Map value);
 
 	public class EmittedStatement:StatementBase
 	{
 		Ass ass;
 		public override void AssignImplementation(ref Map context, Map value)
 		{
-			ass(ref context,value);
+			ass(context,value);
 		}
-		public EmittedStatement(ILEmitter emitter,Program program,Map code):base(program,code)
+		public EmittedStatement(ILEmitter emitter, Program program, Map code)
+			: base(program, code)
 		{
-			Type[] parameters = new Type[] { typeof(StatementBase), typeof(Map) };
+			Type[] parameters = new Type[] { typeof(EmittedStatement), typeof(Map), typeof(Map) };
 			DynamicMethod method = new DynamicMethod(
 				"Optimized",
-				typeof(Map),
+				typeof(void),
 				parameters,
 				typeof(Map).Module);
 
@@ -1184,14 +1195,37 @@ namespace Meta
 			Local context = p.Declare();
 			p.AddRange(
 				context.Assign(argument),
-				emitter
+				emitter,
 				//,
 				//Emit(this, null, context, new Argument(0, typeof(Expression))),
-				//(Emit)Return
+				(Emit)Expression.Return
 				);
 			p.Emit(method.GetILGenerator());
-			ass=(Ass)method.CreateDelegate(typeof(Ass), this);
+			ass = (Ass)method.CreateDelegate(typeof(Ass), this);
 		}
+		//public EmittedStatement(ILEmitter emitter,Program program,Map code):base(program,code)
+		//{
+		//    Type[] parameters = new Type[] { typeof(EmittedStatement),typeof(Map), typeof(Map) };
+		//    DynamicMethod method = new DynamicMethod(
+		//        "Optimized",
+		//        typeof(void),
+		//        parameters,
+		//        typeof(Map).Module);
+
+		//    Argument argument = new Argument(1, typeof(Map));
+		//    ILProgram p = new ILProgram();
+
+		//    Local context = p.Declare();
+		//    p.AddRange(
+		//        context.Assign(argument),
+		//        emitter
+		//        //,
+		//        //Emit(this, null, context, new Argument(0, typeof(Expression))),
+		//        //(Emit)Return
+		//        );
+		//    p.Emit(method.GetILGenerator());
+		//    ass=(Ass)method.CreateDelegate(typeof(Ass), this);
+		//}
 	}
 	public class KeyStatement : StatementBase
 	{
@@ -1202,19 +1236,50 @@ namespace Meta
 				//ILProgram p = new ILProgram();
 				//context[key.Evaluate(context)] = value;
 
-				Argument context=new Argument(0,typeof(Map));
-				Argument value=new Argument(1,typeof(Map));
-				ILEmitter p=context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(((Literal)key).literal.GetString()).Assign(value);
+				Argument context=new Argument(1,typeof(Map));
+				Argument value=new Argument(2,typeof(Map));
+				//ILEmitter p=context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(((Literal)key).literal.GetString()).Assign(value);
 				//p.Add(context. program.type.GetField(
-				//p.Add(context.Call("set_Item",
+
+
+
+				string name=((Literal)key).literal.GetString();
+				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value);
+
+				ILProgram s = new ILProgram();
+				//ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value);
+				//ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field(name).Assign(value);
+				
+				//.Call("Set",
+				//    new New(
+				//        typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+				//        ((Literal)key).literal.GetString()), value, context);
+
+				//ILEmitter p=context.Call("get_Strategy").Call("Set",
+				//    new New(
+				//        typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+				//        ((Literal)key).literal.GetString()),value,context);
+
+
+
+					//.Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Call("Set",.Field(((Literal)key).literal.GetString()).Assign(value);
+				//ILEmitter p=context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Call("Set",.Field(((Literal)key).literal.GetString()).Assign(value);
+
+				//ILEmitter p = context.Call("set_Item",
+				//                    new New(
+				//                        typeof(Map).GetConstructor(new Type[] { typeof(string) }),
+				//                        ((Literal)key).literal.GetString()),
+				//                    value);
+				//ILEmitter p = context.Call("set_Item",
 				//    new New(
 				//        typeof(Map).GetConstructor(new Type[] { typeof(string) }),
 				//        ((Literal)key).literal.GetString()),
-				//    value));
+				//    value);
 				return new EmittedStatement(p, program, code);
 			}
 			else
 			{
+				object x=program.AllLiteralKeys();
 				return this;
 			}
 		}
@@ -2106,70 +2171,71 @@ namespace Meta
 		{
 			return base.Call(argument, parent);
 		}
-		//public override Map CopyData()
-		//{
-		//    return base.CopyData();
-		//}
-		//public override int Count
-		//{
-		//    get
-		//    {
-		//        return base.Count;
-		//    }
-		//}
-		//public override MapStrategy DeepCopy(Map key, Map value, Map map)
-		//{
-		//    return base.DeepCopy(key, value, map);
-		//}
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    return base.Equal(obj);
-		//}
-		//public override Number GetNumber()
-		//{
-		//    return base.GetNumber();
-		//}
-		//public override int GetHashCode()
-		//{
-		//    return base.GetHashCode();
-		//}
-		//public override bool Equals(object obj)
-		//{
-		//    return base.Equals(obj);
-		//}
-		//public override string GetString()
-		//{
-		//    return base.GetString();
-		//}
-		//public override bool IsNumber
-		//{
-		//    get
-		//    {
-		//        return base.IsNumber;
-		//    }
-		//}
-		//public override bool IsString
-		//{
-		//    get
-		//    {
-		//        return base.IsString;
-		//    }
-		//}
-		//protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
-		//{
-		//    base.Panic(key, val, strategy, map);
-		//}
-		//public override IEnumerable<Map> Array
-		//{
-		//    get
-		//    {
-		//        yield break;
-		//    }
-		//}
-		//public override void Append(Map map, Map parent)
-		//{
-		//    throw new Exception("not implemented");
-		//}
+		public override Map CopyData()
+		{
+			return base.CopyData();
+		}
+		public override int Count
+		{
+			get
+			{
+				return base.Count;
+			}
+		}
+		public override MapStrategy DeepCopy(Map key, Map value, Map map)
+		{
+			return base.DeepCopy(key, value, map);
+		}
+		public override bool Equal(MapStrategy obj)
+		{
+			return base.Equal(obj);
+		}
+		public override Number GetNumber()
+		{
+			return base.GetNumber();
+		}
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+		public override bool Equals(object obj)
+		{
+			return base.Equals(obj);
+		}
+		public override string GetString()
+		{
+			return base.GetString();
+		}
+		public override bool IsNumber
+		{
+			get
+			{
+				return base.IsNumber;
+			}
+		}
+		public override bool IsString
+		{
+			get
+			{
+				return base.IsString;
+			}
+		}
+		protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
+		{
+			base.Panic(key, val, strategy, map);
+		}
+		public override IEnumerable<Map> Array
+		{
+			get
+			{
+				yield break;
+			}
+		}
+		public override void Append(Map map, Map parent)
+		{
+			throw new Exception("not implemented");
+		}
+
 		public override bool ContainsKey(Map key)
 		{
 			return Get(key) != null;
