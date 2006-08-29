@@ -365,12 +365,6 @@
 				try=.
 					Library
 					Try_Map_Map
-			asf=-
-				.
-					lib
-					contains
-				"x"
-				"y"		
 	&=.
 		-
 			lib

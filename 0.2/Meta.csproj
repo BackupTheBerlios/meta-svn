@@ -43,4 +43,11 @@
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="basicTest.meta" />
+    <None Include="learning.meta" />
+    <None Include="libDesign.meta" />
+    <None Include="library.meta" />
+    <None Include="libraryTest.meta" />
+  </ItemGroup>
 </Project>
