@@ -19,73 +19,21 @@
 //	ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
-
-using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Net;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 using Meta;
 using Meta.Test;
-using Microsoft.Win32;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
-//using System.Drawing;
-using System.Security.Cryptography;
-using System.Globalization;
-using System.Net.Mail;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-//using System.Xml.Serialization;
-//using System.Windows;
-//using SdlDotNet;
-
+using System.Text;
+using System.Threading;
 namespace Meta
 {
-	public delegate Map Eval(Map context);
-
-	public class New : ILExpression
-	{
-		public override Type Type
-		{
-			get
-			{
-				return constructor.DeclaringType;
-			}
-		}
-		private ConstructorInfo constructor;
-		private ILEmitter[] arguments;
-		public New(ConstructorInfo constructor,params ILEmitter[] arguments)
-		{
-			this.constructor = constructor;
-			this.arguments = arguments;
-		}
-		public override void Evaluate(ILGenerator il)
-		{
-			foreach (ILEmitter argument in arguments)
-			{
-				argument.Emit(il);
-			}
-			il.Emit(OpCodes.Newobj, constructor);
-		}
-	}
-	public class Load:ILEmitter
-	{
-		private Storage storage;
-		public Load(Storage storage)
-		{
-			this.storage = storage;
-		}
-		public override void Emit(ILGenerator il)
-		{
-			storage.Load(il);
-		}
-	}
+	public delegate Map Evaluate(Map context);
 	public abstract class Storage:ILExpression
 	{
 		private Type type;
@@ -139,57 +87,19 @@ namespace Meta
 	public class Integer : ILEmitter
 	{
 		private int integer;
-		public Integer(int integer)
-		{
-			this.integer = integer;
-		}
-		public override void Emit(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldc_I4, integer);
-		}
+		public Integer(int integer){this.integer = integer;}
+		public override void Emit(ILGenerator il){il.Emit(OpCodes.Ldc_I4, integer);}
 	}
 	public class InstanceField : ILExpression
 	{
-		public override Type Type
-		{
-			get 
-			{
-				//try
-				//{
-					return field.FieldType;
-				//}
-				//catch (Exception e)
-				//{
-				//    throw e;
-				//}
-			}
-		}
+		public override Type Type { get { return field.FieldType; } }
 		public ILEmitter Assign(ILEmitter b)
-		{
-			return (CustomEmitter)delegate(ILGenerator il)
-			{
-				instance.Emit(il);
-				b.Emit(il);
-				il.Emit(OpCodes.Stfld, field);
-				//b.Emit(il);
-				//Store(il);
-			};
-		}
+		{return (CustomEmitter)delegate(ILGenerator il)
+			{instance.Emit(il);b.Emit(il);il.Emit(OpCodes.Stfld, field);};}
 		private FieldInfo field;
 		private ILEmitter instance;
 		public InstanceField(ILEmitter instance, FieldInfo field)
-		{
-			this.field = field;
-			if (field == null)
-			{
-			}
-			this.instance = instance;
-		}
-		//public void Store(ILGenerator il)
-		//{
-		//    instance.Emit(il);
-		//    il.Emit(OpCodes.Stfld, field);
-		//}
+		{this.field = field;this.instance = instance;}
 		public void Load(ILGenerator il)
 		{
 			instance.Emit(il);
@@ -200,192 +110,71 @@ namespace Meta
 			Load(il);
 		}
 	}
-	public class StaticField : Storage
-	{
-		public override Type Type
-		{
-			get 
-			{
-				return field.FieldType;
-			}
-		}
-		private FieldInfo field;
-		public StaticField(FieldInfo field)
-		{
-			this.field = field;
-		}
-		public override void Store(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldsfld, field);
-		}
-		public override void Load(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldsfld, field);
-		}
-		public override void Evaluate(ILGenerator il)
-		{
-			Load(il);
-		}
-	}
 	public class Argument:Storage
 	{
 		public override Type Type
 		{
-			get
-			{
-				return type;
-			}
+			get{return type;}
 		}
-		public override void Evaluate(ILGenerator il)
-		{
-			Load(il);
-		}
-		public override void Store(ILGenerator il)
-		{
-			il.Emit(OpCodes.Starg, index);
-		}
-		public override void Load(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldarg, index);
-		}
-		public int Index
-		{
-			get
-			{
-				return index;
-			}
-		}
+		public override void Evaluate(ILGenerator il) { Load(il); }
+		public override void Store(ILGenerator il) { il.Emit(OpCodes.Starg, index); }
+		public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldarg, index); }
+		public int Index { get { return index; } }
 		private int index;
 		private Type type;
-		public Argument(int index,Type type)
-		{
-			this.index = index;
-			this.type = type;
-		}
+		public Argument(int index, Type type) { this.index = index; this.type = type; }
 	}
 	public class Local:Storage
 	{
-		public override Type Type
-		{
-			get 
-			{
-				return type;
-			}
-		}
+		public override Type Type { get { return type; } }
 		private Type type=typeof(Map);
-		public override void Evaluate(ILGenerator il)
-		{
-			Load(il);
-		}
-		public override void Store(ILGenerator il)
-		{
-			il.Emit(OpCodes.Stloc, local.LocalIndex);
-		}
-		public override void Load(ILGenerator il)
-		{
-			il.Emit(OpCodes.Ldloc, local.LocalIndex);
-		}
-		public void Declare(ILGenerator il)
-		{
-			local = il.DeclareLocal(type);
-		}
+		public override void Evaluate(ILGenerator il) { Load(il); }
+		public override void Store(ILGenerator il) { il.Emit(OpCodes.Stloc, local.LocalIndex); }
+		public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldloc, local.LocalIndex); }
+		public void Declare(ILGenerator il) { local = il.DeclareLocal(type); }
 		LocalBuilder local;
 	}
 	public delegate void Emit(ILGenerator il);
 	public class CustomEmitter : ILEmitter
 	{
 		private Emit emitter;
-		public CustomEmitter(Emit emitter)
-		{
-			this.emitter = emitter;
-		}
-		public override void Emit(ILGenerator il)
-		{
-			emitter(il);
-		}
+		public CustomEmitter(Emit emitter){this.emitter = emitter;}
+		public override void Emit(ILGenerator il) { emitter(il); }
 	}
 	public class Cast:ILEmitter
 	{
-		public override Type  Type
-		{
-			get 
-			{ 
-				 return type;
-			}
-		}
+		public override Type Type{get { return type; } }
 		private Type type;
 		private ILEmitter emitter;
-		public Cast(ILEmitter emitter,Type type)
-		{
-			this.emitter=emitter;
-			this.type = type;
-		}
+		public Cast(ILEmitter emitter,Type type){this.emitter=emitter;this.type = type;}
 		public override void Emit(ILGenerator il)
-		{
-			emitter.Emit(il);
-			il.Emit(OpCodes.Castclass,type);
-		}
+		{emitter.Emit(il);il.Emit(OpCodes.Castclass,type);}
 	}
-	public abstract class ILEmitter
+	public abstract class ILEmitter 
 	{
-		public ILEmitter Cast(Type type)
-		{
-			return new Cast(this, type);
-			//return (Emit)delegate(ILGenerator il)
-			//{
-			//    il.Emit(OpCodes.Ldstr, text);
-			//};
-		}
-		public static implicit operator ILEmitter(string text)
-		{
-			return (Emit)delegate(ILGenerator il)
-			{
-				il.Emit(OpCodes.Ldstr, text);
-			};
-		}
-		public virtual Type Type
-		{
-			get
-			{
-				return typeof(Map);
-			}
-		}
-		public InstanceField Field(string name)
-		{
-			return new InstanceField(this, Type.GetField(name));
-		}
-		public ILExpression Call(string name, params ILEmitter[] arguments)
-		{
-			return new InstanceCall(this, Type.GetMethod(name), arguments);
-		}
+		public static implicit operator ILEmitter(string text){ return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldstr, text); }; }
+		public static implicit operator ILEmitter(int del) { return new Integer(del); }
+		public static implicit operator ILEmitter(Emit del) { return new CustomEmitter(del); }
 
-		public static implicit operator ILEmitter(int del)
-		{
-			return new Integer(del);
-		}
-		public static implicit operator ILEmitter(Emit del)
-		{
-			return new CustomEmitter(del);
-		}
+		public ILEmitter Cast(Type type) { return new Cast(this, type); }
+		public virtual Type Type { get { return typeof(Map); } }
+		public InstanceField Field(string name){return new InstanceField(this, Type.GetField(name));}
+		public ILExpression Call(string name, params ILEmitter[] arguments){return new InstanceCall(this, Type.GetMethod(name), arguments);}
+
 		public abstract void Emit(ILGenerator il);
 	}
 	public class ILProgram : ILEmitter
 	{
-		public Local Declare()
-		{
+		public Local Declare(){
 			Local local = new Local();
 			Add((Emit)local.Declare);
 			return local;
 		}
 		private List<ILEmitter> statements;
-		public ILProgram(params ILEmitter[] statements)
-		{
-			this.statements = new List<ILEmitter>(statements);
-		}
-		public void AddRange(params ILEmitter[] statements)
-		{
-			this.statements.AddRange(statements);
-		}
+		public ILProgram(params ILEmitter[] statements){this.statements = new List<ILEmitter>(statements);}
+		//public void AddRange(params ILEmitter[] statements){
+		//    this.statements.AddRange(statements);
+		//}
 		public void Add(Emit emitter)
 		{
 			Add(new CustomEmitter(emitter));
@@ -412,6 +201,31 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public class New : ILExpression
+		{
+			public override Type Type
+			{
+				get
+				{
+					return constructor.DeclaringType;
+				}
+			}
+			private ConstructorInfo constructor;
+			private ILEmitter[] arguments;
+			public New(ConstructorInfo constructor, params ILEmitter[] arguments)
+			{
+				this.constructor = constructor;
+				this.arguments = arguments;
+			}
+			public override void Evaluate(ILGenerator il)
+			{
+				foreach (ILEmitter argument in arguments)
+				{
+					argument.Emit(il);
+				}
+				il.Emit(OpCodes.Newobj, constructor);
+			}
+		}
 		public static Emit EmitSearch(Local key, Local selected, Extent extent)
 		{
 			return Until(
@@ -487,15 +301,8 @@ namespace Meta
 			il.Emit(OpCodes.Ldnull);
 		}
 		public List<Map> literals = new List<Map>();
-		protected Eval optimized;
+		protected Evaluate optimized;
 		public abstract Map Evaluate(Map context);
-		//{
-		//    if (optimized == null)
-		//    {
-		//        optimized = EmitCode();
-		//    }
-		//    return optimized(context);
-		//}
 		public static void Return(ILGenerator il)
 		{
 			il.Emit(OpCodes.Ret);
@@ -504,27 +311,6 @@ namespace Meta
 		{
 			return this;
 		}
-		//public Eval EmitCode()
-		//{
-		//    Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
-		//    DynamicMethod method = new DynamicMethod(
-		//        "Optimized",
-		//        typeof(Map),
-		//        parameters,
-		//        typeof(Map).Module);
-
-		//    Argument argument = new Argument(1,typeof(Map));
-		//    ILProgram program = new ILProgram();
-
-		//    Local context = program.Declare();
-		//    program.AddRange(
-		//        context.Assign(argument),
-		//        Emit(this,null, context,new Argument(0,typeof(Expression))),
-		//        (Emit)Return);
-		//    program.Emit(method.GetILGenerator());
-		//    return (Eval)method.CreateDelegate(typeof(Eval), this);
-		//}
-		//public abstract ILEmitter Emit(Expression expression,StatementBase lastProgram, Local context, Argument argument);
 	}
 	public class Call : Expression
 	{
@@ -598,7 +384,7 @@ namespace Meta
 	}
 	public class EmittedExpression : Expression
 	{
-		Eval eval;
+		Evaluate eval;
 		public EmittedExpression(ILEmitter emitter)
 		{
 			Type[] parameters = new Type[] { typeof(Expression), typeof(Map) };
@@ -612,13 +398,11 @@ namespace Meta
 			ILProgram program = new ILProgram();
 
 			Local context = program.Declare();
-			program.AddRange(
-				context.Assign(argument),
-				emitter,
-				//Emit(this, null, context, new Argument(0, typeof(Expression))),
-				(Emit)Return);
+			program.Add(context.Assign(argument));
+			program.Add(emitter);
+			program.Add((Emit)Return);
 			program.Emit(method.GetILGenerator());
-			eval=(Eval)method.CreateDelegate(typeof(Eval), this);
+			eval=(Evaluate)method.CreateDelegate(typeof(Evaluate), this);
 		}
 		public override Map Evaluate(Map context)
 		{
@@ -1160,11 +944,15 @@ namespace Meta
 			ILProgram p = new ILProgram();
 
 			Local context = p.Declare();
-			p.AddRange(
-				context.Assign(argument),
-				emitter,
-				(Emit)Expression.Return
-				);
+			p.Add(context.Assign(argument));
+			p.Add(emitter);
+			p.Add((Emit)Expression.Return);
+
+			//p.AddRange(
+			//    context.Assign(argument),
+			//    emitter,
+			//    (Emit)Expression.Return
+			//    );
 			p.Emit(method.GetILGenerator());
 			ass = (Ass)method.CreateDelegate(typeof(Ass), this);
 		}
