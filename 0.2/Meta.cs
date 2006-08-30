@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -201,38 +202,24 @@ namespace Meta {
 		}
 	}
 	public abstract class Expression : MetaBase {
-		public abstract IEnumerable<Expression> SubExpressions {
-			get;
-		}
-		//    get {
-		//        yield break;
-		//    }
-		//}
 		protected Evaluate optimized;
 		public Map Evaluate(Map context) {
-			List<Map> results = new List<Map>();
-			foreach (Expression subExpression in SubExpressions) {
-				results.Add(subExpression.Evaluate(context));
+			if (!isOptimized && !(this is Literal)) {
 			}
-			return EvaluateImplementation(context,results);
+			return EvaluateImplementation(context);
 		}
-		public abstract Map EvaluateImplementation(Map context,List<Map> subResults);
+		public abstract Map EvaluateImplementation(Map context);
 		public bool isOptimized = false;
 		public Expression Optimize(Map scope, List<Statement> statements) {
 			isOptimized = true;
-			return OptimizeImplementation(scope,statements);
+			return OptimizeImplementation(scope, statements);
 		}
-		public virtual Expression OptimizeImplementation(Map scope, List<Statement> statements) { 
-			return this; 
+		public virtual Expression OptimizeImplementation(Map scope, List<Statement> statements) {
+			return this;
 		}
 
 	}
 	public class Call : Expression {
-		//public override IEnumerable<Expression> SubExpressions {
-		//    get {
-		//        return calls;
-		//    }
-		//}
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			for (int i = 0; i < calls.Count; i++) {
 				calls[i] = calls[i].Optimize(scope, statements);
@@ -253,34 +240,16 @@ namespace Meta {
 			}
 			this.parameterName = parameterName;
 		}
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				return calls;
-			}
-		}
-		public override Map EvaluateImplementation(Map current, List<Map> results) {
-			Map callable = results[0];//.Evaluate(current);
-			for (int i = 1; i < results.Count; i++) {
-				callable = callable.Call(results[i]);
+		public override Map EvaluateImplementation(Map current) {
+			Map callable = calls[0].Evaluate(current);
+			for (int i = 1; i < calls.Count; i++) {
+				callable = callable.Call(calls[i].Evaluate(current));
 			}
 			return callable;
 
 		}
-		//public override Map EvaluateImplementation(Map current,List<Map> subResults) {
-		//    Map callable = calls[0].Evaluate(current);
-		//    for (int i = 1; i < calls.Count; i++) {
-		//        callable = callable.Call(calls[i].Evaluate(current));
-		//    }
-		//    return callable;
-
-		//}
 	}
 	public class OptimizedSearch : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				yield break;
-			}
-		}
 		private int count;
 		private Map key;
 		public OptimizedSearch(int count, Map key) {
@@ -288,7 +257,7 @@ namespace Meta {
 			this.count = count;
 			this.key = key;
 		}
-		public override Map EvaluateImplementation(Map context, List<Map> subResults) {
+		public override Map EvaluateImplementation(Map context) {
 			Map selected = context;
 			for (int i = 0; i < count; i++) {
 				selected = selected.Scope;
@@ -297,28 +266,20 @@ namespace Meta {
 		}
 	}
 	public class CustomExpression : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				yield break;
-			}
-		}
 		Evaluate eval;
 		public CustomExpression(Evaluate eval) {
 			this.isOptimized = true;
 			this.eval = eval;
 		}
-		public override Map EvaluateImplementation(Map context, List<Map> subResults) {
+		public override Map EvaluateImplementation(Map context) {
 			return eval(context);
 		}
 	}
 	public class Search : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-		    get { 
-		        yield return this.expression;
-		    }
-		}
-		public override Map EvaluateImplementation(Map context, List<Map> subResults) {
-			Map key = subResults[0];// expression.Evaluate(context);
+		public override Map EvaluateImplementation(Map context) {
+			if (!isOptimized) {
+			}
+			Map key = expression.Evaluate(context);
 			Map selected = context;
 			while (!selected.ContainsKey(key)) {
 				if (selected.Scope != null) {
@@ -329,20 +290,6 @@ namespace Meta {
 			}
 			return selected[key].Copy();
 		}
-		//public override Map EvaluateImplementation(Map context, List<Map> subResults) {
-		//    if (!isOptimized) {
-		//    }
-		//    Map key = expression.Evaluate(context);
-		//    Map selected = context;
-		//    while (!selected.ContainsKey(key)) {
-		//        if (selected.Scope != null) {
-		//            selected = selected.Scope;
-		//        } else {
-		//            throw new KeyNotFound(key, code.Extent, null);
-		//        }
-		//    }
-		//    return selected[key].Copy();
-		//}
 		private bool op = false;
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			op = true;
@@ -354,14 +301,14 @@ namespace Meta {
 					if (statements[i].AlwaysContainsKey(key)) {
 
 						if (statements[i].program.type != null) {
-						    ILProgram program = new ILProgram();
-						    Local selected = program.Declare();
-						    program.Add(selected.Assign(new Argument(1, typeof(Map))));
-						    for (int a = 0; a < count; a++) {
-						        program.Add(selected.Assign(selected.Call("get_Scope")));
-						    }
-						    program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
-						    return EmittedExpression(program);
+							ILProgram program = new ILProgram();
+							Local selected = program.Declare();
+							program.Add(selected.Assign(new Argument(1, typeof(Map))));
+							for (int a = 0; a < count; a++) {
+								program.Add(selected.Assign(selected.Call("get_Scope")));
+							}
+							program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
+							return EmittedExpression(program);
 						} else {
 							return new OptimizedSearch(count, key);
 						}
@@ -388,7 +335,7 @@ namespace Meta {
 							return new OptimizedSearch(count, key);
 						}
 					} else if (s.activeProgram != null && !s.activeProgram.WillNotAddKey(key, s.activeStatement)) {
-						object x=!s.activeProgram.WillNotAddKey(key, s.activeStatement);
+						object x = !s.activeProgram.WillNotAddKey(key, s.activeStatement);
 						break;
 					}
 					s = s.Scope;
@@ -406,11 +353,6 @@ namespace Meta {
 		}
 	}
 	public class Program : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				yield break; ;
-			}
-		}
 		public bool WillNotAddKey(Map key, Statement statement) {
 			int index = 0;
 			foreach (Statement s in statementList) {
@@ -434,7 +376,7 @@ namespace Meta {
 		public bool AllLiteralKeys() {
 			int count = 0;
 			foreach (Statement statement in statementList) {
-				if ((statement.LiteralKey!= null && statement.LiteralKey.IsString && statement.LiteralKey.Count != 0) || statement is CurrentStatement && count == statementList.Count - 1) {
+				if ((statement.LiteralKey != null && statement.LiteralKey.IsString && statement.LiteralKey.Count != 0) || statement is CurrentStatement && count == statementList.Count - 1) {
 					count++;
 				} else {
 					return false;
@@ -491,21 +433,21 @@ namespace Meta {
 		}
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			if (AllLiteralKeys()) {
-				type = CreateType();
+				//type = CreateType();
 			}
 			for (int i = 0; i < statementList.Count; i++) {
 				Statement statement = statementList[i];
 				statements.Add(statement);
 				statement.value = statement.value.Optimize(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
-				statementList[i] = statement.Optimize(scope,statements);
+				statementList[i] = statement.Optimize(scope, statements);
 			}
 			return this;
 		}
-		public override Map EvaluateImplementation(Map parent, List<Map> subResults) {
+		public override Map EvaluateImplementation(Map parent) {
 			Map context;
 			if (type != null) {
-			    context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
+				context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
 			} else {
 				context = new Map();
 			}
@@ -547,9 +489,9 @@ namespace Meta {
 			return this;
 		}
 		public void Assign(ref Map context) {
-			AssignImplementation(ref context,value.Evaluate(context));
+			AssignImplementation(ref context, value.Evaluate(context));
 		}
-		public abstract void AssignImplementation(ref Map context,Map value);
+		public abstract void AssignImplementation(ref Map context, Map value);
 		public virtual bool NeverContainsKey(Map key) {
 			bool neverContains = true;
 			int count = 0;
@@ -651,7 +593,7 @@ namespace Meta {
 
 	public class EmittedStatement : Statement {
 		Ass ass;
-		public override void AssignImplementation(ref Map context,Map value) {
+		public override void AssignImplementation(ref Map context, Map value) {
 			ass(context, value);
 		}
 		private Map key;
@@ -695,26 +637,25 @@ namespace Meta {
 		}
 		public override Statement Optimize(Map scope, List<Statement> statements) {
 			if (program.type != null && key is Literal && ((Literal)key).literal.IsString) {
-			    Argument context = new Argument(1, typeof(Map));
-			    Argument value = new Argument(2, typeof(Map));
+				Argument context = new Argument(1, typeof(Map));
+				Argument value = new Argument(2, typeof(Map));
 
-			    string name = ((Literal)key).literal.GetString();
+				string name = ((Literal)key).literal.GetString();
 				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value);
 				//ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value.Call("Copy"));// why copy here? should not be necessary
 
-			    ILProgram s = new ILProgram();
-			    return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
-			} 
-			else {
+				ILProgram s = new ILProgram();
+				return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
+			} else {
 				statements.Add(this);
-				this.key = this.key.Optimize(scope,statements);
+				this.key = this.key.Optimize(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
 
 				return this;
 			}
 		}
 		private Map code;
-		public override void AssignImplementation(ref Map context,Map value) {
+		public override void AssignImplementation(ref Map context, Map value) {
 			context[key.Evaluate(context)] = value;
 		}
 		public Expression key;
@@ -726,7 +667,7 @@ namespace Meta {
 	}
 
 	public class CurrentStatement : Statement {
-		public override void AssignImplementation(ref Map context,Map value) {
+		public override void AssignImplementation(ref Map context, Map value) {
 			Map val = value.Copy();
 			val.Scope = context.Scope;
 			context = val;
@@ -743,7 +684,7 @@ namespace Meta {
 	}
 
 	public class SearchStatement : Statement {
-		public override void AssignImplementation(ref Map context,Map value) {
+		public override void AssignImplementation(ref Map context, Map value) {
 			Map selected = context;
 			Map key = this.key.Evaluate(context);
 			while (!selected.ContainsKey(key)) {
@@ -765,12 +706,7 @@ namespace Meta {
 	}
 
 	public class Literal : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				yield break;
-			}
-		}
-		public override Map EvaluateImplementation(Map context, List<Map> subResults) { return literal.Copy(); }
+		public override Map EvaluateImplementation(Map context) { return literal.Copy(); }
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public Literal(Map code) {
@@ -783,12 +719,7 @@ namespace Meta {
 	}
 
 	public class Root : Expression {
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				yield break;
-			}
-		}
-		public override Map EvaluateImplementation(Map selected, List<Map> subResults) { return Gac.gac; }
+		public override Map EvaluateImplementation(Map selected) { return Gac.gac; }
 	}
 
 	public class Select : Expression {
@@ -798,10 +729,10 @@ namespace Meta {
 			}
 			return this;
 		}
-		public override Map EvaluateImplementation(Map context, List<Map> results) {
-			Map selected = results[0];//[0].Evaluate(context);
-			for (int i = 1; i < results.Count; i++) {
-				Map key = results[i];// subs[i].Evaluate(context);
+		public override Map EvaluateImplementation(Map context) {
+			Map selected = subs[0].Evaluate(context);
+			for (int i = 1; i < subselects.Count; i++) {
+				Map key = subs[i].Evaluate(context);
 				Map value = selected.TryGetValue(key);
 				if (value == null) {
 					throw new KeyDoesNotExist(key, subselects[i].Extent, selected);
@@ -810,24 +741,6 @@ namespace Meta {
 				}
 			}
 			return selected;
-		}
-		//public override Map EvaluateImplementation(Map context, List<Map> subResults) {
-		//    Map selected = subs[0].Evaluate(context);
-		//    for (int i = 1; i < subselects.Count; i++) {
-		//        Map key = subs[i].Evaluate(context);
-		//        Map value = selected.TryGetValue(key);
-		//        if (value == null) {
-		//            throw new KeyDoesNotExist(key, subselects[i].Extent, selected);
-		//        } else {
-		//            selected = value;
-		//        }
-		//    }
-		//    return selected;
-		//}
-		public override IEnumerable<Expression> SubExpressions {
-			get {
-				return subs;
-			}
 		}
 		private List<Expression> subs = new List<Expression>();
 		private List<Map> subselects;
@@ -840,6 +753,7 @@ namespace Meta {
 	}
 
 	public class Interpreter {
+		public static bool profiling = false;
 		static Interpreter() {
 			try {
 				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
@@ -866,6 +780,19 @@ namespace Meta {
 					}
 					Console.ReadLine();
 				} else if (args[0] == "-profile") {
+					UseConsole();
+					Interpreter.profiling = true;
+					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+					List<Extent> results = new List<Extent>(Map.calls.Keys);
+					results.Sort(delegate(Extent a, Extent b) {
+						return Map.calls[b].CompareTo(Map.calls[a]);
+					});
+
+					foreach (Extent e in results) {
+						Console.WriteLine(e.ToString() + "    " + Map.calls[e]);
+					}
+					Console.ReadLine();
+				} else if (args[0] == "-performance") {
 					UseConsole();
 					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
 				}
@@ -1362,7 +1289,7 @@ namespace Meta {
 			return base.Call(argument, parent);
 		}
 		public override Map CopyData() {
-			return new Map(new CloneStrategy(this));
+			return base.CopyData();
 		}
 		public override int Count {
 			get {
@@ -2373,6 +2300,17 @@ namespace Meta {
 
 	[Serializable]
 	public class SourcePosition {
+		public override string ToString() {
+			return "line " + line + ", column " + column;
+		}
+		public override bool Equals(object obj) {
+			SourcePosition pos = obj as SourcePosition;
+			return pos != null
+				&& pos.line == line && pos.column == column;
+		}
+		public override int GetHashCode() {
+			return line.GetHashCode() * column.GetHashCode();
+		}
 		private int line;
 		private int column;
 		public SourcePosition(int line, int column) {
@@ -2402,6 +2340,19 @@ namespace Meta {
 
 	[Serializable]
 	public class Extent {
+		public override string ToString() {
+			return fileName + ", " + start.ToString();
+		}
+		public override bool Equals(object obj) {
+			Extent extent = obj as Extent;
+			return extent != null 
+				&& extent.start == start 
+				&& extent.end == end
+				&& extent.fileName==fileName;
+		}
+		public override int GetHashCode() {
+			return start.GetHashCode() * end.GetHashCode() * fileName.GetHashCode();
+		}
 		private SourcePosition start;
 		private SourcePosition end;
 		public Extent(int line, string fileName)
@@ -4089,6 +4040,39 @@ namespace Meta {
 			return result;
 		}
 	}
+	internal class HiPerfTimer {
+		[DllImport("Kernel32.dll")]
+		private static extern bool QueryPerformanceCounter(
+			out long lpPerformanceCount);
+
+		[DllImport("Kernel32.dll")]
+		private static extern bool QueryPerformanceFrequency(
+			out long lpFrequency);
+
+		private long startTime, stopTime;
+		private long freq;
+
+		public HiPerfTimer() {
+			startTime = 0;
+			stopTime = 0;
+
+			if (QueryPerformanceFrequency(out freq) == false) {
+				throw new ApplicationException();
+			}
+		}
+		public void Start() {
+			Thread.Sleep(0);
+			QueryPerformanceCounter(out startTime);
+		}
+		public void Stop() {
+			QueryPerformanceCounter(out stopTime);
+		}
+		public double Duration {
+			get {
+				return (double)(stopTime - startTime) / (double)freq;
+			}
+		}
+	}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
 		public Program activeProgram;
@@ -4130,7 +4114,31 @@ namespace Meta {
 		public string GetString() { return strategy.GetString(); }
 
 
-		public Map Call(Map arg) { return strategy.Call(arg, this); }
+		public Map Call(Map arg) {
+			HiPerfTimer timer = null;
+			if (Interpreter.profiling) {
+				timer = new HiPerfTimer();
+				timer.Start();
+			}
+			Map result=strategy.Call(arg, this);
+
+			if (Interpreter.profiling) {
+				timer.Stop();
+				if (this.ContainsKey(CodeKeys.Function)) {
+					Extent e = this[CodeKeys.Function].extent;
+					if (e != null) {
+						if (!calls.ContainsKey(e)) {
+							calls[e] = 0;
+						}
+						calls[e] += timer.Duration;
+					} else {
+					}
+				} else {
+				}
+			}
+			return result;
+		}
+		public static Dictionary<Extent, double> calls = new Dictionary<Extent, double>();
 		public void Append(Map map) { strategy.Append(map, this); }
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
 		public override bool Equals(object toCompare) { return strategy.Equal(((Map)toCompare).Strategy); }
