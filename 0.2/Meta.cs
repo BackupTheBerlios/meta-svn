@@ -785,11 +785,11 @@ namespace Meta {
 					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
 					List<Extent> results = new List<Extent>(Map.calls.Keys);
 					results.Sort(delegate(Extent a, Extent b) {
-						return Map.calls[b].CompareTo(Map.calls[a]);
+						return Map.calls[b].time.CompareTo(Map.calls[a].time);
 					});
 
 					foreach (Extent e in results) {
-						Console.WriteLine(e.ToString() + "    " + Map.calls[e]);
+						Console.WriteLine(e.ToString() + "    " + Map.calls[e].time + "     "+ Map.calls[e].calls);
 					}
 					Console.ReadLine();
 				} else if (args[0] == "-performance") {
@@ -1836,13 +1836,69 @@ namespace Meta {
 		}
 	}
 
+	public class Profile {
+		public double time;
+		public int calls;
+		public int recursive;
+	}
 	[Serializable]
 	public abstract class MapStrategy {
+		[DllImport("Kernel32.dll")]
+		private static extern bool QueryPerformanceCounter(
+			out long lpPerformanceCount);
+
+		[DllImport("Kernel32.dll")]
+		private static extern bool QueryPerformanceFrequency(
+			out long lpFrequency);
+
+		//private long startTime, stopTime;
+		private static long freq;
+
+		//private long freq;
+		static MapStrategy() {
+			if (QueryPerformanceFrequency(out freq) == false) {
+				throw new ApplicationException();
+			}
+		}
+
 		public virtual string Serialize(Map parent) {
 			return parent.SerializeDefault();
 		}
 		public virtual Map Call(Map argument, Map parent) {
-			return parent.CallDefault(argument);
+			long start = 0;
+			if (Interpreter.profiling) {
+				QueryPerformanceCounter(out start);
+				Extent e = Get(CodeKeys.Function).Extent;
+				if (!Map.calls.ContainsKey(e)) {
+					Map.calls[e] = new Profile();
+				}
+				Map.calls[e].calls++;
+				Map.calls[e].recursive++;
+				//timer = new HiPerfTimer();
+				//timer.Start();
+			}
+			Map result=parent.CallDefault(argument);
+		
+			if (Interpreter.profiling) {
+				//timer.Stop();
+				//if (this.ContainsKey(CodeKeys.Function)) {
+					Extent e = Get(CodeKeys.Function).Extent;
+					if (e != null) {
+
+						long stop;
+						QueryPerformanceCounter(out stop);
+						double duration = (double)(stop - start) / (double)freq;
+						Map.calls[e].recursive--;
+						if (Map.calls[e].recursive == 0) {
+							Map.calls[e].time += duration;
+						}
+					} else {
+					}
+				//} else {
+				//}
+			}
+			return result;
+
 		}
 		public virtual void Append(Map map, Map parent) {
 			this.Set(GetArrayCount() + 1, map, parent);
@@ -3951,6 +4007,32 @@ namespace Meta {
 		}
 	}
 	public class Library {
+		public static Map Sum(Map arg, Map func) {
+			IEnumerator<Map> enumerator = arg.Array.GetEnumerator();
+			if (enumerator.MoveNext()) {
+				Map result = enumerator.Current.Copy();
+				while(enumerator.MoveNext())
+				{
+					result = func.Call(result).Call(enumerator.Current);
+				}
+				return result;
+			} else {
+				return Map.Empty;
+			}
+		}
+		public static Map If(Map condition, Map then) {
+			if (Convert.ToBoolean(condition.GetNumber().GetInt32())) {
+				return then.Call(new Map());
+			}
+			return Map.Empty;
+		}
+		public static Map Apply(Map array,Map func) {
+			List<Map> result = new List<Map>();
+			foreach (Map map in array.Array) {
+				result.Add(func.Call(map));
+			}
+			return new Map(result);
+		}
 		public static Map Append(Map array, Map item) {
 			array.Append(item);
 			if (!(array.Strategy is ListStrategy)) {
@@ -4040,39 +4122,39 @@ namespace Meta {
 			return result;
 		}
 	}
-	internal class HiPerfTimer {
-		[DllImport("Kernel32.dll")]
-		private static extern bool QueryPerformanceCounter(
-			out long lpPerformanceCount);
+	//internal class HiPerfTimer {
+	//    [DllImport("Kernel32.dll")]
+	//    private static extern bool QueryPerformanceCounter(
+	//        out long lpPerformanceCount);
 
-		[DllImport("Kernel32.dll")]
-		private static extern bool QueryPerformanceFrequency(
-			out long lpFrequency);
+	//    [DllImport("Kernel32.dll")]
+	//    private static extern bool QueryPerformanceFrequency(
+	//        out long lpFrequency);
 
-		private long startTime, stopTime;
-		private long freq;
+	//    private long startTime, stopTime;
+	//    private long freq;
 
-		public HiPerfTimer() {
-			startTime = 0;
-			stopTime = 0;
+	//    public HiPerfTimer() {
+	//        startTime = 0;
+	//        stopTime = 0;
 
-			if (QueryPerformanceFrequency(out freq) == false) {
-				throw new ApplicationException();
-			}
-		}
-		public void Start() {
-			Thread.Sleep(0);
-			QueryPerformanceCounter(out startTime);
-		}
-		public void Stop() {
-			QueryPerformanceCounter(out stopTime);
-		}
-		public double Duration {
-			get {
-				return (double)(stopTime - startTime) / (double)freq;
-			}
-		}
-	}
+	//        if (QueryPerformanceFrequency(out freq) == false) {
+	//            throw new ApplicationException();
+	//        }
+	//    }
+	//    public void Start() {
+	//        Thread.Sleep(0);
+	//        QueryPerformanceCounter(out startTime);
+	//    }
+	//    public void Stop() {
+	//        QueryPerformanceCounter(out stopTime);
+	//    }
+	//    public double Duration {
+	//        get {
+	//            return (double)(stopTime - startTime) / (double)freq;
+	//        }
+	//    }
+	//}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
 		public Program activeProgram;
@@ -4114,31 +4196,61 @@ namespace Meta {
 		public string GetString() { return strategy.GetString(); }
 
 
-		public Map Call(Map arg) {
-			HiPerfTimer timer = null;
-			if (Interpreter.profiling) {
-				timer = new HiPerfTimer();
-				timer.Start();
-			}
-			Map result=strategy.Call(arg, this);
 
-			if (Interpreter.profiling) {
-				timer.Stop();
-				if (this.ContainsKey(CodeKeys.Function)) {
-					Extent e = this[CodeKeys.Function].extent;
-					if (e != null) {
-						if (!calls.ContainsKey(e)) {
-							calls[e] = 0;
-						}
-						calls[e] += timer.Duration;
-					} else {
-					}
-				} else {
-				}
-			}
+
+		//public HiPerfTimer() {
+		//    startTime = 0;
+		//    stopTime = 0;
+
+		//    if (QueryPerformanceFrequency(out freq) == false) {
+		//        throw new ApplicationException();
+		//    }
+		//}
+		//public void Start() {
+		//    Thread.Sleep(0);
+		//    QueryPerformanceCounter(out startTime);
+		//}
+		//public void Stop() {
+		//    QueryPerformanceCounter(out stopTime);
+		//}
+		//public double Duration {
+		//    get {
+		//        return (double)(stopTime - startTime) / (double)freq;
+		//    }
+		//}
+		public Map Call(Map arg) {
+			Map result = strategy.Call(arg, this);
 			return result;
 		}
-		public static Dictionary<Extent, double> calls = new Dictionary<Extent, double>();
+		//public Map Call(Map arg) {
+		//    long start=0;
+		//    if (Interpreter.profiling) {
+		//        QueryPerformanceCounter(out start);
+		//        //timer = new HiPerfTimer();
+		//        //timer.Start();
+		//    }
+		//    Map result=strategy.Call(arg, this);
+
+		//    if (Interpreter.profiling) {
+		//        //timer.Stop();
+		//        if (this.ContainsKey(CodeKeys.Function)) {
+		//            Extent e = this[CodeKeys.Function].extent;
+		//            if (e != null) {
+		//                if (!calls.ContainsKey(e)) {
+		//                    calls[e] = 0;
+		//                }
+		//                long stop;
+		//                QueryPerformanceCounter(out stop);
+		//                double duration=(double)(stop - start) / (double)freq;
+		//                calls[e] += duration;
+		//            } else {
+		//            }
+		//        } else {
+		//        }
+		//    }
+		//    return result;
+		//}
+		public static Dictionary<Extent, Profile> calls = new Dictionary<Extent, Profile>();
 		public void Append(Map map) { strategy.Append(map, this); }
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
 		public override bool Equals(object toCompare) { return strategy.Equal(((Map)toCompare).Strategy); }

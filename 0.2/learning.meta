@@ -37,18 +37,15 @@
 														&=-
 															join
 															-
-																.
-																	,
-																		0=,
-																			|0
-																		1=,
-																			|-
-																				join
-																				value
-																				"<br>"
-																	-
-																		isString
+																if
+																-
+																	isString
+																	value
+																,
+																	|-
+																		join
 																		value
+																		"<br>"
 															-	
 																printNodes
 																-

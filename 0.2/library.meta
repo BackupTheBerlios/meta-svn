@@ -263,6 +263,11 @@
 								helper
 								1
 								0
+				apply=.
+					/
+					Meta
+					Library
+					Apply_Map_Map
 				callIf=,
 					map|,
 						key|,
@@ -333,9 +338,15 @@
 										-
 											length
 											array
+				sum=.
+					Library
+					Sum_Map_Map
 				reverse=.
 					Library
 					Reverse_Map
+				if=.
+					Library
+					If_Map_Map
 				if=,
 					condition|,
 						then|-
