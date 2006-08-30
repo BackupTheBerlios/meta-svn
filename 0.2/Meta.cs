@@ -298,15 +298,16 @@ namespace Meta {
 				Map s = scope;
 				for (int i = statements.Count - 1; i >= 0; i--) {
 					if (statements[i].AlwaysContainsKey(key)) {
+
 						if (statements[i].program.type != null) {
-							ILProgram program = new ILProgram();
-							Local selected = program.Declare();
-							program.Add(selected.Assign(new Argument(1, typeof(Map))));
-							for (int a = 0; a < count; a++) {
-								program.Add(selected.Assign(selected.Call("get_Scope")));
-							}
-							program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
-							return EmittedExpression(program);
+						    ILProgram program = new ILProgram();
+						    Local selected = program.Declare();
+						    program.Add(selected.Assign(new Argument(1, typeof(Map))));
+						    for (int a = 0; a < count; a++) {
+						        program.Add(selected.Assign(selected.Call("get_Scope")));
+						    }
+						    program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
+						    return EmittedExpression(program);
 						} else {
 							return new OptimizedSearch(count, key);
 						}
@@ -327,7 +328,7 @@ namespace Meta {
 								program.Add(selected.Assign(selected.Call("get_Scope")));
 							}
 							OptimizedMap o = (OptimizedMap)s.Strategy;
-							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()));
+							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()).Call("Copy"));
 							return EmittedExpression(program);
 						} else {
 							return new OptimizedSearch(count, key);
@@ -445,7 +446,7 @@ namespace Meta {
 		public override Map EvaluateImplementation(Map parent) {
 			Map context;
 			if (type != null) {
-				context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
+			    context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
 			} else {
 				context = new Map();
 			}
@@ -486,7 +487,10 @@ namespace Meta {
 		public virtual Statement Optimize(Map scope, List<Statement> statements) {
 			return this;
 		}
-		public abstract void Assign(ref Map context);
+		public void Assign(ref Map context) {
+			AssignImplementation(ref context,value.Evaluate(context));
+		}
+		public abstract void AssignImplementation(ref Map context,Map value);
 		public virtual bool NeverContainsKey(Map key) {
 			bool neverContains = true;
 			int count = 0;
@@ -498,7 +502,7 @@ namespace Meta {
 					neverContains = false;
 					break;
 				}
-				if (statement.LiteralKey!=null) {
+				if (statement.LiteralKey != null) {
 					if (statement.LiteralKey.Equals(key)) {
 						neverContains = false;
 						break;
@@ -514,7 +518,7 @@ namespace Meta {
 				if (statement == this) {
 					break;
 				}
-				if (statement.LiteralKey!=null) {
+				if (statement.LiteralKey != null) {
 					if (statement.LiteralKey.Equals(key)) {
 						alwaysContains = true;
 						break;
@@ -530,13 +534,66 @@ namespace Meta {
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
 	}
+	//public abstract class Statement {
+	//    public virtual Map LiteralKey {
+	//        get {
+	//            return null;
+	//        }
+	//    }
+	//    public virtual Statement Optimize(Map scope, List<Statement> statements) {
+	//        return this;
+	//    }
+	//    public abstract void Assign(ref Map context);
+	//    public virtual bool NeverContainsKey(Map key) {
+	//        bool neverContains = true;
+	//        int count = 0;
+	//        foreach (Statement statement in program.Statements) {
+	//            if (statement == this) {
+	//                break;
+	//            }
+	//            if (statement is CurrentStatement && count != program.Statements.Count - 1) {
+	//                neverContains = false;
+	//                break;
+	//            }
+	//            if (statement.LiteralKey!=null) {
+	//                if (statement.LiteralKey.Equals(key)) {
+	//                    neverContains = false;
+	//                    break;
+	//                }
+	//            }
+	//            count++;
+	//        }
+	//        return neverContains;
+	//    }
+	//    public virtual bool AlwaysContainsKey(Map key) {
+	//        bool alwaysContains = false;
+	//        foreach (Statement statement in program.Statements) {
+	//            if (statement == this) {
+	//                break;
+	//            }
+	//            if (statement.LiteralKey!=null) {
+	//                if (statement.LiteralKey.Equals(key)) {
+	//                    alwaysContains = true;
+	//                    break;
+	//                }
+	//            }
+	//        }
+	//        return alwaysContains;
+	//    }
+	//    public Program program;
+	//    public Expression value;
+	//    public Statement(Program program, Map code) {
+	//        this.program = program;
+	//        this.value = code[CodeKeys.Value].GetExpression();
+	//    }
+	//}
 
 	public delegate void Ass(Map context, Map value);
 
 	public class EmittedStatement : Statement {
 		Ass ass;
-		public override void Assign(ref Map context) {
-			ass(context, value.Evaluate(context));
+		public override void AssignImplementation(ref Map context,Map value) {
+			ass(context, value);
 		}
 		private Map key;
 		public override Map LiteralKey {
@@ -579,19 +636,17 @@ namespace Meta {
 		}
 		public override Statement Optimize(Map scope, List<Statement> statements) {
 			if (program.type != null && key is Literal && ((Literal)key).literal.IsString) {
-				Argument context = new Argument(1, typeof(Map));
-				Argument value = new Argument(2, typeof(Map));
+			    Argument context = new Argument(1, typeof(Map));
+			    Argument value = new Argument(2, typeof(Map));
 
-				string name = ((Literal)key).literal.GetString();
-				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value.Call("Copy"));// why copy here? should not be necessary
+			    string name = ((Literal)key).literal.GetString();
+				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value);
+				//ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value.Call("Copy"));// why copy here? should not be necessary
 
-				ILProgram s = new ILProgram();
-				return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
+			    ILProgram s = new ILProgram();
+			    return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
 			} 
 			else {
-				if (key is Literal && ((Literal)key).literal.IsString) {
-				}
-				object x = program.AllLiteralKeys();
 				statements.Add(this);
 				this.key = this.key.Optimize(scope,statements);
 				statements.RemoveAt(statements.Count - 1);
@@ -600,8 +655,8 @@ namespace Meta {
 			}
 		}
 		private Map code;
-		public override void Assign(ref Map context) {
-			context[key.Evaluate(context)] = value.Evaluate(context);
+		public override void AssignImplementation(ref Map context,Map value) {
+			context[key.Evaluate(context)] = value;
 		}
 		public Expression key;
 		public KeyStatement(Map code, Program program)
@@ -612,11 +667,16 @@ namespace Meta {
 	}
 
 	public class CurrentStatement : Statement {
-		public override void Assign(ref Map context) {
-			Map val = value.Evaluate(context).Copy();
+		public override void AssignImplementation(ref Map context,Map value) {
+			Map val = value.Copy();
 			val.Scope = context.Scope;
 			context = val;
 		}
+		//public override void Assign(ref Map context) {
+		//    Map val = value.Evaluate(context).Copy();
+		//    val.Scope = context.Scope;
+		//    context = val;
+		//}
 		public CurrentStatement(Map code, Program program)
 			: base(program, code) {
 			this.value = code[CodeKeys.Value].GetExpression();
@@ -624,7 +684,7 @@ namespace Meta {
 	}
 
 	public class SearchStatement : Statement {
-		public override void Assign(ref Map context) {
+		public override void AssignImplementation(ref Map context,Map value) {
 			Map selected = context;
 			Map key = this.key.Evaluate(context);
 			while (!selected.ContainsKey(key)) {
@@ -633,7 +693,7 @@ namespace Meta {
 					throw new KeyNotFound(key, code.Extent, null);
 				}
 			}
-			selected[key] = value.Evaluate(context);
+			selected[key] = value;
 		}
 		private Expression key;
 		Map code;
