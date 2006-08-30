@@ -208,7 +208,6 @@ namespace Meta {
 			return EvaluateImplementation(context);
 		}
 		public abstract Map EvaluateImplementation(Map context);
-		//public abstract Map Evaluate(Map context);
 		public bool isOptimized = false;
 		public Expression Optimize(Map scope, List<Statement> statements) {
 			isOptimized = true;
@@ -272,8 +271,6 @@ namespace Meta {
 			this.eval = eval;
 		}
 		public override Map EvaluateImplementation(Map context) {
-			//if (!isOptimized) {
-			//}
 			return eval(context);
 		}
 	}
@@ -359,18 +356,10 @@ namespace Meta {
 			foreach (Statement s in statementList) {
 				if (s == statement) {
 					for (int i = index; i < statementList.Count; i++) {
-						//KeyStatement keyStatement = statementList[i] as KeyStatement;
 						if (statementList[i].LiteralKey != null) {
 							if (statementList[i].LiteralKey.Equals(key)) {
 								return false;
 							}
-
-						//KeyStatement keyStatement = statementList[i] as KeyStatement;
-						//if (keyStatement != null) {
-						//    Literal literal = keyStatement.key as Literal;
-						//    if (literal != null && literal.literal.Equals(key)) {
-						//        return false;
-						//    }
 						} else if (statementList[i] is CurrentStatement) {
 						} else {
 							return false;
@@ -385,7 +374,6 @@ namespace Meta {
 		public bool AllLiteralKeys() {
 			int count = 0;
 			foreach (Statement statement in statementList) {
-				//KeyStatement keyStatement = statement as KeyStatement;
 				if ((statement.LiteralKey!= null && statement.LiteralKey.IsString && statement.LiteralKey.Count != 0) || statement is CurrentStatement && count == statementList.Count - 1) {
 					count++;
 				} else {
@@ -394,18 +382,6 @@ namespace Meta {
 			}
 			return true;
 		}
-		//public bool AllLiteralKeys() {
-		//    int count = 0;
-		//    foreach (Statement statement in statementList) {
-		//        KeyStatement keyStatement = statement as KeyStatement;
-		//        if (keyStatement != null && keyStatement.key is Literal && ((Literal)keyStatement.key).literal.IsString && ((Literal)keyStatement.key).literal.Count != 0 || statement is CurrentStatement && count == statementList.Count - 1) {
-		//            count++;
-		//        } else {
-		//            return false;
-		//        }
-		//    }
-		//    return true;
-		//}
 
 		public Type type;
 
@@ -432,19 +408,6 @@ namespace Meta {
 			}
 			return typeBuilder.CreateType();
 		}
-		//private Type CreateType() {
-		//    counter++;
-		//    TypeBuilder typeBuilder = IntVectorModule.DefineType(
-		//        "DynamicMetaType" + counter,
-		//        TypeAttributes.Public);
-		//    foreach (Statement statement in statementList) {
-		//        KeyStatement keyStatement = statement as KeyStatement;
-		//        if ((keyStatement != null && keyStatement.key is Literal)) {
-		//            typeBuilder.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(Map), FieldAttributes.Public);
-		//        }
-		//    }
-		//    return typeBuilder.CreateType();
-		//}
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			if (AllLiteralKeys()) {
 				type = CreateType();
@@ -515,7 +478,6 @@ namespace Meta {
 					break;
 				}
 				if (statement.LiteralKey!=null) {
-					//Literal literal = ((KeyStatement)statement).key as Literal;
 					if (statement.LiteralKey.Equals(key)) {
 						neverContains = false;
 						break;
