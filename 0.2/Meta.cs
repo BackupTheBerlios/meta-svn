@@ -359,12 +359,18 @@ namespace Meta {
 			foreach (Statement s in statementList) {
 				if (s == statement) {
 					for (int i = index; i < statementList.Count; i++) {
-						KeyStatement keyStatement = statementList[i] as KeyStatement;
-						if (keyStatement != null) {
-							Literal literal = keyStatement.key as Literal;
-							if (literal != null && literal.literal.Equals(key)) {
+						//KeyStatement keyStatement = statementList[i] as KeyStatement;
+						if (statementList[i].LiteralKey != null) {
+							if (statementList[i].LiteralKey.Equals(key)) {
 								return false;
 							}
+
+						//KeyStatement keyStatement = statementList[i] as KeyStatement;
+						//if (keyStatement != null) {
+						//    Literal literal = keyStatement.key as Literal;
+						//    if (literal != null && literal.literal.Equals(key)) {
+						//        return false;
+						//    }
 						} else if (statementList[i] is CurrentStatement) {
 						} else {
 							return false;
@@ -376,12 +382,11 @@ namespace Meta {
 			}
 			return false;
 		}
-
 		public bool AllLiteralKeys() {
 			int count = 0;
 			foreach (Statement statement in statementList) {
-				KeyStatement keyStatement = statement as KeyStatement;
-				if (keyStatement != null && keyStatement.key is Literal && ((Literal)keyStatement.key).literal.IsString && ((Literal)keyStatement.key).literal.Count != 0 || statement is CurrentStatement && count == statementList.Count - 1) {
+				//KeyStatement keyStatement = statement as KeyStatement;
+				if ((statement.LiteralKey!= null && statement.LiteralKey.IsString && statement.LiteralKey.Count != 0) || statement is CurrentStatement && count == statementList.Count - 1) {
 					count++;
 				} else {
 					return false;
@@ -389,6 +394,18 @@ namespace Meta {
 			}
 			return true;
 		}
+		//public bool AllLiteralKeys() {
+		//    int count = 0;
+		//    foreach (Statement statement in statementList) {
+		//        KeyStatement keyStatement = statement as KeyStatement;
+		//        if (keyStatement != null && keyStatement.key is Literal && ((Literal)keyStatement.key).literal.IsString && ((Literal)keyStatement.key).literal.Count != 0 || statement is CurrentStatement && count == statementList.Count - 1) {
+		//            count++;
+		//        } else {
+		//            return false;
+		//        }
+		//    }
+		//    return true;
+		//}
 
 		public Type type;
 
@@ -409,13 +426,25 @@ namespace Meta {
 				"DynamicMetaType" + counter,
 				TypeAttributes.Public);
 			foreach (Statement statement in statementList) {
-				KeyStatement keyStatement = statement as KeyStatement;
-				if ((keyStatement != null && keyStatement.key is Literal)) {
-					typeBuilder.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(Map), FieldAttributes.Public);
+				if (statement.LiteralKey!= null) {
+					typeBuilder.DefineField(statement.LiteralKey.GetString(), typeof(Map), FieldAttributes.Public);
 				}
 			}
 			return typeBuilder.CreateType();
 		}
+		//private Type CreateType() {
+		//    counter++;
+		//    TypeBuilder typeBuilder = IntVectorModule.DefineType(
+		//        "DynamicMetaType" + counter,
+		//        TypeAttributes.Public);
+		//    foreach (Statement statement in statementList) {
+		//        KeyStatement keyStatement = statement as KeyStatement;
+		//        if ((keyStatement != null && keyStatement.key is Literal)) {
+		//            typeBuilder.DefineField(((Literal)keyStatement.key).literal.GetString(), typeof(Map), FieldAttributes.Public);
+		//        }
+		//    }
+		//    return typeBuilder.CreateType();
+		//}
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			if (AllLiteralKeys()) {
 				type = CreateType();
@@ -571,7 +600,7 @@ namespace Meta {
 				Argument value = new Argument(2, typeof(Map));
 
 				string name = ((Literal)key).literal.GetString();
-				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value);
+				ILEmitter p = context.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(program.type).Field(name).Assign(value.Call("Copy"));// why copy here? should not be necessary
 
 				ILProgram s = new ILProgram();
 				return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
