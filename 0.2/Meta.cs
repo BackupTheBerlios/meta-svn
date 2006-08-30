@@ -393,20 +393,41 @@ namespace Meta {
 				"MetaDynamic",
 				"MetaDynamic.dll");
 		}
+		private static Dictionary<Map, Type> types = new Dictionary<Map, Type>();
 
 		private static ModuleBuilder IntVectorModule;
 		private static int counter = 0;
-		private Type CreateType() {
-			counter++;
+		private Type ReallyCreateType(Map keys) {
 			TypeBuilder typeBuilder = IntVectorModule.DefineType(
 				"DynamicMetaType" + counter,
 				TypeAttributes.Public);
-			foreach (Statement statement in statementList) {
-				if (statement.LiteralKey!= null) {
-					typeBuilder.DefineField(statement.LiteralKey.GetString(), typeof(Map), FieldAttributes.Public);
-				}
+			foreach (Map key in keys.Keys) {
+				typeBuilder.DefineField(key.GetString(), typeof(Map), FieldAttributes.Public);
 			}
 			return typeBuilder.CreateType();
+		}
+		private Type CreateType() {
+			counter++;
+
+
+			Map keys = new Map();
+			foreach (Statement statement in statementList) {
+				if (statement.LiteralKey != null) {
+					keys[statement.LiteralKey] = Map.Empty;
+					//typeBuilder.DefineField(statement.LiteralKey.GetString(), typeof(Map), FieldAttributes.Public);
+				}
+			}
+			if (!types.ContainsKey(keys)) {
+				types[keys] = ReallyCreateType(keys);
+			}
+			return types[keys];
+			//foreach (Statement statement in statementList) {
+			//    if (statement.LiteralKey!= null) {
+			//        typeBuilder.DefineField(statement.LiteralKey.GetString(), typeof(Map), FieldAttributes.Public);
+			//    }
+			//}
+
+			//return typeBuilder.CreateType();
 		}
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements) {
 			if (AllLiteralKeys()) {
@@ -566,7 +587,8 @@ namespace Meta {
 
 				ILProgram s = new ILProgram();
 				return new EmittedStatement(((Literal)key).literal, p, program, code, this.value);
-			} else {
+			} 
+			else {
 				if (key is Literal && ((Literal)key).literal.IsString) {
 				}
 				object x = program.AllLiteralKeys();
