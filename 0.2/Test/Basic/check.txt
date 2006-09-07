@@ -7,7 +7,7 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"asdf"
 	Value (Map):
-		0
+		"hello"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"shortFunction"
@@ -1427,11 +1427,6 @@ Entry (KeyValuePair`2)
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (Map):
-		"asdfasdf"
-	Value (Map):
-		0
-Entry (KeyValuePair`2)
-	Key (Map):
 		"indexerNoConversionIndexed"
 	Value (Map):
 		"abchihiunchangedYunchangedZabc"
@@ -2173,7 +2168,7 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"alleMeineText"
 	Value (Map):
-		"schwimmen auf dem See,"
+		"schwimmen auf dem See,""
 Entry (KeyValuePair`2)
 	Key (Map):
 		"form"

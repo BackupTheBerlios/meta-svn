@@ -40,8 +40,18 @@
     <Compile Include="Meta.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MathML, Version=0.34.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Dokumente und Einstellungen\Christian\Desktop\numerator-0.34\MathML.dll</HintPath>
+    </Reference>
+    <Reference Include="MathML.Rendering, Version=0.34.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Dokumente und Einstellungen\Christian\Desktop\numerator-0.34\MathML.Rendering.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
@@ -49,5 +59,7 @@
     <None Include="libDesign.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
+    <None Include="relativity.learn" />
+    <None Include="test.meta" />
   </ItemGroup>
 </Project>

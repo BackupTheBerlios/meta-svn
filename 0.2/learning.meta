@@ -2,70 +2,205 @@
 	&=-
 		mergeAll
 		+
+			<"MathML"
+			<"MathML.Rendering"
 			System
 			mscorlib
 			<"System.Windows.Forms"
+			<"System.Drawing"
 	printNodes=,
 		nodes|,
-			data|-
-				joinAll
-				-
-					apply
-					data
-					,
-						entry|-
-							joinAll
-							-
-								apply
-								-
-									enumerableToArray
-									nodes
-								,
-									node|-
-										.
-											,
-												0=,
-													|0
-												1=,
-													|,
-														value=.
-															entry
-															-
-																.
-																	node
-																	get_Text
-														&=-
-															join
-															-
-																if
-																-
-																	isString
-																	value
-																,
-																	|-
-																		join
-																		value
-																		"<br>"
-															-	
-																printNodes
-																-
-																	.
-																		node
-																		get_Nodes
-																value
-											-
-												and
+			data|,
+				depth|-
+					filter
+					-
+						joinAll
+						-
+							apply
+							data
+							,
+								entry|-
+									joinAll
+									-
+										apply
+										-
+											enumerableToArray
+											nodes
+										,
+											node|-
+												if
 												-
 													.
 														node
 														get_Checked
-												-
-													containedBy
-													-
-														.
-															node
-															get_Text
-													entry
+												,
+													|,
+														key=-
+															.
+																node
+																get_Text
+														&=-
+															if
+															-
+																contains
+																entry
+																key
+															,
+																|,
+																	value=.
+																		entry
+																		<key
+																	&=-
+																		ifElse
+																		-
+																			isString
+																			value
+																		,
+																			|+
+																				,
+																					type=-
+																						ifElse
+																						-
+																							contains
+																							data
+																							key
+																						,
+																							|,
+																								name=.
+																									-
+																										keys
+																										.
+																											data
+																											<key
+																									1
+																								value=.
+																									data
+																									<key
+																									<name
+																						,
+																							|,
+																								name="rtf"
+																								value=0
+																					margin=-
+																						Padding_Int32_Int32_Int32_Int32
+																						-
+																							multiply
+																							depth
+																							10
+																						10
+																						0
+																						0
+																					types=,
+																						mathml=,
+																							|,
+																								math=-
+																									MathMLControl
+																									,
+																										Margin=margin
+																										Height=80
+																										Width=500
+																										BackColor=-
+																											.
+																												Color
+																												get_White
+																										MathElement=,
+																											document=-
+																												MathMLDocument
+																											asdf=-
+																												.
+																													document
+																													LoadXml_String
+																												value
+																											&=-
+																												.
+																													document
+																													get_DocumentElement
+																								&=math
+																						rtf=,
+																							asdf|,
+																								box=-
+																									RichTextBox
+																									,
+																										Margin=margin
+																										Width=500
+																										Font=-
+																											Font_String_Single
+																											"Arial"
+																											10
+																										KeyDown=,
+																											|,
+																												e|-
+																													.
+																														e
+																														set_Handled_Boolean
+																													1
+																										KeyPress=,
+																											|,
+																												e|-
+																													.
+																														e
+																														set_Handled_Boolean
+																													1
+																										
+																										BorderStyle=.
+																											BorderStyle
+																											None
+																										ContentsResized=,
+																											sender|,
+																												e|-
+																													.
+																														sender
+																														set_Height_Int32
+																													-
+																														.
+																															-
+																																.
+																																	e
+																																	get_NewRectangle
+																															get_Height
+																										Rtf=-
+																											joinAll
+																											+
+																												"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
+																												-
+																													if
+																													-
+																														contains
+																														data
+																														key
+																													,
+																														|.
+																															data
+																															<key
+																															rtf
+																												value
+																												"}"
+																								&=box
+																					&=-
+																						.
+																							types
+																							.
+																								type
+																								name
+																		,
+																			|-
+																				printNodes
+																				-
+																					.
+																						node
+																						get_Nodes
+																				value
+																				-
+																					add
+																					depth
+																					1
+					,
+						arg|-
+							not
+							-
+								equal
+								0
+								arg
 	data=0
 	getNodes=,
 		data|,
@@ -137,17 +272,29 @@
 			asdf=-
 				loadText
 	loadText=,
-		|-
-			.
-				browser
-				set_DocumentText_String
+		|+
 			-
-				printNodes
+				.
+					-
+						.
+							panel
+							get_Controls
+					Clear
+			-
+				.
+					-
+						.
+							panel
+							get_Controls
+					AddRange_Control[]
 				-
-					.
-						tree
-						get_Nodes
-				data
+					printNodes
+					-
+						.
+							tree
+							get_Nodes
+					data
+					0
 	tree=-
 		TreeView
 		,
@@ -155,22 +302,35 @@
 				|,
 					e|-
 						loadText
+			Width=200
 			Dock=.
 				DockStyle
 				Left
 			CheckBoxes=1
-	browser=-
-		WebBrowser
+	panel=-
+		FlowLayoutPanel
 		,
+			BackColor=-
+				.
+					Color
+					get_White
+			WrapContents=0
+			AutoScroll=1
+			FlowDirection=.
+				FlowDirection
+				TopDown
 			Dock=.
 				DockStyle
 				Fill
 	form=-
 		Form
 		,
+			Size=+
+				800
+				600
 			Text="Learning"
 			Controls=+
-				browser				
+				panel
 				-
 					Splitter
 					,
@@ -184,10 +344,6 @@
 						-
 							load
 							"D:\Meta\0.2\relativity.learn"
-						-
-							.
-								form
-								Close
 			Menu=-
 				<"MainMenu_MenuItem[]"
 				+

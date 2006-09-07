@@ -183,6 +183,18 @@ arg|,
 			integerToString=-
 				integerToString
 				5
+		filterTest=-
+			filter
+			+
+				1
+				100
+				2
+				4
+				100
+				100
+			-
+				equal
+				100
 		reverseTest=-
 			reverse
 			"hello"

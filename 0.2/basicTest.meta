@@ -297,7 +297,7 @@ commandLine|,
 		memberTest
 		,
 			instanceField="b"
-	asdf=-
+	-
 		.
 			MemberTest
 			set_ClassProperty_String
@@ -309,7 +309,7 @@ commandLine|,
 		.
 			MemberTest
 			get_ClassProperty
-	asdf=-
+	-
 		.
 			memberTest
 			set_InstanceProperty_String
@@ -360,7 +360,7 @@ commandLine|,
 			Meta
 			IndexerNoConversion
 		0
-	asdfasdf=-
+	-
 		.
 			indexerNoConversion
 			set_Item_String_String
@@ -422,7 +422,7 @@ commandLine|,
 		arg|,
 			staticEventChanged:arg
 	asdf="hello"
-	asdf=-
+	-
 		.
 			TestClass
 			add_staticEvent_NormalEvent
@@ -447,7 +447,7 @@ commandLine|,
 			CallStaticEvent_Object
 		!"testClass"
 	instanceEventChanged=0
-	asdf=-
+	-
 		.
 			testClass
 			add_instanceEvent_IntEvent
@@ -541,13 +541,13 @@ commandLine|,
 			"System.Windows.Forms"
 			TextBox
 		0
-	asdf=-
+	-
 		.
 			textBox
 			set_Text_String
 		"
 			Alle meine Entchen,
-			schwimmen auf dem See,
+			schwimmen auf dem See,"
 			schwimmen auf dem See,
 			Köpfchen in das Wasser,
 			asdf in die Hoeh.
@@ -566,7 +566,7 @@ commandLine|,
 			/
 			"System.Windows.Forms"
 			Form
-	asdf=-
+	-
 		.
 			form
 			set_Location_Point
@@ -664,7 +664,7 @@ commandLine|,
 	app=.
 		<"System.Windows.Forms"
 		Application
-	asdf=-
+	-
 		.
 			app
 			set_VisualStyleState_VisualStyleState
