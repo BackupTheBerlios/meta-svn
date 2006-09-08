@@ -126,39 +126,43 @@
 		number|,
 			&=-
 				textBox
-			Background=-
-				.
-					Brushes
-					get_LightYellow
-			Text=-
-				integerToString
-				number
-			getMap=,
-				|-
-					stringToInteger
-					Text
-			PreviewTextInput=,
-				|,
-					e|-
-						apply
+				,
+					Background=-
 						.
-							e
-							Text
-						,
-							c|-
-								if
+							Brushes
+							get_LightYellow
+					Text=-
+						integerToString
+						number
+					getMap=,
+						|-
+							stringToInteger
+							-
+								get_Text
+					PreviewTextInput=,
+						|,
+							e|-
+								apply
 								-
-									not
-									-
-										.
-											Char
-											IsDigit_Char
-										c
+									.
+										e
+										get_Text
 								,
-									|,
-										.
-											!e
-											Handled=1
+									c|-
+										if
+										-
+											not
+											-
+												.
+													Char
+													IsDigit_Char
+												c
+										,
+											|-
+												.
+													!e
+													set_Handled_Boolean
+												1
 	multi=,
 		views|,
 			&=-
@@ -178,16 +182,7 @@
 						PresentationFramework
 						HorizontalAlignment
 						Left
-			-
-				apply
-				views
-				,
-					view|-
-						.
-							-
-								get_Children
-							Add_UIElement
-						view
+					Children=views
 			MouseLeftButtonDown=,
 				|,
 					e|,
@@ -921,19 +916,20 @@
 		|,
 			&=-
 				textBox
-			Background=-
-				.
-					Brushes
-					get_White
-			PreviewTextInput=,
-				|,
-					e|,
+				,
+					Background=-
 						.
-							!e
-							Handled=1
-			getMap=,
-				|,
-					current=0
+							Brushes
+							get_White
+					PreviewTextInput=,
+						|,
+							e|,
+								.
+									!e
+									Handled=1
+					getMap=,
+						|,
+							current=0
 	selectView=,
 		create=,
 			|-
@@ -1112,41 +1108,38 @@
 					click=,
 						|-
 							.
-								,
-									&=-
-										OpenFileDialog
-										OpenFileDialog
-									Filter="*.meta (Meta files)|*.meta"
-									FileOk=,
-										dialog|,
-											|,
-												!path=.
-													dialog
-													FileName
-												asdf=-
-													load
+								-
+									OpenFileDialog
+									,
+										Filter="*.meta (Meta files)|*.meta"
+										FileOk=,
+											dialog|,
+												|,
+													!path=.
+														dialog
+														FileName
+													-
+														load
 								ShowDialog
 				,
 					header="SaveAs"
 					click=,
 						|-
 							.
-								,
-									&=-
-										.
-											SaveFileDialog
-											SaveFileDialog
-									Filter="*.meta (Meta files)|*.meta"
-									DefaultExt=".meta"
-									AddExtension=1
-									FileOk=,
-										dialog|,
-											|,
-												!path=.
-													dialog
-													FileName
-												asdf=-
-													Save
+								-
+									SaveFileDialog
+									,
+										Filter="*.meta (Meta files)|*.meta"
+										DefaultExt=".meta"
+										AddExtension=1
+										FileOk=,
+											dialog|,
+												|,
+													!path=.
+														dialog
+														FileName
+													-
+														Save
 								ShowDialog
 				,
 					header="Save"
@@ -1252,6 +1245,7 @@
 		Window
 		,
 			Content=panel
+			Title="Meta Edit"
 	1=-
 		.
 			-

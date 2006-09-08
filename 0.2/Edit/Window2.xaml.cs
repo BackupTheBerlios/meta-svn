@@ -22,7 +22,12 @@ namespace Edit
 		public Window2()
 		{
 			DockPanel p;
+			MenuItem m;
+			//m.HeaderTemplate.LoadContent
+			//Label label = new Label();
+			//label.Content=
 			//DockPanel.SetDock(
+			Window w;
 			ScrollViewer s;
 			//DockPanel.DockProperty.
 			//Dock.Top

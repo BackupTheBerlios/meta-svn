@@ -5301,8 +5301,8 @@ namespace Meta
 				Map value = entry.Value;
 				if (entry.Key.Strategy is ObjectMap)
 				{
-					//DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
-					//type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+					type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
 				}
 				else
 				{
@@ -5502,7 +5502,14 @@ namespace Meta
 		}
 		public override string ToString()
 		{
-			return Meta.Serialize.ValueFunction(this);
+			if (IsString)
+			{
+				return GetString();
+			}
+			else
+			{
+				return Meta.Serialize.ValueFunction(this);
+			}
 		}
 		private object expression;
 
