@@ -1058,19 +1058,16 @@
 						arg
 	load=,
 		|-
-			merge
 			.
-				panel
-				Children
-				1
-			,
-				Content=-
-					parse
-					-
-						.
-							Binary
-							Deserialize_String
-						path
+				scrollViewer
+				set_Content_Object
+			-
+				parse
+				-
+					.
+						Binary
+						Deserialize_String
+					path
 	currentData=,
 		|-
 			.
@@ -1175,11 +1172,10 @@
 	menu=-
 		Menu
 		,
-			<.
+			.
 				DockPanel
-				DockProperty=.
-				Dock
-				Top
+				DockProperty
+			="asdf"
 			Items=-
 				apply
 				commands
@@ -1207,16 +1203,18 @@
 												sender|.
 													value
 													click
+	scrollViewer=-
+		ScrollViewer
+	asdf=.
+		Dock
+		Top
 	panel=-
 		DockPanel
 		,
 			Children=+
 				menu
-				-
-					ScrollViewer
+				scrollViewer
 	path="C:\asdf.meta"
-	asdf=-
-		load
 	window=-
 		Window
 		,

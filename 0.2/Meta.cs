@@ -35,6 +35,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows;
 //using MathML;
 
 namespace Meta
@@ -938,16 +939,16 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			try
-			{
-				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.ToString());
-				Console.ReadLine();
-			}
-			return;
+			//try
+			//{
+			//    MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
+			//}
+			//catch (Exception e)
+			//{
+			//    Console.WriteLine(e.ToString());
+			//    Console.ReadLine();
+			//}
+			//return;
 			if (args.Length != 0)
 			{
 				//try
@@ -1383,6 +1384,16 @@ namespace Meta
 	[Serializable]
 	public class Method : MapStrategy
 	{
+		// use Equals instead of Equal
+		public override bool Equal(MapStrategy obj)
+		{
+			Method method=obj as Method;
+			if (method != null)
+			{
+				return this.method.Equals(method.method);
+			}
+			return false;
+		}
 		public override object UniqueKey
 		{
 			get
@@ -1567,7 +1578,7 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
-			if (Type.IsGenericTypeDefinition)
+			if (Type.IsGenericTypeDefinition && key.Strategy is TypeMap)
 			{
 				List<Type> types = new List<Type>();
 				if (Type.GetGenericArguments().Length == 1)
@@ -1624,14 +1635,14 @@ namespace Meta
 			}
 			return name;
 		}
-		public override int GetHashCode()
-		{
-			return Type.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return obj is TypeMap && ((TypeMap)obj).Type == this.Type;
-		}
+		//public override int GetHashCode()
+		//{
+		//    return Type.GetHashCode();
+		//}
+		//public override bool Equals(object obj)
+		//{
+		//    return obj is TypeMap && ((TypeMap)obj).Type == this.Type;
+		//}
 		public override Map CopyData()
 		{
 			return new Map(new TypeMap(this.Type));
@@ -1685,14 +1696,14 @@ namespace Meta
 		{
 			return base.GetNumber();
 		}
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-		public override bool Equals(object obj)
-		{
-			return base.Equals(obj);
-		}
+		//public override int GetHashCode()
+		//{
+		//    return base.GetHashCode();
+		//}
+		//public override bool Equals(object obj)
+		//{
+		//    return base.Equals(obj);
+		//}
 		public override string GetString()
 		{
 			return base.GetString();
@@ -1801,14 +1812,14 @@ namespace Meta
 				return base.Call(arg, parent);
 			}
 		}
-		public override bool Equals(object obj)
-		{
-			return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
-		}
-		public override int GetHashCode()
-		{
-			return Object.GetHashCode();
-		}
+		//public override bool Equals(object obj)
+		//{
+		//    return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
+		//}
+		//public override int GetHashCode()
+		//{
+		//    return Object.GetHashCode();
+		//}
 		public ObjectMap(string text)
 			: this(text, text.GetType())
 		{
@@ -2432,6 +2443,59 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		public override int GetHashCode()
+		{
+			return GetHashCodeDefault();
+		}
+		public int GetHashCodeDefault()
+		{
+			
+			if (IsNumber)
+			{
+				return (int)(GetNumber().Numerator % int.MaxValue);
+			}
+			else
+			{
+				return Count;
+			}
+		}
+		// create a normal strategy?, doesn't work with clonestrategy, however
+		public virtual bool EqualDefault(MapStrategy strategy)
+		{
+			if (strategy.Count != this.Count)
+			{
+				return false;
+			}
+			else
+			{
+				bool isEqual = true;
+				foreach (Map key in this.Keys)
+				{
+					Map otherValue = strategy.Get(key);
+					Map thisValue = Get(key);
+					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
+					{
+						isEqual = false;
+					}
+				}
+				return isEqual;
+			}
+		}
+		public override bool Equals(object obj)
+		{
+			return Equal((MapStrategy)obj);
+		}
+		public virtual bool Equal(MapStrategy obj)
+		{
+			return EqualDefault((MapStrategy)obj);
+		}
+		//public virtual bool IsNormal
+		//{
+		//    get
+		//    {
+		//        return true;
+		//    }
+		//}
 		[DllImport("Kernel32.dll")]
 		protected static extern bool QueryPerformanceCounter(
 			out long lpPerformanceCount);
@@ -2656,31 +2720,6 @@ namespace Meta
 				return count;
 			}
 		}
-		public virtual bool Equal(MapStrategy obj)
-		{
-			return EqualDefault((MapStrategy)obj);
-		}
-		public virtual bool EqualDefault(MapStrategy strategy)
-		{
-			if (strategy.Count != this.Count)
-			{
-				return false;
-			}
-			else
-			{
-				bool isEqual = true;
-				foreach (Map key in this.Keys)
-				{
-					Map otherValue = strategy.Get(key);
-					Map thisValue = Get(key);
-					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
-					{
-						isEqual = false;
-					}
-				}
-				return isEqual;
-			}
-		}
 	}
 
 	public abstract class Member
@@ -2784,6 +2823,37 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : MapStrategy
 	{
+
+		//public override bool IsNormal
+		//{
+		//    get
+		//    {
+		//        return false;
+		//    }
+		//}
+		//public override int GetHashCode()
+		//{
+		//    // inconsistent with global key, maybe
+		//    if (obj != null)
+		//    {
+		//        return obj.GetHashCode();
+		//    }
+		//    else
+		//    {
+		//        return type.GetHashCode();
+		//    }
+		//}
+
+
+		//public override bool Equal(MapStrategy obj)
+		//{
+		//    DotNetMap dotNet = obj as DotNetMap;
+		//    if (dotNet != null)
+		//    {
+		//        return dotNet.obj == obj && dotNet.type == type;
+		//    }
+		//    return false;
+		//}
 		public override object UniqueKey
 		{
 			get
@@ -5332,58 +5402,66 @@ namespace Meta
 			foreach (KeyValuePair<Map, Map> entry in values)
 			{
 				Map value = entry.Value;
-				MemberInfo[] members = type.GetMember(entry.Key.GetString());
-				if (members.Length != 0)
+				if (entry.Key.Strategy is ObjectMap)
 				{
-					MemberInfo member = members[0];
-					if (member is FieldInfo)
-					{
-						FieldInfo field = (FieldInfo)member;
-						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-					}
-					else if (member is PropertyInfo)
-					{
-						PropertyInfo property = (PropertyInfo)member;
-						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap))
-						{
-							if (value.ArrayCount != 0)
-							{
-								IList list = (IList)property.GetValue(obj, null);
-								list.Clear();
-								Type t = DotNetMap.GetListAddFunctionType(list, value);
-								if (t == null)
-								{
-									throw new ApplicationException("Cannot convert argument.");
-								}
-								else
-								{
-									foreach (Map map in value.Array)
-									{
-										list.Add(Transform.ToDotNet(map, t));
-									}
-								}
-							}
-						}
-						else
-						{
-							object converted = Transform.ToDotNet(value, property.PropertyType);
-							property.SetValue(obj, converted, null);
-						}
-
-					}
-					else if (member is EventInfo)
-					{
-						EventInfo eventInfo = (EventInfo)member;
-						new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
-					}
-					else
-					{
-						throw new Exception("unknown member type");
-					}
+					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+					type.GetMethod("SetValue").Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
 				}
 				else
 				{
-					// we should really throw an exception here
+					MemberInfo[] members = type.GetMember(entry.Key.GetString());
+					if (members.Length != 0)
+					{
+						MemberInfo member = members[0];
+						if (member is FieldInfo)
+						{
+							FieldInfo field = (FieldInfo)member;
+							field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
+						}
+						else if (member is PropertyInfo)
+						{
+							PropertyInfo property = (PropertyInfo)member;
+							if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap))
+							{
+								if (value.ArrayCount != 0)
+								{
+									IList list = (IList)property.GetValue(obj, null);
+									list.Clear();
+									Type t = DotNetMap.GetListAddFunctionType(list, value);
+									if (t == null)
+									{
+										throw new ApplicationException("Cannot convert argument.");
+									}
+									else
+									{
+										foreach (Map map in value.Array)
+										{
+											list.Add(Transform.ToDotNet(map, t));
+										}
+									}
+								}
+							}
+							else
+							{
+								object converted = Transform.ToDotNet(value, property.PropertyType);
+								property.SetValue(obj, converted, null);
+							}
+
+						}
+						else if (member is EventInfo)
+						{
+							EventInfo eventInfo = (EventInfo)member;
+							new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);
+						}
+						else
+						{
+							throw new Exception("unknown member type");
+						}
+					}
+					else
+					{
+						// we should really throw an exception here
+					}
 				}
 			}
 			return o;
@@ -5415,39 +5493,6 @@ namespace Meta
 			return result;
 		}
 	}
-	//internal class HiPerfTimer {
-	//    [DllImport("Kernel32.dll")]
-	//    private static extern bool QueryPerformanceCounter(
-	//        out long lpPerformanceCount);
-
-	//    [DllImport("Kernel32.dll")]
-	//    private static extern bool QueryPerformanceFrequency(
-	//        out long lpFrequency);
-
-	//    private long startTime, stopTime;
-	//    private long freq;
-
-	//    public HiPerfTimer() {
-	//        startTime = 0;
-	//        stopTime = 0;
-
-	//        if (QueryPerformanceFrequency(out freq) == false) {
-	//            throw new ApplicationException();
-	//        }
-	//    }
-	//    public void Start() {
-	//        Thread.Sleep(0);
-	//        QueryPerformanceCounter(out startTime);
-	//    }
-	//    public void Stop() {
-	//        QueryPerformanceCounter(out stopTime);
-	//    }
-	//    public double Duration {
-	//        get {
-	//            return (double)(stopTime - startTime) / (double)freq;
-	//        }
-	//    }
-	//}
 	[Serializable]
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
@@ -5553,7 +5598,18 @@ namespace Meta
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
 		public void Append(Map map) { strategy.Append(map, this); }
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
-		public override bool Equals(object toCompare) { return strategy.Equal(((Map)toCompare).Strategy); }
+		public override bool Equals(object toCompare) 
+		{
+			//if (strategy.IsNormal == ((Map)toCompare).strategy.IsNormal)
+			//{
+			//if (toCompare is MapStrategy)
+			//{
+				return strategy.Equal(((Map)toCompare).Strategy);
+			//}
+			//return false;
+			//}
+			//return false;
+		}
 		public Map TryGetValue(Map key) { return strategy.Get(key); }
 		public IEnumerable<Map> Keys { get { return strategy.Keys; } }
 
@@ -5699,15 +5755,19 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			if (IsNumber)
-			{
-				return (int)(GetNumber().Numerator % int.MaxValue);
-			}
-			else
-			{
-				return Count;
-			}
+			return strategy.GetHashCode();
 		}
+		//public override int GetHashCode()
+		//{
+		//    if (IsNumber)
+		//    {
+		//        return (int)(GetNumber().Numerator % int.MaxValue);
+		//    }
+		//    else
+		//    {
+		//        return Count;
+		//    }
+		//}
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();
