@@ -556,15 +556,7 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map parent)
 		{
-			Map context;
-			//if (type != null)
-			//{
-			//    context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
-			//}
-			//else
-			//{
-				context = new Map();
-			//}
+			Map context = new Map();
 			context.Scope = parent;
 			foreach (Statement statement in statementList)
 			{
@@ -673,60 +665,6 @@ namespace Meta
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
 	}
-	//public abstract class Statement {
-	//    public virtual Map LiteralKey {
-	//        get {
-	//            return null;
-	//        }
-	//    }
-	//    public virtual Statement Optimize(Map scope, List<Statement> statements) {
-	//        return this;
-	//    }
-	//    public abstract void Assign(ref Map context);
-	//    public virtual bool NeverContainsKey(Map key) {
-	//        bool neverContains = true;
-	//        int count = 0;
-	//        foreach (Statement statement in program.Statements) {
-	//            if (statement == this) {
-	//                break;
-	//            }
-	//            if (statement is CurrentStatement && count != program.Statements.Count - 1) {
-	//                neverContains = false;
-	//                break;
-	//            }
-	//            if (statement.LiteralKey!=null) {
-	//                if (statement.LiteralKey.Equals(key)) {
-	//                    neverContains = false;
-	//                    break;
-	//                }
-	//            }
-	//            count++;
-	//        }
-	//        return neverContains;
-	//    }
-	//    public virtual bool AlwaysContainsKey(Map key) {
-	//        bool alwaysContains = false;
-	//        foreach (Statement statement in program.Statements) {
-	//            if (statement == this) {
-	//                break;
-	//            }
-	//            if (statement.LiteralKey!=null) {
-	//                if (statement.LiteralKey.Equals(key)) {
-	//                    alwaysContains = true;
-	//                    break;
-	//                }
-	//            }
-	//        }
-	//        return alwaysContains;
-	//    }
-	//    public Program program;
-	//    public Expression value;
-	//    public Statement(Program program, Map code) {
-	//        this.program = program;
-	//        this.value = code[CodeKeys.Value].GetExpression();
-	//    }
-	//}
-
 	public delegate void Ass(Map context, Map value);
 
 	public class EmittedStatement : Statement
@@ -801,11 +739,6 @@ namespace Meta
 			val.Scope = context.Scope;
 			context = val;
 		}
-		//public override void Assign(ref Map context) {
-		//    Map val = value.Evaluate(context).Copy();
-		//    val.Scope = context.Scope;
-		//    context = val;
-		//}
 		public CurrentStatement(Map code, Program program)
 			: base(program, code)
 		{
@@ -919,23 +852,6 @@ namespace Meta
 				throw e;
 			}
 		}
-		//public static void Whatever()
-		//{
-		//    FlowLayoutPanel p = new FlowLayoutPanel();
-		//    p.FlowDirection = FlowDirection.TopDown;
-		//    RichTextBox r = new RichTextBox();
-		//    MathMLControl control = new MathMLControl();
-		//    control.ClientSizeChanged += new EventHandler(control_ClientSizeChanged);
-		//    MathMLDocument document = new MathMLDocument();
-		//    document.LoadXml(@"<math><mi>x</mi><mo>=</mo><mfrac><mrow><mrow><mo>-</mo><mi>b</mi></mrow><mo>&PlusMinus;</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mrow><mn>4</mn><mo>&InvisibleTimes;</mo><mi>a</mi><mo>&InvisibleTimes;</mo><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mo>&InvisibleTimes;</mo><mi>a</mi></mrow></mfrac></math>");
-		//    control.MathElement = (MathMLMathElement)document.DocumentElement;
-		//}
-
-		static void control_ClientSizeChanged(object sender, EventArgs e)
-		{
-
-		}			
-
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -1666,114 +1582,6 @@ namespace Meta
 			return result;
 		}
 	}
-
-	//public class OptimizedMap : MapStrategy
-	//{
-	//    public override Map CallImplementation(Map argument, Map parent)
-	//    {
-	//        return base.Call(argument, parent);
-	//    }
-	//    public override Map CopyData()
-	//    {
-	//        return base.CopyData();
-	//    }
-	//    public override int Count
-	//    {
-	//        get
-	//        {
-	//            return base.Count;
-	//        }
-	//    }
-	//    public override MapStrategy DeepCopy(Map key, Map value, Map map)
-	//    {
-	//        return base.DeepCopy(key, value, map);
-	//    }
-	//    public override bool Equal(MapStrategy obj)
-	//    {
-	//        return base.Equal(obj);
-	//    }
-	//    public override Number GetNumber()
-	//    {
-	//        return base.GetNumber();
-	//    }
-	//    //public override int GetHashCode()
-	//    //{
-	//    //    return base.GetHashCode();
-	//    //}
-	//    //public override bool Equals(object obj)
-	//    //{
-	//    //    return base.Equals(obj);
-	//    //}
-	//    public override string GetString()
-	//    {
-	//        return base.GetString();
-	//    }
-	//    public override bool IsNumber
-	//    {
-	//        get
-	//        {
-	//            return base.IsNumber;
-	//        }
-	//    }
-	//    public override bool IsString
-	//    {
-	//        get
-	//        {
-	//            return base.IsString;
-	//        }
-	//    }
-	//    protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
-	//    {
-	//        base.Panic(key, val, strategy, map);
-	//    }
-	//    public override IEnumerable<Map> Array
-	//    {
-	//        get
-	//        {
-	//            yield break;
-	//        }
-	//    }
-	//    public override void Append(Map map, Map parent)
-	//    {
-	//        throw new Exception("not implemented");
-	//    }
-
-	//    public override bool ContainsKey(Map key) { return Get(key) != null; }
-	//    public override int GetArrayCount() { return 0; }
-	//    public override IEnumerable<Map> Keys
-	//    {
-	//        get
-	//        {
-	//            foreach (FieldInfo field in type.GetFields())
-	//            {
-	//                yield return field.Name;
-	//            }
-	//        }
-	//    }
-	//    public object obj;
-	//    public Type type;
-	//    public OptimizedMap(object obj)
-	//    {
-	//        this.obj = obj;
-	//        this.type = obj.GetType();
-	//    }
-	//    public override void Set(Map key, Map val, Map map)
-	//    {
-	//        type.GetField(key.GetString()).SetValue(obj, val);
-	//    }
-	//    public override Map Get(Map key)
-	//    {
-	//        if (key.IsString && key.Count != 0)
-	//        {
-	//            FieldInfo field = type.GetField(key.GetString());
-	//            if (field != null)
-	//            {
-	//                return (Map)field.GetValue(obj);
-	//            }
-	//        }
-	//        return null;
-	//    }
-	//}
 
 	[Serializable]
 	public class ObjectMap : DotNetMap
