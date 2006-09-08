@@ -354,80 +354,80 @@ namespace Meta
 			return selected[key].Copy();
 		}
 		private bool op = false;
-		public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
-		{
-			op = true;
-			if (expression is Literal)
-			{
-				Map key = ((Literal)expression).literal;
-				int count = 0;
-				Map s = scope;
-				for (int i = statements.Count - 1; i >= 0; i--)
-				{
-					if (statements[i].AlwaysContainsKey(key))
-					{
+		//public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
+		//{
+		//    op = true;
+		//    if (expression is Literal)
+		//    {
+		//        Map key = ((Literal)expression).literal;
+		//        int count = 0;
+		//        Map s = scope;
+		//        for (int i = statements.Count - 1; i >= 0; i--)
+		//        {
+		//            if (statements[i].AlwaysContainsKey(key))
+		//            {
 
-						if (statements[i].program.type != null)
-						{
-							ILProgram program = new ILProgram();
-							Local selected = program.Declare();
-							program.Add(selected.Assign(new Argument(1, typeof(Map))));
-							for (int a = 0; a < count; a++)
-							{
-								program.Add(selected.Assign(selected.Call("get_Scope")));
-							}
-							program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
-							return EmittedExpression(program);
-						}
-						else
-						{
-							return new OptimizedSearch(count, key);
-						}
-					}
-					else if (statements[i].NeverContainsKey(key))
-					{
-						count++;
-					}
-					else
-					{
-						return this;
-					}
+		//                if (statements[i].program.type != null)
+		//                {
+		//                    ILProgram program = new ILProgram();
+		//                    Local selected = program.Declare();
+		//                    program.Add(selected.Assign(new Argument(1, typeof(Map))));
+		//                    for (int a = 0; a < count; a++)
+		//                    {
+		//                        program.Add(selected.Assign(selected.Call("get_Scope")));
+		//                    }
+		//                    program.Add(selected.Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(statements[i].program.type).Field(key.GetString()));
+		//                    return EmittedExpression(program);
+		//                }
+		//                else
+		//                {
+		//                    return new OptimizedSearch(count, key);
+		//                }
+		//            }
+		//            else if (statements[i].NeverContainsKey(key))
+		//            {
+		//                count++;
+		//            }
+		//            else
+		//            {
+		//                return this;
+		//            }
 
-				}
-				while (s != null)
-				{
-					if (s.ContainsKey(key))
-					{
-						if (s.Strategy is OptimizedMap)
-						{
-							ILProgram program = new ILProgram();
-							Local selected = program.Declare();
-							program.Add(selected.Assign(new Argument(1, typeof(Map))));
-							for (int i = 0; i < count; i++)
-							{
-								program.Add(selected.Assign(selected.Call("get_Scope")));
-							}
-							OptimizedMap o = (OptimizedMap)s.Strategy;
-							program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()).Call("Copy"));
-							return EmittedExpression(program);
-						}
-						else
-						{
-							return new OptimizedSearch(count, key);
-						}
-					}
-					else if (s.activeProgram != null && !s.activeProgram.WillNotAddKey(key, s.activeStatement))
-					{
-						object x = !s.activeProgram.WillNotAddKey(key, s.activeStatement);
-						break;
-					}
-					s = s.Scope;
-					count++;
-				}
-			}
-			this.expression = this.expression.Optimize(scope, statements);
-			return this;
-		}
+		//        }
+		//        while (s != null)
+		//        {
+		//            if (s.ContainsKey(key))
+		//            {
+		//                if (s.Strategy is OptimizedMap)
+		//                {
+		//                    ILProgram program = new ILProgram();
+		//                    Local selected = program.Declare();
+		//                    program.Add(selected.Assign(new Argument(1, typeof(Map))));
+		//                    for (int i = 0; i < count; i++)
+		//                    {
+		//                        program.Add(selected.Assign(selected.Call("get_Scope")));
+		//                    }
+		//                    OptimizedMap o = (OptimizedMap)s.Strategy;
+		//                    program.Add(selected.Cast(typeof(Map)).Call("get_Strategy").Cast(typeof(OptimizedMap)).Field("obj").Cast(((OptimizedMap)s.Strategy).type).Field(key.GetString()).Call("Copy"));
+		//                    return EmittedExpression(program);
+		//                }
+		//                else
+		//                {
+		//                    return new OptimizedSearch(count, key);
+		//                }
+		//            }
+		//            else if (s.activeProgram != null && !s.activeProgram.WillNotAddKey(key, s.activeStatement))
+		//            {
+		//                object x = !s.activeProgram.WillNotAddKey(key, s.activeStatement);
+		//                break;
+		//            }
+		//            s = s.Scope;
+		//            count++;
+		//        }
+		//    }
+		//    this.expression = this.expression.Optimize(scope, statements);
+		//    return this;
+		//}
 		private Expression expression;
 		Map code;
 		public Search(Map code)
@@ -557,14 +557,14 @@ namespace Meta
 		public override Map EvaluateImplementation(Map parent)
 		{
 			Map context;
-			if (type != null)
-			{
-				context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
-			}
-			else
-			{
+			//if (type != null)
+			//{
+			//    context = new Map(new OptimizedMap(type.GetConstructor(Type.EmptyTypes).Invoke(new object[] { })));
+			//}
+			//else
+			//{
 				context = new Map();
-			}
+			//}
 			context.Scope = parent;
 			foreach (Statement statement in statementList)
 			{
@@ -1667,113 +1667,113 @@ namespace Meta
 		}
 	}
 
-	public class OptimizedMap : MapStrategy
-	{
-		public override Map CallImplementation(Map argument, Map parent)
-		{
-			return base.Call(argument, parent);
-		}
-		public override Map CopyData()
-		{
-			return base.CopyData();
-		}
-		public override int Count
-		{
-			get
-			{
-				return base.Count;
-			}
-		}
-		public override MapStrategy DeepCopy(Map key, Map value, Map map)
-		{
-			return base.DeepCopy(key, value, map);
-		}
-		public override bool Equal(MapStrategy obj)
-		{
-			return base.Equal(obj);
-		}
-		public override Number GetNumber()
-		{
-			return base.GetNumber();
-		}
-		//public override int GetHashCode()
-		//{
-		//    return base.GetHashCode();
-		//}
-		//public override bool Equals(object obj)
-		//{
-		//    return base.Equals(obj);
-		//}
-		public override string GetString()
-		{
-			return base.GetString();
-		}
-		public override bool IsNumber
-		{
-			get
-			{
-				return base.IsNumber;
-			}
-		}
-		public override bool IsString
-		{
-			get
-			{
-				return base.IsString;
-			}
-		}
-		protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
-		{
-			base.Panic(key, val, strategy, map);
-		}
-		public override IEnumerable<Map> Array
-		{
-			get
-			{
-				yield break;
-			}
-		}
-		public override void Append(Map map, Map parent)
-		{
-			throw new Exception("not implemented");
-		}
+	//public class OptimizedMap : MapStrategy
+	//{
+	//    public override Map CallImplementation(Map argument, Map parent)
+	//    {
+	//        return base.Call(argument, parent);
+	//    }
+	//    public override Map CopyData()
+	//    {
+	//        return base.CopyData();
+	//    }
+	//    public override int Count
+	//    {
+	//        get
+	//        {
+	//            return base.Count;
+	//        }
+	//    }
+	//    public override MapStrategy DeepCopy(Map key, Map value, Map map)
+	//    {
+	//        return base.DeepCopy(key, value, map);
+	//    }
+	//    public override bool Equal(MapStrategy obj)
+	//    {
+	//        return base.Equal(obj);
+	//    }
+	//    public override Number GetNumber()
+	//    {
+	//        return base.GetNumber();
+	//    }
+	//    //public override int GetHashCode()
+	//    //{
+	//    //    return base.GetHashCode();
+	//    //}
+	//    //public override bool Equals(object obj)
+	//    //{
+	//    //    return base.Equals(obj);
+	//    //}
+	//    public override string GetString()
+	//    {
+	//        return base.GetString();
+	//    }
+	//    public override bool IsNumber
+	//    {
+	//        get
+	//        {
+	//            return base.IsNumber;
+	//        }
+	//    }
+	//    public override bool IsString
+	//    {
+	//        get
+	//        {
+	//            return base.IsString;
+	//        }
+	//    }
+	//    protected override void Panic(Map key, Map val, MapStrategy strategy, Map map)
+	//    {
+	//        base.Panic(key, val, strategy, map);
+	//    }
+	//    public override IEnumerable<Map> Array
+	//    {
+	//        get
+	//        {
+	//            yield break;
+	//        }
+	//    }
+	//    public override void Append(Map map, Map parent)
+	//    {
+	//        throw new Exception("not implemented");
+	//    }
 
-		public override bool ContainsKey(Map key) { return Get(key) != null; }
-		public override int GetArrayCount() { return 0; }
-		public override IEnumerable<Map> Keys
-		{
-			get
-			{
-				foreach (FieldInfo field in type.GetFields())
-				{
-					yield return field.Name;
-				}
-			}
-		}
-		public object obj;
-		public Type type;
-		public OptimizedMap(object obj)
-		{
-			this.obj = obj;
-			this.type = obj.GetType();
-		}
-		public override void Set(Map key, Map val, Map map)
-		{
-			type.GetField(key.GetString()).SetValue(obj, val);
-		}
-		public override Map Get(Map key)
-		{
-			if (key.IsString && key.Count != 0)
-			{
-				FieldInfo field = type.GetField(key.GetString());
-				if (field != null)
-				{
-					return (Map)field.GetValue(obj);
-				}
-			}
-			return null;
-		}
-	}
+	//    public override bool ContainsKey(Map key) { return Get(key) != null; }
+	//    public override int GetArrayCount() { return 0; }
+	//    public override IEnumerable<Map> Keys
+	//    {
+	//        get
+	//        {
+	//            foreach (FieldInfo field in type.GetFields())
+	//            {
+	//                yield return field.Name;
+	//            }
+	//        }
+	//    }
+	//    public object obj;
+	//    public Type type;
+	//    public OptimizedMap(object obj)
+	//    {
+	//        this.obj = obj;
+	//        this.type = obj.GetType();
+	//    }
+	//    public override void Set(Map key, Map val, Map map)
+	//    {
+	//        type.GetField(key.GetString()).SetValue(obj, val);
+	//    }
+	//    public override Map Get(Map key)
+	//    {
+	//        if (key.IsString && key.Count != 0)
+	//        {
+	//            FieldInfo field = type.GetField(key.GetString());
+	//            if (field != null)
+	//            {
+	//                return (Map)field.GetValue(obj);
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//}
 
 	[Serializable]
 	public class ObjectMap : DotNetMap
