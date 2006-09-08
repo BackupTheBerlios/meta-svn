@@ -58,10 +58,10 @@
 											value
 											getMap
 			keys=,
-				<.
+				.
 					ModifierKeys
 					Alt=,
-					<.
+					.
 						Key
 						Enter=,
 						|-
@@ -113,9 +113,10 @@
 			&=-
 				textBox
 			Text=text
-			Background=.
-				Brushes
-				Fuchsia
+			Background=-
+				.
+					Brushes
+					get_Fuchsia
 			getMap=,
 				|Text
 	numberView=,
@@ -159,20 +160,31 @@
 		views|,
 			&=-
 				StackPanel
-			Margin=-
-				Thickness_Double
-				2
-			Children=views
-			Orientation=.
-				PresentationFramework
-				Orientation
-				Vertical
-			<.
-				FrameworkElement
-				HorizontalAlignmentProperty=.
-				PresentationFramework
-				HorizontalAlignment
-				Left
+				,
+					Margin=-
+						Thickness_Double
+						2
+					Orientation=.
+						PresentationFramework
+						Orientation
+						Vertical
+					.
+						FrameworkElement
+						HorizontalAlignmentProperty
+					=.
+						PresentationFramework
+						HorizontalAlignment
+						Left
+			-
+				apply
+				views
+				,
+					view|-
+						.
+							-
+								get_Children
+							Add_UIElement
+						view
 			MouseLeftButtonDown=,
 				|,
 					e|,
@@ -221,10 +233,10 @@
 				KeyDown=-
 					keyMapping
 					,
-						<.
+						.
 							ModifierKeys
 							Alt=,
-							<.
+							.
 								Key
 								Enter=,
 								|-
@@ -256,15 +268,17 @@
 				Thickness_Double
 				2
 			Orientation=horizontal
-			<.
+			.
 				FrameworkElement
-				HorizontalAlignmentProperty=.
+				HorizontalAlignmentProperty
+			=.
 				PresentationFramework
 				HorizontalAlignment
 				Left
-			<.
+			.
 				FrameworkElement
-				VerticalAlignmentProperty=.
+				VerticalAlignmentProperty
+			=.
 				PresentationFramework
 				VerticalAlignment
 				Top
@@ -279,19 +293,20 @@
 					!Children=+
 						view
 			keys=,
-				<.
+				.
 					ModifierKeys
-					Alt=-
+					Alt
+				=-
 					merge
 					,
-						<.
+						.
 							Key
 							B
 						=,
 							|,
 								!copied=-
 									getMap
-						<.
+						.
 							Key
 							M
 						=,
@@ -300,17 +315,19 @@
 								-
 									parse
 									c
-						<.
+						.
 							Key
-							R=,
+							R
+						=,
 							|-
 								.
 									commands
 									Debug
 									Run
-						<.
+						.
 							Key
-							Delete=,
+							Delete
+						=,
 							|-
 								.
 									Parent
@@ -322,61 +339,61 @@
 						-
 							foreach
 							,
-								<.
+								.
 									Key
 									U
 								=stringView
-								<.
+								.
 									Key
 									V
 								=.
 									lookupView
 									create
-								<.
+								.
 									Key
 									L
 								=.
 									literalView
 									create
-								<.
+								.
 									Key
 									N
 								=numberView
-								<.
+								.
 									Key
 									E
 								=emptyView
-								<.
+								.
 									Key
 									A
 								=.
 									listProgramView
 									create
-								<.
+								.
 									Key
 									P
 								=.
 									programView
 									create
-								<.
+								.
 									Key
 									S
 								=.
 									selectView
 									create
-								<.
+								.
 									Key
 									T
 								=.
 									currentView
 									create
-								<.
+								.
 									Key
 									F
 								=.
 									searchView
 									create
-								<.
+								.
 									Key
 									C
 								=.
@@ -385,7 +402,7 @@
 							,
 								key|,
 									value|,
-										<key=,
+										key=,
 											|+
 												-
 													setView
@@ -481,11 +498,11 @@
 				control
 				children
 			keys=,
-				<.
+				.
 					ModifierKeys
 					Alt
 				=,
-					<.
+					.
 						Key
 						Y
 					=,
@@ -511,7 +528,7 @@
 									.
 										functionStatementView
 										create
-					<.
+					.
 						Key
 						Enter
 					=,
@@ -791,11 +808,11 @@
 									child
 									getMap
 			keys=,
-				<.
+				.
 					ModifierKeys
 					Alt
 				=,
-					<.
+					.
 						Key
 						Enter
 					=,
@@ -886,9 +903,10 @@
 							Children
 							0
 							getMap
-			Background=.
-				Brushes
-				DarkViolet
+			Background=-
+				.
+					Brushes
+					get_DarkViolet
 	currentView=,
 		create=,
 			|-
@@ -930,11 +948,11 @@
 							parse
 							arg
 			keys=,
-				<.
+				.
 					ModifierKeys
 					Alt
 				=,
-					<.
+					.
 						Key
 						Enter
 					=,
@@ -970,52 +988,53 @@
 		arg|-
 			view
 			-
-				case
+				switch
 				arg
 				,
-					<isEmpty=emptyView
-					<isString=stringView
-					<isNumber=numberView
-					<,
+					!"empty"=emptyView
+					!"isString"=stringView
+					!"isNumber"=numberView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"call"=callView
-					<,
+							"call"
+					=callView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"call"=callView
-					<,
+							"literal"
+					=literalView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"literal"=literalView
-					<,
+							"search"
+					=searchView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"search"=searchView
-					<,
+							"lookup"
+					=lookupView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"lookup"=lookupView
-					<,
+							"select"
+					=selectView
+					,
 						|-
-							hasKey
+							contains
 							arg
-							"select"=selectView
-					<,
-						|-
-							hasKey
-							arg
-							"current"=currentView
-					<,
+							"current"
+					=currentView
+					,
 						|-
 							if
 							-
-								hasKey
+								contains
 								arg
 								"program"
 							,
@@ -1046,16 +1065,18 @@
 																	literal=key
 										and
 					=listProgramView
-					<,
+					,
 						|-
-							hasKey
+							contains
 							arg
 							"program"
 					=programView
-				,
-					|-
-						mapView
-						arg
+					,
+						|1
+					=,
+						|-
+							mapView
+							arg
 	load=,
 		|-
 			.
@@ -1127,7 +1148,7 @@
 						|-
 							if
 							-
-								isEmpty
+								empty
 								path
 							,
 								then=,
@@ -1207,9 +1228,11 @@
 													click
 	scrollViewer=-
 		ScrollViewer
-	asdf=.
-		Dock
-		Top
+		,
+			Content=-
+				parse
+				,
+					literal=" "
 	panel=-
 		DockPanel
 		,

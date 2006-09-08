@@ -292,7 +292,18 @@ namespace Meta
 			Map callable = calls[0].Evaluate(current);
 			for (int i = 1; i < calls.Count; i++)
 			{
-				callable = callable.Call(calls[i].Evaluate(current));
+				try
+				{
+					callable = callable.Call(calls[i].Evaluate(current));
+				}
+				catch (MetaException e)
+				{
+					throw e;
+				}
+				catch (Exception e)
+				{
+					throw new MetaException(e.Message, code.Extent);
+				}
 			}
 			return callable;
 
@@ -2795,7 +2806,6 @@ namespace Meta
 		}
 		public override void Set(Map key, Map value, Map parent)
 		{
-			string fieldName = key.GetString();
 			if (Members.ContainsKey(key))
 			{
 				Members[key].Set(obj, value);
@@ -5138,6 +5148,27 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Foreach(Map map, Map func)
+		{
+			List<Map> result = new List<Map>();
+			foreach (KeyValuePair<Map, Map> entry in map)
+			{
+				result.Add(func.Call(entry.Key).Call(entry.Value));
+			}
+			return new Map(new ListStrategy(result));
+		}
+		public static Map Switch(Map map, Map cases)
+		{
+			foreach (KeyValuePair<Map,Map> entry in cases)
+			{
+				if (Convert.ToBoolean(entry.Key.Call(map).GetNumber().GetInt32()))
+				{
+					return entry.Value.Call(map);
+					break;
+				}
+			}
+			return Map.Empty;
+		}
 		public static Map Raise(Number a, Number b)
 		{
 			Number result=1;
@@ -5299,6 +5330,7 @@ namespace Meta
 									Type t = DotNetMap.GetListAddFunctionType(list, value);
 									if (t == null)
 									{
+										t = DotNetMap.GetListAddFunctionType(list, value);
 										throw new ApplicationException("Cannot convert argument.");
 									}
 									else

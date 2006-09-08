@@ -9,6 +9,9 @@
 							Map_Object
 							arg
 						ContainsKey_Map
+				foreach=.
+					Library
+					Foreach_Map_Map
 				flip=,
 					func|,
 						a|,
@@ -231,6 +234,9 @@
 				appendTo=-
 					flip
 					append
+				empty=-
+					equal
+					0
 				prepend=,
 					array|,
 						item|-
@@ -282,6 +288,9 @@
 					Meta
 					Library
 					Apply_Map_Map
+				switch=.
+					Library
+					Switch_Map_Map
 				callIf=,
 					map|,
 						key|,
