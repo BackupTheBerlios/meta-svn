@@ -720,6 +720,9 @@ namespace Meta
 		private Map code;
 		public override void AssignImplementation(ref Map context, Map value)
 		{
+			if (key is Search)
+			{
+			}
 			context[key.Evaluate(context)] = value;
 		}
 		public Expression key;
@@ -855,6 +858,12 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			Map map=new Map();
+			Map memberTest = new Map(new Test.TestClasses.MemberTest());
+			bool x = memberTest.Equals(memberTest);
+			bool y = memberTest.Equals(memberTest);
+			map[memberTest] = "hello";
+			Map whatever=map[memberTest];
 			//try
 			//{
 			//    MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
@@ -1300,6 +1309,13 @@ namespace Meta
 	[Serializable]
 	public class Method : MapStrategy
 	{
+		public override bool IsNormal
+		{
+			get
+			{
+				return false;
+			}
+		}
 		// use Equals instead of Equal
 		public override bool Equals(object obj)
 		{
@@ -1756,7 +1772,7 @@ namespace Meta
 				}
 				else
 				{
-					return EqualDefault(strategy);
+					return base.Equals(strategy);
 				}
 			}
 			return false;
@@ -2168,6 +2184,13 @@ namespace Meta
 	[Serializable]
 	public class CloneStrategy : MapStrategy
 	{
+		public override bool IsNormal
+		{
+			get
+			{
+				return original.IsNormal;
+			}
+		}
 		public override int GetArrayCount()
 		{
 			return original.GetArrayCount();
@@ -2256,13 +2279,15 @@ namespace Meta
 	[Serializable]
 	public abstract class MapStrategy
 	{
+		public virtual bool IsNormal
+		{
+			get
+			{
+				return true;
+			}
+		}
 		public override int GetHashCode()
 		{
-			return GetHashCodeDefault();
-		}
-		public int GetHashCodeDefault()
-		{
-			
 			if (IsNumber)
 			{
 				return (int)(GetNumber().Numerator % int.MaxValue);
@@ -2272,10 +2297,31 @@ namespace Meta
 				return Count;
 			}
 		}
-		// create a normal strategy?, doesn't work with clonestrategy, however
-		public virtual bool EqualDefault(MapStrategy strategy)
+		//public virtual bool EqualDefault(MapStrategy strategy)
+		//{
+		//    if (strategy.Count != this.Count)
+		//    {
+		//        return false;
+		//    }
+		//    else
+		//    {
+		//        bool isEqual = true;
+		//        foreach (Map key in this.Keys)
+		//        {
+		//            Map otherValue = strategy.Get(key);
+		//            Map thisValue = Get(key);
+		//            if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue))
+		//            {
+		//                isEqual = false;
+		//            }
+		//        }
+		//        return isEqual;
+		//    }
+		//}
+		public override bool Equals(object obj)
 		{
-			if (strategy.Count != this.Count)
+			MapStrategy strategy = obj as MapStrategy;
+			if (strategy==null || strategy.Count != this.Count)
 			{
 				return false;
 			}
@@ -2293,10 +2339,6 @@ namespace Meta
 				}
 				return isEqual;
 			}
-		}
-		public override bool Equals(object obj)
-		{
-			return EqualDefault((MapStrategy)obj);
 			//return Equal((MapStrategy)obj);
 		}
 		//public virtual bool Equal(MapStrategy obj)
@@ -2637,37 +2679,34 @@ namespace Meta
 	[Serializable]
 	public abstract class DotNetMap : MapStrategy
 	{
-
-		//public override bool IsNormal
-		//{
-		//    get
-		//    {
-		//        return false;
-		//    }
-		//}
-		//public override int GetHashCode()
-		//{
-		//    // inconsistent with global key, maybe
-		//    if (obj != null)
-		//    {
-		//        return obj.GetHashCode();
-		//    }
-		//    else
-		//    {
-		//        return type.GetHashCode();
-		//    }
-		//}
-
-
-		//public override bool Equal(MapStrategy obj)
-		//{
-		//    DotNetMap dotNet = obj as DotNetMap;
-		//    if (dotNet != null)
-		//    {
-		//        return dotNet.obj == obj && dotNet.type == type;
-		//    }
-		//    return false;
-		//}
+		public override bool IsNormal
+		{
+			get
+			{
+				return false;
+			}
+		}
+		public override int GetHashCode()
+		{
+			// inconsistent with global key, maybe
+			if (obj != null)
+			{
+				return obj.GetHashCode();
+			}
+			else
+			{
+				return type.GetHashCode();
+			}
+		}
+		public override bool Equals(object obj)
+		{
+			DotNetMap dotNet = obj as DotNetMap;
+			if (dotNet != null)
+			{
+				return dotNet.Object == Object && dotNet.Type == Type;
+			}
+			return false;
+		}
 		public override object UniqueKey
 		{
 			get
@@ -3119,6 +3158,13 @@ namespace Meta
 
 	public class Gac : MapStrategy
 	{
+		public override bool IsNormal
+		{
+			get
+			{
+				return false;
+			}
+		}
 		public override int GetArrayCount()
 		{
 			return 0;
@@ -4629,7 +4675,8 @@ namespace Meta
 				{
 					return "Gac";
 				}
-				if (map.Strategy is DotNetMap)
+				if (!map.Strategy.IsNormal)
+				//if (map.Strategy is DotNetMap)
 				{
 					return map.Strategy.ToString();
 				}
@@ -5346,83 +5393,49 @@ namespace Meta
 		public int Count { get { return strategy.Count; } }
 		public int ArrayCount { get { return strategy.GetArrayCount(); } }
 		public bool IsString { get { return strategy.IsString; } }
-		public bool IsNumber { get { return strategy.IsNumber; } }
-		public IEnumerable<Map> Array { get { return strategy.Array; } }
+		public bool IsNumber
+		{
+			get
+			{
+				return strategy.IsNumber;
+			}
+		}
+		public IEnumerable<Map> Array
+		{
+			get
+			{
+				return strategy.Array;
+			}
+		}
+		public Number GetNumber()
+		{ 
+			return strategy.GetNumber(); 
+		}
+		public string GetString()
+		{ 
+			return strategy.GetString();
+		}
 
-
-		public Number GetNumber() { return strategy.GetNumber(); }
-		public string GetString() { return strategy.GetString(); }
-
-
-
-
-		//public HiPerfTimer() {
-		//    startTime = 0;
-		//    stopTime = 0;
-
-		//    if (QueryPerformanceFrequency(out freq) == false) {
-		//        throw new ApplicationException();
-		//    }
-		//}
-		//public void Start() {
-		//    Thread.Sleep(0);
-		//    QueryPerformanceCounter(out startTime);
-		//}
-		//public void Stop() {
-		//    QueryPerformanceCounter(out stopTime);
-		//}
-		//public double Duration {
-		//    get {
-		//        return (double)(stopTime - startTime) / (double)freq;
-		//    }
-		//}
 		public Map Call(Map arg)
 		{
 			Map result = strategy.Call(arg, this);
 			return result;
 		}
-		//public Map Call(Map arg) {
-		//    long start=0;
-		//    if (Interpreter.profiling) {
-		//        QueryPerformanceCounter(out start);
-		//        //timer = new HiPerfTimer();
-		//        //timer.Start();
-		//    }
-		//    Map result=strategy.Call(arg, this);
-
-		//    if (Interpreter.profiling) {
-		//        //timer.Stop();
-		//        if (this.ContainsKey(CodeKeys.Function)) {
-		//            Extent e = this[CodeKeys.Function].extent;
-		//            if (e != null) {
-		//                if (!calls.ContainsKey(e)) {
-		//                    calls[e] = 0;
-		//                }
-		//                long stop;
-		//                QueryPerformanceCounter(out stop);
-		//                double duration=(double)(stop - start) / (double)freq;
-		//                calls[e] += duration;
-		//            } else {
-		//            }
-		//        } else {
-		//        }
-		//    }
-		//    return result;
-		//}
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
 		public void Append(Map map) { strategy.Append(map, this); }
 		public bool ContainsKey(Map key) { return strategy.ContainsKey(key); }
-		public override bool Equals(object toCompare) 
+		public override bool Equals(object obj) 
 		{
-			//if (strategy.IsNormal == ((Map)toCompare).strategy.IsNormal)
-			//{
-			//if (toCompare is MapStrategy)
-			//{
-				return strategy.Equals(((Map)toCompare).Strategy);
-			//}
-			//return false;
-			//}
-			//return false;
+			Map map=obj as Map;
+			if(map!=null)
+			{
+				if (map.strategy.IsNormal == strategy.IsNormal)
+				{
+					return strategy.Equals(map.Strategy);
+				}
+				return false;
+			}
+			return false;
 		}
 		public Map TryGetValue(Map key) { return strategy.Get(key); }
 		public IEnumerable<Map> Keys { get { return strategy.Keys; } }

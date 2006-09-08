@@ -265,6 +265,7 @@ commandLine|,
 	memberTest=-
 		!"MemberTest"
 		0
+	!"memberTest"="memberKeyTest"
 	stringOverload=-
 		.
 			MemberTest

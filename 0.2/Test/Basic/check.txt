@@ -1372,6 +1372,11 @@ Entry (KeyValuePair`2)
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (Map):
+		Meta.Test.TestClasses.MemberTest
+	Value (Map):
+		"memberKeyTest"
+Entry (KeyValuePair`2)
+	Key (Map):
 		"stringOverload"
 	Value (Map):
 		"string function, argument+hello"
