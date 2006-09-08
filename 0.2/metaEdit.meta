@@ -35,10 +35,14 @@
 							.
 								statement
 								value
-			Background=-
-				.
-					Brushes
-					get_Green
+				,
+					Background=-
+						.
+							Brushes
+							get_Green
+					KeyDown=-
+						keyMapping
+						keys
 			getMap=,
 				|,
 					program=-
@@ -74,9 +78,6 @@
 									.
 										literalView
 										create
-			KeyDown=-
-				keyMapping
-				keys
 	emptyView=,
 		|,
 			&=-
@@ -165,34 +166,38 @@
 												1
 	multi=,
 		views|,
-			&=-
-				StackPanel
-				,
-					Margin=-
-						Thickness_Double
-						2
-					Orientation=.
-						PresentationFramework
-						Orientation
-						Vertical
-					.
-						FrameworkElement
-						HorizontalAlignmentProperty
-					=.
-						PresentationFramework
-						HorizontalAlignment
-						Left
-					Children=views
-			MouseLeftButtonDown=,
-				|,
-					e|,
-						.
-							!e
-							Handled=1
-						asdf=-
+			init|,
+				&=-
+					StackPanel
+					-
+						merge
+						,
+							Margin=-
+								Thickness_Double
+								2
+							Orientation=.
+								PresentationFramework
+								Orientation
+								Vertical
 							.
-								panel
-								Focus
+								FrameworkElement
+								HorizontalAlignmentProperty
+							=.
+								PresentationFramework
+								HorizontalAlignment
+								Left
+							Children=views
+							MouseLeftButtonDown=,
+								|,
+									e|,
+										.
+											!e
+											Handled=1
+										asdf=-
+											.
+												panel
+												Focus
+						init
 	entry=,
 		create=,
 			|-
@@ -212,10 +217,38 @@
 					+
 						key
 						value
-				Orientation=.
-					PresentationFramework
-					Orientation
-					Horizontal
+					,
+						Orientation=.
+							PresentationFramework
+							Orientation
+							Horizontal
+						KeyDown=-
+							keyMapping
+							,
+								.
+									ModifierKeys
+									Alt=,
+									.
+										Key
+										Enter=,
+										|-
+											.
+												Parent
+												Children
+												Insert_Int32_UIElement
+											-
+												add
+												-
+													.
+														Parent
+														Children
+														IndexOf_UIElement
+													this
+												1
+											-
+												.
+													entry
+													create
 				getKey=,
 					|-
 						.
@@ -228,33 +261,6 @@
 							Children
 							1
 							getMap
-				KeyDown=-
-					keyMapping
-					,
-						.
-							ModifierKeys
-							Alt=,
-							.
-								Key
-								Enter=,
-								|-
-									.
-										Parent
-										Children
-										Insert_Int32_UIElement
-									-
-										add
-										-
-											.
-												Parent
-												Children
-												IndexOf_UIElement
-											this
-										1
-									-
-										.
-											entry
-											create
 	copied=0
 	view=,
 		content|,
@@ -262,24 +268,25 @@
 				multi
 				+
 					content
-			Margin=-
-				Thickness_Double
-				2
-			Orientation=horizontal
-			.
-				FrameworkElement
-				HorizontalAlignmentProperty
-			=.
-				PresentationFramework
-				HorizontalAlignment
-				Left
-			.
-				FrameworkElement
-				VerticalAlignmentProperty
-			=.
-				PresentationFramework
-				VerticalAlignment
-				Top
+				,
+					Margin=-
+						Thickness_Double
+						2
+					Orientation=horizontal
+					.
+						FrameworkElement
+						HorizontalAlignmentProperty
+					=.
+						PresentationFramework
+						HorizontalAlignment
+						Left
+					.
+						FrameworkElement
+						VerticalAlignmentProperty
+					=.
+						PresentationFramework
+						VerticalAlignment
+						Top
 			getMap=,
 				|-
 					.
@@ -450,10 +457,15 @@
 											Handled=1
 	control=,
 		children|,
-			&=-
-				multi
-				children
-			Focusable=1
+			init|,
+				&=-
+					multi
+					children
+					-
+						merge
+						,
+							Focusable=1
+						init
 	functionView=,
 		key|,
 			value|,
@@ -472,6 +484,11 @@
 							.
 								value
 								expression
+					,
+						Background=-
+							.
+								Brushes
+								get_Azure
 				getKey=,
 					|"function"
 				getValue=,
@@ -486,15 +503,8 @@
 								Children
 								1
 								getMap
-				Background=-
-					.
-						Brushes
-						get_Azure
 	statementBase=,
 		children|,
-			&=-
-				control
-				children
 			keys=,
 				.
 					ModifierKeys
@@ -552,9 +562,13 @@
 									.
 										statementView
 										create
-			KeyDown=-
-				keyMapping
-				keys
+			&=-
+				control
+				children
+				,
+					KeyDown=-
+						keyMapping
+						keys
 	statementView=,
 		create=,
 			|-
@@ -698,10 +712,11 @@
 									|-
 										statementView
 										statement
-			Background=-
-				.
-					Brushes
-					get_Blue
+				,
+					Background=-
+						.
+							Brushes
+							get_Blue
 			getMap=,
 				|,
 					program=-
@@ -748,6 +763,7 @@
 										-
 											parseView
 											value
+				0
 			getMap=,
 				|-
 					sum
@@ -791,10 +807,14 @@
 						arg|-
 							parseView
 							arg
-			Background=-
-				.
-					Brushes
-					get_BurlyWood
+				,
+					Background=-
+						.
+							Brushes
+							get_BurlyWood
+					KeyDown=-
+						keyMapping
+						keys
 			getMap=,
 				|,
 					call=-
@@ -826,9 +846,6 @@
 									.
 										literalView
 										create
-			KeyDown=-
-				keyMapping
-				keys
 	lookupView=,
 		create=,
 			|-
@@ -845,6 +862,11 @@
 						.
 							source
 							lookup
+				,
+					Background=-
+						.
+							Brushes
+							get_MistyRose
 			getMap=,
 				|,
 					lookup=-
@@ -852,10 +874,6 @@
 							Children
 							0
 							getMap
-			Background=-
-				.
-					Brushes
-					get_MistyRose
 	searchView=,
 		create=,
 			|-
@@ -872,6 +890,11 @@
 						.
 							source
 							search
+				,
+					Background=-
+						.
+							Brushes
+							get_DeepSkyBlue
 			getMap=,
 				|,
 					search=-
@@ -879,10 +902,6 @@
 							Children
 							0
 							getMap
-			Background=-
-				.
-					Brushes
-					get_DeepSkyBlue
 	literalView=,
 		create=,
 			|-
@@ -898,6 +917,11 @@
 						.
 							source
 							literal
+				,
+					Background=-
+						.
+							Brushes
+							get_DarkViolet
 			getMap=,
 				|,
 					literal=-
@@ -905,10 +929,6 @@
 							Children
 							0
 							getMap
-			Background=-
-				.
-					Brushes
-					get_DarkViolet
 	currentView=,
 		create=,
 			|-
@@ -940,17 +960,6 @@
 							search=,
 								literal="hello"
 		source|,
-			&=-
-				control
-				-
-					apply
-					.
-						source
-						select
-					,
-						arg|-
-							parseView
-							arg
 			keys=,
 				.
 					ModifierKeys
@@ -970,9 +979,25 @@
 									.
 										lookupView
 										create
-			KeyDown=-
-				keyMapping
-				keys
+			&=-
+				control
+				-
+					apply
+					.
+						source
+						select
+					,
+						arg|-
+							parseView
+							arg
+				,
+					KeyDown=-
+						keyMapping
+						keys
+					Background=-
+						.
+							Brushes
+							get_Chocolate
 			getMap=,
 				|,
 					select=-
@@ -985,10 +1010,6 @@
 								.
 									child
 									getMap
-			Background=-
-				.
-					Brushes
-					get_Chocolate
 	parseView=,
 		arg|-
 			view
