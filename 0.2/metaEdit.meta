@@ -1175,7 +1175,9 @@
 			.
 				DockPanel
 				DockProperty
-			="asdf"
+			=.
+				Dock
+				Top
 			Items=-
 				apply
 				commands
