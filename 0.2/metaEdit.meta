@@ -166,7 +166,7 @@
 												1
 			getMap=,
 				|-
-					stringToInteger
+					stringToNumber
 					-
 						get_Text
 	multi=,
@@ -177,8 +177,11 @@
 					merge
 					,
 						Margin=-
-							Thickness_Double
-							2
+							Thickness_Double_Double_Double_Double
+							10
+							0
+							0
+							0
 						Orientation=.
 							PresentationFramework
 							Orientation
@@ -193,10 +196,12 @@
 						MouseLeftButtonDown=,
 							|,
 								e|,
-									.
-										!e
-										Handled=1
-									asdf=-
+									-
+										.
+											e
+											set_Handled_Boolean
+										1
+									-
 										.
 											panel
 											Focus
@@ -281,9 +286,6 @@
 				,
 					Children=+
 						content
-					Margin=-
-						Thickness_Double
-						2
 					Orientation=horizontal
 					.
 						FrameworkElement
@@ -586,6 +588,10 @@
 				control
 				,
 					Children=children
+					Background=-
+						.
+							Brushes
+							get_Azure
 					KeyDown=-
 						keyMapping
 						keys
@@ -933,6 +939,71 @@
 								child
 								0
 							getMap
+	literalNumberView=,
+		source|,
+			&=-
+				textBox
+				,
+					Background=-
+						.
+							Brushes
+							get_LightYellow
+					Text=-
+						integerToString
+						.
+							source
+							literal
+					PreviewTextInput=,
+						|,
+							e|-
+								apply
+								-
+									.
+										e
+										get_Text
+								,
+									c|-
+										if
+										-
+											not
+											-
+												.
+													Char
+													IsDigit_Char
+												c
+										,
+											|-
+												.
+													!e
+													set_Handled_Boolean
+												1
+			getMap=,
+				|,
+					literal=-
+						stringToNumber
+						-
+							get_Text
+	literalStringView=,
+		create=,
+			|-
+				literalStringView
+				,
+					literal=" "
+		source|,
+			&=-
+				textBox
+				,
+					Text=.
+						source
+						literal
+					Background=-
+						.
+							Brushes
+							get_Fuchsia
+			getMap=,
+				|,
+					literal=-
+						get_Text
 	literalView=,
 		create=,
 			|-
@@ -975,10 +1046,11 @@
 							get_White
 					PreviewTextInput=,
 						|,
-							e|,
+							e|-
 								.
-									!e
-									Handled=1
+									e
+									set_Handled_Boolean
+								1
 					getMap=,
 						|,
 							current=0
@@ -1065,7 +1137,34 @@
 							contains
 							arg
 							"literal"
-					=literalView
+					=,
+						arg|-
+							ifElse
+							-
+								isString
+								.
+									arg
+									literal
+							,
+								|-
+									literalStringView
+									arg
+							,
+								|-
+									ifElse
+									-
+										isNumber
+										.
+											arg
+											literal
+									,
+										|-
+											literalNumberView
+											arg
+									,
+										|-
+											literalView
+											arg
 					,
 						|-
 							contains
@@ -1209,14 +1308,7 @@
 									SaveAs
 							,
 								|-
-									.
-										File
-										WriteAllText_String_String
-									path
-									-
-										toString
-										-
-											currentData
+									save
 				,
 					header="Exit"
 					click=,
@@ -1230,21 +1322,25 @@
 				,
 					header="Run"
 					click=,
-						|+
+						|,
 							-
-								print
-								-
-									currentData
-							-
-								.
-									File
-									Save
+								save
 							-
 								.
 									Process
 									Start_String_String
-								"C:\Meta\0.2\Meta.exe"
+								"C:\Meta\0.2\bin\Debug\Meta.exe"
 								path
+	save=,
+		|-
+			.
+				File
+				WriteAllText_String_String
+			path
+			-
+				toString
+				-
+					currentData
 	menu=-
 		Menu
 		,

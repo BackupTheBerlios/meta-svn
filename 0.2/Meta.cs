@@ -872,43 +872,12 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			//Map map=new Map();
-			//Map memberTest = new Map(new Test.TestClasses.MemberTest());
-			//bool x = memberTest.Equals(memberTest);
-			//bool y = memberTest.Equals(memberTest);
-			//map[memberTest] = "hello";
-			//Map whatever=map[memberTest];
-
-			try
-			{
-				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.ToString());
-				Console.ReadLine();
-			}
-			return;
 			if (args.Length != 0)
 			{
-				//try
-				//{
-				//    MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"test.meta"), Map.Empty);
-				//}
-				//catch (Exception e)
-				//{
-				//    Console.WriteLine(e.ToString());
-				//    Console.ReadLine();
-				//}
-				//return;
 				if (args[0] == "-test")
 				{
 					try
 					{
-						//UseConsole();
-						////MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-						//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
-						//return;
 						UseConsole();
 						new MetaTest().Run();
 					}
@@ -943,6 +912,27 @@ namespace Meta
 				{
 					UseConsole();
 					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);
+				}
+				else
+				{
+					string fileName = args[0].Trim('"');
+					if (File.Exists(fileName))
+					{
+						try
+						{
+							MetaTest.Run(fileName, Map.Empty);
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e.ToString());
+							Console.ReadLine();
+						}
+						return;
+					}
+					else
+					{
+						Console.WriteLine("File " + fileName + " not found.");
+					}
 				}
 			}
 		}
@@ -5152,6 +5142,10 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map StringToNumber(Map map)
+		{
+			return Convert.ToInt32(map.GetString());
+		}
 		public static Map Foreach(Map map, Map func)
 		{
 			List<Map> result = new List<Map>();

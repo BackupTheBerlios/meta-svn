@@ -194,6 +194,9 @@
 						sum
 						arg
 						or
+				stringToNumber=.
+					Library
+					StringToNumber_Map
 				or=,
 					a|,
 						b|-
