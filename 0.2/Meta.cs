@@ -19,7 +19,7 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
 
-using MathML.Rendering;
+//using MathML.Rendering;
 using Meta;
 using Meta.Test;
 using System;
@@ -35,7 +35,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using MathML;
+//using MathML;
 
 namespace Meta
 {
@@ -918,17 +918,17 @@ namespace Meta
 				throw e;
 			}
 		}
-		public static void Whatever()
-		{
-			FlowLayoutPanel p = new FlowLayoutPanel();
-			p.FlowDirection = FlowDirection.TopDown;
-			RichTextBox r = new RichTextBox();
-			MathMLControl control = new MathMLControl();
-			control.ClientSizeChanged += new EventHandler(control_ClientSizeChanged);
-			MathMLDocument document = new MathMLDocument();
-			document.LoadXml(@"<math><mi>x</mi><mo>=</mo><mfrac><mrow><mrow><mo>-</mo><mi>b</mi></mrow><mo>&PlusMinus;</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mrow><mn>4</mn><mo>&InvisibleTimes;</mo><mi>a</mi><mo>&InvisibleTimes;</mo><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mo>&InvisibleTimes;</mo><mi>a</mi></mrow></mfrac></math>");
-			control.MathElement = (MathMLMathElement)document.DocumentElement;
-		}
+		//public static void Whatever()
+		//{
+		//    FlowLayoutPanel p = new FlowLayoutPanel();
+		//    p.FlowDirection = FlowDirection.TopDown;
+		//    RichTextBox r = new RichTextBox();
+		//    MathMLControl control = new MathMLControl();
+		//    control.ClientSizeChanged += new EventHandler(control_ClientSizeChanged);
+		//    MathMLDocument document = new MathMLDocument();
+		//    document.LoadXml(@"<math><mi>x</mi><mo>=</mo><mfrac><mrow><mrow><mo>-</mo><mi>b</mi></mrow><mo>&PlusMinus;</mo><msqrt><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mrow><mn>4</mn><mo>&InvisibleTimes;</mo><mi>a</mi><mo>&InvisibleTimes;</mo><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mo>&InvisibleTimes;</mo><mi>a</mi></mrow></mfrac></math>");
+		//    control.MathElement = (MathMLMathElement)document.DocumentElement;
+		//}
 
 		static void control_ClientSizeChanged(object sender, EventArgs e)
 		{
@@ -938,7 +938,16 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-
+			try
+			{
+				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
+				Console.ReadLine();
+			}
+			return;
 			if (args.Length != 0)
 			{
 				//try
@@ -1039,7 +1048,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
@@ -3872,6 +3881,7 @@ namespace Meta
 					new CharacterExcept(
 						Syntax.@string,
 						Syntax.function,
+						Syntax.indentation,
 						Syntax.windowsNewLine[0],
 						Syntax.unixNewLine)))),
 			new Action(

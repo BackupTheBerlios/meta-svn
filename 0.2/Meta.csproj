@@ -56,10 +56,8 @@
   <ItemGroup>
     <None Include="basicTest.meta" />
     <None Include="learning.meta" />
-    <None Include="libDesign.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
-    <None Include="relativity.learn" />
-    <None Include="test.meta" />
+    <None Include="metaEdit.meta" />
   </ItemGroup>
 </Project>

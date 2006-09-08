@@ -981,7 +981,6 @@
 							hasKey
 							arg
 							"call"=callView
-
 					<,
 						|-
 							hasKey
@@ -1089,20 +1088,20 @@
 					click=,
 						|-
 							.
-									,
-										&=-
-											OpenFileDialog
-											OpenFileDialog
-										Filter="*.meta (Meta files)|*.meta"
-										FileOk=,
-											dialog|,
-												|,
-													!path=.
-														dialog
-														FileName
-													asdf=-
-														load
-									ShowDialog
+								,
+									&=-
+										OpenFileDialog
+										OpenFileDialog
+									Filter="*.meta (Meta files)|*.meta"
+									FileOk=,
+										dialog|,
+											|,
+												!path=.
+													dialog
+													FileName
+												asdf=-
+													load
+								ShowDialog
 				,
 					header="SaveAs"
 					click=,
