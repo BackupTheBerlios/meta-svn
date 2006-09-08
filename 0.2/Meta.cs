@@ -266,7 +266,7 @@ namespace Meta
 			}
 			return this;
 		}
-		private Map parameterName;
+		//private Map parameterName;
 		public List<Expression> calls;
 		Map code;
 		public Call(Map code, Map parameterName)
@@ -281,7 +281,7 @@ namespace Meta
 			{
 				calls.Add(new Literal(new Map(CodeKeys.Literal, Map.Empty)));
 			}
-			this.parameterName = parameterName;
+			//this.parameterName = parameterName;
 		}
 		public override Map EvaluateImplementation(Map current)
 		{
@@ -979,7 +979,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -992,7 +992,7 @@ namespace Meta
 			if (!TryToDotNet(meta, target, out dotNet))
 			{
 				TryToDotNet(meta, target, out dotNet);
-				throw new ApplicationException("Cannot convert " + Serialize.ValueFunction(meta) + " to " + target.ToString() + ".");
+				throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 			}
 			return dotNet;
 		}
@@ -1432,7 +1432,7 @@ namespace Meta
 				if (!Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out arg))
 				{
 					bool asdf = argument.IsNumber;
-					throw new Exception("Could not convert argument " + Meta.Serialize.ValueFunction(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
+					throw new Exception("Could not convert argument " + Meta.Serialization.Serialize(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());
 				}
 				else
 				{
@@ -4664,106 +4664,374 @@ namespace Meta
 		}
 	}
 
-	public class Serialize
+	public class Serialization
 	{
-		public static string ValueFunction(Map map)
+		public static string Serialize(Map map)
 		{
-			return DoSerialize(map);
+			return Serialize(map, -1).Trim();
 		}
-		public static string DoSerialize(Map map)
+		private static string Number(Map map)
 		{
-			return DoSerialize(map, -1).Trim();
+			return map.GetNumber().ToString();
 		}
-		private static string GetIndentation(int indentation)
-		{
-			return "".PadLeft(indentation, '\t');
-		}
-		private static string DoSerialize(Map map, int indentation)
-		{
-			try
-			{
-				if (map.Strategy is Gac)
-				{
-					return "Gac";
-				}
-				if (!map.Strategy.IsNormal)
-				//if (map.Strategy is DotNetMap)
-				{
-					return map.Strategy.ToString();
-				}
-				else if (map.Count == 0)
-				{
-					if (indentation < 0)
-					{
-						return "";
-					}
-					else
-					{
-						return "0";
-					}
-				}
-				else if (map.IsNumber)
-				{
-					return map.GetNumber().ToString();
-				}
-				else if (map.IsString)
-				{
 
-					string text = map.GetString();
-					if (text.Contains("\"") || text.Contains("\n"))
-					{
-						string result = "\"" + Environment.NewLine;
-						foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
-						{
-							result += GetIndentation(indentation) + "\t" + line + Environment.NewLine;
-						}
-						return result.Trim('\n', '\r') + Environment.NewLine + GetIndentation(indentation) + "\"";
-					}
-					else
-					{
-						return "\"" + text + "\"";
-					}
+		private static string Serialize(Map map, int indentation)
+		{
+			if (!map.Strategy.IsNormal)
+			{
+				return map.Strategy.ToString();
+			}
+			else if (map.Count == 0)
+			{
+				if (indentation < 0)
+				{
+					return "";
 				}
 				else
 				{
-					string text;
-					if (indentation < 0)
-					{
-						text = "";
-					}
-					else
-					{
-						text = "," + Environment.NewLine;
-					}
-					foreach (KeyValuePair<Map, Map> entry in map)
-					{
-						text +=
-							GetIndentation(indentation + 1);
-						string key;
-						if (entry.Key.Count != 0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0)
-						{
-							key = entry.Key.GetString();
-						}
-						else
-						{
-							key = "<" + DoSerialize(entry.Key, indentation + 1);
-						}
-						text += key +
-							"=" +
-							DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
-						text = text.TrimEnd('\r', '\n') + Environment.NewLine;
-					}
-					return text;
+					return "0";
 				}
 			}
-			catch (Exception e)
+			else if (map.IsNumber)
 			{
-				int asdf = 0;
-				throw e;
+				return Number(map);
 			}
+			else if (map.IsString)
+			{
+				return String(map, indentation);
+			}
+			else
+			{
+				return Map(map, indentation);
+			}
+		}
+		//private static string Program(Map map, int indentation)
+		//{
+		//}
+		//private static string Literal(Map map, int indentation)
+		//{
+		//}
+		//private static string Function(Map map, int indentation)
+		//{
+		//}
+		private static string Map(Map map, int indentation)
+		{
+			string text;
+			if (indentation < 0)
+			{
+				text = "";
+			}
+			else
+			{
+				text = "," + Environment.NewLine;
+			}
+			foreach (KeyValuePair<Map, Map> entry in map)
+			{
+				text+=Entry(indentation, entry);
+			}
+			return text;
+		}
 
+		private static string Entry(int indentation, KeyValuePair<Map, Map> entry)
+		{
+			if (entry.Key.Equals(CodeKeys.Function))
+			{
+				return Function(entry.Value, indentation+1);
+			}
+			else
+			{
+				return (Indentation(indentation + 1)
+								+ Key(indentation, entry) +
+								"=" +
+								Serialize(entry.Value, indentation + 1)
+								+ Environment.NewLine).TrimEnd('\r', '\n')
+								+ Environment.NewLine;
+			}
+		}
+		private static string Literal(Map value, int indentation)
+		{
+			if (value.IsNumber)
+			{
+				return Number(value);
+			}
+			else if (value.IsString)
+			{
+				return String(value, indentation);
+			}
+			throw new Exception("not implemented");
+		}
+		private static string Function(Map value,int indentation)
+		{
+			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression],indentation);
+		}
+		private static string Root()
+		{
+			return "/";
+		}
+		private static string Expression(Map map, int indentation)
+		{
+			if (map.ContainsKey(CodeKeys.Literal))
+			{
+				return Literal(map[CodeKeys.Literal], indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Root))
+			{
+				return Root();
+			}
+			if (map.ContainsKey(CodeKeys.Call))
+			{
+				return Call(map[CodeKeys.Call],indentation);//, this.TryGetValue(CodeKeys.Parameter));
+			}
+			else if (map.ContainsKey(CodeKeys.Program))
+			{
+				return Program(map[CodeKeys.Program],indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Select))
+			{
+				return Select(map[CodeKeys.Select],indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Search))
+			{
+			    return Search(map[CodeKeys.Search],indentation);
+			}
+			return Serialize(map,indentation);
+		}
+		private static string FunctionStatement(Map map, int indentation)
+		{
+			return map[CodeKeys.Parameter].GetString()+"|"+
+				Expression(map[CodeKeys.Expression],indentation);
+		}
+		private static string KeyStatement(Map map, int indentation)
+		{
+			Map key = map[CodeKeys.Key];
+			if (key.Equals(new Map(CodeKeys.Literal, CodeKeys.Function)))
+			{
+				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);
+			}
+			else
+			{
+				return Expression(map[CodeKeys.Key], indentation) + "="
+					+ Expression(map[CodeKeys.Value], indentation);
+			}
+		}
+		private static string CurrentStatement(Map map, int indentation)
+		{
+			return "&=" + Expression(map[CodeKeys.Value], indentation);
+		}
+		private static string SearchStatement(Map map, int indentation)
+		{
+			return Expression(map[CodeKeys.Keys],indentation)+":"+Expression(map[CodeKeys.Value],indentation);
+		}
+		private static string DiscardStatement(Map map, int indentation)
+		{
+			return Expression(map[CodeKeys.Value], indentation);
+		}
+		private static string Statement(Map map, int indentation)
+		{
+			if (map.ContainsKey(CodeKeys.Key))
+			{
+				return KeyStatement(map, indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Current))
+			{
+				return CurrentStatement(map, indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Keys))
+			{
+				return SearchStatement(map, indentation);
+			}
+			else if (map.ContainsKey(CodeKeys.Value))
+			{
+				return DiscardStatement(map, indentation);
+			}
+			throw new Exception("not implemented");
+		}
+		private static string Program(Map map, int indentation)
+		{
+			string text = ","+NewLine();
+			indentation++;
+			foreach (Map m in map.Array)
+			{
+				text += Indentation(indentation)+Trim(Statement(m, indentation))+NewLine();
+			}
+			return text;
+		}
+		private static string Trim(string text)
+		{
+			return text.TrimEnd('\n', '\r');
+		}
+		private static string NewLine()
+		{
+			return Environment.NewLine;
+		}
+		private static string EmptyMap()
+		{
+			return "0";
+		}
+		private static string Call(Map map, int indentation)
+		{
+			string text = "-" + NewLine();
+			indentation++;
+			foreach (Map m in map.Array)
+			{
+				text += Indentation(indentation)+
+					Trim(Expression(m, indentation)) + NewLine();
+			}
+			return text;
+		}
+		private static string Select(Map map, int indentation)
+		{
+			string text = "."+NewLine();
+			indentation++;
+			foreach (Map sub in map.Array)
+			{
+				text += Indentation(indentation) + 
+					Trim(Expression(sub, indentation))+NewLine();
+			}
+			return text;
+		}
+		private static string Search(Map map, int indentation)
+		{
+			return "!" + Expression(map, indentation);
+		}
+		private static string Key(int indentation, KeyValuePair<Map, Map> entry)
+		{
+			if (entry.Key.Count != 0 && entry.Key.IsString)
+			{
+				string key=entry.Key.GetString();
+				if (key.IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0)
+				{
+					return entry.Key.GetString();
+				}
+			}
+			return Serialize(entry.Key, indentation + 1);
+		}
+
+		private static string String(Map map, int indentation)
+		{
+			string text = map.GetString();
+			if (text.Contains("\"") || text.Contains("\n"))
+			{
+				string result = "\"" + Environment.NewLine;
+				foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
+				{
+					result += Indentation(indentation) + "\t" + line + Environment.NewLine;
+				}
+				return result.Trim('\n', '\r') + Environment.NewLine + Indentation(indentation) + "\"";
+			}
+			else
+			{
+				return "\"" + text + "\"";
+			}
+		}
+		private static string Indentation(int indentation)
+		{
+			if (indentation < 0)
+			{
+			}
+			return "".PadLeft(indentation, '\t');
 		}
 	}
+	//public class Serialize
+	//{
+	//    public static string ValueFunction(Map map)
+	//    {
+	//        return DoSerialize(map);
+	//    }
+	//    public static string DoSerialize(Map map)
+	//    {
+	//        return DoSerialize(map, -1).Trim();
+	//    }
+	//    private static string GetIndentation(int indentation)
+	//    {
+	//        return "".PadLeft(indentation, '\t');
+	//    }
+	//    private static string DoSerialize(Map map, int indentation)
+	//    {
+	//        try
+	//        {
+	//            if (map.Strategy is Gac)
+	//            {
+	//                return "Gac";
+	//            }
+	//            if (!map.Strategy.IsNormal)
+	//            //if (map.Strategy is DotNetMap)
+	//            {
+	//                return map.Strategy.ToString();
+	//            }
+	//            else if (map.Count == 0)
+	//            {
+	//                if (indentation < 0)
+	//                {
+	//                    return "";
+	//                }
+	//                else
+	//                {
+	//                    return "0";
+	//                }
+	//            }
+	//            else if (map.IsNumber)
+	//            {
+	//                return map.GetNumber().ToString();
+	//            }
+	//            else if (map.IsString)
+	//            {
+
+	//                string text = map.GetString();
+	//                if (text.Contains("\"") || text.Contains("\n"))
+	//                {
+	//                    string result = "\"" + Environment.NewLine;
+	//                    foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
+	//                    {
+	//                        result += GetIndentation(indentation) + "\t" + line + Environment.NewLine;
+	//                    }
+	//                    return result.Trim('\n', '\r') + Environment.NewLine + GetIndentation(indentation) + "\"";
+	//                }
+	//                else
+	//                {
+	//                    return "\"" + text + "\"";
+	//                }
+	//            }
+	//            else
+	//            {
+	//                string text;
+	//                if (indentation < 0)
+	//                {
+	//                    text = "";
+	//                }
+	//                else
+	//                {
+	//                    text = "," + Environment.NewLine;
+	//                }
+	//                foreach (KeyValuePair<Map, Map> entry in map)
+	//                {
+	//                    text +=
+	//                        GetIndentation(indentation + 1);
+	//                    string key;
+	//                    if (entry.Key.Count != 0 && entry.Key.IsString && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0)
+	//                    {
+	//                        key = entry.Key.GetString();
+	//                    }
+	//                    else
+	//                    {
+	//                        key = "<" + DoSerialize(entry.Key, indentation + 1);
+	//                    }
+	//                    text += key +
+	//                        "=" +
+	//                        DoSerialize(entry.Value, indentation + 1) + Environment.NewLine;
+	//                    text = text.TrimEnd('\r', '\n') + Environment.NewLine;
+	//                }
+	//                return text;
+	//            }
+	//        }
+	//        catch (Exception e)
+	//        {
+	//            int asdf = 0;
+	//            throw e;
+	//        }
+
+	//    }
+	//}
 
 	namespace Test
 	{
@@ -4798,7 +5066,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 1;
-					return Meta.Serialize.ValueFunction(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
 			public class Basic : Test
@@ -5129,14 +5397,14 @@ namespace Meta
 	public class KeyDoesNotExist : ExecutionException
 	{
 		public KeyDoesNotExist(Map key, Extent extent, Map map)
-			: base("Key does not exist: " + Serialize.ValueFunction(key) + " in " + Serialize.ValueFunction(map), extent, map)
+			: base("Key does not exist: " + Serialization.Serialize(key) + " in " + Serialization.Serialize(map), extent, map)
 		{
 		}
 	}
 	public class KeyNotFound : ExecutionException
 	{
 		public KeyNotFound(Map key, Extent extent, Map map)
-			: base("Key not found: " + Serialize.ValueFunction(key), extent, map)
+			: base("Key not found: " + Serialization.Serialize(key), extent, map)
 		{
 		}
 	}
@@ -5302,8 +5570,8 @@ namespace Meta
 				Map value = entry.Value;
 				if (entry.Key.Strategy is ObjectMap)
 				{
-					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
-					type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+					//DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+					//type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
 				}
 				else
 				{
@@ -5509,7 +5777,7 @@ namespace Meta
 			}
 			else
 			{
-				return Meta.Serialize.ValueFunction(this);
+				return Meta.Serialization.Serialize(this);
 			}
 		}
 		private object expression;
@@ -5587,7 +5855,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Cannot compile map " + Meta.Serialize.ValueFunction(this));
+				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
 			}
 		}
 		public Map Scope { get { return scope; } set { scope = value; } }
@@ -5615,7 +5883,7 @@ namespace Meta
 			}
 			else
 			{
-				throw new ApplicationException("Map is not a function: " + Meta.Serialize.ValueFunction(this));
+				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
 			}
 		}
 		public Map Copy()

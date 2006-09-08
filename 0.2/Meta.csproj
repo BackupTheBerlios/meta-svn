@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
-    <None Include="Copy of metaEdit.meta" />
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />

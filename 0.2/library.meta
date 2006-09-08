@@ -217,8 +217,8 @@
 					Parser
 					Parse_String
 				toString=.
-					Serialize
-					ValueFunction_Map
+					Serialization
+					Serialize_Map
 				writeLine=,
 					arg|-
 						.
