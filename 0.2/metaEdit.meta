@@ -95,14 +95,18 @@
 			getMap=,
 				|0
 	textBox=,
-		|,
+		init|,
 			&=-
 				TextBox
-			AcceptsReturn=1
-			GotFocus=,
-				|,
-					|-
-						SelectAll
+				-
+					merge
+					,
+						AcceptsReturn=1
+						GotFocus=,
+							|,
+								|-
+									SelectAll
+					init
 	horizontal=.
 		Orientation
 		Horizontal
