@@ -876,16 +876,16 @@ namespace Meta
 			//map[memberTest] = "hello";
 			//Map whatever=map[memberTest];
 
-			try
-			{
-				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.ToString());
-				Console.ReadLine();
-			}
-			return;
+			//try
+			//{
+			//    MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
+			//}
+			//catch (Exception e)
+			//{
+			//    Console.WriteLine(e.ToString());
+			//    Console.ReadLine();
+			//}
+			//return;
 			if (args.Length != 0)
 			{
 				//try
@@ -986,7 +986,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -4722,7 +4722,7 @@ namespace Meta
 						string result = "\"" + Environment.NewLine;
 						foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
 						{
-							result += GetIndentation(indentation + 1) + "\t" + line + Environment.NewLine;
+							result += GetIndentation(indentation) + "\t" + line + Environment.NewLine;
 						}
 						return result.Trim('\n', '\r') + Environment.NewLine + GetIndentation(indentation) + "\"";
 					}
@@ -4813,6 +4813,7 @@ namespace Meta
 				public override object GetResult(out int level)
 				{
 					level = 2;
+					//return Run(Path.Combine(Interpreter.InstallationPath, @"Test\Serialization\result.txt"), new Map(1, "first argument", 2, "second argument"));
 					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
 				}
 			}
@@ -5304,8 +5305,8 @@ namespace Meta
 				Map value = entry.Value;
 				if (entry.Key.Strategy is ObjectMap)
 				{
-					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
-					type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+					//DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+					//type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
 				}
 				else
 				{
