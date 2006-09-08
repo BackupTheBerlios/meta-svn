@@ -1,6 +1,6 @@
 |,
 	&=-
-		sum
+		mergeAll
 		+
 			System
 			PresentationFramework
@@ -8,7 +8,6 @@
 			windowsbase
 			mscorlib
 			Meta
-		merge
 	listProgramView=,
 		create=,
 			|-
@@ -335,7 +334,7 @@
 									Remove_UIElement
 								this
 					-
-						sum
+						mergeAll
 						-
 							foreach
 							,
@@ -414,7 +413,6 @@
 														Children
 														0
 														Focus
-						merge
 			KeyDown=-
 				keyMapping
 				keys
