@@ -746,9 +746,16 @@ namespace Meta
 		public override void AssignImplementation(ref Map context, Map value)
 		{
 			Map val = value.Copy();
-			val.Scope = context.Scope;
-			context = val;
+			//val.Scope = context.Scope;
+			context.Strategy = val.Strategy;
+			//context = val;
 		}
+		//public override void AssignImplementation(ref Map context, Map value)
+		//{
+		//    Map val = value.Copy();
+		//    val.Scope = context.Scope;
+		//    context = val;
+		//}
 		public CurrentStatement(Map code, Program program)
 			: base(program, code)
 		{

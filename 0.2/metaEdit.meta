@@ -49,7 +49,8 @@
 						foreach
 						-
 							enumerableToArray
-							Children
+							-
+								get_Children
 						,
 							key|,
 								value|,
@@ -124,9 +125,9 @@
 						.
 							Brushes
 							get_Fuchsia
-					getMap=,
-						|-
-							get_Text
+			getMap=,
+				|-
+					get_Text
 	numberView=,
 		number|,
 			&=-
@@ -139,11 +140,6 @@
 					Text=-
 						integerToString
 						number
-					getMap=,
-						|-
-							stringToInteger
-							-
-								get_Text
 					PreviewTextInput=,
 						|,
 							e|-
@@ -168,6 +164,11 @@
 													!e
 													set_Handled_Boolean
 												1
+			getMap=,
+				|-
+					stringToInteger
+					-
+						get_Text
 	multi=,
 		init|,
 			&=-
@@ -200,6 +201,13 @@
 											panel
 											Focus
 					init
+			child=,
+				index|-
+					.
+						-
+							get_Children
+						get_Item_Int32
+					index
 	entry=,
 		create=,
 			|-
@@ -254,14 +262,16 @@
 				getKey=,
 					|-
 						.
-							Children
-							0
+							-
+								child
+								0
 							getMap
 				getValue=,
 					|-
 						.
-							Children
-							1
+							-
+								child
+								1
 							getMap
 	copied=0
 	view=,
@@ -292,8 +302,9 @@
 			getMap=,
 				|-
 					.
-						Children
-						0
+						-
+							child
+							0
 						getMap
 			setView=,
 				view|,
@@ -418,8 +429,9 @@
 														0
 												-
 													.
-														Children
-														0
+														-
+															child
+															0
 														Focus
 			KeyDown=-
 				keyMapping
@@ -430,10 +442,13 @@
 				e|-
 					callIf
 					keys
-					.
-						e
-						KeyboardDevice
-						Modifiers
+					-
+						.
+							-
+								.
+									e
+									get_KeyboardDevice
+							get_Modifiers
 					,
 						functions|+
 							-
@@ -442,21 +457,24 @@
 							-
 								callIf
 								functions
-								.
-									e
-									SystemKey
+								-
+									.
+										e
+										get_SystemKey
 								,
 									func|,
-										asdf=-
+										-
 											print
-											.
-												e
-												SystemKey
-										asdf=-
+											-
+												.
+													e
+													SystemKey
+										-
 											func
-										.
-											!e
-											Handled=1
+										-
+											e
+											set_Handled_Boolean.
+											1
 	control=,
 		init|,
 			&=-
@@ -495,13 +513,15 @@
 					|,
 						parameter=-
 							.
-								Children
-								0
+								-
+									child
+									0
 								getMap
 						expression=-
 							.
-								Children
-								1
+								-
+									child
+									1
 								getMap
 	statementBase=,
 		children|,
@@ -604,14 +624,16 @@
 					key=.
 						-
 							.
-								Children
-								0
+								-
+									child
+									0
 								getMap
 						select
 					value=-
 						.
-							Children
-							1
+							-
+								child
+								1
 							getMap
 			Background=-
 				.
@@ -657,13 +679,15 @@
 						literal=,
 							parameter=-
 								.
-									Children
-									0
+									-
+										child
+										0
 									getMap
 							expression=-
 								.
-									Children
-									1
+									-
+										child
+										1
 									getMap
 			Background=-
 				.
@@ -723,7 +747,8 @@
 						apply
 						-
 							enumerableToArray
-							Children
+							-
+								get_Children
 						,
 							entry|-
 								.
@@ -771,13 +796,15 @@
 						apply
 						-
 							enumerableToArray
-							Children
+							-
+								get_Children
 						,
 							entry|,
-								<-
+								-
 									.
 										entry
-										getKey=-
+										getKey
+								=-
 									.
 										entry
 										getValue
@@ -821,7 +848,8 @@
 						apply
 						-
 							enumerableToArray
-							Children
+							-
+								get_Children
 						,
 							child|-
 								.
@@ -838,7 +866,8 @@
 					=,
 						|-
 							.
-								Children
+								-
+									get_Children
 								Add_UIElement
 							-
 								view
@@ -871,8 +900,9 @@
 				|,
 					lookup=-
 						.
-							Children
-							0
+							-
+								child
+								0
 							getMap
 	searchView=,
 		create=,
@@ -899,8 +929,9 @@
 				|,
 					search=-
 						.
-							Children
-							0
+							-
+								child
+								0
 							getMap
 	literalView=,
 		create=,
@@ -926,8 +957,9 @@
 				|,
 					literal=-
 						.
-							Children
-							0
+							-
+								child
+								0
 							getMap
 	currentView=,
 		create=,
@@ -971,7 +1003,8 @@
 					=,
 						|-
 							.
-								Children
+								-
+									get_Children
 								Add_UIElement
 							-
 								view
@@ -1004,7 +1037,8 @@
 						apply
 						-
 							enumerableToArray
-							Children
+							-
+								get_Children
 						,
 							child|-
 								.
@@ -1115,10 +1149,10 @@
 	currentData=,
 		|-
 			.
-				panel
-				Children
-				1
-				Content
+				-
+					.
+						scrollViewer
+						get_Content
 				getMap
 	commands=+
 		,
@@ -1176,11 +1210,13 @@
 							,
 								|-
 									.
-										Binary
-										Serialize_Map_String
-									-
-										currentData
+										File
+										WriteAllText_String_String
 									path
+									-
+										toString
+										-
+											currentData
 				,
 					header="Exit"
 					click=,
