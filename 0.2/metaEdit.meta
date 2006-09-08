@@ -24,18 +24,18 @@
 		source|,
 			&=-
 				control
-				-
-					apply
-					.
-						source
-						program
-					,
-						statement|-
-							parseView
-							.
-								statement
-								value
 				,
+					Children=-
+						apply
+						.
+							source
+							program
+						,
+							statement|-
+								parseView
+								.
+									statement
+									value
 					Background=-
 						.
 							Brushes
@@ -165,39 +165,37 @@
 													set_Handled_Boolean
 												1
 	multi=,
-		views|,
-			init|,
-				&=-
-					StackPanel
-					-
-						merge
-						,
-							Margin=-
-								Thickness_Double
-								2
-							Orientation=.
-								PresentationFramework
-								Orientation
-								Vertical
-							.
-								FrameworkElement
-								HorizontalAlignmentProperty
-							=.
-								PresentationFramework
-								HorizontalAlignment
-								Left
-							Children=views
-							MouseLeftButtonDown=,
-								|,
-									e|,
+		init|,
+			&=-
+				StackPanel
+				-
+					merge
+					,
+						Margin=-
+							Thickness_Double
+							2
+						Orientation=.
+							PresentationFramework
+							Orientation
+							Vertical
+						.
+							FrameworkElement
+							HorizontalAlignmentProperty
+						=.
+							PresentationFramework
+							HorizontalAlignment
+							Left
+						MouseLeftButtonDown=,
+							|,
+								e|,
+									.
+										!e
+										Handled=1
+									asdf=-
 										.
-											!e
-											Handled=1
-										asdf=-
-											.
-												panel
-												Focus
-						init
+											panel
+											Focus
+					init
 	entry=,
 		create=,
 			|-
@@ -214,10 +212,10 @@
 			value|,
 				&=-
 					control
-					+
-						key
-						value
 					,
+						Children=+
+							key
+							value
 						Orientation=.
 							PresentationFramework
 							Orientation
@@ -266,9 +264,9 @@
 		content|,
 			&=-
 				multi
-				+
-					content
 				,
+					Children=+
+						content
 					Margin=-
 						Thickness_Double
 						2
@@ -456,35 +454,33 @@
 											!e
 											Handled=1
 	control=,
-		children|,
-			init|,
-				&=-
-					multi
-					children
-					-
-						merge
-						,
-							Focusable=1
-						init
+		init|,
+			&=-
+				multi
+				-
+					merge
+					,
+						Focusable=1
+					init
 	functionView=,
 		key|,
 			value|,
 				&=-
 					control
-					+
-						-
-							view
+					,
+						Children=+
 							-
-								stringView
+								view
+								-
+									stringView
+									.
+										value
+										parameter
+							-
+								parseView
 								.
 									value
-									parameter
-						-
-							parseView
-							.
-								value
-								expression
-					,
+									expression
 						Background=-
 							.
 								Brushes
@@ -564,8 +560,8 @@
 										create
 			&=-
 				control
-				children
 				,
+					Children=children
 					KeyDown=-
 						keyMapping
 						keys
@@ -685,38 +681,38 @@
 		source|,
 			&=-
 				control
-				-
-					apply
-					.
-						source
-						program
-					,
-						statement|-
-							view
-							-
-								ifElse
-								-
-									equal
-									.
-										statement
-										key
-									+
-										,
-											lookup=,
-												literal="function"
-								,
-									|-
-										functionStatementView
-										statement
-								,
-									|-
-										statementView
-										statement
 				,
 					Background=-
 						.
 							Brushes
 							get_Blue
+					Children=-
+						apply
+						.
+							source
+							program
+						,
+							statement|-
+								view
+								-
+									ifElse
+									-
+										equal
+										.
+											statement
+											key
+										+
+											,
+												lookup=,
+													literal="function"
+									,
+										|-
+											functionStatementView
+											statement
+									,
+										|-
+											statementView
+											statement
 			getMap=,
 				|,
 					program=-
@@ -738,32 +734,32 @@
 		entries|,
 			&=-
 				control
-				-
-					foreach
-					entries
-					,
-						key|,
-							value|-
-								ifElse
-								-
-									equal
-									key
-									"function"
-								,
-									|-
-										functionView
+				,
+					Children=-
+						foreach
+						entries
+						,
+							key|,
+								value|-
+									ifElse
+									-
+										equal
 										key
-										value
-								,
-									|-
-										entry
-										-
-											parseView
+										"function"
+									,
+										|-
+											functionView
 											key
-										-
-											parseView
 											value
-				0
+									,
+										|-
+											entry
+											-
+												parseView
+												key
+											-
+												parseView
+												value
 			getMap=,
 				|-
 					sum
@@ -798,16 +794,16 @@
 		source|,
 			&=-
 				control
-				-
-					apply
-					.
-						source
-						call
-					,
-						arg|-
-							parseView
-							arg
 				,
+					Children=-
+						apply
+						.
+							source
+							call
+						,
+							arg|-
+								parseView
+								arg
 					Background=-
 						.
 							Brushes
@@ -856,13 +852,13 @@
 		source|,
 			&=-
 				control
-				+
-					-
-						parseView
-						.
-							source
-							lookup
 				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								lookup
 					Background=-
 						.
 							Brushes
@@ -884,13 +880,13 @@
 		source|,
 			&=-
 				control
-				+
-					-
-						parseView
-						.
-							source
-							search
 				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								search
 					Background=-
 						.
 							Brushes
@@ -911,13 +907,13 @@
 		source|,
 			&=-
 				control
-				+
-					-
-						parseView
-						.
-							source
-							literal
 				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								literal
 					Background=-
 						.
 							Brushes
@@ -981,16 +977,16 @@
 										create
 			&=-
 				control
-				-
-					apply
-					.
-						source
-						select
-					,
-						arg|-
-							parseView
-							arg
 				,
+					Children=-
+						apply
+						.
+							source
+							select
+						,
+							arg|-
+								parseView
+								arg
 					KeyDown=-
 						keyMapping
 						keys
