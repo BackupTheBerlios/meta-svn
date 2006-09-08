@@ -210,6 +210,9 @@
 						-
 							toString
 							arg
+				parse=.
+					Parser
+					Parse_String
 				toString=.
 					Serialize
 					ValueFunction_Map

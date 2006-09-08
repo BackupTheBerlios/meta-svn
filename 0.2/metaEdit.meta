@@ -31,13 +31,14 @@
 						program
 					,
 						statement|-
-							parse
+							parseView
 							.
 								statement
 								value
-			Background=.
-				Brushes
-				Green
+			Background=-
+				.
+					Brushes
+					get_Green
 			getMap=,
 				|,
 					program=-
@@ -80,9 +81,10 @@
 		|,
 			&=-
 				textBox
-			Background=.
-				Brushes
-				Red
+			Background=-
+				.
+					Brushes
+					get_Red
 			PreviewTextInput=,
 				|,
 					e|,
@@ -111,20 +113,23 @@
 		text|,
 			&=-
 				textBox
-			Text=text
-			Background=-
-				.
-					Brushes
-					get_Fuchsia
-			getMap=,
-				|Text
+				,
+					Text=text
+					Background=-
+						.
+							Brushes
+							get_Fuchsia
+					getMap=,
+						|-
+							get_Text
 	numberView=,
 		number|,
 			&=-
 				textBox
-			Background=.
-				Brushes
-				LightYellow
+			Background=-
+				.
+					Brushes
+					get_LightYellow
 			Text=-
 				integerToString
 				number
@@ -150,11 +155,10 @@
 											IsDigit_Char
 										c
 								,
-									then=,
-										|,
-											.
-												!e
-												Handled=1
+									|,
+										.
+											!e
+											Handled=1
 	multi=,
 		views|,
 			&=-
@@ -312,7 +316,7 @@
 							|-
 								setView
 								-
-									parse
+									parseView
 									c
 						.
 							Key
@@ -469,7 +473,7 @@
 									value
 									parameter
 						-
-							parse
+							parseView
 							.
 								value
 								expression
@@ -487,9 +491,10 @@
 								Children
 								1
 								getMap
-				Background=.
-					Brushes
-					Azure
+				Background=-
+					.
+						Brushes
+						get_Azure
 	statementBase=,
 		children|,
 			&=-
@@ -571,13 +576,13 @@
 				statementBase
 				+
 					-
-						parse
+						parseView
 						,
 							select=.
 								source
 								key
 					-
-						parse
+						parseView
 						.
 							source
 							value
@@ -599,9 +604,10 @@
 							Children
 							1
 							getMap
-			Background=.
-				Brushes
-				Gray
+			Background=-
+				.
+					Brushes
+					get_Gray
 	functionStatementView=,
 		create=,
 			|-
@@ -626,7 +632,7 @@
 								literal
 								parameter
 					-
-						parse
+						parseView
 						.
 							source
 							value
@@ -650,9 +656,10 @@
 									Children
 									1
 									getMap
-			Background=.
-				Brushes
-				Azure
+			Background=-
+				.
+					Brushes
+					get_Azure
 	programView=,
 		create=,
 			|-
@@ -678,7 +685,7 @@
 						statement|-
 							view
 							-
-								if
+								ifElse
 								-
 									equal
 									.
@@ -689,17 +696,17 @@
 											lookup=,
 												literal="function"
 								,
-									then=,
-										|-
-											functionStatementView
-											statement
-									else=,
-										|-
-											statementView
-											statement
-			Background=.
-				Brushes
-				Blue
+									|-
+										functionStatementView
+										statement
+								,
+									|-
+										statementView
+										statement
+			Background=-
+				.
+					Brushes
+					get_Blue
 			getMap=,
 				|,
 					program=-
@@ -727,26 +734,25 @@
 					,
 						key|,
 							value|-
-								if
+								ifElse
 								-
 									equal
 									key
 									"function"
 								,
-									then=,
-										|-
-											functionView
+									|-
+										functionView
+										key
+										value
+								,
+									|-
+										entry
+										-
+											parseView
 											key
+										-
+											parseView
 											value
-									else=,
-										|-
-											entry
-											-
-												parse
-												key
-											-
-												parse
-												value
 			getMap=,
 				|-
 					sum
@@ -788,11 +794,12 @@
 						call
 					,
 						arg|-
-							parse
+							parseView
 							arg
-			Background=.
-				Brushes
-				BurlyWood
+			Background=-
+				.
+					Brushes
+					get_BurlyWood
 			getMap=,
 				|,
 					call=-
@@ -839,7 +846,7 @@
 				control
 				+
 					-
-						parse
+						parseView
 						.
 							source
 							lookup
@@ -850,9 +857,10 @@
 							Children
 							0
 							getMap
-			Background=.
-				Brushes
-				MistyRose
+			Background=-
+				.
+					Brushes
+					get_MistyRose
 	searchView=,
 		create=,
 			|-
@@ -865,7 +873,7 @@
 				control
 				+
 					-
-						parse
+						parseView
 						.
 							source
 							search
@@ -876,9 +884,10 @@
 							Children
 							0
 							getMap
-			Background=.
-				Brushes
-				DeepSkyBlue
+			Background=-
+				.
+					Brushes
+					get_DeepSkyBlue
 	literalView=,
 		create=,
 			|-
@@ -890,7 +899,7 @@
 				control
 				+
 					-
-						parse
+						parseView
 						.
 							source
 							literal
@@ -912,9 +921,10 @@
 		|,
 			&=-
 				textBox
-			Background=.
-				Brushes
-				White
+			Background=-
+				.
+					Brushes
+					get_White
 			PreviewTextInput=,
 				|,
 					e|,
@@ -943,7 +953,7 @@
 						select
 					,
 						arg|-
-							parse
+							parseView
 							arg
 			keys=,
 				.
@@ -979,10 +989,11 @@
 								.
 									child
 									getMap
-			Background=.
-				Brushes
-				Chocolate
-	parse=,
+			Background=-
+				.
+					Brushes
+					get_Chocolate
+	parseView=,
 		arg|-
 			view
 			-
@@ -1036,32 +1047,31 @@
 								arg
 								"program"
 							,
-								then=,
-									|-
-										sum
+								|-
+									sum
+									-
+										foreach
 										-
-											foreach
+											range
 											-
-												range
-												-
-													count
+												count
+												.
+													arg
+													program
+										,
+											key|,
+												value|-
+													equal
 													.
 														arg
 														program
-											,
-												key|,
-													value|-
-														equal
-														.
-															arg
-															program
-															<key
-															key
-														+
-															,
-																lookup=,
-																	literal=key
-										and
+														<key
+														key
+													+
+														,
+															lookup=,
+																literal=key
+									and
 					=listProgramView
 					,
 						|-
@@ -1081,11 +1091,9 @@
 				scrollViewer
 				set_Content_Object
 			-
-				parse
+				parseView
 				-
-					.
-						Binary
-						Deserialize_String
+					parse
 					path
 	currentData=,
 		|-
@@ -1144,22 +1152,21 @@
 					header="Save"
 					click=,
 						|-
-							if
+							ifElse
 							-
 								empty
 								path
 							,
-								then=,
-									|-
-										SaveAs
-								else=,
-									|-
-										.
-											Binary
-											Serialize_Map_String
-										-
-											currentData
-										path
+								|-
+									SaveAs
+							,
+								|-
+									.
+										Binary
+										Serialize_Map_String
+									-
+										currentData
+									path
 				,
 					header="Exit"
 					click=,
@@ -1228,16 +1235,19 @@
 		ScrollViewer
 		,
 			Content=-
-				parse
+				parseView
 				,
 					literal=" "
+	path="C:\asdf.meta"
+	-
+		load
+		path
 	panel=-
 		DockPanel
 		,
 			Children=+
 				menu
 				scrollViewer
-	path="C:\asdf.meta"
 	window=-
 		Window
 		,

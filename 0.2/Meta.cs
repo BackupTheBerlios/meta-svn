@@ -19,7 +19,6 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
 
-//using MathML.Rendering;
 using Meta;
 using Meta.Test;
 using System;
@@ -36,13 +35,10 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows;
-//using MathML;
 
 namespace Meta
 {
-
 	public delegate Map Evaluate(Map context);
-
 	public abstract class Storage : ILEmitter
 	{
 		private Type type;
@@ -876,16 +872,16 @@ namespace Meta
 			//map[memberTest] = "hello";
 			//Map whatever=map[memberTest];
 
-			//try
-			//{
-			//    MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
-			//}
-			//catch (Exception e)
-			//{
-			//    Console.WriteLine(e.ToString());
-			//    Console.ReadLine();
-			//}
-			//return;
+			try
+			{
+				MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"metaEdit.meta"), Map.Empty);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
+				Console.ReadLine();
+			}
+			return;
 			if (args.Length != 0)
 			{
 				//try
@@ -986,7 +982,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
