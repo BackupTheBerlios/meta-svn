@@ -1301,7 +1301,7 @@ namespace Meta
 	public class Method : MapStrategy
 	{
 		// use Equals instead of Equal
-		public override bool Equal(MapStrategy obj)
+		public override bool Equals(object obj)
 		{
 			Method method=obj as Method;
 			if (method != null)
@@ -1689,9 +1689,9 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override bool Equal(MapStrategy obj)
+		public override bool Equals(object obj)
 		{
-			return obj.Count == 0;
+			return ((MapStrategy)obj).Count == 0;
 		}
 		public override IEnumerable<Map> Keys
 		{
@@ -1745,16 +1745,21 @@ namespace Meta
 		{
 			return 0;
 		}
-		public override bool Equal(MapStrategy obj)
+		public override bool Equals(object obj)
 		{
-			if (obj.IsNumber && obj.GetNumber().Equals(number))
+			MapStrategy strategy = obj as MapStrategy;
+			if (strategy != null)
 			{
-				return true;
+				if (strategy.IsNumber && strategy.GetNumber().Equals(number))
+				{
+					return true;
+				}
+				else
+				{
+					return EqualDefault(strategy);
+				}
 			}
-			else
-			{
-				return EqualDefault(obj);
-			}
+			return false;
 		}
 		private Number number;
 		public NumberStrategy(Number number)
@@ -1856,7 +1861,7 @@ namespace Meta
 		{
 			this.text = text;
 		}
-		public override bool Equal(MapStrategy obj)
+		public override bool Equals(object obj)
 		{
 			if (obj is StringStrategy)
 			{
@@ -1864,7 +1869,7 @@ namespace Meta
 			}
 			else
 			{
-				return base.Equal(obj);
+				return base.Equals(obj);
 			}
 		}
 		public override void Set(Map key, Map val, Map map)
@@ -2195,9 +2200,9 @@ namespace Meta
 			MapStrategy clone = new CloneStrategy(this.original);
 			return new Map(clone);
 		}
-		public override bool Equal(MapStrategy obj)
+		public override bool Equals(object obj)
 		{
-			return obj.Equal(original);
+			return obj.Equals(original);
 		}
 		public override int GetHashCode()
 		{
@@ -2291,12 +2296,13 @@ namespace Meta
 		}
 		public override bool Equals(object obj)
 		{
-			return Equal((MapStrategy)obj);
-		}
-		public virtual bool Equal(MapStrategy obj)
-		{
 			return EqualDefault((MapStrategy)obj);
+			//return Equal((MapStrategy)obj);
 		}
+		//public virtual bool Equal(MapStrategy obj)
+		//{
+		//    return EqualDefault((MapStrategy)obj);
+		//}
 		//public virtual bool IsNormal
 		//{
 		//    get
@@ -5412,7 +5418,7 @@ namespace Meta
 			//{
 			//if (toCompare is MapStrategy)
 			//{
-				return strategy.Equal(((Map)toCompare).Strategy);
+				return strategy.Equals(((Map)toCompare).Strategy);
 			//}
 			//return false;
 			//}
