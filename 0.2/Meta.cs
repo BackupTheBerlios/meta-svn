@@ -5696,6 +5696,10 @@ namespace Meta
 			}
 		}
 		public Map() : this(EmptyStrategy.empty) { }
+		public Map(Map map)
+			: this(new ObjectMap(map))
+		{
+		}
 		public Map(object o) : this(new ObjectMap(o)) { }
 		public Map(string text) : this(new StringStrategy(text)) { }
 		public Map(Number number) : this(new NumberStrategy(number)) { }

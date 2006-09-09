@@ -21,10 +21,12 @@ namespace Edit
 
 		public Window2()
 		{
-			DockPanel p;
+			DockPanel p=null;
 			MenuItem m;
-			Label l=new Label();
+			//Label l=new Label();
 			TextBox t=new TextBox();
+			//ModifierKeys.Control
+			//Key.
 			//StackPanel o;
 			//o.KeyDown += new KeyEventHandler(o_KeyDown);
 			//t.FontFamily = new FontFamily("Courier New");

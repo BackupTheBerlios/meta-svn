@@ -39,7 +39,7 @@
 					KeyDown=-
 						keyMapping
 						keys
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Green
@@ -87,7 +87,7 @@
 									e
 									set_Handled_Boolean
 								1
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Red
@@ -105,7 +105,7 @@
 									e
 									set_Handled_Boolean
 								1
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Yellow
@@ -144,7 +144,7 @@
 				textBox
 				,
 					Text=text
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Fuchsia
@@ -181,7 +181,7 @@
 													e
 													set_Handled_Boolean
 												1
-			color=-
+			badge=-
 				.
 					Brushes
 					get_LightYellow
@@ -317,19 +317,48 @@
 			keys=,
 				.
 					ModifierKeys
-					None
+					Control
 				=,
+					.
+						Key
+						N
+					=,
+						|-
+							changeChild
+							-
+								.
+									literalNumberView
+									create
+					.
+						Key
+						F
+					=,
+						|-
+							changeChild
+							-
+								.
+									searchView
+									create
+					.
+						Key
+						T
+					=,
+						|-
+							changeChild
+							-
+								.
+									literalStringView
+									create
 					.
 						Key
 						OemComma
 					=,
 						|-
-							setChildren
-							+
-								-
-									.
-										programView
-										create
+							changeChild
+							-
+								.
+									programView
+									create
 			&=-
 				multi
 				,
@@ -343,24 +372,36 @@
 					KeyDown=-
 						keyMapping
 						keys
-					Children=+
+					Children=-
+						ifElse
 						-
-							Label
-							,
-								Width=100
-								Background=.
-									-
-										merge
-										,
-											color=-
-												.
-													Brushes
-													get_Black
-										-
-											print
-											content
-									color
-						content
+							contains
+							content
+							"badge"
+						,
+							|+
+								-
+									Label
+									,
+										Width=30
+										Background=.
+											-
+												merge
+												,
+													badge=-
+														.
+															Brushes
+															get_Black
+												content
+											badge
+								content
+						,
+							|+
+								-
+									Label
+									,
+										Width=0
+								content
 					Orientation=horizontal
 					.
 						FrameworkElement
@@ -376,6 +417,20 @@
 						PresentationFramework
 						VerticalAlignment
 						Top
+			changeChild=,
+				arg|,
+					children=-
+						get_Children
+					-
+						.
+							children
+							RemoveAt_Int32
+						1
+					-
+						.
+							children
+							Add_UIElement
+						arg
 			code=,
 				|-
 					.
@@ -529,15 +584,6 @@
 					,
 						functions|+
 							-
-								print
-								"in keyMapping"
-							-
-								print
-								-
-									.
-										e
-										get_SystemKey
-							-
 								callIf
 								functions
 								-
@@ -603,7 +649,7 @@
 								.
 									value
 									expression
-				color=-
+				badge=-
 					.
 						Brushes
 						get_Azure
@@ -689,7 +735,7 @@
 					KeyDown=-
 						keyMapping
 						keys
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Azure
@@ -739,7 +785,7 @@
 								children
 							1
 							code
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Gray
@@ -793,7 +839,7 @@
 										children
 									1
 									code
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Azure
@@ -841,7 +887,7 @@
 										|-
 											statementView
 											statement
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Blue
@@ -938,7 +984,7 @@
 					KeyDown=-
 						keyMapping
 						keys
-			color=-
+			badge=-
 				.
 					Brushes
 					get_BurlyWood
@@ -990,7 +1036,7 @@
 							.
 								source
 								lookup
-			color=-
+			badge=-
 				.
 					Brushes
 					get_MistyRose
@@ -1019,7 +1065,7 @@
 							.
 								source
 								search
-			color=-
+			badge=-
 				.
 					Brushes
 					get_DeepSkyBlue
@@ -1032,6 +1078,11 @@
 							1
 							code
 	literalNumberView=,
+		create=,
+			|-
+				literalNumberView
+				,
+					literal=1
 		source|,
 			&=-
 				textBox
@@ -1041,6 +1092,10 @@
 						.
 							source
 							literal
+					Background=-
+						.
+							Brushes
+							get_LightYellow
 					PreviewTextInput=,
 						|,
 							e|-
@@ -1071,10 +1126,6 @@
 						stringToNumber
 						-
 							get_Text
-	color=-
-		.
-			Brushes
-			get_LightYellow
 	literalStringView=,
 		create=,
 			|-
@@ -1088,10 +1139,10 @@
 					Text=.
 						source
 						literal
-			color=-
-				.
-					Brushes
-					get_Fuchsia
+					Background=-
+						.
+							Brushes
+							get_Fuchsia
 			code=,
 				|,
 					literal=-
@@ -1112,7 +1163,7 @@
 							.
 								source
 								literal
-			color=-
+			badge=-
 				.
 					Brushes
 					get_DarkViolet
@@ -1142,7 +1193,7 @@
 					code=,
 						|,
 							current=0
-			color=-
+			badge=-
 				.
 					Brushes
 					get_White
@@ -1191,7 +1242,7 @@
 					KeyDown=-
 						keyMapping
 						keys
-			color=-
+			badge=-
 				.
 					Brushes
 					get_Chocolate
