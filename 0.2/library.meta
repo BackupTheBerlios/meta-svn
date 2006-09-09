@@ -208,11 +208,13 @@
 										|b
 								<a
 				print=,
-					arg|-
-						writeLine
+					arg|,
 						-
-							toString
-							arg
+							writeLine
+							-
+								toString
+								arg
+						&=arg
 				parse=.
 					Parser
 					Parse_String
@@ -220,13 +222,15 @@
 					Serialization
 					Serialize_Map
 				writeLine=,
-					arg|-
-						.
-							/
-							mscorlib
-							Console
-							WriteLine_String
-						arg
+					arg|,
+						-
+							.
+								/
+								mscorlib
+								Console
+								WriteLine_String
+							arg
+						&=arg
 				readLine=,
 					arg|-
 						.

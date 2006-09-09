@@ -23,8 +23,10 @@ namespace Edit
 		{
 			DockPanel p;
 			MenuItem m;
+			Label l=new Label();
 			TextBox t=new TextBox();
-			StackPanel o;
+			//StackPanel o;
+			//o.KeyDown += new KeyEventHandler(o_KeyDown);
 			//t.FontFamily = new FontFamily("Courier New");
 			//t.FontSize=10
 			//t.BorderThickness=new Thickness(
@@ -39,6 +41,11 @@ namespace Edit
 			//Dock.Top
 			InitializeComponent();
 		}
+
+		//void o_KeyDown(object sender, KeyEventArgs e)
+		//{
+		//    e.Key
+		//}
 
 	}
 }

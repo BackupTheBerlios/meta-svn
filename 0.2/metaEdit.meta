@@ -3,11 +3,11 @@
 		mergeAll
 		+
 			System
-			PresentationFramework
 			PresentationCore
 			windowsbase
 			mscorlib
 			Meta
+			PresentationFramework
 	listProgramView=,
 		create=,
 			|-
@@ -36,13 +36,13 @@
 								.
 									statement
 									value
-					Background=-
-						.
-							Brushes
-							get_Green
 					KeyDown=-
 						keyMapping
 						keys
+			color=-
+				.
+					Brushes
+					get_Green
 			code=,
 				|,
 					program=-
@@ -79,36 +79,39 @@
 		|,
 			&=-
 				textBox
-			Background=-
+				,
+					PreviewTextInput=,
+						|,
+							e|-
+								.
+									e
+									set_Handled_Boolean
+								1
+			color=-
 				.
 					Brushes
 					get_Red
-			PreviewTextInput=,
-				|,
-					e|-
-						.
-							e
-							set_Handled_Boolean
-						1
 			code=,
 				|0
 	literalEmptyView=,
 		|,
 			&=-
 				textBox
-			Background=-
+				,
+					PreviewTextInput=,
+						|,
+							e|-
+								.
+									e
+									set_Handled_Boolean
+								1
+			color=-
 				.
 					Brushes
 					get_Yellow
-			PreviewTextInput=,
-				|,
-					e|-
-						.
-							e
-							set_Handled_Boolean
-						1
 			code=,
-				|0
+				|,
+					literal=0
 	textBox=,
 		init|,
 			&=-
@@ -141,22 +144,16 @@
 				textBox
 				,
 					Text=text
-					Background=-
-						.
-							Brushes
-							get_Fuchsia
-			code=,
-				|-
-					get_Text
+			color=-
+				.
+					Brushes
+					get_Fuchsia
+			code=get_Text
 	numberView=,
 		number|,
 			&=-
 				textBox
 				,
-					Background=-
-						.
-							Brushes
-							get_LightYellow
 					Text=-
 						integerToString
 						number
@@ -184,6 +181,10 @@
 													e
 													set_Handled_Boolean
 												1
+			color=-
+				.
+					Brushes
+					get_LightYellow
 			code=,
 				|-
 					stringToNumber
@@ -226,6 +227,20 @@
 											panel
 											Focus
 					init
+			setChildren=,
+				value|,
+					children=-
+						get_Children
+					-
+						.
+							children
+							Clear
+					-
+						apply
+						value
+						.
+							children
+							Add_UIElement
 			children=,
 				|-
 					enumerableToArray
@@ -299,17 +314,52 @@
 	copied=0
 	view=,
 		content|,
+			keys=,
+				.
+					ModifierKeys
+					None
+				=,
+					.
+						Key
+						OemComma
+					=,
+						|-
+							setChildren
+							+
+								-
+									.
+										programView
+										create
 			&=-
 				multi
 				,
 					Focusable=1
 					Margin=-
 						Thickness_Double_Double_Double_Double
-						10
 						0
 						0
 						0
+						0
+					KeyDown=-
+						keyMapping
+						keys
 					Children=+
+						-
+							Label
+							,
+								Width=100
+								Background=.
+									-
+										merge
+										,
+											color=-
+												.
+													Brushes
+													get_Black
+										-
+											print
+											content
+									color
 						content
 					Orientation=horizontal
 					.
@@ -331,7 +381,7 @@
 					.
 						-
 							children
-						1
+						2
 						code
 			setView=,
 				view|,
@@ -482,6 +532,12 @@
 								print
 								"in keyMapping"
 							-
+								print
+								-
+									.
+										e
+										get_SystemKey
+							-
 								callIf
 								functions
 								-
@@ -491,16 +547,33 @@
 								,
 									func|,
 										-
+											func
+										-
+											.
+												e
+												set_Handled_Boolean
+											1
+							-
+								callIf
+								functions
+								-
+									.
+										e
+										get_Key
+								,
+									func|,
+										-
 											print
 											-
 												.
 													e
-													SystemKey
+													get_Key
 										-
 											func
 										-
-											e
-											set_Handled_Boolean.
+											.
+												e
+												set_Handled_Boolean
 											1
 	control=,
 		init|,
@@ -530,10 +603,10 @@
 								.
 									value
 									expression
-						Background=-
-							.
-								Brushes
-								get_Azure
+				color=-
+					.
+						Brushes
+						get_Azure
 				key=,
 					|"function"
 				value=,
@@ -613,13 +686,13 @@
 				control
 				,
 					Children=children
-					Background=-
-						.
-							Brushes
-							get_Azure
 					KeyDown=-
 						keyMapping
 						keys
+			color=-
+				.
+					Brushes
+					get_Azure
 	statementView=,
 		create=,
 			|-
@@ -666,7 +739,7 @@
 								children
 							1
 							code
-			Background=-
+			color=-
 				.
 					Brushes
 					get_Gray
@@ -720,7 +793,7 @@
 										children
 									1
 									code
-			Background=-
+			color=-
 				.
 					Brushes
 					get_Azure
@@ -741,10 +814,6 @@
 			&=-
 				control
 				,
-					Background=-
-						.
-							Brushes
-							get_Blue
 					Children=-
 						apply
 						.
@@ -772,6 +841,10 @@
 										|-
 											statementView
 											statement
+			color=-
+				.
+					Brushes
+					get_Blue
 			code=,
 				|,
 					program=-
@@ -862,13 +935,13 @@
 							arg|-
 								parseView
 								arg
-					Background=-
-						.
-							Brushes
-							get_BurlyWood
 					KeyDown=-
 						keyMapping
 						keys
+			color=-
+				.
+					Brushes
+					get_BurlyWood
 			code=,
 				|,
 					call=-
@@ -917,10 +990,10 @@
 							.
 								source
 								lookup
-					Background=-
-						.
-							Brushes
-							get_MistyRose
+			color=-
+				.
+					Brushes
+					get_MistyRose
 			code=,
 				|,
 					lookup=-
@@ -946,10 +1019,10 @@
 							.
 								source
 								search
-					Background=-
-						.
-							Brushes
-							get_DeepSkyBlue
+			color=-
+				.
+					Brushes
+					get_DeepSkyBlue
 			code=,
 				|,
 					search=-
@@ -963,10 +1036,6 @@
 			&=-
 				textBox
 				,
-					Background=-
-						.
-							Brushes
-							get_LightYellow
 					Text=-
 						integerToString
 						.
@@ -1002,6 +1071,10 @@
 						stringToNumber
 						-
 							get_Text
+	color=-
+		.
+			Brushes
+			get_LightYellow
 	literalStringView=,
 		create=,
 			|-
@@ -1015,10 +1088,10 @@
 					Text=.
 						source
 						literal
-					Background=-
-						.
-							Brushes
-							get_Fuchsia
+			color=-
+				.
+					Brushes
+					get_Fuchsia
 			code=,
 				|,
 					literal=-
@@ -1039,10 +1112,10 @@
 							.
 								source
 								literal
-					Background=-
-						.
-							Brushes
-							get_DarkViolet
+			color=-
+				.
+					Brushes
+					get_DarkViolet
 			code=,
 				|,
 					literal=-
@@ -1059,10 +1132,6 @@
 			&=-
 				textBox
 				,
-					Background=-
-						.
-							Brushes
-							get_White
 					PreviewTextInput=,
 						|,
 							e|-
@@ -1073,6 +1142,10 @@
 					code=,
 						|,
 							current=0
+			color=-
+				.
+					Brushes
+					get_White
 	selectView=,
 		create=,
 			|-
@@ -1118,10 +1191,10 @@
 					KeyDown=-
 						keyMapping
 						keys
-					Background=-
-						.
-							Brushes
-							get_Chocolate
+			color=-
+				.
+					Brushes
+					get_Chocolate
 			code=,
 				|,
 					select=-
@@ -1357,22 +1430,26 @@
 								MenuItem
 								,
 									Header="Open"
-									Click=open
+									Click=,
+										|open
 							-
 								MenuItem
 								,
 									Header="SaveAs"
-									Click=saveAs
+									Click=,
+										|saveAs
 							-
 								MenuItem
 								,
 									Header="Save"
-									Click=save
+									Click=,
+										|save
 							-
 								MenuItem
 								,
 									Header="Exit"
-									Click=close
+									Click=,
+										|close
 				-
 					MenuItem
 					,
@@ -1382,7 +1459,8 @@
 								MenuItem
 								,
 									Header="Run"
-									Click=run
+									Click=,
+										|run
 	scrollViewer=-
 		ScrollViewer
 	path="C:\asdf.meta"

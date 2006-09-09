@@ -1399,10 +1399,10 @@ namespace Meta
 			this.method = method;
 			this.obj = obj;
 			this.type = type;
-			if (method != null)
+			if (method == null)
 			{
-				this.parameters = method.GetParameters();
 			}
+			this.parameters = method.GetParameters();
 		}
 		public override bool IsString
 		{
@@ -1598,7 +1598,12 @@ namespace Meta
 			{
 				if (constructor == null)
 				{
-					constructor = new Map(new Method(Type.GetConstructor(new Type[] { }), Object, Type));
+					ConstructorInfo method=Type.GetConstructor(new Type[] { });
+					if(method==null)
+					{
+						throw new Exception("Default constructor for "+Type+" not found.");
+					}
+					constructor = new Map(new Method(method, Object, Type));
 				}
 				return constructor;
 			}
@@ -2851,7 +2856,17 @@ namespace Meta
 		{
 			get
 			{
-				return Members.Keys;
+				foreach (Map key in Members.Keys)
+				{
+					yield return key;
+				}
+				if (global.ContainsKey(GlobalKey))
+				{
+					foreach (Map key in global[GlobalKey].Keys)
+					{
+						yield return key;
+					}
+				}
 			}
 		}
 		public override bool IsString
