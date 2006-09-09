@@ -52,10 +52,8 @@
 						,
 							key|,
 								value|,
-									key=+
-										,
-											lookup=,
-												literal=key
+									key=,
+										literal=key
 									value=-
 										.
 											value
@@ -87,10 +85,28 @@
 					get_Red
 			PreviewTextInput=,
 				|,
-					e|,
+					e|-
 						.
-							!e
-							Handled=1
+							e
+							set_Handled_Boolean
+						1
+			code=,
+				|0
+	literalEmptyView=,
+		|,
+			&=-
+				textBox
+			Background=-
+				.
+					Brushes
+					get_Yellow
+			PreviewTextInput=,
+				|,
+					e|-
+						.
+							e
+							set_Handled_Boolean
+						1
 			code=,
 				|0
 	textBox=,
@@ -165,7 +181,7 @@
 										,
 											|-
 												.
-													!e
+													e
 													set_Handled_Boolean
 												1
 			code=,
@@ -333,7 +349,7 @@
 							B
 						=,
 							|,
-								!copied=-
+								copied:-
 									code
 						.
 							Key
@@ -977,7 +993,7 @@
 										,
 											|-
 												.
-													!e
+													e
 													set_Handled_Boolean
 												1
 			code=,
@@ -1254,94 +1270,74 @@
 						scrollViewer
 						get_Content
 				code
-	commands=+
-		,
-			header="File"
-			items=+
-				,
-					header="Open"
-					click=,
-						|-
-							.
-								-
-									OpenFileDialog
-									,
-										Filter="*.meta (Meta files)|*.meta"
-										FileOk=,
-											dialog|,
-												|,
-													!path=.
-														dialog
-														FileName
-													-
-														load
-								ShowDialog
-				,
-					header="SaveAs"
-					click=,
-						|-
-							.
-								-
-									SaveFileDialog
-									,
-										Filter="*.meta (Meta files)|*.meta"
-										DefaultExt=".meta"
-										AddExtension=1
-										FileOk=,
-											dialog|,
-												|,
-													!path=.
-														dialog
-														FileName
-													-
-														Save
-								ShowDialog
-				,
-					header="Save"
-					click=,
-						|-
-							ifElse
-							-
-								empty
-								path
-							,
-								|-
-									SaveAs
-							,
-								|-
-									save
-				,
-					header="Exit"
-					click=,
-						|-
-							.
-								window
-								Close
-		,
-			header="Debug"
-			items=+
-				,
-					header="Run"
-					click=,
-						|,
-							-
-								save
-							-
-								.
-									Process
-									Start_String_String
-								"C:\Meta\0.2\bin\Debug\Meta.exe"
-								path
-	save=,
+	saveAs=,
 		|-
 			.
-				File
-				WriteAllText_String_String
-			path
-			-
-				toString
 				-
-					currentData
+					SaveFileDialog
+					,
+						Filter="*.meta (Meta files)|*.meta"
+						DefaultExt=".meta"
+						AddExtension=1
+						FileOk=,
+							dialog|,
+								|,
+									path:-
+										.
+											dialog
+											get_FileName
+									-
+										Save
+				ShowDialog
+	save=,
+		|-
+			ifElse
+			-
+				empty
+				path
+			saveAs
+			,
+				|-
+					.
+						File
+						WriteAllText_String_String
+					path
+					-
+						toString
+						-
+							currentData
+	open=,
+		|-
+			.
+				-
+					OpenFileDialog
+					,
+						Filter="*.meta (Meta files)|*.meta"
+						FileOk=,
+							dialog|,
+								|,
+									path:-
+										.
+											dialog
+											get_FileName
+									-
+										load
+				ShowDialog
+	close=,
+		|-
+			.
+				window
+				Close
+	run=,
+		|,
+			-
+				save
+			-
+				.
+					Process
+					Start_String_String
+				"C:\Meta\0.2\bin\Debug\Meta.exe"
+				path
 	menu=-
 		Menu
 		,
@@ -1351,40 +1347,44 @@
 			=.
 				Dock
 				Top
-			Items=-
-				apply
-				commands
-				,
-					value|-
-						MenuItem
-						,
-							Header=.
-								value
-								header
-							Items=-
-								apply
-								.
-									value
-									items
+			Items=+
+				-
+					MenuItem
+					,
+						Header="File"
+						Items=+
+							-
+								MenuItem
 								,
-									value|-
-										.
-											MenuItem
-										,
-											Header=.
-												value
-												header
-											Click=,
-												sender|.
-													value
-													click
+									Header="Open"
+									Click=open
+							-
+								MenuItem
+								,
+									Header="SaveAs"
+									Click=saveAs
+							-
+								MenuItem
+								,
+									Header="Save"
+									Click=save
+							-
+								MenuItem
+								,
+									Header="Exit"
+									Click=close
+				-
+					MenuItem
+					,
+						Header="Debug"
+						Items=+
+							-
+								MenuItem
+								,
+									Header="Run"
+									Click=run
 	scrollViewer=-
 		ScrollViewer
-		,
-			Content=-
-				parseView
-				,
-					literal=" "
 	path="C:\asdf.meta"
 	-
 		load
@@ -1400,7 +1400,7 @@
 		,
 			Content=panel
 			Title="Meta Edit"
-	1=-
+	-
 		.
 			-
 				Application
