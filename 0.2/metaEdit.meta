@@ -367,7 +367,11 @@
 								|-
 									Label
 									,
+										VerticalAlignment=.
+											VerticalAlignment
+											Top
 										Width=10
+										Height=20
 										Background=.
 											-
 												merge
@@ -574,10 +578,9 @@
 				+
 					-
 						parseView
-						,
-							select=.
-								source
-								key
+						.
+							source
+							key
 					-
 						parseView
 						.
@@ -589,19 +592,17 @@
 				Horizontal
 			code=,
 				|,
-					key=.
-						-
-							.
-								-
-									children
-								1
-								code
-						select
-					value=-
+					key=-
 						.
 							-
 								children
 							1
+							code
+					value=-
+						.
+							-
+								children
+							2
 							code
 			badge=-
 				.
@@ -688,6 +689,10 @@
 							expression=,
 								literal="hello"
 		source|,
+			-
+				print
+				.
+					source
 			&=-
 				statementBase
 				+
@@ -709,10 +714,8 @@
 							expression
 			code=,
 				|,
-					key=+
-						,
-							lookup=,
-								literal="function"
+					key=,
+						literal="function"
 					value=,
 						literal=,
 							parameter=-
@@ -725,7 +728,7 @@
 								.
 									-
 										children
-									1
+									2
 									code
 			badge=-
 				.
@@ -1289,8 +1292,10 @@
 			-
 				parseView
 				-
-					parse
-					path
+					print
+					-
+						parse
+						path
 	completeCode=,
 		|-
 			.
