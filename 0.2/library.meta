@@ -19,9 +19,15 @@
 								func
 								b
 								a
-				containedBy=-
-					flip
-					contains
+				containedBy=,
+					key|,
+						map|-
+							.
+								-
+									Map_Map
+									map
+								ContainsKey_Map
+							key
 				add=.
 					Number
 					op_Addition_Number_Number

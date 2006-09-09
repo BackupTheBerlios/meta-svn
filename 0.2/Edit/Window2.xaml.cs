@@ -25,6 +25,7 @@ namespace Edit
 			MenuItem m;
 			//Label l=new Label();
 			TextBox t=new TextBox();
+			//Key.oemplu
 			//ModifierKeys.Control
 			//Key.
 			//StackPanel o;

@@ -139,10 +139,22 @@ arg|,
 							1
 			keyTestMap=,
 				x="hello"
-			contains=-
+			containsTest=-
+				contains
+				keyTestMap
+				"x"
+			containedBy1=-
 				containedBy
 				"x"
 				keyTestMap
+			containedBy2=-
+				containedBy
+				"y"
+				keyTestMap
+			containedBy3=-
+				containedBy
+				"x"
+				0
 			keysTest=-
 				keys
 				,

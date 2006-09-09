@@ -321,6 +321,16 @@
 				=,
 					.
 						Key
+						OemPlus
+					=,
+						|-
+							changeChild
+							-
+								.
+									listProgramView
+									create
+					.
+						Key
 						N
 					=,
 						|-
@@ -372,36 +382,6 @@
 					KeyDown=-
 						keyMapping
 						keys
-					Children=-
-						ifElse
-						-
-							contains
-							content
-							"badge"
-						,
-							|+
-								-
-									Label
-									,
-										Width=30
-										Background=.
-											-
-												merge
-												,
-													badge=-
-														.
-															Brushes
-															get_Black
-												content
-											badge
-								content
-						,
-							|+
-								-
-									Label
-									,
-										Width=0
-								content
 					Orientation=horizontal
 					.
 						FrameworkElement
@@ -417,20 +397,57 @@
 						PresentationFramework
 						VerticalAlignment
 						Top
+			Clear=,
+				|-
+					.
+						-
+							get_Children
+						Clear
+			AddChild=,
+				child|-
+					.
+						-
+							get_Children
+						Add_UIElement
+					child
 			changeChild=,
-				arg|,
-					children=-
-						get_Children
+				content|,
 					-
-						.
-							children
-							RemoveAt_Int32
-						1
+						Clear
 					-
-						.
-							children
-							Add_UIElement
-						arg
+						AddChild
+						-
+							ifElse
+							-
+								contains
+								content
+								"badge"
+							,
+								|-
+									Label
+									,
+										Width=30
+										Background=.
+											-
+												merge
+												,
+													badge=-
+														.
+															Brushes
+															get_Black
+												content
+											badge
+							,
+								|-
+									Label
+									,
+										Width=0
+					-
+						AddChild
+						content
+			-
+				changeChild
+				content
 			code=,
 				|-
 					.
@@ -1269,15 +1286,15 @@
 					!"isNumber"=numberView
 					,
 						|-
-							contains
-							arg
+							containedBy
 							"call"
+							arg
 					=callView
 					,
 						|-
-							contains
-							arg
+							containedBy
 							"literal"
+							arg
 					=,
 						arg|-
 							ifElse
@@ -1312,23 +1329,17 @@
 							arg
 							"search"
 					=searchView
-					,
-						|-
-							contains
-							arg
-							"lookup"
+					-
+						containedBy
+						"lookup"
 					=lookupView
-					,
-						|-
-							contains
-							arg
-							"select"
+					-
+						containedBy
+						"select"
 					=selectView
-					,
-						|-
-							contains
-							arg
-							"current"
+					-
+						containedBy
+						"current"
 					=currentView
 					,
 						|-
@@ -1386,7 +1397,7 @@
 				-
 					parse
 					path
-	currentData=,
+	completeCode=,
 		|-
 			.
 				-
@@ -1429,7 +1440,7 @@
 					-
 						toString
 						-
-							currentData
+							completeCode
 	open=,
 		|-
 			.

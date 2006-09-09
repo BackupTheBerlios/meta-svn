@@ -177,9 +177,24 @@ Entry (KeyValuePair`2)
 						"hello"
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"contains"
+				"containsTest"
 			Value (Map):
 				1
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"containedBy1"
+			Value (Map):
+				1
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"containedBy2"
+			Value (Map):
+				0
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"containedBy3"
+			Value (Map):
+				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"keysTest"

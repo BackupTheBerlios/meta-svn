@@ -305,26 +305,26 @@ namespace Meta
 
 		}
 	}
-	public class OptimizedSearch : Expression
-	{
-		private int count;
-		private Map key;
-		public OptimizedSearch(int count, Map key)
-		{
-			this.isOptimized = true;
-			this.count = count;
-			this.key = key;
-		}
-		public override Map EvaluateImplementation(Map context)
-		{
-			Map selected = context;
-			for (int i = 0; i < count; i++)
-			{
-				selected = selected.Scope;
-			}
-			return selected[key].Copy();
-		}
-	}
+	//public class OptimizedSearch : Expression
+	//{
+	//    private int count;
+	//    private Map key;
+	//    public OptimizedSearch(int count, Map key)
+	//    {
+	//        this.isOptimized = true;
+	//        this.count = count;
+	//        this.key = key;
+	//    }
+	//    public override Map EvaluateImplementation(Map context)
+	//    {
+	//        Map selected = context;
+	//        for (int i = 0; i < count; i++)
+	//        {
+	//            selected = selected.Scope;
+	//        }
+	//        return selected[key].Copy();
+	//    }
+	//}
 	public class CustomExpression : Expression
 	{
 		Evaluate eval;
@@ -5445,7 +5445,6 @@ namespace Meta
 				if (Convert.ToBoolean(entry.Key.Call(map).GetNumber().GetInt32()))
 				{
 					return entry.Value.Call(map);
-					break;
 				}
 			}
 			return Map.Empty;
