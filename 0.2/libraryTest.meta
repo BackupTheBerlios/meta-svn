@@ -139,6 +139,16 @@ arg|,
 							1
 			keyTestMap=,
 				x="hello"
+			modifyTest=-
+				modify
+				,
+					hello="asdf"
+					world="fdsa"
+				,
+					arg|-
+						join
+						"hello, "
+						arg
 			containsTest=-
 				contains
 				keyTestMap

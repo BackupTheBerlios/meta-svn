@@ -8,6 +8,12 @@
 			mscorlib
 			Meta
 			PresentationFramework
+			.
+				windowsbase
+				Key
+			.
+				windowsbase
+				ModifierKeys
 	listProgramView=,
 		create=,
 			|-
@@ -22,26 +28,6 @@
 							value=,
 								literal=" "
 		source|,
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=,
-					.
-						Key
-						Enter
-					=,
-						|-
-							.
-								-
-									get_Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										literalStringView
-										create
 			&=-
 				control
 				,
@@ -57,8 +43,21 @@
 									statement
 									value
 					KeyDown=-
-						keyMapping
-						keys
+						MapKeys
+						,
+							<Alt=,
+								<Enter=,
+									|-
+										.
+											-
+												get_Children
+											Add_UIElement
+										-
+											view
+											-
+												.
+													literalStringView
+													create
 			badge=-
 				.
 					Brushes
@@ -274,14 +273,10 @@
 							Orientation
 							Horizontal
 						KeyDown=-
-							keyMapping
+							MapKeys
 							,
-								.
-									ModifierKeys
-									Alt=,
-									.
-										Key
-										Enter=,
+								<Alt=,
+									<Enter=,
 										|-
 											.
 												Parent
@@ -317,89 +312,32 @@
 	copied=0
 	view=,
 		content|,
-			keys=,
-				.
-					ModifierKeys
-					Control
-				=,
-					.
-						Key
-						U
-					=,
-						|-
-							changeChild
-							-
-								.
-									selectView
-									create
-					.
-						Key
-						I
-					=,
-						|-
-							changeChild
-							-
-								.
-									callView
-									create
-					.
-						Key
-						L
-					=,
-						|-
-							changeChild
-							-
-								.
-									listProgramView
-									create
-					.
-						Key
-						N
-					=,
-						|-
-							changeChild
-							-
-								.
-									literalNumberView
-									create
-					.
-						Key
-						F
-					=,
-						|-
-							changeChild
-							-
-								.
-									searchView
-									create
-					.
-						Key
-						T
-					=,
-						|-
-							changeChild
-							-
-								.
-									literalStringView
-									create
-					.
-						Key
-						P
-					=,
-						|-
-							changeChild
-							-
-								.
-									programView
-									create
 			&=-
 				multi
 				,
 					Focusable=1
-					KeyDown=-
-						keyMapping
-						keys
 					Orientation=horizontal
+					KeyDown=-
+						MapKeys
+						,
+							<Control=-
+								modify
+								,
+									<U=selectView
+									<I=callView
+									<L=listProgramView
+									<N=literalNumberView
+									<F=searchView
+									<T=literalStringView
+									<P=programView
+								,
+									value|,
+										|-
+											ChangeChild
+											-
+												.
+													value
+													create
 			Clear=,
 				|-
 					.
@@ -413,7 +351,7 @@
 							get_Children
 						Add_UIElement
 					child
-			changeChild=,
+			ChangeChild=,
 				content|,
 					-
 						Clear
@@ -429,7 +367,7 @@
 								|-
 									Label
 									,
-										Width=30
+										Width=10
 										Background=.
 											-
 												merge
@@ -449,7 +387,7 @@
 						AddChild
 						content
 			-
-				changeChild
+				ChangeChild
 				content
 			code=,
 				|-
@@ -458,10 +396,7 @@
 							children
 						2
 						code
-			KeyDown=-
-				keyMapping
-				keys
-	keyMapping=,
+	MapKeys=,
 		keys|,
 			sender|,
 				e|-
@@ -564,70 +499,60 @@
 								code
 	statementBase=,
 		children|,
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=,
-					.
-						Key
-						Y
-					=,
-						|-
-							.
-								Parent
-								Parent
-								Children
-								Insert_Int32_UIElement
-							-
-								add
-								-
-									.
-										Parent
-										Parent
-										Children
-										IndexOf_UIElement
-									Parent
-								1
-							-
-								view
-								-
-									.
-										functionStatementView
-										create
-					.
-						Key
-						Enter
-					=,
-						|-
-							.
-								Parent
-								Parent
-								Children
-								Insert_Int32_UIElement
-							-
-								add
-								-
-									.
-										Parent
-										Parent
-										Children
-										IndexOf_UIElement
-									Parent
-								1
-							-
-								view
-								-
-									.
-										statementView
-										create
 			&=-
 				control
 				,
 					Children=children
 					KeyDown=-
-						keyMapping
-						keys
+						MapKeys
+						,
+							<Alt=,
+								<Y=,
+									|-
+										.
+											Parent
+											Parent
+											Children
+											Insert_Int32_UIElement
+										-
+											add
+											-
+												.
+													Parent
+													Parent
+													Children
+													IndexOf_UIElement
+												Parent
+											1
+										-
+											view
+											-
+												.
+													functionStatementView
+													create
+								<Enter=,
+									|-
+										.
+											Parent
+											Parent
+											Children
+											Insert_Int32_UIElement
+										-
+											add
+											-
+												.
+													Parent
+													Parent
+													Children
+													IndexOf_UIElement
+												Parent
+											1
+										-
+											view
+											-
+												.
+													statementView
+													create
 			badge=-
 				.
 					Brushes
@@ -682,6 +607,76 @@
 				.
 					Brushes
 					get_Gray
+	searchStatementView=,
+		create=,
+			|-
+				searchStatementView
+				,
+					keys=,
+						literal="hello"
+					value=,
+						literal="hello"
+		source|,
+			&=-
+				statementBase
+				+
+					-
+						parseView
+						.
+							source
+							keys
+					-
+						parseView
+						.
+							source
+							value
+			code=,
+				|,
+					keys=-
+						.
+							-
+								children
+							1
+							code
+					value=-
+						.
+							-
+								children
+							2
+							code
+			badge=-
+				.
+					Brushes
+					get_Azure
+	currentStatementView=,
+		create=,
+			|-
+				currentStatementView
+				,
+					value=,
+						literal=" "
+		source|,
+			&=-
+				statementBase
+				+
+					-
+						parseView
+						.
+							source
+							value
+			code=,
+				|,
+					current=0
+					value=-
+						.
+							-
+								children
+							1
+							code
+			badge=-
+				.
+					Brushes
+					get_Green
 	functionStatementView=,
 		create=,
 			|-
@@ -764,13 +759,18 @@
 								-
 									ifElse
 									-
-										equal
-										.
+										if
+										-
+											contains
 											statement
-											key
-										+
-											,
-												lookup=,
+											"key"
+										,
+											|-
+												equal
+												.
+													statement
+													key
+												,
 													literal="function"
 									,
 										|-
@@ -778,8 +778,30 @@
 											statement
 									,
 										|-
-											statementView
-											statement
+											ifElse
+											-
+												contains
+												statement
+												"current"
+											,
+												|-
+													currentStatementView
+													statement
+											,
+												|-
+													ifElse
+													-
+														contains
+														statement
+														"keys"
+													,
+														|-
+															searchStatementView
+															statement
+													,
+														|-
+															statementView
+															statement
 			badge=-
 				.
 					Brushes
@@ -860,26 +882,6 @@
 						,
 							literal="world"
 		source|,
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=,
-					.
-						Key
-						Enter
-					=,
-						|-
-							.
-								-
-									get_Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										literalStringView
-										create
 			&=-
 				control
 				,
@@ -893,8 +895,21 @@
 								parseView
 								arg
 					KeyDown=-
-						keyMapping
-						keys
+						MapKeys
+						,
+							<Alt=,
+								<Enter=,
+									|-
+										.
+											-
+												get_Children
+											Add_UIElement
+										-
+											view
+											-
+												.
+													literalStringView
+													create
 			badge=-
 				.
 					Brushes
@@ -1098,26 +1113,6 @@
 							search=,
 								literal="hello"
 		source|,
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=,
-					.
-						Key
-						Enter
-					=,
-						|-
-							.
-								-
-									get_Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										literalStringView
-										create
 			&=-
 				control
 				,
@@ -1131,8 +1126,21 @@
 								parseView
 								arg
 					KeyDown=-
-						keyMapping
-						keys
+						MapKeys
+						,
+							<Alt=,
+								<Enter=,
+									|-
+										.
+											-
+												get_Children
+											Add_UIElement
+										-
+											view
+											-
+												.
+													literalStringView
+													create
 			badge=-
 				.
 					Brushes
@@ -1203,13 +1211,17 @@
 							arg
 							"search"
 					=searchView
-					-
-						containedBy
-						"lookup"
+					,
+						|-
+							contains
+							arg
+							"lookup"
 					=lookupView
-					-
-						containedBy
-						"select"
+					,
+						|-
+							contains
+							arg
+							"select"
 					=selectView
 					-
 						containedBy
@@ -1237,14 +1249,24 @@
 										,
 											key|,
 												value|-
-													equal
-													.
-														arg
-														program
-														<key
-														key
+													if
+													-
+														contains
+														.
+															arg
+															program
+															<key
+														"key"
 													,
-														literal=key
+														|-
+															equal
+															.
+																arg
+																program
+																<key
+																key
+															,
+																literal=key
 									and
 					=listProgramView
 					,
@@ -1404,7 +1426,7 @@
 						Run=run
 	scrollViewer=-
 		ScrollViewer
-	path="C:\asdf.meta"
+	path="C:\Meta\0.2\learning.meta"
 	-
 		load
 		path

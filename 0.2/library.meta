@@ -28,6 +28,9 @@
 									map
 								ContainsKey_Map
 							key
+				modify=.
+					Library
+					Modify_Map_Map
 				add=.
 					Number
 					op_Addition_Number_Number
@@ -112,6 +115,11 @@
 									0=,
 										|0
 								<a
+				andAll=,
+					arg|-
+						sum
+						arg
+						or
 				integerToString=,
 					arg|-
 						.

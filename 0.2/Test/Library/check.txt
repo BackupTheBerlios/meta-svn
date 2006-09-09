@@ -177,6 +177,20 @@ Entry (KeyValuePair`2)
 						"hello"
 		Entry (KeyValuePair`2)
 			Key (Map):
+				"modifyTest"
+			Value (Map):
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"hello"
+					Value (Map):
+						"hello, asdf"
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"world"
+					Value (Map):
+						"hello, fdsa"
+		Entry (KeyValuePair`2)
+			Key (Map):
 				"containsTest"
 			Value (Map):
 				1

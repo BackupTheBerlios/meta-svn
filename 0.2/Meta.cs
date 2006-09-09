@@ -4086,6 +4086,7 @@ namespace Meta
 		public static Rule KeysStatement = new Sequence(
 			new Action(new Assignment(CodeKeys.Key),
 			new Alternatives(
+				new Sequence(new Action(new Character('<')),new Action(new ReferenceAssignment(),Expression)),
 				new Sequence(new Action(new Assignment(CodeKeys.Literal), LookupString)),
 
 				Expression)),
@@ -5425,6 +5426,15 @@ namespace Meta
 	}
 	public class Library
 	{
+		public static Map Modify(Map map, Map func)
+		{
+			Map result = new Map();
+			foreach (KeyValuePair<Map,Map> entry in map)
+			{
+				result[entry.Key] = func.Call(entry.Value);
+			}
+			return result;
+		}
 		public static Map StringToNumber(Map map)
 		{
 			return Convert.ToInt32(map.GetString());
