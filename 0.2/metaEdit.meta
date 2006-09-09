@@ -205,6 +205,13 @@
 							PresentationFramework
 							HorizontalAlignment
 							Left
+						.
+							FrameworkElement
+							VerticalAlignmentProperty
+						=.
+							PresentationFramework
+							VerticalAlignment
+							Top
 						MouseLeftButtonDown=,
 							|,
 								e|,
@@ -366,11 +373,9 @@
 												content
 												"symbol"
 											,
-												|-
-													print
-													.
-														content
-														symbol
+												|.
+													content
+													symbol
 										Background=.
 											-
 												merge
@@ -502,6 +507,17 @@
 				-
 					merge
 					,
+						Orientation=.
+							PresentationFramework
+							Orientation
+							Horizontal
+						.
+							FrameworkElement
+							VerticalAlignmentProperty
+						=.
+							PresentationFramework
+							VerticalAlignment
+							Top
 						KeyDown=-
 							MapKeys
 							,
@@ -690,6 +706,10 @@
 			&=-
 				statementBase
 				,
+					Orientation=.
+						PresentationFramework
+						Orientation
+						Vertical
 					Children=+
 						-
 							view
@@ -1104,7 +1124,7 @@
 				.
 					Brushes
 					get_Chocolate
-			symbol="|"
+			symbol="."
 			code=,
 				|,
 					select=-
@@ -1375,6 +1395,10 @@
 						Run=run
 	scrollViewer=-
 		ScrollViewer
+		,
+			HorizontalScrollBarVisibility=.
+				ScrollBarVisibility
+				Auto
 	path="C:\Meta\0.2\learning.meta"
 	-
 		load
