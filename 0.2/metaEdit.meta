@@ -22,6 +22,26 @@
 							value=,
 								literal=" "
 		source|,
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=,
+					.
+						Key
+						Enter
+					=,
+						|-
+							.
+								-
+									get_Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										literalStringView
+										create
 			&=-
 				control
 				,
@@ -58,23 +78,6 @@
 										.
 											value
 											code
-			keys=,
-				.
-					ModifierKeys
-					Alt=,
-					.
-						Key
-						Enter=,
-						|-
-							.
-								Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										literalView
-										create
 	emptyView=,
 		|,
 			&=-
@@ -321,7 +324,27 @@
 				=,
 					.
 						Key
-						OemPlus
+						U
+					=,
+						|-
+							changeChild
+							-
+								.
+									selectView
+									create
+					.
+						Key
+						I
+					=,
+						|-
+							changeChild
+							-
+								.
+									callView
+									create
+					.
+						Key
+						L
 					=,
 						|-
 							changeChild
@@ -361,7 +384,7 @@
 									create
 					.
 						Key
-						OemComma
+						P
 					=,
 						|-
 							changeChild
@@ -373,30 +396,10 @@
 				multi
 				,
 					Focusable=1
-					Margin=-
-						Thickness_Double_Double_Double_Double
-						0
-						0
-						0
-						0
 					KeyDown=-
 						keyMapping
 						keys
 					Orientation=horizontal
-					.
-						FrameworkElement
-						HorizontalAlignmentProperty
-					=.
-						PresentationFramework
-						HorizontalAlignment
-						Left
-					.
-						FrameworkElement
-						VerticalAlignmentProperty
-					=.
-						PresentationFramework
-						VerticalAlignment
-						Top
 			Clear=,
 				|-
 					.
@@ -455,133 +458,6 @@
 							children
 						2
 						code
-			setView=,
-				view|,
-					!Children=+
-						view
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=-
-					merge
-					,
-						.
-							Key
-							B
-						=,
-							|,
-								copied:-
-									code
-						.
-							Key
-							M
-						=,
-							|-
-								setView
-								-
-									parseView
-									c
-						.
-							Key
-							R
-						=,
-							|-
-								.
-									commands
-									Debug
-									Run
-						.
-							Key
-							Delete
-						=,
-							|-
-								.
-									Parent
-									Children
-									Remove_UIElement
-								this
-					-
-						mergeAll
-						-
-							foreach
-							,
-								.
-									Key
-									U
-								=stringView
-								.
-									Key
-									V
-								=.
-									lookupView
-									create
-								.
-									Key
-									L
-								=.
-									literalView
-									create
-								.
-									Key
-									N
-								=numberView
-								.
-									Key
-									E
-								=emptyView
-								.
-									Key
-									A
-								=.
-									listProgramView
-									create
-								.
-									Key
-									P
-								=.
-									programView
-									create
-								.
-									Key
-									S
-								=.
-									selectView
-									create
-								.
-									Key
-									T
-								=.
-									currentView
-									create
-								.
-									Key
-									F
-								=.
-									searchView
-									create
-								.
-									Key
-									C
-								=.
-									callView
-									create
-							,
-								key|,
-									value|,
-										key=,
-											|+
-												-
-													setView
-													-
-														value
-														0
-												-
-													.
-														-
-															children
-														1
-														Focus
 			KeyDown=-
 				keyMapping
 				keys
@@ -979,13 +855,31 @@
 				,
 					call=+
 						,
-							select=+
-								,
-									search=,
-										literal="hello"
+							search=,
+								literal="hello"
 						,
 							literal="world"
 		source|,
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=,
+					.
+						Key
+						Enter
+					=,
+						|-
+							.
+								-
+									get_Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										literalStringView
+										create
 			&=-
 				control
 				,
@@ -1016,26 +910,6 @@
 								.
 									child
 									code
-			keys=,
-				.
-					ModifierKeys
-					Alt
-				=,
-					.
-						Key
-						Enter
-					=,
-						|-
-							.
-								-
-									get_Children
-								Add_UIElement
-							-
-								view
-								-
-									.
-										literalView
-										create
 	lookupView=,
 		create=,
 			|-
@@ -1242,7 +1116,7 @@
 								view
 								-
 									.
-										lookupView
+										literalStringView
 										create
 			&=-
 				control
@@ -1369,10 +1243,8 @@
 														program
 														<key
 														key
-													+
-														,
-															lookup=,
-																literal=key
+													,
+														literal=key
 									and
 					=listProgramView
 					,
