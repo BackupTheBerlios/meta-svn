@@ -23,6 +23,12 @@ namespace Edit
 		{
 			DockPanel p;
 			MenuItem m;
+			TextBox t=new TextBox();
+			StackPanel o;
+			//t.FontFamily = new FontFamily("Courier New");
+			//t.FontSize=10
+			//t.BorderThickness=new Thickness(
+			//t.
 			//m.HeaderTemplate.LoadContent
 			//Label label = new Label();
 			//label.Content=

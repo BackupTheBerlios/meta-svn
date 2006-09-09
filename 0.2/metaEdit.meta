@@ -43,14 +43,12 @@
 					KeyDown=-
 						keyMapping
 						keys
-			getMap=,
+			code=,
 				|,
 					program=-
 						foreach
 						-
-							enumerableToArray
-							-
-								get_Children
+							children
 						,
 							key|,
 								value|,
@@ -61,7 +59,7 @@
 									value=-
 										.
 											value
-											getMap
+											code
 			keys=,
 				.
 					ModifierKeys
@@ -93,7 +91,7 @@
 						.
 							!e
 							Handled=1
-			getMap=,
+			code=,
 				|0
 	textBox=,
 		init|,
@@ -102,11 +100,17 @@
 				-
 					merge
 					,
+						FontFamily=-
+							FontFamily_String
+							"Courier New"
+						FontSize=16
+						Padding=-
+							Thickness_Double
+							2
+						BorderThickness=-
+							Thickness_Double
+							0
 						AcceptsReturn=1
-						GotFocus=,
-							|,
-								|-
-									SelectAll
 					init
 	horizontal=.
 		Orientation
@@ -125,7 +129,7 @@
 						.
 							Brushes
 							get_Fuchsia
-			getMap=,
+			code=,
 				|-
 					get_Text
 	numberView=,
@@ -164,7 +168,7 @@
 													!e
 													set_Handled_Boolean
 												1
-			getMap=,
+			code=,
 				|-
 					stringToNumber
 					-
@@ -178,7 +182,7 @@
 					,
 						Margin=-
 							Thickness_Double_Double_Double_Double
-							10
+							0
 							0
 							0
 							0
@@ -206,13 +210,11 @@
 											panel
 											Focus
 					init
-			child=,
-				index|-
-					.
-						-
-							get_Children
-						get_Item_Int32
-					index
+			children=,
+				|-
+					enumerableToArray
+					-
+						get_Children
 	entry=,
 		create=,
 			|-
@@ -264,26 +266,33 @@
 												.
 													entry
 													create
-				getKey=,
+				key=,
 					|-
 						.
 							-
-								child
-								0
-							getMap
-				getValue=,
+								children
+							1
+							code
+				value=,
 					|-
 						.
 							-
-								child
-								1
-							getMap
+								children
+							2
+							code
 	copied=0
 	view=,
 		content|,
 			&=-
 				multi
 				,
+					Focusable=1
+					Margin=-
+						Thickness_Double_Double_Double_Double
+						10
+						0
+						0
+						0
 					Children=+
 						content
 					Orientation=horizontal
@@ -301,13 +310,13 @@
 						PresentationFramework
 						VerticalAlignment
 						Top
-			getMap=,
+			code=,
 				|-
 					.
 						-
-							child
-							0
-						getMap
+							children
+						1
+						code
 			setView=,
 				view|,
 					!Children=+
@@ -325,7 +334,7 @@
 						=,
 							|,
 								!copied=-
-									getMap
+									code
 						.
 							Key
 							M
@@ -432,8 +441,8 @@
 												-
 													.
 														-
-															child
-															0
+															children
+														1
 														Focus
 			KeyDown=-
 				keyMapping
@@ -509,22 +518,22 @@
 							.
 								Brushes
 								get_Azure
-				getKey=,
+				key=,
 					|"function"
-				getValue=,
+				value=,
 					|,
 						parameter=-
 							.
 								-
-									child
-									0
-								getMap
+									children
+								1
+								code
 						expression=-
 							.
 								-
-									child
-									1
-								getMap
+									children
+								2
+								code
 	statementBase=,
 		children|,
 			keys=,
@@ -625,22 +634,22 @@
 				PresentationFramework
 				Orientation
 				Horizontal
-			getMap=,
+			code=,
 				|,
 					key=.
 						-
 							.
 								-
-									child
-									0
-								getMap
+									children
+								1
+								code
 						select
 					value=-
 						.
 							-
-								child
-								1
-							getMap
+								children
+							1
+							code
 			Background=-
 				.
 					Brushes
@@ -675,7 +684,7 @@
 							value
 							literal
 							expression
-			getMap=,
+			code=,
 				|,
 					key=+
 						,
@@ -686,15 +695,15 @@
 							parameter=-
 								.
 									-
-										child
-										0
-									getMap
+										children
+									1
+									code
 							expression=-
 								.
 									-
-										child
-										1
-									getMap
+										children
+									1
+									code
 			Background=-
 				.
 					Brushes
@@ -747,19 +756,17 @@
 										|-
 											statementView
 											statement
-			getMap=,
+			code=,
 				|,
 					program=-
 						apply
 						-
-							enumerableToArray
-							-
-								get_Children
+							children
 						,
 							entry|-
 								.
 									entry
-									getMap
+									code
 	mapView=,
 		create=,
 			|-
@@ -795,25 +802,23 @@
 											-
 												parseView
 												value
-			getMap=,
+			code=,
 				|-
 					sum
 					-
 						apply
 						-
-							enumerableToArray
-							-
-								get_Children
+							children
 						,
 							entry|,
 								-
 									.
 										entry
-										getKey
+										key
 								=-
 									.
 										entry
-										getValue
+										value
 					merge
 	callView=,
 		create=,
@@ -848,19 +853,17 @@
 					KeyDown=-
 						keyMapping
 						keys
-			getMap=,
+			code=,
 				|,
 					call=-
 						apply
 						-
-							enumerableToArray
-							-
-								get_Children
+							children
 						,
 							child|-
 								.
 									child
-									getMap
+									code
 			keys=,
 				.
 					ModifierKeys
@@ -902,14 +905,14 @@
 						.
 							Brushes
 							get_MistyRose
-			getMap=,
+			code=,
 				|,
 					lookup=-
 						.
 							-
-								child
-								0
-							getMap
+								children
+							1
+							code
 	searchView=,
 		create=,
 			|-
@@ -931,14 +934,14 @@
 						.
 							Brushes
 							get_DeepSkyBlue
-			getMap=,
+			code=,
 				|,
 					search=-
 						.
 							-
-								child
-								0
-							getMap
+								children
+							1
+							code
 	literalNumberView=,
 		source|,
 			&=-
@@ -977,7 +980,7 @@
 													!e
 													set_Handled_Boolean
 												1
-			getMap=,
+			code=,
 				|,
 					literal=-
 						stringToNumber
@@ -1000,7 +1003,7 @@
 						.
 							Brushes
 							get_Fuchsia
-			getMap=,
+			code=,
 				|,
 					literal=-
 						get_Text
@@ -1024,14 +1027,14 @@
 						.
 							Brushes
 							get_DarkViolet
-			getMap=,
+			code=,
 				|,
 					literal=-
 						.
 							-
-								child
-								0
-							getMap
+								children
+							1
+							code
 	currentView=,
 		create=,
 			|-
@@ -1051,7 +1054,7 @@
 									e
 									set_Handled_Boolean
 								1
-					getMap=,
+					code=,
 						|,
 							current=0
 	selectView=,
@@ -1103,19 +1106,17 @@
 						.
 							Brushes
 							get_Chocolate
-			getMap=,
+			code=,
 				|,
 					select=-
 						apply
 						-
-							enumerableToArray
-							-
-								get_Children
+							children
 						,
 							child|-
 								.
 									child
-									getMap
+									code
 	parseView=,
 		arg|-
 			view
@@ -1252,7 +1253,7 @@
 					.
 						scrollViewer
 						get_Content
-				getMap
+				code
 	commands=+
 		,
 			header="File"

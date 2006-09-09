@@ -979,7 +979,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
@@ -5570,8 +5570,8 @@ namespace Meta
 				Map value = entry.Value;
 				if (entry.Key.Strategy is ObjectMap)
 				{
-					//DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
-					//type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+					type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
 				}
 				else
 				{
