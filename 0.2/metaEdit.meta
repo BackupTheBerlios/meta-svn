@@ -62,6 +62,7 @@
 				.
 					Brushes
 					get_Green
+			symbol="+"
 			code=,
 				|,
 					program=-
@@ -89,10 +90,6 @@
 									e
 									set_Handled_Boolean
 								1
-			badge=-
-				.
-					Brushes
-					get_Red
 			code=,
 				|0
 	literalEmptyView=,
@@ -107,10 +104,6 @@
 									e
 									set_Handled_Boolean
 								1
-			badge=-
-				.
-					Brushes
-					get_Yellow
 			code=,
 				|,
 					literal=0
@@ -146,10 +139,6 @@
 				textBox
 				,
 					Text=text
-			badge=-
-				.
-					Brushes
-					get_Fuchsia
 			code=get_Text
 	numberView=,
 		number|,
@@ -370,8 +359,18 @@
 										VerticalAlignment=.
 											VerticalAlignment
 											Top
-										Width=10
-										Height=20
+										Content=-
+											if
+											-
+												contains
+												content
+												"symbol"
+											,
+												|-
+													print
+													.
+														content
+														symbol
 										Background=.
 											-
 												merge
@@ -441,12 +440,6 @@
 								,
 									func|,
 										-
-											print
-											-
-												.
-													e
-													get_Key
-										-
 											func
 										-
 											.
@@ -485,6 +478,7 @@
 					.
 						Brushes
 						get_Azure
+				symbol="|"
 				key=,
 					|"function"
 				value=,
@@ -502,65 +496,63 @@
 								2
 								code
 	statementBase=,
-		children|,
+		init|,
 			&=-
 				control
-				,
-					Children=children
-					KeyDown=-
-						MapKeys
-						,
-							<Alt=,
-								<Y=,
-									|-
-										.
-											Parent
-											Parent
-											Children
-											Insert_Int32_UIElement
-										-
-											add
-											-
-												.
-													Parent
-													Parent
-													Children
-													IndexOf_UIElement
+				-
+					merge
+					,
+						KeyDown=-
+							MapKeys
+							,
+								<Alt=,
+									<Y=,
+										|-
+											.
 												Parent
-											1
-										-
-											view
-											-
-												.
-													functionStatementView
-													create
-								<Enter=,
-									|-
-										.
-											Parent
-											Parent
-											Children
-											Insert_Int32_UIElement
-										-
-											add
-											-
-												.
-													Parent
-													Parent
-													Children
-													IndexOf_UIElement
 												Parent
-											1
-										-
-											view
+												Children
+												Insert_Int32_UIElement
 											-
-												.
-													statementView
-													create
-			badge=-
-				.
-					Brushes
-					get_Azure
+												add
+												-
+													.
+														Parent
+														Parent
+														Children
+														IndexOf_UIElement
+													Parent
+												1
+											-
+												view
+												-
+													.
+														functionStatementView
+														create
+									<Enter=,
+										|-
+											.
+												Parent
+												Parent
+												Children
+												Insert_Int32_UIElement
+											-
+												add
+												-
+													.
+														Parent
+														Parent
+														Children
+														IndexOf_UIElement
+													Parent
+												1
+											-
+												view
+												-
+													.
+														statementView
+														create
+					init
 	statementView=,
 		create=,
 			|-
@@ -575,17 +567,18 @@
 		source|,
 			&=-
 				statementBase
-				+
-					-
-						parseView
-						.
-							source
-							key
-					-
-						parseView
-						.
-							source
-							value
+				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								key
+						-
+							parseView
+							.
+								source
+								value
 			Orientation=.
 				PresentationFramework
 				Orientation
@@ -608,6 +601,7 @@
 				.
 					Brushes
 					get_Gray
+			symbol="="
 	searchStatementView=,
 		create=,
 			|-
@@ -620,17 +614,18 @@
 		source|,
 			&=-
 				statementBase
-				+
-					-
-						parseView
-						.
-							source
-							keys
-					-
-						parseView
-						.
-							source
-							value
+				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								keys
+						-
+							parseView
+							.
+								source
+								value
 			code=,
 				|,
 					keys=-
@@ -649,6 +644,7 @@
 				.
 					Brushes
 					get_Azure
+			symbol=":"
 	currentStatementView=,
 		create=,
 			|-
@@ -659,12 +655,13 @@
 		source|,
 			&=-
 				statementBase
-				+
-					-
-						parseView
-						.
-							source
-							value
+				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								value
 			code=,
 				|,
 					current=0
@@ -674,6 +671,7 @@
 								children
 							1
 							code
+			symbol="&"
 			badge=-
 				.
 					Brushes
@@ -689,29 +687,31 @@
 							expression=,
 								literal="hello"
 		source|,
-			-
-				print
-				.
-					source
 			&=-
 				statementBase
-				+
-					-
-						view
+				,
+					Children=+
 						-
-							stringView
+							view
+							-
+								textBox
+								,
+									Text=.
+										source
+										value
+										literal
+										parameter
+									Background=-
+										.
+											Brushes
+											get_Yellow
+						-
+							parseView
 							.
 								source
 								value
 								literal
-								parameter
-					-
-						parseView
-						.
-							source
-							value
-							literal
-							expression
+								expression
 			code=,
 				|,
 					key=,
@@ -721,19 +721,24 @@
 							parameter=-
 								.
 									-
-										children
+										.
+											-
+												children
+											1
+									children
 									1
-									code
+									get_Text
 							expression=-
 								.
 									-
 										children
 									2
 									code
+			symbol="|"
 			badge=-
 				.
 					Brushes
-					get_Azure
+					get_Green
 	programView=,
 		create=,
 			|-
@@ -809,6 +814,7 @@
 				.
 					Brushes
 					get_Blue
+			symbol=","
 			code=,
 				|,
 					program=-
@@ -857,7 +863,7 @@
 												value
 			code=,
 				|-
-					sum
+					mergeAll
 					-
 						apply
 						-
@@ -872,7 +878,6 @@
 									.
 										entry
 										value
-					merge
 	callView=,
 		create=,
 			|-
@@ -917,6 +922,7 @@
 				.
 					Brushes
 					get_BurlyWood
+			symbol="-"
 			code=,
 				|,
 					call=-
@@ -928,35 +934,6 @@
 								.
 									child
 									code
-	lookupView=,
-		create=,
-			|-
-				lookupView
-				,
-					lookup=,
-						literal="hello"
-		source|,
-			&=-
-				control
-				,
-					Children=+
-						-
-							parseView
-							.
-								source
-								lookup
-			badge=-
-				.
-					Brushes
-					get_MistyRose
-			code=,
-				|,
-					lookup=-
-						.
-							-
-								children
-							1
-							code
 	searchView=,
 		create=,
 			|-
@@ -978,6 +955,7 @@
 				.
 					Brushes
 					get_DeepSkyBlue
+			symbol="!"
 			code=,
 				|,
 					search=-
@@ -1084,28 +1062,6 @@
 								children
 							1
 							code
-	currentView=,
-		create=,
-			|-
-				currentView
-		|,
-			&=-
-				textBox
-				,
-					PreviewTextInput=,
-						|,
-							e|-
-								.
-									e
-									set_Handled_Boolean
-								1
-					code=,
-						|,
-							current=0
-			badge=-
-				.
-					Brushes
-					get_White
 	selectView=,
 		create=,
 			|-
@@ -1148,6 +1104,7 @@
 				.
 					Brushes
 					get_Chocolate
+			symbol="|"
 			code=,
 				|,
 					select=-
@@ -1166,9 +1123,8 @@
 				switch
 				arg
 				,
-					!"empty"=emptyView
-					!"isString"=stringView
 					!"isNumber"=numberView
+					!"isString"=stringView
 					,
 						|-
 							containedBy
@@ -1218,18 +1174,8 @@
 						|-
 							contains
 							arg
-							"lookup"
-					=lookupView
-					,
-						|-
-							contains
-							arg
 							"select"
 					=selectView
-					-
-						containedBy
-						"current"
-					=currentView
 					,
 						|-
 							if
@@ -1292,10 +1238,8 @@
 			-
 				parseView
 				-
-					print
-					-
-						parse
-						path
+					parse
+					path
 	completeCode=,
 		|-
 			.

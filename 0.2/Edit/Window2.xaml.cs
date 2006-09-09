@@ -36,7 +36,7 @@ namespace Edit
 			//t.BorderThickness=new Thickness(
 			//t.
 			//m.HeaderTemplate.LoadContent
-			//Label label = new Label();
+			Label label = new Label();
 			//label.Content=
 			//DockPanel.SetDock(
 			Window w;
