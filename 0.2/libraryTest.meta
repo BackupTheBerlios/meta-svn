@@ -104,19 +104,19 @@ arg|,
 		bitwiseTest=,
 			or=0
 		mapTest=,
-			ifTest=-
-				ifElse
+			IfTest=-
+				ElseIf
 				1
 				,
-					arg|"if test successful"
+					arg|"If test successful"
 				,
 					|0
 			joinTest=-
 				join
 				"abc, "
 				"die Katze lief im Schnee."
-			joinAllTest=-
-				joinAll
+			JoinAllTest=-
+				JoinAll
 				+
 					"abc, "
 					"die Katze lief im Schnee."
@@ -125,9 +125,9 @@ arg|,
 				append
 				"hello"
 				32
-			apply=,
+			Map=,
 				&=-
-					apply
+					Map
 					+
 						1
 						2

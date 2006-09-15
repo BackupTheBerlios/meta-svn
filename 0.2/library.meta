@@ -3,7 +3,7 @@
 		|,
 			&=Meta
 			lib=,
-				contains=,
+				Contains=,
 					arg|.
 						-
 							Map_Map
@@ -45,7 +45,7 @@
 				addArray=,
 					a|,
 						b|-
-							apply
+							Map
 							-
 								keys
 								a
@@ -157,12 +157,12 @@
 								Map_Object
 								arg
 							get_IsString
-				joinAll=,
+				JoinAll=,
 					arg|-
 						sum
 						arg
 						join
-				joinAll=.
+				JoinAll=.
 					Library
 					JoinAll_Map
 				keys=,
@@ -271,7 +271,7 @@
 				prependTo=-
 					flip
 					prepend
-				apply=,
+				Map=,
 					array|,
 						func|,
 							max=-
@@ -307,11 +307,11 @@
 								helper
 								1
 								0
-				apply=.
+				Map=.
 					/
 					Meta
 					Library
-					Apply_Map_Map
+					Map_Map_Map
 				switch=.
 					Library
 					Switch_Map_Map
@@ -330,7 +330,7 @@
 													map
 													<key
 									-
-										contains
+										Contains
 										map
 										key
 				join=.
@@ -394,15 +394,18 @@
 				reverse=.
 					Library
 					Reverse_Map
-				if=.
+				If=.
 					Library
 					If_Map_Map
-				ifElse=.
+				ElseIf=.
 					Library
-					IfElse_Map_Map_Map
+					ElseIf_Map_Map_Map
 				filter=.
 					Library
 					Filter_Map_Map
+				filterWith=-
+					flip
+					filter
 				merge=.
 					Library
 					Merge_Map_Map

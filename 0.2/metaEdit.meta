@@ -3,17 +3,11 @@
 		mergeAll
 		+
 			System
+			PresentationFramework
 			PresentationCore
 			windowsbase
 			mscorlib
 			Meta
-			PresentationFramework
-			.
-				windowsbase
-				Key
-			.
-				windowsbase
-				ModifierKeys
 	listProgramView=,
 		create=,
 			|-
@@ -42,71 +36,65 @@
 								.
 									statement
 									value
+					Background=-
+						.
+							Brushes
+							get_Green
 					KeyDown=-
-						MapKeys
-						,
-							<Alt=,
-								<Enter=,
-									|-
-										.
-											-
-												get_Children
-											Add_UIElement
-										-
-											view
-											-
-												.
-													literalStringView
-													create
-			badge=-
-				.
-					Brushes
-					get_Green
-			symbol="+"
-			code=,
+						keyMapping
+						keys
+			getMap=,
 				|,
 					program=-
 						foreach
 						-
-							children
+							enumerableToArray
+							-
+								get_Children
 						,
 							key|,
 								value|,
-									key=,
-										literal=key
+									key=+
+										,
+											lookup=,
+												literal=key
 									value=-
 										.
 											value
-											code
+											getMap
+			keys=,
+				.
+					ModifierKeys
+					Alt=,
+					.
+						Key
+						Enter=,
+						|-
+							.
+								Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										literalView
+										create
 	emptyView=,
 		|,
 			&=-
 				textBox
-				,
-					PreviewTextInput=,
-						|,
-							e|-
-								.
-									e
-									set_Handled_Boolean
-								1
-			code=,
-				|0
-	literalEmptyView=,
-		|,
-			&=-
-				textBox
-				,
-					PreviewTextInput=,
-						|,
-							e|-
-								.
-									e
-									set_Handled_Boolean
-								1
-			code=,
+			Background=-
+				.
+					Brushes
+					get_Red
+			PreviewTextInput=,
 				|,
-					literal=0
+					e|,
+						.
+							!e
+							Handled=1
+			getMap=,
+				|0
 	textBox=,
 		init|,
 			&=-
@@ -114,17 +102,11 @@
 				-
 					merge
 					,
-						FontFamily=-
-							FontFamily_String
-							"Courier New"
-						FontSize=16
-						Padding=-
-							Thickness_Double
-							2
-						BorderThickness=-
-							Thickness_Double
-							0
 						AcceptsReturn=1
+						GotFocus=,
+							|,
+								|-
+									SelectAll
 					init
 	horizontal=.
 		Orientation
@@ -139,12 +121,22 @@
 				textBox
 				,
 					Text=text
-			code=get_Text
+					Background=-
+						.
+							Brushes
+							get_Fuchsia
+			getMap=,
+				|-
+					get_Text
 	numberView=,
 		number|,
 			&=-
 				textBox
 				,
+					Background=-
+						.
+							Brushes
+							get_LightYellow
 					Text=-
 						integerToString
 						number
@@ -169,14 +161,10 @@
 										,
 											|-
 												.
-													e
+													!e
 													set_Handled_Boolean
 												1
-			badge=-
-				.
-					Brushes
-					get_LightYellow
-			code=,
+			getMap=,
 				|-
 					stringToNumber
 					-
@@ -190,7 +178,7 @@
 					,
 						Margin=-
 							Thickness_Double_Double_Double_Double
-							0
+							10
 							0
 							0
 							0
@@ -205,13 +193,6 @@
 							PresentationFramework
 							HorizontalAlignment
 							Left
-						.
-							FrameworkElement
-							VerticalAlignmentProperty
-						=.
-							PresentationFramework
-							VerticalAlignment
-							Top
 						MouseLeftButtonDown=,
 							|,
 								e|,
@@ -225,25 +206,13 @@
 											panel
 											Focus
 					init
-			setChildren=,
-				value|,
-					children=-
-						get_Children
-					-
-						.
-							children
-							Clear
-					-
-						apply
-						value
-						.
-							children
-							Add_UIElement
-			children=,
-				|-
-					enumerableToArray
-					-
-						get_Children
+			child=,
+				index|-
+					.
+						-
+							get_Children
+						get_Item_Int32
+					index
 	entry=,
 		create=,
 			|-
@@ -269,10 +238,14 @@
 							Orientation
 							Horizontal
 						KeyDown=-
-							MapKeys
+							keyMapping
 							,
-								<Alt=,
-									<Enter=,
+								.
+									ModifierKeys
+									Alt=,
+									.
+										Key
+										Enter=,
 										|-
 											.
 												Parent
@@ -291,120 +264,181 @@
 												.
 													entry
 													create
-				key=,
+				getKey=,
 					|-
 						.
 							-
-								children
-							1
-							code
-				value=,
+								child
+								0
+							getMap
+				getValue=,
 					|-
 						.
 							-
-								children
-							2
-							code
+								child
+								1
+							getMap
 	copied=0
 	view=,
 		content|,
 			&=-
 				multi
 				,
-					Focusable=1
-					Orientation=horizontal
-					KeyDown=-
-						MapKeys
-						,
-							<Control=-
-								modify
-								,
-									<U=selectView
-									<I=callView
-									<L=listProgramView
-									<N=literalNumberView
-									<F=searchView
-									<T=literalStringView
-									<P=programView
-								,
-									value|,
-										|-
-											ChangeChild
-											-
-												.
-													value
-													create
-			Clear=,
-				|-
-					.
-						-
-							get_Children
-						Clear
-			AddChild=,
-				child|-
-					.
-						-
-							get_Children
-						Add_UIElement
-					child
-			ChangeChild=,
-				content|,
-					-
-						Clear
-					-
-						AddChild
-						-
-							ifElse
-							-
-								contains
-								content
-								"badge"
-							,
-								|-
-									Label
-									,
-										VerticalAlignment=.
-											VerticalAlignment
-											Top
-										Content=-
-											if
-											-
-												contains
-												content
-												"symbol"
-											,
-												|.
-													content
-													symbol
-										Background=.
-											-
-												merge
-												,
-													badge=-
-														.
-															Brushes
-															get_Black
-												content
-											badge
-							,
-								|-
-									Label
-									,
-										Width=0
-					-
-						AddChild
+					Children=+
 						content
-			-
-				ChangeChild
-				content
-			code=,
+					Orientation=horizontal
+					.
+						FrameworkElement
+						HorizontalAlignmentProperty
+					=.
+						PresentationFramework
+						HorizontalAlignment
+						Left
+					.
+						FrameworkElement
+						VerticalAlignmentProperty
+					=.
+						PresentationFramework
+						VerticalAlignment
+						Top
+			getMap=,
 				|-
 					.
 						-
-							children
-						2
-						code
-	MapKeys=,
+							child
+							0
+						getMap
+			setView=,
+				view|,
+					!Children=+
+						view
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=-
+					merge
+					,
+						.
+							Key
+							B
+						=,
+							|,
+								!copied=-
+									getMap
+						.
+							Key
+							M
+						=,
+							|-
+								setView
+								-
+									parseView
+									c
+						.
+							Key
+							R
+						=,
+							|-
+								.
+									commands
+									Debug
+									Run
+						.
+							Key
+							Delete
+						=,
+							|-
+								.
+									Parent
+									Children
+									Remove_UIElement
+								this
+					-
+						mergeAll
+						-
+							foreach
+							,
+								.
+									Key
+									U
+								=stringView
+								.
+									Key
+									V
+								=.
+									lookupView
+									create
+								.
+									Key
+									L
+								=.
+									literalView
+									create
+								.
+									Key
+									N
+								=numberView
+								.
+									Key
+									E
+								=emptyView
+								.
+									Key
+									A
+								=.
+									listProgramView
+									create
+								.
+									Key
+									P
+								=.
+									programView
+									create
+								.
+									Key
+									S
+								=.
+									selectView
+									create
+								.
+									Key
+									T
+								=.
+									currentView
+									create
+								.
+									Key
+									F
+								=.
+									searchView
+									create
+								.
+									Key
+									C
+								=.
+									callView
+									create
+							,
+								key|,
+									value|,
+										key=,
+											|+
+												-
+													setView
+													-
+														value
+														0
+												-
+													.
+														-
+															child
+															0
+														Focus
+			KeyDown=-
+				keyMapping
+				keys
+	keyMapping=,
 		keys|,
 			sender|,
 				e|-
@@ -420,6 +454,9 @@
 					,
 						functions|+
 							-
+								print
+								"in keyMapping"
+							-
 								callIf
 								functions
 								-
@@ -429,27 +466,16 @@
 								,
 									func|,
 										-
-											func
-										-
-											.
-												e
-												set_Handled_Boolean
-											1
-							-
-								callIf
-								functions
-								-
-									.
-										e
-										get_Key
-								,
-									func|,
+											print
+											-
+												.
+													e
+													SystemKey
 										-
 											func
 										-
-											.
-												e
-												set_Handled_Boolean
+											e
+											set_Handled_Boolean.
 											1
 	control=,
 		init|,
@@ -479,96 +505,96 @@
 								.
 									value
 									expression
-				badge=-
-					.
-						Brushes
-						get_Azure
-				symbol="|"
-				key=,
+						Background=-
+							.
+								Brushes
+								get_Azure
+				getKey=,
 					|"function"
-				value=,
+				getValue=,
 					|,
 						parameter=-
 							.
 								-
-									children
-								1
-								code
+									child
+									0
+								getMap
 						expression=-
 							.
 								-
-									children
-								2
-								code
+									child
+									1
+								getMap
 	statementBase=,
-		init|,
+		children|,
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=,
+					.
+						Key
+						Y
+					=,
+						|-
+							.
+								Parent
+								Parent
+								Children
+								Insert_Int32_UIElement
+							-
+								add
+								-
+									.
+										Parent
+										Parent
+										Children
+										IndexOf_UIElement
+									Parent
+								1
+							-
+								view
+								-
+									.
+										functionStatementView
+										create
+					.
+						Key
+						Enter
+					=,
+						|-
+							.
+								Parent
+								Parent
+								Children
+								Insert_Int32_UIElement
+							-
+								add
+								-
+									.
+										Parent
+										Parent
+										Children
+										IndexOf_UIElement
+									Parent
+								1
+							-
+								view
+								-
+									.
+										statementView
+										create
 			&=-
 				control
-				-
-					merge
-					,
-						Orientation=.
-							PresentationFramework
-							Orientation
-							Horizontal
+				,
+					Children=children
+					Background=-
 						.
-							FrameworkElement
-							VerticalAlignmentProperty
-						=.
-							PresentationFramework
-							VerticalAlignment
-							Top
-						KeyDown=-
-							MapKeys
-							,
-								<Alt=,
-									<Y=,
-										|-
-											.
-												Parent
-												Parent
-												Children
-												Insert_Int32_UIElement
-											-
-												add
-												-
-													.
-														Parent
-														Parent
-														Children
-														IndexOf_UIElement
-													Parent
-												1
-											-
-												view
-												-
-													.
-														functionStatementView
-														create
-									<Enter=,
-										|-
-											.
-												Parent
-												Parent
-												Children
-												Insert_Int32_UIElement
-											-
-												add
-												-
-													.
-														Parent
-														Parent
-														Children
-														IndexOf_UIElement
-													Parent
-												1
-											-
-												view
-												-
-													.
-														statementView
-														create
-					init
+							Brushes
+							get_Azure
+					KeyDown=-
+						keyMapping
+						keys
 	statementView=,
 		create=,
 			|-
@@ -583,115 +609,42 @@
 		source|,
 			&=-
 				statementBase
-				,
-					Children=+
-						-
-							parseView
-							.
+				+
+					-
+						parseView
+						,
+							select=.
 								source
 								key
-						-
-							parseView
-							.
-								source
-								value
+					-
+						parseView
+						.
+							source
+							value
 			Orientation=.
 				PresentationFramework
 				Orientation
 				Horizontal
-			code=,
+			getMap=,
 				|,
-					key=-
-						.
-							-
-								children
-							1
-							code
+					key=.
+						-
+							.
+								-
+									child
+									0
+								getMap
+						select
 					value=-
 						.
 							-
-								children
-							2
-							code
-			badge=-
+								child
+								1
+							getMap
+			Background=-
 				.
 					Brushes
 					get_Gray
-			symbol="="
-	searchStatementView=,
-		create=,
-			|-
-				searchStatementView
-				,
-					keys=,
-						literal="hello"
-					value=,
-						literal="hello"
-		source|,
-			&=-
-				statementBase
-				,
-					Children=+
-						-
-							parseView
-							.
-								source
-								keys
-						-
-							parseView
-							.
-								source
-								value
-			code=,
-				|,
-					keys=-
-						.
-							-
-								children
-							1
-							code
-					value=-
-						.
-							-
-								children
-							2
-							code
-			badge=-
-				.
-					Brushes
-					get_Azure
-			symbol=":"
-	currentStatementView=,
-		create=,
-			|-
-				currentStatementView
-				,
-					value=,
-						literal=" "
-		source|,
-			&=-
-				statementBase
-				,
-					Children=+
-						-
-							parseView
-							.
-								source
-								value
-			code=,
-				|,
-					current=0
-					value=-
-						.
-							-
-								children
-							1
-							code
-			symbol="&"
-			badge=-
-				.
-					Brushes
-					get_Green
 	functionStatementView=,
 		create=,
 			|-
@@ -705,60 +658,47 @@
 		source|,
 			&=-
 				statementBase
-				,
-					Orientation=.
-						PresentationFramework
-						Orientation
-						Vertical
-					Children=+
+				+
+					-
+						view
 						-
-							view
-							-
-								textBox
-								,
-									Text=.
-										source
-										value
-										literal
-										parameter
-									Background=-
-										.
-											Brushes
-											get_Yellow
-						-
-							parseView
+							stringView
 							.
 								source
 								value
 								literal
-								expression
-			code=,
+								parameter
+					-
+						parseView
+						.
+							source
+							value
+							literal
+							expression
+			getMap=,
 				|,
-					key=,
-						literal="function"
+					key=+
+						,
+							lookup=,
+								literal="function"
 					value=,
 						literal=,
 							parameter=-
 								.
 									-
-										.
-											-
-												children
-											1
-									children
-									1
-									get_Text
+										child
+										0
+									getMap
 							expression=-
 								.
 									-
-										children
-									2
-									code
-			symbol="|"
-			badge=-
+										child
+										1
+									getMap
+			Background=-
 				.
 					Brushes
-					get_Green
+					get_Azure
 	programView=,
 		create=,
 			|-
@@ -776,6 +716,10 @@
 			&=-
 				control
 				,
+					Background=-
+						.
+							Brushes
+							get_Blue
 					Children=-
 						apply
 						.
@@ -787,18 +731,13 @@
 								-
 									ifElse
 									-
-										if
-										-
-											contains
+										equal
+										.
 											statement
-											"key"
-										,
-											|-
-												equal
-												.
-													statement
-													key
-												,
+											key
+										+
+											,
+												lookup=,
 													literal="function"
 									,
 										|-
@@ -806,46 +745,21 @@
 											statement
 									,
 										|-
-											ifElse
-											-
-												contains
-												statement
-												"current"
-											,
-												|-
-													currentStatementView
-													statement
-											,
-												|-
-													ifElse
-													-
-														contains
-														statement
-														"keys"
-													,
-														|-
-															searchStatementView
-															statement
-													,
-														|-
-															statementView
-															statement
-			badge=-
-				.
-					Brushes
-					get_Blue
-			symbol=","
-			code=,
+											statementView
+											statement
+			getMap=,
 				|,
 					program=-
 						apply
 						-
-							children
+							enumerableToArray
+							-
+								get_Children
 						,
 							entry|-
 								.
 									entry
-									code
+									getMap
 	mapView=,
 		create=,
 			|-
@@ -881,23 +795,26 @@
 											-
 												parseView
 												value
-			code=,
+			getMap=,
 				|-
-					mergeAll
+					sum
 					-
 						apply
 						-
-							children
+							enumerableToArray
+							-
+								get_Children
 						,
 							entry|,
 								-
 									.
 										entry
-										key
+										getKey
 								=-
 									.
 										entry
-										value
+										getValue
+					merge
 	callView=,
 		create=,
 			|-
@@ -905,8 +822,10 @@
 				,
 					call=+
 						,
-							search=,
-								literal="hello"
+							select=+
+								,
+									search=,
+										literal="hello"
 						,
 							literal="world"
 		source|,
@@ -922,38 +841,75 @@
 							arg|-
 								parseView
 								arg
+					Background=-
+						.
+							Brushes
+							get_BurlyWood
 					KeyDown=-
-						MapKeys
-						,
-							<Alt=,
-								<Enter=,
-									|-
-										.
-											-
-												get_Children
-											Add_UIElement
-										-
-											view
-											-
-												.
-													literalStringView
-													create
-			badge=-
-				.
-					Brushes
-					get_BurlyWood
-			symbol="-"
-			code=,
+						keyMapping
+						keys
+			getMap=,
 				|,
 					call=-
 						apply
 						-
-							children
+							enumerableToArray
+							-
+								get_Children
 						,
 							child|-
 								.
 									child
-									code
+									getMap
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=,
+					.
+						Key
+						Enter
+					=,
+						|-
+							.
+								-
+									get_Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										literalView
+										create
+	lookupView=,
+		create=,
+			|-
+				lookupView
+				,
+					lookup=,
+						literal="hello"
+		source|,
+			&=-
+				control
+				,
+					Children=+
+						-
+							parseView
+							.
+								source
+								lookup
+					Background=-
+						.
+							Brushes
+							get_MistyRose
+			getMap=,
+				|,
+					lookup=-
+						.
+							-
+								child
+								0
+							getMap
 	searchView=,
 		create=,
 			|-
@@ -971,38 +927,32 @@
 							.
 								source
 								search
-			badge=-
-				.
-					Brushes
-					get_DeepSkyBlue
-			symbol="!"
-			code=,
+					Background=-
+						.
+							Brushes
+							get_DeepSkyBlue
+			getMap=,
 				|,
 					search=-
 						.
 							-
-								children
-							1
-							code
+								child
+								0
+							getMap
 	literalNumberView=,
-		create=,
-			|-
-				literalNumberView
-				,
-					literal=1
 		source|,
 			&=-
 				textBox
 				,
+					Background=-
+						.
+							Brushes
+							get_LightYellow
 					Text=-
 						integerToString
 						.
 							source
 							literal
-					Background=-
-						.
-							Brushes
-							get_LightYellow
 					PreviewTextInput=,
 						|,
 							e|-
@@ -1024,10 +974,10 @@
 										,
 											|-
 												.
-													e
+													!e
 													set_Handled_Boolean
 												1
-			code=,
+			getMap=,
 				|,
 					literal=-
 						stringToNumber
@@ -1050,7 +1000,7 @@
 						.
 							Brushes
 							get_Fuchsia
-			code=,
+			getMap=,
 				|,
 					literal=-
 						get_Text
@@ -1070,18 +1020,40 @@
 							.
 								source
 								literal
-			badge=-
-				.
-					Brushes
-					get_DarkViolet
-			code=,
+					Background=-
+						.
+							Brushes
+							get_DarkViolet
+			getMap=,
 				|,
 					literal=-
 						.
 							-
-								children
-							1
-							code
+								child
+								0
+							getMap
+	currentView=,
+		create=,
+			|-
+				currentView
+		|,
+			&=-
+				textBox
+				,
+					Background=-
+						.
+							Brushes
+							get_White
+					PreviewTextInput=,
+						|,
+							e|-
+								.
+									e
+									set_Handled_Boolean
+								1
+					getMap=,
+						|,
+							current=0
 	selectView=,
 		create=,
 			|-
@@ -1092,6 +1064,26 @@
 							search=,
 								literal="hello"
 		source|,
+			keys=,
+				.
+					ModifierKeys
+					Alt
+				=,
+					.
+						Key
+						Enter
+					=,
+						|-
+							.
+								-
+									get_Children
+								Add_UIElement
+							-
+								view
+								-
+									.
+										lookupView
+										create
 			&=-
 				control
 				,
@@ -1105,37 +1097,25 @@
 								parseView
 								arg
 					KeyDown=-
-						MapKeys
-						,
-							<Alt=,
-								<Enter=,
-									|-
-										.
-											-
-												get_Children
-											Add_UIElement
-										-
-											view
-											-
-												.
-													literalStringView
-													create
-			badge=-
-				.
-					Brushes
-					get_Chocolate
-			symbol="."
-			code=,
+						keyMapping
+						keys
+					Background=-
+						.
+							Brushes
+							get_Chocolate
+			getMap=,
 				|,
 					select=-
 						apply
 						-
-							children
+							enumerableToArray
+							-
+								get_Children
 						,
 							child|-
 								.
 									child
-									code
+									getMap
 	parseView=,
 		arg|-
 			view
@@ -1143,19 +1123,20 @@
 				switch
 				arg
 				,
-					!"isNumber"=numberView
+					!"empty"=emptyView
 					!"isString"=stringView
+					!"isNumber"=numberView
 					,
 						|-
-							containedBy
-							"call"
+							contains
 							arg
+							"call"
 					=callView
 					,
 						|-
-							containedBy
-							"literal"
+							contains
 							arg
+							"literal"
 					=,
 						arg|-
 							ifElse
@@ -1194,8 +1175,20 @@
 						|-
 							contains
 							arg
+							"lookup"
+					=lookupView
+					,
+						|-
+							contains
+							arg
 							"select"
 					=selectView
+					,
+						|-
+							contains
+							arg
+							"current"
+					=currentView
 					,
 						|-
 							if
@@ -1218,23 +1211,15 @@
 										,
 											key|,
 												value|-
-													if
-													-
-														contains
-														.
-															arg
-															program
-															<key
-														"key"
-													,
-														|-
-															equal
-															.
-																arg
-																program
-																<key
-																key
-															,
+													equal
+													.
+														arg
+														program
+														<key
+														key
+													+
+														,
+															lookup=,
 																literal=key
 									and
 					=listProgramView
@@ -1260,146 +1245,146 @@
 				-
 					parse
 					path
-	completeCode=,
+	currentData=,
 		|-
 			.
 				-
 					.
 						scrollViewer
 						get_Content
-				code
-	saveAs=,
-		|-
-			.
-				-
-					SaveFileDialog
-					,
-						Filter="*.meta (Meta files)|*.meta"
-						DefaultExt=".meta"
-						AddExtension=1
-						FileOk=,
-							dialog|,
-								|,
-									path:-
-										.
-											dialog
-											get_FileName
-									-
-										Save
-				ShowDialog
+				getMap
+	commands=+
+		,
+			header="File"
+			items=+
+				,
+					header="Open"
+					click=,
+						|-
+							.
+								-
+									OpenFileDialog
+									,
+										Filter="*.meta (Meta files)|*.meta"
+										FileOk=,
+											dialog|,
+												|,
+													!path=.
+														dialog
+														FileName
+													-
+														load
+								ShowDialog
+				,
+					header="SaveAs"
+					click=,
+						|-
+							.
+								-
+									SaveFileDialog
+									,
+										Filter="*.meta (Meta files)|*.meta"
+										DefaultExt=".meta"
+										AddExtension=1
+										FileOk=,
+											dialog|,
+												|,
+													!path=.
+														dialog
+														FileName
+													-
+														Save
+								ShowDialog
+				,
+					header="Save"
+					click=,
+						|-
+							ifElse
+							-
+								empty
+								path
+							,
+								|-
+									SaveAs
+							,
+								|-
+									save
+				,
+					header="Exit"
+					click=,
+						|-
+							.
+								window
+								Close
+		,
+			header="Debug"
+			items=+
+				,
+					header="Run"
+					click=,
+						|,
+							-
+								save
+							-
+								.
+									Process
+									Start_String_String
+								"C:\Meta\0.2\bin\Debug\Meta.exe"
+								path
 	save=,
 		|-
-			ifElse
-			-
-				empty
-				path
-			saveAs
-			,
-				|-
-					.
-						File
-						WriteAllText_String_String
-					path
-					-
-						toString
-						-
-							completeCode
-	open=,
-		|-
 			.
+				File
+				WriteAllText_String_String
+			path
+			-
+				toString
 				-
-					OpenFileDialog
-					,
-						Filter="*.meta (Meta files)|*.meta"
-						FileOk=,
-							dialog|,
-								|,
-									path:-
-										.
-											dialog
-											get_FileName
-									-
-										load
-				ShowDialog
-	close=,
-		|-
-			.
-				window
-				Close
-	run=,
-		|,
-			-
-				save
-			-
-				.
-					Process
-					Start_String_String
-				"C:\Meta\0.2\bin\Debug\Meta.exe"
-				path
-	createMenu=,
-		items|-
-			Menu
-			,
-				.
-					DockPanel
-					DockProperty
-				=.
-					Dock
-					Top
-				Items=-
-					apply
-					items
-					,
-						item|-
-							MenuItem
-							,
-								Header=.
-									-
-										keys
-										item
-									1
-								Items=-
-									apply
-									.
-										item
-										<Header
-									,
-										val|-
-											MenuItem
-											,
-												Header=.
-													-
-														keys
-														val
-													1
-												Click=,
-													|.
-														val
-														<Header
+					currentData
 	menu=-
-		createMenu
-		+
-			,
-				File=+
-					,
-						Open=open
-					,
-						SaveAs=saveAs
-					,
-						Save=save
-					,
-						Exit=close
-			,
-				Debug=+
-					,
-						Run=run
+		Menu
+		,
+			.
+				DockPanel
+				DockProperty
+			=.
+				Dock
+				Top
+			Items=-
+				apply
+				commands
+				,
+					value|-
+						MenuItem
+						,
+							Header=.
+								value
+								header
+							Items=-
+								apply
+								.
+									value
+									items
+								,
+									value|-
+										.
+											MenuItem
+										,
+											Header=.
+												value
+												header
+											Click=,
+												sender|.
+													value
+													click
 	scrollViewer=-
 		ScrollViewer
 		,
-			HorizontalScrollBarVisibility=.
-				ScrollBarVisibility
-				Auto
-	path="C:\Meta\0.2\learning.meta"
+			Content=-
+				parseView
+				,
+					literal=" "
+	path="C:\asdf.meta"
 	-
 		load
 		path
@@ -1414,7 +1399,7 @@
 		,
 			Content=panel
 			Title="Meta Edit"
-	-
+	1=-
 		.
 			-
 				Application

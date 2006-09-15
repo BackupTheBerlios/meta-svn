@@ -1653,6 +1653,15 @@ namespace Meta
 				return base.Call(arg, parent);
 			}
 		}
+		public override int GetHashCode()
+		{
+			return Object.GetHashCode();
+		}
+		public override bool Equals(object o)
+		{
+			//FlowLayoutPanel p;
+			return o is ObjectMap && Object.Equals(((ObjectMap)o).Object);
+		}
 		//public override bool Equals(object obj)
 		//{
 		//    return obj is ObjectMap && ((ObjectMap)obj).Object.Equals(this.Object);
@@ -3557,8 +3566,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.'};
 	}
 
 	public class Parser
@@ -5457,7 +5466,7 @@ namespace Meta
 					return entry.Value.Call(map);
 				}
 			}
-			return Map.Empty;
+			return Meta.Map.Empty;
 		}
 		public static Map Raise(Number a, Number b)
 		{
@@ -5484,7 +5493,7 @@ namespace Meta
 			}
 			return new Map(result);
 		}
-		public static Map IfElse(Map condition, Map then, Map els)
+		public static Map ElseIf(Map condition, Map then, Map els)
 		{
 			if (Convert.ToBoolean(condition.GetNumber().GetInt32()))
 			{
@@ -5509,7 +5518,7 @@ namespace Meta
 			}
 			else
 			{
-				return Map.Empty;
+				return Meta.Map.Empty;
 			}
 		}
 		public static Map JoinAll(Map arrays)
@@ -5537,7 +5546,7 @@ namespace Meta
 		//    }
 		//    return new Map();
 		//}
-		public static Map Apply(Map array, Map func)
+		public static Map Map(Map array, Map func)
 		{
 			List<Map> result = new List<Map>();
 			foreach (Map map in array.Array)
@@ -5549,9 +5558,6 @@ namespace Meta
 		public static Map Append(Map array, Map item)
 		{
 			array.Append(item);
-			if (!(array.Strategy is ListStrategy))
-			{
-			}
 			return array;
 		}
 		public static Map EnumerableToArray(Map map)
@@ -5562,11 +5568,6 @@ namespace Meta
 				result.Add(Transform.ToMeta(entry));
 			}
 			return new Map(result);
-			//Map result = new Map();
-			//foreach (object entry in (IEnumerable)(((ObjectMap)map.Strategy)).Object) {
-			//    result.Append(Transform.ToMeta(entry));
-			//}
-			//return result;
 		}
 		public static Map Reverse(Map arg)
 		{
@@ -5578,12 +5579,18 @@ namespace Meta
 		{
 			try
 			{
-				return tryFunction.Call(Map.Empty);
+				return tryFunction.Call(Meta.Map.Empty);
 			}
 			catch (Exception e)
 			{
+				//TreeView t;
+				//t.AfterCheck += new TreeViewEventHandler(t_AfterCheck);
 				return catchFunction.Call(new Map(e));
 			}
+		}
+
+		static void t_AfterCheck(object sender, TreeViewEventArgs e)
+		{
 		}
 		public static Map With(Map o, Map values)
 		{
@@ -5635,7 +5642,9 @@ namespace Meta
 							else
 							{
 								object converted = Transform.ToDotNet(value, property.PropertyType);
+								//property.GetSetMethod().Invoke(obj,new object[] { converted });//, null);
 								property.SetValue(obj, converted, null);
+								//property.SetValue(obj, converted, null);
 							}
 
 						}
@@ -5647,16 +5656,24 @@ namespace Meta
 						else
 						{
 							throw new Exception("unknown member type");
+							TreeView t;
+							FlowLayoutPanel p;
+							//p.LayoutEngine.
+							//p.Layout += new LayoutEventHandler(p_Layout);
+							//p.
+							//p.controls
 						}
 					}
 					else
 					{
+						o[entry.Key] = entry.Value;
 						// we should really throw an exception here
 					}
 				}
 			}
 			return o;
 		}
+
 		public static Map Merge(Map arg, Map map)
 		{
 			foreach (KeyValuePair<Map, Map> pair in map)
