@@ -202,7 +202,6 @@
 																				p=-
 																					FlowLayoutPanel
 																					,
-																						Controls=children
 																						BackColor=-
 																							.
 																								Color
@@ -215,6 +214,15 @@
 																						Dock=.
 																							DockStyle
 																							Fill
+																				controls=-
+																					.
+																						p
+																						get_Controls
+																				-
+																					.
+																						controls
+																						AddRange_Control[]
+																					children
 																				-
 																					.
 																						node
@@ -327,6 +335,10 @@
 					data
 			asdf=-
 				loadText
+			-
+				.
+					form
+					Close
 	loadText=,
 		|,
 			controls=-
@@ -366,31 +378,19 @@
 								e
 								get_Node
 						-
-							print
-							"after check"
-						-
 							.
 								panel
 								SuspendLayout
-						-
-							print
-							.
-								node
-								suspend
 						-
 							Map
 							.
 								node
 								suspend
 							,
-								p|,
-									-
-										print
-										"suspended"
-									-
-										.
-											p
-											SuspendLayout
+								p|-
+									.
+										p
+										SuspendLayout
 						-
 							Map
 							.

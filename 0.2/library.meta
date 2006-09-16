@@ -40,8 +40,8 @@
 				addAll=,
 					array|-
 						sum
-						array
 						add
+						array
 				addArray=,
 					a|,
 						b|-
@@ -118,8 +118,8 @@
 				andAll=,
 					arg|-
 						sum
-						arg
 						or
+						arg
 				integerToString=,
 					arg|-
 						.
@@ -160,8 +160,8 @@
 				JoinAll=,
 					arg|-
 						sum
-						arg
 						join
+						arg
 				JoinAll=.
 					Library
 					JoinAll_Map
@@ -184,8 +184,8 @@
 				mergeAll=,
 					arg|-
 						sum
-						arg
 						merge
+						arg
 				negate=,
 					arg|-
 						subtract
@@ -206,8 +206,8 @@
 				orAll=,
 					arg|-
 						sum
-						arg
 						or
+						arg
 				stringToNumber=.
 					Library
 					StringToNumber_Map
@@ -229,6 +229,9 @@
 								toString
 								arg
 						&=arg
+				SplitString=.
+					Library
+					SplitString_Map_Map
 				parse=.
 					Parser
 					Parse_String
@@ -339,55 +342,6 @@
 				range=.
 					Library
 					Range_Map
-				sum=,
-					array|,
-						func|,
-							max=-
-								length
-								array
-							&=-
-								.
-									,
-										1=,
-											|0
-										0=,
-											|,
-												helper=,
-													index|,
-														result|-
-															.
-																,
-																	0=,
-																		|result
-																	1=,
-																		|-
-																			helper
-																			-
-																				add
-																				1
-																				index
-																			-
-																				func
-																				result
-																				.
-																					array
-																					<index
-																-
-																	lessOrEqual
-																	index
-																	max
-												&=-
-													helper
-													2
-													.
-														array
-														1
-									-
-										equal
-										0
-										-
-											length
-											array
 				sum=.
 					Library
 					Sum_Map_Map
@@ -406,6 +360,20 @@
 				filterWith=-
 					flip
 					filter
+				random=.
+					Library
+					Random_Int32
+				discard=,
+					array|,
+						func|-
+							filter
+							array
+							,
+								entry|-
+									not
+									-
+										func
+										entry
 				merge=.
 					Library
 					Merge_Map_Map
@@ -418,6 +386,35 @@
 				try=.
 					Library
 					Try_Map_Map
+				ReadTextFile=,
+					file|-
+						.
+							mscorlib
+							File
+							ReadAllText_String_Encoding
+						file
+						-
+							.
+								mscorlib
+								Encoding
+								get_Default
+				TrimString=.
+					Library
+					Trim_String
+				WriteTextFile=,
+					file|,
+						text|-
+							.
+								mscorlib
+								File
+								WriteAllText_String_String_Encoding
+							file
+							text
+							-
+								.
+									mscorlib
+									Encoding
+									get_Default
 	&=.
 		-
 			lib

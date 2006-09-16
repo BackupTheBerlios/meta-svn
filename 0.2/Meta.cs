@@ -35,6 +35,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows;
+using SdlDotNet;
 
 namespace Meta
 {
@@ -979,7 +980,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -3561,13 +3562,13 @@ namespace Meta
 		public const char explicitCall = '-';
 		public const char select = '.';
 		public const char character = '\'';
-		public const char assignment = ' ';
+		//public const char assignment = ' ';
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', assignment, select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.'};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n',  function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.'};
 	}
 
 	public class Parser
@@ -4693,7 +4694,14 @@ namespace Meta
 	{
 		public static string Serialize(Map map)
 		{
-			return Serialize(map, -1).Trim();
+			try
+			{
+				return Serialize(map, -1).Trim();
+			}
+			catch (Exception e)
+			{
+				throw e;
+			}
 		}
 		private static string Number(Map map)
 		{
@@ -4938,6 +4946,7 @@ namespace Meta
 			if (text.Contains("\"") || text.Contains("\n"))
 			{
 				string result = "\"" + Environment.NewLine;
+				indentation++;
 				foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None))
 				{
 					result += Indentation(indentation) + "\t" + line + Environment.NewLine;
@@ -5435,6 +5444,30 @@ namespace Meta
 	}
 	public class Library
 	{
+		private static Random random = new Random();
+		public static Map Random(int max)
+		{
+			return random.Next(max) + 1;
+		}
+		public static string Trim(string text)
+		{
+			Events.KeyboardDown += new KeyboardEventHandler(Events_KeyboardDown);
+			return text.Trim();
+		}
+
+		static void Events_KeyboardDown(object sender, KeyboardEventArgs e)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public static Map SplitString(Map text, Map chars)
+		{
+		    List<Map> result = new List<Map>();
+		    foreach(string part in text.GetString().Split((char[])Transform.ToDotNet(chars,typeof(char[])),StringSplitOptions.RemoveEmptyEntries))
+			{
+				result.Add(part);
+			}
+			return new Map(new ListStrategy(result));
+		}
 		public static Map Modify(Map map, Map func)
 		{
 			Map result = new Map();
@@ -5504,7 +5537,7 @@ namespace Meta
 				return els.Call(new Map());
 			}
 		}
-		public static Map Sum(Map arg, Map func)
+		public static Map Sum(Map func,Map arg)
 		{
 			IEnumerator<Map> enumerator = arg.Array.GetEnumerator();
 			if (enumerator.MoveNext())
@@ -5599,13 +5632,13 @@ namespace Meta
 			foreach (KeyValuePair<Map, Map> entry in values)
 			{
 				Map value = entry.Value;
-				if (entry.Key.Strategy is ObjectMap)
-				{
-					DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
-					type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
-				}
-				else
-				{
+				//if (entry.Key.Strategy is ObjectMap)
+				//{
+				//    DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+				//    type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Object) }).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+				//}
+				//else
+				//{
 					MemberInfo[] members = type.GetMember(entry.Key.GetString());
 					if (members.Length != 0)
 					{
@@ -5669,7 +5702,7 @@ namespace Meta
 						o[entry.Key] = entry.Value;
 						// we should really throw an exception here
 					}
-				}
+				//}
 			}
 			return o;
 		}

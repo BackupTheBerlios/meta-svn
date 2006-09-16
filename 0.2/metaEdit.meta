@@ -798,6 +798,7 @@
 			getMap=,
 				|-
 					sum
+					merge
 					-
 						apply
 						-
@@ -814,7 +815,6 @@
 									.
 										entry
 										getValue
-					merge
 	callView=,
 		create=,
 			|-
@@ -1199,6 +1199,7 @@
 							,
 								|-
 									sum
+									and
 									-
 										foreach
 										-
@@ -1221,7 +1222,6 @@
 														,
 															lookup=,
 																literal=key
-									and
 					=listProgramView
 					,
 						|-

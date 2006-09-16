@@ -143,9 +143,9 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"ifTest"
+				"IfTest"
 			Value (Map):
-				"if test successful"
+				"If test successful"
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"joinTest"
@@ -153,7 +153,7 @@ Entry (KeyValuePair`2)
 				"abc, die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"joinAllTest"
+				"JoinAllTest"
 			Value (Map):
 				"abc, die Katze lief im Schnee.die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
@@ -163,7 +163,7 @@ Entry (KeyValuePair`2)
 				"hello "
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"apply"
+				"Map"
 			Value (Map):
 				""
 		Entry (KeyValuePair`2)
@@ -310,3 +310,22 @@ Entry (KeyValuePair`2)
 		"addArrayTest"
 	Value (Map):
 		""
+Entry (KeyValuePair`2)
+	Key (Map):
+		"stringSplitTest"
+	Value (Map):
+		Entry (KeyValuePair`2)
+			Key (Map):
+				1
+			Value (Map):
+				"hello"
+		Entry (KeyValuePair`2)
+			Key (Map):
+				2
+			Value (Map):
+				"world"
+		Entry (KeyValuePair`2)
+			Key (Map):
+				3
+			Value (Map):
+				" "

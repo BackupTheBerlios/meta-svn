@@ -42,6 +42,7 @@
   <ItemGroup>
     <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -51,6 +52,11 @@
   <ItemGroup>
     <None Include="basicTest.meta" />
     <None Include="Copy of learning.meta" />
+    <Content Include="humanEnglish.txt" />
+    <Content Include="humanGerman.txt" />
+    <None Include="game.meta" />
+    <None Include="knowledge.meta" />
+    <None Include="language.meta" />
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
