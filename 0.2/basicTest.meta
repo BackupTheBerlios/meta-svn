@@ -487,9 +487,8 @@ commandLine|,
 		secondSwitchCases
 		3
 	emptyMap=0
-	emptyFunction=,
-		arg|,
-			x="hello"
+	emptyFunction=arg?,
+		x="hello"
 	emptyFunctionResult=-
 		!"emptyFunction"
 		0
@@ -599,8 +598,7 @@ commandLine|,
 							!"add"
 							!"arg"
 							1
-				0=,
-					arg|!"arg"
+				0=arg?!"arg"
 			&=-
 				.
 					whileBranches
@@ -609,15 +607,13 @@ commandLine|,
 	whileCounter=-
 		!"loop"
 		3
-	returnInMap=,
-		arg|,
-			result=!"arg"
+	returnInMap=arg?,
+		result=!"arg"
 	literalAsArgument=-
 		!"returnInMap"
 		1
-	returnFunction=,
-		arg|,
-			arg|"functionResult"
+	returnFunction=arg?,
+		arg|"functionResult"
 	returnArg=,
 		arg|!"arg"
 	myArg=,
