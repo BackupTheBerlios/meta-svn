@@ -51,15 +51,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy %282%29 of game.meta" />
+    <None Include="Copy %283%29 of game.meta" />
+    <None Include="Copy %284%29 of game.meta" />
+    <None Include="Copy %285%29 of game.meta" />
+    <None Include="Copy %286%29 of game.meta" />
+    <None Include="game.meta" />
+    <None Include="gamewhatever.meta" />
+    <None Include="asdfasdfasdfgame.meta" />
+    <None Include="gameasdf.meta" />
+    <None Include="Copy of game.meta" />
     <None Include="Copy of learning.meta" />
     <Content Include="humanEnglish.txt" />
     <Content Include="humanGerman.txt" />
-    <None Include="game.meta" />
+    <None Include="gameerqwerqwer.meta" />
     <None Include="knowledge.meta" />
     <None Include="language.meta" />
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
     <None Include="metaEdit.meta" />
+    <None Include="stuff.meta" />
   </ItemGroup>
 </Project>

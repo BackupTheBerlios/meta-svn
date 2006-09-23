@@ -43,31 +43,31 @@ arg|,
 				add
 				-100
 				91
-			subtractTest=-
+			DifferenceTest=-
 				add
 				1/4
 				-
-					multiply
+					Product
 					1/100
 					-1
-			subtractTest2=-
-				subtract
+			DifferenceTest2=-
+				Difference
 				103
 				2
 			divideTest=-
 				divide
 				5
 				103
-			multiplyInteger=-
-				multiply
+			ProductInteger=-
+				Product
 				19
 				1023
-			minusMultiply=-
-				multiply
+			minusProduct=-
+				Product
 				-1
 				-2
-			multiplyFraction=-
-				multiply
+			ProductFraction=-
+				Product
 				3/2
 				7/3
 			smallerDecreasingTest=-
@@ -95,7 +95,7 @@ arg|,
 				3
 				5
 			divide=-
-				multiply
+				Product
 				1000
 				-
 					divide

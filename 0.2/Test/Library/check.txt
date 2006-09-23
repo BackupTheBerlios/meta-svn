@@ -65,12 +65,12 @@ Entry (KeyValuePair`2)
 				-9
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"subtractTest"
+				"DifferenceTest"
 			Value (Map):
 				6/25
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"subtractTest2"
+				"DifferenceTest2"
 			Value (Map):
 				-101
 		Entry (KeyValuePair`2)
@@ -80,17 +80,17 @@ Entry (KeyValuePair`2)
 				5/103
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"multiplyInteger"
+				"ProductInteger"
 			Value (Map):
 				19437
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"minusMultiply"
+				"minusProduct"
 			Value (Map):
 				2
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"multiplyFraction"
+				"ProductFraction"
 			Value (Map):
 				7/2
 		Entry (KeyValuePair`2)

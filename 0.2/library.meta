@@ -3,6 +3,9 @@
 		|,
 			&=Meta
 			lib=,
+				Double=.
+					Library
+					Double_Map
 				Contains=,
 					arg|.
 						-
@@ -37,11 +40,25 @@
 				raise=.
 					Library
 					Raise_Number_Number
-				addAll=,
-					array|-
-						sum
-						add
-						array
+				or=,
+					a|,
+						b|-
+							.
+								,
+									1=,
+										|1
+									0=,
+										|b
+								<a
+				merge=.
+					Library
+					Merge_Map_Map
+				sum=.
+					Library
+					Sum_Map_Map
+				addAll=-
+					sum
+					add
 				addArray=,
 					a|,
 						b|-
@@ -58,18 +75,52 @@
 									.
 										b
 										<key
+				LengthVector=,
+					vector|-
+						raise
+						-
+							add
+							-
+								raise
+								.
+									vector
+									1
+								2
+							-
+								raise
+								.
+									vector
+									2
+								2
+						1/2
+				DifferenceVector=,
+					a|,
+						b|-
+							Map
+							-
+								keys
+								a
+							,
+								key|-
+									Difference
+									.
+										a
+										<key
+									.
+										b
+										<key
 				divide=.
 					Number
 					op_Division_Number_Number
 				divideBy=-
 					flip
 					divide
-				subtractFrom=.
+				DifferenceFrom=.
 					Number
 					op_Subtraction_Number_Number
-				subtract=-
+				Difference=-
 					flip
-					subtractFrom
+					DifferenceFrom
 				greater=.
 					Number
 					op_GreaterThan_Number_Number
@@ -92,6 +143,23 @@
 								greater
 								a
 								b
+				CallKey=,
+					map|,
+						key|-
+							If
+							-
+								Contains
+								map
+								key
+							,
+								|-
+									Call
+									.
+										map
+										<key
+				Call=,
+					func|-
+						func
 				minimum=,
 					a|,
 						b|.
@@ -99,9 +167,12 @@
 								1=a
 								0=b
 							-
-								smaller
+								less
 								a
 								b
+				MinimumAll=-
+					sum
+					minimum
 				bitwiseOr=.
 					Number
 					op_BitwiseOr_Number_Number
@@ -115,11 +186,9 @@
 									0=,
 										|0
 								<a
-				andAll=,
-					arg|-
-						sum
-						or
-						arg
+				andAll=-
+					sum
+					and
 				integerToString=,
 					arg|-
 						.
@@ -157,11 +226,6 @@
 								Map_Object
 								arg
 							get_IsString
-				JoinAll=,
-					arg|-
-						sum
-						join
-						arg
 				JoinAll=.
 					Library
 					JoinAll_Map
@@ -174,6 +238,14 @@
 									Map_Object
 									arg
 								get_Keys
+				Distance=,
+					a|,
+						b|-
+							LengthVector
+							-
+								DifferenceVector
+								a
+								b
 				length=,
 					arg|-
 						.
@@ -181,20 +253,46 @@
 								Map_Object
 								arg
 							get_ArrayCount
-				mergeAll=,
-					arg|-
-						sum
-						merge
-						arg
+				mergeAll=-
+					sum
+					merge
 				negate=,
 					arg|-
-						subtract
+						Difference
 						0
 						arg
 				modulo=.
 					Number
 					op_Modulus_Number_Number
-				multiply=.
+				DotProductVector=,
+					vector|,
+						number|-
+							Map
+							vector
+							,
+								entry|-
+									Product
+									number
+									entry
+				ProductVector=,
+					a|,
+						b|-
+							Map
+							-
+								range
+								-
+									length
+									a
+							,
+								index|-
+									Product
+									.
+										a
+										<index
+									.
+										b
+										<index
+				Product=.
 					Number
 					op_Multiply_Number_Number
 				not=,
@@ -203,24 +301,12 @@
 							0=1
 							1=0
 						<arg
-				orAll=,
-					arg|-
-						sum
-						or
-						arg
+				orAll=-
+					sum
+					or
 				stringToNumber=.
 					Library
 					StringToNumber_Map
-				or=,
-					a|,
-						b|-
-							.
-								,
-									1=,
-										|1
-									0=,
-										|b
-								<a
 				print=,
 					arg|,
 						-
@@ -342,9 +428,6 @@
 				range=.
 					Library
 					Range_Map
-				sum=.
-					Library
-					Sum_Map_Map
 				reverse=.
 					Library
 					Reverse_Map
@@ -374,9 +457,6 @@
 									-
 										func
 										entry
-				merge=.
-					Library
-					Merge_Map_Map
 				mergeWith=-
 					flip
 					merge
@@ -398,6 +478,12 @@
 								mscorlib
 								Encoding
 								get_Default
+				CompareNumber=.
+					Library
+					CompareNumber_Number_Number
+				Sort=.
+					Library
+					Sort_Map_Map
 				TrimString=.
 					Library
 					Trim_String
