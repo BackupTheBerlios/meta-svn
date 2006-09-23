@@ -470,10 +470,8 @@ commandLine|,
 		1
 		!"one"
 	firstIfBranches=,
-		1=,
-			arg|"then"
-		0=,
-			arg|"else"
+		1=arg?"then"
+		0=arg?"else"
 	firstIf=-
 		.
 			firstIfBranches

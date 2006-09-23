@@ -3604,6 +3604,7 @@ namespace Meta
 
 	public class Syntax
 	{
+		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callStart = '(';
@@ -3626,8 +3627,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n',  function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' };
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.'};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n',  function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':' ,functionProgram};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.',functionProgram,};
 	}
 
 	public class Parser
@@ -3657,7 +3658,7 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(LiteralExpression, Call, Program, List, Search, Select, ExplicitCall);
+			return new Alternatives(FunctionProgram,LiteralExpression, Call, Program, List, Search, Select, ExplicitCall);
 		});
 
 		public static Rule NewLine =
@@ -4260,6 +4261,35 @@ namespace Meta
 			new Action(new Assignment(CodeKeys.Value), Expression),
 			new Action(new Optional(EndOfLine)));
 
+		public static Rule FunctionProgram=new Sequence(
+			new Action(new Assignment(CodeKeys.Program),
+				new Sequence(
+					new Action(new Assignment(1),
+						new Sequence(
+							new Action(new Assignment(CodeKeys.Key), new LiteralRule(new Map(CodeKeys.Literal, CodeKeys.Function))),
+							new Action(new Assignment(CodeKeys.Value), new Sequence(
+								new Action(
+									new Assignment(CodeKeys.Literal),
+									new Sequence(
+										new Action(new Assignment(
+											CodeKeys.Parameter),
+											new ZeroOrMore(
+											new Action(
+												new Autokey(),
+												new CharacterExcept(Syntax.lookupStringForbiddenFirst)))),
+													//Syntax.@string,
+													//Syntax.function,
+													//Syntax.functionProgram,
+													//Syntax.indentation,
+													//Syntax.windowsNewLine[0],
+													//Syntax.unixNewLine)))),
+										new Action(
+												new Character(
+													Syntax.functionProgram)),
+											new Action(new Assignment(CodeKeys.Expression),
+											Expression),
+										new Action(new Optional(EndOfLine))
+			)))))))));
 
 		public static Rule Program = new Sequence(
 			new Action(new Character(',')),
