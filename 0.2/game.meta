@@ -6,8 +6,8 @@
 		SdlDotNet.Events
 		SdlDotNet.Key
 		OdeDotNet
-	world=World 0
-	space=Space 0
+	world=(World
+	space=(Space
 	createBox=space.CreateBox_Single_Single_Single
 	vector=Vector3_Single_Single_Single
 	(createBox 800 20 20).set_Position_Vector3 (vector 400 0 0)
@@ -16,43 +16,34 @@
 	(createBox 20 600 20).set_Position_Vector3 (vector 800 300 0)
 	bubble=size?,
 		body=Body_World world
-		radius=?-
-			Product
-			size
-			4
-		body.set_Mass_Mass (Mass.Sphere_Single_Single (Product 2 (Product size size)) 1/1000)
+		radius=?Product size 4
+		body.set_Mass_Mass (Mass.Sphere_Single_Single (Product 2 (Product size size)) 1/1000
 		keyUp=0
 		keyDown=0
 		position=+
 			random 790
 			random 590
-		body.set_Position_Vector3 (Vector3_Single_Single_Single position.1 position.2 0)
-		geom=space.CreateSphere_Single (radius 0)
-		geom.set_Position_Vector3 (body.get_Position 0)
+		body.set_Position_Vector3 (Vector3_Single_Single_Single position.1 position.2 0
+		geom=space.CreateSphere_Single (radius
+		geom.set_Position_Vector3 (body.get_Position
 		geom.set_Body_Body body
 		speed=+
 			Difference (random 12) 6
 			Difference (random 12) 6
 		body.set_LinearVel_Vector3 (Vector3_Single_Single_Single speed.1 speed.2 0)
-		color=Color.get_Red 0
+		color=(Color.get_Red
 		setColor=c?,
 			color:c
 		GetPosition=?+
-			-
-				.
-					body.get_Position 0
-					get_X
-			-
-				.
-					body.get_Position 0
-					get_Y
+			((body.get_Position).get_X
+			((body.get_Position).get_Y
 		move=?0
 		draw=?-
 			DrawFilledCircle_Circle_Color
 			+
-				GetPosition 0
+				(GetPosition
 				+
-					radius 0
+					(radius
 			color
 	player=key?c?,
 		this=bubble 1
@@ -70,7 +61,7 @@
 				others=bubbles
 				lengths=Map others b?-
 					LengthVector
-					DifferenceVector (GetPosition 0) (b.GetPosition 0)
+					DifferenceVector (GetPosition) (b.GetPosition
 				index=.
 					-
 						Sort
@@ -99,28 +90,28 @@
 							get_Position
 		keyUp=,
 			<key=?,
-				jointGroup.Empty 0
+				(jointGroup.Empty
 				currentJoint:0
 	paused=0
 	-
 		add_Quit_QuitEventHandler
 		?e?,
-			Events.Close 0
-			Events.QuitApplication 0
+			(Events.Close
+			(Events.QuitApplication
 	add_AppActive_ActiveEventHandler ?e?If (not (equal 1 (e.get_State))) ?,
-		paused:not (e.get_GainedFocus)
+		paused:not (e.get_GainedFocus
 	add_KeyboardDown_KeyboardEventHandler ?e?-
 		Map
 		players
-		player?CallKey player.keyDown (e.get_Key 0)
+		player?CallKey player.keyDown (e.get_Key
 	add_KeyboardUp_KeyboardEventHandler ?e?-
 		Map
 		players
-		player?CallKey player.keyUp (e.get_Key 0)
+		player?CallKey player.keyUp (e.get_Key
 	contactGroup=JointGroup_Int32 0
 	space.add_Collision_CollisionEventHandler ?e?,
-		a=e.get_Geom1 0
-		b=e.get_Geom2 0
+		a=(e.get_Geom1
+		b=(e.get_Geom2
 		-
 			Map 
 			enumerableToArray (a.Collide_Geom_Int32 b 13)
@@ -132,8 +123,8 @@
 							Geom=contactGeom
 						contactGroup
 					Attach_Body_Body
-				a.get_Body 0
-				b.get_Body 0
+				(a.get_Body
+				(b.get_Body
 	players=+
 		player Return (Color.get_Blue)
 	bubbles=JoinAll +
@@ -142,50 +133,17 @@
 	-
 		add_Tick_TickEventHandler
 		??If (not paused) ?,
-			contactGroup.Empty 0
-			(Video.get_Screen).Fill_Color (Color.get_White)
-			space.CheckCollisions 0
-			world.Step 0
-			-
-				Map
-				bubbles
-				b?,
-					b.move 0
-					b.draw 0
-			-
-				Map
-				players
-				player?player.draw 0
-			-
-				Map
-				players
-				player?-
-					If
-					not (equal 0 player.currentJoint)
-					?,
-						-
-							print
-							"there is a joint"
-						a=-
-							.
-								player
-								currentJoint
-								get_Anchor
-						b=-
-							.
-								player
-								body
-								get_Position
-						-
-							DrawLine_Line_Color
-							-
-								print
-								-
-									Line_Int16_Int16_Int16_Int16
-									a.get_X 0
-									a.get_Y 0
-									b.get_X 0
-									b.get_Y 0
-							Color.get_Black 0
-			Flip 0
-	Run 0
+			(contactGroup.Empty
+			(Video.get_Screen).Fill_Color (Color.get_White
+			(space.CheckCollisions
+			(world.Step
+			Map bubbles b?,
+				(b.move
+				(b.draw
+			Map players player?(player.draw
+			Map players player?If (not (equal 0 player.currentJoint)) ?,
+				a=(player.currentJoint.get_Anchor
+				b=(player.body.get_Position
+				DrawLine_Line_Color (Line_Int16_Int16_Int16_Int16 (a.get_X) (a.get_Y) (b.get_X) (b.get_Y)) (Color.get_Black
+			(Flip
+	(Run

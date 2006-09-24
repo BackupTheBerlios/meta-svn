@@ -4031,7 +4031,7 @@ namespace Meta
 				//new Action(new Append(),new OptionalEmpty(new Sequence(
 				//    new Action(new Autokey(),Expression))))
 
-								)),new Action(new Character(Syntax.callEnd)));
+								)),new Action(new Optional(new Character(Syntax.callEnd))));
 		});
 		//public static Rule Call = new DelayedRule(delegate()
 		//{
