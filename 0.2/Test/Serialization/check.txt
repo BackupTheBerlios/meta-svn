@@ -178,7 +178,6 @@ commandLine|,
 	"inScope"="wrong"
 	4=-
 		!"scopeFunction"
-		0
 	"scopeFromFunctionData"="wrong"
 	"scopeFunctionFunction"=,
 		"scopeFromFunctionData"="right"

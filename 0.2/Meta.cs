@@ -3626,8 +3626,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select ,' '};
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.',functionProgram,select,' '};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select ,' ','-'};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.',functionProgram,select,' ','-'};
 	}
 
 	public class Parser
@@ -3657,7 +3657,18 @@ namespace Meta
 		}
 		public static Rule Expression = new DelayedRule(delegate()
 		{
-			return new Alternatives(FunctionProgram, LiteralExpression, CallInline,SelectInline, Call, Program, List, Search, Select, ExplicitCall);
+			return new Alternatives(
+				FunctionProgram,
+				LiteralExpression,
+				CallInline, 
+				Call,
+				//CallInlineLong,
+				SelectInline,
+				Program, 
+				List,
+				Search,
+				Select,
+				ExplicitCall);
 		});
 
 		public static Rule NewLine =
@@ -3741,7 +3752,12 @@ namespace Meta
 					new Alternatives(
 						new Character(Syntax.unixNewLine),
 						StringRule(Syntax.windowsNewLine))));
-
+		private static Rule SmallIndentationSpecial = new CustomRule(delegate(Parser p, out bool matched)
+		{
+			p.indentationCount++;
+			matched = true;
+			return null;
+		});
 		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, out bool matched)
 		{
 			p.indentationCount++;
@@ -3858,7 +3874,6 @@ namespace Meta
 					new Optional(
 						new Sequence(
 							new Action(
-
 								new Character(Syntax.fraction)),
 							new Action(
 								new ReferenceAssignment(),
@@ -3977,12 +3992,46 @@ namespace Meta
 						new Action(EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
 
+		//public static Rule ExplicitCall = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.callStart)),
+		//        new Action(new ReferenceAssignment(), CallInline),
+		//        new Action(new Character(Syntax.callEnd)));
+		//});
 		public static Rule ExplicitCall = new DelayedRule(delegate()
 		{
 			return new Sequence(
 				new Action(new Character(Syntax.callStart)),
-				new Action(new ReferenceAssignment(), Call),
-				new Action(new Character(Syntax.callEnd)));
+				new Action(new Assignment(
+					CodeKeys.Call),
+					new Sequence(
+				new Action(new Assignment(1),
+						new Alternatives(
+								SelectInline,
+								LiteralExpression,
+								Search)),
+							new Action(new Append(),
+							new ZeroOrMore(
+								new Action(
+									new Autokey(),
+									new Sequence(
+										new Action(new Optional(new Character(' '))),
+										new Action(
+											new ReferenceAssignment(),
+											new Alternatives(
+												SelectInline,
+												FunctionProgram,
+												ExplicitCall,
+												LiteralExpression,
+												Search,
+												Program,
+												List)))))
+							)//,
+				//new Action(new Append(),new OptionalEmpty(new Sequence(
+				//    new Action(new Autokey(),Expression))))
+
+								)),new Action(new Character(Syntax.callEnd)));
 		});
 		//public static Rule Call = new DelayedRule(delegate()
 		//{
@@ -4024,6 +4073,72 @@ namespace Meta
 							new Action(new Optional(EndOfLine)),
 							new Action(new Optional(Dedentation)))));
 		});
+
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(FullIndentation),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(EndOfLine)),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), Expression))))),
+		//                    new Action(new Optional(EndOfLine)),
+		//                    new Action(new Optional(Dedentation)))));
+		//});
+
+
+
+		public static Rule CallInlineLong = new DelayedRule(delegate()
+		{
+			return new Sequence(
+				new Action(new Assignment(
+					CodeKeys.Call),
+					new Sequence(
+						new Action(new Autokey(), SelectInline),
+						new Action(SmallIndentationSpecial),
+						new Action(
+							new ReferenceAssignment(),
+							new OneOrMore(
+								new Action(
+									new Autokey(),
+									new Sequence(
+										new Action(EndOfLine),
+										new Action(SameIndentation),
+										new Action(new ReferenceAssignment(), String))))),
+							new Action(new Optional(EndOfLine)),
+							new Action(new Optional(Dedentation)))));
+		});
+
+
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(FullIndentation),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(EndOfLine)),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), Expression))))),
+		//                    new Action(new Optional(EndOfLine)),
+		//                    new Action(new Optional(Dedentation)))));
+		//});
 
 
 		public static Rule FunctionExpression = new Sequence(
@@ -4086,6 +4201,55 @@ namespace Meta
 							Expression)),
 					new Alternatives(LookupStringExpression, LookupAnythingExpression))));
 
+		//public static Rule CallInlineLong = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//        new Action(
+		//            new Assignment(1),
+		//            new Alternatives(
+		//                SelectInline//,
+		//                //LiteralExpression,
+		//                //Search
+		//                )),
+		//            new Action(FullIndentation),
+		//            new Action(
+		//                new Append(),
+		//                new OneOrMore(
+		//                    new Action(
+		//                        new Autokey(),
+		//                        new Sequence(
+		//                            new Action(new Optional(EndOfLine)),
+		//                            new Action(SameIndentation),
+		//                            new Action(new ReferenceAssignment(), String))))),
+		//            new Action(new Optional(EndOfLine)),
+		//            new Action(new Optional(Dedentation)))));
+		//});
+
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(FullIndentation),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(EndOfLine)),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), Expression))))),
+		//                    new Action(new Optional(EndOfLine)),
+		//                    new Action(new Optional(Dedentation)))));
+		//})
+
+
 		public static Rule CallInline = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -4102,15 +4266,48 @@ namespace Meta
 								new Action(
 									new Autokey(),
 									new Sequence(
-										new Action(new Character(' ')),
+										new Action(new Optional(new Character(' '))),
 										new Action(
 											new ReferenceAssignment(),
 											new Alternatives(
 												SelectInline,
+												FunctionProgram,
+												ExplicitCall,
 												LiteralExpression,
-												Search)))))
-							))));
+												Search,
+												Program,
+												List)))))
+							)//,
+							//new Action(new Append(),new OptionalEmpty(new Sequence(
+							//    new Action(new Autokey(),Expression))))
+								
+								)));
 		});
+		//public static Rule CallInline = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//        new Action(new Assignment(1),
+		//                new Alternatives(
+		//                        SelectInline,
+		//                        LiteralExpression,
+		//                        Search)),
+		//                    new Action(new Append(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Character(' ')),
+		//                                new Action(
+		//                                    new ReferenceAssignment(),
+		//                                    new Alternatives(
+		//                                        SelectInline,
+		//                                        LiteralExpression,
+		//                                        Search)))))
+		//                    ))));
+		//});
 		public static Rule ProgramDelayed = new DelayedRule(delegate()
 		{
 			return Program;
@@ -4122,7 +4319,8 @@ namespace Meta
 					new Action(new Assignment(1),
 						new Alternatives(
 							Root,
-							Search)),
+							Search,
+			ExplicitCall)),
 					new Action(new Append(),
 						new OneOrMore(new Action(new Autokey(),new Sequence(
 							new Action(new Character('.')),
@@ -4145,7 +4343,8 @@ namespace Meta
 							CallInline,
 							Root,
 							Search,
-							Call)),
+							Call
+			)),
 					new Action(new Append(),
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Optional(EndOfLine)),
@@ -4761,6 +4960,28 @@ namespace Meta
 			public TwoOrMore(Action action)
 			{
 				this.action = action;
+			}
+		}
+		public class OptionalEmpty : Rule
+		{
+			private Rule rule;
+			public OptionalEmpty(Rule rule)
+			{
+				this.rule = rule;
+			}
+			protected override Map MatchImplementation(Parser parser, out bool match)
+			{
+				Map matched = rule.Match(parser, out match);
+				if (matched == null)
+				{
+					match = true;
+					return new Map();
+				}
+				else
+				{
+					match = true;
+					return matched;
+				}
 			}
 		}
 		public class Optional : Rule

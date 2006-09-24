@@ -152,21 +152,17 @@ commandLine|,
 			!"object"
 			SetA
 		0
-	bSet=-
-		.
-			!"object"
-			SetB
-		,
-			value=,
-				x=7
-				z=1
+	bSet=!"object".SetB ,
+		value=,
+			x=7
+			z=1
 	scopeTest="default"
 	scopeFunction=,
 		inScope="right"
 		arg|,
 			scopeTest:inScope
 	inScope="wrong"
-	4=!"scopeFunction" 0
+	4=(!"scopeFunction")
 	scopeFromFunctionData="wrong"
 	scopeFunctionFunction=,
 		scopeFromFunctionData="right"
