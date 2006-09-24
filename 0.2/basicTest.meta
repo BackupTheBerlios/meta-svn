@@ -53,8 +53,8 @@ commandLine|,
 		asdf
 	counter=0
 	SetCounter=,
-		argument|,
-			counter:argument
+		|,
+			counter:@
 	1=!"SetCounter" 5
 	scoping=,
 		test=,
@@ -71,8 +71,7 @@ commandLine|,
 				0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	negativeInteger=-
-		merge
+	negativeInteger=merge
 		negativeInteger
 		,
 			x="hello"

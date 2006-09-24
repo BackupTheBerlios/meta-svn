@@ -257,6 +257,14 @@ namespace Meta
 		}
 
 	}
+	public class LastArgument : Expression
+	{
+		public override Map EvaluateImplementation(Map context)
+		{
+			return Map.arguments.Peek();
+		}
+	}
+
 	public class Call : Expression
 	{
 		public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
@@ -3626,8 +3634,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select ,' ','-'};
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'.',functionProgram,select,' ','-'};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>'};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*' ,'>'};
 	}
 
 	public class Parser
@@ -3655,17 +3663,24 @@ namespace Meta
 			this.text = text;
 			this.file = filePath;
 		}
+		public static Rule LastArgument = new Sequence(
+			new Action(new Character(Syntax.lastArgument)),
+			new Action(
+				new Assignment(CodeKeys.LastArgument),
+				new LiteralRule(new Map())));
 		public static Rule Expression = new DelayedRule(delegate()
 		{
 			return new Alternatives(
+				LastArgument,
 				FunctionProgram,
 				LiteralExpression,
 				CallInline, 
 				Call,
-				//CallInlineLong,
+				CallInlineLong,
 				SelectInline,
 				Program, 
 				List,
+				//ListInline,
 				Search,
 				Select,
 				ExplicitCall);
@@ -4026,7 +4041,9 @@ namespace Meta
 												LiteralExpression,
 												Search,
 												Program,
-												List)))))
+												List//,
+												//ListInline
+												)))))
 							)//,
 				//new Action(new Append(),new OptionalEmpty(new Sequence(
 				//    new Action(new Autokey(),Expression))))
@@ -4069,7 +4086,18 @@ namespace Meta
 									new Sequence(
 										new Action(new Optional(EndOfLine)),
 										new Action(SameIndentation),
-										new Action(new ReferenceAssignment(), Expression))))),
+										new Action(new ReferenceAssignment(), new Alternatives(
+				FunctionProgram,
+				LiteralExpression,
+				CallInline, 
+				Call,
+				SelectInline,
+				Program, 
+				List,
+				//ListInline,
+				Search,
+				Select,
+				ExplicitCall)))))),
 							new Action(new Optional(EndOfLine)),
 							new Action(new Optional(Dedentation)))));
 		});
@@ -4095,28 +4123,49 @@ namespace Meta
 		//                    new Action(new Optional(Dedentation)))));
 		//});
 
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(FullIndentation),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(EndOfLine)),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), Expression))))),
+		//                    new Action(new Optional(EndOfLine)),
+		//                    new Action(new Optional(Dedentation)))));
+		//});
 
 
-		public static Rule CallInlineLong = new DelayedRule(delegate()
-		{
-			return new Sequence(
-				new Action(new Assignment(
-					CodeKeys.Call),
-					new Sequence(
-						new Action(new Autokey(), SelectInline),
-						new Action(SmallIndentationSpecial),
-						new Action(
-							new ReferenceAssignment(),
-							new OneOrMore(
-								new Action(
-									new Autokey(),
-									new Sequence(
-										new Action(EndOfLine),
-										new Action(SameIndentation),
-										new Action(new ReferenceAssignment(), String))))),
-							new Action(new Optional(EndOfLine)),
-							new Action(new Optional(Dedentation)))));
-		});
+
+		//public static Rule CallInlineLong = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Autokey(), SelectInline),
+		//                new Action(SmallIndentationSpecial),
+		//                new Action(
+		//                    new ReferenceAssignment(),
+		//                    new OneOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(EndOfLine),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), String))))),
+		//                    new Action(new Optional(EndOfLine)),
+		//                    new Action(new Optional(Dedentation)))));
+		//});
 
 
 		//public static Rule Call = new DelayedRule(delegate()
@@ -4173,8 +4222,9 @@ namespace Meta
 		private static Rule LookupAnythingExpression =
 			new Sequence(
 				new Action(new Character('<')),
-				new Action(new ReferenceAssignment(), Expression)
-			);
+			// forbid inlinecall here!!
+				new Action(new ReferenceAssignment(), Expression),
+			new Action(new Optional(new Character('>'))));
 
 		private static Rule LookupStringExpression =
 			new Sequence(
@@ -4250,6 +4300,65 @@ namespace Meta
 		//})
 
 
+
+		public static Stack<int> callIndent = new Stack<int>();
+		public static Rule CallInlineLong = new DelayedRule(delegate()
+		{
+			return new PrePost(delegate(Parser p)
+			{
+				callIndent.Push(p.indentationCount);
+			}, new Sequence(
+				new Action(new Assignment(
+					CodeKeys.Call),
+					new Sequence(
+				new Action(new Assignment(1),
+						new Alternatives(
+				//SelectInline,
+				//LiteralExpression,
+								Search)),
+						new Action(SmallIndentation),
+						new Action(
+							new Append(),
+							new OneOrMore(
+								new Action(
+									new Autokey(),
+									new Sequence(
+										new Action(new Optional(EndOfLine)),
+										new Action(SameIndentation),
+										new Action(new ReferenceAssignment(), new Alternatives(
+										//Expression
+										FunctionProgram,
+												SelectInline,
+												FunctionProgram,
+												ExplicitCall,
+												LiteralExpression,
+												CallInline,
+												Call,
+												SelectInline,
+												Search,
+												Program,
+												List
+												)))))),
+				//FunctionProgram,
+				//LiteralExpression,
+				//CallInline, 
+				//Call,
+				//CallInlineLong,
+				//SelectInline,
+				//Program, 
+				//List,
+				////ListInline,
+				//Search,
+				//Select,
+				//ExplicitCall);
+
+							new Action(new Optional(EndOfLine)),
+							new Action(new Optional(Dedentation))))),
+						delegate(Parser p)
+						{
+							p.indentationCount = callIndent.Pop();
+						});
+		});
 		public static Rule CallInline = new DelayedRule(delegate()
 		{
 			return new Sequence(
@@ -4276,13 +4385,17 @@ namespace Meta
 												LiteralExpression,
 												Search,
 												Program,
-												List)))))
+												List
+				//,
+				//ListInline
+												)))))
 							)//,
-							//new Action(new Append(),new OptionalEmpty(new Sequence(
-							//    new Action(new Autokey(),Expression))))
-								
+				//new Action(new Append(),new OptionalEmpty(new Sequence(
+				//    new Action(new Autokey(),Expression))))
+
 								)));
 		});
+
 		//public static Rule CallInline = new DelayedRule(delegate()
 		//{
 		//    return new Sequence(
@@ -4349,7 +4462,7 @@ namespace Meta
 						new ZeroOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Optional(EndOfLine)),
 							new Action(SameIndentation),
-							new Action(new ReferenceAssignment(), new Alternatives(LookupAnythingExpression, LookupStringExpression, Expression)))))),
+							new Action(new ReferenceAssignment(), new Alternatives(CallInline, LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
 					new Action(new Optional(Dedentation))
 			)));
@@ -4516,6 +4629,102 @@ namespace Meta
 					{
 						p.defaultKeys.Pop();
 					})));
+		//public static Rule ListPart=new Sequence(
+		//    new Action(
+		//        new ReferenceAssignment(),
+		//        new CustomProduction(
+		//            delegate(Parser p, Map map, ref Map result)
+		//            {
+		//                result = new Map(
+		//                    CodeKeys.Key, new Map(
+		//                            CodeKeys.Literal, p.defaultKeys.Peek()),
+		//                    CodeKeys.Value, map);
+		//                p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//                return result;
+		//            }
+		//    ), ExplicitCall)
+		//    )))
+
+		//public static Rule ListInline = new Sequence(
+		//    new Action(new Character('[')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+
+		//    //new Action(new Optional(EndOfLine)),
+		//    //new Action(SmallIndentation),
+		//                new Action(
+		//                    new Append(),
+		//                    new OneOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Character('*')),
+		//                                //new Action(new Optional(EndOfLine)),
+		//                                //new Action(SameIndentation),
+		//                                new Action(
+		//    )
+		//    ,
+		//        new Action(new Optional(EndOfLine)),
+		//        new Action(new Optional(new Alternatives(Dedentation)))
+		//    ),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })),
+		//    new Action(new Character('['))
+		//    );
+
+
+		//public static Rule ListInline = new Sequence(
+		//    new Action(new Character('[')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//                new Action(new Assignment(1),
+		//    //new Action(new Optional(EndOfLine)),
+		//    //new Action(SmallIndentation),
+		//                new Action(
+		//                    new Append(),
+		//                    new OneOrMore(
+		//                        new Action(new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Character('*')),
+		//                                //new Action(new Optional(EndOfLine)),
+		//                                //new Action(SameIndentation),
+		//                                new Action(
+		//                    new CustomProduction(
+		//                    delegate(Parser p, Map map, ref Map result)
+		//                    {
+		//                        result = new Map(
+		//                            CodeKeys.Key, new Map(
+		//                                    CodeKeys.Literal, p.defaultKeys.Peek()),
+		//                            CodeKeys.Value, map);
+		//                        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//                        return result;
+		//                    }
+		//    ), ExplicitCall)
+		//    )))
+		//    )
+		//    ,
+		//        new Action(new Optional(EndOfLine)),
+		//        new Action(new Optional(new Alternatives(Dedentation)))
+		//    ),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })),
+		//    new Action(new Character('['))
+		//    );
+
 
 		public static Rule DiscardStatement = new Sequence(
 			new Action(new Assignment(CodeKeys.Discard),new LiteralRule(new Map("literal","asdf"))),
@@ -4677,6 +4886,7 @@ namespace Meta
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
+				//int oldIndentation = parser.indentationCount;
 				bool isStartOfFile = parser.isStartOfFile;
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
@@ -4685,6 +4895,10 @@ namespace Meta
 					parser.line = oldLine;
 					parser.column = oldColumn;
 					parser.isStartOfFile = isStartOfFile;
+					//if (parser.indentationCount != oldIndentation)
+					//{
+					//}
+					//parser.indentationCount = oldIndentation;
 				}
 				else
 				{
@@ -5675,6 +5889,7 @@ namespace Meta
 
 	public class CodeKeys
 	{
+		public static readonly Map LastArgument="lastArgument";
 		public static readonly Map Discard = "discard";
 		public static readonly Map Key = "key";
 		public static readonly Map Expression = "expression";
@@ -5842,6 +6057,7 @@ namespace Meta
 			{
 				result.Add(part);
 			}
+			
 			return new Map(new ListStrategy(result));
 		}
 		public static Map Modify(Map map, Map func)
@@ -6189,10 +6405,12 @@ namespace Meta
 		{ 
 			return strategy.GetString();
 		}
-
+		public static Stack<Map> arguments = new Stack<Map>();
 		public Map Call(Map arg)
 		{
+			arguments.Push(arg);
 			Map result = strategy.Call(arg, this);
+			arguments.Pop();
 			return result;
 		}
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
@@ -6320,6 +6538,10 @@ namespace Meta
 			else if (ContainsKey(CodeKeys.Root))
 			{
 				return new Root();
+			}
+			else if (ContainsKey(CodeKeys.LastArgument))
+			{
+				return new LastArgument();
 			}
 			else
 			{

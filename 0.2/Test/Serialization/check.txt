@@ -55,8 +55,9 @@ commandLine|,
 		5=!"asdf"
 	"counter"=0
 	"SetCounter"=,
-		argument|,
-			"counter":!"argument"
+		|,
+			"counter":,
+				lastArgument=0
 	1=-
 		!"SetCounter"
 		5

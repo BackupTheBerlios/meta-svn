@@ -85,7 +85,7 @@ Entry (KeyValuePair`2)
 					Key (Map):
 						"parameter"
 					Value (Map):
-						"argument"
+						0
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"expression"
@@ -113,13 +113,9 @@ Entry (KeyValuePair`2)
 											Value (Map):
 												Entry (KeyValuePair`2)
 													Key (Map):
-														"search"
+														"lastArgument"
 													Value (Map):
-														Entry (KeyValuePair`2)
-															Key (Map):
-																"literal"
-															Value (Map):
-																"argument"
+														0
 Entry (KeyValuePair`2)
 	Key (Map):
 		"scoping"
