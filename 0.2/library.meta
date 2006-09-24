@@ -90,36 +90,21 @@
 					<arg
 				orAll=sum or
 				stringToNumber=Library.StringToNumber_Map
-				print=arg?writeLine (toString arg)
+				print=?writeLine (toString @)
 				SplitString=Library.SplitString_Map_Map
 				parse=Parser.Parse_String
 				toString=Serialization.Serialize_Map
-				writeLine=arg?,
-					/.mscorlib.Console.WriteLine_String arg
+				writeLine=?,
+					/.mscorlib.Console.WriteLine_String @
 					&=arg
-				readLine=,
-					arg|-
-						.
-							/
-							mscorlib
-							Console
-							ReadLine
-				append=.
-					Library
-					Append_Map_Map
-				appendTo=-
-					flip
-					append
-				empty=-
-					equal
-					0
-				prepend=,
-					array|,
-						item|-
-							join
-							+
-								item
-							array
+				readLine=?(mscorlib.Console.ReadLine
+				append=Library.Append_Map_Map
+				appendTo=flip append
+				empty=equal 0
+				prepend=array?item?join
+					+
+						item
+					array
 				prependTo=-
 					flip
 					prepend

@@ -4040,6 +4040,7 @@ namespace Meta
 												ExplicitCall,
 												LiteralExpression,
 												Search,
+												LastArgument,
 												Program,
 												List//,
 												//ListInline
@@ -4087,6 +4088,7 @@ namespace Meta
 										new Action(new Optional(EndOfLine)),
 										new Action(SameIndentation),
 										new Action(new ReferenceAssignment(), new Alternatives(
+				LastArgument,
 				FunctionProgram,
 				LiteralExpression,
 				CallInline, 
@@ -4101,94 +4103,6 @@ namespace Meta
 							new Action(new Optional(EndOfLine)),
 							new Action(new Optional(Dedentation)))));
 		});
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(FullIndentation),
-		//                new Action(
-		//                    new ReferenceAssignment(),
-		//                    new OneOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(EndOfLine)),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Optional(EndOfLine)),
-		//                    new Action(new Optional(Dedentation)))));
-		//});
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(FullIndentation),
-		//                new Action(
-		//                    new ReferenceAssignment(),
-		//                    new OneOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(EndOfLine)),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Optional(EndOfLine)),
-		//                    new Action(new Optional(Dedentation)))));
-		//});
-
-
-
-		//public static Rule CallInlineLong = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Autokey(), SelectInline),
-		//                new Action(SmallIndentationSpecial),
-		//                new Action(
-		//                    new ReferenceAssignment(),
-		//                    new OneOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(EndOfLine),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), String))))),
-		//                    new Action(new Optional(EndOfLine)),
-		//                    new Action(new Optional(Dedentation)))));
-		//});
-
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(FullIndentation),
-		//                new Action(
-		//                    new ReferenceAssignment(),
-		//                    new OneOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(EndOfLine)),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), Expression))))),
-		//                    new Action(new Optional(EndOfLine)),
-		//                    new Action(new Optional(Dedentation)))));
-		//});
-
 
 		public static Rule FunctionExpression = new Sequence(
 			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new Map(CodeKeys.Literal, CodeKeys.Function))),
@@ -4369,6 +4283,7 @@ namespace Meta
 						new Alternatives(
 								SelectInline,
 								LiteralExpression,
+								LastArgument,
 								Search)),
 							new Action(new Append(),
 							new OneOrMore(
@@ -4383,6 +4298,7 @@ namespace Meta
 												FunctionProgram,
 												ExplicitCall,
 												LiteralExpression,
+												LastArgument,
 												Search,
 												Program,
 												List
