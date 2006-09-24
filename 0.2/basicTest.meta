@@ -44,9 +44,7 @@ commandLine|,
 	asdf="hello"
 	shortFunction=,
 		arg|!"asdf"
-	shortFunctionTest=-
-		!"shortFunction"
-		"hello"
+	shortFunctionTest=!"shortFunction" "hello"
 	listTest=+
 		1
 		2
@@ -57,20 +55,14 @@ commandLine|,
 	SetCounter=,
 		argument|,
 			counter:argument
-	1=-
-		!"SetCounter"
-		5
+	1=!"SetCounter" 5
 	scoping=,
 		test=,
 			scopingValue="right"
 			arg|!"scopingValue"
 	scopingValue="wrong"
-	scopingTest=.
-		scoping
-		test
-	lexicalScoping=-
-		!"scopingTest"
-		0
+	scopingTest=scoping.test
+	lexicalScoping=!"scopingTest" 0
 	unicodeText="äaba"
 	integerHashTest=,
 		2="correct hash content"
@@ -88,9 +80,7 @@ commandLine|,
 	integerIncrementTest=,
 		0=integerIncrementTest
 	integerDecrementTest=5
-	integerDecrementTest=.
-		!"integerDecrementTest"
-		0
+	integerDecrementTest=!"integerDecrementTest".0
 	negativeNumber=-123
 	mapNumbers=,
 		integer=,
@@ -176,20 +166,14 @@ commandLine|,
 		arg|,
 			scopeTest:inScope
 	inScope="wrong"
-	4=-
-		!"scopeFunction"
-		0
+	4=!"scopeFunction" 0
 	scopeFromFunctionData="wrong"
 	scopeFunctionFunction=,
 		scopeFromFunctionData="right"
 		arg|,
 			arg|!"scopeFromFunctionData"
-	scopeFromFunction=-
-		!"scopeFunctionFunction"
-		0
-	scopeFromFunctionTest=-
-		!"scopeFromFunction"
-		0
+	scopeFromFunction=!"scopeFunctionFunction" 0
+	scopeFromFunctionTest=!"scopeFromFunction" 0
 	ReturnEverything=,
 		everything|,
 			&=!"everything"
@@ -227,9 +211,7 @@ commandLine|,
 			symbol="haha"
 	FirstLevel=,
 		arg|+
-			-
-				!"SecondLevel"
-				!"arg"
+			!"SecondLevel" !"arg"
 	SecondLevel=,
 		arg|!"arg"
 	argTest=-
@@ -262,9 +244,7 @@ commandLine|,
 		/
 		Meta
 		MemberTest
-	memberTest=-
-		!"MemberTest"
-		0
+	memberTest=!"MemberTest" 0
 	!"memberTest"="memberKeyTest"
 	stringOverload=-
 		.

@@ -2,95 +2,40 @@
 	&=-
 		mergeAll
 		+
-			System.Drawing
+			!"System.Drawing"
 			SdlDotNet
 			-
-				.
-					SdlDotNet
-					Video
-					SetVideoModeWindow_Int32_Int32_Boolean
+				SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean
 				800
 				600
 				1
-			.
-				SdlDotNet
-				Events
-			.
-				SdlDotNet
-				Key
+			SdlDotNet.Events
+			SdlDotNet.Key
 			OdeDotNet
-	world=-
-		World
-	space=-
-		Space
-	upper=-
-		.
-			space
-			CreateBox_Single_Single_Single
-		800
-		20
-		20
+	world=World 0
+	space=Space 0
 	-
 		.
-			upper
+			space.CreateBox_Single_Single_Single 800 20 20
 			set_Position_Vector3
-		-
-			Vector3_Single_Single_Single
-			400
-			0
-			0
-	lower=-
-		.
-			space
-			CreateBox_Single_Single_Single
-		800
-		20
-		20
+		Vector3_Single_Single_Single 400 0 0
 	-
 		.
-			lower
+			space.CreateBox_Single_Single_Single 800 20 20
 			set_Position_Vector3
-		-
-			Vector3_Single_Single_Single
-			400
-			600
-			0
-	left=-
-		.
-			space
-			CreateBox_Single_Single_Single
-		20
-		600
-		20
+		Vector3_Single_Single_Single 400 600 0
 	-
 		.
-			left
+			space.CreateBox_Single_Single_Single 20 600 20
 			set_Position_Vector3
-		-
-			Vector3_Single_Single_Single
-			0
-			300
-			0
-	right=-
-		.
-			space
-			CreateBox_Single_Single_Single
-		20
-		600
-		20
+		Vector3_Single_Single_Single 0 300 0
 	-
 		.
-			right
+			space.CreateBox_Single_Single_Single 20 600 20
 			set_Position_Vector3
-		-
-			Vector3_Single_Single_Single
-			800
-			300
-			0
+		Vector3_Single_Single_Single 800 300 0
 	bubble=initSize?,
-		body=-
-			Body_World
-			world
+		body=Body_World world
 		&=-
 			merge
 			body
@@ -112,90 +57,42 @@
 		-
 			set_Mass_Mass
 			-
-				.
-					Mass
-					Sphere_Single_Single
+				Mass.Sphere_Single_Single
 				-
 					Product
 					2
-					-
-						Product
-						size
-						size
+					Product size size
 				1/1000
 		keyUp=0
-		acceleration=+
-			0
-			0
-		setSpeed=s?,
-			speed:s
 		keyDown=0
 		position=+
-			-
-				random
-				790
-			-
-				random
-				590
+			random 790
+			random 590
 		-
 			set_Position_Vector3
-			-
-				Vector3_Single_Single_Single
-				.
-					position
-					1
-				.
-					position
-					2
-				0
+			Vector3_Single_Single_Single position.1 position.2 0
 		geom=-
-			.
-				space
-				CreateSphere_Single
-			-
-				radius
+			space.CreateSphere_Single
+			radius 0
 		-
-			.
-				geom
-				set_Position_Vector3
-			-
-				get_Position
-		-
-			.
-				geom
-				set_Body_Body
-			body
+			geom.set_Position_Vector3
+			get_Position 0
+		geom.set_Body_Body body
 		speed=+
 			-
 				Difference
-				-
-					random
-					12
+				random 12
 				6
 			-
 				Difference
-				-
-					random
-					12
+				random 12
 				6
 		-
 			set_LinearVel_Vector3
-			-
-				Vector3_Single_Single_Single
-				.
-					speed
-					1
-				.
-					speed
-					2
-				0
-		color=-
-			.
-				Color
-				get_Red
-		setColor=,
-			c|,
-				color:c
+			Vector3_Single_Single_Single speed.1 speed.2 0
+		color=Color.get_Red 0
+		setColor=c?,
+			color:c
 		GetPosition=?+
 			-
 				.
@@ -258,9 +155,7 @@
 							-
 								GetPosition
 							-
-								.
-									b
-									GetPosition
+								b.GetPosition
 				index=.
 					-
 						Sort
@@ -269,12 +164,8 @@
 							others
 						a?b?-
 							CompareNumber
-							.
-								lengths
-								<a
-							.
-								lengths
-								<b
+							lengths.<a
+							lengths.<b
 					1
 				joint=-
 					HingeJoint_World_JointGroup
@@ -284,17 +175,11 @@
 					setCurrentJoint
 					joint
 				-
-					.
-						joint
-						Attach_Body_Body
-					.
-						others
-						<index
+					joint.Attach_Body_Body
+					others.<index
 					this
 				-
-					.
-						joint
-						set_Anchor_Vector3
+					joint.set_Anchor_Vector3
 					-
 						.
 							others
@@ -303,22 +188,14 @@
 		keyUp=,
 			<key=?,
 				-
-					.
-						jointGroup
-						Empty
+					jointGroup.Empty
 				currentJoint:0
 	paused=0
 	-
 		add_Quit_QuitEventHandler
 		?e?,
-			-
-				.
-					Events
-					Close
-			-
-				.
-					Events
-					QuitApplication
+			Events.Close 0
+			Events.QuitApplication 0
 	-
 		add_AppActive_ActiveEventHandler
 		?e?-
@@ -328,77 +205,45 @@
 				-
 					equal
 					1
-					-
-						.
-							e
-							get_State
+					e.get_State 0
 			,
 				|,
 					paused:-
 						not
-						-
-							.
-								e
-								get_GainedFocus
+						e.get_GainedFocus 0
 	-
 		add_KeyboardDown_KeyboardEventHandler
 		?e?-
 			Map
 			players
-			,
-				player|-
-					CallKey
-					.
-						player
-						keyDown
-					-
-						print
-						-
-							.
-								e
-								get_Key
+			player?-
+				CallKey
+				player.keyDown
+				-
+					print
+					e.get_Key 0
 	-
-		.
-			add_KeyboardUp_KeyboardEventHandler
+		add_KeyboardUp_KeyboardEventHandler
 		?e?-
 			Map
 			players
-			,
-				player|-
-					CallKey
-					.
-						player
-						keyUp
-					-
-						.
-							e
-							get_Key
+			player?-
+				CallKey
+				player.keyUp
+				e.get_Key 0
 	contactGroup=-
 		JointGroup_Int32
 		0
 	-
-		.
-			space
-			add_Collision_CollisionEventHandler
+		space.add_Collision_CollisionEventHandler
 		?e?,
-			a=-
-				.
-					e
-					get_Geom1
-			b=-
-				.
-					e
-					get_Geom2
+			a=e.get_Geom1 0
+			b=e.get_Geom2 0
 			-
 				Map
 				-
 					enumerableToArray
-					-
-						.
-							a
-							Collide_Geom_Int32
-						b
-						13
+					a.Collide_Geom_Int32 b 13
 				contactGeom?,
 					contact=-
 						Contact
@@ -406,47 +251,27 @@
 							Geom=contactGeom
 					-
 						.
-							-
-								.
-									world
-									CreateContactJoint_Contact_JointGroup
-								contact
-								contactGroup
+							world.CreateContactJoint_Contact_JointGroup contact contactGroup
 							Attach_Body_Body
-						-
-							.
-								a
-								get_Body
-						-
-							.
-								b
-								get_Body
+						a.get_Body 0
+						b.get_Body 0
 	players=+
 		-
 			player
 			Return
-			-
-				.
-					Color
-					get_Blue
+			Color.get_Blue 0
 	bubbles=-
 		JoinAll
 		+
 			-
 				Map
-				-
-					range
-					10
+				range 10
 				?-
 					bubble
-					-
-						random
-						5
+					random 5
 			-
 				Map
-				-
-					range
-					10
+				range 10
 				?-
 					bubble
 					-
@@ -456,105 +281,54 @@
 		add_Tick_TickEventHandler
 		??-
 			If
-			-
-				not
-				paused
+			not paused
 			,
 				|,
+					contactGroup.Empty 0
 					-
 						.
-							contactGroup
-							Empty
-					-
-						.
-							-
-								.
-									Video
-									get_Screen
+							Video.get_Screen 0
 							Fill_Color
-						-
-							.
-								Color
-								get_White
-					-
-						.
-							space
-							CheckCollisions
-					-
-						.
-							world
-							Step
+						Color.get_White 0
+					space.CheckCollisions 0
+					world.Step 0
 					-
 						Map
 						bubbles
-						,
-							b|,
-								-
-									.
-										b
-										move
-								-
-									.
-										b
-										draw
+						b?,
+							-
+								b.move
+							-
+								b.draw
 					-
 						Map
 						players
-						,
-							player|-
-								.
-									player
-									draw
+						player?-
+							player.draw
 					-
 						Map
 						players
-						,
-							player|-
-								If
-								-
-									not
-									-
-										equal
-										0
+						player?-
+							If
+							-
+								not
+								equal 0 player.currentJoint
+							,
+								|,
+									a=-
 										.
 											player
 											currentJoint
-								,
-									|,
-										a=-
-											.
-												player
-												currentJoint
-												get_Anchor
-										b=-
-											.
-												player
-												get_Position
+											get_Anchor
+									b=player.get_Position 0
+									-
+										DrawLine_Line_Color
 										-
-											DrawLine_Line_Color
-											-
-												Line_Int16_Int16_Int16_Int16
-												-
-													.
-														a
-														get_X
-												-
-													.
-														a
-														get_Y
-												-
-													.
-														b
-														get_X
-												-
-													.
-														b
-														get_Y
-											-
-												.
-													Color
-													get_Black
-					-
-						Flip
-	-
-		Run
+											Line_Int16_Int16_Int16_Int16
+											a.get_X 0
+											a.get_Y 0
+											b.get_X 0
+											b.get_Y 0
+										Color.get_Black 0
+					Flip 0
+	Run 0
