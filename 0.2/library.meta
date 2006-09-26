@@ -9,6 +9,7 @@
 			containedBy=key?map?(Map_Map map).ContainsKey_Map key
 			modify=Library.Modify_Map_Map
 			add=Number.op_Addition_Number_Number
+			Sum=Number.op_Addition_Number_Number
 			raise=Library.Raise_Number_Number
 			or=a?b?.
 				,
@@ -23,6 +24,7 @@
 			DifferenceVector=a?b?Map (keys a) key?Difference a.<key> b.<key
 			divide=Number.op_Division_Number_Number
 			divideBy=flip divide
+			Quotient=Number.op_Division_Number_Number
 			DifferenceFrom=Number.op_Subtraction_Number_Number
 			Difference=flip DifferenceFrom
 			greater=Number.op_GreaterThan_Number_Number
@@ -76,7 +78,7 @@
 			toString=Serialization.Serialize_Map
 			writeLine=?,
 				/.mscorlib.Console.WriteLine_String @
-				&=arg
+				&=@
 			readLine=?(mscorlib.Console.ReadLine
 			append=Library.Append_Map_Map
 			appendTo=flip append

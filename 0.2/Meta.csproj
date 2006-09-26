@@ -51,12 +51,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy %2810%29 of game.meta" />
+    <None Include="Copy %2811%29 of game.meta" />
     <None Include="Copy %282%29 of game.meta" />
+    <None Include="Copy %282%29 of learning.meta" />
+    <None Include="Copy %282%29 of relativity.learn" />
     <None Include="Copy %283%29 of game.meta" />
+    <None Include="Copy %283%29 of learning.meta" />
     <None Include="Copy %284%29 of game.meta" />
+    <None Include="Copy %284%29 of learning.meta" />
     <None Include="Copy %285%29 of game.meta" />
+    <None Include="Copy of relativity.learn" />
+    <None Include="learningNew.meta" />
     <None Include="Copy %286%29 of game.meta" />
     <None Include="Copy %287%29 of game.meta" />
+    <None Include="Copy %288%29 of game.meta" />
+    <None Include="Copy %289%29 of game.meta" />
     <None Include="game.meta" />
     <None Include="gamewhatever.meta" />
     <None Include="asdfasdfasdfgame.meta" />
@@ -72,6 +82,7 @@
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
     <None Include="metaEdit.meta" />
+    <None Include="relativity.learn" />
     <None Include="stuff.meta" />
   </ItemGroup>
 </Project>

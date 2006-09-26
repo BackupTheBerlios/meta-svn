@@ -881,10 +881,12 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			//Video.Screen.Update(new Rectangle(
 			//Events.AppActive += new ActiveEventHandler(Events_AppActive);
 			//Events.Close();
 			//new Surface().DrawLine(new Line(),
 			//new Line(
+			//Video.Screen.DrawFilledBox(new Box(
 			if (args.Length != 0)
 			{
 				if (args[0] == "-test")
@@ -1090,9 +1092,6 @@ namespace Meta
 		{
 			try
 			{
-				if (target == typeof(float))
-				{
-				}
 				dotNet = null;
 				if (target.IsSubclassOf(typeof(Enum)))
 				{
@@ -1165,41 +1164,14 @@ namespace Meta
 							}
 							break;
 						case TypeCode.Object:
-							FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+							//FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
 							if (target == typeof(Number) && meta.IsNumber)
 							{
 								dotNet = meta.GetNumber();
 							}
-							else if (target != typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == 2 && Library.Join(meta[1], meta[2]).ArrayCount == fields.Length)
-							{
-								dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-								meta = Library.Join(meta[1], meta[2]);
-								int index = 1;
-								foreach (FieldInfo field in fields)
-								{
-									field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
-									index++;
-								}
-							}
-							else if (target != typeof(void) && target.IsValueType && meta.ArrayCount == meta.Count && meta.Count == fields.Length)
-							{
-								dotNet = target.InvokeMember(".ctor", BindingFlags.CreateInstance | BindingFlags.Instance | BindingFlags.Public, null, null, new object[] { });
-								int index = 1;
-								foreach (FieldInfo field in fields)
-								{
-									field.SetValue(dotNet, Transform.ToDotNet(meta[index], field.FieldType));
-									index++;
-								}
-
-							}
 							if (dotNet == null && target == typeof(Type) && meta.Strategy is TypeMap)
 							{
 								dotNet = ((TypeMap)meta.Strategy).Type;
-							}
-							else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-									&& meta.ContainsKey(CodeKeys.Function))
-							{
-								dotNet = CreateDelegateFromCode(target, meta);
 							}
 							// remove?
 							else if (meta.Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta.Strategy).Type))
@@ -1234,6 +1206,11 @@ namespace Meta
 								{
 									dotNet = list.ToArray(elementType);
 								}
+							}
+							else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+							   && meta.ContainsKey(CodeKeys.Function))
+							{
+								dotNet = CreateDelegateFromCode(target, meta);
 							}
 							break;
 						case TypeCode.SByte:
@@ -1457,6 +1434,9 @@ namespace Meta
 		ParameterInfo[] parameters;
 		public override Map CallImplementation(Map argument, Map parent)
 		{
+			if (this.method.Name.Contains("Update"))
+			{
+			}
 			return DecideCall(argument, new List<object>());
 		}
 		private Map DecideCall(Map argument, List<object> oldArguments)

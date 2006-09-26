@@ -7,13 +7,14 @@
 		SdlDotNet.Key
 		OdeDotNet
 	world=(World
-	space=(Space
+	space=(Space_SpaceType SpaceType.HashSpace
+	Fill_Color (Color.get_White
 	createBox=space.CreateBox_Single_Single_Single
 	vector=Vector3_Single_Single_Single
-	(createBox 800 20 20).set_Position_Vector3 (vector 400 0 0)
-	(createBox 800 20 20).set_Position_Vector3 (vector 400 600 0)
-	(createBox 20 600 20).set_Position_Vector3 (vector 0 300 0)
-	(createBox 20 600 20).set_Position_Vector3 (vector 800 300 0)
+	(createBox 798 50 100).set_Position_Vector3 (vector 400 0 0)
+	(createBox 798 50 100).set_Position_Vector3 (vector 400 600 0)
+	(createBox 50 598 100).set_Position_Vector3 (vector 0 300 0)
+	(createBox 50 598 100).set_Position_Vector3 (vector 800 300 0)
 	bubble=size?,
 		body=Body_World world
 		radius=?Product size 4
@@ -38,45 +39,43 @@
 			((body.get_Position).get_X
 			((body.get_Position).get_Y
 		move=?0
-		draw=?-
-			DrawFilledCircle_Circle_Color
-			+
-				(GetPosition
-				+
-					(radius
-			color
+		draw=c?,
+			asdf=(GetPosition)
+			-
+				DrawFilledCircle_Circle_Color
+				Circle_Point_Int16 (Point_Int32_Int32 asdf.1 asdf.2) (radius
+				c
 	player=key?c?,
 		&=bubble 1
-		jointGroup=-
-			JointGroup_Int32
-			0
+		jointGroup=JointGroup_Int32 0
 		setColor c
 		currentJoint=0
 		setCurrentJoint=joint?,
 			currentJoint:joint
+		currentBubble=0
+		setCurrentBubble=b?,
+			currentBubble:b
+		toVector=v?Vector3_Single_Single_Single v.1 v.2 0
+		center=a?b?Quotient (Sum a b) 2
 		keyDown=,
 			<key=?,
 				lengths=Map bubbles b?LengthVector (DifferenceVector (GetPosition) (b.GetPosition
-				index=.
-					Sort (keys bubbles) a?b?-
-						CompareNumber
-						lengths.<a
-						lengths.<b
-					1
-				joint=HingeJoint_World_JointGroup world jointGroup
-				setCurrentJoint joint
-				joint.Attach_Body_Body bubbles.<index>.body body
-				joint.set_Anchor_Vector3 (bubbles.<index>.body.get_Position
+				sorted=Sort (keys bubbles) a?b?CompareNumber lengths.<a> lengths.<b
+				index=sorted.1
+				bubble=.
+					bubbles
+					<index
+				joint=SliderJoint_World_JointGroup world jointGroup
+				joint.Attach_Body_Body bubble.body body
+				setCurrentBubble bubble
 		keyUp=,
 			<key=?,
 				(jointGroup.Empty
-				currentJoint:0
+				currentBubble:0
 	paused=0
-	-
-		add_Quit_QuitEventHandler
-		?e?,
-			(Events.Close
-			(Events.QuitApplication
+	add_Quit_QuitEventHandler ?e?,
+		(Events.Close
+		(Events.QuitApplication
 	add_AppActive_ActiveEventHandler ?e?If (not (equal (e.get_State) 1)) ?,
 		paused:not (e.get_GainedFocus
 	add_KeyboardDown_KeyboardEventHandler ?e?Map players player?CallKey player.keyDown (e.get_Key
@@ -86,6 +85,7 @@
 		player?CallKey player.keyUp (e.get_Key
 	contactGroup=JointGroup_Int32 0
 	space.add_Collision_CollisionEventHandler ?e?,
+		print "collided"
 		a=(e.get_Geom1
 		b=(e.get_Geom2
 		-
@@ -106,18 +106,35 @@
 	bubbles=JoinAll +
 		Map (range 10) ?bubble (random 5)
 		Map (range 10) ?bubble (random 2)
+	(Events.set_TargetFps_Int32 500
 	add_Tick_TickEventHandler ??If (not paused) ?,
+		print (players.1.body.get_AngularVel
 		(contactGroup.Empty
-		(Video.get_Screen).Fill_Color (Color.get_White
+		print (Events.get_Fps
+		Map bubbles b?,
+			b.draw (Color.get_White
+		Map players player?,
+			player.draw (Color.get_White
 		(space.CheckCollisions
 		(world.Step
 		Map bubbles b?,
 			(b.move
-			(b.draw
-		Map players player?(player.draw
-		Map players player?If (not (equal 0 player.currentJoint)) ?,
-			a=(player.currentJoint.get_Anchor
+			(b.draw b.color
+		Map players player?(player.draw (Color.get_Blue
+		Map players player?If (not (equal 0 player.currentBubble)) ?,
+			a=(player.currentBubble.body.get_Position
 			b=(player.body.get_Position
-			DrawLine_Line_Color (Line_Int16_Int16_Int16_Int16 (a.get_X) (a.get_Y) (b.get_X) (b.get_Y)) (Color.get_Black
+			DrawLine_Line_Color (Line_Int16_Int16_Int16_Int16 (a.get_X) (a.get_Y) (b.get_X) (b.get_Y)) (Color.get_Black)
+		-
+			!"Update_Rectangle[]"
+			-
+				Map
+				join bubbles players
+				a?-
+					Rectangle_Int32_Int32_Int32_Int32
+					Difference (a.radius) (a.GetPosition).1 
+					Difference (a.radius) (a.GetPosition).2 
+					Product (a.radius) 2
+					Product (a.radius) 2
 		(Flip
 	(Run

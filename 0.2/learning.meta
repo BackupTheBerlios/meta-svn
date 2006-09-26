@@ -1,255 +1,211 @@
 |,
-	&=-
-		mergeAll
-		+
-			MathML
-			MathML.Rendering
-			System
-			mscorlib
-			System.Windows.Forms
-			System.Drawing
-	printNodes=,
-		nodes|,
-			data|,
-				depth|-
+	&=mergeAll +
+		MathML
+		!"MathML.Rendering"
+		System
+		mscorlib
+		!"System.Windows.Forms"
+		!"System.Drawing"
+	printNodes=nodes?data?depth?-
+		JoinAll
+		-
+			Map
+			data
+			,
+				entry|-
 					JoinAll
 					-
 						Map
-						data
+						-
+							enumerableToArray
+							nodes
 						,
-							entry|-
-								JoinAll
+							node|-
+								If
 								-
-									Map
-									-
-										enumerableToArray
-										nodes
-									,
-										node|-
+									.
+										node
+										get_Checked
+								,
+									|,
+										key=-
+											.
+												node
+												get_Text
+										&=-
 											If
 											-
-												.
-													node
-													get_Checked
+												Contains
+												entry
+												key
 											,
 												|,
-													key=-
-														.
-															node
-															get_Text
+													value=.
+														entry
+														<key
 													&=-
-														If
+														ElseIf
 														-
-															Contains
-															entry
-															key
+															isString
+															value
 														,
-															|,
-																value=.
-																	entry
-																	<key
-																&=-
-																	ElseIf
-																	-
-																		isString
-																		value
-																	,
-																		|+
-																			,
-																				type=-
-																					ElseIf
+															|+
+																,
+																	type=-
+																		ElseIf
+																		-
+																			Contains
+																			data
+																			key
+																		,
+																			|,
+																				name=.
 																					-
-																						Contains
-																						data
-																						key
-																					,
+																						keys
+																						.
+																							data
+																							<key
+																					1
+																				value=.
+																					data
+																					<key
+																					<name
+																		,
+																			|,
+																				name="rtf"
+																				value=0
+																	margin=Padding_Int32_Int32_Int32_Int32 (Product depth 10) 10 0 0
+																	types=,
+																		mathml=?MathMLControl,
+																			Margin=margin
+																			Height=80
+																			Width=500
+																			BackColor=(Color.get_White
+																			MathElement=,
+																				document=(MathMLDocument
+																				document.LoadXml_String value
+																				&=(document.get_DocumentElement
+																		rtf=?,
+																			box=-
+																				RichTextBox
+																				,
+																					Margin=margin
+																					Width=500
+																					Font=-
+																						Font_String_Single
+																						"Arial"
+																						10
+																					KeyDown=,
 																						|,
-																							name=.
+																							e|e.set_Handled_Boolean 1
+																					KeyPress=,
+																						|,
+																							e|e.set_Handled_Boolean 1
+																					BorderStyle=BorderStyle.None
+																					ContentsResized=,
+																						sender|,
+																							e|-
+																								sender.set_Height_Int32
 																								-
-																									keys
 																									.
+																										-
+																											e.get_NewRectangle
+																										get_Height
+																					Rtf=-
+																						JoinAll
+																						+
+																							"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
+																							-
+																								If
+																								-
+																									Contains
+																									data
+																									key
+																								,
+																									|.
 																										data
 																										<key
-																								1
-																							value=.
-																								data
-																								<key
-																								<name
-																					,
-																						|,
-																							name="rtf"
-																							value=0
-																				margin=-
-																					Padding_Int32_Int32_Int32_Int32
-																					-
-																						Product
-																						depth
-																						10
-																					10
-																					0
-																					0
-																				types=,
-																					mathml=,
-																						|,
-																							math=-
-																								MathMLControl
-																								,
-																									Margin=margin
-																									Height=80
-																									Width=500
-																									BackColor=-
-																										.
-																											Color
-																											get_White
-																									MathElement=,
-																										document=-
-																											MathMLDocument
-																										asdf=-
-																											.
-																												document
-																												LoadXml_String
-																											value
-																										&=-
-																											.
-																												document
-																												get_DocumentElement
-																							&=math
-																					rtf=,
-																						|,
-																							box=-
-																								RichTextBox
-																								,
-																									Margin=margin
-																									Width=500
-																									Font=-
-																										Font_String_Single
-																										"Arial"
-																										10
-																									KeyDown=,
-																										|,
-																											e|-
-																												.
-																													e
-																													set_Handled_Boolean
-																												1
-																									KeyPress=,
-																										|,
-																											e|-
-																												.
-																													e
-																													set_Handled_Boolean
-																												1																										
-																									BorderStyle=.
-																										BorderStyle
-																										None
-																									ContentsResized=,
-																										sender|,
-																											e|-
-																												.
-																													sender
-																													set_Height_Int32
-																												-
-																													.
-																														-
-																															.
-																																e
-																																get_NewRectangle
-																														get_Height
-																									Rtf=-
-																										JoinAll
-																										+
-																											"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
-																											-
-																												If
-																												-
-																													Contains
-																													data
-																													key
-																												,
-																													|.
-																														data
-																														<key
-																														rtf
-																											value
-																											"}"
+																										rtf
+																							value
+																							"}"
 
-																							-
-																								.
-																									node
-																									AddCheckChanged
-																								box
-																							&=box
-																				&=-
-																					.
-																						types
-																						.
-																							type
-																							name
-																	,
-																		|+
-																			,
-																				children=-
-																					printNodes
-																					-
-																						.
-																							node
-																							get_Nodes
-																					value
-																					-
-																						add
-																						depth
-																						1
-																				p=-
-																					FlowLayoutPanel
-																					,
-																						BackColor=-
-																							.
-																								Color
-																								get_White
-																						WrapContents=0
-																						AutoSize=1
-																						FlowDirection=.
-																							FlowDirection
-																							TopDown
-																						Dock=.
-																							DockStyle
-																							Fill
-																				controls=-
-																					.
-																						p
-																						get_Controls
-																				-
-																					.
-																						controls
-																						AddRange_Control[]
-																					children
-																				-
-																					.
-																						node
-																						AddCheckChanged
-																					p
-																				-
-																					Map
-																					-
-																						enumerableToArray
-																						-
-																							.
-																								node
-																								get_Nodes
-																					,
-																						asdf|-
-																							.
-																								asdf
-																								AddSuspend
-																							p
-																				&=p
-				,
-					arg|-
-						not
-						-
-							equal
-							0
-							arg
+																			-
+																				.
+																					node
+																					AddCheckChanged
+																				box
+																			&=box
+																	&=-
+																		.
+																			types
+																			.
+																				type
+																				name
+														,
+															|+
+																,
+																	children=-
+																		printNodes
+																		-
+																			.
+																				node
+																				get_Nodes
+																		value
+																		-
+																			add
+																			depth
+																			1
+																	p=-
+																		FlowLayoutPanel
+																		,
+																			BackColor=-
+																				.
+																					Color
+																					get_White
+																			WrapContents=0
+																			AutoSize=1
+																			FlowDirection=.
+																				FlowDirection
+																				TopDown
+																			Dock=.
+																				DockStyle
+																				Fill
+																	controls=-
+																		.
+																			p
+																			get_Controls
+																	-
+																		.
+																			controls
+																			<"AddRange_Control[]"
+																		children
+																	-
+																		.
+																			node
+																			AddCheckChanged
+																		p
+																	-
+																		Map
+																		-
+																			enumerableToArray
+																			-
+																				.
+																					node
+																					get_Nodes
+																		,
+																			asdf|-
+																				.
+																					asdf
+																					AddSuspend
+																				p
+																	&=p
+	,
+		arg|-
+			not
+			-
+				equal
+				0
+				arg
 	data=0
 	getNodes=,
 		data|,
@@ -329,16 +285,12 @@
 						.
 							tree
 							get_Nodes
-					AddRange_TreeNode[]
+					<"AddRange_TreeNode[]"
 				-
 					getNodes
 					data
 			asdf=-
 				loadText
-			-
-				.
-					form
-					Close
 	loadText=,
 		|,
 			controls=-
@@ -360,7 +312,7 @@
 			-
 				.
 					controls
-					AddRange_Control[]
+					<"AddRange_Control[]"
 				result
 	tree=-
 		TreeView
@@ -437,9 +389,7 @@
 	form=-
 		Form
 		,
-			Size=+
-				800
-				600
+			Size=Size_Int32_Int32 800 600
 			Text="Learning"
 			Controls=+
 				panel
@@ -499,3 +449,6 @@
 			Application
 			Run_Form
 		form
+	-
+		print
+		"end"
