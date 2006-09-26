@@ -71,10 +71,8 @@ commandLine|,
 				0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	negativeInteger=merge
-		negativeInteger
-		,
-			x="hello"
+	negativeInteger=merge negativeInteger
+		x="hello"
 	integerIncrementTest=5
 	integerIncrementTest=,
 		0=integerIncrementTest

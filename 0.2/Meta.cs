@@ -3658,12 +3658,13 @@ namespace Meta
 				Call,
 				CallInlineLong,
 				SelectInline,
-				Program, 
 				List,
 				//ListInline,
 				Search,
 				Select,
-				ExplicitCall);
+				ExplicitCall,
+				Program
+				);
 		});
 
 		public static Rule NewLine =
@@ -4005,6 +4006,7 @@ namespace Meta
 						new Alternatives(
 								SelectInline,
 								LiteralExpression,
+								ExplicitCall,
 								Search)),
 							new Action(new Append(),
 							new ZeroOrMore(
@@ -4021,8 +4023,8 @@ namespace Meta
 												LiteralExpression,
 												Search,
 												LastArgument,
-												Program,
-												List//,
+												List,
+												Program
 												//ListInline
 												)))))
 							)//,
@@ -4074,12 +4076,14 @@ namespace Meta
 				CallInline, 
 				Call,
 				SelectInline,
-				Program, 
 				List,
 				//ListInline,
 				Search,
 				Select,
-				ExplicitCall)))))),
+				ExplicitCall,
+				Program
+
+				)))))),
 							new Action(new Optional(EndOfLine)),
 							new Action(new Optional(Dedentation)))));
 		});
@@ -4230,8 +4234,8 @@ namespace Meta
 												Call,
 												SelectInline,
 												Search,
-												Program,
-												List
+												List,
+												Program
 												)))))),
 				//FunctionProgram,
 				//LiteralExpression,
@@ -4280,8 +4284,8 @@ namespace Meta
 												LiteralExpression,
 												LastArgument,
 												Search,
-												Program,
-												List
+												List,
+												Program
 				//,
 				//ListInline
 												)))))
@@ -4350,6 +4354,7 @@ namespace Meta
 							ProgramDelayed,
 							LiteralExpression,
 							CallInline,
+							ExplicitCall,
 							Root,
 							Search,
 							Call
@@ -4656,23 +4661,49 @@ namespace Meta
 											Expression),
 										new Action(new Optional(EndOfLine))
 			)))))))));
-
-		public static Rule Program = new Sequence(
-			new Action(new Character(',')),
-			new Action(
-				new Assignment(CodeKeys.Program),
-					new Sequence(
-						new Action(EndOfLine),
-						new Action(SmallIndentation),
-						new Action(new ReferenceAssignment(),
-							new ZeroOrMore(
-								new Action(
-									new Autokey(),
-									new Sequence(
-										new Action(new Alternatives(
-											SameIndentation,
-											Dedentation)),
-										new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement,DiscardStatement)))))))));
+		public static Rule Program = new PrePost(
+			delegate(Parser p)
+			{
+				callIndent.Push(p.indentationCount);
+			},
+			new Sequence(
+					new Action(new Optional(new Character(','))),
+			//new Action(new Character(',')),
+					new Action(
+						new Assignment(CodeKeys.Program),
+							new Sequence(
+								new Action(EndOfLine),
+								new Action(SmallIndentation),
+								new Action(new ReferenceAssignment(),
+									new OneOrMore(
+										new Action(
+											new Autokey(),
+											new Sequence(
+												new Action(new Alternatives(
+													SameIndentation,
+													Dedentation)),
+												new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement))))))))),
+									delegate(Parser p)
+									{
+										p.indentationCount = callIndent.Pop();
+									});
+		//public static Rule Program = new Sequence(
+		//    new Action(new Optional(new Character(','))),
+		//    //new Action(new Character(',')),
+		//    new Action(
+		//        new Assignment(CodeKeys.Program),
+		//            new Sequence(
+		//                new Action(EndOfLine),
+		//                new Action(SmallIndentation),
+		//                new Action(new ReferenceAssignment(),
+		//                    new ZeroOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Alternatives(
+		//                                    SameIndentation,
+		//                                    Dedentation)),
+		//                                new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement,DiscardStatement)))))))));
 		// Maybe make this a delegate instead of a class
 		public abstract class Production
 		{
