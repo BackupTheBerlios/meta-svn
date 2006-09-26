@@ -1,5 +1,5 @@
 |,
-	&=-
+	&-
 		mergeAll
 		+
 			System
@@ -22,7 +22,7 @@
 							value=,
 								literal=" "
 		source|,
-			&=-
+			&-
 				control
 				,
 					Children=-
@@ -81,7 +81,7 @@
 										create
 	emptyView=,
 		|,
-			&=-
+			&-
 				textBox
 			Background=-
 				.
@@ -97,7 +97,7 @@
 				|0
 	textBox=,
 		init|,
-			&=-
+			&-
 				TextBox
 				-
 					merge
@@ -117,7 +117,7 @@
 				stringView
 				" "
 		text|,
-			&=-
+			&-
 				textBox
 				,
 					Text=text
@@ -130,7 +130,7 @@
 					get_Text
 	numberView=,
 		number|,
-			&=-
+			&-
 				textBox
 				,
 					Background=-
@@ -171,7 +171,7 @@
 						get_Text
 	multi=,
 		init|,
-			&=-
+			&-
 				StackPanel
 				-
 					merge
@@ -227,7 +227,7 @@
 						create
 		key|,
 			value|,
-				&=-
+				&-
 					control
 					,
 						Children=+
@@ -281,7 +281,7 @@
 	copied=0
 	view=,
 		content|,
-			&=-
+			&-
 				multi
 				,
 					Children=+
@@ -479,7 +479,7 @@
 											1
 	control=,
 		init|,
-			&=-
+			&-
 				multi
 				-
 					merge
@@ -489,7 +489,7 @@
 	functionView=,
 		key|,
 			value|,
-				&=-
+				&-
 					control
 					,
 						Children=+
@@ -584,7 +584,7 @@
 									.
 										statementView
 										create
-			&=-
+			&-
 				control
 				,
 					Children=children
@@ -607,7 +607,7 @@
 					value=,
 						literal=" "
 		source|,
-			&=-
+			&-
 				statementBase
 				+
 					-
@@ -656,7 +656,7 @@
 							expression=,
 								literal="hello"
 		source|,
-			&=-
+			&-
 				statementBase
 				+
 					-
@@ -713,7 +713,7 @@
 							value=,
 								literal=" "
 		source|,
-			&=-
+			&-
 				control
 				,
 					Background=-
@@ -767,7 +767,7 @@
 				,
 					"hello"="world"
 		entries|,
-			&=-
+			&-
 				control
 				,
 					Children=-
@@ -829,7 +829,7 @@
 						,
 							literal="world"
 		source|,
-			&=-
+			&-
 				control
 				,
 					Children=-
@@ -889,7 +889,7 @@
 					lookup=,
 						literal="hello"
 		source|,
-			&=-
+			&-
 				control
 				,
 					Children=+
@@ -918,7 +918,7 @@
 					search=,
 						literal="hello"
 		source|,
-			&=-
+			&-
 				control
 				,
 					Children=+
@@ -941,7 +941,7 @@
 							getMap
 	literalNumberView=,
 		source|,
-			&=-
+			&-
 				textBox
 				,
 					Background=-
@@ -990,7 +990,7 @@
 				,
 					literal=" "
 		source|,
-			&=-
+			&-
 				textBox
 				,
 					Text=.
@@ -1011,7 +1011,7 @@
 				,
 					literal=" "
 		source|,
-			&=-
+			&-
 				control
 				,
 					Children=+
@@ -1037,7 +1037,7 @@
 			|-
 				currentView
 		|,
-			&=-
+			&-
 				textBox
 				,
 					Background=-
@@ -1084,7 +1084,7 @@
 									.
 										lookupView
 										create
-			&=-
+			&-
 				control
 				,
 					Children=-

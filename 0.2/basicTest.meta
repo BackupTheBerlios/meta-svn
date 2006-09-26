@@ -36,7 +36,7 @@ listTest=+
 		"long"
 		"list"
 commandLine|,
-	&=-
+	&-
 		merge
 		0
 		+
@@ -52,6 +52,7 @@ commandLine|,
 		"hello"
 		asdf
 	counter=0
+	inlineProgram={hello="world"}
 	SetCounter=,
 		|,
 			counter:@
@@ -64,15 +65,17 @@ commandLine|,
 	scopingTest=scoping.test
 	lexicalScoping=!"scopingTest" 0
 	unicodeText="äaba"
-	integerHashTest=,
+	integerHashTest=
 		2="correct hash content"
 		hashTestData=,
 			0=,
 				0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	negativeInteger=merge negativeInteger
-		x="hello"
+	negativeInteger=merge
+		negativeInteger
+		,
+			x="hello"
 	integerIncrementTest=5
 	integerIncrementTest=,
 		0=integerIncrementTest
@@ -135,7 +138,7 @@ commandLine|,
 						1=.
 							newB
 							value
-				&="changed"
+				&"changed"
 		x=,
 			a="b"
 			c="d"
@@ -169,7 +172,7 @@ commandLine|,
 	scopeFromFunctionTest=!"scopeFromFunction" 0
 	ReturnEverything=,
 		everything|,
-			&=!"everything"
+			&!"everything"
 	everythingReturned=-
 		!"ReturnEverything"
 		+
@@ -184,20 +187,20 @@ commandLine|,
 			"z"
 	ReturnFunction=,
 		arg|,
-			&=,
+			&,
 				arg|,
-					&=+
+					&+
 						1
 						2
 						3
 	SetCurrent=,
 		current|,
-			&=,
+			&,
 				asdf=!"current"
 				x=.
 					!"current"
 					symbol
-			&=!"x"
+			&!"x"
 	thisSet=-
 		!"SetCurrent"
 		,
@@ -355,7 +358,7 @@ commandLine|,
 		0
 	someFunction=,
 		arg|,
-			&="simple function this"
+			&"simple function this"
 	callFunction=,
 		arg|!"someFunction"
 	callFunctionResult=-
@@ -428,7 +431,7 @@ commandLine|,
 		,
 			arg|,
 				instanceEventChanged:1
-				&=arg
+				&arg
 	instanceEventResult=-
 		.
 			testClass
@@ -572,7 +575,7 @@ commandLine|,
 							!"arg"
 							1
 				0=arg?!"arg"
-			&=-
+			&-
 				.
 					whileBranches
 					<whileDecision
@@ -618,7 +621,7 @@ commandLine|,
 		arg|,
 			innerFunction=,
 				arg|,
-					&=!"arg"
+					&!"arg"
 			1=-
 				!"innerFunction"
 				0

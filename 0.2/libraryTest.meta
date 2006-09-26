@@ -126,7 +126,7 @@ arg|,
 				"hello"
 				32
 			Map=,
-				&=-
+				&-
 					Map
 					+
 						1
@@ -283,4 +283,4 @@ arg|,
 			SplitString
 			"hello.world. !!!"
 			".!"
-	&=test
+	&test

@@ -1,5 +1,5 @@
 |,
-	&=mergeAll+
+	&mergeAll+
 		!"System.Drawing"
 		SdlDotNet
 		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean 800 600 1
@@ -46,7 +46,7 @@
 				Circle_Point_Int16 (Point_Int32_Int32 asdf.1 asdf.2) (radius
 				c
 	player=key?c?,
-		&=bubble 1
+		&bubble 1
 		jointGroup=JointGroup_Int32 0
 		setColor c
 		currentJoint=0

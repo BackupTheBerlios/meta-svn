@@ -3592,6 +3592,9 @@ namespace Meta
 
 	public class Syntax
 	{
+		public const char programStart='{';
+		public const char programEnd='}';
+		public const char programSeparator='#';
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
@@ -3614,8 +3617,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>'};
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*' ,'>'};
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>',programStart,programEnd,programSeparator};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*' ,'>',programStart,programEnd,programSeparator};
 	}
 
 	public class Parser
@@ -3663,7 +3666,9 @@ namespace Meta
 				Search,
 				Select,
 				ExplicitCall,
-				Program
+				SimpleProgram,
+				Program,
+				ProgramInline
 				);
 		});
 
@@ -4421,7 +4426,7 @@ namespace Meta
 
 
 		public static Rule CurrentStatement = new Sequence(
-			new Action(StringRule("&=")),
+			new Action(StringRule("&")),
 			new Action(new Assignment(CodeKeys.Current), new LiteralRule(Meta.Map.Empty)),
 			new Action(new Assignment(CodeKeys.Value), Expression),
 			new Action(new Optional(EndOfLine))
@@ -4661,13 +4666,9 @@ namespace Meta
 											Expression),
 										new Action(new Optional(EndOfLine))
 			)))))))));
-		public static Rule Program = new PrePost(
-			delegate(Parser p)
-			{
-				callIndent.Push(p.indentationCount);
-			},
+		public static Rule SimpleProgram=
 			new Sequence(
-					new Action(new Optional(new Character(','))),
+					//new Action(new Optional(new Character(','))),
 			//new Action(new Character(',')),
 					new Action(
 						new Assignment(CodeKeys.Program),
@@ -4682,11 +4683,86 @@ namespace Meta
 												new Action(new Alternatives(
 													SameIndentation,
 													Dedentation)),
-												new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement))))))))),
+												new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement)))))))));
+
+		public static Rule ProgramInline = new DelayedRule(delegate
+		{
+			return new Sequence(
+				new Action(
+					new Assignment(CodeKeys.Program),
+					new Sequence(
+						new Action(new Character(Syntax.programStart)),
+						new Action(new Assignment(1),
+						KeysStatement),
+						//new Alternatives(
+						//    SelectInline,
+						//    LiteralExpression,
+						//    LastArgument,
+						//    Search)),
+						new Action(new Append(),
+						new ZeroOrMore(
+							new Action(
+								new Autokey(),
+								new Sequence(
+									new Action(new Optional(new Character(Syntax.programSeparator))),
+									new Action(
+										new ReferenceAssignment(),
+										KeysStatement
+										//new Alternatives(
+										//    SelectInline,
+										//    //FunctionProgram,
+										//    ExplicitCall,
+										//    LiteralExpression,
+										//    LastArgument,
+										//    Search
+										//    //List,
+										//    //Program
+											))))),
+					new Action(new Optional(new Character(Syntax.programEnd))))));
+		});
+
+
+
+		public static Rule Program = new PrePost(
+			delegate(Parser p)
+			{
+				callIndent.Push(p.indentationCount);
+			},
+			new Sequence(
+				new Action(new Character(',')),
+				new Action(new ReferenceAssignment(),SimpleProgram)),
+
 									delegate(Parser p)
 									{
 										p.indentationCount = callIndent.Pop();
 									});
+
+		//public static Rule Program = new PrePost(
+		//    delegate(Parser p)
+		//    {
+		//        callIndent.Push(p.indentationCount);
+		//    },
+		//    new Sequence(
+		//            new Action(new Optional(new Character(','))),
+		//    //new Action(new Character(',')),
+		//            new Action(
+		//                new Assignment(CodeKeys.Program),
+		//                    new Sequence(
+		//                        new Action(EndOfLine),
+		//                        new Action(SmallIndentation),
+		//                        new Action(new ReferenceAssignment(),
+		//                            new OneOrMore(
+		//                                new Action(
+		//                                    new Autokey(),
+		//                                    new Sequence(
+		//                                        new Action(new Alternatives(
+		//                                            SameIndentation,
+		//                                            Dedentation)),
+		//                                        new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement))))))))),
+		//                            delegate(Parser p)
+		//                            {
+		//                                p.indentationCount = callIndent.Pop();
+		//                            });
 		//public static Rule Program = new Sequence(
 		//    new Action(new Optional(new Character(','))),
 		//    //new Action(new Character(',')),

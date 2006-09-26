@@ -1,6 +1,6 @@
 |,
 	lib=?,
-		&=Meta
+		&Meta
 		lib=,
 			Double=Library.Double_Map
 			Contains=?(Map_Map @).ContainsKey_Map
@@ -78,7 +78,7 @@
 			toString=Serialization.Serialize_Map
 			writeLine=?,
 				/.mscorlib.Console.WriteLine_String @
-				&=@
+				&@
 			readLine=?(mscorlib.Console.ReadLine
 			append=Library.Append_Map_Map
 			appendTo=flip append
@@ -115,7 +115,7 @@
 			Sort=Library.Sort_Map_Map
 			TrimString=Library.Trim_String
 			WriteTextFile=file?text?mscorlib.File.WriteAllText_String_String_Encoding file text (mscorlib.Encoding.get_Default
-	&=.
+	&.
 		-
 			lib
 		lib

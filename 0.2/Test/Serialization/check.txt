@@ -54,6 +54,8 @@ commandLine|,
 		4="hello"
 		5=!"asdf"
 	"counter"=0
+	"inlineProgram"=,
+		"hello"="world"
 	"SetCounter"=,
 		|,
 			"counter":,

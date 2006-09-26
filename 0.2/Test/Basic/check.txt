@@ -75,6 +75,15 @@ Entry (KeyValuePair`2)
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
+		"inlineProgram"
+	Value (Map):
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"hello"
+			Value (Map):
+				"world"
+Entry (KeyValuePair`2)
+	Key (Map):
 		"SetCounter"
 	Value (Map):
 		Entry (KeyValuePair`2)
