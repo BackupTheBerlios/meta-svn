@@ -56,6 +56,7 @@ commandLine|,
 	"counter"=0
 	"inlineProgram"=,
 		"hello"="world"
+		"x"="y"
 	"SetCounter"=,
 		|,
 			"counter":,

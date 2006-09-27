@@ -82,6 +82,11 @@ Entry (KeyValuePair`2)
 				"hello"
 			Value (Map):
 				"world"
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"x"
+			Value (Map):
+				"y"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"SetCounter"

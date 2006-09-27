@@ -65,8 +65,9 @@
 				bubble=.
 					bubbles
 					<index
-				joint=SliderJoint_World_JointGroup world jointGroup
+				joint=HingeJoint_World_JointGroup world jointGroup
 				joint.Attach_Body_Body bubble.body body
+				joint.set_Anchor_Vector3 (bubble.body.get_Position)
 				setCurrentBubble bubble
 		keyUp=,
 			<key=?,
@@ -85,7 +86,6 @@
 		player?CallKey player.keyUp (e.get_Key
 	contactGroup=JointGroup_Int32 0
 	space.add_Collision_CollisionEventHandler ?e?,
-		print "collided"
 		a=(e.get_Geom1
 		b=(e.get_Geom2
 		-
@@ -108,13 +108,9 @@
 		Map (range 10) ?bubble (random 2)
 	(Events.set_TargetFps_Int32 500
 	add_Tick_TickEventHandler ??If (not paused) ?,
-		print (players.1.body.get_AngularVel
+		Fill_Color (Color.get_White
 		(contactGroup.Empty
 		print (Events.get_Fps
-		Map bubbles b?,
-			b.draw (Color.get_White
-		Map players player?,
-			player.draw (Color.get_White
 		(space.CheckCollisions
 		(world.Step
 		Map bubbles b?,
@@ -125,16 +121,5 @@
 			a=(player.currentBubble.body.get_Position
 			b=(player.body.get_Position
 			DrawLine_Line_Color (Line_Int16_Int16_Int16_Int16 (a.get_X) (a.get_Y) (b.get_X) (b.get_Y)) (Color.get_Black)
-		-
-			!"Update_Rectangle[]"
-			-
-				Map
-				join bubbles players
-				a?-
-					Rectangle_Int32_Int32_Int32_Int32
-					Difference (a.radius) (a.GetPosition).1 
-					Difference (a.radius) (a.GetPosition).2 
-					Product (a.radius) 2
-					Product (a.radius) 2
 		(Flip
 	(Run

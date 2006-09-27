@@ -111,10 +111,11 @@
 		Text="Learning"
 		Controls=+
 			panel
-			Splitter
-				Dock=DockStyle.Left
+			Splitter {Dock=DockStyle.Left
 			tree
-		Load=??load "D:\Meta\0.2\relativity.learn"
+		Load=??,
+			load "D:\Meta\0.2\relativity.learn"
+			form.Close0
 		Menu=<"MainMenu_MenuItem[]" +
 			MenuItem,
 				Text="File"
