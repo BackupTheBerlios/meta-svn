@@ -157,24 +157,29 @@ namespace Meta
 	{
 		public override Map EvaluateStructure()
 		{
-			Expression current = Parent;
+			Expression current = this;
 			Map key = expression.EvaluateStructure();
-			if (key != null && !(key is Structure || key is Unknown))
+			if (key != null && key.IsConstant)
 			{
 				while (true)
 				{
-					//if (current is Program || current is Function)
+					while (current.Statement == null)
 					{
-						Map structure = current.EvaluateStructure();
-						if (structure == null)
-						{
-							return null;
-						}
-						else if (structure.ContainsKey(key))
-						{
-							return structure[key];
-						}
+						current = current.Parent;
 					}
+					Statement statement = current.Statement;
+					Map structure = statement.Pre();
+					//Map structure = statement.EvaluateStructure();
+					//Map structure = current.EvaluateStructure();
+					if (structure == null)
+					{
+						return null;
+					}
+					else if (structure.ContainsKey(key))
+					{
+						return structure[key];
+					}
+					current = current.Parent;
 				}
 			}
 			return null;
@@ -187,46 +192,29 @@ namespace Meta
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			return new CompiledSearch(expression.Compile(this), Source);
+			Map optimized = EvaluateStructure();
+			if (optimized!=null && optimized.IsConstant)
+			{
+				return new OptimizedSearch(optimized, Source);
+			}
+			else
+			{
+				return new CompiledSearch(expression.Compile(this), Source);
+			}
 		}
 	}
-	//public class Search : Expression
-	//{
-	//    public override Map EvaluateStructure()
-	//    {
-	//        Expression current=Parent;
-	//        Map key=expression.EvaluateStructure();
-	//        if(key!=null && !(key is Structure || key is Unknown))
-	//        {
-	//            while (true)
-	//            {
-	//                //if (current is Program || current is Function)
-	//                {
-	//                    Map structure=current.EvaluateStructure();
-	//                    if (structure == null)
-	//                    {
-	//                        return null;
-	//                    }
-	//                    else if (structure.ContainsKey(key))
-	//                    {
-	//                        return structure[key];
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return null;
-	//    }
-	//    private Expression expression;
-	//    public Search(Map code,Expression parent)
-	//        : base(code.Source,parent)
-	//    {
-	//        this.expression = code.GetExpression(this);
-	//    }
-	//    public override Compiled Compile(Expression parent)
-	//    {
-	//        return new CompiledSearch(expression.Compile(this),Source);
-	//    }
-	//}
+	public class OptimizedSearch : Compiled
+	{
+		private Map literal;
+		public OptimizedSearch(Map literal,Source source):base(source)
+		{
+			this.literal = literal;
+		}
+		public override Map EvaluateImplementation(Map context)
+		{
+			return literal.Copy();
+		}
+	}
 	public class CompiledSearch : Compiled
 	{
 		private Compiled expression;
@@ -312,6 +300,30 @@ namespace Meta
 	}
 	public abstract class Statement
 	{
+		public virtual Map Pre()
+		{
+			if (Index == 0)
+			{
+				return Map.Empty;
+			}
+			else
+			{
+
+				return null;
+			}
+		}
+		//public virtual Map EvaluateStructure()
+		//{
+			//if (Index == 0)
+			//{
+			//    return Map.Empty;
+			//}
+			//else
+			//{
+
+			//    return null;
+			//}
+		//}
 		public abstract CompiledStatement Compile();
 		public Program program;
 		public readonly Expression value;
@@ -321,7 +333,10 @@ namespace Meta
 			this.program = program;
 			this.Index = index;
 			this.value = value;
-			value.Statement = this;
+			if (value != null)
+			{
+				value.Statement = this;
+			}
 		}
 	}
 	public class CompiledDiscardStatement : CompiledStatement
@@ -390,6 +405,7 @@ namespace Meta
 		}
 		public override void AssignImplementation(ref Map context, Map value)
 		{
+			// fix this
 			if (index == 0)
 			{
 				Map val = value.Copy();
@@ -580,14 +596,40 @@ namespace Meta
 			{
 				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
 				map.Scope = Gac.gac;
+
+				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+
+				//lib.Parent = new LiteralExpression(Gac.gac);
+				//callable[CodeKeys.Function].Scope = callable;
+				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+				map[CodeKeys.Function].Compile(gac);
+				//callable.
+				//return callable.Call(argument);
+
 				Gac.gac["library"] = map.Call(Map.Empty);
 				Gac.gac["library"].Scope = Gac.gac;
+
+
 			}
 			catch (Exception e)
 			{
 				throw e;
 			}
 		}
+		//static Interpreter()
+		//{
+		//    try
+		//    {
+		//        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+		//        map.Scope = Gac.gac;
+		//        Gac.gac["library"] = map.Call(Map.Empty);
+		//        Gac.gac["library"].Scope = Gac.gac;
+		//    }
+		//    catch (Exception e)
+		//    {
+		//        throw e;
+		//    }
+		//}
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -4728,9 +4770,14 @@ namespace Meta
 			{
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
-				Expression lib=new LiteralExpression(Gac.gac["library"],new LiteralExpression(Gac.gac,null));
+				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+				LiteralExpression lib=new LiteralExpression(Gac.gac["library"],gac);
+				lib.Statement = new LiteralStatement(gac);
+
 				//lib.Parent = new LiteralExpression(Gac.gac);
+				// remove
 				callable[CodeKeys.Function].Scope = callable;
+				callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 				callable[CodeKeys.Function].Compile(lib);
 				//callable.
 				return callable.Call(argument);
@@ -5348,6 +5395,22 @@ namespace Meta
 			return literal;
 		}
 		public override Compiled Compile(Expression parent)
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+	}
+	public class LiteralStatement : Statement
+	{
+		private LiteralExpression program;
+		public LiteralStatement(LiteralExpression program):base(null,null,0)
+		{
+			this.program = program;
+		}
+		public override Map Pre()
+		{
+			return program.EvaluateStructure();
+		}
+		public override CompiledStatement Compile()
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
