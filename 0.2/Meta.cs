@@ -325,6 +325,7 @@ namespace Meta
 				if (value is Literal)
 				{
 					((Literal)value).Compile(program);
+					//((Literal)value).literal.Compile(program);
 				}
 			}
 			return new CompiledKeyStatement(key.Compile(program),value.Compile(program));
@@ -5263,6 +5264,15 @@ namespace Meta
 			this.code = code;
 			this.function = function;
 		}
+		//public override Map EvaluateImplementation(Map arg)
+		//{
+		//    Map argument = new Map(new DictionaryStrategy());
+		//    argument[code[CodeKeys.Parameter]] = arg;
+		//    argument.Scope = code;
+		//    Expression expression = code[CodeKeys.Expression].GetExpression(function);
+		//    return expression.Compile(null).Evaluate(argument);
+		//    //return expression.Evaluate(argument);
+		//}
 		public override Map EvaluateImplementation(Map arg)
 		{
 			Map argument = new Map(new DictionaryStrategy());
@@ -5306,16 +5316,38 @@ namespace Meta
 			return structure;
 		}
 		private Map code;
-		public Function(Map code,Expression parent)
-			: base(code.Source,parent)
+		public Function(Map code, Expression parent)
+			: base(code.Source, parent)
 		{
 			this.code = code;
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			return new CompiledFunction(code, Source,this);
+			return new CompiledFunction(code, Source, this);
 		}
 	}
+	//public class Function : Expression
+	//{
+	//    public override Map EvaluateStructure()
+	//    {
+	//        Structure structure = new Structure();
+	//        if (code.ContainsKey(CodeKeys.Parameter))
+	//        {
+	//            structure[code[CodeKeys.Parameter]] = new Unknown();
+	//        }
+	//        return structure;
+	//    }
+	//    private Map code;
+	//    public Function(Map code,Expression parent)
+	//        : base(code.Source,parent)
+	//    {
+	//        this.code = code;
+	//    }
+	//    public override Compiled Compile(Expression parent)
+	//    {
+	//        return new CompiledFunction(code, Source,this);
+	//    }
+	//}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
 		private MapStrategy strategy;
@@ -5530,9 +5562,6 @@ namespace Meta
 			{
 				expression = CreateExpression(parent);
 			}
-			else
-			{
-			}
 			return expression;
 		}
 		public Expression CreateExpression(Expression parent)
@@ -5565,10 +5594,14 @@ namespace Meta
 			{
 				return new LastArgument(this[CodeKeys.LastArgument],parent);
 			}
-			else if (ContainsKey(CodeKeys.Function))
+			else if (ContainsKey(CodeKeys.Expression))
 			{
-				return new Function(this,parent);
+				return new Function(this.Scope, parent);
 			}
+			//else if (ContainsKey(CodeKeys.Function))
+			//{
+			//    return new Function(this,parent);
+			//}
 			else
 			{
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
@@ -5587,7 +5620,9 @@ namespace Meta
 		{
 			if (ContainsKey(CodeKeys.Function))
 			{
-				return this.GetExpression(null).Compile(null).Evaluate(arg);
+				this[CodeKeys.Function].Scope = this;
+				return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+				//return this.GetExpression(null).Compile(null).Evaluate(arg);
 			}
 			else
 			{
