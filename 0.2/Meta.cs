@@ -60,11 +60,6 @@ namespace Meta
 			this.Source = source;
 		}
 		public abstract Compiled Compile(Expression parent);
-		//public Map Evaluate(Map context)
-		//{
-		//    return EvaluateImplementation(context);
-		//}
-		//public abstract Map EvaluateImplementation(Map context);
 	}
 	public class LastArgument : Expression
 	{
@@ -104,26 +99,6 @@ namespace Meta
 				calls.Add(new Literal(Map.Empty));
 			}
 		}
-		//public override Map EvaluateImplementation(Map current)
-		//{
-		//    Map result = calls[0].Evaluate(current);
-		//    for (int i = 1; i < calls.Count; i++)
-		//    {
-		//        try
-		//        {
-		//            result = result.Call(calls[i].Evaluate(current));
-		//        }
-		//        catch (MetaException e)
-		//        {
-		//            throw e;
-		//        }
-		//        catch (Exception e)
-		//        {
-		//            throw new MetaException(e.Message, Source);
-		//        }
-		//    }
-		//    return result;
-		//}
 		public override Compiled Compile(Expression parent)
 		{
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e)
@@ -162,23 +137,6 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
-		//public override Map EvaluateImplementation(Map context)
-		//{
-		//    Map key = expression.Evaluate(context);
-		//    Map selected = context;
-		//    while (!selected.ContainsKey(key))
-		//    {
-		//        if (selected.Scope != null)
-		//        {
-		//            selected = selected.Scope;
-		//        }
-		//        else
-		//        {
-		//            throw new KeyNotFound(key, Source, null);
-		//        }
-		//    }
-		//    return selected[key].Copy();
-		//}
 		private Expression expression;
 		public Search(Map code)
 			: base(code.Source)
@@ -228,11 +186,8 @@ namespace Meta
 			context.Scope = parent;
 			foreach (Statement statement in statementList)
 			{
-				//context.activeProgram = this;
-				//context.activeStatement = statement;
 				statement.Assign(ref context);
 			}
-			context.activeProgram = null;
 			return context;
 		}
 	}
@@ -242,19 +197,6 @@ namespace Meta
 		{
 			return new CompiledProgram(statementList,Source);
 		}
-		//public override Map EvaluateImplementation(Map parent)
-		//{
-		//    Map context = new Map();
-		//    context.Scope = parent;
-		//    foreach (Statement statement in statementList)
-		//    {
-		//        context.activeProgram = this;
-		//        context.activeStatement = statement;
-		//        statement.Assign(ref context);
-		//    }
-		//    context.activeProgram = null;
-		//    return context;
-		//}
 		private List<Statement> statementList;
 		public Program(Map code)
 			: base(code.Source)
@@ -271,7 +213,6 @@ namespace Meta
 		public void Assign(ref Map context)
 		{
 			AssignImplementation(ref context, value.Compile(null).Evaluate(context));
-			//AssignImplementation(ref context, value.Evaluate(context));
 		}
 		public abstract void AssignImplementation(ref Map context, Map value);
 		public Program program;
@@ -282,21 +223,6 @@ namespace Meta
 			this.value = code[CodeKeys.Value].GetExpression();
 		}
 	}
-	//public abstract class Statement
-	//{
-	//    public void Assign(ref Map context)
-	//    {
-	//        AssignImplementation(ref context, value.Evaluate(context));
-	//    }
-	//    public abstract void AssignImplementation(ref Map context, Map value);
-	//    public Program program;
-	//    public Expression value;
-	//    public Statement(Program program, Map code)
-	//    {
-	//        this.program = program;
-	//        this.value = code[CodeKeys.Value].GetExpression();
-	//    }
-	//}
 	public class DiscardStatement : Statement
 	{
 		public DiscardStatement(Program program, Map code)
@@ -313,7 +239,6 @@ namespace Meta
 		public override void AssignImplementation(ref Map context, Map value)
 		{
 			context[key.Compile(null).Evaluate(context)] = value;
-			//context[key.Evaluate(context)] = value;
 		}
 		public Expression key;
 		public KeyStatement(Map code, Program program)
@@ -342,7 +267,6 @@ namespace Meta
 		{
 			Map selected = context;
 			Map key = this.key.Compile(null).Evaluate(context);
-			//Map key = this.key.Evaluate(context);
 			while (!selected.ContainsKey(key))
 			{
 				selected = selected.Scope;
@@ -429,8 +353,7 @@ namespace Meta
 		{
 			Map selected = subs[0].Evaluate(context);
 			for (int i = 1; i < subs.Count; i++)
-				//for (int i = 1; i < subselects.Count; i++)
-				{
+			{
 				Map key = subs[i].Evaluate(context);
 				Map value = selected.TryGetValue(key);
 				if (value == null)
@@ -454,32 +377,11 @@ namespace Meta
 				return e.Compile(null);
 			}),Source);
 		}
-		//public override Map EvaluateImplementation(Map context)
-		//{
-		//    Map selected = subs[0].Evaluate(context);
-		//    for (int i = 1; i < subselects.Count; i++)
-		//    {
-		//        Map key = subs[i].Evaluate(context);
-		//        Map value = selected.TryGetValue(key);
-		//        if (value == null)
-		//        {
-		//            throw new KeyDoesNotExist(key, subselects[i].Source, selected);
-		//        }
-		//        else
-		//        {
-		//            selected = value;
-		//        }
-		//    }
-		//    return selected;
-		//}
 		private List<Expression> subs = new List<Expression>();
-		// remove
-		private List<Map> subselects;
 		public Select(Map code)
 			: base(code.Source)
 		{
-			this.subselects = new List<Map>(code.Array);
-			foreach (Map m in subselects)
+			foreach (Map m in code.Array)
 			{
 				subs.Add(m.GetExpression());
 			}
@@ -5258,8 +5160,8 @@ namespace Meta
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
 		// remove
-		public Program activeProgram;
-		public Statement activeStatement;
+		//public Program activeProgram;
+		//public Statement activeStatement;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
 			: this(new ListStrategy(new List<Map>(list)))
