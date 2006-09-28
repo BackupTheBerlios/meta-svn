@@ -5262,24 +5262,18 @@ namespace Meta
 	public class CompiledFunction : Compiled
 	{
 		private Map code;
-		private Function function;
-		public CompiledFunction(Map code,Source source,Function function):base(source)
+		//private Function function;
+		private Map parameter;
+		public CompiledFunction(Map code,Source source,Map parameter,Compiled expression):base(source)
 		{
 			this.code = code;
-			this.function = function;
+			//this.function = function;
 			// should be done by expressionm, really
-			this.expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function).Compile(function);
+			this.parameter = parameter;
+			this.expression = expression;
+			//this.expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function).Compile(function);
 		}
 		private Compiled expression;
-		//public override Map EvaluateImplementation(Map arg)
-		//{
-		//    Map argument = new Map(new DictionaryStrategy());
-		//    argument[code[CodeKeys.Parameter]] = arg;
-		//    argument.Scope = code;
-		//    Expression expression = code[CodeKeys.Expression].GetExpression(function);
-		//    return expression.Compile(null).Evaluate(argument);
-		//    //return expression.Evaluate(argument);
-		//}
 		public override Map EvaluateImplementation(Map arg)
 		{
 			Map argument = new Map(new DictionaryStrategy());
@@ -5333,7 +5327,8 @@ namespace Meta
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			return new CompiledFunction(code, Source, this);
+			Map func=code[CodeKeys.Function];
+			return new CompiledFunction(code, Source,func[CodeKeys.Parameter],func[CodeKeys.Expression].GetExpression(this).Compile(this));
 		}
 	}
 	//public class Function : Expression
