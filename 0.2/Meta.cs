@@ -324,7 +324,7 @@ namespace Meta
 			{
 				if (value is Literal)
 				{
-					((Literal)value).Compile(program);
+					((Literal)value).literal.Compile(program);
 					//((Literal)value).literal.Compile(program);
 				}
 			}
@@ -5261,34 +5261,20 @@ namespace Meta
 	}
 	public class CompiledFunction : Compiled
 	{
-		private Map code;
-		//private Function function;
 		private Map parameter;
-		public CompiledFunction(Map code,Source source,Map parameter,Compiled expression):base(source)
+		public CompiledFunction(Source source,Map parameter,Compiled expression):base(source)
 		{
-			this.code = code;
-			//this.function = function;
-			// should be done by expressionm, really
 			this.parameter = parameter;
 			this.expression = expression;
-			//this.expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function).Compile(function);
 		}
 		private Compiled expression;
 		public override Map EvaluateImplementation(Map context)
 		{
 			Map argument = new Map(new DictionaryStrategy());
 			argument[parameter] = Map.arguments.Peek();
-			//argument[parameter] = arg;
 			argument.Scope = context;
 			return expression.Evaluate(argument);
 		}
-		//public override Map EvaluateImplementation(Map arg)
-		//{
-		//    Map argument = new Map(new DictionaryStrategy());
-		//    argument[parameter] = arg;
-		//    argument.Scope = code;
-		//    return expression.Evaluate(argument);
-		//}
 	}
 	public class LiteralExpression : Expression
 	{
@@ -5333,7 +5319,7 @@ namespace Meta
 		public override Compiled Compile(Expression parent)
 		{
 			//Map func=code[CodeKeys.Function];
-			return new CompiledFunction(code, Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
+			return new CompiledFunction(Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
 		}
 	}
 	//public class Function : Expression
@@ -5667,6 +5653,7 @@ namespace Meta
 			Map clone = strategy.CopyData();
 			clone.Scope = Scope;
 			clone.Source = Source;
+			clone.Compiled = Compiled;
 			return clone;
 		}
 		public override int GetHashCode()
