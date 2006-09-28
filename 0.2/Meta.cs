@@ -234,24 +234,22 @@ namespace Meta
 			}
 		}
 	}
+
+
 	public abstract class Expression : MetaBase
 	{
 		protected Evaluate optimized;
 		public Map Evaluate(Map context)
 		{
-			if (!isOptimized && !(this is Literal))
-			{
-			}
 			return EvaluateImplementation(context);
 		}
 		public abstract Map EvaluateImplementation(Map context);
-		public bool isOptimized = false;
-		public Expression Optimize(Map scope, List<Statement> statements)
+		//public abstract Map EvaluateStructure(Expression context);
+		public Expression Compile(Map scope, List<Statement> statements)
 		{
-			isOptimized = true;
-			return OptimizeImplementation(scope, statements);
+			return CompileImplementation(scope, statements);
 		}
-		public virtual Expression OptimizeImplementation(Map scope, List<Statement> statements)
+		public virtual Expression CompileImplementation(Map scope, List<Statement> statements)
 		{
 			return this;
 		}
@@ -267,11 +265,11 @@ namespace Meta
 
 	public class Call : Expression
 	{
-		public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
+		public override Expression CompileImplementation(Map scope, List<Statement> statements)
 		{
 			for (int i = 0; i < calls.Count; i++)
 			{
-				calls[i] = calls[i].Optimize(scope, statements);
+				calls[i] = calls[i].Compile(scope, statements);
 			}
 			return this;
 		}
@@ -318,12 +316,14 @@ namespace Meta
 		public OptimizedSearch(Map result)
 		{
 			this.result = result;
-			this.isOptimized = true;
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
 			return result;
 		}
+	}
+	public class Structure
+	{
 	}
 	//public class OptimizedSearch : Expression
 	//{
@@ -350,7 +350,6 @@ namespace Meta
 		Evaluate eval;
 		public CustomExpression(Evaluate eval)
 		{
-			this.isOptimized = true;
 			this.eval = eval;
 		}
 		public override Map EvaluateImplementation(Map context)
@@ -554,17 +553,13 @@ namespace Meta
 			}
 			return types[keys];
 		}
-		public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
+		public override Expression CompileImplementation(Map scope, List<Statement> statements)
 		{
-			if (AllLiteralKeys())
-			{
-				//type = CreateType();
-			}
 			for (int i = 0; i < statementList.Count; i++)
 			{
 				Statement statement = statementList[i];
 				statements.Add(statement);
-				statement.value = statement.value.Optimize(scope, statements);
+				statement.value = statement.value.Compile(scope, statements);
 				statements.RemoveAt(statements.Count - 1);
 				statementList[i] = statement.Optimize(scope, statements);
 			}
@@ -813,11 +808,11 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		public override Expression OptimizeImplementation(Map scope, List<Statement> statements)
+		public override Expression CompileImplementation(Map scope, List<Statement> statements)
 		{
 			for (int i = 0; i < subs.Count; i++)
 			{
-				subs[i] = subs[i].Optimize(scope, statements);
+				subs[i] = subs[i].Compile(scope, statements);
 			}
 			return this;
 		}
@@ -5677,6 +5672,22 @@ namespace Meta
 			return result;
 		}
 	}
+	public class Function:Expression
+	{
+		private Map code;
+		public Function(Map code)
+		{
+			this.code = code;
+		}
+		public override Map EvaluateImplementation(Map arg)
+		{
+			Map argument = new Map(new DictionaryStrategy());
+			argument[code[CodeKeys.Function][CodeKeys.Parameter]] = arg;
+			argument.Scope = code;
+			Expression expression = code[CodeKeys.Function][CodeKeys.Expression].Optimize(argument);
+			return expression.Evaluate(argument);
+		}
+	}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
 		public Program activeProgram;
@@ -5887,7 +5898,7 @@ namespace Meta
 		{
 			if (optimized == null)
 			{
-				optimized = GetExpression().Optimize(scope, new List<Statement>());
+				optimized = GetExpression().Compile(scope, new List<Statement>());
 			}
 			return optimized;
 		}
@@ -5929,6 +5940,10 @@ namespace Meta
 			{
 				return new LastArgument();
 			}
+			else if (ContainsKey(CodeKeys.Function))
+			{
+				return new Function(this);
+			}
 			else
 			{
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
@@ -5958,11 +5973,12 @@ namespace Meta
 		{
 			if (ContainsKey(CodeKeys.Function))
 			{
-				Map argument = new Map(new DictionaryStrategy());
-				argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
-				argument.Scope = this;
-				Expression expression = this[CodeKeys.Function][CodeKeys.Expression].Optimize(argument);
-				return expression.Evaluate(argument);
+				return this.GetExpression().Evaluate(arg);
+				//Map argument = new Map(new DictionaryStrategy());
+				//argument[this[CodeKeys.Function][CodeKeys.Parameter]] = arg;
+				//argument.Scope = this;
+				//Expression expression = this[CodeKeys.Function][CodeKeys.Expression].Optimize(argument);
+				//return expression.Evaluate(argument);
 			}
 			else
 			{
