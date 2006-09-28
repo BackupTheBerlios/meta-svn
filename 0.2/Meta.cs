@@ -5274,16 +5274,21 @@ namespace Meta
 			//this.expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function).Compile(function);
 		}
 		private Compiled expression;
-		public override Map EvaluateImplementation(Map arg)
+		public override Map EvaluateImplementation(Map context)
 		{
 			Map argument = new Map(new DictionaryStrategy());
-			argument[code[CodeKeys.Function][CodeKeys.Parameter]] = arg;
-			argument.Scope = code;
-			//Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function);
-			//Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function);
+			argument[parameter] = Map.arguments.Peek();
+			//argument[parameter] = arg;
+			argument.Scope = context;
 			return expression.Evaluate(argument);
-			//return expression.Evaluate(argument);
 		}
+		//public override Map EvaluateImplementation(Map arg)
+		//{
+		//    Map argument = new Map(new DictionaryStrategy());
+		//    argument[parameter] = arg;
+		//    argument.Scope = code;
+		//    return expression.Evaluate(argument);
+		//}
 	}
 	public class LiteralExpression : Expression
 	{
@@ -5327,8 +5332,8 @@ namespace Meta
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			Map func=code[CodeKeys.Function];
-			return new CompiledFunction(code, Source,func[CodeKeys.Parameter],func[CodeKeys.Expression].GetExpression(this).Compile(this));
+			//Map func=code[CodeKeys.Function];
+			return new CompiledFunction(code, Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
 		}
 	}
 	//public class Function : Expression
@@ -5601,7 +5606,7 @@ namespace Meta
 			}
 			else if (ContainsKey(CodeKeys.Expression))
 			{
-				return new Function(this.Scope, parent);
+				return new Function(this, parent);
 			}
 			else
 			{
@@ -5624,20 +5629,39 @@ namespace Meta
 				this[CodeKeys.Function].Scope = this;
 				if (this[CodeKeys.Function].Compiled != null)
 				{
-					return this[CodeKeys.Function].Compiled.Evaluate(arg);
+					return this[CodeKeys.Function].Compiled.Evaluate(this);
 				}
 				else
 				{
-					return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+					return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(this);
 				}
-				//return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
-				//return this.GetExpression(null).Compile(null).Evaluate(arg);
 			}
 			else
 			{
 				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
 			}
 		}
+		//public Map CallDefault(Map arg)
+		//{
+		//    if (ContainsKey(CodeKeys.Function))
+		//    {
+		//        this[CodeKeys.Function].Scope = this;
+		//        if (this[CodeKeys.Function].Compiled != null)
+		//        {
+		//            return this[CodeKeys.Function].Compiled.Evaluate(arg);
+		//        }
+		//        else
+		//        {
+		//            return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+		//        }
+		//        //return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+		//        //return this.GetExpression(null).Compile(null).Evaluate(arg);
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
+		//    }
+		//}
 		public Map Copy()
 		{
 			Map clone = strategy.CopyData();
