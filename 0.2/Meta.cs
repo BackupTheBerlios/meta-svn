@@ -5494,33 +5494,29 @@ namespace Meta
 				return Meta.Serialization.Serialize(this);
 			}
 		}
-		private object expression;
+		private Expression expression;
 		public Statement GetStatement(Program program)
 		{
-			if (expression == null)
+			if (ContainsKey(CodeKeys.Keys))
 			{
-				if (ContainsKey(CodeKeys.Keys))
-				{
-					expression = new SearchStatement(this, program);
-				}
-				else if (ContainsKey(CodeKeys.Current))
-				{
-					expression = new CurrentStatement(this, program);
-				}
-				else if (ContainsKey(CodeKeys.Key))
-				{
-					expression = new KeyStatement(this, program);
-				}
-				else if (ContainsKey(CodeKeys.Discard))
-				{
-					expression = new DiscardStatement(program, this);
-				}
-				else
-				{
-					throw new ApplicationException("Cannot compile map");
-				}
+				return new SearchStatement(this, program);
 			}
-			return (Statement)expression;
+			else if (ContainsKey(CodeKeys.Current))
+			{
+				return new CurrentStatement(this, program);
+			}
+			else if (ContainsKey(CodeKeys.Key))
+			{
+				return new KeyStatement(this, program);
+			}
+			else if (ContainsKey(CodeKeys.Discard))
+			{
+				return new DiscardStatement(program, this);
+			}
+			else
+			{
+				throw new ApplicationException("Cannot compile map");
+			}
 		}
 		public Compiled Compiled;
 		public void Compile(Expression parent)
@@ -5537,7 +5533,7 @@ namespace Meta
 			else
 			{
 			}
-			return (Expression)expression;
+			return expression;
 		}
 		public Expression CreateExpression(Expression parent)
 		{
