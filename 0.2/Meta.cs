@@ -5702,12 +5702,16 @@ namespace Meta
 			else if (ContainsKey(CodeKeys.Expression))
 			{
 				Program program = new Program(this,parent);
-				if (ContainsKey(CodeKeys.Parameter))
+				Map parameter = this[CodeKeys.Parameter];
+				if (parameter.Count!=0)
 				{
 					KeyStatement s = new KeyStatement(
-						new Literal(this[CodeKeys.Parameter], program),
+						new Literal(parameter, program),
 						new LastArgument(Map.Empty, program), program, 0);
-				    program.statementList.Add(s);
+					program.statementList.Add(s);
+				}
+				else
+				{
 				}
 				CurrentStatement c=new CurrentStatement(this[CodeKeys.Expression].GetExpression(program),program,program.statementList.Count);
 				program.statementList.Add(c);
