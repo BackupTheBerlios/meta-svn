@@ -61,7 +61,7 @@ namespace Meta
 			this.Source = source;
 			this.Parent = parent;
 		}
-		//public abstract Map EvaluateStructure();
+		public abstract Map EvaluateStructure();
 		public abstract Compiled Compile(Expression parent);
 	}
 	public class LastArgument : Expression
@@ -69,6 +69,15 @@ namespace Meta
 		public LastArgument(Map code,Expression parent)
 			: base(code.Source,parent)
 		{
+		}
+		public override Map EvaluateStructure()
+		{
+			Expression arg = Parent;
+			while (!(arg is Function))
+			{
+				arg = arg.Parent;
+			}
+			return arg.EvaluateStructure();
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -101,6 +110,10 @@ namespace Meta
 			{
 				calls.Add(new Literal(Map.Empty,this));
 			}
+		}
+		public override Map EvaluateStructure()
+		{
+			throw new Exception("The method or operation is not implemented.");
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -140,6 +153,30 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			Expression current=Parent;
+			Map key=expression.EvaluateStructure();
+			if(key!=null && !(key is Structure || key is Unknown))
+			{
+				while (true)
+				{
+					if (current is Program || current is Function)
+					{
+						Map structure=current.EvaluateStructure();
+						if (structure == null)
+						{
+							return null;
+						}
+						else if (structure.ContainsKey(key))
+						{
+							return structure[key];
+						}
+					}
+				}
+			}
+			return null;
+		}
 		private Expression expression;
 		public Search(Map code,Expression parent)
 			: base(code.Source,parent)
@@ -197,6 +234,10 @@ namespace Meta
 	}
 	public class Program : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			return null;
+		}
 		public override Compiled Compile(Expression parent)
 		{
 			return new CompiledProgram(statementList.ConvertAll < CompiledStatement >( delegate(Statement s)
@@ -278,6 +319,14 @@ namespace Meta
 	{
 		public override CompiledStatement Compile()
 		{
+			Map k=key.EvaluateStructure();
+			if (k != null && k.Equals(CodeKeys.Function))
+			{
+				if (value is Literal)
+				{
+					((Literal)value).Compile(program);
+				}
+			}
 			return new CompiledKeyStatement(key.Compile(program),value.Compile(program));
 		}
 		private Map code;
@@ -363,6 +412,10 @@ namespace Meta
 	}
 	public class Literal : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			return literal;
+		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled Compile(Expression parent)
@@ -395,6 +448,10 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			return Gac.gac;
+		}
 		public Root(Map code,Expression parent)
 			: base(code.Source,parent)
 		{
@@ -432,6 +489,21 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			Map selected = subs[0].EvaluateStructure();
+			for (int i = 1; i < subs.Count; i++)
+			{
+				Map key = subs[i].EvaluateStructure();
+				if (key==null || key is Structure || key is Unknown || !selected.ContainsKey(key))
+				{
+					// compilation error???
+					return null;
+				}
+				selected = selected[key];
+			}
+			return selected;
+		}
 		public override Compiled Compile(Expression parent)
 		{
 			return new CompiledSelect(subs.ConvertAll<Compiled>(delegate(Expression e)
@@ -4592,6 +4664,7 @@ namespace Meta
 			{
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
+				//callable.
 				return callable.Call(argument);
 			}
 		}
@@ -5200,8 +5273,38 @@ namespace Meta
 			//return expression.Evaluate(argument);
 		}
 	}
+	public class LiteralExpression : Expression
+	{
+		public LiteralExpression(Expression parent)
+			: base(null, parent)
+		{
+		}
+		public override Map EvaluateStructure()
+		{
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override Compiled Compile(Expression parent)
+		{
+			return null;
+		}
+	}
+	public class Structure: Map
+	{
+	}
+	public class Unknown:Map
+	{
+	}
 	public class Function : Expression
 	{
+		public override Map EvaluateStructure()
+		{
+			Structure structure = new Structure();
+			if (code.ContainsKey(CodeKeys.Parameter))
+			{
+				structure[code[CodeKeys.Parameter]] = new Unknown();
+			}
+			return structure;
+		}
 		private Map code;
 		public Function(Map code,Expression parent)
 			: base(code.Source,parent)
@@ -5211,22 +5314,10 @@ namespace Meta
 		public override Compiled Compile(Expression parent)
 		{
 			return new CompiledFunction(code, Source,this);
-			//return new CompiledFunction(code, Source);
 		}
-		//public override Map EvaluateImplementation(Map arg)
-		//{
-		//    Map argument = new Map(new DictionaryStrategy());
-		//    argument[code[CodeKeys.Function][CodeKeys.Parameter]] = arg;
-		//    argument.Scope = code;
-		//    Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression();
-		//    return expression.Evaluate(argument);
-		//}
 	}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
-		// remove
-		//public Program activeProgram;
-		//public Statement activeStatement;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
 			: this(new ListStrategy(new List<Map>(list)))
@@ -5431,20 +5522,20 @@ namespace Meta
 			}
 			return (Statement)expression;
 		}
-		private Expression optimized;
-		//public Expression Optimize(Map scope)
-		//{
-		//    if (optimized == null)
-		//    {
-		//        optimized = GetExpression().Compile(scope, new List<Statement>());
-		//    }
-		//    return optimized;
-		//}
+		public Compiled Compiled;
+		public void Compile(Expression parent)
+		{
+			Compiled = this.GetExpression(parent).Compile(parent);
+		}
+
 		public Expression GetExpression(Expression parent)
 		{
 			if (expression == null)
 			{
 				expression = CreateExpression(parent);
+			}
+			else
+			{
 			}
 			return (Expression)expression;
 		}
@@ -5485,17 +5576,6 @@ namespace Meta
 			else
 			{
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
-			}
-		}
-		public Map Scope
-		{
-			get
-			{
-				return scope;
-			}
-			set
-			{
-				scope = value;
 			}
 		}
 		public int GetArrayCountDefault()
@@ -5598,7 +5678,7 @@ namespace Meta
 		{
 			return (double)integer;
 		}
-		public Map scope;
+		public Map Scope;
 		public string SerializeDefault()
 		{
 			string text;
