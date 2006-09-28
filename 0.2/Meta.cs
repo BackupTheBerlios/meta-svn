@@ -4665,6 +4665,10 @@ namespace Meta
 			{
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
+				Expression lib=new LiteralExpression(Gac.gac["library"],new LiteralExpression(Gac.gac,null));
+				//lib.Parent = new LiteralExpression(Gac.gac);
+				callable[CodeKeys.Function].Scope = callable;
+				callable[CodeKeys.Function].Compile(lib);
 				//callable.
 				return callable.Call(argument);
 			}
@@ -5263,7 +5267,10 @@ namespace Meta
 		{
 			this.code = code;
 			this.function = function;
+			// should be done by expressionm, really
+			this.expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function).Compile(function);
 		}
+		private Compiled expression;
 		//public override Map EvaluateImplementation(Map arg)
 		//{
 		//    Map argument = new Map(new DictionaryStrategy());
@@ -5278,24 +5285,27 @@ namespace Meta
 			Map argument = new Map(new DictionaryStrategy());
 			argument[code[CodeKeys.Function][CodeKeys.Parameter]] = arg;
 			argument.Scope = code;
-			Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function);
-			return expression.Compile(null).Evaluate(argument);
+			//Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function);
+			//Expression expression = code[CodeKeys.Function][CodeKeys.Expression].GetExpression(function);
+			return expression.Evaluate(argument);
 			//return expression.Evaluate(argument);
 		}
 	}
 	public class LiteralExpression : Expression
 	{
-		public LiteralExpression(Expression parent)
+		private Map literal;
+		public LiteralExpression(Map literal,Expression parent)
 			: base(null, parent)
 		{
+			this.literal = literal;
 		}
 		public override Map EvaluateStructure()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			return literal;
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			return null;
+			throw new Exception("The method or operation is not implemented.");
 		}
 	}
 	public class Structure: Map
@@ -5598,10 +5608,6 @@ namespace Meta
 			{
 				return new Function(this.Scope, parent);
 			}
-			//else if (ContainsKey(CodeKeys.Function))
-			//{
-			//    return new Function(this,parent);
-			//}
 			else
 			{
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
@@ -5621,7 +5627,15 @@ namespace Meta
 			if (ContainsKey(CodeKeys.Function))
 			{
 				this[CodeKeys.Function].Scope = this;
-				return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+				if (this[CodeKeys.Function].Compiled != null)
+				{
+					return this[CodeKeys.Function].Compiled.Evaluate(arg);
+				}
+				else
+				{
+					return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
+				}
+				//return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
 				//return this.GetExpression(null).Compile(null).Evaluate(arg);
 			}
 			else
