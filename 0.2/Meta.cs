@@ -56,6 +56,7 @@ namespace Meta
 	{
 		public readonly Source Source;
 		public readonly Expression Parent;
+		public Statement Statement;
 		public Expression(Source source,Expression parent)
 		{
 			this.Source = source;
@@ -156,15 +157,15 @@ namespace Meta
 	{
 		public override Map EvaluateStructure()
 		{
-			Expression current=Parent;
-			Map key=expression.EvaluateStructure();
-			if(key!=null && !(key is Structure || key is Unknown))
+			Expression current = Parent;
+			Map key = expression.EvaluateStructure();
+			if (key != null && !(key is Structure || key is Unknown))
 			{
 				while (true)
 				{
 					//if (current is Program || current is Function)
 					{
-						Map structure=current.EvaluateStructure();
+						Map structure = current.EvaluateStructure();
 						if (structure == null)
 						{
 							return null;
@@ -179,16 +180,53 @@ namespace Meta
 			return null;
 		}
 		private Expression expression;
-		public Search(Map code,Expression parent)
-			: base(code.Source,parent)
+		public Search(Map code, Expression parent)
+			: base(code.Source, parent)
 		{
 			this.expression = code.GetExpression(this);
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			return new CompiledSearch(expression.Compile(this),Source);
+			return new CompiledSearch(expression.Compile(this), Source);
 		}
 	}
+	//public class Search : Expression
+	//{
+	//    public override Map EvaluateStructure()
+	//    {
+	//        Expression current=Parent;
+	//        Map key=expression.EvaluateStructure();
+	//        if(key!=null && !(key is Structure || key is Unknown))
+	//        {
+	//            while (true)
+	//            {
+	//                //if (current is Program || current is Function)
+	//                {
+	//                    Map structure=current.EvaluateStructure();
+	//                    if (structure == null)
+	//                    {
+	//                        return null;
+	//                    }
+	//                    else if (structure.ContainsKey(key))
+	//                    {
+	//                        return structure[key];
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return null;
+	//    }
+	//    private Expression expression;
+	//    public Search(Map code,Expression parent)
+	//        : base(code.Source,parent)
+	//    {
+	//        this.expression = code.GetExpression(this);
+	//    }
+	//    public override Compiled Compile(Expression parent)
+	//    {
+	//        return new CompiledSearch(expression.Compile(this),Source);
+	//    }
+	//}
 	public class CompiledSearch : Compiled
 	{
 		private Compiled expression;
@@ -283,7 +321,7 @@ namespace Meta
 			this.program = program;
 			this.Index = index;
 			this.value = value;
-			//this.value = code[CodeKeys.Value].GetExpression(program);
+			value.Statement = this;
 		}
 	}
 	public class CompiledDiscardStatement : CompiledStatement
@@ -338,6 +376,7 @@ namespace Meta
 			: base(program, value,index)
 		{
 			this.key = key;
+			key.Statement = this;
 			//this.key = code[CodeKeys.Key].GetExpression(program);
 		}
 	}
@@ -406,6 +445,7 @@ namespace Meta
 			: base(program, value,index)
 		{
 			this.key = key;
+			key.Statement = this;
 		}
 	}
 	public class CompiledLiteral : Compiled
@@ -5295,23 +5335,6 @@ namespace Meta
 			return result;
 		}
 	}
-	//public class CompiledFunction : Compiled
-	//{
-	//    private Map parameter;
-	//    public CompiledFunction(Source source,Map parameter,Compiled expression):base(source)
-	//    {
-	//        this.parameter = parameter;
-	//        this.expression = expression;
-	//    }
-	//    private Compiled expression;
-	//    public override Map EvaluateImplementation(Map context)
-	//    {
-	//        Map argument = new Map(new DictionaryStrategy());
-	//        argument[parameter] = Map.arguments.Peek();
-	//        argument.Scope = context;
-	//        return expression.Evaluate(argument);
-	//    }
-	//}
 	public class LiteralExpression : Expression
 	{
 		private Map literal;
@@ -5355,74 +5378,6 @@ namespace Meta
 		{
 		}
 	}
-	//public class Function : ScopeExpression
-	//{
-	//    public override Map EvaluateStructure()
-	//    {
-	//        Structure structure = new Structure();
-	//        if (code.ContainsKey(CodeKeys.Parameter))
-	//        {
-	//            structure[code[CodeKeys.Parameter]] = new Unknown();
-	//        }
-	//        return structure;
-	//    }
-	//    private Map code;
-	//    public Function(Map code, Expression parent)
-	//        : base(code.Source, parent)
-	//    {
-	//        this.code = code;
-	//    }
-	//    public override Compiled Compile(Expression parent)
-	//    {
-	//        //Map func=code[CodeKeys.Function];
-	//        return new CompiledFunction(Source, code[CodeKeys.Parameter], code[CodeKeys.Expression].GetExpression(this).Compile(this));
-	//    }
-	//}
-	//public class Function : ScopeExpression
-	//{
-	//    public override Map EvaluateStructure()
-	//    {
-	//        Structure structure = new Structure();
-	//        if (code.ContainsKey(CodeKeys.Parameter))
-	//        {
-	//            structure[code[CodeKeys.Parameter]] = new Unknown();
-	//        }
-	//        return structure;
-	//    }
-	//    private Map code;
-	//    public Function(Map code, Expression parent)
-	//        : base(code.Source, parent)
-	//    {
-	//        this.code = code;
-	//    }
-	//    public override Compiled Compile(Expression parent)
-	//    {
-	//        //Map func=code[CodeKeys.Function];
-	//        return new CompiledFunction(Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
-	//    }
-	//}
-	//public class Function : Expression
-	//{
-	//    public override Map EvaluateStructure()
-	//    {
-	//        Structure structure = new Structure();
-	//        if (code.ContainsKey(CodeKeys.Parameter))
-	//        {
-	//            structure[code[CodeKeys.Parameter]] = new Unknown();
-	//        }
-	//        return structure;
-	//    }
-	//    private Map code;
-	//    public Function(Map code,Expression parent)
-	//        : base(code.Source,parent)
-	//    {
-	//        this.code = code;
-	//    }
-	//    public override Compiled Compile(Expression parent)
-	//    {
-	//        return new CompiledFunction(code, Source,this);
-	//    }
-	//}
 	public delegate T SingleDelegate<T>(T t);
 	public class CompilableAttribute:Attribute
 	{
