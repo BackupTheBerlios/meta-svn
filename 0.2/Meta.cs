@@ -343,21 +343,30 @@ namespace Meta
 	}
 	public class CompiledCurrentStatement : CompiledStatement
 	{
-		public CompiledCurrentStatement(Compiled value)
+		private int index;
+		public CompiledCurrentStatement(Compiled value,int index)
 			: base(value)
 		{
+			this.index = index;
 		}
 		public override void AssignImplementation(ref Map context, Map value)
 		{
-			Map val = value.Copy();
-			context.Strategy = val.Strategy;
+			if (index == 0)
+			{
+				Map val = value.Copy();
+				context.Strategy = val.Strategy;
+			}
+			else
+			{
+				context = value.Copy();
+			}
 		}
 	}
 	public class CurrentStatement : Statement
 	{
 		public override CompiledStatement Compile()
 		{
-			return new CompiledCurrentStatement(value.Compile(program));
+			return new CompiledCurrentStatement(value.Compile(program),Index);
 		}
 		public CurrentStatement(Expression value, Program program,int index)
 			: base(program, value,index)
@@ -5286,23 +5295,23 @@ namespace Meta
 			return result;
 		}
 	}
-	public class CompiledFunction : Compiled
-	{
-		private Map parameter;
-		public CompiledFunction(Source source,Map parameter,Compiled expression):base(source)
-		{
-			this.parameter = parameter;
-			this.expression = expression;
-		}
-		private Compiled expression;
-		public override Map EvaluateImplementation(Map context)
-		{
-			Map argument = new Map(new DictionaryStrategy());
-			argument[parameter] = Map.arguments.Peek();
-			argument.Scope = context;
-			return expression.Evaluate(argument);
-		}
-	}
+	//public class CompiledFunction : Compiled
+	//{
+	//    private Map parameter;
+	//    public CompiledFunction(Source source,Map parameter,Compiled expression):base(source)
+	//    {
+	//        this.parameter = parameter;
+	//        this.expression = expression;
+	//    }
+	//    private Compiled expression;
+	//    public override Map EvaluateImplementation(Map context)
+	//    {
+	//        Map argument = new Map(new DictionaryStrategy());
+	//        argument[parameter] = Map.arguments.Peek();
+	//        argument.Scope = context;
+	//        return expression.Evaluate(argument);
+	//    }
+	//}
 	public class LiteralExpression : Expression
 	{
 		private Map literal;
@@ -5346,29 +5355,29 @@ namespace Meta
 		{
 		}
 	}
-	public class Function : ScopeExpression
-	{
-		public override Map EvaluateStructure()
-		{
-			Structure structure = new Structure();
-			if (code.ContainsKey(CodeKeys.Parameter))
-			{
-				structure[code[CodeKeys.Parameter]] = new Unknown();
-			}
-			return structure;
-		}
-		private Map code;
-		public Function(Map code, Expression parent)
-			: base(code.Source, parent)
-		{
-			this.code = code;
-		}
-		public override Compiled Compile(Expression parent)
-		{
-			//Map func=code[CodeKeys.Function];
-			return new CompiledFunction(Source, code[CodeKeys.Parameter], code[CodeKeys.Expression].GetExpression(this).Compile(this));
-		}
-	}
+	//public class Function : ScopeExpression
+	//{
+	//    public override Map EvaluateStructure()
+	//    {
+	//        Structure structure = new Structure();
+	//        if (code.ContainsKey(CodeKeys.Parameter))
+	//        {
+	//            structure[code[CodeKeys.Parameter]] = new Unknown();
+	//        }
+	//        return structure;
+	//    }
+	//    private Map code;
+	//    public Function(Map code, Expression parent)
+	//        : base(code.Source, parent)
+	//    {
+	//        this.code = code;
+	//    }
+	//    public override Compiled Compile(Expression parent)
+	//    {
+	//        //Map func=code[CodeKeys.Function];
+	//        return new CompiledFunction(Source, code[CodeKeys.Parameter], code[CodeKeys.Expression].GetExpression(this).Compile(this));
+	//    }
+	//}
 	//public class Function : ScopeExpression
 	//{
 	//    public override Map EvaluateStructure()
@@ -5674,15 +5683,19 @@ namespace Meta
 			}
 			else if (ContainsKey(CodeKeys.Expression))
 			{
-				//Program program = new Program(this,parent);
-				//if (ContainsKey(CodeKeys.Parameter))
-				//{
-				//    KeyStatement s=new KeyStatement(,program,0)
-				//    program.statementList.Add();
-				//}
-				//return program;
+				Program program = new Program(this,parent);
+				if (ContainsKey(CodeKeys.Parameter))
+				{
+					KeyStatement s = new KeyStatement(
+						new Literal(this[CodeKeys.Parameter], program),
+						new LastArgument(Map.Empty, program), program, 0);
+				    program.statementList.Add(s);
+				}
+				CurrentStatement c=new CurrentStatement(this[CodeKeys.Expression].GetExpression(program),program,program.statementList.Count);
+				program.statementList.Add(c);
+				return program;
 
-				return new Function(this, parent);
+				//return new Function(this, parent);
 			}
 			else
 			{
