@@ -325,7 +325,6 @@ namespace Meta
 				if (value is Literal)
 				{
 					((Literal)value).literal.Compile(program);
-					//((Literal)value).literal.Compile(program);
 				}
 			}
 			return new CompiledKeyStatement(key.Compile(program),value.Compile(program));
@@ -5627,27 +5626,7 @@ namespace Meta
 				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
 			}
 		}
-		//public Map CallDefault(Map arg)
-		//{
-		//    if (ContainsKey(CodeKeys.Function))
-		//    {
-		//        this[CodeKeys.Function].Scope = this;
-		//        if (this[CodeKeys.Function].Compiled != null)
-		//        {
-		//            return this[CodeKeys.Function].Compiled.Evaluate(arg);
-		//        }
-		//        else
-		//        {
-		//            return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
-		//        }
-		//        //return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(arg);
-		//        //return this.GetExpression(null).Compile(null).Evaluate(arg);
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-		//    }
-		//}
+
 		public Map Copy()
 		{
 			Map clone = strategy.CopyData();
