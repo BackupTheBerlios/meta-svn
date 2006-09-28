@@ -59,7 +59,7 @@
 			keys=arg?<"Map_IEnumerable`1" ((Map_Object arg).get_Keys
 			Distance=a?b?LengthVector (DifferenceVector a b)
 			length=arg?((Map_Object arg).get_ArrayCount
-			mergeAll=sum merge
+			mergeAll=Library.MergeAll_Map
 			negate=arg?Difference 0 arg
 			modulo=Number.op_Modulus_Number_Number
 			DotProductVector=vector?number?Map vector entry?Product number entry

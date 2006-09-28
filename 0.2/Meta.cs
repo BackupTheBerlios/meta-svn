@@ -72,12 +72,13 @@ namespace Meta
 		}
 		public override Map EvaluateStructure()
 		{
-			Expression arg = Parent;
-			while (!(arg is Function))
-			{
-				arg = arg.Parent;
-			}
-			return arg.EvaluateStructure();
+			return null;
+			//Expression arg = Parent;
+			//while (!(arg is Function))
+			//{
+			//    arg = arg.Parent;
+			//}
+			//return arg.EvaluateStructure();
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -161,7 +162,7 @@ namespace Meta
 			{
 				while (true)
 				{
-					if (current is Program || current is Function)
+					//if (current is Program || current is Function)
 					{
 						Map structure=current.EvaluateStructure();
 						if (structure == null)
@@ -232,7 +233,7 @@ namespace Meta
 			return context;
 		}
 	}
-	public class Program : Expression
+	public class Program : ScopeExpression
 	{
 		public override Map EvaluateStructure()
 		{
@@ -245,14 +246,16 @@ namespace Meta
 				return s.Compile();
 			}), Source);
 		}
-		private List<Statement> statementList;
+		public List<Statement> statementList;
 		public Program(Map code,Expression parent)
 			: base(code.Source,parent)
 		{
 			statementList = new List<Statement>();
+			int index=0;
 			foreach (Map m in code.Array)
 			{
-				statementList.Add(m.GetStatement(this));
+				statementList.Add(m.GetStatement(this,index));
+				index++;
 			}
 		}
 	}
@@ -274,12 +277,13 @@ namespace Meta
 		public abstract CompiledStatement Compile();
 		public Program program;
 		public readonly Expression value;
-		public Statement(Program program, Map code)
+		public readonly int Index;
+		public Statement(Program program, Expression value,int index)
 		{
 			this.program = program;
-			// this is not really correct, structure of program depends on statement
-			// use common base class, that can give a structure
-			this.value = code[CodeKeys.Value].GetExpression(program);
+			this.Index = index;
+			this.value = value;
+			//this.value = code[CodeKeys.Value].GetExpression(program);
 		}
 	}
 	public class CompiledDiscardStatement : CompiledStatement
@@ -294,8 +298,8 @@ namespace Meta
 	}
 	public class DiscardStatement : Statement
 	{
-		public DiscardStatement(Program program, Map code)
-			: base(program, code)
+		public DiscardStatement(Program program, Expression value,int index)
+			: base(program, value,index)
 		{
 		}
 		public override CompiledStatement Compile()
@@ -329,13 +333,12 @@ namespace Meta
 			}
 			return new CompiledKeyStatement(key.Compile(program),value.Compile(program));
 		}
-		private Map code;
 		public Expression key;
-		public KeyStatement(Map code, Program program)
-			: base(program, code)
+		public KeyStatement(Expression key,Expression value, Program program,int index)
+			: base(program, value,index)
 		{
-			this.code = code;
-			this.key = code[CodeKeys.Key].GetExpression(program);
+			this.key = key;
+			//this.key = code[CodeKeys.Key].GetExpression(program);
 		}
 	}
 	public class CompiledCurrentStatement : CompiledStatement
@@ -356,8 +359,8 @@ namespace Meta
 		{
 			return new CompiledCurrentStatement(value.Compile(program));
 		}
-		public CurrentStatement(Map code, Program program)
-			: base(program, code)
+		public CurrentStatement(Expression value, Program program,int index)
+			: base(program, value,index)
 		{
 		}
 	}
@@ -390,12 +393,10 @@ namespace Meta
 			return new CompiledSearchStatement(key.Compile(program),value.Compile(program));
 		}
 		private Expression key;
-		private Map code;
-		public SearchStatement(Map code, Program program)
-			: base(program, code)
+		public SearchStatement(Expression key,Expression value, Program program,int index)
+			: base(program, value,index)
 		{
-			this.code = code;
-			this.key = code[CodeKeys.Keys].GetExpression(program);
+			this.key = key;
 		}
 	}
 	public class CompiledLiteral : Compiled
@@ -1978,7 +1979,21 @@ namespace Meta
 		}
 		public virtual Map CallImplementation(Map argument, Map parent)
 		{
-			return parent.CallDefault(argument);
+			if (ContainsKey(CodeKeys.Function))
+			{
+				if (this.Get(CodeKeys.Function).Compiled != null)
+				{
+					return this.Get(CodeKeys.Function).Compiled.Evaluate(parent);
+				}
+				else
+				{
+					return this.Get(CodeKeys.Function).GetExpression(null).Compile(null).Evaluate(parent);
+				}
+			}
+			else
+			{
+				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
+			}
 		}
 		public Map Call(Map argument, Map parent)
 		{
@@ -5230,7 +5245,20 @@ namespace Meta
 			}
 			return o;
 		}
-
+		[Compilable]
+		public static Map MergeAll(Map array)
+		{
+			Map result = new Map();
+			foreach (Map map in array.Array)
+			{
+				foreach (KeyValuePair<Map, Map> pair in map)
+				{
+					result[pair.Key] = pair.Value;
+				}
+			}
+			return result;
+		}
+		[Compilable]
 		public static Map Merge(Map arg, Map map)
 		{
 			foreach (KeyValuePair<Map, Map> pair in map)
@@ -5294,11 +5322,31 @@ namespace Meta
 	}
 	public class Structure: Map
 	{
+		public override bool IsConstant
+		{
+			get
+			{
+				return false;
+			}
+		}
 	}
 	public class Unknown:Map
 	{
+		public override bool IsConstant
+		{
+			get
+			{
+				return false;
+			}
+		}
 	}
-	public class Function : Expression
+	public abstract class ScopeExpression:Expression
+	{
+		public ScopeExpression(Source source, Expression parent):base(source,parent)
+		{
+		}
+	}
+	public class Function : ScopeExpression
 	{
 		public override Map EvaluateStructure()
 		{
@@ -5318,9 +5366,32 @@ namespace Meta
 		public override Compiled Compile(Expression parent)
 		{
 			//Map func=code[CodeKeys.Function];
-			return new CompiledFunction(Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
+			return new CompiledFunction(Source, code[CodeKeys.Parameter], code[CodeKeys.Expression].GetExpression(this).Compile(this));
 		}
 	}
+	//public class Function : ScopeExpression
+	//{
+	//    public override Map EvaluateStructure()
+	//    {
+	//        Structure structure = new Structure();
+	//        if (code.ContainsKey(CodeKeys.Parameter))
+	//        {
+	//            structure[code[CodeKeys.Parameter]] = new Unknown();
+	//        }
+	//        return structure;
+	//    }
+	//    private Map code;
+	//    public Function(Map code, Expression parent)
+	//        : base(code.Source, parent)
+	//    {
+	//        this.code = code;
+	//    }
+	//    public override Compiled Compile(Expression parent)
+	//    {
+	//        //Map func=code[CodeKeys.Function];
+	//        return new CompiledFunction(Source,code[CodeKeys.Parameter],code[CodeKeys.Expression].GetExpression(this).Compile(this));
+	//    }
+	//}
 	//public class Function : Expression
 	//{
 	//    public override Map EvaluateStructure()
@@ -5343,8 +5414,20 @@ namespace Meta
 	//        return new CompiledFunction(code, Source,this);
 	//    }
 	//}
+	public delegate T SingleDelegate<T>(T t);
+	public class CompilableAttribute:Attribute
+	{
+		public SingleDelegate<Structure> structure;
+	}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial
 	{
+		public virtual bool IsConstant
+		{
+			get
+			{
+				return true;
+			}
+		}
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
 			: this(new ListStrategy(new List<Map>(list)))
@@ -5522,23 +5605,23 @@ namespace Meta
 			}
 		}
 		private Expression expression;
-		public Statement GetStatement(Program program)
+		public Statement GetStatement(Program program,int index)
 		{
 			if (ContainsKey(CodeKeys.Keys))
 			{
-				return new SearchStatement(this, program);
+				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program),this[CodeKeys.Value].GetExpression(program), program,index);
 			}
 			else if (ContainsKey(CodeKeys.Current))
 			{
-				return new CurrentStatement(this, program);
+				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program,index);
 			}
 			else if (ContainsKey(CodeKeys.Key))
 			{
-				return new KeyStatement(this, program);
+				return new KeyStatement(this[CodeKeys.Key].GetExpression(program),this[CodeKeys.Value].GetExpression(program), program,index);
 			}
 			else if (ContainsKey(CodeKeys.Discard))
 			{
-				return new DiscardStatement(program, this);
+				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program),index);
 			}
 			else
 			{
@@ -5591,6 +5674,14 @@ namespace Meta
 			}
 			else if (ContainsKey(CodeKeys.Expression))
 			{
+				//Program program = new Program(this,parent);
+				//if (ContainsKey(CodeKeys.Parameter))
+				//{
+				//    KeyStatement s=new KeyStatement(,program,0)
+				//    program.statementList.Add();
+				//}
+				//return program;
+
 				return new Function(this, parent);
 			}
 			else
@@ -5607,25 +5698,25 @@ namespace Meta
 			}
 			return i - 1;
 		}
-		public Map CallDefault(Map arg)
-		{
-			if (ContainsKey(CodeKeys.Function))
-			{
-				this[CodeKeys.Function].Scope = this;
-				if (this[CodeKeys.Function].Compiled != null)
-				{
-					return this[CodeKeys.Function].Compiled.Evaluate(this);
-				}
-				else
-				{
-					return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(this);
-				}
-			}
-			else
-			{
-				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-			}
-		}
+		//public Map CallDefault(Map arg)
+		//{
+		//    if (ContainsKey(CodeKeys.Function))
+		//    {
+		//        this[CodeKeys.Function].Scope = this;
+		//        if (this[CodeKeys.Function].Compiled != null)
+		//        {
+		//            return this[CodeKeys.Function].Compiled.Evaluate(this);
+		//        }
+		//        else
+		//        {
+		//            return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(this);
+		//        }
+		//    }
+		//    else
+		//    {
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
+		//    }
+		//}
 
 		public Map Copy()
 		{
