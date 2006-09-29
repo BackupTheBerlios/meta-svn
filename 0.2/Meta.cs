@@ -3831,11 +3831,9 @@ namespace Meta
 						new Alternatives(
 							ProgramDelayed,
 							LiteralExpression,
-							//CallInline,
 							Root,
 							Search,
-							Call
-			)),
+							Call)),
 					new Append(
 						new ZeroOrMore(
 							new Autokey(new Sequence(
@@ -3843,8 +3841,9 @@ namespace Meta
 								SameIndentation,
 								new ReferenceAssignment(
 									new Alternatives(
-									//CallInline,
-									LookupAnythingExpression, LookupStringExpression, Expression)))))),
+										LookupAnythingExpression,
+										LookupStringExpression,
+										Expression)))))),
 
 					new Optional(Dedentation)
 			)));
@@ -3858,41 +3857,6 @@ namespace Meta
 							LookupStringExpression,
 							LookupAnythingExpression,
 							Expression)))));
-
-		private static Rule Keys = new Alternatives(
-			new Sequence(
-				new Assignment(1,
-					new Alternatives(
-						new Sequence(new Assignment(CodeKeys.Literal, new Alternatives(LookupString, Number))),
-						KeysSearch,
-						new Sequence(new ReferenceAssignment(LiteralExpression)),
-			new Sequence(new Assignment(CodeKeys.Literal, new Alternatives(LookupString, Number))),
-			EmptyMap,
-			String,
-			LookupStringExpression
-			))),
-
-			new Sequence(
-			'.',
-			FullIndentation,
-			new Append(
-				new ZeroOrMore(
-					new Autokey(
-						new Sequence(
-				new Optional(EndOfLine),
-			SameIndentation,
-			new ReferenceAssignment(
-				new Alternatives(
-						KeysSearch,
-						new Sequence(new ReferenceAssignment(
-							LiteralExpression)),
-			EmptyMap,
-			String,
-			LookupStringExpression
-			)))))),
-			new Optional(EndOfLine),
-			new Optional(Dedentation),
-			new Optional(SameIndentation)));
 
 		public static Rule CurrentStatement = new Sequence(
 			'&',
