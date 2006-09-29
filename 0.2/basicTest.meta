@@ -66,7 +66,7 @@ commandLine|{
 	scopingTest=scoping.test
 	lexicalScoping=!"scopingTest"(0
 	unicodeText="äaba"
-	integerHashTest=
+	integerHashTest={
 		2="correct hash content"
 		hashTestData={
 			0={

@@ -3619,6 +3619,12 @@ namespace Meta
 					new ZeroOrMore(new CharacterExcept(Syntax.unixNewLine)),
 					EndOfLine)),
 			new ReferenceAssignment(Map));
+
+
+		public static Rule ComplexStuff()
+		{
+			return null;
+		}
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new PrePost(
@@ -3864,11 +3870,16 @@ namespace Meta
 			new Assignment(CodeKeys.Value, Expression),
 			new Optional(EndOfLine));
 
-		public static Rule KeysStatement = new Sequence(
+		public static Rule NormalStatement = new Sequence(
 			new Assignment(CodeKeys.Key,
 				new Alternatives(
-					new Sequence('<', new ReferenceAssignment(Expression)),
-					new Sequence(new Assignment(CodeKeys.Literal, LookupString)),
+					new Sequence(
+						'<',
+						new ReferenceAssignment(Expression)),
+					new Sequence(
+						new Assignment(
+							CodeKeys.Literal,
+							LookupString)),
 					Expression)),
 			new Optional(EndOfLine),
 			new Optional(SameIndentation),
@@ -3999,7 +4010,7 @@ namespace Meta
 											new Alternatives(
 												SameIndentation,
 												Dedentation),
-											new ReferenceAssignment(new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement)))))))));
+											new ReferenceAssignment(new Alternatives(CurrentStatement, NormalStatement, Statement, DiscardStatement)))))))));
 
 		public static Rule Program = new PrePost(
 			delegate(Parser p)
@@ -4151,7 +4162,7 @@ namespace Meta
 				int oldIndex = parser.index;
 				int oldLine = parser.line;
 				int oldColumn = parser.column;
-				//int oldIndentation = parser.indentationCount;
+				int oldIndentation = parser.indentationCount;
 				bool isStartOfFile = parser.isStartOfFile;
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched)
@@ -4160,7 +4171,10 @@ namespace Meta
 					parser.line = oldLine;
 					parser.column = oldColumn;
 					parser.isStartOfFile = isStartOfFile;
-					//parser.indentationCount = oldIndentation;
+					if (parser.indentationCount != oldIndentation)
+					{
+					}
+					parser.indentationCount = oldIndentation;
 				}
 				else
 				{
