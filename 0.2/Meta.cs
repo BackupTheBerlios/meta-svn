@@ -3327,7 +3327,7 @@ namespace Meta
 				LastArgument,
 				FunctionProgram,
 				LiteralExpression,
-				CallInline,
+				//CallInline,
 				Call,
 				CallInlineLong,
 				SelectInline,
@@ -3633,7 +3633,7 @@ namespace Meta
 									LastArgument,
 									FunctionProgram,
 									LiteralExpression,
-									CallInline,
+									//CallInline,
 									SelectInline,
 									Search,
 									List,
@@ -3648,7 +3648,7 @@ namespace Meta
 									LastArgument,
 									FunctionProgram,
 									LiteralExpression,
-									CallInline,
+									//CallInline,
 									Call,
 									SelectInline,
 									List,
@@ -3664,7 +3664,7 @@ namespace Meta
 					LastArgument,
 					FunctionProgram,
 					LiteralExpression,
-					CallInline,
+					//CallInline,
 					Call,
 					SelectInline,
 					List,
@@ -3686,7 +3686,7 @@ namespace Meta
 					LastArgument,
 					FunctionProgram,
 					LiteralExpression,
-					CallInline,
+					//CallInline,
 					Call,
 					SelectInline,
 					List,
@@ -3784,7 +3784,7 @@ namespace Meta
 												SelectInline,
 												FunctionProgram,
 												LiteralExpression,
-												CallInline,
+												//CallInline,
 												Call,
 												SelectInline,
 												Search,
@@ -3797,34 +3797,6 @@ namespace Meta
 						{
 							p.indentationCount = callIndent.Pop();
 						});
-		});
-		public static Rule CallInline = new DelayedRule(delegate()
-		{
-			return new Sequence(
-				new Assignment(CodeKeys.Call,
-					new Sequence(
-				new Assignment(1,
-						new Alternatives(
-								SelectInline,
-								LiteralExpression,
-								LastArgument,
-								Search)),
-							new Append(
-							new OneOrMore(
-								new Autokey(
-									new Sequence(
-										new Optional(' '),
-										new ReferenceAssignment(
-											new Alternatives(
-												SelectInline,
-												FunctionProgram,
-												LiteralExpression,
-												LastArgument,
-												Search,
-												List,
-												Program
-												)))))
-							))));
 		});
 
 		public static Rule ProgramDelayed = new DelayedRule(delegate()
@@ -3859,7 +3831,7 @@ namespace Meta
 						new Alternatives(
 							ProgramDelayed,
 							LiteralExpression,
-							CallInline,
+							//CallInline,
 							Root,
 							Search,
 							Call
@@ -3869,7 +3841,10 @@ namespace Meta
 							new Autokey(new Sequence(
 								new Optional(EndOfLine),
 								SameIndentation,
-								new ReferenceAssignment(new Alternatives(CallInline, LookupAnythingExpression, LookupStringExpression, Expression)))))),
+								new ReferenceAssignment(
+									new Alternatives(
+									//CallInline,
+									LookupAnythingExpression, LookupStringExpression, Expression)))))),
 
 					new Optional(Dedentation)
 			)));

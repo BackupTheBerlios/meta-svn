@@ -43,7 +43,7 @@ commandLine|{
 	asdf="hello"
 	shortFunction={
 		arg|!"asdf"
-	shortFunctionTest=!"shortFunction" "hello"
+	shortFunctionTest=!"shortFunction"("hello"
 	listTest=[
 		1
 		2
@@ -57,14 +57,14 @@ commandLine|{
 	SetCounter={
 		|{
 			counter:@
-	1=!"SetCounter" 5
+	1=!"SetCounter"(5
 	scoping={
 		test={
 			scopingValue="right"
 			arg|!"scopingValue"
 	scopingValue="wrong"
 	scopingTest=scoping.test
-	lexicalScoping=!"scopingTest" 0
+	lexicalScoping=!"scopingTest"(0
 	unicodeText="äaba"
 	integerHashTest=
 		2="correct hash content"
@@ -165,8 +165,8 @@ commandLine|{
 		scopeFromFunctionData="right"
 		arg|{
 			arg|!"scopeFromFunctionData"
-	scopeFromFunction=!"scopeFunctionFunction" 0
-	scopeFromFunctionTest=!"scopeFromFunction" 0
+	scopeFromFunction=!"scopeFunctionFunction"(0
+	scopeFromFunctionTest=!"scopeFromFunction"(0
 	ReturnEverything={
 		everything|{
 			&!"everything"
@@ -201,7 +201,7 @@ commandLine|{
 			symbol="haha"
 	FirstLevel={
 		arg|[
-			!"SecondLevel" !"arg"
+			!"SecondLevel"(!"arg"
 	SecondLevel={
 		arg|!"arg"
 	argTest=!"FirstLevel"(
@@ -231,7 +231,7 @@ commandLine|{
 		/
 		Meta
 		MemberTest
-	memberTest=!"MemberTest" 0
+	memberTest=!"MemberTest"(0
 	!"memberTest"="memberKeyTest"
 	stringOverload=MemberTest.OverloadedMethod_String(
 		"hello"
