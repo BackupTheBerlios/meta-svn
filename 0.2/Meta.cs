@@ -3382,6 +3382,7 @@ namespace Meta
 	}
 	public class Syntax
 	{
+		public const char arrayStart = '[';
 		public const char programStart = '{';
 		public const char programEnd = '}';
 		public const char programSeparator = '#';
@@ -3407,8 +3408,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programEnd, programSeparator };
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programEnd, programSeparator };
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', arrayStart, '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programEnd, programSeparator };
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, ',', '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programEnd, programSeparator };
 	}
 
 	public class Parser
@@ -4132,7 +4133,7 @@ namespace Meta
 			)));
 
 		public static Rule ListMap = new Sequence(
-			new Action(new Character('+')),
+			new Action(new Character(Syntax.arrayStart)),
 			new Action(
 				new ReferenceAssignment(),
 				new PrePost(
@@ -4160,7 +4161,7 @@ namespace Meta
 					})));
 
 		public static Rule List = new Sequence(
-			new Action(new Character('+')),
+			new Action(new Character(Syntax.arrayStart)),
 			new Action(
 				new Assignment(CodeKeys.Program),
 				new PrePost(

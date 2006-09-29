@@ -53,8 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
-    <None Include="Copy %283%29 of relativity.learn" />
-    <None Include="Copy of editor.meta" />
     <None Include="editor.meta" />
     <None Include="learningNewTest.meta" />
     <None Include="learningTest.meta" />
@@ -63,7 +61,6 @@
     <None Include="gameNew.meta" />
     <None Include="game.meta" />
     <None Include="gamewhatever.meta" />
-    <None Include="asdfasdfasdfgame.meta" />
     <None Include="gameasdf.meta" />
     <Content Include="humanEnglish.txt" />
     <Content Include="humanGerman.txt" />

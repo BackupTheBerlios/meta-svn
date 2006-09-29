@@ -84,7 +84,7 @@
 			appendTo=flip append
 			empty=equal 0
 			prepend=array?item?join
-				+
+				[
 					item
 				array
 			prependTo=flip prepend
