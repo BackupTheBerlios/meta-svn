@@ -150,9 +150,6 @@
 						{
 							x="y"
 							y="a"
-			firstTest=.
-				"hello"
-				1
 			tryTest=try(
 				{
 					arg|"hello"

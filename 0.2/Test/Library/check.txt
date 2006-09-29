@@ -248,11 +248,6 @@ Entry (KeyValuePair`2)
 								0
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"firstTest"
-			Value (Map):
-				104
-		Entry (KeyValuePair`2)
-			Key (Map):
 				"tryTest"
 			Value (Map):
 				"hello"

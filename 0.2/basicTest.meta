@@ -73,7 +73,7 @@ commandLine|{
 				0=0
 		hashTest=!!"hashTestData"
 	negativeInteger=100
-	negativeInteger=merge
+	negativeInteger=merge(
 		negativeInteger
 		{
 			x="hello"
@@ -135,9 +135,7 @@ commandLine|{
 				b:merge(
 					b
 					{
-						1=.
-							newB
-							value
+						1=newB.value
 				&"changed"
 		x={
 			a="b"
@@ -192,9 +190,7 @@ commandLine|{
 		current|{
 			&{
 				asdf=!"current"
-				x=.
-					!"current"
-					symbol
+				x=!"current".symbol
 			&!"x"
 	thisSet=!"SetCurrent"(
 		{
@@ -207,14 +203,8 @@ commandLine|{
 	argTest=!"FirstLevel"(
 		{
 			a="z"
-	TestClass=.
-		/
-		Meta
-		TestClass
-	nestedClassTest=.
-		TestClass
-		NestedClass
-		field
+	TestClass=/.Meta.TestClass
+	nestedClassTest=TestClass.NestedClass.field
 	testClass=!"TestClass"(
 		{
 			floatValue=3
@@ -224,13 +214,8 @@ commandLine|{
 		TestClass
 		{
 			boolTest=1
-	boolTest=.
-		TestClass
-		boolTest
-	MemberTest=.
-		/
-		Meta
-		MemberTest
+	boolTest=TestClass.boolTest
+	MemberTest=/.Meta.MemberTest
 	memberTest=!"MemberTest"(0
 	!"memberTest"="memberKeyTest"
 	stringOverload=MemberTest.OverloadedMethod_String(
@@ -361,9 +346,7 @@ commandLine|{
 		"one"
 		"two"
 		"three"
-	secondSwitch=.
-		secondSwitchCases
-		3
+	secondSwitch=secondSwitchCases.3
 	emptyMap=0
 	emptyFunction=arg?{
 		x="hello"
@@ -378,9 +361,7 @@ commandLine|{
 	stringTest=merge(
 		stringTest
 		{
-			6=.
-				stringTest
-				1
+			6=stringTest.1
 	helloh="hi"
 	stringStrategyHashTest=!!"stringTest"
 	x={
@@ -473,14 +454,9 @@ commandLine|{
 		
 		
 	"
-	app=.
-		<"System.Windows.Forms"
-		Application
+	app=<"System.Windows.Forms">.Application
 	app.set_VisualStyleState_VisualStyleState(
-		.
-			!"System.Windows.Forms"
-			VisualStyleState
-			ClientAreaEnabled
+		!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled
 	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState(
 	typeTest=mscorlib.Array.CreateInstance_Type_Int32(
 		mscorlib.String
