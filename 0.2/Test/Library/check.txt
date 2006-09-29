@@ -150,12 +150,12 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"joinTest"
 			Value (Map):
-				"abc, die Katze lief im Schnee."
+				"abc{ die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"JoinAllTest"
 			Value (Map):
-				"abc, die Katze lief im Schnee.die Katze lief im Schnee."
+				"abc{ die Katze lief im Schnee.die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"appendTest"
@@ -183,12 +183,12 @@ Entry (KeyValuePair`2)
 					Key (Map):
 						"hello"
 					Value (Map):
-						"hello, asdf"
+						"hello{ asdf"
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"world"
 					Value (Map):
-						"hello, fdsa"
+						"hello{ fdsa"
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"containsTest"

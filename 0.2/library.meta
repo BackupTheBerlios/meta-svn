@@ -1,7 +1,7 @@
-|,
-	lib=?,
+|{
+	lib=?{
 		&Meta
-		lib=,
+		lib={
 			Double=Library.Double_Map
 			Contains=?(Map_Map @).ContainsKey_Map
 			foreach=Library.Foreach_Map_Map
@@ -12,7 +12,7 @@
 			Sum=Number.op_Addition_Number_Number
 			raise=Library.Raise_Number_Number
 			or=a?b?.
-				,
+				{
 					1=1
 					0=b
 				<a
@@ -32,20 +32,20 @@
 			greaterOrEqual=Number.op_GreaterThanOrEqual_Number_Number
 			lessOrEqual=Number.op_LessThanOrEqual_Number_Number
 			maximum=a?b?.
-				,
+				{
 					1=a
 					0=b
 				greater a b
 			CallKey=map?key?If (Contains map key) ?(map.<key
 			minimum=a?b?.
-				,
+				{
 					1=a
 					0=b
 				less a b
 			MinimumAll=sum minimum
 			bitwiseOr=Number.op_BitwiseOr_Number_Number
 			and=a?b?.
-				,
+				{
 					1=b
 					0=0
 				<a
@@ -66,7 +66,7 @@
 			ProductVector=a?b?Map (range (length a)) index?Product a.<index> b.<index
 			Product=Number.op_Multiply_Number_Number
 			not=arg?.
-				,
+				{
 					0=1
 					1=0
 				<arg
@@ -76,7 +76,7 @@
 			SplitString=Library.SplitString_Map_Map
 			parse=Parser.Parse_String
 			toString=Serialization.Serialize_Map
-			writeLine=?,
+			writeLine=?{
 				/.mscorlib.Console.WriteLine_String @
 				&@
 			readLine=?(mscorlib.Console.ReadLine
@@ -90,14 +90,15 @@
 			prependTo=flip prepend
 			Map=Library.Map_Map_Map
 			switch=Library.Switch_Map_Map
-			callIf=map?key?func?-
-				.
-					,
-						0=,
+			callIf=map?key?func?{
+				which=.
+					{
+						0={
 							|0
-						1=,
+						1={
 							|func map.<key
 					Contains map key
+				&which(
 			join=Library.Join_Map_Map
 			range=Library.Range_Map
 			reverse=Library.Reverse_Map
@@ -116,6 +117,5 @@
 			TrimString=Library.Trim_String
 			WriteTextFile=file?text?mscorlib.File.WriteAllText_String_String_Encoding file text (mscorlib.Encoding.get_Default
 	&.
-		-
-			lib
+		lib 0
 		lib

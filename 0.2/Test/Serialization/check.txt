@@ -22,7 +22,7 @@
 	SOFTWARE.
 "
 shortFunc="
-	,
+	{
 		arg|!"
 			arg
 "
@@ -399,9 +399,8 @@ commandLine|,
 		!"delayedFunction"
 		0
 	"delayedFunctionDirect"=-
-		-
-			!"delayedFunction"
-			0
+		!"delayedFunction"
+		0
 		0
 	"value"="xyz"
 	"selectionFunction"=,
@@ -550,10 +549,10 @@ commandLine|,
 			!"textBox"
 			"set_Text_String"
 		"
-			Alle meine Entchen,
-			schwimmen auf dem See,"
-			schwimmen auf dem See,
-			Köpfchen in das Wasser,
+			Alle meine Entchen{
+			schwimmen auf dem See{"
+			schwimmen auf dem See{
+			Köpfchen in das Wasser{
 			asdf in die Hoeh.
 		"
 	"lines"=-
