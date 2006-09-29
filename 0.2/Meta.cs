@@ -180,11 +180,6 @@ namespace Meta
 					}
 					Statement statement = current.Statement;
 					Map structure = statement.Pre();
-					// this is somewhat incorrect for normal programs, because
-					// overwriting should not bother us, but it is unlikely and unimportant
-					//Map post = statement.Post();
-					//Map structure = statement.EvaluateStructure();
-					//Map structure = current.EvaluateStructure();
 					if (structure == null)//||post==null)
 					{
 						return null;
@@ -193,12 +188,6 @@ namespace Meta
 					{
 						if (hasCrossedFunction)
 						{
-							//Map post = statement.Post();
-							//// not really correct
-							//if (post != null && post[key].IsConstant && post[key].Equals(structure[key]))
-							//{
-							//    return structure[key];
-							//}
 							return null;
 						}
 						else
@@ -206,10 +195,6 @@ namespace Meta
 							return structure[key];
 						}
 					}
-					//if (post.ContainsKey(key))
-					//{
-					//    return null;
-					//}
 					current = current.Parent;
 				}
 			}
@@ -230,8 +215,76 @@ namespace Meta
 			}
 			else
 			{
-				return new CompiledSearch(expression.Compile(this), Source);
+				Expression current = this;
+				Map key = expression.EvaluateStructure();
+				int count = 0;
+				if (key != null && key.IsConstant)
+				{
+					if (key.Equals(new Map("Meta")))
+					{
+					}
+					bool hasCrossedFunction = false;
+					while (true)
+					{
+						while (current.Statement == null)
+						{
+							if (current.isFunction)
+							{
+								hasCrossedFunction = true;
+								count++;
+							}
+							current = current.Parent;
+							if (current == null)
+							{
+								break;
+								//return null;
+							}
+						}
+						Statement statement = current.Statement;
+						Map structure = statement.Pre();
+						if (structure == null)//||post==null)
+						{
+							break;
+							//return null;
+						}
+						if (structure.ContainsKey(key))// && structure[key].IsConstant)
+						{
+							//if (hasCrossedFunction)
+							//{
+							//    count++;
+							//}
+							return new FastSearch(key, count, Source);
+							//if (hasCrossedFunction)
+							//{
+							//    return null;
+							//}
+							//else
+							//{
+							//    return structure[key];
+							//}
+						}
+						if (hasCrossedFunction)
+						{
+							if (!statement.NeverAddsKey(key))
+							{
+								break;
+							}
+						}
+						count++;
+						//Map post = statement.Post();
+						//if (post == null)
+						//{
+						//    break;
+						//}
+						//if (post.ContainsKey(key))
+						//{
+						//    break;
+						//}
+						current = current.Parent;
+					}
+				}
 			}
+			return new CompiledSearch(expression.Compile(this), Source);
 		}
 	}
 	public class FastSearch : Compiled
@@ -242,15 +295,48 @@ namespace Meta
 			: base(source)
 		{
 			this.key = key;
+			//if (count > 0)
+			//{
+			//    count++;
+			//}
 			this.count = count;
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
+			Map selected = context;
+
 			for (int i = 0; i < count; i++)
 			{
-				context = context.Scope;
+				selected = selected.Scope;
 			}
-			return context[key];
+			int difference = 0;
+			if (!selected.ContainsKey(key))
+			{
+				while (!selected.ContainsKey(key))
+				{
+					selected = selected.Scope;
+					difference++;
+				}
+			}
+			if (difference != 0)
+			{
+				if (difference == 1)
+				{
+				}
+				if (difference == 2)
+				{
+				}
+				if (difference == 3)
+				{
+				}
+				if (difference == 4)
+				{
+				}
+			}
+			else
+			{
+			}
+			return selected[key];
 		}
 	}
 	public class OptimizedSearch : Compiled
@@ -435,6 +521,27 @@ namespace Meta
 				}
 			}
 		}
+		public virtual bool DoesNotAddKey(Map key)
+		{
+			return true;
+		}
+		public bool NeverAddsKey(Map key)
+		{
+			Statement current = this;
+			while (true)
+			{
+				current=current.Next;
+				if (current == null || current is CurrentStatement)
+				{
+					break;
+				}
+				if (!current.DoesNotAddKey(key))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
 		//public Map Post()
 		//{
 		//}
@@ -509,6 +616,15 @@ namespace Meta
 	}
 	public class KeyStatement : Statement
 	{
+		public override bool DoesNotAddKey(Map key)
+		{
+			Map k=this.key.EvaluateStructure();
+			if (k != null && k.IsConstant && !k.Equals(key))
+			{
+				return true;
+			}
+			return false;
+		}
 		protected override Map CurrentImplementation(Map previous)
 		{
 			Map k = key.EvaluateStructure();
@@ -709,24 +825,34 @@ namespace Meta
 		public CompiledSelect(List<Compiled> subs,Source source):base(source)
 		{
 			this.subs= subs;
+			if (subs[0] == null)
+			{
+			}
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
-			Map selected = subs[0].Evaluate(context);
-			for (int i = 1; i < subs.Count; i++)
-			{
-				Map key = subs[i].Evaluate(context);
-				Map value = selected.TryGetValue(key);
-				if (value == null)
+			//try
+			//{
+				Map selected = subs[0].Evaluate(context);
+				for (int i = 1; i < subs.Count; i++)
 				{
-					throw new KeyDoesNotExist(key, subs[i].Source, selected);
+					Map key = subs[i].Evaluate(context);
+					Map value = selected.TryGetValue(key);
+					if (value == null)
+					{
+						throw new KeyDoesNotExist(key, subs[i].Source, selected);
+					}
+					else
+					{
+						selected = value;
+					}
 				}
-				else
-				{
-					selected = value;
-				}
-			}
-			return selected;
+				return selected;
+			//}
+			//catch (Exception e)
+			//{
+			//    return null;
+			//}
 		}
 	}
 	public class Select : Expression
