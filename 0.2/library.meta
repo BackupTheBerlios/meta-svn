@@ -5,10 +5,12 @@
 			Double=Library.Double_Map
 			Contains=?{
 				m=Map_Map(@)
-				&m.ContainsKey_Map(
+				&m.ContainsKey_Map
 			foreach=Library.Foreach_Map_Map
 			flip=func?a?b?func(b,a
-			containedBy=key?map?Map_Map(map).ContainsKey_Map(key
+			containedBy=key?map?{
+				m=Map_Map(map
+				&m.ContainsKey_Map(key
 			modify=Library.Modify_Map_Map
 			add=Number.op_Addition_Number_Number
 			Sum=Number.op_Addition_Number_Number
@@ -38,7 +40,7 @@
 					1=a
 					0=b
 				greater(a,b
-			CallKey=map?key?If(Contains(map,key),?(map.<key
+			CallKey=map?key?If(Contains(map,key),?map.<key>(
 			minimum=a?b?.
 				{
 					1=a
@@ -52,15 +54,27 @@
 					0=0
 				<a
 			andAll=sum(and
-			integerToString=arg?Map_Object(arg).ToString(
-			count=arg?Map_Object(arg).get_Count(
+			integerToString=arg?{
+				m=Map_Object(arg
+				&m.ToString(
+			count=arg?{
+				m=Map_Object(arg
+				&m.get_Count(
 			equal=Library.Equal_Map_Map
-			isNumber=arg?Map_Object(arg).get_IsNumber(
-			isString=arg?Map_Object(arg).get_IsString(
+			isNumber=arg?{
+				m=Map_Object(arg
+				&m.get_IsNumber(
+			isString=arg?{
+				m=Map_Object(arg
+				&m.get_IsString(
 			JoinAll=Library.JoinAll_Map
-			keys=arg?<"Map_IEnumerable`1"(Map_Object(arg).get_Keys(
+			keys=arg?<"Map_IEnumerable`1"({
+				m=Map_Object(arg
+				&m.get_Keys(
 			Distance=a?b?LengthVector(DifferenceVector(a,b
-			length=arg?Map_Object(arg).get_ArrayCount(
+			length=arg?{
+				m=Map_Object(arg
+				&m.get_ArrayCount(
 			mergeAll=Library.MergeAll_Map
 			negate=arg?Difference(0,arg
 			modulo=Number.op_Modulus_Number_Number
@@ -81,7 +95,7 @@
 			writeLine=?{
 				/.mscorlib.Console.WriteLine_String(@
 				&@
-			readLine=?(mscorlib.Console.ReadLine
+			readLine=?mscorlib.Console.ReadLine(
 			append=Library.Append_Map_Map
 			appendTo=flip(append
 			empty=equal(0
@@ -123,6 +137,6 @@
 				file
 				text
 				mscorlib.Encoding.get_Default(
-	&.
-		lib(0)
-		lib
+	&{
+		m=lib(0)
+		&m.lib

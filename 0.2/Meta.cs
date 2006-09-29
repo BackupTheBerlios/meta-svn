@@ -4189,7 +4189,7 @@ namespace Meta
 								new ReferenceAssignment(),
 								new Alternatives(LookupStringExpression, LookupAnythingExpression, LiteralExpression)
 			))))))));
-
+		
 		private static Rule Select = new Sequence(
 			new Action(new Assignment(
 				CodeKeys.Select),
