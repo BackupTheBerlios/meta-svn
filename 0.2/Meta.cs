@@ -115,7 +115,8 @@ namespace Meta
 		}
 		public override Map EvaluateStructure()
 		{
-			throw new Exception("The method or operation is not implemented.");
+			return null;
+			//throw new Exception("The method or operation is not implemented.");
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -166,6 +167,10 @@ namespace Meta
 					while (current.Statement == null)
 					{
 						current = current.Parent;
+						if (current == null)
+						{
+							return null;
+						}
 					}
 					Statement statement = current.Statement;
 					Map structure = statement.Pre();
@@ -302,28 +307,30 @@ namespace Meta
 	{
 		public virtual Map Pre()
 		{
-			if (Index == 0)
+			if (Previous == null)
 			{
 				return Map.Empty;
 			}
 			else
 			{
-
-				return null;
+				return Previous.GetStructure();
 			}
 		}
-		//public virtual Map EvaluateStructure()
-		//{
-			//if (Index == 0)
-			//{
-			//    return Map.Empty;
-			//}
-			//else
-			//{
-
-			//    return null;
-			//}
-		//}
+		public Statement Previous
+		{
+			get
+			{
+				if (Index == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return program.statementList[Index - 1];
+				}
+			}
+		}
+		public abstract Map GetStructure();
 		public abstract CompiledStatement Compile();
 		public Program program;
 		public readonly Expression value;
@@ -351,6 +358,17 @@ namespace Meta
 	}
 	public class DiscardStatement : Statement
 	{
+		public override Map GetStructure()
+		{
+			if(Previous==null)
+			{
+				return Map.Empty;
+			}
+			else
+			{
+				return Previous.GetStructure();
+			}
+		}
 		public DiscardStatement(Program program, Expression value,int index)
 			: base(program, value,index)
 		{
@@ -374,6 +392,29 @@ namespace Meta
 	}
 	public class KeyStatement : Statement
 	{
+		public override Map GetStructure()
+		{
+			Map k = key.EvaluateStructure();
+			if (k != null && k.IsConstant)
+			{
+				Map result;
+				if (Previous != null)
+				{
+					result = Previous.GetStructure();
+				}
+				else
+				{
+					result = new Map();
+				}
+				if (result == null)
+				{
+					result = new Map();
+				}
+				result[k] = new Unknown();//value.EvaluateStructure();
+				return result;
+			}
+			return null;
+		}
 		public override CompiledStatement Compile()
 		{
 			Map k=key.EvaluateStructure();
@@ -419,6 +460,10 @@ namespace Meta
 	}
 	public class CurrentStatement : Statement
 	{
+		public override Map GetStructure()
+		{
+			return value.EvaluateStructure();
+		}
 		public override CompiledStatement Compile()
 		{
 			return new CompiledCurrentStatement(value.Compile(program),Index);
@@ -452,6 +497,17 @@ namespace Meta
 	}
 	public class SearchStatement : Statement
 	{
+		public override Map GetStructure()
+		{
+			if (Previous != null)
+			{
+				return Previous.GetStructure();
+			}
+			else
+			{
+				return Map.Empty;
+			}
+		}
 		public override CompiledStatement Compile()
 		{
 			return new CompiledSearchStatement(key.Compile(program),value.Compile(program));
@@ -5271,6 +5327,9 @@ namespace Meta
 
 		public static Map With(Map o, Map values)
 		{
+			if (!(o.Strategy is ObjectMap))
+			{
+			}
 			object obj = ((ObjectMap)o.Strategy).Object;
 			Type type = obj.GetType();
 			foreach (KeyValuePair<Map, Map> entry in values)
@@ -5407,6 +5466,10 @@ namespace Meta
 			this.program = program;
 		}
 		public override Map Pre()
+		{
+			return program.EvaluateStructure();
+		}
+		public override Map GetStructure()
 		{
 			return program.EvaluateStructure();
 		}
