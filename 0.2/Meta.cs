@@ -75,12 +75,6 @@ namespace Meta
 		public override Map EvaluateStructure()
 		{
 			return null;
-			//Expression arg = Parent;
-			//while (!(arg is Function))
-			//{
-			//    arg = arg.Parent;
-			//}
-			//return arg.EvaluateStructure();
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -124,13 +118,7 @@ namespace Meta
 				{
 					Method method = (Method)first.Strategy;
 					if (method.method.IsStatic && method.parameters.Length==1 && calls.Count==2)
-					//if (method.parameters.Length == calls.Count - 1)
 					{
-						//if (method.method is ConstructorInfo)
-						//{
-						//    ConstructorInfo constructor = (ConstructorInfo)method.method;
-						//    return 
-						//}
 						if (method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length != 0)
 						{
 							return (Map)method.method.Invoke(null,new object[] {arg});
@@ -139,7 +127,6 @@ namespace Meta
 				}
 			}
 			return null;
-			//throw new Exception("The method or operation is not implemented.");
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -242,9 +229,6 @@ namespace Meta
 				int count = 0;
 				if (key != null && key.IsConstant)
 				{
-					if (key.Equals(new Map("Meta")))
-					{
-					}
 					bool hasCrossedFunction = false;
 					while (true)
 					{
@@ -259,39 +243,21 @@ namespace Meta
 							if (current == null)
 							{
 								break;
-								//return null;
 							}
 						}
 						if (current == null)
 						{
 							break;
-							//return null;
 						}
-						//if (current == null)
-						//{
-						//}
 						Statement statement = current.Statement;
 						Map structure = statement.Pre();
-						if (structure == null)//||post==null)
+						if (structure == null)
 						{
 							break;
-							//return null;
 						}
 						if (structure.ContainsKey(key))// && structure[key].IsConstant)
 						{
-							//if (hasCrossedFunction)
-							//{
-							//    count++;
-							//}
 							return new FastSearch(key, count, Source);
-							//if (hasCrossedFunction)
-							//{
-							//    return null;
-							//}
-							//else
-							//{
-							//    return structure[key];
-							//}
 						}
 						if (hasCrossedFunction)
 						{
@@ -301,15 +267,6 @@ namespace Meta
 							}
 						}
 						count++;
-						//Map post = statement.Post();
-						//if (post == null)
-						//{
-						//    break;
-						//}
-						//if (post.ContainsKey(key))
-						//{
-						//    break;
-						//}
 						current = current.Parent;
 					}
 				}
@@ -325,10 +282,6 @@ namespace Meta
 			: base(source)
 		{
 			this.key = key;
-			//if (count > 0)
-			//{
-			//    count++;
-			//}
 			this.count = count;
 		}
 		public override Map EvaluateImplementation(Map context)
@@ -466,25 +419,6 @@ namespace Meta
 	}
 	public abstract class Statement
 	{
-		//public virtual Map Pre()
-		//{
-		//    if (Previous == null)
-		//    {
-		//        return Map.Empty;
-		//    }
-		//    else
-		//    {
-
-		//    }
-		//    //if (Previous == null)
-		//    //{
-		//    //    return Map.Empty;
-		//    //}
-		//    //else
-		//    //{
-		//    //    return Previous.GetStructure();
-		//    //}
-		//}
 		public virtual Map Pre()
 		{
 			if (Previous == null)
@@ -510,14 +444,7 @@ namespace Meta
 		}
 		public Map Post()
 		{
-			//if (this is CurrentStatement)
-			//{
-			//    return Pre();
-			//}
-			//else
-			//{
 			return Post(Current());
-			//}
 		}
 		public Map Post(Map previous)
 		{
@@ -572,12 +499,8 @@ namespace Meta
 			}
 			return true;
 		}
-		//public Map Post()
-		//{
-		//}
 		protected abstract Map CurrentImplementation(Map previous);
 
-		//public abstract Map GetStructure();
 		public Statement Previous
 		{
 			get
@@ -660,34 +583,11 @@ namespace Meta
 			Map k = key.EvaluateStructure();
 			if (k != null && k.IsConstant)
 			{
-				previous[k] = new Unknown();//value.EvaluateStructure();
+				previous[k] = new Unknown();
 				return previous;
 			}
 			return null;
 		}
-		//protected override Map Current(Map previous)
-		//{
-		//    Map k = key.EvaluateStructure();
-		//    if (k != null && k.IsConstant)
-		//    {
-		//        Map result;
-		//        if (Previous != null)
-		//        {
-		//            result = Previous.GetStructure();
-		//        }
-		//        else
-		//        {
-		//            result = new Map();
-		//        }
-		//        if (result == null)
-		//        {
-		//            result = new Map();
-		//        }
-		//        result[k] = new Unknown();//value.EvaluateStructure();
-		//        return result;
-		//    }
-		//    return null;
-		//}
 		public override CompiledStatement Compile()
 		{
 			Map k=key.EvaluateStructure();
@@ -706,7 +606,6 @@ namespace Meta
 		{
 			this.key = key;
 			key.Statement = this;
-			//this.key = code[CodeKeys.Key].GetExpression(program);
 		}
 	}
 	public class CompiledCurrentStatement : CompiledStatement
@@ -861,28 +760,21 @@ namespace Meta
 		}
 		public override Map EvaluateImplementation(Map context)
 		{
-			//try
-			//{
-				Map selected = subs[0].Evaluate(context);
-				for (int i = 1; i < subs.Count; i++)
+			Map selected = subs[0].Evaluate(context);
+			for (int i = 1; i < subs.Count; i++)
+			{
+				Map key = subs[i].Evaluate(context);
+				Map value = selected.TryGetValue(key);
+				if (value == null)
 				{
-					Map key = subs[i].Evaluate(context);
-					Map value = selected.TryGetValue(key);
-					if (value == null)
-					{
-						throw new KeyDoesNotExist(key, subs[i].Source, selected);
-					}
-					else
-					{
-						selected = value;
-					}
+					throw new KeyDoesNotExist(key, subs[i].Source, selected);
 				}
-				return selected;
-			//}
-			//catch (Exception e)
-			//{
-			//    return null;
-			//}
+				else
+				{
+					selected = value;
+				}
+			}
+			return selected;
 		}
 	}
 	public class Select : Expression
@@ -931,12 +823,8 @@ namespace Meta
 
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 
-				//lib.Parent = new LiteralExpression(Gac.gac);
-				//callable[CodeKeys.Function].Scope = callable;
 				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
 				map[CodeKeys.Function].Compile(gac);
-				//callable.
-				//return callable.Call(argument);
 
 				Gac.gac["library"] = map.Call(Map.Empty);
 				Gac.gac["library"].Scope = Gac.gac;
@@ -948,20 +836,6 @@ namespace Meta
 				throw e;
 			}
 		}
-		//static Interpreter()
-		//{
-		//    try
-		//    {
-		//        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
-		//        map.Scope = Gac.gac;
-		//        Gac.gac["library"] = map.Call(Map.Empty);
-		//        Gac.gac["library"].Scope = Gac.gac;
-		//    }
-		//    catch (Exception e)
-		//    {
-		//        throw e;
-		//    }
-		//}
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -1219,7 +1093,6 @@ namespace Meta
 							}
 							break;
 						case TypeCode.Object:
-							//FieldInfo[] fields = target.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
 							if (target == typeof(Number) && meta.IsNumber)
 							{
 								dotNet = meta.GetNumber();
@@ -1240,7 +1113,6 @@ namespace Meta
 							// maybe remove
 							else if (target.IsArray)
 							{
-								string[] asdf;
 								ArrayList list = new ArrayList();
 								bool converted = true;
 								Type elementType = target.GetElementType();
@@ -3445,8 +3317,9 @@ namespace Meta
 			this.text = text;
 			this.file = filePath;
 		}
+
 		public static Rule LastArgument = new Sequence(
-			new Action(new Character(Syntax.lastArgument)),
+			Syntax.lastArgument,
 			new Action(
 				new Assignment(CodeKeys.LastArgument),
 				new LiteralRule(new Map())));
@@ -3463,10 +3336,8 @@ namespace Meta
 				List,
 				Search,
 				Select,
-				//ExplicitCall,
 				SimpleProgram,
-				Program//,
-				//ProgramInline
+				Program
 				);
 		});
 		public static Rule NewLine =
@@ -3574,7 +3445,6 @@ namespace Meta
 			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
 		});
 		private static Rule StringLine = new ZeroOrMore(new Action(new Autokey(), new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
-		// remove
 		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			Map map = new Sequence(
@@ -3602,7 +3472,6 @@ namespace Meta
 			matched = true;
 			return null;
 		});
-		// remove
 		private static void MatchStringLine(Parser parser, StringBuilder text)
 		{
 			bool matching = true;
@@ -3621,7 +3490,6 @@ namespace Meta
 				}
 			}
 		}
-		// refactor
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
 		{
 			StringBuilder result = new StringBuilder(100);
@@ -3644,7 +3512,6 @@ namespace Meta
 			}
 			return result.ToString();
 		});
-		// refactor
 		private static Rule SingleString = new OneOrMore(
 			new Action(
 				new Autokey(),
@@ -3790,43 +3657,6 @@ namespace Meta
 									new CharacterExcept(Syntax.unixNewLine)))),
 						new Action(EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
-
-		//public static Rule ExplicitCall = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Character(Syntax.callStart)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//        new Action(new Assignment(1),
-		//                new Alternatives(
-		//                        SelectInline,
-		//                        LiteralExpression,
-		//                        ExplicitCall,
-		//                        Search)),
-		//                    new Action(new Append(),
-		//                    new ZeroOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(new Character(' '))),
-		//                                new Action(
-		//                                    new ReferenceAssignment(),
-		//                                    new Alternatives(
-		//                                        SelectInline,
-		//                                        FunctionProgram,
-		//                                        ExplicitCall,
-		//                                        LiteralExpression,
-		//                                        Search,
-		//                                        LastArgument,
-		//                                        List,
-		//                                        Program//,
-		//                                        //ProgramInline
-		//                                        )))))
-		//                    )
-		//                )), new Action(new Optional(new Character(Syntax.callEnd))));
-		//});
-
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return new PrePost(
@@ -3835,7 +3665,6 @@ namespace Meta
 					callIndent.Push(p.indentationCount);
 				},
 				new Sequence(
-				//new Action(new Character(Syntax.explicitCall)),
 				new Action(new Assignment(
 					CodeKeys.Call),
 					new Sequence(
@@ -3844,16 +3673,11 @@ namespace Meta
 								FunctionProgram,
 								LiteralExpression,
 								CallInline,
-				//Call,
 								SelectInline,
 								Search,
-								
 								List,
-				//ExplicitCall,
 								Program,
 								Select
-				//,ProgramInline
-
 								)),
 								new Action(new Character(Syntax.callStart)),
 						new Action(new Append(),
@@ -3869,10 +3693,7 @@ namespace Meta
 								List,
 								Search,
 								Select,
-								//ExplicitCall,
 								Program
-								//,ProgramInline
-
 				)),new Action(new Append(),
 					new ZeroOrMore(
 					new Action(new Autokey(),
@@ -3888,14 +3709,10 @@ namespace Meta
 				List,
 				Search,
 				Select,
-				//ExplicitCall,
 				Program
-				//,ProgramInline
-
 				)))))),
 				new Action(new Optional(new Character(Syntax.callEnd)))
-				)
-							,
+				),
 						new Sequence(
 							new Action(FullIndentation),
 
@@ -3915,10 +3732,7 @@ namespace Meta
 				List,
 				Search,
 				Select,
-				//ExplicitCall,
 				Program
-				//,ProgramInline
-
 				)))))),
 			new Action(new Optional(EndOfLine)),
 			new Action(new Optional(Dedentation)))))
@@ -3929,102 +3743,6 @@ namespace Meta
 				p.indentationCount = callIndent.Pop();
 			});
 		});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new PrePost(
-		//        delegate(Parser p)
-		//        {
-		//            callIndent.Push(p.indentationCount);
-		//        },
-		//        new Sequence(
-		//        //new Action(new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(new Assignment(1), new Alternatives(
-		//                        LastArgument,
-		//                        FunctionProgram,
-		//                        LiteralExpression,
-		//                        CallInline,
-		//                        //Call,
-		//                        SelectInline,
-		//                        List,
-		//                        Search,
-		//                        Select,
-		//                        //ExplicitCall,
-		//                        Program
-		//        //,ProgramInline
-
-		//                        )),
-		//                        new Action(new Character(Syntax.callStart)),
-		//                new Action(new Append(),
-		//                new Sequence(
-		//                    new Action(FullIndentation),
-
-		//                    new Action(new ReferenceAssignment(), new ZeroOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(EndOfLine)),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), new Alternatives(
-		//        LastArgument,
-		//        FunctionProgram,
-		//        LiteralExpression,
-		//        CallInline,
-		//        Call,
-		//        SelectInline,
-		//        List,
-		//        Search,
-		//        Select,
-		//        //ExplicitCall,
-		//        Program
-		//        //,ProgramInline
-
-		//        )))))))),
-		//    new Action(new Optional(EndOfLine)),
-		//    new Action(new Optional(Dedentation))))),
-		//    delegate(Parser p)
-		//    {
-		//        p.indentationCount = callIndent.Pop();
-		//    });
-		//});
-
-
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//        new Action(new Character(Syntax.explicitCall)),
-		//        new Action(new Assignment(
-		//            CodeKeys.Call),
-		//            new Sequence(
-		//                new Action(FullIndentation),
-		//                new Action(
-		//                    new ReferenceAssignment(),
-		//                    new OneOrMore(
-		//                        new Action(
-		//                            new Autokey(),
-		//                            new Sequence(
-		//                                new Action(new Optional(EndOfLine)),
-		//                                new Action(SameIndentation),
-		//                                new Action(new ReferenceAssignment(), new Alternatives(
-		//        LastArgument,
-		//        FunctionProgram,
-		//        LiteralExpression,
-		//        CallInline,
-		//        Call,
-		//        SelectInline,
-		//        List,
-		//        Search,
-		//        Select,
-		//        ExplicitCall,
-		//        Program
-		//        //,ProgramInline
-
-		//        )))))),
-		//    new Action(new Optional(EndOfLine)),
-		//    new Action(new Optional(Dedentation)))));
-		//});
 
 		public static Rule FunctionExpression = new Sequence(
 			new Action(new Assignment(CodeKeys.Key), new LiteralRule(new Map(CodeKeys.Literal, CodeKeys.Function))),
@@ -4097,8 +3815,6 @@ namespace Meta
 					new Sequence(
 				new Action(new Assignment(1),
 						new Alternatives(
-				//SelectInline,
-				//LiteralExpression,
 								Search)),
 						new Action(SmallIndentation),
 						new Action(
@@ -4110,11 +3826,9 @@ namespace Meta
 										new Action(new Optional(EndOfLine)),
 										new Action(SameIndentation),
 										new Action(new ReferenceAssignment(), new Alternatives(
-				//Expression
 										FunctionProgram,
 												SelectInline,
 												FunctionProgram,
-												//ExplicitCall,
 												LiteralExpression,
 												CallInline,
 												Call,
@@ -4122,7 +3836,6 @@ namespace Meta
 												Search,
 												List,
 												Program
-												//,ProgramInline
 												)))))),
 							new Action(new Optional(EndOfLine)),
 							new Action(new Optional(Dedentation))))),
@@ -4154,13 +3867,11 @@ namespace Meta
 											new Alternatives(
 												SelectInline,
 												FunctionProgram,
-												//ExplicitCall,
 												LiteralExpression,
 												LastArgument,
 												Search,
 												List,
 												Program
-												//,ProgramInline
 												)))))
 							))));
 		});
@@ -4177,10 +3888,7 @@ namespace Meta
 					new Action(new Assignment(1),
 						new Alternatives(
 							Root,
-							Search//,
-			//Call
-			//,
-			//ExplicitCall
+							Search
 			)),
 					new Action(new Append(),
 						new OneOrMore(new Action(new Autokey(), new Sequence(
@@ -4202,7 +3910,6 @@ namespace Meta
 							ProgramDelayed,
 							LiteralExpression,
 							CallInline,
-							//ExplicitCall,
 							Root,
 							Search,
 							Call
@@ -4422,28 +4129,6 @@ namespace Meta
 												Dedentation)),
 											new Action(new ReferenceAssignment(), new Alternatives(CurrentStatement, KeysStatement, Statement, DiscardStatement)))))))));
 
-		//public static Rule ProgramInline = new DelayedRule(delegate
-		//{
-		//    return new Sequence(
-		//        new Action(
-		//            new Assignment(CodeKeys.Program),
-		//            new Sequence(
-		//                new Action(new Character(Syntax.programStart)),
-		//                new Action(new Assignment(1),
-		//                KeysStatement),
-		//                new Action(new Append(),
-		//                new ZeroOrMore(
-		//                    new Action(
-		//                        new Autokey(),
-		//                        new Sequence(
-		//                            new Action(new Optional(new Character(Syntax.programSeparator))),
-		//                            new Action(
-		//                                new ReferenceAssignment(),
-		//                                KeysStatement
-		//                                    ))))),
-		//            new Action(new Optional(new Character(Syntax.programEnd))))));
-		//});
-
 		public static Rule Program = new PrePost(
 			delegate(Parser p)
 			{
@@ -4463,8 +4148,16 @@ namespace Meta
 		}
 		public class Action
 		{
+			public static implicit operator Action(char c)
+			{
+				return new Action(c);
+			}
 			private Rule rule;
 			private Production production;
+			public Action(char c)
+				: this(new Character(c))
+			{
+			}
 			public Action(Rule rule)
 				: this(new Match(), rule)
 			{
@@ -4584,8 +4277,7 @@ namespace Meta
 						{
 							result = new Map(result.GetString());
 						}
-						result.Source = new Source(oldLine, oldColumn,parser.file);//, parser.line, parser.column, parser.file);
-						//result.Source = new Source(oldLine, oldColumn, parser.line, parser.column, parser.file);
+						result.Source = new Source(oldLine, oldColumn,parser.file);
 					}
 				}
 				return result;
@@ -5274,12 +4966,8 @@ namespace Meta
 				LiteralExpression lib=new LiteralExpression(Gac.gac["library"],gac);
 				lib.Statement = new LiteralStatement(gac);
 
-				//lib.Parent = new LiteralExpression(Gac.gac);
-				// remove
-				callable[CodeKeys.Function].Scope = callable;
 				callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 				callable[CodeKeys.Function].Compile(lib);
-				//callable.
 				return callable.Call(argument);
 			}
 		}
@@ -6224,8 +5912,6 @@ namespace Meta
 				CurrentStatement c=new CurrentStatement(this[CodeKeys.Expression].GetExpression(program),program,program.statementList.Count);
 				program.statementList.Add(c);
 				return program;
-
-				//return new Function(this, parent);
 			}
 			else
 			{
@@ -6241,25 +5927,6 @@ namespace Meta
 			}
 			return i - 1;
 		}
-		//public Map CallDefault(Map arg)
-		//{
-		//    if (ContainsKey(CodeKeys.Function))
-		//    {
-		//        this[CodeKeys.Function].Scope = this;
-		//        if (this[CodeKeys.Function].Compiled != null)
-		//        {
-		//            return this[CodeKeys.Function].Compiled.Evaluate(this);
-		//        }
-		//        else
-		//        {
-		//            return this[CodeKeys.Function].GetExpression(null).Compile(null).Evaluate(this);
-		//        }
-		//    }
-		//    else
-		//    {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-		//    }
-		//}
 
 		public Map Copy()
 		{
