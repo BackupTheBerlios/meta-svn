@@ -147,19 +147,19 @@ commandLine|{
 				a:"b"
 	a="default"
 	b=0
-	aSet=!"object".SetA(
-		0
-	bSet=!"object".SetB {
-		value={
-			x=7
-			z=1
+	aSet=!"object".SetA(0
+	bSet=!"object".SetB(
+		{
+			value={
+				x=7
+				z=1
 	scopeTest="default"
 	scopeFunction={
 		inScope="right"
 		arg|{
 			scopeTest:inScope
 	inScope="wrong"
-	4=(!"scopeFunction")
+	4=!"scopeFunction"(
 	scopeFromFunctionData="wrong"
 	scopeFunctionFunction={
 		scopeFromFunctionData="right"

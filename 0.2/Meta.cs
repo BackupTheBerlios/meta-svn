@@ -3843,10 +3843,11 @@ namespace Meta
 								LastArgument,
 								FunctionProgram,
 								LiteralExpression,
-								Search,
 								CallInline,
 				//Call,
 								SelectInline,
+								Search,
+								
 								List,
 				//ExplicitCall,
 								Program,
@@ -3892,7 +3893,7 @@ namespace Meta
 				//,ProgramInline
 
 				)))))),
-				new Action(new Character(Syntax.callEnd))
+				new Action(new Optional(new Character(Syntax.callEnd)))
 				)
 							,
 						new Sequence(
@@ -4176,8 +4177,8 @@ namespace Meta
 					new Action(new Assignment(1),
 						new Alternatives(
 							Root,
-							Search,
-			Call
+							Search//,
+			//Call
 			//,
 			//ExplicitCall
 			)),

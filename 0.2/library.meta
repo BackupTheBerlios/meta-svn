@@ -3,7 +3,9 @@
 		&Meta
 		lib={
 			Double=Library.Double_Map
-			Contains=?{Map_Map(@).ContainsKey_Map
+			Contains=?{
+				m=Map_Map(@)
+				&m.ContainsKey_Map(
 			foreach=Library.Foreach_Map_Map
 			flip=func?a?b?func(b,a
 			containedBy=key?map?Map_Map(map).ContainsKey_Map(key

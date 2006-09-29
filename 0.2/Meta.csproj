@@ -53,26 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
-    <None Include="Copy of gameNew.meta" />
-    <None Include="editor.meta" />
-    <None Include="learningNewTest.meta" />
-    <None Include="learningTest.meta" />
-    <None Include="learningAllNew.meta" />
-    <None Include="learningNew.meta" />
     <None Include="gameNew.meta" />
     <None Include="game.meta" />
-    <None Include="gamewhatever.meta" />
-    <None Include="gameasdf.meta" />
-    <Content Include="humanEnglish.txt" />
-    <Content Include="humanGerman.txt" />
-    <None Include="gameerqwerqwer.meta" />
-    <None Include="knowledge.meta" />
-    <None Include="language.meta" />
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
-    <None Include="metaEdit.meta" />
-    <None Include="relativity.learn" />
-    <None Include="stuff.meta" />
   </ItemGroup>
 </Project>
