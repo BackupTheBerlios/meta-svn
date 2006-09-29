@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta.csproj", "{421
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edit", "Edit\Edit.csproj", "{B6144538-0707-4697-A807-6FBC538CC527}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "Plugin\Plugin.csproj", "{E137C005-BF5C-4B98-99DD-336D4C6B6A3F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,10 +18,6 @@ Global
 		{B6144538-0707-4697-A807-6FBC538CC527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6144538-0707-4697-A807-6FBC538CC527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6144538-0707-4697-A807-6FBC538CC527}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E137C005-BF5C-4B98-99DD-336D4C6B6A3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E137C005-BF5C-4B98-99DD-336D4C6B6A3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E137C005-BF5C-4B98-99DD-336D4C6B6A3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E137C005-BF5C-4B98-99DD-336D4C6B6A3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
