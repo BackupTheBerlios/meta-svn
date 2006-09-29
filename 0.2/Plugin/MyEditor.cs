@@ -20,8 +20,8 @@ namespace MetaCommunity.Plugin
             this.richTextBoxCtrl.HideSelection = false;
 
 			m_Recorder = new VsMacroRecorder(GuidList.guidPluginEditorFactory);
-			richTextBoxCtrl.Font = new System.Drawing.Font("Arial", 20);
-			this.Font = new System.Drawing.Font("Arial", 20);
+			//richTextBoxCtrl.Font = new System.Drawing.Font("Arial", 20);
+			//this.Font = new System.Drawing.Font("Arial", 20);
         }
 
         public EditorTextBox RichTextBoxControl
