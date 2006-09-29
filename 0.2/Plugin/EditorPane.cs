@@ -1419,6 +1419,7 @@ namespace MetaCommunity.Plugin
                 }
                 finally
                 {
+					lineRead = "";
                     str.Close();
                 }
                 if (lineRead.Contains(rtfSignature))
