@@ -54,6 +54,7 @@ namespace Meta
 	}
 	public abstract class Expression
 	{
+		public bool isFunction = false;
 		public readonly Source Source;
 		public readonly Expression Parent;
 		public Statement Statement;
@@ -162,10 +163,15 @@ namespace Meta
 			Map key = expression.EvaluateStructure();
 			if (key != null && key.IsConstant)
 			{
+				bool hasCrossedFunction=false;
 				while (true)
 				{
 					while (current.Statement == null)
 					{
+						if (current.isFunction)
+						{
+							hasCrossedFunction = true;
+						}
 						current = current.Parent;
 						if (current == null)
 						{
@@ -174,16 +180,36 @@ namespace Meta
 					}
 					Statement statement = current.Statement;
 					Map structure = statement.Pre();
+					// this is somewhat incorrect for normal programs, because
+					// overwriting should not bother us, but it is unlikely and unimportant
+					//Map post = statement.Post();
 					//Map structure = statement.EvaluateStructure();
 					//Map structure = current.EvaluateStructure();
-					if (structure == null)
+					if (structure == null)//||post==null)
 					{
 						return null;
 					}
-					else if (structure.ContainsKey(key))
+					if (structure.ContainsKey(key) && structure[key].IsConstant)
 					{
-						return structure[key];
+						if (hasCrossedFunction)
+						{
+							//Map post = statement.Post();
+							//// not really correct
+							//if (post != null && post[key].IsConstant && post[key].Equals(structure[key]))
+							//{
+							//    return structure[key];
+							//}
+							return null;
+						}
+						else
+						{
+							return structure[key];
+						}
 					}
+					//if (post.ContainsKey(key))
+					//{
+					//    return null;
+					//}
 					current = current.Parent;
 				}
 			}
@@ -206,6 +232,25 @@ namespace Meta
 			{
 				return new CompiledSearch(expression.Compile(this), Source);
 			}
+		}
+	}
+	public class FastSearch : Compiled
+	{
+		private int count;
+		private Map key;
+		public FastSearch(Map key, int count, Source source)
+			: base(source)
+		{
+			this.key = key;
+			this.count = count;
+		}
+		public override Map EvaluateImplementation(Map context)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				context = context.Scope;
+			}
+			return context[key];
 		}
 	}
 	public class OptimizedSearch : Compiled
@@ -305,17 +350,97 @@ namespace Meta
 	}
 	public abstract class Statement
 	{
+		//public virtual Map Pre()
+		//{
+		//    if (Previous == null)
+		//    {
+		//        return Map.Empty;
+		//    }
+		//    else
+		//    {
+
+		//    }
+		//    //if (Previous == null)
+		//    //{
+		//    //    return Map.Empty;
+		//    //}
+		//    //else
+		//    //{
+		//    //    return Previous.GetStructure();
+		//    //}
+		//}
 		public virtual Map Pre()
 		{
 			if (Previous == null)
 			{
-				return Map.Empty;
+				return new Map();
 			}
 			else
 			{
-				return Previous.GetStructure();
+				return Previous.Current();
 			}
 		}
+		public Map Current()
+		{
+			Map pre = Pre();
+			if (pre != null)
+			{
+				return CurrentImplementation(pre);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		public Map Post()
+		{
+			//if (this is CurrentStatement)
+			//{
+			//    return Pre();
+			//}
+			//else
+			//{
+			return Post(Current());
+			//}
+		}
+		public Map Post(Map previous)
+		{
+			if (Next != null)
+			{
+				if (Next is CurrentStatement)
+				{
+					return previous;
+				}
+				else
+				{
+					return Next.Current();
+				}
+			}
+			else
+			{
+				return previous;
+			}
+		}
+		public Statement Next
+		{
+			get
+			{
+				if (program==null || Index >=program.statementList.Count-1)
+				{
+					return null;
+				}
+				else
+				{
+					return program.statementList[Index + 1];
+				}
+			}
+		}
+		//public Map Post()
+		//{
+		//}
+		protected abstract Map CurrentImplementation(Map previous);
+
+		//public abstract Map GetStructure();
 		public Statement Previous
 		{
 			get
@@ -330,7 +455,6 @@ namespace Meta
 				}
 			}
 		}
-		public abstract Map GetStructure();
 		public abstract CompiledStatement Compile();
 		public Program program;
 		public readonly Expression value;
@@ -358,16 +482,9 @@ namespace Meta
 	}
 	public class DiscardStatement : Statement
 	{
-		public override Map GetStructure()
+		protected override Map CurrentImplementation(Map previous)
 		{
-			if(Previous==null)
-			{
-				return Map.Empty;
-			}
-			else
-			{
-				return Previous.GetStructure();
-			}
+			return previous;
 		}
 		public DiscardStatement(Program program, Expression value,int index)
 			: base(program, value,index)
@@ -392,29 +509,39 @@ namespace Meta
 	}
 	public class KeyStatement : Statement
 	{
-		public override Map GetStructure()
+		protected override Map CurrentImplementation(Map previous)
 		{
 			Map k = key.EvaluateStructure();
 			if (k != null && k.IsConstant)
 			{
-				Map result;
-				if (Previous != null)
-				{
-					result = Previous.GetStructure();
-				}
-				else
-				{
-					result = new Map();
-				}
-				if (result == null)
-				{
-					result = new Map();
-				}
-				result[k] = new Unknown();//value.EvaluateStructure();
-				return result;
+				previous[k] = new Unknown();//value.EvaluateStructure();
+				return previous;
 			}
 			return null;
 		}
+		//protected override Map Current(Map previous)
+		//{
+		//    Map k = key.EvaluateStructure();
+		//    if (k != null && k.IsConstant)
+		//    {
+		//        Map result;
+		//        if (Previous != null)
+		//        {
+		//            result = Previous.GetStructure();
+		//        }
+		//        else
+		//        {
+		//            result = new Map();
+		//        }
+		//        if (result == null)
+		//        {
+		//            result = new Map();
+		//        }
+		//        result[k] = new Unknown();//value.EvaluateStructure();
+		//        return result;
+		//    }
+		//    return null;
+		//}
 		public override CompiledStatement Compile()
 		{
 			Map k=key.EvaluateStructure();
@@ -460,7 +587,7 @@ namespace Meta
 	}
 	public class CurrentStatement : Statement
 	{
-		public override Map GetStructure()
+		protected override Map CurrentImplementation(Map previous)
 		{
 			return value.EvaluateStructure();
 		}
@@ -497,16 +624,9 @@ namespace Meta
 	}
 	public class SearchStatement : Statement
 	{
-		public override Map GetStructure()
+		protected override Map CurrentImplementation(Map previous)
 		{
-			if (Previous != null)
-			{
-				return Previous.GetStructure();
-			}
-			else
-			{
-				return Map.Empty;
-			}
+			return previous;
 		}
 		public override CompiledStatement Compile()
 		{
@@ -5469,7 +5589,7 @@ namespace Meta
 		{
 			return program.EvaluateStructure();
 		}
-		public override Map GetStructure()
+		protected override Map CurrentImplementation(Map previous)
 		{
 			return program.EvaluateStructure();
 		}
@@ -5765,6 +5885,7 @@ namespace Meta
 			else if (ContainsKey(CodeKeys.Expression))
 			{
 				Program program = new Program(this,parent);
+				program.isFunction = true;
 				Map parameter = this[CodeKeys.Parameter];
 				if (parameter.Count!=0)
 				{
