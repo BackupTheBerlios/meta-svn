@@ -116,6 +116,28 @@ namespace Meta
 		}
 		public override Map EvaluateStructure()
 		{
+			Map first=calls[0].EvaluateStructure();
+			Map arg = calls[1].EvaluateStructure();
+			if (first != null && first.IsConstant && arg!=null)
+			{
+				if (first.Strategy is Method)
+				{
+					Method method = (Method)first.Strategy;
+					if (method.method.IsStatic && method.parameters.Length==1 && calls.Count==2)
+					//if (method.parameters.Length == calls.Count - 1)
+					{
+						//if (method.method is ConstructorInfo)
+						//{
+						//    ConstructorInfo constructor = (ConstructorInfo)method.method;
+						//    return 
+						//}
+						if (method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length != 0)
+						{
+							return (Map)method.method.Invoke(null,new object[] {arg});
+						}
+					}
+				}
+			}
 			return null;
 			//throw new Exception("The method or operation is not implemented.");
 		}
@@ -1427,7 +1449,7 @@ namespace Meta
 		{
 			return new Map(this);
 		}
-		protected MethodBase method;
+		public MethodBase method;
 		protected object obj;
 		protected Type type;
 		public Method(MethodBase method, object obj, Type type)
@@ -1451,7 +1473,7 @@ namespace Meta
 				return false;
 			}
 		}
-		ParameterInfo[] parameters;
+		public ParameterInfo[] parameters;
 		public override Map CallImplementation(Map argument, Map parent)
 		{
 			return DecideCall(argument, new List<object>());
