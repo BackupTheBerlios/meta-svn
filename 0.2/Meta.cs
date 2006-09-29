@@ -3391,12 +3391,11 @@ namespace Meta
 	public class Syntax
 	{
 		public const char arrayStart = '[';
-		//public const char programStart = '{';
-		//public const char programEnd = '}';
 		public const char programSeparator = '#';
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
+		public const char callSeparator=',';
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
@@ -3417,8 +3416,8 @@ namespace Meta
 		public const char tab = '\t';
 		public const char current = '&';
 		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator };
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator };
+		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator};
+		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator};
 	}
 
 	public class Parser
@@ -3464,7 +3463,7 @@ namespace Meta
 				List,
 				Search,
 				Select,
-				ExplicitCall,
+				//ExplicitCall,
 				SimpleProgram,
 				Program//,
 				//ProgramInline
@@ -3792,41 +3791,41 @@ namespace Meta
 						new Action(EndOfLine)))),
 			new Action(new ReferenceAssignment(), Map));
 
-		public static Rule ExplicitCall = new DelayedRule(delegate()
-		{
-			return new Sequence(
-				new Action(new Character(Syntax.callStart)),
-				new Action(new Assignment(
-					CodeKeys.Call),
-					new Sequence(
-				new Action(new Assignment(1),
-						new Alternatives(
-								SelectInline,
-								LiteralExpression,
-								ExplicitCall,
-								Search)),
-							new Action(new Append(),
-							new ZeroOrMore(
-								new Action(
-									new Autokey(),
-									new Sequence(
-										new Action(new Optional(new Character(' '))),
-										new Action(
-											new ReferenceAssignment(),
-											new Alternatives(
-												SelectInline,
-												FunctionProgram,
-												ExplicitCall,
-												LiteralExpression,
-												Search,
-												LastArgument,
-												List,
-												Program//,
-												//ProgramInline
-												)))))
-							)
-						)), new Action(new Optional(new Character(Syntax.callEnd))));
-		});
+		//public static Rule ExplicitCall = new DelayedRule(delegate()
+		//{
+		//    return new Sequence(
+		//        new Action(new Character(Syntax.callStart)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//        new Action(new Assignment(1),
+		//                new Alternatives(
+		//                        SelectInline,
+		//                        LiteralExpression,
+		//                        ExplicitCall,
+		//                        Search)),
+		//                    new Action(new Append(),
+		//                    new ZeroOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(new Character(' '))),
+		//                                new Action(
+		//                                    new ReferenceAssignment(),
+		//                                    new Alternatives(
+		//                                        SelectInline,
+		//                                        FunctionProgram,
+		//                                        ExplicitCall,
+		//                                        LiteralExpression,
+		//                                        Search,
+		//                                        LastArgument,
+		//                                        List,
+		//                                        Program//,
+		//                                        //ProgramInline
+		//                                        )))))
+		//                    )
+		//                )), new Action(new Optional(new Character(Syntax.callEnd))));
+		//});
 
 		public static Rule Call = new DelayedRule(delegate()
 		{
@@ -3844,19 +3843,58 @@ namespace Meta
 								LastArgument,
 								FunctionProgram,
 								LiteralExpression,
+								Search,
 								CallInline,
-								//Call,
+				//Call,
 								SelectInline,
 								List,
-								Search,
-								Select,
-								ExplicitCall,
-								Program
+				//ExplicitCall,
+								Program,
+								Select
 				//,ProgramInline
 
 								)),
 								new Action(new Character(Syntax.callStart)),
 						new Action(new Append(),
+							new Alternatives(
+							new Sequence(
+								new Action(new Assignment(1),new Alternatives(
+								LastArgument,
+								FunctionProgram,
+								LiteralExpression,
+								CallInline,
+								Call,
+								SelectInline,
+								List,
+								Search,
+								Select,
+								//ExplicitCall,
+								Program
+								//,ProgramInline
+
+				)),new Action(new Append(),
+					new ZeroOrMore(
+					new Action(new Autokey(),
+						new Sequence(
+							new Action(new Character(Syntax.callSeparator)),
+							new Action(new ReferenceAssignment(),new Alternatives(
+				LastArgument,
+				FunctionProgram,
+				LiteralExpression,
+				CallInline,
+				Call,
+				SelectInline,
+				List,
+				Search,
+				Select,
+				//ExplicitCall,
+				Program
+				//,ProgramInline
+
+				)))))),
+				new Action(new Character(Syntax.callEnd))
+				)
+							,
 						new Sequence(
 							new Action(FullIndentation),
 
@@ -3876,18 +3914,82 @@ namespace Meta
 				List,
 				Search,
 				Select,
-				ExplicitCall,
+				//ExplicitCall,
 				Program
 				//,ProgramInline
 
-				)))))))),
+				)))))),
 			new Action(new Optional(EndOfLine)),
-			new Action(new Optional(Dedentation))))),
+			new Action(new Optional(Dedentation)))))
+				
+				))),
 			delegate(Parser p)
 			{
 				p.indentationCount = callIndent.Pop();
 			});
 		});
+		//public static Rule Call = new DelayedRule(delegate()
+		//{
+		//    return new PrePost(
+		//        delegate(Parser p)
+		//        {
+		//            callIndent.Push(p.indentationCount);
+		//        },
+		//        new Sequence(
+		//        //new Action(new Character(Syntax.explicitCall)),
+		//        new Action(new Assignment(
+		//            CodeKeys.Call),
+		//            new Sequence(
+		//                new Action(new Assignment(1), new Alternatives(
+		//                        LastArgument,
+		//                        FunctionProgram,
+		//                        LiteralExpression,
+		//                        CallInline,
+		//                        //Call,
+		//                        SelectInline,
+		//                        List,
+		//                        Search,
+		//                        Select,
+		//                        //ExplicitCall,
+		//                        Program
+		//        //,ProgramInline
+
+		//                        )),
+		//                        new Action(new Character(Syntax.callStart)),
+		//                new Action(new Append(),
+		//                new Sequence(
+		//                    new Action(FullIndentation),
+
+		//                    new Action(new ReferenceAssignment(), new ZeroOrMore(
+		//                        new Action(
+		//                            new Autokey(),
+		//                            new Sequence(
+		//                                new Action(new Optional(EndOfLine)),
+		//                                new Action(SameIndentation),
+		//                                new Action(new ReferenceAssignment(), new Alternatives(
+		//        LastArgument,
+		//        FunctionProgram,
+		//        LiteralExpression,
+		//        CallInline,
+		//        Call,
+		//        SelectInline,
+		//        List,
+		//        Search,
+		//        Select,
+		//        //ExplicitCall,
+		//        Program
+		//        //,ProgramInline
+
+		//        )))))))),
+		//    new Action(new Optional(EndOfLine)),
+		//    new Action(new Optional(Dedentation))))),
+		//    delegate(Parser p)
+		//    {
+		//        p.indentationCount = callIndent.Pop();
+		//    });
+		//});
+
+
 		//public static Rule Call = new DelayedRule(delegate()
 		//{
 		//    return new Sequence(
@@ -4011,7 +4113,7 @@ namespace Meta
 										FunctionProgram,
 												SelectInline,
 												FunctionProgram,
-												ExplicitCall,
+												//ExplicitCall,
 												LiteralExpression,
 												CallInline,
 												Call,
@@ -4051,7 +4153,7 @@ namespace Meta
 											new Alternatives(
 												SelectInline,
 												FunctionProgram,
-												ExplicitCall,
+												//ExplicitCall,
 												LiteralExpression,
 												LastArgument,
 												Search,
@@ -4075,7 +4177,10 @@ namespace Meta
 						new Alternatives(
 							Root,
 							Search,
-			ExplicitCall)),
+			Call
+			//,
+			//ExplicitCall
+			)),
 					new Action(new Append(),
 						new OneOrMore(new Action(new Autokey(), new Sequence(
 							new Action(new Character('.')),
@@ -4096,7 +4201,7 @@ namespace Meta
 							ProgramDelayed,
 							LiteralExpression,
 							CallInline,
-							ExplicitCall,
+							//ExplicitCall,
 							Root,
 							Search,
 							Call

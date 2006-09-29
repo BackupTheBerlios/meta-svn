@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy of gameNew.meta" />
     <None Include="editor.meta" />
     <None Include="learningNewTest.meta" />
     <None Include="learningTest.meta" />
