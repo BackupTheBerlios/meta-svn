@@ -3354,8 +3354,6 @@ namespace Meta
 						Syntax.unixNewLine,
 						Syntax.windowsNewLine));
 
-
-		// horrible
 		public static Rule Integer =
 			new Sequence(
 				new CustomProduction(
@@ -3394,7 +3392,6 @@ namespace Meta
 		})))));
 
 
-		// unelegant
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched)
 		{
 			if(p.indentationCount==-1)
@@ -3416,31 +3413,23 @@ namespace Meta
 			return null;
 		});
 
-		// remove
-		//public static Rule FullIndentation = 
-		//    new Alternatives(
-		//    StartOfFile,
-		//    new Sequence(
-		//        EndOfLine,
-		//        SmallIndentation));
-
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
 			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
 		});
 
 		private static Rule StringLine = new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
-		public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
-		{
-			Map map = new Sequence(
-				new Optional(EndOfLine),
-				"".PadLeft(pa.indentationCount - 1, Syntax.indentation)).Match(pa, out matched);
-			if (matched)
-			{
-				pa.indentationCount--;
-			}
-			return map;
-		});
+		//public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
+		//{
+		//    Map map = new Sequence(
+		//        new Optional(EndOfLine),
+		//        "".PadLeft(pa.indentationCount - 1, Syntax.indentation)).Match(pa, out matched);
+		//    if (matched)
+		//    {
+		//        pa.indentationCount--;
+		//    }
+		//    return map;
+		//});
 
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
@@ -3494,6 +3483,29 @@ namespace Meta
 			}
 			return result.ToString();
 		});
+		//private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
+		//{
+		//    StringBuilder result = new StringBuilder(100);
+		//    MatchStringLine(parser, result);
+		//    matched = true;
+		//    while (true)
+		//    {
+		//        bool lineMatched;
+		//        new Sequence(
+		//            EndOfLine,
+		//            SameIndentation).Match(parser, out lineMatched);
+		//        if (lineMatched)
+		//        {
+		//            result.Append('\n');
+		//            MatchStringLine(parser, result);
+		//        }
+		//        else
+		//        {
+		//            break;
+		//        }
+		//    }
+		//    return result.ToString();
+		//});
 
 		private static Rule SingleString = new OneOrMore(
 			new Autokey(
@@ -3501,6 +3513,21 @@ namespace Meta
 					Syntax.unixNewLine,
 					Syntax.windowsNewLine[0],
 					Syntax.@string)));
+
+		//public static Rule String = ComplexStuff(
+		//    Syntax.@string,
+		//    Syntax.@string,
+		//    null,
+		//    SingleString,
+		//    new Sequence(
+		//        SmallIndentation,
+		//        EndOfLine,
+		//        SameIndentation,
+		//        SingleString,
+		//        StringBeef));
+		//            //EndOfLine,
+		//            //Dedentation,
+		//            //SameIndentation
 
 		public static Rule String = new Sequence(
 			Syntax.@string,
@@ -3511,7 +3538,10 @@ namespace Meta
 					EndOfLine,
 					SameIndentation,
 					new ReferenceAssignment(StringBeef),
-					StringDedentation))),
+					EndOfLine,
+					Dedentation,
+					SameIndentation
+			))),
 			Syntax.@string);
 
 		public static Rule Number = new Sequence(
@@ -3596,7 +3626,6 @@ namespace Meta
 				EndOfLine,
 				SmallIndentation)),
 
-			//FullIndentation,
 			new ReferenceAssignment(new PrePost(
 				delegate(Parser p)
 				{
@@ -3623,40 +3652,74 @@ namespace Meta
 					new ZeroOrMore(new CharacterExcept(Syntax.unixNewLine)),
 					EndOfLine)),
 			new ReferenceAssignment(Map));
-		public static Rule ComplexStuff(Map key, char start, char end, char separator, Rule entry, Rule first)
+		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first)
 		{
 			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);
 		}
-		public static Rule ComplexStuff(Map key, char start, char end, char separator, Action firstAction,Action entryAction, Rule first)
+		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first)
 		{
 			return new Sequence(
-				new Assignment(key,
-					new Sequence(
-						first != null ? new Assignment(1, first) : null,
-						start,
-						new Append(
-							new Alternatives(
-								new Sequence(
-									firstAction,
-									new Append(
-										new ZeroOrMore(
-											new Autokey(
-												new Sequence(
-													separator,
-													entryAction)))),
-									new Optional(end)),
-							new Sequence(
-								SmallIndentation,
-								new ReferenceAssignment(
-									new ZeroOrMore(
-										new Autokey(
-											new Sequence(
-												new Optional(EndOfLine),
-												SameIndentation,
-												entryAction)))),
-									new Optional(EndOfLine),
-									new Optional(Dedentation)))))));
+				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));
 		}
+
+		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first)
+		{
+			return new Sequence(
+				first != null ? new Assignment(1, first) : null,
+				start,
+				new Append(
+					new Alternatives(
+						new Sequence(
+							firstAction,
+							new Append(
+								new ZeroOrMore(
+									new Autokey(
+										new Sequence(
+										separator!=null?new Match(separator):null,
+											entryAction)))),
+							new Optional(end)),
+					new Sequence(
+						SmallIndentation,
+						new ReferenceAssignment(
+							new ZeroOrMore(
+								new Autokey(
+									new Sequence(
+										new Optional(EndOfLine),
+										SameIndentation,
+										entryAction)))),
+							new Optional(EndOfLine),
+							new Optional(Dedentation)))));
+		}
+		//public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction,Action entryAction, Rule first)
+		//{
+		//    return new Sequence(
+		//        new Assignment(key,
+		//            new Sequence(
+		//                first != null ? new Assignment(1, first) : null,
+		//                start,
+		//                new Append(
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            firstAction,
+		//                            new Append(
+		//                                new ZeroOrMore(
+		//                                    new Autokey(
+		//                                        new Sequence(
+		//                                            separator,
+		//                                            entryAction)))),
+		//                            new Optional(end)),
+		//                    new Sequence(
+		//                        SmallIndentation,
+		//                        new ReferenceAssignment(
+		//                            new ZeroOrMore(
+		//                                new Autokey(
+		//                                    new Sequence(
+		//                                        new Optional(EndOfLine),
+		//                                        SameIndentation,
+		//                                        entryAction)))),
+		//                            new Optional(EndOfLine),
+		//                            new Optional(Dedentation)))))));
+		//}
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
