@@ -168,11 +168,26 @@ namespace Meta
 	{
 		public override Map EvaluateStructure()
 		{
+			Map key;
+			int count;
+			Map value;
+			if (FindStuff(out count,out key,out value))
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		private bool FindStuff(out int count, out Map key,out Map value)
+		{
 			Expression current = this;
-			Map key = expression.EvaluateStructure();
+			key = expression.EvaluateStructure();
+			count = 0;
 			if (key != null && key.IsConstant)
 			{
-				bool hasCrossedFunction=false;
+				bool hasCrossedFunction = false;
 				while (true)
 				{
 					while (current.Statement == null)
@@ -180,35 +195,89 @@ namespace Meta
 						if (current.isFunction)
 						{
 							hasCrossedFunction = true;
+							count++;
 						}
 						current = current.Parent;
 						if (current == null)
 						{
-							return null;
+							break;
 						}
+					}
+					if (current == null)
+					{
+						break;
 					}
 					Statement statement = current.Statement;
 					Map structure = statement.Pre();
-					if (structure == null)//||post==null)
+					if (structure == null)
 					{
-						return null;
+						statement.Pre();
+						break;
 					}
-					if (structure.ContainsKey(key) && structure[key].IsConstant)
+					if (structure.ContainsKey(key))// && structure[key].IsConstant)
 					{
-						if (hasCrossedFunction)
+						value = structure[key];
+						return true;
+						//return new FastSearch(key, count, Source);
+					}
+					if (hasCrossedFunction)
+					{
+						if (!statement.NeverAddsKey(key))
 						{
-							return null;
-						}
-						else
-						{
-							return structure[key];
+							break;
 						}
 					}
+					count++;
 					current = current.Parent;
 				}
 			}
-			return null;
+			value = null;
+			return false;
+			//return new CompiledSearch(expression.Compile(this), Source);
 		}
+		//public override Map EvaluateStructure()
+		//{
+		//    Expression current = this;
+		//    Map key = expression.EvaluateStructure();
+		//    if (key != null && key.IsConstant)
+		//    {
+		//        bool hasCrossedFunction=false;
+		//        while (true)
+		//        {
+		//            while (current.Statement == null)
+		//            {
+		//                if (current.isFunction)
+		//                {
+		//                    hasCrossedFunction = true;
+		//                }
+		//                current = current.Parent;
+		//                if (current == null)
+		//                {
+		//                    return null;
+		//                }
+		//            }
+		//            Statement statement = current.Statement;
+		//            Map structure = statement.Pre();
+		//            if (structure == null)//||post==null)
+		//            {
+		//                return null;
+		//            }
+		//            if (structure.ContainsKey(key) && structure[key].IsConstant)
+		//            {
+		//                if (hasCrossedFunction)
+		//                {
+		//                    return null;
+		//                }
+		//                else
+		//                {
+		//                    return structure[key];
+		//                }
+		//            }
+		//            current = current.Parent;
+		//        }
+		//    }
+		//    return null;
+		//}
 		private Expression expression;
 		public Search(Map code, Expression parent)
 			: base(code.Source, parent)
@@ -217,62 +286,84 @@ namespace Meta
 		}
 		public override Compiled Compile(Expression parent)
 		{
-			Map optimized = EvaluateStructure();
-			if (optimized!=null && optimized.IsConstant)
+			int count;
+			Map key;
+			Map value;
+			if (FindStuff(out count, out key, out value))
 			{
-				return new OptimizedSearch(optimized, Source);
+				if (value != null && value.IsConstant)
+				{
+					return new OptimizedSearch(value, Source);
+				}
+				else
+				{
+					return new FastSearch(key, count, Source);
+				}
 			}
 			else
 			{
-				Expression current = this;
-				Map key = expression.EvaluateStructure();
-				int count = 0;
-				if (key != null && key.IsConstant)
-				{
-					bool hasCrossedFunction = false;
-					while (true)
-					{
-						while (current.Statement == null)
-						{
-							if (current.isFunction)
-							{
-								hasCrossedFunction = true;
-								count++;
-							}
-							current = current.Parent;
-							if (current == null)
-							{
-								break;
-							}
-						}
-						if (current == null)
-						{
-							break;
-						}
-						Statement statement = current.Statement;
-						Map structure = statement.Pre();
-						if (structure == null)
-						{
-							break;
-						}
-						if (structure.ContainsKey(key))// && structure[key].IsConstant)
-						{
-							return new FastSearch(key, count, Source);
-						}
-						if (hasCrossedFunction)
-						{
-							if (!statement.NeverAddsKey(key))
-							{
-								break;
-							}
-						}
-						count++;
-						current = current.Parent;
-					}
-				}
+				return new CompiledSearch(expression.Compile(this), Source);
 			}
-			return new CompiledSearch(expression.Compile(this), Source);
 		}
+		//public override Compiled Compile(Expression parent)
+		//{
+		//    Map optimized = EvaluateStructure();
+		//    if (optimized!=null && optimized.IsConstant)
+		//    {
+		//        return new OptimizedSearch(optimized, Source);
+		//    }
+		//    else
+		//    {
+		//        Expression current = this;
+		//        Map key = expression.EvaluateStructure();
+		//        int count = 0;
+		//        if (key != null && key.IsConstant)
+		//        {
+		//            bool hasCrossedFunction = false;
+		//            while (true)
+		//            {
+		//                while (current.Statement == null)
+		//                {
+		//                    if (current.isFunction)
+		//                    {
+		//                        hasCrossedFunction = true;
+		//                        count++;
+		//                    }
+		//                    current = current.Parent;
+		//                    if (current == null)
+		//                    {
+		//                        break;
+		//                    }
+		//                }
+		//                if (current == null)
+		//                {
+		//                    break;
+		//                }
+		//                Statement statement = current.Statement;
+		//                Map structure = statement.Pre();
+		//                if (structure == null)
+		//                {
+		//                    statement.Pre();
+		//                    break;
+		//                }
+		//                if (structure.ContainsKey(key))// && structure[key].IsConstant)
+		//                {
+		//                    return new FastSearch(key, count, Source);
+		//                }
+		//                if (hasCrossedFunction)
+		//                {
+		//                    if (!statement.NeverAddsKey(key))
+		//                    {
+		//                        break;
+		//                    }
+		//                }
+		//                count++;
+		//                current = current.Parent;
+		//            }
+		//        }
+		//    }
+		//    return new CompiledSearch(expression.Compile(this), Source);
+		//}
 	}
 	public class FastSearch : Compiled
 	{
@@ -3419,17 +3510,6 @@ namespace Meta
 		});
 
 		private static Rule StringLine = new ZeroOrMore(new Autokey(new CharacterExcept(Syntax.unixNewLine, Syntax.windowsNewLine[0])));
-		//public static Rule StringDedentation = new CustomRule(delegate(Parser pa, out bool matched)
-		//{
-		//    Map map = new Sequence(
-		//        new Optional(EndOfLine),
-		//        "".PadLeft(pa.indentationCount - 1, Syntax.indentation)).Match(pa, out matched);
-		//    if (matched)
-		//    {
-		//        pa.indentationCount--;
-		//    }
-		//    return map;
-		//});
 
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
@@ -3483,29 +3563,6 @@ namespace Meta
 			}
 			return result.ToString();
 		});
-		//private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched)
-		//{
-		//    StringBuilder result = new StringBuilder(100);
-		//    MatchStringLine(parser, result);
-		//    matched = true;
-		//    while (true)
-		//    {
-		//        bool lineMatched;
-		//        new Sequence(
-		//            EndOfLine,
-		//            SameIndentation).Match(parser, out lineMatched);
-		//        if (lineMatched)
-		//        {
-		//            result.Append('\n');
-		//            MatchStringLine(parser, result);
-		//        }
-		//        else
-		//        {
-		//            break;
-		//        }
-		//    }
-		//    return result.ToString();
-		//});
 
 		private static Rule SingleString = new OneOrMore(
 			new Autokey(
@@ -3513,21 +3570,6 @@ namespace Meta
 					Syntax.unixNewLine,
 					Syntax.windowsNewLine[0],
 					Syntax.@string)));
-
-		//public static Rule String = ComplexStuff(
-		//    Syntax.@string,
-		//    Syntax.@string,
-		//    null,
-		//    SingleString,
-		//    new Sequence(
-		//        SmallIndentation,
-		//        EndOfLine,
-		//        SameIndentation,
-		//        SingleString,
-		//        StringBeef));
-		//            //EndOfLine,
-		//            //Dedentation,
-		//            //SameIndentation
 
 		public static Rule String = new Sequence(
 			Syntax.@string,
