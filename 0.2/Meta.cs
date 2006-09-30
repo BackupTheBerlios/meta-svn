@@ -63,7 +63,17 @@ namespace Meta
 			this.Source = source;
 			this.Parent = parent;
 		}
-		public abstract Map EvaluateStructure();
+		private bool evaluated = false;
+		private Map structure;
+		public Map EvaluateStructure()
+		{
+			if (!evaluated)
+			{
+				structure = StructureImplementation();
+			}
+			return structure;
+		}
+		public abstract Map StructureImplementation();
 		public abstract Compiled Compile(Expression parent);
 	}
 	public class LastArgument : Expression
@@ -72,7 +82,7 @@ namespace Meta
 			: base(code.Source,parent)
 		{
 		}
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			return null;
 		}
@@ -108,7 +118,7 @@ namespace Meta
 				calls.Add(new Literal(Map.Empty,this));
 			}
 		}
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			Map first = calls[0].EvaluateStructure();
 			if (first != null && first.IsConstant)
@@ -198,7 +208,7 @@ namespace Meta
 	}
 	public class Search : Expression
 	{
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			Map key;
 			int count;
@@ -399,7 +409,7 @@ namespace Meta
 	}
 	public class Program : ScopeExpression
 	{
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			return statementList[statementList.Count - 1].Current();
 			//return null;
@@ -439,51 +449,77 @@ namespace Meta
 	}
 	public abstract class Statement
 	{
+		bool preEvaluated=false;
+		bool currentEvaluated = false;
+		private Map pre;
+		private Map current;
 		public virtual Map Pre()
 		{
-			if (Previous == null)
+			if (!preEvaluated)
 			{
-				return new Map();
-			}
-			else
-			{
-				return Previous.Current();
-			}
-		}
-		public Map Current()
-		{
-			Map pre = Pre();
-			if (pre != null)
-			{
-				return CurrentImplementation(pre);
-			}
-			else
-			{
-				return null;
-			}
-		}
-		public Map Post()
-		{
-			return Post(Current());
-		}
-		public Map Post(Map previous)
-		{
-			if (Next != null)
-			{
-				if (Next is CurrentStatement)
+				if (Previous == null)
 				{
-					return previous;
+					pre=new Map();
 				}
 				else
 				{
-					return Next.Current();
+					pre=Previous.Current();
 				}
 			}
-			else
-			{
-				return previous;
-			}
+			preEvaluated = true;
+			return pre;
 		}
+		public Map Current()
+		{
+			if (!currentEvaluated)
+			{
+				Map pre = Pre();
+				if (pre != null)
+				{
+					return CurrentImplementation(pre);
+				}
+				else
+				{
+					return null;
+				}
+			}
+			currentEvaluated = true;
+			return current;
+		}
+		//public Map Current()
+		//{
+		//    Map pre = Pre();
+		//    if (pre != null)
+		//    {
+		//        return CurrentImplementation(pre);
+		//    }
+		//    else
+		//    {
+		//        return null;
+		//    }
+		//}
+		//public Map Post()
+		//{
+		//    return Post(Current());
+		//}
+		//public Map Post(Map previous)
+		//{
+		//    if (Next != null)
+		//    {
+		//        if (Next is CurrentStatement)
+		//        {
+		//            return previous;
+		//        }
+		//        else
+		//        {
+		//            return Next.Current();
+		//        }
+		//    }
+		//    else
+		//    {
+		//        return previous;
+		//    }
+		//}
 		public Statement Next
 		{
 			get
@@ -603,8 +639,13 @@ namespace Meta
 			Map k = key.EvaluateStructure();
 			if (k != null && k.IsConstant)
 			{
-				// evaluate value, too
+				Map val=value.EvaluateStructure();
+				if (val == null)
+				{
+				    val = new Unknown();
+				}
 				previous[k] = new Unknown();
+				//previous[k] = new Unknown();
 				return previous;
 			}
 			return null;
@@ -720,7 +761,7 @@ namespace Meta
 	}
 	public class Literal : Expression
 	{
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			return literal;
 		}
@@ -756,7 +797,7 @@ namespace Meta
 	}
 	public class Root : Expression
 	{
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			return Gac.gac;
 		}
@@ -800,20 +841,21 @@ namespace Meta
 	}
 	public class Select : Expression
 	{
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
-			Map selected = subs[0].EvaluateStructure();
-			for (int i = 1; i < subs.Count; i++)
-			{
-				Map key = subs[i].EvaluateStructure();
-				if (key==null || key is Structure || key is Unknown || !selected.ContainsKey(key))
-				{
-					// compilation error???
-					return null;
-				}
-				selected = selected[key];
-			}
-			return selected;
+			return null;
+			//Map selected = subs[0].EvaluateStructure();
+			//for (int i = 1; i < subs.Count; i++)
+			//{
+			//    Map key = subs[i].EvaluateStructure();
+			//    if (key==null || key is Structure || key is Unknown || !selected.ContainsKey(key))
+			//    {
+			//        // compilation error???
+			//        return null;
+			//    }
+			//    selected = selected[key];
+			//}
+			//return selected;
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -5359,7 +5401,7 @@ namespace Meta
 		{
 			this.literal = literal;
 		}
-		public override Map EvaluateStructure()
+		public override Map StructureImplementation()
 		{
 			return literal;
 		}
