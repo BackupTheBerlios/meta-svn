@@ -110,24 +110,56 @@ namespace Meta
 		}
 		public override Map EvaluateStructure()
 		{
-			Map first=calls[0].EvaluateStructure();
-			Map arg = calls[1].EvaluateStructure();
-			if (first != null && first.IsConstant && arg!=null)
+			Map first = calls[0].EvaluateStructure();
+			if (first != null && first.IsConstant)
 			{
 				if (first.Strategy is Method)
 				{
 					Method method = (Method)first.Strategy;
-					if (method.method.IsStatic && method.parameters.Length==1 && calls.Count==2)
+					if (method.method.IsStatic && method.parameters.Length == calls.Count-1)
 					{
-						if (method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length != 0)
+						if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
 						{
-							return (Map)method.method.Invoke(null,new object[] {arg});
+							List<object> arguments = new List<object>();
+							for (int i = 1; i < calls.Count; i++)
+							{
+								Map arg = calls[i].EvaluateStructure();
+								if (arg == null)
+								{
+									return null;
+								}
+								else
+								{
+									arguments.Add(Transform.ToDotNet(arg,method.parameters[i-1].ParameterType));
+								}
+							}
+							return (Map)method.method.Invoke(null, arguments.ToArray());
 						}
 					}
 				}
 			}
 			return null;
 		}
+		//public override Map EvaluateStructure()
+		//{
+		//    Map first=calls[0].EvaluateStructure();
+		//    Map arg = calls[1].EvaluateStructure();
+		//    if (first != null && first.IsConstant && arg!=null)
+		//    {
+		//        if (first.Strategy is Method)
+		//        {
+		//            Method method = (Method)first.Strategy;
+		//            if (method.method.IsStatic && method.parameters.Length==1 && calls.Count==2)
+		//            {
+		//                if (method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length != 0)
+		//                {
+		//                    return (Map)method.method.Invoke(null,new object[] {arg});
+		//                }
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
 		public override Compiled Compile(Expression parent)
 		{
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e)
@@ -214,11 +246,10 @@ namespace Meta
 						statement.Pre();
 						break;
 					}
-					if (structure.ContainsKey(key))// && structure[key].IsConstant)
+					if (structure.ContainsKey(key))
 					{
 						value = structure[key];
 						return true;
-						//return new FastSearch(key, count, Source);
 					}
 					if (hasCrossedFunction)
 					{
@@ -370,7 +401,8 @@ namespace Meta
 	{
 		public override Map EvaluateStructure()
 		{
-			return null;
+			return statementList[statementList.Count - 1].Current();
+			//return null;
 		}
 		public override Compiled Compile(Expression parent)
 		{
@@ -571,6 +603,7 @@ namespace Meta
 			Map k = key.EvaluateStructure();
 			if (k != null && k.IsConstant)
 			{
+				// evaluate value, too
 				previous[k] = new Unknown();
 				return previous;
 			}
