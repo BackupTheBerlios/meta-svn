@@ -3812,51 +3812,8 @@ namespace Meta
 									LiteralExpression)))))))));
 
 
-		public static Rule CurrentStatement = new Sequence(
-			'&',
-			new Assignment(CodeKeys.Current, new LiteralRule(Meta.Map.Empty)),
-			new Assignment(CodeKeys.Value, Expression),
-			new Optional(EndOfLine));
-
-		public static Rule NormalStatement = new Sequence(
-			new Assignment(CodeKeys.Key,
-				new Alternatives(
-					new Sequence(
-						'<',
-						new ReferenceAssignment(Expression)),
-					new Sequence(
-						new Assignment(
-							CodeKeys.Literal,
-							LookupString)),
-					Expression)),
-			new Optional(EndOfLine),
-			new Optional(SameIndentation),
-			'=',
-			new Assignment(CodeKeys.Value, Expression),
-			new Optional(EndOfLine));
 
 
-		public static Rule Statement = new Sequence(
-			new ReferenceAssignment(
-				new Alternatives(
-					FunctionExpression,
-					new Sequence(
-						new Assignment(
-							CodeKeys.Keys,
-							new Alternatives(
-								new Sequence(
-									new Assignment(
-										CodeKeys.Literal,
-										LookupString)),
-								Expression)),
-						new Optional(EndOfLine),
-						new Optional(SameIndentation),
-						':',
-						new Assignment(
-							CodeKeys.Value,
-							Expression),
-						new Optional(EndOfLine))
-			)));
 
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
@@ -3884,16 +3841,17 @@ namespace Meta
 					})));
 
 		public static Action ListAction = new CustomProduction(
-					delegate(Parser p, Map map, ref Map result)
-					{
-						result = new Map(
-							CodeKeys.Key, new Map(
-									CodeKeys.Literal, p.defaultKeys.Peek()),
-							CodeKeys.Value, map);
-						p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-						return result;
-					},
-					Expression);
+			delegate(Parser p, Map map, ref Map result)
+			{
+				result = new Map(
+					CodeKeys.Key, new Map(
+							CodeKeys.Literal, p.defaultKeys.Peek()),
+					CodeKeys.Value, map);
+				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+				return result;
+			},
+			Expression);
+
 		public static Rule List = new PrePost(
 					delegate(Parser p)
 					{
@@ -3905,59 +3863,66 @@ namespace Meta
 				Syntax.arrayEnd,
 				Syntax.arraySeparator,
 				ListAction,
-			ListAction,
+				ListAction,
+				null
+				),
+				delegate(Parser p)
+				{
+					p.defaultKeys.Pop();
+				});
 
+		public static Rule ComplexStatement(Rule rule,Action action)
+		{
+			return new Sequence(
+				action,
+				rule!=null?new Match(rule):null,
+				new Assignment(CodeKeys.Value, Expression),
+				new Optional(EndOfLine));
+		}
+		public static Rule DiscardStatement = ComplexStatement(
+			null,
+			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())));
+		public static Rule CurrentStatement = ComplexStatement(
+			'&',
+			new Assignment(CodeKeys.Current, new LiteralRule(Meta.Map.Empty)));
 
-			null
-				), delegate(Parser p)
-					{
-						p.defaultKeys.Pop();
-					});
+		public static Rule NormalStatement = ComplexStatement(
+			'=',
+			new Assignment(
+				CodeKeys.Key,
+				new Alternatives(
+					new Sequence(
+						'<',
+						new ReferenceAssignment(Expression)),
+					new Sequence(
+						new Assignment(
+							CodeKeys.Literal,
+							LookupString)),
+					Expression)));
 
-//        public static Rule List = new PrePost(
-//                    delegate(Parser p)
-//                    {
-//                        p.defaultKeys.Push(1);
-//                    },
-//            new Sequence(
-//            Syntax.arrayStart,
-//            new Assignment(CodeKeys.Program,
-//                    new Sequence(
-//            new Optional(EndOfLine),
-//            SmallIndentation,
-//                new Append(
-//                new ZeroOrMore(
-//                    new Autokey(
-//                        new Sequence(
-//                            new Optional(EndOfLine),
-//                            SameIndentation,
-//                new CustomProduction(
-//                delegate(Parser p, Map map, ref Map result)
-//                {
-//                    result = new Map(
-//                        CodeKeys.Key, new Map(
-//                                CodeKeys.Literal, p.defaultKeys.Peek()),
-//                        CodeKeys.Value, map);
-//                    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-//                    return result;
-//                }
-//            , Expression)
-//            )))
-//            )
-//            ,
-//                new Optional(EndOfLine),
-//                new Optional(new Alternatives(Dedentation))
-//            )
-//)), delegate(Parser p)
-//                    {
-//                        p.defaultKeys.Pop();
-//                    });
+		public static Rule Statement = ComplexStatement(
+			':',
+			new ReferenceAssignment(
+				new Sequence(
+					new Assignment(
+						CodeKeys.Keys,
+						new Alternatives(
+							new Sequence(
+								new Assignment(
+									CodeKeys.Literal,
+									LookupString)),
+							Expression)))));
 
-
-		public static Rule DiscardStatement = new Sequence(
-			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())),
-			new Assignment(CodeKeys.Value, Expression),
-			new Optional(EndOfLine));
+		public static Rule AllStatements = new Alternatives(
+			FunctionExpression,
+		CurrentStatement,
+		NormalStatement,
+		Statement,
+		DiscardStatement);
+		//public static Rule DiscardStatement = new Sequence(
+		//    new Assignment(CodeKeys.Discard, new LiteralRule(new Map())),
+		//    new Assignment(CodeKeys.Value, Expression),
+		//    new Optional(EndOfLine));
 
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
@@ -3979,11 +3944,7 @@ namespace Meta
 										new Optional(EndOfLine)
 			)))))))));
 
-		public static Rule AllStatements=new Alternatives(
-			CurrentStatement,
-			NormalStatement,
-			Statement,
-			DiscardStatement);
+
 
 		public static Rule Program = ComplexStuff(
 			CodeKeys.Program,
