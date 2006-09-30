@@ -3319,23 +3319,17 @@ namespace Meta
 		private bool negative = false;
 		public string text;
 		public int index;
-		private string file;
+		private string fileName;
 		private int line = 1;
 		private int column = 1;
-		//private bool isStartOfFile = true;
 		private int indentationCount = -1;
 		public Stack<int> defaultKeys = new Stack<int>();
 		public Parser(string text, string filePath)
 		{
 			this.index = 0;
 			this.text = text;
-			this.file = filePath;
+			this.fileName = filePath;
 		}
-		public static Rule LastArgument = new Sequence(
-			Syntax.lastArgument,
-			new Assignment(
-				CodeKeys.LastArgument,
-				new LiteralRule(new Map())));
 
 		public static Rule Expression = new DelayedRule(delegate()
 		{
@@ -3360,6 +3354,8 @@ namespace Meta
 						Syntax.unixNewLine,
 						Syntax.windowsNewLine));
 
+
+		// horrible
 		public static Rule Integer =
 			new Sequence(
 				new CustomProduction(
@@ -3396,6 +3392,9 @@ namespace Meta
 		{
 			matched = true; return null;
 		})))));
+
+
+		// unelegant
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched)
 		{
 			if(p.indentationCount==-1)
@@ -3409,17 +3408,21 @@ namespace Meta
 			}
 			return null;
 		});
+
 		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, out bool matched)
 		{
 			p.indentationCount++;
 			matched = true;
 			return null;
 		});
-		public static Rule FullIndentation = new Alternatives(
-			StartOfFile,
-			new Sequence(
-				EndOfLine,
-				SmallIndentation));
+
+		// remove
+		//public static Rule FullIndentation = 
+		//    new Alternatives(
+		//    StartOfFile,
+		//    new Sequence(
+		//        EndOfLine,
+		//        SmallIndentation));
 
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched)
 		{
@@ -3504,7 +3507,8 @@ namespace Meta
 			new ReferenceAssignment(new Alternatives(
 				SingleString,
 				new Sequence(
-					FullIndentation,
+					SmallIndentation,
+					EndOfLine,
 					SameIndentation,
 					new ReferenceAssignment(StringBeef),
 					StringDedentation))),
@@ -3586,7 +3590,13 @@ namespace Meta
 
 		public static Rule Map = new Sequence(
 			new Optional(Syntax.programStart),
-			FullIndentation,
+			new Alternatives(
+			StartOfFile,
+			new Sequence(
+				EndOfLine,
+				SmallIndentation)),
+
+			//FullIndentation,
 			new ReferenceAssignment(new PrePost(
 				delegate(Parser p)
 				{
@@ -3636,7 +3646,7 @@ namespace Meta
 													entryAction)))),
 									new Optional(end)),
 							new Sequence(
-								FullIndentation,
+								SmallIndentation,
 								new ReferenceAssignment(
 									new ZeroOrMore(
 										new Autokey(
@@ -3647,71 +3657,6 @@ namespace Meta
 									new Optional(EndOfLine),
 									new Optional(Dedentation)))))));
 		}
-		//public static Rule ComplexStuff(Map key, char start, char end, char separator, Rule entry, Rule first)
-		//{
-		//    return new Sequence(
-		//        new Assignment(key,
-		//            new Sequence(
-		//                first != null ? new Assignment(1, first) : null,
-		//                start,
-		//                new Append(
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            new Assignment(1, entry),
-		//                            new Append(
-		//                                new ZeroOrMore(
-		//                                    new Autokey(
-		//                                        new Sequence(
-		//                                            separator,
-		//                                            new ReferenceAssignment(entry))))),
-		//                            new Optional(end)),
-		//                    new Sequence(
-		//                        FullIndentation,
-		//                        new ReferenceAssignment(
-		//                            new ZeroOrMore(
-		//                                new Autokey(
-		//                                    new Sequence(
-		//                                        new Optional(EndOfLine),
-		//                                        SameIndentation,
-		//                                        new ReferenceAssignment(entry))))),
-		//                            new Optional(EndOfLine),
-		//                            new Optional(Dedentation)))))));
-		//}
-		//public static Rule ComplexStuff(Map key,char start, char end, char separator, Rule entry,Rule first)
-		//{
-		//    return new Sequence(
-		//        new Assignment(key,
-		//            new Sequence(
-		//                first!=null?new Assignment(1, first):null,
-		//                start,
-		//                new Append(
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            new Assignment(1, entry),
-		//                            new Append(
-		//                                new ZeroOrMore(
-		//                                    new Autokey(
-		//                                        new Sequence(
-		//                                            separator,
-		//                                            new ReferenceAssignment(entry))))),
-		//                            new Optional(end)),
-		//                    new Sequence(
-		//                        FullIndentation,
-		//                        new ReferenceAssignment(
-		//                            new ZeroOrMore(
-		//                                new Autokey(
-		//                                    new Sequence(
-		//                                        new Optional(EndOfLine),
-		//                                        SameIndentation,
-		//                                        new ReferenceAssignment(entry))))),
-		//                            new Optional(EndOfLine),
-		//                            new Optional(Dedentation)))))));
-		//}
-
-		//public static Rule ComplexStuff(Map key,char start,char end,char separator,Rule entry)
-		//{
-		//    return ComplexStuff(key,start, end, separator, entry, null);
-		//}
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
@@ -3758,6 +3703,10 @@ namespace Meta
 		private static Rule Current = Simple(
 			Syntax.current,
 			new Map(CodeKeys.Current, Meta.Map.Empty));
+
+		public static Rule LastArgument = Simple(
+			Syntax.lastArgument,
+			new Map(CodeKeys.LastArgument,new Map()));
 
 		private static Rule Root = Simple(
 			Syntax.root,
@@ -3919,10 +3868,6 @@ namespace Meta
 		NormalStatement,
 		Statement,
 		DiscardStatement);
-		//public static Rule DiscardStatement = new Sequence(
-		//    new Assignment(CodeKeys.Discard, new LiteralRule(new Map())),
-		//    new Assignment(CodeKeys.Value, Expression),
-		//    new Optional(EndOfLine));
 
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
@@ -4117,7 +4062,7 @@ namespace Meta
 						{
 							result = new Map(result.GetString());
 						}
-						result.Source = new Source(oldLine, oldColumn, parser.file);
+						result.Source = new Source(oldLine, oldColumn, parser.fileName);
 					}
 				}
 				return result;
@@ -4392,7 +4337,7 @@ namespace Meta
 		{
 			get
 			{
-				return file;
+				return fileName;
 			}
 		}
 		public int Line
