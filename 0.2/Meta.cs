@@ -3347,17 +3347,17 @@ namespace Meta
 				Program
 			);
 		});
-		public static Rule NewLine =
-			new Alternatives(
-				new Character(Syntax.unixNewLine),
-				StringRule(Syntax.windowsNewLine));
-
 		public static Rule EndOfLine =
 			new Sequence(
-				new Match(new ZeroOrMore(new Match(new Alternatives(
-						new Character(Syntax.space),
-						new Character(Syntax.tab))))),
-				new Match(NewLine));
+				new ZeroOrMore(
+					new Alternatives(
+						Syntax.space,
+						Syntax.tab)),
+				new Alternatives(
+					Syntax.unixNewLine,
+					new Sequence(
+						Syntax.windowsNewLine[0],
+						Syntax.windowsNewLine[1])));
 
 		public static Rule Integer =
 			new Sequence(
@@ -3367,7 +3367,7 @@ namespace Meta
 						p.negative = map != null;
 						return null;
 					},
-					new Optional(new Character(Syntax.negative))),
+					new Optional(Syntax.negative)),
 				new ReferenceAssignment(
 					new Sequence(
 						new ReferenceAssignment(
@@ -3413,14 +3413,13 @@ namespace Meta
 		});
 
 		private static Rule EndOfLinePreserve = new Sequence(
-			new Match(
-				new ZeroOrMore(
-					new Autokey(new Alternatives(
-						new Character(Syntax.space),
-						new Character(Syntax.tab))))),
+			new ZeroOrMore(
+				new Autokey(new Alternatives(
+					Syntax.space,
+					Syntax.tab))),
 			new Append(
 					new Alternatives(
-						new Character(Syntax.unixNewLine),
+						Syntax.unixNewLine,
 						StringRule(Syntax.windowsNewLine))));
 
 		private static Rule SmallIndentationSpecial = new CustomRule(delegate(Parser p, out bool matched)
@@ -3579,6 +3578,10 @@ namespace Meta
 				Expression),
 			new Optional(EndOfLine));
 
+		//public static Rule ComplexStatement()
+		//{
+		//}
+
 		public static Rule Entry = new Alternatives(
 			new Sequence(
 				new Assignment(
@@ -3631,7 +3634,10 @@ namespace Meta
 					EndOfLine)),
 			new ReferenceAssignment(Map));
 
-
+		//public static Rule ComplexStuff(Map key, char start, char end, char separator, Rule entry, Rule first)
+		//{
+		//    return ComplexStuff(key,start,end,separator,new ReferenceAssignment(entry),first);
+		//}
 		public static Rule ComplexStuff(Map key,char start, char end, char separator, Rule entry,Rule first)
 		{
 			return new Sequence(
@@ -3699,9 +3705,7 @@ namespace Meta
 						Function))));
 
 		private static Rule Whitespace = new ZeroOrMore(
-			new Alternatives(
-				new Character(Syntax.tab),
-				new Character(Syntax.space)));
+			new Alternatives(Syntax.tab,Syntax.space));
 
 		private static Rule EmptyMap = new Sequence(
 			Syntax.emptyMap,
@@ -3741,7 +3745,9 @@ namespace Meta
 					new Sequence(
 						'!',
 						new ReferenceAssignment(Expression)),
-					new Alternatives(LookupStringExpression, LookupAnythingExpression))));
+					new Alternatives(
+						LookupStringExpression,
+						LookupAnythingExpression))));
 
 		public static Rule ProgramDelayed = new DelayedRule(delegate()
 		{
@@ -3756,14 +3762,15 @@ namespace Meta
 						new Alternatives(
 							Root,
 							Search,
-			LiteralExpression
-			)),
+							LiteralExpression)),
 					new Append(
 						new OneOrMore(new Autokey(new Sequence(
 							'.',
 							new ReferenceAssignment(
-								new Alternatives(LookupStringExpression, LookupAnythingExpression, LiteralExpression)
-			))))))));
+								new Alternatives(
+									LookupStringExpression,
+									LookupAnythingExpression,
+									LiteralExpression)))))))));
 
 		private static Rule KeysSearch = new Sequence(
 			new Assignment(CodeKeys.Search,
@@ -3846,14 +3853,14 @@ namespace Meta
 						p.defaultKeys.Pop();
 					})));
 
-		public static Rule List = new Sequence(
-			Syntax.arrayStart,
-			new Assignment(CodeKeys.Program,
-				new PrePost(
+		public static Rule List = new PrePost(
 					delegate(Parser p)
 					{
 						p.defaultKeys.Push(1);
 					},
+			new Sequence(
+			Syntax.arrayStart,
+			new Assignment(CodeKeys.Program,
 					new Sequence(
 			new Optional(EndOfLine),
 			SmallIndentation,
@@ -3868,6 +3875,7 @@ namespace Meta
 				{
 					result = new Map(
 						CodeKeys.Key, new Map(
+						//CodeKeys.Literal, result.ArrayCount+1),
 								CodeKeys.Literal, p.defaultKeys.Peek()),
 						CodeKeys.Value, map);
 					p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
@@ -3879,17 +3887,58 @@ namespace Meta
 			,
 				new Optional(EndOfLine),
 				new Optional(new Alternatives(Dedentation))
-			),
-					delegate(Parser p)
+			)
+)), delegate(Parser p)
 					{
 						p.defaultKeys.Pop();
-					})));
+					});
+
+
+		//public static Rule List = new Sequence(
+		//    Syntax.arrayStart,
+		//    new Assignment(CodeKeys.Program,
+		//        new PrePost(
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Push(1);
+		//            },
+		//            new Sequence(
+		//    new Optional(EndOfLine),
+		//    SmallIndentation,
+		//        new Append(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    new Optional(EndOfLine),
+		//                    SameIndentation,
+		//        new CustomProduction(
+		//        delegate(Parser p, Map map, ref Map result)
+		//        {
+		//            result = new Map(
+		//                CodeKeys.Key, new Map(
+		//                        //CodeKeys.Literal, result.ArrayCount+1),
+		//                        CodeKeys.Literal, p.defaultKeys.Peek()),
+		//                CodeKeys.Value, map);
+		//            //p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//            return result;
+		//        }
+		//    , Expression)
+		//    )))
+		//    )
+		//    ,
+		//        new Optional(EndOfLine),
+		//        new Optional(new Alternatives(Dedentation))
+		//    ),
+		//            delegate(Parser p)
+		//            {
+		//                p.defaultKeys.Pop();
+		//            })));
 
 		public static Rule DiscardStatement = new Sequence(
 			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())),
 			new Assignment(CodeKeys.Value, Expression),
 			new Optional(EndOfLine));
-
+		// refactor
 		public static Rule FunctionProgram = new Sequence(
 			new Assignment(CodeKeys.Program,
 				new Sequence(
@@ -3922,32 +3971,6 @@ namespace Meta
 			Syntax.programSeparator,
 			AllStatements,
 			null);
-				//EndOfLine,
-				//SmallIndentation,
-				//new ReferenceAssignment(new Sequence(
-				//    new Assignment(CodeKeys.Program,
-				//        new Sequence(
-				//            new ReferenceAssignment(
-				//                new OneOrMore(
-				//                        new Autokey(
-				//                        new Sequence(
-				//                            SameIndentation,
-				//                            new ReferenceAssignment(AllStatements))))))),
-				//            Dedentation)));
-		//public static Rule Program = new Sequence(
-		//        Syntax.programStart,
-		//        EndOfLine,
-		//        SmallIndentation,
-		//        new ReferenceAssignment(new Sequence(
-		//            new Assignment(CodeKeys.Program,
-		//                new Sequence(
-		//                    new ReferenceAssignment(
-		//                        new OneOrMore(
-		//                                new Autokey(
-		//                                new Sequence(
-		//                                    SameIndentation,
-		//                                    new ReferenceAssignment(AllStatements))))))),
-		//                    Dedentation)));
 
 		public abstract class Action
 		{
