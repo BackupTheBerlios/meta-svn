@@ -233,51 +233,7 @@ namespace Meta
 			}
 			value = null;
 			return false;
-			//return new CompiledSearch(expression.Compile(this), Source);
 		}
-		//public override Map EvaluateStructure()
-		//{
-		//    Expression current = this;
-		//    Map key = expression.EvaluateStructure();
-		//    if (key != null && key.IsConstant)
-		//    {
-		//        bool hasCrossedFunction=false;
-		//        while (true)
-		//        {
-		//            while (current.Statement == null)
-		//            {
-		//                if (current.isFunction)
-		//                {
-		//                    hasCrossedFunction = true;
-		//                }
-		//                current = current.Parent;
-		//                if (current == null)
-		//                {
-		//                    return null;
-		//                }
-		//            }
-		//            Statement statement = current.Statement;
-		//            Map structure = statement.Pre();
-		//            if (structure == null)//||post==null)
-		//            {
-		//                return null;
-		//            }
-		//            if (structure.ContainsKey(key) && structure[key].IsConstant)
-		//            {
-		//                if (hasCrossedFunction)
-		//                {
-		//                    return null;
-		//                }
-		//                else
-		//                {
-		//                    return structure[key];
-		//                }
-		//            }
-		//            current = current.Parent;
-		//        }
-		//    }
-		//    return null;
-		//}
 		private Expression expression;
 		public Search(Map code, Expression parent)
 			: base(code.Source, parent)
@@ -305,65 +261,6 @@ namespace Meta
 				return new CompiledSearch(expression.Compile(this), Source);
 			}
 		}
-		//public override Compiled Compile(Expression parent)
-		//{
-		//    Map optimized = EvaluateStructure();
-		//    if (optimized!=null && optimized.IsConstant)
-		//    {
-		//        return new OptimizedSearch(optimized, Source);
-		//    }
-		//    else
-		//    {
-		//        Expression current = this;
-		//        Map key = expression.EvaluateStructure();
-		//        int count = 0;
-		//        if (key != null && key.IsConstant)
-		//        {
-		//            bool hasCrossedFunction = false;
-		//            while (true)
-		//            {
-		//                while (current.Statement == null)
-		//                {
-		//                    if (current.isFunction)
-		//                    {
-		//                        hasCrossedFunction = true;
-		//                        count++;
-		//                    }
-		//                    current = current.Parent;
-		//                    if (current == null)
-		//                    {
-		//                        break;
-		//                    }
-		//                }
-		//                if (current == null)
-		//                {
-		//                    break;
-		//                }
-		//                Statement statement = current.Statement;
-		//                Map structure = statement.Pre();
-		//                if (structure == null)
-		//                {
-		//                    statement.Pre();
-		//                    break;
-		//                }
-		//                if (structure.ContainsKey(key))// && structure[key].IsConstant)
-		//                {
-		//                    return new FastSearch(key, count, Source);
-		//                }
-		//                if (hasCrossedFunction)
-		//                {
-		//                    if (!statement.NeverAddsKey(key))
-		//                    {
-		//                        break;
-		//                    }
-		//                }
-		//                count++;
-		//                current = current.Parent;
-		//            }
-		//        }
-		//    }
-		//    return new CompiledSearch(expression.Compile(this), Source);
-		//}
 	}
 	public class FastSearch : Compiled
 	{
