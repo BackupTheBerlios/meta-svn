@@ -3263,7 +3263,9 @@ namespace Meta
 	public class Syntax
 	{
 		public const char arrayStart = '[';
-		public const char programSeparator = '#';
+		public const char programSeparator = ';';
+		public const char programStart = '{';
+		public const char programEnd = '}';
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
@@ -3277,7 +3279,6 @@ namespace Meta
 		public const char indentation = '\t';
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
-		public const char programStart = '{';
 		public const char function = '|';
 		public const char @string = '\"';
 		public const char emptyMap = '0';
@@ -3287,9 +3288,21 @@ namespace Meta
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const char current = '&';
-		public static char[] integer = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-		public static char[] lookupStringForbidden = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator};
-		public static char[] lookupStringForbiddenFirst = new char[] { current, lastArgument, explicitCall, indentation, '\r', '\n', select, function, @string, emptyMap, '!', root, callStart, callEnd, character, programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ', '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator};
+		public readonly static char[] integer = new char[] {
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+		public readonly static char[] lookupStringForbidden = new char[] {
+			current, lastArgument, explicitCall, indentation, '\r', '\n',
+			function, @string,emptyMap, '!', root, callStart, callEnd, 
+			character, programStart, '*', '$', '\\', '<', '=', arrayStart,
+			'-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', 
+			programStart, programSeparator ,callSeparator,programEnd};
+		public readonly static char[] lookupStringForbiddenFirst = new char[] {
+			current, lastArgument, explicitCall, indentation, '\r', '\n', select,
+			function, @string, emptyMap, '!', root, callStart, callEnd, character,
+			programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
+			'3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
+			'-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
+			programEnd};
 	}
 	public class Parser
 	{
@@ -3625,7 +3638,7 @@ namespace Meta
 				new Assignment(key,
 					new Sequence(
 						first!=null?new Assignment(1, first):null,
-						Syntax.callStart,
+						start,
 						new Append(
 							new Alternatives(
 								new Sequence(
@@ -3634,7 +3647,7 @@ namespace Meta
 										new ZeroOrMore(
 											new Autokey(
 												new Sequence(
-													Syntax.callSeparator,
+													separator,
 													new ReferenceAssignment(entry))))),
 									new Optional(end)),
 							new Sequence(
@@ -3730,7 +3743,6 @@ namespace Meta
 						new ReferenceAssignment(Expression)),
 					new Alternatives(LookupStringExpression, LookupAnythingExpression))));
 
-		public static Stack<int> callIndent = new Stack<int>();
 		public static Rule ProgramDelayed = new DelayedRule(delegate()
 		{
 			return Program;
@@ -3903,20 +3915,39 @@ namespace Meta
 			Statement,
 			DiscardStatement);
 
-		public static Rule Program = new Sequence(
-				Syntax.programStart,
-				EndOfLine,
-				SmallIndentation,
-				new ReferenceAssignment(new Sequence(
-					new Assignment(CodeKeys.Program,
-						new Sequence(
-							new ReferenceAssignment(
-								new OneOrMore(
-										new Autokey(
-										new Sequence(
-											SameIndentation,
-											new ReferenceAssignment(AllStatements))))))),
-							Dedentation)));
+		public static Rule Program = ComplexStuff(
+			CodeKeys.Program,
+			Syntax.programStart,
+			Syntax.programEnd,
+			Syntax.programSeparator,
+			AllStatements,
+			null);
+				//EndOfLine,
+				//SmallIndentation,
+				//new ReferenceAssignment(new Sequence(
+				//    new Assignment(CodeKeys.Program,
+				//        new Sequence(
+				//            new ReferenceAssignment(
+				//                new OneOrMore(
+				//                        new Autokey(
+				//                        new Sequence(
+				//                            SameIndentation,
+				//                            new ReferenceAssignment(AllStatements))))))),
+				//            Dedentation)));
+		//public static Rule Program = new Sequence(
+		//        Syntax.programStart,
+		//        EndOfLine,
+		//        SmallIndentation,
+		//        new ReferenceAssignment(new Sequence(
+		//            new Assignment(CodeKeys.Program,
+		//                new Sequence(
+		//                    new ReferenceAssignment(
+		//                        new OneOrMore(
+		//                                new Autokey(
+		//                                new Sequence(
+		//                                    SameIndentation,
+		//                                    new ReferenceAssignment(AllStatements))))))),
+		//                    Dedentation)));
 
 		public abstract class Action
 		{
