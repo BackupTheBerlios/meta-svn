@@ -3883,71 +3883,75 @@ namespace Meta
 						p.defaultKeys.Pop();
 					})));
 
-		//public static Rule List = new PrePost(
-		//            delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Push(1);
-		//            },
-		//    ComplexStuff(
-		//        CodeKeys.Program,
-		//        Syntax.arrayStart,
-		//        Syntax.arrayEnd,
-		//        Syntax.arraySeparator,
-		//        new CustomProduction(
-		//            delegate(Parser p, Map map, ref Map result)
-		//            {
-		//                result = new Map(
-		//                    CodeKeys.Key, new Map(
-		//                            CodeKeys.Literal, p.defaultKeys.Peek()),
-		//                    CodeKeys.Value, map);
-		//                p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//                return result;
-		//            },
-		//            Expression),
-		//    null
-		//        ),delegate(Parser p)
-		//            {
-		//                p.defaultKeys.Pop();
-		//            });
-
+		public static Action ListAction = new CustomProduction(
+					delegate(Parser p, Map map, ref Map result)
+					{
+						result = new Map(
+							CodeKeys.Key, new Map(
+									CodeKeys.Literal, p.defaultKeys.Peek()),
+							CodeKeys.Value, map);
+						p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+						return result;
+					},
+					Expression);
 		public static Rule List = new PrePost(
 					delegate(Parser p)
 					{
 						p.defaultKeys.Push(1);
 					},
-			new Sequence(
-			Syntax.arrayStart,
-			new Assignment(CodeKeys.Program,
-					new Sequence(
-			new Optional(EndOfLine),
-			SmallIndentation,
-				new Append(
-				new ZeroOrMore(
-					new Autokey(
-						new Sequence(
-							new Optional(EndOfLine),
-							SameIndentation,
-				new CustomProduction(
-				delegate(Parser p, Map map, ref Map result)
-				{
-					result = new Map(
-						CodeKeys.Key, new Map(
-								CodeKeys.Literal, p.defaultKeys.Peek()),
-						CodeKeys.Value, map);
-					p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-					return result;
-				}
-            , Expression)
-			)))
-			)
-			,
-				new Optional(EndOfLine),
-				new Optional(new Alternatives(Dedentation))
-			)
-)), delegate(Parser p)
+			ComplexStuff(
+				CodeKeys.Program,
+				Syntax.arrayStart,
+				Syntax.arrayEnd,
+				Syntax.arraySeparator,
+				ListAction,
+			ListAction,
+
+
+			null
+				), delegate(Parser p)
 					{
 						p.defaultKeys.Pop();
 					});
+
+//        public static Rule List = new PrePost(
+//                    delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Push(1);
+//                    },
+//            new Sequence(
+//            Syntax.arrayStart,
+//            new Assignment(CodeKeys.Program,
+//                    new Sequence(
+//            new Optional(EndOfLine),
+//            SmallIndentation,
+//                new Append(
+//                new ZeroOrMore(
+//                    new Autokey(
+//                        new Sequence(
+//                            new Optional(EndOfLine),
+//                            SameIndentation,
+//                new CustomProduction(
+//                delegate(Parser p, Map map, ref Map result)
+//                {
+//                    result = new Map(
+//                        CodeKeys.Key, new Map(
+//                                CodeKeys.Literal, p.defaultKeys.Peek()),
+//                        CodeKeys.Value, map);
+//                    p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+//                    return result;
+//                }
+//            , Expression)
+//            )))
+//            )
+//            ,
+//                new Optional(EndOfLine),
+//                new Optional(new Alternatives(Dedentation))
+//            )
+//)), delegate(Parser p)
+//                    {
+//                        p.defaultKeys.Pop();
+//                    });
 
 
 		public static Rule DiscardStatement = new Sequence(
