@@ -3331,7 +3331,6 @@ namespace Meta
 				SelectInline,
 				List,
 				Search,
-				SimpleProgram,
 				Program
 			);
 		});
@@ -3625,7 +3624,7 @@ namespace Meta
 			return new Sequence(
 				new Assignment(key,
 					new Sequence(
-						new Assignment(1, first),
+						first!=null?new Assignment(1, first):null,
 						Syntax.callStart,
 						new Append(
 							new Alternatives(
@@ -3657,100 +3656,24 @@ namespace Meta
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
-							new Alternatives(
-		                            LastArgument,
-		                            FunctionProgram,
-		                            LiteralExpression,
-		                            Call,
-		                            SelectInline,
-		                            List,
-		                            Search,
-		                            //Select,
-		                            Program),
-new Alternatives(
-									LastArgument,
-									FunctionProgram,
-									LiteralExpression,
-									SelectInline,
-									Search,
-									List,
-									Program
-				//,
-				//Select
-									)
-									);
+				new Alternatives(
+                    LastArgument,
+                    FunctionProgram,
+                    LiteralExpression,
+                    Call,
+                    SelectInline,
+                    List,
+                    Search,
+                    Program),
+				new Alternatives(
+					LastArgument,
+					FunctionProgram,
+					LiteralExpression,
+					SelectInline,
+					Search,
+					List,
+					Program));
 		});
-		//public static Rule Call = new DelayedRule(delegate()
-		//{
-		//    return new Sequence(
-		//            new Assignment(CodeKeys.Call,
-		//                new Sequence(
-							//new Assignment(1, new Alternatives(
-							//        LastArgument,
-							//        FunctionProgram,
-							//        LiteralExpression,
-							//        SelectInline,
-							//        Search,
-							//        List,
-							//        Program
-							//        //,
-							//        //Select
-							//        )),
-		//                    Syntax.callStart,
-		//                    new Append(
-		//                        new Alternatives(
-		//                        new Sequence(
-		//                            new Assignment(1, new Alternatives(
-		//                            LastArgument,
-		//                            FunctionProgram,
-		//                            LiteralExpression,
-		//                            Call,
-		//                            SelectInline,
-		//                            List,
-		//                            Search,
-		//                            //Select,
-		//                            Program
-		//            )), new Append(
-		//                new ZeroOrMore(
-		//                new Autokey(
-		//                    new Sequence(
-		//                        Syntax.callSeparator,
-		//                        new ReferenceAssignment(new Alternatives(
-		//            LastArgument,
-		//            FunctionProgram,
-		//            LiteralExpression,
-		//            Call,
-		//            SelectInline,
-		//            List,
-		//            Search,
-		//            //Select,
-		//            Program
-		//            )))))),
-		//            new Optional(new Character(Syntax.callEnd))
-		//            ),
-		//                    new Sequence(
-		//                        FullIndentation,
-
-		//                        new ReferenceAssignment(new ZeroOrMore(
-		//                            new Autokey(
-		//                                new Sequence(
-		//                                    new Optional(EndOfLine),
-		//                                    SameIndentation,
-		//                                    new ReferenceAssignment(new Alternatives(
-		//            LastArgument,
-		//            FunctionProgram,
-		//            LiteralExpression,
-		//            Call,
-		//            SelectInline,
-		//            List,
-		//            Search,
-		//            //Select,
-		//            Program
-		//            )))))),
-		//        new Optional(EndOfLine),
-		//        new Optional(Dedentation)))))));
-		//});
-
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
 				CodeKeys.Key,
@@ -3829,34 +3752,6 @@ new Alternatives(
 							new ReferenceAssignment(
 								new Alternatives(LookupStringExpression, LookupAnythingExpression, LiteralExpression)
 			))))))));
-
-		//private static Rule Select = new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Select,
-		//        new Sequence(
-		//            '.',
-		//            FullIndentation,
-		//            SameIndentation,
-		//            new Assignment(1,
-		//                new Alternatives(
-		//                    ProgramDelayed,
-		//                    LiteralExpression,
-		//                    Root,
-		//                    Search,
-		//                    Call)),
-		//            new Append(
-		//                new ZeroOrMore(
-		//                    new Autokey(new Sequence(
-		//                        new Optional(EndOfLine),
-		//                        SameIndentation,
-		//                        new ReferenceAssignment(
-		//                            new Alternatives(
-		//                                LookupAnythingExpression,
-		//                                LookupStringExpression,
-		//                                Expression)))))),
-
-		//            new Optional(Dedentation)
-		//    )));
 
 		private static Rule KeysSearch = new Sequence(
 			new Assignment(CodeKeys.Search,
@@ -3979,7 +3874,7 @@ new Alternatives(
 					})));
 
 		public static Rule DiscardStatement = new Sequence(
-			new Assignment(CodeKeys.Discard, new LiteralRule(new Map("literal", "asdf"))),
+			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())),
 			new Assignment(CodeKeys.Value, Expression),
 			new Optional(EndOfLine));
 
@@ -4001,33 +3896,28 @@ new Alternatives(
 											new Assignment(CodeKeys.Expression,Expression),
 										new Optional(EndOfLine)
 			)))))))));
-		public static Rule SimpleProgram =
-			new Sequence(
+
+		public static Rule AllStatements=new Alternatives(
+			CurrentStatement,
+			NormalStatement,
+			Statement,
+			DiscardStatement);
+
+		public static Rule Program = new Sequence(
+				Syntax.programStart,
+				EndOfLine,
+				SmallIndentation,
+				new ReferenceAssignment(new Sequence(
 					new Assignment(CodeKeys.Program,
 						new Sequence(
-							EndOfLine,
-							SmallIndentation,
 							new ReferenceAssignment(
 								new OneOrMore(
 										new Autokey(
 										new Sequence(
-											new Alternatives(
-												SameIndentation,
-												Dedentation),
-											new ReferenceAssignment(new Alternatives(CurrentStatement, NormalStatement, Statement, DiscardStatement)))))))));
+											SameIndentation,
+											new ReferenceAssignment(AllStatements))))))),
+							Dedentation)));
 
-		public static Rule Program = new PrePost(
-			delegate(Parser p)
-			{
-				callIndent.Push(p.indentationCount);
-			},
-			new Sequence(
-				Syntax.programStart,
-				new ReferenceAssignment(SimpleProgram)),
-					delegate(Parser p)
-					{
-						p.indentationCount = callIndent.Pop();
-					});
 		public abstract class Action
 		{
 			public static implicit operator Action(char c)
@@ -4343,11 +4233,14 @@ new Alternatives(
 				bool success = true;
 				foreach (Action action in actions)
 				{
-					bool matched = action.Execute(parser, ref result);
-					if (!matched)
+					if (action != null)
 					{
-						success = false;
-						break;
+						bool matched = action.Execute(parser, ref result);
+						if (!matched)
+						{
+							success = false;
+							break;
+						}
 					}
 				}
 				if (!success)
