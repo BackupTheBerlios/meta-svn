@@ -114,11 +114,9 @@ commandLine|{
 	commandLineArguments=!"commandLine"
 	aMap={
 		a="a"
-	!"aMap"="Object"
 	"normal symbol"="NormalSymbol"
 	lookupSymbol="LookupSymbol"
 	"long key symbol"="LookupExtendedSymbol"
-	lookedUpMap=!aMap
 	lookedUpNormalSymbol=!"normal symbol"
 	lookedUpSymbol=!"lookupSymbol"
 	lookedUpLongSymbol=!"long key symbol"
@@ -217,7 +215,6 @@ commandLine|{
 	boolTest=TestClass.boolTest
 	MemberTest=/.Meta.MemberTest
 	memberTest=!"MemberTest"(0
-	!"memberTest"="memberKeyTest"
 	stringOverload=MemberTest.OverloadedMethod_String(
 		"hello"
 	integerOverload=MemberTest.OverloadedMethod_Int32(

@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta.csproj", "{4218F150-9C03-4E68-9C00-89A8AFF0062C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edit", "Edit\Edit.csproj", "{B6144538-0707-4697-A807-6FBC538CC527}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,10 +12,6 @@ Global
 		{4218F150-9C03-4E68-9C00-89A8AFF0062C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4218F150-9C03-4E68-9C00-89A8AFF0062C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4218F150-9C03-4E68-9C00-89A8AFF0062C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6144538-0707-4697-A807-6FBC538CC527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6144538-0707-4697-A807-6FBC538CC527}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6144538-0707-4697-A807-6FBC538CC527}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6144538-0707-4697-A807-6FBC538CC527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

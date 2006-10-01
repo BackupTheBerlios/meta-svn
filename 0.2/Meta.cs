@@ -140,7 +140,7 @@ namespace Meta
 								}
 								else
 								{
-									arguments.Add(Transform.ToDotNet(arg,method.parameters[i-1].ParameterType));
+									arguments.Add(Transform.ToDotNet(arg.Copy(),method.parameters[i-1].ParameterType));
 								}
 							}
 							return (Map)method.method.Invoke(null, arguments.ToArray());
@@ -299,6 +299,7 @@ namespace Meta
 			}
 			else
 			{
+				FindStuff(out count, out key, out value);
 				return new CompiledSearch(expression.Compile(this), Source);
 			}
 		}
@@ -644,8 +645,9 @@ namespace Meta
 				{
 				    val = new Unknown();
 				}
+				//previous[k] = val;
+				// shouldn't work that way, but bug in SearchStatement, somehow
 				previous[k] = new Unknown();
-				//previous[k] = new Unknown();
 				return previous;
 			}
 			return null;
@@ -653,7 +655,7 @@ namespace Meta
 		public override CompiledStatement Compile()
 		{
 			Map k=key.EvaluateStructure();
-			if (k != null && k.Equals(CodeKeys.Function))
+			if (k != null && k.Equals(CodeKeys.Function) && program.statementList.Count==1)
 			{
 				if (value is Literal)
 				{
