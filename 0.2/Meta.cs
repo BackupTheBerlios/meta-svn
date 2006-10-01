@@ -647,7 +647,14 @@ namespace Meta
 				}
 				//previous[k] = val;
 				// shouldn't work that way, but bug in SearchStatement, somehow
-				previous[k] = new Unknown();
+				//if (value is Program)
+				//{
+				//    previous[k] = val;
+				//}
+				//else
+				//{
+					previous[k] = new Unknown();
+				//}
 				return previous;
 			}
 			return null;

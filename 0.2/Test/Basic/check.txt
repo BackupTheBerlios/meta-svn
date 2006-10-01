@@ -352,15 +352,6 @@ Entry (KeyValuePair`2)
 				"a"
 Entry (KeyValuePair`2)
 	Key (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"a"
-			Value (Map):
-				"a"
-	Value (Map):
-		"Object"
-Entry (KeyValuePair`2)
-	Key (Map):
 		"normal symbol"
 	Value (Map):
 		"NormalSymbol"
@@ -374,11 +365,6 @@ Entry (KeyValuePair`2)
 		"long key symbol"
 	Value (Map):
 		"LookupExtendedSymbol"
-Entry (KeyValuePair`2)
-	Key (Map):
-		"lookedUpMap"
-	Value (Map):
-		"Object"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"lookedUpNormalSymbol"
@@ -1380,11 +1366,6 @@ Entry (KeyValuePair`2)
 		"memberTest"
 	Value (Map):
 		Meta.Test.TestClasses.MemberTest
-Entry (KeyValuePair`2)
-	Key (Map):
-		Meta.Test.TestClasses.MemberTest
-	Value (Map):
-		"memberKeyTest"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"stringOverload"
@@ -3073,7 +3054,7 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"x"
 			Value (Map):
-				"y"
+				"changed"
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"z"
