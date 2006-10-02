@@ -76,7 +76,6 @@ namespace IDE
 			BindKey(EditingCommands.SelectToLineStart, Key.U, ModifierKeys.Alt | ModifierKeys.Shift);
 			BindKey(EditingCommands.SelectUpByLine, Key.L, ModifierKeys.Alt | ModifierKeys.Shift);
 			BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
-
 			InitializeComponent();
 			textBox.FontSize = 16;
 			textBox.FontFamily = new FontFamily("Courier New");
