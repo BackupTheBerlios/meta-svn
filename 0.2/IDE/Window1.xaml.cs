@@ -17,15 +17,10 @@ using System.Diagnostics;
 
 namespace IDE
 {
-	/// <summary>
-	/// Interaction logic for Window1.xaml
-	/// </summary>
-
 	public partial class Window1 : System.Windows.Window
 	{
 		public static KeyboardDevice keyboard;
 		TextBox textBox = new TextBox();
-
 		private void Save()
 		{
 			if (fileName == "")
@@ -51,7 +46,9 @@ namespace IDE
 			fileName = file;
 			textBox.Text = File.ReadAllText(fileName);
 		}
-		public ComboBox intellisense = new ComboBox();
+		public ListBox intellisense = new ListBox();
+		Menu menu = new Menu();
+
 		public Window1()
 		{
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
@@ -120,13 +117,19 @@ namespace IDE
 						{
 							if (list[i] is Search)
 							{
-								Canvas.SetLeft(intellisense,textBox.get
+								Rect r=textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
+								Canvas.SetLeft(intellisense, r.Right);
+								Canvas.SetTop(intellisense, r.Bottom);//+(double)menu.GetValue(FrameworkElement.HeightProperty));
 								intellisense.Items.Clear();
-								foreach (Map m in list[i].EvaluateStructure().Keys)
+								intellisense.Visibility = Visibility.Visible;
+								Map s = list[i].EvaluateStructure();
+								if (s != null)
 								{
-									intellisense.Items.Add(m.ToString());
+									foreach (Map m in s.Keys)
+									{
+										intellisense.Items.Add(m.ToString());
+									}
 								}
-								//MessageBox.Show(list[i].EvaluateStructure().ToString());
 							}
 						}
 					}
@@ -137,7 +140,6 @@ namespace IDE
 				}
 			};
 			DockPanel panel = new DockPanel();
-			Menu menu = new Menu();
 			menu.SetValue(DockPanel.DockProperty, Dock.Top);
 			textBox.SetValue(DockPanel.DockProperty, Dock.Bottom);
 
@@ -176,18 +178,24 @@ namespace IDE
 			};
 			menu.Items.Add(file);
 			panel.Children.Add(menu);
-			panel.Children.Add(textBox);
 			Canvas canvas = new Canvas();
-			canvas.Children.Add(intellisense);
+			panel.Children.Add(canvas);
+			canvas.Children.Add(textBox);
+			Canvas.SetZIndex(intellisense, 100);
+			//intellisense.Items.Add("hello");
 			canvas.Background = Brushes.Yellow;
 			DockPanel.SetDock(canvas, Dock.Top);
 			canvas.SizeChanged += delegate
 			{
-				panel.SetValue(FrameworkElement.HeightProperty, canvas.ActualHeight);
-				panel.SetValue(FrameworkElement.WidthProperty, canvas.ActualWidth);
+				textBox.SetValue(FrameworkElement.HeightProperty, canvas.ActualHeight);
+				textBox.SetValue(FrameworkElement.WidthProperty, canvas.ActualWidth);
 			};
-			canvas.Children.Add(panel);
-			this.Content = canvas;
+			//canvas.Children.Add(panel);
+			intellisense.Visibility = Visibility.Hidden;
+			//Canvas.SetLeft(panel, 0);
+			//Canvas.SetTop(panel, 0);
+			canvas.Children.Add(intellisense);
+			this.Content = panel;
 		}
 	}
 }
