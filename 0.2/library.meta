@@ -56,8 +56,14 @@
 			greaterOrEqual=Number.op_GreaterThanOrEqual_Number_Number
 			lessOrEqual=Number.op_LessThanOrEqual_Number_Number
 			addArray=a?b?Map(keys(a),key?add(a.<key>,b.<key>))
-			LengthVector=vector?raise(add(raise(vector.1,2),raise(vector.2,2)),1/2)
-			DifferenceVector=a?b?Map(keys(a),key?Difference(a.<key>,b.<key
+			LengthVector=vector?raise(
+				add(
+					raise(vector.1,2
+					raise(vector.2,2
+				1/2
+			DifferenceVector=a?b?Map(
+				keys(a
+				key?Difference(a.<key>,b.<key>
 			maximum=a?b?{
 				stuff={
 					1=a

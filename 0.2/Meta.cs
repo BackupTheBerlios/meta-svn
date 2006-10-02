@@ -235,6 +235,7 @@ namespace Meta
 				}
 				catch (MetaException e)
 				{
+					e.InvocationList.Add(new ExceptionLog(Source.start));
 					throw e;
 				}
 				catch (Exception e)
@@ -366,6 +367,7 @@ namespace Meta
 				int difference = 0;
 				if (!selected.ContainsKey(key))
 				{
+					selected = context;
 					while (!selected.ContainsKey(key))
 					{
 						selected = selected.Scope;
@@ -1054,7 +1056,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
