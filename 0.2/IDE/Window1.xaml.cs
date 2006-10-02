@@ -46,22 +46,57 @@ namespace IDE
 			fileName = file;
 			textBox.Text = File.ReadAllText(fileName);
 		}
-		public ListBox intellisense = new ListBox();
+		public static ListBox intellisense = new ListBox();
 		Menu menu = new Menu();
 
+		public static bool Intellisense
+		{
+			get
+			{
+				return intellisense.Visibility == Visibility.Visible;
+			}
+		}
+		public void IntellisenseUp()
+		{
+			if (intellisense.SelectedIndex != 0)
+			{
+				intellisense.SelectedIndex--;
+			}
+		}
+		public void IntellisenseDown()
+		{
+			if (intellisense.SelectedIndex<intellisense.Items.Count-1)
+			{
+				intellisense.SelectedIndex++;
+			}
+		}
+		public void Complete()
+		{
+			if (intellisense.SelectedItem != null)
+			{
+				int index = textBox.SelectionStart;
+				textBox.SelectionStart = textBox.Text.LastIndexOf('.', textBox.SelectionStart)+1;
+				textBox.SelectionLength = index-textBox.SelectionStart;
+				textBox.SelectedText = (string)intellisense.SelectedItem;
+				intellisense.Visibility = Visibility.Hidden;
+				textBox.SelectionStart += textBox.SelectionLength;
+				textBox.SelectionLength = 0;
+			}
+		}
+		string search = "";
 		public Window1()
 		{
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
 			BindKey(EditingCommands.Delete, Key.M, ModifierKeys.Alt);
-			BindKey(EditingCommands.DeleteNextWord, Key.M, ModifierKeys.Alt|ModifierKeys.Control);
-			BindKey(EditingCommands.DeletePreviousWord, Key.N, ModifierKeys.Alt|ModifierKeys.Control);
-			BindKey(EditingCommands.MoveDownByLine,Key.K, ModifierKeys.Alt);
-			BindKey(EditingCommands.MoveDownByPage, Key.K, ModifierKeys.Alt|ModifierKeys.Control);
+			BindKey(EditingCommands.DeleteNextWord, Key.M, ModifierKeys.Alt | ModifierKeys.Control);
+			BindKey(EditingCommands.DeletePreviousWord, Key.N, ModifierKeys.Alt | ModifierKeys.Control);
+			BindKey(EditingCommands.MoveDownByLine, Key.K, ModifierKeys.Alt);
+			BindKey(EditingCommands.MoveDownByPage, Key.K, ModifierKeys.Alt | ModifierKeys.Control);
 			BindKey(EditingCommands.MoveLeftByCharacter, Key.J, ModifierKeys.Alt);
 			BindKey(EditingCommands.MoveRightByCharacter, Key.Oem3, ModifierKeys.Alt);
 			BindKey(EditingCommands.MoveUpByLine, Key.L, ModifierKeys.Alt);
-			BindKey(EditingCommands.MoveLeftByWord, Key.J, ModifierKeys.Alt|ModifierKeys.Control);
-			BindKey(EditingCommands.MoveRightByWord, Key.M, ModifierKeys.Alt|ModifierKeys.Control);
+			BindKey(EditingCommands.MoveLeftByWord, Key.J, ModifierKeys.Alt | ModifierKeys.Control);
+			BindKey(EditingCommands.MoveRightByWord, Key.M, ModifierKeys.Alt | ModifierKeys.Control);
 			BindKey(EditingCommands.MoveToDocumentEnd, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Control);
 			BindKey(EditingCommands.MoveToDocumentStart, Key.U, ModifierKeys.Alt | ModifierKeys.Control);
 			BindKey(EditingCommands.MoveToLineEnd, Key.Oem1, ModifierKeys.Alt);
@@ -82,60 +117,176 @@ namespace IDE
 			InitializeComponent();
 			textBox.FontSize = 16;
 			textBox.FontFamily = new FontFamily("Courier New");
-			textBox.AcceptsTab = true;
-			textBox.KeyDown += delegate(object sender, KeyEventArgs e)
+			//textBox.AcceptsTab = true;
+			intellisense.MouseDoubleClick += delegate
+			{
+				Complete();
+			};
+			intellisense.KeyDown += delegate(object sender, KeyEventArgs e)
+			{
+				if (e.Key == Key.Enter)
+				{
+					Complete();
+				}
+			};
+			textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e)
+			{
+				if (Intellisense)
+				{
+					if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt)
+					{
+						if (e.Key == Key.L)
+						{
+							IntellisenseUp();
+							e.Handled = true;
+							return;
+						}
+						else if (e.Key == Key.K)
+						{
+							IntellisenseDown();
+							e.Handled = true;
+							return;
+						}
+					}
+					else if (e.Key == Key.Up)
+					{
+						IntellisenseUp();
+						e.Handled = true;
+						return;
+					}
+					else if (e.Key == Key.Down)
+					{
+						IntellisenseDown();
+						e.Handled = true;
+						return;
+					}
+					//int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+					//if (index != -1)
+					//{
+					//    string text=textBox.Text.Substring(index+1, textBox.SelectionStart - index);
+					//    foreach (ListViewItem item in intellisense.Items)
+					//    {
+					//        if (((string)item.Content).StartsWith(text))
+					//        {
+					//            intellisense.SelectedItem = item;
+					//            break;
+					//        }
+					//    }
+					//}
+				}
+			};
+			textBox.KeyUp += delegate(object sender, KeyEventArgs e)
+			{
+				if (Intellisense)
+				{
+					int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+					if (index != -1)
+					{
+						string text = textBox.Text.Substring(index+1, textBox.SelectionStart - index-1);
+						foreach (string item in intellisense.Items)
+						{
+							if (item.StartsWith(text))
+							{
+								intellisense.SelectedItem = item;
+								break;
+							}
+						}
+					}
+				}
+			};
+			textBox.KeyDown += delegate(object obj, KeyEventArgs e)
 			{
 				keyboard = e.KeyboardDevice;
 				if (e.Key == Key.Return)
 				{
-					string line=textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
-					textBox.SelectedText = "\n".PadRight(1+line.Length - line.TrimStart('\t').Length, '\t');
+					string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
+					textBox.SelectedText = "\n".PadRight(1 + line.Length - line.TrimStart('\t').Length, '\t');
 					textBox.SelectionStart = textBox.SelectionStart + textBox.SelectionLength;
 					textBox.SelectionLength = 0;
+					textBox.Focus();
+				}
+				else if (e.Key == Key.Escape)
+				{
+					if (Intellisense)
+					{
+						intellisense.Visibility = Visibility.Hidden;
+					}
+				}
+				else if (e.Key == Key.Tab)
+				{
+					if (Intellisense)
+					{
+						Complete();
+						e.Handled = true;
+					}
+					else
+					{
+						EditingCommands.IncreaseIndentation.Execute(null, textBox);
+						//e.Handled = true; ;
+					}
+				}
+				else if (e.Key == Key.Return && Intellisense)
+				{
+					Complete();
+					e.Handled = true;
 				}
 				else if (e.Key == Key.OemPeriod)
 				{
-					string text=textBox.Text.Substring(0, textBox.SelectionStart);
+					search = "";
+					string text = textBox.Text.Substring(0, textBox.SelectionStart);
 					Interpreter.profiling = false;
 					Parser parser = new Parser(text, fileName);
 					bool matched;
-					Map map=Parser.File.Match(parser, out matched);
+					Map map = Parser.File.Match(parser, out matched);
 					LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 					LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 					lib.Statement = new LiteralStatement(gac);
 					KeyStatement.intellisense = true;
 					map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 					map[CodeKeys.Function].Compile(lib);
-					Source key=new Source(
+					Source key = new Source(
 						parser.Line,
 						parser.Column,
 						parser.FileName);
 					if (Meta.Expression.sources.ContainsKey(key))
 					{
-						List<Meta.Expression> list=Meta.Expression.sources[key];
-						for (int i = 0; i < list.Count;i++)
+						List<Meta.Expression> list = Meta.Expression.sources[key];
+						for (int i = 0; i < list.Count; i++)
 						{
 							if (list[i] is Search)
 							{
-								Rect r=textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
+								Rect r = textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
 								Canvas.SetLeft(intellisense, r.Right);
 								Canvas.SetTop(intellisense, r.Bottom);//+(double)menu.GetValue(FrameworkElement.HeightProperty));
 								intellisense.Items.Clear();
 								intellisense.Visibility = Visibility.Visible;
 								Map s = list[i].EvaluateStructure();
+								List<string> keys = new List<string>();
 								if (s != null)
 								{
 									foreach (Map m in s.Keys)
 									{
-										intellisense.Items.Add(m.ToString());
+										keys.Add(m.ToString());
 									}
+								}
+								keys.Sort(delegate(string a, string b)
+								{
+									return a.CompareTo(b);
+								});
+								foreach (string k in keys)
+								{
+									intellisense.Items.Add(k);
+								}
+								if (intellisense.Items.Count != 0)
+								{
+									intellisense.SelectedIndex = 0;
 								}
 							}
 						}
 					}
 					else
 					{
-						MessageBox.Show("no intellisense"+Meta.Expression.sources.Count);
+						MessageBox.Show("no intellisense" + Meta.Expression.sources.Count);
 					}
 				}
 			};
@@ -143,10 +294,10 @@ namespace IDE
 			menu.SetValue(DockPanel.DockProperty, Dock.Top);
 			textBox.SetValue(DockPanel.DockProperty, Dock.Bottom);
 
-			MenuItem file =new MenuItem();
+			MenuItem file = new MenuItem();
 
-			MenuItem save=new MenuItem();
-			MenuItem run=new MenuItem();
+			MenuItem save = new MenuItem();
+			MenuItem run = new MenuItem();
 			MenuItem open = new MenuItem();
 			run.Header = "Run";
 			save.Header = "Save";
@@ -162,7 +313,7 @@ namespace IDE
 			open.Click += delegate
 			{
 				OpenFileDialog dialog = new OpenFileDialog();
-				if (dialog.ShowDialog()==true)
+				if (dialog.ShowDialog() == true)
 				{
 					Open(dialog.FileName);
 				}
@@ -182,7 +333,6 @@ namespace IDE
 			panel.Children.Add(canvas);
 			canvas.Children.Add(textBox);
 			Canvas.SetZIndex(intellisense, 100);
-			//intellisense.Items.Add("hello");
 			canvas.Background = Brushes.Yellow;
 			DockPanel.SetDock(canvas, Dock.Top);
 			canvas.SizeChanged += delegate
@@ -190,10 +340,7 @@ namespace IDE
 				textBox.SetValue(FrameworkElement.HeightProperty, canvas.ActualHeight);
 				textBox.SetValue(FrameworkElement.WidthProperty, canvas.ActualWidth);
 			};
-			//canvas.Children.Add(panel);
 			intellisense.Visibility = Visibility.Hidden;
-			//Canvas.SetLeft(panel, 0);
-			//Canvas.SetTop(panel, 0);
 			canvas.Children.Add(intellisense);
 			this.Content = panel;
 		}
