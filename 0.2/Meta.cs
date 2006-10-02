@@ -44,6 +44,9 @@ namespace Meta
 		public Extent Source;
 		public Compiled(Extent source)
 		{
+			if (source == null || source.end == null)
+			{
+			}
 			this.Source = source;
 		}
 		public Map Evaluate(Map context)
@@ -60,6 +63,9 @@ namespace Meta
 		public Statement Statement;
 		public Expression(Extent source,Expression parent)
 		{
+			if (source == null)
+			{
+			}
 			this.Source = source;
 			this.Parent = parent;
 		}
@@ -74,7 +80,17 @@ namespace Meta
 			return structure;
 		}
 		public abstract Map StructureImplementation();
-		public abstract Compiled Compile(Expression parent);
+		public Compiled Compile(Expression parent)
+		{
+			Compiled result=CompileImplementation(parent);
+			if (result.Source != null)
+			{
+				sources[result.Source.end] = result;
+			}
+			return result;
+		}
+		public static Dictionary<Source, Compiled> sources = new Dictionary<Source, Compiled>();
+		public abstract Compiled CompileImplementation(Expression parent);
 	}
 	public class LastArgument : Expression
 	{
@@ -86,7 +102,7 @@ namespace Meta
 		{
 			return null;
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledLastArgument(Source);
 		}
@@ -170,7 +186,7 @@ namespace Meta
 		//    }
 		//    return null;
 		//}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e)
 			{
@@ -281,7 +297,7 @@ namespace Meta
 		{
 			this.expression = code.GetExpression(this);
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			int count;
 			Map key;
@@ -415,7 +431,7 @@ namespace Meta
 			return statementList[statementList.Count - 1].Current();
 			//return null;
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledProgram(statementList.ConvertAll < CompiledStatement >( delegate(Statement s)
 			{
@@ -775,7 +791,7 @@ namespace Meta
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledLiteral(literal,Source);
 		}
@@ -813,7 +829,7 @@ namespace Meta
 			: base(code.Source,parent)
 		{
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledRoot(Source);
 		}
@@ -865,7 +881,7 @@ namespace Meta
 			//}
 			//return selected;
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledSelect(subs.ConvertAll<Compiled>(delegate(Expression e)
 			{
@@ -5473,7 +5489,7 @@ namespace Meta
 		{
 			return literal;
 		}
-		public override Compiled Compile(Expression parent)
+		public override Compiled CompileImplementation(Expression parent)
 		{
 			throw new Exception("The method or operation is not implemented.");
 		}
