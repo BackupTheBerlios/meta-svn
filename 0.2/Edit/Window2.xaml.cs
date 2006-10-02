@@ -22,6 +22,7 @@ namespace Edit
 		public Window2()
 		{
 			DockPanel p=null;
+			StackPanel a;
 			MenuItem m;
 			//Label l=new Label();
 			TextBox t=new TextBox();

@@ -37,7 +37,7 @@
 			parse=Parser.Parse_String
 			toString=Serialization.Serialize_Map
 			writeLine=?{
-				/.mscorlib.Console.WriteLine_String(@
+				Library.WriteLine_String(@
 				&@
 			join=Library.Join_Map_Map
 			range=Library.Range_Map

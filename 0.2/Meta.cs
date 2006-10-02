@@ -993,15 +993,18 @@ namespace Meta
 		public static bool useConsole = false;
 		public static void UseConsole()
 		{
-			AllocConsole();
+			if (!useConsole)
+			{
+				AllocConsole();
+				Console.SetBufferSize(80, 1000);
+			}
 			useConsole = true;
-			Console.SetBufferSize(80, 1000);
 		}
 		public static string InstallationPath
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
@@ -3081,8 +3084,15 @@ namespace Meta
 						{
 							assembly = Assembly.LoadWithPartialName(key.GetString());
 						}
-						value = LoadAssembly(assembly);
-						cache[key] = value;
+						if (assembly != null)
+						{
+							value = LoadAssembly(assembly);
+							cache[key] = value;
+						}
+						else
+						{
+							value = null;
+						}
 					}
 					catch (Exception e)
 					{
@@ -5110,6 +5120,11 @@ namespace Meta
 		public static Map Double(Map d)
 		{
 			return new Map((object)(float)d.GetNumber().GetDouble());
+		}
+		public static void WriteLine(string s)
+		{
+			//Interpreter.UseConsole();
+			Console.WriteLine(s);
 		}
 		private static Random random = new Random();
 		public static Map Random(int max)
