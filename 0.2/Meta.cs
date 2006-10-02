@@ -408,7 +408,7 @@ namespace Meta
 				//else
 				//{
 				//}
-				return selected[key];
+				return selected[key].Copy();
 			}
 			catch (Exception e)
 			{
@@ -5477,6 +5477,9 @@ namespace Meta
 		[Compilable]
 		public static Map Merge(Map arg, Map map)
 		{
+			if (map.ContainsKey("x"))
+			{
+			}
 			foreach (KeyValuePair<Map, Map> pair in map)
 			{
 				arg[pair.Key] = pair.Value;
