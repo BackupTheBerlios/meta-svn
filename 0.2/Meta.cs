@@ -357,38 +357,49 @@ namespace Meta
 		{
 			Map selected = context;
 
-			for (int i = 0; i < count; i++)
+			try
 			{
-				selected = selected.Scope;
-			}
-			int difference = 0;
-			if (!selected.ContainsKey(key))
-			{
-				while (!selected.ContainsKey(key))
+				for (int i = 0; i < count; i++)
 				{
 					selected = selected.Scope;
-					difference++;
 				}
+				int difference = 0;
+				if (!selected.ContainsKey(key))
+				{
+					while (!selected.ContainsKey(key))
+					{
+						selected = selected.Scope;
+						difference++;
+						if (selected == null)
+						{
+							throw new KeyNotFound(key, Source.start, null);
+						}
+					}
+				}
+				if (difference != 0)
+				{
+					if (difference == 1)
+					{
+					}
+					if (difference == 2)
+					{
+					}
+					if (difference == 3)
+					{
+					}
+					if (difference == 4)
+					{
+					}
+				}
+				else
+				{
+				}
+				return selected[key];
 			}
-			if (difference != 0)
+			catch (Exception e)
 			{
-				if (difference == 1)
-				{
-				}
-				if (difference == 2)
-				{
-				}
-				if (difference == 3)
-				{
-				}
-				if (difference == 4)
-				{
-				}
+				throw e;
 			}
-			else
-			{
-			}
-			return selected[key];
 		}
 	}
 	public class OptimizedSearch : Compiled
