@@ -84,6 +84,7 @@ namespace IDE
 			}
 		}
 		string search = "";
+		int searchStart = 0;
 		public Window1()
 		{
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
@@ -117,7 +118,9 @@ namespace IDE
 			InitializeComponent();
 			textBox.FontSize = 16;
 			textBox.FontFamily = new FontFamily("Courier New");
-			//textBox.AcceptsTab = true;
+			textBox.AcceptsTab = true;
+			textBox.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+			textBox.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 			intellisense.MouseDoubleClick += delegate
 			{
 				Complete();
@@ -147,6 +150,21 @@ namespace IDE
 							e.Handled = true;
 							return;
 						}
+					}
+					else if (e.Key == Key.Tab)
+					{
+						if (Intellisense)
+						{
+							Complete();
+							e.Handled = true;
+							return;
+						}
+						//else
+						//{
+						//    textBox.SelectionLength = 1;
+						//    EditingCommands.IncreaseIndentation.Execute(null, textBox);
+						//    e.Handled = true; ;
+						//}
 					}
 					else if (e.Key == Key.Up)
 					{
@@ -179,16 +197,23 @@ namespace IDE
 			{
 				if (Intellisense)
 				{
-					int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
-					if (index != -1)
+					if (textBox.SelectionStart <= searchStart && e.Key!=Key.OemPeriod)
 					{
-						string text = textBox.Text.Substring(index+1, textBox.SelectionStart - index-1);
-						foreach (string item in intellisense.Items)
+						intellisense.Visibility = Visibility.Hidden;
+					}
+					else
+					{
+						int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+						if (index != -1)
 						{
-							if (item.StartsWith(text))
+							string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
+							foreach (string item in intellisense.Items)
 							{
-								intellisense.SelectedItem = item;
-								break;
+								if (item.StartsWith(text))
+								{
+									intellisense.SelectedItem = item;
+									break;
+								}
 							}
 						}
 					}
@@ -212,19 +237,6 @@ namespace IDE
 						intellisense.Visibility = Visibility.Hidden;
 					}
 				}
-				else if (e.Key == Key.Tab)
-				{
-					if (Intellisense)
-					{
-						Complete();
-						e.Handled = true;
-					}
-					else
-					{
-						EditingCommands.IncreaseIndentation.Execute(null, textBox);
-						//e.Handled = true; ;
-					}
-				}
 				else if (e.Key == Key.Return && Intellisense)
 				{
 					Complete();
@@ -234,6 +246,7 @@ namespace IDE
 				{
 					search = "";
 					string text = textBox.Text.Substring(0, textBox.SelectionStart);
+					searchStart = textBox.SelectionStart;
 					Interpreter.profiling = false;
 					Parser parser = new Parser(text, fileName);
 					bool matched;
@@ -304,11 +317,13 @@ namespace IDE
 			file.Header = "File";
 			open.Header = "Open";
 			file.Items.Add(open);
+			textBox.TextChanged += new TextChangedEventHandler(textBox_TextChanged);
+			textBox.TextInput += new TextCompositionEventHandler(textBox_TextInput);
 			file.Items.Add(save);
 			file.Items.Add(run);
 			this.Loaded += delegate
 			{
-				Open(@"C:\test.meta");
+				Open(@"C:\meta\0.2\basicTest.meta");
 			};
 			open.Click += delegate
 			{
@@ -343,6 +358,14 @@ namespace IDE
 			intellisense.Visibility = Visibility.Hidden;
 			canvas.Children.Add(intellisense);
 			this.Content = panel;
+		}
+
+		void textBox_TextInput(object sender, TextCompositionEventArgs e)
+		{
+		}
+
+		void textBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
 		}
 	}
 }

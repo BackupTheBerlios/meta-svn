@@ -5745,7 +5745,11 @@ namespace Meta
 		}
 		public override string ToString()
 		{
-			if (IsString)
+			if (Count == 0)
+			{
+				return "0";
+			}
+			else if (IsString)
 			{
 				return GetString();
 			}
