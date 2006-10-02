@@ -63,9 +63,6 @@ namespace Meta
 		public Statement Statement;
 		public Expression(Extent source,Expression parent)
 		{
-			if (source == null)
-			{
-			}
 			this.Source = source;
 			this.Parent = parent;
 		}
@@ -76,6 +73,27 @@ namespace Meta
 			if (!evaluated)
 			{
 				structure = StructureImplementation();
+				if (Source != null)
+				{
+					//Expression old;
+					//if (sources.TryGetValue(Source.end, out old))
+					//{
+					//    if (old is Literal)
+					//    {
+					//        sources[Source.end] = this;
+					//    }
+					//}
+					//sources[Source.end] = this;
+					//if (Source.end.FileName.Contains("test.meta"))
+					//{
+					//}
+					//if (!sources.ContainsKey(Source.end))
+					//{
+					//    sources[Source.end] = new List<Expression>();
+					//}
+					//sources[Source.end].Add(this);
+				}
+				evaluated = true;
 			}
 			return structure;
 		}
@@ -83,13 +101,18 @@ namespace Meta
 		public Compiled Compile(Expression parent)
 		{
 			Compiled result=CompileImplementation(parent);
-			if (result.Source != null)
+			if (Source != null)
 			{
-				sources[result.Source.end] = result;
+				if (!sources.ContainsKey(Source.end))
+				{
+					sources[Source.end] = new List<Expression>();
+				}
+				sources[Source.end].Add(this);
 			}
 			return result;
 		}
-		public static Dictionary<Source, Compiled> sources = new Dictionary<Source, Compiled>();
+		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
+		//public static Dictionary<Source, List<Compiled>> sources = new Dictionary<Source, List<Compiled>>();
 		public abstract Compiled CompileImplementation(Expression parent);
 	}
 	public class LastArgument : Expression
@@ -642,6 +665,7 @@ namespace Meta
 	}
 	public class KeyStatement : Statement
 	{
+		public static bool intellisense = false;
 		public override bool DoesNotAddKey(Map key)
 		{
 			Map k=this.key.EvaluateStructure();
@@ -662,7 +686,7 @@ namespace Meta
 				    val = new Unknown();
 				}
 				// not general enough
-				if (value is Search)
+				if (value is Search ||(intellisense && ( value is Literal || value is Program)))
 				{
 				    previous[k] = val;
 				}
@@ -1019,7 +1043,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}

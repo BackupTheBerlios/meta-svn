@@ -46,6 +46,12 @@ namespace IDE
 		{
 			command.InputGestures.Add(new KeyGesture(key,modifiers));
 		}
+		public void Open(string file)
+		{
+			fileName = file;
+			textBox.Text = File.ReadAllText(fileName);
+		}
+		public ComboBox intellisense = new ComboBox();
 		public Window1()
 		{
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
@@ -93,28 +99,42 @@ namespace IDE
 				else if (e.Key == Key.OemPeriod)
 				{
 					string text=textBox.Text.Substring(0, textBox.SelectionStart);
-					//Interpreter.profiling = false;
-					//Map map=Parser.ParseString(text, fileName);
-					
-					//LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-					//LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
-					//lib.Statement = new LiteralStatement(gac);
-					//callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
-					//callable[CodeKeys.Function].Compile(lib);
-					//MessageBox.Show(map.ToString());
+					Interpreter.profiling = false;
+					Parser parser = new Parser(text, fileName);
+					bool matched;
+					Map map=Parser.File.Match(parser, out matched);
+					LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+					LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
+					lib.Statement = new LiteralStatement(gac);
+					KeyStatement.intellisense = true;
+					map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
+					map[CodeKeys.Function].Compile(lib);
+					Source key=new Source(
+						parser.Line,
+						parser.Column,
+						parser.FileName);
+					if (Meta.Expression.sources.ContainsKey(key))
+					{
+						List<Meta.Expression> list=Meta.Expression.sources[key];
+						for (int i = 0; i < list.Count;i++)
+						{
+							if (list[i] is Search)
+							{
+								Canvas.SetLeft(intellisense,textBox.get
+								intellisense.Items.Clear();
+								foreach (Map m in list[i].EvaluateStructure().Keys)
+								{
+									intellisense.Items.Add(m.ToString());
+								}
+								//MessageBox.Show(list[i].EvaluateStructure().ToString());
+							}
+						}
+					}
+					else
+					{
+						MessageBox.Show("no intellisense"+Meta.Expression.sources.Count);
+					}
 				}
-				//else if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt)
-				//{
-
-				//    if (e.Key == Key.L || e.SystemKey==Key.L)
-				//    {
-				//        //KeyEventArgs k = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp+10, Key.U);
-				//        //textBox.Do(e);
-				//        EditingCommands.MoveUpByLine.Execute(null, textBox);
-						
-				//        //textBox.LineUp();
-				//    }
-				//}
 			};
 			DockPanel panel = new DockPanel();
 			Menu menu = new Menu();
@@ -130,16 +150,19 @@ namespace IDE
 			save.Header = "Save";
 			file.Header = "File";
 			open.Header = "Open";
+			file.Items.Add(open);
 			file.Items.Add(save);
 			file.Items.Add(run);
-			file.Items.Add(open);
+			this.Loaded += delegate
+			{
+				Open(@"C:\test.meta");
+			};
 			open.Click += delegate
 			{
 				OpenFileDialog dialog = new OpenFileDialog();
 				if (dialog.ShowDialog()==true)
 				{
-					fileName = dialog.FileName;
-					textBox.Text = File.ReadAllText(fileName);
+					Open(dialog.FileName);
 				}
 			};
 			run.Click += delegate
@@ -154,9 +177,17 @@ namespace IDE
 			menu.Items.Add(file);
 			panel.Children.Add(menu);
 			panel.Children.Add(textBox);
-			this.Content = panel;
+			Canvas canvas = new Canvas();
+			canvas.Children.Add(intellisense);
+			canvas.Background = Brushes.Yellow;
+			DockPanel.SetDock(canvas, Dock.Top);
+			canvas.SizeChanged += delegate
+			{
+				panel.SetValue(FrameworkElement.HeightProperty, canvas.ActualHeight);
+				panel.SetValue(FrameworkElement.WidthProperty, canvas.ActualWidth);
+			};
+			canvas.Children.Add(panel);
+			this.Content = canvas;
 		}
-
-
 	}
 }
