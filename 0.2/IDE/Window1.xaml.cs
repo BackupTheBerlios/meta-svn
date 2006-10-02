@@ -58,7 +58,7 @@ namespace IDE
 		}
 		public void IntellisenseUp()
 		{
-			if (intellisense.SelectedIndex != 0)
+			if (intellisense.SelectedIndex > 0)
 			{
 				intellisense.SelectedIndex--;
 			}
@@ -85,6 +85,12 @@ namespace IDE
 		}
 		string search = "";
 		int searchStart = 0;
+		public void PositionIntellisense()
+		{
+			Rect r = textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
+			Canvas.SetLeft(intellisense, r.Right);
+			Canvas.SetTop(intellisense, r.Bottom);//+(double)menu.GetValue(FrameworkElement.HeightProperty));
+		}
 		public Window1()
 		{
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
@@ -117,6 +123,19 @@ namespace IDE
 			BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 			InitializeComponent();
 			textBox.FontSize = 16;
+			textBox.AddHandler(ScrollViewer.ScrollChangedEvent,new ScrollChangedEventHandler(delegate(object sender,ScrollChangedEventArgs e)
+			{
+				if (Intellisense)
+				{
+					PositionIntellisense();
+				}
+			}));
+			intellisense.SetValue(FrameworkElement.HeightProperty, 100.0);
+			intellisense.SetValue(FrameworkElement.WidthProperty, 200.0);
+			intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
+			//intellisense.SetValue(FrameworkElement.MinHeightProperty, 200.0);
+			//intellisense.SetValue(FrameworkElement.MinWidthProperty, 200.0);
+
 			textBox.FontFamily = new FontFamily("Courier New");
 			textBox.AcceptsTab = true;
 			textBox.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
@@ -268,9 +287,7 @@ namespace IDE
 						{
 							if (list[i] is Search)
 							{
-								Rect r = textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
-								Canvas.SetLeft(intellisense, r.Right);
-								Canvas.SetTop(intellisense, r.Bottom);//+(double)menu.GetValue(FrameworkElement.HeightProperty));
+								PositionIntellisense();
 								intellisense.Items.Clear();
 								intellisense.Visibility = Visibility.Visible;
 								Map s = list[i].EvaluateStructure();
@@ -323,7 +340,7 @@ namespace IDE
 			file.Items.Add(run);
 			this.Loaded += delegate
 			{
-				Open(@"C:\meta\0.2\basicTest.meta");
+				Open(@"C:\meta\0.2\game.meta");
 			};
 			open.Click += delegate
 			{
