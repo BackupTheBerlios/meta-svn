@@ -182,7 +182,9 @@ namespace Meta
 									arguments.Add(Transform.ToDotNet(arg.Copy(),method.parameters[i-1].ParameterType));
 								}
 							}
-							return (Map)method.method.Invoke(null, arguments.ToArray());
+							Map result=(Map)method.method.Invoke(null, arguments.ToArray());
+							result.IsConstant = false;
+							return result;
 						}
 					}
 				}
@@ -266,6 +268,9 @@ namespace Meta
 		{
 			Expression current = this;
 			key = expression.EvaluateStructure();
+			if (key != null && key.Equals(new Map("TestClass")))
+			{
+			}
 			count = 0;
 			if (key != null && key.IsConstant)
 			{
@@ -357,7 +362,9 @@ namespace Meta
 		public override Map EvaluateImplementation(Map context)
 		{
 			Map selected = context;
-
+			if (key.Equals(new Map("TestClass")))
+			{
+			}
 			try
 			{
 				for (int i = 0; i < count; i++)
@@ -704,10 +711,14 @@ namespace Meta
 				    val = new Unknown();
 				}
 				// not general enough
-				if (value is Search ||(intellisense && ( value is Literal || value is Program)))
+				if (value is Search || value is Call ||(intellisense && (value is Literal || value is Program)))
 				{
-				    previous[k] = val;
+					previous[k] = val;
 				}
+				//if (value is Search ||(intellisense && ( value is Literal || value is Program)))
+				//{
+				//    previous[k] = val;
+				//}
 				else
 				{
 					previous[k] = new Unknown();
@@ -968,11 +979,11 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			DateTime start = DateTime.Now;
-			MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
-			Console.WriteLine((DateTime.Now - start).TotalSeconds);
-			Console.ReadLine();
-			return;
+			//DateTime start = DateTime.Now;
+			//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
+			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
+			//Console.ReadLine();
+			//return;
 			if (args.Length != 0)
 			{
 				if (args[0] == "-test")
@@ -5565,9 +5576,14 @@ namespace Meta
 		{
 			get
 			{
-				return true;
+				return isConstant;
+			}
+			set
+			{
+				isConstant = value;
 			}
 		}
+		private bool isConstant;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
 			: this(new ListStrategy(new List<Map>(list)))
@@ -5856,6 +5872,7 @@ namespace Meta
 			clone.Scope = Scope;
 			clone.Source = Source;
 			clone.Compiled = Compiled;
+			clone.IsConstant = this.IsConstant;
 			return clone;
 		}
 		public override int GetHashCode()
