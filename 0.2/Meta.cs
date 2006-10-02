@@ -645,16 +645,15 @@ namespace Meta
 				{
 				    val = new Unknown();
 				}
-				//previous[k] = val;
-				// shouldn't work that way, but bug in SearchStatement, somehow
-				//if (value is Program)
-				//{
-				//    previous[k] = val;
-				//}
-				//else
-				//{
+				// not general enough
+				if (value is Search)
+				{
+				    previous[k] = val;
+				}
+				else
+				{
 					previous[k] = new Unknown();
-				//}
+				}
 				return previous;
 			}
 			return null;
@@ -1004,7 +1003,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -1012,7 +1011,7 @@ namespace Meta
 	{
 		public static object ToDotNet(Map meta, Type target)
 		{
-			object dotNet; ;
+			object dotNet;
 			if (!TryToDotNet(meta, target, out dotNet))
 			{
 				TryToDotNet(meta, target, out dotNet);
@@ -3572,10 +3571,11 @@ namespace Meta
 					SameIndentation,
 					new ReferenceAssignment(StringBeef),
 					EndOfLine,
-					Dedentation,
-					SameIndentation
-			))),
-			Syntax.@string);
+					Dedentation
+					//SameIndentation
+			)
+			)),
+			new Optional(Syntax.@string));
 
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
