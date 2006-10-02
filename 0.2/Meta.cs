@@ -968,6 +968,11 @@ namespace Meta
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			DateTime start = DateTime.Now;
+			MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
+			Console.WriteLine((DateTime.Now - start).TotalSeconds);
+			Console.ReadLine();
+			return;
 			if (args.Length != 0)
 			{
 				if (args[0] == "-test")
@@ -3502,7 +3507,6 @@ namespace Meta
 		private bool negative = false;
 		public string text;
 		public int index;
-		// should be in extent, maybe
 		private string fileName;
 		private int line = 1;
 		private int column = 1;
@@ -3514,18 +3518,17 @@ namespace Meta
 			this.text = text;
 			this.fileName = filePath;
 		}
-
 		public static Rule Expression = new DelayedRule(delegate()
 		{
 			return new Alternatives(
-				LastArgument,
-				FunctionProgram,
 				LiteralExpression,
+				FunctionProgram,
 				Call,
 				SelectInline,
-				List,
 				Search,
-				Program
+				List,
+				Program,
+				LastArgument
 			);
 		});
 		public static Rule EndOfLine =
@@ -3822,56 +3825,28 @@ namespace Meta
 							new Optional(EndOfLine),
 							new Optional(Dedentation)))));
 		}
-		//public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction,Action entryAction, Rule first)
-		//{
-		//    return new Sequence(
-		//        new Assignment(key,
-		//            new Sequence(
-		//                first != null ? new Assignment(1, first) : null,
-		//                start,
-		//                new Append(
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            firstAction,
-		//                            new Append(
-		//                                new ZeroOrMore(
-		//                                    new Autokey(
-		//                                        new Sequence(
-		//                                            separator,
-		//                                            entryAction)))),
-		//                            new Optional(end)),
-		//                    new Sequence(
-		//                        SmallIndentation,
-		//                        new ReferenceAssignment(
-		//                            new ZeroOrMore(
-		//                                new Autokey(
-		//                                    new Sequence(
-		//                                        new Optional(EndOfLine),
-		//                                        SameIndentation,
-		//                                        entryAction)))),
-		//                            new Optional(EndOfLine),
-		//                            new Optional(Dedentation)))))));
-		//}
 		public static Rule Call = new DelayedRule(delegate()
 		{
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
 				new Alternatives(
                     LastArgument,
-                    FunctionProgram,
+					FunctionProgram,
                     LiteralExpression,
                     Call,
                     SelectInline,
-                    List,
-                    Search,
-                    Program),
+					Search,
+					List,
+                    Program
+					),
 				new Alternatives(
-					LastArgument,
 					FunctionProgram,
 					LiteralExpression,
 					SelectInline,
 					Search,
 					List,
-					Program));
+					Program,
+					LastArgument
+					));
 		});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
@@ -3910,8 +3885,8 @@ namespace Meta
 		private static Rule LiteralExpression = new Sequence(
 			new Assignment(CodeKeys.Literal,new Alternatives(
 				Number,
-				EmptyMap,
 				String,
+				EmptyMap,
 				CharacterDataExpression)));
 
 		private static Rule LookupAnythingExpression = new Sequence(
@@ -3934,7 +3909,8 @@ namespace Meta
 						new ReferenceAssignment(Expression)),
 					new Alternatives(
 						LookupStringExpression,
-						LookupAnythingExpression))));
+						LookupAnythingExpression
+			))));
 
 
 		private static Rule SelectInline = new Sequence(
@@ -3954,10 +3930,6 @@ namespace Meta
 									LookupStringExpression,
 									LookupAnythingExpression,
 									LiteralExpression)))))))));
-
-
-
-
 
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
@@ -4059,10 +4031,11 @@ namespace Meta
 
 		public static Rule AllStatements = new Alternatives(
 			FunctionExpression,
-		CurrentStatement,
-		NormalStatement,
-		Statement,
-		DiscardStatement);
+			CurrentStatement,
+			NormalStatement,
+			Statement,
+			DiscardStatement
+		);
 
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
@@ -4081,8 +4054,7 @@ namespace Meta
 												new CharacterExcept(Syntax.lookupStringForbiddenFirst)))),
 										Syntax.functionProgram,
 											new Assignment(CodeKeys.Expression,Expression),
-										new Optional(EndOfLine)
-			)))))))));
+										new Optional(EndOfLine))))))))));
 
 
 

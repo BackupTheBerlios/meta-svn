@@ -50,11 +50,11 @@
 			800
 			300
 			0
-	world.set_Gravity_Vector3(vector(0 Double(1/5) 0
+	world.set_Gravity_Vector3(vector(0 double(1/5) 0
 	bubble=size?{
 		body=Body_World(world
-		radius=?Product(size 4
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(Product(2 Product(size size)) 1/1000
+		radius=?product(size 4
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(2 product(size size)) 1/1000
 		keyUp=0
 		keyDown=0
 		position=[
@@ -65,8 +65,8 @@
 		geom.set_Position_Vector3(body.get_Position(
 		geom.set_Body_Body(body
 		speed=[
-			Difference(random(12) 6
-			Difference(random(12) 6
+			difference(random(12) 6
+			difference(random(12) 6
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1 speed.2 0
 		color=Color.get_Red(
 		setColor=c?{
@@ -93,14 +93,14 @@
 		setCurrentBubble=b?{
 			currentBubble:b
 		toVector=v?Vector3_Single_Single_Single(v.1 v.2 0
-		center=a?b?Quotient(Sum(a b) 2
+		center=a?b?quotient(Sum(a b) 2
 		keyDown={
 			<key=?{
-				lengths=Map(bubbles b?LengthVector(
-					DifferenceVector(
+				lengths=apply(bubbles b?vectorLength(
+					vectorDifference(
 						GetPosition(
 						b.GetPosition(
-				sorted=Sort(keys(bubbles) a?b?CompareNumber(lengths.<a> lengths.<b
+				sorted=sort(keys(bubbles) a?b?compareNumber(lengths.<a> lengths.<b
 				index=sorted.1
 				bubble=bubbles.<index
 				joint=HingeJoint_World_JointGroup(world jointGroup
@@ -112,7 +112,7 @@
 				jointGroup.Empty(
 				currentBubble:0
 	paused=0
-	add_AppActive_ActiveEventHandler(?e?If(
+	add_AppActive_ActiveEventHandler(?e?if(
 		not(
 			equal(
 				e.get_State(
@@ -122,13 +122,13 @@
 	add_Quit_QuitEventHandler(?e?{
 		Events.Close(
 		Events.QuitApplication(
-	add_KeyboardDown_KeyboardEventHandler(?e?Map(players player?CallKey(player.keyDown e.get_Key(
-	add_KeyboardUp_KeyboardEventHandler(?e?Map(players player?CallKey(player.keyUp e.get_Key(
+	add_KeyboardDown_KeyboardEventHandler(?e?apply(players player?callKey(player.keyDown e.get_Key(
+	add_KeyboardUp_KeyboardEventHandler(?e?apply(players player?callKey(player.keyUp e.get_Key(
 	contactGroup=JointGroup_Int32(0
 	space.add_Collision_CollisionEventHandler(?e?{
 		a=e.get_Geom1(
 		b=e.get_Geom2(
-		Map(
+		apply(
 			enumerableToArray(a.Collide_Geom_Int32(b 13
 			contactGeom?{
 				contact=world.CreateContactJoint_Contact_JointGroup(
@@ -140,9 +140,9 @@
 					b.get_Body(
 	players=[
 		player(Return Color.get_Blue(
-	bubbles=JoinAll([
-		Map(range(10) ?bubble(random(5
-		Map(range(10) ?bubble(random(2
+	bubbles=joinAll([
+		apply(range(10) ?bubble(random(5
+		apply(range(10) ?bubble(random(2
 	Events.set_TargetFps_Int32(500
 	paused=0
 	add_Tick_TickEventHandler(??{
@@ -151,11 +151,11 @@
 		print(Events.get_Fps(
 		space.CheckCollisions(
 		world.Step(
-		Map(bubbles b?{
+		apply(bubbles b?{
 			b.move(
 			b.draw(b.color
-		Map(players player?player.draw(Color.get_Blue(
-		Map(players player?If(not(equal(0 player.currentBubble)) ?{
+		apply(players player?player.draw(Color.get_Blue(
+		apply(players player?if(not(equal(0 player.currentBubble)) ?{
 			a=player.currentBubble.body.get_Position(
 			b=player.body.get_Position(
 			DrawLine_Line_Color(

@@ -395,7 +395,7 @@ commandLine|{
 			whileBranches={
 				1={
 					arg|!"loop"(
-						!"add"(
+						sum(
 							!"arg
 							1
 				0=arg?!"arg

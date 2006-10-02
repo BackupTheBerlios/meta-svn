@@ -20,38 +20,34 @@
 				false=or(
 					0
 					0
-				otherTrue=orAll(
-					[
-						0
-						1
-						0
-						1
-						0
+				otherTrue=or(
+					0
+					1
 		numberTest={
-			positiveAdd=add(
+			positiveAdd=sum(
 				100
 				1000
-			negativeAdd=add(
+			negativeAdd=sum(
 				-100
 				91
-			DifferenceTest=add(
+			differenceTest=sum(
 				1/4
-				Product(
+				product(
 					1/100
 					-1
-			DifferenceTest2=Difference(
+			differenceTest2=difference(
 				103
 				2
 			divideTest=divide(
 				5
 				103
-			ProductInteger=Product(
+			productInteger=product(
 				19
 				1023
-			minusProduct=Product(
+			minusproduct=product(
 				-1
 				-2
-			ProductFraction=Product(
+			productFraction=product(
 				3/2
 				7/3
 			smallerDecreasingTest=less(
@@ -72,7 +68,7 @@
 			greaterTest=greater(
 				3
 				5
-			divide=Product(
+			divide=product(
 				1000
 				divide(
 					1
@@ -80,7 +76,7 @@
 		bitwiseTest={
 			or=0
 		mapTest={
-			IfTest=ElseIf(
+			IfTest=elseIf(
 				1
 				{
 					arg|"If test successful"
@@ -89,7 +85,7 @@
 			joinTest=join(
 				"abc{ "
 				"die Katze lief im Schnee."
-			JoinAllTest=JoinAll(
+			joinAllTest=joinAll(
 				[
 					"abc{ "
 					"die Katze lief im Schnee."
@@ -98,13 +94,13 @@
 				"hello"
 				32
 			Map={
-				&Map(
+				&apply(
 					[
 						1
 						2
 						3
 					{
-						argument|add(
+						argument|sum(
 							argument
 							1
 			keyTestMap={
@@ -117,7 +113,7 @@
 					arg|join(
 						"hello{ "
 						arg
-			containsTest=Contains(
+			containsTest=contains(
 				keyTestMap
 				"x"
 			containedBy1=containedBy(
@@ -170,10 +166,10 @@
 				100
 		reverseTest=reverse(
 			"hello"
-		sumTest=sum(
+		sumTest=accumulate(
 			{
 				first|{
-					second|add(
+					second|sum(
 						first
 						second
 			[
@@ -202,7 +198,7 @@
 				banana="yellow"
 				apple="red"
 				strawberries="red"
-		addArrayTest=addArray(
+		vectorSumTest=vectorSum(
 			[
 				1
 				2
@@ -219,7 +215,4 @@
 				5
 				6
 				7
-		stringSplitTest=SplitString(
-			"hello.world. !!!"
-			".!"
 	&test

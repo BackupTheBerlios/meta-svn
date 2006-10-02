@@ -2397,7 +2397,7 @@ Entry (KeyValuePair`2)
 																																							Key (Map):
 																																								"literal"
 																																							Value (Map):
-																																								"add"
+																																								"sum"
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				2

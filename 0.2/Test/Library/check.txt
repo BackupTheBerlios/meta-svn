@@ -65,12 +65,12 @@ Entry (KeyValuePair`2)
 				-9
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"DifferenceTest"
+				"differenceTest"
 			Value (Map):
 				6/25
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"DifferenceTest2"
+				"differenceTest2"
 			Value (Map):
 				-101
 		Entry (KeyValuePair`2)
@@ -80,17 +80,17 @@ Entry (KeyValuePair`2)
 				5/103
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"ProductInteger"
+				"productInteger"
 			Value (Map):
 				19437
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"minusProduct"
+				"minusproduct"
 			Value (Map):
 				2
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"ProductFraction"
+				"productFraction"
 			Value (Map):
 				7/2
 		Entry (KeyValuePair`2)
@@ -153,7 +153,7 @@ Entry (KeyValuePair`2)
 				"abc{ die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"JoinAllTest"
+				"joinAllTest"
 			Value (Map):
 				"abc{ die Katze lief im Schnee.die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
@@ -302,25 +302,6 @@ Entry (KeyValuePair`2)
 		4
 Entry (KeyValuePair`2)
 	Key (Map):
-		"addArrayTest"
+		"vectorSumTest"
 	Value (Map):
 		""
-Entry (KeyValuePair`2)
-	Key (Map):
-		"stringSplitTest"
-	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				1
-			Value (Map):
-				"hello"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				2
-			Value (Map):
-				"world"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				3
-			Value (Map):
-				" "

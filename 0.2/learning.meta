@@ -7,24 +7,24 @@
 		!"System.Windows.Forms"
 		!"System.Drawing"
 	printNodes=nodes?data?depth?-
-		JoinAll
-		Map data entry?JoinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
+		joinAll
+		Map data entry?joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
 			key=(node.get_Text
-			&If (Contains entry key) ?
+			&If (contains entry key) ?
 				value=entry.<key
 				&ElseIf
 					isString value
 					?+
 						,
 							type=ElseIf
-								Contains data key
+								contains data key
 								?
 									name=(keys data.<key>).1
 									value=data.<key>.<name
 								?
 									name="rtf"
 									value=0
-							margin=Padding_Int32_Int32_Int32_Int32 (Product depth 10) 10 0 0
+							margin=Padding_Int32_Int32_Int32_Int32 (product depth 10) 10 0 0
 							types=,
 								mathml=?MathMLControl,
 									Margin=margin
@@ -43,9 +43,9 @@
 									KeyPress=?e?e.set_Handled_Boolean 1
 									BorderStyle=BorderStyle.None
 									ContentsResized=sender?e?sender.set_Height_Int32 ((e.get_NewRectangle).get_Height
-									Rtf=JoinAll +
+									Rtf=joinAll +
 										"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
-										If (Contains data key) ?data.<key>.rtf
+										If (contains data key) ?data.<key>.rtf
 										value
 										"}"
 							&(types.<type.name>
@@ -67,8 +67,8 @@
 			CheckChanged=0
 			Text=key
 			Checked=1
-			Nodes=getNodes (JoinAll (Map data map?If
-				Contains map key
+			Nodes=getNodes (joinAll (Map data map?If
+				contains map key
 				?.
 					,
 						1=0

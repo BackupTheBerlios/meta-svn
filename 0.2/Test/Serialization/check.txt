@@ -597,7 +597,7 @@ commandLine|,
 					arg|-
 						!"loop"
 						-
-							!"add"
+							!"sum"
 							!"arg"
 							1
 				0=,
