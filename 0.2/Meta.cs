@@ -3564,18 +3564,14 @@ namespace Meta
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
-				SingleString,
+				new Sequence(new ReferenceAssignment(SingleString),new Optional(Syntax.@string)),
 				new Sequence(
 					SmallIndentation,
 					EndOfLine,
 					SameIndentation,
 					new ReferenceAssignment(StringBeef),
 					EndOfLine,
-					Dedentation
-					//SameIndentation
-			)
-			)),
-			new Optional(Syntax.@string));
+					Dedentation))));
 
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
@@ -4154,10 +4150,10 @@ namespace Meta
 				{
 					if (result != null)
 					{
-						if (result.IsString)
-						{
-							result = new Map(result.GetString());
-						}
+						//if (result.IsString)
+						//{
+						//    result = new Map(result.GetString());
+						//}
 						result.Source = new Source(oldLine, oldColumn, parser.fileName);
 					}
 				}
@@ -4781,22 +4777,22 @@ namespace Meta
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-			public class Basic : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test
-			{
-				public override object GetResult(out int level)
-				{
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-				}
-			}
+			//public class Basic : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test
+			//{
+			//    public override object GetResult(out int level)
+			//    {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+			//    }
+			//}
 			public static Map Run(string path, Map argument)
 			{
 				Map callable = Parser.Parse(path);
