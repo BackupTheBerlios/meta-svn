@@ -2,7 +2,7 @@
 	&mergeAll([
 		!"System.Drawing"
 		SdlDotNet
-		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1
+		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800 600 1
 		SdlDotNet.Events
 		SdlDotNet.Key
 		OdeDotNet
@@ -12,8 +12,8 @@
 	createBox=space.CreateBox_Single_Single_Single
 	vector=Vector3_Single_Single_Single
 	makeBox=size?position?{
-		box=createBox(size.1,size.2,size.3
-		box.set_Position_Vector3(vector(position.1,position.2,position.3
+		box=createBox(size.1 size.2 size.3
+		box.set_Position_Vector3(vector(position.1 position.2 position.3
 	makeBox(
 		[
 			798
@@ -50,24 +50,24 @@
 			800
 			300
 			0
-	world.set_Gravity_Vector3(vector(0,Double(1/5),0
+	world.set_Gravity_Vector3(vector(0 Double(1/5) 0
 	bubble=size?{
 		body=Body_World(world
-		radius=?Product(size,4
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(Product(2,Product(size,size)),1/1000
+		radius=?Product(size 4
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(Product(2 Product(size size)) 1/1000
 		keyUp=0
 		keyDown=0
 		position=[
 			random(790
 			random(590
-		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0
+		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2 0
 		geom=space.CreateSphere_Single(radius(
 		geom.set_Position_Vector3(body.get_Position(
 		geom.set_Body_Body(body
 		speed=[
-			Difference(random(12),6
-			Difference(random(12),6
-		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0
+			Difference(random(12) 6
+			Difference(random(12) 6
+		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1 speed.2 0
 		color=Color.get_Red(
 		setColor=c?{
 			color:c
@@ -80,7 +80,7 @@
 		draw=c?{
 			asdf=GetPosition(
 			DrawFilledCircle_Circle_Color(
-				Circle_Point_Int16(Point_Int32_Int32(asdf.1,asdf.2),radius(
+				Circle_Point_Int16(Point_Int32_Int32(asdf.1 asdf.2) radius(
 				c
 	player=key?c?{
 		&bubble(1
@@ -92,19 +92,19 @@
 		currentBubble=0
 		setCurrentBubble=b?{
 			currentBubble:b
-		toVector=v?Vector3_Single_Single_Single(v.1,v.2,0
-		center=a?b?Quotient(Sum(a,b),2
+		toVector=v?Vector3_Single_Single_Single(v.1 v.2 0
+		center=a?b?Quotient(Sum(a b) 2
 		keyDown={
 			<key=?{
-				lengths=Map(bubbles,b?LengthVector(
+				lengths=Map(bubbles b?LengthVector(
 					DifferenceVector(
 						GetPosition(
 						b.GetPosition(
-				sorted=Sort(keys(bubbles),a?b?CompareNumber(lengths.<a>,lengths.<b
+				sorted=Sort(keys(bubbles) a?b?CompareNumber(lengths.<a> lengths.<b
 				index=sorted.1
 				bubble=bubbles.<index
-				joint=HingeJoint_World_JointGroup(world,jointGroup
-				joint.Attach_Body_Body(bubble.body,body
+				joint=HingeJoint_World_JointGroup(world jointGroup
+				joint.Attach_Body_Body(bubble.body body
 				joint.set_Anchor_Vector3(bubble.body.get_Position(
 				setCurrentBubble(bubble
 		keyUp={
@@ -122,14 +122,14 @@
 	add_Quit_QuitEventHandler(?e?{
 		Events.Close(
 		Events.QuitApplication(
-	add_KeyboardDown_KeyboardEventHandler(?e?Map(players,player?CallKey(player.keyDown,e.get_Key(
-	add_KeyboardUp_KeyboardEventHandler(?e?Map(players,player?CallKey(player.keyUp,e.get_Key(
+	add_KeyboardDown_KeyboardEventHandler(?e?Map(players player?CallKey(player.keyDown e.get_Key(
+	add_KeyboardUp_KeyboardEventHandler(?e?Map(players player?CallKey(player.keyUp e.get_Key(
 	contactGroup=JointGroup_Int32(0
 	space.add_Collision_CollisionEventHandler(?e?{
 		a=e.get_Geom1(
 		b=e.get_Geom2(
 		Map(
-			enumerableToArray(a.Collide_Geom_Int32(b,13
+			enumerableToArray(a.Collide_Geom_Int32(b 13
 			contactGeom?{
 				contact=world.CreateContactJoint_Contact_JointGroup(
 					Contact({
@@ -139,10 +139,10 @@
 					a.get_Body(
 					b.get_Body(
 	players=[
-		player(Return,Color.get_Blue(
+		player(Return Color.get_Blue(
 	bubbles=JoinAll([
-		Map(range(10),?bubble(random(5
-		Map(range(10),?bubble(random(2
+		Map(range(10) ?bubble(random(5
+		Map(range(10) ?bubble(random(2
 	Events.set_TargetFps_Int32(500
 	paused=0
 	add_Tick_TickEventHandler(??{
@@ -151,11 +151,11 @@
 		print(Events.get_Fps(
 		space.CheckCollisions(
 		world.Step(
-		Map(bubbles,b?{
+		Map(bubbles b?{
 			b.move(
 			b.draw(b.color
-		Map(players,player?player.draw(Color.get_Blue(
-		Map(players,player?If(not(equal(0,player.currentBubble)),?{
+		Map(players player?player.draw(Color.get_Blue(
+		Map(players player?If(not(equal(0 player.currentBubble)) ?{
 			a=player.currentBubble.body.get_Position(
 			b=player.body.get_Position(
 			DrawLine_Line_Color(

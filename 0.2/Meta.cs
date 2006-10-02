@@ -368,34 +368,39 @@ namespace Meta
 				if (!selected.ContainsKey(key))
 				{
 					selected = context;
+					int realCount = 0;
 					while (!selected.ContainsKey(key))
 					{
 						selected = selected.Scope;
-						difference++;
+						realCount++;
 						if (selected == null)
 						{
 							throw new KeyNotFound(key, Source.start, null);
 						}
 					}
+					difference = count - realCount;
+					if (difference != 0)
+					{
+						if (difference == 1)
+						{
+						}
+						else if (difference == 2)
+						{
+						}
+						else if (difference == 3)
+						{
+						}
+						else if (difference == 4)
+						{
+						}
+						else
+						{
+						}
+					}
 				}
-				if (difference != 0)
-				{
-					if (difference == 1)
-					{
-					}
-					if (difference == 2)
-					{
-					}
-					if (difference == 3)
-					{
-					}
-					if (difference == 4)
-					{
-					}
-				}
-				else
-				{
-				}
+				//else
+				//{
+				//}
 				return selected[key];
 			}
 			catch (Exception e)
@@ -3449,7 +3454,7 @@ namespace Meta
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
-		public const char callSeparator=',';
+		public const char callSeparator=' ';
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
