@@ -133,8 +133,6 @@ namespace IDE
 			intellisense.SetValue(FrameworkElement.HeightProperty, 100.0);
 			intellisense.SetValue(FrameworkElement.WidthProperty, 200.0);
 			intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
-			//intellisense.SetValue(FrameworkElement.MinHeightProperty, 200.0);
-			//intellisense.SetValue(FrameworkElement.MinWidthProperty, 200.0);
 
 			textBox.FontFamily = new FontFamily("Courier New");
 			textBox.AcceptsTab = true;
@@ -169,6 +167,12 @@ namespace IDE
 							e.Handled = true;
 							return;
 						}
+					}
+					else if (e.Key == Key.Return)
+					{
+						Complete();
+						e.Handled = true;
+						return;
 					}
 					else if (e.Key == Key.Tab)
 					{
@@ -228,9 +232,10 @@ namespace IDE
 							string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
 							foreach (string item in intellisense.Items)
 							{
-								if (item.StartsWith(text))
+								if (item.StartsWith(text,StringComparison.OrdinalIgnoreCase))
 								{
 									intellisense.SelectedItem = item;
+									intellisense.ScrollIntoView(intellisense.SelectedItem);
 									break;
 								}
 							}
@@ -255,11 +260,6 @@ namespace IDE
 					{
 						intellisense.Visibility = Visibility.Hidden;
 					}
-				}
-				else if (e.Key == Key.Return && Intellisense)
-				{
-					Complete();
-					e.Handled = true;
 				}
 				else if (e.Key == Key.OemPeriod)
 				{
