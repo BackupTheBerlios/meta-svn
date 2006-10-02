@@ -41,8 +41,8 @@ namespace Meta
 {
 	public abstract class Compiled
 	{
-		public Source Source;
-		public Compiled(Source source)
+		public Extent Source;
+		public Compiled(Extent source)
 		{
 			this.Source = source;
 		}
@@ -55,10 +55,10 @@ namespace Meta
 	public abstract class Expression
 	{
 		public bool isFunction = false;
-		public readonly Source Source;
+		public readonly Extent Source;
 		public readonly Expression Parent;
 		public Statement Statement;
-		public Expression(Source source,Expression parent)
+		public Expression(Extent source,Expression parent)
 		{
 			this.Source = source;
 			this.Parent = parent;
@@ -93,7 +93,7 @@ namespace Meta
 	}
 	public class CompiledLastArgument : Compiled
 	{
-		public CompiledLastArgument(Source source)
+		public CompiledLastArgument(Extent source)
 			: base(source)
 		{
 		}
@@ -181,7 +181,7 @@ namespace Meta
 	public class CompiledCall : Compiled
 	{
 		List<Compiled> calls;
-		public CompiledCall(List<Compiled> calls,Source source):base(source)
+		public CompiledCall(List<Compiled> calls,Extent source):base(source)
 		{
 			this.calls = calls;
 		}
@@ -200,7 +200,7 @@ namespace Meta
 				}
 				catch (Exception e)
 				{
-					throw new MetaException(e.Message, Source);
+					throw new MetaException(e.Message, Source.start);
 				}
 			}
 			return result;
@@ -308,7 +308,7 @@ namespace Meta
 	{
 		private int count;
 		private Map key;
-		public FastSearch(Map key, int count, Source source)
+		public FastSearch(Map key, int count, Extent source)
 			: base(source)
 		{
 			this.key = key;
@@ -355,7 +355,7 @@ namespace Meta
 	public class OptimizedSearch : Compiled
 	{
 		private Map literal;
-		public OptimizedSearch(Map literal,Source source):base(source)
+		public OptimizedSearch(Map literal,Extent source):base(source)
 		{
 			this.literal = literal;
 		}
@@ -367,7 +367,7 @@ namespace Meta
 	public class CompiledSearch : Compiled
 	{
 		private Compiled expression;
-		public CompiledSearch(Compiled expression,Source source):base(source)
+		public CompiledSearch(Compiled expression,Extent source):base(source)
 		{
 			this.expression = expression;
 		}
@@ -383,7 +383,7 @@ namespace Meta
 				}
 				else
 				{
-					throw new KeyNotFound(key, Source, null);
+					throw new KeyNotFound(key, Source.start, null);
 				}
 			}
 			return selected[key].Copy();
@@ -392,7 +392,7 @@ namespace Meta
 	public class CompiledProgram : Compiled
 	{
 		private List<CompiledStatement> statementList;
-		public CompiledProgram(List<CompiledStatement> statementList, Source source)
+		public CompiledProgram(List<CompiledStatement> statementList, Extent source)
 			: base(source)
 		{
 			this.statementList = statementList;
@@ -731,7 +731,7 @@ namespace Meta
 				selected = selected.Scope;
 				if (selected == null)
 				{
-					throw new KeyNotFound(key, key.Source, null);
+					throw new KeyNotFound(key, key.Source.start, null);
 				}
 			}
 			selected[key] = value;
@@ -758,7 +758,7 @@ namespace Meta
 	public class CompiledLiteral : Compiled
 	{
 		private Map literal;
-		public CompiledLiteral(Map literal,Source source):base(source)
+		public CompiledLiteral(Map literal,Extent source):base(source)
 		{
 			this.literal = literal;
 		}
@@ -794,7 +794,7 @@ namespace Meta
 	}
 	public class CompiledRoot : Compiled
 	{
-		public CompiledRoot(Source source)
+		public CompiledRoot(Extent source)
 			: base(source)
 		{
 		}
@@ -821,7 +821,7 @@ namespace Meta
 	public class CompiledSelect : Compiled
 	{
 		List<Compiled> subs;
-		public CompiledSelect(List<Compiled> subs,Source source):base(source)
+		public CompiledSelect(List<Compiled> subs,Extent source):base(source)
 		{
 			this.subs= subs;
 			if (subs[0] == null)
@@ -837,7 +837,7 @@ namespace Meta
 				Map value = selected.TryGetValue(key);
 				if (value == null)
 				{
-					throw new KeyDoesNotExist(key, subs[i].Source, selected);
+					throw new KeyDoesNotExist(key, subs[i].Source.start, selected);
 				}
 				else
 				{
@@ -2999,6 +2999,25 @@ namespace Meta
 			}
 		}
 	}
+	public class Extent
+	{
+		public readonly Source start;
+		public readonly Source end;
+		public Extent(Source start, Source end)
+		{
+			this.start = start;
+			this.end = end;
+		}
+		public override int GetHashCode()
+		{
+			return start.GetHashCode() * end.GetHashCode();
+		}
+		public override bool Equals(object obj)
+		{
+			Extent extent=obj as Extent;
+			return extent != null && start.Equals(extent.start) && end.Equals(extent.end);
+		}
+	}
 	public class Source
 	{
 		public override string ToString()
@@ -3008,13 +3027,38 @@ namespace Meta
 		public readonly int Line;
 		public readonly int Column;
 		public readonly string FileName;
-		public Source(int line, int column,string fileName)
+		public Source(int line, int column, string fileName)
 		{
 			this.Line = line;
 			this.Column = column;
 			this.FileName = fileName;
 		}
+		public override int GetHashCode()
+		{
+			return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
+		}
+		public override bool Equals(object obj)
+		{
+			Source source=obj as Source;
+			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
+		}
 	}
+	//public class Source
+	//{
+	//    public override string ToString()
+	//    {
+	//        return FileName + ", " + "line " + Line + ", column " + Column;
+	//    }
+	//    public readonly int Line;
+	//    public readonly int Column;
+	//    public readonly string FileName;
+	//    public Source(int line, int column,string fileName)
+	//    {
+	//        this.Line = line;
+	//        this.Column = column;
+	//        this.FileName = fileName;
+	//    }
+	//}
 	public class Gac : MapStrategy
 	{
 		public override bool IsNormal
@@ -3400,6 +3444,7 @@ namespace Meta
 		private bool negative = false;
 		public string text;
 		public int index;
+		// should be in extent, maybe
 		private string fileName;
 		private int line = 1;
 		private int column = 1;
@@ -4154,7 +4199,10 @@ namespace Meta
 						//{
 						//    result = new Map(result.GetString());
 						//}
-						result.Source = new Source(oldLine, oldColumn, parser.fileName);
+						result.Source = new Extent(
+							new Source(oldLine, oldColumn, parser.fileName),
+							new Source(parser.line, parser.column, parser.fileName));
+						//result.Source = new Source(oldLine, oldColumn, parser.fileName);
 					}
 				}
 				return result;
@@ -4777,22 +4825,22 @@ namespace Meta
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-			//public class Basic : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test
-			//{
-			//    public override object GetResult(out int level)
-			//    {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
-			//    }
-			//}
+			public class Basic : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test
+			{
+				public override object GetResult(out int level)
+				{
+					level = 2;
+					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);
+				}
+			}
 			public static Map Run(string path, Map argument)
 			{
 				Map callable = Parser.Parse(path);
@@ -5472,7 +5520,7 @@ namespace Meta
 	}
 	public abstract class ScopeExpression:Expression
 	{
-		public ScopeExpression(Source source, Expression parent):base(source,parent)
+		public ScopeExpression(Extent source, Expression parent):base(source,parent)
 		{
 		}
 	}
@@ -5791,7 +5839,7 @@ namespace Meta
 				yield return new KeyValuePair<Map, Map>(key, this[key]);
 			}
 		}
-		public Source Source;
+		public Extent Source;
 		public static Map Empty = new Map(EmptyStrategy.empty);
 		public static implicit operator Map(string text)
 		{
