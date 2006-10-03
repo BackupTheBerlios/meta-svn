@@ -48,6 +48,7 @@ namespace IDE
 		}
 		public static ListBox intellisense = new ListBox();
 		Menu menu = new Menu();
+		Label status = new Label();
 
 		public static bool Intellisense
 		{
@@ -93,6 +94,7 @@ namespace IDE
 		}
 		public Window1()
 		{
+			BindKey(ApplicationCommands.Find, Key.F, ModifierKeys.Control);
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
 			BindKey(EditingCommands.Delete, Key.M, ModifierKeys.Alt);
 			BindKey(EditingCommands.DeleteNextWord, Key.M, ModifierKeys.Alt | ModifierKeys.Control);
@@ -121,6 +123,7 @@ namespace IDE
 			BindKey(EditingCommands.SelectToLineStart, Key.U, ModifierKeys.Alt | ModifierKeys.Shift);
 			BindKey(EditingCommands.SelectUpByLine, Key.L, ModifierKeys.Alt | ModifierKeys.Shift);
 			BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
+			//BindKey(EditingCommands.IncreaseIndentation, Key.Tab, ModifierKeys.None);
 			InitializeComponent();
 			textBox.FontSize = 16;
 			textBox.AddHandler(ScrollViewer.ScrollChangedEvent,new ScrollChangedEventHandler(delegate(object sender,ScrollChangedEventArgs e)
@@ -164,6 +167,14 @@ namespace IDE
 						else if (e.Key == Key.K)
 						{
 							IntellisenseDown();
+							e.Handled = true;
+							return;
+						}
+					}
+					else if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+					{
+						if (e.Key == Key.Space)
+						{
 							e.Handled = true;
 							return;
 						}
@@ -215,6 +226,11 @@ namespace IDE
 					//    }
 					//}
 				}
+				//else if (e.Key == Key.Tab)
+				//{
+				//    EditingCommands.IncreaseIndentation.Execute(null, textBox);
+				//    e.Handled = true;
+				//}
 			};
 			textBox.KeyUp += delegate(object sender, KeyEventArgs e)
 			{
@@ -285,7 +301,7 @@ namespace IDE
 						List<Meta.Expression> list = Meta.Expression.sources[key];
 						for (int i = 0; i < list.Count; i++)
 						{
-							if (list[i] is Search)
+							if (list[i] is Search || list[i] is Select)
 							{
 								PositionIntellisense();
 								intellisense.Items.Clear();
@@ -373,6 +389,12 @@ namespace IDE
 				}
 			};
 			textBox.TextInput += new TextCompositionEventHandler(textBox_TextInput);
+			textBox.SelectionChanged += delegate
+			{
+				status.Content = "Ln " +
+					(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart)+1);
+					//" Col "+textBox.;
+			};
 			file.Items.Add(save);
 			file.Items.Add(run);
 			this.Loaded += delegate
@@ -387,6 +409,8 @@ namespace IDE
 					Open(dialog.FileName);
 				}
 			};
+			//this.SetValue(FrameworkElement.HeightProperty, 200);
+			//this.SetValue(FrameworkElement.WidthProperty, 640);
 			run.Click += delegate
 			{
 				Save();
@@ -398,6 +422,8 @@ namespace IDE
 			};
 			menu.Items.Add(file);
 			panel.Children.Add(menu);
+			DockPanel.SetDock(status, Dock.Bottom);
+			panel.Children.Add(status);
 			Canvas canvas = new Canvas();
 			panel.Children.Add(canvas);
 			canvas.Children.Add(textBox);

@@ -1010,19 +1010,22 @@ namespace Meta
 	{
 		public override Map StructureImplementation()
 		{
-			return null;
-			//Map selected = subs[0].EvaluateStructure();
-			//for (int i = 1; i < subs.Count; i++)
-			//{
-			//    Map key = subs[i].EvaluateStructure();
-			//    if (key==null || key is Structure || key is Unknown || !selected.ContainsKey(key))
-			//    {
-			//        // compilation error???
-			//        return null;
-			//    }
-			//    selected = selected[key];
-			//}
-			//return selected;
+			//return null;
+			Map selected = subs[0].EvaluateStructure();
+			for (int i = 1; i < subs.Count; i++)
+			{
+				Map key = subs[i].EvaluateStructure();
+				if (key!=null && key.Equals(new Map("Animation")))
+				{
+				}
+				if (key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key))
+				{
+					// compilation error???
+					return null;
+				}
+				selected = selected[key];
+			}
+			return selected;
 		}
 		public override Compiled CompileImplementation(Expression parent)
 		{
@@ -1658,7 +1661,7 @@ namespace Meta
 	}
 	public class TypeMap : DotNetMap
 	{
-		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic;
+		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic|BindingFlags.FlattenHierarchy;
 		protected override BindingFlags BindingFlags
 		{
 			get
