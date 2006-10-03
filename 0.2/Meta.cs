@@ -154,7 +154,7 @@ namespace Meta
 			}
 			if (calls.Count == 1)
 			{
-				calls.Add(new Literal(Map.Empty,this));
+				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
 		public override Map StructureImplementation()
@@ -162,28 +162,54 @@ namespace Meta
 			Map first = calls[0].EvaluateStructure();
 			if (first != null && first.IsConstant)
 			{
-				if (first.Strategy is Method)
+				Method method;
+				if (first.Strategy is TypeMap)
 				{
-					Method method = (Method)first.Strategy;
-					if (method.method.IsStatic && method.parameters.Length == calls.Count-1)
+					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
+				}
+				else if (first.Strategy is Method)
+				{
+					method = (Method)first.Strategy;
+				}
+				else
+				{
+					method = null;
+				}
+				if(method!=null)
+				{
+					//Method method = (Method)first.Strategy;
+					if (method.parameters.Length == calls.Count - 1 || (calls.Count==2 && method.parameters.Length==0))
 					{
-						if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+						if (method.method.IsStatic)
 						{
-							List<object> arguments = new List<object>();
-							for (int i = 1; i < calls.Count; i++)
+							if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
 							{
-								Map arg = calls[i].EvaluateStructure();
-								if (arg == null)
+								List<object> arguments = new List<object>();
+								for (int i = 1; i < calls.Count; i++)
 								{
-									return null;
+									Map arg = calls[i].EvaluateStructure();
+									if (arg == null)
+									{
+										return null;
+									}
+									else
+									{
+										arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i - 1].ParameterType));
+									}
 								}
-								else
-								{
-									arguments.Add(Transform.ToDotNet(arg.Copy(),method.parameters[i-1].ParameterType));
-								}
+								Map result = (Map)method.method.Invoke(null, arguments.ToArray());
+								result.IsConstant = false;
+								return result;
 							}
-							Map result=(Map)method.method.Invoke(null, arguments.ToArray());
-							result.IsConstant = false;
+						}
+						else if (method.method is ConstructorInfo)
+						{
+							Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.method.DeclaringType);
+							Structure result = new Structure();
+							foreach (Map key in type.Keys)
+							{
+								result[key] = new Unknown();
+							}
 							return result;
 						}
 					}
@@ -191,6 +217,40 @@ namespace Meta
 			}
 			return null;
 		}
+		//public override Map StructureImplementation()
+		//{
+		//    Map first = calls[0].EvaluateStructure();
+		//    if (first != null && first.IsConstant)
+		//    {
+		//        if (first.Strategy is Method)
+		//        {
+		//            Method method = (Method)first.Strategy;
+		//            if (method.method.IsStatic && method.parameters.Length == calls.Count-1)
+		//            {
+		//                if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+		//                {
+		//                    List<object> arguments = new List<object>();
+		//                    for (int i = 1; i < calls.Count; i++)
+		//                    {
+		//                        Map arg = calls[i].EvaluateStructure();
+		//                        if (arg == null)
+		//                        {
+		//                            return null;
+		//                        }
+		//                        else
+		//                        {
+		//                            arguments.Add(Transform.ToDotNet(arg.Copy(),method.parameters[i-1].ParameterType));
+		//                        }
+		//                    }
+		//                    Map result=(Map)method.method.Invoke(null, arguments.ToArray());
+		//                    result.IsConstant = false;
+		//                    return result;
+		//                }
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
 		//public override Map EvaluateStructure()
 		//{
 		//    Map first=calls[0].EvaluateStructure();
@@ -226,6 +286,36 @@ namespace Meta
 		{
 			this.calls = calls;
 		}
+		//public override Map EvaluateImplementation(Map current)
+		//{
+		//    List<Map> maps = new List<Map>();
+		//    foreach (Compiled c in calls)
+		//    {
+		//        maps.Add(c.Evaluate(current));
+		//    }
+		//    if (maps.Count == 1)
+		//    {
+		//        maps.Add(Map.Empty);
+		//    }
+		//    Map result = maps[0];
+		//    for (int i = 1; i < calls.Count; i++)
+		//    {
+		//        try
+		//        {
+		//            result = result.Call(maps[i]);
+		//        }
+		//        catch (MetaException e)
+		//        {
+		//            e.InvocationList.Add(new ExceptionLog(Source.start));
+		//            throw e;
+		//        }
+		//        catch (Exception e)
+		//        {
+		//            throw new MetaException(e.Message, Source.start);
+		//        }
+		//    }
+		//    return result;
+		//}
 		public override Map EvaluateImplementation(Map current)
 		{
 			Map result = calls[0].Evaluate(current);
@@ -268,7 +358,7 @@ namespace Meta
 		{
 			Expression current = this;
 			key = expression.EvaluateStructure();
-			if (key != null && key.Equals(new Map("TestClass")))
+			if (key != null && key.Equals(new Map("OdeDotNet")))
 			{
 			}
 			count = 0;
@@ -1080,7 +1170,7 @@ namespace Meta
 		{
 			get
 			{
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
@@ -1576,7 +1666,7 @@ namespace Meta
 				return bindingFlags;
 			}
 		}
-		private static MemberCache cache = new MemberCache(bindingFlags);
+		public static MemberCache cache = new MemberCache(bindingFlags);
 		protected override MemberCache MemberCache
 		{
 			get
@@ -1667,7 +1757,7 @@ namespace Meta
 			return new Map(new TypeMap(this.Type));
 		}
 		private Map constructor;
-		private Map Constructor
+		public Map Constructor
 		{
 			get
 			{
@@ -1700,7 +1790,7 @@ namespace Meta
 				return bindingFlags;
 			}
 		}
-		private static MemberCache cache = new MemberCache(bindingFlags);
+		public static MemberCache cache = new MemberCache(bindingFlags);
 		protected override MemberCache MemberCache
 		{
 			get
@@ -3187,15 +3277,19 @@ namespace Meta
 		}
 		public override Map Get(Map key)
 		{
+			if(key.Equals(new Map("OdeDotNet")))
+			{
+			}
 			Map value;
 			if (!cache.ContainsKey(key))
 			{
 				if (key.IsString)
 				{
-					try
-					{
+					//try
+					//{
 						Assembly assembly;
-						string path = Path.Combine(Directory.GetCurrentDirectory(), key.GetString() + ".dll");
+						string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
+						//string path = Path.Combine(Directory.GetCurrentDirectory(), key.GetString() + ".dll");
 						if (File.Exists(path))
 						{
 							assembly = Assembly.LoadFile(path);
@@ -3213,11 +3307,11 @@ namespace Meta
 						{
 							value = null;
 						}
-					}
-					catch (Exception e)
-					{
-						value = null;
-					}
+					//}
+					//catch (Exception e)
+					//{
+					//    value = null;
+					//}
 				}
 				else
 				{

@@ -130,7 +130,7 @@ namespace IDE
 					PositionIntellisense();
 				}
 			}));
-			intellisense.SetValue(FrameworkElement.HeightProperty, 100.0);
+			intellisense.SetValue(FrameworkElement.MaxHeightProperty, 100.0);
 			intellisense.SetValue(FrameworkElement.WidthProperty, 200.0);
 			intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
 
@@ -218,30 +218,30 @@ namespace IDE
 			};
 			textBox.KeyUp += delegate(object sender, KeyEventArgs e)
 			{
-				if (Intellisense)
-				{
-					if (textBox.SelectionStart <= searchStart && e.Key!=Key.OemPeriod)
-					{
-						intellisense.Visibility = Visibility.Hidden;
-					}
-					else
-					{
-						int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
-						if (index != -1)
-						{
-							string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
-							foreach (string item in intellisense.Items)
-							{
-								if (item.StartsWith(text,StringComparison.OrdinalIgnoreCase))
-								{
-									intellisense.SelectedItem = item;
-									intellisense.ScrollIntoView(intellisense.SelectedItem);
-									break;
-								}
-							}
-						}
-					}
-				}
+				//if (Intellisense)
+				//{
+				//    if (textBox.SelectionStart <= searchStart && e.Key!=Key.OemPeriod)
+				//    {
+				//        intellisense.Visibility = Visibility.Hidden;
+				//    }
+				//    else
+				//    {
+				//        int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+				//        if (index != -1)
+				//        {
+				//            string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
+				//            foreach (string item in intellisense.Items)
+				//            {
+				//                if (item.StartsWith(text,StringComparison.OrdinalIgnoreCase))
+				//                {
+				//                    intellisense.SelectedItem = item;
+				//                    intellisense.ScrollIntoView(intellisense.SelectedItem);
+				//                    break;
+				//                }
+				//            }
+				//        }
+				//    }
+				//}
 			};
 			textBox.KeyDown += delegate(object obj, KeyEventArgs e)
 			{
@@ -289,7 +289,6 @@ namespace IDE
 							{
 								PositionIntellisense();
 								intellisense.Items.Clear();
-								intellisense.Visibility = Visibility.Visible;
 								Map s = list[i].EvaluateStructure();
 								List<string> keys = new List<string>();
 								if (s != null)
@@ -303,6 +302,10 @@ namespace IDE
 								{
 									return a.CompareTo(b);
 								});
+								if (keys.Count != 0)
+								{
+									intellisense.Visibility = Visibility.Visible;
+								}
 								foreach (string k in keys)
 								{
 									intellisense.Items.Add(k);
@@ -334,7 +337,41 @@ namespace IDE
 			file.Header = "File";
 			open.Header = "Open";
 			file.Items.Add(open);
-			textBox.TextChanged += new TextChangedEventHandler(textBox_TextChanged);
+			//textBox.TextChanged += new TextChangedEventHandler(textBox_TextChanged);
+			intellisense.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e)
+			{
+				if (intellisense.SelectedItem != null)
+				{
+					intellisense.ScrollIntoView(intellisense.SelectedItem);
+				}
+			};
+			textBox.TextChanged += delegate
+			{
+				if (Intellisense)
+				{
+					if (textBox.SelectionStart <= searchStart)// && e.Key != Key.OemPeriod)
+					{
+						intellisense.Visibility = Visibility.Hidden;
+					}
+					else
+					{
+						int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+						if (index != -1)
+						{
+							string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
+							foreach (string item in intellisense.Items)
+							{
+								if (item.StartsWith(text, StringComparison.OrdinalIgnoreCase))
+								{
+									intellisense.SelectedItem = item;
+									intellisense.ScrollIntoView(intellisense.SelectedItem);
+									break;
+								}
+							}
+						}
+					}
+				}
+			};
 			textBox.TextInput += new TextCompositionEventHandler(textBox_TextInput);
 			file.Items.Add(save);
 			file.Items.Add(run);
