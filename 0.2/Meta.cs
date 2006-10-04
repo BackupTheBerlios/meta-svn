@@ -1755,18 +1755,13 @@ namespace Meta {
 			get {
 				throw new Exception("The method or operation is not implemented.");}}
 		public override bool ContainsKey(Map key) {
-			return Get(key) != null;
-		}
-	}
+			return Get(key) != null;}}
 	public class Number {
 		public int CompareTo(Number number) {
-			return GetDouble().CompareTo(number.GetDouble());
-		}
+			return GetDouble().CompareTo(number.GetDouble());}
 		public bool IsNatural {
 			get {
-				return denominator == 1.0d;
-			}
-		}
+				return denominator == 1.0d;}}
 		private readonly double numerator;
 		private readonly double denominator;
 		public static Number Parse(string text) {
@@ -1775,149 +1770,100 @@ namespace Meta {
 				int numerator = Convert.ToInt32(parts[0]);
 				int denominator;
 				if (parts.Length > 2) {
-					denominator = Convert.ToInt32(parts[2]);
-				}
+					denominator = Convert.ToInt32(parts[2]);}
 				else {
-					denominator = 1;
-				}
-				return new Number(numerator, denominator);
-			}
+					denominator = 1;}
+				return new Number(numerator, denominator);}
 			catch (Exception e) {
-				return null;
-			}
-		}
+				return null;}}
 		public Number(double integer)
-			: this(integer, 1) {
-		}
+			: this(integer, 1) {}
 		public Number(Number i)
-			: this(i.numerator, i.denominator) {
-		}
+			: this(i.numerator, i.denominator) {}
 		public Number(double numerator, double denominator) {
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
 			if (denominator < 0) {
 				numerator = -numerator;
-				denominator = -denominator;
-			}
+				denominator = -denominator;}
 			this.numerator = numerator / greatestCommonDivisor;
-			this.denominator = denominator / greatestCommonDivisor;
-		}
+			this.denominator = denominator / greatestCommonDivisor;}
 		public double Numerator {
 			get {
-				return numerator;
-			}
-		}
+				return numerator;}}
 		public double Denominator {
 			get {
-				return denominator;
-			}
-		}
+				return denominator;}}
 		public static Number operator |(Number a, Number b) {
-			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);
-		}
+			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);}
 		public override string ToString() {
 			if (denominator == 1) {
-				return numerator.ToString();
-			}
+				return numerator.ToString();}
 			else {
-				return numerator.ToString() + Syntax.fraction + denominator.ToString();
-			}
-		}
+				return numerator.ToString() + Syntax.fraction + denominator.ToString();}}
 		public Number Clone() {
-			return new Number(this);
-		}
+			return new Number(this);}
 		public static implicit operator Number(double number) {
-			return new Number(number);
-		}
+			return new Number(number);}
 		public static implicit operator Number(decimal number) {
-			return new Number((double)number);
-		}
+			return new Number((double)number);}
 		public static implicit operator Number(int integer) {
-			return new Number((double)integer);
-		}
+			return new Number((double)integer);}
 		public static bool operator ==(Number a, Number b) {
-			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator == b.denominator;
-		}
+			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator == b.denominator;}
 		public static bool operator !=(Number a, Number b) {
-			return !(a == b);
-		}
+			return !(a == b);}
 		private static double GreatestCommonDivisor(double a, double b) {
 			a = Math.Abs(a);
 			b = Math.Abs(b);
 			while (a != 0 && b != 0) {
 				if (a > b) {
-					a = a % b;
-				}
+					a = a % b;}
 				else {
-					b = b % a;
-				}
-			}
+					b = b % a;}}
 			if (a == 0) {
-				return b;
-			}
+				return b;}
 			else {
-				return a;
-			}
-		}
+				return a;}}
 		private static double LeastCommonMultiple(Number a, Number b) {
-			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
-		}
+			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);}
 		public static Number operator %(Number a, Number b) {
-			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
-		}
+			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);}
 		public static Number operator +(Number a, Number b) {
-			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));
-		}
+			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));}
 		public static Number operator /(Number a, Number b) {
-			return new Number(a.numerator * b.denominator, a.denominator * b.numerator);
-		}
+			return new Number(a.numerator * b.denominator, a.denominator * b.numerator);}
 		public static Number operator -(Number a, Number b) {
-			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));
-		}
+			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));}
 		public static Number operator *(Number a, Number b) {
-			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);
-		}
+			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);}
 		public double Expand(Number b) {
-			return numerator * (LeastCommonMultiple(this, b) / denominator);
-		}
+			return numerator * (LeastCommonMultiple(this, b) / denominator);}
 		public static bool operator >(Number a, Number b) {
-			return a.Expand(b) > b.Expand(a);
-		}
+			return a.Expand(b) > b.Expand(a);}
 		public static bool operator <(Number a, Number b) {
-			return a.Expand(b) < b.Expand(a);
-		}
+			return a.Expand(b) < b.Expand(a);}
 		public static bool operator >=(Number a, Number b) {
-			return a.Expand(b) >= b.Expand(a);
-		}
+			return a.Expand(b) >= b.Expand(a);}
 		public static bool operator <=(Number a, Number b) {
-			return a.Expand(b) <= b.Expand(a);
-		}
+			return a.Expand(b) <= b.Expand(a);}
 		public override bool Equals(object o) {
 			if (!(o is Number)) {
-				return false;
-			}
+				return false;}
 			Number b = (Number)o;
-			return b.numerator == numerator && b.denominator == denominator;
-		}
+			return b.numerator == numerator && b.denominator == denominator;}
 		public override int GetHashCode() {
 			Number x = new Number(this);
 			while (x > int.MaxValue) {
-				x = x - int.MaxValue;
-			}
-			return x.GetInt32();
-		}
+				x = x - int.MaxValue;}
+			return x.GetInt32();}
 		public double GetDouble() {
-			return numerator / denominator;
-		}
+			return numerator / denominator;}
 		public int GetInt32() {
-			return Convert.ToInt32(numerator / denominator);
-		}
+			return Convert.ToInt32(numerator / denominator);}
 		public long GetRealInt64() {
-			return Convert.ToInt64(numerator / denominator);
-		}
+			return Convert.ToInt64(numerator / denominator);}
 		public long GetInt64() {
-			return Convert.ToInt64(numerator);
-		}
-	}
+			return Convert.ToInt64(numerator);}}
 	public class Parser {
 		private bool negative = false;
 		public string text;
@@ -1930,8 +1876,7 @@ namespace Meta {
 		public Parser(string text, string filePath) {
 			this.index = 0;
 			this.text = text;
-			this.FileName = filePath;
-		}
+			this.FileName = filePath;}
 		public static Rule Expression = new DelayedRule(delegate() {
 			return new Alternatives(
 				LiteralExpression,
@@ -1942,8 +1887,7 @@ namespace Meta {
 				List,
 				Program,
 				LastArgument
-			);
-		});
+			);});
 		public static Rule EndOfLine = new Sequence(
 			new ZeroOrMore(
 				new Alternatives(
@@ -1958,8 +1902,7 @@ namespace Meta {
 				new CustomProduction(
 					delegate(Parser p, Map map, ref Map result) {
 						p.negative = map != null;
-						return null;
-					},
+						return null;},
 					new Optional(Syntax.negative)),
 				new ReferenceAssignment(
 					new Sequence(
@@ -1968,42 +1911,32 @@ namespace Meta {
 								new CustomProduction(
 									delegate(Parser p, Map map, ref Map result) {
 										if (result == null) {
-											result = new Map();
-										}
+											result = new Map();}
 										result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
-										return result;
-									},
+										return result;},
 									new Characters(Syntax.integer)))),
 						new CustomProduction(delegate(Parser p, Map map, ref Map result) {
 			if (result.GetNumber() > 0 && p.negative) {
-				result = 0 - result.GetNumber();
-			}
-			return null;
-		},
+				result = 0 - result.GetNumber();}
+			return null;},
 		new CustomRule(delegate(Parser p, out bool matched) {
-			matched = true; return null;
-		})))));
+			matched = true; return null;})))));
 
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched) {
 			if (p.indentationCount == -1) {
 				p.indentationCount++;
-				matched = true;
-			}
+				matched = true;}
 			else {
-				matched = false;
-			}
-			return null;
-		});
+				matched = false;}
+			return null;});
 
 		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, out bool matched) {
 			p.indentationCount++;
 			matched = true;
-			return null;
-		});
+			return null;});
 
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, out bool matched) {
-			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
-		});
+			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);});
 
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
@@ -2013,8 +1946,7 @@ namespace Meta {
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, out bool matched) {
 			pa.indentationCount--;
 			matched = true;
-			return null;
-		});
+			return null;});
 		private static void MatchStringLine(Parser parser, StringBuilder text) {
 			bool matching = true;
 			for (; matching && parser.index < parser.text.Length; parser.index++) {
@@ -2026,10 +1958,7 @@ namespace Meta {
 						break;
 					default:
 						text.Append(c);
-						break;
-				}
-			}
-		}
+						break;}}}
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, out bool matched) {
 			StringBuilder result = new StringBuilder(100);
 			MatchStringLine(parser, result);
@@ -2041,14 +1970,10 @@ namespace Meta {
 					SameIndentation).Match(parser, out lineMatched);
 				if (lineMatched) {
 					result.Append('\n');
-					MatchStringLine(parser, result);
-				}
+					MatchStringLine(parser, result);}
 				else {
-					break;
-				}
-			}
-			return result.ToString();
-		});
+					break;}}
+			return result.ToString();});
 
 		private static Rule SingleString = new OneOrMore(
 			new Autokey(
@@ -2086,8 +2011,7 @@ namespace Meta {
 					Syntax.lookupStringForbidden)))));
 
 		public static Rule ExpressionData = new DelayedRule(delegate() {
-			return Parser.Expression;
-		});
+			return Parser.Expression;});
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
@@ -2095,8 +2019,7 @@ namespace Meta {
 				ListMap,
 				String,
 				Number,
-				CharacterDataExpression);
-		});
+				CharacterDataExpression);});
 		private static Rule LookupAnything = new Sequence(
 			'<',
 			new ReferenceAssignment(Value));
@@ -2135,8 +2058,7 @@ namespace Meta {
 				new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result) {
 						result = new Map(result[1], map);
-						return result;
-					},
+						return result;},
 					Value),
 			 new Optional(EndOfLine)));
 
@@ -2150,8 +2072,7 @@ namespace Meta {
 
 			new ReferenceAssignment(new PrePost(
 				delegate(Parser p) {
-					p.defaultKeys.Push(1);
-				},
+					p.defaultKeys.Push(1);},
 				new Sequence(
 					new ReferenceAssignment(
 						new OneOrMore(
@@ -2161,8 +2082,7 @@ namespace Meta {
 									new ReferenceAssignment(Entry))))),
 					Dedentation),
 				delegate(Parser p) {
-					p.defaultKeys.Pop();
-				})));
+					p.defaultKeys.Pop();})));
 
 		public static Rule File = new Sequence(
 			new Optional(
@@ -2174,12 +2094,10 @@ namespace Meta {
 			new ReferenceAssignment(Map));
 
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
-			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);
-		}
+			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);}
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
-				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));
-		}
+				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));}
 
 		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
@@ -2206,8 +2124,7 @@ namespace Meta {
 										SameIndentation,
 										entryAction)))),
 							new Optional(EndOfLine),
-							new Optional(Dedentation)))));
-		}
+							new Optional(Dedentation)))));}
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
 				new Alternatives(
@@ -2228,8 +2145,7 @@ namespace Meta {
 					List,
 					Program,
 					LastArgument
-					));
-		});
+					));});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
 				CodeKeys.Key,
@@ -2244,8 +2160,7 @@ namespace Meta {
 		private static Rule Simple(char c, Map literal) {
 			return new Sequence(
 				c,
-				new ReferenceAssignment(new LiteralRule(literal)));
-		}
+				new ReferenceAssignment(new LiteralRule(literal)));}
 
 		private static Rule EmptyMap = Simple(
 			Syntax.emptyMap,
@@ -2315,8 +2230,7 @@ namespace Meta {
 			new ReferenceAssignment(
 				new PrePost(
 					delegate(Parser p) {
-						p.defaultKeys.Push(1);
-					},
+						p.defaultKeys.Push(1);},
 					new Sequence(
 			new Optional(EndOfLine),
 			SmallIndentation,
@@ -2330,8 +2244,7 @@ namespace Meta {
 				new Optional(EndOfLine),
 				new Optional(new Alternatives(Dedentation))),
 					delegate(Parser p) {
-						p.defaultKeys.Pop();
-					})));
+						p.defaultKeys.Pop();})));
 
 		public static Action ListAction = new CustomProduction(
 			delegate(Parser p, Map map, ref Map result) {
@@ -2340,14 +2253,12 @@ namespace Meta {
 							CodeKeys.Literal, p.defaultKeys.Peek()),
 					CodeKeys.Value, map);
 				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-				return result;
-			},
+				return result;},
 			Expression);
 
 		public static Rule List = new PrePost(
 					delegate(Parser p) {
-						p.defaultKeys.Push(1);
-					},
+						p.defaultKeys.Push(1);},
 			ComplexStuff(
 				CodeKeys.Program,
 				Syntax.arrayStart,
@@ -2358,16 +2269,14 @@ namespace Meta {
 				null
 				),
 				delegate(Parser p) {
-					p.defaultKeys.Pop();
-				});
+					p.defaultKeys.Pop();});
 
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			return new Sequence(
 				action,
 				rule != null ? new Match(rule) : null,
 				new Assignment(CodeKeys.Value, Expression),
-				new Optional(EndOfLine));
-		}
+				new Optional(EndOfLine));}
 
 		public static Rule DiscardStatement = ComplexStatement(
 			null,
@@ -2441,111 +2350,75 @@ namespace Meta {
 
 		public abstract class Action {
 			public static implicit operator Action(string s) {
-				return new Match(StringRule(s));
-			}
+				return new Match(StringRule(s));}
 			public static implicit operator Action(char c) {
-				return new Match(new IgnoreCharacter(c));
-			}
+				return new Match(new IgnoreCharacter(c));}
 			public static implicit operator Action(Rule rule) {
-				return new Match(rule);
-			}
+				return new Match(rule);}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
 			public Action(char c)
-				: this(new Characters(c)) {
-			}
+				: this(new Characters(c)) {}
 			public Action(Rule rule) {
-				this.rule = rule;
-			}
+				this.rule = rule;}
 			public bool Execute(Parser parser, ref Map result) {
 				bool matched;
 				Map map = rule.Match(parser, out matched);
 				if (matched) {
-					Effect(parser, map, ref result);
-				}
-				return matched;
-			}
-		}
+					Effect(parser, map, ref result);}
+				return matched;}}
 		public class Autokey : Action {
 			public Autokey(Rule rule)
-				: base(rule) {
-			}
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result.Append(map);
-			}
-		}
+				result.Append(map);}}
 		public class Assignment : Action {
 			private Map key;
 			public Assignment(Map key, Rule rule)
 				: base(rule) {
-				this.key = key;
-			}
+				this.key = key;}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				if (map != null) {
-					result[key] = map;
-				}
-			}
-		}
+					result[key] = map;}}}
 		public class Match : Action {
 			public Match(Rule rule)
-				: base(rule) {
-			}
-			protected override void Effect(Parser parser, Map map, ref Map result) {
-			}
-		}
+				: base(rule) {}
+			protected override void Effect(Parser parser, Map map, ref Map result) {}}
 		public class ReferenceAssignment : Action {
 			public ReferenceAssignment(Rule rule)
-				: base(rule) {
-			}
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = map;
-			}
-		}
+				result = map;}}
 		public class Append : Action {
 			public Append(Rule rule)
-				: base(rule) {
-			}
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				foreach (Map m in map.Array) {
-					result.Append(m);
-				}
-			}
-		}
+					result.Append(m);}}}
 		public class Join : Action {
 			public Join(Rule rule)
-				: base(rule) {
-			}
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = Library.Join(result, map);
-			}
-		}
+				result = Library.Join(result, map);}}
 		public class Merge : Action {
 			public Merge(Rule rule)
-				: base(rule) {
-			}
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = Library.Merge(result, map);
-			}
-		}
+				result = Library.Merge(result, map);}}
 		public class CustomProduction : Action {
 			private CustomActionDelegate action;
 			public CustomProduction(CustomActionDelegate action, Rule rule)
 				: base(rule) {
-				this.action = action;
-			}
+				this.action = action;}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				this.action(parser, map, ref result);
-			}
-		}
+				this.action(parser, map, ref result);}}
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 
 		public abstract class Rule {
 			public static implicit operator Rule(string s) {
-				return StringRule(s);
-			}
+				return StringRule(s);}
 			public static implicit operator Rule(char c) {
-				return new Characters(c);
-			}
+				return new Characters(c);}
 			public Map Match(Parser parser, out bool matched) {
 				int oldIndex = parser.index;
 				int oldLine = parser.Line;
@@ -2556,59 +2429,41 @@ namespace Meta {
 					parser.index = oldIndex;
 					parser.Line = oldLine;
 					parser.Column = oldColumn;
-					parser.indentationCount = oldIndentation;
-				}
+					parser.indentationCount = oldIndentation;}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
 							new Source(oldLine, oldColumn, parser.FileName),
-							new Source(parser.Line, parser.Column, parser.FileName));
-					}
-				}
-				return result;
-			}
-			protected abstract Map MatchImplementation(Parser parser, out bool match);
-		}
+							new Source(parser.Line, parser.Column, parser.FileName));}}
+				return result;}
+			protected abstract Map MatchImplementation(Parser parser, out bool match);}
 		public class IgnoreCharacter : CharacterRule {
 			private char c;
 			public IgnoreCharacter(char c)
-				: base(new char[] { c }, false) {
-				this.c = c;
-			}
+				: base(new char[] {}, false) {
+				this.c = c;}
 			protected override bool MatchCharacer(char next) {
-				return next == c && next != Syntax.endOfFile;
-			}
-		}
+				return next == c && next != Syntax.endOfFile;}}
 		public class Characters : CharacterRule {
 			public Characters(params char[] characters)
-				: base(characters, true) {
-			}
+				: base(characters, true) {}
 			protected override bool MatchCharacer(char next) {
 				if (next == Syntax.endOfFile) {
-					return false;
-				}
+					return false;}
 				foreach (char c in characters) {
 					if (c.Equals(next)) {
-						return true;
-					}
-				}
-				return false;
-			}
-		}
+						return true;}}
+				return false;}}
 		public class CharacterExcept : CharacterRule {
 			public CharacterExcept(params char[] characters)
-				: base(characters, true) {
-			}
+				: base(characters, true) {}
 			protected override bool MatchCharacer(char c) {
-				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;
-			}
-		}
+				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;}}
 		public abstract class CharacterRule : Rule {
 			private bool keep;
 			public CharacterRule(char[] chars, bool keep) {
 				this.characters = chars;
-				this.keep = keep;
-			}
+				this.keep = keep;}
 			protected char[] characters;
 			protected abstract bool MatchCharacer(char c);
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
@@ -2619,16 +2474,11 @@ namespace Meta {
 					parser.Column++;
 					if (character.Equals(Syntax.unixNewLine)) {
 						parser.Line++;
-						parser.Column = 1;
-					}
-					return character;
-				}
+						parser.Column = 1;}
+					return character;}
 				else {
 					matched = false;
-					return null;
-				}
-			}
-		}
+					return null;}}}
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
@@ -2637,69 +2487,51 @@ namespace Meta {
 			public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
 				this.pre = pre;
 				this.rule = rule;
-				this.post = post;
-			}
+				this.post = post;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				pre(parser);
 				Map result = rule.Match(parser, out matched);
 				post(parser);
-				return result;
-			}
-		}
+				return result;}}
 		// remove?
 		public static Rule StringRule(string text) {
 			List<Action> actions = new List<Action>();
 			foreach (char c in text) {
-				actions.Add(c);
-			}
-			return new Sequence(actions.ToArray());
-		}
+				actions.Add(c);}
+			return new Sequence(actions.ToArray());}
 		public delegate Map ParseFunction(Parser parser, out bool matched);
 		public class CustomRule : Rule {
 			private ParseFunction parseFunction;
 			public CustomRule(ParseFunction parseFunction) {
-				this.parseFunction = parseFunction;
-			}
+				this.parseFunction = parseFunction;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
-				return parseFunction(parser, out matched);
-			}
-		}
+				return parseFunction(parser, out matched);}}
 		public delegate Rule RuleFunction();
 		public class DelayedRule : Rule {
 			private RuleFunction ruleFunction;
 			private Rule rule;
 			public DelayedRule(RuleFunction ruleFunction) {
-				this.ruleFunction = ruleFunction;
-			}
+				this.ruleFunction = ruleFunction;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				if (rule == null) {
-					rule = ruleFunction();
-				}
-				return rule.Match(parser, out matched);
-			}
-		}
+					rule = ruleFunction();}
+				return rule.Match(parser, out matched);}}
 		public class Alternatives : Rule {
 			private Rule[] cases;
 			public Alternatives(params Rule[] cases) {
-				this.cases = cases;
-			}
+				this.cases = cases;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				Map result = null;
 				matched = false;
 				foreach (Rule expression in cases) {
 					result = (Map)expression.Match(parser, out matched);
 					if (matched) {
-						break;
-					}
-				}
-				return result;
-			}
-		}
+						break;}}
+				return result;}}
 		public class Sequence : Rule {
 			private Action[] actions;
 			public Sequence(params Action[] rules) {
-				this.actions = rules;
-			}
+				this.actions = rules;}
 			protected override Map MatchImplementation(Parser parser, out bool match) {
 				Map result = new Map();
 				bool success = true;
@@ -2708,120 +2540,84 @@ namespace Meta {
 						bool matched = action.Execute(parser, ref result);
 						if (!matched) {
 							success = false;
-							break;
-						}
-					}
-				}
+							break;}}}
 				if (!success) {
 					match = false;
-					return null;
-				}
+					return null;}
 				else {
 					match = true;
-					return result;
-				}
-			}
-		}
+					return result;}}}
 		public class LiteralRule : Rule {
 			private Map literal;
 			public LiteralRule(Map literal) {
-				this.literal = literal;
-			}
+				this.literal = literal;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				matched = true;
-				return literal;
-			}
-		}
+				return literal;}}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
-				: base(action) {
-			}
+				: base(action) {}
 			protected override Map MatchImplementation(Parser parser, out bool match) {
 				Map result = base.MatchImplementation(parser, out match);
 				if (match && result.IsString) {
-					result = result.GetString();
-				}
-				return result;
-			}
-		}
+					result = result.GetString();}
+				return result;}}
 		public class ZeroOrMore : Rule {
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				Map list = new Map(new ListStrategy());
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
-						break;
-					}
-				}
+						break;}}
 				matched = true;
-				return list;
-			}
+				return list;}
 			private Action action;
 			public ZeroOrMore(Action action) {
-				this.action = action;
-			}
-		}
+				this.action = action;}}
 		public class OneOrMore : Rule {
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				Map list = new Map(new ListStrategy());
 				matched = false;
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
-						break;
-					}
-					matched = true;
-				}
-				return list;
-			}
+						break;}
+					matched = true;}
+				return list;}
 			private Action action;
 			public OneOrMore(Action action) {
-				this.action = action;
-			}
-		}
+				this.action = action;}}
 		public class Optional : Rule {
 			private Rule rule;
 			public Optional(Rule rule) {
-				this.rule = rule;
-			}
+				this.rule = rule;}
 			protected override Map MatchImplementation(Parser parser, out bool match) {
 				Map matched = rule.Match(parser, out match);
 				if (matched == null) {
 					match = true;
-					return null;
-				}
+					return null;}
 				else {
 					match = true;
-					return matched;
-				}
-			}
-		}
+					return matched;}}}
 		private char Look() {
 			if (index < text.Length) {
-				return text[index];
-			}
+				return text[index];}
 			else {
-				return Syntax.endOfFile;
-			}
-		}
+				return Syntax.endOfFile;}}
 		public static Map Parse(string file) {
-			return ParseString(System.IO.File.ReadAllText(file), file);
-		}
+			return ParseString(System.IO.File.ReadAllText(file), file);}
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			bool matched;
 			Map result = Parser.File.Match(parser, out matched);
 			if (parser.index != parser.text.Length) {
-				throw new SyntaxException("Expected end of file.", parser);
-			}
-			return result;
-		}
-	}
+				throw new SyntaxException("Expected end of file.", parser);}
+			return result;}}
 	public class Syntax {
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
 		public const char arraySeparator = ';';
 		public const char programSeparator = ';';
 		public const char programStart = '{';
-		public const char programEnd = '}';
+		public const char programEnd ='}';
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
@@ -2845,134 +2641,98 @@ namespace Meta {
 		public const char tab = '\t';
 		public const char current = '&';
 		public readonly static char[] integer = new char[] {
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 		public readonly static char[] lookupStringForbidden = new char[] {
 			current, lastArgument, explicitCall, indentation, '\r', '\n',
 			function, @string,emptyMap, '!', root, callStart, callEnd, 
 			character, programStart, '*', '$', '\\', '<', '=', arrayStart,
 			'-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', 
 			programStart, programSeparator ,callSeparator,programEnd,
-			arrayEnd,arraySeparator};
+			arrayEnd};
 		public readonly static char[] lookupStringForbiddenFirst = new char[] {
 			current, lastArgument, explicitCall, indentation, '\r', '\n', select,
 			function, @string, emptyMap, '!', root, callStart, callEnd, character,
 			programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
 			'3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
 			'-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
-			programEnd,arraySeparator,arrayEnd};
-	}
+			programEnd,arraySeparator};}
 	public class Serialization {
 		public static string Serialize(Map map) {
 			try {
-				return Serialize(map, -1).Trim();
-			}
+				return Serialize(map, -1).Trim();}
 			catch (Exception e) {
-				throw e;
-			}
-		}
+				throw e;}}
 		private static string Number(Map map) {
-			return map.GetNumber().ToString();
-		}
+			return map.GetNumber().ToString();}
 
 		private static string Serialize(Map map, int indentation) {
 			if (!map.Strategy.IsNormal) {
-				return map.Strategy.ToString();
-			}
+				return map.Strategy.ToString();}
 			else if (map.Count == 0) {
 				if (indentation < 0) {
-					return "";
-				}
+					return "";}
 				else {
-					return "0";
-				}
-			}
+					return "0";}}
 			else if (map.IsNumber) {
-				return Number(map);
-			}
+				return Number(map);}
 			else if (map.IsString) {
-				return String(map, indentation);
-			}
+				return String(map, indentation);}
 			else {
-				return Map(map, indentation);
-			}
-		}
+				return Map(map, indentation);}}
 		private static string Map(Map map, int indentation) {
 			string text;
 			if (indentation < 0) {
-				text = "";
-			}
+				text = "";}
 			else {
-				text = "," + Environment.NewLine;
-			}
+				text = "," + Environment.NewLine;}
 			foreach (KeyValuePair<Map, Map> entry in map) {
-				text += Entry(indentation, entry);
-			}
-			return text;
-		}
+				text += Entry(indentation, entry);}
+			return text;}
 
 		private static string Entry(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Equals(CodeKeys.Function)) {
-				return Function(entry.Value, indentation + 1);
-			}
+				return Function(entry.Value, indentation + 1);}
 			else {
 				return (Indentation(indentation + 1)
 					+ Key(indentation, entry) +
 					"=" +
 					Serialize(entry.Value, indentation + 1)
 					+ Environment.NewLine).TrimEnd('\r', '\n')
-					+ Environment.NewLine;
-			}
-		}
+					+ Environment.NewLine;}}
 		private static string Literal(Map value, int indentation) {
 			if (value.IsNumber) {
-				return Number(value);
-			}
+				return Number(value);}
 			else if (value.IsString) {
-				return String(value, indentation);
-			}
-			throw new Exception("not implemented");
-		}
+				return String(value, indentation);}
+			throw new Exception("not implemented");}
 		private static string Function(Map value, int indentation) {
-			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);
-		}
+			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);}
 		private static string Root() {
-			return "/";
-		}
+			return "/";}
 		private static string Expression(Map map, int indentation) {
 			if (map.ContainsKey(CodeKeys.Literal)) {
-				return Literal(map[CodeKeys.Literal], indentation);
-			}
+				return Literal(map[CodeKeys.Literal], indentation);}
 			else if (map.ContainsKey(CodeKeys.Root)) {
-				return Root();
-			}
+				return Root();}
 			if (map.ContainsKey(CodeKeys.Call)) {
-				return Call(map[CodeKeys.Call], indentation);
-			}
+				return Call(map[CodeKeys.Call], indentation);}
 			else if (map.ContainsKey(CodeKeys.Program)) {
-				return Program(map[CodeKeys.Program], indentation);
-			}
+				return Program(map[CodeKeys.Program], indentation);}
 			else if (map.ContainsKey(CodeKeys.Select)) {
-				return Select(map[CodeKeys.Select], indentation);
-			}
+				return Select(map[CodeKeys.Select], indentation);}
 			else if (map.ContainsKey(CodeKeys.Search)) {
-				return Search(map[CodeKeys.Search], indentation);
-			}
-			return Serialize(map, indentation);
-		}
+				return Search(map[CodeKeys.Search], indentation);}
+			return Serialize(map, indentation);}
 		private static string FunctionStatement(Map map, int indentation) {
 			return map[CodeKeys.Parameter].GetString() + "|" +
-				Expression(map[CodeKeys.Expression], indentation);
-		}
+				Expression(map[CodeKeys.Expression], indentation);}
 		private static string KeyStatement(Map map, int indentation) {
 			Map key = map[CodeKeys.Key];
 			if (key.Equals(new Map(CodeKeys.Literal, CodeKeys.Function))) {
-				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);
-			}
+				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);}
 			else {
 				return Expression(map[CodeKeys.Key], indentation) + "="
-					+ Expression(map[CodeKeys.Value], indentation);
-			}
-		}
+					+ Expression(map[CodeKeys.Value], indentation);}}
 		private static string CurrentStatement(Map map, int indentation) {
 			return "&=" + Expression(map[CodeKeys.Value], indentation);
 		}
