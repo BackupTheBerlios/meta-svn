@@ -999,493 +999,325 @@ namespace Meta {
 		public ObjectMap(string text)
 			: this(text, text.GetType()) {}
 		public ObjectMap(Map target)
-			: this(target, target.GetType()) {
-		}
+			: this(target, target.GetType()) {}
 		public ObjectMap(object target, Type type)
-			: base(target, type) {
-		}
+			: base(target, type) {}
 		public ObjectMap(object target)
-			: base(target, target.GetType()) {
-		}
+			: base(target, target.GetType()) {}
 		public override string ToString() {
-			return Object.ToString();
-		}
+			return Object.ToString();}
 		public override Map CopyData() {
-			return new Map(Object);
-		}
-	}
+			return new Map(Object);}}
 
 	public class EmptyStrategy : MapStrategy {
 		public override bool ContainsKey(Map key) {
-			return false;
-		}
+			return false;}
 		public override void Append(Map map, Map parent) {
 			ListStrategy list = new ListStrategy();
 			list.Append(map, parent);
-			parent.Strategy = list;
-		}
+			parent.Strategy = list;}
 		public static EmptyStrategy empty = new EmptyStrategy();
-		private EmptyStrategy() {
-		}
+		private EmptyStrategy() {}
 		public override bool IsNumber {
 			get {
-				return true;
-			}
-		}
+				return true;}}
 		public override int Count {
 			get {
-				return 0;
-			}
-		}
+				return 0;}}
 		public override int GetArrayCount() {
-			return 0;
-		}
+			return 0;}
 		public override int GetHashCode() {
-			return 0.GetHashCode();
-		}
+			return 0.GetHashCode();}
 		public override bool Equals(object obj) {
-			return ((MapStrategy)obj).Count == 0;
-		}
+			return ((MapStrategy)obj).Count == 0;}
 		public override IEnumerable<Map> Keys {
 			get {
-				yield break;
-			}
-		}
+				yield break;}}
 		public override Map CopyData() {
-			return new Map(this);
-		}
+			return new Map(this);}
 		public override MapStrategy DeepCopy(Map key, Map value, Map map) {
 			if (key.IsNumber) {
 				if (key.Count == 0 && value.IsNumber) {
 					NumberStrategy number = new NumberStrategy(0);
 					number.Set(key, value, map);
-					return number;
-				}
+					return number;}
 				else {
 					if (key.Equals(new Map(1))) {
 						ListStrategy list = new ListStrategy();
 						list.Append(value, map);
-						return list;
-					}
-				}
-			}
+						return list;}}}
 			DictionaryStrategy dictionary = new DictionaryStrategy();
 			dictionary.Set(key, value, map);
-			return dictionary;
-		}
+			return dictionary;}
 		public override void Set(Map key, Map val, Map map) {
-			map.Strategy = DeepCopy(key, val, map);
-		}
+			map.Strategy = DeepCopy(key, val, map);}
 		public override Map Get(Map key) {
-			return null;
-		}
-	}
+			return null;}}
 
 	public class NumberStrategy : MapStrategy {
 		public override int GetArrayCount() {
-			return 0;
-		}
+			return 0;}
 		public override bool Equals(object obj) {
 			MapStrategy strategy = obj as MapStrategy;
 			if (strategy != null) {
 				if (strategy.IsNumber && strategy.GetNumber().Equals(number)) {
-					return true;
-				}
+					return true;}
 				else {
-					return base.Equals(strategy);
-				}
-			}
-			return false;
-		}
+					return base.Equals(strategy);}}
+			return false;}
 		private Number number;
 		public NumberStrategy(Number number) {
-			this.number = number;
-		}
+			this.number = number;}
 		public override Map Get(Map key) {
 			if (ContainsKey(key)) {
 				if (key.Equals(Map.Empty)) {
-					return number - 1;
-				}
+					return number - 1;}
 				else if (key.Equals(NumberKeys.Negative)) {
-					return Map.Empty;
-				}
+					return Map.Empty;}
 				else if (key.Equals(NumberKeys.Denominator)) {
-					return new Map(new Number(number.Denominator));
-				}
+					return new Map(new Number(number.Denominator));}
 				else {
-					throw new ApplicationException("Error.");
-				}
-			}
+					throw new ApplicationException("Error.");}}
 			else {
-				return null;
-			}
-		}
+				return null;}}
 		public override void Set(Map key, Map value, Map map) {
 			if (key.Equals(Map.Empty) && value.IsNumber) {
-				this.number = value.GetNumber() + 1;
-			}
+				this.number = value.GetNumber() + 1;}
 			else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
 				if (number > 0) {
-					number = 0 - number;
-				}
-			}
+					number = 0 - number;}}
 			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
-				this.number = new Number(number.Numerator, value.GetNumber().GetInt32());
-			}
+				this.number = new Number(number.Numerator, value.GetNumber().GetInt32());}
 			else {
-				Panic(key, value, new DictionaryStrategy(), map);
-			}
-		}
+				Panic(key, value, new DictionaryStrategy(), map);}}
 		public override IEnumerable<Map> Keys {
 			get {
 				if (number != 0) {
-					yield return Map.Empty;
-				}
+					yield return Map.Empty;}
 				if (number < 0) {
-					yield return NumberKeys.Negative;
-				}
+					yield return NumberKeys.Negative;}
 				if (number.Denominator != 1.0d) {
-					yield return NumberKeys.Denominator;
-				}
-			}
-		}
+					yield return NumberKeys.Denominator;}}}
 		public override Map CopyData() {
-			return new Map(new NumberStrategy(number));
-		}
+			return new Map(new NumberStrategy(number));}
 		public override bool IsNumber {
 			get {
-				return true;
-			}
-		}
+				return true;}}
 		public override Number GetNumber() {
-			return number;
-		}
+			return number;}
 		public override int GetHashCode() {
-			return (int)(number.Numerator % int.MaxValue);
-		}
-	}
+			return (int)(number.Numerator % int.MaxValue);}}
 
 	public class StringStrategy : MapStrategy {
 		private string text;
 		public StringStrategy(string text) {
-			this.text = text;
-		}
+			this.text = text;}
 		public override int GetHashCode() {
-			return text.Length;
-		}
+			return text.Length;}
 		public override bool Equals(object obj) {
 			if (obj is StringStrategy) {
-				return ((StringStrategy)obj).text == text;
-			}
+				return ((StringStrategy)obj).text == text;}
 			else {
-				return base.Equals(obj);
-			}
-		}
+				return base.Equals(obj);}}
 		public override void Set(Map key, Map val, Map map) {
 			MapStrategy strategy;
 			if (key.Equals(new Map(Count + 1))) {
-				strategy = new ListStrategy();
-			}
+				strategy = new ListStrategy();}
 			else {
-				strategy = new DictionaryStrategy();
-			}
-			Panic(key, val, strategy, map);
-		}
+				strategy = new DictionaryStrategy();}
+			Panic(key, val, strategy, map);}
 		public override int Count {
 			get {
-				return text.Length;
-			}
-		}
+				return text.Length;}}
 		public override bool IsNumber {
 			get {
-				return text.Length == 0;
-			}
-		}
+				return text.Length == 0;}}
 		public override bool IsString {
 			get {
-				return true;
-			}
-		}
+				return true;}}
 		public override string GetString() {
-			return text;
-		}
+			return text;}
 		public override Map Get(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
 				if (number.IsNatural && number > 0 && number <= Count) {
-					return text[number.GetInt32() - 1];
-				}
+					return text[number.GetInt32() - 1];}
 				else {
-					return null;
-				}
-			}
+					return null;}}
 			else {
-				return null;
-			}
-		}
+				return null;}}
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
 				if (number.IsNatural) {
-					return number > 0 && number <= text.Length;
-				}
+					return number > 0 && number <= text.Length;}
 				else {
-					return false;
-				}
-			}
+					return false;}}
 			else {
-				return false;
-			}
-		}
+				return false;}}
 		public override int GetArrayCount() {
-			return text.Length;
-		}
+			return text.Length;}
 		public override Map CopyData() {
-			return new Map(this);
-		}
+			return new Map(this);}
 		public override IEnumerable<Map> Keys {
 			get {
 				for (int i = 1; i <= text.Length; i++) {
-					yield return i;
-				}
-			}
-		}
-	}
+					yield return i;}}}}
 	public class ListStrategy : MapStrategy {
 		public override MapStrategy DeepCopy(Map key, Map value, Map map) {
 			if (key.Equals(new Map(Count + 1))) {
 				List<Map> newList = new List<Map>(this.list);
 				newList.Add(value);
-				return new ListStrategy(newList);
-			}
+				return new ListStrategy(newList);}
 			else {
-				return base.DeepCopy(key, value, map);
-			}
-		}
+				return base.DeepCopy(key, value, map);}}
 		public override Map CopyData() {
-			return new Map(new CloneStrategy(this));
-		}
+			return new Map(new CloneStrategy(this));}
 		public override void Append(Map map, Map parent) {
-			list.Add(map);
-		}
+			list.Add(map);}
 		private List<Map> list;
 		public ListStrategy()
-			: this(5) {
-		}
+			: this(5) {}
 		public ListStrategy(List<Map> list) {
-			this.list = list;
-		}
+			this.list = list;}
 		public ListStrategy(int capacity) {
-			this.list = new List<Map>(capacity);
-		}
+			this.list = new List<Map>(capacity);}
 		public ListStrategy(ListStrategy original) {
-			this.list = new List<Map>(original.list);
-		}
+			this.list = new List<Map>(original.list);}
 		public override Map Get(Map key) {
 			Map value = null;
 			if (key.IsNumber) {
 				int integer = key.GetNumber().GetInt32();
 				if (integer >= 1 && integer <= list.Count) {
-					value = list[integer - 1];
-				}
-			}
-			return value;
-		}
+					value = list[integer - 1];}}
+			return value;}
 		public override void Set(Map key, Map val, Map map) {
 			if (key.IsNumber) {
 				int integer = key.GetNumber().GetInt32();
 				if (integer >= 1 && integer <= list.Count) {
-					list[integer - 1] = val;
-				}
+					list[integer - 1] = val;}
 				else if (integer == list.Count + 1) {
-					list.Add(val);
-				}
+					list.Add(val);}
 				else {
-					Panic(key, val, new DictionaryStrategy(), map);
-				}
-			}
+					Panic(key, val, new DictionaryStrategy(), map);}}
 			else {
-				Panic(key, val, new DictionaryStrategy(), map);
-			}
-		}
+				Panic(key, val, new DictionaryStrategy(), map);}}
 		public override int Count {
 			get {
-				return list.Count;
-			}
-		}
+				return list.Count;}}
 		public override IEnumerable<Map> Array {
 			get {
-				return this.list;
-			}
-		}
+				return this.list;}}
 		public override int GetArrayCount() {
-			return this.list.Count;
-		}
+			return this.list.Count;}
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number integer = key.GetNumber();
-				return integer >= 1 && integer <= list.Count;
-			}
+				return integer >= 1 && integer <= list.Count;}
 			else {
-				return false;
-			}
-		}
+				return false;}}
 		public override IEnumerable<Map> Keys {
 			get {
 				for (int i = 1; i <= list.Count; i++) {
-					yield return i;
-				}
-			}
-		}
-	}
+					yield return i;}}}}
 	public class DictionaryStrategy : MapStrategy {
 		public override Map CopyData() {
-			return new Map(new CloneStrategy(this));
-		}
+			return new Map(new CloneStrategy(this));}
 		public override bool IsNumber {
 			get {
-				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);
-			}
-		}
+				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
 		public override int GetArrayCount() {
 			int i = 1;
 			while (this.ContainsKey(i)) {
-				i++;
-			}
-			return i - 1;
-		}
+				i++;}
+			return i - 1;}
 		private Dictionary<Map, Map> dictionary;
 		public DictionaryStrategy()
-			: this(2) {
-		}
+			: this(2) {}
 		public DictionaryStrategy(int Count) {
-			this.dictionary = new Dictionary<Map, Map>(Count);
-		}
+			this.dictionary = new Dictionary<Map, Map>(Count);}
 		public DictionaryStrategy(Dictionary<Map, Map> data) {
-			this.dictionary = data;
-		}
+			this.dictionary = data;}
 		public override Map Get(Map key) {
 			Map val;
 			dictionary.TryGetValue(key, out val);
-			return val;
-		}
+			return val;}
 		public override void Set(Map key, Map value, Map map) {
-			dictionary[key] = value;
-		}
+			dictionary[key] = value;}
 		public override bool ContainsKey(Map key) {
-			return dictionary.ContainsKey(key);
-		}
+			return dictionary.ContainsKey(key);}
 		public override IEnumerable<Map> Keys {
 			get {
-				return dictionary.Keys;
-			}
-		}
+				return dictionary.Keys;}}
 		public override int Count {
 			get {
-				return dictionary.Count;
-			}
-		}
-	}
+				return dictionary.Count;}}}
 	public class CloneStrategy : MapStrategy {
 		public override bool IsNormal {
 			get {
-				return original.IsNormal;
-			}
-		}
+				return original.IsNormal;}}
 		public override int GetArrayCount() {
-			return original.GetArrayCount();
-		}
+			return original.GetArrayCount();}
 		private MapStrategy original;
 		public CloneStrategy(MapStrategy original) {
-			this.original = original;
-		}
+			this.original = original;}
 		public override IEnumerable<Map> Array {
 			get {
-				return original.Array;
-			}
-		}
+				return original.Array;}}
 		public override bool ContainsKey(Map key) {
-			return original.ContainsKey(key);
-		}
+			return original.ContainsKey(key);}
 		public override int Count {
 			get {
-				return original.Count;
-			}
-		}
+				return original.Count;}}
 		public override Map CopyData() {
 			MapStrategy clone = new CloneStrategy(this.original);
-			return new Map(clone);
-		}
+			return new Map(clone);}
 		public override bool Equals(object obj) {
-			return obj.Equals(original);
-		}
+			return obj.Equals(original);}
 		public override int GetHashCode() {
-			return original.GetHashCode();
-		}
+			return original.GetHashCode();}
 		public override Number GetNumber() {
-			return original.GetNumber();
-		}
+			return original.GetNumber();}
 		public override string GetString() {
-			return original.GetString();
-		}
+			return original.GetString();}
 		public override bool IsNumber {
 			get {
-				return original.IsNumber;
-			}
-		}
+				return original.IsNumber;}}
 		public override bool IsString {
 			get {
-				return original.IsString;
-			}
-		}
+				return original.IsString;}}
 		public override IEnumerable<Map> Keys {
 			get {
-				return original.Keys;
-			}
-		}
+				return original.Keys;}}
 		public override Map Get(Map key) {
-			return original.Get(key);
-		}
+			return original.Get(key);}
 		public override void Set(Map key, Map value, Map map) {
-			map.Strategy = original.DeepCopy(key, value, map);
-		}
-	}
+			map.Strategy = original.DeepCopy(key, value, map);}}
 	public class Profile {
 		public double time;
 		public int calls;
-		public int recursive;
-	}
+		public int recursive;}
 	public abstract class MapStrategy {
 		public virtual bool IsNormal {
 			get {
-				return true;
-			}
-		}
+				return true;}}
 		public override int GetHashCode() {
 			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);
-			}
+				return (int)(GetNumber().Numerator % int.MaxValue);}
 			else {
-				return Count;
-			}
-		}
+				return Count;}}
 		public override bool Equals(object obj) {
 			MapStrategy strategy = obj as MapStrategy;
 			if (strategy == null || strategy.Count != this.Count) {
-				return false;
-			}
+				return false;}
 			else {
 				bool isEqual = true;
 				foreach (Map key in this.Keys) {
 					Map otherValue = strategy.Get(key);
 					Map thisValue = Get(key);
 					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
-						isEqual = false;
-					}
-				}
-				return isEqual;
-			}
-		}
+						isEqual = false;}}
+				return isEqual;}}
 		[DllImport("Kernel32.dll")]
 		protected static extern bool QueryPerformanceCounter(
 			out long lpPerformanceCount);
@@ -1498,40 +1330,28 @@ namespace Meta {
 
 		static MapStrategy() {
 			if (QueryPerformanceFrequency(out freq) == false) {
-				throw new ApplicationException();
-			}
-		}
+				throw new ApplicationException();}}
 		public virtual string Serialize(Map parent) {
-			return parent.SerializeDefault();
-		}
+			return parent.SerializeDefault();}
 		public virtual object UniqueKey {
 			get {
-				return Get(CodeKeys.Function).Source;
-			}
-		}
+				return Get(CodeKeys.Function).Source;}}
 		public virtual Map CallImplementation(Map argument, Map parent) {
 			if (ContainsKey(CodeKeys.Function)) {
 				if (this.Get(CodeKeys.Function).GetCompiled(typeof(Map)) != null) {
-					return this.Get(CodeKeys.Function).GetCompiled(typeof(Map)).Evaluate(parent);
-				}
+					return this.Get(CodeKeys.Function).GetCompiled(typeof(Map)).Evaluate(parent);}
 				else {
-					return this.Get(CodeKeys.Function).GetExpression(null).Compile(null).Evaluate(parent);
-				}
-			}
+					return this.Get(CodeKeys.Function).GetExpression(null).Compile(null).Evaluate(parent);}}
 			else {
-				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
-			}
-		}
+				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));}}
 		public Map Call(Map argument, Map parent) {
 			long start = 0;
 			if (Interpreter.profiling && UniqueKey != null) {
 				QueryPerformanceCounter(out start);
 				if (!Map.calls.ContainsKey(UniqueKey)) {
-					Map.calls[UniqueKey] = new Profile();
-				}
+					Map.calls[UniqueKey] = new Profile();}
 				Map.calls[UniqueKey].calls++;
-				Map.calls[UniqueKey].recursive++;
-			}
+				Map.calls[UniqueKey].recursive++;}
 			Map result = CallImplementation(argument, parent);
 			if (Interpreter.profiling) {
 				if (UniqueKey != null) {
@@ -1540,166 +1360,112 @@ namespace Meta {
 					double duration = (double)(stop - start) / (double)freq;
 					Map.calls[UniqueKey].recursive--;
 					if (Map.calls[UniqueKey].recursive == 0) {
-						Map.calls[UniqueKey].time += duration;
-					}
-				}
-			}
+						Map.calls[UniqueKey].time += duration;}}}
 			return result;
-
-		}
+}
 		public virtual void Append(Map map, Map parent) {
-			this.Set(GetArrayCount() + 1, map, parent);
-		}
+			this.Set(GetArrayCount() + 1, map, parent);}
 		public abstract void Set(Map key, Map val, Map map);
 		public abstract Map Get(Map key);
 		public virtual bool ContainsKey(Map key) {
 			foreach (Map k in Keys) {
 				if (k.Equals(key)) {
-					return true;
-				}
-			}
-			return false;
-		}
+					return true;}}
+			return false;}
 		public abstract int GetArrayCount();
 		public virtual Map CopyData() {
 			Map map = new Map();
 			foreach (Map key in Keys) {
-				map[key] = this.Get(key).Copy();
-			}
-			return map;
-		}
+				map[key] = this.Get(key).Copy();}
+			return map;}
 		protected virtual void Panic(Map key, Map val, MapStrategy strategy, Map map) {
 			map.Strategy = strategy;
 			foreach (Map k in Keys) {
-				strategy.Set(k, Get(k).Copy(), map);
-			}
-			map.Strategy.Set(key, val, map);
-		}
+				strategy.Set(k, Get(k).Copy(), map);}
+			map.Strategy.Set(key, val, map);}
 		public virtual MapStrategy DeepCopy(Map key, Map value, Map map) {
 			MapStrategy strategy = new DictionaryStrategy();
 			foreach (Map k in Keys) {
-				strategy.Set(k, Get(k).Copy(), map);
-			}
+				strategy.Set(k, Get(k).Copy(), map);}
 			strategy.Set(key, value, map);
-			return strategy;
-		}
+			return strategy;}
 		public virtual bool IsNumber {
 			get {
-				return GetIsNumberDefault();
-			}
-		}
+				return GetIsNumberDefault();}}
 		public bool GetIsNumberDefault() {
-			return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);
-		}
+			return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}
 		public virtual bool IsString {
 			get {
-				return IsStringDefault;
-			}
-		}
+				return IsStringDefault;}}
 		public bool IsStringDefault {
 			get {
 				if (GetArrayCount() != Count) {
-					return false;
-				}
+					return false;}
 				foreach (Map m in Array) {
 					if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}
+						return false;}}
+				return true;}}
 		public string GetStringDefault() {
 			StringBuilder text = new StringBuilder("");
 			foreach (Map key in Keys) {
-				text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));
-			}
-			return text.ToString();
-		}
+				text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));}
+			return text.ToString();}
 		public virtual string GetString() {
-			return GetStringDefault();
-		}
+			return GetStringDefault();}
 		public virtual Number GetNumber() {
-			return GetNumberDefault();
-		}
+			return GetNumberDefault();}
 		public Number GetNumberDefault() {
 			Number number;
 			if (Count == 0) {
-				number = 0;
-			}
+				number = 0;}
 			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber) {
-				number = 1 + this.Get(Map.Empty).GetNumber();
-			}
+				number = 1 + this.Get(Map.Empty).GetNumber();}
 			else {
-				throw new ApplicationException("Map is not an integer");
-			}
-			return number;
-		}
+				throw new ApplicationException("Map is not an integer");}
+			return number;}
 		public abstract IEnumerable<Map> Keys {
-			get;
-		}
+			get;}
 		public virtual IEnumerable<Map> Array {
 			get {
 				for (int i = 1; this.ContainsKey(i); i++) {
-					yield return Get(i);
-				}
-			}
-		}
+					yield return Get(i);}}}
 		public virtual int Count {
 			get {
 				int count = 0;
 				foreach (Map key in Keys) {
-					count++;
-				}
-				return count;
-			}
-		}
-	}
+					count++;}
+				return count;}}}
 	public abstract class Member {
 		public abstract void Set(object obj, Map value);
-		public abstract Map Get(object obj);
-	}
+		public abstract Map Get(object obj);}
 	public class TypeMember : Member {
 		public override void Set(object obj, Map value) {
-			throw new Exception("The method or operation is not implemented.");
-		}
+			throw new Exception("The method or operation is not implemented.");}
 		private Type type;
 		public TypeMember(Type type) {
-			this.type = type;
-		}
+			this.type = type;}
 		public override Map Get(object obj) {
-			return new Map(new TypeMap(type));
-		}
-	}
+			return new Map(new TypeMap(type));}}
 	public class FieldMember : Member {
 		private FieldInfo field;
 		public FieldMember(FieldInfo field) {
-			this.field = field;
-		}
+			this.field = field;}
 		public override void Set(object obj, Map value) {
-			field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));
-		}
+			field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
 		public override Map Get(object obj) {
-			return Transform.ToMeta(field.GetValue(obj));
-		}
-	}
+			return Transform.ToMeta(field.GetValue(obj));}}
 	public class MethodMember : Member {
 		private MethodBase method;
 		public MethodMember(MethodInfo method) {
-			this.method = method;
-		}
+			this.method = method;}
 		public override void Set(object obj, Map value) {
-			throw new Exception("The method or operation is not implemented.");
-		}
+			throw new Exception("The method or operation is not implemented.");}
 		public override Map Get(object obj) {
-			return new Map(new Method(method, obj, method.DeclaringType));
-		}
-	}
+			return new Map(new Method(method, obj, method.DeclaringType));}}
 	public class MemberCache {
 		private BindingFlags bindingFlags;
 		public MemberCache(BindingFlags bindingFlags) {
-			this.bindingFlags = bindingFlags;
-		}
+			this.bindingFlags = bindingFlags;}
 		public Dictionary<Map, Member> GetMembers(Type type) {
 			if (!cache.ContainsKey(type)) {
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
@@ -1707,115 +1473,77 @@ namespace Meta {
 					MethodInfo method = member as MethodInfo;
 					if (method != null) {
 						string name = TypeMap.GetMethodName(method);
-						data[name] = new MethodMember(method);
-					}
+						data[name] = new MethodMember(method);}
 					FieldInfo field = member as FieldInfo;
 					if (field != null) {
-						data[field.Name] = new FieldMember(field);
-					}
+						data[field.Name] = new FieldMember(field);}
 					Type t = member as Type;
 					if (t != null) {
-						data[t.Name] = new TypeMember(t);
-					}
-				}
-				cache[type] = data;
-			}
-			else {
-			}
-			return cache[type];
-		}
-		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
-	}
+						data[t.Name] = new TypeMember(t);}}
+				cache[type] = data;}
+			else {}
+			return cache[type];}
+		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();}
 	public abstract class DotNetMap : MapStrategy {
 		public override bool IsNormal {
 			get {
-				return false;
-			}
-		}
+				return false;}}
 		public override int GetHashCode() {
 			if (obj != null) {
-				return obj.GetHashCode();
-			}
+				return obj.GetHashCode();}
 			else {
-				return type.GetHashCode();
-			}
-		}
+				return type.GetHashCode();}}
 		public override bool Equals(object obj) {
 			DotNetMap dotNet = obj as DotNetMap;
 			if (dotNet != null) {
-				return dotNet.Object == Object && dotNet.Type == Type;
-			}
-			return false;
-		}
+				return dotNet.Object == Object && dotNet.Type == Type;}
+			return false;}
 		public override object UniqueKey {
 			get {
-				return null;
-			}
-		}
+				return null;}}
 		protected abstract BindingFlags BindingFlags {
-			get;
-		}
+			get;}
 		public override int GetArrayCount() {
-			return 0;
-		}
+			return 0;}
 		public object Object {
 			get {
-				return obj;
-			}
-		}
+				return obj;}}
 		public Type Type {
 			get {
-				return type;
-			}
-		}
+				return type;}}
 		protected abstract object GlobalKey {
-			get;
-		}
+			get;}
 		public static string GetMethodName(MethodInfo method) {
 			string name = method.Name;
 			foreach (ParameterInfo parameter in method.GetParameters()) {
-				name += "_" + parameter.ParameterType.Name;
-			}
-			return name;
-		}
+				name += "_" + parameter.ParameterType.Name;}
+			return name;}
 		private Dictionary<Map, Member> data;
 		private Dictionary<Map, Member> Members {
 			get {
 				if (data == null) {
-					data = MemberCache.GetMembers(type);
-				}
-				return data;
-			}
-		}
+					data = MemberCache.GetMembers(type);}
+				return data;}}
 		protected abstract MemberCache MemberCache {
-			get;
-		}
+			get;}
 		private object obj;
 		private Type type;
 		public DotNetMap(object obj, Type type) {
 			this.obj = obj;
-			this.type = type;
-		}
+			this.type = type;}
 		public override Map Get(Map key) {
 			if (Members.ContainsKey(key)) {
-				return Members[key].Get(obj);
-			}
+				return Members[key].Get(obj);}
 			if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key)) {
-				return global[GlobalKey][key];
-			}
-			return null;
-		}
+				return global[GlobalKey][key];}
+			return null;}
 		public override void Set(Map key, Map value, Map parent) {
 			if (Members.ContainsKey(key)) {
-				Members[key].Set(obj, value);
-			}
+				Members[key].Set(obj, value);}
 			else {
 				if (!global.ContainsKey(GlobalKey)) {
-					global[GlobalKey] = new Dictionary<Map, Map>();
-				}
-				global[GlobalKey][key] = value;
-			}
-		}
+					global[GlobalKey] = new Dictionary<Map, Map>();}
+				global[GlobalKey][key] = value;}}
 		public static Type GetListAddFunctionType(IList list, Map value) {
 			foreach (MemberInfo member in list.GetType().GetMember("Add")) {
 				if (member is MethodInfo) {
@@ -1828,96 +1556,61 @@ namespace Meta {
 							object o;
 							if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
 								c = false;
-								break;
-							}
-						}
+								break;}}
 						if (c) {
-							return parameter.ParameterType;
-						}
-					}
-				}
-			}
-			return null;
-		}
+							return parameter.ParameterType;}}}}
+			return null;}
 		public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
 		public override bool ContainsKey(Map key) {
-			return Get(key) != null;
-		}
+			return Get(key) != null;}
 		public override IEnumerable<Map> Keys {
 			get {
 				foreach (Map key in Members.Keys) {
-					yield return key;
-				}
+					yield return key;}
 				if (global.ContainsKey(GlobalKey)) {
 					foreach (Map key in global[GlobalKey].Keys) {
-						yield return key;
-					}
-				}
-			}
-		}
+						yield return key;}}}}
 		public override bool IsString {
 			get {
-				return false;
-			}
-		}
+				return false;}}
 		public override bool IsNumber {
 			get {
-				return false;
-			}
-		}
+				return false;}}
 		public override string Serialize(Map parent) {
 			if (obj != null) {
-				return this.obj.ToString();
-			}
+				return this.obj.ToString();}
 			else {
-				return this.type.ToString();
-			}
-		}
+				return this.type.ToString();}}
 		public Delegate CreateEventDelegate(string name, Map code) {
 			EventInfo eventInfo = type.GetEvent(name, BindingFlags.Public | BindingFlags.NonPublic |
 				BindingFlags.Static | BindingFlags.Instance);
 			Delegate eventDelegate = Transform.CreateDelegateFromCode(eventInfo.EventHandlerType, code);
-			return eventDelegate;
-		}
-	}
+			return eventDelegate;}}
 	public interface ISerializeEnumerableSpecial {
-		string Serialize();
-	}
+		string Serialize();}
 	public class TestAttribute : Attribute {
 		public TestAttribute()
-			: this(1) {
-		}
+			: this(1) {}
 		public TestAttribute(int level) {
-			this.level = level;
-		}
+			this.level = level;}
 		private int level;
 		public int Level {
 			get {
-				return level;
-			}
-		}
-	}
+				return level;}}}
 	[AttributeUsage(AttributeTargets.Property)]
 	public class SerializeAttribute : Attribute {
 		public SerializeAttribute()
-			: this(1) {
-		}
+			: this(1) {}
 		public SerializeAttribute(int level) {
-			this.level = level;
-		}
+			this.level = level;}
 		private int level;
 		public int Level {
 			get {
-				return level;
-			}
-		}
-	}
+				return level;}}}
 	public abstract class TestRunner {
 		public static string TestDirectory {
 			get {
-				return Path.Combine(Interpreter.InstallationPath, "Test");
-			}
-		}
+				return Path.Combine(Interpreter.InstallationPath, "Test");}}
 		public abstract class Test {
 			public bool RunTest() {
 				int level;
@@ -1930,130 +1623,93 @@ namespace Meta {
 				string checkPath = Path.Combine(testDirectory, "check.txt");
 				Directory.CreateDirectory(testDirectory);
 				if (!File.Exists(checkPath)) {
-					File.Create(checkPath).Close();
-				}
+					File.Create(checkPath).Close();}
 				StringBuilder stringBuilder = new StringBuilder();
 				Serialize(result, "", stringBuilder, level);
 				File.WriteAllText(resultPath, stringBuilder.ToString(), Encoding.UTF8);
 				string successText;
 				bool success = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
 				if (success) {
-					successText = "succeeded";
-				}
+					successText = "succeeded";}
 				else {
-					successText = "failed";
-				}
+					successText = "failed";}
 				Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
-				return success;
-			}
-			public abstract object GetResult(out int level);
-		}
+				return success;}
+			public abstract object GetResult(out int level);}
 		public void Run() {
 			bool allTestsSucessful = true;
 			foreach (Type testType in this.GetType().GetNestedTypes()) {
 				if (testType.IsSubclassOf(typeof(Test))) {
-					Test test = (Test)testType.GetConstructor(new Type[] {
-					}).Invoke(null);
+					Test test = (Test)testType.GetConstructor(new Type[] {}).Invoke(null);
 					if (!test.RunTest()) {
-						allTestsSucessful = false;
-					}
-				}
-			}
+						allTestsSucessful = false;}}}
 			if (!allTestsSucessful) {
-				Console.ReadLine();
-			}
-		}
+				Console.ReadLine();}}
 		public const char indentationChar = '\t';
 
 		private static bool UseToStringMethod(Type type) {
 			return (!type.IsValueType || type.IsPrimitive)
-				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();
-		}
+				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();}
 		private static bool UseProperty(PropertyInfo property, int level) {
 			object[] attributes = property.GetCustomAttributes(typeof(SerializeAttribute), false);
 			return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly()
-				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
-		}
+				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);}
 		public static void Serialize(object obj, string indent, StringBuilder builder, int level) {
 			if (obj == null) {
-				builder.Append(indent + "null\n");
-			}
+				builder.Append(indent + "null\n");}
 			else if (UseToStringMethod(obj.GetType())) {
-				builder.Append(indent + "\"" + obj.ToString() + "\"" + "\n");
-			}
+				builder.Append(indent + "\"" + obj.ToString() + "\"" + "\n");}
 			else {
 				foreach (PropertyInfo property in obj.GetType().GetProperties()) {
 					if (UseProperty((PropertyInfo)property, level)) {
 						object val = property.GetValue(obj, null);
 						builder.Append(indent + property.Name);
 						if (val != null) {
-							builder.Append(" (" + val.GetType().Name + ")");
-						}
+							builder.Append(" (" + val.GetType().Name + ")");}
 						builder.Append(":\n");
-						Serialize(val, indent + indentationChar, builder, level);
-					}
-				}
+						Serialize(val, indent + indentationChar, builder, level);}}
 				string specialEnumerableSerializationText;
 				if (obj is ISerializeEnumerableSpecial && (specialEnumerableSerializationText = ((ISerializeEnumerableSpecial)obj).Serialize()) != null) {
-					builder.Append(indent + specialEnumerableSerializationText + "\n");
-				}
+					builder.Append(indent + specialEnumerableSerializationText + "\n");}
 				else if (obj is System.Collections.IEnumerable) {
 					foreach (object entry in (System.Collections.IEnumerable)obj) {
 						builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
-						Serialize(entry, indent + indentationChar, builder, level);
-					}
-				}
-			}
-		}
-	}
+						Serialize(entry, indent + indentationChar, builder, level);}}}}}
 	public class Extent {
 		public readonly Source start;
 		public readonly Source end;
 		public Extent(Source start, Source end) {
 			this.start = start;
-			this.end = end;
-		}
+			this.end = end;}
 		public override int GetHashCode() {
-			return start.GetHashCode() * end.GetHashCode();
-		}
+			return start.GetHashCode() * end.GetHashCode();}
 		public override bool Equals(object obj) {
 			Extent extent = obj as Extent;
-			return extent != null && start.Equals(extent.start) && end.Equals(extent.end);
-		}
-	}
+			return extent != null && start.Equals(extent.start) && end.Equals(extent.end);}}
 	public class Source {
 		public override string ToString() {
-			return FileName + ", " + "line " + Line + ", column " + Column;
-		}
+			return FileName + ", " + "line " + Line + ", column " + Column;}
 		public readonly int Line;
 		public readonly int Column;
 		public readonly string FileName;
 		public Source(int line, int column, string fileName) {
 			this.Line = line;
 			this.Column = column;
-			this.FileName = fileName;
-		}
+			this.FileName = fileName;}
 		public override int GetHashCode() {
-			return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
-		}
+			return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();}
 		public override bool Equals(object obj) {
 			Source source = obj as Source;
-			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
-		}
-	}
+			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;}}
 	public class Gac : MapStrategy {
 		public override bool IsNormal {
 			get {
-				return false;
-			}
-		}
+				return false;}}
 		public override int GetArrayCount() {
-			return 0;
-		}
+			return 0;}
 		public static readonly Map gac = new Map(new Gac());
 		private Gac() {
-			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-		}
+			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		public static Map LoadAssembly(Assembly assembly) {
 			Map val = new Map();
@@ -2062,22 +1718,15 @@ namespace Meta {
 					Map selected = val;
 					string name;
 					if (type.IsGenericTypeDefinition) {
-						name = type.Name.Split('`')[0];
-					}
+						name = type.Name.Split('`')[0];}
 					else {
-						name = type.Name;
-					}
+						name = type.Name;}
 					selected[type.Name] = new Map(new TypeMap(type));
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
-							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));
-						}
-
-					}
-				}
-			}
-			return val;
-		}
+							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
+}}}
+			return val;}
 		public override Map Get(Map key) {
 			Map value;
 			if (!cache.ContainsKey(key)) {
@@ -2085,39 +1734,26 @@ namespace Meta {
 					Assembly assembly;
 					string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
 					if (File.Exists(path)) {
-						assembly = Assembly.LoadFile(path);
-					}
+						assembly = Assembly.LoadFile(path);}
 					else {
-						assembly = Assembly.LoadWithPartialName(key.GetString());
-					}
+						assembly = Assembly.LoadWithPartialName(key.GetString());}
 					if (assembly != null) {
 						value = LoadAssembly(assembly);
-						cache[key] = value;
-					}
+						cache[key] = value;}
 					else {
-						value = null;
-					}
-				}
+						value = null;}}
 				else {
-					value = null;
-				}
-			}
+					value = null;}}
 			else {
-				value = cache[key];
-			}
-			return value;
-		}
+				value = cache[key];}
+			return value;}
 		public override void Set(Map key, Map val, Map map) {
-			cache[key] = val;
-		}
+			cache[key] = val;}
 		public override Map CopyData() {
-			return new Map(this);
-		}
+			return new Map(this);}
 		public override IEnumerable<Map> Keys {
 			get {
-				throw new Exception("The method or operation is not implemented.");
-			}
-		}
+				throw new Exception("The method or operation is not implemented.");}}
 		public override bool ContainsKey(Map key) {
 			return Get(key) != null;
 		}
