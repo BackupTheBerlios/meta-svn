@@ -2734,90 +2734,64 @@ namespace Meta {
 				return Expression(map[CodeKeys.Key], indentation) + "="
 					+ Expression(map[CodeKeys.Value], indentation);}}
 		private static string CurrentStatement(Map map, int indentation) {
-			return "&=" + Expression(map[CodeKeys.Value], indentation);
-		}
+			return "&=" + Expression(map[CodeKeys.Value], indentation);}
 		private static string SearchStatement(Map map, int indentation) {
-			return Expression(map[CodeKeys.Keys], indentation) + ":" + Expression(map[CodeKeys.Value], indentation);
-		}
+			return Expression(map[CodeKeys.Keys], indentation) + ":" + Expression(map[CodeKeys.Value], indentation);}
 		private static string DiscardStatement(Map map, int indentation) {
-			return Expression(map[CodeKeys.Value], indentation);
-		}
+			return Expression(map[CodeKeys.Value], indentation);}
 		private static string Statement(Map map, int indentation) {
 			if (map.ContainsKey(CodeKeys.Key)) {
-				return KeyStatement(map, indentation);
-			}
+				return KeyStatement(map, indentation);}
 			else if (map.ContainsKey(CodeKeys.Current)) {
-				return CurrentStatement(map, indentation);
-			}
+				return CurrentStatement(map, indentation);}
 			else if (map.ContainsKey(CodeKeys.Keys)) {
-				return SearchStatement(map, indentation);
-			}
+				return SearchStatement(map, indentation);}
 			else if (map.ContainsKey(CodeKeys.Value)) {
-				return DiscardStatement(map, indentation);
-			}
-			throw new Exception("not implemented");
-		}
+				return DiscardStatement(map, indentation);}
+			throw new Exception("not implemented");}
 		private static string Program(Map map, int indentation) {
 			string text = "," + NewLine();
 			indentation++;
 			foreach (Map m in map.Array) {
-				text += Indentation(indentation) + Trim(Statement(m, indentation)) + NewLine();
-			}
-			return text;
-		}
+				text += Indentation(indentation) + Trim(Statement(m, indentation)) + NewLine();}
+			return text;}
 		private static string Trim(string text) {
-			return text.TrimEnd('\n', '\r');
-		}
+			return text.TrimEnd('\n', '\r');}
 		private static string NewLine() {
-			return Environment.NewLine;
-		}
+			return Environment.NewLine;}
 		private static string Call(Map map, int indentation) {
 			string text = "-" + NewLine();
 			indentation++;
 			foreach (Map m in map.Array) {
 				text += Indentation(indentation) +
-					Trim(Expression(m, indentation)) + NewLine();
-			}
-			return text;
-		}
+					Trim(Expression(m, indentation)) + NewLine();}
+			return text;}
 		private static string Select(Map map, int indentation) {
 			string text = "." + NewLine();
 			indentation++;
 			foreach (Map sub in map.Array) {
 				text += Indentation(indentation) +
-					Trim(Expression(sub, indentation)) + NewLine();
-			}
-			return text;
-		}
+					Trim(Expression(sub, indentation)) + NewLine();}
+			return text;}
 		private static string Search(Map map, int indentation) {
-			return "!" + Expression(map, indentation);
-		}
+			return "!" + Expression(map, indentation);}
 		private static string Key(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Count != 0 && entry.Key.IsString) {
 				string key = entry.Key.GetString();
 				if (key.IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0) {
-					return entry.Key.GetString();
-				}
-			}
-			return Serialize(entry.Key, indentation + 1);
-		}
+					return entry.Key.GetString();}}
+			return Serialize(entry.Key, indentation + 1);}
 		private static string String(Map map, int indentation) {
 			string text = map.GetString();
 			if (text.Contains("\"") || text.Contains("\n")) {
 				string result = "\"" + Environment.NewLine;
 				foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) {
-					result += Indentation(indentation) + "\t" + line + Environment.NewLine;
-				}
-				return result.Trim('\n', '\r') + Environment.NewLine + Indentation(indentation) + "\"";
-			}
+					result += Indentation(indentation) + "\t" + line + Environment.NewLine;}
+				return result.Trim('\n', '\r') + Environment.NewLine + Indentation(indentation) + "\"";}
 			else {
-				return "\"" + text + "\"";
-			}
-		}
+				return "\"" + text + "\"";}}
 		private static string Indentation(int indentation) {
-			return "".PadLeft(indentation, '\t');
-		}
-	}
+			return "".PadLeft(indentation, '\t');}}
 	namespace Test {
 		public class MetaTest : TestRunner {
 			public static int Leaves(Map map) {
