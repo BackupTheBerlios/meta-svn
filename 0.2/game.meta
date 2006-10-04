@@ -113,13 +113,6 @@
 				jointGroup.Empty(
 				currentBubble:0
 	paused=0
-	add_AppActive_ActiveEventHandler(?e?if(
-		not(
-			equal(
-				e.get_State(
-				1
-		?{
-			paused:not(e.get_GainedFocus(
 	add_Quit_QuitEventHandler(?e?{
 		Events.Close(
 		Events.QuitApplication(

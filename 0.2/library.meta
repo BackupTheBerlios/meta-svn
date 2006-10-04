@@ -46,8 +46,8 @@
 			divide=Number.op_Division_Number_Number
 			divideBy=flip(divide
 			quotient=Number.op_Division_Number_Number
-			differenceFrom=Number.op_Subtraction_Number_Number
-			difference=flip(differenceFrom
+			difference=Number.op_Subtraction_Number_Number
+			differenceFrom=flip(difference
 			greater=Number.op_GreaterThan_Number_Number
 			less=Number.op_LessThan_Number_Number
 			greaterOrEqual=Number.op_GreaterThanOrEqual_Number_Number

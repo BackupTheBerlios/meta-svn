@@ -72,7 +72,7 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"differenceTest2"
 			Value (Map):
-				-101
+				101
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"divideTest"
