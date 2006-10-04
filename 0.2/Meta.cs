@@ -44,9 +44,6 @@ namespace Meta
 		public Extent Source;
 		public Compiled(Extent source)
 		{
-			if (source == null || source.end == null)
-			{
-			}
 			this.Source = source;
 		}
 		public Map Evaluate(Map context)
@@ -73,26 +70,6 @@ namespace Meta
 			if (!evaluated)
 			{
 				structure = StructureImplementation();
-				if (Source != null)
-				{
-					//Expression old;
-					//if (sources.TryGetValue(Source.end, out old))
-					//{
-					//    if (old is Literal)
-					//    {
-					//        sources[Source.end] = this;
-					//    }
-					//}
-					//sources[Source.end] = this;
-					//if (Source.end.FileName.Contains("test.meta"))
-					//{
-					//}
-					//if (!sources.ContainsKey(Source.end))
-					//{
-					//    sources[Source.end] = new List<Expression>();
-					//}
-					//sources[Source.end].Add(this);
-				}
 				evaluated = true;
 			}
 			return structure;
@@ -112,7 +89,6 @@ namespace Meta
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		//public static Dictionary<Source, List<Compiled>> sources = new Dictionary<Source, List<Compiled>>();
 		public abstract Compiled CompileImplementation(Expression parent);
 	}
 	public class LastArgument : Expression
@@ -222,9 +198,7 @@ namespace Meta
 								if (arg == null)
 								{
 									m = method.method;
-									//m = null;
 									return true;
-									//return false;
 								}
 								else
 								{
@@ -238,7 +212,6 @@ namespace Meta
 										m = method.method;
 										return false;
 									}
-									//arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i].ParameterType));
 								}
 							}
 							m = method.method;
@@ -489,9 +462,6 @@ namespace Meta
 						}
 					}
 				}
-				//else
-				//{
-				//}
 				return selected[key].Copy();
 			}
 			catch (Exception e)
@@ -561,7 +531,6 @@ namespace Meta
 		public override Map StructureImplementation()
 		{
 			return statementList[statementList.Count - 1].Current();
-			//return null;
 		}
 		public override Compiled CompileImplementation(Expression parent)
 		{
@@ -635,40 +604,6 @@ namespace Meta
 			currentEvaluated = true;
 			return current;
 		}
-		//public Map Current()
-		//{
-		//    Map pre = Pre();
-		//    if (pre != null)
-		//    {
-		//        return CurrentImplementation(pre);
-		//    }
-		//    else
-		//    {
-		//        return null;
-		//    }
-		//}
-		//public Map Post()
-		//{
-		//    return Post(Current());
-		//}
-		//public Map Post(Map previous)
-		//{
-		//    if (Next != null)
-		//    {
-		//        if (Next is CurrentStatement)
-		//        {
-		//            return previous;
-		//        }
-		//        else
-		//        {
-		//            return Next.Current();
-		//        }
-		//    }
-		//    else
-		//    {
-		//        return previous;
-		//    }
-		//}
 		public Statement Next
 		{
 			get
@@ -799,10 +734,6 @@ namespace Meta
 				{
 					previous[k] = val;
 				}
-				//if (value is Search ||(intellisense && ( value is Literal || value is Program)))
-				//{
-				//    previous[k] = val;
-				//}
 				else
 				{
 					previous[k] = new Unknown();
@@ -1004,22 +935,15 @@ namespace Meta
 	{
 		public override Map StructureImplementation()
 		{
-			//return null;
 			Map selected = subs[0].EvaluateStructure();
 			for (int i = 1; i < subs.Count; i++)
 			{
 				Map key = subs[i].EvaluateStructure();
-				//try
-				//{
-					if (selected==null || key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key))
-					{
-						// compilation error???
-						return null;
-					}
-				//}
-				//catch (Exception e)
-				//{
-				//}
+				if (selected==null || key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key))
+				{
+					// compilation error???
+					return null;
+				}
 				selected = selected[key];
 			}
 			return selected;
@@ -1084,7 +1008,6 @@ namespace Meta
 					{
 						DebugPrint(e.ToString());
 					}
-					//Console.ReadLine();
 				}
 				else if (args[0] == "-nprof")
 				{
@@ -1287,7 +1210,6 @@ namespace Meta
 						{
 							dotNet = meta;
 						}
-						// maybe remove
 						else if (target.IsArray)
 						{
 							ArrayList list = new ArrayList();
@@ -1318,7 +1240,6 @@ namespace Meta
 						}
 					}
 					else if (target.IsEnum)
-					//else if (target.IsSubclassOf(typeof(Enum)))
 					{
 						dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());
 					}
@@ -1388,54 +1309,6 @@ namespace Meta
 									dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
 								}
 								break;
-							//case TypeCode.Object:
-							//    if (target == typeof(Number) && meta.IsNumber)
-							//    {
-							//        dotNet = meta.GetNumber();
-							//    }
-							//    if (dotNet == null && target == typeof(Type) && meta.Strategy is TypeMap)
-							//    {
-							//        dotNet = ((TypeMap)meta.Strategy).Type;
-							//    }
-							//    // remove?
-							//    else if (meta.Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta.Strategy).Type))
-							//    {
-							//        dotNet = ((ObjectMap)meta.Strategy).Object;
-							//    }
-							//    else if (target.IsAssignableFrom(meta.GetType()))
-							//    {
-							//        dotNet = meta;
-							//    }
-							//    // maybe remove
-							//    else if (target.IsArray)
-							//    {
-							//        ArrayList list = new ArrayList();
-							//        bool converted = true;
-							//        Type elementType = target.GetElementType();
-							//        foreach (Map m in meta.Array)
-							//        {
-							//            object o;
-							//            if (Transform.TryToDotNet(m, elementType, out o))
-							//            {
-							//                list.Add(o);
-							//            }
-							//            else
-							//            {
-							//                converted = false;
-							//                break;
-							//            }
-							//        }
-							//        if (converted)
-							//        {
-							//            dotNet = list.ToArray(elementType);
-							//        }
-							//    }
-							//    else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-							//       && meta.ContainsKey(CodeKeys.Function))
-							//    {
-							//        dotNet = CreateDelegateFromCode(target, meta);
-							//    }
-							//    break;
 							case TypeCode.SByte:
 								if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue))
 								{
@@ -2865,7 +2738,6 @@ namespace Meta
 		}
 		public override int GetHashCode()
 		{
-			// inconsistent with global key, maybe
 			if (obj != null)
 			{
 				return obj.GetHashCode();
@@ -3266,22 +3138,6 @@ namespace Meta
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
 		}
 	}
-	//public class Source
-	//{
-	//    public override string ToString()
-	//    {
-	//        return FileName + ", " + "line " + Line + ", column " + Column;
-	//    }
-	//    public readonly int Line;
-	//    public readonly int Column;
-	//    public readonly string FileName;
-	//    public Source(int line, int column,string fileName)
-	//    {
-	//        this.Line = line;
-	//        this.Column = column;
-	//        this.FileName = fileName;
-	//    }
-	//}
 	public class Gac : MapStrategy
 	{
 		public override bool IsNormal
@@ -3338,33 +3194,25 @@ namespace Meta
 			{
 				if (key.IsString)
 				{
-					//try
-					//{
-						Assembly assembly;
-						string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
-						//string path = Path.Combine(Directory.GetCurrentDirectory(), key.GetString() + ".dll");
-						if (File.Exists(path))
-						{
-							assembly = Assembly.LoadFile(path);
-						}
-						else
-						{
-							assembly = Assembly.LoadWithPartialName(key.GetString());
-						}
-						if (assembly != null)
-						{
-							value = LoadAssembly(assembly);
-							cache[key] = value;
-						}
-						else
-						{
-							value = null;
-						}
-					//}
-					//catch (Exception e)
-					//{
-					//    value = null;
-					//}
+					Assembly assembly;
+					string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
+					if (File.Exists(path))
+					{
+						assembly = Assembly.LoadFile(path);
+					}
+					else
+					{
+						assembly = Assembly.LoadWithPartialName(key.GetString());
+					}
+					if (assembly != null)
+					{
+						value = LoadAssembly(assembly);
+						cache[key] = value;
+					}
+					else
+					{
+						value = null;
+					}
 				}
 				else
 				{
@@ -4186,7 +4034,6 @@ namespace Meta
 			public static implicit operator Action(char c)
 			{
 				return new Match(new IgnoreCharacter(c));
-				//return new Match(new Character(c));
 			}
 			public static implicit operator Action(Rule rule)
 			{
@@ -4340,14 +4187,9 @@ namespace Meta
 				{
 					if (result != null)
 					{
-						//if (result.IsString)
-						//{
-						//    result = new Map(result.GetString());
-						//}
 						result.Source = new Extent(
 							new Source(oldLine, oldColumn, parser.fileName),
 							new Source(parser.line, parser.column, parser.fileName));
-						//result.Source = new Source(oldLine, oldColumn, parser.fileName);
 					}
 				}
 				return result;
