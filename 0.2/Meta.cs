@@ -238,10 +238,60 @@ namespace Meta
 		}
 		public override Compiled CompileImplementation(Expression parent)
 		{
+			List<object> arguments;
+			MethodBase method;
+			if (CallStuff(out arguments, out method))
+			{
+				if (method.IsStatic)
+				{
+					return new EmittedCall((MethodInfo)method,calls.GetRange(1,calls.Count-1).ConvertAll<Compiled>(
+						delegate(Expression e)
+						{
+							return e.Compile(this);
+						}),Source);
+				}
+			}
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e)
 			{
 				return e.Compile(this);
-			}),Source);
+			}), Source);
+		}
+	}
+	public class EmittedCall : Compiled
+	{
+		private List<Compiled> arguments;
+		private ParameterInfo[] parameters;
+		public EmittedCall(MethodInfo method, List<Compiled> arguments,Extent source):base(source)
+		{
+			this.method=method;
+			this.arguments = arguments;
+			this.parameters=method.GetParameters();
+		}
+		private MethodInfo method;
+		public override Map EvaluateImplementation(Map context)
+		{
+			//Map result = calls[0].Evaluate(current);
+			List<object> args = new List<object>();
+			//int index=0;
+			for(int index=0;index<parameters.Length;index++)
+			{
+				args.Add(Transform.ToDotNet(arguments[index].Evaluate(context),parameters[index].ParameterType));
+				//index++;
+			}
+			try
+			{
+				object returnValue = method.Invoke(null, args.ToArray());
+				return Transform.ToMeta(returnValue);
+			}
+			catch (MetaException e)
+			{
+				e.InvocationList.Add(new ExceptionLog(Source.start));
+				throw e;
+			}
+			catch (Exception e)
+			{
+				throw new MetaException(e.Message, Source.start);
+			}
 		}
 	}
 	public class CompiledCall : Compiled
