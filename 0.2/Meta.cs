@@ -8,7 +8,7 @@
 //	permit persons to whom the Software is furnished to do so, subject to
 //	the following conditions:
 //
-//	The above copyright notice and this permission notice shall be
+//	The above copyright notice and this permission notice shall
 //	included in all copies or substantial portions of the Software.
 //	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 //	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -41,13 +41,10 @@ namespace Meta {
 	public abstract class Compiled {
 		public Extent Source;
 		public Compiled(Extent source) {
-			this.Source = source;
-		}
+			this.Source = source;}
 		public Map Evaluate(Map context) {
-			return EvaluateImplementation(context);
-		}
-		public abstract Map EvaluateImplementation(Map context);
-	}
+			return EvaluateImplementation(context);}
+		public abstract Map EvaluateImplementation(Map context);}
 	public abstract class Expression {
 		public bool isFunction = false;
 		public readonly Extent Source;
@@ -55,62 +52,45 @@ namespace Meta {
 		public Statement Statement;
 		public Expression(Extent source, Expression parent) {
 			this.Source = source;
-			this.Parent = parent;
-		}
+			this.Parent = parent;}
 		private bool evaluated = false;
 		private Map structure;
 		public Map EvaluateStructure() {
 			if (!evaluated) {
 				structure = StructureImplementation();
-				evaluated = true;
-			}
-			return structure;
-		}
+				evaluated = true;}
+			return structure;}
 		public abstract Map StructureImplementation();
 		public Compiled Compile(Expression parent) {
 			Compiled result = CompileImplementation(parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.end)) {
-					sources[Source.end] = new List<Expression>();
-				}
-				sources[Source.end].Add(this);
-			}
-			return result;
-		}
+					sources[Source.end] = new List<Expression>();}
+				sources[Source.end].Add(this);}
+			return result;}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		public abstract Compiled CompileImplementation(Expression parent);
-	}
+		public abstract Compiled CompileImplementation(Expression parent);}
 	public class LastArgument : Expression {
 		public LastArgument(Map code, Expression parent)
-			: base(code.Source, parent) {
-		}
+			: base(code.Source, parent) {}
 		public override Map StructureImplementation() {
-			return null;
-		}
+			return null;}
 		public override Compiled CompileImplementation(Expression parent) {
-			return new CompiledLastArgument(Source);
-		}
-	}
+			return new CompiledLastArgument(Source);}}
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source)
-			: base(source) {
-		}
+			: base(source) {}
 		public override Map EvaluateImplementation(Map context) {
-			return Map.arguments.Peek();
-		}
-	}
+			return Map.arguments.Peek();}}
 	public class Call : Expression {
 		public List<Expression> calls;
 		public Call(Map code, Map parameterName, Expression parent)
 			: base(code.Source, parent) {
 			this.calls = new List<Expression>();
 			foreach (Map m in code.Array) {
-				calls.Add(m.GetExpression(this));
-			}
+				calls.Add(m.GetExpression(this));}
 			if (calls.Count == 1) {
-				calls.Add(new Literal(Map.Empty, this));
-			}
-		}
+				calls.Add(new Literal(Map.Empty, this));}}
 		public override Map StructureImplementation() {
 			List<object> arguments;
 			MethodBase method;
@@ -119,35 +99,25 @@ namespace Meta {
 					Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
 					Structure result = new Structure();
 					foreach (Map key in type.Keys) {
-						result[key] = new Unknown();
-					}
-					return result;
-				}
+						result[key] = new Unknown();}
+					return result;}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
 					try {
 						Map result = (Map)method.Invoke(null, arguments.ToArray());
 						result.IsConstant = false;
-						return result;
-					}
-					catch (Exception e) {
-					}
-				}
-			}
-			return null;
-		}
+						return result;}
+					catch (Exception e) {}}}
+			return null;}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
 			Map first = calls[0].EvaluateStructure();
 			if (first != null && first.IsConstant) {
 				Method method;
 				if (first.Strategy is TypeMap) {
-					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
-				}
+					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;}
 				else if (first.Strategy is Method) {
-					method = (Method)first.Strategy;
-				}
+					method = (Method)first.Strategy;}
 				else {
-					method = null;
-				}
+					method = null;}
 				if (method != null) {
 					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0)) {
 						if (method.method.IsStatic || method.method is ConstructorInfo) {
@@ -156,25 +126,16 @@ namespace Meta {
 								Map arg = calls[i + 1].EvaluateStructure();
 								if (arg == null) {
 									m = method.method;
-									return true;
-								}
+									return true;}
 								else {
 									object nextArg;
 									if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
-										arguments.Add(nextArg);
-									}
+										arguments.Add(nextArg);}
 									else {
 										m = method.method;
-										return false;
-									}
-								}
-							}
+										return false;}}}
 							m = method.method;
-							return true;
-						}
-					}
-				}
-			}
+							return true;}}}}
 			arguments = null;
 			m = null;
 			return false;
@@ -4528,20 +4489,15 @@ namespace Meta {
 		private Expression expression;
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
-				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
-			}
+				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);}
 			else if (ContainsKey(CodeKeys.Current)) {
-				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);
-			}
+				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);}
 			else if (ContainsKey(CodeKeys.Key)) {
-				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
-			}
+				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);}
 			else if (ContainsKey(CodeKeys.Discard)) {
-				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);
-			}
+				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);}
 			else {
-				throw new ApplicationException("Cannot compile map");
-			}
+				throw new ApplicationException("Cannot compile map");}
 		}
 		public void Compile(Expression parent) {
 			Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);}
@@ -4549,30 +4505,23 @@ namespace Meta {
 		public Expression GetExpression(Expression parent) {
 			if (expression == null) {
 				expression = CreateExpression(parent);}
-			return expression;}
-
+			return expression;
+		}
 		public Expression CreateExpression(Expression parent) {
 			if (ContainsKey(CodeKeys.Call)) {
-				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);
-			}
+				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);}
 			else if (ContainsKey(CodeKeys.Program)) {
-				return new Program(this[CodeKeys.Program], parent);
-			}
+				return new Program(this[CodeKeys.Program], parent);}
 			else if (ContainsKey(CodeKeys.Literal)) {
-				return new Literal(this[CodeKeys.Literal], parent);
-			}
+				return new Literal(this[CodeKeys.Literal], parent);}
 			else if (ContainsKey(CodeKeys.Select)) {
-				return new Select(this[CodeKeys.Select], parent);
-			}
+				return new Select(this[CodeKeys.Select], parent);}
 			else if (ContainsKey(CodeKeys.Search)) {
-				return new Search(this[CodeKeys.Search], parent);
-			}
+				return new Search(this[CodeKeys.Search], parent);}
 			else if (ContainsKey(CodeKeys.Root)) {
-				return new Root(this[CodeKeys.Root], parent);
-			}
+				return new Root(this[CodeKeys.Root], parent);}
 			else if (ContainsKey(CodeKeys.LastArgument)) {
-				return new LastArgument(this[CodeKeys.LastArgument], parent);
-			}
+				return new LastArgument(this[CodeKeys.LastArgument], parent);}
 			else if (ContainsKey(CodeKeys.Expression)) {
 				Program program = new Program(this, parent);
 				program.isFunction = true;
@@ -4581,8 +4530,7 @@ namespace Meta {
 					KeyStatement s = new KeyStatement(
 						new Literal(parameter, program),
 						new LastArgument(Map.Empty, program), program, 0);
-					program.statementList.Add(s);
-				}
+					program.statementList.Add(s);}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
 				program.statementList.Add(c);
 				return program;
@@ -4593,7 +4541,7 @@ namespace Meta {
 		}
 		public int GetArrayCountDefault() {
 			int i = 1;
-			for (; ContainsKey(i); i++);
+			for (;ContainsKey(i);i++);
 			return i - 1;}
 		public Map Copy() {
 			Map clone = strategy.CopyData();
@@ -4601,27 +4549,20 @@ namespace Meta {
 			clone.Source = Source;
 			clone.specialized = specialized;
 			clone.IsConstant = this.IsConstant;
-			return clone;
-		}
+			return clone;}
 		public override int GetHashCode() {
-			return strategy.GetHashCode();
-		}
+			return strategy.GetHashCode();}
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-			return this.GetEnumerator();
-		}
+			return this.GetEnumerator();}
 		public IEnumerator<KeyValuePair<Map, Map>> GetEnumerator() {
 			foreach (Map key in Keys) {
-				yield return new KeyValuePair<Map, Map>(key, this[key]);
-			}
-		}
+				yield return new KeyValuePair<Map, Map>(key, this[key]);}}
 		public Extent Source;
 		public static Map Empty = new Map(EmptyStrategy.empty);
 		public static implicit operator Map(string text) {
-			return new Map(text);
-		}
+			return new Map(text);}
 		public static implicit operator Map(Number integer) {
-			return new Map(integer);
-		}
+			return new Map(integer);}
 		public static implicit operator Map(double number) {
 			return new Number(number);
 		}
