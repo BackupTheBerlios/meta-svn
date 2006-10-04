@@ -159,6 +159,37 @@ namespace Meta
 		}
 		public override Map StructureImplementation()
 		{
+			List<object> arguments;
+			MethodBase method;
+			if (CallStuff(out arguments, out method))
+			{
+				if (method is ConstructorInfo)
+				{
+					Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
+					Structure result = new Structure();
+					foreach (Map key in type.Keys)
+					{
+						result[key] = new Unknown();
+					}
+					return result;
+				}
+				else if (method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+				{
+					try
+					{
+						Map result = (Map)method.Invoke(null, arguments.ToArray());
+						result.IsConstant = false;
+						return result;
+					}
+					catch (Exception e)
+					{
+					}
+				}
+			}
+			return null;
+		}
+		public bool CallStuff(out List<object> arguments,out MethodBase m)
+		{
 			Map first = calls[0].EvaluateStructure();
 			if (first != null && first.IsConstant)
 			{
@@ -175,48 +206,131 @@ namespace Meta
 				{
 					method = null;
 				}
-				if(method!=null)
+				if (method != null)
 				{
-					//Method method = (Method)first.Strategy;
-					if (method.parameters.Length == calls.Count - 1 || (calls.Count==2 && method.parameters.Length==0))
+					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0))
 					{
-						if (method.method.IsStatic)
+						if (method.method.IsStatic  || method.method is ConstructorInfo)
 						{
-							if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+							arguments=new List<object>();
+							//List<object> arguments = new List<object>();
+							for (int i = 0; i < method.parameters.Length; i++)
 							{
-								List<object> arguments = new List<object>();
-								for (int i = 1; i < calls.Count; i++)
+								Map arg = calls[i+1].EvaluateStructure();
+								if (arg == null)
 								{
-									Map arg = calls[i].EvaluateStructure();
-									if (arg == null)
-									{
-										return null;
-									}
-									else
-									{
-										arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i - 1].ParameterType));
-									}
+									m = null;
+									return false;
+									//return null;
 								}
-								Map result = (Map)method.method.Invoke(null, arguments.ToArray());
-								result.IsConstant = false;
-								return result;
+								else
+								{
+									arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i].ParameterType));
+								}
 							}
+							m = method.method;
+							return true;
+							//Map result = (Map)method.method.Invoke(null, arguments.ToArray());
+							//result.IsConstant = false;
+							//return result;
+							//if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+							//{
+							//    List<object> arguments = new List<object>();
+							//    for (int i = 1; i < calls.Count; i++)
+							//    {
+							//        Map arg = calls[i].EvaluateStructure();
+							//        if (arg == null)
+							//        {
+							//            return null;
+							//        }
+							//        else
+							//        {
+							//            arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i - 1].ParameterType));
+							//        }
+							//    }
+							//Map result = (Map)method.method.Invoke(null, arguments.ToArray());
+							//result.IsConstant = false;
+							//return result;
+							//}
 						}
-						else if (method.method is ConstructorInfo)
-						{
-							Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.method.DeclaringType);
-							Structure result = new Structure();
-							foreach (Map key in type.Keys)
-							{
-								result[key] = new Unknown();
-							}
-							return result;
-						}
+						//else if (method.method is ConstructorInfo)
+						//{
+						//    //Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.method.DeclaringType);
+						//    //Structure result = new Structure();
+						//    //foreach (Map key in type.Keys)
+						//    //{
+						//    //    result[key] = new Unknown();
+						//    //}
+						//    //return result;
+						//}
 					}
 				}
 			}
-			return null;
+			arguments = null;
+			m = null;
+			return false;
+			//return null;
 		}
+		//public override Map StructureImplementation()
+		//{
+		//    Map first = calls[0].EvaluateStructure();
+		//    if (first != null && first.IsConstant)
+		//    {
+		//        Method method;
+		//        if (first.Strategy is TypeMap)
+		//        {
+		//            method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
+		//        }
+		//        else if (first.Strategy is Method)
+		//        {
+		//            method = (Method)first.Strategy;
+		//        }
+		//        else
+		//        {
+		//            method = null;
+		//        }
+		//        if(method!=null)
+		//        {
+		//            //Method method = (Method)first.Strategy;
+		//            if (method.parameters.Length == calls.Count - 1 || (calls.Count==2 && method.parameters.Length==0))
+		//            {
+		//                if (method.method.IsStatic)
+		//                {
+		//                    if (method.method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+		//                    {
+		//                        List<object> arguments = new List<object>();
+		//                        for (int i = 1; i < calls.Count; i++)
+		//                        {
+		//                            Map arg = calls[i].EvaluateStructure();
+		//                            if (arg == null)
+		//                            {
+		//                                return null;
+		//                            }
+		//                            else
+		//                            {
+		//                                arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i - 1].ParameterType));
+		//                            }
+		//                        }
+		//                        Map result = (Map)method.method.Invoke(null, arguments.ToArray());
+		//                        result.IsConstant = false;
+		//                        return result;
+		//                    }
+		//                }
+		//                else if (method.method is ConstructorInfo)
+		//                {
+		//                    Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.method.DeclaringType);
+		//                    Structure result = new Structure();
+		//                    foreach (Map key in type.Keys)
+		//                    {
+		//                        result[key] = new Unknown();
+		//                    }
+		//                    return result;
+		//                }
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
 		public override Compiled CompileImplementation(Expression parent)
 		{
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e)
@@ -5295,31 +5409,16 @@ namespace Meta
 		}
 		public static void WriteLine(string s)
 		{
-			//Interpreter.UseConsole();
 			Console.WriteLine(s);
 		}
 		private static Random random = new Random();
-		public static Map Random(int max)
+		public static int Random(int max)
 		{
 			return random.Next(max) + 1;
 		}
 		public static string Trim(string text)
 		{
-			Events.KeyboardDown += new KeyboardEventHandler(Events_KeyboardDown);
 			return text.Trim();
-		}
-		static void Events_KeyboardDown(object sender, KeyboardEventArgs e)
-		{
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public static Map SplitString(Map text, Map chars)
-		{
-			List<Map> result = new List<Map>();
-			foreach (string part in text.GetString().Split((char[])Transform.ToDotNet(chars, typeof(char[])), StringSplitOptions.RemoveEmptyEntries))
-			{
-				result.Add(part);
-			}
-			return new Map(new ListStrategy(result));
 		}
 		public static Map Modify(Map map, Map func)
 		{
@@ -5371,7 +5470,7 @@ namespace Meta
 			});
 			return new Map(result);
 		}
-		public static Map Equal(Map a, Map b)
+		public static bool Equal(object a,object b)
 		{
 			return a.Equals(b);
 		}
@@ -5387,9 +5486,9 @@ namespace Meta
 			}
 			return new Map(result);
 		}
-		public static Map ElseIf(Map condition, Map then, Map els)
+		public static Map ElseIf(bool condition, Map then, Map els)
 		{
-			if (Convert.ToBoolean(condition.GetNumber().GetInt32()))
+			if (condition)
 			{
 				return then.Call(new Map());
 			}
@@ -5424,9 +5523,9 @@ namespace Meta
 			}
 			return new Map(result);
 		}
-		public static Map If(Map condition, Map then)
+		public static Map If(bool condition, Map then)
 		{
-			if (!condition.Equals(new Map()))
+			if (condition)
 			{
 				return then.Call(new Map());
 			}
@@ -5472,12 +5571,8 @@ namespace Meta
 				return catchFunction.Call(new Map(e));
 			}
 		}
-
 		public static Map With(Map o, Map values)
 		{
-			if (!(o.Strategy is ObjectMap))
-			{
-			}
 			object obj = ((ObjectMap)o.Strategy).Object;
 			Type type = obj.GetType();
 			foreach (KeyValuePair<Map, Map> entry in values)
@@ -5578,11 +5673,10 @@ namespace Meta
 			}
 			return arg;
 		}
-		public static Map Range(Map arg)
+		public static Map Range(Number arg)
 		{
-			int end = arg.GetNumber().GetInt32();
 			Map result = new Map();
-			for (int i = 1; i <= end; i++)
+			for (int i = 1; i <= arg; i++)
 			{
 				result.Append(i);
 			}

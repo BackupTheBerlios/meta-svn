@@ -147,6 +147,10 @@
 					1
 			?{
 				paused:1
+	if(
+		not(1
+		{
+			paused:1
 	add_Tick_TickEventHandler(
 		??if(
 			not(

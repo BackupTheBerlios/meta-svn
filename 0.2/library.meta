@@ -37,10 +37,10 @@
 				Library.WriteLine_String(@
 				&@
 			join=Library.Join_Map_Map
-			range=Library.Range_Map
+			range=Library.Range_Number
 			reverse=Library.Reverse_Map
-			if=Library.If_Map_Map
-			elseIf=Library.ElseIf_Map_Map_Map
+			if=Library.If_Boolean_Map
+			elseIf=Library.ElseIf_Boolean_Map_Map
 			filter=Library.Filter_Map_Map
 			apply=Library.Map_Map_Map
 			divide=Number.op_Division_Number_Number
@@ -84,7 +84,7 @@
 			count=arg?{
 				m=Map_Object(arg
 				&m.get_Count(
-			equal=Library.Equal_Map_Map
+			equal=Library.Equal_Object_Object
 			isNumber=arg?{
 				m=Map_Object(arg
 				&m.get_IsNumber(
