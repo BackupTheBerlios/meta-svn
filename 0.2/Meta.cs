@@ -173,7 +173,7 @@ namespace Meta
 					}
 					return result;
 				}
-				else if (method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
+				else if (arguments!=null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0)
 				{
 					try
 					{
@@ -208,6 +208,9 @@ namespace Meta
 				}
 				if (method != null)
 				{
+					if (method.method.Name.ToLower().Contains("elseif"))
+					{
+					}
 					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0))
 					{
 						if (method.method.IsStatic  || method.method is ConstructorInfo)
@@ -218,12 +221,24 @@ namespace Meta
 								Map arg = calls[i+1].EvaluateStructure();
 								if (arg == null)
 								{
-									m = null;
-									return false;
+									m = method.method;
+									//m = null;
+									return true;
+									//return false;
 								}
 								else
 								{
-									arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i].ParameterType));
+									object nextArg;
+									if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg))
+									{
+										arguments.Add(nextArg);
+									}
+									else
+									{
+										m = method.method;
+										return false;
+									}
+									//arguments.Add(Transform.ToDotNet(arg.Copy(), method.parameters[i].ParameterType));
 								}
 							}
 							m = method.method;
@@ -270,13 +285,10 @@ namespace Meta
 		private MethodInfo method;
 		public override Map EvaluateImplementation(Map context)
 		{
-			//Map result = calls[0].Evaluate(current);
 			List<object> args = new List<object>();
-			//int index=0;
 			for(int index=0;index<parameters.Length;index++)
 			{
 				args.Add(Transform.ToDotNet(arguments[index].Evaluate(context),parameters[index].ParameterType));
-				//index++;
 			}
 			try
 			{
@@ -346,6 +358,9 @@ namespace Meta
 			count = 0;
 			if (key != null && key.IsConstant)
 			{
+				if (key.Equals(new Map("elseIf")))
+				{
+				}
 				bool hasCrossedFunction = false;
 				while (true)
 				{
@@ -994,11 +1009,17 @@ namespace Meta
 			for (int i = 1; i < subs.Count; i++)
 			{
 				Map key = subs[i].EvaluateStructure();
-				if (key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key))
-				{
-					// compilation error???
-					return null;
-				}
+				//try
+				//{
+					if (selected==null || key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key))
+					{
+						// compilation error???
+						return null;
+					}
+				//}
+				//catch (Exception e)
+				//{
+				//}
 				selected = selected[key];
 			}
 			return selected;
