@@ -1944,9 +1944,11 @@ namespace Meta {
 			return true;});
 
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			bool matched;
-			map=StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
-		return matched;});
+			//bool matched;
+			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, ref map);
+			//map=StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
+		//return matched;
+		});
 
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
@@ -1976,10 +1978,10 @@ namespace Meta {
 			MatchStringLine(parser, result);
 			bool matched = true;
 			while (true) {
-				bool lineMatched;
-				new Sequence(
+				Map m=null;
+				bool lineMatched=new Sequence(
 					EndOfLine,
-					SameIndentation).Match(parser, out lineMatched);
+					SameIndentation).Match(parser, ref m);
 				if (lineMatched) {
 					result.Append('\n');
 					MatchStringLine(parser, result);}
@@ -2377,10 +2379,17 @@ namespace Meta {
 				this.rule = rule;}
 			public bool Execute(Parser parser, ref Map result) {
 				bool matched;
-				Map map = rule.Match(parser, out matched);
+				Map map=null;
+				matched=rule.Match(parser,ref map);
 				if (matched) {
 					Effect(parser, map, ref result);}
 				return matched;}}
+			//public bool Execute(Parser parser, ref Map result) {
+			//    bool matched;
+			//    Map map = rule.Match(parser, out matched);
+			//    if (matched) {
+			//        Effect(parser, map, ref result);}
+			//    return matched;}}
 		public class Autokey : Action {
 			public Autokey(Rule rule)
 				: base(rule) {}
@@ -2433,11 +2442,12 @@ namespace Meta {
 				return StringRule(s);}
 			public static implicit operator Rule(char c) {
 				return new Characters(c);}
-			public Map Match(Parser parser, out bool matched) {
+			public bool Match(Parser parser, ref Map map) {
 				int oldIndex = parser.index;
 				int oldLine = parser.Line;
 				int oldColumn = parser.Column;
 				int oldIndentation = parser.indentationCount;
+				bool matched;
 				Map result = MatchImplementation(parser, out matched);
 				if (!matched) {
 					parser.index = oldIndex;
@@ -2449,7 +2459,27 @@ namespace Meta {
 						result.Source = new Extent(
 							new Source(oldLine, oldColumn, parser.FileName),
 							new Source(parser.Line, parser.Column, parser.FileName));}}
-				return result;}
+				map=result;
+				return matched;}
+				//return result;}
+
+			//public Map Match(Parser parser, out bool matched) {
+			//    int oldIndex = parser.index;
+			//    int oldLine = parser.Line;
+			//    int oldColumn = parser.Column;
+			//    int oldIndentation = parser.indentationCount;
+			//    Map result = MatchImplementation(parser, out matched);
+			//    if (!matched) {
+			//        parser.index = oldIndex;
+			//        parser.Line = oldLine;
+			//        parser.Column = oldColumn;
+			//        parser.indentationCount = oldIndentation;}
+			//    else {
+			//        if (result != null) {
+			//            result.Source = new Extent(
+			//                new Source(oldLine, oldColumn, parser.FileName),
+			//                new Source(parser.Line, parser.Column, parser.FileName));}}
+			//    return result;}
 			protected abstract Map MatchImplementation(Parser parser, out bool match);}
 		public class IgnoreCharacter : CharacterRule {
 			private char c;
@@ -2504,7 +2534,8 @@ namespace Meta {
 				this.post = post;}
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				pre(parser);
-				Map result = rule.Match(parser, out matched);
+				Map result=null;
+				matched=rule.Match(parser, ref result);
 				post(parser);
 				return result;}}
 		// remove?
@@ -2514,7 +2545,6 @@ namespace Meta {
 				actions.Add(c);}
 			return new Sequence(actions.ToArray());}
 		public delegate bool ParseFunction(Parser parser, ref Map map);
-		//public delegate Map ParseFunction(Parser parser, out bool matched);
 		public class CustomRule : Rule {
 			private ParseFunction parseFunction;
 			public CustomRule(ParseFunction parseFunction) {
@@ -2523,9 +2553,6 @@ namespace Meta {
 				Map result=null;
 				matched=parseFunction(parser, ref result);
 			return result;}}
-
-			//protected override Map MatchImplementation(Parser parser, out bool matched) {
-			//    return parseFunction(parser, out matched);}}
 		public delegate Rule RuleFunction();
 		public class DelayedRule : Rule {
 			private RuleFunction ruleFunction;
@@ -2535,7 +2562,9 @@ namespace Meta {
 			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				if (rule == null) {
 					rule = ruleFunction();}
-				return rule.Match(parser, out matched);}}
+				Map map=null;
+				matched=rule.Match(parser,ref map);
+			return map;}}
 		public class Alternatives : Rule {
 			private Rule[] cases;
 			public Alternatives(params Rule[] cases) {
@@ -2544,7 +2573,8 @@ namespace Meta {
 				Map result = null;
 				matched = false;
 				foreach (Rule expression in cases) {
-					result = (Map)expression.Match(parser, out matched);
+					matched=expression.Match(parser, ref result);
+					//result = (Map)expression.Match(parser, out matched);
 					if (matched) {
 						break;}}
 				return result;}}
@@ -2610,7 +2640,8 @@ namespace Meta {
 			public Optional(Rule rule) {
 				this.rule = rule;}
 			protected override Map MatchImplementation(Parser parser, out bool match) {
-				Map matched = rule.Match(parser, out match);
+				Map matched=null;
+				match=rule.Match(parser, ref matched);
 				if (matched == null) {
 					match = true;
 					return null;}
@@ -2627,7 +2658,8 @@ namespace Meta {
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			bool matched;
-			Map result = Parser.File.Match(parser, out matched);
+			Map result=null;
+			Parser.File.Match(parser, ref result);
 			if (parser.index != parser.text.Length) {
 				throw new SyntaxException("Expected end of file.", parser);}
 			return result;}}
