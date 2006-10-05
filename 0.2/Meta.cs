@@ -29,10 +29,13 @@ using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows;
+using SdlDotNet;
 
 namespace Meta {
 	public abstract class Compiled {
@@ -94,17 +97,16 @@ namespace Meta {
 			if (CallStuff(out arguments, out method)) {
 				if (method is ConstructorInfo) {
 					Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
-					Map result = new Map();
-					result.IsConstant=false;
+					Structure result = new Structure();
 					foreach (Map key in type.Keys) {
-						result[key] = new Map();
-						result[key].IsConstant=false;}
-						//result[key] = new Unknown();}
+						result[key] = new Unknown();}
 					return result;}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
+					try {
 						Map result = (Map)method.Invoke(null, arguments.ToArray());
 						result.IsConstant = false;
-						return result;}}
+						return result;}
+					catch (Exception e) {}}}
 			return null;}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
 			Map first = calls[0].EvaluateStructure();
@@ -234,7 +236,7 @@ namespace Meta {
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
 				if (value != null && value.IsConstant) {
-					return new CompiledLiteral(value, Source);}
+					return new OptimizedSearch(value, Source);}
 				else {
 					return new FastSearch(key, count, Source);}}
 			else {
@@ -271,13 +273,13 @@ namespace Meta {
 				return selected[key].Copy();}
 			catch (Exception e) {
 				throw e;}}}
-	//public class OptimizedSearch : Compiled {
-	//    private Map literal;
-	//    public OptimizedSearch(Map literal, Extent source)
-	//        : base(source) {
-	//        this.literal = literal;}
-	//    public override Map EvaluateImplementation(Map context) {
-	//        return literal.Copy();}}
+	public class OptimizedSearch : Compiled {
+		private Map literal;
+		public OptimizedSearch(Map literal, Extent source)
+			: base(source) {
+			this.literal = literal;}
+		public override Map EvaluateImplementation(Map context) {
+			return literal.Copy();}}
 	public class CompiledSearch : Compiled {
 		private Compiled expression;
 		public CompiledSearch(Compiled expression, Extent source)
@@ -303,7 +305,7 @@ namespace Meta {
 			foreach (CompiledStatement statement in statementList) {
 				statement.Assign(ref context);}
 			return context;}}
-	public class Program : Expression {
+	public class Program : ScopeExpression {
 		public override Map StructureImplementation() {
 			return statementList[statementList.Count - 1].Current();}
 		public override Compiled CompileImplementation(Expression parent) {
@@ -411,14 +413,12 @@ namespace Meta {
 			if (k != null && k.IsConstant) {
 				Map val = value.EvaluateStructure();
 				if (val == null) {
-					val = new Map();
-					val.IsConstant=false;}
+					val = new Unknown();}
 				// not general enough
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
 					previous[k] = val;}
 				else {
-					previous[k] = new Map();
-					previous[k].IsConstant=false;}
+					previous[k] = new Unknown();}
 				return previous;}
 			return null;}
 		public override CompiledStatement Compile() {
@@ -527,7 +527,7 @@ namespace Meta {
 			Map selected = subs[0].EvaluateStructure();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].EvaluateStructure();
-				if (selected == null || key == null || !key.IsConstant || !selected.ContainsKey(key)) {
+				if (selected == null || key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key)) {
 					// compilation error???
 					return null;}
 				selected = selected[key];}
@@ -553,7 +553,9 @@ namespace Meta {
 				map[CodeKeys.Function].Compile(gac);
 
 				Gac.gac["library"] = map.Call(Map.Empty);
-				Gac.gac["library"].Scope = Gac.gac;}
+				Gac.gac["library"].Scope = Gac.gac;
+
+}
 			catch (Exception e) {
 				throw e;}}
 		[STAThread]
@@ -576,6 +578,7 @@ namespace Meta {
 					List<object> results = new List<object>(Map.calls.Keys);
 					results.Sort(delegate(object a, object b) {
 						return Map.calls[b].time.CompareTo(Map.calls[a].time);});
+
 					foreach (object e in results) {
 						Console.WriteLine(e.ToString() + "    " + Map.calls[e].time + "     " + Map.calls[e].calls);}}
 				else if (args[0] == "-performance") {
@@ -597,8 +600,8 @@ namespace Meta {
 			if (useConsole) {
 				Console.WriteLine(text);
 				Console.ReadLine();}
-			else {MessageBox.Show(text, "Meta exception");}}
-		
+			else {
+				System.Windows.Forms.MessageBox.Show(text, "Meta exception");}}
 		[System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true, ExactSpelling = true)]
 		public static extern bool AllocConsole();
 
@@ -609,7 +612,8 @@ namespace Meta {
 				Console.SetBufferSize(80, 1000);}
 			useConsole = true;}
 		public static string InstallationPath {
-			get {return @"D:\Meta\0.2\";}}}
+			get {
+				return @"D:\Meta\0.2\";}}}
 	public class Transform {
 		public static object ToDotNet(Map meta, Type target) {
 			object dotNet;
@@ -628,11 +632,14 @@ namespace Meta {
 				invoke.ReturnType,
 				arguments.ToArray(),
 				typeof(Map).Module);
+
 			ILGenerator il = method.GetILGenerator();
+
 			LocalBuilder local = il.DeclareLocal(typeof(object[]));
 			il.Emit(OpCodes.Ldc_I4, parameters.Length);
 			il.Emit(OpCodes.Newarr, typeof(object));
 			il.Emit(OpCodes.Stloc, local);
+
 			for (int i = 0; i < parameters.Length; i++) {
 				il.Emit(OpCodes.Ldloc, local);
 				il.Emit(OpCodes.Ldc_I4, i);
@@ -641,6 +648,7 @@ namespace Meta {
 			il.Emit(OpCodes.Ldarg_0);
 			il.Emit(OpCodes.Ldloc, local);
 			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+
 			if (invoke.ReturnType == typeof(void)) {
 				il.Emit(OpCodes.Pop);
 				il.Emit(OpCodes.Ret);}
@@ -681,7 +689,7 @@ namespace Meta {
 						else if (target.IsAssignableFrom(meta.GetType())) {
 							dotNet = meta;}
 						else if (target.IsArray) {
-							System.Collections.ArrayList list = new System.Collections.ArrayList();
+							ArrayList list = new ArrayList();
 							bool converted = true;
 							Type elementType = target.GetElementType();
 							foreach (Map m in meta.Array) {
@@ -714,6 +722,7 @@ namespace Meta {
 								if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue)) {
 									dotNet = Convert.ToChar(meta.GetNumber().GetInt32());}
 								break;
+							// unlogical
 							case TypeCode.DateTime:
 								dotNet = null;
 								break;
@@ -728,11 +737,13 @@ namespace Meta {
 								if (IsIntegerInRange(meta, double.MinValue, double.MaxValue)) {
 									// fix this
 									dotNet = (double)(meta.GetNumber().GetInt64());
+									//dotNet = (double)(meta.GetNumber().GetDouble());
 								}
 								break;
 							case TypeCode.Int16:
 								if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue)) {
 									dotNet = Convert.ToInt16(meta.GetNumber().GetRealInt64());
+									//dotNet = Convert.ToInt16(meta.GetNumber().GetInt64());
 								}
 								break;
 							case TypeCode.Int32:
@@ -751,6 +762,7 @@ namespace Meta {
 								if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue)) {
 									// wrong
 									dotNet = (float)meta.GetNumber().GetInt64();
+									//dotNet = (float)meta.GetNumber().GetDouble();
 								}
 								break;
 							case TypeCode.String:
@@ -1532,22 +1544,22 @@ namespace Meta {
 				if (!global.ContainsKey(GlobalKey)) {
 					global[GlobalKey] = new Dictionary<Map, Map>();}
 				global[GlobalKey][key] = value;}}
-		//public static Type GetListAddFunctionType(IList list, Map value) {
-		//    foreach (MemberInfo member in list.GetType().GetMember("Add")) {
-		//        if (member is MethodInfo) {
-		//            MethodInfo method = (MethodInfo)member;
-		//            ParameterInfo[] parameters = method.GetParameters();
-		//            if (parameters.Length == 1) {
-		//                ParameterInfo parameter = parameters[0];
-		//                bool c = true;
-		//                foreach (Map entry in value.Array) {
-		//                    object o;
-		//                    if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
-		//                        c = false;
-		//                        break;}}
-		//                if (c) {
-		//                    return parameter.ParameterType;}}}}
-		//    return null;}
+		public static Type GetListAddFunctionType(IList list, Map value) {
+			foreach (MemberInfo member in list.GetType().GetMember("Add")) {
+				if (member is MethodInfo) {
+					MethodInfo method = (MethodInfo)member;
+					ParameterInfo[] parameters = method.GetParameters();
+					if (parameters.Length == 1) {
+						ParameterInfo parameter = parameters[0];
+						bool c = true;
+						foreach (Map entry in value.Array) {
+							object o;
+							if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
+								c = false;
+								break;}}
+						if (c) {
+							return parameter.ParameterType;}}}}
+			return null;}
 		public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
 		public override bool ContainsKey(Map key) {
 			return Get(key) != null;}
@@ -1787,7 +1799,7 @@ namespace Meta {
 			if (denominator == 1) {
 				return numerator.ToString();}
 			else {
-				return numerator.ToString() + Parser.fraction + denominator.ToString();}}
+				return numerator.ToString() + Syntax.fraction + denominator.ToString();}}
 		public Number Clone() {
 			return new Number(this);}
 		public static implicit operator Number(double number) {
@@ -1853,57 +1865,8 @@ namespace Meta {
 		public long GetInt64() {
 			return Convert.ToInt64(numerator);}}
 	public class Parser {
-		public const char arrayStart = '[';
-		public const char arrayEnd = ']';
-		public const char arraySeparator = ';';
-		public const char programSeparator = ';';
-		public const char programStart = '{';
-		public const char programEnd ='}';
-		public const char functionProgram = '?';
-		public const char lastArgument = '@';
-		public const char autokey = '.';
-		public const char callSeparator = ' ';
-		public const char callStart = '(';
-		public const char callEnd = ')';
-		public const char root = '/';
-		public const char negativeChar = '-';
-		public const char fraction = '/';
-		public const char endOfFile = (char)65535;
-		public const char indentation = '\t';
-		public const char unixNewLine = '\n';
-		public const string windowsNewLine = "\r\n";
-		public const char function = '|';
-		public const char @string = '\"';
-		public const char emptyMap = '0';
-		public const char select = '.';
-		public const char character = '\'';
-		public const char space = ' ';
-		public const char tab = '\t';
-		public const char current = '&';
-		public const char search='!';
-		public const char lookupStart='<';
-		public const char lookupEnd='>';
-		public const char statement='=';
-		public const char searchStatement=':';
-		public readonly static char[] integer = "0123456789".ToCharArray();
-		public readonly static char[] lookupStringForbidden = new char[] {
-			current, lastArgument, indentation, windowsNewLine[0], windowsNewLine[1],
-			function, @string,emptyMap, search, root, callStart, callEnd, 
-			character, programStart, lookupStart, statement, arrayStart,
-			searchStatement, functionProgram, select, callSeparator, arrayStart,
-			arrayEnd,lookupEnd,programStart,programSeparator,programEnd};
-		public static T[] Combine<T>(T[] a, T[] b)
-		{
-			T[] t=new T[a.Length+b.Length];
-			a.CopyTo(t,0);
-			b.CopyTo(t,a.Length);
-			return t;
-		}
-		public readonly static char[] lookupStringForbiddenFirst = Combine(lookupStringForbidden,integer);
 		private bool negative = false;
 		public string text;
-		
-
 		public int index;
 		public string FileName;
 		public int Line = 1;
@@ -1916,24 +1879,34 @@ namespace Meta {
 			this.FileName = filePath;}
 		public static Rule Expression = new DelayedRule(delegate() {
 			return new Alternatives(
-				LiteralExpression,FunctionProgram,Call,SelectInline,Search,List,
+				LiteralExpression,
+				FunctionProgram,
+				Call,
+				SelectInline,
+				Search,
+				List,
 				Program,
 				LastArgument
 			);});
 		public static Rule EndOfLine = new Sequence(
 			new ZeroOrMore(
-				new Alternatives(space,tab)),
-			new Alternatives(unixNewLine,windowsNewLine));
+				new Alternatives(
+					Syntax.space,
+					Syntax.tab)),
+			new Alternatives(
+				Syntax.unixNewLine,
+				Syntax.windowsNewLine));
+
 		public static Rule Integer =
 			new Sequence(
 				new CustomProduction(
 					delegate(Parser p, Map map, ref Map result) {
 						p.negative = map != null;
 						return null;},
-					new Optional(negativeChar)),
-				new Reference(
+					new Optional(Syntax.negative)),
+				new ReferenceAssignment(
 					new Sequence(
-						new Reference(
+						new ReferenceAssignment(
 							new OneOrMore(
 								new CustomProduction(
 									delegate(Parser p, Map map, ref Map result) {
@@ -1941,41 +1914,51 @@ namespace Meta {
 											result = new Map();}
 										result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
 										return result;},
-									new Characters(integer)))),
+									new Characters(Syntax.integer)))),
 						new CustomProduction(delegate(Parser p, Map map, ref Map result) {
 			if (result.GetNumber() > 0 && p.negative) {
 				result = 0 - result.GetNumber();}
 			return null;},
-		new CustomRule(delegate(Parser p, ref Map result) {
-			result=null;return true;})))));
-			//matched = true; return null;})))));
+		new CustomRule(delegate(Parser p, ref Map matched) {
+			return true;})))));
 
-		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map result) {
+		//new CustomRule(delegate(Parser p, out bool matched) {
+		//    matched = true; return null;})))));
+		
+		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map matched) {
 			if (p.indentationCount == -1) {
 				p.indentationCount++;
 				return true;}
 			else {
-				return false;}
-			//return null;
-		});
+				return false;}});
+		//public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched) {
+		//    if (p.indentationCount == -1) {
+		//        p.indentationCount++;
+		//        matched = true;}
+		//    else {
+		//        matched = false;}
+		//    return null;});
 
-		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map result) {
+		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map matched) {
 			p.indentationCount++;
 			return true;});
-			//return null;});
 
-		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map result) {
-			return StringRule("".PadLeft(pa.indentationCount, indentation)).Match(pa, ref result);});
-			//return StringRule("".PadLeft(pa.indentationCount, indentation)).Match(pa, out matched);});
+		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
+			bool matched;
+			map=StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
+		return matched;});
 
 		public static Rule CharacterDataExpression = new Sequence(
-			character,new Reference(new CharacterExcept()),new Optional(character));
+			Syntax.character,
+			new ReferenceAssignment(new CharacterExcept(Syntax.character)),
+			Syntax.character);
 
-		public static Rule Dedentation = new CustomRule(delegate(Parser pa, ref Map result) {
+		public static Rule Dedentation = new CustomRule(delegate(Parser pa, ref Map map) {
 			pa.indentationCount--;
+			return true;
 			//matched = true;
-			return true;});
-			//return null;});
+			//return null;
+		});
 		private static void MatchStringLine(Parser parser, StringBuilder text) {
 			bool matching = true;
 			for (; matching && parser.index < parser.text.Length; parser.index++) {
@@ -1988,77 +1971,61 @@ namespace Meta {
 					default:
 						text.Append(c);
 						break;}}}
-
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, ref Map map) {
 			StringBuilder result = new StringBuilder(100);
 			MatchStringLine(parser, result);
-			bool m = true;
+			bool matched = true;
 			while (true) {
-				Map lineEnd=null;
-				if(new Sequence(
+				bool lineMatched;
+				new Sequence(
 					EndOfLine,
-					SameIndentation).Match(parser, ref lineEnd)){
+					SameIndentation).Match(parser, out lineMatched);
+				if (lineMatched) {
 					result.Append('\n');
 					MatchStringLine(parser, result);}
 				else {
-					m=false;
 					break;}}
 			map=result.ToString();
-			return m;});
+		return matched;});
 			//return result.ToString();});
-		//private static Rule StringBeef = new CustomRule(delegate(Parser parser, ref Map map) {
-		//    StringBuilder result = new StringBuilder(100);
-		//    MatchStringLine(parser, result);
-		//    bool m = true;
-		//    while (true) {
-		//        bool lineMatched;
-		//        new Sequence(
-		//            EndOfLine,
-		//            SameIndentation).Match(parser, out lineMatched);
-		//        if (lineMatched) {
-		//            result.Append('\n');
-		//            MatchStringLine(parser, result);}
-		//        else {
-		//            break;}}
-		//    return result.ToString();});
 
 		private static Rule SingleString = new OneOrMore(
 			new Autokey(
 				new CharacterExcept(
-					unixNewLine,
-					windowsNewLine[0],
-					@string)));
+					Syntax.unixNewLine,
+					Syntax.windowsNewLine[0],
+					Syntax.@string)));
 
 		public static Rule String = new Sequence(
-			@string,
-			new Reference(new Alternatives(
-				new Sequence(new Reference(SingleString), new Optional(@string)),
+			Syntax.@string,
+			new ReferenceAssignment(new Alternatives(
+				new Sequence(new ReferenceAssignment(SingleString), new Optional(Syntax.@string)),
 				new Sequence(
 					SmallIndentation,
 					EndOfLine,
 					SameIndentation,
-					new Reference(StringBeef),
+					new ReferenceAssignment(StringBeef),
 					EndOfLine,
 					Dedentation))));
 
 		public static Rule Number = new Sequence(
-			new Reference(Integer),
+			new ReferenceAssignment(Integer),
 			new Assignment(
 					NumberKeys.Denominator,
 					new Optional(
 						new Sequence(
-							fraction,
-							new Reference(Integer)))));
+							Syntax.fraction,
+							new ReferenceAssignment(Integer)))));
 
 		public static Rule LookupString = new Sequence(
-			new Assignment(1, new CharacterExcept(lookupStringForbiddenFirst)),
+			new Assignment(1, new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
 			new Append(new ZeroOrMore(
 				new Autokey(
 					new CharacterExcept(
-					lookupStringForbidden)))));
+					Syntax.lookupStringForbidden)))));
 
 		public static Rule ExpressionData = new DelayedRule(delegate() {
-			return Expression;});
+			return Parser.Expression;});
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
@@ -2067,7 +2034,9 @@ namespace Meta {
 				String,
 				Number,
 				CharacterDataExpression);});
-		private static Rule LookupAnything = new Sequence('<',new Reference(Value));
+		private static Rule LookupAnything = new Sequence(
+			'<',
+			new ReferenceAssignment(Value));
 
 		public static Rule Function = new Sequence(
 			new Assignment(
@@ -2075,12 +2044,12 @@ namespace Meta {
 				new ZeroOrMore(
 					new Autokey(
 						new CharacterExcept(
-							@string,
-							function,
-							indentation,
-							windowsNewLine[0],
-							unixNewLine)))),
-			function,
+							Syntax.@string,
+							Syntax.function,
+							Syntax.indentation,
+							Syntax.windowsNewLine[0],
+							Syntax.unixNewLine)))),
+			Syntax.function,
 			new Assignment(
 				CodeKeys.Expression,
 				Expression),
@@ -2088,12 +2057,17 @@ namespace Meta {
 
 
 		public static Rule Entry = new Alternatives(
-			new Sequence(new Assignment(CodeKeys.Function,Function)),
 			new Sequence(
-				new Assignment(1,new Alternatives(
-					Number,
-					LookupString,
-					LookupAnything)),
+				new Assignment(
+					CodeKeys.Function,
+					Function)),
+			new Sequence(
+				new Assignment(
+					1,
+					new Alternatives(
+						Number,
+						LookupString,
+						LookupAnything)),
 				'=',
 				new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result) {
@@ -2103,31 +2077,38 @@ namespace Meta {
 			 new Optional(EndOfLine)));
 
 		public static Rule Map = new Sequence(
-			new Optional(programStart),
+			new Optional(Syntax.programStart),
 			new Alternatives(
-				StartOfFile,
-				new Sequence(EndOfLine,SmallIndentation)),
-			new Reference(new PrePost(
+			StartOfFile,
+			new Sequence(
+				EndOfLine,
+				SmallIndentation)),
+
+			new ReferenceAssignment(new PrePost(
 				delegate(Parser p) {
 					p.defaultKeys.Push(1);},
 				new Sequence(
-					new Reference(
+					new ReferenceAssignment(
 						new OneOrMore(
 							new Merge(
 								new Sequence(
 									SameIndentation,
-									new Reference(Entry))))),
+									new ReferenceAssignment(Entry))))),
 					Dedentation),
 				delegate(Parser p) {
 					p.defaultKeys.Pop();})));
 
 		public static Rule File = new Sequence(
 			new Optional(
-				new Sequence('#','!',new ZeroOrMore(new CharacterExcept(unixNewLine)),EndOfLine)),
-			new Reference(Map));
+				new Sequence(
+					'#',
+					'!',
+					new ZeroOrMore(new CharacterExcept(Syntax.unixNewLine)),
+					EndOfLine)),
+			new ReferenceAssignment(Map));
 
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
-			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new Reference(entry), first);}
+			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);}
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));}
@@ -2149,7 +2130,7 @@ namespace Meta {
 							new Optional(end)),
 					new Sequence(
 						SmallIndentation,
-						new Reference(
+						new ReferenceAssignment(
 							new ZeroOrMore(
 								new Autokey(
 									new Sequence(
@@ -2158,9 +2139,8 @@ namespace Meta {
 										entryAction)))),
 							new Optional(EndOfLine),
 							new Optional(Dedentation)))));}
-
 		public static Rule Call = new DelayedRule(delegate() {
-			return ComplexStuff(CodeKeys.Call, callStart, callEnd, callSeparator,
+			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
 				new Alternatives(
 					LastArgument,
 					FunctionProgram,
@@ -2194,22 +2174,22 @@ namespace Meta {
 		private static Rule Simple(char c, Map literal) {
 			return new Sequence(
 				c,
-				new Reference(new LiteralRule(literal)));}
+				new ReferenceAssignment(new LiteralRule(literal)));}
 
 		private static Rule EmptyMap = Simple(
-			emptyMap,
+			Syntax.emptyMap,
 			Meta.Map.Empty);
 
 		private static Rule Current = Simple(
-			current,
+			Syntax.current,
 			new Map(CodeKeys.Current, Meta.Map.Empty));
 
 		public static Rule LastArgument = Simple(
-			lastArgument,
+			Syntax.lastArgument,
 			new Map(CodeKeys.LastArgument, new Map()));
 
 		private static Rule Root = Simple(
-			root,
+			Syntax.root,
 			new Map(CodeKeys.Root, Meta.Map.Empty));
 
 		private static Rule LiteralExpression = new Sequence(
@@ -2221,7 +2201,7 @@ namespace Meta {
 
 		private static Rule LookupAnythingExpression = new Sequence(
 			'<',
-			new Reference(Expression),
+			new ReferenceAssignment(Expression),
 			new Optional('>'));
 
 		private static Rule LookupStringExpression = new Sequence(
@@ -2235,7 +2215,7 @@ namespace Meta {
 				new Alternatives(
 					new Sequence(
 						'!',
-						new Reference(Expression)),
+						new ReferenceAssignment(Expression)),
 					new Alternatives(
 						LookupStringExpression,
 						LookupAnythingExpression
@@ -2253,28 +2233,28 @@ namespace Meta {
 					new Append(
 						new OneOrMore(new Autokey(new Sequence(
 							'.',
-							new Reference(
+							new ReferenceAssignment(
 								new Alternatives(
 									LookupStringExpression,
 									LookupAnythingExpression,
 									LiteralExpression)))))))));
 
 		public static Rule ListMap = new Sequence(
-			arrayStart,
-			new Reference(
+			Syntax.arrayStart,
+			new ReferenceAssignment(
 				new PrePost(
 					delegate(Parser p) {
 						p.defaultKeys.Push(1);},
 					new Sequence(
 			new Optional(EndOfLine),
 			SmallIndentation,
-			new Reference(
+			new ReferenceAssignment(
 				new ZeroOrMore(
 					new Autokey(
 						new Sequence(
 							new Optional(EndOfLine),
 							SameIndentation,
-							new Reference(Value))))),
+							new ReferenceAssignment(Value))))),
 				new Optional(EndOfLine),
 				new Optional(new Alternatives(Dedentation))),
 					delegate(Parser p) {
@@ -2295,9 +2275,9 @@ namespace Meta {
 						p.defaultKeys.Push(1);},
 			ComplexStuff(
 				CodeKeys.Program,
-				arrayStart,
-				arrayEnd,
-				arraySeparator,
+				Syntax.arrayStart,
+				Syntax.arrayEnd,
+				Syntax.arraySeparator,
 				ListAction,
 				ListAction,
 				null
@@ -2327,7 +2307,7 @@ namespace Meta {
 				new Alternatives(
 					new Sequence(
 						'<',
-						new Reference(Expression)),
+						new ReferenceAssignment(Expression)),
 					new Sequence(
 						new Assignment(
 							CodeKeys.Literal,
@@ -2336,7 +2316,7 @@ namespace Meta {
 
 		public static Rule Statement = ComplexStatement(
 			':',
-			new Reference(
+			new ReferenceAssignment(
 				new Sequence(
 					new Assignment(
 						CodeKeys.Keys,
@@ -2369,16 +2349,16 @@ namespace Meta {
 											CodeKeys.Parameter,
 											new ZeroOrMore(
 											new Autokey(
-												new CharacterExcept(lookupStringForbiddenFirst)))),
-										functionProgram,
+												new CharacterExcept(Syntax.lookupStringForbiddenFirst)))),
+										Syntax.functionProgram,
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine))))))))));
 
 		public static Rule Program = ComplexStuff(
 			CodeKeys.Program,
-			programStart,
-			programEnd,
-			programSeparator,
+			Syntax.programStart,
+			Syntax.programEnd,
+			Syntax.programSeparator,
 			AllStatements,
 			null);
 
@@ -2396,15 +2376,11 @@ namespace Meta {
 			public Action(Rule rule) {
 				this.rule = rule;}
 			public bool Execute(Parser parser, ref Map result) {
-				//bool matched;
-				Map map=null;
-				if(rule.Match(parser, ref map)){
-				//Map map = rule.Match(parser, out matched);
-				//if (matched) {
-					Effect(parser, map, ref result);
-					return true;}
-				return false;}}
-				//return matched;}}
+				bool matched;
+				Map map = rule.Match(parser, out matched);
+				if (matched) {
+					Effect(parser, map, ref result);}
+				return matched;}}
 		public class Autokey : Action {
 			public Autokey(Rule rule)
 				: base(rule) {}
@@ -2422,8 +2398,8 @@ namespace Meta {
 			public Match(Rule rule)
 				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {}}
-		public class Reference : Action {
-			public Reference(Rule rule)
+		public class ReferenceAssignment : Action {
+			public ReferenceAssignment(Rule rule)
 				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = map;}}
@@ -2439,7 +2415,8 @@ namespace Meta {
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = Library.Join(result, map);}}
 		public class Merge : Action {
-			public Merge(Rule rule): base(rule) {}
+			public Merge(Rule rule)
+				: base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = Library.Merge(result, map);}}
 		public class CustomProduction : Action {
@@ -2452,44 +2429,40 @@ namespace Meta {
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 
 		public abstract class Rule {
-			public static implicit operator Rule(string s) {return StringRule(s);}
-			public static implicit operator Rule(char c) {return new Characters(c);}
-			public bool Match(Parser parser, ref Map map) {
-			//public Map Match(Parser parser, ref Map result) {
+			public static implicit operator Rule(string s) {
+				return StringRule(s);}
+			public static implicit operator Rule(char c) {
+				return new Characters(c);}
+			public Map Match(Parser parser, out bool matched) {
 				int oldIndex = parser.index;
 				int oldLine = parser.Line;
 				int oldColumn = parser.Column;
 				int oldIndentation = parser.indentationCount;
-				Map result=null;
-				if (!MatchImplementation(parser, ref result)) {
-				//Map result = MatchImplementation(parser, out matched);
-				//if (!matched) {
+				Map result = MatchImplementation(parser, out matched);
+				if (!matched) {
 					parser.index = oldIndex;
 					parser.Line = oldLine;
 					parser.Column = oldColumn;
-					parser.indentationCount = oldIndentation;
-					return false;}
+					parser.indentationCount = oldIndentation;}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
 							new Source(oldLine, oldColumn, parser.FileName),
-							new Source(parser.Line, parser.Column, parser.FileName));}
-					return true;}}
-				//return result;}
-			protected abstract bool MatchImplementation(Parser parser, ref Map result);}
-			//protected abstract Map MatchImplementation(Parser parser, out bool match);}
+							new Source(parser.Line, parser.Column, parser.FileName));}}
+				return result;}
+			protected abstract Map MatchImplementation(Parser parser, out bool match);}
 		public class IgnoreCharacter : CharacterRule {
 			private char c;
 			public IgnoreCharacter(char c)
 				: base(new char[] {}, false) {
 				this.c = c;}
 			protected override bool MatchCharacer(char next) {
-				return next == c && next != endOfFile;}}
+				return next == c && next != Syntax.endOfFile;}}
 		public class Characters : CharacterRule {
 			public Characters(params char[] characters)
 				: base(characters, true) {}
 			protected override bool MatchCharacer(char next) {
-				if (next == endOfFile) {
+				if (next == Syntax.endOfFile) {
 					return false;}
 				foreach (char c in characters) {
 					if (c.Equals(next)) {
@@ -2499,7 +2472,7 @@ namespace Meta {
 			public CharacterExcept(params char[] characters)
 				: base(characters, true) {}
 			protected override bool MatchCharacer(char c) {
-				return c.ToString().IndexOfAny(characters) == -1 && c != endOfFile;}}
+				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;}}
 		public abstract class CharacterRule : Rule {
 			private bool keep;
 			public CharacterRule(char[] chars, bool keep) {
@@ -2507,22 +2480,19 @@ namespace Meta {
 				this.keep = keep;}
 			protected char[] characters;
 			protected abstract bool MatchCharacer(char c);
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				char character = parser.Look();
 				if (MatchCharacer(character)) {
-					//matched = true;
+					matched = true;
 					parser.index++;
 					parser.Column++;
-					if (character.Equals(unixNewLine)) {
+					if (character.Equals(Syntax.unixNewLine)) {
 						parser.Line++;
 						parser.Column = 1;}
-					result=character;
-					return true;}
-					//return character;}
+					return character;}
 				else {
-					//matched = false;
-					return false;}}}
-					//return null;}}}
+					matched = false;
+					return null;}}}
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
@@ -2532,66 +2502,58 @@ namespace Meta {
 				this.pre = pre;
 				this.rule = rule;
 				this.post = post;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				pre(parser);
-				bool matched=rule.Match(parser, ref result);
-				//Map result = rule.Match(parser, out matched);
+				Map result = rule.Match(parser, out matched);
 				post(parser);
-				return matched;}}
+				return result;}}
+		// remove?
 		public static Rule StringRule(string text) {
 			List<Action> actions = new List<Action>();
 			foreach (char c in text) {
 				actions.Add(c);}
 			return new Sequence(actions.ToArray());}
-		public delegate bool ParseFunction(Parser parser, ref Map result);
+		public delegate bool ParseFunction(Parser parser, ref Map map);
+		//public delegate Map ParseFunction(Parser parser, out bool matched);
 		public class CustomRule : Rule {
 			private ParseFunction parseFunction;
 			public CustomRule(ParseFunction parseFunction) {
 				this.parseFunction = parseFunction;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				return parseFunction(parser, ref result);}}
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
+				Map result=null;
+				matched=parseFunction(parser, ref result);
+			return result;}}
+
+			//protected override Map MatchImplementation(Parser parser, out bool matched) {
+			//    return parseFunction(parser, out matched);}}
 		public delegate Rule RuleFunction();
-		public class Delayed<T>{
-			public delegate T DelayedDelegate();
-			private DelayedDelegate del;
-			public Delayed(DelayedDelegate del) {
-				this.del=del;}
-			private T result;
-			public T Content{
-				get{
-					if(result==null){
-						result=del();}
-					return result;}}}
 		public class DelayedRule : Rule {
-			private Delayed<Rule> rule;
-			public DelayedRule(Delayed<Rule>.DelayedDelegate ruleFunction) {
-				this.rule=new Delayed<Rule>(ruleFunction);}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				return rule.Content.Match(parser,ref result);}}
-				//return rule.Content.Match(parser,out matched);}}
-		
+			private RuleFunction ruleFunction;
+			private Rule rule;
+			public DelayedRule(RuleFunction ruleFunction) {
+				this.ruleFunction = ruleFunction;}
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
+				if (rule == null) {
+					rule = ruleFunction();}
+				return rule.Match(parser, out matched);}}
 		public class Alternatives : Rule {
 			private Rule[] cases;
-			public Alternatives(params Rule[] cases) {this.cases = cases;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				//Map result = null;
+			public Alternatives(params Rule[] cases) {
+				this.cases = cases;}
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
+				Map result = null;
+				matched = false;
 				foreach (Rule expression in cases) {
-					if(expression.Match(parser, ref result))
-						return true;
-						break;}
-
-					//result = (Map)expression.Match(parser, ref result);
-					////result = (Map)expression.Match(parser, ref result);
-					//if (matched) {
-					//    return true;
-					//    break;}}
-				return false;}}
-				//return result;}}
+					result = (Map)expression.Match(parser, out matched);
+					if (matched) {
+						break;}}
+				return result;}}
 		public class Sequence : Rule {
 			private Action[] actions;
 			public Sequence(params Action[] rules) {
 				this.actions = rules;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
+			protected override Map MatchImplementation(Parser parser, out bool match) {
+				Map result = new Map();
 				bool success = true;
 				foreach (Action action in actions) {
 					if (action != null) {
@@ -2599,82 +2561,47 @@ namespace Meta {
 						if (!matched) {
 							success = false;
 							break;}}}
-				// refactor
 				if (!success) {
-					result=null;
-					return false;}
+					match = false;
+					return null;}
 				else {
-					return true;}}}
-					//return result;}}}
-
-			//protected override bool MatchImplementation(Parser parser, ref Map result) {
-			//    Map result = new Map();
-			//    bool success = true;
-			//    foreach (Action action in actions) {
-			//        if (action != null) {
-			//            bool matched = action.Execute(parser, ref result);
-			//            if (!matched) {
-			//                success = false;
-			//                break;}}}
-			//    if (!success) {
-			//        match = false;
-			//        return null;}
-			//    else {
-			//        match = true;
-			//        return result;}}}
+					match = true;
+					return result;}}}
 		public class LiteralRule : Rule {
 			private Map literal;
 			public LiteralRule(Map literal) {
 				this.literal = literal;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				result=literal;
-				return true;}}
-			//protected override bool MatchImplementation(Parser parser, ref Map result) {
-			//    matched = true;
-			//    return literal;}}
-
-
-		// remove this shit
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
+				matched = true;
+				return literal;}}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
 				: base(action) {}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				bool match=base.MatchImplementation(parser, ref result);
-				//Map result = base.MatchImplementation(parser, out match);
+			protected override Map MatchImplementation(Parser parser, out bool match) {
+				Map result = base.MatchImplementation(parser, out match);
 				if (match && result.IsString) {
 					result = result.GetString();}
-				return match;}}
+				return result;}}
 		public class ZeroOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				Map list = new Map(new ListStrategy());
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;}}
-				result=list;
-				return true;}
-				//return list;}
-			//protected override bool MatchImplementation(Parser parser, ref Map result) {
-			//    Map list = new Map(new ListStrategy());
-			//    while (true) {
-			//        if (!action.Execute(parser, ref list)) {
-			//            break;}}
-			//    matched = true;
-			//    return list;}
+				matched = true;
+				return list;}
 			private Action action;
 			public ZeroOrMore(Action action) {
 				this.action = action;}}
 		public class OneOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
+			protected override Map MatchImplementation(Parser parser, out bool matched) {
 				Map list = new Map(new ListStrategy());
-				bool matched = false;
-				//matched = false;
+				matched = false;
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;}
 					matched = true;}
-				result=list;
-				return matched;}
-				//return list;}
+				return list;}
 			private Action action;
 			public OneOrMore(Action action) {
 				this.action = action;}}
@@ -2682,32 +2609,73 @@ namespace Meta {
 			private Rule rule;
 			public Optional(Rule rule) {
 				this.rule = rule;}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				bool matched = rule.Match(parser, ref result);
-				//Map matched = rule.Match(parser, out match);
-				if (result == null) {
-					return  true;}
-					//return null;}
+			protected override Map MatchImplementation(Parser parser, out bool match) {
+				Map matched = rule.Match(parser, out match);
+				if (matched == null) {
+					match = true;
+					return null;}
 				else {
-					return true;}}}
-					//return matched;}}}
+					match = true;
+					return matched;}}}
 		private char Look() {
 			if (index < text.Length) {
 				return text[index];}
 			else {
-				return endOfFile;}}
+				return Syntax.endOfFile;}}
 		public static Map Parse(string file) {
 			return ParseString(System.IO.File.ReadAllText(file), file);}
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			bool matched;
-			Map result=null;
-			File.Match(parser, ref result);
-			//Map result = File.Match(parser, out matched);
+			Map result = Parser.File.Match(parser, out matched);
 			if (parser.index != parser.text.Length) {
 				throw new SyntaxException("Expected end of file.", parser);}
 			return result;}}
-
+	public class Syntax {
+		public const char arrayStart = '[';
+		public const char arrayEnd = ']';
+		public const char arraySeparator = ';';
+		public const char programSeparator = ';';
+		public const char programStart = '{';
+		public const char programEnd ='}';
+		public const char functionProgram = '?';
+		public const char lastArgument = '@';
+		public const char autokey = '.';
+		public const char callSeparator = ' ';
+		public const char callStart = '(';
+		public const char callEnd = ')';
+		public const char root = '/';
+		public const char negative = '-';
+		public const char fraction = '/';
+		public const char endOfFile = (char)65535;
+		public const char indentation = '\t';
+		public const char unixNewLine = '\n';
+		public const string windowsNewLine = "\r\n";
+		public const char function = '|';
+		public const char @string = '\"';
+		public const char emptyMap = '0';
+		public const char explicitCall = '-';
+		public const char select = '.';
+		public const char character = '\'';
+		public const char space = ' ';
+		public const char tab = '\t';
+		public const char current = '&';
+		public readonly static char[] integer = new char[] {
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+		public readonly static char[] lookupStringForbidden = new char[] {
+			current, lastArgument, explicitCall, indentation, '\r', '\n',
+			function, @string,emptyMap, '!', root, callStart, callEnd, 
+			character, programStart, '*', '$', '\\', '<', '=', arrayStart,
+			'-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', 
+			programStart, programSeparator ,callSeparator,programEnd,
+			arrayEnd};
+		public readonly static char[] lookupStringForbiddenFirst = new char[] {
+			current, lastArgument, explicitCall, indentation, '\r', '\n', select,
+			function, @string, emptyMap, '!', root, callStart, callEnd, character,
+			programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
+			'3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
+			'-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
+			programEnd,arraySeparator};}
 	public class Serialization {
 		public static string Serialize(Map map) {
 			try {
@@ -2830,7 +2798,7 @@ namespace Meta {
 		private static string Key(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Count != 0 && entry.Key.IsString) {
 				string key = entry.Key.GetString();
-				if (key.IndexOfAny(Parser.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Parser.lookupStringForbiddenFirst) != 0) {
+				if (key.IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0) {
 					return entry.Key.GetString();}}
 			return Serialize(entry.Key, indentation + 1);}
 		private static string String(Map map, int indentation) {
@@ -2875,6 +2843,7 @@ namespace Meta {
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 				LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 				lib.Statement = new LiteralStatement(gac);
+
 				callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 				callable[CodeKeys.Function].Compile(lib);
 				return callable.Call(argument);}}
@@ -3143,25 +3112,45 @@ namespace Meta {
 			object obj = ((ObjectMap)o.Strategy).Object;
 			Type type = obj.GetType();
 			foreach (KeyValuePair<Map, Map> entry in values) {
+				Map value = entry.Value;
+				//if (entry.Key.Strategy is ObjectMap)
+				//{
+				//    DependencyProperty key = (DependencyProperty)((ObjectMap)entry.Key.Strategy).Object;
+				//    type.GetMethod("SetValue", new Type[] { typeof(DependencyProperty), typeof(Objec}).Invoke(obj, new object[] { key, Transform.ToDotNet(value, key.PropertyType) });
+				//}
+				//else
+				//{
 				MemberInfo[] members = type.GetMember(entry.Key.GetString());
 				if (members.Length != 0) {
 					MemberInfo member = members[0];
-					switch(member.MemberType) {
-						case MemberTypes.Field:
-							FieldInfo field = (FieldInfo)member;
-							field.SetValue(obj, Transform.ToDotNet(entry.Value, field.FieldType));
-							break;
-						case MemberTypes.Property:
-							PropertyInfo property = (PropertyInfo)member;
-							object converted = Transform.ToDotNet(entry.Value, property.PropertyType);
-							property.SetValue(obj, converted, null);
-							break;
-						case MemberTypes.Event:
-							EventInfo eventInfo = (EventInfo)member;
-							new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(entry.Value);
-							break;
-					default:
-						throw new Exception("unknown member type");}}}
+					if (member is FieldInfo) {
+						FieldInfo field = (FieldInfo)member;
+						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
+					else if (member is PropertyInfo) {
+						PropertyInfo property = (PropertyInfo)member;
+						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap)) {
+							if (value.ArrayCount != 0) {
+								IList list = (IList)property.GetValue(obj, null);
+								list.Clear();
+								Type t = DotNetMap.GetListAddFunctionType(list, value);
+								if (t == null) {
+									t = DotNetMap.GetListAddFunctionType(list, value);
+									throw new ApplicationException("Cannot convert argument.");}
+								else {
+									foreach (Map map in value.Array) {
+										list.Add(Transform.ToDotNet(map, t));}}}}
+						else {
+							object converted = Transform.ToDotNet(value, property.PropertyType);
+							property.SetValue(obj, converted, null);}}
+					else if (member is EventInfo) {
+						EventInfo eventInfo = (EventInfo)member;
+						new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);}
+					else {
+						throw new Exception("unknown member type");}}
+				else {
+					o[entry.Key] = entry.Value;}
+				//}
+			}
 			return o;}
 		[Compilable]
 		public static Map MergeAll(Map array) {
@@ -3193,7 +3182,6 @@ namespace Meta {
 			return literal;}
 		public override Compiled CompileImplementation(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");}}
-	// remove??
 	public class LiteralStatement : Statement {
 		private LiteralExpression program;
 		public LiteralStatement(LiteralExpression program)
@@ -3205,12 +3193,21 @@ namespace Meta {
 			return program.EvaluateStructure();}
 		public override CompiledStatement Compile() {
 			throw new Exception("The method or operation is not implemented.");}}
+	public class Structure : Map {
+		public override bool IsConstant {
+			get {
+				return false;}}}
+	public class Unknown : Map {
+		public override bool IsConstant {
+			get {
+				return false;}}}
+	public abstract class ScopeExpression : Expression {
+		public ScopeExpression(Extent source, Expression parent)
+			: base(source, parent) {}}
 	public delegate T SingleDelegate<T>(T t);
 	public class CompilableAttribute : Attribute {
-		public SingleDelegate<Map> structure;}
+		public SingleDelegate<Structure> structure;}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
-		public Extent Source;
-		public Map Scope;
 		private Dictionary<Type, Compiled> specialized;
 		private Dictionary<Type, Compiled> Specialized {
 			get {
@@ -3219,14 +3216,19 @@ namespace Meta {
 				return specialized;}}
 		public Compiled GetCompiled(Type type) {
 			try {
-				if (Specialized.ContainsKey(type)) {return Specialized[type];}
-				else if (Specialized.ContainsKey(typeof(Map))) {return Specialized[typeof(Map)];}
-				else {return null;}}
+				if (Specialized.ContainsKey(type)) {
+					return Specialized[type];}
+				else if (Specialized.ContainsKey(typeof(Map))) {
+					return Specialized[typeof(Map)];}
+				else {
+					return null;}}
 			catch (Exception e) {
 				throw e;}}
 		public virtual bool IsConstant {
-			get {return isConstant;}
-			set {isConstant = value;}}
+			get {
+				return isConstant;}
+			set {
+				isConstant = value;}}
 		private bool isConstant = true;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
@@ -3237,16 +3239,46 @@ namespace Meta {
 			foreach (object entry in list) {
 				this[index] = Transform.ToMeta(entry);
 				index++;}}
+		public Map()
+			: this(EmptyStrategy.empty) {}
+		public Map(Map map)
+			: this(new ObjectMap(map)) {}
+		public Map(object o)
+			: this(new ObjectMap(o)) {}
+		public Map(string text)
+			: this(new StringStrategy(text)) {}
+		public Map(Number number)
+			: this(new NumberStrategy(number)) {}
+		public Map(MapStrategy strategy) {
+			this.strategy = strategy;}
+		public Map(params Map[] keysAndValues)
+			: this() {
+			for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
+				this[keysAndValues[i]] = keysAndValues[i + 1];}}
 		public MapStrategy Strategy {
-			get {return strategy;}
-			set {strategy = value;}}
-		public int Count {get {return strategy.Count;}}
-		public int ArrayCount {get {return strategy.GetArrayCount();}}
-		public bool IsString {get {return strategy.IsString;}}
-		public bool IsNumber {get {return strategy.IsNumber;}}
-		public IEnumerable<Map> Array {get {return strategy.Array;}}
-		public Number GetNumber() {return strategy.GetNumber();}
-		public string GetString() {return strategy.GetString();}
+			get {
+				return strategy;}
+			set {
+				strategy = value;}}
+		public int Count {
+			get {
+				return strategy.Count;}}
+		public int ArrayCount {
+			get {
+				return strategy.GetArrayCount();}}
+		public bool IsString {
+			get {
+				return strategy.IsString;}}
+		public bool IsNumber {
+			get {
+				return strategy.IsNumber;}}
+		public IEnumerable<Map> Array {
+			get {
+				return strategy.Array;}}
+		public Number GetNumber() {
+			return strategy.GetNumber();}
+		public string GetString() {
+			return strategy.GetString();}
 		public static Stack<Map> arguments = new Stack<Map>();
 		public Map Call(Map arg) {
 			arguments.Push(arg);
@@ -3254,29 +3286,41 @@ namespace Meta {
 			arguments.Pop();
 			return result;}
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
-		public void Append(Map map) {strategy.Append(map, this);}
-		public bool ContainsKey(Map key) {return strategy.ContainsKey(key);}
+		public void Append(Map map) {
+			strategy.Append(map, this);}
+		public bool ContainsKey(Map key) {
+			return strategy.ContainsKey(key);}
 		public override bool Equals(object obj) {
 			Map map = obj as Map;
-			if (map != null && map.strategy.IsNormal == strategy.IsNormal) {
-				return strategy.Equals(map.Strategy);}
+			if (map != null) {
+				if (map.strategy.IsNormal == strategy.IsNormal) {
+					return strategy.Equals(map.Strategy);}
+				return false;}
 			return false;}
 		public Map TryGetValue(Map key) {
 			return strategy.Get(key);}
 		public IEnumerable<Map> Keys {
-			get {return strategy.Keys;}}
+			get {
+				return strategy.Keys;}}
 		public Map this[Map key] {
 			get {
 				Map value = TryGetValue(key);
-				if (value == null) {throw new KeyDoesNotExist(key, null, this);}
-				else {return value;}}
+				if (value == null) {
+					throw new KeyDoesNotExist(key, null, this);}
+				else {
+					return value;}}
 			set {
-				if (value == null) {throw new Exception("Value cannot be null.");}
-				else {strategy.Set(key, value, this);}}}
+				if (value == null) {
+					throw new Exception("Value cannot be null.");}
+				else {
+					strategy.Set(key, value, this);}}}
 		public override string ToString() {
-			if (Count == 0) {return "0";}
-			else if (IsString) {return GetString();}
-			else {return Meta.Serialization.Serialize(this);}}
+			if (Count == 0) {
+				return "0";}
+			else if (IsString) {
+				return GetString();}
+			else {
+				return Meta.Serialization.Serialize(this);}}
 		private Expression expression;
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
@@ -3291,6 +3335,7 @@ namespace Meta {
 				throw new ApplicationException("Cannot compile map");}}
 		public void Compile(Expression parent) {
 			Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);}
+
 		public Expression GetExpression(Expression parent) {
 			if (expression == null) {
 				expression = CreateExpression(parent);}
@@ -3322,7 +3367,8 @@ namespace Meta {
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
 				program.statementList.Add(c);
 				return program;}
-			else {throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));}}
+			else {
+				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));}}
 		public int GetArrayCountDefault() {
 			int i = 1;
 			for (;ContainsKey(i);i++);
@@ -3334,39 +3380,54 @@ namespace Meta {
 			clone.specialized = specialized;
 			clone.IsConstant = this.IsConstant;
 			return clone;}
-		public override int GetHashCode() {return strategy.GetHashCode();}
+		public override int GetHashCode() {
+			return strategy.GetHashCode();}
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
 			return this.GetEnumerator();}
 		public IEnumerator<KeyValuePair<Map, Map>> GetEnumerator() {
 			foreach (Map key in Keys) {
 				yield return new KeyValuePair<Map, Map>(key, this[key]);}}
+		public Extent Source;
 		public static Map Empty = new Map(EmptyStrategy.empty);
-		public Map():this(EmptyStrategy.empty) {}
-		public Map(Map map): this(new ObjectMap(map)) {}
-		public Map(object o): this(new ObjectMap(o)) {}
-		public Map(string text): this(new StringStrategy(text)) {}
-		public Map(Number number): this(new NumberStrategy(number)) {}
-		public Map(MapStrategy strategy) {this.strategy = strategy;}
-		public Map(params Map[] keysAndValues): this() {
-			for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
-				this[keysAndValues[i]] = keysAndValues[i + 1];}}
-		public static implicit operator Map(string text) {return new Map(text);}
-		public static implicit operator Map(Number integer) {return new Map(integer);}
-		public static implicit operator Map(double number) {return new Number(number);}
-		public static implicit operator Map(decimal number) {return (double)number;}
-		public static implicit operator Map(float number) {return (double)number;}
-		public static implicit operator Map(bool boolean) {return Convert.ToDouble(boolean);}
-		public static implicit operator Map(char character) {return (double)character;}
-		public static implicit operator Map(byte integer) {return (double)integer;}
-		public static implicit operator Map(sbyte integer) {return (double)integer;}
-		public static implicit operator Map(uint integer) {return (double)integer;}
-		public static implicit operator Map(ushort integer) {return (double)integer;}
-		public static implicit operator Map(int integer) {return (double)integer;}
-		public static implicit operator Map(long integer) {return (double)integer;}
-		public static implicit operator Map(ulong integer) {return (double)integer;}
+		public static implicit operator Map(string text) {
+			return new Map(text);}
+		public static implicit operator Map(Number integer) {
+			return new Map(integer);}
+		public static implicit operator Map(double number) {
+			return new Number(number);}
+		public static implicit operator Map(decimal number) {
+			return (double)number;}
+		public static implicit operator Map(float number) {
+			return (double)number;}
+		public static implicit operator Map(bool boolean) {
+			return Convert.ToDouble(boolean);}
+		public static implicit operator Map(char character) {
+			return (double)character;}
+		public static implicit operator Map(byte integer) {
+			return (double)integer;}
+		public static implicit operator Map(sbyte integer) {
+			return (double)integer;}
+		public static implicit operator Map(uint integer) {
+			return (double)integer;}
+		public static implicit operator Map(ushort integer) {
+			return (double)integer;}
+		public static implicit operator Map(int integer) {
+			return (double)integer;}
+		public static implicit operator Map(long integer) {
+			return (double)integer;}
+		public static implicit operator Map(ulong integer) {
+			return (double)integer;}
+		public Map Scope;
 		public string SerializeDefault() {
-			if (this.Count == 0) {return  "0";}
-			else if (this.IsString) {return  "\"" + this.GetString() + "\"";}
-			else if (this.IsNumber) {return  this.GetNumber().ToString();}
-			else {return null;}}
-		public string Serialize() {return strategy.Serialize(this);}}}
+			string text;
+			if (this.Count == 0) {
+				text = "0";}
+			else if (this.IsString) {
+				text = "\"" + this.GetString() + "\"";}
+			else if (this.IsNumber) {
+				text = this.GetNumber().ToString();}
+			else {
+				text = null;}
+			return text;}
+		public string Serialize() {
+			return strategy.Serialize(this);}}}
