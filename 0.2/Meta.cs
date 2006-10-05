@@ -1919,13 +1919,13 @@ namespace Meta {
 			if (result.GetNumber() > 0 && p.negative) {
 				result = 0 - result.GetNumber();}
 			return null;},
-		new CustomRule(delegate(Parser p, ref Map matched) {
+		new CustomRule(delegate(Parser p, ref Map map) {
 			return true;})))));
 
 		//new CustomRule(delegate(Parser p, out bool matched) {
 		//    matched = true; return null;})))));
 		
-		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map matched) {
+		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
 			if (p.indentationCount == -1) {
 				p.indentationCount++;
 				return true;}
@@ -1939,7 +1939,7 @@ namespace Meta {
 		//        matched = false;}
 		//    return null;});
 
-		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map matched) {
+		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map map) {
 			p.indentationCount++;
 			return true;});
 
@@ -2448,7 +2448,8 @@ namespace Meta {
 				int oldColumn = parser.Column;
 				int oldIndentation = parser.indentationCount;
 				bool matched;
-				Map result = MatchImplementation(parser, out matched);
+				Map result=null;
+				matched= MatchImplementation(parser, ref result);
 				if (!matched) {
 					parser.index = oldIndex;
 					parser.Line = oldLine;
@@ -2461,26 +2462,7 @@ namespace Meta {
 							new Source(parser.Line, parser.Column, parser.FileName));}}
 				map=result;
 				return matched;}
-				//return result;}
-
-			//public Map Match(Parser parser, out bool matched) {
-			//    int oldIndex = parser.index;
-			//    int oldLine = parser.Line;
-			//    int oldColumn = parser.Column;
-			//    int oldIndentation = parser.indentationCount;
-			//    Map result = MatchImplementation(parser, out matched);
-			//    if (!matched) {
-			//        parser.index = oldIndex;
-			//        parser.Line = oldLine;
-			//        parser.Column = oldColumn;
-			//        parser.indentationCount = oldIndentation;}
-			//    else {
-			//        if (result != null) {
-			//            result.Source = new Extent(
-			//                new Source(oldLine, oldColumn, parser.FileName),
-			//                new Source(parser.Line, parser.Column, parser.FileName));}}
-			//    return result;}
-			protected abstract Map MatchImplementation(Parser parser, out bool match);}
+			protected abstract bool MatchImplementation(Parser parser, ref Map map);}
 		public class IgnoreCharacter : CharacterRule {
 			private char c;
 			public IgnoreCharacter(char c)
@@ -2510,19 +2492,19 @@ namespace Meta {
 				this.keep = keep;}
 			protected char[] characters;
 			protected abstract bool MatchCharacer(char c);
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				char character = parser.Look();
 				if (MatchCharacer(character)) {
-					matched = true;
 					parser.index++;
 					parser.Column++;
 					if (character.Equals(Syntax.unixNewLine)) {
 						parser.Line++;
 						parser.Column = 1;}
-					return character;}
+					map=character;
+					return true;}
 				else {
-					matched = false;
-					return null;}}}
+					map=null;
+					return false;}}}
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
@@ -2532,12 +2514,11 @@ namespace Meta {
 				this.pre = pre;
 				this.rule = rule;
 				this.post = post;}
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				pre(parser);
-				Map result=null;
-				matched=rule.Match(parser, ref result);
+				bool matched=rule.Match(parser, ref map);
 				post(parser);
-				return result;}}
+				return matched;}}
 		// remove?
 		public static Rule StringRule(string text) {
 			List<Action> actions = new List<Action>();
@@ -2549,40 +2530,35 @@ namespace Meta {
 			private ParseFunction parseFunction;
 			public CustomRule(ParseFunction parseFunction) {
 				this.parseFunction = parseFunction;}
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
-				Map result=null;
-				matched=parseFunction(parser, ref result);
-			return result;}}
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
+				return parseFunction(parser, ref map);}}
 		public delegate Rule RuleFunction();
 		public class DelayedRule : Rule {
 			private RuleFunction ruleFunction;
 			private Rule rule;
 			public DelayedRule(RuleFunction ruleFunction) {
 				this.ruleFunction = ruleFunction;}
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				if (rule == null) {
 					rule = ruleFunction();}
-				Map map=null;
-				matched=rule.Match(parser,ref map);
-			return map;}}
+				return rule.Match(parser,ref map);}}
 		public class Alternatives : Rule {
 			private Rule[] cases;
 			public Alternatives(params Rule[] cases) {
 				this.cases = cases;}
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
-				Map result = null;
-				matched = false;
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
+				//matched = false;
 				foreach (Rule expression in cases) {
-					matched=expression.Match(parser, ref result);
+					bool matched=expression.Match(parser, ref map);
 					//result = (Map)expression.Match(parser, out matched);
 					if (matched) {
-						break;}}
-				return result;}}
+						return true;}}
+				return false;}}
 		public class Sequence : Rule {
 			private Action[] actions;
 			public Sequence(params Action[] rules) {
 				this.actions = rules;}
-			protected override Map MatchImplementation(Parser parser, out bool match) {
+			protected override bool MatchImplementation(Parser parser, ref Map match) {
 				Map result = new Map();
 				bool success = true;
 				foreach (Action action in actions) {
@@ -2592,46 +2568,47 @@ namespace Meta {
 							success = false;
 							break;}}}
 				if (!success) {
-					match = false;
-					return null;}
+					match=null;
+					return false;}
 				else {
-					match = true;
-					return result;}}}
+					match=result;
+					return true;}}}
 		public class LiteralRule : Rule {
 			private Map literal;
 			public LiteralRule(Map literal) {
 				this.literal = literal;}
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
-				matched = true;
-				return literal;}}
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
+				map=literal;
+				return true;}}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
 				: base(action) {}
-			protected override Map MatchImplementation(Parser parser, out bool match) {
-				Map result = base.MatchImplementation(parser, out match);
+			protected override bool MatchImplementation(Parser parser, ref Map result) {
+				bool match=base.MatchImplementation(parser, ref result);
 				if (match && result.IsString) {
 					result = result.GetString();}
-				return result;}}
+				return match;}}
 		public class ZeroOrMore : Rule {
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				Map list = new Map(new ListStrategy());
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;}}
-				matched = true;
-				return list;}
+				map=list;
+				return true;}
 			private Action action;
 			public ZeroOrMore(Action action) {
 				this.action = action;}}
 		public class OneOrMore : Rule {
-			protected override Map MatchImplementation(Parser parser, out bool matched) {
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				Map list = new Map(new ListStrategy());
-				matched = false;
+				bool matched = false;
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;}
 					matched = true;}
-				return list;}
+				map=list;
+				return matched;}
 			private Action action;
 			public OneOrMore(Action action) {
 				this.action = action;}}
@@ -2639,15 +2616,15 @@ namespace Meta {
 			private Rule rule;
 			public Optional(Rule rule) {
 				this.rule = rule;}
-			protected override Map MatchImplementation(Parser parser, out bool match) {
+			protected override bool MatchImplementation(Parser parser, ref Map match) {
 				Map matched=null;
-				match=rule.Match(parser, ref matched);
+				rule.Match(parser, ref matched);
 				if (matched == null) {
-					match = true;
-					return null;}
+					match=null;
+					return true;}
 				else {
-					match = true;
-					return matched;}}}
+					match=matched;
+					return true;}}}
 		private char Look() {
 			if (index < text.Length) {
 				return text[index];}
