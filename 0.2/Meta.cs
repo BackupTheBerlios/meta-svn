@@ -1894,17 +1894,19 @@ namespace Meta {
 		public class Index {
 			private State state;
 			private Rule rule;
-			public Index(State state,Rule rule)
+			private Parser parser;
+			public Index(State state,Rule rule,Parser parser)
 			{
 				this.state=state;
 				this.rule=rule;
+				this.parser=parser;
 			}
 			public override int GetHashCode() {
-				return state.GetHashCode()*rule.GetHashCode();
+				return state.GetHashCode()*rule.GetHashCode()*parser.GetHashCode();
 			}
 			public override bool Equals(object obj) {
 				Index index=obj as Index;
-				return index!=null && index.rule.Equals(rule) && index.state.Equals(state);
+				return index!=null && index.rule.Equals(rule) && index.parser==parser  && index.state.Equals(state);
 			}
 		}
 		public string Text;
@@ -1934,16 +1936,12 @@ namespace Meta {
 					case '\'':
 						return true;
 					default:
-						return false;}};}
+						return false;}};
+		}
 		public static Rule Expression = new DelayedRule(delegate() {
 		    return new CachedRule(new Alternatives(
 		        LiteralExpression,FunctionProgram,Call,Select,
 		        Search,List,Program,LastArgument));});
-
-		//public static Rule Expression = new DelayedRule(delegate() {
-		//    return new CachedRule(new Alternatives(
-		//        LiteralExpression,FunctionProgram,Call,SelectInline,
-		//        Search,List,Program,LastArgument));});
 		public class Ignore:Rule
 		{
 			private Rule rule;
@@ -1955,6 +1953,10 @@ namespace Meta {
 		public static Rule EndOfLine = new Ignore(new Sequence(
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
+
+		//public static Rule EndOfLine = new Ignore(new Sequence(
+		//    new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
+		//    new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
 
 		public static Rule Integer = new Sequence(new CustomProduction(
 		        delegate(Parser p, Map map, ref Map result) {
@@ -1977,23 +1979,36 @@ namespace Meta {
 
 		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
 		
-		private static Rule StringBeef = new CustomRule(delegate(Parser parser, ref Map map) {
-			StringBuilder result = new StringBuilder(100);
-			string s=null;
-			StringLine.MatchString(parser,ref s);
-			result.Append(s);
-			bool matched = true;
-			while (true) {
-				bool lineMatched=new Sequence(
-					EndOfLine,
-					SameIndentation).Match(parser, ref map);
-				if (lineMatched) {
-					result.Append('\n');
-					StringLine.MatchString(parser, ref s);
-					result.Append(s);}
-				else {break;}}
-			map=result.ToString();
-			return matched;});
+		public class StringIgnore:StringRule
+		{
+			private Rule rule;
+			public StringIgnore(Rule rule) {
+				this.rule=rule;
+			}
+			public override bool MatchString(Parser parser, ref string s) {
+				Map map=null;
+				s="";
+				return rule.Match(parser,ref map);
+			}
+		}
+		public class StringLoop:StringRule {
+			private StringRule rule;
+			public StringLoop(StringRule rule) {
+				this.rule=rule;
+			}
+			public override bool MatchString(Parser parser, ref string s) {
+				while(true){
+					string result=null;
+					if(rule.MatchString(parser,ref result)){
+						s+=result;
+					}
+					else{
+						break;
+					}
+				}
+				return true;
+			}
+		}
 
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
@@ -2013,7 +2028,14 @@ namespace Meta {
 					SmallIndentation,
 					EndOfLine,
 					SameIndentation,
-					new ReferenceAssignment(StringBeef),
+					new ReferenceAssignment(new StringSequence(
+						StringLine,
+						new StringLoop(
+							new StringSequence(
+								new StringIgnore(EndOfLine),
+								new StringIgnore(SameIndentation),
+								new LiteralString("\n"),
+								StringLine)))),
 					EndOfLine,
 					Dedentation))));
 		public static Rule Number = new Sequence(
@@ -2032,17 +2054,23 @@ namespace Meta {
 			}
 			public override bool MatchString(Parser parser, ref string s) {
 				s="";
+				State oldState=parser.State;
 				foreach(StringRule rule in rules) {
 					string result=null;
 					if(rule.MatchString(parser, ref result)) {
 						s+=result;}
-					else {return false;}}
+					else {
+						parser.State=oldState;
+						return false;
+					}
+				}
 				return true;
 			}
 		}
-		public static Rule LookupString = new StringSequence(
-			new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
-			new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden)));
+
+		public static Rule LookupString = new CachedRule(new StringSequence(
+		    new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
+		    new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
@@ -2436,6 +2464,16 @@ namespace Meta {
 			}
 			public Map map;
 			public State state;
+		}
+		public class LiteralString:StringRule {
+			private string s;
+			public LiteralString(string s) {
+				this.s=s;
+			}
+			public override bool MatchString(Parser parser, ref string s) {
+				s=this.s;
+				return true;
+			}
 		}
 		public class CachedRule:Rule {
 		    private Rule rule;
