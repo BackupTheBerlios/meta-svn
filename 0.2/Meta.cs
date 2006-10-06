@@ -390,7 +390,7 @@ namespace Meta {
 		}
 		public Structure Current() {
 			if (!currentEvaluated) {
-				Map pre = PreMap();
+				Structure pre = Pre();
 				//Map pre = Pre();
 				if (pre != null) {
 					current = CurrentImplementation(pre);}
@@ -415,7 +415,7 @@ namespace Meta {
 				if (!current.DoesNotAddKey(key)) {
 					return false;}}
 			return true;}
-		protected abstract Structure CurrentImplementation(Map previous);
+		protected abstract Structure CurrentImplementation(Structure previous);
 
 		public Statement Previous {
 			get {
@@ -438,8 +438,8 @@ namespace Meta {
 			: base(value) {}
 		public override void AssignImplementation(ref Map context, Map value) {}}
 	public class DiscardStatement : Statement {
-		protected override Structure CurrentImplementation(Map previous) {
-			return new LiteralStructure(previous);
+		protected override Structure CurrentImplementation(Structure previous) {
+			return previous;
 		}
 		public DiscardStatement(Program program, Expression value, int index)
 			: base(program, value, index) {}
@@ -467,7 +467,7 @@ namespace Meta {
 			if (k != null && k.IsConstant && !k.Equals(key)) {
 				return true;}
 			return false;}
-		protected override Structure CurrentImplementation(Map previous) {
+		protected override Structure CurrentImplementation(Structure previous) {
 			Structure ks = key.EvaluateStructure();
 			Map k;
 			if(ks!=null) {
@@ -493,13 +493,15 @@ namespace Meta {
 				}
 				// not general enough
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
-					previous[k] = val;
+					((LiteralStructure)previous).literal[k] = val;
 				}
 				else {
-					previous[k] = new Map();
-					previous[k].IsConstant=false;
+					((LiteralStructure)previous).literal[k] = new Map();
+					((LiteralStructure)previous).literal[k].IsConstant=false;
 				}
-				return new LiteralStructure(previous);}
+				return previous;
+				//return new LiteralStructure(previous);
+			}
 			return null;}
 		public override CompiledStatement Compile() {
 			Map k = key.EvaluateMapStructure();
@@ -525,7 +527,7 @@ namespace Meta {
 			else {
 				context = value.Copy();}}}
 	public class CurrentStatement : Statement {
-		protected override Structure CurrentImplementation(Map previous) {
+		protected override Structure CurrentImplementation(Structure previous) {
 			return new LiteralStructure(value.EvaluateMapStructure());
 		}
 		public override CompiledStatement Compile() {
@@ -546,8 +548,8 @@ namespace Meta {
 					throw new KeyNotFound(key, key.Source.start, null);}}
 			selected[key] = value;}}
 	public class SearchStatement : Statement {
-		protected override Structure CurrentImplementation(Map previous) {
-			return new LiteralStructure(previous);
+		protected override Structure CurrentImplementation(Structure previous) {
+			return previous;
 		}
 		public override CompiledStatement Compile() {
 			return new CompiledSearchStatement(key.Compile(program), value.Compile(program));}
@@ -3415,7 +3417,7 @@ namespace Meta {
 		public override Structure Pre() {
 			return program.EvaluateStructure();
 		}
-		protected override Structure CurrentImplementation(Map previous) {
+		protected override Structure CurrentImplementation(Structure previous) {
 			return program.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
