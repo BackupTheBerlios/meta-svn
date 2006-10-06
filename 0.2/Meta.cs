@@ -1925,21 +1925,12 @@ namespace Meta {
 		        delegate(Parser p, Map map, ref Map result) {
 		            result=new Map(new Number(double.Parse(map.GetString()),1.0));},
 		        new OneOrMoreChars(new Chars(Syntax.integer))));
-
-		//public static Rule Integer = new Sequence(new CustomProduction(
-		//        delegate(Parser p, Map map, ref Map result) {
-		//            result=new Map(new Number(double.Parse(map.GetString()),1.0));},
-		//        new Sequence(
-		//            new Assignment(1,new Optional(
-		//                new Characters(Syntax.negative))),
-		//            new Append(new OneOrMoreChars(new Chars(Syntax.integer))))));
-
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
 			if (p.State.indentationCount == -1) {
 				p.State.indentationCount++;
 				return true;}
 			else {return false;}});
-		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map map) {
+		private static CustomRule SmallIndentation = new CustomRule(delegate(Parser p, ref Map map) {
 			p.State.indentationCount++;
 			return true;});
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
@@ -1970,8 +1961,7 @@ namespace Meta {
 				if (lineMatched) {
 					result.Append('\n');
 					MatchStringLine(parser, result);}
-				else {
-					break;}}
+				else {break;}}
 			map=result.ToString();
 			return matched;});
 		public static Rule String = new Sequence(
@@ -1991,23 +1981,14 @@ namespace Meta {
 					new ReferenceAssignment(StringBeef),
 					EndOfLine,
 					Dedentation))));
-		public static Rule Number = 
-				new Sequence(
-					new ReferenceAssignment(Integer),
-					new Assignment(
-							NumberKeys.Denominator,
-							new Optional(
-								new Sequence(
-									Syntax.fraction,
-									new ReferenceAssignment(Integer)))));
-		//public static Rule Number = new Sequence(
-		//    new ReferenceAssignment(Integer),
-		//    new Assignment(
-		//            NumberKeys.Denominator,
-		//            new Optional(
-		//                new Sequence(
-		//                    Syntax.fraction,
-		//                    new ReferenceAssignment(Integer)))));
+		public static Rule Number = new Sequence(
+			new ReferenceAssignment(Integer),
+			new Assignment(
+					NumberKeys.Denominator,
+					new Optional(
+						new Sequence(
+							Syntax.fraction,
+							new ReferenceAssignment(Integer)))));
 		
 		public static Rule LookupString = new Sequence(
 			new ReferenceAssignment(new ConvertRule(new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)))),
@@ -2019,12 +2000,8 @@ namespace Meta {
 				Map,
 				ListMap,
 				String,
-				Number
-				//,CharacterDataExpression
-				);});
-		private static Rule LookupAnything = new Sequence(
-			'<',
-			new ReferenceAssignment(Value));
+				Number);});
+		private static Rule LookupAnything = new Sequence('<',new ReferenceAssignment(Value));
 		public static Rule Function = new Sequence(
 			new Assignment(
 				CodeKeys.Parameter,
@@ -2035,14 +2012,6 @@ namespace Meta {
 							Syntax.indentation+
 							Syntax.windowsNewLine[0]+
 							Syntax.unixNewLine))),
-				//new ZeroOrMore(
-				//    new Autokey(
-				//        new CharacterExcept(
-				//            Syntax.@string,
-				//            Syntax.function,
-				//            Syntax.indentation,
-				//            Syntax.windowsNewLine[0],
-				//            Syntax.unixNewLine)))),
 			Syntax.function,
 			new Assignment(
 				CodeKeys.Expression,
@@ -2400,8 +2369,10 @@ namespace Meta {
 			public bool Match(Parser parser, ref Map map) {
 				return Match(parser,ref map,true);}
 			public int mismatches=0;
+			public int calls=0;
 			public bool Match(Parser parser, ref Map map,bool keep) {
 				if(precondition!=null) { if(!precondition(parser)) {return false;}}
+				calls++;
 				State oldState=parser.State;
 				bool matched;
 				Map result=null;
