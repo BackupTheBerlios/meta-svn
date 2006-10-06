@@ -2249,26 +2249,6 @@ namespace Meta {
 						LookupStringExpression,
 						LookupAnythingExpression)))));
 
-		//private static Rule Search = new CachedRule(new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Search,
-		//        new Alternatives(
-		//            Prefix('!',Expression),
-		//            new Alternatives(
-		//                LookupStringExpression,
-		//                LookupAnythingExpression
-		//    )))));
-
-		//private static Rule Search = new Sequence(
-		//    new Assignment(
-		//        CodeKeys.Search,
-		//        new Alternatives(
-		//            Prefix('!',Expression),
-		//            new Alternatives(
-		//                LookupStringExpression,
-		//                LookupAnythingExpression
-		//    ))));
-
 		private static Rule Select = new CachedRule(new Sequence(
 			new Assignment(
 				CodeKeys.Select,
@@ -2551,14 +2531,6 @@ namespace Meta {
 		        else {
 		            map=null;
 		            return false;}}}
-
-		//public class ConvertRule:Rule {
-		//    private StringRule rule;
-		//    public ConvertRule(StringRule rule) {this.rule=rule;}
-		//    protected override bool MatchImplementation(Parser parser, ref Map map, bool keep) {
-		//        string s=null;
-		//        if(rule.MatchString(parser,ref s)) {map=s;return true;}
-		//        else {return false;}}}
 
 		public abstract class CharRule:Rule {
 			public abstract bool CheckNext(char next);
