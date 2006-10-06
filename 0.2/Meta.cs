@@ -1864,19 +1864,38 @@ namespace Meta {
 			return Convert.ToInt64(numerator / denominator);}
 		public long GetInt64() {
 			return Convert.ToInt64(numerator);}}
+	public struct State{
+		public State(int index,int Line,int Column,int indentationCount){
+			this.index=index;
+			this.Line=Line;
+			this.Column=Column;
+			this.indentationCount=indentationCount;}
+		public int index;
+		public int Line;
+		public int Column;
+		public int indentationCount;}
 	public class Parser {
 		private bool negative = false;
 		public string text;
-		public int index;
+		//public int index;
 		public string FileName;
-		public int Line = 1;
-		public int Column = 1;
-		private int indentationCount = -1;
+		//public int Line = 1;
+		//public int Column = 1;
+		//private int indentationCount = -1;
 		public Stack<int> defaultKeys = new Stack<int>();
+
+		public State State;
 		public Parser(string text, string filePath) {
-			this.index = 0;
+			//this.index = 0;
+			State=new State(0,1,1,-1);
+		//public string FileName;
+		//public int Line = 1;
+		//public int Column = 1;
+		//private int indentationCount = -1;
+
 			this.text = text;
-			this.FileName = filePath;}
+			this.FileName = filePath;
+		}
 		public static Rule Expression = new DelayedRule(delegate() {
 			return new Alternatives(
 				LiteralExpression,
@@ -1921,49 +1940,26 @@ namespace Meta {
 			return null;},
 		new CustomRule(delegate(Parser p, ref Map map) {
 			return true;})))));
-
-		//new CustomRule(delegate(Parser p, out bool matched) {
-		//    matched = true; return null;})))));
-		
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
-			if (p.indentationCount == -1) {
-				p.indentationCount++;
+			if (p.State.indentationCount == -1) {
+				p.State.indentationCount++;
 				return true;}
-			else {
-				return false;}});
-		//public static Rule StartOfFile = new CustomRule(delegate(Parser p, out bool matched) {
-		//    if (p.indentationCount == -1) {
-		//        p.indentationCount++;
-		//        matched = true;}
-		//    else {
-		//        matched = false;}
-		//    return null;});
-
+			else {return false;}});
 		private static Rule SmallIndentation = new CustomRule(delegate(Parser p, ref Map map) {
-			p.indentationCount++;
+			p.State.indentationCount++;
 			return true;});
-
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			//bool matched;
-			return StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, ref map);
-			//map=StringRule("".PadLeft(pa.indentationCount, Syntax.indentation)).Match(pa, out matched);
-		//return matched;
-		});
-
+			return StringRule("".PadLeft(pa.State.indentationCount, Syntax.indentation)).Match(pa, ref map);});
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(new CharacterExcept(Syntax.character)),
 			Syntax.character);
-
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			pa.indentationCount--;
-			return true;
-			//matched = true;
-			//return null;
-		});
+			pa.State.indentationCount--;
+			return true;});
 		private static void MatchStringLine(Parser parser, StringBuilder text) {
 			bool matching = true;
-			for (; matching && parser.index < parser.text.Length; parser.index++) {
+			for (; matching && parser.State.index < parser.text.Length; parser.State.index++) {
 				char c = parser.Look();
 				switch (c) {
 					case '\n':
@@ -1978,30 +1974,28 @@ namespace Meta {
 			MatchStringLine(parser, result);
 			bool matched = true;
 			while (true) {
-				Map m=null;
 				bool lineMatched=new Sequence(
 					EndOfLine,
-					SameIndentation).Match(parser, ref m);
+					SameIndentation).Match(parser, ref map);
 				if (lineMatched) {
 					result.Append('\n');
 					MatchStringLine(parser, result);}
 				else {
 					break;}}
 			map=result.ToString();
-		return matched;});
-			//return result.ToString();});
-
-		private static Rule SingleString = new OneOrMore(
-			new Autokey(
-				new CharacterExcept(
-					Syntax.unixNewLine,
-					Syntax.windowsNewLine[0],
-					Syntax.@string)));
+			return matched;});
 
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
-				new Sequence(new ReferenceAssignment(SingleString), new Optional(Syntax.@string)),
+				new Sequence(
+					new ReferenceAssignment(new OneOrMore(
+						new Autokey(
+							new CharacterExcept(
+								Syntax.unixNewLine,
+								Syntax.windowsNewLine[0],
+								Syntax.@string)))),
+					new Optional(Syntax.@string)),
 				new Sequence(
 					SmallIndentation,
 					EndOfLine,
@@ -2443,23 +2437,25 @@ namespace Meta {
 			public static implicit operator Rule(char c) {
 				return new Characters(c);}
 			public bool Match(Parser parser, ref Map map) {
-				int oldIndex = parser.index;
-				int oldLine = parser.Line;
-				int oldColumn = parser.Column;
-				int oldIndentation = parser.indentationCount;
+				State oldState=parser.State;
+				//int oldIndex = parser.index;
+				//int oldLine = parser.Line;
+				//int oldColumn = parser.Column;
+				//int oldIndentation = parser.indentationCount;
 				bool matched;
 				Map result=null;
 				matched= MatchImplementation(parser, ref result);
 				if (!matched) {
-					parser.index = oldIndex;
-					parser.Line = oldLine;
-					parser.Column = oldColumn;
-					parser.indentationCount = oldIndentation;}
+					parser.State=oldState;}
+					//parser.index = oldIndex;
+					//parser.Line = oldLine;
+					//parser.Column = oldColumn;
+					//parser.indentationCount = oldIndentation;}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
-							new Source(oldLine, oldColumn, parser.FileName),
-							new Source(parser.Line, parser.Column, parser.FileName));}}
+							new Source(oldState.Line, oldState.Column, parser.FileName),
+							new Source(parser.State.Line, parser.State.Column, parser.FileName));}}
 				map=result;
 				return matched;}
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);}
@@ -2495,11 +2491,11 @@ namespace Meta {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				char character = parser.Look();
 				if (MatchCharacer(character)) {
-					parser.index++;
-					parser.Column++;
+					parser.State.index++;
+					parser.State.Column++;
 					if (character.Equals(Syntax.unixNewLine)) {
-						parser.Line++;
-						parser.Column = 1;}
+						parser.State.Line++;
+						parser.State.Column = 1;}
 					map=character;
 					return true;}
 				else {
@@ -2626,8 +2622,8 @@ namespace Meta {
 					match=matched;
 					return true;}}}
 		private char Look() {
-			if (index < text.Length) {
-				return text[index];}
+			if (State.index < text.Length) {
+				return text[State.index];}
 			else {
 				return Syntax.endOfFile;}}
 		public static Map Parse(string file) {
@@ -2637,7 +2633,7 @@ namespace Meta {
 			bool matched;
 			Map result=null;
 			Parser.File.Match(parser, ref result);
-			if (parser.index != parser.text.Length) {
+			if (parser.State.index != parser.text.Length) {
 				throw new SyntaxException("Expected end of file.", parser);}
 			return result;}}
 	public class Syntax {
@@ -3016,7 +3012,7 @@ namespace Meta {
 			return count;}}
 	public class SyntaxException : MetaException {
 		public SyntaxException(string message, Parser parser)
-			: base(message, new Source(parser.Line, parser.Column, parser.FileName)) {}}
+			: base(message, new Source(parser.State.Line, parser.State.Column, parser.FileName)) {}}
 	public class ExecutionException : MetaException {
 		private Map context;
 		public ExecutionException(string message, Source source, Map context)
