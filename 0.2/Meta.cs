@@ -1940,24 +1940,12 @@ namespace Meta {
 			return true;});
 
 
-		//private static void MatchStringLine(Parser parser, StringBuilder text) {
-		//    bool matching = true;
-		//    for (; matching && parser.State.index < parser.text.Length; parser.State.index++) {
-		//        char c = parser.Look();
-		//        switch (c) {
-		//            case '\n':
-		//            case '\r':
-		//                matching = false;
-		//                break;
-		//            default:
-		//                text.Append(c);
-		//                break;}}}
 		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
+		
 		private static Rule StringBeef = new CustomRule(delegate(Parser parser, ref Map map) {
 			StringBuilder result = new StringBuilder(100);
 			string s=null;
 			StringLine.Match(parser,ref s);
-			//MatchStringLine(parser, result);
 			result.Append(s);
 			bool matched = true;
 			while (true) {
@@ -1968,34 +1956,19 @@ namespace Meta {
 					result.Append('\n');
 					StringLine.Match(parser, ref s);
 					result.Append(s);}
-					//MatchStringLine(parser, result);}
 				else {break;}}
 			map=result.ToString();
 			return matched;});
 
-		//private static Rule StringBeef = new CustomRule(delegate(Parser parser, ref Map map) {
-		//    StringBuilder result = new StringBuilder(100);
-		//    MatchStringLine(parser, result);
-		//    bool matched = true;
-		//    while (true) {
-		//        bool lineMatched=new Sequence(
-		//            EndOfLine,
-		//            SameIndentation).Match(parser, ref map);
-		//        if (lineMatched) {
-		//            result.Append('\n');
-		//            MatchStringLine(parser, result);}
-		//        else {break;}}
-		//    map=result.ToString();
-		//    return matched;});
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
 				new Sequence(
 					new ReferenceAssignment(
-					new OneOrMoreChars(new CharsExcept(""+
-						Syntax.unixNewLine+
-						Syntax.windowsNewLine[0]+
-						Syntax.@string))),
+						new OneOrMoreChars(new CharsExcept(""+
+							Syntax.unixNewLine+
+							Syntax.windowsNewLine[0]+
+							Syntax.@string))),
 					new Optional(Syntax.@string)),
 				new Sequence(
 					SmallIndentation,
@@ -2012,12 +1985,9 @@ namespace Meta {
 						new Sequence(
 							Syntax.fraction,
 							new ReferenceAssignment(Integer)))));
-		
 		public static Rule LookupString = new Sequence(
 			new ReferenceAssignment(new ConvertRule(new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 			new Append(new ConvertRule(new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden)))));
-
-
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
 				Map,
