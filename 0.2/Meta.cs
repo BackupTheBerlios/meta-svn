@@ -97,9 +97,11 @@ namespace Meta {
 			if (CallStuff(out arguments, out method)) {
 				if (method is ConstructorInfo) {
 					Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
-					Structure result = new Structure();
+					Map result = new Map();
+					result.IsConstant=false;
 					foreach (Map key in type.Keys) {
-						result[key] = new Unknown();}
+						result[key] = new Map();}
+						//result[key] = new Unknown();}
 					return result;}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
 					try {
@@ -413,12 +415,16 @@ namespace Meta {
 			if (k != null && k.IsConstant) {
 				Map val = value.EvaluateStructure();
 				if (val == null) {
-					val = new Unknown();}
+				    val = new Map();
+					val.IsConstant=false;
+				}
 				// not general enough
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
 					previous[k] = val;}
 				else {
-					previous[k] = new Unknown();}
+					previous[k] = new Map();
+					previous[k].IsConstant=false;
+				}
 				return previous;}
 			return null;}
 		public override CompiledStatement Compile() {
@@ -527,7 +533,7 @@ namespace Meta {
 			Map selected = subs[0].EvaluateStructure();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].EvaluateStructure();
-				if (selected == null || key == null || key is Structure || key is Unknown || !key.IsConstant || !selected.ContainsKey(key)) {
+				if (selected == null || key == null || !key.IsConstant || !selected.ContainsKey(key)) {
 					// compilation error???
 					return null;}
 				selected = selected[key];}
@@ -540,6 +546,7 @@ namespace Meta {
 			: base(code.Source, parent) {
 			foreach (Map m in code.Array) {
 				subs.Add(m.GetExpression(this));}}}
+
 	public class Interpreter {
 		public static bool profiling = false;
 		static Interpreter() {
@@ -559,13 +566,38 @@ namespace Meta {
 		    catch (Exception e) {
 		        throw e;}
 		}
+		public static Number Fibo(Number n) {
+		    if(n<2) {
+		        return 1;
+		    }
+		    else {
+		        //checked{
+		        return Fibo(n-1)+Fibo(n-2);
+		        //}
+		    }
+		}
+		public static int Fibo(int n) {
+		    if(n<2) {
+		        return 1;
+		    }
+		    else {
+				checked{
+		        return Fibo(n-1)+Fibo(n-2);
+				}
+		    }
+		}
 		[STAThread]
 		public static void Main(string[] args) {
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta"));
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"));
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"));
 			//return;
+
 			DateTime start = DateTime.Now;
+			//Console.WriteLine(Fibo(36));
+			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
+			//return;
+
 
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -600,7 +632,8 @@ namespace Meta {
 						return;}
 					else {
 						Console.WriteLine("File " + fileName + " not found.");}}}
-			Console.WriteLine((DateTime.Now - start).TotalSeconds);}
+			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
+		}
 		private static void DebugPrint(string text) {
 			if (useConsole) {
 				Console.WriteLine(text);
@@ -2940,6 +2973,10 @@ namespace Meta {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), Map.Empty);}}
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -3255,14 +3292,15 @@ namespace Meta {
 				//}
 			}
 			return o;}
-		[Compilable]
+		[MergeCompile]
 		public static Map MergeAll(Map array) {
 			Map result = new Map();
 			foreach (Map map in array.Array) {
 				foreach (KeyValuePair<Map, Map> pair in map) {
 					result[pair.Key] = pair.Value;}}
-			return result;}
-		[Compilable]
+			return result;
+		}
+		[MergeCompile]
 		public static Map Merge(Map arg, Map map) {
 			foreach (KeyValuePair<Map, Map> pair in map) {
 				arg[pair.Key] = pair.Value;}
@@ -3296,20 +3334,21 @@ namespace Meta {
 			return program.EvaluateStructure();}
 		public override CompiledStatement Compile() {
 			throw new Exception("The method or operation is not implemented.");}}
-	public class Structure : Map {
-		public override bool IsConstant {
-			get {
-				return false;}}}
-	public class Unknown : Map {
-		public override bool IsConstant {
-			get {
-				return false;}}}
 	public abstract class ScopeExpression : Expression {
 		public ScopeExpression(Extent source, Expression parent)
 			: base(source, parent) {}}
 	public delegate T SingleDelegate<T>(T t);
-	public class CompilableAttribute : Attribute {
-		public SingleDelegate<Structure> structure;}
+
+	//public abstract class Structure {
+	//}
+	public class MergeCompile:CompilableAttribute {
+		public override Map GetStructure() {
+			return null;
+		}
+	}
+	public abstract class CompilableAttribute : Attribute {
+		public abstract Map GetStructure();
+	}
 	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
 		private Dictionary<Type, Compiled> specialized;
 		private Dictionary<Type, Compiled> Specialized {
