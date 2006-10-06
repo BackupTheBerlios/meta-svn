@@ -555,9 +555,10 @@ namespace Meta {
 				Gac.gac["library"] = map.Call(Map.Empty);
 				Gac.gac["library"].Scope = Gac.gac;
 
-}
+			}
 			catch (Exception e) {
-				throw e;}}
+				throw e;}
+			}
 		[STAThread]
 		public static void Main(string[] args) {
 			DateTime start = DateTime.Now;
@@ -1877,52 +1878,56 @@ namespace Meta {
 	public class Parser {
 		private bool negative = false;
 		public string text;
-		//public int index;
-		public string FileName;
-		//public int Line = 1;
-		//public int Column = 1;
-		//private int indentationCount = -1;
+		public readonly string FileName;
 		public Stack<int> defaultKeys = new Stack<int>();
-
 		public State State;
 		public Parser(string text, string filePath) {
-			//this.index = 0;
 			State=new State(0,1,1,-1);
-		//public string FileName;
-		//public int Line = 1;
-		//public int Column = 1;
-		//private int indentationCount = -1;
-
-			this.text = text;
+			this.text = text+Syntax.endOfFile;
 			this.FileName = filePath;
-		}
-		public static Rule Expression = new DelayedRule(delegate() {
-			return new Alternatives(
-				LiteralExpression,
-				FunctionProgram,
-				Call,
-				SelectInline,
-				Search,
-				List,
-				Program,
-				LastArgument
-			);});
-		public static Rule EndOfLine = new Sequence(
-			new ZeroOrMore(
-				new Alternatives(
-					Syntax.space,
-					Syntax.tab)),
-			new Alternatives(
-				Syntax.unixNewLine,
-				Syntax.windowsNewLine));
+			Root.precondition=delegate(Parser p) {return p.Look()==Syntax.root;};
+			Program.precondition=delegate(Parser p) {return p.Look()==Syntax.programStart;};
+			LiteralExpression.precondition=delegate(Parser p) {
+				switch(p.Look()){
+					case Syntax.@string:
+					case Syntax.emptyMap:
+					case Syntax.negative:
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
+					case '\'':
+						return true;
+					default:
+						return false;}};}
 
+		public static Rule Expression = new DelayedRule(delegate() {
+		    return new Alternatives(
+		        LiteralExpression,FunctionProgram,Call,SelectInline,
+		        Search,List,Program,LastArgument);});
+		public class Ignore:Rule
+		{
+			private Rule rule;
+			public Ignore(Rule rule) {
+				this.rule=rule;}
+			protected override bool MatchImplementation(Parser parser, ref Map map, bool keep) {
+				return rule.Match(parser,ref map,false);}
+		}
+		public static Rule EndOfLine = new Ignore(new Sequence(
+			new ZeroOrMore(new Characters(Syntax.space,Syntax.tab)),
+			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
 		public static Rule Integer =
 			new Sequence(
 				new CustomProduction(
 					delegate(Parser p, Map map, ref Map result) {
 						p.negative = map != null;
 						return null;},
-					new Optional(Syntax.negative)),
+					new Optional(new Characters(Syntax.negative))),
 				new ReferenceAssignment(
 					new Sequence(
 						new ReferenceAssignment(
@@ -1933,7 +1938,7 @@ namespace Meta {
 											result = new Map();}
 										result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
 										return result;},
-									new Characters(Syntax.integer)))),
+									new Characters(Syntax.integer.ToCharArray())))),
 						new CustomProduction(delegate(Parser p, Map map, ref Map result) {
 			if (result.GetNumber() > 0 && p.negative) {
 				result = 0 - result.GetNumber();}
@@ -1949,7 +1954,7 @@ namespace Meta {
 			p.State.indentationCount++;
 			return true;});
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			return StringRule("".PadLeft(pa.State.indentationCount, Syntax.indentation)).Match(pa, ref map);});
+			return StringRule2("".PadLeft(pa.State.indentationCount, Syntax.indentation)).Match(pa, ref map);});
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(new CharacterExcept(Syntax.character)),
@@ -1984,7 +1989,6 @@ namespace Meta {
 					break;}}
 			map=result.ToString();
 			return matched;});
-
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
@@ -2003,7 +2007,6 @@ namespace Meta {
 					new ReferenceAssignment(StringBeef),
 					EndOfLine,
 					Dedentation))));
-
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
 			new Assignment(
@@ -2012,16 +2015,11 @@ namespace Meta {
 						new Sequence(
 							Syntax.fraction,
 							new ReferenceAssignment(Integer)))));
-
+		
 		public static Rule LookupString = new Sequence(
-			new Assignment(1, new CharacterExcept(Syntax.lookupStringForbiddenFirst)),
-			new Append(new ZeroOrMore(
-				new Autokey(
-					new CharacterExcept(
-					Syntax.lookupStringForbidden)))));
+			new Assignment(1, new CharacterExcept(Syntax.lookupStringForbiddenFirst.ToCharArray())),
+			new Append(new ConvertRule(new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden)))));
 
-		public static Rule ExpressionData = new DelayedRule(delegate() {
-			return Parser.Expression;});
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
@@ -2033,7 +2031,6 @@ namespace Meta {
 		private static Rule LookupAnything = new Sequence(
 			'<',
 			new ReferenceAssignment(Value));
-
 		public static Rule Function = new Sequence(
 			new Assignment(
 				CodeKeys.Parameter,
@@ -2050,8 +2047,6 @@ namespace Meta {
 				CodeKeys.Expression,
 				Expression),
 			new Optional(EndOfLine));
-
-
 		public static Rule Entry = new Alternatives(
 			new Sequence(
 				new Assignment(
@@ -2071,7 +2066,6 @@ namespace Meta {
 						return result;},
 					Value),
 			 new Optional(EndOfLine)));
-
 		public static Rule Map = new Sequence(
 			new Optional(Syntax.programStart),
 			new Alternatives(
@@ -2079,7 +2073,6 @@ namespace Meta {
 			new Sequence(
 				EndOfLine,
 				SmallIndentation)),
-
 			new ReferenceAssignment(new PrePost(
 				delegate(Parser p) {
 					p.defaultKeys.Push(1);},
@@ -2093,22 +2086,17 @@ namespace Meta {
 					Dedentation),
 				delegate(Parser p) {
 					p.defaultKeys.Pop();})));
-
-		public static Rule File = new Sequence(
+		public static Rule File = new Ignore(new Sequence(
 			new Optional(
-				new Sequence(
-					'#',
-					'!',
+				new Sequence('#','!',
 					new ZeroOrMore(new CharacterExcept(Syntax.unixNewLine)),
 					EndOfLine)),
-			new ReferenceAssignment(Map));
-
+			new ReferenceAssignment(Map)));
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
 			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);}
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));}
-
 		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				first != null ? new Assignment(1, first) : null,
@@ -2195,6 +2183,13 @@ namespace Meta {
 				EmptyMap,
 				CharacterDataExpression)));
 
+		//private static Rule LiteralExpression = new Sequence(
+		//    new Assignment(CodeKeys.Literal, new Alternatives(
+		//        Number,
+		//        String,
+		//        EmptyMap,
+		//        CharacterDataExpression)));
+
 		private static Rule LookupAnythingExpression = new Sequence(
 			'<',
 			new ReferenceAssignment(Expression),
@@ -2209,9 +2204,7 @@ namespace Meta {
 			new Assignment(
 				CodeKeys.Search,
 				new Alternatives(
-					new Sequence(
-						'!',
-						new ReferenceAssignment(Expression)),
+					Prefix('!',Expression),
 					new Alternatives(
 						LookupStringExpression,
 						LookupAnythingExpression
@@ -2227,13 +2220,10 @@ namespace Meta {
 							Search,
 							LiteralExpression)),
 					new Append(
-						new OneOrMore(new Autokey(new Sequence(
-							'.',
-							new ReferenceAssignment(
-								new Alternatives(
-									LookupStringExpression,
-									LookupAnythingExpression,
-									LiteralExpression)))))))));
+						new OneOrMore(new Autokey(Prefix('.',new Alternatives(
+							LookupStringExpression,
+							LookupAnythingExpression,
+							LiteralExpression))))))));
 
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
@@ -2291,19 +2281,19 @@ namespace Meta {
 		public static Rule DiscardStatement = ComplexStatement(
 			null,
 			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())));
-
 		public static Rule CurrentStatement = ComplexStatement(
 			'&',
 			new Assignment(CodeKeys.Current, new LiteralRule(Meta.Map.Empty)));
-
+		public static Rule Prefix(Rule pre,Rule rule)
+		{
+			return new Sequence(pre,new ReferenceAssignment(rule));
+		}
 		public static Rule NormalStatement = ComplexStatement(
 			'=',
 			new Assignment(
 				CodeKeys.Key,
 				new Alternatives(
-					new Sequence(
-						'<',
-						new ReferenceAssignment(Expression)),
+					Prefix('<',Expression),
 					new Sequence(
 						new Assignment(
 							CodeKeys.Literal,
@@ -2312,16 +2302,14 @@ namespace Meta {
 
 		public static Rule Statement = ComplexStatement(
 			':',
-			new ReferenceAssignment(
-				new Sequence(
-					new Assignment(
-						CodeKeys.Keys,
-						new Alternatives(
-							new Sequence(
-								new Assignment(
-									CodeKeys.Literal,
-									LookupString)),
-							Expression)))));
+			new Assignment(
+				CodeKeys.Keys,
+				new Alternatives(
+					new Sequence(
+						new Assignment(
+							CodeKeys.Literal,
+							LookupString)),
+					Expression)));
 
 		public static Rule AllStatements = new Alternatives(
 			FunctionExpression,
@@ -2344,12 +2332,11 @@ namespace Meta {
 										new Assignment(
 											CodeKeys.Parameter,
 											new ZeroOrMore(
-											new Autokey(
-												new CharacterExcept(Syntax.lookupStringForbiddenFirst)))),
+												new Autokey(
+													new CharacterExcept(Syntax.lookupStringForbiddenFirst.ToCharArray())))),
 										Syntax.functionProgram,
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine))))))))));
-
 		public static Rule Program = ComplexStuff(
 			CodeKeys.Program,
 			Syntax.programStart,
@@ -2357,100 +2344,77 @@ namespace Meta {
 			Syntax.programSeparator,
 			AllStatements,
 			null);
-
 		public abstract class Action {
 			public static implicit operator Action(string s) {
-				return new Match(StringRule(s));}
+				return new Match(new Ignore(StringRule2(s)));}
 			public static implicit operator Action(char c) {
-				return new Match(new IgnoreCharacter(c));}
+				return new Match(new Ignore(new Characters(c)));}
 			public static implicit operator Action(Rule rule) {
-				return new Match(rule);}
+				return new Match(new Ignore(rule));}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
 			public Action(char c)
 				: this(new Characters(c)) {}
-			public Action(Rule rule) {
-				this.rule = rule;}
-			public bool Execute(Parser parser, ref Map result) {
-				bool matched;
+			public Action(Rule rule) {this.rule = rule;}
+			public bool Execute(Parser parser, ref Map result,bool keep) {
 				Map map=null;
-				matched=rule.Match(parser,ref map);
-				if (matched) {
-					Effect(parser, map, ref result);}
+				bool matched=rule.Match(parser,ref map);
+				if (matched) {Effect(parser, map, ref result);}
 				return matched;}}
-			//public bool Execute(Parser parser, ref Map result) {
-			//    bool matched;
-			//    Map map = rule.Match(parser, out matched);
-			//    if (matched) {
-			//        Effect(parser, map, ref result);}
-			//    return matched;}}
 		public class Autokey : Action {
-			public Autokey(Rule rule)
-				: base(rule) {}
+			public Autokey(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result.Append(map);}}
 		public class Assignment : Action {
 			private Map key;
-			public Assignment(Map key, Rule rule)
-				: base(rule) {
-				this.key = key;}
+			public Assignment(Map key, Rule rule): base(rule) {this.key = key;}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				if (map != null) {
-					result[key] = map;}}}
+				if (map != null) {result[key] = map;}}}
 		public class Match : Action {
-			public Match(Rule rule)
-				: base(rule) {}
+			public Match(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {}}
 		public class ReferenceAssignment : Action {
-			public ReferenceAssignment(Rule rule)
-				: base(rule) {}
+			public ReferenceAssignment(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = map;}}
 		public class Append : Action {
-			public Append(Rule rule)
-				: base(rule) {}
+			public Append(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				foreach (Map m in map.Array) {
-					result.Append(m);}}}
+				foreach (Map m in map.Array) {result.Append(m);}}}
 		public class Join : Action {
-			public Join(Rule rule)
-				: base(rule) {}
+			public Join(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = Library.Join(result, map);}}
 		public class Merge : Action {
-			public Merge(Rule rule)
-				: base(rule) {}
+			public Merge(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				result = Library.Merge(result, map);}}
 		public class CustomProduction : Action {
 			private CustomActionDelegate action;
-			public CustomProduction(CustomActionDelegate action, Rule rule)
-				: base(rule) {
+			public CustomProduction(CustomActionDelegate action, Rule rule): base(rule) {
 				this.action = action;}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				this.action(parser, map, ref result);}}
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
-
+		public delegate bool Precondition(Parser p);
 		public abstract class Rule {
+			public Precondition precondition;
 			public static implicit operator Rule(string s) {
-				return StringRule(s);}
+				return new Ignore(StringRule2(s));}
 			public static implicit operator Rule(char c) {
-				return new Characters(c);}
+			    return new Ignore(new SingleCharacter(c));}
 			public bool Match(Parser parser, ref Map map) {
+				return Match(parser,ref map,true);}
+			public int mismatches=0;
+			public bool Match(Parser parser, ref Map map,bool keep) {
+				if(precondition!=null) { if(!precondition(parser)) {return false;}}
 				State oldState=parser.State;
-				//int oldIndex = parser.index;
-				//int oldLine = parser.Line;
-				//int oldColumn = parser.Column;
-				//int oldIndentation = parser.indentationCount;
 				bool matched;
 				Map result=null;
-				matched= MatchImplementation(parser, ref result);
+				matched= MatchImplementation(parser, ref result,keep);
 				if (!matched) {
+					mismatches++;
 					parser.State=oldState;}
-					//parser.index = oldIndex;
-					//parser.Line = oldLine;
-					//parser.Column = oldColumn;
-					//parser.indentationCount = oldIndentation;}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
@@ -2458,49 +2422,129 @@ namespace Meta {
 							new Source(parser.State.Line, parser.State.Column, parser.FileName));}}
 				map=result;
 				return matched;}
-			protected abstract bool MatchImplementation(Parser parser, ref Map map);}
-		public class IgnoreCharacter : CharacterRule {
-			private char c;
-			public IgnoreCharacter(char c)
-				: base(new char[] {}, false) {
-				this.c = c;}
-			protected override bool MatchCharacer(char next) {
-				return next == c && next != Syntax.endOfFile;}}
+			protected abstract bool MatchImplementation(Parser parser, ref Map map,bool keep);}
+
 		public class Characters : CharacterRule {
-			public Characters(params char[] characters)
-				: base(characters, true) {}
-			protected override bool MatchCharacer(char next) {
-				if (next == Syntax.endOfFile) {
-					return false;}
-				foreach (char c in characters) {
-					if (c.Equals(next)) {
-						return true;}}
-				return false;}}
+			private string chars;
+			public Characters(params char[] characters){chars=new string(characters);}
+			protected override bool MatchCharacter(char next) {
+				return chars.IndexOf(next)!=-1;}}
+		public class SingleCharacter : CharacterRule {
+			private char c;
+			public SingleCharacter(char c){this.c=c;}
+			protected override bool MatchCharacter(char next) {return c.Equals(next);}}
+
 		public class CharacterExcept : CharacterRule {
-			public CharacterExcept(params char[] characters)
-				: base(characters, true) {}
-			protected override bool MatchCharacer(char c) {
-				return c.ToString().IndexOfAny(characters) == -1 && c != Syntax.endOfFile;}}
+			private string s;
+		    public CharacterExcept(params char[] characters){s=new string(characters)+Syntax.endOfFile;}
+		    protected override bool MatchCharacter(char c) {
+		        return s.IndexOf(c)==-1;}}
+
+		public class ConvertRule:Rule {
+			private StringRule rule;
+			public ConvertRule(StringRule rule) {this.rule=rule;}
+			protected override bool MatchImplementation(Parser parser, ref Map map, bool keep) {
+				string s=null;
+				if(rule.Match(parser,ref s)) {map=s;return true;}
+				else {return false;}}}
+		public abstract class CharRule {
+			public abstract bool Match(char next);
+		}
+		public abstract class Chars:CharRule{
+			private string chars;
+			public Chars(string chars){this.chars=chars;}
+			public override bool Match(char next) {
+				return chars.IndexOf(next)!=-1;}}
+
+		public class CharsExcept: CharRule {
+			private string s;
+		    public CharsExcept(string characters){s=characters+Syntax.endOfFile;}
+		    public override bool Match(char c) {
+		        return s.IndexOf(c)==-1;}}
+
+		
+		public class CharLoop:StringRule {
+			private CharRule rule;
+			private int min;
+			private int max;
+			public CharLoop(CharRule rule,int min,int max){
+				this.rule=rule;
+				this.min=min;
+				this.max=max;}
+			public override bool Match(Parser parser, ref string s) {
+				int offset=0;
+				while((max==-1 || offset<max) && rule.Match(parser.Look(offset))) {
+					offset++;
+				}
+				s=parser.text.Substring(parser.State.index,offset);
+				if(offset>=min && (max==-1 || offset <= max))
+				{
+					parser.State.index+=offset;
+					return true;
+				}
+				return false;
+			}}
+
+			public class OneChar:CharLoop{
+				public OneChar(CharRule rule):base(rule,1,1) {}
+			}
+			public class OneOrMoreChars:CharLoop{
+				public OneOrMoreChars(CharRule rule):base(rule,1,-1){}
+			}
+			public class ZeroOrMoreChars:CharLoop{
+				public ZeroOrMoreChars(CharRule rule):base(rule,0,-1){}
+			}
+
+		//public class OneOrMoreChars:StringRule {
+		//    private CharRule rule;
+		//    public OneOrMoreChars(CharRule rule){this.rule=rule;}
+		//    public override bool Match(Parser parser, ref string s) {
+		//        int offset=0;
+		//        while(rule.Match(parser.Look(offset))) {
+		//            offset++;
+		//        }
+		//        s=parser.text.Substring(parser.State.index,offset);
+		//        parser.State.index+=offset;
+		//        return offset>0;
+		//    }
+		//}
+
+		//public class ZeroOrMoreChars:StringRule {
+		//    private CharRule rule;
+		//    public ZeroOrMoreChars(CharRule rule){this.rule=rule;}
+		//    public override bool Match(Parser parser, ref string s) {
+		//        int offset=0;
+		//        while(rule.Match(parser.Look(offset))) {
+		//            offset++;
+		//        }
+		//        s=parser.text.Substring(parser.State.index,offset);
+		//        parser.State.index+=offset;
+		//        return true;
+		//    }
+		//}
+
+
+		public abstract class StringRule {
+			public abstract bool Match(Parser parser,ref string s);}
+
 		public abstract class CharacterRule : Rule {
-			private bool keep;
-			public CharacterRule(char[] chars, bool keep) {
-				this.characters = chars;
-				this.keep = keep;}
-			protected char[] characters;
-			protected abstract bool MatchCharacer(char c);
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			public static int calls;
+			protected abstract bool MatchCharacter(char c);
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				char character = parser.Look();
-				if (MatchCharacer(character)) {
+				calls++;
+				if (MatchCharacter(character)) {
 					parser.State.index++;
 					parser.State.Column++;
 					if (character.Equals(Syntax.unixNewLine)) {
 						parser.State.Line++;
 						parser.State.Column = 1;}
-					map=character;
+					map=keep?new Map(character):null;
 					return true;}
 				else {
 					map=null;
 					return false;}}}
+
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
@@ -2510,13 +2554,12 @@ namespace Meta {
 				this.pre = pre;
 				this.rule = rule;
 				this.post = post;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				pre(parser);
 				bool matched=rule.Match(parser, ref map);
 				post(parser);
 				return matched;}}
-		// remove?
-		public static Rule StringRule(string text) {
+		public static Rule StringRule2(string text) {
 			List<Action> actions = new List<Action>();
 			foreach (char c in text) {
 				actions.Add(c);}
@@ -2526,7 +2569,7 @@ namespace Meta {
 			private ParseFunction parseFunction;
 			public CustomRule(ParseFunction parseFunction) {
 				this.parseFunction = parseFunction;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				return parseFunction(parser, ref map);}}
 		public delegate Rule RuleFunction();
 		public class DelayedRule : Rule {
@@ -2534,7 +2577,7 @@ namespace Meta {
 			private Rule rule;
 			public DelayedRule(RuleFunction ruleFunction) {
 				this.ruleFunction = ruleFunction;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				if (rule == null) {
 					rule = ruleFunction();}
 				return rule.Match(parser,ref map);}}
@@ -2542,11 +2585,9 @@ namespace Meta {
 			private Rule[] cases;
 			public Alternatives(params Rule[] cases) {
 				this.cases = cases;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				//matched = false;
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				foreach (Rule expression in cases) {
 					bool matched=expression.Match(parser, ref map);
-					//result = (Map)expression.Match(parser, out matched);
 					if (matched) {
 						return true;}}
 				return false;}}
@@ -2554,12 +2595,12 @@ namespace Meta {
 			private Action[] actions;
 			public Sequence(params Action[] rules) {
 				this.actions = rules;}
-			protected override bool MatchImplementation(Parser parser, ref Map match) {
+			protected override bool MatchImplementation(Parser parser, ref Map match,bool keep) {
 				Map result = new Map();
 				bool success = true;
 				foreach (Action action in actions) {
 					if (action != null) {
-						bool matched = action.Execute(parser, ref result);
+						bool matched = action.Execute(parser, ref result,keep);
 						if (!matched) {
 							success = false;
 							break;}}}
@@ -2573,22 +2614,22 @@ namespace Meta {
 			private Map literal;
 			public LiteralRule(Map literal) {
 				this.literal = literal;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				map=literal;
 				return true;}}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
 				: base(action) {}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				bool match=base.MatchImplementation(parser, ref result);
+			protected override bool MatchImplementation(Parser parser, ref Map result,bool keep) {
+				bool match=base.MatchImplementation(parser, ref result,keep);
 				if (match && result.IsString) {
 					result = result.GetString();}
 				return match;}}
 		public class ZeroOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				Map list = new Map(new ListStrategy());
 				while (true) {
-					if (!action.Execute(parser, ref list)) {
+					if (!action.Execute(parser, ref list,keep)) {
 						break;}}
 				map=list;
 				return true;}
@@ -2596,11 +2637,11 @@ namespace Meta {
 			public ZeroOrMore(Action action) {
 				this.action = action;}}
 		public class OneOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
 				Map list = new Map(new ListStrategy());
 				bool matched = false;
 				while (true) {
-					if (!action.Execute(parser, ref list)) {
+					if (!action.Execute(parser, ref list,keep)) {
 						break;}
 					matched = true;}
 				map=list;
@@ -2612,7 +2653,7 @@ namespace Meta {
 			private Rule rule;
 			public Optional(Rule rule) {
 				this.rule = rule;}
-			protected override bool MatchImplementation(Parser parser, ref Map match) {
+			protected override bool MatchImplementation(Parser parser, ref Map match,bool keep) {
 				Map matched=null;
 				rule.Match(parser, ref matched);
 				if (matched == null) {
@@ -2621,19 +2662,17 @@ namespace Meta {
 				else {
 					match=matched;
 					return true;}}}
+		private char Look(int offset) {
+			return text[State.index+offset];}
 		private char Look() {
-			if (State.index < text.Length) {
-				return text[State.index];}
-			else {
-				return Syntax.endOfFile;}}
+			return text[State.index];}
 		public static Map Parse(string file) {
 			return ParseString(System.IO.File.ReadAllText(file), file);}
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
-			bool matched;
 			Map result=null;
 			Parser.File.Match(parser, ref result);
-			if (parser.State.index != parser.text.Length) {
+			if (parser.State.index != parser.text.Length-1) {
 				throw new SyntaxException("Expected end of file.", parser);}
 			return result;}}
 	public class Syntax {
@@ -2665,22 +2704,22 @@ namespace Meta {
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const char current = '&';
-		public readonly static char[] integer = new char[] {
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-		public readonly static char[] lookupStringForbidden = new char[] {
-			current, lastArgument, explicitCall, indentation, '\r', '\n',
-			function, @string,emptyMap, '!', root, callStart, callEnd, 
-			character, programStart, '*', '$', '\\', '<', '=', arrayStart,
-			'-', ':', functionProgram, select, ' ', '-', '[', ']', '*', '>', 
-			programStart, programSeparator ,callSeparator,programEnd,
-			arrayEnd};
-		public readonly static char[] lookupStringForbiddenFirst = new char[] {
-			current, lastArgument, explicitCall, indentation, '\r', '\n', select,
-			function, @string, emptyMap, '!', root, callStart, callEnd, character,
-			programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
-			'3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
-			'-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
-			programEnd,arraySeparator};}
+		public static readonly string integer = "0123456789";
+		public static readonly string lookupStringForbidden = //new char[] {
+			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
+			function+ @string+emptyMap+ '!'+ root+ callStart+ callEnd+ 
+			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
+			'-'+ ':'+ functionProgram+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
+			programStart+ programSeparator +callSeparator+programEnd+
+			arrayEnd;
+		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;}
+//{
+//            current, lastArgument, explicitCall, indentation, '\r', '\n', select,
+//            function, @string, emptyMap, '!', root, callStart, callEnd, character,
+//            programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
+//            '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
+//            '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
+//            programEnd,arraySeparator};}
 	public class Serialization {
 		public static string Serialize(Map map) {
 			try {
@@ -2803,7 +2842,7 @@ namespace Meta {
 		private static string Key(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Count != 0 && entry.Key.IsString) {
 				string key = entry.Key.GetString();
-				if (key.IndexOfAny(Syntax.lookupStringForbidden) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst) != 0) {
+				if (key.IndexOfAny(Syntax.lookupStringForbidden.ToCharArray()) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst.ToCharArray()) != 0) {
 					return entry.Key.GetString();}}
 			return Serialize(entry.Key, indentation + 1);}
 		private static string String(Map map, int indentation) {
