@@ -695,4 +695,8 @@ commandLine|,
 		!"merge"
 		!"copiedData"
 		,
-			"x"="changed""
+			"x"="changed"
+	"characterLiterals"=,
+		"a"=97
+		"space"=32
+		"tab"=9"

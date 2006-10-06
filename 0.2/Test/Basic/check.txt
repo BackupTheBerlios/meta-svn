@@ -3074,3 +3074,22 @@ Entry (KeyValuePair`2)
 				"z"
 			Value (Map):
 				"a"
+Entry (KeyValuePair`2)
+	Key (Map):
+		"characterLiterals"
+	Value (Map):
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"a"
+			Value (Map):
+				97
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"space"
+			Value (Map):
+				32
+		Entry (KeyValuePair`2)
+			Key (Map):
+				"tab"
+			Value (Map):
+				9
