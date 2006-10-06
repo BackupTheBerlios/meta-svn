@@ -54,13 +54,34 @@ namespace Meta {
 			this.Source = source;
 			this.Parent = parent;}
 		private bool evaluated = false;
-		private Map structure;
-		public Map EvaluateStructure() {
+		private Structure structure;
+		//private Map structure;
+		public Map EvaluateMapStructure() {
+			Structure s=EvaluateStructure();
+			Map m;
+			if(s!=null) {
+				m=((LiteralStructure)s).literal;
+			}
+			else {
+				m=null;
+			}
+			return m;
+		}
+		public Structure EvaluateStructure() {
 			if (!evaluated) {
 				structure = StructureImplementation();
-				evaluated = true;}
-			return structure;}
-		public abstract Map StructureImplementation();
+				evaluated = true;
+			}
+			return structure;
+		}
+		//public Map EvaluateStructure() {
+		//    if (!evaluated) {
+		//        structure = StructureImplementation();
+		//        evaluated = true;
+		//    }
+		//    return structure;
+		//}
+		public abstract Structure StructureImplementation();
 		public Compiled Compile(Expression parent) {
 			Compiled result = CompileImplementation(parent);
 			if (Source != null) {
@@ -73,7 +94,7 @@ namespace Meta {
 	public class LastArgument : Expression {
 		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {}
-		public override Map StructureImplementation() {
+		public override Structure StructureImplementation() {
 			return null;}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledLastArgument(Source);}}
@@ -91,7 +112,7 @@ namespace Meta {
 				calls.Add(m.GetExpression(this));}
 			if (calls.Count == 1) {
 				calls.Add(new Literal(Map.Empty, this));}}
-		public override Map StructureImplementation() {
+		public override Structure StructureImplementation() {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -102,22 +123,32 @@ namespace Meta {
 					foreach (Map key in type.Keys) {
 						result[key] = new Map();}
 						//result[key] = new Unknown();}
-					return result;}
+					return new LiteralStructure(result);
+					//return result;
+				}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
 					try {
 						Map result = (Map)method.Invoke(null, arguments.ToArray());
 						result.IsConstant = false;
-						return result;}
+						return new LiteralStructure(result);
+						//return result;
+					}
 					catch (Exception e) {}}}
 			return null;}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
-			Map first = calls[0].EvaluateStructure();
+			//LiteralStructure first = (LiteralStructure)calls[0].EvaluateStructure();
+			Map first = calls[0].EvaluateMapStructure();
 			if (first != null && first.IsConstant) {
 				Method method;
 				if (first.Strategy is TypeMap) {
-					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;}
+				//if (first.Strategy is TypeMap) {
+					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
+					//method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
+				}
 				else if (first.Strategy is Method) {
+				//else if (first.Strategy is Method) {
 					method = (Method)first.Strategy;}
+					//method = (Method)first.Strategy;}
 				else {
 					method = null;}
 				if (method != null) {
@@ -125,13 +156,15 @@ namespace Meta {
 						if (method.method.IsStatic || method.method is ConstructorInfo) {
 							arguments = new List<object>();
 							for (int i = 0; i < method.parameters.Length; i++) {
-								Map arg = calls[i + 1].EvaluateStructure();
+								//LiteralStructure arg = (LiteralStructure)calls[i + 1].EvaluateStructure();
+								Map arg = calls[i + 1].EvaluateMapStructure();
 								if (arg == null) {
 									m = method.method;
 									return true;}
 								else {
 									object nextArg;
 									if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
+									//if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
 										arguments.Add(nextArg);}
 									else {
 										m = method.method;
@@ -189,17 +222,26 @@ namespace Meta {
 					throw new MetaException(e.Message, Source.start);}}
 			return result;}}
 	public class Search : Expression {
-		public override Map StructureImplementation() {
+		public override Structure StructureImplementation() {
 			Map key;
 			int count;
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
-				return value;}
+				return new LiteralStructure(value);
+			}
+				//return value;}
 			else {
 				return null;}}
 		private bool FindStuff(out int count, out Map key, out Map value) {
 			Expression current = this;
-			key = expression.EvaluateStructure();
+			Structure keyStructure = expression.EvaluateStructure();
+			if(keyStructure!=null ) {
+				key=((LiteralStructure)keyStructure).literal;
+			}
+			else {
+				key=null;
+			}
+			//key = expression.EvaluateStructure();
 			count = 0;
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
@@ -308,8 +350,9 @@ namespace Meta {
 				statement.Assign(ref context);}
 			return context;}}
 	public class Program : ScopeExpression {
-		public override Map StructureImplementation() {
-			return statementList[statementList.Count - 1].Current();}
+		public override Structure StructureImplementation() {
+			return new LiteralStructure( statementList[statementList.Count - 1].Current());}
+			//return statementList[statementList.Count - 1].Current();}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledProgram(statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();}), Source);}
@@ -406,21 +449,46 @@ namespace Meta {
 	public class KeyStatement : Statement {
 		public static bool intellisense = false;
 		public override bool DoesNotAddKey(Map key) {
-			Map k = this.key.EvaluateStructure();
+			Structure structure=this.key.EvaluateStructure();
+			Map k;
+			if(structure!=null) {
+				k=((LiteralStructure)structure).literal;
+			}
+			else {
+				k=null;
+			}
+			//Map k = this.key.EvaluateStructure();
 			if (k != null && k.IsConstant && !k.Equals(key)) {
 				return true;}
 			return false;}
 		protected override Map CurrentImplementation(Map previous) {
-			Map k = key.EvaluateStructure();
+			Structure ks = key.EvaluateStructure();
+			Map k;
+			if(ks!=null) {
+				k=((LiteralStructure)ks).literal;
+			}
+			else {
+				k=null;
+			}
+			//Map k = key.EvaluateStructure();
 			if (k != null && k.IsConstant) {
-				Map val = value.EvaluateStructure();
+				Structure s= value.EvaluateStructure();
+				Map val;
+				if(s!=null) {
+					val=((LiteralStructure)s).literal;
+				}
+				else {
+					val=null;
+				}
+				//Map val = value.EvaluateStructure();
 				if (val == null) {
 				    val = new Map();
 					val.IsConstant=false;
 				}
 				// not general enough
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
-					previous[k] = val;}
+					previous[k] = val;
+				}
 				else {
 					previous[k] = new Map();
 					previous[k].IsConstant=false;
@@ -428,7 +496,7 @@ namespace Meta {
 				return previous;}
 			return null;}
 		public override CompiledStatement Compile() {
-			Map k = key.EvaluateStructure();
+			Map k = key.EvaluateMapStructure();
 			if (k != null && k.Equals(CodeKeys.Function) && program.statementList.Count == 1) {
 				if (value is Literal) {
 					((Literal)value).literal.Compile(program);}}
@@ -452,7 +520,7 @@ namespace Meta {
 				context = value.Copy();}}}
 	public class CurrentStatement : Statement {
 		protected override Map CurrentImplementation(Map previous) {
-			return value.EvaluateStructure();}
+			return value.EvaluateMapStructure();}
 		public override CompiledStatement Compile() {
 			return new CompiledCurrentStatement(value.Compile(program), Index);}
 		public CurrentStatement(Expression value, Program program, int index)
@@ -488,8 +556,10 @@ namespace Meta {
 		public override Map EvaluateImplementation(Map context) {
 			return literal.Copy();}}
 	public class Literal : Expression {
-		public override Map StructureImplementation() {
-			return literal;}
+		public override Structure StructureImplementation() {
+			return new LiteralStructure(literal);
+			//return literal;
+		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled CompileImplementation(Expression parent) {
@@ -506,8 +576,10 @@ namespace Meta {
 		public override Map EvaluateImplementation(Map selected) {
 			return Gac.gac;}}
 	public class Root : Expression {
-		public override Map StructureImplementation() {
-			return Gac.gac;}
+		public override Structure StructureImplementation() {
+			return new LiteralStructure(Gac.gac);
+			//return Gac.gac;
+		}
 		public Root(Map code, Expression parent)
 			: base(code.Source, parent) {}
 		public override Compiled CompileImplementation(Expression parent) {
@@ -529,15 +601,18 @@ namespace Meta {
 					selected = value;}}
 			return selected;}}
 	public class Select : Expression {
-		public override Map StructureImplementation() {
-			Map selected = subs[0].EvaluateStructure();
+		public override Structure StructureImplementation() {
+			Map selected = subs[0].EvaluateMapStructure();
+			//Map selected = subs[0].EvaluateStructure();
 			for (int i = 1; i < subs.Count; i++) {
-				Map key = subs[i].EvaluateStructure();
+				Map key = subs[i].EvaluateMapStructure();
+				//Map key = subs[i].EvaluateStructure();
 				if (selected == null || key == null || !key.IsConstant || !selected.ContainsKey(key)) {
 					// compilation error???
 					return null;}
 				selected = selected[key];}
-			return selected;}
+			return new LiteralStructure(selected);
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledSelect(subs.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile(null);}), Source);}
@@ -3319,8 +3394,9 @@ namespace Meta {
 		public LiteralExpression(Map literal, Expression parent)
 			: base(null, parent) {
 			this.literal = literal;}
-		public override Map StructureImplementation() {
-			return literal;}
+		public override Structure StructureImplementation() {
+			return new LiteralStructure(literal);
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");}}
 	public class LiteralStatement : Statement {
@@ -3329,9 +3405,11 @@ namespace Meta {
 			: base(null, null, 0) {
 			this.program = program;}
 		public override Map Pre() {
-			return program.EvaluateStructure();}
+			return program.EvaluateMapStructure();
+		}
 		protected override Map CurrentImplementation(Map previous) {
-			return program.EvaluateStructure();}
+			return program.EvaluateMapStructure();
+		}
 		public override CompiledStatement Compile() {
 			throw new Exception("The method or operation is not implemented.");}}
 	public abstract class ScopeExpression : Expression {
@@ -3339,7 +3417,29 @@ namespace Meta {
 			: base(source, parent) {}}
 	public delegate T SingleDelegate<T>(T t);
 
-	//public abstract class Structure {
+	public abstract class Structure {
+		public abstract bool IsConstant {
+			get;
+		}
+	}
+	public class LiteralStructure:Structure {
+		public override bool IsConstant {
+			get { 
+				return literal.IsConstant;
+			}
+		}
+		public Map literal;
+		public LiteralStructure(Map literal) {
+			this.literal=literal;
+		}
+	}
+	//public class Rational:Structure {
+	//}
+	//public class Integer:Structure {
+	//}
+	//public class Long:Structure {
+	//}
+	//public class Int:Structure {
 	//}
 	public class MergeCompile:CompilableAttribute {
 		public override Map GetStructure() {
