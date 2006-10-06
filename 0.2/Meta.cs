@@ -543,24 +543,28 @@ namespace Meta {
 	public class Interpreter {
 		public static bool profiling = false;
 		static Interpreter() {
-			try {
-				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
-				map.Scope = Gac.gac;
+		    try {
+		        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+		        map.Scope = Gac.gac;
 
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+		        LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 
-				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-				map[CodeKeys.Function].Compile(gac);
+		        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+		        map[CodeKeys.Function].Compile(gac);
 
-				Gac.gac["library"] = map.Call(Map.Empty);
-				Gac.gac["library"].Scope = Gac.gac;
+		        Gac.gac["library"] = map.Call(Map.Empty);
+		        Gac.gac["library"].Scope = Gac.gac;
 
-			}
-			catch (Exception e) {
-				throw e;}
-			}
+		    }
+		    catch (Exception e) {
+		        throw e;}
+		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta"));
+			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"));
+			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"));
+			//return;
 			DateTime start = DateTime.Now;
 
 			if (args.Length != 0) {
@@ -1866,22 +1870,49 @@ namespace Meta {
 		public long GetInt64() {
 			return Convert.ToInt64(numerator);}}
 	public struct State{
-		public State(int index,int Line,int Column,int indentationCount){
+		public override bool Equals(object obj) {
+			State state=(State)obj;
+			return state.indentationCount==indentationCount &&
+				state.Column ==Column && state.index==index && state.Line==Line &&
+				state.FileName==FileName;
+		}
+		public override int GetHashCode() {
+			return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*indentationCount.GetHashCode()*FileName.GetHashCode();
+		}
+		public State(int index,int Line,int Column,int indentationCount,string fileName){
 			this.index=index;
+			this.FileName=fileName;
 			this.Line=Line;
 			this.Column=Column;
 			this.indentationCount=indentationCount;}
+		public string FileName;
 		public int index;
 		public int Line;
 		public int Column;
 		public int indentationCount;}
 	public class Parser {
+		public class Index {
+			private State state;
+			private Rule rule;
+			public Index(State state,Rule rule)
+			{
+				this.state=state;
+				this.rule=rule;
+			}
+			public override int GetHashCode() {
+				return state.GetHashCode()*rule.GetHashCode();
+			}
+			public override bool Equals(object obj) {
+				Index index=obj as Index;
+				return index!=null && index.rule.Equals(rule) && index.state.Equals(state);
+			}
+		}
 		public string Text;
 		public readonly string FileName;
 		public Stack<int> defaultKeys = new Stack<int>();
 		public State State;
 		public Parser(string text, string filePath) {
-			State=new State(0,1,1,-1);
+			State=new State(0,1,1,-1,filePath);
 			this.Text = text+Syntax.endOfFile;
 			this.FileName = filePath;
 			Root.precondition=delegate(Parser p) {return p.Look()==Syntax.root;};
@@ -1904,11 +1935,15 @@ namespace Meta {
 						return true;
 					default:
 						return false;}};}
-
 		public static Rule Expression = new DelayedRule(delegate() {
-		    return new Alternatives(
-		        LiteralExpression,FunctionProgram,Call,SelectInline,
-		        Search,List,Program,LastArgument);});
+		    return new CachedRule(new Alternatives(
+		        LiteralExpression,FunctionProgram,Call,Select,
+		        Search,List,Program,LastArgument));});
+
+		//public static Rule Expression = new DelayedRule(delegate() {
+		//    return new CachedRule(new Alternatives(
+		//        LiteralExpression,FunctionProgram,Call,SelectInline,
+		//        Search,List,Program,LastArgument));});
 		public class Ignore:Rule
 		{
 			private Rule rule;
@@ -1964,12 +1999,6 @@ namespace Meta {
 			Syntax.character,
 			new ReferenceAssignment(new CharsExcept(Syntax.character.ToString())),
 			Syntax.character);
-
-		//public static Rule CharacterDataExpression = new Sequence(
-		//    Syntax.character,
-		//    new ReferenceAssignment(new CharacterExcept(Syntax.character)),
-		//    Syntax.character);
-
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
@@ -1995,9 +2024,26 @@ namespace Meta {
 						new Sequence(
 							Syntax.fraction,
 							new ReferenceAssignment(Integer)))));
-		public static Rule LookupString = new Sequence(
-			new ReferenceAssignment(new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
-			new Append(new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
+		public class StringSequence:StringRule
+		{
+			private StringRule[] rules;
+			public StringSequence(params StringRule[] rules) {
+				this.rules=rules;
+			}
+			public override bool MatchString(Parser parser, ref string s) {
+				s="";
+				foreach(StringRule rule in rules) {
+					string result=null;
+					if(rule.MatchString(parser, ref result)) {
+						s+=result;}
+					else {return false;}}
+				return true;
+			}
+		}
+		public static Rule LookupString = new StringSequence(
+			new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
+			new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden)));
+
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
 				Map,
@@ -2103,15 +2149,14 @@ namespace Meta {
 					FunctionProgram,
 					LiteralExpression,
 					Call,
-					SelectInline,
+					Select,
 					Search,
 					List,
-					Program
-					),
+					Program),
 				new Alternatives(
 					FunctionProgram,
 					LiteralExpression,
-					SelectInline,
+					Select,
 					Search,
 					List,
 					Program,
@@ -2167,17 +2212,36 @@ namespace Meta {
 				CodeKeys.Literal,
 				LookupString));
 
-		private static Rule Search = new Sequence(
+		private static Rule Search = new CachedRule(new Sequence(
 			new Assignment(
 				CodeKeys.Search,
 				new Alternatives(
 					Prefix('!',Expression),
 					new Alternatives(
 						LookupStringExpression,
-						LookupAnythingExpression
-			))));
+						LookupAnythingExpression)))));
 
-		private static Rule SelectInline = new Sequence(
+		//private static Rule Search = new CachedRule(new Sequence(
+		//    new Assignment(
+		//        CodeKeys.Search,
+		//        new Alternatives(
+		//            Prefix('!',Expression),
+		//            new Alternatives(
+		//                LookupStringExpression,
+		//                LookupAnythingExpression
+		//    )))));
+
+		//private static Rule Search = new Sequence(
+		//    new Assignment(
+		//        CodeKeys.Search,
+		//        new Alternatives(
+		//            Prefix('!',Expression),
+		//            new Alternatives(
+		//                LookupStringExpression,
+		//                LookupAnythingExpression
+		//    ))));
+
+		private static Rule Select = new CachedRule(new Sequence(
 			new Assignment(
 				CodeKeys.Select,
 				new Sequence(
@@ -2190,7 +2254,7 @@ namespace Meta {
 						new OneOrMore(new Autokey(Prefix('.',new Alternatives(
 							LookupStringExpression,
 							LookupAnythingExpression,
-							LiteralExpression))))))));
+							LiteralExpression)))))))));
 
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
@@ -2363,9 +2427,40 @@ namespace Meta {
 				this.action(parser, map, ref result);}}
 		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
+		public class CachedResult
+		{
+			public CachedResult(Map map,State state)
+			{
+				this.map=map;
+				this.state=state;
+			}
+			public Map map;
+			public State state;
+		}
+		public class CachedRule:Rule {
+		    private Rule rule;
+		    public CachedRule(Rule rule) {
+		        this.rule=rule;}
+		    private Dictionary<State,CachedResult> cached=new Dictionary<State,CachedResult>();
+		    protected override bool MatchImplementation(Parser parser, ref Map map, bool keep) {
+		        CachedResult cachedResult;
+		        State oldState=parser.State;
+		        if(cached.TryGetValue(parser.State,out cachedResult)) {
+		            map=cachedResult.map;
+		            if(parser.Text.Length==parser.State.index+1) {
+		                return false;
+		            }
+					parser.State=cachedResult.state;
+		            return true;
+		        }
+		        if(rule.Match(parser,ref map,keep)) {
+		            cached[oldState]=new CachedResult(map,parser.State);
+		            return true;
+		        }
+		        return false;
+		    }
+		}
 		public abstract class Rule {
-			//public static implicit operator Rule(StringRule rule) {
-			//    return new ConvertRule(rule);}
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
 				return new Ignore(StringRule2(s));}
@@ -2375,6 +2470,7 @@ namespace Meta {
 				return Match(parser,ref map,true);}
 			public int mismatches=0;
 			public int calls=0;
+
 			public bool Match(Parser parser, ref Map map,bool keep) {
 				if(precondition!=null) { if(!precondition(parser)) {return false;}}
 				calls++;
@@ -2827,13 +2923,13 @@ namespace Meta {
 					level = 1;
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));}}
 			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));}}
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));}}
 			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
