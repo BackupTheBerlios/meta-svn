@@ -458,7 +458,3 @@ commandLine|{
 		copiedData
 		{
 			x="changed
-	characterLiterals={
-		a='a'
-		space=' '
-		tab='	'

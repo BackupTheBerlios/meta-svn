@@ -1919,32 +1919,50 @@ namespace Meta {
 				return rule.Match(parser,ref map,false);}
 		}
 		public static Rule EndOfLine = new Ignore(new Sequence(
-			new ZeroOrMore(new Characters(Syntax.space,Syntax.tab)),
+			new ConvertRule(new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab))),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
-		public static Rule Integer =
-			new Sequence(
-				new CustomProduction(
-					delegate(Parser p, Map map, ref Map result) {
-						p.negative = map != null;
-						return null;},
-					new Optional(new Characters(Syntax.negative))),
-				new ReferenceAssignment(
-					new Sequence(
-						new ReferenceAssignment(
-							new OneOrMore(
-								new CustomProduction(
-									delegate(Parser p, Map map, ref Map result) {
-										if (result == null) {
-											result = new Map();}
-										result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
-										return result;},
-									new Characters(Syntax.integer.ToCharArray())))),
-						new CustomProduction(delegate(Parser p, Map map, ref Map result) {
-			if (result.GetNumber() > 0 && p.negative) {
-				result = 0 - result.GetNumber();}
-			return null;},
-		new CustomRule(delegate(Parser p, ref Map map) {
-			return true;})))));
+		public static Rule Integer = new Sequence(new CustomProduction(
+		        delegate(Parser p, Map map, ref Map result) {
+		            result=new Map(new Number(double.Parse(map.GetString()),1.0));
+				return result;},
+		        new Sequence(
+		            new Assignment(1,new Optional(
+		                new Characters(Syntax.negative))),
+		            new Append(new OneOrMoreChars(new Chars(Syntax.integer))))));
+		            //new Append(new OneOrMore(new Autokey(new Characters(Syntax.integer.ToCharArray())))))));
+
+		//public static Rule Integer =
+		//    new Sequence(
+		//        new CustomProduction(
+		//            delegate(Parser p, Map map, ref Map result) {
+		//                p.negative = map != null;
+		//                return null;},
+		//            new Optional(new Characters(Syntax.negative))),
+		//        new ReferenceAssignment(
+		//            new Sequence(
+		//                new ReferenceAssignment(
+		//                        new CustomProduction(
+		//                            delegate(Parser p, Map map, ref Map result) {
+		//                                if (result == null) {
+		//                                    result = new Map();}
+		//                                result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+		//                                return result;},
+		//                            new Characters(Syntax.integer.ToCharArray())))),
+
+		//                    //new OneOrMore(
+		//                    //    new CustomProduction(
+		//                    //        delegate(Parser p, Map map, ref Map result) {
+		//                    //            if (result == null) {
+		//                    //                result = new Map();}
+		//                    //            result = result.GetNumber() * 10 + (Number)map.GetNumber().GetInt32() - '0';
+		//                    //            return result;},
+		//                    //        new Characters(Syntax.integer.ToCharArray())))),
+		//                new CustomProduction(delegate(Parser p, Map map, ref Map result) {
+		//    if (result.GetNumber() > 0 && p.negative) {
+		//        result = 0 - result.GetNumber();}
+		//    return null;},
+		//new CustomRule(delegate(Parser p, ref Map map) {
+		//    return true;})))));
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
 			if (p.State.indentationCount == -1) {
 				p.State.indentationCount++;
@@ -1955,10 +1973,14 @@ namespace Meta {
 			return true;});
 		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
 			return StringRule2("".PadLeft(pa.State.indentationCount, Syntax.indentation)).Match(pa, ref map);});
-		public static Rule CharacterDataExpression = new Sequence(
-			Syntax.character,
-			new ReferenceAssignment(new CharacterExcept(Syntax.character)),
-			Syntax.character);
+		//public static Rule CharacterDataExpression = new Sequence(
+		//    Syntax.character,
+		//    new ReferenceAssignment(new CharacterExcept(Syntax.character)),
+		//    Syntax.character);
+		//public static Rule CharacterDataExpression = new Sequence(
+		//    Syntax.character,
+		//    new ReferenceAssignment(new CharacterExcept(Syntax.character)),
+		//    Syntax.character);
 		public static Rule Dedentation = new CustomRule(delegate(Parser pa, ref Map map) {
 			pa.State.indentationCount--;
 			return true;});
@@ -1993,12 +2015,11 @@ namespace Meta {
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
 				new Sequence(
-					new ReferenceAssignment(new OneOrMore(
-						new Autokey(
-							new CharacterExcept(
-								Syntax.unixNewLine,
-								Syntax.windowsNewLine[0],
-								Syntax.@string)))),
+					new ReferenceAssignment(
+					new OneOrMoreChars(new CharsExcept(""+
+								Syntax.unixNewLine+
+								Syntax.windowsNewLine[0]+
+								Syntax.@string))),
 					new Optional(Syntax.@string)),
 				new Sequence(
 					SmallIndentation,
@@ -2007,17 +2028,26 @@ namespace Meta {
 					new ReferenceAssignment(StringBeef),
 					EndOfLine,
 					Dedentation))));
-		public static Rule Number = new Sequence(
-			new ReferenceAssignment(Integer),
-			new Assignment(
-					NumberKeys.Denominator,
-					new Optional(
-						new Sequence(
-							Syntax.fraction,
-							new ReferenceAssignment(Integer)))));
+		public static Rule Number = 
+				new Sequence(
+					new ReferenceAssignment(Integer),
+					new Assignment(
+							NumberKeys.Denominator,
+							new Optional(
+								new Sequence(
+									Syntax.fraction,
+									new ReferenceAssignment(Integer)))));
+		//public static Rule Number = new Sequence(
+		//    new ReferenceAssignment(Integer),
+		//    new Assignment(
+		//            NumberKeys.Denominator,
+		//            new Optional(
+		//                new Sequence(
+		//                    Syntax.fraction,
+		//                    new ReferenceAssignment(Integer)))));
 		
 		public static Rule LookupString = new Sequence(
-			new Assignment(1, new CharacterExcept(Syntax.lookupStringForbiddenFirst.ToCharArray())),
+			new ReferenceAssignment(new ConvertRule(new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 			new Append(new ConvertRule(new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden)))));
 
 
@@ -2026,22 +2056,30 @@ namespace Meta {
 				Map,
 				ListMap,
 				String,
-				Number,
-				CharacterDataExpression);});
+				Number
+				//,CharacterDataExpression
+				);});
 		private static Rule LookupAnything = new Sequence(
 			'<',
 			new ReferenceAssignment(Value));
 		public static Rule Function = new Sequence(
 			new Assignment(
 				CodeKeys.Parameter,
-				new ZeroOrMore(
-					new Autokey(
-						new CharacterExcept(
-							Syntax.@string,
-							Syntax.function,
-							Syntax.indentation,
-							Syntax.windowsNewLine[0],
-							Syntax.unixNewLine)))),
+				new ZeroOrMoreChars(
+						new CharsExcept(""+
+							Syntax.@string+
+							Syntax.function+
+							Syntax.indentation+
+							Syntax.windowsNewLine[0]+
+							Syntax.unixNewLine))),
+				//new ZeroOrMore(
+				//    new Autokey(
+				//        new CharacterExcept(
+				//            Syntax.@string,
+				//            Syntax.function,
+				//            Syntax.indentation,
+				//            Syntax.windowsNewLine[0],
+				//            Syntax.unixNewLine)))),
 			Syntax.function,
 			new Assignment(
 				CodeKeys.Expression,
@@ -2089,7 +2127,7 @@ namespace Meta {
 		public static Rule File = new Ignore(new Sequence(
 			new Optional(
 				new Sequence('#','!',
-					new ZeroOrMore(new CharacterExcept(Syntax.unixNewLine)),
+					new ZeroOrMoreChars(new CharsExcept(Syntax.unixNewLine.ToString())),
 					EndOfLine)),
 			new ReferenceAssignment(Map)));
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
@@ -2180,15 +2218,8 @@ namespace Meta {
 			new Assignment(CodeKeys.Literal, new Alternatives(
 				Number,
 				String,
-				EmptyMap,
-				CharacterDataExpression)));
-
-		//private static Rule LiteralExpression = new Sequence(
-		//    new Assignment(CodeKeys.Literal, new Alternatives(
-		//        Number,
-		//        String,
-		//        EmptyMap,
-		//        CharacterDataExpression)));
+				EmptyMap
+			)));
 
 		private static Rule LookupAnythingExpression = new Sequence(
 			'<',
@@ -2331,9 +2362,7 @@ namespace Meta {
 									new Sequence(
 										new Assignment(
 											CodeKeys.Parameter,
-											new ZeroOrMore(
-												new Autokey(
-													new CharacterExcept(Syntax.lookupStringForbiddenFirst.ToCharArray())))),
+											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
 										Syntax.functionProgram,
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine))))))))));
@@ -2345,16 +2374,18 @@ namespace Meta {
 			AllStatements,
 			null);
 		public abstract class Action {
+			public static implicit operator Action(StringRule rule) {
+				return new Match(new ConvertRule(rule));}
 			public static implicit operator Action(string s) {
 				return new Match(new Ignore(StringRule2(s)));}
 			public static implicit operator Action(char c) {
-				return new Match(new Ignore(new Characters(c)));}
+				return new Match(new Ignore(new OneChar(new SingleChar(c))));}
 			public static implicit operator Action(Rule rule) {
 				return new Match(new Ignore(rule));}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
-			public Action(char c)
-				: this(new Characters(c)) {}
+
+
 			public Action(Rule rule) {this.rule = rule;}
 			public bool Execute(Parser parser, ref Map result,bool keep) {
 				Map map=null;
@@ -2398,11 +2429,13 @@ namespace Meta {
 		public delegate Map CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public abstract class Rule {
+			public static implicit operator Rule(StringRule rule) {
+				return new ConvertRule(rule);}
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
 				return new Ignore(StringRule2(s));}
 			public static implicit operator Rule(char c) {
-			    return new Ignore(new SingleCharacter(c));}
+			    return new Ignore(new OneChar(new SingleChar(c)));}
 			public bool Match(Parser parser, ref Map map) {
 				return Match(parser,ref map,true);}
 			public int mismatches=0;
@@ -2425,20 +2458,34 @@ namespace Meta {
 			protected abstract bool MatchImplementation(Parser parser, ref Map map,bool keep);}
 
 		public class Characters : CharacterRule {
-			private string chars;
-			public Characters(params char[] characters){chars=new string(characters);}
-			protected override bool MatchCharacter(char next) {
-				return chars.IndexOf(next)!=-1;}}
-		public class SingleCharacter : CharacterRule {
-			private char c;
-			public SingleCharacter(char c){this.c=c;}
-			protected override bool MatchCharacter(char next) {return c.Equals(next);}}
-
+		    private string chars;
+		    public Characters(params char[] characters){chars=new string(characters);}
+		    protected override bool MatchCharacter(char next) {
+		        return chars.IndexOf(next)!=-1;}}
+		
 		public class CharacterExcept : CharacterRule {
-			private string s;
+		    private string s;
 		    public CharacterExcept(params char[] characters){s=new string(characters)+Syntax.endOfFile;}
 		    protected override bool MatchCharacter(char c) {
 		        return s.IndexOf(c)==-1;}}
+
+		public abstract class CharacterRule : Rule {
+		    public static int calls;
+		    protected abstract bool MatchCharacter(char c);
+		    protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
+		        char character = parser.Look();
+		        calls++;
+		        if (MatchCharacter(character)) {
+		            parser.State.index++;
+		            parser.State.Column++;
+		            if (character.Equals(Syntax.unixNewLine)) {
+		                parser.State.Line++;
+		                parser.State.Column = 1;}
+		            map=keep?new Map(character):null;
+		            return true;}
+		        else {
+		            map=null;
+		            return false;}}}
 
 		public class ConvertRule:Rule {
 			private StringRule rule;
@@ -2450,19 +2497,16 @@ namespace Meta {
 		public abstract class CharRule {
 			public abstract bool Match(char next);
 		}
-		public abstract class Chars:CharRule{
+		public class Chars:CharRule{
 			private string chars;
 			public Chars(string chars){this.chars=chars;}
 			public override bool Match(char next) {
 				return chars.IndexOf(next)!=-1;}}
-
 		public class CharsExcept: CharRule {
 			private string s;
 		    public CharsExcept(string characters){s=characters+Syntax.endOfFile;}
 		    public override bool Match(char c) {
-		        return s.IndexOf(c)==-1;}}
-
-		
+		        return s.IndexOf(c)==-1;}}		
 		public class CharLoop:StringRule {
 			private CharRule rule;
 			private int min;
@@ -2473,20 +2517,33 @@ namespace Meta {
 				this.max=max;}
 			public override bool Match(Parser parser, ref string s) {
 				int offset=0;
+				int column=parser.State.Column;
+				int line=0;
 				while((max==-1 || offset<max) && rule.Match(parser.Look(offset))) {
 					offset++;
-				}
+					column++;
+					if(parser.Look(offset).Equals(Syntax.unixNewLine)) {
+						line++;
+						column= 1;}}
 				s=parser.text.Substring(parser.State.index,offset);
 				if(offset>=min && (max==-1 || offset <= max))
 				{
 					parser.State.index+=offset;
+					parser.State.Column=column;
+					parser.State.Line+=line;
 					return true;
 				}
 				return false;
 			}}
-
 			public class OneChar:CharLoop{
 				public OneChar(CharRule rule):base(rule,1,1) {}
+			}
+			public class SingleChar:CharRule{
+				private char c;
+				public SingleChar(char c) {this.c=c;}
+				public override bool Match(char next) {
+					return next.Equals(c);
+				}
 			}
 			public class OneOrMoreChars:CharLoop{
 				public OneOrMoreChars(CharRule rule):base(rule,1,-1){}
@@ -2494,56 +2551,9 @@ namespace Meta {
 			public class ZeroOrMoreChars:CharLoop{
 				public ZeroOrMoreChars(CharRule rule):base(rule,0,-1){}
 			}
-
-		//public class OneOrMoreChars:StringRule {
-		//    private CharRule rule;
-		//    public OneOrMoreChars(CharRule rule){this.rule=rule;}
-		//    public override bool Match(Parser parser, ref string s) {
-		//        int offset=0;
-		//        while(rule.Match(parser.Look(offset))) {
-		//            offset++;
-		//        }
-		//        s=parser.text.Substring(parser.State.index,offset);
-		//        parser.State.index+=offset;
-		//        return offset>0;
-		//    }
-		//}
-
-		//public class ZeroOrMoreChars:StringRule {
-		//    private CharRule rule;
-		//    public ZeroOrMoreChars(CharRule rule){this.rule=rule;}
-		//    public override bool Match(Parser parser, ref string s) {
-		//        int offset=0;
-		//        while(rule.Match(parser.Look(offset))) {
-		//            offset++;
-		//        }
-		//        s=parser.text.Substring(parser.State.index,offset);
-		//        parser.State.index+=offset;
-		//        return true;
-		//    }
-		//}
-
-
 		public abstract class StringRule {
 			public abstract bool Match(Parser parser,ref string s);}
 
-		public abstract class CharacterRule : Rule {
-			public static int calls;
-			protected abstract bool MatchCharacter(char c);
-			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
-				char character = parser.Look();
-				calls++;
-				if (MatchCharacter(character)) {
-					parser.State.index++;
-					parser.State.Column++;
-					if (character.Equals(Syntax.unixNewLine)) {
-						parser.State.Line++;
-						parser.State.Column = 1;}
-					map=keep?new Map(character):null;
-					return true;}
-				else {
-					map=null;
-					return false;}}}
 
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
@@ -2713,13 +2723,7 @@ namespace Meta {
 			programStart+ programSeparator +callSeparator+programEnd+
 			arrayEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;}
-//{
-//            current, lastArgument, explicitCall, indentation, '\r', '\n', select,
-//            function, @string, emptyMap, '!', root, callStart, callEnd, character,
-//            programStart, '*', '$', '\\', '<', '=', arrayStart, '-', '0', '1', '2',
-//            '3', '4', '5', '6', '7', '8', '9', '.', functionProgram, select, ' ',
-//            '-', '[', ']', '*', '>', programStart, programSeparator ,callSeparator,
-//            programEnd,arraySeparator};}
+
 	public class Serialization {
 		public static string Serialize(Map map) {
 			try {
@@ -2728,7 +2732,6 @@ namespace Meta {
 				throw e;}}
 		private static string Number(Map map) {
 			return map.GetNumber().ToString();}
-
 		private static string Serialize(Map map, int indentation) {
 			if (!map.Strategy.IsNormal) {
 				return map.Strategy.ToString();}
@@ -2768,7 +2771,8 @@ namespace Meta {
 				return Number(value);}
 			else if (value.IsString) {
 				return String(value, indentation);}
-			throw new Exception("not implemented");}
+			else {return "error";}}
+			//throw new Exception("not implemented");}
 		private static string Function(Map value, int indentation) {
 			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);}
 		private static string Root() {
