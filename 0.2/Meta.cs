@@ -59,7 +59,7 @@ namespace Meta {
 			Structure s=EvaluateStructure();
 			Map m;
 			if(s!=null) {
-				m=((LiteralStructure)s).literal;
+				m=((LiteralStructure)s).Literal;
 			}
 			else {
 				m=null;
@@ -219,7 +219,7 @@ namespace Meta {
 			Expression current = this;
 			Structure keyStructure = expression.EvaluateStructure();
 			if(keyStructure!=null ) {
-				key=((LiteralStructure)keyStructure).literal;
+				key=((LiteralStructure)keyStructure).Literal;
 			}
 			else {
 				key=null;
@@ -368,7 +368,7 @@ namespace Meta {
 		public Map PreMap() {
 			Structure s=Pre();
 			if(s!=null) {
-				return ((LiteralStructure)s).literal;
+				return ((LiteralStructure)s).Literal;
 			}
 			else {
 				return null;
@@ -386,7 +386,7 @@ namespace Meta {
 		}
 		public Map CurrentMap() {
 			Structure s=Current();
-			return s!=null?((LiteralStructure)s).literal:null;
+			return s!=null?((LiteralStructure)s).Literal:null;
 		}
 		public Structure Current() {
 			if (!currentEvaluated) {
@@ -458,51 +458,34 @@ namespace Meta {
 			Structure structure=this.key.EvaluateStructure();
 			Map k;
 			if(structure!=null) {
-				k=((LiteralStructure)structure).literal;
+				k=((LiteralStructure)structure).Literal;
 			}
 			else {
 				k=null;
 			}
-			//Map k = this.key.EvaluateStructure();
 			if (k != null && k.IsConstant && !k.Equals(key)) {
 				return true;}
 			return false;}
 		protected override Structure CurrentImplementation(Structure previous) {
-			Structure ks = key.EvaluateStructure();
-			Map k;
-			if(ks!=null) {
-				k=((LiteralStructure)ks).literal;
-			}
-			else {
-				k=null;
-			}
-			//Map k = key.EvaluateStructure();
+			Map k=key.EvaluateMapStructure();
 			if (k != null && k.IsConstant) {
-				Structure s= value.EvaluateStructure();
-				Map val;
-				if(s!=null) {
-					val=((LiteralStructure)s).literal;
-				}
-				else {
-					val=null;
-				}
-				//Map val = value.EvaluateStructure();
+				Map val=value.EvaluateMapStructure();
 				if (val == null) {
 				    val = new Map();
 					val.IsConstant=false;
 				}
 				// not general enough
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
-					((LiteralStructure)previous).literal[k] = val;
+					((LiteralStructure)previous).Literal[k] = val;
 				}
 				else {
-					((LiteralStructure)previous).literal[k] = new Map();
-					((LiteralStructure)previous).literal[k].IsConstant=false;
+					((LiteralStructure)previous).Literal[k] = new Map();
+					((LiteralStructure)previous).Literal[k].IsConstant=false;
 				}
 				return previous;
-				//return new LiteralStructure(previous);
 			}
-			return null;}
+			return null;
+		}
 		public override CompiledStatement Compile() {
 			Map k = key.EvaluateMapStructure();
 			if (k != null && k.Equals(CodeKeys.Function) && program.statementList.Count == 1) {
@@ -3438,7 +3421,12 @@ namespace Meta {
 				return literal.IsConstant;
 			}
 		}
-		public Map literal;
+		public Map Literal {
+			get {
+				return literal;
+			}
+		}
+		private Map literal;
 		public LiteralStructure(Map literal) {
 			this.literal=literal;
 		}
