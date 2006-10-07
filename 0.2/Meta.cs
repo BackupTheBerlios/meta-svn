@@ -46,26 +46,48 @@ namespace Meta {
 			return EvaluateImplementation(context);}
 		public abstract Map EvaluateImplementation(Map context);}
 	public abstract class Expression {
-		private Dictionary<Type, Compiled> specialized;
-		public Dictionary<Type, Compiled> Specialized {
-		    get {
-		        if (specialized == null) {
-		            specialized = new Dictionary<Type, Compiled>();
-		        }
-		        return specialized;}
-		}
-		public Compiled GetCompiled(Type type) {
-		    try {
-		        if (Specialized.ContainsKey(type)) {
-		            return Specialized[type];}
-		        else if (Specialized.ContainsKey(typeof(Map))) {
-		            return Specialized[typeof(Map)];}
-		        else {
-		            return null;}
-		    }
-		    catch (Exception e) {
-		        throw e;}
-		}
+		public Compiled compiled;
+		//private Dictionary<Type, Compiled> specialized;
+		//public Dictionary<Type, Compiled> Specialized {
+		//    get {
+		//        if (specialized == null) {
+		//            specialized = new Dictionary<Type, Compiled>();
+		//        }
+		//        return specialized;}
+		//}
+		//public Compiled GetCompiled(Type type) {
+		//    try {
+		//        if (Specialized.ContainsKey(type)) {
+		//            return Specialized[type];}
+		//        else if (Specialized.ContainsKey(typeof(Map))) {
+		//            return Specialized[typeof(Map)];}
+		//        else {
+		//            return null;}
+		//    }
+		//    catch (Exception e) {
+		//        throw e;}
+		//}
+
+		//private Dictionary<Type, Compiled> specialized;
+		//public Dictionary<Type, Compiled> Specialized {
+		//    get {
+		//        if (specialized == null) {
+		//            specialized = new Dictionary<Type, Compiled>();
+		//        }
+		//        return specialized;}
+		//}
+		//public Compiled GetCompiled(Type type) {
+		//    try {
+		//        if (Specialized.ContainsKey(type)) {
+		//            return Specialized[type];}
+		//        else if (Specialized.ContainsKey(typeof(Map))) {
+		//            return Specialized[typeof(Map)];}
+		//        else {
+		//            return null;}
+		//    }
+		//    catch (Exception e) {
+		//        throw e;}
+		//}
 
 		//private Dictionary<Type, Compiled> specialized;
 		//private Dictionary<Type, Compiled> Specialized {
@@ -1533,8 +1555,10 @@ namespace Meta {
 		public virtual Map CallImplementation(Map argument, Map parent) {
 			Map function=Get(CodeKeys.Function);
 			if (function!=null) {
-				if (function.expression!=null && function.expression.GetCompiled(typeof(Map)) != null) {
-					return function.expression.GetCompiled(typeof(Map)).Evaluate(parent);
+				if (function.expression!=null && function.expression.compiled!= null) {
+				//if (function.expression!=null && function.expression.GetCompiled(typeof(Map)) != null) {
+					return function.expression.compiled.Evaluate(parent);
+					//return function.expression.GetCompiled(typeof(Map)).Evaluate(parent);
 				}
 				else {
 					return function.GetExpression(null).Compile(null).Evaluate(parent);}}
@@ -3724,7 +3748,8 @@ namespace Meta {
 			else {
 				throw new ApplicationException("Cannot compile map");}}
 		public void Compile(Expression parent) {
-			GetExpression(parent).Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);
+			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
+			//GetExpression(parent).Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);
 		}
 		//public void Compile(Expression parent) {
 		//    Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);}
