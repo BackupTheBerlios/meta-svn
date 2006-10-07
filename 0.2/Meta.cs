@@ -725,46 +725,64 @@ namespace Meta {
 	}
 	public class Interpreter {
 		public static bool profiling = false;
-		static Interpreter() {
-		    try {
-		        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
-		        map.Scope = Gac.gac;
+		//static Interpreter() {
+		//    try {
+		//        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+		//        map.Scope = Gac.gac;
 
-		        LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+		//        LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 
-		        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-		        map[CodeKeys.Function].Compile(gac);
+		//        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+		//        map[CodeKeys.Function].Compile(gac);
 
-		        Gac.gac["library"] = map.Call(Map.Empty);
-		        Gac.gac["library"].Scope = Gac.gac;
+		//        Gac.gac["library"] = map.Call(Map.Empty);
+		//        Gac.gac["library"].Scope = Gac.gac;
 
-		    }
-		    catch (Exception e) {
-		        throw e;
-			}
-		}
-		private static Number two=2;
-		private static Number one=1;
+		//    }
+		//    catch (Exception e) {
+		//        throw e;
+		//    }
+		//}
+		//private static Number two=new Integer(2);
+		private static Number one=new Integer(1);
+		//public static Number Fibo(Number n) {
+		//    if(n<two) {
+		//        return one;
+		//    }
+		//    else {
+		//        //checked{
+		//        return Fibo(n-one)+Fibo(n-two);
+		//        //}
+		//    }
+		//}
 		public static Number Fibo(Number n) {
-		    if(n<two) {
+		    if(n.LessThan(2)) {
 		        return one;
 		    }
 		    else {
-		        //checked{
-		        return Fibo(n-one)+Fibo(n-two);
-		        //}
+		        return Fibo(n.Subtract(1)).Add(Fibo(n.Subtract(2)));
 		    }
 		}
-		//public static int Fibo(int n) {
-		//    if(n<2) {
-		//        return 1;
+		//public static Number Fibo(Number n) {
+		//    if(n.LessThan(two)) {
+		//        return one;
 		//    }
 		//    else {
-		//        checked{
-		//        return Fibo(n-1)+Fibo(n-2);
-		//        }
+		//        //checked{
+		//        return Fibo(n.Subtract(one)).Add(Fibo(n.Subtract(two)));
+		//        //}
 		//    }
 		//}
+		public static int Fibo(int n) {
+		    if(n<2) {
+		        return 1;
+		    }
+		    else {
+		        checked{
+		        return Fibo(n-1)+Fibo(n-2);
+		        }
+		    }
+		}
 		[STAThread]
 		public static void Main(string[] args) {
 			//Number two=new Rational(2);
@@ -785,9 +803,10 @@ namespace Meta {
 			//return;
 
 			DateTime start = DateTime.Now;
-			//Console.WriteLine(Fibo(28));
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
-			//return;
+			//Console.WriteLine(Fibo(34));
+			Console.WriteLine(Fibo(new Integer(34)));
+			Console.WriteLine((DateTime.Now - start).TotalSeconds);
+			return;
 
 
 			if (args.Length != 0) {
@@ -1064,10 +1083,11 @@ namespace Meta {
 					case TypeCode.DBNull:
 						return new Map(dotNet);
 					case TypeCode.Object:
-						if (type == typeof(Number)) {
-							return (Number)dotNet;
-						}
-						else if(type==typeof(Rational)) {
+						//if (type == typeof(Number)) {
+						//    return (Number)dotNet;
+						//}
+						//else 
+						if(type==typeof(Rational)) {
 							return (Rational)dotNet;
 						}
 						else if (type == typeof(Map)) {
@@ -2066,14 +2086,12 @@ namespace Meta {
 			return Get(key) != null;}}
 
 	public abstract class Number {
+		public static Number operator |(Number a, Number b) {
+			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
+		}
 		public override bool Equals(object o) {
-			if (!(o is Number)) {
-				return false;}
-			Number b = (Number)o;
-			if(Numerator==117) 
-			{
-			}
-			return b.Numerator == Numerator && b.Denominator == Denominator;
+			Number b = o as Number;
+			return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
 		}
 		public override int GetHashCode() {
 			Number x = new Rational(this);
@@ -2090,9 +2108,6 @@ namespace Meta {
 		public abstract int GetInt32();
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
-		public static Number operator |(Number a, Number b) {
-			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
-		}
 		public static implicit operator Number(double number) {
 			return new Rational(number);
 		}
@@ -2102,6 +2117,7 @@ namespace Meta {
 		public static implicit operator Number(int integer) {
 			return new Rational((double)integer);
 		}
+
 		public static bool operator ==(Number a, Number b) {
 			return !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
 		}
@@ -2136,14 +2152,33 @@ namespace Meta {
 			return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
 		}
 
+
+		public virtual Number Subtract(Number b) {
+			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
+		}
+		public virtual bool LessThan(Number b) {
+			return Expand(b) > b.Expand(this);
+		}
+		public virtual Number Add(int b) {
+			return Add(new Integer(b));
+		}
+		public virtual Number Add(Number b) {
+			 return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
+		}
+		public virtual Number Subtract(int b) {
+			return Add(new Integer(b));
+		}
+		public virtual bool LessThan(int b) {
+			return LessThan(new Integer(b));
+		}
 		public static Number operator +(Number a, Number b) {
-			return new Rational(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));
+			return a.Add(b);
+		}
+		public static Number operator -(Number a, Number b) {
+			return a.Subtract(b);
 		}
 		public static Number operator /(Number a, Number b) {
 			return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
-		}
-		public static Number operator -(Number a, Number b) {
-			return new Rational(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));
 		}
 		public static Number operator *(Number a, Number b) {
 			return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
@@ -2155,7 +2190,7 @@ namespace Meta {
 			return a.Expand(b) > b.Expand(a);
 		}
 		public static bool operator <(Number a, Number b) {
-			return a.Expand(b) < b.Expand(a);
+			return a.LessThan(b);
 		}
 		public static bool operator >=(Number a, Number b) {
 			return a.Expand(b) >= b.Expand(a);
@@ -2169,7 +2204,112 @@ namespace Meta {
 		public abstract bool IsNatural {
 			get;
 		}
+		public virtual bool IsInt32 {
+			get {
+				return false;
+			}
+		}
 		public abstract double GetDouble();
+	}
+	public class Integer:Number {
+		public override bool IsInt32 {
+			get {
+				return true;
+			}
+		}
+	    private int integer;
+	    public Integer(int integer) {
+	        this.integer=integer;
+	    }
+	    public override double GetDouble() {
+	        return integer;
+	    }
+	    public override Number Subtract(Number b) {
+			if(b.IsInt32) {
+				checked {
+					try {
+						return new Integer(integer-b.GetInt32());
+					}
+					catch(OverflowException) {
+					    return base.Subtract(b);
+					}
+				}
+			}
+			return base.Subtract(b);
+	    }
+	    public override bool LessThan(Number b) {
+			if(b.IsInt32) {
+				checked {
+					try {
+						return integer<b.GetInt32();
+					}
+					catch(OverflowException) {
+						return base.LessThan(b);
+					}
+				}
+			}
+			return base.LessThan(b);
+	    }
+	    public override Number Add(Number b) {
+			if(b.IsInt32) {
+				checked {
+					try {
+						return new Integer(integer+b.GetInt32());
+					}
+					catch(OverflowException) {
+						return base.Add(b);
+					}
+				}
+			}
+			return base.Add(b);
+	    }
+		public override Number Subtract(int b) {
+			checked {
+				try {
+					return new Integer(integer-b);
+				}
+				catch(OverflowException) {
+					return base.Subtract(b);
+				}
+			}
+		}
+		public override bool LessThan(int b) {
+			return integer<b;
+		}
+		public override Number Add(int b) {
+			checked {
+				try {
+					return new Integer(integer+b);
+				}
+				catch(OverflowException) {
+					return base.Add(b);
+				}
+			}
+		}
+	    public override double Denominator {
+	        get {
+	            return 1;
+	        }
+	    }
+	    public override int GetInt32() {
+	        return integer;
+	    }
+	    public override long GetInt64() {
+	        return integer;
+	    }
+	    public override long GetRealInt64() {
+	        return integer;
+	    }
+	    public override bool IsNatural {
+	        get {
+	            return true;
+	        }
+	    }
+	    public override double Numerator {
+	        get {
+	            return integer;
+	        }
+	    }
 	}
 	public class Rational:Number {
 		public override bool IsNatural {
@@ -2223,24 +2363,8 @@ namespace Meta {
 			}
 		}
 		public Number Clone() {
-			//return new Rational(numerator,denominator);
 			return new Rational(this);
 		}
-		//public override bool Equals(object o) {
-		//    if (!(o is Number)) {
-		//        return false;}
-		//    Number b = (Number)o;
-		//    if(Numerator==117) 
-		//    {
-		//    }
-		//    return b.Numerator == numerator && b.Denominator == denominator;
-		//}
-		//public override int GetHashCode() {
-		//    Number x = new Rational(this);
-		//    while (x > int.MaxValue) {
-		//        x = x - int.MaxValue;}
-		//    return x.GetInt32();
-		//}
 		public override double GetDouble() {
 			return numerator / denominator;
 		}
