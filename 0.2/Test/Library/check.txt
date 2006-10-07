@@ -158,6 +158,11 @@ Entry (KeyValuePair`2)
 				"abc{ die Katze lief im Schnee.die Katze lief im Schnee."
 		Entry (KeyValuePair`2)
 			Key (Map):
+				"sliceTest"
+			Value (Map):
+				"Katze"
+		Entry (KeyValuePair`2)
+			Key (Map):
 				"appendTest"
 			Value (Map):
 				"hello "

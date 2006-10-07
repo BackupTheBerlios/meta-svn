@@ -160,7 +160,7 @@ namespace Meta {
 									return true;}
 								else {
 									object nextArg;
-									if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
+									if (Transform.TryToDotNet(arg.Copy(), method.parameters[i].ParameterType, out nextArg)) {
 										arguments.Add(nextArg);}
 									else {
 										m = method.method;
@@ -632,7 +632,9 @@ namespace Meta {
 			if (code.Count != 0 && code.IsString) {
 				this.literal = code.GetString();}
 			else {
-				this.literal = code;}}}
+				this.literal = code;}
+		}
+	}
 	public class CompiledRoot : Compiled {
 		public CompiledRoot(Extent source)
 			: base(source) {}
@@ -3381,7 +3383,10 @@ namespace Meta {
 				return Number(value);}
 			else if (value.IsString) {
 				return String(value, indentation);}
-			else {return "error";}}
+			else {
+				return "error";
+			}
+		}
 			//throw new Exception("not implemented");}
 		private static string Function(Map value, int indentation) {
 			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);}
@@ -3702,6 +3707,17 @@ namespace Meta {
 		public KeyNotFound(Map key, Source source, Map map)
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}}
 	public class Library {
+		public static Map Slice(Map array,int start,int end) {
+			return new Map(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start,0)));
+		}
+		public static Map Select(Map array,Map function) {
+			foreach(Map m in array.Array) {
+				if(Convert.ToBoolean(function.Call(m).GetNumber().GetInt32())) {
+					return m;
+				}
+			}
+			throw new Exception("Predicate was not false for all items in the array.");
+		}
 		public static Map Rest(Map m) {
 			return new Map(new List<Map>(m.Array).GetRange(1,m.ArrayCount-1));
 		}
@@ -4069,7 +4085,9 @@ namespace Meta {
 				return strategy.IsString;}}
 		public bool IsNumber {
 			get {
-				return strategy.IsNumber;}}
+				return strategy.IsNumber;
+			}
+		}
 		public IEnumerable<Map> Array {
 			get {
 				return strategy.Array;}}

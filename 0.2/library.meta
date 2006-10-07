@@ -65,6 +65,8 @@
 			length=arg?{
 				m=Map_Object(arg
 				&m.get_ArrayCount(0
+			select=Library.Select_Map_Map
+			slice=Library.Slice_Map_Int32_Int32
 			vectorAllLess=a?b?accumulate(
 				and
 				apply(

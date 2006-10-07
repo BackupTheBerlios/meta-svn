@@ -90,6 +90,10 @@
 					"abc{ "
 					"die Katze lief im Schnee."
 					"die Katze lief im Schnee."
+			sliceTest=slice(
+				"die Katze lief im Schnee."
+				5
+				10
 			appendTest=append(
 				"hello"
 				32
