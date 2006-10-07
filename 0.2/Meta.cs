@@ -423,19 +423,34 @@ namespace Meta {
 			context.Scope = parent;
 			foreach (CompiledStatement statement in statementList) {
 				statement.Assign(ref context);}
-			return context;}}
+			return context;
+		}
+	}
+	public class Function:Program {
+		private Dictionary<Type, Compiled> specialized=new Dictionary<Type, Compiled>();
+		public Compiled GetSpecialized(Type type) {
+	        if (specialized.ContainsKey(type)) {
+	            return specialized[type];
+			}
+	        else {
+	            return null;
+			}
+		}
+		public Function(Extent source,Expression parent):base(source,parent) {
+		}
+	}
 	public class Program : ScopeExpression {
 		public override Structure StructureImplementation() {
-			//return new LiteralStructure( statementList[statementList.Count - 1].CurrentMap());}
 			return statementList[statementList.Count - 1].Current();
 		}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledProgram(statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();}), Source);}
-		public List<Statement> statementList;
+		public List<Statement> statementList= new List<Statement>();
+		public Program(Extent source,Expression parent):base(source,parent) {
+		}
 		public Program(Map code, Expression parent)
 			: base(code.Source, parent) {
-			statementList = new List<Statement>();
 			int index = 0;
 			foreach (Map m in code.Array) {
 				statementList.Add(m.GetStatement(this, index));
@@ -728,35 +743,49 @@ namespace Meta {
 		        throw e;
 			}
 		}
+		private static Number two=2;
+		private static Number one=1;
 		public static Number Fibo(Number n) {
-		    if(n<2) {
-		        return 1;
+		    if(n<two) {
+		        return one;
 		    }
 		    else {
 		        //checked{
-		        return Fibo(n-1)+Fibo(n-2);
+		        return Fibo(n-one)+Fibo(n-two);
 		        //}
 		    }
 		}
-		public static int Fibo(int n) {
-		    if(n<2) {
-		        return 1;
-		    }
-		    else {
-				checked{
-		        return Fibo(n-1)+Fibo(n-2);
-				}
-		    }
-		}
+		//public static int Fibo(int n) {
+		//    if(n<2) {
+		//        return 1;
+		//    }
+		//    else {
+		//        checked{
+		//        return Fibo(n-1)+Fibo(n-2);
+		//        }
+		//    }
+		//}
 		[STAThread]
 		public static void Main(string[] args) {
+			//Number two=new Rational(2);
+			//Number one =new Rational(1);
+			//Number one2=new  Rational(1);
+			//Number rest=one+one2;
+			//bool x=two.Equals(rest);
+
+			//Map m=new Map();
+			//m[1.0]=2.0;
+			//m[2.0]=3.0;
+			//bool x=m.IsString;
+			//string s=m.GetString();
+
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta"));
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"));
 			//Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"));
 			//return;
 
 			DateTime start = DateTime.Now;
-			//Console.WriteLine(Fibo(36));
+			//Console.WriteLine(Fibo(28));
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			//return;
 
@@ -880,14 +909,18 @@ namespace Meta {
 					TypeCode typeCode = Type.GetTypeCode(target);
 					if (typeCode == TypeCode.Object) {
 						if (target == typeof(Number) && meta.IsNumber) {
-							dotNet = meta.GetNumber();}
+							dotNet = meta.GetNumber();
+						}
 						if (dotNet == null && target == typeof(Type) && meta.Strategy is TypeMap) {
-							dotNet = ((TypeMap)meta.Strategy).Type;}
+							dotNet = ((TypeMap)meta.Strategy).Type;
+						}
 						// remove?
 						else if (meta.Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta.Strategy).Type)) {
-							dotNet = ((ObjectMap)meta.Strategy).Object;}
+							dotNet = ((ObjectMap)meta.Strategy).Object;
+						}
 						else if (target.IsAssignableFrom(meta.GetType())) {
-							dotNet = meta;}
+							dotNet = meta;
+						}
 						else if (target.IsArray) {
 							ArrayList list = new ArrayList();
 							bool converted = true;
@@ -951,7 +984,8 @@ namespace Meta {
 									dotNet = meta.GetNumber().GetInt32();}
 								break;
 							case TypeCode.Int64:
-								if (IsIntegerInRange(meta, new Number(Int64.MinValue), new Number(Int64.MaxValue))) {
+								if (IsIntegerInRange(meta, new Rational(Int64.MinValue), new Rational(Int64.MaxValue))) {
+								//if (IsIntegerInRange(meta, new Rational(Int64.MinValue), new Rational(Int64.MaxValue))) {
 									dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());}
 								break;
 							case TypeCode.SByte:
@@ -974,11 +1008,11 @@ namespace Meta {
 									dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());}
 								break;
 							case TypeCode.UInt32:
-								if (IsIntegerInRange(meta, new Number(UInt32.MinValue), new Number(UInt32.MaxValue))) {
+								if (IsIntegerInRange(meta, new Rational(UInt32.MinValue), new Rational(UInt32.MaxValue))) {
 									dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());}
 								break;
 							case TypeCode.UInt64:
-								if (IsIntegerInRange(meta, new Number(UInt64.MinValue), new Number(UInt64.MaxValue))) {
+								if (IsIntegerInRange(meta, new Rational(UInt64.MinValue), new Rational(UInt64.MaxValue))) {
 									dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());}
 								break;
 							default:
@@ -987,7 +1021,10 @@ namespace Meta {
 			catch (Exception e) {
 				throw e;}}
 		public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
-			return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;}
+			return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;
+		}
+		//public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
+		//    return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
 				return Map.Empty;}
@@ -1028,7 +1065,11 @@ namespace Meta {
 						return new Map(dotNet);
 					case TypeCode.Object:
 						if (type == typeof(Number)) {
-							return (Number)dotNet;}
+							return (Number)dotNet;
+						}
+						else if(type==typeof(Rational)) {
+							return (Rational)dotNet;
+						}
 						else if (type == typeof(Map)) {
 							return (Map)dotNet;}
 						else {
@@ -1037,6 +1078,28 @@ namespace Meta {
 						throw new ApplicationException("Cannot convert object.");}}}}
 
 	public delegate Map CallDelegate(Map argument);
+
+	public class MethodExpression:Expression {
+		private Method method;
+		public MethodExpression(Method method,Expression parent):base(null,parent) {
+		}
+		public override Structure StructureImplementation() {
+			return null;
+		}
+		public override Compiled CompileImplementation(Expression parent) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+	}
+	public class TypeExpression:Expression {
+		public TypeExpression(Type type,Expression parent):base(null,parent) {
+		}
+		public override Structure StructureImplementation() {
+			return null;
+		}
+		public override Compiled CompileImplementation(Expression parent) {
+			return null;
+		}
+	}
 
 	public class Method : MapStrategy {
 		public override bool IsNormal {
@@ -1086,8 +1149,11 @@ namespace Meta {
 			}
 		}
 		public ParameterInfo[] parameters;
+		//public Map CallImplementation(Map argument, Map parent) {
+		//    return DecideCall(argument, new List<object>());
+		//}
 		public override Map CallImplementation(Map argument, Map parent) {
-			return DecideCall(argument, new List<object>());
+		    return DecideCall(argument, new List<object>());
 		}
 		private Map DecideCall(Map argument, List<object> oldArguments) {
 			List<object> arguments = new List<object>(oldArguments);
@@ -1272,7 +1338,8 @@ namespace Meta {
 
 	public class NumberStrategy : MapStrategy {
 		public override int GetArrayCount() {
-			return 0;}
+			return 0;
+		}
 		public override bool Equals(object obj) {
 			MapStrategy strategy = obj as MapStrategy;
 			if (strategy != null) {
@@ -1291,11 +1358,13 @@ namespace Meta {
 				else if (key.Equals(NumberKeys.Negative)) {
 					return Map.Empty;}
 				else if (key.Equals(NumberKeys.Denominator)) {
-					return new Map(new Number(number.Denominator));}
+					return new Map(new Rational(number.Denominator));}
 				else {
 					throw new ApplicationException("Error.");}}
 			else {
-				return null;}}
+				return null;
+			}
+		}
 		public override void Set(Map key, Map value, Map map) {
 			if (key.Equals(Map.Empty) && value.IsNumber) {
 				this.number = value.GetNumber() + 1;}
@@ -1303,7 +1372,7 @@ namespace Meta {
 				if (number > 0) {
 					number = 0 - number;}}
 			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
-				this.number = new Number(number.Numerator, value.GetNumber().GetInt32());}
+				this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
 			else {
 				Panic(key, value, new DictionaryStrategy(), map);}}
 		public override IEnumerable<Map> Keys {
@@ -1553,31 +1622,32 @@ namespace Meta {
 			get {
 				return Get(CodeKeys.Function).Source;}}
 		public virtual Map CallImplementation(Map argument, Map parent) {
-			Map function=Get(CodeKeys.Function);
-			if (function!=null) {
-				if (function.expression!=null && function.expression.compiled!= null) {
-				//if (function.expression!=null && function.expression.GetCompiled(typeof(Map)) != null) {
-					return function.expression.compiled.Evaluate(parent);
-					//return function.expression.GetCompiled(typeof(Map)).Evaluate(parent);
-				}
-				else {
-					return function.GetExpression(null).Compile(null).Evaluate(parent);}}
-			else {
-				throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
-			}
+		    Map function=Get(CodeKeys.Function);
+		    if (function!=null) {
+		        if (function.expression!=null && function.expression.compiled!= null) {
+		            return function.expression.compiled.Evaluate(parent);
+		        }
+		        else {
+		            return function.GetExpression(null).Compile(null).Evaluate(parent);}}
+		    else {
+		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
+		    }
 		}
 
+
 		//public virtual Map CallImplementation(Map argument, Map parent) {
-		//    if (ContainsKey(CodeKeys.Function)) {
-		//        if (this.Get(CodeKeys.Function).GetCompiled(typeof(Map)) != null) {
-		//        //if (this.Get(CodeKeys.Function).GetCompiled(typeof(Map)) != null) {
-		//        //if (this.Get(CodeKeys.Function).GetCompiled(typeof(Map)) != null) {
-		//            return this.Get(CodeKeys.Function).GetCompiled(typeof(Map)).Evaluate(parent);
+		//    Map function=Get(CodeKeys.Function);
+		//    if (function!=null) {
+		//        if (function.expression!=null && function.expression.compiled!= null) {
+		//            return function.expression.compiled.Evaluate(parent);
 		//        }
 		//        else {
-		//            return this.Get(CodeKeys.Function).GetExpression(null).Compile(null).Evaluate(parent);}}
+		//            return function.GetExpression(null).Compile(null).Evaluate(parent);}}
 		//    else {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));}}
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
+		//    }
+		//}
+
 		public Map Call(Map argument, Map parent) {
 			long start = 0;
 			if (Interpreter.profiling && UniqueKey != null) {
@@ -1586,7 +1656,11 @@ namespace Meta {
 					Map.calls[UniqueKey] = new Profile();}
 				Map.calls[UniqueKey].calls++;
 				Map.calls[UniqueKey].recursive++;}
+
+			//Map result = parent.GetExpression().compiled.Evaluate(parent);//argument, parent);
 			Map result = CallImplementation(argument, parent);
+			//Map result = CallImplementation(argument, parent);
+
 			if (Interpreter.profiling) {
 				if (UniqueKey != null) {
 					long stop;
@@ -1596,7 +1670,7 @@ namespace Meta {
 					if (Map.calls[UniqueKey].recursive == 0) {
 						Map.calls[UniqueKey].time += duration;}}}
 			return result;
-}
+		}
 		public virtual void Append(Map map, Map parent) {
 			this.Set(GetArrayCount() + 1, map, parent);}
 		public abstract void Set(Map key, Map val, Map map);
@@ -1990,12 +2064,119 @@ namespace Meta {
 				throw new Exception("The method or operation is not implemented.");}}
 		public override bool ContainsKey(Map key) {
 			return Get(key) != null;}}
-	public class Number {
+
+	public abstract class Number {
+		public override bool Equals(object o) {
+			if (!(o is Number)) {
+				return false;}
+			Number b = (Number)o;
+			if(Numerator==117) 
+			{
+			}
+			return b.Numerator == Numerator && b.Denominator == Denominator;
+		}
+		public override int GetHashCode() {
+			Number x = new Rational(this);
+			while (x > int.MaxValue) {
+				x = x - int.MaxValue;}
+			return x.GetInt32();
+		}
+		public abstract double Numerator {
+			get;
+		}
+		public abstract double Denominator {
+			get;
+		}
+		public abstract int GetInt32();
+		public abstract long GetInt64();
+		public abstract long GetRealInt64();
+		public static Number operator |(Number a, Number b) {
+			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
+		}
+		public static implicit operator Number(double number) {
+			return new Rational(number);
+		}
+		public static implicit operator Number(decimal number) {
+			return new Rational((double)number);
+		}
+		public static implicit operator Number(int integer) {
+			return new Rational((double)integer);
+		}
+		public static bool operator ==(Number a, Number b) {
+			return !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
+		}
+		public static bool operator !=(Number a, Number b) {
+			return !(a == b);
+		}
+		public static Number operator %(Number a, Number b) {
+			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
+		}
+		public static double GreatestCommonDivisor(double a, double b) {
+			if(a==b) {
+				return a;
+			}
+			a = Math.Abs(a);
+			b = Math.Abs(b);
+			while (a != 0 && b != 0) {
+				if (a > b) {
+					a = a % b;
+				}
+				else {
+					b = b % a;
+				}
+			}
+			if (a == 0) {
+				return b;
+			}
+			else {
+				return a;
+			}
+		}
+		public static double LeastCommonMultiple(Number a, Number b) {
+			return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
+		}
+
+		public static Number operator +(Number a, Number b) {
+			return new Rational(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));
+		}
+		public static Number operator /(Number a, Number b) {
+			return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
+		}
+		public static Number operator -(Number a, Number b) {
+			return new Rational(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));
+		}
+		public static Number operator *(Number a, Number b) {
+			return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
+		}
+		public double Expand(Number b) {
+			return Numerator * (LeastCommonMultiple(this, b) / Denominator);
+		}
+		public static bool operator >(Number a, Number b) {
+			return a.Expand(b) > b.Expand(a);
+		}
+		public static bool operator <(Number a, Number b) {
+			return a.Expand(b) < b.Expand(a);
+		}
+		public static bool operator >=(Number a, Number b) {
+			return a.Expand(b) >= b.Expand(a);
+		}
+		public static bool operator <=(Number a, Number b) {
+			return a.Expand(b) <= b.Expand(a);
+		}
 		public int CompareTo(Number number) {
-			return GetDouble().CompareTo(number.GetDouble());}
-		public bool IsNatural {
+			return GetDouble().CompareTo(number.GetDouble());
+		}
+		public abstract bool IsNatural {
+			get;
+		}
+		public abstract double GetDouble();
+	}
+	public class Rational:Number {
+		public override bool IsNatural {
 			get {
-				return denominator == 1.0d;}}
+				return denominator == 1.0d;
+			}
+		}
 		private readonly double numerator;
 		private readonly double denominator;
 		public static Number Parse(string text) {
@@ -2007,97 +2188,202 @@ namespace Meta {
 					denominator = Convert.ToInt32(parts[2]);}
 				else {
 					denominator = 1;}
-				return new Number(numerator, denominator);}
+				return new Rational(numerator, denominator);}
 			catch (Exception e) {
-				return null;}}
-		public Number(double integer)
-			: this(integer, 1) {}
-		public Number(Number i)
-			: this(i.numerator, i.denominator) {}
-		public Number(double numerator, double denominator) {
+				return null;}
+		}
+		public Rational(double integer): this(integer, 1) {}
+		public Rational(Number i)
+			: this(i.Numerator, i.Denominator) {}
+		public Rational(double numerator, double denominator) {
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
 			if (denominator < 0) {
 				numerator = -numerator;
-				denominator = -denominator;}
+				denominator = -denominator;
+			}
 			this.numerator = numerator / greatestCommonDivisor;
-			this.denominator = denominator / greatestCommonDivisor;}
-		public double Numerator {
+			this.denominator = denominator / greatestCommonDivisor;
+		}
+		public override double Numerator {
 			get {
-				return numerator;}}
-		public double Denominator {
+				return numerator;
+			}
+		}
+		public override double Denominator {
 			get {
-				return denominator;}}
-		public static Number operator |(Number a, Number b) {
-			return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);}
+				return denominator;
+			}
+		}
 		public override string ToString() {
 			if (denominator == 1) {
-				return numerator.ToString();}
+				return numerator.ToString();
+			}
 			else {
-				return numerator.ToString() + Syntax.fraction + denominator.ToString();}}
+				return numerator.ToString() + Syntax.fraction + denominator.ToString();
+			}
+		}
 		public Number Clone() {
-			return new Number(this);}
-		public static implicit operator Number(double number) {
-			return new Number(number);}
-		public static implicit operator Number(decimal number) {
-			return new Number((double)number);}
-		public static implicit operator Number(int integer) {
-			return new Number((double)integer);}
-		public static bool operator ==(Number a, Number b) {
-			return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator == b.denominator;}
-		public static bool operator !=(Number a, Number b) {
-			return !(a == b);}
-		private static double GreatestCommonDivisor(double a, double b) {
-			a = Math.Abs(a);
-			b = Math.Abs(b);
-			while (a != 0 && b != 0) {
-				if (a > b) {
-					a = a % b;}
-				else {
-					b = b % a;}}
-			if (a == 0) {
-				return b;}
-			else {
-				return a;}}
-		private static double LeastCommonMultiple(Number a, Number b) {
-			return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);}
-		public static Number operator %(Number a, Number b) {
-			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);}
-		public static Number operator +(Number a, Number b) {
-			return new Number(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));}
-		public static Number operator /(Number a, Number b) {
-			return new Number(a.numerator * b.denominator, a.denominator * b.numerator);}
-		public static Number operator -(Number a, Number b) {
-			return new Number(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));}
-		public static Number operator *(Number a, Number b) {
-			return new Number(a.numerator * b.numerator, a.denominator * b.denominator);}
-		public double Expand(Number b) {
-			return numerator * (LeastCommonMultiple(this, b) / denominator);}
-		public static bool operator >(Number a, Number b) {
-			return a.Expand(b) > b.Expand(a);}
-		public static bool operator <(Number a, Number b) {
-			return a.Expand(b) < b.Expand(a);}
-		public static bool operator >=(Number a, Number b) {
-			return a.Expand(b) >= b.Expand(a);}
-		public static bool operator <=(Number a, Number b) {
-			return a.Expand(b) <= b.Expand(a);}
-		public override bool Equals(object o) {
-			if (!(o is Number)) {
-				return false;}
-			Number b = (Number)o;
-			return b.numerator == numerator && b.denominator == denominator;}
-		public override int GetHashCode() {
-			Number x = new Number(this);
-			while (x > int.MaxValue) {
-				x = x - int.MaxValue;}
-			return x.GetInt32();}
-		public double GetDouble() {
-			return numerator / denominator;}
-		public int GetInt32() {
-			return Convert.ToInt32(numerator / denominator);}
-		public long GetRealInt64() {
+			//return new Rational(numerator,denominator);
+			return new Rational(this);
+		}
+		//public override bool Equals(object o) {
+		//    if (!(o is Number)) {
+		//        return false;}
+		//    Number b = (Number)o;
+		//    if(Numerator==117) 
+		//    {
+		//    }
+		//    return b.Numerator == numerator && b.Denominator == denominator;
+		//}
+		//public override int GetHashCode() {
+		//    Number x = new Rational(this);
+		//    while (x > int.MaxValue) {
+		//        x = x - int.MaxValue;}
+		//    return x.GetInt32();
+		//}
+		public override double GetDouble() {
+			return numerator / denominator;
+		}
+		public override int GetInt32() {
+			return Convert.ToInt32(numerator / denominator);
+		}
+		public override long GetRealInt64() {
 			return Convert.ToInt64(numerator / denominator);}
-		public long GetInt64() {
-			return Convert.ToInt64(numerator);}}
+		public override long GetInt64() {
+			return Convert.ToInt64(numerator);
+		}
+	}
+	//public class Number {
+	//    public int CompareTo(Number number) {
+	//        return GetDouble().CompareTo(number.GetDouble());}
+	//    public bool IsNatural {
+	//        get {
+	//            return denominator == 1.0d;}}
+	//    private readonly double numerator;
+	//    private readonly double denominator;
+	//    public static Number Parse(string text) {
+	//        try {
+	//            string[] parts = text.Split('/');
+	//            int numerator = Convert.ToInt32(parts[0]);
+	//            int denominator;
+	//            if (parts.Length > 2) {
+	//                denominator = Convert.ToInt32(parts[2]);}
+	//            else {
+	//                denominator = 1;}
+	//            return new Rational(numerator, denominator);}
+	//        catch (Exception e) {
+	//            return null;}}
+	//    public Number(double integer)
+	//        : this(integer, 1) {}
+	//    public Number(Number i)
+	//        : this(i.numerator, i.denominator) {}
+	//    public Number(double numerator, double denominator) {
+	//        double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+	//        if (denominator < 0) {
+	//            numerator = -numerator;
+	//            denominator = -denominator;}
+	//        this.numerator = numerator / greatestCommonDivisor;
+	//        this.denominator = denominator / greatestCommonDivisor;}
+	//    public double Numerator {
+	//        get {
+	//            return numerator;}}
+	//    public double Denominator {
+	//        get {
+	//            return denominator;}}
+	//    public static Number operator |(Number a, Number b) {
+	//        return Convert.ToInt32(a.numerator) | Convert.ToInt32(b.numerator);}
+	//    public override string ToString() {
+	//        if (denominator == 1) {
+	//            return numerator.ToString();}
+	//        else {
+	//            return numerator.ToString() + Syntax.fraction + denominator.ToString();}}
+	//    public Number Clone() {
+	//        return new Rational(this);}
+	//    public static implicit operator Number(double number) {
+	//        return new Rational(number);}
+	//    public static implicit operator Number(decimal number) {
+	//        return new Rational((double)number);}
+	//    public static implicit operator Number(int integer) {
+	//        return new Rational((double)integer);}
+	//    public static bool operator ==(Number a, Number b) {
+	//        return !ReferenceEquals(b, null) && a.numerator == b.numerator && a.denominator == b.denominator;}
+	//    public static bool operator !=(Number a, Number b) {
+	//        return !(a == b);}
+	//    private static double GreatestCommonDivisor(double a, double b) {
+	//        if(a==b) {
+	//            return a;
+	//        }
+	//        a = Math.Abs(a);
+	//        b = Math.Abs(b);
+	//        while (a != 0 && b != 0) {
+	//            if (a > b) {
+	//                a = a % b;
+	//            }
+	//            else {
+	//                b = b % a;
+	//            }
+	//        }
+	//        if (a == 0) {
+	//            return b;
+	//        }
+	//        else {
+	//            return a;
+	//        }
+	//    }
+	//    private static double LeastCommonMultiple(Number a, Number b) {
+	//        return a.denominator * b.denominator / GreatestCommonDivisor(a.denominator, b.denominator);
+	//    }
+	//    public static Number operator %(Number a, Number b) {
+	//        return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
+	//    }
+	//    public static Number operator +(Number a, Number b) {
+	//        return new Rational(a.Expand(b) + b.Expand(a), LeastCommonMultiple(a, b));
+	//    }
+	//    public static Number operator /(Number a, Number b) {
+	//        return new Rational(a.numerator * b.denominator, a.denominator * b.numerator);
+	//    }
+	//    public static Number operator -(Number a, Number b) {
+	//        return new Rational(a.Expand(b) - b.Expand(a), LeastCommonMultiple(a, b));
+	//    }
+	//    public static Number operator *(Number a, Number b) {
+	//        return new Rational(a.numerator * b.numerator, a.denominator * b.denominator);
+	//    }
+	//    public double Expand(Number b) {
+	//        return numerator * (LeastCommonMultiple(this, b) / denominator);
+	//    }
+	//    public static bool operator >(Number a, Number b) {
+	//        return a.Expand(b) > b.Expand(a);
+	//    }
+	//    public static bool operator <(Number a, Number b) {
+	//        return a.Expand(b) < b.Expand(a);
+	//    }
+	//    public static bool operator >=(Number a, Number b) {
+	//        return a.Expand(b) >= b.Expand(a);
+	//    }
+	//    public static bool operator <=(Number a, Number b) {
+	//        return a.Expand(b) <= b.Expand(a);
+	//    }
+	//    public override bool Equals(object o) {
+	//        if (!(o is Number)) {
+	//            return false;}
+	//        Number b = (Number)o;
+	//        return b.numerator == numerator && b.denominator == denominator;
+	//    }
+	//    public override int GetHashCode() {
+	//        Number x = new Rational(this);
+	//        while (x > int.MaxValue) {
+	//            x = x - int.MaxValue;}
+	//        return x.GetInt32();}
+	//    public double GetDouble() {
+	//        return numerator / denominator;}
+	//    public int GetInt32() {
+	//        return Convert.ToInt32(numerator / denominator);}
+	//    public long GetRealInt64() {
+	//        return Convert.ToInt64(numerator / denominator);}
+	//    public long GetInt64() {
+	//        return Convert.ToInt64(numerator);
+	//    }
+	//}
 	public struct State{
 		public override bool Equals(object obj) {
 			State state=(State)obj;
@@ -2189,7 +2475,7 @@ namespace Meta {
 
 		public static Rule Integer = new Sequence(new CustomProduction(
 		        delegate(Parser p, Map map, ref Map result) {
-		            result=new Map(new Number(double.Parse(map.GetString()),1.0));},
+		            result=new Map(new Rational(double.Parse(map.GetString()),1.0));},
 		        new OneOrMoreChars(new Chars(Syntax.integer))));
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
 			if (p.State.indentationCount == -1) {
@@ -3383,7 +3669,7 @@ namespace Meta {
 					return entry.Value.Call(map);}}
 			return Meta.Map.Empty;}
 		public static Map Raise(Number a, Number b) {
-			return new Number(Math.Pow(a.GetDouble(), b.GetDouble()));}
+			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));}
 		public static int CompareNumber(Number a, Number b) {
 			return a.CompareTo(b);}
 		public static Map Sort(Map array, Map function) {
@@ -3392,7 +3678,13 @@ namespace Meta {
 				return (int)Transform.ToDotNet(function.Call(a).Call(b), typeof(int));});
 			return new Map(result);}
 		public static bool Equal(object a, object b) {
-			return a.Equals(b);}
+			if( a is Map ) {
+				if(((Map)a).IsNumber) 
+				{
+				}
+			}
+			return a.Equals(b);
+		}
 		public static Map Filter(Map array, Map condition) {
 			List<Map> result = new List<Map>();
 			foreach (Map m in array.Array) {
@@ -3749,11 +4041,10 @@ namespace Meta {
 				throw new ApplicationException("Cannot compile map");}}
 		public void Compile(Expression parent) {
 			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
-			//GetExpression(parent).Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);
 		}
-		//public void Compile(Expression parent) {
-		//    Specialized[typeof(Map)] = this.GetExpression(parent).Compile(parent);}
-
+		public Expression GetExpression() {
+			return GetExpression(null);
+		}
 		public Expression GetExpression(Expression parent) {
 			if (expression == null) {
 				expression = CreateExpression(parent);
@@ -3776,7 +4067,7 @@ namespace Meta {
 			else if (ContainsKey(CodeKeys.LastArgument)) {
 				return new LastArgument(this[CodeKeys.LastArgument], parent);}
 			else if (ContainsKey(CodeKeys.Expression)) {
-				Program program = new Program(this, parent);
+				Program program = new Function(this.Source, parent);
 				program.isFunction = true;
 				Map parameter = this[CodeKeys.Parameter];
 				if (parameter.Count != 0) {
@@ -3786,9 +4077,12 @@ namespace Meta {
 					program.statementList.Add(s);}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
 				program.statementList.Add(c);
-				return program;}
+				return program;
+			}
 			else {
-				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));}}
+				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+			}
+		}
 		public int GetArrayCountDefault() {
 			int i = 1;
 			for (;ContainsKey(i);i++);
@@ -3815,7 +4109,7 @@ namespace Meta {
 		public static implicit operator Map(Number integer) {
 			return new Map(integer);}
 		public static implicit operator Map(double number) {
-			return new Number(number);}
+			return new Rational(number);}
 		public static implicit operator Map(decimal number) {
 			return (double)number;}
 		public static implicit operator Map(float number) {
