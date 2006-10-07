@@ -3708,7 +3708,7 @@ namespace Meta {
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}}
 	public class Library {
 		public static Map Slice(Map array,int start,int end) {
-			return new Map(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start,0)));
+			return new Map(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
 		}
 		public static Map Select(Map array,Map function) {
 			foreach(Map m in array.Array) {

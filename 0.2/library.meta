@@ -43,6 +43,7 @@
 			ifElse=Library.ElseIf_Boolean_Map_Map
 			filter=Library.Filter_Map_Map
 			apply=Library.Map_Map_Map
+			applyTo=flip(apply
 			divide=Number.op_Division_Number_Number
 			divideBy=flip(divide
 			quotient=Number.op_Division_Number_Number
@@ -72,6 +73,11 @@
 				apply(
 					range(length(a
 					index?less(a.<index> b.<index
+			lessEqualArray=a?b?accumulate(
+				and
+				apply(
+					range(length(a
+					index?lessEqual(a.<index> b.<index
 			maximum=a?b?{
 				stuff={
 					1=a
@@ -112,6 +118,7 @@
 			print=?{
 				writeLine(toString(@
 				&@
+			printAll=applyTo(print
 			readLine=?mscorlib.Console.ReadLine(
 			append=Library.Append_Map_Map
 			appendTo=flip(append
