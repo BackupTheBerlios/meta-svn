@@ -53,10 +53,10 @@
 			smallerDecreasingTest=less(
 				4
 				1
-			nonincreasingTest=lessOrEqual(
+			nonincreasingTest=lessEqual(
 				1
 				1
-			nondecreasingTest=greaterOrEqual(
+			nondecreasingTest=greaterEqual(
 				1
 				2
 			strictlyIncreasingTest=greater(
@@ -76,7 +76,7 @@
 		bitwiseTest={
 			or=0
 		mapTest={
-			IfTest=elseIf(
+			IfTest=ifElse(
 				1
 				{
 					arg|"If test successful"

@@ -59,5 +59,6 @@
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
+    <None Include="mergeSort.meta" />
   </ItemGroup>
 </Project>

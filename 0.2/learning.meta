@@ -12,11 +12,11 @@
 			key=(node.get_Text
 			&If (contains entry key) ?
 				value=entry.<key
-				&ElseIf
+				&ifElse
 					isString value
 					?+
 						,
-							type=ElseIf
+							type=ifElse
 								contains data key
 								?
 									name=(keys data.<key>).1

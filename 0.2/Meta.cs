@@ -96,7 +96,8 @@ namespace Meta {
 		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {}
 		public override Structure StructureImplementation() {
-			return null;}
+			return null;
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledLastArgument(Source);}}
 	public class CompiledLastArgument : Compiled {
@@ -112,7 +113,10 @@ namespace Meta {
 			foreach (Map m in code.Array) {
 				calls.Add(m.GetExpression(this));}
 			if (calls.Count == 1) {
-				calls.Add(new Literal(Map.Empty, this));}}
+				calls.Add(new Literal(new Map(), this));
+				//calls.Add(new Literal(Map.Empty, this));
+			}
+		}
 		public override Structure StructureImplementation() {
 			List<object> arguments;
 			MethodBase method;
@@ -198,7 +202,14 @@ namespace Meta {
 		public override object EvaluateNoConversion(Map context) {
 			List<object> args = new List<object>();
 			for (int index = 0; index < parameters.Length; index++) {
-				args.Add(Transform.ToDotNet(arguments[index].Evaluate(context), parameters[index].ParameterType));
+				object a=arguments[index].EvaluateNoConversion(context);
+				Type targetType=parameters[index].ParameterType;
+				if(a.GetType()!=targetType) {
+					a=Transform.ToDotNet(Transform.ToMeta(a),targetType);
+				}
+				args.Add(a);
+				//args.Add(Transform.ToDotNet(arguments[index].EvaluateNoConversion(context), parameters[index].ParameterType));
+				//args.Add(Transform.ToDotNet(arguments[index].Evaluate(context), parameters[index].ParameterType));
 			}
 			try {
 				return method.Invoke(null, args.ToArray());
@@ -208,6 +219,9 @@ namespace Meta {
 				throw e;
 			}
 			catch (Exception e) {
+				if(e.InnerException!=null) {
+					e=e.InnerException;
+				}
 				throw new MetaException(e.Message, Source.start);
 			}
 
@@ -294,14 +308,17 @@ namespace Meta {
 			int count;
 			Map key;
 			Map value;
-			if (FindStuff(out count, out key, out value)) {
-				if (value != null && value.IsConstant) {
-					return new OptimizedSearch(value, Source);}
-				else {
-					return new FastSearch(key, count, Source);}}
-			else {
-				FindStuff(out count, out key, out value);
-				return new CompiledSearch(expression.Compile(this), Source);}}}
+			//if (FindStuff(out count, out key, out value)) {
+			//    if (value != null && value.IsConstant) {
+			//        return new OptimizedSearch(value, Source);}
+			//    else {
+			//        return new FastSearch(key, count, Source);}}
+			//else {
+			//    FindStuff(out count, out key, out value);
+				return new CompiledSearch(expression.Compile(this), Source);
+		//}
+	}
+}
 	public class FastSearch : Compiled {
 		private int count;
 		private Map key;
@@ -352,6 +369,7 @@ namespace Meta {
 				if (selected.Scope != null) {
 					selected = selected.Scope;}
 				else {
+					expression.Evaluate(context);
 					throw new KeyNotFound(key, Source.start, null);}}
 			return selected[key].Copy();}}
 	public class CompiledProgram : Compiled {
@@ -681,7 +699,8 @@ namespace Meta {
 		        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
 		        map[CodeKeys.Function].Compile(gac);
 
-		        Gac.gac["library"] = map.Call(Map.Empty);
+		        Gac.gac["library"] = map.Call(new Map());
+				//Gac.gac["library"] = map.Call(Map.Empty);
 		        Gac.gac["library"].Scope = Gac.gac;
 
 		    }
@@ -761,13 +780,21 @@ namespace Meta {
 						UseConsole();
 						new MetaTest().Run();}
 					catch (Exception e) {
-						DebugPrint(e.ToString());}}
+						string text=e.ToString();
+						if(text.Length>1000) {
+							text=text.Substring(0,1000)+"...";
+						}
+						DebugPrint(text);
+					}
+				}
 				else if (args[0] == "-nprof") {
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}
+					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new Map());}
+					//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}
 				else if (args[0] == "-profile") {
 					UseConsole();
 					Interpreter.profiling = true;
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"game.meta"), Map.Empty);
+					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"game.meta"), new Map());
+					//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"game.meta"), Map.Empty);
 					List<object> results = new List<object>(Map.calls.Keys);
 					results.Sort(delegate(object a, object b) {
 						return Map.calls[b].time.CompareTo(Map.calls[a].time);});
@@ -776,12 +803,15 @@ namespace Meta {
 						Console.WriteLine(e.ToString() + "    " + Map.calls[e].time + "     " + Map.calls[e].calls);}}
 				else if (args[0] == "-performance") {
 					UseConsole();
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);}
+					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), new Map());}
+					//MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), Map.Empty);}
 				else {
 					string fileName = args[0].Trim('"');
 					if (File.Exists(fileName)) {
 						try {
-							MetaTest.Run(fileName, Map.Empty);}
+							MetaTest.Run(fileName, new Map());
+						}
+							//MetaTest.Run(fileName, Map.Empty);}
 						catch (Exception e) {
 							Console.WriteLine(e.ToString());}
 						Console.WriteLine((DateTime.Now - start).TotalSeconds);
@@ -992,7 +1022,9 @@ namespace Meta {
 		//    return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
-				return Map.Empty;}
+				return new Map();//Map.Empty;
+				//return Map.Empty;
+			}
 			else {
 				Type type = dotNet.GetType();
 				switch (Type.GetTypeCode(type)) {
@@ -1217,8 +1249,10 @@ namespace Meta {
 					constructor = new Map(new Method(method, Object, Type));}
 				return constructor;}}
 		public override Map CallImplementation(Map argument, Map parent) {
-			return Library.With(Constructor.Call(Map.Empty), argument);}}
-
+			return Library.With(Constructor.Call(new Map()), argument);
+			//return Library.With(Constructor.Call(Map.Empty), argument);
+		}
+	}
 	public class ObjectMap : DotNetMap {
 		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		protected override BindingFlags BindingFlags {
@@ -1264,14 +1298,20 @@ namespace Meta {
 		private EmptyStrategy() {}
 		public override bool IsNumber {
 			get {
-				return true;}}
+				return true;
+			}
+		}
 		public override int Count {
 			get {
-				return 0;}}
+				return 0;
+			}
+		}
 		public override int GetArrayCount() {
-			return 0;}
+			return 0;
+		}
 		public override int GetHashCode() {
-			return 0.GetHashCode();}
+			return 0.GetHashCode();
+		}
 		public override bool Equals(object obj) {
 			return ((MapStrategy)obj).Count == 0;}
 		public override IEnumerable<Map> Keys {
@@ -1320,11 +1360,13 @@ namespace Meta {
 		}
 		public override Map Get(Map key) {
 			if (ContainsKey(key)) {
-				if (key.Equals(Map.Empty)) {
+				if (key.Equals(new Map())) {
+				//if (key.Equals(Map.Empty)) {
 					return number - 1;
 				}
 				else if (key.Equals(NumberKeys.Negative)) {
-					return Map.Empty;
+					return new Map();
+					//return Map.Empty;
 				}
 				else if (key.Equals(NumberKeys.Denominator)) {
 					return new Map(new Rational(number.Denominator));}
@@ -1337,21 +1379,27 @@ namespace Meta {
 			}
 		}
 		public override void Set(Map key, Map value, Map map) {
-			if (key.Equals(Map.Empty) && value.IsNumber) {
-				this.number = value.GetNumber() + 1;}
-			else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
-				if (number > 0) {
-					number = 0 - number;
-				}
+			if (key.Equals(new Map()) && value.IsNumber) {
+			//if (key.Equals(Map.Empty) && value.IsNumber) {
+			    this.number = value.GetNumber() + 1;
+			}
+			else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
+			//else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
+			    if (number > 0) {
+			        number = 0 - number;
+			    }
 			}
 			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
-				this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
+			    this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
 			else {
-				Panic(key, value, new DictionaryStrategy(), map);}}
+				Panic(key, value, new DictionaryStrategy(), map);
+			}
+		}
 		public override IEnumerable<Map> Keys {
 			get {
 				if (number != 0) {
-					yield return Map.Empty;
+					yield return new Map();
+					//yield return Map.Empty;
 				}
 				if (number < 0) {
 					yield return NumberKeys.Negative;
@@ -1369,8 +1417,9 @@ namespace Meta {
 		public override Number GetNumber() {
 			return number;}
 		public override int GetHashCode() {
-			return (int)(number.Numerator % int.MaxValue);}}
-
+			return (int)(number.Numerator % int.MaxValue);
+		}
+	}
 	public class StringStrategy : MapStrategy {
 		private string text;
 		public StringStrategy(string text) {
@@ -1488,7 +1537,10 @@ namespace Meta {
 			return new Map(new CloneStrategy(this));}
 		public override bool IsNumber {
 			get {
-				return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
+				return Count == 0 || (Count == 1 && ContainsKey(new Map()) && this.Get(new Map()).IsNumber);
+			}
+		}
+				//return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
 		public override int GetArrayCount() {
 			int i = 1;
 			while (this.ContainsKey(i)) {
@@ -1680,7 +1732,9 @@ namespace Meta {
 			get {
 				return GetIsNumberDefault();}}
 		public bool GetIsNumberDefault() {
-			return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}
+			return Count == 0 || (Count == 1 && ContainsKey(new Map()) && this.Get(new Map()).IsNumber);
+		}
+			//return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}
 		public virtual bool IsString {
 			get {
 				return IsStringDefault;}}
@@ -1705,11 +1759,16 @@ namespace Meta {
 			Number number;
 			if (Count == 0) {
 				number = 0;}
-			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber) {
-				number = 1 + this.Get(Map.Empty).GetNumber();}
+			else if (this.Count == 1 && this.ContainsKey(new Map()) && this.Get(new Map()).IsNumber) {
+			//else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber) {
+				number = 1 + this.Get(new Map()).GetNumber();
+			}
+				//number = 1 + this.Get(Map.Empty).GetNumber();}
 			else {
-				throw new ApplicationException("Map is not an integer");}
-			return number;}
+				throw new ApplicationException("Map is not an integer");
+			}
+			return number;
+		}
 		public abstract IEnumerable<Map> Keys {
 			get;}
 		public virtual IEnumerable<Map> Array {
@@ -2023,7 +2082,14 @@ namespace Meta {
 					if (File.Exists(path)) {
 						assembly = Assembly.LoadFile(path);}
 					else {
-						assembly = Assembly.LoadWithPartialName(key.GetString());}
+						try {
+							assembly = Assembly.LoadWithPartialName(key.GetString());
+						}
+						catch(Exception e) {
+							return null;
+							//throw e;
+						}
+					}
 					if (assembly != null) {
 						value = LoadAssembly(assembly);
 						cache[key] = value;}
@@ -2693,11 +2759,13 @@ namespace Meta {
 
 		private static Rule EmptyMap = Simple(
 			Syntax.emptyMap,
-			Meta.Map.Empty);
-
+			new Map()
+			//Meta.Map.Empty
+		);
 		private static Rule Current = Simple(
 			Syntax.current,
-			new Map(CodeKeys.Current, Meta.Map.Empty));
+			new Map(CodeKeys.Current, new Map()));
+			//new Map(CodeKeys.Current, Meta.Map.Empty));
 
 		public static Rule LastArgument = Simple(
 			Syntax.lastArgument,
@@ -2705,13 +2773,14 @@ namespace Meta {
 
 		private static Rule Root = Simple(
 			Syntax.root,
-			new Map(CodeKeys.Root, Meta.Map.Empty));
+			new Map(CodeKeys.Root,new Map()));
+			//new Map(CodeKeys.Root, Meta.Map.Empty));
 
 		private static Rule LiteralExpression = new Sequence(
 			new Assignment(CodeKeys.Literal, new Alternatives(
+				EmptyMap,
 				Number,
 				String,
-				EmptyMap,
 				CharacterDataExpression
 			)));
 
@@ -2806,7 +2875,8 @@ namespace Meta {
 			new Assignment(CodeKeys.Discard, new LiteralRule(new Map())));
 		public static Rule CurrentStatement = ComplexStatement(
 			'&',
-			new Assignment(CodeKeys.Current, new LiteralRule(Meta.Map.Empty)));
+			new Assignment(CodeKeys.Current, new LiteralRule(new Map())));
+			//new Assignment(CodeKeys.Current, new LiteralRule(Meta.Map.Empty)));
 		public static Rule Prefix(Rule pre,Rule rule)
 		{
 			return new Sequence(pre,new ReferenceAssignment(rule));
@@ -3165,7 +3235,7 @@ namespace Meta {
 			public LiteralRule(Map literal) {
 				this.literal = literal;}
 			protected override bool MatchImplementation(Parser parser, ref Map map,bool keep) {
-				map=literal;
+				map=literal.Copy();
 				return true;}}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
@@ -3399,7 +3469,7 @@ namespace Meta {
 			else {
 				return "\"" + text + "\"";}}
 		private static string Indentation(int indentation) {
-			return "".PadLeft(indentation, '\t');}}
+			return "".PadLeft(Math.Max(0,indentation), '\t');}}
 	namespace Test {
 		public class MetaTest : TestRunner {
 			public static int Leaves(Map map) {
@@ -3412,23 +3482,43 @@ namespace Meta {
 				return count;}
 			public static string TestPath {
 				get {
-					return Path.Combine(Interpreter.InstallationPath, "Test");}}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));}}
+					return Path.Combine(Interpreter.InstallationPath, "Test");
+				}
+			}
 			public class Basic : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));}}
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class MergeSort: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new Map());
+					//return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), Map.Empty);
+				}
+			}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new Map());
+				}
+			}
+					//return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
 			public class Fibo: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), Map.Empty);}}
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new Map());
+					//return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), Map.Empty);
+				}
+			}
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -3612,6 +3702,21 @@ namespace Meta {
 		public KeyNotFound(Map key, Source source, Map map)
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}}
 	public class Library {
+		public static Map Rest(Map m) {
+			return new Map(new List<Map>(m.Array).GetRange(1,m.ArrayCount-1));
+		}
+		public static Number Floor(Number n){
+			return new Rational(n.GetRealInt64());
+		}
+		public static Map While(Map condition,Map body) {
+			while(Convert.ToBoolean(condition.Call(new Map()).GetNumber().GetInt32())) {
+			//while(Convert.ToBoolean(condition.Call(Meta.Map.Empty).GetNumber().GetInt32())) {
+				body.Call(new Map());
+				//body.Call(Meta.Map.Empty);
+			}
+			return new Map();
+			//return Meta.Map.Empty;
+		}
 		public static Map Double(Map d) {
 			return new Map((object)(float)d.GetNumber().GetDouble());}
 		public static void WriteLine(string s) {
@@ -3637,7 +3742,9 @@ namespace Meta {
 			foreach (KeyValuePair<Map, Map> entry in cases) {
 				if (Convert.ToBoolean(entry.Key.Call(map).GetNumber().GetInt32())) {
 					return entry.Value.Call(map);}}
-			return Meta.Map.Empty;}
+			return new Map();
+			//return Meta.Map.Empty;
+		}
 		public static Map Raise(Number a, Number b) {
 			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));}
 		public static int CompareNumber(Number a, Number b) {
@@ -3674,7 +3781,10 @@ namespace Meta {
 					result = func.Call(result).Call(enumerator.Current);}
 				return result;}
 			else {
-				return Meta.Map.Empty;}}
+				return new Map();
+				//return Meta.Map.Empty;
+			}
+		}
 		public static Map JoinAll(Map arrays) {
 			List<Map> result = new List<Map>();
 			foreach (Map array in arrays.Array) {
@@ -3703,7 +3813,9 @@ namespace Meta {
 			return new Map(list);}
 		public static Map Try(Map tryFunction, Map catchFunction) {
 			try {
-				return tryFunction.Call(Meta.Map.Empty);}
+				return tryFunction.Call(new Map());
+				//return tryFunction.Call(Meta.Map.Empty);
+			}
 			catch (Exception e) {
 				return catchFunction.Call(new Map(e));}}
 		public static Map With(Map o, Map values) {
@@ -3771,7 +3883,9 @@ namespace Meta {
 			Map result = new Map();
 			for (int i = 1; i <= arg; i++) {
 				result.Append(i);}
-			return result;}}
+			return result;
+		}
+	}
 	public class LiteralExpression : Expression {
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent)
@@ -4043,7 +4157,8 @@ namespace Meta {
 				if (parameter.Count != 0) {
 					KeyStatement s = new KeyStatement(
 						new Literal(parameter, program),
-						new LastArgument(Map.Empty, program), program, 0);
+						new LastArgument(new Map(), program), program, 0);
+						//new LastArgument(Map.Empty, program), program, 0);
 					program.statementList.Add(s);}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
 				program.statementList.Add(c);
@@ -4073,7 +4188,7 @@ namespace Meta {
 			foreach (Map key in Keys) {
 				yield return new KeyValuePair<Map, Map>(key, this[key]);}}
 		public Extent Source;
-		public static Map Empty = new Map(EmptyStrategy.empty);
+		//public static Map Empty = new Map(EmptyStrategy.empty);
 		public static implicit operator Map(string text) {
 			return new Map(text);
 		}
