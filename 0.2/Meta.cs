@@ -3882,9 +3882,17 @@ namespace Meta {
 		public static Map Range(Number arg) {
 			Map result = new Map();
 			for (int i = 1; i <= arg; i++) {
-				result.Append(i);}
+				result.Append(i);
+			}
 			return result;
 		}
+		//public static Map Range(Number start,Number arg) {
+		//    Map result = new Map();
+		//    for (Number i = start; i <= arg; i+=1) {
+		//        result.Append(i);
+		//    }
+		//    return result;
+		//}
 	}
 	public class LiteralExpression : Expression {
 		private Map literal;
