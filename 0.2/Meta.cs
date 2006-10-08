@@ -47,7 +47,8 @@ namespace Meta {
 			return Evaluate(context);
 		}
 		public Map Evaluate(Map context) {
-			return EvaluateImplementation(context);}
+			return EvaluateImplementation(context);
+		}
 		public abstract Map EvaluateImplementation(Map context);}
 	public abstract class Expression {
 		public Compiled compiled;
@@ -57,7 +58,8 @@ namespace Meta {
 		public Statement Statement;
 		public Expression(Extent source, Expression parent) {
 			this.Source = source;
-			this.Parent = parent;}
+			this.Parent = parent;
+		}
 		private bool evaluated = false;
 		private Structure structure;
 		public Map GetConstant() {
@@ -87,9 +89,12 @@ namespace Meta {
 			Compiled result = CompileImplementation(parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.end)) {
-					sources[Source.end] = new List<Expression>();}
-				sources[Source.end].Add(this);}
-			return result;}
+					sources[Source.end] = new List<Expression>();
+				}
+				sources[Source.end].Add(this);
+			}
+			return result;
+		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public abstract Compiled CompileImplementation(Expression parent);}
 	public class LastArgument : Expression {
@@ -99,22 +104,24 @@ namespace Meta {
 			return null;
 		}
 		public override Compiled CompileImplementation(Expression parent) {
-			return new CompiledLastArgument(Source);}}
+			return new CompiledLastArgument(Source);
+		}
+	}
 	public class CompiledLastArgument : Compiled {
-		public CompiledLastArgument(Extent source)
-			: base(source) {}
+		public CompiledLastArgument(Extent source): base(source) {}
 		public override Map EvaluateImplementation(Map context) {
-			return Map.arguments.Peek();}}
+			return Map.arguments.Peek();
+		}
+	}
 	public class Call : Expression {
 		public List<Expression> calls;
-		public Call(Map code, Map parameterName, Expression parent)
-			: base(code.Source, parent) {
+		public Call(Map code, Map parameterName, Expression parent): base(code.Source, parent) {
 			this.calls = new List<Expression>();
 			foreach (Map m in code.Array) {
-				calls.Add(m.GetExpression(this));}
+				calls.Add(m.GetExpression(this));
+			}
 			if (calls.Count == 1) {
 				calls.Add(new Literal(new Map(), this));
-				//calls.Add(new Literal(Map.Empty, this));
 			}
 		}
 		public override Structure StructureImplementation() {
@@ -126,7 +133,8 @@ namespace Meta {
 					Map result = new Map();
 					result.IsConstant=false;
 					foreach (Map key in type.Keys) {
-						result[key] = new Map();}
+						result[key] = new Map();
+					}
 					return new LiteralStructure(result);
 				}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
@@ -135,8 +143,11 @@ namespace Meta {
 						result.IsConstant = false;
 						return new LiteralStructure(result);
 					}
-					catch (Exception e) {}}}
-			return null;}
+					catch (Exception e) {}
+				}
+			}
+			return null;
+		}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
 			Map first = calls[0].GetConstant();
 			if (first != null) {
@@ -148,7 +159,8 @@ namespace Meta {
 					method = (Method)first.Strategy;
 				}
 				else {
-					method = null;}
+					method = null;
+				}
 				if (method != null) {
 					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0)) {
 						if (method.method.IsStatic || method.method is ConstructorInfo) {
@@ -164,12 +176,20 @@ namespace Meta {
 										arguments.Add(nextArg);}
 									else {
 										m = method.method;
-										return false;}}}
+										return false;
+									}
+								}
+							}
 							m = method.method;
-							return true;}}}}
+							return true;
+						}
+					}
+				}
+			}
 			arguments = null;
 			m = null;
-			return false;}
+			return false;
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			List<object> arguments;
 			MethodBase method;
@@ -208,8 +228,6 @@ namespace Meta {
 					a=Transform.ToDotNet(Transform.ToMeta(a),targetType);
 				}
 				args.Add(a);
-				//args.Add(Transform.ToDotNet(arguments[index].EvaluateNoConversion(context), parameters[index].ParameterType));
-				//args.Add(Transform.ToDotNet(arguments[index].Evaluate(context), parameters[index].ParameterType));
 			}
 			try {
 				return method.Invoke(null, args.ToArray());
@@ -234,7 +252,8 @@ namespace Meta {
 		List<Compiled> calls;
 		public CompiledCall(List<Compiled> calls, Extent source)
 			: base(source) {
-			this.calls = calls;}
+			this.calls = calls;
+		}
 		public override Map EvaluateImplementation(Map current) {
 			Map result = calls[0].Evaluate(current);
 			for (int i = 1; i < calls.Count; i++) {
@@ -246,7 +265,9 @@ namespace Meta {
 				}
 				catch (Exception e) {
 					throw new MetaException(e.Message, Source.start);}}
-			return result;}}
+			return result;
+		}
+	}
 	public class Search : Expression {
 		public override Structure StructureImplementation() {
 			Map key;
@@ -257,7 +278,9 @@ namespace Meta {
 			}
 				//return value;}
 			else {
-				return null;}}
+				return null;
+			}
+		}
 		private bool FindStuff(out int count, out Map key, out Map value) {
 			Expression current = this;
 			Structure keyStructure = expression.EvaluateStructure();
@@ -267,7 +290,6 @@ namespace Meta {
 			else {
 				key=null;
 			}
-			//key = expression.EvaluateStructure();
 			count = 0;
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
@@ -275,12 +297,16 @@ namespace Meta {
 					while (current.Statement == null) {
 						if (current.isFunction) {
 							hasCrossedFunction = true;
-							count++;}
+							count++;
+						}
 						current = current.Parent;
 						if (current == null) {
-							break;}}
+							break;
+						}
+					}
 					if (current == null) {
-						break;}
+						break;
+					}
 					Statement statement = current.Statement;
 					Map structure = statement.PreMap();
 					//Map structure = statement.Pre();
@@ -297,28 +323,32 @@ namespace Meta {
 							break;}
 					}
 					count++;
-					current = current.Parent;}}
+					current = current.Parent;
+				}
+			}
 			value = null;
-			return false;}
+			return false;
+		}
 		private Expression expression;
 		public Search(Map code, Expression parent)
 			: base(code.Source, parent) {
-			this.expression = code.GetExpression(this);}
+			this.expression = code.GetExpression(this);
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			int count;
 			Map key;
 			Map value;
-			//if (FindStuff(out count, out key, out value)) {
-			//    if (value != null && value.IsConstant) {
-			//        return new OptimizedSearch(value, Source);}
-			//    else {
-			//        return new FastSearch(key, count, Source);}}
-			//else {
-			//    FindStuff(out count, out key, out value);
+			if (FindStuff(out count, out key, out value)) {
+			    if (value != null && value.IsConstant) {
+			        return new OptimizedSearch(value, Source);}
+			    else {
+			        return new FastSearch(key, count, Source);}}
+			else {
+			    FindStuff(out count, out key, out value);
 				return new CompiledSearch(expression.Compile(this), Source);
-		//}
+			}
+		}
 	}
-}
 	public class FastSearch : Compiled {
 		private int count;
 		private Map key;
@@ -3709,6 +3739,7 @@ namespace Meta {
 	public class Library {
 		public static Map Slice(Map array,int start,int end) {
 			return new Map(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
+			//return new Map(new List<Map>(array.Array).ConvertAll<Map>(delegate(Map map) {return map.Copy();}).GetRange(start-1,Math.Max(end-start+1,0)));
 		}
 		public static Map Select(Map array,Map function) {
 			foreach(Map m in array.Array) {
@@ -3738,8 +3769,9 @@ namespace Meta {
 		public static void WriteLine(string s) {
 			Console.WriteLine(s);}
 		private static Random random = new Random();
-		public static int Random(int max) {
-			return random.Next(max) + 1;}
+		public static int Random(int lower,int upper) {
+			return lower+Convert.ToInt32((random.NextDouble()*(upper-lower)));
+		}
 		public static string Trim(string text) {
 			return text.Trim();}
 		public static Map Modify(Map map, Map func) {

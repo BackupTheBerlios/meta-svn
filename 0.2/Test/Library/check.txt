@@ -160,7 +160,7 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"sliceTest"
 			Value (Map):
-				"Katze"
+				"Katze "
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"appendTest"

@@ -51,23 +51,23 @@
 			800
 			300
 			0
-	world.set_Gravity_Vector3(vector(0 double(1/5) 0
+	world.set_Gravity_Vector3(vector(0 double(1/20) 0
 	bubble=size?{
 		body=Body_World(world
 		radius=?product(size 4
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(2 product(size size)) 1/1000
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size size) 1/1000
 		keyUp=0
 		keyDown=0
 		position=[
-			random(790
-			random(590
+			random(1 790
+			random(1 590
 		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2 0
 		geom=space.CreateSphere_Single(radius(
 		geom.set_Position_Vector3(body.get_Position(
 		geom.set_Body_Body(body
 		speed=[
-			difference(random(12) 6
-			difference(random(12) 6
+			random(-6 6
+			random(-6 6
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1 speed.2 0
 		color=Color.get_Red(
 		setColor=c?{
@@ -135,8 +135,8 @@
 	players=[
 		player(Return Color.get_Blue(
 	bubbles=joinAll([
-		apply(range(10) ?bubble(random(5
-		apply(range(10) ?bubble(random(2
+		apply(range(10) ?bubble(random(1 5
+		apply(range(10) ?bubble(random(1 2
 	Events.set_TargetFps_Int32(500
 	paused=0
 	Events.add_AppActive_ActiveEventHandler(

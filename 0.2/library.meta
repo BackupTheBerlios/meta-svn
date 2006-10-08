@@ -141,7 +141,7 @@
 				&which(
 			floor=Library.Floor_Number
 			filterWith=flip(filter
-			random=Library.Random_Int32
+			random=Library.Random_Int32_Int32
 			discard=array?func?filter(array ?not(func(@
 			mergeWith=flip(merge
 			enumerableToArray=Library.EnumerableToArray_Map
