@@ -360,8 +360,8 @@ namespace Meta {
 			Map selected = context;
 			try {
 				for (int i = 0; i < count; i++) {
-					selected = selected.Scope;}
-				int difference = 0;
+					selected = selected.Scope;
+				}
 				if (!selected.ContainsKey(key)) {
 					selected = context;
 					int realCount = 0;
@@ -369,49 +369,58 @@ namespace Meta {
 						selected = selected.Scope;
 						realCount++;
 						if (selected == null) {
-							throw new KeyNotFound(key, Source.start, null);}}
-					difference = count - realCount;
-					if (difference != 0) {
-						if (difference == 1) {}
-						else if (difference == 2) {}
-						else if (difference == 3) {}
-						else if (difference == 4) {}
-						else {}}}
-				return selected[key].Copy();}
+							throw new KeyNotFound(key, Source.start, null);
+						}
+					}
+				}
+				return selected[key].Copy();
+			}
 			catch (Exception e) {
-				throw e;}}}
+				throw e;
+			}
+		}
+	}
 	public class OptimizedSearch : Compiled {
 		private Map literal;
 		public OptimizedSearch(Map literal, Extent source)
 			: base(source) {
-			this.literal = literal;}
+			this.literal = literal;
+		}
 		public override Map EvaluateImplementation(Map context) {
-			return literal.Copy();}}
+			return literal.Copy();
+		}
+	}
 	public class CompiledSearch : Compiled {
 		private Compiled expression;
-		public CompiledSearch(Compiled expression, Extent source)
-			: base(source) {
-			this.expression = expression;}
+		public CompiledSearch(Compiled expression, Extent source): base(source) {
+			this.expression = expression;
+		}
 		public override Map EvaluateImplementation(Map context) {
 			Map key = expression.Evaluate(context);
 			Map selected = context;
 			while (!selected.ContainsKey(key)) {
 				if (selected.Scope != null) {
-					selected = selected.Scope;}
+					selected = selected.Scope;
+				}
 				else {
 					expression.Evaluate(context);
-					throw new KeyNotFound(key, Source.start, null);}}
-			return selected[key].Copy();}}
+					throw new KeyNotFound(key, Source.start, null);
+				}
+			}
+			return selected[key].Copy();
+		}
+	}
 	public class CompiledProgram : Compiled {
 		private List<CompiledStatement> statementList;
-		public CompiledProgram(List<CompiledStatement> statementList, Extent source)
-			: base(source) {
-			this.statementList = statementList;}
+		public CompiledProgram(List<CompiledStatement> statementList, Extent source): base(source) {
+			this.statementList = statementList;
+		}
 		public override Map EvaluateImplementation(Map parent) {
 			Map context = new Map();
 			context.Scope = parent;
 			foreach (CompiledStatement statement in statementList) {
-				statement.Assign(ref context);}
+				statement.Assign(ref context);
+			}
 			return context;
 		}
 	}
@@ -455,9 +464,7 @@ namespace Meta {
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
 		private Structure pre;
-		//private Map pre;
 		private Structure current;
-		//private Map current;
 		public Map PreMap() {
 			Structure s=Pre();
 			if(s!=null) {
@@ -484,38 +491,52 @@ namespace Meta {
 		public Structure Current() {
 			if (!currentEvaluated) {
 				Structure pre = Pre();
-				//Map pre = Pre();
 				if (pre != null) {
 					current = CurrentImplementation(pre);}
 				else {
-					current = null;}}
+					current = null;
+				}
+			}
 			currentEvaluated = true;
 			return current;}
 		public Statement Next {
 			get {
 				if (program == null || Index >= program.statementList.Count - 1) {
-					return null;}
+					return null;
+				}
 				else {
-					return program.statementList[Index + 1];}}}
+					return program.statementList[Index + 1];
+				}
+			}
+		}
 		public virtual bool DoesNotAddKey(Map key) {
-			return true;}
+			return true;
+		}
 		public bool NeverAddsKey(Map key) {
 			Statement current = this;
 			while (true) {
 				current = current.Next;
 				if (current == null || current is CurrentStatement) {
-					break;}
+					break;
+				}
 				if (!current.DoesNotAddKey(key)) {
-					return false;}}
-			return true;}
+					return false;
+				}
+			}
+			return true;
+		}
 		protected abstract Structure CurrentImplementation(Structure previous);
 
 		public Statement Previous {
 			get {
 				if (Index == 0) {
-					return null;}
+					return null;
+				}
 				else {
-					return program.statementList[Index - 1];}}}
+					return program.statementList[Index - 1];
+				}
+			}
+		}
 		public abstract CompiledStatement Compile();
 		public Program program;
 		public readonly Expression value;
@@ -525,26 +546,33 @@ namespace Meta {
 			this.Index = index;
 			this.value = value;
 			if (value != null) {
-				value.Statement = this;}}}
+				value.Statement = this;
+			}
+		}
+	}
 	public class CompiledDiscardStatement : CompiledStatement {
 		public CompiledDiscardStatement(Compiled value)
 			: base(value) {}
-		public override void AssignImplementation(ref Map context, Map value) {}}
+		public override void AssignImplementation(ref Map context, Map value) {}
+	}
 	public class DiscardStatement : Statement {
 		protected override Structure CurrentImplementation(Structure previous) {
 			return previous;
 		}
-		public DiscardStatement(Program program, Expression value, int index)
-			: base(program, value, index) {}
+		public DiscardStatement(Program program, Expression value, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
-			return new CompiledDiscardStatement(value.Compile(program));}}
+			return new CompiledDiscardStatement(value.Compile(program));
+		}
+	}
 	public class CompiledKeyStatement : CompiledStatement {
 		private Compiled key;
-		public CompiledKeyStatement(Compiled key, Compiled value)
-			: base(value) {
-			this.key = key;}
+		public CompiledKeyStatement(Compiled key, Compiled value): base(value) {
+			this.key = key;
+		}
 		public override void AssignImplementation(ref Map context, Map value) {
-			context[key.Evaluate(context)] = value;}}
+			context[key.Evaluate(context)] = value;
+		}
+	}
 	public class KeyStatement : Statement {
 		public static bool intellisense = false;
 		public override bool DoesNotAddKey(Map key) {
@@ -557,8 +585,10 @@ namespace Meta {
 				k=null;
 			}
 			if (k != null && k.IsConstant && !k.Equals(key)) {
-				return true;}
-			return false;}
+				return true;
+			}
+			return false;
+		}
 		protected override Structure CurrentImplementation(Structure previous) {
 			Map k=key.GetConstant();
 			if (k != null) {
@@ -575,10 +605,6 @@ namespace Meta {
 					Map m=new Map();
 					m.IsConstant=false;
 					((LiteralStructure)previous).Literal[k] = m;
-					//((LiteralStructure)previous).Literal[k].IsConstant=false;
-
-					//((LiteralStructure)previous).Literal[k] = new Map();
-					//((LiteralStructure)previous).Literal[k].IsConstant=false;
 				}
 				return previous;
 			}
