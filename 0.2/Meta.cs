@@ -489,20 +489,14 @@ namespace Meta {
 		public CompiledFunction(Function function): base(function.Source) {
 			this.expression=function.expression.Compile(function);
 			this.parameter=function.key;
-			//this.statementList = function.statementList.ConvertAll<CompiledStatement>(delegate(Statement statement) {
-			//    return statement.Compile();
-			//});
 		}
 		public override MapBase EvaluateImplementation(MapBase parent) {
-			MapBase context = new DictionaryMap();
-			if(parameter!=null) {
-				context[parameter]=MapBase.arguments.Peek();
-			}
+			MapBase context = new FunctionArgument(parameter,MapBase.arguments.Peek());
 			//MapBase context = new DictionaryMap();
-			context.Scope = parent;
-			//foreach (CompiledStatement statement in statementList) {
-			//    statement.Assign(ref context);
+			//if(parameter!=null) {
+			//    context[parameter]=MapBase.arguments.Peek();
 			//}
+			context.Scope = parent;
 			return expression.Evaluate(context);
 		}
 	}
