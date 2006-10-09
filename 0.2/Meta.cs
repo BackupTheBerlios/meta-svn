@@ -1388,70 +1388,70 @@ namespace Meta {
 			return new Map(Object);
 		}
 	}
-	public class EmptyStrategy : MapStrategy {
-		public override bool ContainsKey(MapBase key) {
-			return false;}
-		public override void Append(MapBase map, MapBase parent) {
-			DictionaryStrategy list = new DictionaryStrategy();
-			//ListStrategy list = new ListStrategy();
-			list.Append(map, parent);
-			((Map)parent).Strategy = list;
-		}
-		public static EmptyStrategy empty = new EmptyStrategy();
-		private EmptyStrategy() {}
-		public override bool IsNumber {
-			get {
-				return true;
-			}
-		}
-		public override int Count {
-			get {
-				return 0;
-			}
-		}
-		public override int GetArrayCount() {
-			return 0;
-		}
-		public override int GetHashCode() {
-			return 0.GetHashCode();
-		}
-		public override bool Equals(object obj) {
-			return ((MapStrategy)obj).Count == 0;}
-		public override IEnumerable<MapBase> Keys {
-			get {
-				yield break;}}
-		public override MapBase CopyData() {
-			return new Map(this);}
-		public override MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
-			if (key.IsNumber) {
-				if (key.Count == 0 && value.IsNumber) {
-					DictionaryStrategy number = new DictionaryStrategy(0);
-					number.Set(key, value, map);
-					return number;
-					//NumberStrategy number = new NumberStrategy(0);
-					//number.Set(key, value, map);
-					//return number;
-				}
-				else {
-					if (key.Equals(new Integer(1))) {
-					//if (key.Equals(new Map(1))) {
-						DictionaryStrategy list = new DictionaryStrategy();
-						//ListStrategy list = new ListStrategy();
-						list.Append(value, map);
-						return list;
-					}
-				}
-			}
-			DictionaryStrategy dictionary = new DictionaryStrategy();
-			dictionary.Set(key, value, map);
-			return dictionary;}
-		public override void Set(MapBase key, MapBase val, MapBase map) {
-			((Map)map).Strategy = DeepCopy(key, val, map);
-		}
-		public override MapBase Get(MapBase key) {
-			return null;
-		}
-	}
+	//public class EmptyStrategy : MapStrategy {
+	//    public override bool ContainsKey(MapBase key) {
+	//        return false;}
+	//    public override void Append(MapBase map, MapBase parent) {
+	//        DictionaryStrategy list = new DictionaryStrategy();
+	//        //ListStrategy list = new ListStrategy();
+	//        list.Append(map, parent);
+	//        ((Map)parent).Strategy = list;
+	//    }
+	//    public static EmptyStrategy empty = new EmptyStrategy();
+	//    private EmptyStrategy() {}
+	//    public override bool IsNumber {
+	//        get {
+	//            return true;
+	//        }
+	//    }
+	//    public override int Count {
+	//        get {
+	//            return 0;
+	//        }
+	//    }
+	//    public override int GetArrayCount() {
+	//        return 0;
+	//    }
+	//    public override int GetHashCode() {
+	//        return 0.GetHashCode();
+	//    }
+	//    public override bool Equals(object obj) {
+	//        return ((MapStrategy)obj).Count == 0;}
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            yield break;}}
+	//    public override MapBase CopyData() {
+	//        return new Map(this);}
+	//    public override MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
+	//        if (key.IsNumber) {
+	//            if (key.Count == 0 && value.IsNumber) {
+	//                DictionaryStrategy number = new DictionaryStrategy(0);
+	//                number.Set(key, value, map);
+	//                return number;
+	//                //NumberStrategy number = new NumberStrategy(0);
+	//                //number.Set(key, value, map);
+	//                //return number;
+	//            }
+	//            else {
+	//                if (key.Equals(new Integer(1))) {
+	//                //if (key.Equals(new Map(1))) {
+	//                    DictionaryStrategy list = new DictionaryStrategy();
+	//                    //ListStrategy list = new ListStrategy();
+	//                    list.Append(value, map);
+	//                    return list;
+	//                }
+	//            }
+	//        }
+	//        DictionaryStrategy dictionary = new DictionaryStrategy();
+	//        dictionary.Set(key, value, map);
+	//        return dictionary;}
+	//    public override void Set(MapBase key, MapBase val, MapBase map) {
+	//        ((Map)map).Strategy = DeepCopy(key, val, map);
+	//    }
+	//    public override MapBase Get(MapBase key) {
+	//        return null;
+	//    }
+	//}
 	public class StringStrategy : MapStrategy {
 		private string text;
 		public StringStrategy(string text) {
