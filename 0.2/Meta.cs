@@ -585,13 +585,46 @@ namespace Meta {
 			}
 		}
 	}
+	public class CompiledFunctionProgram:Compiled {
+		private Compiled expression;
+		public CompiledFunctionProgram(Extent source,Compiled expression):base(source) {
+			this.expression=expression;
+			//this.function=new DictionaryMap(CodeKeys.Function, function);
+		}
+		public override MapBase EvaluateImplementation(MapBase context) {
+			DictionaryMap map=new DictionaryMap();
+			map[CodeKeys.Function]=expression.Evaluate(context);
+			map.Scope=context;
+			return map;
+		}
+	}
 	//public class CompiledFunctionProgram:Compiled {
+	//    private MapBase function;
+	//    public CompiledFunctionProgram(Extent source,MapBase function):base(source) {
+	//        this.function=new DictionaryMap(CodeKeys.Function, function);
+	//    }
+	//    public override MapBase EvaluateImplementation(MapBase context) {
+	//        //MapBase result=function.Copy();
+	//        function.Scope=context;
+	//        return function;
+	//    }
 	//}
 	public class Program : ScopeExpression {
 		public override Structure StructureImplementation() {
 			return statementList[statementList.Count - 1].Current();
 		}
 		public override Compiled CompileImplementation(Expression parent) {
+			if(statementList.Count==1) {
+				KeyStatement statement=statementList[0] as KeyStatement;
+				if(statement!=null) {
+					MapBase key=statement.key.GetConstant();
+					MapBase value=statement.value.GetConstant();
+					CompiledStatement compiled=statement.Compile();
+					if(key!=null && value!=null && key.Equals(CodeKeys.Function)) {
+						return new CompiledFunctionProgram(Source,compiled.value);
+					}
+				}
+			}
 			return new CompiledProgram(statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();}), Source);}
 		public List<Statement> statementList= new List<Statement>();
@@ -3932,12 +3965,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3955,6 +3982,12 @@ namespace Meta {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
+			}
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
 			}
 
 			//public class MergeSort: Test {
