@@ -418,10 +418,101 @@ namespace Meta {
 			return context;
 		}
 	}
+	public class FunctionArgument:MapBase {
+		public override MapBase this[MapBase key] {
+			get {
+				if(key.Equals(this.key)) {
+					return value;
+				}
+				else {
+					return null;
+				}
+			}
+			set {
+				if(key.Equals(this.key)) {
+					this.value=value;
+				}
+				else {
+					throw new Exception("The method or operation is not implemented.");
+				}
+			}
+		}
+		public override IEnumerable<MapBase> Keys {
+			get { throw new Exception("The method or operation is not implemented."); }
+		}
+		public override bool IsNormal {
+			get { throw new Exception("The method or operation is not implemented."); }
+		}
+		public override string GetString() {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override MapBase Copy() {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override IEnumerable<MapBase> Array {
+			get { 
+				throw new Exception("The method or operation is not implemented."); 
+			}
+		}
+		public override int ArrayCount {
+			get { 
+				throw new Exception("The method or operation is not implemented."); 
+			}
+		}
+		public override MapBase Call(MapBase arg) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		private MapBase key;
+		private MapBase value;
+		public FunctionArgument(MapBase key,MapBase value) {
+			this.key=key;
+			this.value=value;
+		}
+		public override bool ContainsKey(MapBase k) {
+			return k.Equals(this.key);
+		}
+		public override Number GetNumber() {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override int Count {
+			get { throw new Exception("The method or operation is not implemented."); }
+		}
+
+	}
+	public class CompiledFunction:Compiled {
+		//private List<CompiledStatement> statementList;
+		private Compiled expression;
+		private MapBase parameter;
+		public CompiledFunction(Function function): base(function.Source) {
+			this.expression=function.expression.Compile(function);
+			this.parameter=function.key;
+			//this.statementList = function.statementList.ConvertAll<CompiledStatement>(delegate(Statement statement) {
+			//    return statement.Compile();
+			//});
+		}
+		public override MapBase EvaluateImplementation(MapBase parent) {
+			MapBase context = new DictionaryMap();
+			if(parameter!=null) {
+				context[parameter]=MapBase.arguments.Peek();
+			}
+			//MapBase context = new DictionaryMap();
+			context.Scope = parent;
+			//foreach (CompiledStatement statement in statementList) {
+			//    statement.Assign(ref context);
+			//}
+			return expression.Evaluate(context);
+		}
+	}
 	public class Function:Program {
-		//private Dictionary<Type, Compiled> specialized;
+		public override Compiled CompileImplementation(Expression parent) {
+			return new CompiledFunction(this);
+		}
+		public Expression expression;
+		public MapBase key;
 		public Function(Expression parent,MapBase code):base(code.Source,parent) {
-			//Program program = new Function(this.Source, parent);
 			isFunction = true;
 			MapBase parameter = code[CodeKeys.Parameter];
 			if (parameter.Count != 0) {
@@ -429,8 +520,10 @@ namespace Meta {
 					new Literal(parameter, this),
 					new LastArgument(MapBase.Empty, this), this, 0);
 				statementList.Add(s);
+				this.key=parameter;
 			}
-			CurrentStatement c = new CurrentStatement(code[CodeKeys.Expression].GetExpression(this), this, statementList.Count);
+			this.expression=code[CodeKeys.Expression].GetExpression(this);
+			CurrentStatement c = new CurrentStatement(expression, this, statementList.Count);
 			statementList.Add(c);
 		}
 	}
