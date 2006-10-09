@@ -110,7 +110,7 @@ namespace Meta {
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source): base(source) {}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			return Map.arguments.Peek();
+			return MapBase.arguments.Peek();
 		}
 	}
 	public class Call : Expression {
@@ -1428,7 +1428,8 @@ namespace Meta {
 		}
 		public override MapBase this[MapBase key] {
 			get {
-				if (key is Map && Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
+				if (Type.IsGenericTypeDefinition && key is TypeMap) {
+				//if (key is Map && Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
 					List<Type> types = new List<Type>();
 					if (Type.GetGenericArguments().Length == 1) {
 						types.Add(((TypeMap)key).Type);
@@ -1713,9 +1714,9 @@ namespace Meta {
 			//    MapBase.calls[UniqueKey].calls++;
 			//    MapBase.calls[UniqueKey].recursive++;
 			//}
-			Map.arguments.Push(argument);
+			MapBase.arguments.Push(argument);
 			MapBase result = CallImplementation(argument);
-			Map.arguments.Pop();
+			MapBase.arguments.Pop();
 			//MapBase result = CallImplementation(argument, parent);
 			//Map result = CallImplementation(argument, parent);
 
@@ -1811,41 +1812,6 @@ namespace Meta {
 			}
 		}
 	}
-	//public class DictionaryStrategy : MapStrategy {
-	//    public override MapBase CopyData() {
-	//        return new Map(new CloneStrategy(this));}
-	//    public override bool IsNumber {
-	//        get {
-	//            return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber);
-	//        }
-	//    }
-	//            //return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
-	//    public override int GetArrayCount() {
-	//        int i = 1;
-	//        while (this.ContainsKey(i)) {
-	//            i++;}
-	//        return i - 1;}
-	//    private Dictionary<MapBase, MapBase> dictionary;
-	//    public DictionaryStrategy()
-	//        : this(2) {}
-	//    public DictionaryStrategy(int Count) {
-	//        this.dictionary = new Dictionary<MapBase, MapBase>(Count);}
-	//    public DictionaryStrategy(Dictionary<MapBase, MapBase> data) {
-	//        this.dictionary = data;}
-	//    public override MapBase Get(MapBase key) {
-	//        MapBase val;
-	//        dictionary.TryGetValue(key, out val);
-	//        return val;}
-	//    public override void Set(MapBase key, MapBase value, MapBase map) {
-	//        dictionary[key] = value;}
-	//    public override bool ContainsKey(MapBase key) {
-	//        return dictionary.ContainsKey(key);}
-	//    public override IEnumerable<MapBase> Keys {
-	//        get {
-	//            return dictionary.Keys;}}
-	//    public override int Count {
-	//        get {
-	//            return dictionary.Count;}}}
 	//public class CloneStrategy : MapStrategy {
 	//    public override bool IsNormal {
 	//        get {
@@ -1903,180 +1869,180 @@ namespace Meta {
 		public double time;
 		public int calls;
 		public int recursive;}
-	public abstract class MapStrategy {
-		public virtual bool IsNormal {
-			get {
-				return true;
-			}
-		}
-		public override int GetHashCode() {
-			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);
-			}
-			else {
-				return Count;
-			}
-		}
-		public override bool Equals(object obj) {
-			MapStrategy strategy = obj as MapStrategy;
-			if (strategy == null || strategy.Count != this.Count) {
-				return false;}
-			else {
-				bool isEqual = true;
-				foreach (MapBase key in this.Keys) {
-					MapBase otherValue = strategy.Get(key);
-					MapBase thisValue = Get(key);
-					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
-						isEqual = false;}}
-				return isEqual;
-			}
-		}
-		[DllImport("Kernel32.dll")]
-		protected static extern bool QueryPerformanceCounter(
-			out long lpPerformanceCount);
+	//public abstract class MapStrategy {
+	//    public virtual bool IsNormal {
+	//        get {
+	//            return true;
+	//        }
+	//    }
+	//    public override int GetHashCode() {
+	//        if (IsNumber) {
+	//            return (int)(GetNumber().Numerator % int.MaxValue);
+	//        }
+	//        else {
+	//            return Count;
+	//        }
+	//    }
+	//    public override bool Equals(object obj) {
+	//        MapStrategy strategy = obj as MapStrategy;
+	//        if (strategy == null || strategy.Count != this.Count) {
+	//            return false;}
+	//        else {
+	//            bool isEqual = true;
+	//            foreach (MapBase key in this.Keys) {
+	//                MapBase otherValue = strategy.Get(key);
+	//                MapBase thisValue = Get(key);
+	//                if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
+	//                    isEqual = false;}}
+	//            return isEqual;
+	//        }
+	//    }
+	//    [DllImport("Kernel32.dll")]
+	//    protected static extern bool QueryPerformanceCounter(
+	//        out long lpPerformanceCount);
 
-		[DllImport("Kernel32.dll")]
-		protected static extern bool QueryPerformanceFrequency(
-			out long lpFrequency);
+	//    [DllImport("Kernel32.dll")]
+	//    protected static extern bool QueryPerformanceFrequency(
+	//        out long lpFrequency);
 
-		private static long freq;
+	//    private static long freq;
 
-		static MapStrategy() {
-			if (QueryPerformanceFrequency(out freq) == false) {
-				throw new ApplicationException();}}
-		public virtual string Serialize(MapBase parent) {
-			return parent.SerializeDefault();}
-		public virtual object UniqueKey {
-			get {
-				return Get(CodeKeys.Function).Source;}}
-		public virtual MapBase CallImplementation(MapBase argument, MapBase parent) {
-		    MapBase function=Get(CodeKeys.Function);
-		    if (function!=null) {
-		        if (function.expression!=null && function.expression.compiled!= null) {
-		            return function.expression.compiled.Evaluate(parent);
-		        }
-		        else {
-		            return function.GetExpression(null).Compile(null).Evaluate(parent);}}
-		    else {
-		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
-		    }
-		}
+	//    static MapStrategy() {
+	//        if (QueryPerformanceFrequency(out freq) == false) {
+	//            throw new ApplicationException();}}
+	//    public virtual string Serialize(MapBase parent) {
+	//        return parent.SerializeDefault();}
+	//    public virtual object UniqueKey {
+	//        get {
+	//            return Get(CodeKeys.Function).Source;}}
+	//    public virtual MapBase CallImplementation(MapBase argument, MapBase parent) {
+	//        MapBase function=Get(CodeKeys.Function);
+	//        if (function!=null) {
+	//            if (function.expression!=null && function.expression.compiled!= null) {
+	//                return function.expression.compiled.Evaluate(parent);
+	//            }
+	//            else {
+	//                return function.GetExpression(null).Compile(null).Evaluate(parent);}}
+	//        else {
+	//            throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
+	//        }
+	//    }
 
 
-		public MapBase Call(MapBase argument, MapBase parent) {
-			long start = 0;
-			if (Interpreter.profiling && UniqueKey != null) {
-				QueryPerformanceCounter(out start);
-				if (!MapBase.calls.ContainsKey(UniqueKey)) {
-					MapBase.calls[UniqueKey] = new Profile();}
-				MapBase.calls[UniqueKey].calls++;
-				MapBase.calls[UniqueKey].recursive++;}
-			MapBase result = CallImplementation(argument, parent);
-			//Map result = CallImplementation(argument, parent);
+	//    public MapBase Call(MapBase argument, MapBase parent) {
+	//        long start = 0;
+	//        if (Interpreter.profiling && UniqueKey != null) {
+	//            QueryPerformanceCounter(out start);
+	//            if (!MapBase.calls.ContainsKey(UniqueKey)) {
+	//                MapBase.calls[UniqueKey] = new Profile();}
+	//            MapBase.calls[UniqueKey].calls++;
+	//            MapBase.calls[UniqueKey].recursive++;}
+	//        MapBase result = CallImplementation(argument, parent);
+	//        //Map result = CallImplementation(argument, parent);
 
-			if (Interpreter.profiling) {
-				if (UniqueKey != null) {
-					long stop;
-					QueryPerformanceCounter(out stop);
-					double duration = (double)(stop - start) / (double)freq;
-					MapBase.calls[UniqueKey].recursive--;
-					if (MapBase.calls[UniqueKey].recursive == 0) {
-						MapBase.calls[UniqueKey].time += duration;}}}
-			return result;
-		}
-		public virtual void Append(MapBase map, MapBase parent) {
-			this.Set(GetArrayCount() + 1, map, parent);}
-		public abstract void Set(MapBase key, MapBase val, MapBase map);
-		public abstract MapBase Get(MapBase key);
-		public virtual bool ContainsKey(MapBase key) {
-			foreach (MapBase k in Keys) {
-				if (k.Equals(key)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		public virtual int GetArrayCount() {
-			int i = 1;
-			for (;ContainsKey(i);i++);
-			return i - 1;
-		}
-		public virtual MapBase CopyData() {
-			MapBase map = new DictionaryMap();
-			foreach (MapBase key in Keys) {
-				map[key] = this.Get(key).Copy();
-			}
-			return map;
-		}
-		protected virtual void Panic(MapBase key, MapBase val, MapStrategy strategy, MapBase map) {
-			((Map)map).Strategy = strategy;
-			foreach (MapBase k in Keys) {
-				strategy.Set(k, Get(k).Copy(), map);}
-			((Map)map).Strategy.Set(key, val, map);
-		}
-		//public virtual MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
-		//    MapStrategy strategy = new DictionaryStrategy();
-		//    foreach (MapBase k in Keys) {
-		//        strategy.Set(k, Get(k).Copy(), map);
-		//    }
-		//    strategy.Set(key, value, map);
-		//    return strategy;
-		//}
-		public virtual bool IsNumber {
-			get {
-				return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber);
-			}
-		}
-		public virtual bool IsString {
-			get {
-				if (GetArrayCount() != Count) {
-					return false;
-				}
-				foreach (MapBase m in Array) {
-					if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}
-		public virtual string GetString() {
-			StringBuilder text = new StringBuilder("");
-			foreach (MapBase key in Keys) {
-				text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));}
-			return text.ToString();
-		}
-		public virtual Number GetNumber() {
-			Number number;
-			if (Count == 0) {
-				number = 0;}
-			else if (this.Count == 1 && this.ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber) {
-				number = 1 + this.Get(new DictionaryMap()).GetNumber();
-			}
-			else {
-				throw new ApplicationException("Map is not an integer");
-			}
-			return number;
-		}
-		public abstract IEnumerable<MapBase> Keys {
-			get;
-		}
-		public virtual IEnumerable<MapBase> Array {
-			get {
-				for (int i = 1; this.ContainsKey(i); i++) {
-					yield return Get(i);
-				}
-			}
-		}
-		public virtual int Count {
-			get {
-				int count = 0;
-				foreach (MapBase key in Keys) {
-					count++;}
-				return count;
-			}
-		}
-	}
+	//        if (Interpreter.profiling) {
+	//            if (UniqueKey != null) {
+	//                long stop;
+	//                QueryPerformanceCounter(out stop);
+	//                double duration = (double)(stop - start) / (double)freq;
+	//                MapBase.calls[UniqueKey].recursive--;
+	//                if (MapBase.calls[UniqueKey].recursive == 0) {
+	//                    MapBase.calls[UniqueKey].time += duration;}}}
+	//        return result;
+	//    }
+	//    public virtual void Append(MapBase map, MapBase parent) {
+	//        this.Set(GetArrayCount() + 1, map, parent);}
+	//    public abstract void Set(MapBase key, MapBase val, MapBase map);
+	//    public abstract MapBase Get(MapBase key);
+	//    public virtual bool ContainsKey(MapBase key) {
+	//        foreach (MapBase k in Keys) {
+	//            if (k.Equals(key)) {
+	//                return true;
+	//            }
+	//        }
+	//        return false;
+	//    }
+	//    public virtual int GetArrayCount() {
+	//        int i = 1;
+	//        for (;ContainsKey(i);i++);
+	//        return i - 1;
+	//    }
+	//    public virtual MapBase CopyData() {
+	//        MapBase map = new DictionaryMap();
+	//        foreach (MapBase key in Keys) {
+	//            map[key] = this.Get(key).Copy();
+	//        }
+	//        return map;
+	//    }
+	//    //protected virtual void Panic(MapBase key, MapBase val, MapStrategy strategy, MapBase map) {
+	//    //    ((Map)map).Strategy = strategy;
+	//    //    foreach (MapBase k in Keys) {
+	//    //        strategy.Set(k, Get(k).Copy(), map);}
+	//    //    ((Map)map).Strategy.Set(key, val, map);
+	//    //}
+	//    //public virtual MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
+	//    //    MapStrategy strategy = new DictionaryStrategy();
+	//    //    foreach (MapBase k in Keys) {
+	//    //        strategy.Set(k, Get(k).Copy(), map);
+	//    //    }
+	//    //    strategy.Set(key, value, map);
+	//    //    return strategy;
+	//    //}
+	//    public virtual bool IsNumber {
+	//        get {
+	//            return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber);
+	//        }
+	//    }
+	//    public virtual bool IsString {
+	//        get {
+	//            if (GetArrayCount() != Count) {
+	//                return false;
+	//            }
+	//            foreach (MapBase m in Array) {
+	//                if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
+	//                    return false;
+	//                }
+	//            }
+	//            return true;
+	//        }
+	//    }
+	//    public virtual string GetString() {
+	//        StringBuilder text = new StringBuilder("");
+	//        foreach (MapBase key in Keys) {
+	//            text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));}
+	//        return text.ToString();
+	//    }
+	//    public virtual Number GetNumber() {
+	//        Number number;
+	//        if (Count == 0) {
+	//            number = 0;}
+	//        else if (this.Count == 1 && this.ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber) {
+	//            number = 1 + this.Get(new DictionaryMap()).GetNumber();
+	//        }
+	//        else {
+	//            throw new ApplicationException("Map is not an integer");
+	//        }
+	//        return number;
+	//    }
+	//    public abstract IEnumerable<MapBase> Keys {
+	//        get;
+	//    }
+	//    public virtual IEnumerable<MapBase> Array {
+	//        get {
+	//            for (int i = 1; this.ContainsKey(i); i++) {
+	//                yield return Get(i);
+	//            }
+	//        }
+	//    }
+	//    public virtual int Count {
+	//        get {
+	//            int count = 0;
+	//            foreach (MapBase key in Keys) {
+	//                count++;}
+	//            return count;
+	//        }
+	//    }
+	//}
 	public abstract class Member {
 		public abstract void Set(object obj, MapBase value);
 		public abstract MapBase Get(object obj);
@@ -2596,16 +2562,56 @@ namespace Meta {
 		public override bool Equals(object obj) {
 			Source source = obj as Source;
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;}}
-	public class Gac : MapStrategy {
+	public class Gac : MapBase{
+		public override MapBase TryGetValue(MapBase key) {
+			return this[key];
+		}
+		public override IEnumerable<MapBase> Array {
+			get { 
+				yield break;
+			}
+		}
+		public override bool IsNumber {
+			get {
+				return false;
+			}
+		}
+		public override bool IsString {
+			get {
+				return false;
+			}
+		}
+		public override int Count {
+			get { throw new Exception("The method or operation is not implemented."); }
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override MapBase Call(MapBase arg) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override Number GetNumber() {
+			return null;
+		}
+		public override string GetString() {
+			return null;
+		}
 		public override bool IsNormal {
 			get {
 				return false;
 			}
 		}
-		public override int GetArrayCount() {
-			return 0;
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
 		}
-		public static readonly MapBase gac = new Map(new Gac());
+
+		//public override int GetArrayCount() {
+		//    return 0;
+		//}
+		public static readonly MapBase gac = new Gac();
+		//public static readonly MapBase gac = new Map(new Gac());
 		private Gac() {
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());}
 		private Dictionary<MapBase, MapBase> cache = new Dictionary<MapBase, MapBase>();
@@ -2630,54 +2636,141 @@ namespace Meta {
 				}
 			}
 			return val;}
-		public override MapBase Get(MapBase key) {
-			MapBase value;
-			if (!cache.ContainsKey(key)) {
-				if (key.IsString) {
-					Assembly assembly;
-					string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
-					if (File.Exists(path)) {
-						assembly = Assembly.LoadFile(path);}
-					else {
-						try {
-							assembly = Assembly.LoadWithPartialName(key.GetString());
+		public override MapBase this[MapBase key] {			get {				MapBase value;
+				if (!cache.ContainsKey(key)) {
+					if (key.IsString) {
+						Assembly assembly;
+						string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
+						if (File.Exists(path)) {
+							assembly = Assembly.LoadFile(path);}
+						else {
+							try {
+								assembly = Assembly.LoadWithPartialName(key.GetString());
+							}
+							catch(Exception e) {
+								return null;
+								//throw e;
+							}
 						}
-						catch(Exception e) {
-							return null;
-							//throw e;
+						if (assembly != null) {
+							value = LoadAssembly(assembly);
+							cache[key] = value;}
+						else {
+							value = null;
 						}
 					}
-					if (assembly != null) {
-						value = LoadAssembly(assembly);
-						cache[key] = value;}
 					else {
 						value = null;
 					}
 				}
 				else {
-					value = null;
+					value = cache[key];
 				}
+				return value;
 			}
-			else {
-				value = cache[key];
+			set {
+				cache[key] = value;
+				//cache[key] = val;
 			}
-			return value;
 		}
-		public override void Set(MapBase key, MapBase val, MapBase map) {
-			cache[key] = val;
+		public override MapBase Copy() {
+			return this;
 		}
-		public override MapBase CopyData() {
-			return new Map(this);
-		}
+		//public override MapBase CopyData() {
+		//    return new Map(this);
+		//}
 		public override IEnumerable<MapBase> Keys {
 			get {
 				throw new Exception("The method or operation is not implemented.");
 			}
 		}
 		public override bool ContainsKey(MapBase key) {
-			return Get(key) != null;
+			return this[key] != null;
+			//return Get(key) != null;
 		}
 	}
+	//public class Gac : MapStrategy {
+	//    public override bool IsNormal {
+	//        get {
+	//            return false;
+	//        }
+	//    }
+	//    public override int GetArrayCount() {
+	//        return 0;
+	//    }
+	//    public static readonly MapBase gac = new Map(new Gac());
+	//    private Gac() {
+	//        cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());}
+	//    private Dictionary<MapBase, MapBase> cache = new Dictionary<MapBase, MapBase>();
+	//    public static MapBase LoadAssembly(Assembly assembly) {
+	//        MapBase val = new DictionaryMap();
+	//        foreach (Type type in assembly.GetExportedTypes()) {
+	//            if (type.DeclaringType == null) {
+	//                MapBase selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition) {
+	//                    name = type.Name.Split('`')[0];}
+	//                else {
+	//                    name = type.Name;}
+	//                selected[type.Name] = new TypeMap(type);
+	//                //selected[type.Name] = new Map(new TypeMap(type));
+	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
+	//                    if (constructor.GetParameters().Length != 0) {
+	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
+	//                    }
+	//                        //selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
+	//                    }
+	//            }
+	//        }
+	//        return val;}
+	//    public override MapBase Get(MapBase key) {
+	//        MapBase value;
+	//        if (!cache.ContainsKey(key)) {
+	//            if (key.IsString) {
+	//                Assembly assembly;
+	//                string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
+	//                if (File.Exists(path)) {
+	//                    assembly = Assembly.LoadFile(path);}
+	//                else {
+	//                    try {
+	//                        assembly = Assembly.LoadWithPartialName(key.GetString());
+	//                    }
+	//                    catch(Exception e) {
+	//                        return null;
+	//                        //throw e;
+	//                    }
+	//                }
+	//                if (assembly != null) {
+	//                    value = LoadAssembly(assembly);
+	//                    cache[key] = value;}
+	//                else {
+	//                    value = null;
+	//                }
+	//            }
+	//            else {
+	//                value = null;
+	//            }
+	//        }
+	//        else {
+	//            value = cache[key];
+	//        }
+	//        return value;
+	//    }
+	//    public override void Set(MapBase key, MapBase val, MapBase map) {
+	//        cache[key] = val;
+	//    }
+	//    public override MapBase CopyData() {
+	//        return new Map(this);
+	//    }
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            throw new Exception("The method or operation is not implemented.");
+	//        }
+	//    }
+	//    public override bool ContainsKey(MapBase key) {
+	//        return Get(key) != null;
+	//    }
+	//}
 	public class StringMap : MapBase {
 		public override bool IsNormal {
 			get {
@@ -4171,8 +4264,9 @@ namespace Meta {
 			if(map.IsString) {
 				return String(map,indentation);
 			}
-			if (map is Map && !((Map)map).Strategy.IsNormal) {
-				return ((Map)map).Strategy.ToString();
+			if (map is DotNetMap) {
+			//if (map is Map && !((Map)map).Strategy.IsNormal) {
+				return map.ToString();
 			}
 			else if (map.Count == 0) {
 				if (indentation < 0) {
@@ -4769,7 +4863,8 @@ namespace Meta {
 						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
 					else if (member is PropertyInfo) {
 						PropertyInfo property = (PropertyInfo)member;
-						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((Map)value).Strategy is ObjectMap)) {
+						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap)) {
+						//if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((Map)value).Strategy is ObjectMap)) {
 							if (value.ArrayCount != 0) {
 								IList list = (IList)property.GetValue(obj, null);
 								list.Clear();
@@ -4918,6 +5013,7 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public static Stack<MapBase> arguments = new Stack<MapBase>();
 		public abstract bool IsNormal {
 			get;
 		}
@@ -4936,7 +5032,22 @@ namespace Meta {
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
 			return this.GetEnumerator();
 		}
-		public abstract string Serialize();
+		public virtual string Serialize() {
+			string text;
+			if (this.Count == 0) {
+				text = "0";
+			}
+			else if (this.IsString) {
+				text = "\"" + this.GetString() + "\"";
+			}
+			else if (this.IsNumber) {
+				text = this.GetNumber().ToString();
+			}
+			else {
+				text = null;
+			}
+			return text;
+		}
 		public static implicit operator MapBase(string text) {
 			return new StringMap(text);
 			//return new Map(text);
@@ -5023,18 +5134,18 @@ namespace Meta {
 		public abstract MapBase Copy();
 		public MapBase Scope;
 
-		public string SerializeDefault() {
-			string text;
-			if (this.Count == 0) {
-				text = "0";}
-			else if (this.IsString) {
-				text = "\"" + this.GetString() + "\"";}
-			else if (this.IsNumber) {
-				text = this.GetNumber().ToString();}
-			else {
-				text = null;}
-			return text;
-		}
+		//public string SerializeDefault() {
+		//    string text;
+		//    if (this.Count == 0) {
+		//        text = "0";}
+		//    else if (this.IsString) {
+		//        text = "\"" + this.GetString() + "\"";}
+		//    else if (this.IsNumber) {
+		//        text = this.GetNumber().ToString();}
+		//    else {
+		//        text = null;}
+		//    return text;
+		//}
 		public void Compile(Expression parent) {
 			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
 		}
@@ -5111,129 +5222,129 @@ namespace Meta {
 			}
 		}
 	}
-	public class Map : MapBase,IEnumerable{
-		public override bool IsNormal {
-			get { 
-				return strategy.IsNormal;
-			}
-		}
-		private MapStrategy strategy;
-		//public Map(MapBase map): this(new ObjectMap(map)) {}
-		//public Map(MapBase map): this(new ObjectMap(map)) {}
+	//public class Map : MapBase,IEnumerable{
+	//    public override bool IsNormal {
+	//        get { 
+	//            return strategy.IsNormal;
+	//        }
+	//    }
+	//    private MapStrategy strategy;
+	//    //public Map(MapBase map): this(new ObjectMap(map)) {}
+	//    //public Map(MapBase map): this(new ObjectMap(map)) {}
 
-		//public Map(object o): this(new ObjectMap(o)) 
-		//{
-		//    if(o is Number) 
-		//    {
-		//    }
-		//}
-		public Map(MapStrategy strategy) {
-			this.strategy = strategy;
-		}
-		public MapStrategy Strategy {
-			get {
-				return strategy;
-			}
-			set {
-				strategy = value;
-			}
-		}
-		public override int Count {
-			get {
-				return strategy.Count;
-			}
-		}
-		public override int ArrayCount {
-			get {
-				return strategy.GetArrayCount();
-			}
-		}
-		public override bool IsString {
-			get {
-				return strategy.IsString;
-			}
-		}
-		public override bool IsNumber {
-			get {
-				return strategy.IsNumber;
-			}
-		}
-		public override IEnumerable<MapBase> Array {
-			get {
-				return strategy.Array;
-			}
-		}
-		public override Number GetNumber() {
-			return strategy.GetNumber();
-		}
-		public override string GetString() {
-			return strategy.GetString();
-		}
-		public static Stack<MapBase> arguments = new Stack<MapBase>();
-		public override bool Equals(object obj) {
-			Map map = obj as Map;
-			if (map != null) {
-				if(map.IsNumber && IsNumber) {
-					return map.GetNumber().Equals(this.GetNumber());
-				}
-				if (map.strategy.IsNormal == strategy.IsNormal) {
-					return strategy.Equals(map.Strategy);
-				}
-				return false;
-			}
-			return false;
-		}
-		public override MapBase TryGetValue(MapBase key) {
-			return strategy.Get(key);
-		}
-		public override MapBase Call(MapBase arg) {
-			arguments.Push(arg);
-			MapBase result = strategy.Call(arg, this);
-			arguments.Pop();
-			return result;
-		}
-		public override void Append(MapBase map) {
-			strategy.Append(map, this);
-		}
-		public override bool ContainsKey(MapBase key) {
-			return strategy.ContainsKey(key);
-		}
+	//    //public Map(object o): this(new ObjectMap(o)) 
+	//    //{
+	//    //    if(o is Number) 
+	//    //    {
+	//    //    }
+	//    //}
+	//    public Map(MapStrategy strategy) {
+	//        this.strategy = strategy;
+	//    }
+	//    public MapStrategy Strategy {
+	//        get {
+	//            return strategy;
+	//        }
+	//        set {
+	//            strategy = value;
+	//        }
+	//    }
+	//    public override int Count {
+	//        get {
+	//            return strategy.Count;
+	//        }
+	//    }
+	//    public override int ArrayCount {
+	//        get {
+	//            return strategy.GetArrayCount();
+	//        }
+	//    }
+	//    public override bool IsString {
+	//        get {
+	//            return strategy.IsString;
+	//        }
+	//    }
+	//    public override bool IsNumber {
+	//        get {
+	//            return strategy.IsNumber;
+	//        }
+	//    }
+	//    public override IEnumerable<MapBase> Array {
+	//        get {
+	//            return strategy.Array;
+	//        }
+	//    }
+	//    public override Number GetNumber() {
+	//        return strategy.GetNumber();
+	//    }
+	//    public override string GetString() {
+	//        return strategy.GetString();
+	//    }
+	//    public static Stack<MapBase> arguments = new Stack<MapBase>();
+	//    public override bool Equals(object obj) {
+	//        Map map = obj as Map;
+	//        if (map != null) {
+	//            if(map.IsNumber && IsNumber) {
+	//                return map.GetNumber().Equals(this.GetNumber());
+	//            }
+	//            if (map.strategy.IsNormal == strategy.IsNormal) {
+	//                return strategy.Equals(map.Strategy);
+	//            }
+	//            return false;
+	//        }
+	//        return false;
+	//    }
+	//    public override MapBase TryGetValue(MapBase key) {
+	//        return strategy.Get(key);
+	//    }
+	//    public override MapBase Call(MapBase arg) {
+	//        arguments.Push(arg);
+	//        MapBase result = strategy.Call(arg, this);
+	//        arguments.Pop();
+	//        return result;
+	//    }
+	//    public override void Append(MapBase map) {
+	//        strategy.Append(map, this);
+	//    }
+	//    public override bool ContainsKey(MapBase key) {
+	//        return strategy.ContainsKey(key);
+	//    }
 
-		public override IEnumerable<MapBase> Keys {
-			get {
-				return strategy.Keys;
-			}
-		}
-		public override MapBase this[MapBase key] {
-			get {
-				MapBase value = TryGetValue(key);
-				if (value == null) {
-					throw new KeyDoesNotExist(key, null, this);}
-				else {
-					return value;
-				}
-			}
-			set {
-				if (value == null) {
-					throw new Exception("Value cannot be null.");}
-				else {
-					strategy.Set(key, value, this);
-				}
-			}
-		}
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            return strategy.Keys;
+	//        }
+	//    }
+	//    public override MapBase this[MapBase key] {
+	//        get {
+	//            MapBase value = TryGetValue(key);
+	//            if (value == null) {
+	//                throw new KeyDoesNotExist(key, null, this);}
+	//            else {
+	//                return value;
+	//            }
+	//        }
+	//        set {
+	//            if (value == null) {
+	//                throw new Exception("Value cannot be null.");}
+	//            else {
+	//                strategy.Set(key, value, this);
+	//            }
+	//        }
+	//    }
 
-		public override MapBase Copy() {
-			MapBase clone = strategy.CopyData();
-			clone.Scope = Scope;
-			clone.Source = Source;
-			clone.expression=expression;
-			clone.IsConstant = this.IsConstant;
-			return clone;}
-		public override int GetHashCode() {
-			return strategy.GetHashCode();
-		}
-		public override string Serialize() {
-			return strategy.Serialize(this);
-		}
-	}
+	//    public override MapBase Copy() {
+	//        MapBase clone = strategy.CopyData();
+	//        clone.Scope = Scope;
+	//        clone.Source = Source;
+	//        clone.expression=expression;
+	//        clone.IsConstant = this.IsConstant;
+	//        return clone;}
+	//    public override int GetHashCode() {
+	//        return strategy.GetHashCode();
+	//    }
+	//    public override string Serialize() {
+	//        return strategy.Serialize(this);
+	//    }
+	//}
 }
