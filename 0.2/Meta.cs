@@ -637,7 +637,7 @@ namespace Meta {
 			// fix this
 			if (index == 0) {
 				MapBase val = value.Copy();
-				context.Strategy = val.Strategy;
+				((Map)context).Strategy = ((Map)val).Strategy;
 			}
 			else {
 				context = value.Copy();
@@ -940,12 +940,12 @@ namespace Meta {
 						if (target == typeof(Number) && meta.IsNumber) {
 							dotNet = meta.GetNumber();
 						}
-						if (dotNet == null && target == typeof(Type) && meta.Strategy is TypeMap) {
-							dotNet = ((TypeMap)meta.Strategy).Type;
+						if (dotNet == null && target == typeof(Type) && meta is Map && ((Map)meta).Strategy is TypeMap) {
+							dotNet = ((TypeMap)((Map)meta).Strategy).Type;
 						}
 						// remove?
-						else if (meta.Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta.Strategy).Type)) {
-							dotNet = ((ObjectMap)meta.Strategy).Object;
+						else if (((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
+							dotNet = ((ObjectMap)((Map)meta).Strategy).Object;
 						}
 						else if (target.IsAssignableFrom(meta.GetType())) {
 							dotNet = meta;
@@ -972,8 +972,8 @@ namespace Meta {
 							dotNet = CreateDelegateFromCode(target, meta);}}
 					else if (target.IsEnum) {
 						dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());}
-					else if (meta.Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta.Strategy).Type)) {
-						dotNet = ((ObjectMap)meta.Strategy).Object;}
+					else if (meta is Map && ((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
+						dotNet = ((ObjectMap)((Map)meta).Strategy).Object;}
 					else {
 						switch (typeCode) {
 							case TypeCode.Boolean:
@@ -1272,20 +1272,20 @@ namespace Meta {
 			return Get(key) != null;
 		}
 		public override MapBase Get(MapBase key) {
-			if (Type.IsGenericTypeDefinition && key.Strategy is TypeMap) {
+			if (Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
 				List<Type> types = new List<Type>();
 				if (Type.GetGenericArguments().Length == 1) {
-					types.Add(((TypeMap)key.Strategy).Type);
+					types.Add(((TypeMap)((Map)key).Strategy).Type);
 				}
 				else {
 					foreach (MapBase map in key.Array) {
-						types.Add(((TypeMap)map.Strategy).Type);
+						types.Add(((TypeMap)((Map)map).Strategy).Type);
 					}
 				}
 				return new Map(new TypeMap(Type.MakeGenericType(types.ToArray())));
 			}
-			else if (Type == typeof(Array) && key.Strategy is TypeMap) {
-				return new Map(new TypeMap(((TypeMap)key.Strategy).Type.MakeArrayType()));
+			else if (Type == typeof(Array) && ((Map)key).Strategy is TypeMap) {
+				return new Map(new TypeMap(((TypeMap)((Map)key).Strategy).Type.MakeArrayType()));
 			}
 			else if (base.Get(key) != null) {
 				return base.Get(key);
@@ -1374,7 +1374,8 @@ namespace Meta {
 		public override void Append(MapBase map, MapBase parent) {
 			ListStrategy list = new ListStrategy();
 			list.Append(map, parent);
-			parent.Strategy = list;}
+			((Map)parent).Strategy = list;
+		}
 		public static EmptyStrategy empty = new EmptyStrategy();
 		private EmptyStrategy() {}
 		public override bool IsNumber {
@@ -1415,7 +1416,8 @@ namespace Meta {
 			dictionary.Set(key, value, map);
 			return dictionary;}
 		public override void Set(MapBase key, MapBase val, MapBase map) {
-			map.Strategy = DeepCopy(key, val, map);}
+			((Map)map).Strategy = DeepCopy(key, val, map);
+		}
 		public override MapBase Get(MapBase key) {
 			return null;}}
 
@@ -1696,7 +1698,9 @@ namespace Meta {
 		public override MapBase Get(MapBase key) {
 			return original.Get(key);}
 		public override void Set(MapBase key, MapBase value, MapBase map) {
-			map.Strategy = original.DeepCopy(key, value, map);}}
+			((Map)map).Strategy = original.DeepCopy(key, value, map);
+		}
+	}
 	public class Profile {
 		public double time;
 		public int calls;
@@ -1800,10 +1804,10 @@ namespace Meta {
 			return map;
 		}
 		protected virtual void Panic(MapBase key, MapBase val, MapStrategy strategy, MapBase map) {
-			map.Strategy = strategy;
+			((Map)map).Strategy = strategy;
 			foreach (MapBase k in Keys) {
 				strategy.Set(k, Get(k).Copy(), map);}
-			map.Strategy.Set(key, val, map);
+			((Map)map).Strategy.Set(key, val, map);
 		}
 		public virtual MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
 			MapStrategy strategy = new DictionaryStrategy();
@@ -3525,8 +3529,8 @@ namespace Meta {
 			return map.GetNumber().ToString();
 		}
 		private static string Serialize(MapBase map, int indentation) {
-			if (!map.Strategy.IsNormal) {
-				return map.Strategy.ToString();
+			if (!((Map)map).Strategy.IsNormal) {
+				return ((Map)map).Strategy.ToString();
 			}
 			else if (map.Count == 0) {
 				if (indentation < 0) {
@@ -4051,7 +4055,7 @@ namespace Meta {
 			return array;}
 		public static MapBase EnumerableToArray(MapBase map) {
 			List<MapBase> result = new List<MapBase>();
-			foreach (object entry in (IEnumerable)(((ObjectMap)map.Strategy)).Object) {
+			foreach (object entry in (IEnumerable)(((ObjectMap)((Map)map).Strategy)).Object) {
 				result.Add(Transform.ToMeta(entry));}
 			return new Map(result);}
 		public static MapBase Reverse(MapBase arg) {
@@ -4066,7 +4070,7 @@ namespace Meta {
 			catch (Exception e) {
 				return catchFunction.Call(new Map(e));}}
 		public static MapBase With(MapBase o, MapBase values) {
-			object obj = ((ObjectMap)o.Strategy).Object;
+			object obj = ((ObjectMap)((Map)o).Strategy).Object;
 			Type type = obj.GetType();
 			foreach (KeyValuePair<MapBase, MapBase> entry in values) {
 				MapBase value = entry.Value;
@@ -4085,7 +4089,7 @@ namespace Meta {
 						field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
 					else if (member is PropertyInfo) {
 						PropertyInfo property = (PropertyInfo)member;
-						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value.Strategy is ObjectMap)) {
+						if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(((Map)value).Strategy is ObjectMap)) {
 							if (value.ArrayCount != 0) {
 								IList list = (IList)property.GetValue(obj, null);
 								list.Clear();
@@ -4329,10 +4333,10 @@ namespace Meta {
 		//    }
 		//}
 		public MapBase Scope;
-		public abstract MapStrategy Strategy {
-			get;
-			set;
-		}
+		//public abstract MapStrategy Strategy {
+		//    get;
+		//    set;
+		//}
 
 				public string SerializeDefault() {
 			string text;
@@ -4369,7 +4373,7 @@ namespace Meta {
 				this[keysAndValues[i]] = keysAndValues[i + 1];
 			}
 		}
-		public override MapStrategy Strategy {
+		public MapStrategy Strategy {
 			get {
 				return strategy;
 			}
