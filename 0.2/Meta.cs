@@ -271,7 +271,10 @@ namespace Meta {
 					throw e;
 				}
 				catch (Exception e) {
-					throw new MetaException(e.Message, Source.start);}}
+					while(e.InnerException!=null) {
+						e=e.InnerException;
+					}
+					throw new MetaException(e.Message+"\n"+e.StackTrace, Source.start);}}
 			return result;
 		}
 	}
@@ -1234,7 +1237,7 @@ namespace Meta {
 		}
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
 		private MapBase Invoke(MapBase argument, object[] arguments) {
-			try {
+			//try {
 				object result;
 				if (method is ConstructorInfo) {
 					result = ((ConstructorInfo)method).Invoke(arguments);
@@ -1243,15 +1246,15 @@ namespace Meta {
 					result = method.Invoke(obj, arguments);
 				}
 				return Transform.ToMeta(result);
-			}
-			catch (Exception e) {
-				if (e.InnerException != null) {
-					throw e.InnerException;
-				}
-				else {
-					throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
-				}
-			}
+			//}
+			//catch (Exception e) {
+			//    if (e.InnerException != null) {
+			//        throw e.InnerException;
+			//    }
+			//    else {
+			//        throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+			//    }
+			//}
 		}
 	}
 	public class TypeMap : DotNetMap {
@@ -2218,7 +2221,9 @@ namespace Meta {
 		}
 		public override IEnumerable<MapBase> Array {
 			get { 
-				throw new Exception("The method or operation is not implemented."); 
+				foreach(char c in text) {
+					yield return c;
+				}
 			}
 		}
 		//public override MapBase CopyData() {
@@ -4563,9 +4568,8 @@ namespace Meta {
 	}
 	public class Map : MapBase,IEnumerable{
 		private MapStrategy strategy;
-		public Map(IEnumerable<MapBase> list)
-			: this(new DictionaryStrategy()) {
-			foreach(Map map in list) {
+		public Map(IEnumerable<MapBase> list): this(new DictionaryStrategy()) {
+			foreach(MapBase map in list) {
 				this.Append(map);
 			}
 		}

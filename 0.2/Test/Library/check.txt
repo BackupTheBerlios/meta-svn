@@ -1,208 +1,208 @@
 ﻿Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"booleanTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"not"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"true"
 					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"false"
 					Value (Map):
 						0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"and"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"true"
 					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"false"
 					Value (Map):
 						0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"orTest"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"true"
 					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"false"
 					Value (Map):
 						0
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"otherTrue"
 					Value (Integer):
 						1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"numberTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"positiveAdd"
 			Value (Integer):
 				1100
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"negativeAdd"
 			Value (Integer):
 				-9
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"differenceTest"
 			Value (Rational):
 				6/25
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"differenceTest2"
 			Value (Integer):
 				101
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"divideTest"
 			Value (Rational):
 				5/103
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"productInteger"
 			Value (Rational):
 				19437
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"minusproduct"
 			Value (Rational):
 				2
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"productFraction"
 			Value (Rational):
 				7/2
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"smallerDecreasingTest"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"nonincreasingTest"
 			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"nondecreasingTest"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"strictlyIncreasingTest"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"smallerTest"
 			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"greaterTest"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"divide"
 			Value (Rational):
 				1000/7
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"bitwiseTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"or"
 			Value (Map):
 				0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"mapTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"IfTest"
-			Value (Map):
+			Value (StringMap):
 				"If test successful"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"sliceTest"
 			Value (Map):
 				"Katze "
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"Map"
 			Value (Map):
 				""
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"keyTestMap"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"x"
-					Value (Map):
+					Value (StringMap):
 						"hello"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"vectorAllLessTest"
 			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"containsTest"
 			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"containedBy1"
 			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"containedBy2"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"containedBy3"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"keysTest"
 			Value (Map):
 				Entry (KeyValuePair`2)
 					Key (Integer):
 						1
-					Value (Map):
+					Value (StringMap):
 						"jjqwv"
 				Entry (KeyValuePair`2)
 					Key (Integer):
 						2
-					Value (Map):
+					Value (StringMap):
 						"oere"
 				Entry (KeyValuePair`2)
 					Key (Integer):
@@ -210,79 +210,79 @@ Entry (KeyValuePair`2)
 					Value (Integer):
 						1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"equal"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"map"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"true"
 							Value (Integer):
 								1
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"false"
 							Value (Integer):
 								0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"tryTest"
-			Value (Map):
+			Value (StringMap):
 				"hello"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"integerToString"
-			Value (Map):
+			Value (StringMap):
 				"5"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"filterTest"
 	Value (Map):
 		"ddd"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"reverseTest"
 	Value (Map):
 		"olleh"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"sumTest"
 	Value (Integer):
 		21
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lengthTest"
 	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"isStringTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"no"
 			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"yes"
 			Value (Integer):
 				1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"withTest"
 	Value (Map):
 		System.Windows.Forms.Form, Text: hello world
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"countTest"
 	Value (Integer):
 		4
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"vectorSumTest"
 	Value (Map):
 		""
