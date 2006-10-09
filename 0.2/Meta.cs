@@ -419,17 +419,19 @@ namespace Meta {
 		}
 	}
 	public class Function:Program {
-		private Dictionary<Type, Compiled> specialized;
-		//=new Dictionary<Type, Compiled>();
-		//public Compiled GetSpecialized(Type type) {
-		//    if (specialized.ContainsKey(type)) {
-		//        return specialized[type];
-		//    }
-		//    else {
-		//        return null;
-		//    }
-		//}
-		public Function(Extent source,Expression parent):base(source,parent) {
+		//private Dictionary<Type, Compiled> specialized;
+		public Function(Expression parent,MapBase code):base(code.Source,parent) {
+			//Program program = new Function(this.Source, parent);
+			isFunction = true;
+			MapBase parameter = code[CodeKeys.Parameter];
+			if (parameter.Count != 0) {
+				KeyStatement s = new KeyStatement(
+					new Literal(parameter, this),
+					new LastArgument(MapBase.Empty, this), this, 0);
+				statementList.Add(s);
+			}
+			CurrentStatement c = new CurrentStatement(code[CodeKeys.Expression].GetExpression(this), this, statementList.Count);
+			statementList.Add(c);
 		}
 	}
 	public class Program : ScopeExpression {
@@ -4543,18 +4545,19 @@ namespace Meta {
 				return new LastArgument(this[CodeKeys.LastArgument], parent);
 			}
 			else if (ContainsKey(CodeKeys.Expression)) {
-				Program program = new Function(this.Source, parent);
-				program.isFunction = true;
-				MapBase parameter = this[CodeKeys.Parameter];
-				if (parameter.Count != 0) {
-					KeyStatement s = new KeyStatement(
-						new Literal(parameter, program),
-						new LastArgument(MapBase.Empty, program), program, 0);
-					program.statementList.Add(s);
-				}
-				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
-				program.statementList.Add(c);
-				return program;
+				return new Function(parent,this);
+				//Program program = new Function(this.Source, parent);
+				//program.isFunction = true;
+				//MapBase parameter = this[CodeKeys.Parameter];
+				//if (parameter.Count != 0) {
+				//    KeyStatement s = new KeyStatement(
+				//        new Literal(parameter, program),
+				//        new LastArgument(MapBase.Empty, program), program, 0);
+				//    program.statementList.Add(s);
+				//}
+				//CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
+				//program.statementList.Add(c);
+				//return program;
 			}
 			else {
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
