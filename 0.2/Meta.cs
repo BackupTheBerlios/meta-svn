@@ -515,6 +515,78 @@ namespace Meta {
 			statementList.Add(c);
 		}
 	}
+	public class FunctionMap:MapBase {
+		public override MapBase Copy() {
+			return DeepCopy();
+		}
+		public override MapBase this[MapBase key] {
+			get {
+				if(key.Equals(CodeKeys.Function)) {
+					return value;
+				}
+				else {
+					return null;
+				}
+			}
+			set {
+				if(key.Equals(CodeKeys.Function)) {
+					this.value=value;
+				}
+				else {
+					throw new Exception("The method or operation is not implemented.");
+				}
+			}
+		}
+		public override IEnumerable<MapBase> Keys {
+			get { 
+				yield return CodeKeys.Function;
+			}
+		}
+		public override bool IsNormal {
+			get { 
+				return true;
+			}
+		}
+		public override string GetString() {
+			return null;
+		}
+		//public override MapBase Copy() {
+		//    throw new Exception("The method or operation is not implemented.");
+		//}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override IEnumerable<MapBase> Array {
+			get { 
+				yield break;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		//public override MapBase Call(MapBase arg) {
+		//    throw new Exception("The method or operation is not implemented.");
+		//}
+		private MapBase value;
+		public FunctionMap(MapBase key,MapBase value) {
+			this.value=value;
+		}
+		public override bool ContainsKey(MapBase k) {
+			return k.Equals(CodeKeys.Function);
+		}
+		public override Number GetNumber() {
+			return null;
+		}
+		public override int Count {
+			get { 
+				return 1;
+			}
+		}
+	}
+	//public class CompiledFunctionProgram:Compiled {
+	//}
 	public class Program : ScopeExpression {
 		public override Structure StructureImplementation() {
 			return statementList[statementList.Count - 1].Current();
@@ -1662,45 +1734,45 @@ namespace Meta {
 			this[ArrayCount + 1]=map;
 		}
 
-		public virtual MapBase CallImplementation(MapBase argument) {
-		    MapBase function=this[CodeKeys.Function];
-		    if (function!=null) {
-		        if (function.Expression!=null && function.Expression.compiled!= null) {
-		            return function.Expression.compiled.Evaluate(this);
-		        }
-		        else {
-		            return function.GetExpression(null).Compile(null).Evaluate(this);
-				}
-			}
-		    else {
-		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-		    }
-		}
-		public override MapBase Call(MapBase argument) {
-			long start = 0;
-			//if (Interpreter.profiling && UniqueKey != null) {
-			//    QueryPerformanceCounter(out start);
-			//    if (!MapBase.calls.ContainsKey(UniqueKey)) {
-			//        MapBase.calls[UniqueKey] = new Profile();}
-			//    MapBase.calls[UniqueKey].calls++;
-			//    MapBase.calls[UniqueKey].recursive++;
-			//}
-			MapBase.arguments.Push(argument);
-			MapBase result = CallImplementation(argument);
-			MapBase.arguments.Pop();
-			//MapBase result = CallImplementation(argument, parent);
-			//Map result = CallImplementation(argument, parent);
+		//public virtual MapBase CallImplementation(MapBase argument) {
+		//    MapBase function=this[CodeKeys.Function];
+		//    if (function!=null) {
+		//        if (function.Expression!=null && function.Expression.compiled!= null) {
+		//            return function.Expression.compiled.Evaluate(this);
+		//        }
+		//        else {
+		//            return function.GetExpression(null).Compile(null).Evaluate(this);
+		//        }
+		//    }
+		//    else {
+		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
+		//    }
+		//}
+		//public override MapBase Call(MapBase argument) {
+		//    long start = 0;
+		//    //if (Interpreter.profiling && UniqueKey != null) {
+		//    //    QueryPerformanceCounter(out start);
+		//    //    if (!MapBase.calls.ContainsKey(UniqueKey)) {
+		//    //        MapBase.calls[UniqueKey] = new Profile();}
+		//    //    MapBase.calls[UniqueKey].calls++;
+		//    //    MapBase.calls[UniqueKey].recursive++;
+		//    //}
+		//    MapBase.arguments.Push(argument);
+		//    MapBase result = CallImplementation(argument);
+		//    MapBase.arguments.Pop();
+		//    //MapBase result = CallImplementation(argument, parent);
+		//    //Map result = CallImplementation(argument, parent);
 
-			//if (Interpreter.profiling) {
-			//    if (UniqueKey != null) {
-			//        long stop;
-			//        QueryPerformanceCounter(out stop);
-			//        double duration = (double)(stop - start) / (double)freq;
-			//        MapBase.calls[UniqueKey].recursive--;
-			//        if (MapBase.calls[UniqueKey].recursive == 0) {
-			//            MapBase.calls[UniqueKey].time += duration;}}}
-			return result;
-		}
+		//    //if (Interpreter.profiling) {
+		//    //    if (UniqueKey != null) {
+		//    //        long stop;
+		//    //        QueryPerformanceCounter(out stop);
+		//    //        double duration = (double)(stop - start) / (double)freq;
+		//    //        MapBase.calls[UniqueKey].recursive--;
+		//    //        if (MapBase.calls[UniqueKey].recursive == 0) {
+		//    //            MapBase.calls[UniqueKey].time += duration;}}}
+		//    return result;
+		//}
 		public override Number GetNumber() {
 			Number number;
 			if (Count == 0) {
@@ -4449,6 +4521,45 @@ namespace Meta {
 		}
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public virtual MapBase CallImplementation(MapBase argument) {
+		    MapBase function=this[CodeKeys.Function];
+		    if (function!=null) {
+		        if (function.Expression!=null && function.Expression.compiled!= null) {
+		            return function.Expression.compiled.Evaluate(this);
+		        }
+		        else {
+		            return function.GetExpression(null).Compile(null).Evaluate(this);
+				}
+			}
+		    else {
+		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
+		    }
+		}
+		public virtual MapBase Call(MapBase argument) {
+			long start = 0;
+			//if (Interpreter.profiling && UniqueKey != null) {
+			//    QueryPerformanceCounter(out start);
+			//    if (!MapBase.calls.ContainsKey(UniqueKey)) {
+			//        MapBase.calls[UniqueKey] = new Profile();}
+			//    MapBase.calls[UniqueKey].calls++;
+			//    MapBase.calls[UniqueKey].recursive++;
+			//}
+			MapBase.arguments.Push(argument);
+			MapBase result = CallImplementation(argument);
+			MapBase.arguments.Pop();
+			//MapBase result = CallImplementation(argument, parent);
+			//Map result = CallImplementation(argument, parent);
+
+			//if (Interpreter.profiling) {
+			//    if (UniqueKey != null) {
+			//        long stop;
+			//        QueryPerformanceCounter(out stop);
+			//        double duration = (double)(stop - start) / (double)freq;
+			//        MapBase.calls[UniqueKey].recursive--;
+			//        if (MapBase.calls[UniqueKey].recursive == 0) {
+			//            MapBase.calls[UniqueKey].time += duration;}}}
+			return result;
+		}
 		public static MapBase Empty=new DictionaryMap();
 		public MapBase DeepCopy() {
 			MapBase clone = new DictionaryMap();
@@ -4572,7 +4683,7 @@ namespace Meta {
 		}
 		public abstract Number GetNumber();
 		public abstract string GetString();
-		public abstract MapBase Call(MapBase arg);
+		//public abstract MapBase Call(MapBase arg);
 		public abstract void Append(MapBase map);
 		public abstract bool ContainsKey(MapBase key);
 		public abstract IEnumerable<MapBase> Keys {
