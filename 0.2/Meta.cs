@@ -379,7 +379,9 @@ namespace Meta {
 			for (int i = 0; i < count; i++) {
 				selected = selected.Scope;
 			}
-			if (!selected.ContainsKey(key)) {
+			MapBase result=selected[key];
+			if (result==null) {//!selected.ContainsKey(key)) {
+			//if (!selected.ContainsKey(key)) {
 				selected = context;
 				int realCount = 0;
 				while (!selected.ContainsKey(key)) {
@@ -389,8 +391,10 @@ namespace Meta {
 						throw new KeyNotFound(key, Source.start, null);
 					}
 				}
+				return selected[key];
 			}
-			return selected[key];
+			return result;
+			//return selected[key];
 			//return selected[key].Copy();
 		}
 	}
