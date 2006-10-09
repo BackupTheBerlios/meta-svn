@@ -419,15 +419,16 @@ namespace Meta {
 		}
 	}
 	public class Function:Program {
-		private Dictionary<Type, Compiled> specialized=new Dictionary<Type, Compiled>();
-		public Compiled GetSpecialized(Type type) {
-	        if (specialized.ContainsKey(type)) {
-	            return specialized[type];
-			}
-	        else {
-	            return null;
-			}
-		}
+		private Dictionary<Type, Compiled> specialized;
+		//=new Dictionary<Type, Compiled>();
+		//public Compiled GetSpecialized(Type type) {
+		//    if (specialized.ContainsKey(type)) {
+		//        return specialized[type];
+		//    }
+		//    else {
+		//        return null;
+		//    }
+		//}
 		public Function(Extent source,Expression parent):base(source,parent) {
 		}
 	}
@@ -4308,7 +4309,15 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public class EmptyMap:MapBase {
-		public override MapBase this[MapBase key] {			get {				return null;			}			set {				throw new Exception("The method or operation is not implemented.");			}		}
+		public override MapBase this[MapBase key] {
+			get {
+				return null;
+			}
+			set {
+				throw new Exception("The method or operation is not implemented.");
+			}
+		}
+
 		public override IEnumerable<MapBase> Keys {
 			get {
 				yield break;
