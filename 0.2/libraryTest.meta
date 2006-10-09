@@ -82,21 +82,10 @@
 					arg|"If test successful"
 				{
 					|0
-			joinTest=join(
-				"abc{ "
-				"die Katze lief im Schnee."
-			joinAllTest=joinAll(
-				[
-					"abc{ "
-					"die Katze lief im Schnee."
-					"die Katze lief im Schnee."
 			sliceTest=slice(
 				"die Katze lief im Schnee."
 				5
 				10
-			appendTest=append(
-				"hello"
-				32
 			Map={
 				&apply(
 					[
@@ -109,14 +98,6 @@
 							1
 			keyTestMap={
 				x="hello"
-			modifyTest=modify(
-				{
-					hello="asdf"
-					world="fdsa"
-				{
-					arg|join(
-						"hello{ "
-						arg
 			vectorAllLessTest=vectorAllLess(
 				[
 					1

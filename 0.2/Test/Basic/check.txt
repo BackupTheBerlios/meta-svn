@@ -2136,10 +2136,10 @@ Entry (KeyValuePair`2)
 	Key (Map):
 		"stringTest"
 	Value (Map):
-		"helloh"
+		"hello"
 Entry (KeyValuePair`2)
 	Key (Map):
-		"helloh"
+		"hello"
 	Value (Map):
 		"hi"
 Entry (KeyValuePair`2)

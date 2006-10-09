@@ -148,24 +148,9 @@ Entry (KeyValuePair`2)
 				"If test successful"
 		Entry (KeyValuePair`2)
 			Key (Map):
-				"joinTest"
-			Value (Map):
-				"abc{ die Katze lief im Schnee."
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"joinAllTest"
-			Value (Map):
-				"abc{ die Katze lief im Schnee.die Katze lief im Schnee."
-		Entry (KeyValuePair`2)
-			Key (Map):
 				"sliceTest"
 			Value (Map):
 				"Katze "
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"appendTest"
-			Value (Map):
-				"hello "
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"Map"
@@ -180,20 +165,6 @@ Entry (KeyValuePair`2)
 						"x"
 					Value (Map):
 						"hello"
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"modifyTest"
-			Value (Map):
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"hello"
-					Value (Map):
-						"hello{ asdf"
-				Entry (KeyValuePair`2)
-					Key (Map):
-						"world"
-					Value (Map):
-						"hello{ fdsa"
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"vectorAllLessTest"

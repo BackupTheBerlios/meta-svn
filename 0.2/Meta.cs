@@ -1349,7 +1349,9 @@ namespace Meta {
 		public static MemberCache cache = new MemberCache(bindingFlags);
 		protected override MemberCache MemberCache {
 			get {
-				return cache;}}
+				return cache;
+			}
+		}
 		protected override object GlobalKey {
 			get {
 				return Object;}}
@@ -1462,14 +1464,19 @@ namespace Meta {
 			else {
 				return base.Equals(obj);}}
 		public override void Set(MapBase key, MapBase val, MapBase map) {
-			MapStrategy strategy;
-			if (key.Equals(new Integer(Count + 1))) {
-			//if (key.Equals(new Map(Count + 1))) {
-				strategy = new DictionaryStrategy();}
-				//strategy = new ListStrategy();}
-			else {
-				strategy = new DictionaryStrategy();}
-			Panic(key, val, strategy, map);}
+			int index=key.GetNumber().GetInt32()-1;
+			char c=Convert.ToChar(val.GetNumber().GetInt32());
+			text.Remove(index,1).Insert(index,c.ToString());
+
+			//MapStrategy strategy;
+			//if (key.Equals(new Integer(Count + 1))) {
+			////if (key.Equals(new Map(Count + 1))) {
+			//    strategy = new DictionaryStrategy();}
+			//    //strategy = new ListStrategy();}
+			//else {
+			//    strategy = new DictionaryStrategy();}
+			//Panic(key, val, strategy, map);
+		}
 		public override int Count {
 			get {
 				return text.Length;}}
@@ -1773,7 +1780,8 @@ namespace Meta {
 		public virtual MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
 			MapStrategy strategy = new DictionaryStrategy();
 			foreach (MapBase k in Keys) {
-				strategy.Set(k, Get(k).Copy(), map);}
+				strategy.Set(k, Get(k).Copy(), map);
+			}
 			strategy.Set(key, value, map);
 			return strategy;
 		}
@@ -2004,7 +2012,8 @@ namespace Meta {
 		public override IEnumerable<MapBase> Keys {
 			get {
 				foreach (MapBase key in Members.Keys) {
-					yield return key;}
+					yield return key;
+}
 				if (global.ContainsKey(GlobalKey)) {
 					foreach (MapBase key in global[GlobalKey].Keys) {
 						yield return key;
@@ -2294,7 +2303,9 @@ namespace Meta {
 		public override bool ContainsKey(MapBase key) {
 			return new List<MapBase>(Keys).Contains(key);
 		}
-		public override MapBase this[MapBase key] {			get {				if (ContainsKey(key)) {
+		public override MapBase this[MapBase key] {
+			get {
+				if (ContainsKey(key)) {
 					if (key.Equals(new Map())) {
 						return this - 1;
 					}
@@ -2311,7 +2322,11 @@ namespace Meta {
 				else {
 					return null;
 				}
-			}			set 			{				//throw new Exception("Cannot set key in number.");				//if (key.Equals(new Map()) && value.IsNumber) {
+			}
+			set 
+			{
+				//throw new Exception("Cannot set key in number.");
+				//if (key.Equals(new Map()) && value.IsNumber) {
 				////if (key.Equals(Map.Empty) && value.IsNumber) {
 				//    this.number = value.GetNumber() + 1;
 				//    //this.number = value.GetNumber() + 1;
@@ -2327,7 +2342,9 @@ namespace Meta {
 				//else {
 				//    Panic(key, value, new DictionaryStrategy(), map);
 				//}
-			}		}
+			}
+		}
+
 		//public override MapBase Get(MapBase key) {
 		//    if (ContainsKey(key)) {
 		//        if (key.Equals(new Map())) {
@@ -3313,7 +3330,9 @@ namespace Meta {
 		public class Merge : Action {
 			public Merge(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, MapBase map, ref MapBase result) {
-				result = Library.Merge(result, map);}}
+				result = Library.Merge(result, map);
+			}
+		}
 		public class CustomProduction : Action {
 			private CustomActionDelegate action;
 			public CustomProduction(CustomActionDelegate action, Rule rule): base(rule) {
@@ -4207,8 +4226,17 @@ namespace Meta {
 		public static MapBase JoinAll(MapBase arrays) {
 			List<MapBase> result = new List<MapBase>();
 			foreach (MapBase array in arrays.Array) {
-				result.AddRange(array.Array);}
-			return new Map(result);}
+				result.AddRange(array.Array);
+			}
+			return new Map(result);
+		}
+		//public static MapBase JoinAll(MapBase arrays) {
+		//    List<MapBase> result = new List<MapBase>();
+		//    foreach (MapBase array in arrays.Array) {
+		//        result.AddRange(array.Array);
+		//    }
+		//    return new Map(result);
+		//}
 		public static MapBase If(bool condition, MapBase then) {
 			if (condition) {
 				return then.Call(new Map());}
@@ -4291,6 +4319,10 @@ namespace Meta {
 		}
 		[MergeCompile]
 		public static MapBase Merge(MapBase arg, MapBase map) {
+			//arg=new Map();
+			//foreach (KeyValuePair<MapBase, MapBase> pair in arg) {
+			//    arg[pair.Key] = pair.Value;
+			//}
 			foreach (KeyValuePair<MapBase, MapBase> pair in map) {
 				arg[pair.Key] = pair.Value;
 			}

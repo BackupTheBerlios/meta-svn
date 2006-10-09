@@ -209,7 +209,7 @@ commandLine|{
 			boolTest=1
 	boolTest=TestClass.boolTest
 	MemberTest=/.Meta.MemberTest
-	memberTest=!"MemberTest"(0
+	memberTest=!"MemberTest"(
 	stringOverload=MemberTest.OverloadedMethod_String(
 		"hello
 	integerOverload=MemberTest.OverloadedMethod_Int32(
@@ -228,7 +228,7 @@ commandLine|{
 		memberTest
 		{
 			instanceField="b
-	MemberTest.set_ClassProperty_String(
+	Meta.MemberTest.set_ClassProperty_String(
 		memberTest.get_InstanceProperty(
 	classPropertyValue=MemberTest.get_ClassProperty(
 	memberTest.set_InstanceProperty_String(
@@ -353,8 +353,8 @@ commandLine|{
 	stringTest=merge(
 		stringTest
 		{
-			6=stringTest.1
-	helloh="hi
+			5=stringTest.1
+	hello="hi
 	stringStrategyHashTest=!!"stringTest
 	x={
 		aLongText="
