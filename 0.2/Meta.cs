@@ -1811,94 +1811,94 @@ namespace Meta {
 			}
 		}
 	}
-	public class DictionaryStrategy : MapStrategy {
-	    public override MapBase CopyData() {
-	        return new Map(new CloneStrategy(this));}
-	    public override bool IsNumber {
-	        get {
-	            return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber);
-	        }
-	    }
-	            //return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
-	    public override int GetArrayCount() {
-	        int i = 1;
-	        while (this.ContainsKey(i)) {
-	            i++;}
-	        return i - 1;}
-	    private Dictionary<MapBase, MapBase> dictionary;
-	    public DictionaryStrategy()
-	        : this(2) {}
-	    public DictionaryStrategy(int Count) {
-	        this.dictionary = new Dictionary<MapBase, MapBase>(Count);}
-	    public DictionaryStrategy(Dictionary<MapBase, MapBase> data) {
-	        this.dictionary = data;}
-	    public override MapBase Get(MapBase key) {
-	        MapBase val;
-	        dictionary.TryGetValue(key, out val);
-	        return val;}
-	    public override void Set(MapBase key, MapBase value, MapBase map) {
-	        dictionary[key] = value;}
-	    public override bool ContainsKey(MapBase key) {
-	        return dictionary.ContainsKey(key);}
-	    public override IEnumerable<MapBase> Keys {
-	        get {
-	            return dictionary.Keys;}}
-	    public override int Count {
-	        get {
-	            return dictionary.Count;}}}
-	public class CloneStrategy : MapStrategy {
-		public override bool IsNormal {
-			get {
-				return original.IsNormal;}}
-		public override int GetArrayCount() {
-			return original.GetArrayCount();}
-		private MapStrategy original;
-		public CloneStrategy(MapStrategy original) {
-			this.original = original;}
-		public override IEnumerable<MapBase> Array {
-			get {
-				return original.Array;}}
-		public override bool ContainsKey(MapBase key) {
-			return original.ContainsKey(key);}
-		public override int Count {
-			get {
-				return original.Count;}}
-		public override MapBase CopyData() {
-			MapStrategy clone = new CloneStrategy(this.original);
-			return new Map(clone);}
-		public override bool Equals(object obj) {
-			return obj.Equals(original);
-		}
-		public override int GetHashCode() {
-			return original.GetHashCode();
-		}
-		public override Number GetNumber() {
-			return original.GetNumber();
-		}
-		public override string GetString() {
-			return original.GetString();
-		}
-		public override bool IsNumber {
-			get {
-				return original.IsNumber;
-			}
-		}
-		public override bool IsString {
-			get {
-				return original.IsString;
-			}
-		}
-		public override IEnumerable<MapBase> Keys {
-			get {
-				return original.Keys;}}
-		public override MapBase Get(MapBase key) {
-			return original.Get(key);}
-		public override void Set(MapBase key, MapBase value, MapBase map) 
-		{
-			//((Map)map).Strategy = original.DeepCopy(key, value, map);
-			//((Map)map).Strategy = original.DeepCopy(key, value, map);
-		}
-	}
+	//public class DictionaryStrategy : MapStrategy {
+	//    public override MapBase CopyData() {
+	//        return new Map(new CloneStrategy(this));}
+	//    public override bool IsNumber {
+	//        get {
+	//            return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this.Get(new DictionaryMap()).IsNumber);
+	//        }
+	//    }
+	//            //return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}}
+	//    public override int GetArrayCount() {
+	//        int i = 1;
+	//        while (this.ContainsKey(i)) {
+	//            i++;}
+	//        return i - 1;}
+	//    private Dictionary<MapBase, MapBase> dictionary;
+	//    public DictionaryStrategy()
+	//        : this(2) {}
+	//    public DictionaryStrategy(int Count) {
+	//        this.dictionary = new Dictionary<MapBase, MapBase>(Count);}
+	//    public DictionaryStrategy(Dictionary<MapBase, MapBase> data) {
+	//        this.dictionary = data;}
+	//    public override MapBase Get(MapBase key) {
+	//        MapBase val;
+	//        dictionary.TryGetValue(key, out val);
+	//        return val;}
+	//    public override void Set(MapBase key, MapBase value, MapBase map) {
+	//        dictionary[key] = value;}
+	//    public override bool ContainsKey(MapBase key) {
+	//        return dictionary.ContainsKey(key);}
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            return dictionary.Keys;}}
+	//    public override int Count {
+	//        get {
+	//            return dictionary.Count;}}}
+	//public class CloneStrategy : MapStrategy {
+	//    public override bool IsNormal {
+	//        get {
+	//            return original.IsNormal;}}
+	//    public override int GetArrayCount() {
+	//        return original.GetArrayCount();}
+	//    private MapStrategy original;
+	//    public CloneStrategy(MapStrategy original) {
+	//        this.original = original;}
+	//    public override IEnumerable<MapBase> Array {
+	//        get {
+	//            return original.Array;}}
+	//    public override bool ContainsKey(MapBase key) {
+	//        return original.ContainsKey(key);}
+	//    public override int Count {
+	//        get {
+	//            return original.Count;}}
+	//    public override MapBase CopyData() {
+	//        MapStrategy clone = new CloneStrategy(this.original);
+	//        return new Map(clone);}
+	//    public override bool Equals(object obj) {
+	//        return obj.Equals(original);
+	//    }
+	//    public override int GetHashCode() {
+	//        return original.GetHashCode();
+	//    }
+	//    public override Number GetNumber() {
+	//        return original.GetNumber();
+	//    }
+	//    public override string GetString() {
+	//        return original.GetString();
+	//    }
+	//    public override bool IsNumber {
+	//        get {
+	//            return original.IsNumber;
+	//        }
+	//    }
+	//    public override bool IsString {
+	//        get {
+	//            return original.IsString;
+	//        }
+	//    }
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            return original.Keys;}}
+	//    public override MapBase Get(MapBase key) {
+	//        return original.Get(key);}
+	//    public override void Set(MapBase key, MapBase value, MapBase map) 
+	//    {
+	//        //((Map)map).Strategy = original.DeepCopy(key, value, map);
+	//        //((Map)map).Strategy = original.DeepCopy(key, value, map);
+	//    }
+	//}
 	public class Profile {
 		public double time;
 		public int calls;
@@ -2793,9 +2793,6 @@ namespace Meta {
 				return true;
 			}
 		}
-		//public Number():base(new DictionaryStrategy())
-		//{
-		//}
 		public override string GetString() {
 			return null;
 		}
