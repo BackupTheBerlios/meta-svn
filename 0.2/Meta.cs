@@ -480,10 +480,8 @@ namespace Meta {
 		public override int Count {
 			get { throw new Exception("The method or operation is not implemented."); }
 		}
-
 	}
 	public class CompiledFunction:Compiled {
-		//private List<CompiledStatement> statementList;
 		private Compiled expression;
 		private MapBase parameter;
 		public CompiledFunction(Function function): base(function.Source) {
@@ -492,10 +490,6 @@ namespace Meta {
 		}
 		public override MapBase EvaluateImplementation(MapBase parent) {
 			MapBase context = new FunctionArgument(parameter,MapBase.arguments.Peek());
-			//MapBase context = new DictionaryMap();
-			//if(parameter!=null) {
-			//    context[parameter]=MapBase.arguments.Peek();
-			//}
 			context.Scope = parent;
 			return expression.Evaluate(context);
 		}
