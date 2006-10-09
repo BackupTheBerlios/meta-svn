@@ -327,7 +327,6 @@ commandLine|,
 		.
 			/
 			"Meta"
-			"PositionalNoConversion"
 			"PositionalNoConversion_String_String_String"
 		"m"
 		"n"
@@ -343,7 +342,6 @@ commandLine|,
 		.
 			/
 			"Meta"
-			"NamedNoConversion"
 			"NamedNoConversion_Map"
 		,
 			1="m"
@@ -498,7 +496,6 @@ commandLine|,
 		.
 			/
 			"System.Drawing"
-			"Font"
 			"Font_String_Single"
 		"Courier New"
 		10
@@ -573,7 +570,6 @@ commandLine|,
 		-
 			.
 				!"System.Drawing"
-				"Point"
 				"Point_Int32_Int32"
 			5
 			1000
