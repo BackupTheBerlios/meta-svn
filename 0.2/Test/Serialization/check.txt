@@ -60,7 +60,7 @@ commandLine|,
 	"SetCounter"=,
 		|,
 			"counter":,
-				lastArgument=0
+				lastArgument=""
 	1=-
 		!"SetCounter"
 		5
@@ -265,7 +265,6 @@ commandLine|,
 		"MemberTest"
 	"memberTest"=-
 		!"MemberTest"
-		0
 	"stringOverload"=-
 		.
 			!"MemberTest"
@@ -300,7 +299,8 @@ commandLine|,
 			"instanceField"="b"
 	-
 		.
-			!"MemberTest"
+			!"Meta"
+			"MemberTest"
 			"set_ClassProperty_String"
 		-
 			.
@@ -506,10 +506,10 @@ commandLine|,
 		!"merge"
 		!"stringTest"
 		,
-			6=.
+			5=.
 				!"stringTest"
 				1
-	"helloh"="hi"
+	"hello"="hi"
 	"stringStrategyHashTest"=!!"stringTest"
 	"x"=,
 		"aLongText"="

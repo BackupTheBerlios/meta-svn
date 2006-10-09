@@ -4,43 +4,43 @@
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"asdf"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"shortFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"asdf"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"shortFunctionTest"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"listTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
@@ -61,51 +61,51 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				4
-			Value (Map):
+			Value (StringMap):
 				"hello"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				5
-			Value (Map):
+			Value (StringMap):
 				"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"counter"
 	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"inlineProgram"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"hello"
-			Value (Map):
+			Value (StringMap):
 				"world"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
-			Value (Map):
+			Value (StringMap):
 				"y"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"SetCounter"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
-						0
+					Value (StringMap):
+						""
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -113,154 +113,154 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"keys"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"counter"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"lastArgument"
 													Value (Map):
 														0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scoping"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"test"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"scopingValue"
-					Value (Map):
+					Value (StringMap):
 						"right"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"search"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"literal"
-											Value (Map):
+											Value (StringMap):
 												"scopingValue"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopingValue"
-	Value (Map):
+	Value (StringMap):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopingTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"scopingValue"
-			Value (Map):
+			Value (StringMap):
 				"right"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"scopingValue"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lexicalScoping"
-	Value (Map):
+	Value (StringMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"unicodeText"
-	Value (Map):
+	Value (StringMap):
 		"äaba"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"integerHashTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"correct hash content"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"hashTestData"
 			Value (Map):
 				2
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"hashTest"
-			Value (Map):
+			Value (StringMap):
 				"correct hash content"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"negativeInteger"
 	Value (Integer):
 		100
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"integerIncrementTest"
 	Value (Map):
 		6
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"integerDecrementTest"
 	Value (Integer):
 		4
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"negativeNumber"
 	Value (Integer):
 		-123
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"mapNumbers"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"integer"
 			Value (Map):
 				6
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"negative"
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -269,12 +269,12 @@ Entry (KeyValuePair`2)
 					Value (Integer):
 						5
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"negative"
 					Value (Map):
 						0
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"fraction"
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -283,12 +283,12 @@ Entry (KeyValuePair`2)
 					Value (Integer):
 						5
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"denominator"
 					Value (Integer):
 						7
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"negativeFraction"
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -297,128 +297,128 @@ Entry (KeyValuePair`2)
 					Value (Integer):
 						5
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"negative"
 					Value (Map):
 						0
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"denominator"
 					Value (Integer):
 						7
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"fraction"
 	Value (Rational):
 		3/2
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"literalEscapeTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
-			Value (Map):
+			Value (StringMap):
 				"asdf"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"asdf"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				3
-			Value (Map):
+			Value (StringMap):
 				"as"'df"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				4
-			Value (Map):
+			Value (StringMap):
 				"as"''df"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				5
-			Value (Map):
+			Value (StringMap):
 				"as"''''''''''''''''df"
 Entry (KeyValuePair`2)
 	Key (Integer):
 		2
-	Value (Map):
+	Value (StringMap):
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
 	Key (Integer):
 		3
-	Value (Map):
+	Value (StringMap):
 		"Autokey"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"commandLineArguments"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
-			Value (Map):
+			Value (StringMap):
 				"first argument"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"second argument"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"aMap"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"a"
-			Value (Map):
+			Value (StringMap):
 				"a"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"normal symbol"
-	Value (Map):
+	Value (StringMap):
 		"NormalSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lookupSymbol"
-	Value (Map):
+	Value (StringMap):
 		"LookupSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"long key symbol"
-	Value (Map):
+	Value (StringMap):
 		"LookupExtendedSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lookedUpNormalSymbol"
-	Value (Map):
+	Value (StringMap):
 		"NormalSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lookedUpSymbol"
-	Value (Map):
+	Value (StringMap):
 		"LookupSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lookedUpLongSymbol"
-	Value (Map):
+	Value (StringMap):
 		"LookupExtendedSymbol"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"object"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"a"
-			Value (Map):
+			Value (StringMap):
 				"c"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"autoSearch"
-			Value (Map):
+			Value (StringMap):
 				"changed"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"b"
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -426,34 +426,34 @@ Entry (KeyValuePair`2)
 						1
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"x"
 							Value (Integer):
 								7
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"z"
 							Value (Integer):
 								1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"SetA"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -461,64 +461,64 @@ Entry (KeyValuePair`2)
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"keys"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"a"
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"c"
 										Entry (KeyValuePair`2)
 											Key (Integer):
 												2
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"keys"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"autoSearch"
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"changed"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"SetB"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"newB"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -526,20 +526,20 @@ Entry (KeyValuePair`2)
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"keys"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"b"
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"call"
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -547,33 +547,33 @@ Entry (KeyValuePair`2)
 																		1
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"search"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"literal"
-																					Value (Map):
+																					Value (StringMap):
 																						"merge"
 																Entry (KeyValuePair`2)
 																	Key (Integer):
 																		2
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"search"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"literal"
-																					Value (Map):
+																					Value (StringMap):
 																						"b"
 																Entry (KeyValuePair`2)
 																	Key (Integer):
 																		3
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -581,20 +581,20 @@ Entry (KeyValuePair`2)
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"key"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
 																									Value (Integer):
 																										1
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"value"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"select"
 																									Value (Map):
 																										Entry (KeyValuePair`2)
@@ -602,74 +602,74 @@ Entry (KeyValuePair`2)
 																												1
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"search"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (StringMap):
 																																"literal"
-																															Value (Map):
+																															Value (StringMap):
 																																"newB"
 																										Entry (KeyValuePair`2)
 																											Key (Integer):
 																												2
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"literal"
-																													Value (Map):
+																													Value (StringMap):
 																														"value"
 										Entry (KeyValuePair`2)
 											Key (Integer):
 												2
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"current"
 													Value (Map):
 														0
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"changed"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"a"
-					Value (Map):
+					Value (StringMap):
 						"b"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"c"
-					Value (Map):
+					Value (StringMap):
 						"d"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -677,72 +677,72 @@ Entry (KeyValuePair`2)
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"keys"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"a"
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"b"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"a"
-	Value (Map):
+	Value (StringMap):
 		"default"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"b"
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"aSet"
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"bSet"
-	Value (Map):
+	Value (StringMap):
 		"changed"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeTest"
-	Value (Map):
+	Value (StringMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"inScope"
-			Value (Map):
+			Value (StringMap):
 				"right"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -750,31 +750,31 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"keys"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"scopeTest"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"inScope"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"inScope"
-	Value (Map):
+	Value (StringMap):
 		"wrong"
 Entry (KeyValuePair`2)
 	Key (Integer):
@@ -782,34 +782,34 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeFromFunctionData"
-	Value (Map):
+	Value (StringMap):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeFunctionFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"scopeFromFunctionData"
-			Value (Map):
+			Value (StringMap):
 				"right"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -817,90 +817,90 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"function"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"parameter"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"expression"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"scopeFromFunctionData"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeFromFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"scopeFromFunctionData"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"scopeFromFunctionTest"
-	Value (Map):
+	Value (StringMap):
 		"right"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"ReturnEverything"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"everything"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -908,80 +908,80 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"everything"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"everythingReturned"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
-			Value (Map):
+			Value (StringMap):
 				"a"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"b"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				3
-			Value (Map):
+			Value (StringMap):
 				"c"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"variableAsArgument"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
-			Value (Map):
+			Value (StringMap):
 				"x"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"y"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				3
-			Value (Map):
+			Value (StringMap):
 				"z"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"ReturnFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -989,16 +989,16 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -1006,33 +1006,33 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"function"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"parameter"
-																					Value (Map):
+																					Value (StringMap):
 																						"arg"
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"expression"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"program"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
@@ -1040,16 +1040,16 @@ Entry (KeyValuePair`2)
 																										1
 																									Value (Map):
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"current"
 																											Value (Map):
 																												0
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"value"
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"program"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
@@ -1057,20 +1057,20 @@ Entry (KeyValuePair`2)
 																																1
 																															Value (Map):
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"key"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				1
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"value"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				1
@@ -1079,20 +1079,20 @@ Entry (KeyValuePair`2)
 																																2
 																															Value (Map):
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"key"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				2
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"value"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				2
@@ -1101,42 +1101,42 @@ Entry (KeyValuePair`2)
 																																3
 																															Value (Map):
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"key"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				3
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"value"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
 																																			Value (Integer):
 																																				3
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"SetCurrent"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"current"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1144,16 +1144,16 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -1161,46 +1161,46 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"asdf"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"search"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"literal"
-																					Value (Map):
+																					Value (StringMap):
 																						"current"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"x"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"select"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -1208,69 +1208,69 @@ Entry (KeyValuePair`2)
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"search"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
-																									Value (Map):
+																									Value (StringMap):
 																										"current"
 																				Entry (KeyValuePair`2)
 																					Key (Integer):
 																						2
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"symbol"
 								Entry (KeyValuePair`2)
 									Key (Integer):
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"x"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"thisSet"
-	Value (Map):
+	Value (StringMap):
 		"haha"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"FirstLevel"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1278,20 +1278,20 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -1299,55 +1299,55 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"SecondLevel"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"SecondLevel"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"argTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
@@ -1355,161 +1355,161 @@ Entry (KeyValuePair`2)
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"a"
-					Value (Map):
+					Value (StringMap):
 						"z"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"TestClass"
 	Value (Map):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"nestedClassTest"
 	Value (Integer):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"testClass"
 	Value (Map):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"boolTest"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"MemberTest"
 	Value (Map):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"memberTest"
 	Value (Map):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"stringOverload"
-	Value (Map):
+	Value (StringMap):
 		"string function, argument+hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"integerOverload"
-	Value (Map):
+	Value (StringMap):
 		"integer function, argument+5"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"memberTestOverload"
-	Value (Map):
+	Value (StringMap):
 		"MemberTest function, argument+Meta.Test.TestClasses.MemberTest3247"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"classPropertyValue"
-	Value (Map):
+	Value (StringMap):
 		"b"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"instancePropertyValue"
-	Value (Map):
+	Value (StringMap):
 		"b"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"interceptedSymbol"
-	Value (Map):
+	Value (StringMap):
 		"/hello/"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"positionalNoConversion"
 	Value (Map):
 		Meta.Test.TestClasses.PositionalNoConversion
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"positionalNoConversionConcatenated"
-	Value (Map):
+	Value (StringMap):
 		"rstmno"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"namedNoConversion"
 	Value (Map):
 		Meta.Test.TestClasses.NamedNoConversion
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"namedNoConversionConcatenated"
-	Value (Map):
+	Value (StringMap):
 		"rnulltmnnull"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"indexerNoConversion"
 	Value (Map):
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"indexerNoConversionIndexed"
-	Value (Map):
+	Value (StringMap):
 		"abchihiunchangedYunchangedZabc"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"interceptedSymbolTwo"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"k"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"xyz"
-	Value (Map):
+	Value (StringMap):
 		"w"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"literalFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"literal"
 							Value (Integer):
 								5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"literalFunctionResult"
 	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"someFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1517,64 +1517,64 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"simple function this"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"callFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"someFunction"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"callFunctionResult"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1582,38 +1582,38 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"simple function this"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"delayedFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1621,33 +1621,33 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"function"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"parameter"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"expression"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"program"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -1655,42 +1655,42 @@ Entry (KeyValuePair`2)
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"key"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"x"
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"value"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"y"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"delayedFunctionResult"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1698,92 +1698,92 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"x"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"y"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"delayedFunctionDirect"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
-			Value (Map):
+			Value (StringMap):
 				"y"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"value"
-	Value (Map):
+	Value (StringMap):
 		"xyz"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"selectionFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"value"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"selectionFunctionResult"
-	Value (Map):
+	Value (StringMap):
 		"xyz"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"upperLevel"
-	Value (Map):
+	Value (StringMap):
 		"changed"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"SetUpperLevel"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1791,46 +1791,46 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"keys"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"upperLevel"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"ChangeUpperLevel"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1838,20 +1838,20 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -1859,22 +1859,22 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"SetUpperLevel"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
-																	Value (Map):
+																	Value (StringMap):
 																		"changed"
 Entry (KeyValuePair`2)
 	Key (Integer):
@@ -1882,29 +1882,29 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		" "
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"staticEventChanged"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"ChangeStaticEvent"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -1912,26 +1912,26 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"keys"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"staticEventChanged"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 Entry (KeyValuePair`2)
 	Key (Integer):
@@ -1939,52 +1939,52 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"resultFromDelegate"
-	Value (Map):
+	Value (StringMap):
 		"argumentString"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"staticEventResult"
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"instanceEventChanged"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"instanceEventResult"
 	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"one"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"two"
 	Value (Integer):
 		2
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"firstIf"
-	Value (Map):
+	Value (StringMap):
 		"then"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"secondIf"
-	Value (Map):
+	Value (StringMap):
 		"unchanged"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"firstIfCondition"
 	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"firstIfBranches"
 	Value (Map):
 		Entry (KeyValuePair`2)
@@ -1992,98 +1992,98 @@ Entry (KeyValuePair`2)
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"then"
 		Entry (KeyValuePair`2)
 			Key (Map):
 				0
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"else"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"bigNumber"
 	Value (Integer):
 		50020202
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"secondSwitch"
-	Value (Map):
+	Value (StringMap):
 		"three"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"secondSwitchCases"
 	Value (Map):
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				1
-			Value (Map):
+			Value (StringMap):
 				"one"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				2
-			Value (Map):
+			Value (StringMap):
 				"two"
 		Entry (KeyValuePair`2)
 			Key (Integer):
 				3
-			Value (Map):
+			Value (StringMap):
 				"three"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"emptyMap"
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"emptyFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2091,74 +2091,74 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"x"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"emptyFunctionResult"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
-			Value (Map):
+			Value (StringMap):
 				"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"font"
 	Value (Map):
 		[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"decimalTest"
 	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"fractionTest"
 	Value (Integer):
 		40
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"stringTest"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"hello"
-	Value (Map):
+	Value (StringMap):
 		"hi"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"stringStrategyHashTest"
-	Value (Map):
+	Value (StringMap):
 		"hi"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"x"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"aLongText"
-			Value (Map):
+			Value (StringMap):
 				"hello world!
 hello!"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"arrayList"
 	Value (Map):
 		System.Collections.ArrayList
@@ -2168,70 +2168,70 @@ Entry (KeyValuePair`2)
 	Value (Integer):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"arrayListResult"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"textBox"
 	Value (Map):
 		System.Windows.Forms.TextBox, Text: Alle meine Entchen{
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"lines"
 	Value (Map):
 		System.String[]
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"alleMeineText"
-	Value (Map):
+	Value (StringMap):
 		"schwimmen auf dem See{""
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"form"
 	Value (Map):
 		System.Windows.Forms.Form, Text: 
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"automaticConversionTest"
 	Value (Map):
 		{X=5,Y=1000}
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"tabText"
-	Value (Map):
+	Value (StringMap):
 		"			hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"escapedText"
-	Value (Map):
+	Value (StringMap):
 		"'#'n'''t"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"whileCounter"
 	Value (Integer):
 		10
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"loop"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"start"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2239,20 +2239,20 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"whileDecision"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2260,20 +2260,20 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"not"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"call"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -2281,33 +2281,33 @@ Entry (KeyValuePair`2)
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"search"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"equal"
 																		Entry (KeyValuePair`2)
 																			Key (Integer):
 																				2
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"search"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"start"
 																		Entry (KeyValuePair`2)
 																			Key (Integer):
 																				3
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"literal"
 																					Value (Integer):
 																						10
@@ -2316,20 +2316,20 @@ Entry (KeyValuePair`2)
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"whileBranches"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2337,20 +2337,20 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
 																			Value (Integer):
 																				1
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2358,33 +2358,33 @@ Entry (KeyValuePair`2)
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"key"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
-																									Value (Map):
+																									Value (StringMap):
 																										"function"
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"value"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
 																									Value (Map):
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"parameter"
-																											Value (Map):
+																											Value (StringMap):
 																												"arg"
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"expression"
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"call"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
@@ -2392,20 +2392,20 @@ Entry (KeyValuePair`2)
 																																1
 																															Value (Map):
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"search"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (StringMap):
 																																				"literal"
-																																			Value (Map):
+																																			Value (StringMap):
 																																				"loop"
 																														Entry (KeyValuePair`2)
 																															Key (Integer):
 																																2
 																															Value (Map):
 																																Entry (KeyValuePair`2)
-																																	Key (Map):
+																																	Key (StringMap):
 																																		"call"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
@@ -2413,33 +2413,33 @@ Entry (KeyValuePair`2)
 																																				1
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
-																																					Key (Map):
+																																					Key (StringMap):
 																																						"search"
 																																					Value (Map):
 																																						Entry (KeyValuePair`2)
-																																							Key (Map):
+																																							Key (StringMap):
 																																								"literal"
-																																							Value (Map):
+																																							Value (StringMap):
 																																								"sum"
 																																		Entry (KeyValuePair`2)
 																																			Key (Integer):
 																																				2
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
-																																					Key (Map):
+																																					Key (StringMap):
 																																						"search"
 																																					Value (Map):
 																																						Entry (KeyValuePair`2)
-																																							Key (Map):
+																																							Key (StringMap):
 																																								"literal"
-																																							Value (Map):
+																																							Value (StringMap):
 																																								"arg"
 																																		Entry (KeyValuePair`2)
 																																			Key (Integer):
 																																				3
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
-																																					Key (Map):
+																																					Key (StringMap):
 																																						"literal"
 																																					Value (Integer):
 																																						1
@@ -2448,20 +2448,20 @@ Entry (KeyValuePair`2)
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
 																			Value (Map):
 																				0
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2469,55 +2469,55 @@ Entry (KeyValuePair`2)
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"key"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
-																									Value (Map):
+																									Value (StringMap):
 																										"function"
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"value"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (StringMap):
 																										"literal"
 																									Value (Map):
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"parameter"
-																											Value (Map):
+																											Value (StringMap):
 																												"arg"
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"expression"
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"search"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (StringMap):
 																																"literal"
-																															Value (Map):
+																															Value (StringMap):
 																																"arg"
 								Entry (KeyValuePair`2)
 									Key (Integer):
 										3
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"current"
 											Value (Map):
 												0
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2525,7 +2525,7 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"select"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -2533,59 +2533,59 @@ Entry (KeyValuePair`2)
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"search"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"whileBranches"
 																		Entry (KeyValuePair`2)
 																			Key (Integer):
 																				2
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"search"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"literal"
-																							Value (Map):
+																							Value (StringMap):
 																								"whileDecision"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"start"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"returnInMap"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2593,55 +2593,55 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"result"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"search"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"literal"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"literalAsArgument"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"result"
 			Value (Integer):
 				1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"returnFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2649,81 +2649,81 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"function"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"parameter"
-															Value (Map):
+															Value (StringMap):
 																"arg"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"expression"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
-																	Value (Map):
+																	Value (StringMap):
 																		"functionResult"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"returnArg"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"search"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"literal"
-									Value (Map):
+									Value (StringMap):
 										"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"myArg"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2731,96 +2731,96 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"hello"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"world"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"funcReturnTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"hello"
-			Value (Map):
+			Value (StringMap):
 				"world"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"documentedFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"doc"
-			Value (Map):
+			Value (StringMap):
 				"This function returns #hello ."
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"literal"
-							Value (Map):
+							Value (StringMap):
 								"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"docFunctionResult"
-	Value (Map):
+	Value (StringMap):
 		"hello"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"topLevel"
-	Value (Map):
+	Value (StringMap):
 		"changed"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"deep"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"map"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"test"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"function"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"parameter"
-									Value (Map):
+									Value (StringMap):
 										"arg"
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"expression"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"program"
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -2828,22 +2828,22 @@ Entry (KeyValuePair`2)
 														1
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"keys"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
-																	Value (Map):
+																	Value (StringMap):
 																		"topLevel"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"value"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
-																	Value (Map):
+																	Value (StringMap):
 																		"changed"
 Entry (KeyValuePair`2)
 	Key (Integer):
@@ -2851,24 +2851,24 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"outerFunction"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"function"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"parameter"
-					Value (Map):
+					Value (StringMap):
 						"arg"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"expression"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
@@ -2876,20 +2876,20 @@ Entry (KeyValuePair`2)
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
-													Value (Map):
+													Value (StringMap):
 														"innerFunction"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2897,33 +2897,33 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"key"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"function"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"value"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"parameter"
-																					Value (Map):
+																					Value (StringMap):
 																						"arg"
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (StringMap):
 																						"expression"
 																					Value (Map):
 																						Entry (KeyValuePair`2)
-																							Key (Map):
+																							Key (StringMap):
 																								"program"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
@@ -2931,42 +2931,42 @@ Entry (KeyValuePair`2)
 																										1
 																									Value (Map):
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"current"
 																											Value (Map):
 																												0
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (StringMap):
 																												"value"
 																											Value (Map):
 																												Entry (KeyValuePair`2)
-																													Key (Map):
+																													Key (StringMap):
 																														"search"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (StringMap):
 																																"literal"
-																															Value (Map):
+																															Value (StringMap):
 																																"arg"
 								Entry (KeyValuePair`2)
 									Key (Integer):
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"key"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"literal"
 													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (StringMap):
 												"value"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2974,46 +2974,46 @@ Entry (KeyValuePair`2)
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"search"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (StringMap):
 																				"literal"
-																			Value (Map):
+																			Value (StringMap):
 																				"innerFunction"
 														Entry (KeyValuePair`2)
 															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
 																	Value (Map):
 																		0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"outerFunctionTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"innerFunction"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (StringMap):
 						"function"
 					Value (Map):
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"parameter"
-							Value (Map):
+							Value (StringMap):
 								"arg"
 						Entry (KeyValuePair`2)
-							Key (Map):
+							Key (StringMap):
 								"expression"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (StringMap):
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -3021,22 +3021,22 @@ Entry (KeyValuePair`2)
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"current"
 													Value (Map):
 														0
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (StringMap):
 														"value"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (StringMap):
 																"search"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (StringMap):
 																		"literal"
-																	Value (Map):
+																	Value (StringMap):
 																		"arg"
 		Entry (KeyValuePair`2)
 			Key (Integer):
@@ -3044,75 +3044,75 @@ Entry (KeyValuePair`2)
 			Value (Map):
 				0
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"newLines"
-	Value (Map):
+	Value (StringMap):
 		"
 "
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"app"
 	Value (Map):
 		System.Windows.Forms.Application
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"enumTest"
 	Value (Integer):
 		2
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"typeTest"
 	Value (Map):
 		System.String[]
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"oneTwoThreeHello"
-	Value (Map):
+	Value (StringMap):
 		"asdf"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"copySourceData"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
-			Value (Map):
+			Value (StringMap):
 				"y"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"z"
-			Value (Map):
+			Value (StringMap):
 				"a"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"copiedData"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"x"
-			Value (Map):
+			Value (StringMap):
 				"changed"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"z"
-			Value (Map):
+			Value (StringMap):
 				"a"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"characterLiterals"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"a"
 			Value (Integer):
 				97
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"space"
 			Value (Integer):
 				32
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (StringMap):
 				"tab"
 			Value (Integer):
 				9
