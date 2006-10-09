@@ -1,7 +1,7 @@
 ﻿Entry (KeyValuePair`2)
-	Key (Map):
+	Key (StringMap):
 		"hello"
-	Value (Map):
+	Value (StringMap):
 		"world"
 Entry (KeyValuePair`2)
 	Key (Map):

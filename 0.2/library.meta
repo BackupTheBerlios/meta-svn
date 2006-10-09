@@ -21,7 +21,7 @@
 				&stuff.<a
 			merge=Library.Merge_MapBase_MapBase
 			accumulate=Library.Sum_MapBase_MapBase
-			keys=arg?<"Map_IEnumerable`1"({
+			keys=arg?<"DictionaryMap_IEnumerable`1"({
 				m=Map_Object(arg
 				&m.get_Keys(
 			product=Number.op_Multiply_Number_Number
