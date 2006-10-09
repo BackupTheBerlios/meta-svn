@@ -1362,7 +1362,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"TestClass"
-	Value (Map):
+	Value (TypeMap):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1372,7 +1372,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"testClass"
-	Value (Map):
+	Value (ObjectMap):
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1382,12 +1382,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"MemberTest"
-	Value (Map):
+	Value (TypeMap):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"memberTest"
-	Value (Map):
+	Value (ObjectMap):
 		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1422,7 +1422,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"positionalNoConversion"
-	Value (Map):
+	Value (ObjectMap):
 		Meta.Test.TestClasses.PositionalNoConversion
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1432,7 +1432,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"namedNoConversion"
-	Value (Map):
+	Value (ObjectMap):
 		Meta.Test.TestClasses.NamedNoConversion
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1442,7 +1442,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"indexerNoConversion"
-	Value (Map):
+	Value (ObjectMap):
 		Meta.Test.TestClasses.IndexerNoConversion
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2120,7 +2120,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"font"
-	Value (Map):
+	Value (ObjectMap):
 		[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2160,7 +2160,7 @@ hello!"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"arrayList"
-	Value (Map):
+	Value (ObjectMap):
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
 	Key (Integer):
@@ -2175,13 +2175,13 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"textBox"
-	Value (Map):
+	Value (ObjectMap):
 		System.Windows.Forms.TextBox, Text: Alle meine Entchen{
 schwimmen auf dem Se...
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"lines"
-	Value (Map):
+	Value (ObjectMap):
 		System.String[]
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2191,12 +2191,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"form"
-	Value (Map):
+	Value (ObjectMap):
 		System.Windows.Forms.Form, Text: 
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"automaticConversionTest"
-	Value (Map):
+	Value (ObjectMap):
 		{X=5,Y=1000}
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -3052,7 +3052,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"app"
-	Value (Map):
+	Value (TypeMap):
 		System.Windows.Forms.Application
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -3062,7 +3062,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"typeTest"
-	Value (Map):
+	Value (ObjectMap):
 		System.String[]
 Entry (KeyValuePair`2)
 	Key (StringMap):

@@ -152,16 +152,18 @@ namespace Meta {
 			return null;
 		}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
-			MapBase mapBase = (MapBase)calls[0].GetConstant();
-			Map first=mapBase as Map;
+			MapBase first = (MapBase)calls[0].GetConstant();
 			if (first != null) {
 				Method method;
-				if (first.Strategy is TypeMap) {
-					method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
+				if (first is TypeMap) {
+				//if (first.Strategy is TypeMap) {
+					method = (Method)((TypeMap)first).Constructor.Strategy;
+					//method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
 				}
-				else if (first.Strategy is Method) {
-					method = (Method)first.Strategy;
-				}
+				//else if (first.Strategy is Method) {
+				//    method = (Method)first.Strategy;
+				//    //method = (Method)first.Strategy;
+				//}
 				else {
 					method = null;
 				}
@@ -939,12 +941,14 @@ namespace Meta {
 						if (target == typeof(Number) && meta.IsNumber) {
 							dotNet = meta.GetNumber();
 						}
-						if (dotNet == null && target == typeof(Type) && meta is Map && ((Map)meta).Strategy is TypeMap) {
-							dotNet = ((TypeMap)((Map)meta).Strategy).Type;
+						if (dotNet == null && target == typeof(Type) && meta is TypeMap) {
+							dotNet = ((TypeMap)meta).Type;
+							//dotNet = ((TypeMap)((Map)meta).Strategy).Type;
 						}
 						// remove?
-						else if (meta is Map && ((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
-							dotNet = ((ObjectMap)((Map)meta).Strategy).Object;
+						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+						//else if (meta is Map && ((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
+							dotNet = ((ObjectMap)meta).Object;
 						}
 						else if (target.IsAssignableFrom(meta.GetType())) {
 							dotNet = meta;
@@ -971,8 +975,11 @@ namespace Meta {
 							dotNet = CreateDelegateFromCode(target, meta);}}
 					else if (target.IsEnum) {
 						dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());}
-					else if (meta is Map && ((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
-						dotNet = ((ObjectMap)((Map)meta).Strategy).Object;}
+					else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+					//else if (meta is Map && ((Map)meta).Strategy is ObjectMap && target.IsAssignableFrom(((ObjectMap)((Map)meta).Strategy).Type)) {
+						dotNet = ((ObjectMap)meta).Object;
+					}
+						//dotNet = ((ObjectMap)((Map)meta).Strategy).Object;}
 					else {
 						switch (typeCode) {
 							case TypeCode.Boolean:
@@ -1099,9 +1106,11 @@ namespace Meta {
 					case TypeCode.Int64:
 						return (Int64)dotNet;
 					case TypeCode.DateTime:
-						return new Map(new ObjectMap(dotNet));
+						return new ObjectMap(dotNet);
+						//return new Map(new ObjectMap(dotNet));
 					case TypeCode.DBNull:
-						return new Map(new ObjectMap(dotNet));
+						return new ObjectMap(dotNet);
+						//return new Map(new ObjectMap(dotNet));
 					case TypeCode.Object:
 						if(dotNet is Number) {
 							return (Number)dotNet;
@@ -1110,7 +1119,8 @@ namespace Meta {
 							return (MapBase)dotNet;
 						}
 						else {
-							return new Map(new ObjectMap(dotNet));
+							return new ObjectMap(dotNet);
+							//return new Map(new ObjectMap(dotNet));
 						}
 					default:
 						throw new ApplicationException("Cannot convert object.");
@@ -1268,34 +1278,69 @@ namespace Meta {
 		}
 		public TypeMap(Type targetType): base(null, targetType) {}
 		public override bool ContainsKey(MapBase key) {
-			return Get(key) != null;
+			return this[key] != null;
+			//return Get(key) != null;
 		}
-		public override MapBase Get(MapBase key) {
-			if (key is Map && Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
-				List<Type> types = new List<Type>();
-				if (Type.GetGenericArguments().Length == 1) {
-					types.Add(((TypeMap)((Map)key).Strategy).Type);
+		public override MapBase this[MapBase key] {
+			get {
+				if (key is Map && Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
+					List<Type> types = new List<Type>();
+					if (Type.GetGenericArguments().Length == 1) {
+						types.Add(((TypeMap)key).Type);
+						//types.Add(((TypeMap)((Map)key).Strategy).Type);
+					}
+					else {
+						foreach (MapBase map in key.Array) {
+							types.Add(((TypeMap)map).Type);
+							//types.Add(((TypeMap)((Map)map).Strategy).Type);
+						}
+					}
+					return new TypeMap(Type.MakeGenericType(types.ToArray()));
+					//return new Map(new TypeMap(Type.MakeGenericType(types.ToArray())));
+				}
+				else if (Type == typeof(Array) && key is TypeMap) {
+				//else if (Type == typeof(Array) && key is Map && ((Map)key).Strategy is TypeMap) {
+					return new TypeMap(((TypeMap)key).Type.MakeArrayType());
+					//return new Map(new TypeMap(((TypeMap)key).Type.MakeArrayType()));
+					//return new Map(new TypeMap(((TypeMap)((Map)key).Strategy).Type.MakeArrayType()));
+				}
+				else if (base[key] != null) {
+					return base[key];
 				}
 				else {
-					foreach (MapBase map in key.Array) {
-						types.Add(((TypeMap)((Map)map).Strategy).Type);
-					}
+					//Map value;
+					//Data.TryGetValue(key, out value);
+					return null;
+					//return value;
 				}
-				return new Map(new TypeMap(Type.MakeGenericType(types.ToArray())));
-			}
-			else if (Type == typeof(Array) && key is Map && ((Map)key).Strategy is TypeMap) {
-				return new Map(new TypeMap(((TypeMap)((Map)key).Strategy).Type.MakeArrayType()));
-			}
-			else if (base.Get(key) != null) {
-				return base.Get(key);
-			}
-			else {
-				//Map value;
-				//Data.TryGetValue(key, out value);
-				return null;
-				//return value;
 			}
 		}
+		//public override MapBase Get(MapBase key) {
+		//    if (key is Map && Type.IsGenericTypeDefinition && ((Map)key).Strategy is TypeMap) {
+		//        List<Type> types = new List<Type>();
+		//        if (Type.GetGenericArguments().Length == 1) {
+		//            types.Add(((TypeMap)((Map)key).Strategy).Type);
+		//        }
+		//        else {
+		//            foreach (MapBase map in key.Array) {
+		//                types.Add(((TypeMap)((Map)map).Strategy).Type);
+		//            }
+		//        }
+		//        return new Map(new TypeMap(Type.MakeGenericType(types.ToArray())));
+		//    }
+		//    else if (Type == typeof(Array) && key is Map && ((Map)key).Strategy is TypeMap) {
+		//        return new Map(new TypeMap(((TypeMap)((Map)key).Strategy).Type.MakeArrayType()));
+		//    }
+		//    else if (base.Get(key) != null) {
+		//        return base.Get(key);
+		//    }
+		//    else {
+		//        //Map value;
+		//        //Data.TryGetValue(key, out value);
+		//        return null;
+		//        //return value;
+		//    }
+		//}
 		//private Dictionary<Map, Map> data;
 		//private Dictionary<Map, Map> Data {
 		//    get {
@@ -1314,8 +1359,11 @@ namespace Meta {
 			foreach (ParameterInfo parameter in constructor.GetParameters()) {
 				name += "_" + parameter.ParameterType.Name;}
 			return name;}
-		public override MapBase CopyData() {
-			return new Map(new TypeMap(this.Type));}
+		public override MapBase Copy() {
+			return new TypeMap(this.Type);
+		}
+		//public override MapBase CopyData() {
+		//    return new Map(new TypeMap(this.Type));}
 		private MapBase constructor;
 		public Map Constructor {
 			get {
@@ -1327,10 +1375,14 @@ namespace Meta {
 				return (Map)constructor;
 			}
 		}
-		public override MapBase CallImplementation(MapBase argument, MapBase parent) {
+		public override MapBase Call(MapBase argument) {
 			return Library.With(Constructor.Call(new DictionaryMap()), argument);
 			//return Library.With(Constructor.Call(Map.Empty), argument);
 		}
+		//public override MapBase CallImplementation(MapBase argument, MapBase parent) {
+		//    return Library.With(Constructor.Call(new DictionaryMap()), argument);
+		//    //return Library.With(Constructor.Call(Map.Empty), argument);
+		//}
 	}
 	public class ObjectMap : DotNetMap {
 		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
@@ -1346,11 +1398,23 @@ namespace Meta {
 		protected override object GlobalKey {
 			get {
 				return Object;}}
-		public override MapBase CallImplementation(MapBase arg, MapBase parent) {
+		public override MapBase Call(MapBase arg) {
 			if (this.Type.IsSubclassOf(typeof(Delegate))) {
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, parent);}
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, this);}
+				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, parent);}
 			else {
-				return base.Call(arg, parent);}}
+				throw new Exception("Object is not callable.");
+				//return base.Call(arg);
+				//return base.Call(arg, parent);
+			}
+		}
+		//public override MapBase CallImplementation(MapBase arg, MapBase parent) {
+		//    if (this.Type.IsSubclassOf(typeof(Delegate))) {
+		//        return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, parent);}
+		//    else {
+		//        return base.Call(arg, parent);
+		//    }
+		//}
 		public override int GetHashCode() {
 			return Object.GetHashCode();}
 		public override bool Equals(object o) {
@@ -1374,12 +1438,22 @@ namespace Meta {
 			}
 		}
 		public override string ToString() {
-			return Object.ToString();}
-		public override MapBase CopyData() {
-			return new Map(new ObjectMap(Object));
+			return Object.ToString();
 		}
+		public override MapBase Copy() {
+			return new ObjectMap(Object);
+		}
+
+		//public override MapBase CopyData() {
+		//    return new Map(new ObjectMap(Object));
+		//}
 	}
 	public class DictionaryMap : MapBase {
+		public override bool IsNormal {
+			get {
+				return true;
+			}
+		}
 		public override int GetHashCode() {
 			if (IsNumber) {
 				return (int)(GetNumber().Numerator % int.MaxValue);
@@ -1865,7 +1939,8 @@ namespace Meta {
 		public TypeMember(Type type) {
 			this.type = type;}
 		public override MapBase Get(object obj) {
-			return new Map(new TypeMap(type));
+			return new TypeMap(type);
+			//return new Map(new TypeMap(type));
 		}
 	}
 	public class FieldMember : Member {
@@ -1915,7 +1990,24 @@ namespace Meta {
 			return cache[type];
 		}
 		private Dictionary<Type, Dictionary<MapBase, Member>> cache = new Dictionary<Type, Dictionary<MapBase, Member>>();}
-	public abstract class DotNetMap : MapStrategy {
+	public abstract class DotNetMap : MapBase {
+		public override IEnumerable<MapBase> Array {
+			get {
+				yield break;
+			}
+		}
+		public override MapBase TryGetValue(MapBase key) {
+			return this[key];
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override string GetString() {
+			return null;
+		}
+		public override Number GetNumber() {
+			return null;
+		}
 		public override bool IsNormal {
 			get {
 				return false;
@@ -1934,17 +2026,23 @@ namespace Meta {
 				return dotNet.Object == Object && dotNet.Type == Type;}
 			return false;
 		}
-		public override object UniqueKey {
-			get {
-				return null;
-			}
-		}
+		//public override object UniqueKey {
+		//    get {
+		//        return null;
+		//    }
+		//}
 		protected abstract BindingFlags BindingFlags {
 			get;
 		}
-		public override int GetArrayCount() {
-			return 0;
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
 		}
+
+		//public override int GetArrayCount() {
+		//    return 0;
+		//}
 		public object Object {
 			get {
 				return obj;
@@ -1981,23 +2079,25 @@ namespace Meta {
 			this.obj = obj;
 			this.type = type;
 		}
-		public override MapBase Get(MapBase key) {
-			if (Members.ContainsKey(key)) {
-				return Members[key].Get(obj);
+		public override MapBase this[MapBase key] {
+			get {
+				if (Members.ContainsKey(key)) {
+					return Members[key].Get(obj);
+				}
+				if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key)) {
+					return global[GlobalKey][key];
+				}
+				return null;
 			}
-			if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key)) {
-				return global[GlobalKey][key];
-			}
-			return null;
-		}
-		public override void Set(MapBase key, MapBase value, MapBase parent) {
-			if (Members.ContainsKey(key)) {
-				Members[key].Set(obj, value);
-			}
-			else {
-				if (!global.ContainsKey(GlobalKey)) {
-					global[GlobalKey] = new Dictionary<MapBase, MapBase>();}
-				global[GlobalKey][key] = value;
+			set {
+				if (Members.ContainsKey(key)) {
+					Members[key].Set(obj, value);
+				}
+				else {
+					if (!global.ContainsKey(GlobalKey)) {
+						global[GlobalKey] = new Dictionary<MapBase, MapBase>();}
+					global[GlobalKey][key] = value;
+				}
 			}
 		}
 		public static Type GetListAddFunctionType(IList list, MapBase value) {
@@ -2021,13 +2121,19 @@ namespace Meta {
 		}
 		public static Dictionary<object, Dictionary<MapBase, MapBase>> global = new Dictionary<object, Dictionary<MapBase, MapBase>>();
 		public override bool ContainsKey(MapBase key) {
-			return Get(key) != null;
+			return this[key] != null;
+			//return Get(key) != null;
+		}
+		public override int Count {
+			get { 
+				return new List<MapBase>(Keys).Count;
+			}
 		}
 		public override IEnumerable<MapBase> Keys {
 			get {
 				foreach (MapBase key in Members.Keys) {
 					yield return key;
-}
+				}
 				if (global.ContainsKey(GlobalKey)) {
 					foreach (MapBase key in global[GlobalKey].Keys) {
 						yield return key;
@@ -2045,7 +2151,7 @@ namespace Meta {
 				return false;
 			}
 		}
-		public override string Serialize(MapBase parent) {
+		public override string Serialize() {
 			if (obj != null) {
 				return this.obj.ToString();}
 			else {
@@ -2059,6 +2165,150 @@ namespace Meta {
 			return eventDelegate;
 		}
 	}
+//    public abstract class DotNetMap : MapStrategy {
+//        public override bool IsNormal {
+//            get {
+//                return false;
+//            }
+//        }
+//        public override int GetHashCode() {
+//            if (obj != null) {
+//                return obj.GetHashCode();}
+//            else {
+//                return type.GetHashCode();
+//            }
+//        }
+//        public override bool Equals(object obj) {
+//            DotNetMap dotNet = obj as DotNetMap;
+//            if (dotNet != null) {
+//                return dotNet.Object == Object && dotNet.Type == Type;}
+//            return false;
+//        }
+//        public override object UniqueKey {
+//            get {
+//                return null;
+//            }
+//        }
+//        protected abstract BindingFlags BindingFlags {
+//            get;
+//        }
+//        public override int GetArrayCount() {
+//            return 0;
+//        }
+//        public object Object {
+//            get {
+//                return obj;
+//            }
+//        }
+//        public Type Type {
+//            get {
+//                return type;
+//            }
+//        }
+//        protected abstract object GlobalKey {
+//            get;
+//        }
+//        public static string GetMethodName(MethodInfo method) {
+//            string name = method.Name;
+//            foreach (ParameterInfo parameter in method.GetParameters()) {
+//                name += "_" + parameter.ParameterType.Name;}
+//            return name;
+//        }
+//        private Dictionary<MapBase, Member> data;
+//        private Dictionary<MapBase, Member> Members {
+//            get {
+//                if (data == null) {
+//                    data = MemberCache.GetMembers(type);}
+//                return data;
+//            }
+//        }
+//        protected abstract MemberCache MemberCache {
+//            get;
+//        }
+//        private object obj;
+//        private Type type;
+//        public DotNetMap(object obj, Type type) {
+//            this.obj = obj;
+//            this.type = type;
+//        }
+//        public override MapBase Get(MapBase key) {
+//            if (Members.ContainsKey(key)) {
+//                return Members[key].Get(obj);
+//            }
+//            if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key)) {
+//                return global[GlobalKey][key];
+//            }
+//            return null;
+//        }
+//        public override void Set(MapBase key, MapBase value, MapBase parent) {
+//            if (Members.ContainsKey(key)) {
+//                Members[key].Set(obj, value);
+//            }
+//            else {
+//                if (!global.ContainsKey(GlobalKey)) {
+//                    global[GlobalKey] = new Dictionary<MapBase, MapBase>();}
+//                global[GlobalKey][key] = value;
+//            }
+//        }
+//        public static Type GetListAddFunctionType(IList list, MapBase value) {
+//            foreach (MemberInfo member in list.GetType().GetMember("Add")) {
+//                if (member is MethodInfo) {
+//                    MethodInfo method = (MethodInfo)member;
+//                    ParameterInfo[] parameters = method.GetParameters();
+//                    if (parameters.Length == 1) {
+//                        ParameterInfo parameter = parameters[0];
+//                        bool c = true;
+//                        foreach (MapBase entry in value.Array) {
+//                            object o;
+//                            if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
+//                                c = false;
+//                                break;
+//                            }
+//                        }
+//                        if (c) {
+//                            return parameter.ParameterType;}}}}
+//            return null;
+//        }
+//        public static Dictionary<object, Dictionary<MapBase, MapBase>> global = new Dictionary<object, Dictionary<MapBase, MapBase>>();
+//        public override bool ContainsKey(MapBase key) {
+//            return Get(key) != null;
+//        }
+//        public override IEnumerable<MapBase> Keys {
+//            get {
+//                foreach (MapBase key in Members.Keys) {
+//                    yield return key;
+//}
+//                if (global.ContainsKey(GlobalKey)) {
+//                    foreach (MapBase key in global[GlobalKey].Keys) {
+//                        yield return key;
+//                    }
+//                }
+//            }
+//        }
+//        public override bool IsString {
+//            get {
+//                return false;
+//            }
+//        }
+//        public override bool IsNumber {
+//            get {
+//                return false;
+//            }
+//        }
+//        public override string Serialize(MapBase parent) {
+//            if (obj != null) {
+//                return this.obj.ToString();}
+//            else {
+//                return this.type.ToString();
+//            }
+//        }
+//        public Delegate CreateEventDelegate(string name, MapBase code) {
+//            EventInfo eventInfo = type.GetEvent(name, BindingFlags.Public | BindingFlags.NonPublic |
+//                BindingFlags.Static | BindingFlags.Instance);
+//            Delegate eventDelegate = Transform.CreateDelegateFromCode(eventInfo.EventHandlerType, code);
+//            return eventDelegate;
+//        }
+//    }
 	public interface ISerializeEnumerableSpecial {
 		string Serialize();
 	}
@@ -2219,7 +2469,8 @@ namespace Meta {
 						name = type.Name.Split('`')[0];}
 					else {
 						name = type.Name;}
-					selected[type.Name] = new Map(new TypeMap(type));
+					selected[type.Name] = new TypeMap(type);
+					//selected[type.Name] = new Map(new TypeMap(type));
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
 							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
@@ -2276,6 +2527,11 @@ namespace Meta {
 		}
 	}
 	public class StringMap : MapBase {
+		public override bool IsNormal {
+			get {
+				return true;
+			}
+		}
 		public override MapBase TryGetValue(MapBase key) {
 			return this[key];
 		}
@@ -4194,7 +4450,7 @@ namespace Meta {
 			return new DictionaryMap();
 		}
 		public static MapBase Double(MapBase d) {
-			return new Map(new ObjectMap((object)(float)d.GetNumber().GetDouble()));
+			return new ObjectMap((object)(float)d.GetNumber().GetDouble());
 			//return new Map((object)(float)d.GetNumber().GetDouble());
 		}
 		public static void WriteLine(string s) {
@@ -4311,7 +4567,8 @@ namespace Meta {
 		}
 		public static MapBase EnumerableToArray(MapBase map) {
 			List<MapBase> result = new List<MapBase>();
-			foreach (object entry in (IEnumerable)(((ObjectMap)((Map)map).Strategy)).Object) {
+			foreach (object entry in (IEnumerable)((ObjectMap)map).Object) {
+			//foreach (object entry in (IEnumerable)(((ObjectMap)((Map)map).Strategy)).Object) {
 				result.Add(Transform.ToMeta(entry));}
 			return new DictionaryMap(result);
 			//return new Map(result);
@@ -4327,12 +4584,14 @@ namespace Meta {
 				return tryFunction.Call(new DictionaryMap());
 			}
 			catch (Exception e) {
-				return catchFunction.Call(new Map(new ObjectMap(e)));
+				return catchFunction.Call(new ObjectMap(e));
+				//return catchFunction.Call(new Map(new ObjectMap(e)));
 				//return catchFunction.Call(new Map(e));
 			}
 		}
 		public static MapBase With(MapBase o, MapBase values) {
-			object obj = ((ObjectMap)((Map)o).Strategy).Object;
+			object obj = ((ObjectMap)o).Object;
+			//object obj = ((ObjectMap)((Map)o).Strategy).Object;
 			Type type = obj.GetType();
 			foreach (KeyValuePair<MapBase, MapBase> entry in values) {
 				MapBase value = entry.Value;
@@ -4496,6 +4755,9 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public abstract bool IsNormal {
+			get;
+		}
 		public override string ToString() {
 			if (Count == 0) {
 				return "0";
@@ -4687,15 +4949,21 @@ namespace Meta {
 		}
 	}
 	public class Map : MapBase,IEnumerable{
-		private MapStrategy strategy;
-		public Map(MapBase map): this(new ObjectMap(map)) {}
-
-		public Map(object o): this(new ObjectMap(o)) 
-		{
-		    if(o is Number) 
-		    {
-		    }
+		public override bool IsNormal {
+			get { 
+				return strategy.IsNormal;
+			}
 		}
+		private MapStrategy strategy;
+		//public Map(MapBase map): this(new ObjectMap(map)) {}
+		//public Map(MapBase map): this(new ObjectMap(map)) {}
+
+		//public Map(object o): this(new ObjectMap(o)) 
+		//{
+		//    if(o is Number) 
+		//    {
+		//    }
+		//}
 		public Map(MapStrategy strategy) {
 			this.strategy = strategy;
 		}

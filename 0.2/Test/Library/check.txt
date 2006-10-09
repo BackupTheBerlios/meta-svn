@@ -274,7 +274,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"withTest"
-	Value (Map):
+	Value (ObjectMap):
 		System.Windows.Forms.Form, Text: hello world
 Entry (KeyValuePair`2)
 	Key (StringMap):

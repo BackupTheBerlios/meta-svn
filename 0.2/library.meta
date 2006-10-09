@@ -4,12 +4,12 @@
 		lib={
 			double=Library.Double_MapBase
 			contains=?{
-				m=Map_MapBase(@)
+				m=ObjectMap_Object(@)
 				&m.ContainsKey_MapBase
 			foreach=Library.Foreach_MapBase_MapBase
 			flip=func?a?b?func(b a
 			containedBy=key?map?{
-				m=Map_MapBase(map
+				m=ObjectMap_Object(map
 				&m.ContainsKey_MapBase(key
 			modify=Library.Modify_MapBase_MapBase
 			sum=Number.op_Addition_Number_Number
@@ -22,7 +22,7 @@
 			merge=Library.Merge_MapBase_MapBase
 			accumulate=Library.Sum_MapBase_MapBase
 			keys=arg?<"DictionaryMap_IEnumerable`1"({
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.get_Keys(
 			product=Number.op_Multiply_Number_Number
 			not=arg?{
@@ -64,7 +64,7 @@
 				keys(a
 				key?difference(a.<key> b.<key>
 			length=arg?{
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.get_ArrayCount(0
 			select=Library.Select_MapBase_MapBase
 			slice=Library.Slice_MapBase_Int32_Int32
@@ -97,17 +97,17 @@
 				&stuff.<a
 			andAll=accumulate(and
 			integerToString=arg?{
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.ToString(
 			count=arg?{
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.get_Count(
 			equal=Library.Equal_Object_Object
 			isNumber=arg?{
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.get_IsNumber(
 			isString=arg?{
-				m=Map_Object(arg
+				m=ObjectMap_Object(arg
 				&m.get_IsString(
 			joinAll=Library.JoinAll_MapBase
 			mergeAll=Library.MergeAll_MapBase
