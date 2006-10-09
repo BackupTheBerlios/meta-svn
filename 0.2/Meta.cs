@@ -2787,10 +2787,15 @@ namespace Meta {
 			}
 		}
 	}
-	public abstract class Number:Map {
-		public Number():base(new DictionaryStrategy())
-		{
+	public abstract class Number:MapBase {
+		public override bool IsNormal {
+			get {
+				return true;
+			}
 		}
+		//public Number():base(new DictionaryStrategy())
+		//{
+		//}
 		public override string GetString() {
 			return null;
 		}
@@ -3033,6 +3038,11 @@ namespace Meta {
 	}
 	public class Integer:Number {
 
+		public override bool IsNormal {
+			get {
+				return true;
+			}
+		}
 	    public override bool IsInt32 {
 	        get {
 	            return true;
@@ -4780,11 +4790,13 @@ namespace Meta {
 						EventInfo eventInfo = (EventInfo)member;
 						new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
 					}
-						//new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);}
 					else {
-						throw new Exception("unknown member type");}}
+						throw new Exception("unknown member type");
+					}
+				}
 				else {
-					o[entry.Key] = entry.Value;}
+					o[entry.Key] = entry.Value;
+				}
 				//}
 			}
 			return o;}
