@@ -2470,7 +2470,6 @@ namespace Meta {
 		public abstract double GetDouble();
 	}
 	public class Integer:Number {
-
 		public override bool IsNormal {
 			get {
 				return true;
@@ -2993,10 +2992,11 @@ namespace Meta {
 			//new DictionaryMap(CodeKeys.Current, new DictionaryMap()));
 		public static Rule LastArgument = Simple(
 			Syntax.lastArgument,
-			new DictionaryMap(CodeKeys.LastArgument, new DictionaryMap()));
+			new DictionaryMap(CodeKeys.LastArgument, MapBase.Empty));
+			//new DictionaryMap(CodeKeys.LastArgument, new DictionaryMap()));
 		private static Rule Root = Simple(
 			Syntax.root,
-			new DictionaryMap(CodeKeys.Root,new DictionaryMap()));
+			new DictionaryMap(CodeKeys.Root,MapBase.Empty));
 
 		private static Rule LiteralExpression = new Sequence(
 			new Assignment(CodeKeys.Literal, new Alternatives(
@@ -3094,10 +3094,10 @@ namespace Meta {
 
 		public static Rule DiscardStatement = ComplexStatement(
 			null,
-			new Assignment(CodeKeys.Discard, new LiteralRule(new DictionaryMap())));
+			new Assignment(CodeKeys.Discard, new LiteralRule(MapBase.Empty)));
 		public static Rule CurrentStatement = ComplexStatement(
 			'&',
-			new Assignment(CodeKeys.Current, new LiteralRule(new DictionaryMap())));
+			new Assignment(CodeKeys.Current, new LiteralRule(MapBase.Empty)));
 		public static Rule Prefix(Rule pre,Rule rule)
 		{
 			return new Sequence(pre,new ReferenceAssignment(rule));
@@ -4011,10 +4011,10 @@ namespace Meta {
 			return new Rational(n.GetRealInt64());
 		}
 		public static MapBase While(MapBase condition,MapBase body) {
-			while(Convert.ToBoolean(condition.Call(new DictionaryMap()).GetNumber().GetInt32())) {
-				body.Call(new DictionaryMap());
+			while(Convert.ToBoolean(condition.Call(MapBase.Empty).GetNumber().GetInt32())) {
+				body.Call(MapBase.Empty);
 			}
-			return new DictionaryMap();
+			return MapBase.Empty;
 		}
 		public static MapBase Double(MapBase d) {
 			return new ObjectMap((object)(float)d.GetNumber().GetDouble());
@@ -4081,9 +4081,9 @@ namespace Meta {
 		}
 		public static MapBase ElseIf(bool condition, MapBase then, MapBase els) {
 			if (condition) {
-				return then.Call(new DictionaryMap());}
+				return then.Call(MapBase.Empty);}
 			else {
-				return els.Call(new DictionaryMap());}}
+				return els.Call(MapBase.Empty);}}
 		public static MapBase Sum(MapBase func, MapBase arg) {
 			IEnumerator<MapBase> enumerator = arg.Array.GetEnumerator();
 			if (enumerator.MoveNext()) {
@@ -4092,7 +4092,7 @@ namespace Meta {
 					result = func.Call(result).Call(enumerator.Current);}
 				return result;}
 			else {
-				return new DictionaryMap();
+				return MapBase.Empty;
 			}
 		}
 		public static MapBase JoinAll(MapBase arrays) {
@@ -4104,8 +4104,9 @@ namespace Meta {
 		}
 		public static MapBase If(bool condition, MapBase then) {
 			if (condition) {
-				return then.Call(new DictionaryMap());}
-			return new DictionaryMap();}
+				return then.Call(MapBase.Empty);}
+			return MapBase.Empty;
+		}
 		public static MapBase Map(MapBase array, MapBase func) {
 			List<MapBase> result = new List<MapBase>();
 			foreach (MapBase map in array.Array) {
@@ -4129,7 +4130,7 @@ namespace Meta {
 		}
 		public static MapBase Try(MapBase tryFunction, MapBase catchFunction) {
 			try {
-				return tryFunction.Call(new DictionaryMap());
+				return tryFunction.Call(MapBase.Empty);
 			}
 			catch (Exception e) {
 				return catchFunction.Call(new ObjectMap(e));
@@ -4305,6 +4306,55 @@ namespace Meta {
 	}
 	public abstract class CompilableAttribute : Attribute {
 		public abstract MapBase GetStructure();
+	}
+	public class EmptyMap:MapBase {
+		public override MapBase this[MapBase key] {			get {				return null;			}			set {				throw new Exception("The method or operation is not implemented.");			}		}
+		public override IEnumerable<MapBase> Keys {
+			get {
+				yield break;
+			}
+		}
+		public override IEnumerable<MapBase> Array {
+			get {
+				yield break;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		public override int Count {
+			get {
+				return 0;
+			}
+		}
+		public override bool IsNormal {
+			get {
+				return true;
+			}
+		}
+		public override bool ContainsKey(MapBase key) {
+			return false;
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override MapBase Call(MapBase arg) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+
+		public Number zero=new Integer(0);
+		public string emptyString="";
+		public override string GetString() {
+			return emptyString;
+		}
+		public override MapBase Copy() {
+			return new DictionaryMap();
+		}
+		public override Number GetNumber() {
+			return zero;
+		}
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
 		public static MapBase Empty=new DictionaryMap();
