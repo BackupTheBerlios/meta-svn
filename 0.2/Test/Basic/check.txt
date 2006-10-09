@@ -1,5 +1,5 @@
 ﻿Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		1
 	Value (Map):
 		0
@@ -44,34 +44,34 @@ Entry (KeyValuePair`2)
 		"listTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
-			Value (Map):
+			Value (Integer):
 				2
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				3
-			Value (Map):
+			Value (Integer):
 				3
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				4
 			Value (Map):
 				"hello"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				5
 			Value (Map):
 				"hello"
 Entry (KeyValuePair`2)
 	Key (Map):
 		"counter"
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -109,7 +109,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -216,7 +216,7 @@ Entry (KeyValuePair`2)
 		"integerHashTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"correct hash content"
@@ -233,17 +233,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"negativeInteger"
-	Value (Map):
-		Entry (KeyValuePair`2)
-			Key (Map):
-				0
-			Value (Map):
-				99
-		Entry (KeyValuePair`2)
-			Key (Map):
-				"x"
-			Value (Map):
-				"hello"
+	Value (Integer):
+		100
 Entry (KeyValuePair`2)
 	Key (Map):
 		"integerIncrementTest"
@@ -252,12 +243,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"integerDecrementTest"
-	Value (Map):
+	Value (Integer):
 		4
 Entry (KeyValuePair`2)
 	Key (Map):
 		"negativeNumber"
-	Value (Map):
+	Value (Integer):
 		-123
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -272,58 +263,90 @@ Entry (KeyValuePair`2)
 			Key (Map):
 				"negative"
 			Value (Map):
-				-6
+				Entry (KeyValuePair`2)
+					Key (Map):
+						0
+					Value (Integer):
+						5
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"negative"
+					Value (Map):
+						0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"fraction"
 			Value (Map):
-				6/7
+				Entry (KeyValuePair`2)
+					Key (Map):
+						0
+					Value (Integer):
+						5
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"denominator"
+					Value (Integer):
+						7
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"negativeFraction"
 			Value (Map):
-				-6/7
+				Entry (KeyValuePair`2)
+					Key (Map):
+						0
+					Value (Integer):
+						5
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"negative"
+					Value (Map):
+						0
+				Entry (KeyValuePair`2)
+					Key (Map):
+						"denominator"
+					Value (Integer):
+						7
 Entry (KeyValuePair`2)
 	Key (Map):
 		"fraction"
-	Value (Map):
+	Value (Rational):
 		3/2
 Entry (KeyValuePair`2)
 	Key (Map):
 		"literalEscapeTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				3
 			Value (Map):
 				"as"'df"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				4
 			Value (Map):
 				"as"''df"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				5
 			Value (Map):
 				"as"''''''''''''''''df"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		2
 	Value (Map):
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		3
 	Value (Map):
 		"Autokey"
@@ -332,12 +355,12 @@ Entry (KeyValuePair`2)
 		"commandLineArguments"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				"first argument"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"second argument"
@@ -399,18 +422,18 @@ Entry (KeyValuePair`2)
 				"b"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (Integer):
 						1
 					Value (Map):
 						Entry (KeyValuePair`2)
 							Key (Map):
 								"x"
-							Value (Map):
+							Value (Integer):
 								7
 						Entry (KeyValuePair`2)
 							Key (Map):
 								"z"
-							Value (Map):
+							Value (Integer):
 								1
 		Entry (KeyValuePair`2)
 			Key (Map):
@@ -434,7 +457,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -456,7 +479,7 @@ Entry (KeyValuePair`2)
 															Value (Map):
 																"c"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												2
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -499,7 +522,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -520,7 +543,7 @@ Entry (KeyValuePair`2)
 																"call"
 															Value (Map):
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (Integer):
 																		1
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -533,7 +556,7 @@ Entry (KeyValuePair`2)
 																					Value (Map):
 																						"merge"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (Integer):
 																		2
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -546,7 +569,7 @@ Entry (KeyValuePair`2)
 																					Value (Map):
 																						"b"
 																Entry (KeyValuePair`2)
-																	Key (Map):
+																	Key (Integer):
 																		3
 																	Value (Map):
 																		Entry (KeyValuePair`2)
@@ -554,7 +577,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (Integer):
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
@@ -564,7 +587,7 @@ Entry (KeyValuePair`2)
 																								Entry (KeyValuePair`2)
 																									Key (Map):
 																										"literal"
-																									Value (Map):
+																									Value (Integer):
 																										1
 																						Entry (KeyValuePair`2)
 																							Key (Map):
@@ -575,7 +598,7 @@ Entry (KeyValuePair`2)
 																										"select"
 																									Value (Map):
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (Integer):
 																												1
 																											Value (Map):
 																												Entry (KeyValuePair`2)
@@ -588,7 +611,7 @@ Entry (KeyValuePair`2)
 																															Value (Map):
 																																"newB"
 																										Entry (KeyValuePair`2)
-																											Key (Map):
+																											Key (Integer):
 																												2
 																											Value (Map):
 																												Entry (KeyValuePair`2)
@@ -597,7 +620,7 @@ Entry (KeyValuePair`2)
 																													Value (Map):
 																														"value"
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												2
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -629,7 +652,7 @@ Entry (KeyValuePair`2)
 					Value (Map):
 						"d"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -650,7 +673,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -723,7 +746,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -754,7 +777,7 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		4
 	Value (Map):
 		0
@@ -790,7 +813,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -881,7 +904,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -907,17 +930,17 @@ Entry (KeyValuePair`2)
 		"everythingReturned"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				"a"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"b"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				3
 			Value (Map):
 				"c"
@@ -926,17 +949,17 @@ Entry (KeyValuePair`2)
 		"variableAsArgument"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				"x"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"y"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				3
 			Value (Map):
 				"z"
@@ -962,7 +985,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -979,7 +1002,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1013,7 +1036,7 @@ Entry (KeyValuePair`2)
 																								"program"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (Integer):
 																										1
 																									Value (Map):
 																										Entry (KeyValuePair`2)
@@ -1030,7 +1053,7 @@ Entry (KeyValuePair`2)
 																														"program"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (Integer):
 																																1
 																															Value (Map):
 																																Entry (KeyValuePair`2)
@@ -1040,7 +1063,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				1
 																																Entry (KeyValuePair`2)
 																																	Key (Map):
@@ -1049,10 +1072,10 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				1
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (Integer):
 																																2
 																															Value (Map):
 																																Entry (KeyValuePair`2)
@@ -1062,7 +1085,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				2
 																																Entry (KeyValuePair`2)
 																																	Key (Map):
@@ -1071,10 +1094,10 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				2
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (Integer):
 																																3
 																															Value (Map):
 																																Entry (KeyValuePair`2)
@@ -1084,7 +1107,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				3
 																																Entry (KeyValuePair`2)
 																																	Key (Map):
@@ -1093,7 +1116,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (Map):
 																																				"literal"
-																																			Value (Map):
+																																			Value (Integer):
 																																				3
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1117,7 +1140,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1134,7 +1157,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1160,7 +1183,7 @@ Entry (KeyValuePair`2)
 																					Value (Map):
 																						"current"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1181,7 +1204,7 @@ Entry (KeyValuePair`2)
 																				"select"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (Integer):
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
@@ -1194,7 +1217,7 @@ Entry (KeyValuePair`2)
 																									Value (Map):
 																										"current"
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (Integer):
 																						2
 																					Value (Map):
 																						Entry (KeyValuePair`2)
@@ -1203,7 +1226,7 @@ Entry (KeyValuePair`2)
 																							Value (Map):
 																								"symbol"
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1251,7 +1274,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1261,7 +1284,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"literal"
-													Value (Map):
+													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
 											Key (Map):
@@ -1272,7 +1295,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1285,7 +1308,7 @@ Entry (KeyValuePair`2)
 																			Value (Map):
 																				"SecondLevel"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1328,7 +1351,7 @@ Entry (KeyValuePair`2)
 		"argTest"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -1344,7 +1367,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"nestedClassTest"
-	Value (Map):
+	Value (Integer):
 		0
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1354,7 +1377,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"boolTest"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1429,7 +1452,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"interceptedSymbolTwo"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1461,12 +1484,12 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (Map):
 								"literal"
-							Value (Map):
+							Value (Integer):
 								5
 Entry (KeyValuePair`2)
 	Key (Map):
 		"literalFunctionResult"
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1490,7 +1513,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1555,7 +1578,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1594,7 +1617,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1628,7 +1651,7 @@ Entry (KeyValuePair`2)
 																		"program"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -1671,7 +1694,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1764,7 +1787,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1811,7 +1834,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1821,7 +1844,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"literal"
-													Value (Map):
+													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
 											Key (Map):
@@ -1832,7 +1855,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1845,7 +1868,7 @@ Entry (KeyValuePair`2)
 																			Value (Map):
 																				"SetUpperLevel"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -1854,14 +1877,14 @@ Entry (KeyValuePair`2)
 																	Value (Map):
 																		"changed"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		5
 	Value (Map):
 		" "
 Entry (KeyValuePair`2)
 	Key (Map):
 		"staticEventChanged"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1885,7 +1908,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -1911,7 +1934,7 @@ Entry (KeyValuePair`2)
 															Value (Map):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		6
 	Value (Map):
 		0
@@ -1928,22 +1951,22 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"instanceEventChanged"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
 		"instanceEventResult"
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
 		"one"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
 		"two"
-	Value (Map):
+	Value (Integer):
 		2
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -1958,14 +1981,14 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"firstIfCondition"
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
 	Key (Map):
 		"firstIfBranches"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				Entry (KeyValuePair`2)
@@ -2011,7 +2034,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"bigNumber"
-	Value (Map):
+	Value (Integer):
 		50020202
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -2023,17 +2046,17 @@ Entry (KeyValuePair`2)
 		"secondSwitchCases"
 	Value (Map):
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				"one"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				2
 			Value (Map):
 				"two"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				3
 			Value (Map):
 				"three"
@@ -2064,7 +2087,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2102,12 +2125,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"decimalTest"
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
 		"fractionTest"
-	Value (Map):
+	Value (Integer):
 		40
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -2140,9 +2163,9 @@ Entry (KeyValuePair`2)
 	Value (Map):
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		7
-	Value (Map):
+	Value (Integer):
 		0
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -2188,7 +2211,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"whileCounter"
-	Value (Map):
+	Value (Integer):
 		10
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -2212,7 +2235,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2233,7 +2256,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2246,7 +2269,7 @@ Entry (KeyValuePair`2)
 																			Value (Map):
 																				"not"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2254,7 +2277,7 @@ Entry (KeyValuePair`2)
 																		"call"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2267,7 +2290,7 @@ Entry (KeyValuePair`2)
 																							Value (Map):
 																								"equal"
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				2
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2280,16 +2303,16 @@ Entry (KeyValuePair`2)
 																							Value (Map):
 																								"start"
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				3
 																			Value (Map):
 																				Entry (KeyValuePair`2)
 																					Key (Map):
 																						"literal"
-																					Value (Map):
+																					Value (Integer):
 																						10
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2310,7 +2333,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2320,7 +2343,7 @@ Entry (KeyValuePair`2)
 																		Entry (KeyValuePair`2)
 																			Key (Map):
 																				"literal"
-																			Value (Map):
+																			Value (Integer):
 																				1
 																Entry (KeyValuePair`2)
 																	Key (Map):
@@ -2331,7 +2354,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (Integer):
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
@@ -2365,7 +2388,7 @@ Entry (KeyValuePair`2)
 																														"call"
 																													Value (Map):
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (Integer):
 																																1
 																															Value (Map):
 																																Entry (KeyValuePair`2)
@@ -2378,7 +2401,7 @@ Entry (KeyValuePair`2)
 																																			Value (Map):
 																																				"loop"
 																														Entry (KeyValuePair`2)
-																															Key (Map):
+																															Key (Integer):
 																																2
 																															Value (Map):
 																																Entry (KeyValuePair`2)
@@ -2386,7 +2409,7 @@ Entry (KeyValuePair`2)
 																																		"call"
 																																	Value (Map):
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (Integer):
 																																				1
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
@@ -2399,7 +2422,7 @@ Entry (KeyValuePair`2)
 																																							Value (Map):
 																																								"sum"
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (Integer):
 																																				2
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
@@ -2412,16 +2435,16 @@ Entry (KeyValuePair`2)
 																																							Value (Map):
 																																								"arg"
 																																		Entry (KeyValuePair`2)
-																																			Key (Map):
+																																			Key (Integer):
 																																				3
 																																			Value (Map):
 																																				Entry (KeyValuePair`2)
 																																					Key (Map):
 																																						"literal"
-																																					Value (Map):
+																																					Value (Integer):
 																																						1
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2442,7 +2465,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (Map):
 																				Entry (KeyValuePair`2)
-																					Key (Map):
+																					Key (Integer):
 																						1
 																					Value (Map):
 																						Entry (KeyValuePair`2)
@@ -2481,7 +2504,7 @@ Entry (KeyValuePair`2)
 																															Value (Map):
 																																"arg"
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										3
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2498,7 +2521,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2506,7 +2529,7 @@ Entry (KeyValuePair`2)
 																		"select"
 																	Value (Map):
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				1
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2519,7 +2542,7 @@ Entry (KeyValuePair`2)
 																							Value (Map):
 																								"whileBranches"
 																		Entry (KeyValuePair`2)
-																			Key (Map):
+																			Key (Integer):
 																				2
 																			Value (Map):
 																				Entry (KeyValuePair`2)
@@ -2532,7 +2555,7 @@ Entry (KeyValuePair`2)
 																							Value (Map):
 																								"whileDecision"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2566,7 +2589,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2598,7 +2621,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"result"
-			Value (Map):
+			Value (Integer):
 				1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -2622,7 +2645,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2704,7 +2727,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2801,7 +2824,7 @@ Entry (KeyValuePair`2)
 												"program"
 											Value (Map):
 												Entry (KeyValuePair`2)
-													Key (Map):
+													Key (Integer):
 														1
 													Value (Map):
 														Entry (KeyValuePair`2)
@@ -2823,7 +2846,7 @@ Entry (KeyValuePair`2)
 																	Value (Map):
 																		"changed"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		8
 	Value (Map):
 		0
@@ -2849,7 +2872,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (Map):
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										1
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2870,7 +2893,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2904,7 +2927,7 @@ Entry (KeyValuePair`2)
 																								"program"
 																							Value (Map):
 																								Entry (KeyValuePair`2)
-																									Key (Map):
+																									Key (Integer):
 																										1
 																									Value (Map):
 																										Entry (KeyValuePair`2)
@@ -2926,7 +2949,7 @@ Entry (KeyValuePair`2)
 																															Value (Map):
 																																"arg"
 								Entry (KeyValuePair`2)
-									Key (Map):
+									Key (Integer):
 										2
 									Value (Map):
 										Entry (KeyValuePair`2)
@@ -2936,7 +2959,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (Map):
 														"literal"
-													Value (Map):
+													Value (Integer):
 														1
 										Entry (KeyValuePair`2)
 											Key (Map):
@@ -2947,7 +2970,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (Map):
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																1
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2960,7 +2983,7 @@ Entry (KeyValuePair`2)
 																			Value (Map):
 																				"innerFunction"
 														Entry (KeyValuePair`2)
-															Key (Map):
+															Key (Integer):
 																2
 															Value (Map):
 																Entry (KeyValuePair`2)
@@ -2994,7 +3017,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (Map):
 										Entry (KeyValuePair`2)
-											Key (Map):
+											Key (Integer):
 												1
 											Value (Map):
 												Entry (KeyValuePair`2)
@@ -3016,7 +3039,7 @@ Entry (KeyValuePair`2)
 																	Value (Map):
 																		"arg"
 		Entry (KeyValuePair`2)
-			Key (Map):
+			Key (Integer):
 				1
 			Value (Map):
 				0
@@ -3034,7 +3057,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"enumTest"
-	Value (Map):
+	Value (Integer):
 		2
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -3081,15 +3104,15 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"a"
-			Value (Map):
+			Value (Integer):
 				97
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"space"
-			Value (Map):
+			Value (Integer):
 				32
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"tab"
-			Value (Map):
+			Value (Integer):
 				9

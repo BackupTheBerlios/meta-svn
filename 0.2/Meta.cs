@@ -4354,11 +4354,22 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public override string ToString() {
+			if (Count == 0) {
+				return "0";
+			}
+			else if (IsString) {
+				return GetString();
+			}
+			else {
+				return Meta.Serialization.Serialize(this);
+			}
+		}
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
 			return this.GetEnumerator();
 		}
-		public abstract IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator();
+		//public abstract IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator();
 		public abstract string Serialize();
 		public static implicit operator MapBase(string text) {
 		    return new Map(text);
@@ -4445,25 +4456,9 @@ namespace Meta {
 			set;
 		}
 		public Expression expression;
-		public abstract Statement GetStatement(Program program, int index);
-		public abstract void Compile(Expression parent);
-		public abstract Expression GetExpression();
-		public abstract Expression GetExpression(Expression parent);
-		public abstract Expression CreateExpression(Expression parent);
+		//public abstract Statement GetStatement(Program program, int index);
 		public abstract MapBase Copy();
-		//System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-		//    return this.GetEnumerator();
-		//}
-		//public override IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator() {
-		//    foreach (MapBase key in Keys) {
-		//        yield return new KeyValuePair<MapBase, MapBase>(key, this[key]);
-		//    }
-		//}
 		public MapBase Scope;
-		//public abstract MapStrategy Strategy {
-		//    get;
-		//    set;
-		//}
 
 				public string SerializeDefault() {
 			string text;
@@ -4475,7 +4470,87 @@ namespace Meta {
 				text = this.GetNumber().ToString();}
 			else {
 				text = null;}
-			return text;}
+			return text;
+		}
+		public void Compile(Expression parent) {
+			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
+		}
+		public Expression GetExpression() {
+			return GetExpression(null);
+		}
+		public Expression GetExpression(Expression parent) {
+			if (expression == null) {
+				expression = CreateExpression(parent);
+			}
+			return expression;
+		}
+		public Expression CreateExpression(Expression parent) {
+			if (ContainsKey(CodeKeys.Call)) {
+				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);
+			}
+			else if (ContainsKey(CodeKeys.Program)) {
+				return new Program(this[CodeKeys.Program], parent);
+			}
+			else if (ContainsKey(CodeKeys.Literal)) {
+				return new Literal(this[CodeKeys.Literal], parent);
+			}
+			else if (ContainsKey(CodeKeys.Select)) {
+				return new Select(this[CodeKeys.Select], parent);
+			}
+			else if (ContainsKey(CodeKeys.Search)) {
+				return new Search(this[CodeKeys.Search], parent);
+			}
+			else if (ContainsKey(CodeKeys.Root)) {
+				return new Root(this[CodeKeys.Root], parent);
+			}
+			else if (ContainsKey(CodeKeys.LastArgument)) {
+				return new LastArgument(this[CodeKeys.LastArgument], parent);
+			}
+			else if (ContainsKey(CodeKeys.Expression)) {
+				Program program = new Function(this.Source, parent);
+				program.isFunction = true;
+				MapBase parameter = this[CodeKeys.Parameter];
+				if (parameter.Count != 0) {
+					KeyStatement s = new KeyStatement(
+						new Literal(parameter, program),
+						new LastArgument(new Map(), program), program, 0);
+						//new LastArgument(Map.Empty, program), program, 0);
+					program.statementList.Add(s);
+				}
+				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
+				program.statementList.Add(c);
+				return program;
+			}
+			else {
+				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+			}
+		}
+
+		public Statement GetStatement(Program program, int index) {
+			if (ContainsKey(CodeKeys.Keys)) {
+				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
+			}
+			else if (ContainsKey(CodeKeys.Current)) {
+				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);
+			}
+			else if (ContainsKey(CodeKeys.Key)) {
+				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
+			}
+			else if (ContainsKey(CodeKeys.Discard)) {
+				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);
+			}
+			else {
+				throw new ApplicationException("Cannot compile map");
+			}
+		}
+		//System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+		//    return this.GetEnumerator();
+		//}
+		public IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator() {
+			foreach (MapBase key in Keys) {
+				yield return new KeyValuePair<MapBase, MapBase>(key, this[key]);
+			}
+		}
 	}
 	public class Map : MapBase,IEnumerable{
 		private MapStrategy strategy;
@@ -4496,7 +4571,6 @@ namespace Meta {
 			}
 		}
 		public Map(string text): this(new StringStrategy(text)) {}
-		//public Map(Number number): this(new NumberStrategy(number)) {}
 		public Map(MapStrategy strategy) {
 			this.strategy = strategy;
 		}
@@ -4596,87 +4670,7 @@ namespace Meta {
 				}
 			}
 		}
-		public override string ToString() {
-			if (Count == 0) {
-				return "0";
-			}
-			else if (IsString) {
-				return GetString();
-			}
-			else {
-				return Meta.Serialization.Serialize(this);
-			}
-		}
-		public override Statement GetStatement(Program program, int index) {
-			if (ContainsKey(CodeKeys.Keys)) {
-				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
-			}
-			else if (ContainsKey(CodeKeys.Current)) {
-				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);
-			}
-			else if (ContainsKey(CodeKeys.Key)) {
-				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
-			}
-			else if (ContainsKey(CodeKeys.Discard)) {
-				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);
-			}
-			else {
-				throw new ApplicationException("Cannot compile map");
-			}
-		}
-		public override void Compile(Expression parent) {
-			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
-		}
-		public override Expression GetExpression() {
-			return GetExpression(null);
-		}
-		public override Expression GetExpression(Expression parent) {
-			if (expression == null) {
-				expression = CreateExpression(parent);
-			}
-			return expression;
-		}
-		public override Expression CreateExpression(Expression parent) {
-			if (ContainsKey(CodeKeys.Call)) {
-				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);
-			}
-			else if (ContainsKey(CodeKeys.Program)) {
-				return new Program(this[CodeKeys.Program], parent);
-			}
-			else if (ContainsKey(CodeKeys.Literal)) {
-				return new Literal(this[CodeKeys.Literal], parent);
-			}
-			else if (ContainsKey(CodeKeys.Select)) {
-				return new Select(this[CodeKeys.Select], parent);
-			}
-			else if (ContainsKey(CodeKeys.Search)) {
-				return new Search(this[CodeKeys.Search], parent);
-			}
-			else if (ContainsKey(CodeKeys.Root)) {
-				return new Root(this[CodeKeys.Root], parent);
-			}
-			else if (ContainsKey(CodeKeys.LastArgument)) {
-				return new LastArgument(this[CodeKeys.LastArgument], parent);
-			}
-			else if (ContainsKey(CodeKeys.Expression)) {
-				Program program = new Function(this.Source, parent);
-				program.isFunction = true;
-				MapBase parameter = this[CodeKeys.Parameter];
-				if (parameter.Count != 0) {
-					KeyStatement s = new KeyStatement(
-						new Literal(parameter, program),
-						new LastArgument(new Map(), program), program, 0);
-						//new LastArgument(Map.Empty, program), program, 0);
-					program.statementList.Add(s);
-				}
-				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
-				program.statementList.Add(c);
-				return program;
-			}
-			else {
-				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
-			}
-		}
+
 		public override MapBase Copy() {
 			MapBase clone = strategy.CopyData();
 			clone.Scope = Scope;
@@ -4686,14 +4680,6 @@ namespace Meta {
 			return clone;}
 		public override int GetHashCode() {
 			return strategy.GetHashCode();
-		}
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-			return this.GetEnumerator();
-		}
-		public override IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator() {
-			foreach (MapBase key in Keys) {
-				yield return new KeyValuePair<MapBase, MapBase>(key, this[key]);
-			}
 		}
 		public override string Serialize() {
 			return strategy.Serialize(this);
