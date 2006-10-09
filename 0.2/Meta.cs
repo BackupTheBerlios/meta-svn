@@ -110,11 +110,7 @@ namespace Meta {
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source): base(source) {}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			if(Map.arguments.Count==0) 
-			{
-			}
 			return Map.arguments.Peek();
-			//return MapBase.arguments.Peek();
 		}
 	}
 	public class Call : Expression {
@@ -210,9 +206,6 @@ namespace Meta {
 			}
 			if(calls.Count==2 && calls[0].GetConstant()!=null) {
 			    Structure s=calls[1].EvaluateStructure();
-				if(s!=null && s.IsNumber) {
-				    //calls[0].GetConstant().Specialize(typeof(Number));
-				}
 			}
 			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile(this);}), Source);
@@ -237,20 +230,7 @@ namespace Meta {
 				}
 				args.Add(a);
 			}
-			//try {
-				return method.Invoke(null, args.ToArray());
-			//}
-			//catch (MetaException e) {
-			//    e.InvocationList.Add(new ExceptionLog(Source.start));
-			//    throw e;
-			//}
-			//catch (Exception e) {
-			//    if(e.InnerException!=null) {
-			//        e=e.InnerException;
-			//    }
-			//    throw new MetaException(e.Message, Source.start);
-			//}
-
+			return method.Invoke(null, args.ToArray());
 		}
 		public override MapBase EvaluateImplementation(MapBase context) {
 			return Transform.ToMeta(EvaluateNoConversion(context));
@@ -287,7 +267,6 @@ namespace Meta {
 			if (FindStuff(out count, out key, out value)) {
 				return new LiteralStructure(value);
 			}
-				//return value;}
 			else {
 				return null;
 			}
@@ -1400,61 +1379,6 @@ namespace Meta {
 			return new Map(new ObjectMap(Object));
 		}
 	}
-	//public class StringStrategy : MapStrategy {
-	//    private string text;
-	//    public StringStrategy(string text) {
-	//        this.text = text;}
-	//    public override int GetHashCode() {
-	//        return text.Length;}
-	//    public override bool Equals(object obj) {
-	//        if (obj is StringStrategy) {
-	//            return ((StringStrategy)obj).text == text;}
-	//        else {
-	//            return base.Equals(obj);}}
-	//    public override void Set(MapBase key, MapBase val, MapBase map) {
-	//        int index=key.GetNumber().GetInt32()-1;
-	//        char c=Convert.ToChar(val.GetNumber().GetInt32());
-	//        text.Remove(index,1).Insert(index,c.ToString());
-
-	//    }
-	//    public override int Count {
-	//        get {
-	//            return text.Length;}}
-	//    public override bool IsNumber {
-	//        get {
-	//            return text.Length == 0;}}
-	//    public override bool IsString {
-	//        get {
-	//            return true;}}
-	//    public override string GetString() {
-	//        return text;}
-	//    public override MapBase Get(MapBase key) {
-	//        if (key.IsNumber) {
-	//            Number number = key.GetNumber();
-	//            if (number.IsNatural && number > 0 && number <= Count) {
-	//                return text[number.GetInt32() - 1];}
-	//            else {
-	//                return null;}}
-	//        else {
-	//            return null;}}
-	//    public override bool ContainsKey(MapBase key) {
-	//        if (key.IsNumber) {
-	//            Number number = key.GetNumber();
-	//            if (number.IsNatural) {
-	//                return number > 0 && number <= text.Length;}
-	//            else {
-	//                return false;}}
-	//        else {
-	//            return false;}}
-	//    public override int GetArrayCount() {
-	//        return text.Length;}
-	//    public override MapBase CopyData() {
-	//        return new Map(this);}
-	//    public override IEnumerable<MapBase> Keys {
-	//        get {
-	//            for (int i = 1; i <= text.Length; i++) {
-	//                yield return i;}}}}
-
 	public class DictionaryMap : MapBase {
 		public override int GetHashCode() {
 			if (IsNumber) {
@@ -1479,21 +1403,6 @@ namespace Meta {
 			}
 			return false;
 		}
-		//public override bool Equals(object obj) {
-		//    MapStrategy strategy = obj as MapStrategy;
-		//    if (strategy == null || strategy.Count != this.Count) {
-		//        return false;}
-		//    else {
-		//        bool isEqual = true;
-		//        foreach (MapBase key in this.Keys) {
-		//            MapBase otherValue = strategy.Get(key);
-		//            MapBase thisValue = this[key];
-		//            //MapBase thisValue = Get(key);
-		//            if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
-		//                isEqual = false;}}
-		//        return isEqual;
-		//    }
-		//}
 		public DictionaryMap(params MapBase[] keysAndValues){
 		    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
 		        this[keysAndValues[i]] = keysAndValues[i + 1];
@@ -2462,8 +2371,6 @@ namespace Meta {
 				}
 			}
 		}
-		//public override MapBase CopyData() {
-		//    return new Map(this);}
 		public override IEnumerable<MapBase> Keys {
 			get {
 				for (int i = 1; i <= text.Length; i++) {
@@ -2472,69 +2379,10 @@ namespace Meta {
 			}
 		}
 	}
-	//public class StringStrategy : MapStrategy {
-	//    private string text;
-	//    public StringStrategy(string text) {
-	//        this.text = text;}
-	//    public override int GetHashCode() {
-	//        return text.Length;}
-	//    public override bool Equals(object obj) {
-	//        if (obj is StringStrategy) {
-	//            return ((StringStrategy)obj).text == text;}
-	//        else {
-	//            return base.Equals(obj);}}
-	//    public override void Set(MapBase key, MapBase val, MapBase map) {
-	//        int index=key.GetNumber().GetInt32()-1;
-	//        char c=Convert.ToChar(val.GetNumber().GetInt32());
-	//        text.Remove(index,1).Insert(index,c.ToString());
-
-	//    }
-	//    public override int Count {
-	//        get {
-	//            return text.Length;}}
-	//    public override bool IsNumber {
-	//        get {
-	//            return text.Length == 0;}}
-	//    public override bool IsString {
-	//        get {
-	//            return true;}}
-	//    public override string GetString() {
-	//        return text;}
-	//    public override MapBase Get(MapBase key) {
-	//        if (key.IsNumber) {
-	//            Number number = key.GetNumber();
-	//            if (number.IsNatural && number > 0 && number <= Count) {
-	//                return text[number.GetInt32() - 1];}
-	//            else {
-	//                return null;}}
-	//        else {
-	//            return null;}}
-	//    public override bool ContainsKey(MapBase key) {
-	//        if (key.IsNumber) {
-	//            Number number = key.GetNumber();
-	//            if (number.IsNatural) {
-	//                return number > 0 && number <= text.Length;}
-	//            else {
-	//                return false;}}
-	//        else {
-	//            return false;}}
-	//    public override int GetArrayCount() {
-	//        return text.Length;}
-	//    public override MapBase CopyData() {
-	//        return new Map(this);}
-	//    public override IEnumerable<MapBase> Keys {
-	//        get {
-	//            for (int i = 1; i <= text.Length; i++) {
-	//                yield return i;
-	//            }
-	//        }
-	//    }
-	//}
 	public abstract class Number:Map {
 		public Number():base(new DictionaryStrategy())
 		{
 		}
-	//public abstract class Number:Map {
 		public override string GetString() {
 			return null;
 		}
@@ -4128,12 +3976,12 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			public class MergeSort: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class MergeSort: Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 
 			public static MapBase Run(string path, MapBase argument) {
 				MapBase callable = Parser.Parse(path);
@@ -4840,25 +4688,6 @@ namespace Meta {
 	}
 	public class Map : MapBase,IEnumerable{
 		private MapStrategy strategy;
-		//public Map(IEnumerable<MapBase> list): this(new DictionaryStrategy()) {
-		//    foreach(MapBase map in list) {
-		//        this.Append(map);
-		//    }
-		//}
-			//: this(new ListStrategy(new List<MapBase>(list))) {}
-		//public Map(System.Collections.Generic.ICollection<MapBase> list)
-		//    : this(new DictionaryStrategy()) {
-		//    int index = 1;
-		//    foreach (object entry in list) {
-		//        this[index] = Transform.ToMeta(entry);
-		//        index++;
-		//    }
-		//}
-
-		//public Map(): this(new DictionaryStrategy()) {}
-
-		//public Map(): this(EmptyStrategy.empty) {}
-
 		public Map(MapBase map): this(new ObjectMap(map)) {}
 
 		public Map(object o): this(new ObjectMap(o)) 
@@ -4867,15 +4696,9 @@ namespace Meta {
 		    {
 		    }
 		}
-		//public Map(string text): this(new StringStrategy(text)) {}
 		public Map(MapStrategy strategy) {
 			this.strategy = strategy;
 		}
-		//public Map(params MapBase[] keysAndValues): this() {
-		//    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
-		//        this[keysAndValues[i]] = keysAndValues[i + 1];
-		//    }
-		//}
 		public MapStrategy Strategy {
 			get {
 				return strategy;
