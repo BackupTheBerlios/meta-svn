@@ -157,7 +157,9 @@ namespace Meta {
 				Method method;
 				if (first is TypeMap) {
 				//if (first.Strategy is TypeMap) {
-					method = (Method)((TypeMap)first).Constructor.Strategy;
+					method = (Method)((TypeMap)first).Constructor;
+					//method = (Method)((TypeMap)first).Constructor;
+					//method = (Method)((TypeMap)first).Constructor.Strategy;
 					//method = (Method)((TypeMap)first.Strategy).Constructor.Strategy;
 				}
 				//else if (first.Strategy is Method) {
@@ -1150,7 +1152,138 @@ namespace Meta {
 			return null;
 		}
 	}
-	public class Method : MapStrategy {
+	//public class Method : MapStrategy {
+	//    public override bool IsNormal {
+	//        get {
+	//            return false;
+	//        }
+	//    }
+	//    public override int GetHashCode() {
+	//        return method.GetHashCode();
+	//    }
+	//    public override bool Equals(object obj) {
+	//        Method method = obj as Method;
+	//        if (method != null) {
+	//            return this.method.Equals(method.method);
+	//        }
+	//        return false;
+	//    }
+	//    public override object UniqueKey {
+	//        get {
+	//            return method;
+	//        }
+	//    }
+	//    public override int GetArrayCount() {
+	//        return 0;
+	//    }
+	//    public override bool ContainsKey(MapBase key) {
+	//        return false;
+	//    }
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            yield break;
+	//        }
+	//    }
+	//    public override void Set(MapBase key, MapBase val, MapBase parent) {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override MapBase Get(MapBase key) {
+	//        return null;
+	//    }
+	//    public override MapBase CopyData() {
+	//        return new Map(this);
+	//    }
+	//    public MethodBase method;
+	//    protected object obj;
+	//    protected Type type;
+	//    public Method(MethodBase method, object obj, Type type) {
+	//        this.method = method;
+	//        this.obj = obj;
+	//        this.type = type;
+	//        this.parameters = method.GetParameters();
+	//    }
+	//    public override bool IsString {
+	//        get {
+	//            return false;
+	//        }
+	//    }
+	//    public override bool IsNumber {
+	//        get {
+	//            return false;
+	//        }
+	//    }
+	//    public ParameterInfo[] parameters;
+	//    public override MapBase CallImplementation(MapBase argument, MapBase parent) {
+	//        return DecideCall(argument, new List<object>());
+	//    }
+	//    private MapBase DecideCall(MapBase argument, List<object> oldArguments) {
+	//        List<object> arguments = new List<object>(oldArguments);
+	//        if (parameters.Length != 0) {
+	//            object arg;
+	//            if (!Transform.TryToDotNet(argument, parameters[arguments.Count].ParameterType, out arg)) {
+	//                throw new Exception("Could not convert argument " + Meta.Serialization.Serialize(argument) + "\n to " + parameters[arguments.Count].ParameterType.ToString());}
+	//            else {
+	//                arguments.Add(arg);
+	//            }
+	//        }
+	//        if (arguments.Count >= parameters.Length) {
+	//            return Invoke(argument, arguments.ToArray());
+	//        }
+	//        else {
+	//            CallDelegate call = new CallDelegate(delegate(MapBase map) {
+	//                return DecideCall(map, arguments);});
+	//            return new Map(new Method(invokeMethod, call, typeof(CallDelegate)));
+	//        }
+	//    }
+	//    MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
+	//    private MapBase Invoke(MapBase argument, object[] arguments) {
+	//        //try {
+	//            object result;
+	//            if (method is ConstructorInfo) {
+	//                result = ((ConstructorInfo)method).Invoke(arguments);
+	//            }
+	//            else {
+	//                result = method.Invoke(obj, arguments);
+	//            }
+	//            return Transform.ToMeta(result);
+	//        //}
+	//        //catch (Exception e) {
+	//        //    if (e.InnerException != null) {
+	//        //        throw e.InnerException;
+	//        //    }
+	//        //    else {
+	//        //        throw new ApplicationException("implementation exception: " + e.InnerException.ToString() + e.StackTrace, e.InnerException);
+	//        //    }
+	//        //}
+	//    }
+	//}
+	public class Method : MapBase {
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override IEnumerable<MapBase> Array {
+			get { 
+				yield break;
+				//throw new Exception("The method or operation is not implemented."); 
+			}
+		}
+		public override int Count {
+			get { 
+				return 0;
+			}
+		}
+		public override Number GetNumber() {
+			return null;
+		}
+		public override string GetString() {
+			return null;
+		}
+		public override string Serialize() {
+			return method.ToString();
+		}
+		public override MapBase TryGetValue(MapBase key) {
+			return this[key];
+		}
 		public override bool IsNormal {
 			get {
 				return false;
@@ -1166,13 +1299,15 @@ namespace Meta {
 			}
 			return false;
 		}
-		public override object UniqueKey {
+		//public override object UniqueKey {
+		//    get {
+		//        return method;
+		//    }
+		//}
+		public override int ArrayCount {
 			get {
-				return method;
+				return 0;
 			}
-		}
-		public override int GetArrayCount() {
-			return 0;
 		}
 		public override bool ContainsKey(MapBase key) {
 			return false;
@@ -1182,15 +1317,20 @@ namespace Meta {
 				yield break;
 			}
 		}
-		public override void Set(MapBase key, MapBase val, MapBase parent) {
-			throw new Exception("The method or operation is not implemented.");
+		public override MapBase this[MapBase key] {
+			get {
+				return null;
+			}
+			set {
+				throw new Exception("The method or operation is not implemented.");
+			}
 		}
-		public override MapBase Get(MapBase key) {
-			return null;
+		public override MapBase Copy() {
+			return this;
 		}
-		public override MapBase CopyData() {
-			return new Map(this);
-		}
+		//public override MapBase CopyData() {
+		//    return new Map(this);
+		//}
 		public MethodBase method;
 		protected object obj;
 		protected Type type;
@@ -1211,9 +1351,13 @@ namespace Meta {
 			}
 		}
 		public ParameterInfo[] parameters;
-		public override MapBase CallImplementation(MapBase argument, MapBase parent) {
+		public override MapBase Call(MapBase argument) {
 		    return DecideCall(argument, new List<object>());
 		}
+
+		//public override MapBase CallImplementation(MapBase argument, MapBase parent) {
+		//    return DecideCall(argument, new List<object>());
+		//}
 		private MapBase DecideCall(MapBase argument, List<object> oldArguments) {
 			List<object> arguments = new List<object>(oldArguments);
 			if (parameters.Length != 0) {
@@ -1230,7 +1374,8 @@ namespace Meta {
 			else {
 				CallDelegate call = new CallDelegate(delegate(MapBase map) {
 					return DecideCall(map, arguments);});
-				return new Map(new Method(invokeMethod, call, typeof(CallDelegate)));
+				return new Method(invokeMethod, call, typeof(CallDelegate));
+				//return new Map(new Method(invokeMethod, call, typeof(CallDelegate)));
 			}
 		}
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
@@ -1364,15 +1509,18 @@ namespace Meta {
 		}
 		//public override MapBase CopyData() {
 		//    return new Map(new TypeMap(this.Type));}
-		private MapBase constructor;
-		public Map Constructor {
+		private Method constructor;
+		public Method Constructor {
 			get {
 				if (constructor == null) {
 					ConstructorInfo method = Type.GetConstructor(new Type[] {});
 					if (method == null) {
 						throw new Exception("Default constructor for " + Type + " not found.");}
-					constructor = new Map(new Method(method, Object, Type));}
-				return (Map)constructor;
+					constructor = new Method(method, Object, Type);
+				}
+					//constructor = new Map(new Method(method, Object, Type));}
+				return constructor;
+				//return (Map)constructor;
 			}
 		}
 		public override MapBase Call(MapBase argument) {
@@ -1400,7 +1548,8 @@ namespace Meta {
 				return Object;}}
 		public override MapBase Call(MapBase arg) {
 			if (this.Type.IsSubclassOf(typeof(Delegate))) {
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, this);}
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);}
+				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, this);}
 				//return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg, parent);}
 			else {
 				throw new Exception("Object is not callable.");
@@ -1960,7 +2109,8 @@ namespace Meta {
 		public override void Set(object obj, MapBase value) {
 			throw new Exception("The method or operation is not implemented.");}
 		public override MapBase Get(object obj) {
-			return new Map(new Method(method, obj, method.DeclaringType));
+			return new Method(method, obj, method.DeclaringType);
+			//return new Map(new Method(method, obj, method.DeclaringType));
 		}
 	}
 	public class MemberCache {
@@ -2473,7 +2623,9 @@ namespace Meta {
 					//selected[type.Name] = new Map(new TypeMap(type));
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
-							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
+						}
+							//selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
 						}
 				}
 			}
@@ -4626,7 +4778,9 @@ namespace Meta {
 							property.SetValue(obj, converted, null);}}
 					else if (member is EventInfo) {
 						EventInfo eventInfo = (EventInfo)member;
-						new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);}
+						new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
+					}
+						//new Map(new Method(eventInfo.GetAddMethod(), obj, type)).Call(value);}
 					else {
 						throw new Exception("unknown member type");}}
 				else {
