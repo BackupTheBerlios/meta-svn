@@ -54,9 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
-    <None Include="Copy %282%29 of mergeSort.meta" />
-    <None Include="Copy %283%29 of mergeSort.meta" />
-    <None Include="Copy of mergeSort.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />
     <None Include="learning.meta" />
