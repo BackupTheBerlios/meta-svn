@@ -1361,8 +1361,9 @@ namespace Meta {
 		public override string ToString() {
 			return Object.ToString();}
 		public override Map CopyData() {
-			return new Map(Object);}}
-
+			return new Map(Object);
+		}
+	}
 	public class EmptyStrategy : MapStrategy {
 		public override bool ContainsKey(Map key) {
 			return false;}
@@ -1664,19 +1665,27 @@ namespace Meta {
 			MapStrategy clone = new CloneStrategy(this.original);
 			return new Map(clone);}
 		public override bool Equals(object obj) {
-			return obj.Equals(original);}
+			return obj.Equals(original);
+		}
 		public override int GetHashCode() {
-			return original.GetHashCode();}
+			return original.GetHashCode();
+		}
 		public override Number GetNumber() {
-			return original.GetNumber();}
+			return original.GetNumber();
+		}
 		public override string GetString() {
-			return original.GetString();}
+			return original.GetString();
+		}
 		public override bool IsNumber {
 			get {
-				return original.IsNumber;}}
+				return original.IsNumber;
+			}
+		}
 		public override bool IsString {
 			get {
-				return original.IsString;}}
+				return original.IsString;
+			}
+		}
 		public override IEnumerable<Map> Keys {
 			get {
 				return original.Keys;}}
@@ -1741,19 +1750,6 @@ namespace Meta {
 		}
 
 
-		//public virtual Map CallImplementation(Map argument, Map parent) {
-		//    Map function=Get(CodeKeys.Function);
-		//    if (function!=null) {
-		//        if (function.expression!=null && function.expression.compiled!= null) {
-		//            return function.expression.compiled.Evaluate(parent);
-		//        }
-		//        else {
-		//            return function.GetExpression(null).Compile(null).Evaluate(parent);}}
-		//    else {
-		//        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(parent));
-		//    }
-		//}
-
 		public Map Call(Map argument, Map parent) {
 			long start = 0;
 			if (Interpreter.profiling && UniqueKey != null) {
@@ -1762,8 +1758,6 @@ namespace Meta {
 					Map.calls[UniqueKey] = new Profile();}
 				Map.calls[UniqueKey].calls++;
 				Map.calls[UniqueKey].recursive++;}
-
-			//Map result = parent.GetExpression().compiled.Evaluate(parent);//argument, parent);
 			Map result = CallImplementation(argument, parent);
 			//Map result = CallImplementation(argument, parent);
 
@@ -1784,82 +1778,95 @@ namespace Meta {
 		public virtual bool ContainsKey(Map key) {
 			foreach (Map k in Keys) {
 				if (k.Equals(key)) {
-					return true;}
+					return true;
+				}
 			}
-			return false;}
-		public abstract int GetArrayCount();
+			return false;
+		}
+		public virtual int GetArrayCount() {
+			int i = 1;
+			for (;ContainsKey(i);i++);
+			return i - 1;
+		}
 		public virtual Map CopyData() {
 			Map map = new Map();
 			foreach (Map key in Keys) {
-				map[key] = this.Get(key).Copy();}
-			return map;}
+				map[key] = this.Get(key).Copy();
+			}
+			return map;
+		}
 		protected virtual void Panic(Map key, Map val, MapStrategy strategy, Map map) {
 			map.Strategy = strategy;
 			foreach (Map k in Keys) {
 				strategy.Set(k, Get(k).Copy(), map);}
-			map.Strategy.Set(key, val, map);}
+			map.Strategy.Set(key, val, map);
+		}
 		public virtual MapStrategy DeepCopy(Map key, Map value, Map map) {
 			MapStrategy strategy = new DictionaryStrategy();
 			foreach (Map k in Keys) {
 				strategy.Set(k, Get(k).Copy(), map);}
 			strategy.Set(key, value, map);
-			return strategy;}
+			return strategy;
+		}
 		public virtual bool IsNumber {
 			get {
-				return GetIsNumberDefault();}}
-		public bool GetIsNumberDefault() {
-			return Count == 0 || (Count == 1 && ContainsKey(new Map()) && this.Get(new Map()).IsNumber);
+				return Count == 0 || (Count == 1 && ContainsKey(new Map()) && this.Get(new Map()).IsNumber);
+			}
 		}
-			//return Count == 0 || (Count == 1 && ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber);}
 		public virtual bool IsString {
 			get {
-				return IsStringDefault;}}
-		public bool IsStringDefault {
-			get {
 				if (GetArrayCount() != Count) {
-					return false;}
+					return false;
+				}
 				foreach (Map m in Array) {
 					if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
-						return false;}}
-				return true;}}
-		public string GetStringDefault() {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		public virtual string GetString() {
 			StringBuilder text = new StringBuilder("");
 			foreach (Map key in Keys) {
 				text.Append(Convert.ToChar(this.Get(key).GetNumber().GetInt32()));}
-			return text.ToString();}
-		public virtual string GetString() {
-			return GetStringDefault();}
+			return text.ToString();
+		}
 		public virtual Number GetNumber() {
-			return GetNumberDefault();}
-		public Number GetNumberDefault() {
 			Number number;
 			if (Count == 0) {
 				number = 0;}
 			else if (this.Count == 1 && this.ContainsKey(new Map()) && this.Get(new Map()).IsNumber) {
-			//else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this.Get(Map.Empty).IsNumber) {
 				number = 1 + this.Get(new Map()).GetNumber();
 			}
-				//number = 1 + this.Get(Map.Empty).GetNumber();}
 			else {
 				throw new ApplicationException("Map is not an integer");
 			}
 			return number;
 		}
 		public abstract IEnumerable<Map> Keys {
-			get;}
+			get;
+		}
 		public virtual IEnumerable<Map> Array {
 			get {
 				for (int i = 1; this.ContainsKey(i); i++) {
-					yield return Get(i);}}}
+					yield return Get(i);
+				}
+			}
+		}
 		public virtual int Count {
 			get {
 				int count = 0;
 				foreach (Map key in Keys) {
 					count++;}
-				return count;}}}
+				return count;
+			}
+		}
+	}
 	public abstract class Member {
 		public abstract void Set(object obj, Map value);
-		public abstract Map Get(object obj);}
+		public abstract Map Get(object obj);
+	}
 	public class TypeMember : Member {
 		public override void Set(object obj, Map value) {
 			throw new Exception("The method or operation is not implemented.");}
@@ -1867,7 +1874,9 @@ namespace Meta {
 		public TypeMember(Type type) {
 			this.type = type;}
 		public override Map Get(object obj) {
-			return new Map(new TypeMap(type));}}
+			return new Map(new TypeMap(type));
+		}
+	}
 	public class FieldMember : Member {
 		private FieldInfo field;
 		public FieldMember(FieldInfo field) {
@@ -1875,7 +1884,9 @@ namespace Meta {
 		public override void Set(object obj, Map value) {
 			field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
 		public override Map Get(object obj) {
-			return Transform.ToMeta(field.GetValue(obj));}}
+			return Transform.ToMeta(field.GetValue(obj));
+		}
+	}
 	public class MethodMember : Member {
 		private MethodBase method;
 		public MethodMember(MethodInfo method) {
@@ -1883,7 +1894,9 @@ namespace Meta {
 		public override void Set(object obj, Map value) {
 			throw new Exception("The method or operation is not implemented.");}
 		public override Map Get(object obj) {
-			return new Map(new Method(method, obj, method.DeclaringType));}}
+			return new Map(new Method(method, obj, method.DeclaringType));
+		}
+	}
 	public class MemberCache {
 		private BindingFlags bindingFlags;
 		public MemberCache(BindingFlags bindingFlags) {
@@ -1898,74 +1911,104 @@ namespace Meta {
 						data[name] = new MethodMember(method);}
 					FieldInfo field = member as FieldInfo;
 					if (field != null) {
-						data[field.Name] = new FieldMember(field);}
+						data[field.Name] = new FieldMember(field);
+					}
 					Type t = member as Type;
 					if (t != null) {
-						data[t.Name] = new TypeMember(t);}}
-				cache[type] = data;}
+						data[t.Name] = new TypeMember(t);
+					}
+				}
+				cache[type] = data;
+			}
 			else {}
-			return cache[type];}
+			return cache[type];
+		}
 		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();}
 	public abstract class DotNetMap : MapStrategy {
 		public override bool IsNormal {
 			get {
-				return false;}}
+				return false;
+			}
+		}
 		public override int GetHashCode() {
 			if (obj != null) {
 				return obj.GetHashCode();}
 			else {
-				return type.GetHashCode();}}
+				return type.GetHashCode();
+			}
+		}
 		public override bool Equals(object obj) {
 			DotNetMap dotNet = obj as DotNetMap;
 			if (dotNet != null) {
 				return dotNet.Object == Object && dotNet.Type == Type;}
-			return false;}
+			return false;
+		}
 		public override object UniqueKey {
 			get {
-				return null;}}
+				return null;
+			}
+		}
 		protected abstract BindingFlags BindingFlags {
-			get;}
+			get;
+		}
 		public override int GetArrayCount() {
-			return 0;}
+			return 0;
+		}
 		public object Object {
 			get {
-				return obj;}}
+				return obj;
+			}
+		}
 		public Type Type {
 			get {
-				return type;}}
+				return type;
+			}
+		}
 		protected abstract object GlobalKey {
-			get;}
+			get;
+		}
 		public static string GetMethodName(MethodInfo method) {
 			string name = method.Name;
 			foreach (ParameterInfo parameter in method.GetParameters()) {
 				name += "_" + parameter.ParameterType.Name;}
-			return name;}
+			return name;
+		}
 		private Dictionary<Map, Member> data;
 		private Dictionary<Map, Member> Members {
 			get {
 				if (data == null) {
 					data = MemberCache.GetMembers(type);}
-				return data;}}
+				return data;
+			}
+		}
 		protected abstract MemberCache MemberCache {
-			get;}
+			get;
+		}
 		private object obj;
 		private Type type;
 		public DotNetMap(object obj, Type type) {
 			this.obj = obj;
-			this.type = type;}
+			this.type = type;
+		}
 		public override Map Get(Map key) {
 			if (Members.ContainsKey(key)) {
-				return Members[key].Get(obj);}
+				return Members[key].Get(obj);
+			}
 			if (global.ContainsKey(GlobalKey) && global[GlobalKey].ContainsKey(key)) {
-				return global[GlobalKey][key];}
-			return null;}
+				return global[GlobalKey][key];
+			}
+			return null;
+		}
 		public override void Set(Map key, Map value, Map parent) {
 			if (Members.ContainsKey(key)) {
-				Members[key].Set(obj, value);}
+				Members[key].Set(obj, value);
+			}
 			else {
 				if (!global.ContainsKey(GlobalKey)) {
 					global[GlobalKey] = new Dictionary<Map, Map>();}
-				global[GlobalKey][key] = value;}}
+				global[GlobalKey][key] = value;
+			}
+		}
 		public static Type GetListAddFunctionType(IList list, Map value) {
 			foreach (MemberInfo member in list.GetType().GetMember("Add")) {
 				if (member is MethodInfo) {
@@ -1978,61 +2021,85 @@ namespace Meta {
 							object o;
 							if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
 								c = false;
-								break;}}
+								break;
+							}
+						}
 						if (c) {
 							return parameter.ParameterType;}}}}
-			return null;}
+			return null;
+		}
 		public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
 		public override bool ContainsKey(Map key) {
-			return Get(key) != null;}
+			return Get(key) != null;
+		}
 		public override IEnumerable<Map> Keys {
 			get {
 				foreach (Map key in Members.Keys) {
 					yield return key;}
 				if (global.ContainsKey(GlobalKey)) {
 					foreach (Map key in global[GlobalKey].Keys) {
-						yield return key;}}}}
+						yield return key;
+					}
+				}
+			}
+		}
 		public override bool IsString {
 			get {
-				return false;}}
+				return false;
+			}
+		}
 		public override bool IsNumber {
 			get {
-				return false;}}
+				return false;
+			}
+		}
 		public override string Serialize(Map parent) {
 			if (obj != null) {
 				return this.obj.ToString();}
 			else {
-				return this.type.ToString();}}
+				return this.type.ToString();
+			}
+		}
 		public Delegate CreateEventDelegate(string name, Map code) {
 			EventInfo eventInfo = type.GetEvent(name, BindingFlags.Public | BindingFlags.NonPublic |
 				BindingFlags.Static | BindingFlags.Instance);
 			Delegate eventDelegate = Transform.CreateDelegateFromCode(eventInfo.EventHandlerType, code);
-			return eventDelegate;}}
+			return eventDelegate;
+		}
+	}
 	public interface ISerializeEnumerableSpecial {
-		string Serialize();}
+		string Serialize();
+	}
 	public class TestAttribute : Attribute {
-		public TestAttribute()
-			: this(1) {}
+		public TestAttribute(): this(1) {}
 		public TestAttribute(int level) {
-			this.level = level;}
+			this.level = level;
+		}
 		private int level;
 		public int Level {
 			get {
-				return level;}}}
+				return level;
+			}
+		}
+	}
 	[AttributeUsage(AttributeTargets.Property)]
 	public class SerializeAttribute : Attribute {
-		public SerializeAttribute()
-			: this(1) {}
+		public SerializeAttribute(): this(1) {}
 		public SerializeAttribute(int level) {
 			this.level = level;}
 		private int level;
 		public int Level {
 			get {
-				return level;}}}
+				return level;
+			}
+		}
+	}
 	public abstract class TestRunner {
 		public static string TestDirectory {
 			get {
-				return Path.Combine(Interpreter.InstallationPath, "Test");}}
+				return Path.Combine(Interpreter.InstallationPath, "Test");
+			}
+		}
 		public abstract class Test {
 			public bool RunTest() {
 				int level;
@@ -2052,33 +2119,42 @@ namespace Meta {
 				string successText;
 				bool success = File.ReadAllText(resultPath).Equals(File.ReadAllText(checkPath));
 				if (success) {
-					successText = "succeeded";}
+					successText = "succeeded";
+				}
 				else {
-					successText = "failed";}
+					successText = "failed";
+				}
 				Console.WriteLine(" " + successText + "  " + duration.TotalSeconds.ToString() + " s");
 				return success;}
-			public abstract object GetResult(out int level);}
+			public abstract object GetResult(out int level);
+		}
 		public void Run() {
 			bool allTestsSucessful = true;
 			foreach (Type testType in this.GetType().GetNestedTypes()) {
 				if (testType.IsSubclassOf(typeof(Test))) {
 					Test test = (Test)testType.GetConstructor(new Type[] {}).Invoke(null);
 					if (!test.RunTest()) {
-						allTestsSucessful = false;}}}
+						allTestsSucessful = false;
+					}
+				}
+			}
 			if (!allTestsSucessful) {
-				Console.ReadLine();}}
+				Console.ReadLine();
+			}
+		}
 		public const char indentationChar = '\t';
-
 		private static bool UseToStringMethod(Type type) {
 			return (!type.IsValueType || type.IsPrimitive)
 				&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();}
 		private static bool UseProperty(PropertyInfo property, int level) {
 			object[] attributes = property.GetCustomAttributes(typeof(SerializeAttribute), false);
 			return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly()
-				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);}
+				|| (attributes.Length == 1 && ((SerializeAttribute)attributes[0]).Level >= level);
+		}
 		public static void Serialize(object obj, string indent, StringBuilder builder, int level) {
 			if (obj == null) {
-				builder.Append(indent + "null\n");}
+				builder.Append(indent + "null\n");
+			}
 			else if (UseToStringMethod(obj.GetType())) {
 				builder.Append(indent + "\"" + obj.ToString() + "\"" + "\n");}
 			else {
@@ -2096,7 +2172,12 @@ namespace Meta {
 				else if (obj is System.Collections.IEnumerable) {
 					foreach (object entry in (System.Collections.IEnumerable)obj) {
 						builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
-						Serialize(entry, indent + indentationChar, builder, level);}}}}}
+						Serialize(entry, indent + indentationChar, builder, level);
+					}
+				}
+			}
+		}
+	}
 	public class Extent {
 		public readonly Source start;
 		public readonly Source end;
@@ -2126,9 +2207,12 @@ namespace Meta {
 	public class Gac : MapStrategy {
 		public override bool IsNormal {
 			get {
-				return false;}}
+				return false;
+			}
+		}
 		public override int GetArrayCount() {
-			return 0;}
+			return 0;
+		}
 		public static readonly Map gac = new Map(new Gac());
 		private Gac() {
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());}
@@ -2147,7 +2231,9 @@ namespace Meta {
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
 							selected[TypeMap.GetConstructorName(constructor)] = new Map(new Method(constructor, null, type));}
-}}}
+						}
+				}
+			}
 			return val;}
 		public override Map Get(Map key) {
 			Map value;
@@ -2170,22 +2256,33 @@ namespace Meta {
 						value = LoadAssembly(assembly);
 						cache[key] = value;}
 					else {
-						value = null;}}
+						value = null;
+					}
+				}
 				else {
-					value = null;}}
+					value = null;
+				}
+			}
 			else {
-				value = cache[key];}
-			return value;}
+				value = cache[key];
+			}
+			return value;
+		}
 		public override void Set(Map key, Map val, Map map) {
-			cache[key] = val;}
+			cache[key] = val;
+		}
 		public override Map CopyData() {
-			return new Map(this);}
+			return new Map(this);
+		}
 		public override IEnumerable<Map> Keys {
 			get {
-				throw new Exception("The method or operation is not implemented.");}}
+				throw new Exception("The method or operation is not implemented.");
+			}
+		}
 		public override bool ContainsKey(Map key) {
-			return Get(key) != null;}}
-
+			return Get(key) != null;
+		}
+	}
 	public abstract class Number {
 		public override string ToString() {
 			if (Denominator == 1) {
@@ -2260,8 +2357,6 @@ namespace Meta {
 		public static double LeastCommonMultiple(Number a, Number b) {
 			return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
 		}
-
-
 		public virtual Number Subtract(Number b) {
 			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
 		}
@@ -2435,12 +2530,16 @@ namespace Meta {
 				int numerator = Convert.ToInt32(parts[0]);
 				int denominator;
 				if (parts.Length > 2) {
-					denominator = Convert.ToInt32(parts[2]);}
+					denominator = Convert.ToInt32(parts[2]);
+				}
 				else {
-					denominator = 1;}
-				return new Rational(numerator, denominator);}
+					denominator = 1;
+				}
+				return new Rational(numerator, denominator);
+			}
 			catch (Exception e) {
-				return null;}
+				return null;
+			}
 		}
 		public Rational(double integer): this(integer, 1) {}
 		public Rational(Number i)
@@ -2564,30 +2663,18 @@ namespace Meta {
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
 
-		//public static Rule EndOfLine = new Ignore(new Sequence(
-		//    new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
-		//    new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
-
 		public static Rule Integer = new Sequence(new CustomProduction(
 		        delegate(Parser p, Map map, ref Map result) {
 					Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 					Number number;
 					if(rational.IsInt32) {
-					//if(rational.IsNatural && rational.Numerator<int.MaxValue && rational.Numerator>int.MinValue) {
 						number=new Integer(rational.GetInt32());
 					}
 					else {
 						number=rational;
 					}
-					//if(rational.IsNatural && rational.Numerator<int.MaxValue && rational.Numerator>int.MinValue) {
-					//    number=new Integer(rational.GetInt32());
-					//}
-					//else {
-					//    number=rational;
-					//}
 		            result=new Map(number);
 				},
-				//result=new Map(new Rational(double.Parse(map.GetString()),1.0));},
 		        new OneOrMoreChars(new Chars(Syntax.integer))));
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
 			if (p.State.indentationCount == -1) {
@@ -3344,7 +3431,9 @@ namespace Meta {
 				return matched;}
 			private Action action;
 			public OneOrMore(Action action) {
-				this.action = action;}}
+				this.action = action;
+			}
+		}
 		public class Optional : Rule {
 			private Rule rule;
 			public Optional(Rule rule) {
@@ -3357,20 +3446,29 @@ namespace Meta {
 					return true;}
 				else {
 					match=matched;
-					return true;}}}
+					return true;
+				}
+			}
+		}
 		private char Look(int offset) {
-			return Text[State.index+offset];}
+			return Text[State.index+offset];
+		}
 		private char Look() {
-			return Text[State.index];}
+			return Text[State.index];
+		}
 		public static Map Parse(string file) {
-			return ParseString(System.IO.File.ReadAllText(file), file);}
+			return ParseString(System.IO.File.ReadAllText(file), file);
+		}
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			Map result=null;
 			Parser.File.Match(parser, ref result);
 			if (parser.State.index != parser.Text.Length-1) {
-				throw new SyntaxException("Expected end of file.", parser);}
-			return result;}}
+				throw new SyntaxException("Expected end of file.", parser);
+			}
+			return result;
+		}
+	}
 	public class Syntax {
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
@@ -3401,143 +3499,192 @@ namespace Meta {
 		public const char tab = '\t';
 		public const char current = '&';
 		public static readonly string integer = "0123456789-";
-		public static readonly string lookupStringForbidden = //new char[] {
+		public static readonly string lookupStringForbidden =
 			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
 			function+ @string+emptyMap+ '!'+ root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
 			'-'+ ':'+ functionProgram+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
 			programStart+ programSeparator +callSeparator+programEnd+
 			arrayEnd;
-		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;}
-
+		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
+	}
 	public class Serialization {
 		public static string Serialize(Map map) {
 			try {
-				return Serialize(map, -1).Trim();}
+				return Serialize(map, -1).Trim();
+			}
 			catch (Exception e) {
-				throw e;}}
+				throw e;
+			}
+		}
 		private static string Number(Map map) {
-			return map.GetNumber().ToString();}
+			return map.GetNumber().ToString();
+		}
 		private static string Serialize(Map map, int indentation) {
 			if (!map.Strategy.IsNormal) {
-				return map.Strategy.ToString();}
+				return map.Strategy.ToString();
+			}
 			else if (map.Count == 0) {
 				if (indentation < 0) {
-					return "";}
+					return "";
+				}
 				else {
-					return "0";}}
+					return "0";
+				}
+			}
 			else if (map.IsNumber) {
-				return Number(map);}
+				return Number(map);
+			}
 			else if (map.IsString) {
-				return String(map, indentation);}
+				return String(map, indentation);
+			}
 			else {
-				return Map(map, indentation);}}
+				return Map(map, indentation);
+			}
+		}
 		private static string Map(Map map, int indentation) {
 			string text;
 			if (indentation < 0) {
-				text = "";}
+				text = "";
+			}
 			else {
-				text = "," + Environment.NewLine;}
+				text = "," + Environment.NewLine;
+			}
 			foreach (KeyValuePair<Map, Map> entry in map) {
-				text += Entry(indentation, entry);}
-			return text;}
-
+				text += Entry(indentation, entry);
+			}
+			return text;
+		}
 		private static string Entry(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Equals(CodeKeys.Function)) {
-				return Function(entry.Value, indentation + 1);}
+				return Function(entry.Value, indentation + 1);
+			}
 			else {
 				return (Indentation(indentation + 1)
 					+ Key(indentation, entry) +
 					"=" +
 					Serialize(entry.Value, indentation + 1)
 					+ Environment.NewLine).TrimEnd('\r', '\n')
-					+ Environment.NewLine;}}
+					+ Environment.NewLine;
+			}
+		}
 		private static string Literal(Map value, int indentation) {
 			if (value.IsNumber) {
-				return Number(value);}
+				return Number(value);
+			}
 			else if (value.IsString) {
-				return String(value, indentation);}
+				return String(value, indentation);
+			}
 			else {
 				return "error";
 			}
 		}
-			//throw new Exception("not implemented");}
 		private static string Function(Map value, int indentation) {
-			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);}
+			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);
+		}
 		private static string Root() {
-			return "/";}
+			return "/";
+		}
 		private static string Expression(Map map, int indentation) {
 			if (map.ContainsKey(CodeKeys.Literal)) {
-				return Literal(map[CodeKeys.Literal], indentation);}
+				return Literal(map[CodeKeys.Literal], indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Root)) {
 				return Root();}
 			if (map.ContainsKey(CodeKeys.Call)) {
-				return Call(map[CodeKeys.Call], indentation);}
+				return Call(map[CodeKeys.Call], indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Program)) {
-				return Program(map[CodeKeys.Program], indentation);}
+				return Program(map[CodeKeys.Program], indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Select)) {
-				return Select(map[CodeKeys.Select], indentation);}
+				return Select(map[CodeKeys.Select], indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Search)) {
-				return Search(map[CodeKeys.Search], indentation);}
-			return Serialize(map, indentation);}
+				return Search(map[CodeKeys.Search], indentation);
+			}
+			return Serialize(map, indentation);
+		}
 		private static string FunctionStatement(Map map, int indentation) {
 			return map[CodeKeys.Parameter].GetString() + "|" +
-				Expression(map[CodeKeys.Expression], indentation);}
+				Expression(map[CodeKeys.Expression], indentation);
+		}
 		private static string KeyStatement(Map map, int indentation) {
 			Map key = map[CodeKeys.Key];
 			if (key.Equals(new Map(CodeKeys.Literal, CodeKeys.Function))) {
-				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);}
+				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);
+			}
 			else {
 				return Expression(map[CodeKeys.Key], indentation) + "="
-					+ Expression(map[CodeKeys.Value], indentation);}}
+					+ Expression(map[CodeKeys.Value], indentation);
+			}
+		}
 		private static string CurrentStatement(Map map, int indentation) {
-			return "&=" + Expression(map[CodeKeys.Value], indentation);}
+			return "&=" + Expression(map[CodeKeys.Value], indentation);
+		}
 		private static string SearchStatement(Map map, int indentation) {
-			return Expression(map[CodeKeys.Keys], indentation) + ":" + Expression(map[CodeKeys.Value], indentation);}
+			return Expression(map[CodeKeys.Keys], indentation) + ":" + Expression(map[CodeKeys.Value], indentation);
+		}
 		private static string DiscardStatement(Map map, int indentation) {
-			return Expression(map[CodeKeys.Value], indentation);}
+			return Expression(map[CodeKeys.Value], indentation);
+		}
 		private static string Statement(Map map, int indentation) {
 			if (map.ContainsKey(CodeKeys.Key)) {
-				return KeyStatement(map, indentation);}
+				return KeyStatement(map, indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Current)) {
-				return CurrentStatement(map, indentation);}
+				return CurrentStatement(map, indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Keys)) {
-				return SearchStatement(map, indentation);}
+				return SearchStatement(map, indentation);
+			}
 			else if (map.ContainsKey(CodeKeys.Value)) {
-				return DiscardStatement(map, indentation);}
-			throw new Exception("not implemented");}
+				return DiscardStatement(map, indentation);
+			}
+			throw new Exception("not implemented");
+		}
 		private static string Program(Map map, int indentation) {
 			string text = "," + NewLine();
 			indentation++;
 			foreach (Map m in map.Array) {
 				text += Indentation(indentation) + Trim(Statement(m, indentation)) + NewLine();}
-			return text;}
+			return text;
+		}
 		private static string Trim(string text) {
-			return text.TrimEnd('\n', '\r');}
+			return text.TrimEnd('\n', '\r');
+		}
 		private static string NewLine() {
-			return Environment.NewLine;}
+			return Environment.NewLine;
+		}
 		private static string Call(Map map, int indentation) {
 			string text = "-" + NewLine();
 			indentation++;
 			foreach (Map m in map.Array) {
 				text += Indentation(indentation) +
-					Trim(Expression(m, indentation)) + NewLine();}
-			return text;}
+					Trim(Expression(m, indentation)) + NewLine();
+			}
+			return text;
+		}
 		private static string Select(Map map, int indentation) {
 			string text = "." + NewLine();
 			indentation++;
 			foreach (Map sub in map.Array) {
 				text += Indentation(indentation) +
 					Trim(Expression(sub, indentation)) + NewLine();}
-			return text;}
+			return text;
+		}
 		private static string Search(Map map, int indentation) {
-			return "!" + Expression(map, indentation);}
+			return "!" + Expression(map, indentation);
+		}
 		private static string Key(int indentation, KeyValuePair<Map, Map> entry) {
 			if (entry.Key.Count != 0 && entry.Key.IsString) {
 				string key = entry.Key.GetString();
 				if (key.IndexOfAny(Syntax.lookupStringForbidden.ToCharArray()) == -1 && entry.Key.GetString().IndexOfAny(Syntax.lookupStringForbiddenFirst.ToCharArray()) != 0) {
-					return entry.Key.GetString();}}
-			return Serialize(entry.Key, indentation + 1);}
+					return entry.Key.GetString();
+				}
+			}
+			return Serialize(entry.Key, indentation + 1);
+		}
 		private static string String(Map map, int indentation) {
 			string text = map.GetString();
 			if (text.Contains("\"") || text.Contains("\n")) {
@@ -3546,9 +3693,13 @@ namespace Meta {
 					result += Indentation(indentation) + "\t" + line + Environment.NewLine;}
 				return result.Trim('\n', '\r') + Environment.NewLine + Indentation(indentation) + "\"";}
 			else {
-				return "\"" + text + "\"";}}
+				return "\"" + text + "\"";
+			}
+		}
 		private static string Indentation(int indentation) {
-			return "".PadLeft(Math.Max(0,indentation), '\t');}}
+			return "".PadLeft(Math.Max(0,indentation), '\t');
+		}
+	}
 	namespace Test {
 		public class MetaTest : TestRunner {
 			public static int Leaves(Map map) {
@@ -3574,7 +3725,6 @@ namespace Meta {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new Map());
-					//return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), Map.Empty);
 				}
 			}
 			public class Serialization : Test {
@@ -3583,19 +3733,16 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new Map());
 				}
 			}
-					//return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), Map.Empty);}}
 			public class Fibo: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new Map());
-					//return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), Map.Empty);
 				}
 			}
 			public static Map Run(string path, Map argument) {
@@ -3755,7 +3902,9 @@ namespace Meta {
 				return GetSourceText(source) + ": " + message;}}
 		public Source Source {
 			get {
-				return source;}}
+				return source;
+			}
+		}
 		public static int CountLeaves(Map map) {
 			int count = 0;
 			foreach (KeyValuePair<Map, Map> pair in map) {
@@ -3783,7 +3932,6 @@ namespace Meta {
 	public class Library {
 		public static Map Slice(Map array,int start,int end) {
 			return new Map(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
-			//return new Map(new List<Map>(array.Array).ConvertAll<Map>(delegate(Map map) {return map.Copy();}).GetRange(start-1,Math.Max(end-start+1,0)));
 		}
 		public static Map Select(Map array,Map function) {
 			foreach(Map m in array.Array) {
@@ -3801,12 +3949,9 @@ namespace Meta {
 		}
 		public static Map While(Map condition,Map body) {
 			while(Convert.ToBoolean(condition.Call(new Map()).GetNumber().GetInt32())) {
-			//while(Convert.ToBoolean(condition.Call(Meta.Map.Empty).GetNumber().GetInt32())) {
 				body.Call(new Map());
-				//body.Call(Meta.Map.Empty);
 			}
 			return new Map();
-			//return Meta.Map.Empty;
 		}
 		public static Map Double(Map d) {
 			return new Map((object)(float)d.GetNumber().GetDouble());}
@@ -3821,21 +3966,27 @@ namespace Meta {
 		public static Map Modify(Map map, Map func) {
 			Map result = new Map();
 			foreach (KeyValuePair<Map, Map> entry in map) {
-				result[entry.Key] = func.Call(entry.Value);}
-			return result;}
+				result[entry.Key] = func.Call(entry.Value);
+			}
+			return result;
+		}
 		public static Map StringToNumber(Map map) {
-			return Convert.ToInt32(map.GetString());}
+			return Convert.ToInt32(map.GetString());
+		}
 		public static Map Foreach(Map map, Map func) {
 			List<Map> result = new List<Map>();
 			foreach (KeyValuePair<Map, Map> entry in map) {
-				result.Add(func.Call(entry.Key).Call(entry.Value));}
-			return new Map(new ListStrategy(result));}
+				result.Add(func.Call(entry.Key).Call(entry.Value));
+			}
+			return new Map(new ListStrategy(result));
+		}
 		public static Map Switch(Map map, Map cases) {
 			foreach (KeyValuePair<Map, Map> entry in cases) {
 				if (Convert.ToBoolean(entry.Key.Call(map).GetNumber().GetInt32())) {
-					return entry.Value.Call(map);}}
+					return entry.Value.Call(map);
+				}
+			}
 			return new Map();
-			//return Meta.Map.Empty;
 		}
 		public static Map Raise(Number a, Number b) {
 			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));}
@@ -3978,13 +4129,6 @@ namespace Meta {
 			}
 			return result;
 		}
-		//public static Map Range(Number start,Number arg) {
-		//    Map result = new Map();
-		//    for (Number i = start; i <= arg; i+=1) {
-		//        result.Append(i);
-		//    }
-		//    return result;
-		//}
 	}
 	public class LiteralExpression : Expression {
 		private Map literal;
@@ -4075,50 +4219,26 @@ namespace Meta {
 	public abstract class CompilableAttribute : Attribute {
 		public abstract Map GetStructure();
 	}
-	public class Map : IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+	public abstract class MapBase:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+			return this.GetEnumerator();
+		}
+		public abstract IEnumerator<KeyValuePair<Map, Map>> GetEnumerator();
+		public abstract string Serialize();
+	}
+	public class Map : MapBase,IEnumerable{
 		//public void Specialize(Type type) {
 		//    Program p=(Program)this[CodeKeys.Function].CreateExpression(this[CodeKeys.Function].expression);
 		//    ((KeyStatement)p.statementList[0]).value=
 
-		//}
-		//private Dictionary<Type, Compiled> specialized;
-		//private Dictionary<Type, Compiled> Specialized {
-		//    get {
-		//        if (specialized == null) {
-		//            specialized = new Dictionary<Type, Compiled>();
-		//        }
-		//        return specialized;}
-		//}
-		//public Compiled GetCompiled(Type type) {
-		//    try {
-		//        if (Specialized.ContainsKey(type)) {
-		//            return Specialized[type];}
-		//        else if (Specialized.ContainsKey(typeof(Map))) {
-		//            return Specialized[typeof(Map)];}
-		//        else {
-		//            return null;}
-		//    }
-		//    catch (Exception e) {
-		//        throw e;}
-		//}
-
-		//public Compiled GetCompiled(Type type) {
-		//    try {
-		//        if (Specialized.ContainsKey(type)) {
-		//            return Specialized[type];}
-		//        else if (Specialized.ContainsKey(typeof(Map))) {
-		//            return Specialized[typeof(Map)];}
-		//        else {
-		//            return null;}
-		//    }
-		//    catch (Exception e) {
-		//        throw e;}
-		//}
 		public virtual bool IsConstant {
 			get {
-				return isConstant;}
+				return isConstant;
+			}
 			set {
-				isConstant = value;}}
+				isConstant = value;
+			}
+		}
 		private bool isConstant = true;
 		private MapStrategy strategy;
 		public Map(IEnumerable<Map> list)
@@ -4129,36 +4249,42 @@ namespace Meta {
 			foreach (object entry in list) {
 				this[index] = Transform.ToMeta(entry);
 				index++;}}
-		public Map()
-			: this(EmptyStrategy.empty) {}
-		public Map(Map map)
-			: this(new ObjectMap(map)) {}
-		public Map(object o)
-			: this(new ObjectMap(o)) {}
-		public Map(string text)
-			: this(new StringStrategy(text)) {}
-		public Map(Number number)
-			: this(new NumberStrategy(number)) {}
+		public Map(): this(EmptyStrategy.empty) {}
+		public Map(Map map): this(new ObjectMap(map)) {}
+		public Map(object o): this(new ObjectMap(o)) {}
+		public Map(string text): this(new StringStrategy(text)) {}
+		public Map(Number number): this(new NumberStrategy(number)) {}
 		public Map(MapStrategy strategy) {
-			this.strategy = strategy;}
-		public Map(params Map[] keysAndValues)
-			: this() {
+			this.strategy = strategy;
+		}
+		public Map(params Map[] keysAndValues): this() {
 			for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
-				this[keysAndValues[i]] = keysAndValues[i + 1];}}
+				this[keysAndValues[i]] = keysAndValues[i + 1];
+			}
+		}
 		public MapStrategy Strategy {
 			get {
-				return strategy;}
+				return strategy;
+			}
 			set {
-				strategy = value;}}
+				strategy = value;
+			}
+		}
 		public int Count {
 			get {
-				return strategy.Count;}}
+				return strategy.Count;
+			}
+		}
 		public int ArrayCount {
 			get {
-				return strategy.GetArrayCount();}}
+				return strategy.GetArrayCount();
+			}
+		}
 		public bool IsString {
 			get {
-				return strategy.IsString;}}
+				return strategy.IsString;
+			}
+		}
 		public bool IsNumber {
 			get {
 				return strategy.IsNumber;
@@ -4166,65 +4292,93 @@ namespace Meta {
 		}
 		public IEnumerable<Map> Array {
 			get {
-				return strategy.Array;}}
+				return strategy.Array;
+			}
+		}
 		public Number GetNumber() {
-			return strategy.GetNumber();}
+			return strategy.GetNumber();
+		}
 		public string GetString() {
-			return strategy.GetString();}
+			return strategy.GetString();
+		}
 		public static Stack<Map> arguments = new Stack<Map>();
 		public Map Call(Map arg) {
 			arguments.Push(arg);
 			Map result = strategy.Call(arg, this);
 			arguments.Pop();
-			return result;}
+			return result;
+		}
 		public static Dictionary<object, Profile> calls = new Dictionary<object, Profile>();
 		public void Append(Map map) {
-			strategy.Append(map, this);}
+			strategy.Append(map, this);
+		}
 		public bool ContainsKey(Map key) {
-			return strategy.ContainsKey(key);}
+			return strategy.ContainsKey(key);
+		}
 		public override bool Equals(object obj) {
 			Map map = obj as Map;
 			if (map != null) {
 				if (map.strategy.IsNormal == strategy.IsNormal) {
-					return strategy.Equals(map.Strategy);}
-				return false;}
-			return false;}
+					return strategy.Equals(map.Strategy);
+				}
+				return false;
+			}
+			return false;
+		}
 		public Map TryGetValue(Map key) {
-			return strategy.Get(key);}
+			return strategy.Get(key);
+		}
 		public IEnumerable<Map> Keys {
 			get {
-				return strategy.Keys;}}
+				return strategy.Keys;
+			}
+		}
 		public Map this[Map key] {
 			get {
 				Map value = TryGetValue(key);
 				if (value == null) {
 					throw new KeyDoesNotExist(key, null, this);}
 				else {
-					return value;}}
+					return value;
+				}
+			}
 			set {
 				if (value == null) {
 					throw new Exception("Value cannot be null.");}
 				else {
-					strategy.Set(key, value, this);}}}
+					strategy.Set(key, value, this);
+				}
+			}
+		}
 		public override string ToString() {
 			if (Count == 0) {
-				return "0";}
+				return "0";
+			}
 			else if (IsString) {
-				return GetString();}
+				return GetString();
+			}
 			else {
-				return Meta.Serialization.Serialize(this);}}
+				return Meta.Serialization.Serialize(this);
+			}
+		}
 		public Expression expression;
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
-				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);}
+				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
+			}
 			else if (ContainsKey(CodeKeys.Current)) {
-				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);}
+				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);
+			}
 			else if (ContainsKey(CodeKeys.Key)) {
-				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);}
+				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
+			}
 			else if (ContainsKey(CodeKeys.Discard)) {
-				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);}
+				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);
+			}
 			else {
-				throw new ApplicationException("Cannot compile map");}}
+				throw new ApplicationException("Cannot compile map");
+			}
+		}
 		public void Compile(Expression parent) {
 			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
 		}
@@ -4239,19 +4393,26 @@ namespace Meta {
 		}
 		public Expression CreateExpression(Expression parent) {
 			if (ContainsKey(CodeKeys.Call)) {
-				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);}
+				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);
+			}
 			else if (ContainsKey(CodeKeys.Program)) {
-				return new Program(this[CodeKeys.Program], parent);}
+				return new Program(this[CodeKeys.Program], parent);
+			}
 			else if (ContainsKey(CodeKeys.Literal)) {
-				return new Literal(this[CodeKeys.Literal], parent);}
+				return new Literal(this[CodeKeys.Literal], parent);
+			}
 			else if (ContainsKey(CodeKeys.Select)) {
-				return new Select(this[CodeKeys.Select], parent);}
+				return new Select(this[CodeKeys.Select], parent);
+			}
 			else if (ContainsKey(CodeKeys.Search)) {
-				return new Search(this[CodeKeys.Search], parent);}
+				return new Search(this[CodeKeys.Search], parent);
+			}
 			else if (ContainsKey(CodeKeys.Root)) {
-				return new Root(this[CodeKeys.Root], parent);}
+				return new Root(this[CodeKeys.Root], parent);
+			}
 			else if (ContainsKey(CodeKeys.LastArgument)) {
-				return new LastArgument(this[CodeKeys.LastArgument], parent);}
+				return new LastArgument(this[CodeKeys.LastArgument], parent);
+			}
 			else if (ContainsKey(CodeKeys.Expression)) {
 				Program program = new Function(this.Source, parent);
 				program.isFunction = true;
@@ -4261,7 +4422,8 @@ namespace Meta {
 						new Literal(parameter, program),
 						new LastArgument(new Map(), program), program, 0);
 						//new LastArgument(Map.Empty, program), program, 0);
-					program.statementList.Add(s);}
+					program.statementList.Add(s);
+				}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
 				program.statementList.Add(c);
 				return program;
@@ -4270,27 +4432,25 @@ namespace Meta {
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
 			}
 		}
-		public int GetArrayCountDefault() {
-			int i = 1;
-			for (;ContainsKey(i);i++);
-			return i - 1;}
 		public Map Copy() {
 			Map clone = strategy.CopyData();
 			clone.Scope = Scope;
 			clone.Source = Source;
 			clone.expression=expression;
-			//clone.specialized = specialized;
 			clone.IsConstant = this.IsConstant;
 			return clone;}
 		public override int GetHashCode() {
-			return strategy.GetHashCode();}
+			return strategy.GetHashCode();
+		}
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-			return this.GetEnumerator();}
-		public IEnumerator<KeyValuePair<Map, Map>> GetEnumerator() {
+			return this.GetEnumerator();
+		}
+		public override IEnumerator<KeyValuePair<Map, Map>> GetEnumerator() {
 			foreach (Map key in Keys) {
-				yield return new KeyValuePair<Map, Map>(key, this[key]);}}
+				yield return new KeyValuePair<Map, Map>(key, this[key]);
+			}
+		}
 		public Extent Source;
-		//public static Map Empty = new Map(EmptyStrategy.empty);
 		public static implicit operator Map(string text) {
 			return new Map(text);
 		}
@@ -4323,7 +4483,6 @@ namespace Meta {
 		}
 		public static implicit operator Map(ushort integer) {
 			return (int)integer;
-			//return (double)integer;
 		}
 		public static implicit operator Map(int integer) {
 			return new Integer(integer);
@@ -4346,7 +4505,7 @@ namespace Meta {
 			else {
 				text = null;}
 			return text;}
-		public string Serialize() {
+		public override string Serialize() {
 			return strategy.Serialize(this);
 		}
 	}
