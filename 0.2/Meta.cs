@@ -158,6 +158,9 @@ namespace Meta {
 				if (first is TypeMap) {
 					method = (Method)((TypeMap)first).Constructor;
 				}
+				else if (first is Method) {
+					method = (Method)first;
+				}
 				else {
 					method = null;
 				}
@@ -172,7 +175,8 @@ namespace Meta {
 									return true;}
 								else {
 									object nextArg;
-									if (Transform.TryToDotNet(arg.Copy(), method.parameters[i].ParameterType, out nextArg)) {
+									if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
+									//if (Transform.TryToDotNet(arg.Copy(), method.parameters[i].ParameterType, out nextArg)) {
 										arguments.Add(nextArg);}
 									else {
 										m = method.method;
@@ -357,7 +361,8 @@ namespace Meta {
 					}
 				}
 			}
-			return selected[key].Copy();
+			return selected[key];
+			//return selected[key].Copy();
 		}
 	}
 	public class OptimizedSearch : Compiled {
@@ -367,7 +372,8 @@ namespace Meta {
 			this.literal = literal;
 		}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			return literal.Copy();
+			return literal;
+			//return literal.Copy();
 		}
 	}
 	public class CompiledSearch : Compiled {
@@ -388,7 +394,8 @@ namespace Meta {
 					throw new KeyNotFound(key, Source.start, null);
 				}
 			}
-			return selected[key].Copy();
+			return selected[key];
+			//return selected[key].Copy();
 		}
 	}
 	public class CompiledProgram : Compiled {
@@ -673,7 +680,8 @@ namespace Meta {
 			this.literal = literal;
 		}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			return literal.Copy();
+			return literal;
+			//return literal.Copy();
 		}
 	}
 	public class Literal : Expression {
@@ -1352,8 +1360,72 @@ namespace Meta {
 			return new ObjectMap(Object);
 		}
 	}
-	//public class CloneMap:MapBase {
-	//}
+	public class CloneMap:MapBase {
+		private MapBase original;
+		public CloneMap(MapBase original) {
+			this.original=original;
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override IEnumerable<MapBase> Array {
+			get {
+				return original.Array;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return original.ArrayCount;
+			}
+		}
+		public override MapBase Call(MapBase arg) {
+			return original.Call(arg);
+		}
+		public override bool ContainsKey(MapBase key) {
+			return original.ContainsKey(key);
+		}
+		public override MapBase Copy() {
+			return new CloneMap(original);
+		}
+		public override int Count {
+			get {
+				return original.Count;
+			}
+		}
+		public override bool Equals(object obj) {
+			return original.Equals(obj);
+		}
+		public override int GetHashCode() {
+			return original.GetHashCode();
+		}
+		public override Number GetNumber() {
+			return original.GetNumber();
+		}
+		public override string GetString() {
+			return original.GetString();
+		}
+		public override bool IsNormal {
+			get {
+				return original.IsNormal;
+			}
+		}
+		public override IEnumerable<MapBase> Keys {
+			get {
+				return original.Keys;
+			}
+		}
+		public override string Serialize() {
+			return original.Serialize();
+		}
+		public override MapBase this[MapBase key] {
+			get {
+				return original[key];
+			}
+			set {
+				throw new Exception("The method or operation is not implemented.");
+			}
+		}
+	}
 	public class DictionaryMap : MapBase {
 		public override bool IsNormal {
 			get {
@@ -1409,34 +1481,17 @@ namespace Meta {
 				}
 			}
 		}
-		//public override bool IsString {
-		//    get {
-
-		//        if (ArrayCount != Count) {
-		//            return false;
-		//        }
-		//        foreach (MapBase m in Array) {
-		//            if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
-		//                return false;
-		//            }
-		//        }
-		//        return true;
-		//    }
-		//}
 		public override MapBase Copy() {
-			MapBase clone = new DictionaryMap();
-			clone.Scope = Scope;
-			clone.Source = Source;
-			clone.expression=expression;
-			clone.IsConstant = this.IsConstant;
-			foreach (MapBase key in Keys) {
-				if(!ContainsKey(key))
-				{
-					MapBase m=this[key];
-				}
-				clone[key] = this[key].Copy();
-			}
-			return clone;
+			return DeepCopy();
+			//MapBase clone = new DictionaryMap();
+			//clone.Scope = Scope;
+			//clone.Source = Source;
+			//clone.expression=expression;
+			//clone.IsConstant = this.IsConstant;
+			//foreach (MapBase key in Keys) {
+			//    clone[key] = this[key].Copy();
+			//}
+			//return clone;
 		}
 		public override void Append(MapBase map) {
 			this[ArrayCount + 1]=map;
@@ -1490,7 +1545,6 @@ namespace Meta {
 			}
 			else {
 				number =null;
-				//throw new ApplicationException("Map is not an integer");
 			}
 			return number;
 		}
@@ -3333,8 +3387,11 @@ namespace Meta {
 			public LiteralRule(MapBase literal) {
 				this.literal = literal;}
 			protected override bool MatchImplementation(Parser parser, ref MapBase map,bool keep) {
-				map=literal.Copy();
-				return true;}}
+				map=literal;
+				//map=literal.Copy();
+				return true;
+			}
+		}
 		public class ZeroOrMoreString : ZeroOrMore {
 			public ZeroOrMoreString(Action action)
 				: base(action) {}
@@ -4064,11 +4121,18 @@ namespace Meta {
 		}
 		[MergeCompile]
 		public static MapBase Merge(MapBase arg, MapBase map) {
+			arg=arg.Copy();
 			foreach (KeyValuePair<MapBase, MapBase> pair in map) {
 				arg[pair.Key] = pair.Value;
 			}
 			return arg;
 		}
+		//public static MapBase Merge(MapBase arg, MapBase map) {
+		//    foreach (KeyValuePair<MapBase, MapBase> pair in map) {
+		//        arg[pair.Key] = pair.Value;
+		//    }
+		//    return arg;
+		//}
 		public static MapBase Join(MapBase arg, MapBase map) {
 			foreach (MapBase m in map.Array) {
 				arg.Append(m);}
@@ -4171,6 +4235,19 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public MapBase DeepCopy() {
+			MapBase clone = new DictionaryMap();
+			clone.Scope = Scope;
+			clone.Source = Source;
+			clone.expression=expression;
+			clone.IsConstant = this.IsConstant;
+			foreach (MapBase key in Keys) {
+				clone[key] = this[key].Copy();
+			}
+			return clone;
+		}
+		public abstract MapBase Copy();
+
 		public static Stack<MapBase> arguments = new Stack<MapBase>();
 		public abstract bool IsNormal {
 			get;
@@ -4294,7 +4371,6 @@ namespace Meta {
 			set;
 		}
 		public Expression expression;
-		public abstract MapBase Copy();
 		public MapBase Scope;
 
 		public void Compile(Expression parent) {
