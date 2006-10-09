@@ -961,134 +961,6 @@ namespace Meta {
 				};
 			}
 		}
-		//public static Conversion GetConversion(Type target) {
-		//    if (target.IsEnum) {
-		//        return delegate(Map map){
-		//            return Enum.ToObject(target, meta.GetNumber().GetInt32());
-		//        };
-		//    else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//        dotNet = ((ObjectMap)meta).Object;
-		//    }
-		//    else {
-		//        TypeCode typeCode = Type.GetTypeCode(target);
-
-		//        switch (typeCode) {
-		//            case TypeCode.Object:
-		//                    if (target == typeof(Number) && meta.IsNumber) {
-		//                        dotNet = meta.GetNumber();
-		//                    }
-		//                    if (dotNet == null && target == typeof(Type) && meta is TypeMap) {
-		//                        dotNet = ((TypeMap)meta).Type;
-		//                    }
-		//                    // remove?
-		//                    else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//                        dotNet = ((ObjectMap)meta).Object;
-		//                    }
-		//                    else if (target.IsAssignableFrom(type)) {
-		//                        dotNet = meta;
-		//                    }
-		//                    else if (target.IsArray) {
-		//                        ArrayList list = new ArrayList();
-		//                        bool converted = true;
-		//                        Type elementType = target.GetElementType();
-		//                        foreach (MapBase m in meta.Array) {
-		//                            object o;
-		//                            if (Transform.TryToDotNet(m, elementType, out o)) {
-		//                                list.Add(o);}
-		//                            else {
-		//                                converted = false;
-		//                                break;
-		//                            }
-		//                        }
-		//                        if (converted) {
-		//                            dotNet = list.ToArray(elementType);
-		//                        }
-		//                    }
-		//                    else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-		//                       && meta.ContainsKey(CodeKeys.Function)) {
-		//                        dotNet = CreateDelegateFromCode(target, meta);
-		//                    }
-		//                }
-		//                break;
-		//            case TypeCode.Boolean:
-		//                if (meta.IsNumber && (meta.GetNumber().GetInt32() == 1 || meta.GetNumber().GetInt32() == 0)) {
-		//                    dotNet = Convert.ToBoolean(meta.GetNumber().GetInt32());
-		//                }
-		//                break;
-		//            case TypeCode.Byte:
-		//                if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue)) {
-		//                    dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
-		//                }
-		//                break;
-		//            case TypeCode.Char:
-		//                if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue)) {
-		//                    dotNet = Convert.ToChar(meta.GetNumber().GetInt32());
-		//                }
-		//                break;
-		//            // unlogical
-		//            case TypeCode.DateTime:
-		//                dotNet = null;
-		//                break;
-		//            case TypeCode.DBNull:
-		//                dotNet = null;
-		//                break;
-		//            case TypeCode.Decimal:
-		//                if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue)) {
-		//                    dotNet = (decimal)(meta.GetNumber().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Double:
-		//                if (IsIntegerInRange(meta, double.MinValue, double.MaxValue)) {
-		//                    dotNet = (double)(meta.GetNumber().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Int16:
-		//                if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue)) {
-		//                    dotNet = Convert.ToInt16(meta.GetNumber().GetRealInt64());
-		//                }
-		//                break;
-		//            case TypeCode.Int32:
-		//                if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue)) {
-		//                    dotNet = meta.GetNumber().GetInt32();
-		//                }
-		//                break;
-		//            case TypeCode.Int64:
-		//                if (IsIntegerInRange(meta, new Rational(Int64.MinValue), new Rational(Int64.MaxValue))) {
-		//                    dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.SByte:
-		//                if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue)) {
-		//                    dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());}
-		//                break;
-		//            case TypeCode.Single:
-		//                if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue)) {
-		//                    dotNet = (float)meta.GetNumber().GetInt64();
-		//                }
-		//                break;
-		//            case TypeCode.String:
-		//                if (meta.IsString) {
-		//                    dotNet = meta.GetString();}
-		//                break;
-		//            case TypeCode.UInt16:
-		//                if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue)) {
-		//                    dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());}
-		//                break;
-		//            case TypeCode.UInt32:
-		//                if (IsIntegerInRange(meta, new Rational(UInt32.MinValue), new Rational(UInt32.MaxValue))) {
-		//                    dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());
-		//                }
-		//                break;
-		//            case TypeCode.UInt64:
-		//                if (IsIntegerInRange(meta, new Rational(UInt64.MinValue), new Rational(UInt64.MaxValue))) {
-		//                    dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());
-		//                }
-		//                break;
-		//            default:
-		//                throw new ApplicationException("not implemented");
-		//        }
-		//    }
-		//}
 		public static bool TryToDotNet(MapBase meta, Type target, out object dotNet) {
 			try {
 				dotNet = null;
@@ -1606,6 +1478,44 @@ namespace Meta {
 		}
 	}
 	public class DictionaryMap : MapBase {
+		//private MapBase scope;
+		//public override MapBase Scope {
+		//    get {
+		//        return scope;
+		//    }
+		//    set {
+		//        scope=value;
+		//    }
+		//}
+
+		private Expression expression;
+		public override Expression Expression {
+			get {
+				return expression;
+			}
+			set {
+				expression=value;
+			}
+		}
+		public override Extent Source {
+			get {
+				return source;
+			}
+			set {
+				source=value;
+			}
+		}
+		private Extent source;
+		public override bool IsConstant {
+			get {
+				return isConstant;
+			}
+			set {
+				isConstant = value;
+			}
+		}
+		private bool isConstant = true;
+
 		public override bool IsNormal {
 			get {
 				return true;
@@ -1669,8 +1579,8 @@ namespace Meta {
 		public virtual MapBase CallImplementation(MapBase argument) {
 		    MapBase function=this[CodeKeys.Function];
 		    if (function!=null) {
-		        if (function.expression!=null && function.expression.compiled!= null) {
-		            return function.expression.compiled.Evaluate(this);
+		        if (function.Expression!=null && function.Expression.compiled!= null) {
+		            return function.Expression.compiled.Evaluate(this);
 		        }
 		        else {
 		            return function.GetExpression(null).Compile(null).Evaluate(this);
@@ -2295,17 +2205,8 @@ namespace Meta {
 		}
 		public override int Count {
 			get {
-				return text.Length;}}
-		//public override bool IsNumber {
-		//    get {
-		//        return text.Length == 0;
-		//    }
-		//}
-		//public override bool IsString {
-		//    get {
-		//        return true;
-		//    }
-		//}
+				return text.Length;}
+		}
 		public override string GetString() {
 			return text;
 		}
@@ -2361,11 +2262,6 @@ namespace Meta {
 				yield break;
 			}
 		}
-		//public override bool IsString {
-		//    get { 
-		//        return false;
-		//    }
-		//}
 		public override int Count {
 			get { 
 				return new List<MapBase>(Keys).Count;
@@ -4409,7 +4305,7 @@ namespace Meta {
 			MapBase clone = new DictionaryMap();
 			clone.Scope = Scope;
 			clone.Source = Source;
-			clone.expression=expression;
+			clone.Expression=Expression;
 			clone.IsConstant = this.IsConstant;
 			foreach (MapBase key in Keys) {
 				clone[key] = this[key].Copy();
@@ -4492,18 +4388,20 @@ namespace Meta {
 		public static implicit operator MapBase(ulong integer) {
 		    return (double)integer;
 		}
-
-		public Extent Source;
-		public virtual bool IsConstant {
+		public virtual Extent Source {
 			get {
-				return isConstant;
+				return null;
 			}
 			set {
-				isConstant = value;
 			}
 		}
-		private bool isConstant = true;
-
+		public virtual bool IsConstant {
+			get {
+				return true;
+			}
+			set {
+			}
+		}
 		public abstract int Count {
 			get;
 		}
@@ -4525,11 +4423,6 @@ namespace Meta {
 		}
 		public abstract Number GetNumber();
 		public abstract string GetString();
-
-
-		//public virtual MapBase TryGetValue(MapBase key) {
-		//    return this[key];
-		//}
 		public abstract MapBase Call(MapBase arg);
 		public abstract void Append(MapBase map);
 		public abstract bool ContainsKey(MapBase key);
@@ -4540,8 +4433,14 @@ namespace Meta {
 			get;
 			set;
 		}
-		public Expression expression;
 		public MapBase Scope;
+		//public virtual MapBase Scope {
+		//    get {
+		//        return null;
+		//    }
+		//    set {
+		//    }
+		//}
 
 		public void Compile(Expression parent) {
 			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
@@ -4549,11 +4448,18 @@ namespace Meta {
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
-		public Expression GetExpression(Expression parent) {
-			if (expression == null) {
-				expression = CreateExpression(parent);
+		public virtual Expression Expression {
+			get {
+				return null;
 			}
-			return expression;
+			set {
+			}
+		}
+		public virtual Expression GetExpression(Expression parent) {
+			if (Expression == null) {
+				Expression = CreateExpression(parent);
+			}
+			return Expression;
 		}
 		public Expression CreateExpression(Expression parent) {
 			if (ContainsKey(CodeKeys.Call)) {
@@ -4595,7 +4501,6 @@ namespace Meta {
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
 			}
 		}
-
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
 				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
