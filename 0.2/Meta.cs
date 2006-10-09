@@ -1390,7 +1390,8 @@ namespace Meta {
 		public override bool ContainsKey(MapBase key) {
 			return false;}
 		public override void Append(MapBase map, MapBase parent) {
-			ListStrategy list = new ListStrategy();
+			DictionaryStrategy list = new DictionaryStrategy();
+			//ListStrategy list = new ListStrategy();
 			list.Append(map, parent);
 			((Map)parent).Strategy = list;
 		}
@@ -1432,7 +1433,8 @@ namespace Meta {
 				else {
 					if (key.Equals(new Integer(1))) {
 					//if (key.Equals(new Map(1))) {
-						ListStrategy list = new ListStrategy();
+						DictionaryStrategy list = new DictionaryStrategy();
+						//ListStrategy list = new ListStrategy();
 						list.Append(value, map);
 						return list;
 					}
@@ -1463,7 +1465,8 @@ namespace Meta {
 			MapStrategy strategy;
 			if (key.Equals(new Integer(Count + 1))) {
 			//if (key.Equals(new Map(Count + 1))) {
-				strategy = new ListStrategy();}
+				strategy = new DictionaryStrategy();}
+				//strategy = new ListStrategy();}
 			else {
 				strategy = new DictionaryStrategy();}
 			Panic(key, val, strategy, map);}
@@ -1504,64 +1507,68 @@ namespace Meta {
 			get {
 				for (int i = 1; i <= text.Length; i++) {
 					yield return i;}}}}
-	public class ListStrategy : MapStrategy {
-		public override MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
-			if (key.Equals(new Integer(Count + 1))) {
-			//if (key.Equals(new Map(Count + 1))) {
-				List<MapBase> newList = new List<MapBase>(this.list);
-				newList.Add(value);
-				return new ListStrategy(newList);}
-			else {
-				return base.DeepCopy(key, value, map);}}
-		public override MapBase CopyData() {
-			return new Map(new CloneStrategy(this));}
-		public override void Append(MapBase map, MapBase parent) {
-			list.Add(map);}
-		private List<MapBase> list;
-		public ListStrategy()
-			: this(5) {}
-		public ListStrategy(List<MapBase> list) {
-			this.list = list;}
-		public ListStrategy(int capacity) {
-			this.list = new List<MapBase>(capacity);}
-		public ListStrategy(ListStrategy original) {
-			this.list = new List<MapBase>(original.list);}
-		public override MapBase Get(MapBase key) {
-			MapBase value = null;
-			if (key.IsNumber) {
-				int integer = key.GetNumber().GetInt32();
-				if (integer >= 1 && integer <= list.Count) {
-					value = list[integer - 1];}}
-			return value;}
-		public override void Set(MapBase key, MapBase val, MapBase map) {
-			if (key.IsNumber) {
-				int integer = key.GetNumber().GetInt32();
-				if (integer >= 1 && integer <= list.Count) {
-					list[integer - 1] = val;}
-				else if (integer == list.Count + 1) {
-					list.Add(val);}
-				else {
-					Panic(key, val, new DictionaryStrategy(), map);}}
-			else {
-				Panic(key, val, new DictionaryStrategy(), map);}}
-		public override int Count {
-			get {
-				return list.Count;}}
-		public override IEnumerable<MapBase> Array {
-			get {
-				return this.list;}}
-		public override int GetArrayCount() {
-			return this.list.Count;}
-		public override bool ContainsKey(MapBase key) {
-			if (key.IsNumber) {
-				Number integer = key.GetNumber();
-				return integer >= 1 && integer <= list.Count;}
-			else {
-				return false;}}
-		public override IEnumerable<MapBase> Keys {
-			get {
-				for (int i = 1; i <= list.Count; i++) {
-					yield return i;}}}}
+	//public class ListStrategy : MapStrategy {
+	//    public override MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
+	//        if (key.Equals(new Integer(Count + 1))) {
+	//        //if (key.Equals(new Map(Count + 1))) {
+	//            List<MapBase> newList = new List<MapBase>(this.list);
+	//            newList.Add(value);
+	//            return new ListStrategy(newList);
+	//        }
+	//            //return new ListStrategy(newList);}
+	//        else {
+	//            return base.DeepCopy(key, value, map);
+	//        }
+	//    }
+	//    public override MapBase CopyData() {
+	//        return new Map(new CloneStrategy(this));}
+	//    public override void Append(MapBase map, MapBase parent) {
+	//        list.Add(map);}
+	//    private List<MapBase> list;
+	//    public ListStrategy()
+	//        : this(5) {}
+	//    public ListStrategy(List<MapBase> list) {
+	//        this.list = list;}
+	//    public ListStrategy(int capacity) {
+	//        this.list = new List<MapBase>(capacity);}
+	//    public ListStrategy(ListStrategy original) {
+	//        this.list = new List<MapBase>(original.list);}
+	//    public override MapBase Get(MapBase key) {
+	//        MapBase value = null;
+	//        if (key.IsNumber) {
+	//            int integer = key.GetNumber().GetInt32();
+	//            if (integer >= 1 && integer <= list.Count) {
+	//                value = list[integer - 1];}}
+	//        return value;}
+	//    public override void Set(MapBase key, MapBase val, MapBase map) {
+	//        if (key.IsNumber) {
+	//            int integer = key.GetNumber().GetInt32();
+	//            if (integer >= 1 && integer <= list.Count) {
+	//                list[integer - 1] = val;}
+	//            else if (integer == list.Count + 1) {
+	//                list.Add(val);}
+	//            else {
+	//                Panic(key, val, new DictionaryStrategy(), map);}}
+	//        else {
+	//            Panic(key, val, new DictionaryStrategy(), map);}}
+	//    public override int Count {
+	//        get {
+	//            return list.Count;}}
+	//    public override IEnumerable<MapBase> Array {
+	//        get {
+	//            return this.list;}}
+	//    public override int GetArrayCount() {
+	//        return this.list.Count;}
+	//    public override bool ContainsKey(MapBase key) {
+	//        if (key.IsNumber) {
+	//            Number integer = key.GetNumber();
+	//            return integer >= 1 && integer <= list.Count;}
+	//        else {
+	//            return false;}}
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            for (int i = 1; i <= list.Count; i++) {
+	//                yield return i;}}}}
 	public class DictionaryStrategy : MapStrategy {
 		public override MapBase CopyData() {
 			return new Map(new CloneStrategy(this));}
@@ -3572,7 +3579,8 @@ namespace Meta {
 				return match;}}
 		public class ZeroOrMore : Rule {
 			protected override bool MatchImplementation(Parser parser, ref MapBase map,bool keep) {
-				MapBase list = new Map(new ListStrategy());
+				MapBase list = new Map();
+				//MapBase list = new Map(new ListStrategy());
 				while (true) {
 					if (!action.Execute(parser, ref list,keep)) {
 						break;}}
@@ -3583,7 +3591,8 @@ namespace Meta {
 				this.action = action;}}
 		public class OneOrMore : Rule {
 			protected override bool MatchImplementation(Parser parser, ref MapBase map,bool keep) {
-				MapBase list = new Map(new ListStrategy());
+				MapBase list = new Map();
+				//MapBase list = new Map(new ListStrategy());
 				bool matched = false;
 				while (true) {
 					if (!action.Execute(parser, ref list,keep)) {
@@ -4145,7 +4154,8 @@ namespace Meta {
 			foreach (KeyValuePair<MapBase, MapBase> entry in map) {
 				result.Add(func.Call(entry.Key).Call(entry.Value));
 			}
-			return new Map(new ListStrategy(result));
+			return new Map(result);
+			//return new Map(new ListStrategy(result));
 		}
 		public static MapBase Switch(MapBase map, MapBase cases) {
 			foreach (KeyValuePair<MapBase, MapBase> entry in cases) {
@@ -4580,14 +4590,22 @@ namespace Meta {
 	public class Map : MapBase,IEnumerable{
 		private MapStrategy strategy;
 		public Map(IEnumerable<MapBase> list)
-			: this(new ListStrategy(new List<MapBase>(list))) {}
+			: this(new DictionaryStrategy()) {
+			foreach(Map map in list) {
+				this.Append(map);
+			}
+		}
+			//: this(new ListStrategy(new List<MapBase>(list))) {}
 		public Map(System.Collections.Generic.ICollection<MapBase> list)
-			: this(new ListStrategy()) {
+			: this(new DictionaryStrategy()) {
 			int index = 1;
 			foreach (object entry in list) {
 				this[index] = Transform.ToMeta(entry);
-				index++;}}
-		public Map(): this(EmptyStrategy.empty) {}
+				index++;
+			}
+		}
+		public Map(): this(new DictionaryStrategy()) {}
+		//public Map(): this(EmptyStrategy.empty) {}
 		public Map(MapBase map): this(new ObjectMap(map)) {}
 		public Map(object o): this(new ObjectMap(o)) 
 		{
