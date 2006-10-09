@@ -1199,16 +1199,6 @@ namespace Meta {
 			this.type = type;
 			this.parameters = method.GetParameters();
 		}
-		public override bool IsString {
-			get {
-				return false;
-			}
-		}
-		public override bool IsNumber {
-			get {
-				return false;
-			}
-		}
 		public ParameterInfo[] parameters;
 		public override MapBase Call(MapBase argument) {
 		    return DecideCall(argument, new List<object>());
@@ -1419,19 +1409,20 @@ namespace Meta {
 				}
 			}
 		}
-		public override bool IsString {
-			get {
-				if (ArrayCount != Count) {
-					return false;
-				}
-				foreach (MapBase m in Array) {
-					if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}
+		//public override bool IsString {
+		//    get {
+
+		//        if (ArrayCount != Count) {
+		//            return false;
+		//        }
+		//        foreach (MapBase m in Array) {
+		//            if (!Transform.IsIntegerInRange(m, (int)Char.MinValue, (int)Char.MaxValue)) {
+		//                return false;
+		//            }
+		//        }
+		//        return true;
+		//    }
+		//}
 		public override MapBase Copy() {
 			MapBase clone = new DictionaryMap();
 			clone.Scope = Scope;
@@ -1498,14 +1489,30 @@ namespace Meta {
 				number = 1 + this[new DictionaryMap()].GetNumber();
 			}
 			else {
-				throw new ApplicationException("Map is not an integer");
+				number =null;
+				//throw new ApplicationException("Map is not an integer");
 			}
 			return number;
 		}
 		public override string GetString() {
 			StringBuilder text = new StringBuilder("");
-			foreach (MapBase key in Keys) {
-				text.Append(Convert.ToChar(this[key].GetNumber().GetInt32()));}
+			if(ArrayCount==0 || ArrayCount !=Count ) {
+				return null;
+			}
+			foreach (MapBase map in Array) {
+				Number number=map.GetNumber();
+				if(number==null) {
+					return null;
+				}
+				else {
+					if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
+						text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
+					}
+					else {
+						return null;
+					}
+				}
+			}
 			return text.ToString();
 		}
 		public override string Serialize() {
@@ -1520,11 +1527,11 @@ namespace Meta {
 				text = null;}
 			return text;
 		}
-		public override bool IsNumber {
-			get {
-				return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this[new DictionaryMap()].IsNumber);
-			}
-		}
+		//public override bool IsNumber {
+		//    get {
+		//        return Count == 0 || (Count == 1 && ContainsKey(new DictionaryMap()) && this[new DictionaryMap()].IsNumber);
+		//    }
+		//}
 		public override int ArrayCount {
 			get {
 				int i = 1;
@@ -1761,16 +1768,6 @@ namespace Meta {
 				}
 			}
 		}
-		public override bool IsString {
-			get {
-				return false;
-			}
-		}
-		public override bool IsNumber {
-			get {
-				return false;
-			}
-		}
 		public override string Serialize() {
 			if (obj != null) {
 				return this.obj.ToString();}
@@ -1928,16 +1925,6 @@ namespace Meta {
 				yield break;
 			}
 		}
-		public override bool IsNumber {
-			get {
-				return false;
-			}
-		}
-		public override bool IsString {
-			get {
-				return false;
-			}
-		}
 		public override int Count {
 			get { throw new Exception("The method or operation is not implemented."); }
 		}
@@ -2086,14 +2073,16 @@ namespace Meta {
 		public override int Count {
 			get {
 				return text.Length;}}
-		public override bool IsNumber {
-			get {
-				return text.Length == 0;}}
-		public override bool IsString {
-			get {
-				return true;
-			}
-		}
+		//public override bool IsNumber {
+		//    get {
+		//        return text.Length == 0;
+		//    }
+		//}
+		//public override bool IsString {
+		//    get {
+		//        return true;
+		//    }
+		//}
 		public override string GetString() {
 			return text;
 		}
@@ -2149,11 +2138,11 @@ namespace Meta {
 				yield break;
 			}
 		}
-		public override bool IsString {
-			get { 
-				return false;
-			}
-		}
+		//public override bool IsString {
+		//    get { 
+		//        return false;
+		//    }
+		//}
 		public override int Count {
 			get { 
 				return new List<MapBase>(Keys).Count;
@@ -2211,11 +2200,11 @@ namespace Meta {
 				}
 			}
 		}
-		public override bool IsNumber {
-			get {
-				return true;
-			}
-		}
+		//public override bool IsNumber {
+		//    get {
+		//        return true;
+		//    }
+		//}
 		public override Number GetNumber() {
 			return this;
 		}
@@ -2263,6 +2252,9 @@ namespace Meta {
 		}
 
 		public static bool operator ==(Number a, Number b) {
+			if(ReferenceEquals(a,null) && ReferenceEquals(b,null)) {
+				return true;
+			}
 			return !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
 		}
 		public static bool operator !=(Number a, Number b) {
@@ -4271,11 +4263,15 @@ namespace Meta {
 		public abstract int ArrayCount {
 			get;
 		}
-		public abstract bool IsString {
-			get;
+		public bool IsString {
+		    get {
+				return GetString()!=null;
+			}
 		}
-		public abstract bool IsNumber {
-			get;
+		public bool IsNumber {
+		    get {
+				return GetNumber()!=null;
+			}
 		}
 		public abstract IEnumerable<MapBase> Array {
 			get;

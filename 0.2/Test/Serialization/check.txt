@@ -60,7 +60,7 @@ commandLine|,
 	"SetCounter"=,
 		|,
 			"counter":,
-				lastArgument=""
+				lastArgument=0
 	1=-
 		!"SetCounter"
 		5
