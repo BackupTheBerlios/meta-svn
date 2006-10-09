@@ -121,7 +121,7 @@ namespace Meta {
 			{
 			}
 			if (calls.Count == 1) {
-				calls.Add(new Literal(new DictionaryMap(), this));
+				calls.Add(new Literal(MapBase.Empty, this));
 			}
 		}
 		public override Structure StructureImplementation() {
@@ -133,7 +133,8 @@ namespace Meta {
 					MapBase result = new DictionaryMap();
 					result.IsConstant=false;
 					foreach (MapBase key in type.Keys) {
-						result[key] = new DictionaryMap();
+						result[key] = MapBase.Empty;
+						//result[key] = new DictionaryMap();
 					}
 					return new LiteralStructure(result);
 				}
@@ -910,7 +911,7 @@ namespace Meta {
 				this.returnType = returnType;
 			}
 			public object Call(object[] arguments) {
-				MapBase arg = new DictionaryMap();
+				//MapBase arg = new DictionaryMap();
 				MapBase pos = this.callable;
 				foreach (object argument in arguments) {
 					pos = pos.Call(Transform.ToMeta(argument));}
@@ -1107,7 +1108,8 @@ namespace Meta {
 		}
 		public static MapBase ToMeta(object dotNet) {
 			if (dotNet == null) {
-				return new DictionaryMap();
+				return MapBase.Empty;
+				//return new DictionaryMap();
 			}
 			else {
 				Type type = dotNet.GetType();
@@ -1619,8 +1621,9 @@ namespace Meta {
 			Number number;
 			if (Count == 0) {
 				number = 0;}
-			else if (this.Count == 1 && this.ContainsKey(new DictionaryMap()) && this[new DictionaryMap()].IsNumber) {
-				number = 1 + this[new DictionaryMap()].GetNumber();
+			else if (this.Count == 1 && this.ContainsKey(MapBase.Empty) && this[MapBase.Empty].IsNumber) {
+				number = 1 + this[MapBase.Empty].GetNumber();
+				//number = 1 + this[new DictionaryMap()].GetNumber();
 			}
 			else {
 				number =null;
@@ -2284,11 +2287,13 @@ namespace Meta {
 		public override MapBase this[MapBase key] {
 			get {
 				if (ContainsKey(key)) {
-					if (key.Equals(new DictionaryMap())) {
+					if (key.Count==0) {
+					//if (key.Equals(new DictionaryMap())) {
 						return this - 1;
 					}
 					else if (key.Equals(NumberKeys.Negative)) {
-						return new DictionaryMap();
+						return MapBase.Empty;
+						//return new DictionaryMap();
 					}
 					else if (key.Equals(NumberKeys.Denominator)) {
 						return new Rational(Denominator);
@@ -2309,7 +2314,7 @@ namespace Meta {
 		public override IEnumerable<MapBase> Keys {
 			get {
 				if (this!= 0) {
-					yield return new DictionaryMap();
+					yield return MapBase.Empty;
 				}
 				if (this< 0) {
 					yield return NumberKeys.Negative;
@@ -2980,11 +2985,12 @@ namespace Meta {
 
 		private static Rule EmptyMap = Simple(
 			Syntax.emptyMap,
-			new DictionaryMap()
+			MapBase.Empty
 		);
 		private static Rule Current = Simple(
 			Syntax.current,
-			new DictionaryMap(CodeKeys.Current, new DictionaryMap()));
+			new DictionaryMap(CodeKeys.Current, MapBase.Empty));
+			//new DictionaryMap(CodeKeys.Current, new DictionaryMap()));
 		public static Rule LastArgument = Simple(
 			Syntax.lastArgument,
 			new DictionaryMap(CodeKeys.LastArgument, new DictionaryMap()));
@@ -4301,6 +4307,7 @@ namespace Meta {
 		public abstract MapBase GetStructure();
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public static MapBase Empty=new DictionaryMap();
 		public MapBase DeepCopy() {
 			MapBase clone = new DictionaryMap();
 			clone.Scope = Scope;
@@ -4434,13 +4441,6 @@ namespace Meta {
 			set;
 		}
 		public MapBase Scope;
-		//public virtual MapBase Scope {
-		//    get {
-		//        return null;
-		//    }
-		//    set {
-		//    }
-		//}
 
 		public void Compile(Expression parent) {
 			GetExpression(parent).compiled = this.GetExpression(parent).Compile(parent);
@@ -4490,7 +4490,7 @@ namespace Meta {
 				if (parameter.Count != 0) {
 					KeyStatement s = new KeyStatement(
 						new Literal(parameter, program),
-						new LastArgument(new DictionaryMap(), program), program, 0);
+						new LastArgument(MapBase.Empty, program), program, 0);
 					program.statementList.Add(s);
 				}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
