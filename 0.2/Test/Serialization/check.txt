@@ -26,15 +26,15 @@ shortFunc="
 		arg|!"
 			arg
 "
-1="hello"
+0="hello"
 listTest=,
-	1="this"
-	2=1
-	3="is"
-	4="a"
-	5=,
-		1="long"
-		2="list"
+	0="this"
+	0=0
+	0="is"
+	0="a"
+	0=,
+		0="long"
+		0="list"
 commandLine|,
 	&=-
 		!"merge"
