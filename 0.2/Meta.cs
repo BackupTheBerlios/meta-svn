@@ -271,7 +271,12 @@ namespace Meta {
 			int count;
 			MapBase value;
 			if (FindStuff(out count, out key, out value)) {
-				return new LiteralStructure(value);
+				if(value!=null) {
+					return new LiteralStructure(value);
+				}
+				else {
+					return null;
+				}
 			}
 			else {
 				return null;
@@ -287,7 +292,11 @@ namespace Meta {
 				key=null;
 			}
 			count = 0;
+			int programCounter=0;
 			if (key != null && key.IsConstant) {
+				if(key.Equals(new StringMap("fibo"))) 
+				{
+				}
 				bool hasCrossedFunction = false;
 				while (true) {
 					while (current.Statement == null) {
@@ -313,12 +322,26 @@ namespace Meta {
 						value = structure[key];
 						return true;
 					}
+					else if(programCounter<1 && statement is KeyStatement) {
+						IEnumerable<MapBase> k= statement.CurrentKeys();
+						if(k!=null) {
+							List<MapBase> keys=new List<MapBase>(k);
+							if(keys.Contains(key)) {
+								value=null;
+								return true;
+							}
+						}
+					}
 					if (hasCrossedFunction) {
 						if (!statement.NeverAddsKey(key)) {
 							break;}
 					}
 					count++;
+					if(current.Statement!=null && current.Statement.program!=null && !current.Statement.program.isFunction) {
+						programCounter++;
+					}
 					current = current.Parent;
+					//firstProgram=false;
 				}
 			}
 			value = null;
@@ -644,6 +667,14 @@ namespace Meta {
 				return null;
 			}
 		}
+		public IEnumerable<MapBase> PreKeys() {
+			if(PreMap()!=null) {
+				return PreMap().Keys;
+			}
+			else {
+				return new List<MapBase>();
+			}
+		}
 		public virtual Structure Pre() {
 			if (!preEvaluated) {
 				if (Previous == null) {
@@ -668,7 +699,17 @@ namespace Meta {
 				}
 			}
 			currentEvaluated = true;
-			return current;}
+			return current;
+		}
+		public virtual IEnumerable<MapBase> CurrentKeys() {
+			MapBase m=CurrentMap();
+			if(m!=null) {
+				return m.Keys;
+			}
+			else {
+				return null;
+			}
+		}
 		public Statement Next {
 			get {
 				if (program == null || Index >= program.statementList.Count - 1) {
@@ -744,6 +785,18 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
+		public override IEnumerable<MapBase> CurrentKeys() {
+			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
+				List<MapBase> list=new List<MapBase>(PreKeys());
+				if(key.Equals(new StringMap("fibo"))) 
+				{
+				}
+				list.Add(key.GetConstant());
+				return list;
+			}
+			return null;
+			//PreMap
+		}
 		public static bool intellisense = false;
 		public override bool DoesNotAddKey(MapBase key) {
 			Structure structure=this.key.EvaluateStructure();
