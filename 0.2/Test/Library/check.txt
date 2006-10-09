@@ -9,7 +9,7 @@
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"true"
-					Value (Map):
+					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
 					Key (Map):
@@ -23,7 +23,7 @@
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"true"
-					Value (Map):
+					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
 					Key (Map):
@@ -37,7 +37,7 @@
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"true"
-					Value (Map):
+					Value (Integer):
 						1
 				Entry (KeyValuePair`2)
 					Key (Map):
@@ -47,7 +47,7 @@
 				Entry (KeyValuePair`2)
 					Key (Map):
 						"otherTrue"
-					Value (Map):
+					Value (Integer):
 						1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -56,77 +56,77 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"positiveAdd"
-			Value (Map):
+			Value (Integer):
 				1100
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"negativeAdd"
-			Value (Map):
+			Value (Integer):
 				-9
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"differenceTest"
-			Value (Map):
+			Value (Rational):
 				6/25
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"differenceTest2"
-			Value (Map):
+			Value (Integer):
 				101
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"divideTest"
-			Value (Map):
+			Value (Rational):
 				5/103
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"productInteger"
-			Value (Map):
+			Value (Rational):
 				19437
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"minusproduct"
-			Value (Map):
+			Value (Rational):
 				2
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"productFraction"
-			Value (Map):
+			Value (Rational):
 				7/2
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"smallerDecreasingTest"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"nonincreasingTest"
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"nondecreasingTest"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"strictlyIncreasingTest"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"smallerTest"
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"greaterTest"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"divide"
-			Value (Map):
+			Value (Rational):
 				1000/7
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -197,46 +197,46 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"vectorAllLessTest"
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"containsTest"
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"containedBy1"
-			Value (Map):
+			Value (Integer):
 				1
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"containedBy2"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"containedBy3"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"keysTest"
 			Value (Map):
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (Integer):
 						1
 					Value (Map):
 						"jjqwv"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (Integer):
 						2
 					Value (Map):
 						"oere"
 				Entry (KeyValuePair`2)
-					Key (Map):
+					Key (Integer):
 						3
-					Value (Map):
+					Value (Integer):
 						1
 		Entry (KeyValuePair`2)
 			Key (Map):
@@ -249,12 +249,12 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (Map):
 								"true"
-							Value (Map):
+							Value (Integer):
 								1
 						Entry (KeyValuePair`2)
 							Key (Map):
 								"false"
-							Value (Map):
+							Value (Integer):
 								0
 		Entry (KeyValuePair`2)
 			Key (Map):
@@ -279,12 +279,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"sumTest"
-	Value (Map):
+	Value (Integer):
 		21
 Entry (KeyValuePair`2)
 	Key (Map):
 		"lengthTest"
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -293,12 +293,12 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"no"
-			Value (Map):
+			Value (Integer):
 				0
 		Entry (KeyValuePair`2)
 			Key (Map):
 				"yes"
-			Value (Map):
+			Value (Integer):
 				1
 Entry (KeyValuePair`2)
 	Key (Map):
@@ -308,7 +308,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Map):
 		"countTest"
-	Value (Map):
+	Value (Integer):
 		4
 Entry (KeyValuePair`2)
 	Key (Map):

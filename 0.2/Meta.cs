@@ -121,6 +121,9 @@ namespace Meta {
 			foreach (MapBase m in code.Array) {
 				calls.Add(m.GetExpression(this));
 			}
+			if(calls.Count==0) 
+			{
+			}
 			if (calls.Count == 1) {
 				calls.Add(new Literal(new Map(), this));
 			}
@@ -150,6 +153,9 @@ namespace Meta {
 			return null;
 		}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
+			if(calls.Count==0) 
+			{
+			}
 			Map first = (Map)calls[0].GetConstant();
 			if (first != null) {
 				Method method;
@@ -2240,6 +2246,30 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
+		public override string GetString() {
+			return null;
+		}
+		public override MapBase Call(MapBase arg) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override void Append(MapBase map) {
+			throw new Exception("The method or operation is not implemented.");
+		}
+		public override IEnumerable<MapBase> Array {
+			get { 
+				yield break;
+			}
+		}
+		public override bool IsString {
+			get { 
+				return false;
+			}
+		}
+		public override int Count {
+			get { 
+				return new List<MapBase>(Keys).Count;
+			}
+		}
 		public override MapBase TryGetValue(MapBase key) {
 			return this[key];
 		}
@@ -3653,6 +3683,10 @@ namespace Meta {
 			return map.GetNumber().ToString();
 		}
 		private static string Serialize(MapBase map, int indentation) {
+			//if(map.IsNumber) {
+			//    return map.GetNumber().ToString();
+			//}
+			//else 
 			if (!((Map)map).Strategy.IsNormal) {
 				return ((Map)map).Strategy.ToString();
 			}
@@ -3859,13 +3893,6 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new Map(1, "first argument", 2, "second argument"));
 				}
 			}
-			public class MergeSort: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new Map());
-				}
-			}
-
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -3878,6 +3905,13 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new Map());
 				}
 			}
+			public class MergeSort: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new Map());
+				}
+			}
+
 			public static MapBase Run(string path, MapBase argument) {
 				MapBase callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -4369,14 +4403,10 @@ namespace Meta {
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
 			return this.GetEnumerator();
 		}
-		//public abstract IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator();
 		public abstract string Serialize();
 		public static implicit operator MapBase(string text) {
 		    return new Map(text);
 		}
-		////public static implicit operator MapBase(Number integer) {
-		////    return new Map(integer);
-		////}
 		public static implicit operator MapBase(double number) {
 		    return new Rational(number);
 		}
@@ -4456,7 +4486,6 @@ namespace Meta {
 			set;
 		}
 		public Expression expression;
-		//public abstract Statement GetStatement(Program program, int index);
 		public abstract MapBase Copy();
 		public MapBase Scope;
 
@@ -4514,7 +4543,6 @@ namespace Meta {
 					KeyStatement s = new KeyStatement(
 						new Literal(parameter, program),
 						new LastArgument(new Map(), program), program, 0);
-						//new LastArgument(Map.Empty, program), program, 0);
 					program.statementList.Add(s);
 				}
 				CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
@@ -4543,9 +4571,6 @@ namespace Meta {
 				throw new ApplicationException("Cannot compile map");
 			}
 		}
-		//System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-		//    return this.GetEnumerator();
-		//}
 		public IEnumerator<KeyValuePair<MapBase, MapBase>> GetEnumerator() {
 			foreach (MapBase key in Keys) {
 				yield return new KeyValuePair<MapBase, MapBase>(key, this[key]);
