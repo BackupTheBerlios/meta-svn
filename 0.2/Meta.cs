@@ -404,7 +404,8 @@ namespace Meta {
 					selected = selected.Scope;
 				}
 				else {
-					expression.Evaluate(context);
+					MapBase m=expression.Evaluate(context);
+					bool b=context.ContainsKey(m);
 					throw new KeyNotFound(key, Source.start, null);
 				}
 			}
@@ -1359,9 +1360,19 @@ namespace Meta {
 		public ObjectMap(MapBase target)
 			: this(target, target.GetType()) {}
 		public ObjectMap(object target, Type type)
-			: base(target, type) {}
+			: base(target, type) 
+		{
+			if(target is Number)
+			{
+			}
+		}
 		public ObjectMap(object target)
-			: base(target, target.GetType()) {}
+			: base(target, target.GetType()) 
+		{
+			if(target is Number)
+			{
+			}
+		}
 		public override string ToString() {
 			return Object.ToString();}
 		public override MapBase CopyData() {
@@ -1404,14 +1415,22 @@ namespace Meta {
 		public override MapStrategy DeepCopy(MapBase key, MapBase value, MapBase map) {
 			if (key.IsNumber) {
 				if (key.Count == 0 && value.IsNumber) {
-					NumberStrategy number = new NumberStrategy(0);
+					DictionaryStrategy number = new DictionaryStrategy(0);
 					number.Set(key, value, map);
-					return number;}
+					return number;
+					//NumberStrategy number = new NumberStrategy(0);
+					//number.Set(key, value, map);
+					//return number;
+				}
 				else {
-					if (key.Equals(new Map(1))) {
+					if (key.Equals(new Integer(1))) {
+					//if (key.Equals(new Map(1))) {
 						ListStrategy list = new ListStrategy();
 						list.Append(value, map);
-						return list;}}}
+						return list;
+					}
+				}
+			}
 			DictionaryStrategy dictionary = new DictionaryStrategy();
 			dictionary.Set(key, value, map);
 			return dictionary;}
@@ -1421,88 +1440,88 @@ namespace Meta {
 		public override MapBase Get(MapBase key) {
 			return null;}}
 
-	public class NumberStrategy : MapStrategy {
-		public override int GetArrayCount() {
-			return 0;
-		}
-		public override bool Equals(object obj) {
-			MapStrategy strategy = obj as MapStrategy;
-			if (strategy != null) {
-				if (strategy.IsNumber && strategy.GetNumber().Equals(number)) {
-					return true;
-				}
-				else {
-					return base.Equals(strategy);
-				}
-			}
-			return false;
-		}
-		private Number number;
-		public NumberStrategy(Number number) {
-			this.number = number;
-		}
-		public override MapBase Get(MapBase key) {
-			if (ContainsKey(key)) {
-				if (key.Equals(new Map())) {
-				//if (key.Equals(Map.Empty)) {
-					return number - 1;
-				}
-				else if (key.Equals(NumberKeys.Negative)) {
-					return new Map();
-					//return Map.Empty;
-				}
-				else if (key.Equals(NumberKeys.Denominator)) {
-					return new Map(new Rational(number.Denominator));}
-				else {
-					throw new ApplicationException("Error.");
-				}
-			}
-			else {
-				return null;
-			}
-		}
-		public override void Set(MapBase key, MapBase value, MapBase map) {
-			if (key.Equals(new Map()) && value.IsNumber) {
-			//if (key.Equals(Map.Empty) && value.IsNumber) {
-			    this.number = value.GetNumber() + 1;
-			}
-			else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
-			//else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
-			    if (number > 0) {
-			        number = 0 - number;
-			    }
-			}
-			else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
-			    this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
-			else {
-				Panic(key, value, new DictionaryStrategy(), map);
-			}
-		}
-		public override IEnumerable<MapBase> Keys {
-			get {
-				if (number != 0) {
-					yield return new Map();
-					//yield return Map.Empty;
-				}
-				if (number < 0) {
-					yield return NumberKeys.Negative;
-				}
-				if (number.Denominator != 1.0d) {
-					yield return NumberKeys.Denominator;
-				}
-			}
-		}
-		public override MapBase CopyData() {
-			return new Map(new NumberStrategy(number));}
-		public override bool IsNumber {
-			get {
-				return true;}}
-		public override Number GetNumber() {
-			return number;}
-		public override int GetHashCode() {
-			return (int)(number.Numerator % int.MaxValue);
-		}
-	}
+	//public class NumberStrategy : MapStrategy {
+	//    public override int GetArrayCount() {
+	//        return 0;
+	//    }
+	//    public override bool Equals(object obj) {
+	//        MapStrategy strategy = obj as MapStrategy;
+	//        if (strategy != null) {
+	//            if (strategy.IsNumber && strategy.GetNumber().Equals(number)) {
+	//                return true;
+	//            }
+	//            else {
+	//                return base.Equals(strategy);
+	//            }
+	//        }
+	//        return false;
+	//    }
+	//    private Number number;
+	//    public NumberStrategy(Number number) {
+	//        this.number = number;
+	//    }
+	//    public override MapBase Get(MapBase key) {
+	//        if (ContainsKey(key)) {
+	//            if (key.Equals(new Map())) {
+	//            //if (key.Equals(Map.Empty)) {
+	//                return number - 1;
+	//            }
+	//            else if (key.Equals(NumberKeys.Negative)) {
+	//                return new Map();
+	//                //return Map.Empty;
+	//            }
+	//            else if (key.Equals(NumberKeys.Denominator)) {
+	//                return new Map(new Rational(number.Denominator));}
+	//            else {
+	//                throw new ApplicationException("Error.");
+	//            }
+	//        }
+	//        else {
+	//            return null;
+	//        }
+	//    }
+	//    public override void Set(MapBase key, MapBase value, MapBase map) {
+	//        if (key.Equals(new Map()) && value.IsNumber) {
+	//        //if (key.Equals(Map.Empty) && value.IsNumber) {
+	//            this.number = value.GetNumber() + 1;
+	//        }
+	//        else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
+	//        //else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
+	//            if (number > 0) {
+	//                number = 0 - number;
+	//            }
+	//        }
+	//        else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
+	//            this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
+	//        else {
+	//            Panic(key, value, new DictionaryStrategy(), map);
+	//        }
+	//    }
+	//    public override IEnumerable<MapBase> Keys {
+	//        get {
+	//            if (number != 0) {
+	//                yield return new Map();
+	//                //yield return Map.Empty;
+	//            }
+	//            if (number < 0) {
+	//                yield return NumberKeys.Negative;
+	//            }
+	//            if (number.Denominator != 1.0d) {
+	//                yield return NumberKeys.Denominator;
+	//            }
+	//        }
+	//    }
+	//    public override MapBase CopyData() {
+	//        return new Map(new NumberStrategy(number));}
+	//    public override bool IsNumber {
+	//        get {
+	//            return true;}}
+	//    public override Number GetNumber() {
+	//        return number;}
+	//    public override int GetHashCode() {
+	//        return (int)(number.Numerator % int.MaxValue);
+	//    }
+	//}
 	public class StringStrategy : MapStrategy {
 		private string text;
 		public StringStrategy(string text) {
@@ -1708,12 +1727,17 @@ namespace Meta {
 	public abstract class MapStrategy {
 		public virtual bool IsNormal {
 			get {
-				return true;}}
+				return true;
+			}
+		}
 		public override int GetHashCode() {
 			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);}
+				return (int)(GetNumber().Numerator % int.MaxValue);
+			}
 			else {
-				return Count;}}
+				return Count;
+			}
+		}
 		public override bool Equals(object obj) {
 			MapStrategy strategy = obj as MapStrategy;
 			if (strategy == null || strategy.Count != this.Count) {
@@ -1725,7 +1749,9 @@ namespace Meta {
 					MapBase thisValue = Get(key);
 					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
 						isEqual = false;}}
-				return isEqual;}}
+				return isEqual;
+			}
+		}
 		[DllImport("Kernel32.dll")]
 		protected static extern bool QueryPerformanceCounter(
 			out long lpPerformanceCount);
@@ -2291,7 +2317,173 @@ namespace Meta {
 			return Get(key) != null;
 		}
 	}
-	public abstract class Number {
+	public abstract class Number:Map {
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		//public override int GetArrayCount() {
+		//    return 0;
+		//}
+		//public override bool Equals(object obj) {
+		//    MapStrategy strategy = obj as MapStrategy;
+		//    if (strategy != null) {
+		//        if (strategy.IsNumber && strategy.GetNumber().Equals(number)) {
+		//            return true;
+		//        }
+		//        else {
+		//            return base.Equals(strategy);
+		//        }
+		//    }
+		//    return false;
+		//}
+		//private Number number;
+		//public NumberStrategy(Number number) {
+		//    this.number = number;
+		//}
+
+		public override MapBase this[MapBase key] {			get {				if (ContainsKey(key)) {
+					if (key.Equals(new Map())) {
+					//if (key.Equals(Map.Empty)) {
+						return this - 1;
+						//return number - 1;
+					}
+					else if (key.Equals(NumberKeys.Negative)) {
+						return new Map();
+						//return Map.Empty;
+					}
+					else if (key.Equals(NumberKeys.Denominator)) {
+						return new Map(new Rational(Denominator));
+					}
+						//return new Map(new Rational(number.Denominator));}
+					else {
+						throw new ApplicationException("Error.");
+					}
+				}
+				else {
+					return null;
+				}
+			}			set {				//throw new Exception("Cannot set key in number.");				//if (key.Equals(new Map()) && value.IsNumber) {
+				////if (key.Equals(Map.Empty) && value.IsNumber) {
+				//    this.number = value.GetNumber() + 1;
+				//    //this.number = value.GetNumber() + 1;
+				//}
+				//else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
+				////else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
+				//    if (number > 0) {
+				//        number = 0 - number;
+				//    }
+				//}
+				//else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
+				//    this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
+				//else {
+				//    Panic(key, value, new DictionaryStrategy(), map);
+				//}
+			}		}
+		//public override MapBase Get(MapBase key) {
+		//    if (ContainsKey(key)) {
+		//        if (key.Equals(new Map())) {
+		//        //if (key.Equals(Map.Empty)) {
+		//            return number - 1;
+		//        }
+		//        else if (key.Equals(NumberKeys.Negative)) {
+		//            return new Map();
+		//            //return Map.Empty;
+		//        }
+		//        else if (key.Equals(NumberKeys.Denominator)) {
+		//            return new Map(new Rational(number.Denominator));}
+		//        else {
+		//            throw new ApplicationException("Error.");
+		//        }
+		//    }
+		//    else {
+		//        return null;
+		//    }
+		//}
+		//public override void Set(MapBase key, MapBase value, MapBase map) {
+		//    if (key.Equals(new Map()) && value.IsNumber) {
+		//    //if (key.Equals(Map.Empty) && value.IsNumber) {
+		//        this.number = value.GetNumber() + 1;
+		//    }
+		//    else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
+		//    //else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
+		//        if (number > 0) {
+		//            number = 0 - number;
+		//        }
+		//    }
+		//    else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
+		//        this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
+		//    else {
+		//        Panic(key, value, new DictionaryStrategy(), map);
+		//    }
+		//}
+
+		//public override MapBase Get(MapBase key) {
+		//    if (ContainsKey(key)) {
+		//        if (key.Equals(new Map())) {
+		//        //if (key.Equals(Map.Empty)) {
+		//            return number - 1;
+		//        }
+		//        else if (key.Equals(NumberKeys.Negative)) {
+		//            return new Map();
+		//            //return Map.Empty;
+		//        }
+		//        else if (key.Equals(NumberKeys.Denominator)) {
+		//            return new Map(new Rational(number.Denominator));}
+		//        else {
+		//            throw new ApplicationException("Error.");
+		//        }
+		//    }
+		//    else {
+		//        return null;
+		//    }
+		//}
+		//public override void Set(MapBase key, MapBase value, MapBase map) {
+		//    if (key.Equals(new Map()) && value.IsNumber) {
+		//    //if (key.Equals(Map.Empty) && value.IsNumber) {
+		//        this.number = value.GetNumber() + 1;
+		//    }
+		//    else if (key.Equals(NumberKeys.Negative) && value.Equals(new Map()) && number != 0) {
+		//    //else if (key.Equals(NumberKeys.Negative) && value.Equals(Map.Empty) && number != 0) {
+		//        if (number > 0) {
+		//            number = 0 - number;
+		//        }
+		//    }
+		//    else if (key.Equals(NumberKeys.Denominator) && value.IsNumber) {
+		//        this.number = new Rational(number.Numerator, value.GetNumber().GetInt32());}
+		//    else {
+		//        Panic(key, value, new DictionaryStrategy(), map);
+		//    }
+		//}
+		public override IEnumerable<MapBase> Keys {
+			get {
+				if (this!= 0) {
+					yield return new Map();
+					//yield return Map.Empty;
+				}
+				if (this< 0) {
+					yield return NumberKeys.Negative;
+				}
+				if (Denominator != 1.0d) {
+					yield return NumberKeys.Denominator;
+				}
+			}
+		}
+		//public override MapBase CopyData() {
+		//    return new Map(new NumberStrategy(number));
+		//}
+		public override bool IsNumber {
+			get {
+				return true;
+			}
+		}
+		public override Number GetNumber() {
+			return this;
+		}
+		//public override int GetHashCode() {
+		//    return (int)(number.Numerator % int.MaxValue);
+		//}
 		public override string ToString() {
 			if (Denominator == 1) {
 				return Numerator.ToString();
@@ -2304,15 +2496,27 @@ namespace Meta {
 			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
 		}
 		public override bool Equals(object o) {
-			Number b = o as Number;
-			return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
+			Map map = o as Map;
+			if(map!=null && map.IsNumber) {
+				Number b=map.GetNumber();
+				return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
+			}
+			else {
+				return false;
+			}
+			//Number b = o as Number;
+			//return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
 		}
 		public override int GetHashCode() {
-			Number x = new Rational(this);
-			while (x > int.MaxValue) {
-				x = x - int.MaxValue;}
-			return x.GetInt32();
+			return (int)(Numerator % int.MaxValue);
+			//return (int)(number.Numerator % int.MaxValue);
 		}
+		//public override int GetHashCode() {
+		//    Number x = new Rational(this);
+		//    while (x > int.MaxValue) {
+		//        x = x - int.MaxValue;}
+		//    return x.GetInt32();
+		//}
 		public abstract double Numerator {
 			get;
 		}
@@ -2423,6 +2627,138 @@ namespace Meta {
 		}
 		public abstract double GetDouble();
 	}
+	//public abstract class Number {
+	//    public override string ToString() {
+	//        if (Denominator == 1) {
+	//            return Numerator.ToString();
+	//        }
+	//        else {
+	//            return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
+	//        }
+	//    }
+	//    public static Number operator |(Number a, Number b) {
+	//        return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
+	//    }
+	//    public override bool Equals(object o) {
+	//        Number b = o as Number;
+	//        return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
+	//    }
+	//    public override int GetHashCode() {
+	//        Number x = new Rational(this);
+	//        while (x > int.MaxValue) {
+	//            x = x - int.MaxValue;}
+	//        return x.GetInt32();
+	//    }
+	//    public abstract double Numerator {
+	//        get;
+	//    }
+	//    public abstract double Denominator {
+	//        get;
+	//    }
+	//    public abstract int GetInt32();
+	//    public abstract long GetInt64();
+	//    public abstract long GetRealInt64();
+	//    public static implicit operator Number(double number) {
+	//        return new Rational(number);
+	//    }
+	//    public static implicit operator Number(decimal number) {
+	//        return new Rational((double)number);
+	//    }
+	//    public static implicit operator Number(int integer) {
+	//        return new Rational((double)integer);
+	//    }
+
+	//    public static bool operator ==(Number a, Number b) {
+	//        return !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
+	//    }
+	//    public static bool operator !=(Number a, Number b) {
+	//        return !(a == b);
+	//    }
+	//    public static Number operator %(Number a, Number b) {
+	//        return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
+	//    }
+	//    public static double GreatestCommonDivisor(double a, double b) {
+	//        if(a==b) {
+	//            return a;
+	//        }
+	//        a = Math.Abs(a);
+	//        b = Math.Abs(b);
+	//        while (a != 0 && b != 0) {
+	//            if (a > b) {
+	//                a = a % b;
+	//            }
+	//            else {
+	//                b = b % a;
+	//            }
+	//        }
+	//        if (a == 0) {
+	//            return b;
+	//        }
+	//        else {
+	//            return a;
+	//        }
+	//    }
+	//    public static double LeastCommonMultiple(Number a, Number b) {
+	//        return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
+	//    }
+	//    public virtual Number Subtract(Number b) {
+	//        return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
+	//    }
+	//    public virtual bool LessThan(Number b) {
+	//        return Expand(b) < b.Expand(this);
+	//    }
+	//    public virtual Number Add(int b) {
+	//        return Add(new Integer(b));
+	//    }
+	//    public virtual Number Subtract(int b) {
+	//        return Add(new Integer(b));
+	//    }
+	//    public virtual bool LessThan(int b) {
+	//        return LessThan(new Integer(b));
+	//    }
+	//    public virtual Number Add(Number b) {
+	//         return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
+	//    }
+	//    public static Number operator +(Number a, Number b) {
+	//        return a.Add(b);
+	//    }
+	//    public static Number operator -(Number a, Number b) {
+	//        return a.Subtract(b);
+	//    }
+	//    public static Number operator /(Number a, Number b) {
+	//        return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
+	//    }
+	//    public static Number operator *(Number a, Number b) {
+	//        return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
+	//    }
+	//    public double Expand(Number b) {
+	//        return Numerator * (LeastCommonMultiple(this, b) / Denominator);
+	//    }
+	//    public static bool operator >(Number a, Number b) {
+	//        return a.Expand(b) > b.Expand(a);
+	//    }
+	//    public static bool operator <(Number a, Number b) {
+	//        return a.LessThan(b);
+	//    }
+	//    public static bool operator >=(Number a, Number b) {
+	//        return a.Expand(b) >= b.Expand(a);
+	//    }
+	//    public static bool operator <=(Number a, Number b) {
+	//        return a.Expand(b) <= b.Expand(a);
+	//    }
+	//    public int CompareTo(Number number) {
+	//        return GetDouble().CompareTo(number.GetDouble());
+	//    }
+	//    public abstract bool IsNatural {
+	//        get;
+	//    }
+	//    public virtual bool IsInt32 {
+	//        get {
+	//            return IsNatural && Numerator<int.MaxValue && Numerator>int.MinValue; 
+	//        }
+	//    }
+	//    public abstract double GetDouble();
+	//}
 	public class Integer:Number {
 
 	    public override bool IsInt32 {
@@ -2681,7 +3017,8 @@ namespace Meta {
 					else {
 						number=rational;
 					}
-		            result=new Map(number);
+					result=number;
+					//result=new Map(number);
 				},
 		        new OneOrMoreChars(new Chars(Syntax.integer))));
 		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref MapBase map) {
@@ -4033,7 +4370,6 @@ namespace Meta {
 				return result;}
 			else {
 				return new Map();
-				//return Meta.Map.Empty;
 			}
 		}
 		public static MapBase JoinAll(MapBase arrays) {
@@ -4052,7 +4388,8 @@ namespace Meta {
 			return new Map(result);}
 		public static MapBase Append(MapBase array, MapBase item) {
 			array.Append(item);
-			return array;}
+			return array;
+		}
 		public static MapBase EnumerableToArray(MapBase map) {
 			List<MapBase> result = new List<MapBase>();
 			foreach (object entry in (IEnumerable)(((ObjectMap)((Map)map).Strategy)).Object) {
@@ -4065,7 +4402,6 @@ namespace Meta {
 		public static MapBase Try(MapBase tryFunction, MapBase catchFunction) {
 			try {
 				return tryFunction.Call(new Map());
-				//return tryFunction.Call(Meta.Map.Empty);
 			}
 			catch (Exception e) {
 				return catchFunction.Call(new Map(e));}}
@@ -4237,9 +4573,9 @@ namespace Meta {
 		public static implicit operator MapBase(string text) {
 			return new Map(text);
 		}
-		public static implicit operator MapBase(Number integer) {
-			return new Map(integer);
-		}
+		//public static implicit operator MapBase(Number integer) {
+		//    return new Map(integer);
+		//}
 		public static implicit operator MapBase(double number) {
 			return new Rational(number);
 		}
@@ -4362,9 +4698,14 @@ namespace Meta {
 				index++;}}
 		public Map(): this(EmptyStrategy.empty) {}
 		public Map(MapBase map): this(new ObjectMap(map)) {}
-		public Map(object o): this(new ObjectMap(o)) {}
+		public Map(object o): this(new ObjectMap(o)) 
+		{
+			if(o is Number) 
+			{
+			}
+		}
 		public Map(string text): this(new StringStrategy(text)) {}
-		public Map(Number number): this(new NumberStrategy(number)) {}
+		//public Map(Number number): this(new NumberStrategy(number)) {}
 		public Map(MapStrategy strategy) {
 			this.strategy = strategy;
 		}
@@ -4416,6 +4757,12 @@ namespace Meta {
 		public override bool Equals(object obj) {
 			Map map = obj as Map;
 			if (map != null) {
+				//if(map is Number) {
+				//    return ((Number)map).Equals(this);
+				//}
+				if(map.IsNumber && IsNumber) {
+					return map.GetNumber().Equals(this.GetNumber());
+				}
 				if (map.strategy.IsNormal == strategy.IsNormal) {
 					return strategy.Equals(map.Strategy);
 				}
