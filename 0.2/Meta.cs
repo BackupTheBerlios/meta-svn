@@ -715,9 +715,11 @@ namespace Meta {
 			MapBase selected = subs[0].Evaluate(context);
 			for (int i = 1; i < subs.Count; i++) {
 				MapBase key = subs[i].Evaluate(context);
-				MapBase value = selected.TryGetValue(key);
+				MapBase value = selected[key];
+				//MapBase value = selected.TryGetValue(key);
 				if (value == null) {
-					selected.TryGetValue(key);
+					MapBase x=selected[key];
+					//selected.TryGetValue(key);
 					throw new KeyDoesNotExist(key, subs[i].Source.start, selected);}
 				else {
 					selected = value;
@@ -1144,9 +1146,6 @@ namespace Meta {
 		public override string Serialize() {
 			return method.ToString();
 		}
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
-		}
 		public override bool IsNormal {
 			get {
 				return false;
@@ -1363,6 +1362,8 @@ namespace Meta {
 			return new ObjectMap(Object);
 		}
 	}
+	//public class CloneMap:MapBase {
+	//}
 	public class DictionaryMap : MapBase {
 		public override bool IsNormal {
 			get {
@@ -1507,9 +1508,6 @@ namespace Meta {
 				text.Append(Convert.ToChar(this[key].GetNumber().GetInt32()));}
 			return text.ToString();
 		}
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
-		}
 		public override string Serialize() {
 			string text;
 			if (this.Count == 0) {
@@ -1630,9 +1628,6 @@ namespace Meta {
 			get {
 				yield break;
 			}
-		}
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
 		}
 		public override void Append(MapBase map) {
 			throw new Exception("The method or operation is not implemented.");
@@ -1928,9 +1923,6 @@ namespace Meta {
 			Source source = obj as Source;
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;}}
 	public class Gac : MapBase{
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
-		}
 		public override IEnumerable<MapBase> Array {
 			get { 
 				yield break;
@@ -2049,9 +2041,6 @@ namespace Meta {
 				return true;
 			}
 		}
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
-		}
 		public override void Append(MapBase map) {
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -2169,9 +2158,6 @@ namespace Meta {
 			get { 
 				return new List<MapBase>(Keys).Count;
 			}
-		}
-		public override MapBase TryGetValue(MapBase key) {
-			return this[key];
 		}
 		public override MapBase Copy() {
 			return this;
@@ -4298,7 +4284,9 @@ namespace Meta {
 		public abstract string GetString();
 
 
-		public abstract MapBase TryGetValue(MapBase key);
+		//public virtual MapBase TryGetValue(MapBase key) {
+		//    return this[key];
+		//}
 		public abstract MapBase Call(MapBase arg);
 		public abstract void Append(MapBase map);
 		public abstract bool ContainsKey(MapBase key);
@@ -4327,7 +4315,7 @@ namespace Meta {
 		}
 		public Expression CreateExpression(Expression parent) {
 			if (ContainsKey(CodeKeys.Call)) {
-				return new Call(this[CodeKeys.Call], this.TryGetValue(CodeKeys.Parameter), parent);
+				return new Call(this[CodeKeys.Call], this[CodeKeys.Parameter], parent);
 			}
 			else if (ContainsKey(CodeKeys.Program)) {
 				return new Program(this[CodeKeys.Program], parent);
