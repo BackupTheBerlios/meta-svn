@@ -387,6 +387,7 @@ namespace Meta {
 		private List<Conversion> conversions;
 		private MetaConversion returnConversion;
 		private ParameterInfo[] parameters;
+		private DynamicMethod m;
 		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
 			: base(source) {
 			this.method = method;
@@ -398,48 +399,39 @@ namespace Meta {
 				conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
 			}
 		    Type[] param = new Type[] { typeof(object), typeof(object[]) };
-			//Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
-			//Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
-		    DynamicMethod m = new DynamicMethod(
+		    m = new DynamicMethod(
 		        "Optimized",
 		        typeof(object),
-				//typeof(MapBase),
 		        param,
 		        typeof(MapBase).Module);
-
+			if(method.Name.Equals("Compile")) 
+			{
+			}
 			ILGenerator il = m.GetILGenerator();
 			for(int i=0;i<parameters.Length;i++) {
 				Type type=parameters[i].ParameterType;
 				il.Emit(OpCodes.Ldarg_1);
 				il.Emit(OpCodes.Ldc_I4, i);
-				//if(type.Equals(typeof(Boolean))) {
-				//    il.Emit(OpCodes.Ldelem_I4);
-				//}
-				//else {
 				il.Emit(OpCodes.Ldelem_Ref);
-				//}
 				if(type.IsValueType) {
-					 //if(!type.Equals(typeof(Boolean))) {
-					if(type.Equals(typeof(Boolean))) {
-						type=typeof(int);
-					}
-					il.Emit(OpCodes.Unbox,type);
-					 //}
-				}
-				else {
-					il.Emit(OpCodes.Castclass,type);
+				    il.Emit(OpCodes.Unbox_Any,type);
+					//il.Emit(OpCodes.Box,type);
 				}
 			}
-			il.Emit(OpCodes.Callvirt,method);
+			if(method.IsStatic) {
+				il.Emit(OpCodes.Call,method);
+			}
+			else {
+				il.Emit(OpCodes.Callvirt,method);
+			}
 			if(!method.ReturnType.Equals(typeof(void))) {
 				if(method.ReturnType.IsValueType) {
-					il.Emit(OpCodes.Box,method.ReturnType);
-				}
-				else {
-					il.Emit(OpCodes.Castclass,typeof(object));
+				    il.Emit(OpCodes.Box,method.ReturnType);
 				}
 			}
-			//il.Emit(OpCodes.Pop);
+			else {
+			    il.Emit(OpCodes.Ldc_I4,0);
+			}
 			il.Emit(OpCodes.Ret);
 			try{
 				this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
@@ -452,9 +444,6 @@ namespace Meta {
 		private MethodInfo method;
 		public override MapBase EvaluateImplementation(MapBase context) {
 			object[] args=new object[parameters.Length];
-			if(method.Name.Contains("CreateInstance"))
-			{
-			}
 			for (int index = 0; index < parameters.Length; index++) {
 				args[index]=conversions[index](arguments[index].Evaluate(context));
 			}
@@ -1298,6 +1287,8 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//object[] objects=new object[] {100,200,300};
+			//Test.TestClasses.MemberTest.Compile((int)objects[2]);
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -4289,6 +4280,12 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
+			public class Basic : Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
 			public class Fibo: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -4301,12 +4298,7 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
 			}
-			public class Basic : Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
+
 
 
 			//public class MergeSort: Test {
@@ -4328,6 +4320,10 @@ namespace Meta {
 				return callable.Call(argument);}}
 		namespace TestClasses {
 			public class MemberTest {
+				public static void Compile(int i) {
+					Console.WriteLine("hello");
+					//return "";
+				}
 				public static string classField = "default";
 				public string instanceField = "default";
 				public static string OverloadedMethod(string argument) {

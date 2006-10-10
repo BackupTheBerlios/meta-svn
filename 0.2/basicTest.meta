@@ -228,6 +228,8 @@ commandLine|{
 		memberTest
 		{
 			instanceField="b
+	Meta.MemberTest.set_ClassProperty_String(
+		memberTest.get_InstanceProperty(
 	classPropertyValue=MemberTest.get_ClassProperty(
 	memberTest.set_InstanceProperty_String(
 		MemberTest.get_ClassProperty(
