@@ -43,9 +43,6 @@ namespace Meta {
 		public Compiled(Extent source) {
 			this.Source = source;
 		}
-		//public MapBase Evaluate(MapBase context) {
-		//    return Evaluate(context);
-		//}
 		public abstract MapBase Evaluate(MapBase context);}
 	public abstract class Expression {
 		public Compiled compiled;
@@ -4815,24 +4812,21 @@ namespace Meta {
 		public virtual Type GetClass() {
 			return null;
 		}
-		public virtual MapBase CallImplementation(MapBase argument) {
+		public virtual MapBase Call(MapBase argument) {
+			MapBase.arguments.Push(argument);
+			MapBase result;
 		    MapBase function=this[CodeKeys.Function];
 		    if (function!=null) {
 		        if (function.Expression!=null && function.Expression.compiled!= null) {
-		            return function.Expression.compiled.Evaluate(this);
+		            result=function.Expression.compiled.Evaluate(this);
 		        }
 		        else {
-		            return function.GetExpression(null).Compile(null).Evaluate(this);
+		            result=function.GetExpression(null).Compile(null).Evaluate(this);
 				}
 			}
 		    else {
 		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
 		    }
-		}
-		public virtual MapBase Call(MapBase argument) {
-			long start = 0;
-			MapBase.arguments.Push(argument);
-			MapBase result = CallImplementation(argument);
 			MapBase.arguments.Pop();
 			return result;
 		}
