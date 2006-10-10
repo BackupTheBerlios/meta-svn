@@ -396,7 +396,7 @@ namespace Meta {
 			this.conversions=new List<Conversion>();
 			this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
 			for(int i=0;i<parameters.Length;i++) {
-				conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
+			    conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
 			}
 		    Type[] param = new Type[] { typeof(object), typeof(object[]) };
 		    m = new DynamicMethod(
@@ -404,18 +404,15 @@ namespace Meta {
 		        typeof(object),
 		        param,
 		        typeof(MapBase).Module);
-			if(method.Name.Equals("Compile")) 
-			{
-			}
 			ILGenerator il = m.GetILGenerator();
 			for(int i=0;i<parameters.Length;i++) {
 				Type type=parameters[i].ParameterType;
 				il.Emit(OpCodes.Ldarg_1);
 				il.Emit(OpCodes.Ldc_I4, i);
 				il.Emit(OpCodes.Ldelem_Ref);
+				//Transform.GetConversion(type,il);
 				if(type.IsValueType) {
 				    il.Emit(OpCodes.Unbox_Any,type);
-					//il.Emit(OpCodes.Box,type);
 				}
 			}
 			if(method.IsStatic) {
@@ -424,13 +421,13 @@ namespace Meta {
 			else {
 				il.Emit(OpCodes.Callvirt,method);
 			}
-			if(!method.ReturnType.Equals(typeof(void))) {
+			if(method.ReturnType.Equals(typeof(void))) {
+			    il.Emit(OpCodes.Ldc_I4,0);
+			}
+			else {
 				if(method.ReturnType.IsValueType) {
 				    il.Emit(OpCodes.Box,method.ReturnType);
 				}
-			}
-			else {
-			    il.Emit(OpCodes.Ldc_I4,0);
 			}
 			il.Emit(OpCodes.Ret);
 			try{
@@ -445,6 +442,7 @@ namespace Meta {
 		public override MapBase EvaluateImplementation(MapBase context) {
 			object[] args=new object[parameters.Length];
 			for (int index = 0; index < parameters.Length; index++) {
+				//args[index]=arguments[index].Evaluate(context);
 				args[index]=conversions[index](arguments[index].Evaluate(context));
 			}
 			try {
@@ -455,68 +453,8 @@ namespace Meta {
 				object result=fastCall(args);
 				throw e;
 			}
-			//return returnConversion( method.Invoke(this, args));
-			//return returnConversion(method.Invoke(null, args));
 		}
-		//    object[] args=new object[parameters.Length];
-		//    for (int index = 0; index < parameters.Length; index++) {
-		//        args[index]=conversions[index](arguments[index].Evaluate(context));
-		//    }
-		//    return returnConversion(method.Invoke(null, args));
-		//}
 	}
-		//public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
-		//    : base(source) {
-		//    this.method = method;
-		//    this.arguments = arguments;
-		//    this.parameters = method.GetParameters();
-		//    this.conversions=new List<Conversion>();
-		//    this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
-		//    for(int i=0;i<parameters.Length;i++) {
-		//        conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
-		//    }
-		//    Type[] param = new Type[] { typeof(object), typeof(object[]) };
-		//    //Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
-		//    //Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
-		//    DynamicMethod m = new DynamicMethod(
-		//        "Optimized",
-		//        typeof(object),
-		//        //typeof(MapBase),
-		//        param,
-		//        typeof(MapBase).Module);
-
-		//    ILGenerator il = m.GetILGenerator();
-		//    for(int i=0;i<parameters.Length;i++) {
-		//        Type type=parameters[i].ParameterType;
-		//        il.Emit(OpCodes.Ldarg_1);
-		//        il.Emit(OpCodes.Ldc_I4, i);
-		//        il.Emit(OpCodes.Ldelem,type);
-		//        //il.Emit(OpCodes.Ldelem_Ref);
-		//        if(type.IsValueType) {
-		//            il.Emit(OpCodes.Unbox,type);
-		//            //il.Emit(OpCodes.Box,method.ReturnType);
-		//        }
-		//        else {
-		//            il.Emit(OpCodes.Castclass,type);
-		//        }
-		//    }
-		//    il.Emit(OpCodes.Callvirt,method);
-		//    if(!method.ReturnType.Equals(typeof(void))) {
-		//        if(method.ReturnType.IsValueType) {
-		//            il.Emit(OpCodes.Box,method.ReturnType);
-		//        }
-		//        il.Emit(OpCodes.Castclass,typeof(object));
-		//    }
-		//    //il.Emit(OpCodes.Pop);
-		//    il.Emit(OpCodes.Ret);
-		//    try{
-		//        this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
-		//    }
-		//    catch(Exception e) {
-		//        throw e;
-		//    }
-		//}
-
 	public class CompiledCall : Compiled {
 		List<Compiled> calls;
 		public CompiledCall(List<Compiled> calls, Extent source)
@@ -849,9 +787,6 @@ namespace Meta {
 		public override string GetString() {
 			return null;
 		}
-		//public override MapBase Copy() {
-		//    throw new Exception("The method or operation is not implemented.");
-		//}
 		public override void Append(MapBase map) {
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -865,9 +800,6 @@ namespace Meta {
 				return 0;
 			}
 		}
-		//public override MapBase Call(MapBase arg) {
-		//    throw new Exception("The method or operation is not implemented.");
-		//}
 		private MapBase value;
 		public FunctionMap(MapBase value) {
 			this.value=value;
@@ -885,12 +817,15 @@ namespace Meta {
 		}
 	}
 	public class CompiledFunctionProgram:Compiled {
-		private Compiled expression;
-		public CompiledFunctionProgram(Extent source,Compiled expression):base(source) {
-			this.expression=expression;
+		private MapBase value;
+		//private Compiled expression;
+		public CompiledFunctionProgram(Extent source,MapBase value):base(source) {
+			//this.expression=expression;
+			this.value=value;
 		}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			MapBase map=new FunctionMap(expression.Evaluate(context));
+			MapBase map=new FunctionMap(value);
+			//MapBase map=new FunctionMap(expression.Evaluate(context));
 			map.Scope=context;
 			return map;
 		}
@@ -906,8 +841,9 @@ namespace Meta {
 					MapBase key=statement.key.GetConstant();
 					MapBase value=statement.value.GetConstant();
 					CompiledStatement compiled=statement.Compile();
-					if(key!=null && value!=null && key.Equals(CodeKeys.Function)) {
-						return new CompiledFunctionProgram(Source,compiled.value);
+					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
+						return new CompiledFunctionProgram(Source,((CompiledLiteral)compiled.value).literal);
+						//return new CompiledFunctionProgram(Source,compiled.value);
 					}
 				}
 			}
@@ -1185,7 +1121,7 @@ namespace Meta {
 		}
 	}
 	public class CompiledLiteral : Compiled {
-		private MapBase literal;
+		public readonly MapBase literal;
 		public CompiledLiteral(MapBase literal, Extent source)
 			: base(source) {
 			this.literal = literal;
@@ -1447,27 +1383,78 @@ namespace Meta {
 				};
 			}
 		}
+
+		//public static MetaConversion GetMetaConversion(Type type) {
+		//    if(type.IsSubclassOf(typeof(MapBase)) || type.Equals(typeof(MapBase))) {
+		//        return delegate(object obj) {
+		//            return (MapBase)obj;
+		//        };
+		//    }
+		//    else if(type.Equals(typeof(Boolean))) {
+		//        return delegate(object obj) {
+		//            return new Integer(Convert.ToInt32((bool)obj));
+		//        };
+		//    }
+		//    else {
+		//        return delegate(object obj) {
+		//            return Transform.ToMeta(obj);
+		//        };
+		//    }
+		//}
+		//public static void GetConversion(Type target,ILGenerator il) {
+		//    if(target.Equals(typeof(Number))) {
+		//        il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+		//            //return map.GetNumber();
+		//    }
+		//    else if(target.Equals(typeof(String))) {
+		//        il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+		//    }
+		//    else if(target.Equals(typeof(MapBase))) {
+		//        //return delegate(MapBase map) {
+		//            //return map;
+		//    }
+		//    else if(target.Equals(typeof(Boolean))) {
+		//        //return delegate(MapBase map) {
+		//            il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+		//            il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
+		//            il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
+		//            //return Convert.ToBoolean(map.GetNumber().GetInt32());
+		//            //return Convert.ToBoolean(map.GetNumber().GetInt32());
+		//    }
+		//    else 
+		//    {
+		//            //il.Emit(OpCodes.Call,typeof(Transform).GetMethod("ToDotNet"));
+		//            //return Transform.ToDotNet(map,target);
+		//    }
+		//}
+
 		public static Conversion GetConversion(Type target) {
-			if(target.Equals(typeof(Number))) {
-				return delegate(MapBase map) {
-					return map.GetNumber();
-				};
-			}
-			else if(target.Equals(typeof(MapBase))) {
-				return delegate(MapBase map) {
-					return map;
-				};
-			}
-			else if(target.Equals(typeof(Boolean))) {
-				return delegate(MapBase map) {
-					return Convert.ToBoolean(map.GetNumber().GetInt32());
-				};
-			}
-			else {
-				return delegate(MapBase map) {
-					return Transform.ToDotNet(map,target);
-				};
-			}
+		    if(target.Equals(typeof(Number))) {
+		        return delegate(MapBase map) {
+					//il.Emit(OpCodes.Callvirt,typeof(MapBase));
+		            return map.GetNumber();
+		        };
+		    }
+		    else if(target.Equals(typeof(MapBase))) {
+		        return delegate(MapBase map) {
+		            return map;
+		        };
+		    }
+		    else if(target.Equals(typeof(Boolean))) {
+				//return delegate(ILGenerator il) {
+		        return delegate(MapBase map) {
+					//il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+					//il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
+					//il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
+		            return Convert.ToBoolean(map.GetNumber().GetInt32());
+		        };
+		    }
+		    else {
+		        return delegate(MapBase map) {
+					//il.Emit(OpCodes.Call,typeof(Transform).GetMethod("ToDotNet"));
+		            return Transform.ToDotNet(map,target);
+		        };
+		    }
 		}
 		public static bool TryToDotNet(MapBase meta, Type target, out object dotNet) {
 			try {
@@ -4273,7 +4260,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -4286,28 +4278,19 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
 			}
-
-
-
 			//public class MergeSort: Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;
 			//        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 			//    }
 			//}
-
 			public static MapBase Run(string path, MapBase argument) {
 				MapBase callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -4317,7 +4300,9 @@ namespace Meta {
 
 				callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 				callable[CodeKeys.Function].Compile(lib);
-				return callable.Call(argument);}}
+				return callable.Call(argument);
+			}
+		}
 		namespace TestClasses {
 			public class MemberTest {
 				public static void Compile(int i) {
@@ -4327,11 +4312,14 @@ namespace Meta {
 				public static string classField = "default";
 				public string instanceField = "default";
 				public static string OverloadedMethod(string argument) {
-					return "string function, argument+" + argument;}
+					return "string function, argument+" + argument;
+				}
 				public static string OverloadedMethod(int argument) {
-					return "integer function, argument+" + argument;}
+					return "integer function, argument+" + argument;
+				}
 				public static string OverloadedMethod(MemberTest memberTest, int argument) {
-					return "MemberTest function, argument+" + memberTest + argument;}
+					return "MemberTest function, argument+" + memberTest + argument;
+				}
 				public static string ClassProperty {
 					get {
 						return classField;
@@ -4344,7 +4332,10 @@ namespace Meta {
 					get {
 						return this.instanceField;}
 					set {
-						this.instanceField = value;}}}
+						this.instanceField = value;
+					}
+				}
+			}
 			public delegate object IntEvent(object intArg);
 			public delegate object NormalEvent(object sender);
 			public class TestClass {
@@ -4352,9 +4343,11 @@ namespace Meta {
 					public static int field = 0;}
 				public TestClass() {}
 				public object CallInstanceEvent(object intArg) {
-					return instanceEvent(intArg);}
+					return instanceEvent(intArg);
+				}
 				public static object CallStaticEvent(object sender) {
-					return staticEvent(sender);}
+					return staticEvent(sender);
+				}
 				public event IntEvent instanceEvent;
 				public static event NormalEvent staticEvent;
 				protected string x = "unchangedX";
@@ -4365,23 +4358,28 @@ namespace Meta {
 
 				public static object TestClass_staticEvent(object sender) {
 					MethodBase[] m = typeof(TestClass).GetMethods();
-					return null;}
+					return null;
+				}
 				public delegate string TestDelegate(string x);
 				public static Delegate del;
 				public static void TakeDelegate(TestDelegate d) {
-					del = d;}
+					del = d;
+				}
 				public static object GetResultFromDelegate() {
 					return del.DynamicInvoke(new object[] { "argumentString"});}
 				public double doubleValue = 0.0;
 				public float floatValue = 0.0F;
-				public decimal decimalValue = 0.0M;}
+				public decimal decimalValue = 0.0M;
+			}
 			public class PositionalNoConversion : TestClass {
 				public PositionalNoConversion(string p1, string b, string p2) {
 					this.x = p1;
 					this.y = b;
 					this.z = p2;}
 				public string Concatenate(string p1, string b, string c) {
-					return p1 + b + c + this.x + this.y + this.z;}}
+					return p1 + b + c + this.x + this.y + this.z;
+				}
+			}
 			public class NamedNoConversion : TestClass {
 				public NamedNoConversion(MapBase arg) {
 					MapBase def = new DictionaryMap();
@@ -4416,7 +4414,12 @@ namespace Meta {
 					get {
 						return this.x + this.y + this.z + a;}
 					set {
-						this.x = a + value;}}}}}
+						this.x = a + value;
+					}
+				}
+			}
+		}
+	}
 	public class CodeKeys {
 		public static readonly MapBase LastArgument = "lastArgument";
 		public static readonly MapBase Discard = "discard";
@@ -4433,24 +4436,31 @@ namespace Meta {
 		public static readonly MapBase Select = "select";
 		public static readonly MapBase Program = "program";
 		public static readonly MapBase Keys = "keys";
-		public static readonly MapBase Value = "value";}
+		public static readonly MapBase Value = "value";
+	}
 	public class NumberKeys {
 		public static readonly MapBase Negative = "negative";
-		public static readonly MapBase Denominator = "denominator";}
+		public static readonly MapBase Denominator = "denominator";
+	}
 	public class ExceptionLog {
 		public ExceptionLog(Source source) {
-			this.source = source;}
-		public Source source;}
+			this.source = source;
+		}
+		public Source source;
+	}
 	public class MetaException : Exception {
 		private string message;
 		private Source source;
 		private List<ExceptionLog> invocationList = new List<ExceptionLog>();
 		public MetaException(string message, Source source) {
 			this.message = message;
-			this.source = source;}
+			this.source = source;
+		}
 		public List<ExceptionLog> InvocationList {
 			get {
-				return invocationList;}}
+				return invocationList;
+			}
+		}
 		public override string ToString() {
 			string message = Message;
 			if (invocationList.Count != 0) {
