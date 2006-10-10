@@ -384,7 +384,7 @@ namespace Meta {
 	public delegate object FastCall(object[] args);
 	public class EmittedCall : Compiled {
 		private List<Compiled> arguments;
-		private List<Conversion> conversions;
+		//private List<Conversion> conversions;
 		private MetaConversion returnConversion;
 		private ParameterInfo[] parameters;
 		private DynamicMethod m;
@@ -393,11 +393,11 @@ namespace Meta {
 			this.method = method;
 			this.arguments = arguments;
 			this.parameters = method.GetParameters();
-			this.conversions=new List<Conversion>();
+			//this.conversions=new List<Conversion>();
 			this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
-			for(int i=0;i<parameters.Length;i++) {
-			    conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
-			}
+			//for(int i=0;i<parameters.Length;i++) {
+			//    conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
+			//}
 		    Type[] param = new Type[] { typeof(object), typeof(object[]) };
 		    m = new DynamicMethod(
 		        "Optimized",
@@ -410,10 +410,10 @@ namespace Meta {
 				il.Emit(OpCodes.Ldarg_1);
 				il.Emit(OpCodes.Ldc_I4, i);
 				il.Emit(OpCodes.Ldelem_Ref);
-				//Transform.GetConversion(type,il);
-				if(type.IsValueType) {
-				    il.Emit(OpCodes.Unbox_Any,type);
-				}
+				Transform.GetConversion(type,il);
+				//if(type.IsValueType) {
+				//    il.Emit(OpCodes.Unbox_Any,type);
+				//}
 			}
 			if(method.IsStatic) {
 				il.Emit(OpCodes.Call,method);
@@ -442,8 +442,8 @@ namespace Meta {
 		public override MapBase EvaluateImplementation(MapBase context) {
 			object[] args=new object[parameters.Length];
 			for (int index = 0; index < parameters.Length; index++) {
-				//args[index]=arguments[index].Evaluate(context);
-				args[index]=conversions[index](arguments[index].Evaluate(context));
+				args[index]=arguments[index].Evaluate(context);
+				//args[index]=conversions[index](arguments[index].Evaluate(context));
 			}
 			try {
 				object result=fastCall(args);
@@ -1427,7 +1427,24 @@ namespace Meta {
 		//            //return Transform.ToDotNet(map,target);
 		//    }
 		//}
-
+		public static void GetConversion(Type target,ILGenerator il) {
+		    if(target.Equals(typeof(Number))) {
+				il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+		    }
+		    else if(target.Equals(typeof(MapBase))) {
+		    }
+		    else if(target.Equals(typeof(Boolean))) {
+				il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
+				il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
+		    }
+			else if(target.Equals(typeof(String))) {
+				il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetString"));
+			}
+		    else 
+			{
+		    }
+		}
 		public static Conversion GetConversion(Type target) {
 		    if(target.Equals(typeof(Number))) {
 		        return delegate(MapBase map) {
