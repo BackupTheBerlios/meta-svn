@@ -1201,7 +1201,7 @@ namespace Meta {
 				il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
 		    }
 			else if(target.Equals(typeof(String))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetString"));
+				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetString",BindingFlags.Instance|BindingFlags.Public));
 			}
 			else if(target.Equals(typeof(int))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
@@ -1767,6 +1767,7 @@ namespace Meta {
 			}
 			return text.ToString();
 		}
+
 		public override string Serialize() {
 			if (this.Count == 0) {
 				return "0";
@@ -3931,7 +3932,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
+			public class MergeSort: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			    }
+			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3956,14 +3962,6 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
-			public class MergeSort: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			    }
-			}
-
-
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -4162,12 +4160,16 @@ namespace Meta {
 			int count = 0;
 			foreach (KeyValuePair<Map, Map> pair in map) {
 				if (pair.Value == null) {
-					count++;}
+					count++;
+				}
 				else if (pair.Value.IsNumber) {
-					count++;}
+					count++;
+				}
 				else {
 					count += CountLeaves(pair.Value);}}
-			return count;}}
+			return count;
+		}
+	}
 	public class SyntaxException : MetaException {
 		public SyntaxException(string message, Parser parser)
 			: base(message, new Source(parser.State.Line, parser.State.Column, parser.FileName)) {}}
@@ -4181,7 +4183,124 @@ namespace Meta {
 			: base("Key does not exist: " + Serialization.Serialize(key) + " in " + Serialization.Serialize(map), source, map) {}}
 	public class KeyNotFound : ExecutionException {
 		public KeyNotFound(Map key, Source source, Map map)
-			: base("Key not found: " + Serialization.Serialize(key), source, map) {}}
+			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
+	}
+	public class ListMap : Map
+	{
+	    public override bool IsNormal {
+	        get {
+	            return true;
+	        }
+	    }
+	    public override string GetString() {
+	        return Map.GetString(this);
+	    }
+	    public override Number GetNumber() {
+	        return null;
+	    }
+	    public override Map Copy() {
+	        return this;
+	    }
+	    public override void Append(Map map)
+	    {
+	        list.Add(map);
+	    }
+	    private List<Map> list;
+
+	    public ListMap(): this(5)
+	    {
+	    }
+	    public ListMap(List<Map> list)
+	    {
+	        this.list = list;
+	    }
+	    public ListMap(int capacity)
+	    {
+	        this.list = new List<Map>(capacity);
+	    }
+	    //public ListMap(ListStrategy original)
+	    //{
+	    //    this.list = new List<Map>(original.list);
+	    //}
+	    public override Map this[Map key] {	        get {	            Map value = null;
+	            if (key.IsNumber)
+	            {
+	                int integer = key.GetNumber().GetInt32();
+	                if (integer >= 1 && integer <= list.Count)
+	                {
+	                    value = list[integer - 1];
+	                }
+	            }
+	            return value;
+	        }	        set {	            if (key.IsNumber)
+	            {
+	                int integer = key.GetNumber().GetInt32();
+	                if (integer >= 1 && integer <= list.Count)
+	                {
+	                    list[integer - 1] = value;
+	                    return;
+	                }
+	                else if (integer == list.Count + 1)
+	                {
+	                    list.Add(value);
+	                    return;
+	                }
+	            }
+	            throw new Exception("Method or operation not implemented.");
+	        }	    }
+	    public override int Count
+	    {
+	        get
+	        {
+	            return list.Count;
+	        }
+	    }
+	    public override IEnumerable<Map> Array
+	    {
+	        get
+	        {
+	            return this.list;
+	        }
+	    }
+
+	    public override int ArrayCount
+	    {
+	        get {
+	            return list.Count;
+	        }
+	    }
+	    public override bool ContainsKey(Map key)
+	    {
+	        bool containsKey;
+	        if (key.IsNumber)
+	        {
+	            Number integer = key.GetNumber();
+	            if (integer >= 1 && integer <= list.Count)
+	            {
+	                containsKey = true;
+	            }
+	            else
+	            {
+	                containsKey = false;
+	            }
+	        }
+	        else
+	        {
+	            containsKey = false;
+	        }
+	        return containsKey;
+	    }
+	    public override IEnumerable<Map> Keys
+	    {
+	        get
+	        {
+	            for (int i = 1; i <= list.Count; i++)
+	            {
+	                yield return i;
+	            }
+	        }
+	    }
+	}
 	public class Library {
 		public static Map Slice(Map array,int start,int end) {
 			return new DictionaryMap(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
@@ -4306,8 +4425,8 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {
-			//Map result=array.Mutable();//.DeepCopy();
-			Map result=array.DeepCopy();
+			Map result=new ListMap(new List<Map>(array.Array));//.Mutable();//.DeepCopy();
+			//Map result=array.DeepCopy();
 			result.Append(item);
 			return result;
 		}
@@ -4542,6 +4661,27 @@ namespace Meta {
 	}
 	//public class FunctionExpression
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public static string GetString(Map m) {
+			StringBuilder text = new StringBuilder("");
+			if(m.ArrayCount==0 || m.ArrayCount !=m.Count ) {
+				return null;
+			}
+			foreach (Map map in m.Array) {
+				Number number=map.GetNumber();
+				if(number==null) {
+					return null;
+				}
+				else {
+					if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
+						text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
+					}
+					else {
+						return null;
+					}
+				}
+			}
+			return text.ToString();
+		}
 		public virtual Map Mutable() {
 			return this;
 		}
