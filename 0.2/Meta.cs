@@ -483,21 +483,11 @@ namespace Meta {
 			    }
 			}
 			il.Emit(OpCodes.Ret);
-			try{
-				this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
-			}
-			catch(Exception e) {
-				throw e;
-			}
+			this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
 		}
 		private FastCall fastCall;
 		private MethodInfo method;
 		public override MapBase EvaluateImplementation(MapBase context) {
-			//object[] args=new object[parameters.Length];
-			//for (int index = 0; index < parameters.Length; index++) {
-			//    args[index]=arguments[index].Evaluate(context);
-			//    //args[index]=conversions[index](arguments[index].Evaluate(context));
-			//}
 			try {
 				object result=fastCall(context);
 				return returnConversion(result);
@@ -641,6 +631,8 @@ namespace Meta {
 			this.key = key;
 			this.count = count;}
 		public override MapBase EvaluateImplementation(MapBase context) {
+			try
+			{
 			MapBase selected = context;
 			for (int i = 0; i < count; i++) {
 				selected = selected.Scope;
@@ -659,6 +651,11 @@ namespace Meta {
 				return selected[key];
 			}
 			return result;
+			}
+			catch(Exception e) 
+			{
+				throw e;
+			}
 		}
 	}
 	public class OptimizedSearch : Compiled {
@@ -1498,6 +1495,11 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
 			}
+			else if(target.Equals(typeof(object))) {
+			}
+			else if(target.Equals(typeof(Type))) {
+				il.Emit(OpCodes.Callvirt,typeof(MapBase).GetMethod("GetClass"));
+			}
 		    else 
 			{
 		    }
@@ -1864,6 +1866,9 @@ namespace Meta {
 		}
 	}
 	public class TypeMap : DotNetMap {
+		public override Type GetClass() {
+			return this.Type;
+		}
 		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 		protected override BindingFlags BindingFlags {
 			get {
@@ -4334,12 +4339,7 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			public class Basic : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -4360,6 +4360,12 @@ namespace Meta {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
+			}
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
 			}
 			//public class MergeSort: Test {
 			//    public override object GetResult(out int level) {
@@ -4959,6 +4965,9 @@ namespace Meta {
 		}
 	}
 	public abstract class MapBase:IEnumerable<KeyValuePair<MapBase, MapBase>>, ISerializeEnumerableSpecial {
+		public virtual Type GetClass() {
+			return null;
+		}
 		public virtual MapBase CallImplementation(MapBase argument) {
 		    MapBase function=this[CodeKeys.Function];
 		    if (function!=null) {

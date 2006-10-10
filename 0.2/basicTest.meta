@@ -34,7 +34,6 @@ listTest=[
 		"long
 		"list
 commandLine|{
-	Meta.MemberTest.Compile_Int32(1
 	&merge(
 		0
 		[
