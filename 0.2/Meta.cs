@@ -224,7 +224,6 @@ namespace Meta {
 			this.parameters = method.GetParameters();
 			this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
 		    Type[] param = new Type[] { typeof(EmittedCall), typeof(MapBase) };
-			//Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
 		    m = new DynamicMethod(
 		        "Optimized",
 		        typeof(object),
@@ -245,11 +244,17 @@ namespace Meta {
 
 				Transform.GetConversion(type,il);
 			}
-			if(method.IsStatic) {
-			    il.Emit(OpCodes.Call,method);
+			if(method.IsStatic && !method.ReturnType.Equals(typeof(void)) && !method.ReturnType.IsValueType) {
+				il.Emit(OpCodes.Tailcall);
+			}
+
+			if(method.IsStatic) {// && !method.ReturnType.Equals(typeof(void)) && !method.ReturnType.IsValueType) {
+			//if(method.IsStatic && !method.ReturnType.Equals(typeof(void)) && !method.ReturnType.IsValueType) {
+				il.Emit(OpCodes.Call,method);
 			}
 			else {
-			    il.Emit(OpCodes.Callvirt,method);
+				//il.Emit(OpCodes.Tailcall,method);
+				il.Emit(OpCodes.Callvirt,method);
 			}
 			if(method.ReturnType.Equals(typeof(void))) {
 			    il.Emit(OpCodes.Ldc_I4,0);
