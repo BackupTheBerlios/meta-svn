@@ -342,14 +342,14 @@ commandLine|,
 		.
 			/
 			"Meta"
-			"NamedNoConversion_MapBase"
+			"NamedNoConversion_Map"
 		,
 			1="m"
 			"y"="n"
 	"namedNoConversionConcatenated"=-
 		.
 			!"namedNoConversion"
-			"Concatenate_MapBase"
+			"Concatenate_Map"
 		,
 			"c"="t"
 			1="r"
@@ -673,15 +673,6 @@ commandLine|,
 			!"System.Windows.Forms"
 			"Application"
 			"get_VisualStyleState"
-	"typeTest"=-
-		.
-			!"mscorlib"
-			"Array"
-			"CreateInstance_Type_Int32"
-		.
-			!"mscorlib"
-			"String"
-		5
 	"oneTwoThreeHello"="asdf"
 	"copySourceData"=,
 		"x"="y"
