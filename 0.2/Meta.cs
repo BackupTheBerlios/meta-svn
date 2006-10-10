@@ -1736,8 +1736,12 @@ namespace Meta {
 			if (Count == 0) {
 				return 0;
 			}
-			else if (this.Count == 1 && this.ContainsKey(Map.Empty) && this[Map.Empty].IsNumber) {
-				return 1 + this[Map.Empty].GetNumber();
+			else if (this.Count == 1) {
+				if(this.ContainsKey(Map.Empty)) {
+					if(this[Map.Empty].IsNumber) {
+						return 1 + this[Map.Empty].GetNumber();
+					}
+				}
 			}
 			return null;
 		}
@@ -3228,23 +3232,27 @@ namespace Meta {
 			null);
 		public abstract class Action {
 			public static implicit operator Action(StringRule rule) {
-				return new Match(rule);}
+				return new Match(rule);
+			}
 			public static implicit operator Action(string s) {
-				return new Match(new Ignore(StringRule2(s)));}
+				return new Match(new Ignore(StringRule2(s)));
+			}
 			public static implicit operator Action(char c) {
-				return new Match(new Ignore(new OneChar(new SingleChar(c))));}
+				return new Match(new Ignore(new OneChar(new SingleChar(c))));
+			}
 			public static implicit operator Action(Rule rule) {
-				return new Match(new Ignore(rule));}
+				return new Match(new Ignore(rule));
+			}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
 			public Action(Rule rule) {this.rule = rule;}
-			public bool Execute(Parser parser, ref Map result,bool keep) {
+			public bool Execute(Parser parser, ref Map result) {
 				Map map=null;
-				bool matched=rule.Match(parser,ref map);
-				if (matched) {
+				if (rule.Match(parser,ref map)) {
 					Effect(parser, map, ref result);
+					return true;
 				}
-				return matched;
+				return false;
 			}
 		}
 		public class Autokey : Action {
@@ -3345,11 +3353,11 @@ namespace Meta {
 		public abstract class Rule {
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
-				return new Ignore(StringRule2(s));}
+				return new Ignore(StringRule2(s));
+			}
 			public static implicit operator Rule(char c) {
-			    return new Ignore(new OneChar(new SingleChar(c)));}
-			//public bool Match(Parser parser, ref Map map) {
-			//    return Match(parser,ref map,true);}
+			    return new Ignore(new OneChar(new SingleChar(c)));
+			}
 			public int mismatches=0;
 			public int calls=0;
 
@@ -3362,12 +3370,15 @@ namespace Meta {
 				matched= MatchImplementation(parser, ref result);
 				if (!matched) {
 					mismatches++;
-					parser.State=oldState;}
+					parser.State=oldState;
+				}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
 							new Source(oldState.Line, oldState.Column, parser.FileName),
-							new Source(parser.State.Line, parser.State.Column, parser.FileName));}}
+							new Source(parser.State.Line, parser.State.Column, parser.FileName));
+					}
+				}
 				map=result;
 				return matched;
 			}
@@ -3379,8 +3390,7 @@ namespace Meta {
 		    protected override bool MatchCharacter(char next) {
 		        return chars.IndexOf(next)!=-1;
 			}
-		}
-		
+		}		
 		public abstract class CharacterRule : Rule {
 		    protected abstract bool MatchCharacter(char c);
 		    protected override bool MatchImplementation(Parser parser, ref Map map) {
@@ -3392,8 +3402,7 @@ namespace Meta {
 		            if (character.Equals(Syntax.unixNewLine)) {
 		                parser.State.Line++;
 		                parser.State.Column = 1;}
-		            map=new Integer(character);//:null;
-					//map=keep?new Integer(character):null;
+		            map=new Integer(character);
 		            return true;
 				}
 		        else {
@@ -3457,10 +3466,11 @@ namespace Meta {
 					column++;
 					if(parser.Look(offset).Equals(Syntax.unixNewLine)) {
 						line++;
-						column= 1;}}
+						column= 1;
+					}
+				}
 				s=parser.Text.Substring(parser.State.index,offset);
-				if(offset>=min && (max==-1 || offset <= max))
-				{
+				if(offset>=min && (max==-1 || offset <= max)){
 					parser.State.index+=offset;
 					parser.State.Column=column;
 					parser.State.Line+=line;
@@ -3553,34 +3563,46 @@ namespace Meta {
 				foreach (Rule expression in cases) {
 					bool matched=expression.Match(parser, ref map);
 					if (matched) {
-						return true;}}
-				return false;}}
+						return true;
+					}
+				}
+				return false;
+			}
+		}
 		public class Sequence : Rule {
 			private Action[] actions;
 			public Sequence(params Action[] rules) {
-				this.actions = rules;}
+				this.actions = rules;
+			}
 			protected override bool MatchImplementation(Parser parser, ref Map match) {
 				Map result = new DictionaryMap();
 				bool success = true;
 				foreach (Action action in actions) {
 					if (action != null) {
-						bool matched = action.Execute(parser, ref result,true);
+						bool matched = action.Execute(parser, ref result);
 						if (!matched) {
 							success = false;
-							break;}}}
+							break;
+						}
+					}
+				}
 				if (!success) {
 					match=null;
-					return false;}
+					return false;
+				}
 				else {
 					match=result;
-					return true;}}}
+					return true;
+				}
+			}
+		}
 		public class LiteralRule : Rule {
 			private Map literal;
 			public LiteralRule(Map literal) {
-				this.literal = literal;}
+				this.literal = literal;
+			}
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				map=literal;
-				//map=literal.Copy();
 				return true;
 			}
 		}
@@ -3591,32 +3613,38 @@ namespace Meta {
 				bool match=base.MatchImplementation(parser, ref result);
 				if (match && result.IsString) {
 					result = result.GetString();}
-				return match;}}
+				return match;
+			}
+		}
 		public class ZeroOrMore : Rule {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				while (true) {
-					if (!action.Execute(parser, ref list,true)) {
+					if (!action.Execute(parser, ref list)) {
 						break;
 					}
 				}
 				map=list;
-				return true;}
+				return true;
+			}
 			private Action action;
 			public ZeroOrMore(Action action) {
-				this.action = action;}}
+				this.action = action;
+			}
+		}
 		public class OneOrMore : Rule {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				bool matched = false;
 				while (true) {
-					if (!action.Execute(parser, ref list,true)) {
+					if (!action.Execute(parser, ref list)) {
 						break;
 					}
 					matched = true;
 				}
 				map=list;
-				return matched;}
+				return matched;
+			}
 			private Action action;
 			public OneOrMore(Action action) {
 				this.action = action;
@@ -3631,7 +3659,8 @@ namespace Meta {
 				rule.Match(parser, ref matched);
 				if (matched == null) {
 					match=null;
-					return true;}
+					return true;
+				}
 				else {
 					match=matched;
 					return true;
@@ -3902,8 +3931,6 @@ namespace Meta {
 				}
 			}
 
-
-
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3916,7 +3943,6 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -3929,13 +3955,14 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
+			public class MergeSort: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			    }
+			}
 
-			//public class MergeSort: Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			//    }
-			//}
+
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
 				callable.Scope = Gac.gac["library"];
@@ -4278,8 +4305,9 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {
-			array.Append(item);
-			return array;
+			Map result=array.DeepCopy();
+			result.Append(item);
+			return result;
 		}
 		public static Map EnumerableToArray(Map map) {
 			List<Map> result = new List<Map>();
@@ -4446,6 +4474,13 @@ namespace Meta {
 		public abstract Map GetStructure();
 	}
 	public class EmptyMap:Map {
+		public override int GetHashCode() {
+			return 0;
+		}
+		public override bool Equals(object obj) {
+			Map map=obj as Map;
+			return map!=null && map.Count==0;
+		}
 		public override Map this[Map key] {
 			get {
 				return null;
@@ -4526,7 +4561,8 @@ namespace Meta {
 			Map.arguments.Pop();
 			return result;
 		}
-		public static Map Empty=new DictionaryMap();
+		public static Map Empty=new EmptyMap();
+		//public static Map Empty=new DictionaryMap();
 		public Map DeepCopy() {
 			Map clone = new DictionaryMap();
 			clone.Scope = Scope;
@@ -4701,18 +4737,6 @@ namespace Meta {
 			}
 			else if (ContainsKey(CodeKeys.Expression)) {
 				return new Function(parent,this);
-				//Program program = new Function(this.Source, parent);
-				//program.isFunction = true;
-				//MapBase parameter = this[CodeKeys.Parameter];
-				//if (parameter.Count != 0) {
-				//    KeyStatement s = new KeyStatement(
-				//        new Literal(parameter, program),
-				//        new LastArgument(MapBase.Empty, program), program, 0);
-				//    program.statementList.Add(s);
-				//}
-				//CurrentStatement c = new CurrentStatement(this[CodeKeys.Expression].GetExpression(program), program, program.statementList.Count);
-				//program.statementList.Add(c);
-				//return program;
 			}
 			else {
 				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));

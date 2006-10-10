@@ -4,52 +4,52 @@
 	Value (StringMap):
 		"world"
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		1
-	Value (Map):
+	Value (Integer):
 		1
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		2
-	Value (Map):
+	Value (Integer):
 		2
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		3
-	Value (Map):
+	Value (Integer):
 		3
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		4
-	Value (Map):
+	Value (Integer):
 		4
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		5
-	Value (Map):
+	Value (Integer):
 		5
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		6
-	Value (Map):
+	Value (Integer):
 		6
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		7
-	Value (Map):
+	Value (Integer):
 		7
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		8
-	Value (Map):
+	Value (Integer):
 		8
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		9
-	Value (Map):
+	Value (Integer):
 		9
 Entry (KeyValuePair`2)
-	Key (Map):
+	Key (Integer):
 		10
-	Value (Map):
+	Value (Integer):
 		10
