@@ -210,38 +210,7 @@ namespace Meta {
 	}
 	public delegate MapBase MetaConversion(object obj);
 	public delegate object Conversion(MapBase map);
-	public class EmittedCall : Compiled {
-		private List<Compiled> arguments;
-		private List<Conversion> conversions;
-		private MetaConversion returnConversion;
-		private ParameterInfo[] parameters;
-		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
-			: base(source) {
-			this.method = method;
-			this.arguments = arguments;
-			this.parameters = method.GetParameters();
-			this.conversions=new List<Conversion>();
-			this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
-			for(int i=0;i<parameters.Length;i++) {
-				conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
-			}
-		}
-		private MethodInfo method;
-		private 
-		public override MapBase EvaluateImplementation(MapBase context) {
-			object[] args=new object[parameters.Length];
-			for (int index = 0; index < parameters.Length; index++) {
-				args[index]=conversions[index](arguments[index].Evaluate(context));
-			}
-			return returnConversion(method.Invoke(null, args));
-		}
-		//    object[] args=new object[parameters.Length];
-		//    for (int index = 0; index < parameters.Length; index++) {
-		//        args[index]=conversions[index](arguments[index].Evaluate(context));
-		//    }
-		//    return returnConversion(method.Invoke(null, args));
-		//}
-	}
+
     public abstract class Storage : ILEmitter
     {
         private Type type;
@@ -321,27 +290,6 @@ namespace Meta {
 			result.AddRange(collection);
 			return result;
 		}
-	    public Evaluate EmittedExpression(ILEmitter emitter)
-	    {
-	        Type[] parameters = new Type[] { typeof(Expression), typeof(MapBase) };
-	        DynamicMethod method = new DynamicMethod(
-	            "Optimized",
-	            typeof(MapBase),
-	            parameters,
-	            typeof(MapBase).Module);
-
-	        Argument argument = new Argument(1, typeof(MapBase));
-	        ILProgram program = new ILProgram();
-
-	        Local context = program.Declare();
-	        program.Add(context.Assign(argument));
-	        program.Add(emitter);
-	        program.Add(OpCodes.Ret);
-	        program.Emit(method.GetILGenerator());
-			return (Evaluate)method.CreateDelegate(typeof(Evaluate), this);
-			//return new CustomExpression((Evaluate)method.CreateDelegate(typeof(Evaluate), this));
-			//return new CustomExpression((Evaluate)method.CreateDelegate(typeof(Evaluate), this));
-	    }
 		public delegate MapBase Evaluate(MapBase context);
 	    public ILEmitter New(ConstructorInfo constructor, params ILEmitter[] arguments)
 	    {
@@ -433,6 +381,153 @@ namespace Meta {
             }
         }
     }
+	public delegate object FastCall(object[] args);
+	public class EmittedCall : Compiled {
+		private List<Compiled> arguments;
+		private List<Conversion> conversions;
+		private MetaConversion returnConversion;
+		private ParameterInfo[] parameters;
+		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
+			: base(source) {
+			this.method = method;
+			this.arguments = arguments;
+			this.parameters = method.GetParameters();
+			this.conversions=new List<Conversion>();
+			this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
+			for(int i=0;i<parameters.Length;i++) {
+				conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
+			}
+		    Type[] param = new Type[] { typeof(object), typeof(object[]) };
+			//Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
+			//Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
+		    DynamicMethod m = new DynamicMethod(
+		        "Optimized",
+		        typeof(object),
+				//typeof(MapBase),
+		        param,
+		        typeof(MapBase).Module);
+
+			ILGenerator il = m.GetILGenerator();
+			for(int i=0;i<parameters.Length;i++) {
+				Type type=parameters[i].ParameterType;
+				il.Emit(OpCodes.Ldarg_1);
+				il.Emit(OpCodes.Ldc_I4, i);
+				//if(type.Equals(typeof(Boolean))) {
+				//    il.Emit(OpCodes.Ldelem_I4);
+				//}
+				//else {
+				il.Emit(OpCodes.Ldelem_Ref);
+				//}
+				if(type.IsValueType) {
+					 //if(!type.Equals(typeof(Boolean))) {
+					if(type.Equals(typeof(Boolean))) {
+						type=typeof(int);
+					}
+					il.Emit(OpCodes.Unbox,type);
+					 //}
+				}
+				else {
+					il.Emit(OpCodes.Castclass,type);
+				}
+			}
+			il.Emit(OpCodes.Callvirt,method);
+			if(!method.ReturnType.Equals(typeof(void))) {
+				if(method.ReturnType.IsValueType) {
+					il.Emit(OpCodes.Box,method.ReturnType);
+				}
+				else {
+					il.Emit(OpCodes.Castclass,typeof(object));
+				}
+			}
+			//il.Emit(OpCodes.Pop);
+			il.Emit(OpCodes.Ret);
+			try{
+				this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
+			}
+			catch(Exception e) {
+				throw e;
+			}
+		}
+		private FastCall fastCall;
+		private MethodInfo method;
+		public override MapBase EvaluateImplementation(MapBase context) {
+			object[] args=new object[parameters.Length];
+			if(method.Name.Contains("CreateInstance"))
+			{
+			}
+			for (int index = 0; index < parameters.Length; index++) {
+				args[index]=conversions[index](arguments[index].Evaluate(context));
+			}
+			try {
+				object result=fastCall(args);
+				return returnConversion(result);
+			}
+			catch(Exception e) {
+				object result=fastCall(args);
+				throw e;
+			}
+			//return returnConversion( method.Invoke(this, args));
+			//return returnConversion(method.Invoke(null, args));
+		}
+		//    object[] args=new object[parameters.Length];
+		//    for (int index = 0; index < parameters.Length; index++) {
+		//        args[index]=conversions[index](arguments[index].Evaluate(context));
+		//    }
+		//    return returnConversion(method.Invoke(null, args));
+		//}
+	}
+		//public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
+		//    : base(source) {
+		//    this.method = method;
+		//    this.arguments = arguments;
+		//    this.parameters = method.GetParameters();
+		//    this.conversions=new List<Conversion>();
+		//    this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
+		//    for(int i=0;i<parameters.Length;i++) {
+		//        conversions.Add(Transform.GetConversion(parameters[i].ParameterType));
+		//    }
+		//    Type[] param = new Type[] { typeof(object), typeof(object[]) };
+		//    //Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
+		//    //Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
+		//    DynamicMethod m = new DynamicMethod(
+		//        "Optimized",
+		//        typeof(object),
+		//        //typeof(MapBase),
+		//        param,
+		//        typeof(MapBase).Module);
+
+		//    ILGenerator il = m.GetILGenerator();
+		//    for(int i=0;i<parameters.Length;i++) {
+		//        Type type=parameters[i].ParameterType;
+		//        il.Emit(OpCodes.Ldarg_1);
+		//        il.Emit(OpCodes.Ldc_I4, i);
+		//        il.Emit(OpCodes.Ldelem,type);
+		//        //il.Emit(OpCodes.Ldelem_Ref);
+		//        if(type.IsValueType) {
+		//            il.Emit(OpCodes.Unbox,type);
+		//            //il.Emit(OpCodes.Box,method.ReturnType);
+		//        }
+		//        else {
+		//            il.Emit(OpCodes.Castclass,type);
+		//        }
+		//    }
+		//    il.Emit(OpCodes.Callvirt,method);
+		//    if(!method.ReturnType.Equals(typeof(void))) {
+		//        if(method.ReturnType.IsValueType) {
+		//            il.Emit(OpCodes.Box,method.ReturnType);
+		//        }
+		//        il.Emit(OpCodes.Castclass,typeof(object));
+		//    }
+		//    //il.Emit(OpCodes.Pop);
+		//    il.Emit(OpCodes.Ret);
+		//    try{
+		//        this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
+		//    }
+		//    catch(Exception e) {
+		//        throw e;
+		//    }
+		//}
+
 	public class CompiledCall : Compiled {
 		List<Compiled> calls;
 		public CompiledCall(List<Compiled> calls, Extent source)
@@ -4187,22 +4282,17 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-			public class Basic : Test {
+			public class Fibo: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 			public class Library : Test {
@@ -4211,6 +4301,14 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
 			}
+			public class Basic : Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+
+
 			//public class MergeSort: Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;
@@ -4240,9 +4338,12 @@ namespace Meta {
 					return "MemberTest function, argument+" + memberTest + argument;}
 				public static string ClassProperty {
 					get {
-						return classField;}
+						return classField;
+					}
 					set {
-						classField = value;}}
+						classField = value;
+					}
+				}
 				public string InstanceProperty {
 					get {
 						return this.instanceField;}
@@ -4490,6 +4591,7 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static MapBase ElseIf(bool condition, MapBase then, MapBase els) {
+			//condition=!condition;
 			if (condition) {
 				return then.Call(MapBase.Empty);}
 			else {
