@@ -880,7 +880,8 @@ namespace Meta {
 				}
 			}
 			else {
-				context = value.Copy();
+				context = value;
+				//context = value.Copy();
 			}
 		}
 	}
@@ -4305,6 +4306,7 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {
+			//Map result=array.Mutable();//.DeepCopy();
 			Map result=array.DeepCopy();
 			result.Append(item);
 			return result;
@@ -4459,9 +4461,6 @@ namespace Meta {
 		}
 		private Map literal;
 		public LiteralStructure(Map literal) {
-			if(literal==null) 
-			{
-			}
 			this.literal=literal;
 		}
 	}
@@ -4474,6 +4473,10 @@ namespace Meta {
 		public abstract Map GetStructure();
 	}
 	public class EmptyMap:Map {
+
+		public override Map Mutable() {
+			return new DictionaryMap();
+		}
 		public override int GetHashCode() {
 			return 0;
 		}
@@ -4539,6 +4542,9 @@ namespace Meta {
 	}
 	//public class FunctionExpression
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual Map Mutable() {
+			return this;
+		}
 		public virtual int Count {
 			get { throw new Exception("The method or operation is not implemented."); }
 		}

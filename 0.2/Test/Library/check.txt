@@ -14,7 +14,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"false"
-					Value (DictionaryMap):
+					Value (EmptyMap):
 						0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -28,7 +28,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"false"
-					Value (DictionaryMap):
+					Value (EmptyMap):
 						0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -42,7 +42,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"false"
-					Value (DictionaryMap):
+					Value (EmptyMap):
 						0
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -135,7 +135,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"or"
-			Value (DictionaryMap):
+			Value (EmptyMap):
 				0
 Entry (KeyValuePair`2)
 	Key (StringMap):
