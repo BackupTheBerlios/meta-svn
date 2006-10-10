@@ -43,10 +43,10 @@ namespace Meta {
 		public Compiled(Extent source) {
 			this.Source = source;
 		}
-		public MapBase Evaluate(MapBase context) {
-			return EvaluateImplementation(context);
-		}
-		public abstract MapBase EvaluateImplementation(MapBase context);}
+		//public MapBase Evaluate(MapBase context) {
+		//    return Evaluate(context);
+		//}
+		public abstract MapBase Evaluate(MapBase context);}
 	public abstract class Expression {
 		public Compiled compiled;
 		public bool isFunction = false;
@@ -106,7 +106,7 @@ namespace Meta {
 	}
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source): base(source) {}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			return MapBase.arguments.Peek();
 		}
 	}
@@ -269,7 +269,7 @@ namespace Meta {
 		}
 		private FastCall fastCall;
 		private MethodInfo method;
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			try {
 				object result=fastCall(context);
 				return returnConversion(result);
@@ -286,7 +286,7 @@ namespace Meta {
 			: base(source) {
 			this.calls = calls;
 		}
-		public override MapBase EvaluateImplementation(MapBase current) {
+		public override MapBase Evaluate(MapBase current) {
 			MapBase result = calls[0].Evaluate(current);
 			for (int i = 1; i < calls.Count; i++) {
 				try {
@@ -361,14 +361,32 @@ namespace Meta {
 						return true;
 					}
 					else if(programCounter<1 && statement is KeyStatement) {
-						IEnumerable<MapBase> k= statement.CurrentKeys();
-						if(k!=null) {
-							List<MapBase> keys=new List<MapBase>(k);
-							if(keys.Contains(key)) {
-								value=null;
-								return true;
+						//if(current.Statement!=null && current.Statement.program!=null && current.Statement.program.isFunction) {
+						if(hasCrossedFunction) {
+							MapBase map=statement.CurrentMap();//.CurrentKeys();
+							if(map!=null && map.IsConstant) {
+								//List<MapBase> keys=new List<MapBase>(k);
+								if(map.ContainsKey(key)) {
+									value=map[key];
+									if(value.IsConstant) {
+									//value=null;
+										return true;
+									}
+									else 
+									{
+									}
+								}
 							}
 						}
+						//}
+						//IEnumerable<MapBase> k= statement.CurrentKeys();
+						//if(k!=null) {
+						//    List<MapBase> keys=new List<MapBase>(k);
+						//    if(keys.Contains(key)) {
+						//        value=null;
+						//        return true;
+						//    }
+						//}
 					}
 					if (hasCrossedFunction) {
 						if (!statement.NeverAddsKey(key)) {
@@ -412,7 +430,7 @@ namespace Meta {
 			: base(source) {
 			this.key = key;
 			this.count = count;}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			MapBase selected = context;
 			for (int i = 0; i < count; i++) {
 				selected = selected.Scope;
@@ -439,7 +457,7 @@ namespace Meta {
 			: base(source) {
 			this.literal = literal;
 		}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			return literal;
 			//return literal.Copy();
 		}
@@ -449,7 +467,7 @@ namespace Meta {
 		public CompiledSearch(Compiled expression, Extent source): base(source) {
 			this.expression = expression;
 		}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			MapBase key = expression.Evaluate(context);
 			MapBase selected = context;
 			while (!selected.ContainsKey(key)) {
@@ -471,7 +489,7 @@ namespace Meta {
 		public CompiledProgram(List<CompiledStatement> statementList, Extent source): base(source) {
 			this.statementList = statementList;
 		}
-		public override MapBase EvaluateImplementation(MapBase parent) {
+		public override MapBase Evaluate(MapBase parent) {
 			MapBase context = new DictionaryMap();
 			context.Scope = parent;
 			foreach (CompiledStatement statement in statementList) {
@@ -550,7 +568,7 @@ namespace Meta {
 			this.expression=function.expression.Compile(function);
 			this.parameter=function.key;
 		}
-		public override MapBase EvaluateImplementation(MapBase parent) {
+		public override MapBase Evaluate(MapBase parent) {
 			MapBase context = new FunctionArgument(parameter,MapBase.arguments.Peek());
 			context.Scope = parent;
 			return expression.Evaluate(context);
@@ -648,7 +666,7 @@ namespace Meta {
 			//this.expression=expression;
 			this.value=value;
 		}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			MapBase map=new FunctionMap(value);
 			//MapBase map=new FunctionMap(expression.Evaluate(context));
 			map.Scope=context;
@@ -861,6 +879,13 @@ namespace Meta {
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
 					((LiteralStructure)previous).Literal[k] = val;
 				}
+				//// not general enough
+				//if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
+				//    ((LiteralStructure)previous).Literal[k] = val;
+				//}
+				//if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
+				//    ((LiteralStructure)previous).Literal[k] = val;
+				//}
 				else {
 					MapBase m=new DictionaryMap();
 					m.IsConstant=false;
@@ -951,7 +976,7 @@ namespace Meta {
 			: base(source) {
 			this.literal = literal;
 		}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			return literal;
 			//return literal.Copy();
 		}
@@ -972,7 +997,7 @@ namespace Meta {
 	public class CompiledRoot : Compiled {
 		public CompiledRoot(Extent source)
 			: base(source) {}
-		public override MapBase EvaluateImplementation(MapBase selected) {
+		public override MapBase Evaluate(MapBase selected) {
 			return Gac.gac;
 		}
 	}
@@ -991,7 +1016,7 @@ namespace Meta {
 			this.subs = subs;
 			if (subs[0] == null) {}
 		}
-		public override MapBase EvaluateImplementation(MapBase context) {
+		public override MapBase Evaluate(MapBase context) {
 			MapBase selected = subs[0].Evaluate(context);
 			for (int i = 1; i < subs.Count; i++) {
 				MapBase key = subs[i].Evaluate(context);
