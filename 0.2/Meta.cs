@@ -211,233 +211,12 @@ namespace Meta {
 	public delegate MapBase MetaConversion(object obj);
 	public delegate object Conversion(MapBase map);
 
-    public abstract class Storage : ILEmitter
-    {
-        private Type type;
-        public Storage()
-        {
-            System.Windows.Forms.WebBrowser b;
-            type = typeof(MapBase);
-        }
-        public ILEmitter Assign(ILEmitter b)
-        {
-            return new ILExpression(null, Make<ILEmitter>(b, (Emit)Store));
-        }
-        public abstract void Store(ILGenerator il);
-        public abstract void Load(ILGenerator il);
-    }
-    public class InstanceField : ILEmitter
-    {
-        public override Type Type { get { return field.FieldType; } }
-        public ILEmitter Assign(ILEmitter b) { return (CustomEmitter)delegate(ILGenerator il) { instance.Emit(il); b.Emit(il); il.Emit(OpCodes.Stfld, field); }; }
-        private FieldInfo field;
-        private ILEmitter instance;
-        public InstanceField(ILEmitter instance, FieldInfo field) { this.field = field; this.instance = instance; }
-        public void Load(ILGenerator il) { instance.Emit(il); il.Emit(OpCodes.Ldfld, field); }
-        public override void Emit(ILGenerator il) { Load(il); }
-    }
-    public class Argument : Storage
-    {
-        public override Type Type { get { return type; } }
-        public override void Emit(ILGenerator il) { Load(il); }
-        public override void Store(ILGenerator il) { il.Emit(OpCodes.Starg, index); }
-        public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldarg, index); }
-        public int Index { get { return index; } }
-        public Argument(int index, Type type) { this.index = index; this.type = type; }
-        private int index;
-        private Type type;
-    }
-    public class Local : Storage
-    {
-        public override Type Type { get { return type; } }
-        private Type type = typeof(MapBase);
-        public override void Emit(ILGenerator il) { Load(il); }
-        public override void Store(ILGenerator il) { il.Emit(OpCodes.Stloc, local.LocalIndex); }
-        public override void Load(ILGenerator il) { il.Emit(OpCodes.Ldloc, local.LocalIndex); }
-        public void Declare(ILGenerator il) { local = il.DeclareLocal(type); }
-        private LocalBuilder local;
-    }
-    public delegate void Emit(ILGenerator il);
-    public class CustomEmitter : ILEmitter
-    {
-        private Emit emitter;
-        public CustomEmitter(Emit emitter) { this.emitter = emitter; }
-        public override void Emit(ILGenerator il) { emitter(il); }
-    }
-	public abstract class MetaBase
-	{
-		public static List<T> Join<T>(ICollection<T> a, ICollection<T> b)
-		{
-			List<T> result = new List<T>(a);
-			result.AddRange(b);
-			return result;
-		}
-		public static List<T> Make<T>(T a, T b)
-		{
-			return new List<T>(new T[] { a, b });
-		}
-		public static List<T> Append<T>(T t, ICollection<T> collection)
-		{
-			List<T> result = new List<T>();
-			result.AddRange(collection);
-			result.Add(t);
-			return result;
-		}
-		public static List<T> Prepend<T>(T t, ICollection<T> collection)
-		{
-			List<T> result = new List<T>();
-			result.Add(t);
-			result.AddRange(collection);
-			return result;
-		}
-		public delegate MapBase Evaluate(MapBase context);
-	    public ILEmitter New(ConstructorInfo constructor, params ILEmitter[] arguments)
-	    {
-	        return new ILExpression(
-	            constructor.DeclaringType,
-	            Prepend<ILEmitter>(
-	                (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Newobj, constructor); },
-	                arguments));
-	    }
-	}
-    public abstract class ILEmitter :MetaBase
-    {
-        public static implicit operator ILEmitter(OpCode code)
-        {
-            return (Emit)delegate(ILGenerator il) { il.Emit(code); };
-        }
-        public static implicit operator ILEmitter(string text)
-        {
-            return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldstr, text); };
-        }
-        public static implicit operator ILEmitter(int integer)
-        {
-            return (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Ldc_I4, integer); };
-        }
-        public static implicit operator ILEmitter(Emit del)
-        {
-            return new CustomEmitter(del);
-        }
-
-        public ILEmitter Cast(Type type)
-        {
-            return new ILExpression(
-                type,
-                Make<ILEmitter>(
-                    this,
-                    (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Castclass, type); }));
-        }
-        public virtual Type Type { get { return typeof(MapBase); } }
-        public InstanceField Field(string name) { return new InstanceField(this, Type.GetField(name)); }
-
-        public ILEmitter Call(string name, params ILEmitter[] arguments)
-        {
-            MethodInfo method = Type.GetMethod(name);
-            return new ILExpression(
-                method.ReturnType,
-                Join<ILEmitter>(
-                    Make<ILEmitter>(
-                        this,
-                        (Emit)delegate(ILGenerator il) { il.Emit(OpCodes.Callvirt, method); }),
-                    arguments));
-        }
-        public abstract void Emit(ILGenerator il);
-    }
-    public class ILProgram : ILEmitter
-    {
-        public Local Declare()
-        {
-            Local local = new Local();
-            Add((Emit)local.Declare);
-            return local;
-        }
-        private List<ILEmitter> statements;
-        public ILProgram(params ILEmitter[] statements) { this.statements = new List<ILEmitter>(statements); }
-        public void Add(Emit emitter)
-        {
-            Add(new CustomEmitter(emitter));
-        }
-        public void Add(ILEmitter statement)
-        {
-            this.statements.Add(statement);
-        }
-        public override void Emit(ILGenerator il) { statements.ForEach(delegate(ILEmitter e) { e.Emit(il); }); }
-    }
-    public class ILExpression : ILEmitter
-    {
-        private IEnumerable<ILEmitter> emitters;
-        public override Type Type { get { return type; } }
-        private Type type;
-        public ILExpression(Type type, IEnumerable<ILEmitter> emitters)
-        {
-            this.type = type;
-            this.emitters = emitters;
-        }
-        public override void Emit(ILGenerator il)
-        {
-            foreach (ILEmitter emitter in emitters)
-            {
-                emitter.Emit(il);
-            }
-        }
-    }
 	public delegate object FastCall(MapBase context);
-	//public delegate object FastCall(object[] args);
 	public class EmittedCall : Compiled {
 		public Compiled[] arguments;
-		//public List<Compiled> arguments;
 		private MetaConversion returnConversion;
 		private ParameterInfo[] parameters;
 		private DynamicMethod m;
-		//public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
-		//    : base(source) {
-		//    this.method = method;
-		//    this.arguments = arguments;
-		//    this.parameters = method.GetParameters();
-		//    this.returnConversion=Transform.GetMetaConversion(method.ReturnType);
-		//    Type[] param = new Type[] { typeof(EmittedCall), typeof(MapBase) };
-		//    //Type[] param = new Type[] { typeof(EmittedCall), typeof(object[]) };
-		//    m = new DynamicMethod(
-		//        "Optimized",
-		//        typeof(object),
-		//        param,
-		//        typeof(MapBase).Module);
-		//    ILGenerator il = m.GetILGenerator();
-		//    for(int i=0;i<parameters.Length;i++) {
-		//        Type type=parameters[i].ParameterType;
-		//        il.Emit(OpCodes.Ldarg_0);
-		//        il.Emit(OpCodes.Ldfld,typeof(EmittedCall).GetField("arguments"));
-		//        il.Emit(OpCodes.Ldc_I4, i);
-		//        il.Emit(OpCodes.Ldelem_Ref);
-		//        il.Emit(OpCodes.Ldarg_1);
-		//        il.Emit(OpCodes.Callvirt,typeof(Compiled).GetMethod("Evaluate"));
-		//        //il.Emit(OpCodes.Ldarg_1);
-		//        //il.Emit(OpCodes.Ldc_I4, i);
-		//        //il.Emit(OpCodes.Ldelem_Ref);
-		//        Transform.GetConversion(type,il);
-		//    }
-		//    if(method.IsStatic) {
-		//        il.Emit(OpCodes.Call,method);
-		//    }
-		//    else {
-		//        il.Emit(OpCodes.Callvirt,method);
-		//    }
-		//    if(method.ReturnType.Equals(typeof(void))) {
-		//        il.Emit(OpCodes.Ldc_I4,0);
-		//    }
-		//    else {
-		//        if(method.ReturnType.IsValueType) {
-		//            il.Emit(OpCodes.Box,method.ReturnType);
-		//        }
-		//    }
-		//    il.Emit(OpCodes.Ret);
-		//    try{
-		//        this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
-		//    }
-		//    catch(Exception e) {
-		//        throw e;
-		//    }
-		//}
 		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
 			: base(source) {
 			this.method = method;
@@ -452,7 +231,6 @@ namespace Meta {
 		        param,
 		        typeof(MapBase).Module);
 			ILGenerator il = m.GetILGenerator();
-			//il.Emit(OpCodes.Ldarg_0);
 			for(int i=0;i<parameters.Length;i++) {
 				Type type=parameters[i].ParameterType;
 				il.Emit(OpCodes.Ldarg_0);
@@ -466,7 +244,6 @@ namespace Meta {
 
 
 				Transform.GetConversion(type,il);
-				//break;
 			}
 			if(method.IsStatic) {
 			    il.Emit(OpCodes.Call,method);
@@ -631,8 +408,6 @@ namespace Meta {
 			this.key = key;
 			this.count = count;}
 		public override MapBase EvaluateImplementation(MapBase context) {
-			try
-			{
 			MapBase selected = context;
 			for (int i = 0; i < count; i++) {
 				selected = selected.Scope;
@@ -651,11 +426,6 @@ namespace Meta {
 				return selected[key];
 			}
 			return result;
-			}
-			catch(Exception e) 
-			{
-				throw e;
-			}
 		}
 	}
 	public class OptimizedSearch : Compiled {
@@ -2809,6 +2579,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:MapBase {
+		public virtual Number SubtractFrom(int i) {
+			return new Rational(i).Subtract(this);
+		}
 		public override bool IsNormal {
 			get {
 				return true;
@@ -2935,9 +2708,8 @@ namespace Meta {
 			return new Rational((double)number);
 		}
 		public static implicit operator Number(int integer) {
-			return new Rational((double)integer);
+			return new Integer(integer);
 		}
-
 		public static bool operator ==(Number a, Number b) {
 			if(ReferenceEquals(a,null) && ReferenceEquals(b,null)) {
 				return true;
@@ -2984,7 +2756,8 @@ namespace Meta {
 		    return Add(new Integer(b));
 		}
 		public virtual Number Subtract(int b) {
-		    return Add(new Integer(b));
+		    return Subtract(new Integer(b));
+			//return Add(new Integer(b));
 		}
 		public virtual bool LessThan(int b) {
 		    return LessThan(new Integer(b));
@@ -3050,19 +2823,63 @@ namespace Meta {
 	    public override double GetDouble() {
 	        return integer;
 	    }
-	    public override Number Subtract(Number b) {
-	        if(b.IsInt32) {
+		public override Number SubtractFrom(int i) {
+			//if(b.IsInt32) {
 	            checked {
 	                try {
-	                    return new Integer(integer-b.GetInt32());
-	                }
+
+									return new Integer(i-integer);
+				                }
 	                catch(OverflowException) {
-	                    return base.Subtract(b);
+	                    return base.Subtract(i);
 	                }
 	            }
-	        }
-	        return base.Subtract(b);
+			//}
+			//return base.Subtract(i);
+
+		}
+	    public override Number Subtract(Number b) {
+			//if(b.IsInt32) {
+			//    checked {
+			//        try {
+						return b.SubtractFrom(integer);
+						//return new Integer(integer-b.GetInt32());
+						//return new Integer(integer-b.GetInt32());
+			//        }
+			//        catch(OverflowException) {
+			//            return base.Subtract(b);
+			//        }
+			//    }
+			//}
+			//return base.Subtract(b);
 	    }
+		//public override Number Subtract(Number b) {
+		//    if(b.IsInt32) {
+		//        checked {
+		//            try {
+		//                return new Integer(integer-b.GetInt32());
+		//            }
+		//            catch(OverflowException) {
+		//                return base.Subtract(b);
+		//            }
+		//        }
+		//    }
+		//    return base.Subtract(b);
+		//}
+
+		//public override Number Subtract(Number b) {
+		//    if(b.IsInt32) {
+		//        checked {
+		//            try {
+		//                return new Integer(integer-b.GetInt32());
+		//            }
+		//            catch(OverflowException) {
+		//                return base.Subtract(b);
+		//            }
+		//        }
+		//    }
+		//    return base.Subtract(b);
+		//}
 	    public override bool LessThan(Number b) {
 	        if(b.IsInt32) {
 	            checked {
@@ -4339,7 +4156,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class Basic : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -4361,12 +4183,7 @@ namespace Meta {
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			//public class MergeSort: Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;

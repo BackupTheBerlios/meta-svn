@@ -5,4 +5,4 @@
 		?sum(
 			fibo(difference(n 1
 			fibo(difference(n 2
-	&fibo(28
+	&fibo(30
