@@ -446,9 +446,6 @@ commandLine|{
 	app.set_VisualStyleState_VisualStyleState(
 		!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled
 	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState(
-	typeTest=mscorlib.Array.CreateInstance_Type_Int32(
-		mscorlib.String
-		5
 	oneTwoThreeHello="asdf
 	copySourceData={
 		x="y

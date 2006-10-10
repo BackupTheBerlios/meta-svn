@@ -3061,11 +3061,6 @@ Entry (KeyValuePair`2)
 		2
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"typeTest"
-	Value (ObjectMap):
-		System.String[]
-Entry (KeyValuePair`2)
-	Key (StringMap):
 		"oneTwoThreeHello"
 	Value (StringMap):
 		"asdf"
