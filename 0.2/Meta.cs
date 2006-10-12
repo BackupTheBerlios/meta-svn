@@ -1666,6 +1666,7 @@ namespace Meta {
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
+
 		public override Number GetNumber() {
 			if (Count == 0) {
 				return 0;
@@ -1674,7 +1675,6 @@ namespace Meta {
 				if(this.ContainsKey(Map.Empty)) {
 					if(this[Map.Empty].IsNumber) {
 						return this[Map.Empty].GetNumber()+1;
-						//return 1 + this[Map.Empty].GetNumber();
 					}
 				}
 			}
@@ -1898,30 +1898,6 @@ namespace Meta {
 				}
 			}
 		}
-		//public static Type GetListAddFunctionType(IList list, Map value) {
-		//    foreach (MemberInfo member in list.GetType().GetMember("Add")) {
-		//        if (member is MethodInfo) {
-		//            MethodInfo method = (MethodInfo)member;
-		//            ParameterInfo[] parameters = method.GetParameters();
-		//            if (parameters.Length == 1) {
-		//                ParameterInfo parameter = parameters[0];
-		//                bool c = true;
-		//                foreach (Map entry in value.Array) {
-		//                    object o;
-		//                    if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
-		//                        c = false;
-		//                        break;
-		//                    }
-		//                    //object o;
-		//                    //if (!Transform.TryToDotNet(entry, parameter.ParameterType, out o)) {
-		//                    //    c = false;
-		//                    //    break;
-		//                    //}
-		//                }
-		//                if (c) {
-		//                    return parameter.ParameterType;}}}}
-		//    return null;
-		//}
 		public static Dictionary<object, Dictionary<Map, Map>> global = new Dictionary<object, Dictionary<Map, Map>>();
 		public override bool ContainsKey(Map key) {
 			return this[key] != null;
@@ -4088,6 +4064,12 @@ namespace Meta {
 	}
 	public class ListMap : Map
 	{
+		public override Number GetNumber() {
+			if(Count==0) {
+				return 0;
+			}
+			return null;
+		}
 	    public override Map Copy() {
 	        return this;
 	    }
@@ -4108,10 +4090,6 @@ namespace Meta {
 	    {
 	        this.list = new List<Map>(capacity);
 	    }
-	    //public ListMap(ListStrategy original)
-	    //{
-	    //    this.list = new List<Map>(original.list);
-	    //}
 	    public override Map this[Map key] {
 	        get {
 	            Map value = null;
@@ -4743,9 +4721,7 @@ namespace Meta {
 		public abstract IEnumerable<Map> Array {
 			get;
 		}
-		public virtual Number GetNumber() {
-			return null;
-		}
+		public abstract Number GetNumber();
 		//public abstract string GetString();
 		public abstract bool ContainsKey(Map key);
 		public abstract IEnumerable<Map> Keys {
