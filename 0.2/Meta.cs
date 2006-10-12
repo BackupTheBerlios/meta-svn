@@ -79,7 +79,6 @@ namespace Meta {
 		}
 		public abstract Structure StructureImplementation();
 		public Compiled Compile() {
-		//public Compiled Compile(Expression parent) {
 			Compiled result = CompileImplementation(this.Parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.End)) {
@@ -90,7 +89,8 @@ namespace Meta {
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		public abstract Compiled CompileImplementation(Expression parent);}
+		public abstract Compiled CompileImplementation(Expression parent);
+	}
 	public class LastArgument : Expression {
 		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {}
@@ -118,15 +118,6 @@ namespace Meta {
 				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
-		//public Call(Map code, Map parameterName, Expression parent): base(code.Source, parent) {
-		//    this.calls = new List<Expression>();
-		//    foreach (Map m in code.Array) {
-		//        calls.Add(m.GetExpression(this));
-		//    }
-		//    if (calls.Count == 1) {
-		//        calls.Add(new Literal(Map.Empty, this));
-		//    }
-		//}
 		public override Structure StructureImplementation() {
 			List<object> arguments;
 			MethodBase method;
@@ -176,14 +167,6 @@ namespace Meta {
 									return true;}
 								else {
 									arguments.Add(Transform.ToDotNet(arg, method.parameters[i].ParameterType));
-
-									//object nextArg;
-									//if (Transform.TryToDotNet(arg, method.parameters[i].ParameterType, out nextArg)) {
-									//    arguments.Add(nextArg);}
-									//else {
-									//    m = method.method;
-									//    return false;
-									//}
 								}
 							}
 							m = method.method;
@@ -1199,9 +1182,7 @@ namespace Meta {
 							}
 							il.Emit(OpCodes.Newobj,typeof(ObjectMap).GetConstructor(new Type[] {typeof(object)}));
 							break;
-
 					}
-
 				}
 			}
 		}
