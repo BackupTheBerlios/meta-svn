@@ -1154,7 +1154,7 @@ namespace Meta {
 			{
 				if(type.Equals(typeof(Boolean))) {
 					il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToInt32",new Type[] {typeof(Boolean)}));
-					il.Emit(OpCodes.Newobj,typeof(Integer).GetConstructor(new Type[] {typeof(int)}));
+					il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
 				}
 				else if(type.Equals(typeof(void))) {
 					il.Emit(OpCodes.Ldsfld,typeof(Map).GetField("Empty"));
@@ -1166,7 +1166,7 @@ namespace Meta {
 				{
 					switch (Type.GetTypeCode(type)) {
 						case TypeCode.Int32:
-							il.Emit(OpCodes.Newobj,typeof(Integer).GetConstructor(new Type[] {typeof(int)}));
+							il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
 							break;
 						default:
 							if(type.IsValueType)
@@ -1673,7 +1673,7 @@ namespace Meta {
 			else if (this.Count == 1) {
 				if(this.ContainsKey(Map.Empty)) {
 					if(this[Map.Empty].IsNumber) {
-						return Integer.One.Add(this[Map.Empty].GetNumber());
+						return Integer32.One.Add(this[Map.Empty].GetNumber());
 						//return 1 + this[Map.Empty].GetNumber();
 					}
 				}
@@ -2272,10 +2272,6 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
-		public abstract Integer GetInteger();
-		public float GetSingle() {
-			return (float)GetDouble();
-		}
 		public override string GetString() {
 			return null;
 		}
@@ -2329,7 +2325,7 @@ namespace Meta {
 		}
 		public override IEnumerable<Map> Keys {
 			get {
-				if (!this.Equals(Integer.Zero)) {
+				if (!this.Equals(Integer32.Zero)) {
 					yield return Map.Empty;
 				}
 				if (Number.Less(this,0)) {
@@ -2343,6 +2339,9 @@ namespace Meta {
 		public override Number GetNumber() {
 			return this;
 		}
+		public float GetSingle() {
+			return (float)GetDouble();
+		}
 		public override string ToString() {
 			if (Denominator == 1) {
 				return Numerator.ToString();
@@ -2351,8 +2350,8 @@ namespace Meta {
 				return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
 			}
 		}
-		public override bool Equals(object o) {
-			Map map = o as Map;
+		public override bool Equals(object obj) {
+			Map map = obj as Map;
 			if(map!=null && map.IsNumber) {
 				Number b=map.GetNumber();
 				return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
@@ -2379,7 +2378,7 @@ namespace Meta {
 			return new Rational((double)number);
 		}
 		public static implicit operator Number(int integer) {
-			return new Integer(integer);
+			return new Integer32(integer);
 		}
 		public static double GreatestCommonDivisor(double a, double b) {
 			if(a==b) {
@@ -2412,7 +2411,7 @@ namespace Meta {
 			return Expand(b) < b.Expand(this);
 		}
 		public virtual bool LessThan(int b) {
-		    return LessThan(new Integer(b));
+		    return LessThan(new Integer32(b));
 		}
 		public virtual Number Add(Number b) {
 			 return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
@@ -2453,58 +2452,81 @@ namespace Meta {
 		public int CompareTo(Number number) {
 			return GetDouble().CompareTo(number.GetDouble());
 		}
-		//public abstract bool IsNatural {
-		//    get;
-		//}
 		public abstract double GetDouble();
 	}
-	public class Integer:Number{
+	public class Integer:Number {
+		public override double Denominator {
+			get {
+				return 1.0d;
+			}
+		}
+		public override double Numerator {
+			get { 
+				return integer.doubleValue();
+			}
+		}
+		public override double GetDouble() {
+			return integer.doubleValue();
+		}
 
-		public override Integer GetInteger() {
+		public override long GetRealInt64() {
+			return integer.longValue();
+		}
+		public override long GetInt64() {
+			return integer.longValue();
+		}
+		private BigInteger integer;
+		public Integer(string text) {
+			this.integer=new BigInteger(text);
+		}
+		public override int GetInt32() {
+			return integer.intValue();
+		}
+	}
+	public class Integer32:Number{
+
+		public override Integer32 GetInteger() {
 			return this;
 		}
-		public static readonly Integer Zero=new Integer(0);
-		public static readonly Integer One=new Integer(1);
+		public static readonly Integer32 Zero=new Integer32(0);
+		public static readonly Integer32 One=new Integer32(1);
 	    private int integer;
-	    public Integer(int integer) {
+	    public Integer32(int integer) {
 	        this.integer=integer;
 	    }
 	    public override double GetDouble() {
 	        return integer;
 	    }
-	    public override Number Subtract(Number b) {
-			Integer i =b.GetInteger();
-			if(i!=null) {
-				try {
-					return integer-i.integer;
-				}
-				catch(OverflowException) {
-				}
-			}
-			return base.Subtract(b);
-	    }
+		public override Number Subtract(Number b) {
+		    Integer32 i=b.GetInteger();
+		    if(i!=null) {
+		        try {
+		            return integer-i.integer;
+		        }
+				catch(OverflowException) {}
+		    }
+		    return base.Subtract(b);
+		}
 	    public override bool LessThan(Number b) {
-			Integer i=b.GetInteger();
+			Integer32 i=b.GetInteger();
 	        if(i!=null) {
                 try {
                     return integer<i.integer;
                 }
-                catch(OverflowException) {
-                }
+                catch(OverflowException) {}
 	        }
 	        return base.LessThan(b);
 	    }
-	    public override Number Add(Number b) {
-			Integer i=b.GetInteger();
-	        if(i!=null) {
-                try {
-                    return integer+i.integer;
-                }
-                catch(OverflowException) {
-                }
-	        }
-	        return base.Add(b);
-	    }
+		public override Number Add(Number b) {
+		    Integer32 i=b.GetInteger();
+		    if(i!=null) {
+		        try {
+		            return integer+i.integer;
+		        }
+		        catch(OverflowException) {}
+		    }
+		    return base.Add(b);
+		}
 	    public override double Denominator {
 	        get {
 	            return 1;
@@ -2519,11 +2541,6 @@ namespace Meta {
 	    public override long GetRealInt64() {
 	        return integer;
 	    }
-		//public override bool IsNatural {
-		//    get {
-		//        return true;
-		//    }
-		//}
 	    public override double Numerator {
 	        get {
 	            return integer;
@@ -2531,17 +2548,12 @@ namespace Meta {
 	    }
 	}
 	public class Rational:Number {
-		public override Integer GetInteger() {
+		public override Integer32 GetInteger() {
 			if(Denominator==1.0d && Numerator<int.MaxValue && Numerator>int.MinValue) {
-				return new Integer(GetInt32());
+				return new Integer32(GetInt32());
 			}
 			return null;
 		}
-		//public override bool IsNatural {
-		//    get {
-		//        return denominator == 1.0d;
-		//    }
-		//}
 		private readonly double numerator;
 		private readonly double denominator;
 		public static Number Parse(string text) {
@@ -2691,7 +2703,7 @@ namespace Meta {
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
-					result=new Integer(rational.GetInt32());
+					result=new Integer32(rational.GetInt32());
 				}
 				else {
 					result=rational;
@@ -3018,7 +3030,7 @@ namespace Meta {
 			delegate(Parser p, Map map, ref Map result) {
 				result = new DictionaryMap(
 					CodeKeys.Key, 
-					new DictionaryMap(CodeKeys.Literal, new Integer(p.defaultKeys.Peek())),
+					new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek())),
 					CodeKeys.Value, map);
 				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);},
 			Expression);
@@ -3280,7 +3292,7 @@ namespace Meta {
 		            if (character.Equals(Syntax.unixNewLine)) {
 		                parser.State.Line++;
 		                parser.State.Column = 1;}
-		            map=new Integer(character);
+		            map=new Integer32(character);
 		            return true;
 				}
 		        else {
@@ -4510,7 +4522,7 @@ namespace Meta {
 			throw new Exception("The method or operation is not implemented.");
 		}
 
-		public Number zero=new Integer(0);
+		public Number zero=new Integer32(0);
 		public string emptyString="";
 		public override string GetString() {
 			return emptyString;
@@ -4523,6 +4535,13 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual Integer32 GetInteger() {
+			Number number=GetNumber();
+			if(number!=null) {
+				return number.GetInteger();
+			}
+			throw new Exception("Map is not a number.");
+		}
 		public virtual int GetInt32() {
 			Number number=GetNumber();
 			if(number!=null) {
@@ -4531,25 +4550,25 @@ namespace Meta {
 			throw new Exception("Map is not a number.");
 		}
 		public virtual string GetString() {
-			StringBuilder text = new StringBuilder("");
-			if(ArrayCount !=Count ) {
-				return null;
-			}
-			foreach (Map map in Array) {
-				Number number=map.GetNumber();
-				if(number==null) {
-					return null;
-				}
-				else {
-					if(number.GetInt32()>Char.MinValue && number.GetInt32() <Char.MaxValue) {
-						text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
-					}
-					else {
+			if(ArrayCount ==Count ) {
+				StringBuilder text = new StringBuilder("");
+				foreach (Map map in Array) {
+					Number number=map.GetNumber();
+					if(number==null) {
 						return null;
 					}
+					else {
+						if(number.GetInt32()>Char.MinValue && number.GetInt32() <Char.MaxValue) {
+							text.Append(Convert.ToChar(number.GetInt32()));
+						}
+						else {
+							return null;
+						}
+					}
 				}
+				return text.ToString();
 			}
-			return text.ToString();
+			return null;
 		}
 		public virtual Map Mutable() {
 			return this;
@@ -4662,7 +4681,7 @@ namespace Meta {
 		    return (int)integer;
 		}
 		public static implicit operator Map(int integer) {
-		    return new Integer(integer);
+		    return new Integer32(integer);
 		}
 		public static implicit operator Map(long integer) {
 		    return (double)integer;
