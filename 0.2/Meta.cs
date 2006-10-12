@@ -1212,8 +1212,7 @@ namespace Meta {
 		    else if(target.Equals(typeof(Map))) {
 		    }
 		    else if(target.Equals(typeof(Boolean))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
+				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
 				il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
 		    }
 			else if(target.Equals(typeof(String))) {
@@ -2469,7 +2468,6 @@ namespace Meta {
 		public abstract double Denominator {
 			get;
 		}
-		public abstract int GetInt32();
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
 		public static implicit operator Number(double number) {
@@ -4638,8 +4636,14 @@ namespace Meta {
 			return zero;
 		}
 	}
-	//public class FunctionExpression
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual int GetInt32() {
+			Number number=GetNumber();
+			if(number!=null) {
+				return number.GetInt32();
+			}
+			throw new Exception("Map is not a number.");
+		}
 		public static string GetString(Map m) {
 			StringBuilder text = new StringBuilder("");
 			if(m.ArrayCount==0 || m.ArrayCount !=m.Count ) {
@@ -4665,7 +4669,9 @@ namespace Meta {
 			return this;
 		}
 		public virtual int Count {
-			get { throw new Exception("The method or operation is not implemented."); }
+			get { 
+				throw new Exception("The method or operation is not implemented."); 
+			}
 		}
 		public virtual void Append(Map map) {
 			throw new Exception("The method or operation is not implemented.");
@@ -4687,7 +4693,6 @@ namespace Meta {
 			return result;
 		}
 		public static Map Empty=new EmptyMap();
-		//public static Map Empty=new DictionaryMap();
 		public Map DeepCopy() {
 			Map clone = new DictionaryMap();
 			clone.Scope = Scope;
@@ -4841,7 +4846,6 @@ namespace Meta {
 			return Expression;
 		}
 		public static Dictionary<Map,Type> expressions=new Dictionary<Map,Type>();
-		//public static Dictionary<HashList,Type> expressions=new Dictionary<HashList,Type>();
 		static Map() {
 			expressions[CodeKeys.Call]=typeof(Call);
 			expressions[CodeKeys.Program]=typeof(Program);
@@ -4850,8 +4854,6 @@ namespace Meta {
 			expressions[CodeKeys.Root]=typeof(Root);
 			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
 			expressions[CodeKeys.Search]=typeof(Search);
-
-
 		}
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
@@ -4868,36 +4870,6 @@ namespace Meta {
 		    }
 		    throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
 		}
-
-		//public Expression CreateExpression(Expression parent) {
-		//    if (ContainsKey(CodeKeys.Call)) {
-		//        return new Call(this[CodeKeys.Call], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Program)) {
-		//        return new Program(this[CodeKeys.Program], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Literal)) {
-		//        return new Literal(this[CodeKeys.Literal], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Select)) {
-		//        return new Select(this[CodeKeys.Select], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Search)) {
-		//        return new Search(this[CodeKeys.Search], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Root)) {
-		//        return new Root(this[CodeKeys.Root], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.LastArgument)) {
-		//        return new LastArgument(this[CodeKeys.LastArgument], parent);
-		//    }
-		//    else if (ContainsKey(CodeKeys.Expression)) {
-		//        return new Function(parent,this);
-		//    }
-		//    else {
-		//        throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
-		//    }
-		//}
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
 				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
