@@ -2201,7 +2201,7 @@ namespace Meta {
 			get {
 				if (key.IsNumber) {
 					Number number = key.GetNumber();
-					if (number.Denominator==1.0d && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
+					if (number.GetInteger()!=null && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
 						return text[number.GetInt32() - 1];
 					}
 					else {
@@ -2453,7 +2453,9 @@ namespace Meta {
 		}
 		public abstract double GetDouble();
 	}
-	public class Integer:Number {
+	public abstract class IntegerBase:Number {
+	}
+	public class Integer:IntegerBase {
 		public override double Denominator {
 			get {
 				return 1.0d;
@@ -2488,8 +2490,7 @@ namespace Meta {
 			return integer.intValue();
 		}
 	}
-	public class Integer32:Number{
-
+	public class Integer32:IntegerBase{
 		public override Integer32 GetInteger() {
 			return this;
 		}
@@ -2587,17 +2588,21 @@ namespace Meta {
 				numerator = -numerator;
 				denominator = -denominator;
 			}
+			//this.numerator = new Integer(numerator / greatestCommonDivisor);
 			this.numerator = new Integer(Convert.ToInt32((numerator / greatestCommonDivisor)));
 			this.denominator = new Integer(Convert.ToInt32(denominator / greatestCommonDivisor));
+			//this.denominator = denominator / greatestCommonDivisor;
 		}
 		public override double Numerator {
 			get {
 				return numerator.GetDouble();
+				//return numerator;
 			}
 		}
 		public override double Denominator {
 			get {
 				return denominator.GetDouble();
+				//return denominator;
 			}
 		}
 		public Number Clone() {
@@ -2605,6 +2610,7 @@ namespace Meta {
 		}
 		public override double GetDouble() {
 			return numerator.GetDouble() / denominator.GetDouble();
+			//return numerator.GetDouble() / denominator;
 		}
 		public override int GetInt32() {
 			return Convert.ToInt32(numerator.GetDouble() / denominator.GetDouble());
