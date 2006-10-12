@@ -1298,9 +1298,6 @@ namespace Meta {
 			}
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 		}
-		public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
-		    return meta.IsNumber && Number.GreaterEqual(meta.GetNumber(),minValue) && Number.LessEqual(meta.GetNumber(),maxValue);
-		}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
 				return Map.Empty;
@@ -3874,7 +3871,6 @@ namespace Meta {
 			public class MemberTest {
 				public static void Compile(int i) {
 					Console.WriteLine("hello");
-					//return "";
 				}
 				public static string classField = "default";
 				public string instanceField = "default";
@@ -4083,17 +4079,6 @@ namespace Meta {
 	}
 	public class ListMap : Map
 	{
-	    public override bool IsNormal {
-	        get {
-	            return true;
-	        }
-	    }
-		//public override string GetString() {
-
-		//}
-	    public override Number GetNumber() {
-	        return null;
-	    }
 	    public override Map Copy() {
 	        return this;
 	    }
@@ -4583,7 +4568,7 @@ namespace Meta {
 					return null;
 				}
 				else {
-					if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
+					if(number.GetInt32()>Char.MinValue && number.GetInt32() <Char.MaxValue) {
 						text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
 					}
 					else {
@@ -4593,27 +4578,6 @@ namespace Meta {
 			}
 			return text.ToString();
 		}
-		//public static string GetString(Map m) {
-		//    StringBuilder text = new StringBuilder("");
-		//    if(m.ArrayCount==0 || m.ArrayCount !=m.Count ) {
-		//        return null;
-		//    }
-		//    foreach (Map map in m.Array) {
-		//        Number number=map.GetNumber();
-		//        if(number==null) {
-		//            return null;
-		//        }
-		//        else {
-		//            if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
-		//                text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
-		//            }
-		//            else {
-		//                return null;
-		//            }
-		//        }
-		//    }
-		//    return text.ToString();
-		//}
 		public virtual Map Mutable() {
 			return this;
 		}
@@ -4763,7 +4727,9 @@ namespace Meta {
 		public abstract IEnumerable<Map> Array {
 			get;
 		}
-		public abstract Number GetNumber();
+		public virtual Number GetNumber() {
+			return null;
+		}
 		//public abstract string GetString();
 		public abstract bool ContainsKey(Map key);
 		public abstract IEnumerable<Map> Keys {

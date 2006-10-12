@@ -1880,7 +1880,11 @@ Entry (KeyValuePair`2)
 	Key (Integer):
 		5
 	Value (DictionaryMap):
-		" "
+		Entry (KeyValuePair`2)
+			Key (Integer):
+				1
+			Value (DictionaryMap):
+				0
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"staticEventChanged"
