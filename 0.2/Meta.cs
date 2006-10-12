@@ -2236,7 +2236,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
-				if (number.Denominator==1.0d) {
+				if (number.Equals(Integer32.One)) {
 					return Number.Greater(number,0) && Number.LessEqual(number,text.Length);}
 					//return number > 0 && number <= text.Length;}
 				else {
@@ -2271,6 +2271,18 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
+		public static bool operator ==(Number a,int b) {
+			return a.Equals(new Integer32(b));
+		}
+		public static bool operator !=(Number a,int b) {
+			return !(a==b);
+		}
+		public static bool operator ==(Number a,Number b) {
+			return ReferenceEquals(a,b) || a.Equals(b);
+		}
+		public static bool operator !=(Number a,Number b) {
+			return !(a==b);
+		}
 		public override string GetString() {
 			return null;
 		}
