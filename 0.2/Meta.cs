@@ -2560,7 +2560,7 @@ namespace Meta {
 			return null;
 		}
 		private readonly Integer numerator;
-		private readonly double denominator;
+		private readonly Integer denominator;
 		public static Number Parse(string text) {
 			try {
 				string[] parts = text.Split('/');
@@ -2587,36 +2587,31 @@ namespace Meta {
 				numerator = -numerator;
 				denominator = -denominator;
 			}
-			//this.numerator = new Integer(numerator / greatestCommonDivisor);
 			this.numerator = new Integer(Convert.ToInt32((numerator / greatestCommonDivisor)));
-			this.denominator = denominator / greatestCommonDivisor;
+			this.denominator = new Integer(Convert.ToInt32(denominator / greatestCommonDivisor));
 		}
 		public override double Numerator {
 			get {
 				return numerator.GetDouble();
-				//return numerator;
 			}
 		}
 		public override double Denominator {
 			get {
-				return denominator;
+				return denominator.GetDouble();
 			}
 		}
 		public Number Clone() {
 			return new Rational(this);
 		}
 		public override double GetDouble() {
-			return numerator.GetDouble() / denominator;
-			//return numerator / denominator;
+			return numerator.GetDouble() / denominator.GetDouble();
 		}
 		public override int GetInt32() {
-			return Convert.ToInt32(numerator.GetDouble() / denominator);
-			//return Convert.ToInt32(numerator / denominator);
+			return Convert.ToInt32(numerator.GetDouble() / denominator.GetDouble());
 		}
 		public override long GetRealInt64() {
-			return Convert.ToInt64(numerator.GetDouble() / denominator);
+			return Convert.ToInt64(numerator.GetDouble() / denominator.GetDouble());
 		}
-			//return Convert.ToInt64(numerator / denominator);}
 		public override long GetInt64() {
 			return Convert.ToInt64(numerator);
 		}
