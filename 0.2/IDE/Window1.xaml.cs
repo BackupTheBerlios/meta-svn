@@ -284,42 +284,16 @@ namespace IDE {
 				status.Content = "Ln " +
 					(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
 			};
-			const int width = 1024;
-			const int height = 1024;
-
-			bool changing = false;
-			textBox.SelectionChanged += delegate {
-				if (!changing) {
-					changing = true;
-					int start = textBox.SelectionStart;
-					//scrollViewer.ScrollToVerticalOffset(500);
-						//this.Height / 4 + height / 4 + 16 * textBox.GetLineIndexFromCharacterIndex(
-						//textBox.SelectionStart));
-					scrollViewer.ScrollToVerticalOffset(
-						height/2-this.Height/2 +
-						20 * textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
-					int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
-					if (end == -1) {
-						end = 0;
-					}
-					int column = textBox.SelectionStart - end;
-					string text = textBox.Text.Substring(end, column);
-					int tabs = text.Length - text.Replace("\t", "").Length;
-					int length = tabs * 3 + column;
-					scrollViewer.ScrollToHorizontalOffset(width / 2 - this.Width/ 2 + length * 10);
-					textBox.SelectionStart = start;
-				}
-				changing = false;
-			};
-			scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-			scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
-
 			Canvas canvas = new Canvas();
 			canvas.Children.Add(textBox);
 			canvas.Background = Brushes.Yellow;
-			DockPanel.SetDock(scrollViewer, Dock.Top);
+			DockPanel.SetDock(canvas, Dock.Top);
+			scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+			scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 			scrollViewer.Content = canvas;
 			dockPanel.Children.Add(scrollViewer);
+			const int width = 800;
+			const int height = 600;
 
 			Canvas.SetLeft(textBox, width/2);
 			Canvas.SetTop(textBox, height/2);
@@ -339,6 +313,7 @@ namespace IDE {
 			this.Loaded += delegate {
 				Open(@"C:\meta\0.2\game.meta");
 				textBox.Focus();
+				textBox.SelectionStart = 0;
 			};
 		}
 	}
