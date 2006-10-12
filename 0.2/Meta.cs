@@ -1089,13 +1089,6 @@ namespace Meta {
 		}
 	}
 	public class Transform {
-		//public static object ToDotNet(Map meta, Type target) {
-		//    object dotNet;
-		//    if (TryToDotNet(meta, target, out dotNet)) {
-		//        return dotNet;
-		//    }
-		//    throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
-		//}
 		public static Dictionary<int,Type> types=new Dictionary<int,Type>();
 		public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
 			Type type=types[typeToken];
@@ -1218,9 +1211,7 @@ namespace Meta {
 				    Transform.types[token]=target;
 				}
 				il.Emit(OpCodes.Ldc_I4,(int)token);//Transform.types[target]);
-				//il.Emit(OpCodes.Ldc_I4,Transform.types[target]);
 				il.Emit(OpCodes.Call,typeof(Transform).GetMethod("CreateDelegateFromCode",new Type[] {typeof(Map),typeof(int)}));
-				//dotNet = CreateDelegateFromCode(target, meta);
 			}
 		    else 
 			{
@@ -1268,79 +1259,37 @@ namespace Meta {
 					else {
 						switch (typeCode) {
 							case TypeCode.Boolean:
-								if (meta.IsNumber && (meta.GetNumber().GetInt32() == 1 || meta.GetNumber().GetInt32() == 0)) {
-									return Convert.ToBoolean(meta.GetNumber().GetInt32());
-								}
-								break;
+								return Convert.ToBoolean(meta.GetNumber().GetInt32());
 							case TypeCode.Byte:
-								if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue)) {
-									return Convert.ToByte(meta.GetNumber().GetInt32());
-								}
-								break;
+								return Convert.ToByte(meta.GetNumber().GetInt32());
 							case TypeCode.Char:
-								if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue)) {
-									return Convert.ToChar(meta.GetNumber().GetInt32());
-								}
-								break;
-							// unlogical
+								return Convert.ToChar(meta.GetNumber().GetInt32());
 							case TypeCode.DateTime:
 								return null;
-								break;
 							case TypeCode.DBNull:
 								return null;
-								break;
 							case TypeCode.Decimal:
-								if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue)) {
-									return (decimal)(meta.GetNumber().GetInt64());
-								}
-								break;
+								return (decimal)(meta.GetNumber().GetInt64());
 							case TypeCode.Double:
-								if (IsIntegerInRange(meta, double.MinValue, double.MaxValue)) {
-									return (double)(meta.GetNumber().GetInt64());
-								}
-								break;
+								return (double)(meta.GetNumber().GetInt64());
 							case TypeCode.Int16:
-								if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue)) {
-									return Convert.ToInt16(meta.GetNumber().GetRealInt64());
-								}
-								break;
+								return Convert.ToInt16(meta.GetNumber().GetRealInt64());
 							case TypeCode.Int32:
-								if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue)) {
-									return meta.GetNumber().GetInt32();
-								}
-								break;
+								return meta.GetNumber().GetInt32();
 							case TypeCode.Int64:
-								if (IsIntegerInRange(meta, new Rational(Int64.MinValue), new Rational(Int64.MaxValue))) {
-									return Convert.ToInt64(meta.GetNumber().GetInt64());
-								}
-								break;
+								return Convert.ToInt64(meta.GetNumber().GetInt64());
 							case TypeCode.SByte:
-								if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue)) {
-									return Convert.ToSByte(meta.GetNumber().GetInt64());}
-								break;
+								return Convert.ToSByte(meta.GetNumber().GetInt64());
 							case TypeCode.Single:
-								if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue)) {
-									return (float)meta.GetNumber().GetInt64();
-								}
-								break;
+								return (float)meta.GetNumber().GetInt64();
 							case TypeCode.String:
-								if (meta.IsString) {
-									return meta.GetString();}
-								break;
+								return meta.GetString();
 							case TypeCode.UInt16:
-								if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue)) {
-									return Convert.ToUInt16(meta.GetNumber().GetInt64());}
-								break;
+								return Convert.ToUInt16(meta.GetNumber().GetInt64());
 							case TypeCode.UInt32:
-								if (IsIntegerInRange(meta, new Rational(UInt32.MinValue), new Rational(UInt32.MaxValue))) {
-									return Convert.ToUInt32(meta.GetNumber().GetInt64());
-								}
-								break;
+								return Convert.ToUInt32(meta.GetNumber().GetInt64());
 							case TypeCode.UInt64:
-								if (IsIntegerInRange(meta, new Rational(UInt64.MinValue), new Rational(UInt64.MaxValue))) {
-									return Convert.ToUInt64(meta.GetNumber().GetInt64());
-								}
-								break;
+								return Convert.ToUInt64(meta.GetNumber().GetInt64());
 							default:
 								throw new ApplicationException("not implemented");
 						}
@@ -1350,7 +1299,7 @@ namespace Meta {
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 		}
 		public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
-			return meta.IsNumber && Number.GreaterEqual(meta.GetNumber(),minValue) && Number.LessEqual(meta.GetNumber(),maxValue);
+		    return meta.IsNumber && Number.GreaterEqual(meta.GetNumber(),minValue) && Number.LessEqual(meta.GetNumber(),maxValue);
 		}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
@@ -1734,30 +1683,27 @@ namespace Meta {
 			}
 			return null;
 		}
-		public override string GetString() {
-			StringBuilder text = new StringBuilder("");
-			if(ArrayCount !=Count ) {
-				return null;
-			}
-			//if(ArrayCount==0 || ArrayCount !=Count ) {
-			//    return null;
-			//}
-			foreach (Map map in Array) {
-				Number number=map.GetNumber();
-				if(number==null) {
-					return null;
-				}
-				else {
-					if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
-						text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
-					}
-					else {
-						return null;
-					}
-				}
-			}
-			return text.ToString();
-		}
+		//public override string GetString() {
+		//    StringBuilder text = new StringBuilder("");
+		//    if(ArrayCount !=Count ) {
+		//        return null;
+		//    }
+		//    foreach (Map map in Array) {
+		//        Number number=map.GetNumber();
+		//        if(number==null) {
+		//            return null;
+		//        }
+		//        else {
+		//            if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
+		//                text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
+		//            }
+		//            else {
+		//                return null;
+		//            }
+		//        }
+		//    }
+		//    return text.ToString();
+		//}
 
 		public override string Serialize() {
 			if (this.Count == 0) {
@@ -2682,6 +2628,7 @@ namespace Meta {
 			return Convert.ToInt64(numerator);
 		}
 	}
+
 	public struct State{
 		public override bool Equals(object obj) {
 			State state=(State)obj;
@@ -4141,9 +4088,9 @@ namespace Meta {
 	            return true;
 	        }
 	    }
-	    public override string GetString() {
-	        return Map.GetString(this);
-	    }
+		//public override string GetString() {
+
+		//}
 	    public override Number GetNumber() {
 	        return null;
 	    }
@@ -4625,12 +4572,12 @@ namespace Meta {
 			}
 			throw new Exception("Map is not a number.");
 		}
-		public static string GetString(Map m) {
+		public virtual string GetString() {
 			StringBuilder text = new StringBuilder("");
-			if(m.ArrayCount==0 || m.ArrayCount !=m.Count ) {
+			if(ArrayCount !=Count ) {
 				return null;
 			}
-			foreach (Map map in m.Array) {
+			foreach (Map map in Array) {
 				Number number=map.GetNumber();
 				if(number==null) {
 					return null;
@@ -4646,6 +4593,27 @@ namespace Meta {
 			}
 			return text.ToString();
 		}
+		//public static string GetString(Map m) {
+		//    StringBuilder text = new StringBuilder("");
+		//    if(m.ArrayCount==0 || m.ArrayCount !=m.Count ) {
+		//        return null;
+		//    }
+		//    foreach (Map map in m.Array) {
+		//        Number number=map.GetNumber();
+		//        if(number==null) {
+		//            return null;
+		//        }
+		//        else {
+		//            if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
+		//                text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
+		//            }
+		//            else {
+		//                return null;
+		//            }
+		//        }
+		//    }
+		//    return text.ToString();
+		//}
 		public virtual Map Mutable() {
 			return this;
 		}
@@ -4796,7 +4764,7 @@ namespace Meta {
 			get;
 		}
 		public abstract Number GetNumber();
-		public abstract string GetString();
+		//public abstract string GetString();
 		public abstract bool ContainsKey(Map key);
 		public abstract IEnumerable<Map> Keys {
 			get;
