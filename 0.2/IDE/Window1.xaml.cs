@@ -20,17 +20,16 @@ namespace IDE {
 		public static KeyboardDevice keyboard;
 		TextBox textBox = new TextBox();
 		private void Save() {
-			if (fileName == "") {
+			if (fileName == null) {
 				SaveFileDialog dialog = new SaveFileDialog();
-				if (dialog.ShowDialog() == true) {
-					fileName = dialog.FileName;
+				if (dialog.ShowDialog() == false) {
+					return;
 				}
+				fileName = dialog.FileName;
 			}
-			if (fileName != "") {
-				File.WriteAllText(fileName, textBox.Text);
-			}
+			File.WriteAllText(fileName, textBox.Text);
 		}
-		private string fileName = "";
+		private string fileName = null;
 		private void BindKey(RoutedUICommand command, Key key, ModifierKeys modifiers) {
 			command.InputGestures.Add(new KeyGesture(key, modifiers));
 		}
@@ -39,7 +38,6 @@ namespace IDE {
 			textBox.Text = File.ReadAllText(fileName);
 		}
 		public static ListBox intellisense = new ListBox();
-		Menu menu = new Menu();
 		Label status = new Label();
 
 		public static bool Intellisense {
@@ -117,16 +115,16 @@ namespace IDE {
 			};
 			textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 				if (Intellisense) {
+					e.Handled = true;
 					if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt) {
 						if (e.Key == Key.L) {
 							IntellisenseUp();
-							e.Handled = true;
-							return;
 						}
 						else if (e.Key == Key.K) {
 							IntellisenseDown();
-							e.Handled = true;
-							return;
+						}
+						else {
+							e.Handled = false;
 						}
 					}
 					else if (e.KeyboardDevice.Modifiers == ModifierKeys.Control) {
@@ -134,40 +132,31 @@ namespace IDE {
 							EditingCommands.MoveToLineStart.Execute(null, textBox);
 							EditingCommands.SelectToLineEnd.Execute(null, textBox);
 							EditingCommands.Delete.Execute(null, textBox);
-							e.Handled = true;
-							return;
 						}
 						else if (e.Key == Key.Space) {
-							e.Handled = true;
-							return;
+						}
+						else {
+							e.Handled = false;
 						}
 					}
 					else if (e.Key == Key.Return) {
 						Complete();
-						e.Handled = true;
-						return;
 					}
 					else if (e.Key == Key.Tab) {
-						if (Intellisense) {
-							Complete();
-							e.Handled = true;
-							return;
-						}
+						Complete();
 					}
 					else if (e.Key == Key.Up) {
 						IntellisenseUp();
-						e.Handled = true;
-						return;
 					}
 					else if (e.Key == Key.Down) {
 						IntellisenseDown();
-						e.Handled = true;
-						return;
+					}
+					else {
+						e.Handled = false;
 					}
 				}
 			};;
 			textBox.KeyDown += delegate(object obj, KeyEventArgs e) {
-				keyboard = e.KeyboardDevice;
 				if (e.Key == Key.Return) {
 					string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
 					textBox.SelectedText = "\n".PadRight(1 + line.Length - line.TrimStart('\t').Length, '\t');
@@ -235,25 +224,42 @@ namespace IDE {
 					Meta.Expression.sources.Clear();
 				}
 			};
-			DockPanel panel = new DockPanel();
-			menu.SetValue(DockPanel.DockProperty, Dock.Top);
-			textBox.SetValue(DockPanel.DockProperty, Dock.Bottom);
+			DockPanel dockPanel = new DockPanel();
 
+			Menu menu = new Menu();
+			DockPanel.SetDock(menu, Dock.Top);
 			MenuItem file = new MenuItem();
-
 			MenuItem save = new MenuItem();
 			MenuItem run = new MenuItem();
 			MenuItem open = new MenuItem();
-			run.Header = "Run";
-			save.Header = "Save";
 			file.Header = "File";
 			open.Header = "Open";
-			file.Items.Add(open);
-			intellisense.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
-				if (intellisense.SelectedItem != null) {
-					intellisense.ScrollIntoView(intellisense.SelectedItem);
+			save.Header = "Save";
+			run.Header = "Run";
+			open.Click += delegate {
+				OpenFileDialog dialog = new OpenFileDialog();
+				if (dialog.ShowDialog() == true) {
+					Open(dialog.FileName);
 				}
 			};
+			run.Click += delegate {
+				Save();
+				Process.Start(System.IO.Path.Combine(@"C:\Meta\0.2\", @"bin\Debug\Meta.exe"), fileName);
+			};
+			save.Click += delegate {
+				Save();
+			};
+			DockPanel.SetDock(status, Dock.Bottom);
+			dockPanel.Children.Add(status);
+
+			file.Items.Add(open);
+			file.Items.Add(save);
+			file.Items.Add(run);
+			menu.Items.Add(file);
+			dockPanel.Children.Add(menu);
+
+
+			DockPanel.SetDock(textBox,Dock.Bottom);
 			textBox.TextChanged += delegate {
 				if (Intellisense) {
 					if (textBox.SelectionStart <= searchStart) {
@@ -278,44 +284,6 @@ namespace IDE {
 				status.Content = "Ln " +
 					(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
 			};
-			file.Items.Add(save);
-			file.Items.Add(run);
-			this.Loaded += delegate {
-				Open(@"C:\meta\0.2\game.meta");
-				textBox.Focus();
-			};
-			open.Click += delegate {
-				OpenFileDialog dialog = new OpenFileDialog();
-				if (dialog.ShowDialog() == true) {
-					Open(dialog.FileName);
-				}
-			};
-			run.Click += delegate {
-				Save();
-				Process.Start(System.IO.Path.Combine(@"C:\Meta\0.2\", @"bin\Debug\Meta.exe"), fileName);
-			};
-			save.Click += delegate {
-				Save();
-			};
-			menu.Items.Add(file);
-			panel.Children.Add(menu);
-			DockPanel.SetDock(status, Dock.Bottom);
-			panel.Children.Add(status);
-			Canvas canvas = new Canvas();
-			panel.Children.Add(canvas);
-			canvas.Children.Add(textBox);
-			Canvas.SetZIndex(intellisense, 100);
-			canvas.Background = Brushes.Yellow;
-			DockPanel.SetDock(canvas, Dock.Top);
-			textBox.SizeChanged += delegate {
-				canvas.Width=textBox.Width;
-				canvas.Height = textBox.Height;
-			};
-			intellisense.Visibility = Visibility.Hidden;
-			canvas.Children.Add(intellisense);
-			ScrollViewer scroller = new ScrollViewer();
-			scroller.Content = panel;
-			this.Content = scroller;
 			bool changing = false;
 			textBox.SelectionChanged += delegate {
 				if (!changing) {
@@ -340,9 +308,40 @@ namespace IDE {
 				}
 				changing = false;
 			};
-			Brush brush = new SolidColorBrush(Colors.White);
-			brush.Opacity = 0.0;
-			intellisense.Background = brush;
+
+			//Canvas canvas = new Canvas();
+			//canvas.Children.Add(textBox);
+			//canvas.Background = Brushes.Yellow;
+			//DockPanel.SetDock(canvas, Dock.Top);
+			//canvas.Children.Add(intellisense);
+			//dockPanel.Children.Add(canvas);
+			dockPanel.Children.Add(textBox);
+
+
+			//textBox.SizeChanged += delegate {
+			//    canvas.Width = textBox.Width;
+			//    canvas.Height = textBox.Height;
+			//};
+
+
+			intellisense.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
+				if (intellisense.SelectedItem != null) {
+					intellisense.ScrollIntoView(intellisense.SelectedItem);
+				}
+			};
+			intellisense.Visibility = Visibility.Hidden;
+			Canvas.SetZIndex(intellisense, 100);
+
+
+
+
+
+			this.Content = dockPanel;
+
+			this.Loaded += delegate {
+				Open(@"C:\meta\0.2\game.meta");
+				textBox.Focus();
+			};
 		}
 	}
 }
