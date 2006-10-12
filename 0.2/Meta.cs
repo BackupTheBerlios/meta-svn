@@ -1427,7 +1427,8 @@ namespace Meta {
 			}
 		}
 		public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
-			return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;
+			return meta.IsNumber && Number.GreaterEqual(meta.GetNumber(),minValue) && Number.LessEqual(meta.GetNumber(),maxValue);
+			//return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;
 		}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
@@ -2354,7 +2355,8 @@ namespace Meta {
 			get {
 				if (key.IsNumber) {
 					Number number = key.GetNumber();
-					if (number.IsNatural && number > 0 && number <= Count) {
+					if (number.IsNatural && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
+					//if (number.IsNatural && number > 0 && number <= Count) {
 						return text[number.GetInt32() - 1];
 					}
 					else {
@@ -2390,7 +2392,8 @@ namespace Meta {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
 				if (number.IsNatural) {
-					return number > 0 && number <= text.Length;}
+					return Number.Greater(number,0) && Number.LessEqual(number,text.Length);}
+					//return number > 0 && number <= text.Length;}
 				else {
 					return false;
 				}
@@ -2460,7 +2463,8 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					if (key.Count==0) {
-						return this - 1;
+						return Number.Subtract(this,1);
+						//return this - 1;
 					}
 					else if (key.Equals(NumberKeys.Negative)) {
 						return Map.Empty;
@@ -2485,7 +2489,8 @@ namespace Meta {
 				if (!this.Equals(Integer.Zero)) {
 					yield return Map.Empty;
 				}
-				if (this< 0) {
+				if (Number.Less(this,0)) {
+				//if (this< 0) {
 					yield return NumberKeys.Negative;
 				}
 				if (Denominator != 1.0d) {
@@ -2503,9 +2508,6 @@ namespace Meta {
 			else {
 				return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
 			}
-		}
-		public static Number operator |(Number a, Number b) {
-			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
 		}
 		//public static bool operator ==(Number a, Number b) {
 		//    return ReferenceEquals(a,b) || !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
@@ -2540,9 +2542,6 @@ namespace Meta {
 		}
 		public static implicit operator Number(int integer) {
 			return new Integer(integer);
-		}
-		public static Number operator %(Number a, Number b) {
-			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
 		}
 		public static double GreatestCommonDivisor(double a, double b) {
 			if(a==b) {
@@ -2588,33 +2587,40 @@ namespace Meta {
 		}
 
 
-		public static Number operator +(Number a, Number b) {
+		public static Number Add(Number a, Number b) {
 		    return a.Add(b);
 		}
-		public static Number operator -(Number a, Number b) {
+		public static Number Subtract(Number a, Number b) {
 			return a.Subtract(b);
 		}
-		public static Number operator /(Number a, Number b) {
+		public static Number Divide(Number a, Number b) {
 			return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
 		}
-		public static Number operator *(Number a, Number b) {
+		public static Number Multiply(Number a, Number b) {
 			return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
 		}
 		public double Expand(Number b) {
 			return Numerator * (LeastCommonMultiple(this, b) / Denominator);
 		}
-		public static bool operator >(Number a, Number b) {
+		public static bool Greater(Number a, Number b) {
 			return a.Expand(b) > b.Expand(a);
 		}
-		public static bool operator <(Number a, Number b) {
+		public static bool Less(Number a, Number b) {
 			return a.LessThan(b);
 		}
-		public static bool operator >=(Number a, Number b) {
+		public static bool GreaterEqual(Number a, Number b) {
 			return a.Expand(b) >= b.Expand(a);
 		}
-		public static bool operator <=(Number a, Number b) {
+		public static bool LessEqual(Number a, Number b) {
 			return a.Expand(b) <= b.Expand(a);
 		}
+		public static Number BitwiseOr(Number a, Number b) {
+			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
+		}
+		public static Number Modulus(Number a, Number b) {
+			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
+		}
+
 		//public static Number operator +(Number a, Number b) {
 		//    return a.Add(b);
 		//}
@@ -4365,7 +4371,8 @@ namespace Meta {
 	        if (key.IsNumber)
 	        {
 	            Number integer = key.GetNumber();
-	            if (integer >= 1 && integer <= list.Count)
+	            if (Number.GreaterEqual(integer,1) && Number.LessEqual(integer,list.Count))
+				//if (integer >= 1 && integer <= list.Count)
 	            {
 	                containsKey = true;
 	            }
@@ -4609,7 +4616,8 @@ namespace Meta {
 			return arg;}
 		public static Map Range(Number arg) {
 			Map result = new DictionaryMap();
-			for (int i = 1; i <= arg; i++) {
+			for (int i = 1; Number.LessEqual(i,arg); i++) {
+			//for (int i = 1; i <= arg; i++) {
 				result.Append(i);
 			}
 			return result;
