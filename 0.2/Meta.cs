@@ -109,18 +109,24 @@ namespace Meta {
 	}
 	public class Call : Expression {
 		public List<Expression> calls;
-		public Call(Map code, Map parameterName, Expression parent): base(code.Source, parent) {
+		public Call(Map code, Expression parent): base(code.Source, parent) {
 			this.calls = new List<Expression>();
 			foreach (Map m in code.Array) {
 				calls.Add(m.GetExpression(this));
-			}
-			if(calls.Count==0) 
-			{
 			}
 			if (calls.Count == 1) {
 				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
+		//public Call(Map code, Map parameterName, Expression parent): base(code.Source, parent) {
+		//    this.calls = new List<Expression>();
+		//    foreach (Map m in code.Array) {
+		//        calls.Add(m.GetExpression(this));
+		//    }
+		//    if (calls.Count == 1) {
+		//        calls.Add(new Literal(Map.Empty, this));
+		//    }
+		//}
 		public override Structure StructureImplementation() {
 			List<object> arguments;
 			MethodBase method;
@@ -4834,35 +4840,64 @@ namespace Meta {
 			}
 			return Expression;
 		}
-		public Expression CreateExpression(Expression parent) {
-			if (ContainsKey(CodeKeys.Call)) {
-				return new Call(this[CodeKeys.Call], this[CodeKeys.Parameter], parent);
-			}
-			else if (ContainsKey(CodeKeys.Program)) {
-				return new Program(this[CodeKeys.Program], parent);
-			}
-			else if (ContainsKey(CodeKeys.Literal)) {
-				return new Literal(this[CodeKeys.Literal], parent);
-			}
-			else if (ContainsKey(CodeKeys.Select)) {
-				return new Select(this[CodeKeys.Select], parent);
-			}
-			else if (ContainsKey(CodeKeys.Search)) {
-				return new Search(this[CodeKeys.Search], parent);
-			}
-			else if (ContainsKey(CodeKeys.Root)) {
-				return new Root(this[CodeKeys.Root], parent);
-			}
-			else if (ContainsKey(CodeKeys.LastArgument)) {
-				return new LastArgument(this[CodeKeys.LastArgument], parent);
-			}
-			else if (ContainsKey(CodeKeys.Expression)) {
-				return new Function(parent,this);
-			}
-			else {
-				throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
-			}
+		public static Dictionary<Map,Type> expressions=new Dictionary<Map,Type>();
+		//public static Dictionary<HashList,Type> expressions=new Dictionary<HashList,Type>();
+		static Map() {
+			expressions[CodeKeys.Call]=typeof(Call);
+			expressions[CodeKeys.Program]=typeof(Program);
+			expressions[CodeKeys.Literal]=typeof(Literal);
+			expressions[CodeKeys.Select]=typeof(Select);
+			expressions[CodeKeys.Root]=typeof(Root);
+			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
+			expressions[CodeKeys.Search]=typeof(Search);
+
+
 		}
+		public Expression CreateExpression(Expression parent) {
+		    if(this.Count==1) {
+		        foreach(Map key in Keys) {
+					if(expressions.ContainsKey(key)) {
+						return (Expression)expressions[key].GetConstructor(
+							new Type[] {typeof(Map),typeof(Expression)}
+						).Invoke(new object[] {this[key],parent});
+					}
+				}
+			}
+			if (ContainsKey(CodeKeys.Expression)) {
+		        return new Function(parent,this);
+		    }
+		    throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+		}
+
+		//public Expression CreateExpression(Expression parent) {
+		//    if (ContainsKey(CodeKeys.Call)) {
+		//        return new Call(this[CodeKeys.Call], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Program)) {
+		//        return new Program(this[CodeKeys.Program], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Literal)) {
+		//        return new Literal(this[CodeKeys.Literal], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Select)) {
+		//        return new Select(this[CodeKeys.Select], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Search)) {
+		//        return new Search(this[CodeKeys.Search], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Root)) {
+		//        return new Root(this[CodeKeys.Root], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.LastArgument)) {
+		//        return new LastArgument(this[CodeKeys.LastArgument], parent);
+		//    }
+		//    else if (ContainsKey(CodeKeys.Expression)) {
+		//        return new Function(parent,this);
+		//    }
+		//    else {
+		//        throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+		//    }
+		//}
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
 				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
