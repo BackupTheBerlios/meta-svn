@@ -290,6 +290,11 @@ namespace IDE
 					//Parser parser = new Parser(text, fileName);
 					//Map map=null;
 					//bool matched=Parser.File.Match(parser, ref map);
+					//Parser.CachedRule.cachedRules.Clear();
+					foreach (Parser.CachedRule rule in Parser.CachedRule.cachedRules)
+					{
+						rule.cached.Clear();
+					}
 					Parser parser = new Parser(text, fileName);
 					Map map = null;
 					bool matched = Parser.File.Match(parser, ref map);
