@@ -1809,7 +1809,8 @@ namespace Meta {
 			else if (this.Count == 1) {
 				if(this.ContainsKey(Map.Empty)) {
 					if(this[Map.Empty].IsNumber) {
-						return 1 + this[Map.Empty].GetNumber();
+						return Integer.One.Add(this[Map.Empty].GetNumber());
+						//return 1 + this[Map.Empty].GetNumber();
 					}
 				}
 			}
@@ -2481,7 +2482,7 @@ namespace Meta {
 		}
 		public override IEnumerable<Map> Keys {
 			get {
-				if (this!= 0) {
+				if (!this.Equals(Integer.Zero)) {
 					yield return Map.Empty;
 				}
 				if (this< 0) {
@@ -2506,6 +2507,9 @@ namespace Meta {
 		public static Number operator |(Number a, Number b) {
 			return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
 		}
+		//public static bool operator ==(Number a, Number b) {
+		//    return ReferenceEquals(a,b) || !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
+		//}
 		public override bool Equals(object o) {
 			Map map = o as Map;
 			if(map!=null && map.IsNumber) {
@@ -2536,15 +2540,6 @@ namespace Meta {
 		}
 		public static implicit operator Number(int integer) {
 			return new Integer(integer);
-		}
-		public static bool operator ==(Number a, Number b) {
-			if(ReferenceEquals(a,null) && ReferenceEquals(b,null)) {
-				return true;
-			}
-			return !ReferenceEquals(b, null) && a.Numerator == b.Numerator && a.Denominator == b.Denominator;
-		}
-		public static bool operator !=(Number a, Number b) {
-			return !(a == b);
 		}
 		public static Number operator %(Number a, Number b) {
 			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
@@ -2579,9 +2574,6 @@ namespace Meta {
 		public virtual bool LessThan(Number b) {
 			return Expand(b) < b.Expand(this);
 		}
-		public virtual Number Add(int b) {
-		    return Add(new Integer(b));
-		}
 		public virtual Number Subtract(int b) {
 		    return Subtract(new Integer(b));
 		}
@@ -2591,8 +2583,13 @@ namespace Meta {
 		public virtual Number Add(Number b) {
 			 return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
 		}
+		public virtual Number Add(int b) {
+		    return Add(new Integer(b));
+		}
+
+
 		public static Number operator +(Number a, Number b) {
-			return a.Add(b);
+		    return a.Add(b);
 		}
 		public static Number operator -(Number a, Number b) {
 			return a.Subtract(b);
@@ -2618,6 +2615,33 @@ namespace Meta {
 		public static bool operator <=(Number a, Number b) {
 			return a.Expand(b) <= b.Expand(a);
 		}
+		//public static Number operator +(Number a, Number b) {
+		//    return a.Add(b);
+		//}
+		//public static Number operator -(Number a, Number b) {
+		//    return a.Subtract(b);
+		//}
+		//public static Number operator /(Number a, Number b) {
+		//    return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
+		//}
+		//public static Number operator *(Number a, Number b) {
+		//    return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
+		//}
+		//public double Expand(Number b) {
+		//    return Numerator * (LeastCommonMultiple(this, b) / Denominator);
+		//}
+		//public static bool operator >(Number a, Number b) {
+		//    return a.Expand(b) > b.Expand(a);
+		//}
+		//public static bool operator <(Number a, Number b) {
+		//    return a.LessThan(b);
+		//}
+		//public static bool operator >=(Number a, Number b) {
+		//    return a.Expand(b) >= b.Expand(a);
+		//}
+		//public static bool operator <=(Number a, Number b) {
+		//    return a.Expand(b) <= b.Expand(a);
+		//}
 		public int CompareTo(Number number) {
 			return GetDouble().CompareTo(number.GetDouble());
 		}
@@ -2632,26 +2656,21 @@ namespace Meta {
 		public abstract double GetDouble();
 	}
 	public class Integer:Number {
+		public static readonly Integer Zero=new Integer(0);
+		public static readonly Integer One=new Integer(1);
 	    private int integer;
 	    public Integer(int integer) {
 	        this.integer=integer;
-	    }
-	    public override bool IsInt32 {
-	        get {
-	            return true;
-	        }
 	    }
 	    public override double GetDouble() {
 	        return integer;
 	    }
 		public override Number SubtractFrom(int i) {
-            checked {
-                try {
-					return new Integer(i-integer);
-			    }
-                catch(OverflowException) {
-                    return base.Subtract(i);
-                }
+            try {
+				return new Integer(i-integer);
+		    }
+            catch(OverflowException) {
+                return base.Subtract(i);
             }
 		}
 	    public override Number Subtract(Number b) {
@@ -2659,52 +2678,44 @@ namespace Meta {
 	    }
 	    public override bool LessThan(Number b) {
 	        if(b.IsInt32) {
-	            checked {
-	                try {
-	                    return integer<b.GetInt32();
-	                }
-	                catch(OverflowException) {
-	                    return base.LessThan(b);
-	                }
-	            }
+                try {
+                    return integer<b.GetInt32();
+                }
+                catch(OverflowException) {
+                    return base.LessThan(b);
+                }
 	        }
 	        return base.LessThan(b);
 	    }
 	    public override Number Add(Number b) {
 	        if(b.IsInt32) {
-	            checked {
-	                try {
-	                    return new Integer(integer+b.GetInt32());
-	                }
-	                catch(OverflowException) {
-	                    return base.Add(b);
-	                }
-	            }
+                try {
+                    return new Integer(integer+b.GetInt32());
+                }
+                catch(OverflowException) {
+                    return base.Add(b);
+                }
 	        }
 	        return base.Add(b);
 	    }
 	    public override Number Subtract(int b) {
-	        checked {
-	            try {
-	                return new Integer(integer-b);
-	            }
-	            catch(OverflowException) {
-	                return base.Subtract(b);
-	            }
-	        }
+            try {
+                return new Integer(integer-b);
+            }
+            catch(OverflowException) {
+                return base.Subtract(b);
+            }
 	    }
 	    public override bool LessThan(int b) {
 	        return integer<b;
 	    }
 	    public override Number Add(int b) {
-	        checked {
-	            try {
-	                return new Integer(integer+b);
-	            }
-	            catch(OverflowException) {
-	                return base.Add(b);
-	            }
-	        }
+            try {
+                return new Integer(integer+b);
+            }
+            catch(OverflowException) {
+                return base.Add(b);
+            }
 	    }
 	    public override double Denominator {
 	        get {
