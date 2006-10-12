@@ -72,6 +72,7 @@ namespace IDE {
 			Canvas.SetLeft(intellisense, r.Right);
 			Canvas.SetTop(intellisense, r.Bottom);
 		}
+		ScrollViewer scrollViewer = new ScrollViewer();
 		public Window1() {
 			BindKey(ApplicationCommands.Find, Key.F, ModifierKeys.Control);
 			BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
@@ -258,7 +259,6 @@ namespace IDE {
 			menu.Items.Add(file);
 			dockPanel.Children.Add(menu);
 
-
 			DockPanel.SetDock(textBox,Dock.Bottom);
 			textBox.TextChanged += delegate {
 				if (Intellisense) {
@@ -284,15 +284,16 @@ namespace IDE {
 				status.Content = "Ln " +
 					(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
 			};
+			const int width = 1024;
+			const int height = 1024;
+
 			bool changing = false;
 			textBox.SelectionChanged += delegate {
 				if (!changing) {
 					changing = true;
 					int start = textBox.SelectionStart;
-					textBox.ScrollToVerticalOffset(Math.Max(
-						0,
-						16 * textBox.GetLineIndexFromCharacterIndex(
-						textBox.SelectionStart) - 100));
+					scrollViewer.ScrollToVerticalOffset(height/2 +16 * textBox.GetLineIndexFromCharacterIndex(
+						textBox.SelectionStart) - 100);
 					int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
 					if (end == -1) {
 						end = 0;
@@ -301,27 +302,60 @@ namespace IDE {
 					string text = textBox.Text.Substring(end, column);
 					int tabs = text.Length - text.Replace("\t", "").Length;
 					int length = tabs * 3 + column;
-					textBox.ScrollToHorizontalOffset(Math.Max(
-						-50,
-						length * 7 - 50));
+					scrollViewer.ScrollToHorizontalOffset(height/2+length * 7 - 50);
 					textBox.SelectionStart = start;
 				}
 				changing = false;
 			};
-
-			//Canvas canvas = new Canvas();
-			//canvas.Children.Add(textBox);
-			//canvas.Background = Brushes.Yellow;
-			//DockPanel.SetDock(canvas, Dock.Top);
-			//canvas.Children.Add(intellisense);
-			//dockPanel.Children.Add(canvas);
-			dockPanel.Children.Add(textBox);
-
-
-			//textBox.SizeChanged += delegate {
-			//    canvas.Width = textBox.Width;
-			//    canvas.Height = textBox.Height;
+			//textBox.SelectionChanged += delegate {
+			//    if (!changing) {
+			//        changing = true;
+			//        int start = textBox.SelectionStart;
+			//        textBox.ScrollToVerticalOffset(Math.Max(
+			//            0,
+			//            16 * textBox.GetLineIndexFromCharacterIndex(
+			//            textBox.SelectionStart) - 100));
+			//        int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
+			//        if (end == -1) {
+			//            end = 0;
+			//        }
+			//        int column = textBox.SelectionStart - end;
+			//        string text = textBox.Text.Substring(end, column);
+			//        int tabs = text.Length - text.Replace("\t", "").Length;
+			//        int length = tabs * 3 + column;
+			//        textBox.ScrollToHorizontalOffset(Math.Max(
+			//            -50,
+			//            length * 7 - 50));
+			//        textBox.SelectionStart = start;
+			//    }
+			//    changing = false;
 			//};
+			scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+			scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+
+			Canvas canvas = new Canvas();
+			canvas.Children.Add(textBox);
+			canvas.Background = Brushes.Yellow;
+			DockPanel.SetDock(scrollViewer, Dock.Top);
+			//DockPanel.SetDock(canvas, Dock.Top);
+			scrollViewer.Content = canvas;
+			dockPanel.Children.Add(scrollViewer);
+
+			//canvas.Children.Add(scrollViewer);
+
+			Canvas.SetLeft(textBox, width/2);
+			Canvas.SetTop(textBox, height/2);
+			//textBox.Width = 100;
+			//textBox.Height = 100;
+
+
+			textBox.SizeChanged += delegate {
+				canvas.Width = textBox.ActualWidth + width;
+				canvas.Height = textBox.ActualHeight + height;
+
+				//canvas.Width = textBox.Width+width;
+				//canvas.Height = textBox.Height+height;
+			};
 
 
 			intellisense.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
@@ -331,6 +365,7 @@ namespace IDE {
 			};
 			intellisense.Visibility = Visibility.Hidden;
 			Canvas.SetZIndex(intellisense, 100);
+			canvas.Children.Add(intellisense);
 
 
 
