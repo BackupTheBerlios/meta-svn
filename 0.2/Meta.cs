@@ -38,6 +38,17 @@ namespace Meta {
 		public abstract Map Evaluate(Map context);}
 
 	public abstract class Expression:Attribute {
+		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
+
+		static Expression() {
+			expressions[CodeKeys.Call]=typeof(Call);
+			expressions[CodeKeys.Program]=typeof(Program);
+			expressions[CodeKeys.Literal]=typeof(Literal);
+			expressions[CodeKeys.Select]=typeof(Select);
+			expressions[CodeKeys.Root]=typeof(Root);
+			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
+			expressions[CodeKeys.Search]=typeof(Search);
+		}
 		public Compiled GetCompiled() {
 			if(compiled==null) {
 				compiled=Compile();
@@ -4799,21 +4810,12 @@ namespace Meta {
 			}
 			return Expression;
 		}
-		public static Dictionary<Map,Type> expressions=new Dictionary<Map,Type>();
-		static Map() {
-			expressions[CodeKeys.Call]=typeof(Call);
-			expressions[CodeKeys.Program]=typeof(Program);
-			expressions[CodeKeys.Literal]=typeof(Literal);
-			expressions[CodeKeys.Select]=typeof(Select);
-			expressions[CodeKeys.Root]=typeof(Root);
-			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
-			expressions[CodeKeys.Search]=typeof(Search);
-		}
+
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
 		        foreach(Map key in Keys) {
-					if(expressions.ContainsKey(key)) {
-						return (Expression)expressions[key].GetConstructor(
+					if(Expression.expressions.ContainsKey(key)) {
+						return (Expression)Expression.expressions[key].GetConstructor(
 							new Type[] {typeof(Map),typeof(Expression)}
 						).Invoke(new object[] {this[key],parent});
 					}
