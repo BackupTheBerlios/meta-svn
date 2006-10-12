@@ -2248,21 +2248,36 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
-		public static Number operator +(Number a,int b) {return a.Add(new Integer32(b));}
-		public static bool operator ==(Number a,int b) {return a.Equals(new Integer32(b));}
-		public static bool operator !=(Number a,int b) {return !(a==b);}
+		public static Number operator +(Number a,int b) {
+			return a.Add(new Integer32(b));
+		}
+		public static bool operator ==(Number a,int b) {
+			return a.Equals(new Integer32(b));
+		}
+		public static bool operator !=(Number a,int b) {
+			return !(a==b);
+		}
 		public static bool operator ==(Number a,Number b) {
 			return ReferenceEquals(a,b) || a.Equals(b);
 		}
-		public static bool operator !=(Number a,Number b) {return !(a==b);}
-		public override string GetString() {return null;}
-		public override IEnumerable<Map> Array {get { yield break;}
+		public static bool operator !=(Number a,Number b) {
+			return !(a==b);
 		}
-		public override int Count {
-			get { return new List<Map>(Keys).Count;
+		public override string GetString() {
+			return null;
+		}
+		public override IEnumerable<Map> Array {
+			get { 
+				yield break;
 			}
 		}
-		public override Map Copy() {return this;
+		public override int Count {
+			get { 
+				return new List<Map>(Keys).Count;
+			}
+		}
+		public override Map Copy() {
+			return this;
 		}
 		public override int ArrayCount {
 			get {return 0;}
@@ -2278,9 +2293,9 @@ namespace Meta {
 				if (ContainsKey(key)) {
 					if (key.Count==0) {
 						return this-1;
-						//return Number.Subtract(this,1);
 					}
-					else if (key.Equals(NumberKeys.Negative)) { return Map.Empty;
+					else if (key.Equals(NumberKeys.Negative)) {
+						return Map.Empty;
 					}
 					else if (key.Equals(NumberKeys.Denominator)) {
 						return new Rational(Denominator);
@@ -2303,7 +2318,6 @@ namespace Meta {
 					yield return Map.Empty;
 				}
 				if (this<0) {
-				//if (Number.Less(this,0)) {
 					yield return NumberKeys.Negative;
 				}
 				if (Denominator != 1.0d) {
@@ -4418,7 +4432,6 @@ namespace Meta {
 		public static Map Range(Number arg) {
 			Map result = new DictionaryMap();
 			for (int i = 1; i<=arg; i++) {
-			//for (int i = 1; Number.LessEqual(i,arg); i++) {
 				result.Append(i);
 			}
 			return result;
