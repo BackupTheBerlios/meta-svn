@@ -4090,6 +4090,10 @@ namespace Meta {
 	    {
 	        this.list = new List<Map>(capacity);
 	    }
+	    //public ListMap(ListStrategy original)
+	    //{
+	    //    this.list = new List<Map>(original.list);
+	    //}
 	    public override Map this[Map key] {
 	        get {
 	            Map value = null;
