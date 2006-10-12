@@ -151,6 +151,10 @@ namespace IDE
 				{
 					Complete();
 				}
+				if (e.Key == Key.OemOpenBrackets)
+				{
+					intellisense.Visibility = Visibility.Hidden;
+				}
 			};
 			textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e)
 			{
@@ -283,9 +287,13 @@ namespace IDE
 					string text = textBox.Text.Substring(0, textBox.SelectionStart);
 					searchStart = textBox.SelectionStart;
 					Interpreter.profiling = false;
+					//Parser parser = new Parser(text, fileName);
+					//Map map=null;
+					//bool matched=Parser.File.Match(parser, ref map);
 					Parser parser = new Parser(text, fileName);
-					bool matched;
-					Map map = Parser.File.Match(parser, out matched);
+					Map map = null;
+					bool matched = Parser.File.Match(parser, ref map);
+					//Map map = Parser.File.Match(parser, out matched);
 					LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 					LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 					lib.Statement = new LiteralStatement(gac);
@@ -293,9 +301,10 @@ namespace IDE
 					map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 					map[CodeKeys.Function].Compile(lib);
 					Source key = new Source(
-						parser.Line,
-						parser.Column,
+						parser.State.Line,
+						parser.State.Column,
 						parser.FileName);
+					intellisense.Items.Clear();
 					if (Meta.Expression.sources.ContainsKey(key))
 					{
 						List<Meta.Expression> list = Meta.Expression.sources[key];
@@ -305,11 +314,11 @@ namespace IDE
 							{
 								PositionIntellisense();
 								intellisense.Items.Clear();
-								Map s = list[i].EvaluateStructure();
+								Structure s = list[i].EvaluateStructure();
 								List<string> keys = new List<string>();
 								if (s != null)
 								{
-									foreach (Map m in s.Keys)
+									foreach (Map m in ((LiteralStructure)s).Literal.Keys)
 									{
 										keys.Add(m.ToString());
 									}
@@ -337,6 +346,7 @@ namespace IDE
 					{
 						MessageBox.Show("no intellisense" + Meta.Expression.sources.Count);
 					}
+					Meta.Expression.sources.Clear();
 				}
 			};
 			DockPanel panel = new DockPanel();
@@ -438,6 +448,36 @@ namespace IDE
 			intellisense.Visibility = Visibility.Hidden;
 			canvas.Children.Add(intellisense);
 			this.Content = panel;
+			bool changing = false;
+			//textBox.KeyUp+=delegate
+			textBox.SelectionChanged += delegate
+			{
+				if (!changing)
+				{
+				changing = true;
+
+				int start = textBox.SelectionStart;
+				textBox.ScrollToVerticalOffset(Math.Max(
+					0,
+
+					16*textBox.GetLineIndexFromCharacterIndex(
+					textBox.SelectionStart)-100));
+				int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
+				if (end == -1)
+				{
+					end = 0;
+				}
+				int column=textBox.SelectionStart - end;
+				string text = textBox.Text.Substring(end, column);
+				int tabs = text.Length - text.Replace("\t", "").Length;
+				int length = tabs * 3+column;
+				textBox.ScrollToHorizontalOffset(Math.Max(
+					-50,
+					length*5-50));
+					textBox.SelectionStart = start;
+				}
+				changing = false;
+			};
 		}
 
 		void textBox_TextInput(object sender, TextCompositionEventArgs e)

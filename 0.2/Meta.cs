@@ -999,13 +999,19 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-	        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
-	        map.Scope = Gac.gac;
-	        LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-	        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-	        map[CodeKeys.Function].Compile(gac);
-	        Gac.gac["library"] = map.Call(new DictionaryMap());
-	        Gac.gac["library"].Scope = Gac.gac;
+			try
+			{
+				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+				map.Scope = Gac.gac;
+				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+				map[CodeKeys.Function].Compile(gac);
+				Gac.gac["library"] = map.Call(new DictionaryMap());
+				Gac.gac["library"].Scope = Gac.gac;
+			}
+			catch (Exception e)
+			{
+			}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -1084,7 +1090,7 @@ namespace Meta {
 			useConsole = true;}
 		public static string InstallationPath {
 			get {
-				return @"D:\Meta\0.2\";
+				return @"C:\Meta\0.2\";
 			}
 		}
 	}
@@ -3248,11 +3254,13 @@ namespace Meta {
 			}
 		}
 		public class CachedRule:Rule {
+			public static List<CachedRule> cachedRules = new List<CachedRule>();
 		    private Rule rule;
 		    public CachedRule(Rule rule) {
 		        this.rule=rule;
+				cachedRules.Add(this);
 			}
-		    private Dictionary<State,CachedResult> cached=new Dictionary<State,CachedResult>();
+		    public Dictionary<State,CachedResult> cached=new Dictionary<State,CachedResult>();
 		    protected override bool MatchImplementation(Parser parser, ref Map map) {
 		        CachedResult cachedResult;
 		        State oldState=parser.State;
@@ -3603,6 +3611,10 @@ namespace Meta {
 			Parser.File.Match(parser, ref result);
 			if (parser.State.index != parser.Text.Length-1) {
 				throw new SyntaxException("Expected end of file.", parser);
+			}
+			foreach (CachedRule rule in CachedRule.cachedRules)
+			{
+				rule.cached.Clear();
 			}
 			return result;
 		}
