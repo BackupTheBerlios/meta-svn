@@ -292,9 +292,12 @@ namespace IDE {
 				if (!changing) {
 					changing = true;
 					int start = textBox.SelectionStart;
+					//scrollViewer.ScrollToVerticalOffset(500);
+						//this.Height / 4 + height / 4 + 16 * textBox.GetLineIndexFromCharacterIndex(
+						//textBox.SelectionStart));
 					scrollViewer.ScrollToVerticalOffset(
-						this.Height/4+height/4 +16 * textBox.GetLineIndexFromCharacterIndex(
-						textBox.SelectionStart) );
+						height/2-this.Height/2 +
+						20 * textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
 					int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
 					if (end == -1) {
 						end = 0;
@@ -303,7 +306,7 @@ namespace IDE {
 					string text = textBox.Text.Substring(end, column);
 					int tabs = text.Length - text.Replace("\t", "").Length;
 					int length = tabs * 3 + column;
-					scrollViewer.ScrollToHorizontalOffset(this.Width/4+width/4+length * 7);
+					scrollViewer.ScrollToHorizontalOffset(width / 2 - this.Width/ 2 + length * 10);
 					textBox.SelectionStart = start;
 				}
 				changing = false;
@@ -315,27 +318,15 @@ namespace IDE {
 			canvas.Children.Add(textBox);
 			canvas.Background = Brushes.Yellow;
 			DockPanel.SetDock(scrollViewer, Dock.Top);
-			//DockPanel.SetDock(canvas, Dock.Top);
 			scrollViewer.Content = canvas;
 			dockPanel.Children.Add(scrollViewer);
 
-			//canvas.Children.Add(scrollViewer);
-
 			Canvas.SetLeft(textBox, width/2);
 			Canvas.SetTop(textBox, height/2);
-			//textBox.Width = 100;
-			//textBox.Height = 100;
-
-
 			textBox.SizeChanged += delegate {
 				canvas.Width = textBox.ActualWidth + width;
 				canvas.Height = textBox.ActualHeight + height;
-
-				//canvas.Width = textBox.Width+width;
-				//canvas.Height = textBox.Height+height;
 			};
-
-
 			intellisense.SelectionChanged += delegate(object sender, SelectionChangedEventArgs e) {
 				if (intellisense.SelectedItem != null) {
 					intellisense.ScrollIntoView(intellisense.SelectedItem);
@@ -344,13 +335,7 @@ namespace IDE {
 			intellisense.Visibility = Visibility.Hidden;
 			Canvas.SetZIndex(intellisense, 100);
 			canvas.Children.Add(intellisense);
-
-
-
-
-
 			this.Content = dockPanel;
-
 			this.Loaded += delegate {
 				Open(@"C:\meta\0.2\game.meta");
 				textBox.Focus();
