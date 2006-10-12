@@ -1680,28 +1680,6 @@ namespace Meta {
 			}
 			return null;
 		}
-		//public override string GetString() {
-		//    StringBuilder text = new StringBuilder("");
-		//    if(ArrayCount !=Count ) {
-		//        return null;
-		//    }
-		//    foreach (Map map in Array) {
-		//        Number number=map.GetNumber();
-		//        if(number==null) {
-		//            return null;
-		//        }
-		//        else {
-		//            if(Transform.IsIntegerInRange(number, (int)Char.MinValue, (int)Char.MaxValue)) {
-		//                text.Append(Convert.ToChar(map.GetNumber().GetInt32()));
-		//            }
-		//            else {
-		//                return null;
-		//            }
-		//        }
-		//    }
-		//    return text.ToString();
-		//}
-
 		public override string Serialize() {
 			if (this.Count == 0) {
 				return "0";
@@ -2223,7 +2201,7 @@ namespace Meta {
 			get {
 				if (key.IsNumber) {
 					Number number = key.GetNumber();
-					if (number.IsNatural && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
+					if (number.Denominator==1.0d && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
 					//if (number.IsNatural && number > 0 && number <= Count) {
 						return text[number.GetInt32() - 1];
 					}
@@ -2259,7 +2237,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
-				if (number.IsNatural) {
+				if (number.Denominator==1.0d) {
 					return Number.Greater(number,0) && Number.LessEqual(number,text.Length);}
 					//return number > 0 && number <= text.Length;}
 				else {
@@ -2475,13 +2453,8 @@ namespace Meta {
 		public int CompareTo(Number number) {
 			return GetDouble().CompareTo(number.GetDouble());
 		}
-		public abstract bool IsNatural {
-			get;
-		}
-		//public virtual bool IsInt32 {
-		//    get {
-		//        return IsNatural && Numerator<int.MaxValue && Numerator>int.MinValue; 
-		//    }
+		//public abstract bool IsNatural {
+		//    get;
 		//}
 		public abstract double GetDouble();
 	}
@@ -2546,11 +2519,11 @@ namespace Meta {
 	    public override long GetRealInt64() {
 	        return integer;
 	    }
-	    public override bool IsNatural {
-	        get {
-	            return true;
-	        }
-	    }
+		//public override bool IsNatural {
+		//    get {
+		//        return true;
+		//    }
+		//}
 	    public override double Numerator {
 	        get {
 	            return integer;
@@ -2559,16 +2532,16 @@ namespace Meta {
 	}
 	public class Rational:Number {
 		public override Integer GetInteger() {
-			if(IsNatural && Numerator<int.MaxValue && Numerator>int.MinValue) {
+			if(Denominator==1.0d && Numerator<int.MaxValue && Numerator>int.MinValue) {
 				return new Integer(GetInt32());
 			}
 			return null;
 		}
-		public override bool IsNatural {
-			get {
-				return denominator == 1.0d;
-			}
-		}
+		//public override bool IsNatural {
+		//    get {
+		//        return denominator == 1.0d;
+		//    }
+		//}
 		private readonly double numerator;
 		private readonly double denominator;
 		public static Number Parse(string text) {
