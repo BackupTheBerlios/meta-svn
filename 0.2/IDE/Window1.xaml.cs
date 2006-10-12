@@ -130,7 +130,7 @@ namespace IDE
 			{
 				if (Intellisense)
 				{
-					PositionIntellisense();
+					//PositionIntellisense();
 				}
 			}));
 			intellisense.SetValue(FrameworkElement.MaxHeightProperty, 100.0);
@@ -151,6 +151,7 @@ namespace IDE
 				{
 					Complete();
 				}
+
 				if (e.Key == Key.OemOpenBrackets)
 				{
 					intellisense.Visibility = Visibility.Hidden;
@@ -177,7 +178,15 @@ namespace IDE
 					}
 					else if (e.KeyboardDevice.Modifiers == ModifierKeys.Control)
 					{
-						if (e.Key == Key.Space)
+						if (e.Key == Key.L)
+						{
+							EditingCommands.MoveToLineStart.Execute(null, textBox);
+							EditingCommands.SelectToLineEnd.Execute(null, textBox);
+							EditingCommands.Delete.Execute(null, textBox);
+							e.Handled = true;
+							return;
+						}
+						else if (e.Key == Key.Space)
 						{
 							e.Handled = true;
 							return;
@@ -415,6 +424,7 @@ namespace IDE
 			this.Loaded += delegate
 			{
 				Open(@"C:\meta\0.2\game.meta");
+				textBox.Focus();
 			};
 			open.Click += delegate
 			{
@@ -483,6 +493,9 @@ namespace IDE
 				}
 				changing = false;
 			};
+			Brush brush=new SolidColorBrush(Colors.White);
+			brush.Opacity=0.0;
+			intellisense.Background=brush;
 		}
 
 		void textBox_TextInput(object sender, TextCompositionEventArgs e)
