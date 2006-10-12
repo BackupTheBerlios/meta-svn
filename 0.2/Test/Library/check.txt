@@ -71,7 +71,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"differenceTest2"
-			Value (Rational):
+			Value (Integer):
 				101
 		Entry (KeyValuePair`2)
 			Key (StringMap):

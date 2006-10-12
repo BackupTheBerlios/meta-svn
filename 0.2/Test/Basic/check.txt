@@ -243,7 +243,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerDecrementTest"
-	Value (Rational):
+	Value (Integer):
 		4
 Entry (KeyValuePair`2)
 	Key (StringMap):
