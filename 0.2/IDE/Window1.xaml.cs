@@ -292,8 +292,9 @@ namespace IDE {
 				if (!changing) {
 					changing = true;
 					int start = textBox.SelectionStart;
-					scrollViewer.ScrollToVerticalOffset(height/2 +16 * textBox.GetLineIndexFromCharacterIndex(
-						textBox.SelectionStart) - 100);
+					scrollViewer.ScrollToVerticalOffset(
+						this.Height/4+height/4 +16 * textBox.GetLineIndexFromCharacterIndex(
+						textBox.SelectionStart) );
 					int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
 					if (end == -1) {
 						end = 0;
@@ -302,34 +303,11 @@ namespace IDE {
 					string text = textBox.Text.Substring(end, column);
 					int tabs = text.Length - text.Replace("\t", "").Length;
 					int length = tabs * 3 + column;
-					scrollViewer.ScrollToHorizontalOffset(height/2+length * 7 - 50);
+					scrollViewer.ScrollToHorizontalOffset(this.Width/4+width/4+length * 7);
 					textBox.SelectionStart = start;
 				}
 				changing = false;
 			};
-			//textBox.SelectionChanged += delegate {
-			//    if (!changing) {
-			//        changing = true;
-			//        int start = textBox.SelectionStart;
-			//        textBox.ScrollToVerticalOffset(Math.Max(
-			//            0,
-			//            16 * textBox.GetLineIndexFromCharacterIndex(
-			//            textBox.SelectionStart) - 100));
-			//        int end = textBox.Text.LastIndexOf('\n', textBox.SelectionStart);
-			//        if (end == -1) {
-			//            end = 0;
-			//        }
-			//        int column = textBox.SelectionStart - end;
-			//        string text = textBox.Text.Substring(end, column);
-			//        int tabs = text.Length - text.Replace("\t", "").Length;
-			//        int length = tabs * 3 + column;
-			//        textBox.ScrollToHorizontalOffset(Math.Max(
-			//            -50,
-			//            length * 7 - 50));
-			//        textBox.SelectionStart = start;
-			//    }
-			//    changing = false;
-			//};
 			scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 			scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 
