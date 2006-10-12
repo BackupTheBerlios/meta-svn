@@ -51,7 +51,7 @@
 			800
 			300
 			0
-	world.set_Gravity_Vector3(vector(0 double(1/20) 0
+	world.set_Gravity_Vector3(vector(0 1/100 0
 	bubble=size?{
 		body=Body_World(world
 		radius=?product(size 4

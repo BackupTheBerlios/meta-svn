@@ -2222,7 +2222,10 @@ namespace Meta {
 			this.FileName = fileName;
 		}
 		public override int GetHashCode() {
-			return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();}
+			unchecked {
+				return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
+			}
+		}
 		public override bool Equals(object obj) {
 			Source source = obj as Source;
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
@@ -2424,11 +2427,6 @@ namespace Meta {
 		}
 		public virtual Number SubtractFrom(int i) {
 			return new Rational(i).Subtract(this);
-		}
-		public override bool IsNormal {
-			get {
-				return true;
-			}
 		}
 		public override string GetString() {
 			return null;
@@ -2803,7 +2801,9 @@ namespace Meta {
 				state.FileName==FileName;
 		}
 		public override int GetHashCode() {
-			return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*indentationCount.GetHashCode()*FileName.GetHashCode();
+			unchecked {
+				return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*indentationCount.GetHashCode()*FileName.GetHashCode();
+			}
 		}
 		public State(int index,int Line,int Column,int indentationCount,string fileName){
 			this.index=index;
@@ -4004,12 +4004,7 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class MergeSort: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			    }
-			}
+
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -4033,6 +4028,12 @@ namespace Meta {
 			        level = 2;
 			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
+			}
+			public class MergeSort: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			    }
 			}
 			public static Map Run(string path, Map argument) {
 				Map callable = Parser.Parse(path);
@@ -4801,8 +4802,10 @@ namespace Meta {
 		public abstract Map Copy();
 
 		public static Stack<Map> arguments = new Stack<Map>();
-		public abstract bool IsNormal {
-			get;
+		public virtual bool IsNormal {
+			get {
+				return true;
+			}
 		}
 		public override string ToString() {
 			if (Count == 0) {
