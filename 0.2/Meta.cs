@@ -20,22 +20,13 @@
 //	SOFTWARE.
 
 using Meta;
-using Meta.Test;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using System.Windows;
-using SdlDotNet;
 using java.math;
 
 namespace Meta {
@@ -1006,6 +997,17 @@ namespace Meta {
 		}
 	}
 	public class Interpreter {
+		public static Map Run(string path, Map argument) {
+			Map callable = Parser.Parse(path);
+			callable.Scope = Gac.gac["library"];
+			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+			LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
+			lib.Statement = new LiteralStatement(gac);
+
+			callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
+			callable[CodeKeys.Function].Compile(lib);
+			return callable.Call(argument);
+		}
 		public static bool profiling = false;
 		static Interpreter() {
 	        Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
@@ -1026,7 +1028,7 @@ namespace Meta {
 				if (args[0] == "-test") {
 					try {
 						UseConsole();
-						new MetaTest().Run();
+						new Test.MetaTest().Run();
 					}
 					catch (Exception e) {
 						string text=e.ToString();
@@ -1037,12 +1039,12 @@ namespace Meta {
 					}
 				}
 				else if (args[0] == "-nprof") {
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+					Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 				else if (args[0] == "-profile") {
 					UseConsole();
 					Interpreter.profiling = true;
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"game.meta"), new DictionaryMap());
+					Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"game.meta"), new DictionaryMap());
 					List<object> results = new List<object>(Map.calls.Keys);
 					results.Sort(delegate(object a, object b) {
 						return Map.calls[b].time.CompareTo(Map.calls[a].time);});
@@ -1052,13 +1054,13 @@ namespace Meta {
 				}
 				else if (args[0] == "-performance") {
 					UseConsole();
-					MetaTest.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), new DictionaryMap());
+					Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"learning.meta"), new DictionaryMap());
 				}
 				else {
 					string fileName = args[0].Trim('"');
 					if (File.Exists(fileName)) {
 						try {
-							MetaTest.Run(fileName, new DictionaryMap());
+							Interpreter.Run(fileName, new DictionaryMap());
 						}
 						catch (Exception e) {
 							Console.WriteLine(e.ToString());
@@ -1238,8 +1240,11 @@ namespace Meta {
 			{
 		    }
 		}
+		// use GetConversion instead, put them in delegates
+		// otherwise we would have a lot of duplication
+		// only the target type matters
 		public static object ToDotNet(Map meta,Type target) {
-			if(target.Equals(typeof(Map))) {
+			if(target.Equals(typeof(Map))||target.IsSubclassOf(typeof(Map))) {
 				return meta;
 			}
 			else
@@ -1263,17 +1268,6 @@ namespace Meta {
 						}
 						else if (target.IsAssignableFrom(type)) {
 							return meta;
-						}
-						else if (target.IsArray) {
-							ArrayList list = new ArrayList();
-							bool converted = true;
-							Type elementType = target.GetElementType();
-							foreach (Map m in meta.Array) {
-								list.Add(Transform.ToDotNet(m, elementType));
-							}
-							if (converted) {
-								return list.ToArray(elementType);
-							}
 						}
 						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 						   && meta.ContainsKey(CodeKeys.Function)) {
@@ -1368,149 +1362,9 @@ namespace Meta {
 				}
 			}
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
-			//if(dotNet==null)
-			//return dotNet;
 		}
-		//public static bool TryToDotNet(Map meta, Type target, out object dotNet) {
-		//    try {
-		//        dotNet = null;
-		//        if(target.Equals(typeof(Map))) {
-		//            dotNet=meta;
-		//        }
-		//        else
-		//        {
-		//            Type type=meta.GetType();
-		//            if (type.IsSubclassOf(target)) {
-		//                dotNet = meta;
-		//            }
-		//            else {
-		//                TypeCode typeCode = Type.GetTypeCode(target);
-		//                if (typeCode == TypeCode.Object) {
-		//                    if (target == typeof(Number) && meta.IsNumber) {
-		//                        dotNet = meta.GetNumber();
-		//                    }
-		//                    if (dotNet == null && target == typeof(Type) && meta is TypeMap) {
-		//                        dotNet = ((TypeMap)meta).Type;
-		//                    }
-		//                    // remove?
-		//                    else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//                        dotNet = ((ObjectMap)meta).Object;
-		//                    }
-		//                    else if (target.IsAssignableFrom(type)) {
-		//                        dotNet = meta;
-		//                    }
-		//                    else if (target.IsArray) {
-		//                        ArrayList list = new ArrayList();
-		//                        bool converted = true;
-		//                        Type elementType = target.GetElementType();
-		//                        foreach (Map m in meta.Array) {
-		//                            list.Add(Transform.ToDotNet(m, elementType));
-		//                        }
-		//                        if (converted) {
-		//                            dotNet = list.ToArray(elementType);
-		//                        }
-		//                    }
-		//                    else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-		//                       && meta.ContainsKey(CodeKeys.Function)) {
-		//                        dotNet = CreateDelegateFromCode(meta, target);
-		//                    }
-		//                }
-		//                else if (target.IsEnum) {
-		//                    dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());}
-		//                else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//                    dotNet = ((ObjectMap)meta).Object;
-		//                }
-		//                else {
-		//                    switch (typeCode) {
-		//                        case TypeCode.Boolean:
-		//                            if (meta.IsNumber && (meta.GetNumber().GetInt32() == 1 || meta.GetNumber().GetInt32() == 0)) {
-		//                                dotNet = Convert.ToBoolean(meta.GetNumber().GetInt32());
-		//                            }
-		//                            break;
-		//                        case TypeCode.Byte:
-		//                            if (IsIntegerInRange(meta, Byte.MinValue, Byte.MaxValue)) {
-		//                                dotNet = Convert.ToByte(meta.GetNumber().GetInt32());
-		//                            }
-		//                            break;
-		//                        case TypeCode.Char:
-		//                            if (IsIntegerInRange(meta, Char.MinValue, Char.MaxValue)) {
-		//                                dotNet = Convert.ToChar(meta.GetNumber().GetInt32());
-		//                            }
-		//                            break;
-		//                        // unlogical
-		//                        case TypeCode.DateTime:
-		//                            dotNet = null;
-		//                            break;
-		//                        case TypeCode.DBNull:
-		//                            dotNet = null;
-		//                            break;
-		//                        case TypeCode.Decimal:
-		//                            if (IsIntegerInRange(meta, decimal.MinValue, decimal.MaxValue)) {
-		//                                dotNet = (decimal)(meta.GetNumber().GetInt64());
-		//                            }
-		//                            break;
-		//                        case TypeCode.Double:
-		//                            if (IsIntegerInRange(meta, double.MinValue, double.MaxValue)) {
-		//                                dotNet = (double)(meta.GetNumber().GetInt64());
-		//                            }
-		//                            break;
-		//                        case TypeCode.Int16:
-		//                            if (IsIntegerInRange(meta, Int16.MinValue, Int16.MaxValue)) {
-		//                                dotNet = Convert.ToInt16(meta.GetNumber().GetRealInt64());
-		//                            }
-		//                            break;
-		//                        case TypeCode.Int32:
-		//                            if (IsIntegerInRange(meta, Int32.MinValue, Int32.MaxValue)) {
-		//                                dotNet = meta.GetNumber().GetInt32();
-		//                            }
-		//                            break;
-		//                        case TypeCode.Int64:
-		//                            if (IsIntegerInRange(meta, new Rational(Int64.MinValue), new Rational(Int64.MaxValue))) {
-		//                                dotNet = Convert.ToInt64(meta.GetNumber().GetInt64());
-		//                            }
-		//                            break;
-		//                        case TypeCode.SByte:
-		//                            if (IsIntegerInRange(meta, SByte.MinValue, SByte.MaxValue)) {
-		//                                dotNet = Convert.ToSByte(meta.GetNumber().GetInt64());}
-		//                            break;
-		//                        case TypeCode.Single:
-		//                            if (IsIntegerInRange(meta, Single.MinValue, Single.MaxValue)) {
-		//                                dotNet = (float)meta.GetNumber().GetInt64();
-		//                            }
-		//                            break;
-		//                        case TypeCode.String:
-		//                            if (meta.IsString) {
-		//                                dotNet = meta.GetString();}
-		//                            break;
-		//                        case TypeCode.UInt16:
-		//                            if (IsIntegerInRange(meta, UInt16.MinValue, UInt16.MaxValue)) {
-		//                                dotNet = Convert.ToUInt16(meta.GetNumber().GetInt64());}
-		//                            break;
-		//                        case TypeCode.UInt32:
-		//                            if (IsIntegerInRange(meta, new Rational(UInt32.MinValue), new Rational(UInt32.MaxValue))) {
-		//                                dotNet = Convert.ToUInt32(meta.GetNumber().GetInt64());
-		//                            }
-		//                            break;
-		//                        case TypeCode.UInt64:
-		//                            if (IsIntegerInRange(meta, new Rational(UInt64.MinValue), new Rational(UInt64.MaxValue))) {
-		//                                dotNet = Convert.ToUInt64(meta.GetNumber().GetInt64());
-		//                            }
-		//                            break;
-		//                        default:
-		//                            throw new ApplicationException("not implemented");
-		//                    }
-		//                }
-		//            }
-		//        }
-		//        return dotNet != null;
-		//    }
-		//    catch (Exception e) {
-		//        throw e;
-		//    }
-		//}
 		public static bool IsIntegerInRange(Map meta, Number minValue, Number maxValue) {
 			return meta.IsNumber && Number.GreaterEqual(meta.GetNumber(),minValue) && Number.LessEqual(meta.GetNumber(),maxValue);
-			//return meta.IsNumber && meta.GetNumber() >= minValue && meta.GetNumber() <= maxValue;
 		}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
@@ -4062,37 +3916,26 @@ namespace Meta {
 			public class Fibo: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 			    }
 			}
 			public class Basic : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
 			public class MergeSort: Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
-			        return Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 			    }
-			}
-			public static Map Run(string path, Map argument) {
-				Map callable = Parser.Parse(path);
-				callable.Scope = Gac.gac["library"];
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-				LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
-				lib.Statement = new LiteralStatement(gac);
-
-				callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
-				callable[CodeKeys.Function].Compile(lib);
-				return callable.Call(argument);
 			}
 		}
 		namespace TestClasses {
@@ -4560,7 +4403,7 @@ namespace Meta {
 		}
 		public static Map EnumerableToArray(Map map) {
 			List<Map> result = new List<Map>();
-			foreach (object entry in (IEnumerable)((ObjectMap)map).Object) {
+			foreach (object entry in (System.Collections.IEnumerable)((ObjectMap)map).Object) {
 				result.Add(Transform.ToMeta(entry));}
 			return new DictionaryMap(result);
 		}
