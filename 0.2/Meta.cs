@@ -2202,7 +2202,6 @@ namespace Meta {
 				if (key.IsNumber) {
 					Number number = key.GetNumber();
 					if (number.Denominator==1.0d && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
-					//if (number.IsNatural && number > 0 && number <= Count) {
 						return text[number.GetInt32() - 1];
 					}
 					else {
@@ -2476,9 +2475,15 @@ namespace Meta {
 			return integer.longValue();
 		}
 		private BigInteger integer;
+		public Integer(int i) {
+			this.integer=new BigInteger(i.ToString());
+		}
 		public Integer(string text) {
 			this.integer=new BigInteger(text);
 		}
+		//public Integer(string text) {
+		//    this.integer=new BigInteger(text);
+		//}
 		public override int GetInt32() {
 			return integer.intValue();
 		}
@@ -2554,7 +2559,7 @@ namespace Meta {
 			}
 			return null;
 		}
-		private readonly double numerator;
+		private readonly Integer numerator;
 		private readonly double denominator;
 		public static Number Parse(string text) {
 			try {
@@ -2582,12 +2587,14 @@ namespace Meta {
 				numerator = -numerator;
 				denominator = -denominator;
 			}
-			this.numerator = numerator / greatestCommonDivisor;
+			//this.numerator = new Integer(numerator / greatestCommonDivisor);
+			this.numerator = new Integer(Convert.ToInt32((numerator / greatestCommonDivisor)));
 			this.denominator = denominator / greatestCommonDivisor;
 		}
 		public override double Numerator {
 			get {
-				return numerator;
+				return numerator.GetDouble();
+				//return numerator;
 			}
 		}
 		public override double Denominator {
@@ -2599,13 +2606,17 @@ namespace Meta {
 			return new Rational(this);
 		}
 		public override double GetDouble() {
-			return numerator / denominator;
+			return numerator.GetDouble() / denominator;
+			//return numerator / denominator;
 		}
 		public override int GetInt32() {
-			return Convert.ToInt32(numerator / denominator);
+			return Convert.ToInt32(numerator.GetDouble() / denominator);
+			//return Convert.ToInt32(numerator / denominator);
 		}
 		public override long GetRealInt64() {
-			return Convert.ToInt64(numerator / denominator);}
+			return Convert.ToInt64(numerator.GetDouble() / denominator);
+		}
+			//return Convert.ToInt64(numerator / denominator);}
 		public override long GetInt64() {
 			return Convert.ToInt64(numerator);
 		}
@@ -2703,10 +2714,10 @@ namespace Meta {
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
-					result=new Integer32(rational.GetInt32());
+				    result=new Integer32(rational.GetInt32());
 				}
 				else {
-					result=rational;
+				    result=rational;
 				}
 			},
 	        new OneOrMoreChars(new Chars(Syntax.integer))));

@@ -1,5 +1,5 @@
 ﻿Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		1
 	Value (DictionaryMap):
 		0
@@ -44,34 +44,34 @@ Entry (KeyValuePair`2)
 		"listTest"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
-			Value (Integer):
+			Value (Integer32):
 				1
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
-			Value (Integer):
+			Value (Integer32):
 				2
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				3
-			Value (Integer):
+			Value (Integer32):
 				3
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				4
 			Value (StringMap):
 				"hello"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				5
 			Value (StringMap):
 				"hello"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"counter"
-	Value (Integer):
+	Value (Integer32):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -109,7 +109,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -216,7 +216,7 @@ Entry (KeyValuePair`2)
 		"integerHashTest"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"correct hash content"
@@ -233,7 +233,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"negativeInteger"
-	Value (Integer):
+	Value (Integer32):
 		100
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -243,12 +243,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerDecrementTest"
-	Value (Integer):
+	Value (Integer32):
 		4
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"negativeNumber"
-	Value (Integer):
+	Value (Integer32):
 		-123
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -266,7 +266,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
-					Value (Integer):
+					Value (Integer32):
 						5
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -280,12 +280,12 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
-					Value (Integer):
+					Value (Integer32):
 						5
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"denominator"
-					Value (Integer):
+					Value (Integer32):
 						7
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -294,7 +294,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
-					Value (Integer):
+					Value (Integer32):
 						5
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -304,7 +304,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"denominator"
-					Value (Integer):
+					Value (Integer32):
 						7
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -316,37 +316,37 @@ Entry (KeyValuePair`2)
 		"literalEscapeTest"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (StringMap):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"asdf"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				3
 			Value (StringMap):
 				"as"'df"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				4
 			Value (StringMap):
 				"as"''df"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				5
 			Value (StringMap):
 				"as"''''''''''''''''df"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		2
 	Value (StringMap):
 		"ImpliedAutokey"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		3
 	Value (StringMap):
 		"Autokey"
@@ -355,12 +355,12 @@ Entry (KeyValuePair`2)
 		"commandLineArguments"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (StringMap):
 				"first argument"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"second argument"
@@ -422,18 +422,18 @@ Entry (KeyValuePair`2)
 				"b"
 			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
-					Key (Integer):
+					Key (Integer32):
 						1
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"x"
-							Value (Integer):
+							Value (Integer32):
 								7
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"z"
-							Value (Integer):
+							Value (Integer32):
 								1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -457,7 +457,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												1
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -479,7 +479,7 @@ Entry (KeyValuePair`2)
 															Value (StringMap):
 																"c"
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												2
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -522,7 +522,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												1
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -543,7 +543,7 @@ Entry (KeyValuePair`2)
 																"call"
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
-																	Key (Integer):
+																	Key (Integer32):
 																		1
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
@@ -556,7 +556,7 @@ Entry (KeyValuePair`2)
 																					Value (StringMap):
 																						"merge"
 																Entry (KeyValuePair`2)
-																	Key (Integer):
+																	Key (Integer32):
 																		2
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
@@ -569,7 +569,7 @@ Entry (KeyValuePair`2)
 																					Value (StringMap):
 																						"b"
 																Entry (KeyValuePair`2)
-																	Key (Integer):
+																	Key (Integer32):
 																		3
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
@@ -577,7 +577,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer):
+																					Key (Integer32):
 																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
@@ -587,7 +587,7 @@ Entry (KeyValuePair`2)
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
 																										"literal"
-																									Value (Integer):
+																									Value (Integer32):
 																										1
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
@@ -598,7 +598,7 @@ Entry (KeyValuePair`2)
 																										"select"
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
-																											Key (Integer):
+																											Key (Integer32):
 																												1
 																											Value (DictionaryMap):
 																												Entry (KeyValuePair`2)
@@ -611,7 +611,7 @@ Entry (KeyValuePair`2)
 																															Value (StringMap):
 																																"newB"
 																										Entry (KeyValuePair`2)
-																											Key (Integer):
+																											Key (Integer32):
 																												2
 																											Value (DictionaryMap):
 																												Entry (KeyValuePair`2)
@@ -620,7 +620,7 @@ Entry (KeyValuePair`2)
 																													Value (StringMap):
 																														"value"
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												2
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -652,7 +652,7 @@ Entry (KeyValuePair`2)
 					Value (StringMap):
 						"d"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (FunctionMap):
 				Entry (KeyValuePair`2)
@@ -673,7 +673,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												1
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -746,7 +746,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -777,7 +777,7 @@ Entry (KeyValuePair`2)
 	Value (StringMap):
 		"wrong"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		4
 	Value (DictionaryMap):
 		0
@@ -813,7 +813,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -904,7 +904,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -930,17 +930,17 @@ Entry (KeyValuePair`2)
 		"everythingReturned"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (StringMap):
 				"a"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"b"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				3
 			Value (StringMap):
 				"c"
@@ -949,17 +949,17 @@ Entry (KeyValuePair`2)
 		"variableAsArgument"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (StringMap):
 				"x"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"y"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				3
 			Value (StringMap):
 				"z"
@@ -985,7 +985,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1002,7 +1002,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1036,7 +1036,7 @@ Entry (KeyValuePair`2)
 																								"program"
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
-																									Key (Integer):
+																									Key (Integer32):
 																										1
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
@@ -1053,7 +1053,7 @@ Entry (KeyValuePair`2)
 																														"program"
 																													Value (DictionaryMap):
 																														Entry (KeyValuePair`2)
-																															Key (Integer):
+																															Key (Integer32):
 																																1
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
@@ -1063,7 +1063,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				1
 																																Entry (KeyValuePair`2)
 																																	Key (StringMap):
@@ -1072,10 +1072,10 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				1
 																														Entry (KeyValuePair`2)
-																															Key (Integer):
+																															Key (Integer32):
 																																2
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
@@ -1085,7 +1085,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				2
 																																Entry (KeyValuePair`2)
 																																	Key (StringMap):
@@ -1094,10 +1094,10 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				2
 																														Entry (KeyValuePair`2)
-																															Key (Integer):
+																															Key (Integer32):
 																																3
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
@@ -1107,7 +1107,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				3
 																																Entry (KeyValuePair`2)
 																																	Key (StringMap):
@@ -1116,7 +1116,7 @@ Entry (KeyValuePair`2)
 																																		Entry (KeyValuePair`2)
 																																			Key (StringMap):
 																																				"literal"
-																																			Value (Integer):
+																																			Value (Integer32):
 																																				3
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1140,7 +1140,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1157,7 +1157,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1183,7 +1183,7 @@ Entry (KeyValuePair`2)
 																					Value (StringMap):
 																						"current"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1204,7 +1204,7 @@ Entry (KeyValuePair`2)
 																				"select"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer):
+																					Key (Integer32):
 																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
@@ -1217,7 +1217,7 @@ Entry (KeyValuePair`2)
 																									Value (StringMap):
 																										"current"
 																				Entry (KeyValuePair`2)
-																					Key (Integer):
+																					Key (Integer32):
 																						2
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
@@ -1226,7 +1226,7 @@ Entry (KeyValuePair`2)
 																							Value (StringMap):
 																								"symbol"
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										2
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1274,7 +1274,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1284,7 +1284,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
-													Value (Integer):
+													Value (Integer32):
 														1
 										Entry (KeyValuePair`2)
 											Key (StringMap):
@@ -1295,7 +1295,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1308,7 +1308,7 @@ Entry (KeyValuePair`2)
 																			Value (StringMap):
 																				"SecondLevel"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1351,7 +1351,7 @@ Entry (KeyValuePair`2)
 		"argTest"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
@@ -1367,7 +1367,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"nestedClassTest"
-	Value (Integer):
+	Value (Integer32):
 		0
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1377,7 +1377,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"boolTest"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1452,7 +1452,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"interceptedSymbolTwo"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1484,12 +1484,12 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"literal"
-							Value (Integer):
+							Value (Integer32):
 								5
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalFunctionResult"
-	Value (Integer):
+	Value (Integer32):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1513,7 +1513,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1578,7 +1578,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1617,7 +1617,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1651,7 +1651,7 @@ Entry (KeyValuePair`2)
 																		"program"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				1
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
@@ -1694,7 +1694,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1787,7 +1787,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1834,7 +1834,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1844,7 +1844,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
-													Value (Integer):
+													Value (Integer32):
 														1
 										Entry (KeyValuePair`2)
 											Key (StringMap):
@@ -1855,7 +1855,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1868,7 +1868,7 @@ Entry (KeyValuePair`2)
 																			Value (StringMap):
 																				"SetUpperLevel"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -1877,18 +1877,18 @@ Entry (KeyValuePair`2)
 																	Value (StringMap):
 																		"changed"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		5
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (DictionaryMap):
 				0
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"staticEventChanged"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1912,7 +1912,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -1938,7 +1938,7 @@ Entry (KeyValuePair`2)
 															Value (StringMap):
 																"arg"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		6
 	Value (EmptyMap):
 		0
@@ -1955,22 +1955,22 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"instanceEventChanged"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"instanceEventResult"
-	Value (Integer):
+	Value (Integer32):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"one"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"two"
-	Value (Integer):
+	Value (Integer32):
 		2
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -1985,14 +1985,14 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"firstIfCondition"
-	Value (Integer):
+	Value (Integer32):
 		1
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"firstIfBranches"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (FunctionMap):
 				Entry (KeyValuePair`2)
@@ -2038,7 +2038,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"bigNumber"
-	Value (Integer):
+	Value (Integer32):
 		50020202
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2050,17 +2050,17 @@ Entry (KeyValuePair`2)
 		"secondSwitchCases"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (StringMap):
 				"one"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				2
 			Value (StringMap):
 				"two"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				3
 			Value (StringMap):
 				"three"
@@ -2091,7 +2091,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2129,12 +2129,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"decimalTest"
-	Value (Integer):
+	Value (Integer32):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"fractionTest"
-	Value (Integer):
+	Value (Integer32):
 		40
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2167,9 +2167,9 @@ Entry (KeyValuePair`2)
 	Value (ObjectMap):
 		System.Collections.ArrayList
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		7
-	Value (Integer):
+	Value (Integer32):
 		0
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2215,7 +2215,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"whileCounter"
-	Value (Integer):
+	Value (Integer32):
 		10
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2239,7 +2239,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2260,7 +2260,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2273,7 +2273,7 @@ Entry (KeyValuePair`2)
 																			Value (StringMap):
 																				"not"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2281,7 +2281,7 @@ Entry (KeyValuePair`2)
 																		"call"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				1
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
@@ -2294,7 +2294,7 @@ Entry (KeyValuePair`2)
 																							Value (StringMap):
 																								"equal"
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				2
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
@@ -2307,16 +2307,16 @@ Entry (KeyValuePair`2)
 																							Value (StringMap):
 																								"start"
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				3
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
 																					Key (StringMap):
 																						"literal"
-																					Value (Integer):
+																					Value (Integer32):
 																						10
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										2
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2337,7 +2337,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2347,7 +2347,7 @@ Entry (KeyValuePair`2)
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
 																				"literal"
-																			Value (Integer):
+																			Value (Integer32):
 																				1
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
@@ -2358,7 +2358,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer):
+																					Key (Integer32):
 																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
@@ -2392,7 +2392,7 @@ Entry (KeyValuePair`2)
 																														"call"
 																													Value (DictionaryMap):
 																														Entry (KeyValuePair`2)
-																															Key (Integer):
+																															Key (Integer32):
 																																1
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
@@ -2405,7 +2405,7 @@ Entry (KeyValuePair`2)
 																																			Value (StringMap):
 																																				"loop"
 																														Entry (KeyValuePair`2)
-																															Key (Integer):
+																															Key (Integer32):
 																																2
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
@@ -2413,7 +2413,7 @@ Entry (KeyValuePair`2)
 																																		"call"
 																																	Value (DictionaryMap):
 																																		Entry (KeyValuePair`2)
-																																			Key (Integer):
+																																			Key (Integer32):
 																																				1
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
@@ -2426,7 +2426,7 @@ Entry (KeyValuePair`2)
 																																							Value (StringMap):
 																																								"sum"
 																																		Entry (KeyValuePair`2)
-																																			Key (Integer):
+																																			Key (Integer32):
 																																				2
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
@@ -2439,16 +2439,16 @@ Entry (KeyValuePair`2)
 																																							Value (StringMap):
 																																								"arg"
 																																		Entry (KeyValuePair`2)
-																																			Key (Integer):
+																																			Key (Integer32):
 																																				3
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
 																																					Key (StringMap):
 																																						"literal"
-																																					Value (Integer):
+																																					Value (Integer32):
 																																						1
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2469,7 +2469,7 @@ Entry (KeyValuePair`2)
 																				"program"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer):
+																					Key (Integer32):
 																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
@@ -2508,7 +2508,7 @@ Entry (KeyValuePair`2)
 																															Value (StringMap):
 																																"arg"
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										3
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2525,7 +2525,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2533,7 +2533,7 @@ Entry (KeyValuePair`2)
 																		"select"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				1
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
@@ -2546,7 +2546,7 @@ Entry (KeyValuePair`2)
 																							Value (StringMap):
 																								"whileBranches"
 																		Entry (KeyValuePair`2)
-																			Key (Integer):
+																			Key (Integer32):
 																				2
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
@@ -2559,7 +2559,7 @@ Entry (KeyValuePair`2)
 																							Value (StringMap):
 																								"whileDecision"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2593,7 +2593,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2625,7 +2625,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"result"
-			Value (Integer):
+			Value (Integer32):
 				1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2649,7 +2649,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2731,7 +2731,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2828,7 +2828,7 @@ Entry (KeyValuePair`2)
 												"program"
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
-													Key (Integer):
+													Key (Integer32):
 														1
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
@@ -2850,7 +2850,7 @@ Entry (KeyValuePair`2)
 																	Value (StringMap):
 																		"changed"
 Entry (KeyValuePair`2)
-	Key (Integer):
+	Key (Integer32):
 		8
 	Value (DictionaryMap):
 		0
@@ -2876,7 +2876,7 @@ Entry (KeyValuePair`2)
 								"program"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										1
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2897,7 +2897,7 @@ Entry (KeyValuePair`2)
 														"program"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2931,7 +2931,7 @@ Entry (KeyValuePair`2)
 																								"program"
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
-																									Key (Integer):
+																									Key (Integer32):
 																										1
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
@@ -2953,7 +2953,7 @@ Entry (KeyValuePair`2)
 																															Value (StringMap):
 																																"arg"
 								Entry (KeyValuePair`2)
-									Key (Integer):
+									Key (Integer32):
 										2
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
@@ -2963,7 +2963,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
-													Value (Integer):
+													Value (Integer32):
 														1
 										Entry (KeyValuePair`2)
 											Key (StringMap):
@@ -2974,7 +2974,7 @@ Entry (KeyValuePair`2)
 														"call"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -2987,7 +2987,7 @@ Entry (KeyValuePair`2)
 																			Value (StringMap):
 																				"innerFunction"
 														Entry (KeyValuePair`2)
-															Key (Integer):
+															Key (Integer32):
 																2
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
@@ -3021,7 +3021,7 @@ Entry (KeyValuePair`2)
 										"program"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
-											Key (Integer):
+											Key (Integer32):
 												1
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
@@ -3043,7 +3043,7 @@ Entry (KeyValuePair`2)
 																	Value (StringMap):
 																		"arg"
 		Entry (KeyValuePair`2)
-			Key (Integer):
+			Key (Integer32):
 				1
 			Value (DictionaryMap):
 				0
@@ -3061,7 +3061,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"enumTest"
-	Value (Integer):
+	Value (Integer32):
 		2
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -3103,15 +3103,15 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"a"
-			Value (Integer):
+			Value (Integer32):
 				97
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"space"
-			Value (Integer):
+			Value (Integer32):
 				32
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"tab"
-			Value (Integer):
+			Value (Integer32):
 				9
