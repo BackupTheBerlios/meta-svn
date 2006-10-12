@@ -246,16 +246,21 @@ namespace Meta {
 
 				Transform.GetConversion(type,il);
 			}
-			if(method.IsStatic && !method.ReturnType.Equals(typeof(void)) && !method.ReturnType.IsValueType) {
-				il.Emit(OpCodes.Tailcall);
-			}
+			//if(method.IsStatic && !method.ReturnType.Equals(typeof(void)) && !method.ReturnType.IsValueType) {
+			//    il.Emit(OpCodes.Tailcall);
+			//}
 			if(method.IsStatic) {
 				il.Emit(OpCodes.Call,method);
 			}
 			else {
 				il.Emit(OpCodes.Callvirt,method);
 			}
-			Transform.GetMetaConversion(method.ReturnType,il);
+			//if(method.Name.Contains("SetVideoMode")) {
+			//    //il.Emit(OpCodes
+			//}
+			//else {
+				Transform.GetMetaConversion(method.ReturnType,il);
+			//}
 			il.Emit(OpCodes.Ret);
 			this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
 		}
@@ -1019,6 +1024,7 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//Map x=new ObjectMap(Video.SetVideoModeWindow(100,100,true));
 			//BigInteger i=new BigInteger("-10",10);
 			//Console.WriteLine(i.ToString());
 			DateTime start = DateTime.Now;
@@ -1106,7 +1112,14 @@ namespace Meta {
 			TryToDotNet(meta, target, out dotNet);
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 		}
-		public static Delegate CreateDelegateFromCode(Type delegateType, Map code) {
+		public static Dictionary<int,Type> types=new Dictionary<int,Type>();
+		public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
+			//Type type=Type.GetTypeFromHandle(Type.);
+			Type type=types[typeToken];
+			return CreateDelegateFromCode(code,type);// types[typeToken]);
+			//return CreateDelegateFromCode(code,Type.GetTypeFromHandle((IntPtr)typeToken));// types[typeToken]);
+		}
+		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
 			List<Type> arguments = new List<Type>();
@@ -1142,6 +1155,42 @@ namespace Meta {
 			}
 			return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 		}
+		//public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
+		//    MethodInfo invoke = delegateType.GetMethod("Invoke");
+		//    ParameterInfo[] parameters = invoke.GetParameters();
+		//    List<Type> arguments = new List<Type>();
+		//    arguments.Add(typeof(MetaDelegate));
+		//    foreach (ParameterInfo parameter in parameters) {
+		//        arguments.Add(parameter.ParameterType);
+		//    }
+		//    DynamicMethod method = new DynamicMethod("EventHandler",
+		//        invoke.ReturnType,
+		//        arguments.ToArray(),
+		//        typeof(Map).Module);
+		//    ILGenerator il = method.GetILGenerator();
+		//    LocalBuilder local = il.DeclareLocal(typeof(object[]));
+		//    il.Emit(OpCodes.Ldc_I4, parameters.Length);
+		//    il.Emit(OpCodes.Newarr, typeof(object));
+		//    il.Emit(OpCodes.Stloc, local);
+		//    for (int i = 0; i < parameters.Length; i++) {
+		//        il.Emit(OpCodes.Ldloc, local);
+		//        il.Emit(OpCodes.Ldc_I4, i);
+		//        il.Emit(OpCodes.Ldarg, i + 1);
+		//        il.Emit(OpCodes.Stelem_Ref);
+		//    }
+		//    il.Emit(OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ldloc, local);
+		//    il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+		//    if (invoke.ReturnType == typeof(void)) {
+		//        il.Emit(OpCodes.Pop);
+		//        il.Emit(OpCodes.Ret);
+		//    }
+		//    else {
+		//        il.Emit(OpCodes.Castclass, invoke.ReturnType);
+		//        il.Emit(OpCodes.Ret);
+		//    }
+		//    return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+		//}
 		public class MetaDelegate {
 			private Map callable;
 			private Type returnType;
@@ -1181,6 +1230,10 @@ namespace Meta {
 							il.Emit(OpCodes.Newobj,typeof(Integer).GetConstructor(new Type[] {typeof(int)}));
 							break;
 						default:
+							if(type.IsValueType)
+							{
+								il.Emit(OpCodes.Box,type);
+							}
 							il.Emit(OpCodes.Newobj,typeof(ObjectMap).GetConstructor(new Type[] {typeof(object)}));
 							break;
 
@@ -1207,10 +1260,24 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
 			}
+			else if(target.Equals(typeof(Single))) {
+				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetSingle"));
+			}
 			else if(target.Equals(typeof(object))) {
 			}
 			else if(target.Equals(typeof(Type))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetClass"));
+			}
+			else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))) {
+				int token=(int)target.TypeHandle.Value;
+				if(!Transform.types.ContainsKey(token)) {
+				    Transform.types[token]=target;
+				}
+				il.Emit(OpCodes.Ldc_I4,(int)token);//Transform.types[target]);
+				//il.Emit(OpCodes.Ldc_I4,Transform.types[target]);
+				il.Emit(OpCodes.Call,typeof(Transform).GetMethod("CreateDelegateFromCode",new Type[] {typeof(Map),typeof(int)}));
+				//dotNet = CreateDelegateFromCode(target, meta);
 			}
 		    else 
 			{
@@ -1263,7 +1330,9 @@ namespace Meta {
 							}
 							else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 							   && meta.ContainsKey(CodeKeys.Function)) {
-								dotNet = CreateDelegateFromCode(target, meta);}}
+								dotNet = CreateDelegateFromCode(meta, target);
+							}
+						}
 						else if (target.IsEnum) {
 							dotNet = Enum.ToObject(target, meta.GetNumber().GetInt32());}
 						else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
@@ -2034,7 +2103,7 @@ namespace Meta {
 			}
 		}
 		public Delegate CreateEventDelegate(string name, Map code) {
-			return Transform.CreateDelegateFromCode(type.GetEvent(name, BindingFlags).EventHandlerType, code);
+			return Transform.CreateDelegateFromCode(code, type.GetEvent(name, BindingFlags).EventHandlerType);
 		}
 	}
 	public interface ISerializeEnumerableSpecial {
@@ -2350,6 +2419,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
+		public float GetSingle() {
+			return (float)GetDouble();
+		}
 		public virtual Number SubtractFrom(int i) {
 			return new Rational(i).Subtract(this);
 		}
@@ -4222,7 +4294,9 @@ namespace Meta {
 	    //{
 	    //    this.list = new List<Map>(original.list);
 	    //}
-	    public override Map this[Map key] {	        get {	            Map value = null;
+	    public override Map this[Map key] {
+	        get {
+	            Map value = null;
 	            if (key.IsNumber)
 	            {
 	                int integer = key.GetNumber().GetInt32();
@@ -4232,7 +4306,9 @@ namespace Meta {
 	                }
 	            }
 	            return value;
-	        }	        set {	            if (key.IsNumber)
+	        }
+	        set {
+	            if (key.IsNumber)
 	            {
 	                int integer = key.GetNumber().GetInt32();
 	                if (integer >= 1 && integer <= list.Count)
@@ -4247,7 +4323,9 @@ namespace Meta {
 	                }
 	            }
 	            throw new Exception("Method or operation not implemented.");
-	        }	    }
+	        }
+	    }
+
 	    public override int Count
 	    {
 	        get

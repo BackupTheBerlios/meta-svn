@@ -139,37 +139,26 @@
 		apply(range(10) ?bubble(random(1 2
 	Events.set_TargetFps_Int32(500
 	paused=0
-	Events.add_AppActive_ActiveEventHandler(
-		?e?if(
-			not(
-				equal(
-					e.get_State(
-					1
-			?{
-				paused:1
 	add_Tick_TickEventHandler(
-		??if(
-			not(
-				paused
-			?{
-				Fill_Color(Color.get_White(
-				contactGroup.Empty(
-				print(Events.get_Fps(
-				space.CheckCollisions(
-				world.Step(
-				apply(bubbles b?{
-					b.move(
-					b.draw(b.color
-				apply(players player?player.draw(Color.get_Blue(
-				apply(players player?if(not(equal(0 player.currentBubble)) ?{
-					a=player.currentBubble.body.get_Position(
-					b=player.body.get_Position(
-					DrawLine_Line_Color(
-						Line_Int16_Int16_Int16_Int16(
-							a.get_X(
-							a.get_Y(
-							b.get_X(
-							b.get_Y(
-						Color.get_Black(
-				Flip(
+		??{
+			Fill_Color(Color.get_White(
+			contactGroup.Empty(
+			print(Events.get_Fps(
+			space.CheckCollisions(
+			world.Step(
+			apply(bubbles b?{
+				b.move(
+				b.draw(b.color
+			apply(players player?player.draw(Color.get_Blue(
+			apply(players player?if(not(equal(0 player.currentBubble)) ?{
+				a=player.currentBubble.body.get_Position(
+				b=player.body.get_Position(
+				DrawLine_Line_Color(
+					Line_Int16_Int16_Int16_Int16(
+						a.get_X(
+						a.get_Y(
+						b.get_X(
+						b.get_Y(
+					Color.get_Black(
+			Flip(
 	Run(
