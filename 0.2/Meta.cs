@@ -2426,11 +2426,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
+		public abstract Integer GetInteger();
 		public float GetSingle() {
 			return (float)GetDouble();
-		}
-		public virtual Number SubtractFrom(int i) {
-			return new Rational(i).Subtract(this);
 		}
 		public override string GetString() {
 			return null;
@@ -2568,17 +2566,11 @@ namespace Meta {
 		public virtual bool LessThan(Number b) {
 			return Expand(b) < b.Expand(this);
 		}
-		public virtual Number Subtract(int b) {
-		    return Subtract(new Integer(b));
-		}
 		public virtual bool LessThan(int b) {
 		    return LessThan(new Integer(b));
 		}
 		public virtual Number Add(Number b) {
 			 return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-		}
-		public virtual Number Add(int b) {
-		    return Add(new Integer(b));
 		}
 		public static Number Add(Number a, Number b) {
 		    return a.Add(b);
@@ -2627,6 +2619,10 @@ namespace Meta {
 		public abstract double GetDouble();
 	}
 	public class Integer:Number{
+
+		public override Integer GetInteger() {
+			return this;
+		}
 		public static readonly Integer Zero=new Integer(0);
 		public static readonly Integer One=new Integer(1);
 	    private int integer;
@@ -2637,48 +2633,37 @@ namespace Meta {
 	        return integer;
 	    }
 	    public override Number Subtract(Number b) {
-			return b.SubtractFrom(integer);
+			Integer i =b.GetInteger();
+			if(i!=null) {
+				try {
+					return integer-i.integer;
+				}
+				catch(OverflowException) {
+				}
+			}
+			return base.Subtract(b);
 	    }
 	    public override bool LessThan(Number b) {
-	        if(b.IsInt32) {
+			Integer i=b.GetInteger();
+	        if(i!=null) {
                 try {
-                    return integer<b.GetInt32();
+                    return integer<i.integer;
                 }
                 catch(OverflowException) {
-                    return base.LessThan(b);
                 }
 	        }
 	        return base.LessThan(b);
 	    }
 	    public override Number Add(Number b) {
-	        if(b.IsInt32) {
+			Integer i=b.GetInteger();
+	        if(i!=null) {
                 try {
-                    return new Integer(integer+b.GetInt32());
+                    return integer+i.integer;
                 }
                 catch(OverflowException) {
-                    return base.Add(b);
                 }
 	        }
 	        return base.Add(b);
-	    }
-	    public override Number Subtract(int b) {
-            try {
-                return new Integer(integer-b);
-            }
-            catch(OverflowException) {
-                return base.Subtract(b);
-            }
-	    }
-	    public override bool LessThan(int b) {
-	        return integer<b;
-	    }
-	    public override Number Add(int b) {
-            try {
-                return new Integer(integer+b);
-            }
-            catch(OverflowException) {
-                return base.Add(b);
-            }
 	    }
 	    public override double Denominator {
 	        get {
@@ -2706,6 +2691,12 @@ namespace Meta {
 	    }
 	}
 	public class Rational:Number {
+		public override Integer GetInteger() {
+			if(IsInt32) {
+				return new Integer(GetInt32());
+			}
+			return null;
+		}
 		public override bool IsNatural {
 			get {
 				return denominator == 1.0d;
