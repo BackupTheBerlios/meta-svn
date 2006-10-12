@@ -1673,7 +1673,7 @@ namespace Meta {
 			else if (this.Count == 1) {
 				if(this.ContainsKey(Map.Empty)) {
 					if(this[Map.Empty].IsNumber) {
-						return Integer32.One.Add(this[Map.Empty].GetNumber());
+						return this[Map.Empty].GetNumber()+1;
 						//return 1 + this[Map.Empty].GetNumber();
 					}
 				}
@@ -2236,7 +2236,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
-				if (number.Equals(Integer32.One)) {
+				if (number==1) {
 					return Number.Greater(number,0) && Number.LessEqual(number,text.Length);}
 					//return number > 0 && number <= text.Length;}
 				else {
@@ -2271,6 +2271,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
+		public static Number operator +(Number a,int b) {
+			return a.Add(new Integer32(b));
+		}
 		public static bool operator ==(Number a,int b) {
 			return a.Equals(new Integer32(b));
 		}
@@ -2336,7 +2339,7 @@ namespace Meta {
 		}
 		public override IEnumerable<Map> Keys {
 			get {
-				if (!this.Equals(Integer32.Zero)) {
+				if (this!=0) {
 					yield return Map.Empty;
 				}
 				if (Number.Less(this,0)) {
@@ -2495,9 +2498,6 @@ namespace Meta {
 		public Integer(string text) {
 			this.integer=new BigInteger(text);
 		}
-		//public Integer(string text) {
-		//    this.integer=new BigInteger(text);
-		//}
 		public override int GetInt32() {
 			return integer.intValue();
 		}
@@ -2506,8 +2506,8 @@ namespace Meta {
 		public override Integer32 GetInteger() {
 			return this;
 		}
-		public static readonly Integer32 Zero=new Integer32(0);
-		public static readonly Integer32 One=new Integer32(1);
+		//public static readonly Integer32 Zero=new Integer32(0);
+		//public static readonly Integer32 One=new Integer32(1);
 	    private int integer;
 	    public Integer32(int integer) {
 	        this.integer=integer;
