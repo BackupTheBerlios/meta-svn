@@ -176,7 +176,8 @@ namespace Meta {
 								if (arg == null) {
 									m = method.method;
 									return true;}
-								else {
+								else if(method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length!=0) {
+								//else {
 									arguments.Add(Transform.ToDotNet(arg, method.parameters[i].ParameterType));
 								}
 							}
@@ -1099,10 +1100,11 @@ namespace Meta {
 				AllocConsole();
 				Console.SetBufferSize(80, 1000);
 			}
-			useConsole = true;}
+			useConsole = true;
+		}
 		public static string InstallationPath {
 			get {
-				return @"C:\Meta\0.2\";
+				return @"D:\Meta\0.2\";
 			}
 		}
 	}
@@ -1235,9 +1237,6 @@ namespace Meta {
 			{
 		    }
 		}
-		// use GetConversion instead, put them in delegates
-		// otherwise we would have a lot of duplication
-		// only the target type matters
 		public static object ToDotNet(Map meta,Type target) {
 			if(target.Equals(typeof(Map))||target.IsSubclassOf(typeof(Map))) {
 				return meta;
@@ -2626,10 +2625,8 @@ namespace Meta {
 				numerator = -numerator;
 				denominator = -denominator;
 			}
-			//this.numerator = new Integer(numerator / greatestCommonDivisor);
-			this.numerator = new Integer(Convert.ToInt32((numerator / greatestCommonDivisor)));
-			this.denominator = new Integer(Convert.ToInt32(denominator / greatestCommonDivisor));
-			//this.denominator = denominator / greatestCommonDivisor;
+			this.numerator = new Integer(Convert.ToInt64((numerator / greatestCommonDivisor)).ToString());
+			this.denominator = new Integer(Convert.ToInt64(denominator / greatestCommonDivisor).ToString());
 		}
 		public override double Numerator {
 			get {
@@ -2673,12 +2670,15 @@ namespace Meta {
 				return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*indentationCount.GetHashCode()*FileName.GetHashCode();
 			}
 		}
-		public State(int index,int Line,int Column,int indentationCount,string fileName){
+		public State(int index,int Line,int Column,int indentationCount,string fileName,string Text){
 			this.index=index;
 			this.FileName=fileName;
 			this.Line=Line;
 			this.Column=Column;
-			this.indentationCount=indentationCount;}
+			this.indentationCount=indentationCount;
+			this.Text=Text;
+		}
+		public string Text;
 		public string FileName;
 		public int index;
 		public int Line;
@@ -2709,7 +2709,7 @@ namespace Meta {
 		public Stack<int> defaultKeys = new Stack<int>();
 		public State State;
 		public Parser(string text, string filePath) {
-			State=new State(0,1,1,-1,filePath);
+			State=new State(0,1,1,-1,filePath,Text);
 			this.Text = text+Syntax.endOfFile;
 			this.FileName = filePath;
 			Root.precondition=delegate(Parser p) {return p.Look()==Syntax.root;};
