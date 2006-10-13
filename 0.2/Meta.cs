@@ -2284,6 +2284,15 @@ namespace Meta {
 		public override string GetString() {
 			return null;
 		}
+		public static implicit operator Number(double number) {
+			return new Rational(number);
+		}
+		public static implicit operator Number(decimal number) {
+			return new Rational((double)number);
+		}
+		public static implicit operator Number(int integer) {
+			return new Integer32(integer);
+		}
 		public override IEnumerable<Map> Array {
 			get { 
 				yield break;
@@ -2378,16 +2387,8 @@ namespace Meta {
 		}
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
-		public static implicit operator Number(double number) {
-			return new Rational(number);
-		}
-		public static implicit operator Number(decimal number) {
-			return new Rational((double)number);
-		}
-		public static implicit operator Number(int integer) {
-			return new Integer32(integer);
-		}
-		public static double GreatestCommonDivisor(double a, double b) {
+
+		private static double GreatestCommonDivisor(double a, double b) {
 			if(a==b) {
 				return a;
 			}
@@ -2631,13 +2632,11 @@ namespace Meta {
 		public override double Numerator {
 			get {
 				return numerator.GetDouble();
-				//return numerator;
 			}
 		}
 		public override double Denominator {
 			get {
 				return denominator.GetDouble();
-				//return denominator;
 			}
 		}
 		public Number Clone() {
@@ -2645,7 +2644,6 @@ namespace Meta {
 		}
 		public override double GetDouble() {
 			return numerator.GetDouble() / denominator.GetDouble();
-			//return numerator.GetDouble() / denominator;
 		}
 		public override int GetInt32() {
 			return Convert.ToInt32(numerator.GetDouble() / denominator.GetDouble());
