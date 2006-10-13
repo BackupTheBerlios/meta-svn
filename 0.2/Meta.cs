@@ -39,62 +39,59 @@ namespace Meta {
 
 	public abstract class Expression:Attribute {
 		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
-
-		static Expression() {
-			expressions[CodeKeys.Call]=typeof(Call);
+		public static Dictionary<Map,Type> statements=new Dictionary<Map,Type>();
+		static Expression() 
+		{	expressions[CodeKeys.Call]=typeof(Call);
 			expressions[CodeKeys.Program]=typeof(Program);
 			expressions[CodeKeys.Literal]=typeof(Literal);
 			expressions[CodeKeys.Select]=typeof(Select);
 			expressions[CodeKeys.Root]=typeof(Root);
 			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
 			expressions[CodeKeys.Search]=typeof(Search);
-		}
-		public Compiled GetCompiled() {
-			if(compiled==null) {
-				compiled=Compile();
-			}
-			return compiled;
-		}
+
+			statements[CodeKeys.Keys]=typeof(SearchStatement);
+			statements[CodeKeys.Current]=typeof(CurrentStatement);
+			statements[CodeKeys.Key]=typeof(KeyStatement);
+			statements[CodeKeys.Discard]=typeof(DiscardStatement); }
+		public Compiled GetCompiled()
+		{	if(compiled==null) 
+			{	compiled=Compile();}
+			return compiled;}
 		public Compiled compiled;
 		public bool isFunction = false;
 		public readonly Extent Source;
 		public readonly Expression Parent;
 		public Statement Statement;
-		public Expression(Extent source, Expression parent) {
-			this.Source = source;
-			this.Parent = parent;
-		}
+		public Expression(Extent source, Expression parent)
+		{	this.Source = source;
+			this.Parent = parent;}
 		private bool evaluated = false;
 		private Structure structure;
-		public Map GetConstant() {
-			Structure s=EvaluateStructure();
-			return s !=null && s.IsConstant? ((LiteralStructure)s).Literal:null;
-		}
-		public Map EvaluateMapStructure() {
-			Structure s=EvaluateStructure();
+		public Map GetConstant() 
+		{	Structure s=EvaluateStructure();
+			return s !=null && s.IsConstant? ((LiteralStructure)s).Literal:null;}
+		public Map EvaluateMapStructure() 
+		{	Structure s=EvaluateStructure();
 			Map m;
-			if(s!=null) {
-				m=((LiteralStructure)s).Literal;
+			if(s!=null)
+			{	m=((LiteralStructure)s).Literal;
 			}
-			else {
-				m=null;
+			else 
+			{	m=null;
 			}
-			return m;
-		}
+			return m;}
 		public Structure EvaluateStructure() {
-			if (!evaluated) {
-				structure = StructureImplementation();
+			if (!evaluated) 
+			{	structure = StructureImplementation();
 				evaluated = true;
 			}
-			return structure;
-		}
+			return structure;}
 		public abstract Structure StructureImplementation();
 		public Compiled Compile() {
 			Compiled result = CompileImplementation(this.Parent);
-			if (Source != null) {
-				if (!sources.ContainsKey(Source.End)) {
-					sources[Source.End] = new List<Expression>();
-				}
+			if (Source != null) 
+			{	if (!sources.ContainsKey(Source.End)) 
+				{	sources[Source.End] = new List<Expression>();}
 				sources[Source.End].Add(this);
 			}
 			return result;
@@ -102,15 +99,13 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public abstract Compiled CompileImplementation(Expression parent);
 	}
-	public class LastArgument : Expression {
-		public LastArgument(Map code, Expression parent)
+	public class LastArgument : Expression 
+	{	public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {}
-		public override Structure StructureImplementation() {
-			return null;
-		}
-		public override Compiled CompileImplementation(Expression parent) {
-			return new CompiledLastArgument(Source);
-		}
+		public override Structure StructureImplementation()
+		{	return null;}
+		public override Compiled CompileImplementation(Expression parent)
+		{	return new CompiledLastArgument(Source);}
 	}
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source): base(source) {}
@@ -547,7 +542,6 @@ namespace Meta {
 			}
 			this.expression=code[CodeKeys.Expression].GetExpression(this);
 			CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
-			//CurrentStatement c = new CurrentStatement(expression, this, statementList.Count);
 			statementList.Add(c);
 		}
 	}
@@ -883,7 +877,9 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledCurrentStatement(value.Compile(), Index);
 		}
-		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) {}
+		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) 
+		{
+		}
 	}
 	public class CompiledSearchStatement : CompiledStatement {
 		private Compiled key;
@@ -3881,12 +3877,7 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-			public class Fibo: Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			public class Library : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
@@ -3897,6 +3888,12 @@ namespace Meta {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Fibo: Test {
+			    public override object GetResult(out int level) {
+			        level = 2;
+			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 			public class MergeSort: Test {
@@ -4826,29 +4823,18 @@ namespace Meta {
 			return null;
 			//throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
 		}
-		public static Dictionary<Map,Type> statements=new Dictionary<Map,Type>();
-		static Map() {
-			statements[CodeKeys.Keys]=typeof(SearchStatement);
-			statements[CodeKeys.Current]=typeof(CurrentStatement);
-			statements[CodeKeys.Key]=typeof(KeyStatement);
-			statements[CodeKeys.Discard]=typeof(KeyStatement);
-		}
 		public Statement GetStatement(Program program, int index) {
-			if (ContainsKey(CodeKeys.Keys)) {
-				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
+			foreach(KeyValuePair<Map,Type> pair in Expression.statements) {
+			    if(ContainsKey(pair.Key)) {
+			        return (Statement)pair.Value.GetConstructors()[0].Invoke(
+			            new object[] {
+			                this[pair.Key].GetExpression(program),
+			                this[CodeKeys.Value].GetExpression(program),
+			                program,
+			                index});
+			    }
 			}
-			else if (ContainsKey(CodeKeys.Current)) {
-				return new CurrentStatement(null,this[CodeKeys.Value].GetExpression(program), program, index);
-			}
-			else if (ContainsKey(CodeKeys.Key)) {
-				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
-			}
-			else if (ContainsKey(CodeKeys.Discard)) {
-				return new DiscardStatement(null,this[CodeKeys.Value].GetExpression(program),program, index);
-			}
-			else {
-				throw new ApplicationException("Cannot compile map");
-			}
+			return null;
 		}
 		public IEnumerator<KeyValuePair<Map, Map>> GetEnumerator() {
 			foreach (Map key in Keys) {
