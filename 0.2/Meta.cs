@@ -1070,6 +1070,7 @@ namespace Meta {
 						}
 						catch (Exception e) {
 							Console.WriteLine(e.ToString());
+							Console.ReadLine();
 						}
 						Console.WriteLine((DateTime.Now - start).TotalSeconds);
 						return;
@@ -1588,7 +1589,8 @@ namespace Meta {
 			return Object.ToString();
 		}
 		public override Map Copy() {
-			return new ObjectMap(Object);
+			return this;
+			//return new ObjectMap(Object);
 		}
 	}
 	public class DictionaryMap : Map {
@@ -2655,7 +2657,7 @@ namespace Meta {
 			return Convert.ToInt64(numerator.GetDouble() / denominator.GetDouble());
 		}
 		public override long GetInt64() {
-			return Convert.ToInt64(numerator);
+			return Convert.ToInt64(numerator.GetDouble());
 		}
 	}
 

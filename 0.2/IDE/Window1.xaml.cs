@@ -13,11 +13,11 @@ using Microsoft.Win32;
 using Meta;
 using System.IO;
 using System.Diagnostics;
+using SandcastleBuilder.Utils;
 
 
 namespace IDE {
 	public partial class Window1 : System.Windows.Window {
-		public static KeyboardDevice keyboard;
 		TextBox textBox = new TextBox();
 		private void Save() {
 			if (fileName == null) {
@@ -292,8 +292,8 @@ namespace IDE {
 			scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 			scrollViewer.Content = canvas;
 			dockPanel.Children.Add(scrollViewer);
-			const int width = 800;
-			const int height = 600;
+			const int width = 0;
+			const int height = 0;
 
 			Canvas.SetLeft(textBox, width/2);
 			Canvas.SetTop(textBox, height/2);
