@@ -74,24 +74,22 @@ namespace Meta {
 		{	Structure s=EvaluateStructure();
 			Map m;
 			if(s!=null)
-			{	m=((LiteralStructure)s).Literal;
-			}
+			{	m=((LiteralStructure)s).Literal;}
 			else 
-			{	m=null;
-			}
+			{	m=null;}
 			return m;}
 		public Structure EvaluateStructure() {
 			if (!evaluated) 
 			{	structure = StructureImplementation();
-				evaluated = true;
-			}
+				evaluated = true;}
 			return structure;}
 		public abstract Structure StructureImplementation();
 		public Compiled Compile() {
 			Compiled result = CompileImplementation(this.Parent);
-			if (Source != null) 
-			{	if (!sources.ContainsKey(Source.End)) 
-				{	sources[Source.End] = new List<Expression>();}
+			if (Source != null) {
+				if (!sources.ContainsKey(Source.End)) {
+					sources[Source.End] = new List<Expression>();
+				}
 				sources[Source.End].Add(this);
 			}
 			return result;
@@ -99,13 +97,15 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public abstract Compiled CompileImplementation(Expression parent);
 	}
-	public class LastArgument : Expression 
-	{	public LastArgument(Map code, Expression parent)
+	public class LastArgument : Expression {
+		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {}
-		public override Structure StructureImplementation()
-		{	return null;}
-		public override Compiled CompileImplementation(Expression parent)
-		{	return new CompiledLastArgument(Source);}
+		public override Structure StructureImplementation() {
+			return null;
+		}
+		public override Compiled CompileImplementation(Expression parent) {
+			return new CompiledLastArgument(Source);
+		}
 	}
 	public class CompiledLastArgument : Compiled {
 		public CompiledLastArgument(Extent source): base(source) {}
