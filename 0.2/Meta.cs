@@ -546,7 +546,8 @@ namespace Meta {
 				this.key=parameter;
 			}
 			this.expression=code[CodeKeys.Expression].GetExpression(this);
-			CurrentStatement c = new CurrentStatement(expression, this, statementList.Count);
+			CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
+			//CurrentStatement c = new CurrentStatement(expression, this, statementList.Count);
 			statementList.Add(c);
 		}
 	}
@@ -776,7 +777,7 @@ namespace Meta {
 		protected override Structure CurrentImplementation(Structure previous) {
 			return previous;
 		}
-		public DiscardStatement(Program program, Expression value, int index): base(program, value, index) {}
+		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
 			return new CompiledDiscardStatement(value.Compile());
 		}
@@ -872,7 +873,6 @@ namespace Meta {
 			}
 			else {
 				context = value;
-				//context = value.Copy();
 			}
 		}
 	}
@@ -883,7 +883,7 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledCurrentStatement(value.Compile(), Index);
 		}
-		public CurrentStatement(Expression value, Program program, int index): base(program, value, index) {}
+		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) {}
 	}
 	public class CompiledSearchStatement : CompiledStatement {
 		private Compiled key;
@@ -2388,7 +2388,7 @@ namespace Meta {
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
 
-		private static double GreatestCommonDivisor(double a, double b) {
+		public static double GreatestCommonDivisor(double a, double b) {
 			if(a==b) {
 				return a;
 			}
@@ -4790,7 +4790,6 @@ namespace Meta {
 			set;
 		}
 		public Map Scope;
-
 		public void Compile(Expression parent) {
 			GetExpression(parent).Compile();
 		}
@@ -4824,20 +4823,28 @@ namespace Meta {
 			if (ContainsKey(CodeKeys.Expression)) {
 		        return new Function(parent,this);
 		    }
-		    throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+			return null;
+			//throw new ApplicationException("Cannot compile map " + Meta.Serialization.Serialize(this));
+		}
+		public static Dictionary<Map,Type> statements=new Dictionary<Map,Type>();
+		static Map() {
+			statements[CodeKeys.Keys]=typeof(SearchStatement);
+			statements[CodeKeys.Current]=typeof(CurrentStatement);
+			statements[CodeKeys.Key]=typeof(KeyStatement);
+			statements[CodeKeys.Discard]=typeof(KeyStatement);
 		}
 		public Statement GetStatement(Program program, int index) {
 			if (ContainsKey(CodeKeys.Keys)) {
 				return new SearchStatement(this[CodeKeys.Keys].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
 			}
 			else if (ContainsKey(CodeKeys.Current)) {
-				return new CurrentStatement(this[CodeKeys.Value].GetExpression(program), program, index);
+				return new CurrentStatement(null,this[CodeKeys.Value].GetExpression(program), program, index);
 			}
 			else if (ContainsKey(CodeKeys.Key)) {
 				return new KeyStatement(this[CodeKeys.Key].GetExpression(program), this[CodeKeys.Value].GetExpression(program), program, index);
 			}
 			else if (ContainsKey(CodeKeys.Discard)) {
-				return new DiscardStatement(program, this[CodeKeys.Value].GetExpression(program), index);
+				return new DiscardStatement(null,this[CodeKeys.Value].GetExpression(program),program, index);
 			}
 			else {
 				throw new ApplicationException("Cannot compile map");
