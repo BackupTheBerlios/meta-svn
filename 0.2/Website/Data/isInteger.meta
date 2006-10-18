@@ -1,3 +1,0 @@
-|
-	object=Meta.ObjectMap.[mscorlib.Object] arg
-	this=object.IsInteger.get *

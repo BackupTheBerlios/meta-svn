@@ -39,8 +39,7 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Meta.cs">
-    </Compile>
+    <Compile Include="Meta.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -63,4 +62,8 @@
     <None Include="libraryTest.meta" />
     <None Include="mergeSort.meta" />
   </ItemGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

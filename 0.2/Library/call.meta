@@ -1,8 +1,0 @@
-arg|-
-	!"sum"
-	arg
-	,
-		first|,
-			second|-
-				!"first"
-				!"second"

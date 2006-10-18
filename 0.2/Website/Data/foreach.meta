@@ -1,6 +1,0 @@
-|apply
-	array=keys arg.map
-	function=
-		|arg.arg.function
-			value=arg.arg.map.[arg]
-			key=arg
