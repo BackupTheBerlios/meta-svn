@@ -1,4 +1,0 @@
-documentation="Returns the keys of a map in an array."
-|
-	object=Meta.ObjectMap.[mscorlib.Object] arg
-	this=Meta.StrategyMap.[mscorlib.["ICollection`1"].[Meta.Map]] object.Keys.get *

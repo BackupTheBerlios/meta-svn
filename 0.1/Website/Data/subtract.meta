@@ -1,4 +1,0 @@
-documentation="Subtracts two numbers."
-|Meta.StrategyMap.[Meta.Number] Meta.Number.op_Subtraction
-	Meta.Number.[Meta.Map] arg.[1]
-	Meta.Number.[Meta.Map] arg.[2]
