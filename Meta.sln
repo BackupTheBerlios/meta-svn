@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta.csproj", "{421
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDE", "IDE\IDE.csproj", "{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaBase", "MetaBase\MetaBase.csproj", "{41FA81FA-4C80-4C3B-9ECF-39B700E7F14F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,10 +18,6 @@ Global
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41FA81FA-4C80-4C3B-9ECF-39B700E7F14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41FA81FA-4C80-4C3B-9ECF-39B700E7F14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41FA81FA-4C80-4C3B-9ECF-39B700E7F14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41FA81FA-4C80-4C3B-9ECF-39B700E7F14F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
