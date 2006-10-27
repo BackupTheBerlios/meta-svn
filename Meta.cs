@@ -966,18 +966,20 @@ namespace Meta {
 			if (subs[0] == null) {}
 		}
 		public override Map Evaluate(Map context) {
-			Map selected = subs[0].Evaluate(context);
-			for (int i = 1; i < subs.Count; i++) {
-				Map key = subs[i].Evaluate(context);
-				Map value = selected[key];
-				if (value == null) {
-					Map x=selected[key];
-					throw new KeyDoesNotExist(key, subs[i].Source.Start, selected);}
-				else {
-					selected = value;
+				Map selected = subs[0].Evaluate(context);
+				for (int i = 1; i < subs.Count; i++) {
+					Map key = subs[i].Evaluate(context);
+					Map value = selected[key];
+					if (value == null) {
+						Map x = selected[key];
+						throw new KeyDoesNotExist(key, subs[i].Source!=null?subs[i].Source.Start:null, selected);
+					}
+					else {
+						selected = value;
+					}
 				}
-			}
-			return selected;
+				return selected;
+		
 		}
 	}
 	public class Select : Expression {
@@ -1258,6 +1260,18 @@ namespace Meta {
 					if (typeCode == TypeCode.Object) {
 						if (target == typeof(Number) && meta.IsNumber) {
 							return meta.GetNumber();
+						}
+						if(target==typeof(Point) && meta.IsNormal) {
+							return new Point(meta[1].GetInt32(), meta[2].GetInt32());
+						}
+						if (target == typeof(Rectangle) && meta.IsNormal) {
+							return new Rectangle(meta[1][1].GetInt32(),
+								meta[1][2].GetInt32(),
+								meta[2][1].GetInt32(),
+								meta[2][2].GetInt32());
+						}
+						if (target == typeof(Color) && meta.IsNormal) {
+							return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
 						}
 						if (target == typeof(Type) && meta is TypeMap) {
 							return ((TypeMap)meta).Type;
@@ -3053,6 +3067,7 @@ namespace Meta {
 						new Alternatives(
 							Root,
 							Search,
+			LastArgument,
 							LiteralExpression)),
 					new Append(
 						new OneOrMore(new Autokey(Prefix('.',new Alternatives(

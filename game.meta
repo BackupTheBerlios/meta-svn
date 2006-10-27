@@ -81,7 +81,9 @@
 		draw=c?{
 			asdf=GetPosition(
 			DrawFilledCircle_Circle_Color(
-				Circle_Point_Int16(Point_Int32_Int32(asdf.1 asdf.2) radius(
+				Circle_Point_Int16(
+					asdf
+					radius(
 				c
 	player=key?c?{
 		&bubble(1

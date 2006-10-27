@@ -57,6 +57,7 @@
     <None Include="basicTest.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />
+    <None Include="gameLib.meta" />
     <None Include="learning.meta" />
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
