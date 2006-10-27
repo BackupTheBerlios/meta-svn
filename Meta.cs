@@ -1035,6 +1035,7 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//SdlDotNet.Events.KeyboardDown += new SdlDotNet.KeyboardEventHandler(Events_KeyboardDown);
 			//Map x=new ObjectMap(Video.SetVideoModeWindow(100,100,true));
 			//BigInteger i=new BigInteger("-10",10);
 			//Console.WriteLine(i.ToString());
@@ -1090,6 +1091,10 @@ namespace Meta {
 				}
 			}
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
+		}
+
+		static void Events_KeyboardDown(object sender, SdlDotNet.KeyboardEventArgs e) {
+			//e.key
 		}
 		private static void DebugPrint(string text) {
 			if (useConsole) {
@@ -2974,20 +2979,19 @@ namespace Meta {
 								new ZeroOrMore(
 									new Autokey(
 										new Sequence(
-										separator != null ? new Match(separator) : null,
-											entryAction)))),
+										new Match(separator),entryAction)))),
 							new Optional(end)),
-					new Sequence(
-						SmallIndentation,
-						new ReferenceAssignment(
-							new ZeroOrMore(
-								new Autokey(
-									new Sequence(
-										new Optional(EndOfLine),
-										SameIndentation,
-										entryAction)))),
-							new Optional(EndOfLine),
-							new Optional(Dedentation)))));}
+						new Sequence(
+							SmallIndentation,
+							new ReferenceAssignment(
+								new ZeroOrMore(
+									new Autokey(
+										new Sequence(
+											new Optional(EndOfLine),
+											SameIndentation,
+											entryAction)))),
+								new Optional(EndOfLine),
+								new Optional(Dedentation)))));}
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
 				new Alternatives(
@@ -3101,23 +3105,38 @@ namespace Meta {
 					CodeKeys.Key, 
 					new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek())),
 					CodeKeys.Value, map);
-				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);},
-			Expression);
+				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+			},
+			Expression
+		);
+		public static Action FirstListAction = new CustomProduction(
+			delegate(Parser p, Map map, ref Map result) {
+				result.Append(new DictionaryMap(
+					CodeKeys.Key,
+					new DictionaryMap(
+						CodeKeys.Literal, 
+						new Integer32(p.defaultKeys.Peek())),
+					CodeKeys.Value,
+					map));
+				p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+			},
+			Expression
+		);
 
 		public static Rule List = new PrePost(
+			delegate(Parser p) {
+				p.defaultKeys.Push(1);},
+				ComplexStuff(
+					CodeKeys.Program,
+					Syntax.arrayStart,
+					Syntax.arrayEnd,
+					Syntax.arraySeparator,
+					FirstListAction,
+					ListAction,
+					null
+					),
 					delegate(Parser p) {
-						p.defaultKeys.Push(1);},
-						ComplexStuff(
-							CodeKeys.Program,
-							Syntax.arrayStart,
-							Syntax.arrayEnd,
-							Syntax.arraySeparator,
-							ListAction,
-							ListAction,
-							null
-							),
-							delegate(Parser p) {
-								p.defaultKeys.Pop();});
+						p.defaultKeys.Pop();});
 
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			return new Sequence(
@@ -3240,6 +3259,9 @@ namespace Meta {
 		public class Append : Action {
 			public Append(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
+				if (result.Count == 0) 
+				{
+				}
 				foreach (Map m in map.Array) {
 					result.Append(m);
 				}
@@ -3260,7 +3282,8 @@ namespace Meta {
 		public class CustomProduction : Action {
 			private CustomActionDelegate action;
 			public CustomProduction(CustomActionDelegate action, Rule rule): base(rule) {
-				this.action = action;}
+				this.action = action;
+			}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
 				this.action(parser, map, ref result);
 			}
@@ -3654,7 +3677,7 @@ namespace Meta {
 	public class Syntax {
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
-		public const char arraySeparator = ';';
+		public const char arraySeparator = ' ';
 		public const char programSeparator = ';';
 		public const char programStart = '{';
 		public const char programEnd ='}';

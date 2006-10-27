@@ -64,6 +64,10 @@ commandLine|,
 	1=-
 		!"SetCounter"
 		5
+	"LIST"=,
+		1=0
+		2=0
+		3=0
 	"scoping"=,
 		"test"=,
 			"scopingValue"="right"

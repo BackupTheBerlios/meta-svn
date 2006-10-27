@@ -132,6 +132,25 @@ Entry (KeyValuePair`2)
 														0
 Entry (KeyValuePair`2)
 	Key (StringMap):
+		"LIST"
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (Integer32):
+				1
+			Value (EmptyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (Integer32):
+				2
+			Value (EmptyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (Integer32):
+				3
+			Value (EmptyMap):
+				0
+Entry (KeyValuePair`2)
+	Key (StringMap):
 		"scoping"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
