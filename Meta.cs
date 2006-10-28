@@ -2857,7 +2857,8 @@ namespace Meta {
 								new LiteralString("\n"),
 								StringLine)))),
 					EndOfLine,
-					Dedentation))));
+					Dedentation,
+					new Optional(new Sequence(SameIndentation,Syntax.@string))))));
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
 			new CustomProduction(delegate(Parser p, Map map, ref Map result) {
@@ -2979,7 +2980,7 @@ namespace Meta {
 								new ZeroOrMore(
 									new Autokey(
 										new Sequence(
-										new Match(separator),entryAction)))),
+										new Match(separator), entryAction)))),
 							new Optional(end)),
 						new Sequence(
 							SmallIndentation,
@@ -2992,7 +2993,10 @@ namespace Meta {
 											entryAction)))),
 								new Optional(EndOfLine),
 								new Optional(Dedentation),
-								new Optional(new Sequence(SameIndentation,end))))));}
+								new Optional(new Sequence(SameIndentation, end))))),
+				new Optional(end));
+		}
+
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
 				new Alternatives(
