@@ -3205,7 +3205,8 @@ namespace Meta {
 											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
 										Syntax.functionProgram,
 											new Assignment(CodeKeys.Expression, Expression),
-										new Optional(EndOfLine))))))))));
+										new Optional(EndOfLine),
+										new Optional(Syntax.functionProgram))))))))));
 		public static Rule Program = ComplexStuff(
 			CodeKeys.Program,
 			Syntax.programStart,
@@ -3931,30 +3932,30 @@ namespace Meta {
 				}
 			}
 
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
 			public class Basic : Test {
 			    public override object GetResult(out int level) {
 			        level = 2;
 			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
-			//public class Fibo: Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-			//    }
-			//}
-			//public class MergeSort: Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {

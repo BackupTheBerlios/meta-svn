@@ -1,5 +1,4 @@
 |{
-	LIST=[0 0 0
 	lib=?{
 		&Meta
 		lib={
@@ -7,11 +6,19 @@
 			contains=?{
 				m=ObjectMap_Object(@)
 				&m.ContainsKey_Map
+			}
 			foreach=Library.Foreach_Map_Map
-			flip=func?a?b?func(b a
+			flip=func?a?b?func(
+				b
+				a
+			)
 			containedBy=key?map?{
-				m=ObjectMap_Object(map
-				&m.ContainsKey_Map(key
+				m=ObjectMap_Object(
+					map
+				)
+				&m.ContainsKey_Map(
+					key
+				)
 			modify=Library.Modify_Map_Map
 			sum=Number.op_Addition_Number_Number
 			power=Library.Raise_Number_Number
@@ -19,24 +26,32 @@
 				stuff={
 					1=1
 					0=b
+				}
 				&stuff.<a
+			}
 			merge=Library.Merge_Map_Map
 			accumulate=Library.Sum_Map_Map
-			keys=arg?<"DictionaryMap_IEnumerable`1"({
-				m=ObjectMap_Object(arg
-				&m.get_Keys(
+			keys=arg?<"DictionaryMap_IEnumerable`1"(
+				{
+					m=ObjectMap_Object(
+						arg
+					)
+					&m.get_Keys()
+				}
 			product=Number.op_Multiply_Number_Number
 			not=arg?{
 				stuff={
 					0=1
 					1=0
 				&stuff.<arg
+			}
 			stringToNumber=Library.StringToNumber_Map
 			parse=Parser.Parse_String
 			toString=Serialization.Serialize_Map
 			writeLine=?{
 				Library.WriteLine_String(@
 				&@
+			}?
 			join=Library.Join_Map_Map
 			range=Library.Range_Number
 			reverse=Library.Reverse_Map
@@ -159,3 +174,4 @@
 	&{
 		m=lib(0)
 		&m.lib
+}
