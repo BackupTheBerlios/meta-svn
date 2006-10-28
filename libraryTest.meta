@@ -76,7 +76,7 @@
 		bitwiseTest={
 			or=0
 		mapTest={
-			IfTest=ifElse(
+			IfTest=if(
 				1
 				{
 					arg|"If test successful"

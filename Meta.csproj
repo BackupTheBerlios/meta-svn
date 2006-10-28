@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy of Copy of s.meta" />
+    <None Include="Copy of s.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />
     <None Include="gameLib.meta" />
@@ -62,6 +64,7 @@
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
     <None Include="mergeSort.meta" />
+    <None Include="s.meta" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>

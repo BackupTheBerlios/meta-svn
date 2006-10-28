@@ -40,8 +40,8 @@
 			join=Library.Join_Map_Map
 			range=Library.Range_Number
 			reverse=Library.Reverse_Map
-			if=Library.If_Boolean_Map
-			ifElse=Library.IfElse_Boolean_Map_Map
+			ifSingle=Library.If_Boolean_Map
+			if=Library.IfElse_Boolean_Map_Map
 			filter=Library.Filter_Map_Map
 			apply=Library.Apply_Map_Map
 			applyTo=flip(apply

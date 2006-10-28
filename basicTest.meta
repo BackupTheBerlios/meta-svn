@@ -38,39 +38,59 @@ commandLine|{
 		0
 		[
 			"AssignedToCurrent
+	)
 	asdf="hello
 	shortFunction={
 		arg|!"asdf
-	shortFunctionTest=!"shortFunction"("hello
+	}
+	shortFunctionTest=!"shortFunction"(
+		"hello"
+	)
 	listTest=[
 		1
 		2
 		3
 		"hello
 		asdf
+	]
 	counter=0
 	inlineProgram={
 		hello="world
 		x="y
+	}
 	SetCounter={
 		|{
 			counter:@
-	1=!"SetCounter"(5
-	LIST=[0 0 0
+		}
+	}
+	1=SetCounter(
+		5
+	)
+	LIST=[
+		0
+		0
+		0
+	]
 	scoping={
 		test={
-			scopingValue="right
-			arg|!"scopingValue
-	scopingValue="wrong
+			scopingValue="right"
+			arg|scopingValue
+		}
+	}
+	scopingValue="wrong"
 	scopingTest=scoping.test
-	lexicalScoping=!"scopingTest"(0
-	unicodeText="äaba
+	lexicalScoping=scopingTest(
+		0
+	)
+	unicodeText="äaba"
 	integerHashTest={
-		2="correct hash content
+		2="correct hash content"
 		hashTestData={
 			0={
 				0=0
-		hashTest=!!"hashTestData
+			}
+		}
+		hashTest=!!"hashTestData"
 	negativeInteger=100
 	negativeInteger=merge(
 		negativeInteger
