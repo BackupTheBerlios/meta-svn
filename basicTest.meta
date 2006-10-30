@@ -4,7 +4,7 @@ license="
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
-	without limitation the rights to use, copy, modify, merge, publish,
+	without limitation the rights to use, copy, modify, merge, publish 
 	distribute, sublicense, and/or sell copies of the Software, and to
 	permit persons to whom the Software is furnished to do so, subject to
 	the following conditions:
@@ -12,7 +12,7 @@ license="
 	The above copyright notice and this permission notice shall be
 	included in all copies or substantial portions of the Software.
 	
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND 
 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
@@ -38,93 +38,93 @@ commandLine|{
 	&merge(
 		0
 		[
-			"AssignedToCurrent
-	)
-	asdf="hello
+			"AssignedToCurrent"
+	);
+	asdf="hello";
 	shortFunction={
-		arg|!"asdf
-	}
+		arg|!"asdf"
+	};
 	shortFunctionTest=!"shortFunction"(
 		"hello"
-	)
+	);
 	listTest=[
 		1
 		2
 		3
 		"hello
 		asdf
-	]
-	counter=0
+	];
+	counter=0;
 	inlineProgram={
-		hello="world
-		x="y
-	}
+		hello="world;
+		x="y;
+	};
 	SetCounter={
 		|{
-			counter:@
+			counter:@;
 		}
-	}
+	};
 	1=SetCounter(
 		5
-	)
+	);
 	LIST=[
 		0
 		0
 		0
-	]
+	];
 	scoping={
 		test={
-			scopingValue="right"
-			arg|scopingValue
-		}
-	}
-	scopingValue="wrong"
-	scopingTest=scoping.test
+			scopingValue="right";
+			arg|scopingValue;
+		};
+	};
+	scopingValue="wrong";
+	scopingTest=scoping.test;
 	lexicalScoping=scopingTest(
 		0
-	)
-	unicodeText="äaba"
+	);
+	unicodeText="äaba";
 	integerHashTest={
-		2="correct hash content"
+		2="correct,hash,content"
 		hashTestData={
 			0={
-				0=0
-			}
-		}
-		hashTest=!!"hashTestData"
-	}
-	negativeInteger=100
+				0=0;
+			};
+		};
+		hashTest=!!"hashTestData";
+	};
+	negativeInteger=100;
 	negativeInteger=merge(
 		negativeInteger
 		{
-			x="hello
+			x="hello;
 		}
-	)
-	integerIncrementTest=5
+	);
+	integerIncrementTest=5;
 	integerIncrementTest={
-		0=integerIncrementTest
-	}
-	integerDecrementTest=5
-	integerDecrementTest=!"integerDecrementTest".0
-	negativeNumber=-123
+		0=integerIncrementTest;
+	};
+	integerDecrementTest=5;
+	integerDecrementTest=!"integerDecrementTest".0;
+	negativeNumber=-123;
 	mapNumbers={
 		integer={
-			0=5
-		}
+			0=5;
+		};
 		negative={
-			0=5
-			negative=0
-		}
+			0=5;
+			negative=0;
+		};
 		fraction={
-			0=5
-			denominator=7
-		}
+			0=5;
+			denominator=7;
+		};
 		negativeFraction={
-			0=5
-			negative=0
-			denominator=7
-		}
-	fraction=3/2
+			0=5;
+			negative=0;
+			denominator=7;
+		};
+	fraction=3/2;
 	literalEscapeTest=[
 		"asdf"
 		"asdf"
@@ -137,26 +137,27 @@ commandLine|{
 		"
 			as"''''''''''''''''df
 		"
-	2="ImpliedAutokey"
-	3="Autokey"
-	commandLineArguments=commandLine
+	];
+	2="ImpliedAutokey";
+	3="Autokey";
+	commandLineArguments=commandLine;
 	aMap={
-		a="a"
-	}
-	"normal symbol"="NormalSymbol"
-	lookupSymbol="LookupSymbol"
-	"long key symbol"="LookupExtendedSymbol"
-	lookedUpNormalSymbol=!"normal symbol"
-	lookedUpSymbol=!"lookupSymbol"
-	lookedUpLongSymbol=!"long key symbol"
+		a="a";
+	};
+	"normal,symbol"="NormalSymbol";
+	lookupSymbol="LookupSymbol";
+	"long,key,symbol"="LookupExtendedSymbol";
+	lookedUpNormalSymbol=!"normal,symbol";
+	lookedUpSymbol=!"lookupSymbol";
+	lookedUpLongSymbol=!"long,key,symbol";
 	object={
 		a="default"
 		autoSearch="default"
 		b=0
 		SetA={
 			arg|{
-				a:"c
-				autoSearch:"changed
+				a:"c";
+				autoSearch:"changed";
 			}
 		}
 		SetB={
@@ -164,185 +165,139 @@ commandLine|{
 				b:merge(
 					b
 					{
-						1=newB.value
+						1=newB.value;
 					}
 				)
-				&"changed
+				&"changed";
 			}
-		}
+		};
 		x={
-			a="b
-			c="d
-		}
+			a="b";
+			c="d";
+		};
 		1={
 			arg|{
-				a:"b
+				a:"b";
 			}
-		}
+		};
 	}
-	a="default"
-	b=0
+	a="default";
+	b=0;
 	aSet=object.SetA(
 		0
-	)
+	);
 	bSet=object.SetB(
 		{
 			value={
-				x=7
-				z=1
+				x=7;
+				z=1;
 			}
 		}
-	)
-	scopeTest="default"
+	);
+	scopeTest="default";
 	scopeFunction={
-		inScope="right"
+		inScope="right";
 		arg|{
-			scopeTest:inScope
+			scopeTest:inScope;
 		}
-	}
-	inScope="wrong"
-	4=scopeFunction()
-	scopeFromFunctionData="wrong"
+	};
+	inScope="wrong";
+	4=scopeFunction();
+	scopeFromFunctionData="wrong";
 	scopeFunctionFunction={
-		scopeFromFunctionData="right
+		scopeFromFunctionData="right";
 		arg|{
 			arg|!"scopeFromFunctionData"
-		}
-	}
-	scopeFromFunction=scopeFunctionFunction(
-		0
-	)
-	scopeFromFunctionTest=scopeFromFunction(
-		0
-	)
+		};
+	};
+	scopeFromFunction=scopeFunctionFunction(0);
+	scopeFromFunctionTest=scopeFromFunction(0);
 	ReturnEverything={
-		everything|{
-			&everything
-		}
+		everything|{&everything;}
 	}
-	everythingReturned=ReturnEverything(
-		[
-			"a"
-			"b"
-			"c"
-		]
-	)
-	variableAsArgument=ReturnEverything(
-		[
-			"x"
-			"y"
-			"z"
-		]
-	)
+	everythingReturned=ReturnEverything(["a" "b" "c"])
+	variableAsArgument=ReturnEverything(["x" "y" "z"])
 	ReturnFunction={
 		arg|{
 			&{
-				arg|{
-					&[
-						1
-						2
-						3
-					]
-				}
+				arg|{&[1 2 3];}
 			}
-		}
-	}
+		};
+	};
 	SetCurrent={
 		current|{
 			&{
-				asdf=!"current
-				x=!"current".symbol
-			}
-			&!"x
-		}
-	}
-	thisSet=!"SetCurrent"(
+				asdf=!"current";
+				x=!"current".symbol;
+			};
+			&!"x";
+		};
+	};
+	thisSet=SetCurrent(
 		{
-			symbol="haha
+			symbol="haha;
 		}
-	)
+	);
 	FirstLevel={
 		arg|[
 			SecondLevel(
 				arg
 			)
 		]
-	}
+	};
 	SecondLevel={
-		arg|arg
-	}
+		arg|arg;
+	};
 	argTest=FirstLevel(
 		{
-			a="z"
+			a="z";
 		}
-	)
-	TestClass=/.Meta.TestClass
-	nestedClassTest=TestClass.NestedClass.field
+	);
+	TestClass=/.Meta.TestClass;
+	nestedClassTest=TestClass.NestedClass.field;
 	testClass=TestClass(
 		{
-			floatValue=3
-			doubleValue=4
-			decimalValue=5
+			floatValue=3;
+			doubleValue=4;
+			decimalValue=5;
 		}
-	)
+	);
 	TestClass=merge(
 		TestClass
 		{
-			boolTest=1
+			boolTest=1;
 		}
-	)
-	boolTest=TestClass.boolTest
-	MemberTest=/.Meta.MemberTest
-	memberTest=MemberTest()
-	stringOverload=MemberTest.OverloadedMethod_String(
-		"hello"
-	)
-	integerOverload=MemberTest.OverloadedMethod_Int32(
-		5
-	)
-	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(
-		memberTest
-		3247
-	)
-	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(
-		memberTest
-		3247
-	)
+	);
+	boolTest=TestClass.boolTest;
+	MemberTest=/.Meta.MemberTest;
+	memberTest=MemberTest();
+	stringOverload=MemberTest.OverloadedMethod_String("hello");
+	integerOverload=MemberTest.OverloadedMethod_Int32(5);
+	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
+	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	MemberTest:merge(
 		MemberTest
 		{
-			classField="a"
+			classField="a";
 		}
 	)
 	memberTest:merge(
 		memberTest
 		{
-			instanceField="b"
+			instanceField="b";
 		}
-	)
-	Meta.MemberTest.set_ClassProperty_String(
-		memberTest.get_InstanceProperty()
-	)
-	classPropertyValue=MemberTest.get_ClassProperty()
-	memberTest.set_InstanceProperty_String(
-		MemberTest.get_ClassProperty()
-	)
-	instancePropertyValue=memberTest.get_InstanceProperty()
-	interceptedSymbol="/hello/"
-	positionalNoConversion=/.Meta.PositionalNoConversion_String_String_String(
-		"m"
-		"n"
-		"o"
-	)
-	positionalNoConversionConcatenated=positionalNoConversion.Concatenate_String_String_String(
-		"r"
-		"s"
-		"t"
-	)
+	);
+	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty())
+	classPropertyValue=MemberTest.get_ClassProperty();
+	memberTest.set_InstanceProperty_String(MemberTest.get_ClassProperty());
+	instancePropertyValue=memberTest.get_InstanceProperty();
+	interceptedSymbol="/hello/";
+	positionalNoConversion=/.Meta.PositionalNoConversion_String_String_String("m","n","o");
+	positionalNoConversionConcatenated=positionalNoConversion.Concatenate_String_String_String("r","s","t");
 	namedNoConversion=/.Meta.NamedNoConversion_Map(
 		{
-			1="m"
-			y="n"
+			1="m";
+			y="n";
 		}
 	)
 	namedNoConversionConcatenated=namedNoConversion.Concatenate_Map(
@@ -372,7 +327,7 @@ commandLine|{
 	)
 	someFunction={
 		arg|{
-			&"simple function this
+			&"simple,function,this
 		}
 	}		
 	callFunction={
@@ -486,7 +441,7 @@ commandLine|{
 		0
 	)
 	font=/."System.Drawing".Font_String_Single(
-		"Courier New"
+		"Courier,New"
 		10
 	)
 	decimalTest=5
@@ -502,7 +457,7 @@ commandLine|{
 	stringStrategyHashTest=!stringTest
 	x={
 		aLongText="
-			hello world!
+			hello,world!
 			hello!
 		"
 	}
@@ -520,11 +475,11 @@ commandLine|{
 	)
 	textBox.set_Text_String(
 		"
-			Alle meine Entchen
-			schwimmen auf dem See
-			schwimmen auf dem See
-			Köpfchen in das Wasser
-			asdf in die Hoeh.
+			Alle,meine,Entchen
+			schwimmen,auf,dem,See
+			schwimmen,auf,dem,See
+			Köpfchen,in,das,Wasser
+			asdf,in,die,Hoeh.
 		"
 	)
 	lines=textBox.get_Lines()
@@ -584,7 +539,7 @@ commandLine|{
 		0
 	)
 	documentedFunction={
-		doc="This function returns #hello ."
+		doc="This,function,returns,#hello,."
 		arg|"hello"
 	}
 	docFunctionResult=documentedFunction(

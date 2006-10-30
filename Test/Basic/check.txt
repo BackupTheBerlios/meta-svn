@@ -238,7 +238,7 @@ Entry (KeyValuePair`2)
 			Key (Integer32):
 				2
 			Value (StringMap):
-				"correct hash content"
+				"correct,hash,content"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hashTestData"
@@ -248,7 +248,7 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hashTest"
 			Value (StringMap):
-				"correct hash content"
+				"correct,hash,content"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"negativeInteger"
@@ -394,7 +394,7 @@ Entry (KeyValuePair`2)
 				"a"
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"normal symbol"
+		"normal,symbol"
 	Value (StringMap):
 		"NormalSymbol"
 Entry (KeyValuePair`2)
@@ -404,7 +404,7 @@ Entry (KeyValuePair`2)
 		"LookupSymbol"
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"long key symbol"
+		"long,key,symbol"
 	Value (StringMap):
 		"LookupExtendedSymbol"
 Entry (KeyValuePair`2)
@@ -1548,7 +1548,7 @@ Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
 													Value (StringMap):
-														"simple function this"
+														"simple,function,this"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"callFunction"
@@ -1613,7 +1613,7 @@ Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
 													Value (StringMap):
-														"simple function this"
+														"simple,function,this"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunction"
@@ -2144,7 +2144,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"font"
 	Value (ObjectMap):
-		[Font: Name=Courier New, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
+		[Font: Name=Microsoft Sans Serif, Size=10, Units=3, GdiCharSet=1, GdiVerticalFont=False]
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"decimalTest"
@@ -2178,7 +2178,7 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"aLongText"
 			Value (StringMap):
-				"hello world!
+				"hello,world!
 hello!"
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2199,8 +2199,8 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"textBox"
 	Value (ObjectMap):
-		System.Windows.Forms.TextBox, Text: Alle meine Entchen
-schwimmen auf dem See...
+		System.Windows.Forms.TextBox, Text: Alle,meine,Entchen
+schwimmen,auf,dem,See...
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"lines"
@@ -2210,7 +2210,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"alleMeineText"
 	Value (StringMap):
-		"schwimmen auf dem See"
+		"schwimmen,auf,dem,See"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"form"
@@ -2788,7 +2788,7 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"doc"
 			Value (StringMap):
-				"This function returns #hello ."
+				"This,function,returns,#hello,."
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"

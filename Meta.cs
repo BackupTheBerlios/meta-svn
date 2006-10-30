@@ -799,9 +799,6 @@ namespace Meta {
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
 				List<Map> list=new List<Map>(PreKeys());
-				if(key.Equals(new StringMap("fibo"))) 
-				{
-				}
 				list.Add(key.GetConstant());
 				return list;
 			}
@@ -1040,6 +1037,7 @@ namespace Meta {
 			//BigInteger i=new BigInteger("-10",10);
 			//Console.WriteLine(i.ToString());
 			DateTime start = DateTime.Now;
+			SdlDotNet.Surface s;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
 					try {
@@ -3183,13 +3181,16 @@ namespace Meta {
 							LookupString)),
 					Expression)));
 
-		public static Rule AllStatements = new Alternatives(
-			FunctionExpression,
-			CurrentStatement,
-			NormalStatement,
-			Statement,
-			DiscardStatement
-		);
+		public static Rule AllStatements = new Sequence(
+			new ReferenceAssignment(
+				new Alternatives(
+					FunctionExpression,
+					CurrentStatement,
+					NormalStatement,
+					Statement,
+					DiscardStatement
+				)),
+			new Optional(Syntax.statementEnd));
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
 			new Assignment(CodeKeys.Program,
@@ -3681,6 +3682,7 @@ namespace Meta {
 		}
 	}
 	public class Syntax {
+		public const char statementEnd=';';
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
 		public const char arraySeparator = ' ';
@@ -3690,7 +3692,7 @@ namespace Meta {
 		public const char functionProgram = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
-		public const char callSeparator = ' ';
+		public const char callSeparator = ',';
 		public const char callStart = '(';
 		public const char callEnd = ')';
 		public const char root = '/';
@@ -3716,7 +3718,7 @@ namespace Meta {
 			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
 			'-'+ ':'+ functionProgram+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
 			programStart+ programSeparator +callSeparator+programEnd+
-			arrayEnd;
+			arrayEnd+statementEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
 	}
 	public class Serialization {
@@ -3924,12 +3926,7 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3953,6 +3950,12 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
 
