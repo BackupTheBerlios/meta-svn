@@ -3179,35 +3179,71 @@ namespace Meta {
 				return false;
 			}
 		});
+		public static Rule ComplexList() {
+			Action firstAction = new Assignment(1, ListEntry);
+			Action entryAction = new ReferenceAssignment(ListEntry);
+			return new Sequence(
+				new Assignment(CodeKeys.Program,
+					new Sequence(
+						Whitespace,
+						Syntax.arrayStart,
+						new Append(
+							new Alternatives(
+								new Sequence(
+									firstAction,
+									Whitespace,
+									new Append(
+										new ZeroOrMore(
+											new Autokey(
+												new Sequence(
+													Whitespace,
+													Syntax.arraySeparator,
+													Whitespace,
+													entryAction))))
+									, Syntax.arrayEnd)
+								, new Sequence(
+									Whitespace,
+									new Append(
+										new ZeroOrMore(
+											new Autokey(
+												new Sequence(
+													Whitespace,
+													entryAction,
+													new Optional(Syntax.arraySeparator)
+													)))),
+									Whitespace
+									, Syntax.arrayEnd
+									)
+									)))
+								));
+		}
+
 		public static Rule List = new PrePost(
 			delegate(Parser p) {
 				p.defaultKeys.Push(1);
 			},
-				ComplexStuff(
-					CodeKeys.Program,
-					Syntax.arrayStart,
-					Syntax.arrayEnd,
-					Syntax.arraySeparator,
-					ListEntry,
-					null
-					),
+				ComplexList(),
 					delegate(Parser p) {
 						p.defaultKeys.Pop();
 					}
+		);
+		//public static Rule List = new PrePost(
+		//    delegate(Parser p) {
+		//        p.defaultKeys.Push(1);
+		//    },
+		//        ComplexStuff(
+		//            CodeKeys.Program,
+		//            Syntax.arrayStart,
+		//            Syntax.arrayEnd,
+		//            Syntax.arraySeparator,
+		//            ListEntry,
+		//            null
+		//            ),
+		//            delegate(Parser p) {
+		//                p.defaultKeys.Pop();
+		//            }
+		//    );
 
-				//ComplexStuff(
-				//    CodeKeys.Program,
-				//    Syntax.arrayStart,
-				//    Syntax.arrayEnd,
-				//    Syntax.arraySeparator,
-				//    FirstListAction,
-				//    ListAction,
-				//    null
-				//    ),
-				//    delegate(Parser p) {
-				//        p.defaultKeys.Pop();
-				//    }
-			);
 		//public static Rule List = new PrePost(
 		//    delegate(Parser p) {
 		//        p.defaultKeys.Push(1);},
