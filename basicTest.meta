@@ -42,31 +42,23 @@ commandLine|{
 	);
 	asdf="hello";
 	shortFunction={
-		arg|!"asdf"
+		arg|asdf;
 	};
 	shortFunctionTest=!"shortFunction"(
 		"hello"
 	);
-	listTest=[
-		1
-		2
-		3
-		"hello
-		asdf
-	];
+	listTest=[1 2 3 "hello" asdf];
 	counter=0;
 	inlineProgram={
-		hello="world;
-		x="y;
+		hello="world";
+		x="y";
 	};
 	SetCounter={
 		|{
 			counter:@;
-		}
+		};
 	};
-	1=SetCounter(
-		5
-	);
+	1=SetCounter(5);
 	LIST=[
 		0
 		0
@@ -85,7 +77,7 @@ commandLine|{
 	);
 	unicodeText="äaba";
 	integerHashTest={
-		2="correct,hash,content"
+		2="correct,hash,content";
 		hashTestData={
 			0={
 				0=0;
@@ -97,7 +89,7 @@ commandLine|{
 	negativeInteger=merge(
 		negativeInteger
 		{
-			x="hello;
+			x="hello";
 		}
 	);
 	integerIncrementTest=5;
@@ -124,6 +116,7 @@ commandLine|{
 			negative=0;
 			denominator=7;
 		};
+	};
 	fraction=3/2;
 	literalEscapeTest=[
 		"asdf"
@@ -151,15 +144,15 @@ commandLine|{
 	lookedUpSymbol=!"lookupSymbol";
 	lookedUpLongSymbol=!"long,key,symbol";
 	object={
-		a="default"
-		autoSearch="default"
-		b=0
+		a="default";
+		autoSearch="default";
+		b=0;
 		SetA={
 			arg|{
 				a:"c";
 				autoSearch:"changed";
-			}
-		}
+			};
+		};
 		SetB={
 			newB|{
 				b:merge(
@@ -167,9 +160,9 @@ commandLine|{
 					{
 						1=newB.value;
 					}
-				)
+				);
 				&"changed";
-			}
+			};
 		};
 		x={
 			a="b";
@@ -178,9 +171,9 @@ commandLine|{
 		1={
 			arg|{
 				a:"b";
-			}
+			};
 		};
-	}
+	};
 	a="default";
 	b=0;
 	aSet=object.SetA(
@@ -191,7 +184,7 @@ commandLine|{
 			value={
 				x=7;
 				z=1;
-			}
+			};
 		}
 	);
 	scopeTest="default";
@@ -199,7 +192,7 @@ commandLine|{
 		inScope="right";
 		arg|{
 			scopeTest:inScope;
-		}
+		};
 	};
 	inScope="wrong";
 	4=scopeFunction();
@@ -207,43 +200,41 @@ commandLine|{
 	scopeFunctionFunction={
 		scopeFromFunctionData="right";
 		arg|{
-			arg|!"scopeFromFunctionData"
+			arg|!"scopeFromFunctionData";
 		};
 	};
 	scopeFromFunction=scopeFunctionFunction(0);
 	scopeFromFunctionTest=scopeFromFunction(0);
 	ReturnEverything={
-		everything|{&everything;}
-	}
-	everythingReturned=ReturnEverything(["a" "b" "c"])
-	variableAsArgument=ReturnEverything(["x" "y" "z"])
+		everything|{&everything;};
+	};
+	everythingReturned=ReturnEverything(["a" "b" "c"]);
+	variableAsArgument=ReturnEverything(["x" "y" "z"]);
 	ReturnFunction={
 		arg|{
 			&{
-				arg|{&[1 2 3];}
-			}
+				arg|{&[1 2 3];};
+			};
 		};
 	};
 	SetCurrent={
 		current|{
 			&{
-				asdf=!"current";
-				x=!"current".symbol;
+				asdf=current;
+				x=current.symbol;
 			};
-			&!"x";
+			&x;
 		};
 	};
 	thisSet=SetCurrent(
 		{
-			symbol="haha;
+			symbol="haha";
 		}
 	);
 	FirstLevel={
 		arg|[
-			SecondLevel(
-				arg
-			)
-		]
+			SecondLevel(arg)
+		];
 	};
 	SecondLevel={
 		arg|arg;
@@ -280,14 +271,14 @@ commandLine|{
 		{
 			classField="a";
 		}
-	)
+	);
 	memberTest:merge(
 		memberTest
 		{
 			instanceField="b";
 		}
 	);
-	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty())
+	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty());
 	classPropertyValue=MemberTest.get_ClassProperty();
 	memberTest.set_InstanceProperty_String(MemberTest.get_ClassProperty());
 	instancePropertyValue=memberTest.get_InstanceProperty();
@@ -299,303 +290,224 @@ commandLine|{
 			1="m";
 			y="n";
 		}
-	)
+	);
 	namedNoConversionConcatenated=namedNoConversion.Concatenate_Map(
 		{
-			c="t"
-			1="r"
+			c="t";
+			1="r";
 		}
-	)
-	indexerNoConversion=/.Meta.IndexerNoConversion(
-		0
-	)
-	indexerNoConversion.set_Item_String_String(
-		"abc"
-		"hihi"
-	)
-	indexerNoConversionIndexed=indexerNoConversion.get_Item_String(
-		"abc"
-	)
-	interceptedSymbolTwo=1
-	k="hello"
-	xyz="w"
+	);
+	indexerNoConversion=/.Meta.IndexerNoConversion(0);
+	indexerNoConversion.set_Item_String_String("abc","hihi");
+	indexerNoConversionIndexed=indexerNoConversion.get_Item_String("abc");
+	interceptedSymbolTwo=1;
+	k="hello";
+	xyz="w";
 	literalFunction={
-		arg|5
-	}
-	literalFunctionResult=!"literalFunction"(
-		0
-	)
+		arg|5;
+	};
+	literalFunctionResult=!"literalFunction"(0);
 	someFunction={
 		arg|{
-			&"simple,function,this
-		}
-	}		
+			&"simple,function,this";
+		};
+	};	
 	callFunction={
-		arg|someFunction
-	}
-	callFunctionResult=!"callFunction"(
-		0
-	)
+		arg|someFunction;
+	};
+	callFunctionResult=callFunction(0);
 	delayedFunction={
 		arg|{
 			arg|{
-				x="y
-			}
-		}
-	}
-	delayedFunctionResult=delayedFunction(
-		0
-	)
-	delayedFunctionDirect=delayedFunction(
-		0
-		0
-	)
-	value="xyz"
+				x="y";
+			};
+		};
+	};
+	delayedFunctionResult=delayedFunction(0);
+	delayedFunctionDirect=delayedFunction(0,0);
+	value="xyz";
 	selectionFunction={
-		arg|value
-	}
-	selectionFunctionResult=selectionFunction(
-		0
-	)
-	upperLevel="unchanged"
+		arg|value;
+	};
+	selectionFunctionResult=selectionFunction(0);
+	upperLevel="unchanged";
 	SetUpperLevel={
 		arg|{
-			upperLevel:arg
-		}
-	}
+			upperLevel:arg;
+		};
+	};
 	ChangeUpperLevel={
 		arg|{
-			1=SetUpperLevel(
-				"changed
-			)
-		}
-	}
-	5=ChangeUpperLevel(
-		0
-	)
-	staticEventChanged=0
+			1=SetUpperLevel("changed");
+		};
+	};
+	5=ChangeUpperLevel(0);
+	staticEventChanged=0;
 	ChangeStaticEvent={
 		arg|{
-			staticEventChanged:arg
-		}
-	}
-	asdf="hello"
+			staticEventChanged:arg;
+		};
+	};
+	asdf="hello";
 	TestClass.add_staticEvent_NormalEvent(
 		{
-			arg|ChangeStaticEvent(
-				1
-			)
+			arg|ChangeStaticEvent(1);
 		}
-	)
+	);
 	6=TestClass.TakeDelegate_TestDelegate(
 		{
-			arg|arg
+			arg|arg;
 		}
-	)
-	resultFromDelegate=TestClass.GetResultFromDelegate(
-		0
-	)
-	staticEventResult=TestClass.CallStaticEvent_Object(
-		testClass
-	)
-	instanceEventChanged=0
+	);
+	resultFromDelegate=TestClass.GetResultFromDelegate(0);
+	staticEventResult=TestClass.CallStaticEvent_Object(testClass);
+	instanceEventChanged=0;
 	testClass.add_instanceEvent_IntEvent(
 		{
 			arg|{
-				instanceEventChanged:1
-				&arg
-			}
+				instanceEventChanged:1;
+				&arg;
+			};
 		}
-	)
-	instanceEventResult=testClass.CallInstanceEvent_Object(
-		5
-	)
-	one=1
-	two=2
-	firstIf="unchanged"
-	secondIf="unchanged"
-	firstIfCondition=equal(
-		1
-		one
-	)
+	);
+	instanceEventResult=testClass.CallInstanceEvent_Object(5);
+	one=1;
+	two=2;
+	firstIf="unchanged";
+	secondIf="unchanged";
+	firstIfCondition=equal(1,one);
 	firstIfBranches={
-		1=arg?"then"
-		0=arg?"else"
-	}
-	firstIf=firstIfBranches.<firstIfCondition>(
-		0
-	)
-	bigNumber=50020202
-	secondSwitch="unchanged"
-	secondSwitchCases=[
-		"one"
-		"two"
-		"three"
-	]
-	secondSwitch=secondSwitchCases.3
-	emptyMap=0
+		1=arg?"then";
+		0=arg?"else";
+	};
+	firstIf=firstIfBranches.<firstIfCondition>(0);
+	bigNumber=50020202;
+	secondSwitch="unchanged";
+	secondSwitchCases=["one" "two" "three"];
+	secondSwitch=secondSwitchCases.3;
+	emptyMap=0;
 	emptyFunction=arg?{
-		x="hello"
-	}
-	emptyFunctionResult=emptyFunction(
-		0
-	)
-	font=/."System.Drawing".Font_String_Single(
-		"Courier,New"
-		10
-	)
-	decimalTest=5
-	fractionTest=40
-	stringTest="hello"
+		x="hello";
+	};
+	emptyFunctionResult=emptyFunction(0);
+	font=/."System.Drawing".Font_String_Single("Courier,New",10);
+	decimalTest=5;
+	fractionTest=40;
+	stringTest="hello";
 	stringTest=merge(
 		stringTest
 		{
-			5=stringTest.1
+			5=stringTest.1;
 		}
-	)
-	hello="hi"
-	stringStrategyHashTest=!stringTest
+	);
+	hello="hi";
+	stringStrategyHashTest=!stringTest;
 	x={
 		aLongText="
 			hello,world!
 			hello!
-		"
-	}
-	arrayList=/.mscorlib.ArrayList(
-		0
-	)
-	7=arrayList.Add_Object(
-		"hello"
-	)
-	arrayListResult=arrayList.get_Item_Int32(
-		0
-	)
-	textBox=/."System.Windows.Forms".TextBox(
-		0
-	)
+		";
+	};
+	arrayList=/.mscorlib.ArrayList(0);
+	7=arrayList.Add_Object("hello");
+	arrayListResult=arrayList.get_Item_Int32(0);
+	textBox=/."System.Windows.Forms".TextBox(0);
 	textBox.set_Text_String(
 		"
-			Alle,meine,Entchen
-			schwimmen,auf,dem,See
-			schwimmen,auf,dem,See
-			Köpfchen,in,das,Wasser
-			asdf,in,die,Hoeh.
+			Alle meine Entchen
+			schwimmen auf dem See
+			schwimmen auf dem See
+			Köpfchen in das Wasser
+			asdf in die Hoeh.
 		"
-	)
-	lines=textBox.get_Lines()
-	alleMeineText=lines.GetValue_Int32(
-		1
-	)
-	form=/."System.Windows.Forms".Form()
-	form.set_Location_Point(
-		!"System.Drawing".Point_Int32_Int32(
-			5
-			1000
-		)
-	)
-	automaticConversionTest=form.get_Location()
-	tabText="			hello"
-	escapedText="'#'n'''t"
-	whileCounter=0
+	);
+	lines=textBox.get_Lines();
+	alleMeineText=lines.GetValue_Int32(1);
+	form=/."System.Windows.Forms".Form();
+	form.set_Location_Point(!"System.Drawing".Point_Int32_Int32(5,1000));
+	automaticConversionTest=form.get_Location();
+	tabText="			hello";
+	escapedText="'#'n'''t";
+	whileCounter=0;
 	loop={
 		start|{
-			whileDecision=not(
-				equal(
-					start
-					10
-				)
-			)
+			whileDecision=not(equal(start,10));
 			whileBranches={
 				1={
-					arg|loop(
-						sum(
-							arg
-							1
-				0=arg?arg
-			&whileBranches.<whileDecision>(
-				start
-			)
-		}
-	}			
-	whileCounter=loop(
-		3
-	)
+					arg|loop(sum(arg,1));
+				};
+				0=arg?arg;
+			};
+			&whileBranches.<whileDecision>(start);
+		};
+	};
+	whileCounter=loop(3);
 	returnInMap=arg?{
-		result=arg
-	}
-	literalAsArgument=returnInMap(
-		1
-	)
+		result=arg;
+	};
+	literalAsArgument=returnInMap(1);
 	returnFunction=arg?{
-		arg|"functionResult"
-	}
+		arg|"functionResult";
+	};
 	returnArg={
-		arg|!"arg
+		arg|arg;
+	};
 	myArg={
 		arg|{
-			hello="world
-	funcReturnTest=!"returnArg"(
-		!"myArg
-		0
-	)
+			hello="world";
+		};
+	};
+	funcReturnTest=returnArg(myArg,0);
 	documentedFunction={
-		doc="This,function,returns,#hello,."
-		arg|"hello"
-	}
-	docFunctionResult=documentedFunction(
-		0
-	)
-	topLevel="default"
+		doc="This,function,returns,#hello,.";
+		arg|"hello";
+	};
+	docFunctionResult=documentedFunction(0);
+	topLevel="default";
 	deep={
 		map={
 			test={
 				arg|{
-					topLevel:"changed"
-				}
-			}
-		}
-	}
+					topLevel:"changed";
+				};
+			};
+		};
+	};
 	8=deep.map.test(
 		0
-	)
+	);
 	outerFunction={
 		arg|{
 			innerFunction={
 				arg|{
-					&arg
-				}
-			}
-			1=innerFunction(
-				0
-			)
-		}
-	}
-	outerFunctionTest=outerFunction(
-		"right"
-	)
+					&arg;
+				};
+			};
+			1=innerFunction(0);
+		};
+	};
+	outerFunctionTest=outerFunction("right");
 	newLines="
 		
 		
-	"
-	app=<"System.Windows.Forms">.Application
-	app.set_VisualStyleState_VisualStyleState(
-		!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled
-	)
-	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState()
-	oneTwoThreeHello="asdf"
+	";
+	app=<"System.Windows.Forms">.Application;
+	app.set_VisualStyleState_VisualStyleState(!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled);
+	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState();
+	oneTwoThreeHello="asdf";
 	copySourceData={
-		x="y"
-		z="a"
-	}
-	copiedData=copySourceData
+		x="y";
+		z="a";
+	};
+	copiedData=copySourceData;
 	copiedData=merge(
 		copiedData
 		{
-			x="changed
+			x="changed";
 		}
-	)
+	);
 	characterLiterals={
-		a='a'
-		space=' '
-		tab='	'
-	}
+		a='a';
+		space=' ';
+		tab='	';
+	};

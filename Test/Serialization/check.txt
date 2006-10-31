@@ -4,7 +4,7 @@
 	Permission is hereby granted, free of charge, to any person obtaining
 	a copy of this software and associated documentation files (the
 	"Software"), to deal in the Software without restriction, including
-	without limitation the rights to use, copy, modify, merge, publish,
+	without limitation the rights to use, copy, modify, merge, publish 
 	distribute, sublicense, and/or sell copies of the Software, and to
 	permit persons to whom the Software is furnished to do so, subject to
 	the following conditions:
@@ -12,7 +12,7 @@
 	The above copyright notice and this permission notice shall be
 	included in all copies or substantial portions of the Software.
 	
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND 
 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 	MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
@@ -81,7 +81,7 @@ commandLine|,
 		0
 	"unicodeText"="äaba"
 	"integerHashTest"=,
-		2="correct hash content"
+		2="correct,hash,content"
 		"hashTestData"=,
 			0=,
 				0=0
@@ -131,12 +131,12 @@ commandLine|,
 	"commandLineArguments"=!"commandLine"
 	"aMap"=,
 		"a"="a"
-	"normal symbol"="NormalSymbol"
+	"normal,symbol"="NormalSymbol"
 	"lookupSymbol"="LookupSymbol"
-	"long key symbol"="LookupExtendedSymbol"
-	"lookedUpNormalSymbol"=!"normal symbol"
+	"long,key,symbol"="LookupExtendedSymbol"
+	"lookedUpNormalSymbol"=!"normal,symbol"
 	"lookedUpSymbol"=!"lookupSymbol"
-	"lookedUpLongSymbol"=!"long key symbol"
+	"lookedUpLongSymbol"=!"long,key,symbol"
 	"object"=,
 		"a"="default"
 		"autoSearch"="default"
@@ -384,7 +384,7 @@ commandLine|,
 		0
 	"someFunction"=,
 		arg|,
-			&="simple function this"
+			&="simple,function,this"
 	"callFunction"=,
 		arg|!"someFunction"
 	"callFunctionResult"=-
@@ -501,7 +501,7 @@ commandLine|,
 			/
 			"System.Drawing"
 			"Font_String_Single"
-		"Courier New"
+		"Courier,New"
 		10
 	"decimalTest"=5
 	"fractionTest"=40
@@ -517,7 +517,7 @@ commandLine|,
 	"stringStrategyHashTest"=!!"stringTest"
 	"x"=,
 		"aLongText"="
-			hello world!
+			hello,world!
 			hello!
 		"
 	"arrayList"=-
@@ -629,7 +629,7 @@ commandLine|,
 		!"myArg"
 		0
 	"documentedFunction"=,
-		"doc"="This function returns #hello ."
+		"doc"="This,function,returns,#hello,."
 		arg|"hello"
 	"docFunctionResult"=-
 		!"documentedFunction"

@@ -3190,7 +3190,9 @@ namespace Meta {
 					Statement,
 					DiscardStatement
 				)),
-			new Optional(Syntax.statementEnd));
+			new Optional(Syntax.statementEnd)
+			//new Optional(Syntax.statementEnd)
+			);
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
 			new Assignment(CodeKeys.Program,
@@ -3933,19 +3935,19 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
-
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-			public class Basic : Test {
-			    public override object GetResult(out int level) {
-			        level = 2;
-			        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
+
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;

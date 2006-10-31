@@ -2199,8 +2199,8 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"textBox"
 	Value (ObjectMap):
-		System.Windows.Forms.TextBox, Text: Alle,meine,Entchen
-schwimmen,auf,dem,See...
+		System.Windows.Forms.TextBox, Text: Alle meine Entchen
+schwimmen auf dem See...
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"lines"
@@ -2210,7 +2210,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"alleMeineText"
 	Value (StringMap):
-		"schwimmen,auf,dem,See"
+		"schwimmen auf dem See"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"form"
