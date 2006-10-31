@@ -199,7 +199,7 @@
 			enumerableToArray=Library.EnumerableToArray_Map;
 			try=Library.Try_Map_Map;
 			readTextFile=file?mscorlib.File.ReadAllText_String_Encoding(
-				file
+				file,
 				mscorlib.Encoding.get_Default(0)
 			)?;
 			compareNumber=Library.CompareNumber_Number_Number;

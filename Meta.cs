@@ -2966,18 +2966,23 @@ namespace Meta {
 					EndOfLine)),
 			new ReferenceAssignment(MapRule)));
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
-			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);}
-		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
-			return new Sequence(
-				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));}
+			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);
+		}
 		public static Rule Whitespace = new ZeroOrMore(new Characters(
 			Syntax.unixNewLine,
 			Syntax.windowsNewLine[0],
 			Syntax.tab,
 			Syntax.space
 		));
-		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
-			return new Sequence(
+		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
+		//    return new Sequence(
+		//        new Assignment(key,
+		//            ComplexStuff(start, end, separator, firstAction, entryAction, first)));
+		//}
+		//public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
+			   return new Sequence(
+		        new Assignment(key,
+			new Sequence(
 				first != null ? new Assignment(1, first) : null,
 				Whitespace,
 				start,
@@ -2989,26 +2994,64 @@ namespace Meta {
 							new Append(
 								new ZeroOrMore(
 									new Autokey(
-										new Sequence(Whitespace, separator,Whitespace, entryAction)))),
+										new Sequence(Whitespace, separator, Whitespace, entryAction)))),
 							end),
 						new Sequence(
-							//SmallIndentation,
 							new ReferenceAssignment(
 								new ZeroOrMore(
 									new Autokey(
 										new Sequence(
 											Whitespace,
-											//new Optional(EndOfLine),
-											//SameIndentation,
 											entryAction,
 											new Optional(separator)
 											)))),
 								Whitespace,
-								//Dedentation,
 								end
-								)))
-			);
+								))
+						)
+			)));
 		}
+		//public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
+		//    return new Sequence(
+		//        first != null ? new Assignment(1, first) : null,
+		//        Whitespace,
+		//        start,
+		//        new Append(
+		//            new Alternatives(
+		//                new Sequence(
+		//                    firstAction,
+		//                    Whitespace,
+		//                    new Append(
+		//                        new ZeroOrMore(
+		//                            new Autokey(
+		//                                new Sequence(Whitespace, separator,Whitespace, entryAction)))),
+		//                    end),
+		//                new Sequence(
+		//                    new ReferenceAssignment(
+		//                        new ZeroOrMore(
+		//                            new Autokey(
+		//                                new Sequence(
+		//                                    Whitespace,
+		//                                    entryAction,
+		//                                    new CustomRule(delegate(Parser p, ref Map map) {
+		//                                        if(separator.Match(p,ref map))
+		//                                        {
+		//                                            return true;
+		//                                        }
+		//                                        else {
+		//                                            if (separator is Characters) {
+		//                                                p.errors[p.State] = "expected " + ((Characters)separator).chars;
+		//                                            }
+		//                                            return true;
+		//                                        }
+		//                                    })
+		//                                    )))),
+		//                        Whitespace,
+		//                        end
+		//                        ))
+		//                )
+		//    );
+		//}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 
 		public static Rule Call = new DelayedRule(delegate() {
@@ -3046,15 +3089,14 @@ namespace Meta {
 						Function))));
 
 		private static Rule Simple(char c, Map literal) {
-			return new Sequence(
-				c,
-				new ReferenceAssignment(new LiteralRule(literal)));}
-
+			return new Sequence(c,new ReferenceAssignment(new LiteralRule(literal)));
+		}
 		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
 		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
 		public static Rule LastArgument = Simple(
 			Syntax.lastArgument,
-			new DictionaryMap(CodeKeys.LastArgument, Map.Empty));
+			new DictionaryMap(CodeKeys.LastArgument, Map.Empty)
+		);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = new Sequence(
 			new Assignment(CodeKeys.Literal, new Alternatives(
@@ -3065,11 +3107,14 @@ namespace Meta {
 		private static Rule LookupAnythingExpression = new Sequence(
 			'<',
 			new ReferenceAssignment(Expression),
-			new Optional('>'));
+			new Optional('>')
+		);
 		private static Rule LookupStringExpression = new Sequence(
 			new Assignment(
 				CodeKeys.Literal,
-				LookupString));
+				LookupString
+			)
+		);
 		private static Rule Search = new CachedRule(new Sequence(
 			new Assignment(
 				CodeKeys.Search,
@@ -3151,23 +3196,24 @@ namespace Meta {
 					null
 					),
 					delegate(Parser p) {
-						p.defaultKeys.Pop();});
+						p.defaultKeys.Pop();
+					}
+			);
 
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			return new Sequence(
 				action,
 				rule != null ? new Match(rule) : null,
 				new Assignment(CodeKeys.Value, Expression),
-				new Optional(EndOfLine));}
+				new Optional(EndOfLine)
+			);
+		}
 
 		public static Rule DiscardStatement = ComplexStatement(
-			null,
-			new Assignment(CodeKeys.Discard, new LiteralRule(Map.Empty)));
+			null,new Assignment(CodeKeys.Discard, new LiteralRule(Map.Empty)));
 		public static Rule CurrentStatement = ComplexStatement(
-			'&',
-			new Assignment(CodeKeys.Current, new LiteralRule(Map.Empty)));
-		public static Rule Prefix(Rule pre,Rule rule)
-		{
+			'&',new Assignment(CodeKeys.Current, new LiteralRule(Map.Empty)));
+		public static Rule Prefix(Rule pre,Rule rule) {
 			return new Sequence(pre,new ReferenceAssignment(rule));
 		}
 		public static Rule NormalStatement = ComplexStatement(
@@ -3286,12 +3332,6 @@ namespace Meta {
 				}
 			}
 		}
-		public class Join : Action {
-			public Join(Rule rule): base(rule) {}
-			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = Library.Join(result, map);
-			}
-		}
 		public class Merge : Action {
 			public Merge(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
@@ -3388,7 +3428,7 @@ namespace Meta {
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
 		public class Characters : CharacterRule {
-		    private string chars;
+		    public string chars;
 		    public Characters(params char[] characters){chars=new string(characters);}
 		    protected override bool MatchCharacter(char next) {
 		        return chars.IndexOf(next)!=-1;
@@ -3939,13 +3979,13 @@ namespace Meta {
 						count++;}
 					else {
 						count += Leaves(pair.Value);}}
-				return count;}
+				return count;
+			}
 			public static string TestPath {
 				get {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3964,15 +4004,12 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
-
-
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -3985,8 +4022,6 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
-
-
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -4024,7 +4059,8 @@ namespace Meta {
 			public delegate object NormalEvent(object sender);
 			public class TestClass {
 				public class NestedClass {
-					public static int field = 0;}
+					public static int field = 0;
+				}
 				public TestClass() {}
 				public object CallInstanceEvent(object intArg) {
 					return instanceEvent(intArg);
@@ -4037,7 +4073,6 @@ namespace Meta {
 				protected string x = "unchangedX";
 				protected string y = "unchangedY";
 				protected string z = "unchangedZ";
-
 				public static bool boolTest = false;
 
 				public static object TestClass_staticEvent(object sender) {
@@ -4050,7 +4085,8 @@ namespace Meta {
 					del = d;
 				}
 				public static object GetResultFromDelegate() {
-					return del.DynamicInvoke(new object[] { "argumentString"});}
+					return del.DynamicInvoke(new object[] { "argumentString"});
+				}
 				public double doubleValue = 0.0;
 				public float floatValue = 0.0F;
 				public decimal decimalValue = 0.0M;
@@ -4071,28 +4107,36 @@ namespace Meta {
 					def["y"] = "null";
 					def["p2"] = "null";
 					if (arg.ContainsKey(1)) {
-						def[1] = arg[1];}
+						def[1] = arg[1];
+					}
 					if (arg.ContainsKey("y")) {
-						def["y"] = arg["y"];}
+						def["y"] = arg["y"];
+					}
 					if (arg.ContainsKey("p2")) {
-						def["y2"] = arg["y2"];}
+						def["y2"] = arg["y2"];
+					}
 					this.x = def[1].GetString();
 					this.y = def["y"].GetString();
-					this.z = def["p2"].GetString();}
+					this.z = def["p2"].GetString();
+				}
 				public string Concatenate(Map arg) {
 					Map def = new DictionaryMap();
 					def[1] = "null";
 					def["b"] = "null";
 					def["c"] = "null";
-
 					if (arg.ContainsKey(1)) {
-						def[1] = arg[1];}
+						def[1] = arg[1];
+					}
 					if (arg.ContainsKey("b")) {
-						def["b"] = arg["b"];}
+						def["b"] = arg["b"];
+					}
 					if (arg.ContainsKey("c")) {
-						def["c"] = arg["c"];}
+						def["c"] = arg["c"];
+					}
 					return def[1].GetString() + def["b"].GetString() + def["c"].GetString() +
-						this.x + this.y + this.z;}}
+						this.x + this.y + this.z;
+				}
+			}
 			public class IndexerNoConversion : TestClass {
 				public string this[string a] {
 					get {
@@ -4148,22 +4192,29 @@ namespace Meta {
 		public override string ToString() {
 			string message = Message;
 			if (invocationList.Count != 0) {
-				message += "\n\nStack trace:";}
+				message += "\n\nStack trace:";
+			}
 			foreach (ExceptionLog log in invocationList) {
-				message += "\n" + GetSourceText(log.source);}
-
-			return message;}
+				message += "\n" + GetSourceText(log.source);
+			}
+			return message;
+		}
 		public static string GetSourceText(Source source) {
 			string text;
 			if (source != null) {
 				text = source.FileName + ", line ";
-				text += source.Line + ", column " + source.Column;}
+				text += source.Line + ", column " + source.Column;
+			}
 			else {
-				text = "Unknown location";}
-			return text;}
+				text = "Unknown location";
+			}
+			return text;
+		}
 		public override string Message {
 			get {
-				return GetSourceText(source) + ": " + message;}}
+				return GetSourceText(source) + ": " + message;
+			}
+		}
 		public Source Source {
 			get {
 				return source;
@@ -4179,18 +4230,24 @@ namespace Meta {
 					count++;
 				}
 				else {
-					count += CountLeaves(pair.Value);}}
+					count += CountLeaves(pair.Value);
+				}
+			}
 			return count;
 		}
 	}
 	public class SyntaxException : MetaException {
 		public SyntaxException(string message, Parser parser)
-			: base(message, new Source(parser.State.Line, parser.State.Column, parser.FileName)) {}}
+			: base(message, new Source(parser.State.Line, parser.State.Column, parser.FileName)) {
+		}
+	}
 	public class ExecutionException : MetaException {
 		private Map context;
 		public ExecutionException(string message, Source source, Map context)
 			: base(message, source) {
-			this.context = context;}}
+			this.context = context;
+		}
+	}
 	public class KeyDoesNotExist : ExecutionException {
 		public KeyDoesNotExist(Map key, Source source, Map map)
 			: base("Key does not exist: " + Serialization.Serialize(key) + " in " + Serialization.Serialize(map), source, map) {}}
@@ -4198,8 +4255,7 @@ namespace Meta {
 		public KeyNotFound(Map key, Source source, Map map)
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
-	public class ListMap : Map
-	{
+	public class ListMap : Map {
 		public override Number GetNumber() {
 			if(Count==0) {
 				return 0;
@@ -4209,51 +4265,38 @@ namespace Meta {
 	    public override Map Copy() {
 	        return this;
 	    }
-	    public override void Append(Map map)
-	    {
+	    public override void Append(Map map){
 	        list.Add(map);
 	    }
 	    private List<Map> list;
 
-	    public ListMap(): this(5)
-	    {
+	    public ListMap(): this(5) {
 	    }
-	    public ListMap(List<Map> list)
-	    {
+	    public ListMap(List<Map> list) {
 	        this.list = list;
 	    }
-	    public ListMap(int capacity)
-	    {
+	    public ListMap(int capacity) {
 	        this.list = new List<Map>(capacity);
 	    }
-	    //public ListMap(ListStrategy original)
-	    //{
-	    //    this.list = new List<Map>(original.list);
-	    //}
 	    public override Map this[Map key] {
 	        get {
 	            Map value = null;
-	            if (key.IsNumber)
-	            {
+	            if (key.IsNumber) {
 	                int integer = key.GetNumber().GetInt32();
-	                if (integer >= 1 && integer <= list.Count)
-	                {
+	                if (integer >= 1 && integer <= list.Count) {
 	                    value = list[integer - 1];
 	                }
 	            }
 	            return value;
 	        }
 	        set {
-	            if (key.IsNumber)
-	            {
+	            if (key.IsNumber) {
 	                int integer = key.GetNumber().GetInt32();
-	                if (integer >= 1 && integer <= list.Count)
-	                {
+	                if (integer >= 1 && integer <= list.Count) {
 	                    list[integer - 1] = value;
 	                    return;
 	                }
-	                else if (integer == list.Count + 1)
-	                {
+	                else if (integer == list.Count + 1) {
 	                    list.Add(value);
 	                    return;
 	                }
@@ -4261,56 +4304,40 @@ namespace Meta {
 	            throw new Exception("Method or operation not implemented.");
 	        }
 	    }
-
-	    public override int Count
-	    {
-	        get
-	        {
-	            return list.Count;
-	        }
-	    }
-	    public override IEnumerable<Map> Array
-	    {
-	        get
-	        {
-	            return this.list;
-	        }
-	    }
-
-	    public override int ArrayCount
-	    {
+	    public override int Count {
 	        get {
 	            return list.Count;
 	        }
 	    }
-	    public override bool ContainsKey(Map key)
-	    {
+	    public override IEnumerable<Map> Array {
+	        get {
+	            return this.list;
+	        }
+	    }
+	    public override int ArrayCount {
+	        get {
+	            return list.Count;
+	        }
+	    }
+	    public override bool ContainsKey(Map key) {
 	        bool containsKey;
-	        if (key.IsNumber)
-	        {
+	        if (key.IsNumber) {
 	            Number integer = key.GetNumber();
-				//if (Number.GreaterEqual(integer,1) && Number.LessEqual(integer,list.Count))
-				if (integer >= 1 && integer <= list.Count)
-	            {
+				if (integer >= 1 && integer <= list.Count) {
 	                containsKey = true;
 	            }
-	            else
-	            {
+	            else {
 	                containsKey = false;
 	            }
 	        }
-	        else
-	        {
+	        else {
 	            containsKey = false;
 	        }
 	        return containsKey;
 	    }
-	    public override IEnumerable<Map> Keys
-	    {
-	        get
-	        {
-	            for (int i = 1; i <= list.Count; i++)
-	            {
+	    public override IEnumerable<Map> Keys {
+	        get {
+	            for (int i = 1; i <= list.Count; i++) {
 	                yield return i;
 	            }
 	        }
@@ -4326,7 +4353,7 @@ namespace Meta {
 					return m;
 				}
 			}
-			throw new Exception("Predicate was not false for all items in the array.");
+			throw new Exception("Predicate was false for all items in the array.");
 		}
 		public static Map Rest(Map m) {
 			return new DictionaryMap(new List<Map>(m.Array).GetRange(1,m.ArrayCount-1));

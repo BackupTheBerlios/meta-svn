@@ -117,15 +117,6 @@ commandLine|,
 	"literalEscapeTest"=,
 		1="asdf"
 		2="asdf"
-		3="
-			as"'df
-		"
-		4="
-			as"''df
-		"
-		5="
-			as"''''''''''''''''df
-		"
 	2="ImpliedAutokey"
 	3="Autokey"
 	"commandLineArguments"=!"commandLine"
@@ -522,10 +513,7 @@ commandLine|,
 	"hello"="hi"
 	"stringStrategyHashTest"=!!"stringTest"
 	"x"=,
-		"aLongText"="
-			hello,world!
-			hello!
-		"
+		"aLongText"="hello,world!"
 	"arrayList"=-
 		.
 			/
@@ -552,13 +540,7 @@ commandLine|,
 		.
 			!"textBox"
 			"set_Text_String"
-		"
-			Alle meine Entchen
-			schwimmen auf dem See
-			schwimmen auf dem See
-			Köpfchen in das Wasser
-			asdf in die Hoeh.
-		"
+		"Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh."
 	"lines"=-
 		.
 			!"textBox"
@@ -568,7 +550,7 @@ commandLine|,
 		.
 			!"lines"
 			"GetValue_Int32"
-		1
+		0
 	"form"=-
 		.
 			/
@@ -666,10 +648,7 @@ commandLine|,
 	"outerFunctionTest"=-
 		!"outerFunction"
 		"right"
-	"newLines"="
-		
-		
-	"
+	"newLines"=" "
 	"app"=.
 		!"System.Windows.Forms"
 		"Application"
