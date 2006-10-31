@@ -3190,7 +3190,8 @@ namespace Meta {
 					Statement,
 					DiscardStatement
 				)),
-			new Optional(Syntax.statementEnd)
+			Syntax.statementEnd
+			//new Optional(Syntax.statementEnd)
 			//new Optional(Syntax.statementEnd)
 			);
 		// refactor
@@ -3928,7 +3929,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
+			public class LibraryCode: Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
+				}
+			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
