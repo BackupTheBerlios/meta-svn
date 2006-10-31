@@ -59,7 +59,8 @@ namespace Meta {
 			if(compiled==null) {	
 				compiled=Compile();
 			}
-			return compiled;}
+			return compiled;
+		}
 		public Compiled compiled;
 		public bool isFunction = false;
 		public readonly Extent Source;
@@ -3293,8 +3294,6 @@ namespace Meta {
 		public static Rule Program = ComplexProgram();
 
 		public static Rule ComplexProgram() {
-			Action firstAction = new Assignment(1, AllStatements);
-			Action entryAction = new ReferenceAssignment(AllStatements);
 			return new Sequence(
 				new Assignment(CodeKeys.Program,
 					new Sequence(
@@ -3308,16 +3307,15 @@ namespace Meta {
 											new Autokey(
 												new Sequence(
 													Whitespace,
-													entryAction,
+													new ReferenceAssignment(AllStatements),
 													new Optional(Syntax.programSeparator)
 													)))),
 									Whitespace
-									, Syntax.programEnd
+									,Syntax.programEnd
 									)
 									)))
 								));
 		}
-
 		public abstract class Action {
 			public static implicit operator Action(StringRule rule) {
 				return new Match(rule);
