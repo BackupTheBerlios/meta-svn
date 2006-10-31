@@ -3058,9 +3058,8 @@ namespace Meta {
 
 
 
-		public static Rule Call = new DelayedRule(delegate() {
-			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
-				new Alternatives(
+		public static Rule ComplexCall() {
+			Action firstAction = new Assignment(1, new Alternatives(
 					LastArgument,
 					FunctionProgram,
 					LiteralExpression,
@@ -3069,17 +3068,52 @@ namespace Meta {
 					Search,
 					List,
 					Program
-				),
-				new Alternatives(
+				));
+			Action entryAction = new ReferenceAssignment(new Alternatives(
+					LastArgument,
 					FunctionProgram,
 					LiteralExpression,
+					Call,
 					Select,
 					Search,
 					List,
-					Program,
-					LastArgument
-				)
-			);
+					Program
+				));
+			return new Sequence(
+				new Assignment(CodeKeys.Call,
+				new Sequence(
+					new Assignment(1,
+						new Alternatives(
+											FunctionProgram,
+											LiteralExpression,
+											Select,
+											Search,
+											List,
+											Program,
+											LastArgument
+										)),
+						Whitespace,
+						Syntax.callStart,
+						new Append(
+							new Alternatives(
+								new Sequence(
+									Whitespace,
+									new Append(
+										new ZeroOrMore(
+											new Autokey(
+												new Sequence(
+													Whitespace,
+													entryAction,
+													new Optional(Syntax.callSeparator)
+													)))),
+									Whitespace
+									, Syntax.callEnd
+									)
+									)))
+								));
+		}
+		public static Rule Call = new DelayedRule(delegate() {
+			return ComplexCall();
 		});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
