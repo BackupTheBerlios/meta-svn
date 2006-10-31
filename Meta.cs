@@ -2965,16 +2965,16 @@ namespace Meta {
 					new ZeroOrMoreChars(new CharsExcept(Syntax.unixNewLine.ToString())),
 					EndOfLine)),
 			new ReferenceAssignment(MapRule)));
-		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
-			return ComplexStuff(key, start, end, separator, new Assignment(1, entry), new ReferenceAssignment(entry), first);
-		}
+
 		public static Rule Whitespace = new ZeroOrMore(new Characters(
 			Syntax.unixNewLine,
 			Syntax.windowsNewLine[0],
 			Syntax.tab,
 			Syntax.space
 		));
-		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
+		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
+			Action firstAction=new Assignment(1, entry);
+			Action entryAction=new ReferenceAssignment(entry);
 			return new Sequence(
 				new Assignment(key,
 					new Sequence(
@@ -3005,47 +3005,6 @@ namespace Meta {
 										))
 								))));
 		}
-		//public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
-		//    return new Sequence(
-		//        first != null ? new Assignment(1, first) : null,
-		//        Whitespace,
-		//        start,
-		//        new Append(
-		//            new Alternatives(
-		//                new Sequence(
-		//                    firstAction,
-		//                    Whitespace,
-		//                    new Append(
-		//                        new ZeroOrMore(
-		//                            new Autokey(
-		//                                new Sequence(Whitespace, separator,Whitespace, entryAction)))),
-		//                    end),
-		//                new Sequence(
-		//                    new ReferenceAssignment(
-		//                        new ZeroOrMore(
-		//                            new Autokey(
-		//                                new Sequence(
-		//                                    Whitespace,
-		//                                    entryAction,
-		//                                    new CustomRule(delegate(Parser p, ref Map map) {
-		//                                        if(separator.Match(p,ref map))
-		//                                        {
-		//                                            return true;
-		//                                        }
-		//                                        else {
-		//                                            if (separator is Characters) {
-		//                                                p.errors[p.State] = "expected " + ((Characters)separator).chars;
-		//                                            }
-		//                                            return true;
-		//                                        }
-		//                                    })
-		//                                    )))),
-		//                        Whitespace,
-		//                        end
-		//                        ))
-		//                )
-		//    );
-		//}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 
 		public static Rule Call = new DelayedRule(delegate() {
@@ -3153,69 +3112,6 @@ namespace Meta {
 					delegate(Parser p) {
 						p.defaultKeys.Pop();})));
 
-		//public static Action ListAction = new CustomProduction(
-		//    delegate(Parser p, Map map, ref Map result) {
-		//        result = new DictionaryMap(
-		//            CodeKeys.Key, 
-		//            new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek())),
-		//            CodeKeys.Value, map);
-		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//    },
-		//    Expression
-		//);
-		//public static Action FirstListAction = new CustomProduction(
-		//    delegate(Parser p, Map map, ref Map result) {
-		//        result.Append(new DictionaryMap(
-		//            CodeKeys.Key,
-		//            new DictionaryMap(
-		//                CodeKeys.Literal, 
-		//                new Integer32(p.defaultKeys.Peek())),
-		//            CodeKeys.Value,
-		//            map));
-		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//    },
-		//    Expression
-		//);
-		//public static Rule List = new PrePost(
-		//    delegate(Parser p) {
-		//        p.defaultKeys.Push(1);
-		//    },
-		//        ComplexStuff(
-		//            CodeKeys.Program,
-		//            Syntax.arrayStart,
-		//            Syntax.arrayEnd,
-		//            Syntax.arraySeparator,
-		//            FirstListAction,
-		//            ListAction,
-		//            null
-		//            ),
-		//            delegate(Parser p) {
-		//                p.defaultKeys.Pop();
-		//            }
-		//    );
-		//public static Action ListAction = new CustomProduction(
-		//    delegate(Parser p, Map map, ref Map result) {
-		//        result = new DictionaryMap(
-		//            CodeKeys.Key,
-		//            new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek())),
-		//            CodeKeys.Value, map);
-		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//    },
-		//    Expression
-		//);
-		//public static Action FirstListAction = new CustomProduction(
-		//    delegate(Parser p, Map map, ref Map result) {
-		//        result.Append(new DictionaryMap(
-		//            CodeKeys.Key,
-		//            new DictionaryMap(
-		//                CodeKeys.Literal,
-		//                new Integer32(p.defaultKeys.Peek())),
-		//            CodeKeys.Value,
-		//            map));
-		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//    },
-		//    Expression
-		//);
 		public static Rule ListEntry = new CustomRule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
 				map = new DictionaryMap(
