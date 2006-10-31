@@ -186,7 +186,7 @@ commandLine|{
 	scopeFunction={
 		inScope="right";
 		arg|{
-			scopeTest=inScope;
+			scopeTest:inScope;
 		};
 	};
 	inScope="wrong";
@@ -468,9 +468,7 @@ commandLine|{
 			};
 		};
 	};
-	8=deep.map.test(
-		0
-	);
+	8=deep.map.test(0);
 	outerFunction={
 		arg|{
 			innerFunction={

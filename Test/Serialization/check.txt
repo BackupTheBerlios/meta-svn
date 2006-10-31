@@ -184,6 +184,7 @@ commandLine|,
 	"inScope"="wrong"
 	4=-
 		!"scopeFunction"
+		0
 	"scopeFromFunctionData"="wrong"
 	"scopeFunctionFunction"=,
 		"scopeFromFunctionData"="right"
@@ -269,6 +270,7 @@ commandLine|,
 		"MemberTest"
 	"memberTest"=-
 		!"MemberTest"
+		0
 	"stringOverload"=-
 		.
 			!"MemberTest"
@@ -310,10 +312,12 @@ commandLine|,
 			.
 				!"memberTest"
 				"get_InstanceProperty"
+			0
 	"classPropertyValue"=-
 		.
 			!"MemberTest"
 			"get_ClassProperty"
+		0
 	-
 		.
 			!"memberTest"
@@ -322,10 +326,12 @@ commandLine|,
 			.
 				!"MemberTest"
 				"get_ClassProperty"
+			0
 	"instancePropertyValue"=-
 		.
 			!"memberTest"
 			"get_InstanceProperty"
+		0
 	"interceptedSymbol"="/hello/"
 	"positionalNoConversion"=-
 		.
@@ -557,6 +563,7 @@ commandLine|,
 		.
 			!"textBox"
 			"get_Lines"
+		0
 	"alleMeineText"=-
 		.
 			!"lines"
@@ -567,6 +574,7 @@ commandLine|,
 			/
 			"System.Windows.Forms"
 			"Form"
+		0
 	-
 		.
 			!"form"
@@ -581,6 +589,7 @@ commandLine|,
 		.
 			!"form"
 			"get_Location"
+		0
 	"tabText"="			hello"
 	"escapedText"="'#'n'''t"
 	"whileCounter"=0
@@ -677,6 +686,7 @@ commandLine|,
 			!"System.Windows.Forms"
 			"Application"
 			"get_VisualStyleState"
+		0
 	"oneTwoThreeHello"="asdf"
 	"copySourceData"=,
 		"x"="y"
