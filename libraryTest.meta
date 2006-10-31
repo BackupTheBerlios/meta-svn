@@ -26,46 +26,16 @@
 				)
 			);
 			differenceTest2=difference(103,2);
-			divideTest=divide(
-				5
-				103
-			);
-			productInteger=product(
-				19
-				1023
-			);
-			minusproduct=product(
-				-1
-				-2
-			);
-			productFraction=product(
-				3/2
-				7/3
-			);
-			smallerDecreasingTest=less(
-				4
-				1
-			);
-			nonincreasingTest=lessEqual(
-				1
-				1
-			);
-			nondecreasingTest=greaterEqual(
-				1
-				2
-			);
-			strictlyIncreasingTest=greater(
-				23
-				23
-			);
-			smallerTest=less(
-				0
-				1
-			);
-			greaterTest=greater(
-				3
-				5
-			);
+			divideTest=divide(5,103);
+			productInteger=product(19,1023);
+			minusproduct=product(-1,-2);
+			productFraction=product(3/2,7/3);
+			smallerDecreasingTest=less(4,1);
+			nonincreasingTest=lessEqual(1,1);
+			nondecreasingTest=greaterEqual(1,2);
+			strictlyIncreasingTest=greater(23,23);
+			smallerTest=less(0,1);
+			greaterTest=greater(3,5);
 			divide=product(
 				1000
 				divide(
@@ -87,11 +57,7 @@
 					|0
 				}
 			);
-			sliceTest=slice(
-				"die Katze lief im Schnee."
-				5
-				10
-			);
+			sliceTest=slice("die Katze lief im Schnee.",5,10);
 			Map={
 				&apply(
 					[1 2 3]
@@ -154,10 +120,7 @@
 			);
 			integerToString=integerToString(5);
 		}
-		filterTest=filter(
-			[1 100 2 4 100 100]
-			equal(100)
-		);
+		filterTest=filter([1 100 2 4 100 100],equal(100));
 		reverseTest=reverse("hello");
 		sumTest=accumulate(
 			{
