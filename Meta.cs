@@ -2969,6 +2969,11 @@ namespace Meta {
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				new Assignment(key, ComplexStuff(start, end, separator, firstAction, entryAction, first)));}
+		public static Rule Whitespace = new ZeroOrMore(new Characters(
+			Syntax.unixNewLine,
+			Syntax.windowsNewLine[0],
+			Syntax.tab,
+			Syntax.space));
 		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				first != null ? new Assignment(1, first) : null,
@@ -2991,13 +2996,14 @@ namespace Meta {
 										new Sequence(
 											new Optional(EndOfLine),
 											SameIndentation,
-											entryAction)))),
+											entryAction,
+											new Optional(separator))))),
+								Whitespace,
 								new Optional(EndOfLine),
 								new Optional(Dedentation),
-								new Sequence(SameIndentation, end)
-								//new Optional(new Sequence(SameIndentation, end))
+								new Optional(SameIndentation),
+								end
 								)))
-								//new Optional(end)
 				//new Optional(new CustomRule(delegate(Parser p, ref Map map) {
 				//    Map m;
 				//    if(!new Characters(end).Match(p,ref map)) 
