@@ -37,16 +37,13 @@ listTest=[
 commandLine|{
 	&merge(
 		0
-		[
-			"AssignedToCurrent"
+		["AssignedToCurrent"]
 	);
 	asdf="hello";
 	shortFunction={
 		arg|asdf;
 	};
-	shortFunctionTest=!"shortFunction"(
-		"hello"
-	);
+	shortFunctionTest=!"shortFunction"("hello");
 	listTest=[1 2 3 "hello" asdf];
 	counter=0;
 	inlineProgram={
@@ -176,9 +173,7 @@ commandLine|{
 	};
 	a="default";
 	b=0;
-	aSet=object.SetA(
-		0
-	);
+	aSet=object.SetA(0);
 	bSet=object.SetB(
 		{
 			value={
@@ -191,11 +186,11 @@ commandLine|{
 	scopeFunction={
 		inScope="right";
 		arg|{
-			scopeTest:inScope;
+			scopeTest=inScope;
 		};
 	};
 	inScope="wrong";
-	4=scopeFunction();
+	4=scopeFunction(0);
 	scopeFromFunctionData="wrong";
 	scopeFunctionFunction={
 		scopeFromFunctionData="right";
@@ -261,7 +256,7 @@ commandLine|{
 	);
 	boolTest=TestClass.boolTest;
 	MemberTest=/.Meta.MemberTest;
-	memberTest=MemberTest();
+	memberTest=MemberTest(0);
 	stringOverload=MemberTest.OverloadedMethod_String("hello");
 	integerOverload=MemberTest.OverloadedMethod_Int32(5);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
@@ -278,10 +273,10 @@ commandLine|{
 			instanceField="b";
 		}
 	);
-	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty());
-	classPropertyValue=MemberTest.get_ClassProperty();
-	memberTest.set_InstanceProperty_String(MemberTest.get_ClassProperty());
-	instancePropertyValue=memberTest.get_InstanceProperty();
+	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty(0));
+	classPropertyValue=MemberTest.get_ClassProperty(0);
+	memberTest.set_InstanceProperty_String(MemberTest.get_ClassProperty(0));
+	instancePropertyValue=memberTest.get_InstanceProperty(0);
 	interceptedSymbol="/hello/";
 	positionalNoConversion=/.Meta.PositionalNoConversion_String_String_String("m","n","o");
 	positionalNoConversionConcatenated=positionalNoConversion.Concatenate_String_String_String("r","s","t");
@@ -421,11 +416,11 @@ commandLine|{
 			asdf in die Hoeh.
 		"
 	);
-	lines=textBox.get_Lines();
+	lines=textBox.get_Lines(0);
 	alleMeineText=lines.GetValue_Int32(1);
-	form=/."System.Windows.Forms".Form();
+	form=/."System.Windows.Forms".Form(0);
 	form.set_Location_Point(!"System.Drawing".Point_Int32_Int32(5,1000));
-	automaticConversionTest=form.get_Location();
+	automaticConversionTest=form.get_Location(0);
 	tabText="			hello";
 	escapedText="'#'n'''t";
 	whileCounter=0;
@@ -493,7 +488,7 @@ commandLine|{
 	";
 	app=<"System.Windows.Forms">.Application;
 	app.set_VisualStyleState_VisualStyleState(!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled);
-	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState();
+	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState(0);
 	oneTwoThreeHello="asdf";
 	copySourceData={
 		x="y";
@@ -511,3 +506,4 @@ commandLine|{
 		space=' ';
 		tab='	';
 	};
+}

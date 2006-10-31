@@ -8,10 +8,7 @@
 				&m.ContainsKey_Map;
 			}?;
 			foreach=Library.Foreach_Map_Map;
-			flip=func?a?b?func(
-				b
-				a
-			)???;
+			flip=func?a?b?func(b,a)???;
 			containedBy=key?map?{
 				m=ObjectMap_Object(
 					map
@@ -34,10 +31,7 @@
 			accumulate=Library.Sum_Map_Map;
 			keys=arg?<"DictionaryMap_IEnumerable`1">(
 				{
-					m=ObjectMap_Object(
-						arg
-					);
-					&m.get_Keys();
+					m=ObjectMap_Object(arg);
 				}
 			);
 			product=Number.op_Multiply_Number_Number;
@@ -78,10 +72,7 @@
 						rest
 						n
 					)
-					?{
-						do();
-						x(sum(rest,1));
-					}?
+					?0?
 					?0?
 				)?;
 				x(1);
@@ -126,7 +117,10 @@
 				};
 				&stuff.<greater(a,b)>;
 			}??;
-			callKey=map?key?if(contains(map,key),?map.<key>()?)??;
+			callKey=map?key?if(
+				contains(map,key)
+				?0?
+			)??;
 			minimum=a?b?{
 				stuff={
 					1=a;
@@ -145,77 +139,7 @@
 			andAll=accumulate(and);
 			integerToString=arg?{
 				m=ObjectMap_Object(arg);
-				&m.ToString();
 			}?;
-			count=arg?{
-				m=ObjectMap_Object(arg);
-				&m.get_Count();
-			};
-			equal=Library.Equal_Object_Object;
-			isNumber=arg?{
-				m=ObjectMap_Object(arg);
-				&m.get_IsNumber();
-			}?;
-			isString=arg?{
-				m=ObjectMap_Object(arg);
-				&m.get_IsString();
-			}?;
-			joinAll=Library.JoinAll_Map;
-			mergeAll=Library.MergeAll_Map;
-			negate=arg?difference(0,arg);
-			modulo=Number.op_Modulus_Number_Number;
-			vectorDotProduct=vector?number?apply(vector,entry?product(number,entry)?)??;
-			productVector=a?b?apply(range(length(a)),index?product(a.<index>,b.<index>)?)??;
-			print=?{
-				writeLine(toString(@));
-				&@;
-			}?;
-			printAll=applyTo(print);
-			readLine=?mscorlib.Console.ReadLine()?;
-			append=Library.Append_Map_Map;
-			appendTo=flip(append);
-			empty=equal(0);
-			prepend=array?item?join(
-				[
-					item
-				]
-				array
-			)??;
-			prependTo=flip(prepend);
-			switch=Library.Switch_Map_Map;
-			while=Library.While_Map_Map;
-			callIf=map?key?func?{
-				which={
-					stuff={
-						0={
-							|0;
-						};
-						1={
-							|func(map.<key>);
-						};
-					};
-					&stuff.<contains(map,key)>;
-				};
-				&which();
-			}???;
-			floor=Library.Floor_Number;
-			filterWith=flip(filter);
-			random=Library.Random_Int32_Int32;
-			discard=array?func?filter(array,?not(func(@))?)??;
-			mergeWith=flip(merge);
-			enumerableToArray=Library.EnumerableToArray_Map;
-			try=Library.Try_Map_Map;
-			readTextFile=file?mscorlib.File.ReadAllText_String_Encoding(
-				file
-				mscorlib.Encoding.get_Default()
-			)?;
-			compareNumber=Library.CompareNumber_Number_Number;
-			sort=Library.Sort_Map_Map;
-			writeTextFile=file?text?mscorlib.File.WriteAllText_String_String_Encoding(
-				file
-				text
-				mscorlib.Encoding.get_Default()
-			)??;
 		};
 	}?;
 	&{

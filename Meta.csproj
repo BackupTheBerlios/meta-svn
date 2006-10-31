@@ -55,7 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy %282%29 of library.meta" />
     <None Include="Copy %282%29 of s.meta" />
+    <None Include="Copy %283%29 of library.meta" />
+    <None Include="Copy %284%29 of library.meta" />
+    <None Include="Copy %285%29 of library.meta" />
+    <None Include="Copy of basicTest.meta" />
     <None Include="Copy of Copy of s.meta" />
     <None Include="Copy of library.meta" />
     <None Include="Copy of s.meta" />

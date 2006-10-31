@@ -2751,13 +2751,16 @@ namespace Meta {
 					case '9':
 					case '\'':
 						return true;
-					default:
-						return false;}};
+						default:
+						return false;
+				}
+			};
 		}
 		public static Rule Expression = new DelayedRule(delegate() {
 		    return new CachedRule(new Alternatives(
 		        LiteralExpression,FunctionProgram,Call,Select,
-		        Search,List,Program,LastArgument));});
+		        Search,List,Program,LastArgument));
+		});
 		public class Ignore:Rule
 		{
 			private Rule rule;
@@ -2797,7 +2800,7 @@ namespace Meta {
 			pa.State.indentationCount--;
 			return true;
 		});
-		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));		
+		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
 		public class StringIgnore:StringRule
 		{
 			private Rule rule;
@@ -2991,9 +2994,24 @@ namespace Meta {
 											entryAction)))),
 								new Optional(EndOfLine),
 								new Optional(Dedentation),
-								new Optional(new Sequence(SameIndentation, end))))),
-				new Optional(end));
+								new Sequence(SameIndentation, end)
+								//new Optional(new Sequence(SameIndentation, end))
+								)))
+								//new Optional(end)
+				//new Optional(new CustomRule(delegate(Parser p, ref Map map) {
+				//    Map m;
+				//    if(!new Characters(end).Match(p,ref map)) 
+				//    {
+				//        p.errors[p.State]="expected "+end;
+				//        return false;
+				//    }
+				//    else {
+				//        return true;
+				//    }
+				//})
+				);
 		}
+		Dictionary<State, string> errors = new Dictionary<State, string>();
 
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
@@ -3005,7 +3023,8 @@ namespace Meta {
 					Select,
 					Search,
 					List,
-					Program),
+					Program
+				),
 				new Alternatives(
 					FunctionProgram,
 					LiteralExpression,
@@ -3014,7 +3033,9 @@ namespace Meta {
 					List,
 					Program,
 					LastArgument
-					));});
+				)
+			);
+		});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
 				CodeKeys.Key,
@@ -3190,10 +3211,7 @@ namespace Meta {
 					Statement,
 					DiscardStatement
 				)),
-			Syntax.statementEnd
-			//new Optional(Syntax.statementEnd)
-			//new Optional(Syntax.statementEnd)
-			);
+			Syntax.statementEnd);
 		// refactor
 		public static Rule FunctionProgram = new Sequence(
 			new Assignment(CodeKeys.Program,
@@ -3675,6 +3693,13 @@ namespace Meta {
 			Map result=null;
 			Parser.File.Match(parser, ref result);
 			if (parser.State.index != parser.Text.Length-1) {
+				List<State> sorted=new List<State>(parser.errors.Keys);
+				sorted.Sort(delegate(State a, State b) {
+					return a.Line.CompareTo(b.Line);
+				});
+				if (parser.errors.Count != 0) {
+					string error = parser.errors[sorted[0]];
+				}
 				throw new SyntaxException("Expected end of file.", parser);
 			}
 			foreach (CachedRule rule in CachedRule.cachedRules)
@@ -3929,7 +3954,7 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class LibraryCode: Test {
+			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
@@ -3947,6 +3972,8 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
+
+
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;
