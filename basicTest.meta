@@ -36,7 +36,7 @@ listTest=[
 		"list
 commandLine|{
 	&merge(
-		0
+		0,
 		["AssignedToCurrent"]
 	);
 	asdf="hello";
@@ -65,9 +65,7 @@ commandLine|{
 	};
 	scopingValue="wrong";
 	scopingTest=scoping.test;
-	lexicalScoping=scopingTest(
-		0
-	);
+	lexicalScoping=scopingTest(0);
 	unicodeText="äaba";
 	integerHashTest={
 		2="correct,hash,content";
@@ -80,7 +78,7 @@ commandLine|{
 	};
 	negativeInteger=100;
 	negativeInteger=merge(
-		negativeInteger
+		negativeInteger,
 		{
 			x="hello";
 		}
@@ -114,15 +112,6 @@ commandLine|{
 	literalEscapeTest=[
 		"asdf"
 		"asdf"
-		"
-			as"'df
-		"
-		"
-			as"''df
-		"
-		"
-			as"''''''''''''''''df
-		"
 	];
 	2="ImpliedAutokey";
 	3="Autokey";
@@ -149,7 +138,7 @@ commandLine|{
 		SetB={
 			newB|{
 				b:merge(
-					b
+					b,
 					{
 						1=newB.value;
 					}
@@ -170,14 +159,12 @@ commandLine|{
 	a="default";
 	b=0;
 	aSet=object.SetA(0);
-	bSet=object.SetB(
-		{
-			value={
-				x=7;
-				z=1;
-			};
-		}
-	);
+	bSet=object.SetB({
+		value={
+			x=7;
+			z=1;
+		};
+	});
 	scopeTest="default";
 	scopeFunction={
 		inScope="right";
@@ -243,7 +230,7 @@ commandLine|{
 		}
 	);
 	TestClass=merge(
-		TestClass
+		TestClass,
 		{
 			boolTest=1;
 		}
@@ -256,13 +243,13 @@ commandLine|{
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	MemberTest:merge(
-		MemberTest
+		MemberTest,
 		{
 			classField="a";
 		}
 	);
 	memberTest:merge(
-		memberTest
+		memberTest,
 		{
 			instanceField="b";
 		}
@@ -300,7 +287,7 @@ commandLine|{
 		arg|{
 			&"simple,function,this";
 		};
-	};	
+	};
 	callFunction={
 		arg|someFunction;
 	};
@@ -384,7 +371,7 @@ commandLine|{
 	fractionTest=40;
 	stringTest="hello";
 	stringTest=merge(
-		stringTest
+		stringTest,
 		{
 			5=stringTest.1;
 		}
@@ -392,26 +379,15 @@ commandLine|{
 	hello="hi";
 	stringStrategyHashTest=!stringTest;
 	x={
-		aLongText="
-			hello,world!
-			hello!
-		";
+		aLongText="hello,world!";
 	};
 	arrayList=/.mscorlib.ArrayList(0);
 	7=arrayList.Add_Object("hello");
 	arrayListResult=arrayList.get_Item_Int32(0);
 	textBox=/."System.Windows.Forms".TextBox(0);
-	textBox.set_Text_String(
-		"
-			Alle meine Entchen
-			schwimmen auf dem See
-			schwimmen auf dem See
-			Köpfchen in das Wasser
-			asdf in die Hoeh.
-		"
-	);
+	textBox.set_Text_String("Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh.");
 	lines=textBox.get_Lines(0);
-	alleMeineText=lines.GetValue_Int32(1);
+	alleMeineText=lines.GetValue_Int32(0);
 	form=/."System.Windows.Forms".Form(0);
 	form.set_Location_Point(!"System.Drawing".Point_Int32_Int32(5,1000));
 	automaticConversionTest=form.get_Location(0);
@@ -474,10 +450,7 @@ commandLine|{
 		};
 	};
 	outerFunctionTest=outerFunction("right");
-	newLines="
-		
-		
-	";
+	newLines=" ";
 	app=<"System.Windows.Forms">.Application;
 	app.set_VisualStyleState_VisualStyleState(!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled);
 	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState(0);
@@ -488,7 +461,7 @@ commandLine|{
 	};
 	copiedData=copySourceData;
 	copiedData=merge(
-		copiedData
+		copiedData,
 		{
 			x="changed";
 		}

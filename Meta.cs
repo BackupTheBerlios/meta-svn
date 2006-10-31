@@ -2834,7 +2834,8 @@ namespace Meta {
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(new CharsExcept(Syntax.character.ToString())),
-			Syntax.character);
+			Syntax.character
+		);
 		public static Rule String = new Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(new Alternatives(
@@ -2973,49 +2974,40 @@ namespace Meta {
 			Syntax.unixNewLine,
 			Syntax.windowsNewLine[0],
 			Syntax.tab,
-			Syntax.space));
+			Syntax.space
+		));
 		public static Rule ComplexStuff(char start, char end, Rule separator, Action firstAction, Action entryAction, Rule first) {
 			return new Sequence(
 				first != null ? new Assignment(1, first) : null,
+				Whitespace,
 				start,
 				new Append(
 					new Alternatives(
 						new Sequence(
 							firstAction,
+							Whitespace,
 							new Append(
 								new ZeroOrMore(
 									new Autokey(
-										new Sequence(
-										new Match(separator), entryAction)))),
-							new Optional(end)),
+										new Sequence(Whitespace, separator,Whitespace, entryAction)))),
+							end),
 						new Sequence(
-							SmallIndentation,
+							//SmallIndentation,
 							new ReferenceAssignment(
 								new ZeroOrMore(
 									new Autokey(
 										new Sequence(
-											new Optional(EndOfLine),
-											SameIndentation,
+											Whitespace,
+											//new Optional(EndOfLine),
+											//SameIndentation,
 											entryAction,
-											new Optional(separator))))),
+											new Optional(separator)
+											)))),
 								Whitespace,
-								new Optional(EndOfLine),
-								new Optional(Dedentation),
-								new Optional(SameIndentation),
+								//Dedentation,
 								end
 								)))
-				//new Optional(new CustomRule(delegate(Parser p, ref Map map) {
-				//    Map m;
-				//    if(!new Characters(end).Match(p,ref map)) 
-				//    {
-				//        p.errors[p.State]="expected "+end;
-				//        return false;
-				//    }
-				//    else {
-				//        return true;
-				//    }
-				//})
-				);
+			);
 		}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 
@@ -3058,19 +3050,12 @@ namespace Meta {
 				c,
 				new ReferenceAssignment(new LiteralRule(literal)));}
 
-		private static Rule EmptyMap = Simple(
-			Syntax.emptyMap,
-			Map.Empty
-		);
-		private static Rule Current = Simple(
-			Syntax.current,
-			new DictionaryMap(CodeKeys.Current, Map.Empty));
+		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
+		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
 		public static Rule LastArgument = Simple(
 			Syntax.lastArgument,
 			new DictionaryMap(CodeKeys.LastArgument, Map.Empty));
-		private static Rule Root = Simple(
-			Syntax.root,
-			new DictionaryMap(CodeKeys.Root,Map.Empty));
+		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = new Sequence(
 			new Assignment(CodeKeys.Literal, new Alternatives(
 				EmptyMap,
@@ -3101,7 +3086,7 @@ namespace Meta {
 						new Alternatives(
 							Root,
 							Search,
-			LastArgument,
+							LastArgument,
 							LiteralExpression)),
 					new Append(
 						new OneOrMore(new Autokey(Prefix('.',new Alternatives(
@@ -3960,12 +3945,7 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3997,6 +3977,12 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
 
