@@ -2972,6 +2972,7 @@ namespace Meta {
 			Syntax.tab,
 			Syntax.space
 		));
+
 		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
 			Action firstAction=new Assignment(1, entry);
 			Action entryAction=new ReferenceAssignment(entry);
@@ -3012,6 +3013,49 @@ namespace Meta {
 								));
 		}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
+
+		//public static Rule Call = new DelayedRule(delegate() {
+		//    return new Sequence(
+		//        new Assignment(
+		//            CodeKeys.Call,
+		//            new Sequence(
+		//                new Alternatives(
+		//                    LastArgument,
+		//                    FunctionProgram,
+		//                    LiteralExpression,
+		//                    Call,
+		//                    Select,
+		//                    Search,
+		//                    List,
+		//                    Program
+		//                ),
+		//                Whitespace,
+		//                Syntax.callStart,
+		//                new Append(
+		//                    new Alternatives(
+		//                        new Sequence(
+		//                            Whitespace,
+		//                            new Append(
+		//                                new ZeroOrMore(
+		//                                    new Autokey(
+		//                                        new Sequence(
+		//                                            Whitespace,
+		//                                            new Alternatives(
+		//                                                FunctionProgram,
+		//                                                LiteralExpression,
+		//                                                Select,
+		//                                                Search,
+		//                                                List,
+		//                                                Program,
+		//                                                LastArgument
+		//                                            ),
+		//                                            new Optional(Syntax.callSeparator))))),
+		//                            Whitespace
+		//                            , Syntax.callEnd))))));
+		//});
+
+
+
 
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexStuff(CodeKeys.Call, Syntax.callStart, Syntax.callEnd, Syntax.callSeparator,
@@ -3246,13 +3290,34 @@ namespace Meta {
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
 										new Optional(Syntax.functionProgram))))))))));
-		public static Rule Program = ComplexStuff(
-			CodeKeys.Program,
-			Syntax.programStart,
-			Syntax.programEnd,
-			Syntax.programSeparator,
-			AllStatements,
-			null);
+		public static Rule Program = ComplexProgram();
+
+		public static Rule ComplexProgram() {
+			Action firstAction = new Assignment(1, AllStatements);
+			Action entryAction = new ReferenceAssignment(AllStatements);
+			return new Sequence(
+				new Assignment(CodeKeys.Program,
+					new Sequence(
+						Syntax.programStart,
+						new Append(
+							new Alternatives(
+								new Sequence(
+									Whitespace,
+									new Append(
+										new ZeroOrMore(
+											new Autokey(
+												new Sequence(
+													Whitespace,
+													entryAction,
+													new Optional(Syntax.programSeparator)
+													)))),
+									Whitespace
+									, Syntax.programEnd
+									)
+									)))
+								));
+		}
+
 		public abstract class Action {
 			public static implicit operator Action(StringRule rule) {
 				return new Match(rule);
