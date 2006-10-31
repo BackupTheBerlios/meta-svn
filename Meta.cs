@@ -3180,7 +3180,6 @@ namespace Meta {
 			}
 		});
 		public static Rule ComplexList() {
-			Action firstAction = new Assignment(1, ListEntry);
 			Action entryAction = new ReferenceAssignment(ListEntry);
 			return new Sequence(
 				new Assignment(CodeKeys.Program,
@@ -3190,18 +3189,6 @@ namespace Meta {
 						new Append(
 							new Alternatives(
 								new Sequence(
-									firstAction,
-									Whitespace,
-									new Append(
-										new ZeroOrMore(
-											new Autokey(
-												new Sequence(
-													Whitespace,
-													Syntax.arraySeparator,
-													Whitespace,
-													entryAction))))
-									, Syntax.arrayEnd)
-								, new Sequence(
 									Whitespace,
 									new Append(
 										new ZeroOrMore(
