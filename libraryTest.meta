@@ -64,7 +64,8 @@
 					{
 						argument|sum(
 							argument
-							1;
+							1
+						);
 					}
 				);
 			};

@@ -32,6 +32,7 @@
 			keys=arg?<"DictionaryMap_IEnumerable`1">(
 				{
 					m=ObjectMap_Object(arg);
+					&m.get_Keys(0);
 				}
 			);
 			product=Number.op_Multiply_Number_Number;
