@@ -16,14 +16,8 @@
 		box=createBox(size.1 size.2 size.3
 		box.set_Position_Vector3(vector(position.1 position.2 position.3
 	makeBox(
-		[
-			798
-			50
-			100
-		[
-			400
-			0
-			0
+		[798,50,100]
+		[400,0,0]
 	makeBox(
 		[
 			798

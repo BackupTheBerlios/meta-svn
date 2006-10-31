@@ -145,12 +145,12 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"IfTest"
 			Value (StringMap):
-				"If test successful"
+				"If,test,successful"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"sliceTest"
 			Value (DictionaryMap):
-				"Katze "
+				"Katze,"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"Map"
@@ -275,7 +275,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"withTest"
 	Value (ObjectMap):
-		System.Windows.Forms.Form, Text: hello world
+		System.Windows.Forms.Form, Text: hello,world
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"countTest"

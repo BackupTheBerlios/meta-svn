@@ -3713,7 +3713,7 @@ namespace Meta {
 		public const char statementEnd=';';
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
-		public const char arraySeparator = ' ';
+		public const char arraySeparator = ',';
 		public const char programSeparator = ';';
 		public const char programStart = '{';
 		public const char programEnd ='}';

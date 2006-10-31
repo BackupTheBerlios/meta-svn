@@ -51,16 +51,16 @@
 			IfTest=if(
 				1
 				{
-					arg|"If test successful";
+					arg|"If,test,successful";
 				}
 				{
 					|0;
 				}
 			);
-			sliceTest=slice("die Katze lief im Schnee.",5,10);
+			sliceTest=slice("die,Katze,lief,im,Schnee.",5,10);
 			Map={
 				&apply(
-					[1 2 3]
+					[1,2,3]
 					{
 						argument|sum(
 							argument
@@ -73,8 +73,8 @@
 				x="hello";
 			};
 			vectorAllLessTest=vectorAllLess(
-				[1 2 3]
-				[2 3 6]
+				[1,2,3]
+				[2,3,6]
 			);
 			containsTest=contains(keyTestMap,"x");
 			containedBy1=containedBy("x",keyTestMap);
@@ -83,7 +83,7 @@
 			keysTest=keys(
 				{
 					jjqwv="aeäquq";
-					oere="i ke";
+					oere="i,ke";
 					1="oiq";
 				}
 			);
@@ -121,7 +121,7 @@
 			);
 			integerToString=integerToString(5);
 		};
-		filterTest=filter([1 100 2 4 100 100],equal(100));
+		filterTest=filter([1,100,2,4,100,100],equal(100));
 		reverseTest=reverse("hello");
 		sumTest=accumulate(
 			{
@@ -132,16 +132,16 @@
 					);
 				};
 			}
-			[2 5 6 8]
+			[2,5,6,8]
 		);
-		lengthTest=length([1 2 3 4 5]);
+		lengthTest=length([1,2,3,4,5]);
 		isStringTest={
 			no=isString(2);
 			yes=isString("hi");
 		};
 		withTest=!"System.Windows.Forms".Form(
 			{
-				Text="hello world";
+				Text="hello,world";
 			}
 		);
 		countTest=count(
@@ -153,8 +153,8 @@
 			}
 		);
 		vectorSumTest=vectorSum(
-			[1 2 3 4 3 2 1]
-			[1 2 3 4 5 6 7]
+			[1,2,3,4,3,2,1]
+			[1,2,3,4,5,6,7]
 		);
 	};
 	&test;
