@@ -51,10 +51,10 @@
 			IfTest=if(
 				1
 				{
-					arg|"If test successful"
+					arg|"If test successful";
 				}
 				{
-					|0
+					|0;
 				}
 			);
 			sliceTest=slice("die Katze lief im Schnee.",5,10);
@@ -66,7 +66,7 @@
 							argument
 							1;
 					}
-				)
+				);
 			};
 			keyTestMap={
 				x="hello";
@@ -119,7 +119,7 @@
 				}
 			);
 			integerToString=integerToString(5);
-		}
+		};
 		filterTest=filter([1 100 2 4 100 100],equal(100));
 		reverseTest=reverse("hello");
 		sumTest=accumulate(
@@ -129,6 +129,7 @@
 						first
 						second
 					);
+				};
 			}
 			[2 5 6 8]
 		);
@@ -141,7 +142,7 @@
 			{
 				Text="hello world";
 			}
-		)
+		);
 		countTest=count(
 			{
 				orange="orange";
