@@ -2989,10 +2989,15 @@ namespace Meta {
 									new Append(
 										new ZeroOrMore(
 											new Autokey(
-												new Sequence(Whitespace, separator, Whitespace, entryAction)))),
-									end),
-								new Sequence(
-									new ReferenceAssignment(
+												new Sequence(
+													Whitespace,
+													separator,
+													Whitespace,
+													entryAction))))
+									,end)
+								,new Sequence(
+									Whitespace,
+									new Append(
 										new ZeroOrMore(
 											new Autokey(
 												new Sequence(
@@ -3000,10 +3005,11 @@ namespace Meta {
 													entryAction,
 													new Optional(separator)
 													)))),
-										Whitespace,
-										end
-										))
-								))));
+									Whitespace
+									, end
+									)
+									)))
+								));
 		}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 
