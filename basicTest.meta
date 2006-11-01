@@ -26,10 +26,12 @@ shortFunc="
 		arg|!"
 			arg
 1="hello
+x={
+	hello="world";
+}
 listTest=["this",1,"is","a",["long","list"]]
 commandLine|{
-	&merge(
-		0,["AssignedToCurrent"]);
+	&merge(0,["AssignedToCurrent"]);
 	asdf="hello";
 	shortFunction={
 		arg|asdf;
@@ -462,4 +464,4 @@ commandLine|{
 		space=' ';
 		tab='	';
 	};
-}
+};

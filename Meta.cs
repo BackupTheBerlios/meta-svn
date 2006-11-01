@@ -2731,8 +2731,9 @@ namespace Meta {
 		public Stack<int> defaultKeys = new Stack<int>();
 		public State State;
 		public Parser(string text, string filePath) {
-			State=new State(0,1,1,-1,filePath,Text);
-			this.Text = text+Syntax.endOfFile;
+			State = new State(0, 1, 1, 0, filePath, Text);
+			//State = new State(0, 1, 1, -1, filePath, Text);
+			this.Text = text + Syntax.endOfFile;
 			this.FileName = filePath;
 			Root.precondition=delegate(Parser p) {return p.Look()==Syntax.root;};
 			Program.precondition=delegate(Parser p) {return p.Look()==Syntax.programStart;};
@@ -2757,6 +2758,12 @@ namespace Meta {
 				}
 			};
 		}
+		public static Rule Whitespace = new ZeroOrMore(new Characters(
+			Syntax.unixNewLine,
+			Syntax.windowsNewLine[0],
+			Syntax.tab,
+			Syntax.space));
+
 		public static Rule Expression = new DelayedRule(delegate() {
 		    return new CachedRule(new Alternatives(
 		        LiteralExpression,FunctionProgram,Call,Select,
@@ -2766,8 +2773,15 @@ namespace Meta {
 		{
 			private Rule rule;
 			public Ignore(Rule rule) {
-				this.rule=rule;}
+				if (rule == null) 
+				{
+				}
+				this.rule=rule;
+			}
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
+				if (rule == null) 
+				{
+				}
 				return rule.Match(parser,ref map);}
 		}
 		public static Rule EndOfLine = new Ignore(new Sequence(
@@ -2892,18 +2906,23 @@ namespace Meta {
 				return true;
 			}
 		}
+
 		public static Rule LookupString = new CachedRule(new StringSequence(
 		    new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
 		    new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
+
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(
 				MapRule,
 				ListMap,
 				String,
 				Number,
-				CharacterDataExpression);
+				CharacterDataExpression
+			);
 		});
+
 		private static Rule LookupAnything = new Sequence('<',new ReferenceAssignment(Value));
+
 		public static Rule Function = new Sequence(
 			new Assignment(
 				CodeKeys.Parameter,
@@ -2919,6 +2938,7 @@ namespace Meta {
 				CodeKeys.Expression,
 				Expression),
 			new Optional(EndOfLine));
+
 		public static Rule Entry = new Alternatives(
 			new Sequence(
 				new Assignment(
@@ -2934,32 +2954,34 @@ namespace Meta {
 				'=',
 				new CustomProduction(
 					delegate(Parser parser, Map map, ref Map result) {
-						if(!result.ContainsKey(1))
-						{
-						}
 						result = new DictionaryMap(result[1], map);},
 					Value),
 			 new Optional(EndOfLine)));
+
 		public static Rule MapRule = new Sequence(
 			new Optional(Syntax.programStart),
-			new Alternatives(
-			StartOfFile,
-			new Sequence(
-				EndOfLine,
-				SmallIndentation)),
-			new ReferenceAssignment(new PrePost(
-				delegate(Parser p) {
-					p.defaultKeys.Push(1);},
-				new Sequence(
-					new ReferenceAssignment(
-						new OneOrMore(
-							new Merge(
-								new Sequence(
-									SameIndentation,
-									new ReferenceAssignment(Entry))))),
-					Dedentation),
-				delegate(Parser p) {
-					p.defaultKeys.Pop();})));
+			Whitespace,
+			new ReferenceAssignment(
+					new OneOrMore(new Merge(new Sequence(
+						new ReferenceAssignment(Entry), Whitespace, new Optional(Syntax.programSeparator), Whitespace)))
+			),
+			new Optional(Syntax.programEnd),
+			Whitespace
+		);
+
+		//public static Rule MapRule = new Sequence(
+		//    new Optional(Syntax.programStart),
+		//    Whitespace,
+		//    new ReferenceAssignment(
+		//        new Sequence(
+		//            new OneOrMore(new Merge(new Sequence(
+		//                new ReferenceAssignment(Entry),Whitespace,new Optional(Syntax.programSeparator),Whitespace)))
+					
+		//    )),
+		//    new Optional(Syntax.programEnd),
+		//    Whitespace
+		//    );
+
 		public static Rule File = new Ignore(new Sequence(
 			new Optional(
 				new Sequence('#','!',
@@ -2967,12 +2989,7 @@ namespace Meta {
 					EndOfLine)),
 			new ReferenceAssignment(MapRule)));
 
-		public static Rule Whitespace = new ZeroOrMore(new Characters(
-			Syntax.unixNewLine,
-			Syntax.windowsNewLine[0],
-			Syntax.tab,
-			Syntax.space
-		));
+
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 
 		public static Rule ComplexCall() {
@@ -3102,49 +3119,21 @@ namespace Meta {
 						p.defaultKeys.Push(1);
 					},
 					new Sequence(
-			//new Optional(EndOfLine),
 			Whitespace,
-			//SmallIndentation,
 			new ReferenceAssignment(
 				new ZeroOrMore(
 					new Autokey(
 						new Sequence(
-							//new Optional(EndOfLine),
-			Whitespace,
-							//SameIndentation,
+							Whitespace,
 							new ReferenceAssignment(Value),
 			new Optional(Syntax.arraySeparator)
 
 			)))),
 				new Optional(EndOfLine),
 			Syntax.arrayEnd),
-			//    new Optional(
-			//        new Alternatives(Dedentation))
-			//),
 					delegate(Parser p) {
 						p.defaultKeys.Pop();
 					})));
-
-		//public static Rule ListMap = new Sequence(
-		//    Syntax.arrayStart,
-		//    new ReferenceAssignment(
-		//        new PrePost(
-		//            delegate(Parser p) {
-		//                p.defaultKeys.Push(1);},
-		//            new Sequence(
-		//    new Optional(EndOfLine),
-		//    SmallIndentation,
-		//    new ReferenceAssignment(
-		//        new ZeroOrMore(
-		//            new Autokey(
-		//                new Sequence(
-		//                    new Optional(EndOfLine),
-		//                    SameIndentation,
-		//                    new ReferenceAssignment(Value))))),
-		//        new Optional(EndOfLine),
-		//        new Optional(new Alternatives(Dedentation))),
-		//            delegate(Parser p) {
-		//                p.defaultKeys.Pop();})));
 
 		public static Rule ListEntry = new CustomRule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {

@@ -27,6 +27,8 @@ shortFunc="
 			arg
 "
 1="hello"
+x=,
+	hello="world"
 listTest=,
 	1="this"
 	2=1
