@@ -2683,13 +2683,13 @@ namespace Meta {
 	public struct State{
 		public override bool Equals(object obj) {
 			State state=(State)obj;
-			return state.indentationCount==indentationCount &&
+			return 
 				state.Column ==Column && state.index==index && state.Line==Line &&
 				state.FileName==FileName;
 		}
 		public override int GetHashCode() {
 			unchecked {
-				return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*indentationCount.GetHashCode()*FileName.GetHashCode();
+				return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*FileName.GetHashCode();
 			}
 		}
 		public State(int index,int Line,int Column,int indentationCount,string fileName,string Text){
@@ -2697,7 +2697,6 @@ namespace Meta {
 			this.FileName=fileName;
 			this.Line=Line;
 			this.Column=Column;
-			this.indentationCount=indentationCount;
 			this.Text=Text;
 		}
 		public string Text;
@@ -2705,7 +2704,6 @@ namespace Meta {
 		public int index;
 		public int Line;
 		public int Column;
-		public int indentationCount;
 	}
 	public class Parser {
 		public class Index {
@@ -2732,7 +2730,6 @@ namespace Meta {
 		public State State;
 		public Parser(string text, string filePath) {
 			State = new State(0, 1, 1, 0, filePath, Text);
-			//State = new State(0, 1, 1, -1, filePath, Text);
 			this.Text = text + Syntax.endOfFile;
 			this.FileName = filePath;
 			Root.precondition=delegate(Parser p) {return p.Look()==Syntax.root;};
@@ -2773,16 +2770,11 @@ namespace Meta {
 		{
 			private Rule rule;
 			public Ignore(Rule rule) {
-				if (rule == null) 
-				{
-				}
 				this.rule=rule;
 			}
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				if (rule == null) 
-				{
-				}
-				return rule.Match(parser,ref map);}
+				return rule.Match(parser,ref map);
+			}
 		}
 		public static Rule EndOfLine = new Ignore(new Sequence(
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
@@ -2799,22 +2791,7 @@ namespace Meta {
 				}
 			},
 	        new OneOrMoreChars(new Chars(Syntax.integer))));
-		public static Rule StartOfFile = new CustomRule(delegate(Parser p, ref Map map) {
-			if (p.State.indentationCount == -1) {
-				p.State.indentationCount++;
-				return true;}
-			else {return false;}
-		});
-		private static CustomRule SmallIndentation = new CustomRule(delegate(Parser p, ref Map map) {
-			p.State.indentationCount++;
-			return true;
-		});
-		public static Rule SameIndentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			return StringRule2("".PadLeft(pa.State.indentationCount, Syntax.indentation)).Match(pa, ref map);});
-		public static Rule Dedentation = new CustomRule(delegate(Parser pa, ref Map map) {
-			pa.State.indentationCount--;
-			return true;
-		});
+
 		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
 		public class StringIgnore:StringRule
 		{
@@ -2853,40 +2830,25 @@ namespace Meta {
 		);
 		public static Rule String = new Sequence(
 			Syntax.@string,
-			new ReferenceAssignment(new Alternatives(
+			new ReferenceAssignment(
+			new Alternatives(
 				new Sequence(
 					new ReferenceAssignment(
-						new OneOrMoreChars(new CharsExcept(""+
-							Syntax.unixNewLine+
-							Syntax.windowsNewLine[0]+
-							Syntax.@string))),
-					new Optional(Syntax.@string)),
-				new Sequence(
-					SmallIndentation,
-					EndOfLine,
-					SameIndentation,
-					new ReferenceAssignment(new StringSequence(
-						StringLine,
-						new StringLoop(
-							new StringSequence(
-								new StringIgnore(EndOfLine),
-								new StringIgnore(SameIndentation),
-								new LiteralString("\n"),
-								StringLine)))),
-					EndOfLine,
-					Dedentation,
-					new Optional(new Sequence(SameIndentation,Syntax.@string))))));
+						new OneOrMoreChars(new CharsExcept(""+Syntax.@string))),
+					new Optional(Syntax.@string)))));
+
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
 			new CustomProduction(delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
 					result=new Rational(result.GetNumber().GetDouble(),map.GetNumber().GetDouble());
 				}
-			},new Optional(new Sequence(
+			},
+			new Optional(new Sequence(
 				Syntax.fraction,
 				new ReferenceAssignment(Integer)))));
-		public class StringSequence:StringRule
-		{
+
+		public class StringSequence:StringRule{
 			private StringRule[] rules;
 			public StringSequence(params StringRule[] rules) {
 				this.rules=rules;
@@ -2906,7 +2868,6 @@ namespace Meta {
 				return true;
 			}
 		}
-
 		public static Rule LookupString = new CachedRule(new StringSequence(
 		    new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
 		    new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
@@ -2920,7 +2881,6 @@ namespace Meta {
 				CharacterDataExpression
 			);
 		});
-
 		private static Rule LookupAnything = new Sequence('<',new ReferenceAssignment(Value));
 
 		public static Rule Function = new Sequence(
@@ -2968,30 +2928,13 @@ namespace Meta {
 			new Optional(Syntax.programEnd),
 			Whitespace
 		);
-
-		//public static Rule MapRule = new Sequence(
-		//    new Optional(Syntax.programStart),
-		//    Whitespace,
-		//    new ReferenceAssignment(
-		//        new Sequence(
-		//            new OneOrMore(new Merge(new Sequence(
-		//                new ReferenceAssignment(Entry),Whitespace,new Optional(Syntax.programSeparator),Whitespace)))
-					
-		//    )),
-		//    new Optional(Syntax.programEnd),
-		//    Whitespace
-		//    );
-
 		public static Rule File = new Ignore(new Sequence(
 			new Optional(
 				new Sequence('#','!',
 					new ZeroOrMoreChars(new CharsExcept(Syntax.unixNewLine.ToString())),
 					EndOfLine)),
 			new ReferenceAssignment(MapRule)));
-
-
 		Dictionary<State, string> errors = new Dictionary<State, string>();
-
 		public static Rule ComplexCall() {
 			Action firstAction = new Assignment(1, new Alternatives(
 					LastArgument,
