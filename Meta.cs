@@ -3105,13 +3105,18 @@ namespace Meta {
 							new Alternatives(
 								new Sequence(
 									Whitespace,
+									new Assignment(	
+										1,
+										ListEntry),
+									Whitespace,
+
 									new Append(
 										new ZeroOrMore(
 											new Autokey(
 												new Sequence(
+													Syntax.arraySeparator,
 													Whitespace,
-													entryAction,
-													new Optional(Syntax.arraySeparator)
+													entryAction
 													)))),
 									Whitespace
 									, Syntax.arrayEnd
@@ -4319,7 +4324,8 @@ namespace Meta {
 			return new ObjectMap((object)(float)d.GetNumber().GetDouble());
 		}
 		public static void WriteLine(string s) {
-			Console.WriteLine(s);}
+			Console.WriteLine(s);
+		}
 		private static Random random = new Random();
 		public static int Random(int lower,int upper) {
 			return lower+Convert.ToInt32((random.NextDouble()*(upper-lower)));

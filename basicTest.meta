@@ -100,7 +100,7 @@ commandLine|{
 	};
 	fraction=3/2;
 	literalEscapeTest=[
-		"asdf"
+		"asdf",
 		"asdf"
 	];
 	2="ImpliedAutokey";

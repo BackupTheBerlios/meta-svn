@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="tetris.meta" />
+    <None Include="Copy of s.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />
     <None Include="gameLib.meta" />
