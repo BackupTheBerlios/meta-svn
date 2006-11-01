@@ -161,6 +161,7 @@
 			modulo=Number.op_Modulus_Number_Number;
 			vectorDotProduct=vector?number?apply(vector,entry?product(number,entry)?)??;
 			productVector=a?b?apply(range(length(a)),index?product(a.<index>,b.<index>)?)??;
+			vectorProduct=productVector;
 			print=?{
 				writeLine(toString(@));
 				&@;

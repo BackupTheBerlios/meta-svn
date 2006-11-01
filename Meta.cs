@@ -1250,7 +1250,7 @@ namespace Meta {
 		    }
 		}
 		public static object ToDotNet(Map meta,Type target) {
-			if(target.Equals(typeof(Map))||target.IsSubclassOf(typeof(Map))) {
+			if(target.Equals(typeof(Map))) {
 				return meta;
 			}
 			else
@@ -1269,10 +1269,12 @@ namespace Meta {
 							return new Point(meta[1].GetInt32(), meta[2].GetInt32());
 						}
 						if (target == typeof(Rectangle) && meta.IsNormal) {
-							return new Rectangle(meta[1][1].GetInt32(),
-								meta[1][2].GetInt32(),
-								meta[2][1].GetInt32(),
-								meta[2][2].GetInt32());
+							int x=meta[1][1].GetInt32();
+							int y=meta[1][2].GetInt32();
+							return new Rectangle(x,
+								y,
+								meta[2][1].GetInt32()-x,
+								meta[2][2].GetInt32()-y);
 						}
 						if (target == typeof(Color) && meta.IsNormal) {
 							return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
