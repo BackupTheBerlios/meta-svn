@@ -158,6 +158,7 @@
 			joinAll=Library.JoinAll_Map;
 			mergeAll=Library.MergeAll_Map;
 			negate=arg?difference(0,arg);
+			opposite=negate;
 			modulo=Number.op_Modulus_Number_Number;
 			vectorDotProduct=vector?number?apply(vector,entry?product(number,entry)?)??;
 			productVector=a?b?apply(range(length(a)),index?product(a.<index>,b.<index>)?)??;
@@ -192,6 +193,11 @@
 				};
 				&which(0);
 			}???;
+			callKey=key?map?if(
+				contains(map,key),
+				?map.<key>()?
+				?0?
+			)??;
 			floor=Library.Floor_Number;
 			filterWith=flip(filter);
 			random=Library.Random_Int32_Int32;

@@ -259,7 +259,15 @@ namespace Meta {
 		private FastCall fastCall;
 		private MethodInfo method;
 		public override Map Evaluate(Map context) {
-			return fastCall(context);
+			//try {
+				return fastCall(context);
+			//}
+			//catch
+			//    (Exception e) 
+			//{
+			//    SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
+			//    throw e;
+			//}
 		}
 	}
 	public class CompiledCall : Compiled {
@@ -1033,6 +1041,7 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			bool x=SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
 			//SdlDotNet.Events.KeyboardDown += new SdlDotNet.KeyboardEventHandler(Events_KeyboardDown);
 			//Map x=new ObjectMap(Video.SetVideoModeWindow(100,100,true));
 			//BigInteger i=new BigInteger("-10",10);
@@ -1211,8 +1220,23 @@ namespace Meta {
 				}
 			}
 		}
+		public static object MakeEnum(int value,int type) {
+			object x=Enum.ToObject(types[type], value);
+			return x;
+		}
 		public static void GetConversion(Type target,ILGenerator il) {
-		    if(target.Equals(typeof(Number))) {
+			if (target.IsEnum) {
+				int token=(int)target.TypeHandle.Value;
+				if(!Transform.types.ContainsKey(token)) {
+				    Transform.types[token]=target;
+				}
+				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
+				//il.Emit(OpCodes.Ldc_I4,(int)token);
+				//il.Emit(OpCodes.Call,typeof(Transform).GetMethod("MakeEnum"));
+				//il.Emit(OpCodes.Call,typeof(Enum).GetMethod("ToObject",Type[] {typeof(Type),typeof(int)}));
+				//return Enum.ToObject(target, meta.GetNumber().GetInt32());
+			}
+		    else if(target.Equals(typeof(Number))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
 		    }
 		    else if(target.Equals(typeof(Map))) {
@@ -3158,7 +3182,7 @@ namespace Meta {
 			new Assignment(
 				CodeKeys.Key,
 				new Alternatives(
-					Prefix('<',Expression),
+					Prefix('<',new Sequence(new ReferenceAssignment(Expression),new Optional('>'))),
 					new Sequence(
 						new Assignment(
 							CodeKeys.Literal,

@@ -384,6 +384,7 @@
 						!"difference"
 						0
 						!"arg"
+				"opposite"=!"negate"
 				"modulo"=.
 					!"Number"
 					"op_Modulus_Number_Number"
@@ -415,6 +416,7 @@
 									.
 										!"b"
 										!"index"
+				"vectorProduct"=!"productVector"
 				"print"=,
 					|,
 						-
@@ -483,6 +485,21 @@
 								&=-
 									!"which"
 									0
+				"callKey"=,
+					key|,
+						map|-
+							!"if"
+							-
+								!"contains"
+								!"map"
+								!"key"
+							,
+								|-
+									.
+										!"map"
+										!"key"
+							,
+								|0
 				"floor"=.
 					!"Library"
 					"Floor_Number"

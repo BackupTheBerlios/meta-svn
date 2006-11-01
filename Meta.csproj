@@ -44,7 +44,6 @@
   <ItemGroup>
     <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -55,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy of game.meta" />
     <None Include="tetris.meta" />
     <None Include="Copy of s.meta" />
     <None Include="fibo.meta" />
@@ -70,4 +70,10 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Programme\SdlDotNet\sdk\src\SdlDotNet.csproj">
+      <Project>{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}</Project>
+      <Name>SdlDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

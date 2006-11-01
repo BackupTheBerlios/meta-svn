@@ -15,70 +15,37 @@
 	makeBox=size?position?{
 		box=createBox(size.1 size.2 size.3
 		box.set_Position_Vector3(vector(position.1 position.2 position.3
-	makeBox(
-		[798,50,100]
-		[400,0,0]
-	makeBox(
-		[
-			798
-			50
-			100
-		[
-			400
-			600
-			0
-	makeBox(
-		[
-			50
-			598
-			100
-		[
-			0
-			300
-			0
-	makeBox(
-		[
-			50
-			598
-			100
-		[
-			800
-			300
-			0
-	world.set_Gravity_Vector3(vector(0 1/100 0
+	makeBox([798,50,100],[400,0,0]);
+	makeBox([798,50,100],[400,600,0]);
+	makeBox([50,598,100],[0,300,0]);
+	makeBox([50,598,100],[800,300,0]);
+	world.set_Gravity_Vector3(vector(0,1/100,0));
 	bubble=size?{
-		body=Body_World(world
-		radius=?product(size 4
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size size) 1/1000
-		keyUp=0
-		keyDown=0
-		position=[
-			random(1 790
-			random(1 590
-		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2 0
-		geom=space.CreateSphere_Single(radius(
-		geom.set_Position_Vector3(body.get_Position(
-		geom.set_Body_Body(body
-		speed=[
-			random(-6 6
-			random(-6 6
-		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1 speed.2 0
-		color=Color.get_Red(
-		setColor=c?{
-			color:c
+		body=Body_World(world);
+		radius=?product(size,4)?;
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size size),1/1000));
+		keyUp=0;
+		keyDown=0;
+		position=[random(1,790),random(1,590)];
+		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2,0);
+		geom=space.CreateSphere_Single(radius());
+		geom.set_Position_Vector3(body.get_Position());
+		geom.set_Body_Body(body);
+		speed=[random(-6,6),random(-6,6)];
+		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
+		color=Color.get_Red();
+		setColor=c?{color:c;}?;
 		GetPosition=?{
-			pos=body.get_Position(
-			&[
-				pos.get_X(
-				pos.get_Y(
-		move=?0
+			pos=body.get_Position();
+			&[pos.get_X(),pos.get_Y()]}?;
+		move=?0?;
 		draw=c?{
-			asdf=GetPosition(
+			asdf=GetPosition()
 			DrawFilledCircle_Circle_Color(
-				Circle_Point_Int16(
-					asdf
-					radius(
+				Circle_Point_Int16(asdf,radius())
 				c
+			);
+		}?;
 	player=key?c?{
 		&bubble(1
 		jointGroup=JointGroup_Int32(0
