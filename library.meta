@@ -97,6 +97,7 @@
 			}?;
 			select=Library.Select_Map_Map;
 			slice=Library.Slice_Map_Int32_Int32;
+			orAll=accumulate(or);
 			vectorAllLess=a?b?accumulate(
 				and
 				apply(

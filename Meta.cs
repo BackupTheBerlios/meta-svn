@@ -259,15 +259,14 @@ namespace Meta {
 		private FastCall fastCall;
 		private MethodInfo method;
 		public override Map Evaluate(Map context) {
-			//try {
+			try {
 				return fastCall(context);
-			//}
-			//catch
-			//    (Exception e) 
-			//{
-			//    SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
-			//    throw e;
-			//}
+			}
+			catch
+				(Exception e) {
+				SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
+				throw e;
+			}
 		}
 	}
 	public class CompiledCall : Compiled {
@@ -4001,6 +4000,12 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
+			public class Tetris : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"tetris.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -4361,7 +4366,7 @@ namespace Meta {
 		public static Map Modify(Map map, Map func) {
 			Map result = new DictionaryMap();
 			foreach (KeyValuePair<Map, Map> entry in map) {
-				result[entry.Key] = func.Call(entry.Value);
+				result[entry.Key] = func.Call(entry.Key).Call(entry.Value);
 			}
 			return result;
 		}
