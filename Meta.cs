@@ -2973,90 +2973,7 @@ namespace Meta {
 			Syntax.tab,
 			Syntax.space
 		));
-
-		public static Rule ComplexStuff(Map key, char start, char end, Rule separator, Rule entry, Rule first) {
-			Action firstAction=new Assignment(1, entry);
-			Action entryAction=new ReferenceAssignment(entry);
-			return new Sequence(
-				new Assignment(key,
-					new Sequence(
-						first != null ? new Assignment(1, first) : null,
-						Whitespace,
-						start,
-						new Append(
-							new Alternatives(
-								new Sequence(
-									firstAction,
-									Whitespace,
-									new Append(
-										new ZeroOrMore(
-											new Autokey(
-												new Sequence(
-													Whitespace,
-													separator,
-													Whitespace,
-													entryAction))))
-									,end)
-								,new Sequence(
-									Whitespace,
-									new Append(
-										new ZeroOrMore(
-											new Autokey(
-												new Sequence(
-													Whitespace,
-													entryAction,
-													new Optional(separator)
-													)))),
-									Whitespace
-									, end
-									)
-									)))
-								));
-		}
 		Dictionary<State, string> errors = new Dictionary<State, string>();
-
-		//public static Rule Call = new DelayedRule(delegate() {
-		//    return new Sequence(
-		//        new Assignment(
-		//            CodeKeys.Call,
-		//            new Sequence(
-		//                new Alternatives(
-		//                    LastArgument,
-		//                    FunctionProgram,
-		//                    LiteralExpression,
-		//                    Call,
-		//                    Select,
-		//                    Search,
-		//                    List,
-		//                    Program
-		//                ),
-		//                Whitespace,
-		//                Syntax.callStart,
-		//                new Append(
-		//                    new Alternatives(
-		//                        new Sequence(
-		//                            Whitespace,
-		//                            new Append(
-		//                                new ZeroOrMore(
-		//                                    new Autokey(
-		//                                        new Sequence(
-		//                                            Whitespace,
-		//                                            new Alternatives(
-		//                                                FunctionProgram,
-		//                                                LiteralExpression,
-		//                                                Select,
-		//                                                Search,
-		//                                                List,
-		//                                                Program,
-		//                                                LastArgument
-		//                                            ),
-		//                                            new Optional(Syntax.callSeparator))))),
-		//                            Whitespace
-		//                            , Syntax.callEnd))))));
-		//});
-
-
-
 
 		public static Rule ComplexCall() {
 			Action firstAction = new Assignment(1, new Alternatives(
@@ -3084,14 +3001,14 @@ namespace Meta {
 				new Sequence(
 					new Assignment(1,
 						new Alternatives(
-											FunctionProgram,
-											LiteralExpression,
-											Select,
-											Search,
-											List,
-											Program,
-											LastArgument
-										)),
+							FunctionProgram,
+							LiteralExpression,
+							Select,
+							Search,
+							List,
+							Program,
+							LastArgument
+						)),
 						Whitespace,
 						Syntax.callStart,
 						new Append(
@@ -3176,26 +3093,58 @@ namespace Meta {
 							LookupStringExpression,
 							LookupAnythingExpression,
 							LiteralExpression)))))))));
+
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
 			new ReferenceAssignment(
 				new PrePost(
 					delegate(Parser p) {
-						p.defaultKeys.Push(1);},
+						p.defaultKeys.Push(1);
+					},
 					new Sequence(
-			new Optional(EndOfLine),
-			SmallIndentation,
+			//new Optional(EndOfLine),
+			Whitespace,
+			//SmallIndentation,
 			new ReferenceAssignment(
 				new ZeroOrMore(
 					new Autokey(
 						new Sequence(
-							new Optional(EndOfLine),
-							SameIndentation,
-							new ReferenceAssignment(Value))))),
+							//new Optional(EndOfLine),
+			Whitespace,
+							//SameIndentation,
+							new ReferenceAssignment(Value),
+			new Optional(Syntax.arraySeparator)
+
+			)))),
 				new Optional(EndOfLine),
-				new Optional(new Alternatives(Dedentation))),
+			Syntax.arrayEnd),
+			//    new Optional(
+			//        new Alternatives(Dedentation))
+			//),
 					delegate(Parser p) {
-						p.defaultKeys.Pop();})));
+						p.defaultKeys.Pop();
+					})));
+
+		//public static Rule ListMap = new Sequence(
+		//    Syntax.arrayStart,
+		//    new ReferenceAssignment(
+		//        new PrePost(
+		//            delegate(Parser p) {
+		//                p.defaultKeys.Push(1);},
+		//            new Sequence(
+		//    new Optional(EndOfLine),
+		//    SmallIndentation,
+		//    new ReferenceAssignment(
+		//        new ZeroOrMore(
+		//            new Autokey(
+		//                new Sequence(
+		//                    new Optional(EndOfLine),
+		//                    SameIndentation,
+		//                    new ReferenceAssignment(Value))))),
+		//        new Optional(EndOfLine),
+		//        new Optional(new Alternatives(Dedentation))),
+		//            delegate(Parser p) {
+		//                p.defaultKeys.Pop();})));
 
 		public static Rule ListEntry = new CustomRule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
@@ -3248,39 +3197,6 @@ namespace Meta {
 						p.defaultKeys.Pop();
 					}
 		);
-		//public static Rule List = new PrePost(
-		//    delegate(Parser p) {
-		//        p.defaultKeys.Push(1);
-		//    },
-		//        ComplexStuff(
-		//            CodeKeys.Program,
-		//            Syntax.arrayStart,
-		//            Syntax.arrayEnd,
-		//            Syntax.arraySeparator,
-		//            ListEntry,
-		//            null
-		//            ),
-		//            delegate(Parser p) {
-		//                p.defaultKeys.Pop();
-		//            }
-		//    );
-
-		//public static Rule List = new PrePost(
-		//    delegate(Parser p) {
-		//        p.defaultKeys.Push(1);},
-		//        ComplexStuff(
-		//            CodeKeys.Program,
-		//            Syntax.arrayStart,
-		//            Syntax.arrayEnd,
-		//            Syntax.arraySeparator,
-		//            FirstListAction,
-		//            ListAction,
-		//            null
-		//            ),
-		//            delegate(Parser p) {
-		//                p.defaultKeys.Pop();
-		//            }
-		//    );
 
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			return new Sequence(

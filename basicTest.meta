@@ -26,19 +26,10 @@ shortFunc="
 		arg|!"
 			arg
 1="hello
-listTest=[
-	"this
-	1
-	"is
-	"a
-	[
-		"long
-		"list
+listTest=["this",1,"is","a",["long","list"]]
 commandLine|{
 	&merge(
-		0,
-		["AssignedToCurrent"]
-	);
+		0,["AssignedToCurrent"]);
 	asdf="hello";
 	shortFunction={
 		arg|asdf;
