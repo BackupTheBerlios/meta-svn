@@ -3,20 +3,17 @@
 		&Meta;
 		lib={
 			double=Library.Double_Map;
-			contains=?{
-				m=ObjectMap_Object(@);
-				&m.ContainsKey_Map;
-			}?;
+			contains=<ObjectMap_Object(@).ContainsKey_Map>;
 			foreach=Library.Foreach_Map_Map;
-			flip=func?a?b?func(b,a)???;
-			containedBy=key?map?{
+			flip=func<a<b<func(b,a)>>>;
+			containedBy=key<map<{
 				m=ObjectMap_Object(
 					map
 				);
 				&m.ContainsKey_Map(
 					key
 				);
-			}??;
+			}>>;
 			modify=Library.Modify_Map_Map;
 			sum=Number.op_Addition_Number_Number;
 			power=Library.Raise_Number_Number;
@@ -81,85 +78,50 @@
 			bitwiseOr=Number.op_BitwiseOr_Number_Number;
 			and=a<b<{1=b;0=0;}.<a>>>;
 			andAll=accumulate(and);
-			integerToString=arg<ObjectMap_Object(arg).ToString(0)>;
-			count=arg<{
-				m=ObjectMap_Object(arg);
-				&m.get_Count(0);
-			}>;
+			integerToString=arg<ObjectMap_Object(arg).ToString()>;
+			count=arg<ObjectMap_Object(arg).get_Count()>;
 			equal=Library.Equal_Object_Object;
-			isNumber=arg?{
-				m=ObjectMap_Object(arg);
-				&m.get_IsNumber(0);
-			}?;
-			isString=arg?{
-				m=ObjectMap_Object(arg);
-				&m.get_IsString(0);
-			}?;
+			isNumber=arg<ObjectMap_Object(arg).get_IsNumber()>;
+			isString=arg<ObjectMap_Object(arg).get_IsString()>;
 			joinAll=Library.JoinAll_Map;
 			mergeAll=Library.MergeAll_Map;
-			negate=arg?difference(0,arg);
+			negate=arg<difference(0,arg)>;
 			opposite=negate;
 			modulo=Number.op_Modulus_Number_Number;
-			vectorDotProduct=vector?number?apply(vector,entry?product(number,entry)?)??;
-			productVector=a?b?apply(range(length(a)),index?product(a.<index>,b.<index>)?)??;
+			vectorDotProduct=vector<number<apply(vector,entry<product(number,entry)>)>>;
+			productVector=a<b<apply(range(length(a)),index<product(a.<index>,b.<index>)>)>>;
 			vectorProduct=productVector;
-			print=?{
+			print=<{
 				writeLine(toString(@));
 				&@;
-			}?;
+			}>;
 			printAll=applyTo(print);
-			readLine=?mscorlib.Console.ReadLine(0)?;
+			readLine=<mscorlib.Console.ReadLine()>;
 			append=Library.Append_Map_Map;
 			appendTo=flip(append);
 			empty=equal(0);
-			prepend=array?item?join(
-				[item]
-				array
-			)??;
+			prepend=array<item<join([item],array)>>;
 			prependTo=flip(prepend);
 			switch=Library.Switch_Map_Map;
 			while=Library.While_Map_Map;
-			callIf=map?key?func?{
-				which={
-					stuff={
-						0={
-							|0;
-						};
-						1={
-							|func(map.<key>);
-						};
-					};
-					&stuff.<contains(map,key)>;
-				};
-				&which(0);
-			}???;
-			callKey=key?map?if(
-				contains(map,key),
-				?map.<key>()?
-				?0?
-			)??;
+			callIf=map<key<func<{0=<0>;1=<func(map.<key>)>;}.<contains(map,key)>()>>>;
+			callKey=key<map<if(contains(map,key),<map.<key>()><0>)>>;
 			floor=Library.Floor_Number;
 			filterWith=flip(filter);
 			random=Library.Random_Int32_Int32;
-			discard=array?func?filter(array,?not(func(@))?)??;
+			discard=array<func<filter(array,<not(func(@))>)>>;
 			mergeWith=flip(merge);
 			enumerableToArray=Library.EnumerableToArray_Map;
 			try=Library.Try_Map_Map;
-			readTextFile=file?mscorlib.File.ReadAllText_String_Encoding(
-				file,
-				mscorlib.Encoding.get_Default(0)
-			)?;
+			readTextFile=file<mscorlib.File.ReadAllText_String_Encoding(file,mscorlib.Encoding.get_Default())>;
 			compareNumber=Library.CompareNumber_Number_Number;
 			sort=Library.Sort_Map_Map;
-			writeTextFile=file?text?mscorlib.File.WriteAllText_String_String_Encoding(
-				file
-				text
-				mscorlib.Encoding.get_Default(0)
-			)??;
+			writeTextFile=file<text<mscorlib.File.WriteAllText_String_String_Encoding(
+				file,
+				text,
+				mscorlib.Encoding.get_Default()
+			)>>;
 		};
 	}?;
-	&{
-		m=lib(0);
-		&m.lib;
-	};
+	&lib().lib;
 };
