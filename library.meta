@@ -6,14 +6,7 @@
 			contains=<ObjectMap_Object(@).ContainsKey_Map>;
 			foreach=Library.Foreach_Map_Map;
 			flip=func<a<b<func(b,a)>>>;
-			containedBy=key<map<{
-				m=ObjectMap_Object(
-					map
-				);
-				&m.ContainsKey_Map(
-					key
-				);
-			}>>;
+			containedBy=key<map<ObjectMap_Object(map).ContainsKey_Map(key)>>;
 			modify=Library.Modify_Map_Map;
 			sum=Number.op_Addition_Number_Number;
 			power=Library.Raise_Number_Number;
@@ -25,10 +18,7 @@
 			ifOnly=condition?then?if(condition,then,?0?)??;
 			merge=Library.Merge_Map_Map;
 			accumulate=Library.Sum_Map_Map;
-			keys=arg?!"DictionaryMap_IEnumerable`1"({
-				m=ObjectMap_Object(arg);
-				&m.get_Keys(0);
-			});
+			keys=arg<!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys())>;
 			product=Number.op_Multiply_Number_Number;
 			not=arg<{0=1;1=0;}.<arg>>;
 			stringToNumber=Library.StringToNumber_Map;

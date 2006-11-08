@@ -1,127 +1,147 @@
 |{
 	&mergeAll([
-		!"System.Drawing"
-		SdlDotNet
-		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800 600 1
-		SdlDotNet.Events
-		SdlDotNet.Key
+		!"System.Drawing",
+		SdlDotNet,
+		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
+		SdlDotNet.Events,
+		SdlDotNet.Key,
 		OdeDotNet
-	world=World(
-	space=Space_SpaceType(SpaceType.HashSpace
-	Fill_Color(Color.get_White(
-	createBox=space.CreateBox_Single_Single_Single
-	vector=Vector3_Single_Single_Single
-	Events.add_ChannelFinished_ChannelFinishedEventHandler
-	makeBox=size?position?{
-		box=createBox(size.1 size.2 size.3
-		box.set_Position_Vector3(vector(position.1 position.2 position.3
+	]);
+	world=World();
+	space=Space_SpaceType(SpaceType.HashSpace);
+	Fill_Color(Color.get_White());
+	createBox=space.CreateBox_Single_Single_Single;
+	vector=Vector3_Single_Single_Single;
+	Events.add_ChannelFinished_ChannelFinishedEventHandler;
+	makeBox=size<position<{
+		box=createBox(size.1,size.2,size.3);
+		box.set_Position_Vector3(vector(position.1,position.2,position.3));
+	}>>;
 	makeBox([798,50,100],[400,0,0]);
 	makeBox([798,50,100],[400,600,0]);
 	makeBox([50,598,100],[0,300,0]);
 	makeBox([50,598,100],[800,300,0]);
 	world.set_Gravity_Vector3(vector(0,1/100,0));
-	bubble=size?{
+	bubble=size<{
 		body=Body_World(world);
-		radius=?product(size,4)?;
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size size),1/1000));
+		radius=<product(size,4)>;
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1/1000));
 		keyUp=0;
 		keyDown=0;
 		position=[random(1,790),random(1,590)];
-		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2,0);
+		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2,0));
 		geom=space.CreateSphere_Single(radius());
 		geom.set_Position_Vector3(body.get_Position());
 		geom.set_Body_Body(body);
 		speed=[random(-6,6),random(-6,6)];
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
 		color=Color.get_Red();
-		setColor=c?{color:c;}?;
-		GetPosition=?{
+		setColor=c<{color:c;}>;
+		GetPosition=<{
 			pos=body.get_Position();
-			&[pos.get_X(),pos.get_Y()]}?;
-		move=?0?;
-		draw=c?{
-			asdf=GetPosition()
-			DrawFilledCircle_Circle_Color(
-				Circle_Point_Int16(asdf,radius())
-				c
-			);
-		}?;
-	player=key?c?{
-		&bubble(1
-		jointGroup=JointGroup_Int32(0
-		setColor(c
-		currentJoint=0
-		setCurrentJoint=joint?{
-			currentJoint:joint
-		currentBubble=0
-		setCurrentBubble=b?{
-			currentBubble:b
-		toVector=v?Vector3_Single_Single_Single(v.1 v.2 0
-		center=a?b?quotient(Sum(a b) 2
+			&[pos.get_X(),pos.get_Y()];
+		}>;
+		move=<0>;
+		draw=c<{
+			asdf=GetPosition();
+			DrawFilledCircle_Circle_Color(Circle_Point_Int16(asdf,radius()),c);
+		}>;
+	}>;	
+	player=key<c<{
+		&bubble(1);
+		jointGroup=JointGroup_Int32(0);
+		setColor(c);
+		currentJoint=0;
+		setCurrentJoint=joint<{
+			currentJoint:joint;
+		};
+		currentBubble=0;
+		setCurrentBubble=b<{
+			currentBubble:b;
+		};
+		toVector=v<Vector3_Single_Single_Single(v.1,v.2,0)>;
+		center=a<b<quotient(Sum(a,b),2)>>;
 		keyDown={
-			<key=?{
-				lengths=apply(bubbles b?vectorLength(
-					vectorDifference(
-						GetPosition(
-						b.GetPosition(
-				sorted=sort(keys(bubbles) a?b?compareNumber(lengths.<a> lengths.<b
-				index=sorted.1
-				bubble=bubbles.<index
-				joint=HingeJoint_World_JointGroup(world jointGroup
-				joint.Attach_Body_Body(bubble.body body
-				joint.set_Anchor_Vector3(bubble.body.get_Position(
-				setCurrentBubble(bubble
+			!"key"=<{
+				lengths=apply(
+					bubbles,
+					b<vectorLength(vectorDifference(GetPosition(),b.GetPosition()))>
+				);
+				sorted=sort(keys(bubbles),a<b<compareNumber(lengths.<a>,lengths.<b>)>>);
+				index=sorted.1;
+				bubble=bubbles.<index>;
+				joint=HingeJoint_World_JointGroup(world,jointGroup);
+				joint.Attach_Body_Body(bubble.body,body);
+				joint.set_Anchor_Vector3(bubble.body.get_Position());
+				setCurrentBubble(bubble);
+			}>;
+		};
 		keyUp={
-			<key=?{
-				jointGroup.Empty(
-				currentBubble:0
-	paused=0
-	add_Quit_QuitEventHandler(?e?{
-		Events.Close(
-		Events.QuitApplication(
-	add_KeyboardDown_KeyboardEventHandler(?e?apply(players player?callKey(player.keyDown e.get_Key(
-	add_KeyboardUp_KeyboardEventHandler(?e?apply(players player?callKey(player.keyUp e.get_Key(
-	contactGroup=JointGroup_Int32(0
-	space.add_Collision_CollisionEventHandler(?e?{
-		a=e.get_Geom1(
-		b=e.get_Geom2(
+			!"key"=<{
+				jointGroup.Empty();
+				currentBubble:0;
+			}>;
+		};
+	}>>;
+	paused=0;
+	add_Quit_QuitEventHandler(<e<{
+		Events.Close();
+		Events.QuitApplication();
+	}>>);
+	add_KeyboardDown_KeyboardEventHandler(<e<apply(players,player<callKey(player.keyDown,e.get_Key())>)>>);
+	add_KeyboardUp_KeyboardEventHandler(<e<apply(players,player<callKey(player.keyUp,e.get_Key())>)>>);
+	contactGroup=JointGroup_Int32(0);
+	space.add_Collision_CollisionEventHandler(<e<{
+		a=e.get_Geom1();
+		b=e.get_Geom2();
 		apply(
-			enumerableToArray(a.Collide_Geom_Int32(b 13
-			contactGeom?{
+			enumerableToArray(a.Collide_Geom_Int32(b,13)),
+			contactGeom<{
 				contact=world.CreateContactJoint_Contact_JointGroup(
-					Contact({
-						Geom=contactGeom
+					Contact({Geom=contactGeom;}),
 					contactGroup
-				contact.Attach_Body_Body(
-					a.get_Body(
-					b.get_Body(
-	players=[
-		player(Return Color.get_Blue(
+				);
+				contact.Attach_Body_Body(a.get_Body(),b.get_Body());
+			}>
+		);
+	}>>);
+	players=[player(Return,Color.get_Blue())];
 	bubbles=joinAll([
-		apply(range(10) ?bubble(random(1 5
-		apply(range(10) ?bubble(random(1 2
-	Events.set_TargetFps_Int32(500
-	paused=0
-	add_Tick_TickEventHandler(
-		??{
-			Fill_Color(Color.get_White(
-			contactGroup.Empty(
-			print(Events.get_Fps(
-			space.CheckCollisions(
-			world.Step(
-			apply(bubbles b?{
-				b.move(
-				b.draw(b.color
-			apply(players player?player.draw(Color.get_Blue(
-			apply(players player?if(not(equal(0 player.currentBubble)) ?{
-				a=player.currentBubble.body.get_Position(
-				b=player.body.get_Position(
-				DrawLine_Line_Color(
-					Line_Int16_Int16_Int16_Int16(
-						a.get_X(
-						a.get_Y(
-						b.get_X(
-						b.get_Y(
-					Color.get_Black(
-			Flip(
-	Run(
+		apply(range(10),<bubble(random(1,5))>),
+		apply(range(10),<bubble(random(1,2))>)
+	]);
+	Events.set_TargetFps_Int32(500);
+	paused=0;
+	add_Tick_TickEventHandler(<<{
+		Fill_Color(Color.get_White());
+		contactGroup.Empty();
+		print(Events.get_Fps());
+		space.CheckCollisions();
+		world.Step();
+		apply(
+			bubbles,
+			b<{
+				b.move();
+				b.draw(b.color);
+			}>
+		);
+		apply(players,player<player.draw(Color.get_Blue())>);
+		apply(
+			players,
+			player<if(
+				not(equal(0,player.currentBubble)),
+				<{
+					a=player.currentBubble.body.get_Position();
+					b=player.body.get_Position();
+					DrawLine_Line_Color(
+						Line_Int16_Int16_Int16_Int16(a.get_X(),a.get_Y(),b.get_X(),b.get_Y()),
+						Color.get_Black()
+					);
+				}>
+				<0>
+			)>
+		);
+		Flip();
+	});
+	Run();
+}

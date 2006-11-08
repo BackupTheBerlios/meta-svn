@@ -55,6 +55,8 @@
   <ItemGroup>
     <None Include="basicTest.meta" />
     <None Include="breakout.meta" />
+    <None Include="Copy %282%29 of game.meta" />
+    <None Include="Copy %283%29 of game.meta" />
     <None Include="Copy of library.meta" />
     <None Include="tetris.meta" />
     <None Include="fibo.meta" />

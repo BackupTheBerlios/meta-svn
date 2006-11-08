@@ -244,7 +244,7 @@ namespace IDE {
 			};
 			run.Click += delegate {
 				Save();
-				Process.Start(System.IO.Path.Combine(@"C:\Meta\0.2\", @"bin\Debug\Meta.exe"), fileName);
+				Process.Start(System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"), fileName);
 			};
 			save.Click += delegate {
 				Save();
@@ -310,7 +310,7 @@ namespace IDE {
 			canvas.Children.Add(intellisense);
 			this.Content = dockPanel;
 			this.Loaded += delegate {
-				Open(@"C:\meta\0.2\game.meta");
+				Open(@"D:\meta\game.meta");
 				textBox.Focus();
 				textBox.SelectionStart = 0;
 			};
