@@ -13,7 +13,6 @@ using Microsoft.Win32;
 using Meta;
 using System.IO;
 using System.Diagnostics;
-using SandcastleBuilder.Utils;
 
 
 namespace IDE {

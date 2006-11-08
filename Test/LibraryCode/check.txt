@@ -54,6 +54,23 @@
 							&=.
 								!"stuff"
 								!"a"
+				"repeat"=,
+					times|,
+						value|-
+							!"apply"
+							-
+								!"range"
+								!"times"
+							,
+								|!"value"
+				"ifOnly"=,
+					condition|,
+						then|-
+							!"if"
+							!"condition"
+							!"then"
+							,
+								|0
 				"merge"=.
 					!"Library"
 					"Merge_Map_Map"
@@ -239,6 +256,9 @@
 				"slice"=.
 					!"Library"
 					"Slice_Map_Int32_Int32"
+				"orAll"=-
+					!"accumulate"
+					!"or"
 				"vectorAllLess"=,
 					a|,
 						b|-

@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta", "Meta.csproj", "{421
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDE", "IDE\IDE.csproj", "{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SdlDotNet", "C:\Programme\SdlDotNet\sdk\src\SdlDotNet.csproj", "{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,10 +18,6 @@ Global
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE8E9256-17B9-48A5-B97D-AFB92EBABB9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

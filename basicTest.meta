@@ -343,7 +343,7 @@ commandLine|{
 	secondIf="unchanged";
 	firstIfCondition=equal(1,one);
 	firstIfBranches={
-		1=arg?"then";
+		1=arg?"then">;
 		0=arg?"else";
 	};
 	firstIf=firstIfBranches.<firstIfCondition>(0);

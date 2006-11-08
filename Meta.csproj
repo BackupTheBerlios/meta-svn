@@ -55,11 +55,8 @@
   <ItemGroup>
     <None Include="basicTest.meta" />
     <None Include="breakout.meta" />
-    <None Include="Copy %282%29 of tetris.meta" />
-    <None Include="Copy of game.meta" />
-    <None Include="Copy of tetris.meta" />
+    <None Include="Copy of library.meta" />
     <None Include="tetris.meta" />
-    <None Include="Copy of s.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />
     <None Include="gameLib.meta" />
@@ -73,10 +70,4 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="C:\Programme\SdlDotNet\sdk\src\SdlDotNet.csproj">
-      <Project>{87D1ABAF-DCAF-459A-8279-FB28C0AAD036}</Project>
-      <Name>SdlDotNet</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

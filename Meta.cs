@@ -264,7 +264,7 @@ namespace Meta {
 			}
 			catch
 				(Exception e) {
-				SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
+				//SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
 				throw e;
 			}
 		}
@@ -1017,15 +1017,13 @@ namespace Meta {
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 			lib.Statement = new LiteralStatement(gac);
-
 			callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 			callable[CodeKeys.Function].Compile(lib);
 			return callable.Call(argument);
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			try
-			{
+			try {
 				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
 				map.Scope = Gac.gac;
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
@@ -1034,19 +1032,14 @@ namespace Meta {
 				Gac.gac["library"] = map.Call(new DictionaryMap());
 				Gac.gac["library"].Scope = Gac.gac;
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 			}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
-			bool x=SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
-			//SdlDotNet.Events.KeyboardDown += new SdlDotNet.KeyboardEventHandler(Events_KeyboardDown);
-			//Map x=new ObjectMap(Video.SetVideoModeWindow(100,100,true));
-			//BigInteger i=new BigInteger("-10",10);
-			//Console.WriteLine(i.ToString());
+			System.Windows.Forms.TreeView l = new System.Windows.Forms.TreeView();
+			l.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(l_BeforeExpand);
 			DateTime start = DateTime.Now;
-			SdlDotNet.Surface s;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
 					try {
@@ -1097,12 +1090,14 @@ namespace Meta {
 					}
 				}
 			}
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
 		}
 
-		static void Events_KeyboardDown(object sender, SdlDotNet.KeyboardEventArgs e) {
-			//e.key
+		static void l_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e) {
+			throw new Exception("The method or operation is not implemented.");
 		}
+
+		//static void Events_KeyboardDown(object sender, SdlDotNet.KeyboardEventArgs e) {
+		//}
 		private static void DebugPrint(string text) {
 			if (useConsole) {
 				Console.WriteLine(text);
@@ -1545,7 +1540,19 @@ namespace Meta {
 				return this;
 			}
 		}
-		public TypeMap(Type targetType): base(null, targetType) {}
+		public static string ConstructorName(ConstructorInfo constructor) {
+			ParameterInfo[] parameters=constructor.GetParameters();
+			string name = "";
+			for(int i=0;i<parameters.Length;i++) {
+				if (i != 0) {
+					name += "_";
+				}
+				name+=parameters[i].ParameterType.Name;
+			}
+			return name;
+		}
+		public TypeMap(Type type): base(null, type) {
+		}
 		public override bool ContainsKey(Map key) {
 			return this[key] != null;
 		}
@@ -1578,7 +1585,8 @@ namespace Meta {
 			string name = constructor.DeclaringType.Name;
 			foreach (ParameterInfo parameter in constructor.GetParameters()) {
 				name += "_" + parameter.ParameterType.Name;}
-			return name;}
+			return name;
+		}
 		public override Map Copy() {
 			return new TypeMap(this.Type);
 		}
@@ -2787,8 +2795,7 @@ namespace Meta {
 			Syntax.space));
 
 		public static Rule Expression = new DelayedRule(delegate() {
-		    return new CachedRule(new Alternatives(
-		        LiteralExpression,FunctionProgram,Call,Select,
+		    return new CachedRule(new Alternatives(LiteralExpression, Call, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
 		public class Ignore:Rule
@@ -3222,10 +3229,11 @@ namespace Meta {
 										new Assignment(
 											CodeKeys.Parameter,
 											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
-										Syntax.functionProgram,
+										new Alternatives(Syntax.functionStart,Syntax.functionAlternativeStart),
+										//new Alternatives(Syntax.functionStart),
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
-										new Optional(Syntax.functionProgram))))))))));
+										new Optional(new Alternatives(Syntax.functionEnd,Syntax.functionAlternativeEnd)))))))))));
 		public static Rule Program = ComplexProgram();
 
 		public static Rule ComplexProgram() {
@@ -3383,12 +3391,16 @@ namespace Meta {
 			public int calls=0;
 
 			public bool Match(Parser parser, ref Map map) {
-				if(precondition!=null) { if(!precondition(parser)) {return false;}}
+				if(precondition!=null) { 
+					if(!precondition(parser)) {
+						return false;
+					}
+				}
 				calls++;
 				State oldState=parser.State;
 				bool matched;
 				Map result=null;
-				matched= MatchImplementation(parser, ref result);
+				matched=MatchImplementation(parser, ref result);
 				if (!matched) {
 					mismatches++;
 					parser.State=oldState;
@@ -3422,7 +3434,8 @@ namespace Meta {
 		            parser.State.Column++;
 		            if (character.Equals(Syntax.unixNewLine)) {
 		                parser.State.Line++;
-		                parser.State.Column = 1;}
+		                parser.State.Column = 1;
+					}
 		            map=new Integer32(character);
 		            return true;
 				}
@@ -3726,7 +3739,8 @@ namespace Meta {
 		public const char programSeparator = ';';
 		public const char programStart = '{';
 		public const char programEnd ='}';
-		public const char functionProgram = '?';
+		public const char functionStart = '?';
+		public const char functionEnd = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callSeparator = ',';
@@ -3748,14 +3762,15 @@ namespace Meta {
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const char current = '&';
+		public const char functionAlternativeStart = '<';
+		public const char functionAlternativeEnd = '>';
 		public static readonly string integer = "0123456789-";
 		public static readonly string lookupStringForbidden =
 			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
 			function+ @string+emptyMap+ '!'+ root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
-			'-'+ ':'+ functionProgram+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
-			programStart+ programSeparator +callSeparator+programEnd+
-			arrayEnd+statementEnd;
+			'-'+ ':'+ functionStart+functionEnd+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
+			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
 	}
 	public class Serialization {
@@ -4000,12 +4015,12 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
-			public class Tetris : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"tetris.meta"), new DictionaryMap());
-				}
-			}
+			//public class Tetris : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"tetris.meta"), new DictionaryMap());
+			//    }
+			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {
