@@ -20,13 +20,7 @@
 			modify=Library.Modify_Map_Map;
 			sum=Number.op_Addition_Number_Number;
 			power=Library.Raise_Number_Number;
-			or=a?b?{
-				stuff={
-					1=1;
-					0=b;
-				};
-				&stuff.<a>;
-			}??;
+			or=a?b?{1=1;0=b;}.<a>??;
 			repeat=times?value?apply(
 				range(times),
 				?value?
@@ -39,20 +33,11 @@
 				&m.get_Keys(0);
 			});
 			product=Number.op_Multiply_Number_Number;
-			not=arg?{
-				stuff={
-					0=1;
-					1=0;
-				};
-				&stuff.<arg>;
-			}?;
+			not=arg<{0=1;1=0;}.<arg>>;
 			stringToNumber=Library.StringToNumber_Map;
 			parse=Parser.Parse_String;
 			toString=Serialization.Serialize_Map;
-			writeLine=?{
-				Library.WriteLine_String(@);
-				&@;
-			}?;
+			writeLine=<{Library.WriteLine_String(@);&@;}>;
 			join=Library.Join_Map_Map;
 			range=Library.Range_Number;
 			reverse=Library.Reverse_Map;
@@ -70,80 +55,37 @@
 			less=Number.op_LessThan_Number_Number;
 			greaterEqual=Number.op_GreaterThanOrEqual_Number_Number;
 			rest=Library.Rest_Map;
-			times=n?do?{
-				x=rest?if(
-					lessEqual(
-						rest
-						n
-					)
-					?0?
-					?0?
-				)?;
+			times=n<do<{
+				x=rest<if(lessEqual(rest,n),<0>,<0>)>;
 				x(1);
-			}??;
+			}>>;
 			lessEqual=Number.op_LessThanOrEqual_Number_Number;
-			vectorSum=a<b<apply(
-				keys(a),
-				key?sum(a.<key>,b.<key>)?
-			)>>;
-			vectorLength=vector?power(
-				sum(
-					power(vector.1,2)
-					power(vector.2,2)
-				),
-				1/2
-			)?;
-			vectorDifference=a?b?apply(
-				keys(a)
-				key?difference(a.<key>,b.<key>)?
-			)??;
-			length=arg?{
+			vectorSum=a<b<apply(keys(a),key?sum(a.<key>,b.<key>)?)>>;
+			vectorLength=vector<power(sum(power(vector.1,2),power(vector.2,2)),1/2)>;
+			vectorDifference=a<b<apply(keys(a),key<difference(a.<key>,b.<key>)>)>>;
+			length=arg<{
 				m=ObjectMap_Object(arg);
 				&m.get_ArrayCount(0);
-			}?;
+			}>;
 			select=Library.Select_Map_Map;
 			slice=Library.Slice_Map_Int32_Int32;
 			orAll=accumulate(or);
-			vectorAllLess=a?b?accumulate(
-				and
+			vectorAllLess=a<b<accumulate(
+				and,
 				apply(
-					range(length(a))
-					index?less(a.<index>,b.<index>)?
+					range(length(a)),
+					index<less(a.<index>,b.<index>)>
 				)
-			)??;
-			lessEqualArray=a?b?accumulate(
-				and
-				apply(
-					range(length(a))
-					index?lessEqual(a.<index>,b.<index>)?
-				)
-			)??;
-			maximum=a?b?{
-				stuff={
-					1=a;
-					0=b;
-				};
-				&stuff.<greater(a,b)>;
-			}??;
+			)>>;
+			lessEqualArray=a<b<accumulate(and,apply(range(length(a)),index<lessEqual(a.<index>,b.<index>)>))>>;
+			maximum=a<b<{1=a;0=b;}.<greater(a,b)>>>;
 			callKey=map?key?if(
 				contains(map,key)
 				?0?
 			)??;
-			minimum=a?b?{
-				stuff={
-					1=a;
-					0=b;
-				};
-				&stuff.<less(a,b)>;
-			}??;
+			minimum=a<b<{1=a;0=b;}.<less(a,b)>>>;
 			bitwiseOr=Number.op_BitwiseOr_Number_Number;
-			and=a?b?{
-				stuff={
-					1=b;
-					0=0;
-				};
-				&stuff.<a>;
-			}??;
+			and=a<b<{1=b;0=0;}.<a>>>;
 			andAll=accumulate(and);
 			integerToString=arg?{
 				m=ObjectMap_Object(arg);

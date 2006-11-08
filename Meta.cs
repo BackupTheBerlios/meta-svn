@@ -3070,21 +3070,41 @@ namespace Meta {
 					new Alternatives(
 						LookupStringExpression,
 						LookupAnythingExpression)))));
-		private static Rule Select = new CachedRule(new Sequence(
-			new Assignment(
-				CodeKeys.Select,
-				new Sequence(
-					new Assignment(1,
-						new Alternatives(
-							Root,
-							Search,
-							LastArgument,
-							LiteralExpression)),
-					new Append(
-						new OneOrMore(new Autokey(Prefix('.',new Alternatives(
-							LookupStringExpression,
-							LookupAnythingExpression,
-							LiteralExpression)))))))));
+		private static Rule Select = new DelayedRule(delegate {
+			return new CachedRule(new Sequence(
+				new Assignment(
+					CodeKeys.Select,
+					new Sequence(
+						new Assignment(1,
+							new Alternatives(
+								Root,
+								Search,
+								LastArgument,
+								Program,
+								LiteralExpression)),
+						new Append(
+							new OneOrMore(new Autokey(Prefix('.', new Alternatives(
+								LookupStringExpression,
+								LookupAnythingExpression,
+								LiteralExpression)))))))));
+		});
+
+		//private static Rule Select = new CachedRule(new Sequence(
+		//    new Assignment(
+		//        CodeKeys.Select,
+		//        new Sequence(
+		//            new Assignment(1,
+		//                new Alternatives(
+		//                    Root,
+		//                    Search,
+		//                    LastArgument,
+		//                    Program,
+		//                    LiteralExpression)),
+		//            new Append(
+		//                new OneOrMore(new Autokey(Prefix('.',new Alternatives(
+		//                    LookupStringExpression,
+		//                    LookupAnythingExpression,
+		//                    LiteralExpression)))))))));
 
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
