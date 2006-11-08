@@ -47,13 +47,11 @@
 					"Raise_Number_Number"
 				"or"=,
 					a|,
-						b|,
-							"stuff"=,
+						b|.
+							,
 								1=1
 								0=!"b"
-							&=.
-								!"stuff"
-								!"a"
+							!"a"
 				"repeat"=,
 					times|,
 						value|-
@@ -93,13 +91,11 @@
 					!"Number"
 					"op_Multiply_Number_Number"
 				"not"=,
-					arg|,
-						"stuff"=,
+					arg|.
+						,
 							0=1
 							1=0
-						&=.
-							!"stuff"
-							!"arg"
+						!"arg"
 				"stringToNumber"=.
 					!"Library"
 					"StringToNumber_Map"
@@ -242,13 +238,13 @@
 										!"key"
 				"length"=,
 					arg|,
-						"m"=-
-							!"ObjectMap_Object"
-							!"arg"
+						"m"=.
+							-
+								!"ObjectMap_Object"
+								!"arg"
+							"get_ArrayCount"
 						&=-
-							.
-								!"m"
-								"get_ArrayCount"
+							!"m"
 							0
 				"select"=.
 					!"Library"
@@ -303,16 +299,14 @@
 											!"index"
 				"maximum"=,
 					a|,
-						b|,
-							"stuff"=,
+						b|.
+							,
 								1=!"a"
 								0=!"b"
-							&=.
-								!"stuff"
-								-
-									!"greater"
-									!"a"
-									!"b"
+							-
+								!"greater"
+								!"a"
+								!"b"
 				"callKey"=,
 					map|,
 						key|-
@@ -325,28 +319,24 @@
 								|0
 				"minimum"=,
 					a|,
-						b|,
-							"stuff"=,
+						b|.
+							,
 								1=!"a"
 								0=!"b"
-							&=.
-								!"stuff"
-								-
-									!"less"
-									!"a"
-									!"b"
+							-
+								!"less"
+								!"a"
+								!"b"
 				"bitwiseOr"=.
 					!"Number"
 					"op_BitwiseOr_Number_Number"
 				"and"=,
 					a|,
-						b|,
-							"stuff"=,
+						b|.
+							,
 								1=!"b"
 								0=0
-							&=.
-								!"stuff"
-								!"a"
+							!"a"
 				"andAll"=-
 					!"accumulate"
 					!"and"

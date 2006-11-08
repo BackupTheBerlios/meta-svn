@@ -63,10 +63,7 @@
 			vectorSum=a<b<apply(keys(a),key?sum(a.<key>,b.<key>)?)>>;
 			vectorLength=vector<power(sum(power(vector.1,2),power(vector.2,2)),1/2)>;
 			vectorDifference=a<b<apply(keys(a),key<difference(a.<key>,b.<key>)>)>>;
-			length=arg<{
-				m=ObjectMap_Object(arg);
-				&m.get_ArrayCount(0);
-			}>;
+			length=arg<ObjectMap_Object(arg).get_ArrayCount(0)>;
 			select=Library.Select_Map_Map;
 			slice=Library.Slice_Map_Int32_Int32;
 			orAll=accumulate(or);
@@ -79,22 +76,16 @@
 			)>>;
 			lessEqualArray=a<b<accumulate(and,apply(range(length(a)),index<lessEqual(a.<index>,b.<index>)>))>>;
 			maximum=a<b<{1=a;0=b;}.<greater(a,b)>>>;
-			callKey=map?key?if(
-				contains(map,key)
-				?0?
-			)??;
+			callKey=map<key<if(contains(map,key),<0>)>>;
 			minimum=a<b<{1=a;0=b;}.<less(a,b)>>>;
 			bitwiseOr=Number.op_BitwiseOr_Number_Number;
 			and=a<b<{1=b;0=0;}.<a>>>;
 			andAll=accumulate(and);
-			integerToString=arg?{
-				m=ObjectMap_Object(arg);
-				&m.ToString(0);
-			}?;
-			count=arg?{
+			integerToString=arg<ObjectMap_Object(arg).ToString(0)>;
+			count=arg<{
 				m=ObjectMap_Object(arg);
 				&m.get_Count(0);
-			};
+			}>;
 			equal=Library.Equal_Object_Object;
 			isNumber=arg?{
 				m=ObjectMap_Object(arg);

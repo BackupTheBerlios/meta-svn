@@ -2795,7 +2795,7 @@ namespace Meta {
 			Syntax.space));
 
 		public static Rule Expression = new DelayedRule(delegate() {
-		    return new CachedRule(new Alternatives(LiteralExpression, Call, Select, FunctionProgram,
+			return new CachedRule(new Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
 		public class Ignore:Rule
@@ -2967,27 +2967,8 @@ namespace Meta {
 					EndOfLine)),
 			new ReferenceAssignment(MapRule)));
 		Dictionary<State, string> errors = new Dictionary<State, string>();
+
 		public static Rule ComplexCall() {
-			Action firstAction = new Assignment(1, new Alternatives(
-					LastArgument,
-					FunctionProgram,
-					LiteralExpression,
-					Call,
-					Select,
-					Search,
-					List,
-					Program
-				));
-			Action entryAction = new ReferenceAssignment(new Alternatives(
-					LastArgument,
-					FunctionProgram,
-					LiteralExpression,
-					Call,
-					Select,
-					Search,
-					List,
-					Program
-				));
 			return new Sequence(
 				new Assignment(CodeKeys.Call,
 				new Sequence(
@@ -2995,6 +2976,7 @@ namespace Meta {
 						new Alternatives(
 							FunctionProgram,
 							LiteralExpression,
+							CallSelect,
 							Select,
 							Search,
 							List,
@@ -3012,7 +2994,60 @@ namespace Meta {
 											new Autokey(
 												new Sequence(
 													Whitespace,
-													entryAction,
+													new ReferenceAssignment(new Alternatives(
+														LastArgument,
+														FunctionProgram,
+														LiteralExpression,
+														Call,
+														Select,
+														Search,
+														List,
+														Program
+													)),
+													new Optional(Syntax.callSeparator)
+													)))),
+									Whitespace
+									, Syntax.callEnd
+									)
+									)))
+								));
+		}
+		public static Rule SimpleComplexCall() {
+			return new Sequence(
+				new Assignment(CodeKeys.Call,
+				new Sequence(
+					new Assignment(1,
+						new Alternatives(
+							FunctionProgram,
+							LiteralExpression,
+							SmallSelect,
+							Search
+							,
+							List,
+							Program,
+							LastArgument
+						)),
+						Whitespace,
+						Syntax.callStart,
+						new Append(
+							new Alternatives(
+								new Sequence(
+									Whitespace,
+									new Append(
+										new ZeroOrMore(
+											new Autokey(
+												new Sequence(
+													Whitespace,
+													new ReferenceAssignment(new Alternatives(
+														LastArgument,
+														FunctionProgram,
+														LiteralExpression,
+														Call,
+														Select,
+														Search,
+														List,
+														Program
+													)),
 													new Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
@@ -3023,6 +3058,9 @@ namespace Meta {
 		}
 		public static Rule Call = new DelayedRule(delegate() {
 			return ComplexCall();
+		});
+		public static Rule SimpleCall = new DelayedRule(delegate() {
+			return SimpleComplexCall();
 		});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(
@@ -3046,11 +3084,13 @@ namespace Meta {
 		);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = new Sequence(
-			new Assignment(CodeKeys.Literal, new Alternatives(
-				EmptyMap,
-				Number,
-				String,
-				CharacterDataExpression)));
+			new Assignment(
+				CodeKeys.Literal,
+				new Alternatives(
+					EmptyMap,
+					Number,
+					String,
+					CharacterDataExpression)));
 		private static Rule LookupAnythingExpression = new Sequence(
 			'<',
 			new ReferenceAssignment(Expression),
@@ -3070,7 +3110,50 @@ namespace Meta {
 					new Alternatives(
 						LookupStringExpression,
 						LookupAnythingExpression)))));
-		private static Rule Select = new DelayedRule(delegate {
+
+
+		private static Rule SmallSelect = new DelayedRule(delegate {
+			return new CachedRule(new Sequence(
+				new Assignment(
+					CodeKeys.Select,
+					new Sequence(
+						new Assignment(1,
+							new Alternatives(
+								Root,
+								Search,
+								LastArgument,
+								Program,
+								LiteralExpression)),
+						new Append(
+							new OneOrMore(new Autokey(Prefix('.', new Alternatives(
+								LookupStringExpression,
+								LookupAnythingExpression,
+								LiteralExpression)))))))));
+		});
+
+		private static Rule CallSelect = new DelayedRule(delegate{
+			return new CachedRule(new Sequence(
+				new Assignment(
+					CodeKeys.Select,
+					new Sequence(
+						new Assignment(1,
+							new Alternatives(
+								//Root,
+								//Search,
+								SimpleCall
+								//,
+								//LastArgument,
+								//Program,
+								//LiteralExpression
+								)),
+						new Append(
+							new OneOrMore(new Autokey(Prefix('.', new Alternatives(
+								LookupStringExpression,
+								LookupAnythingExpression,
+								LiteralExpression)))))))));
+		});
+
+		private static Rule Select = new DelayedRule(delegate{
 			return new CachedRule(new Sequence(
 				new Assignment(
 					CodeKeys.Select,
