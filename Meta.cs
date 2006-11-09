@@ -49,7 +49,6 @@ namespace Meta {
 			expressions[CodeKeys.Root]=typeof(Root);
 			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
 			expressions[CodeKeys.Search]=typeof(Search);
-
 			statements[CodeKeys.Keys]=typeof(SearchStatement);
 			statements[CodeKeys.Current]=typeof(CurrentStatement);
 			statements[CodeKeys.Key]=typeof(KeyStatement);
@@ -145,17 +144,13 @@ namespace Meta {
 					result.IsConstant=false;
 					foreach (Map key in type.Keys) {
 						result[key] = Map.Empty;
-						//result[key] = new DictionaryMap();
 					}
 					return new LiteralStructure(result);
 				}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
-					try {
-						Map result = (Map)method.Invoke(null, arguments.ToArray());
-						result.IsConstant = false;
-						return new LiteralStructure(result);
-					}
-					catch (Exception e) {}
+					Map result = (Map)method.Invoke(null, arguments.ToArray());
+					result.IsConstant = false;
+					return new LiteralStructure(result);
 				}
 			}
 			return null;
@@ -183,7 +178,6 @@ namespace Meta {
 									m = method.method;
 									return true;}
 								else if(method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length!=0) {
-								//else {
 									arguments.Add(Transform.ToDotNet(arg, method.parameters[i].ParameterType));
 								}
 							}
@@ -222,17 +216,12 @@ namespace Meta {
 		public Compiled[] arguments;
 		private ParameterInfo[] parameters;
 		private DynamicMethod m;
-		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source)
-			: base(source) {
+		public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source) : base(source) {
 			this.method = method;
 			this.arguments = arguments.ToArray();
 			this.parameters = method.GetParameters();
 		    Type[] param = new Type[] { typeof(EmittedCall), typeof(Map) };
-		    m = new DynamicMethod(
-		        "Optimized",
-		        typeof(Map),
-		        param,
-		        typeof(Map).Module);
+		    m = new DynamicMethod("Optimized",typeof(Map),param,typeof(Map).Module);
 			ILGenerator il = m.GetILGenerator();
 			for(int i=0;i<parameters.Length;i++) {
 				Type type=parameters[i].ParameterType;
@@ -240,10 +229,8 @@ namespace Meta {
 				il.Emit(OpCodes.Ldfld,typeof(EmittedCall).GetField("arguments"));
 				il.Emit(OpCodes.Ldc_I4, i);
 				il.Emit(OpCodes.Ldelem_Ref);
-
 				il.Emit(OpCodes.Ldarg_1);
 				il.Emit(OpCodes.Callvirt,typeof(Compiled).GetMethod("Evaluate"));
-
 				Transform.GetConversion(type,il);
 			}
 			if(method.IsStatic) {
@@ -259,20 +246,12 @@ namespace Meta {
 		private FastCall fastCall;
 		private MethodInfo method;
 		public override Map Evaluate(Map context) {
-			try {
-				return fastCall(context);
-			}
-			catch
-				(Exception e) {
-				//SdlDotNet.Keyboard.IsKeyPressed(SdlDotNet.Key.Space);
-				throw e;
-			}
+			return fastCall(context);
 		}
 	}
 	public class CompiledCall : Compiled {
 		List<Compiled> calls;
-		public CompiledCall(List<Compiled> calls, Extent source)
-			: base(source) {
+		public CompiledCall(List<Compiled> calls, Extent source) : base(source) {
 			this.calls = calls;
 		}
 		public override Map Evaluate(Map current) {
@@ -288,7 +267,9 @@ namespace Meta {
 					while(e.InnerException!=null) {
 						e=e.InnerException;
 					}
-					throw new MetaException(e.Message+"\n"+e.StackTrace, Source.Start);}}
+					throw new MetaException(e.Message+"\n"+e.StackTrace, Source.Start);
+				}
+			}
 			return result;
 		}
 	}
@@ -659,19 +640,24 @@ namespace Meta {
 		public List<Statement> statementList= new List<Statement>();
 		public Program(Extent source,Expression parent):base(source,parent) {
 		}
-		public Program(Map code, Expression parent)
-			: base(code.Source, parent) {
+		public Program(Map code, Expression parent) : base(code.Source, parent) {
 			int index = 0;
 			foreach (Map m in code.Array) {
 				statementList.Add(m.GetStatement(this, index));
-				index++;}}}
+				index++;
+			}
+		}
+	}
 	public abstract class CompiledStatement {
 		public CompiledStatement(Compiled value) {
-			this.value = value;}
+			this.value = value;
+		}
 		public void Assign(ref Map context) {
-			AssignImplementation(ref context, value.Evaluate(context));}
+			AssignImplementation(ref context, value.Evaluate(context));
+		}
 		public abstract void AssignImplementation(ref Map context, Map value);
-		public readonly Compiled value;}
+		public readonly Compiled value;
+	}
 	public abstract class Statement {
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
@@ -700,7 +686,9 @@ namespace Meta {
 					pre = new LiteralStructure(new DictionaryMap());
 				}
 				else {
-					pre = Previous.Current();}}
+					pre = Previous.Current();
+				}
+			}
 			preEvaluated = true;
 			return pre;
 		}
@@ -756,7 +744,6 @@ namespace Meta {
 			return true;
 		}
 		protected abstract Structure CurrentImplementation(Structure previous);
-
 		public Statement Previous {
 			get {
 				if (Index == 0) {
@@ -781,9 +768,10 @@ namespace Meta {
 		}
 	}
 	public class CompiledDiscardStatement : CompiledStatement {
-		public CompiledDiscardStatement(Compiled value)
-			: base(value) {}
-		public override void AssignImplementation(ref Map context, Map value) {}
+		public CompiledDiscardStatement(Compiled value) : base(value) {
+		}
+		public override void AssignImplementation(ref Map context, Map value) {
+		}
 	}
 	public class DiscardStatement : Statement {
 		protected override Structure CurrentImplementation(Structure previous) {
@@ -867,13 +855,12 @@ namespace Meta {
 	}
 	public class CompiledCurrentStatement : CompiledStatement {
 		private int index;
-		public CompiledCurrentStatement(Compiled value, int index)
-			: base(value) {
-			this.index = index;}
+		public CompiledCurrentStatement(Compiled value, int index) : base(value) {
+			this.index = index;
+		}
 		public override void AssignImplementation(ref Map context, Map value) {
 			if (index == 0) {
-				if(!(value is DictionaryMap)) 
-				{
+				if(!(value is DictionaryMap))  {
 					context = value.Copy();
 				}
 				else {
@@ -892,14 +879,12 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledCurrentStatement(value.Compile(), Index);
 		}
-		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) 
-		{
+		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) {
 		}
 	}
 	public class CompiledSearchStatement : CompiledStatement {
 		private Compiled key;
-		public CompiledSearchStatement(Compiled key, Compiled value)
-			: base(value) {
+		public CompiledSearchStatement(Compiled key, Compiled value) : base(value) {
 			this.key = key;
 		}
 		public override void AssignImplementation(ref Map context, Map value) {
@@ -908,7 +893,9 @@ namespace Meta {
 			while (!selected.ContainsKey(key)) {
 				selected = selected.Scope;
 				if (selected == null) {
-					throw new KeyNotFound(key, key.Source.Start, null);}}
+					throw new KeyNotFound(key, key.Source.Start, null);
+				}
+			}
 			selected[key] = value;
 		}
 	}
@@ -917,18 +904,17 @@ namespace Meta {
 			return previous;
 		}
 		public override CompiledStatement Compile() {
-			return new CompiledSearchStatement(key.Compile(), value.Compile());}
+			return new CompiledSearchStatement(key.Compile(), value.Compile());
+		}
 		private Expression key;
-		public SearchStatement(Expression key, Expression value, Program program, int index)
-			: base(program, value, index) {
+		public SearchStatement(Expression key, Expression value, Program program, int index) : base(program, value, index) {
 			this.key = key;
 			key.Statement = this;
 		}
 	}
 	public class CompiledLiteral : Compiled {
 		public readonly Map literal;
-		public CompiledLiteral(Map literal, Extent source)
-			: base(source) {
+		public CompiledLiteral(Map literal, Extent source) : base(source) {
 			this.literal = literal;
 		}
 		public override Map Evaluate(Map context) {
@@ -949,8 +935,7 @@ namespace Meta {
 		}
 	}
 	public class CompiledRoot : Compiled {
-		public CompiledRoot(Extent source)
-			: base(source) {}
+		public CompiledRoot(Extent source) : base(source) {}
 		public override Map Evaluate(Map selected) {
 			return Gac.gac;
 		}
@@ -959,7 +944,8 @@ namespace Meta {
 		public override Structure StructureImplementation() {
 			return new LiteralStructure(Gac.gac);
 		}
-		public Root(Map code, Expression parent): base(code.Source, parent) {}
+		public Root(Map code, Expression parent): base(code.Source, parent) {
+		}
 		public override Compiled CompileImplementation(Expression parent) {
 			return new CompiledRoot(Source);
 		}
@@ -968,23 +954,22 @@ namespace Meta {
 		List<Compiled> subs;
 		public CompiledSelect(List<Compiled> subs, Extent source): base(source) {
 			this.subs = subs;
-			if (subs[0] == null) {}
+			if (subs[0] == null) {
+			}
 		}
 		public override Map Evaluate(Map context) {
-				Map selected = subs[0].Evaluate(context);
-				for (int i = 1; i < subs.Count; i++) {
-					Map key = subs[i].Evaluate(context);
-					Map value = selected[key];
-					if (value == null) {
-						Map x = selected[key];
-						throw new KeyDoesNotExist(key, subs[i].Source!=null?subs[i].Source.Start:null, selected);
-					}
-					else {
-						selected = value;
-					}
+			Map selected = subs[0].Evaluate(context);
+			for (int i = 1; i < subs.Count; i++) {
+				Map key = subs[i].Evaluate(context);
+				Map value = selected[key];
+				if (value == null) {
+					throw new KeyDoesNotExist(key, subs[i].Source!=null?subs[i].Source.Start:null, selected);
 				}
-				return selected;
-		
+				else {
+					selected = value;
+				}
+			}
+			return selected;
 		}
 	}
 	public class Select : Expression {
@@ -1038,7 +1023,7 @@ namespace Meta {
 		[STAThread]
 		public static void Main(string[] args) {
 			System.Windows.Forms.TreeView l = new System.Windows.Forms.TreeView();
-			l.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(l_BeforeExpand);
+			//l.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(l_BeforeExpand);
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -1091,13 +1076,6 @@ namespace Meta {
 				}
 			}
 		}
-
-		static void l_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e) {
-			throw new Exception("The method or operation is not implemented.");
-		}
-
-		//static void Events_KeyboardDown(object sender, SdlDotNet.KeyboardEventArgs e) {
-		//}
 		private static void DebugPrint(string text) {
 			if (useConsole) {
 				Console.WriteLine(text);
@@ -1204,8 +1182,7 @@ namespace Meta {
 							il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
 							break;
 						default:
-							if(type.IsValueType)
-							{
+							if(type.IsValueType) {
 								il.Emit(OpCodes.Box,type);
 							}
 							il.Emit(OpCodes.Newobj,typeof(ObjectMap).GetConstructor(new Type[] {typeof(object)}));
@@ -1225,10 +1202,6 @@ namespace Meta {
 				    Transform.types[token]=target;
 				}
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
-				//il.Emit(OpCodes.Ldc_I4,(int)token);
-				//il.Emit(OpCodes.Call,typeof(Transform).GetMethod("MakeEnum"));
-				//il.Emit(OpCodes.Call,typeof(Enum).GetMethod("ToObject",Type[] {typeof(Type),typeof(int)}));
-				//return Enum.ToObject(target, meta.GetNumber().GetInt32());
 			}
 		    else if(target.Equals(typeof(Number))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
@@ -1260,12 +1233,17 @@ namespace Meta {
 				if(!Transform.types.ContainsKey(token)) {
 				    Transform.types[token]=target;
 				}
-				il.Emit(OpCodes.Ldc_I4,(int)token);//Transform.types[target]);
+				il.Emit(OpCodes.Ldc_I4,(int)token);
 				il.Emit(OpCodes.Call,typeof(Transform).GetMethod("CreateDelegateFromCode",new Type[] {typeof(Map),typeof(int)}));
 			}
-		    else 
-			{
-		    }
+			//else if (target.Equals(typeof(object))) {
+			//}
+			else {
+				il.Emit(OpCodes.Castclass, typeof(ObjectMap));
+				il.Emit(OpCodes.Callvirt, typeof(ObjectMap).GetMethod("get_Object"));
+				il.Emit(OpCodes.Castclass, target);
+				//throw new ApplicationException("cannot get conversion");
+			}
 		}
 		public static object ToDotNet(Map meta,Type target) {
 			if(target.Equals(typeof(Map))) {
@@ -3332,15 +3310,10 @@ namespace Meta {
 										new Assignment(
 											CodeKeys.Parameter,
 											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
-										new Alternatives(
-												//Syntax.functionStart,
-											Syntax.functionAlternativeStart),
-										//new Alternatives(Syntax.functionStart),
+										Syntax.functionAlternativeStart,
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
-										new Optional(new Alternatives(
-			//Syntax.functionEnd,
-			Syntax.functionAlternativeEnd)))))))))));
+										new Optional(Syntax.functionAlternativeEnd))))))))));
 		public static Rule Program = ComplexProgram();
 
 		public static Rule ComplexProgram() {
@@ -4122,12 +4095,6 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
-			//public class Tetris : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"tetris.meta"), new DictionaryMap());
-			//    }
-			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {
