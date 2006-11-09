@@ -1,12 +1,6 @@
 |{
-	&mergeAll([
-		!"System.Drawing",
-		SdlDotNet,
-		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
-		SdlDotNet.Events,
-		SdlDotNet.Key,
-		OdeDotNet
-	]);
+	&mergeAll([!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
+		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet]);
 	world=World();
 	space=Space_SpaceType(SpaceType.HashSpace);
 	Fill_Color(Color.get_White());
@@ -52,13 +46,9 @@
 		jointGroup=JointGroup_Int32(0);
 		setColor(c);
 		currentJoint=0;
-		setCurrentJoint=joint<{
-			currentJoint:joint;
-		};
+		setCurrentJoint=joint<{currentJoint:joint;}>;
 		currentBubble=0;
-		setCurrentBubble=b<{
-			currentBubble:b;
-		};
+		setCurrentBubble=b<{currentBubble:b;};
 		toVector=v<Vector3_Single_Single_Single(v.1,v.2,0)>;
 		center=a<b<quotient(Sum(a,b),2)>>;
 		keyDown={
@@ -76,18 +66,10 @@
 				setCurrentBubble(bubble);
 			}>;
 		};
-		keyUp={
-			!"key"=<{
-				jointGroup.Empty();
-				currentBubble:0;
-			}>;
-		};
+		keyUp={!"key"=<{jointGroup.Empty();currentBubble:0;}>;};
 	}>>;
 	paused=0;
-	add_Quit_QuitEventHandler(<e<{
-		Events.Close();
-		Events.QuitApplication();
-	}>>);
+	add_Quit_QuitEventHandler(<e<{Events.Close();Events.QuitApplication();}>>);
 	add_KeyboardDown_KeyboardEventHandler(<e<apply(players,player<callKey(player.keyDown,e.get_Key())>)>>);
 	add_KeyboardUp_KeyboardEventHandler(<e<apply(players,player<callKey(player.keyUp,e.get_Key())>)>>);
 	contactGroup=JointGroup_Int32(0);
@@ -118,13 +100,7 @@
 		print(Events.get_Fps());
 		space.CheckCollisions();
 		world.Step();
-		apply(
-			bubbles,
-			b<{
-				b.move();
-				b.draw(b.color);
-			}>
-		);
+		apply(bubbles,b<{b.move();b.draw(b.color);}>);
 		apply(players,player<player.draw(Color.get_Blue())>);
 		apply(
 			players,

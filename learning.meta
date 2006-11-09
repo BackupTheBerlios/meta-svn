@@ -6,9 +6,9 @@
 		mscorlib
 		!"System.Windows.Forms"
 		!"System.Drawing"
-	printNodes=nodes?data?depth?-
+	printNodes=nodes<data<depth<-
 		joinAll
-		Map data entry?joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
+		Map data entry<joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
 			key=(node.get_Text
 			&If (contains entry key) ?
 				value=entry.<key

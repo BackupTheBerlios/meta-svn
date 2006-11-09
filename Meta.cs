@@ -3332,11 +3332,15 @@ namespace Meta {
 										new Assignment(
 											CodeKeys.Parameter,
 											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
-										new Alternatives(Syntax.functionStart,Syntax.functionAlternativeStart),
+										new Alternatives(
+												//Syntax.functionStart,
+											Syntax.functionAlternativeStart),
 										//new Alternatives(Syntax.functionStart),
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
-										new Optional(new Alternatives(Syntax.functionEnd,Syntax.functionAlternativeEnd)))))))))));
+										new Optional(new Alternatives(
+			//Syntax.functionEnd,
+			Syntax.functionAlternativeEnd)))))))))));
 		public static Rule Program = ComplexProgram();
 
 		public static Rule ComplexProgram() {
@@ -3842,8 +3846,8 @@ namespace Meta {
 		public const char programSeparator = ';';
 		public const char programStart = '{';
 		public const char programEnd ='}';
-		public const char functionStart = '?';
-		public const char functionEnd = '?';
+		//public const char functionStart = '?';
+		//public const char functionEnd = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callSeparator = ',';
@@ -3872,7 +3876,7 @@ namespace Meta {
 			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
 			function+ @string+emptyMap+ '!'+ root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
-			'-'+ ':'+ functionStart+functionEnd+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
+			'-'+ ':'+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
 			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
 	}
@@ -4082,12 +4086,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -4116,6 +4114,12 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
 				}
 			}
 			//public class Tetris : Test {

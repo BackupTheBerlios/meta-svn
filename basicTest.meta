@@ -343,8 +343,8 @@ commandLine|{
 	secondIf="unchanged";
 	firstIfCondition=equal(1,one);
 	firstIfBranches={
-		1=arg?"then">;
-		0=arg?"else";
+		1=arg<"then">;
+		0=arg<"else">;
 	};
 	firstIf=firstIfBranches.<firstIfCondition>(0);
 	bigNumber=50020202;
@@ -352,9 +352,7 @@ commandLine|{
 	secondSwitchCases=["one","two","three"];
 	secondSwitch=secondSwitchCases.3;
 	emptyMap=0;
-	emptyFunction=arg?{
-		x="hello";
-	};
+	emptyFunction=arg<{x="hello";}>;
 	emptyFunctionResult=emptyFunction(0);
 	font=/."System.Drawing".Font_String_Single("Courier,New",10);
 	decimalTest=5;
@@ -391,19 +389,17 @@ commandLine|{
 				1={
 					arg|loop(sum(arg,1));
 				};
-				0=arg?arg;
+				0=arg<arg>;
 			};
 			&whileBranches.<whileDecision>(start);
 		};
 	};
 	whileCounter=loop(3);
-	returnInMap=arg?{
-		result=arg;
-	};
+	returnInMap=arg<{result=arg;}>;
 	literalAsArgument=returnInMap(1);
-	returnFunction=arg?{
+	returnFunction=arg<{
 		arg|"functionResult";
-	};
+	}>;
 	returnArg={
 		arg|arg;
 	};
