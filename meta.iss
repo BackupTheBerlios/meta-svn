@@ -20,13 +20,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ;Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Meta\0.1\Meta\Meta.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Meta\0.1\Meta\Meta.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Meta\0.1\Meta\Library\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "bin\Debug\Meta.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "library.meta"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\Meta"; Filename: "{app}\Meta.exe"
+Name: "{group}\..\Meta 0.1"; Filename: "{app}\Meta.exe"
 ;Name: "{userdesktop}\Meta"; Filename: "{app}\Meta.exe"; Tasks: desktopicon
 
 [Run]

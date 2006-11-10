@@ -366,9 +366,7 @@ commandLine|{
 	);
 	hello="hi";
 	stringStrategyHashTest=!stringTest;
-	x={
-		aLongText="hello,world!";
-	};
+	x={aLongText="hello,world!";};
 	arrayList=/.mscorlib.ArrayList(0);
 	7=arrayList.Add_Object("hello");
 	arrayListResult=arrayList.get_Item_Int32(0);
