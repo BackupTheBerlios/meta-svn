@@ -24,7 +24,7 @@
 			stringToNumber=Library.StringToNumber_Map;
 			parse=Parser.Parse_String;
 			toString=Serialization.Serialize_Map;
-			writeLine=<{Library.WriteLine_String(@);&@;}>;
+			writeLine=a<{Library.WriteLine_String(a);&@;}>;
 			join=Library.Join_Map_Map;
 			range=Library.Range_Number;
 			reverse=Library.Reverse_Map;

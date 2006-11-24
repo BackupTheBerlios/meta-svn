@@ -38,23 +38,27 @@ namespace Meta {
 		}
 		public abstract Map Evaluate(Map context);
 	}
-
-	public abstract class Expression:Attribute {
-		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
-		public static Dictionary<Map,Type> statements=new Dictionary<Map,Type>();
-		static Expression() {	
-			expressions[CodeKeys.Call]=typeof(Call);
-			expressions[CodeKeys.Program]=typeof(Program);
-			expressions[CodeKeys.Literal]=typeof(Literal);
-			expressions[CodeKeys.Select]=typeof(Select);
-			expressions[CodeKeys.Root]=typeof(Root);
-			expressions[CodeKeys.LastArgument]=typeof(LastArgument);
-			expressions[CodeKeys.Search]=typeof(Search);
-			statements[CodeKeys.Keys]=typeof(SearchStatement);
-			statements[CodeKeys.Current]=typeof(CurrentStatement);
-			statements[CodeKeys.Key]=typeof(KeyStatement);
-			statements[CodeKeys.Discard]=typeof(DiscardStatement); 
+	public class Dict<TKey, TValue>:Dictionary<TKey,TValue> {
+		public Dict() {
 		}
+		public TKey key;
+		public static Dict<TKey, TValue> operator -(Dict<TKey, TValue> dict, TKey key) {
+			dict.key = key;
+			return dict;
+		}
+		public static Dict<TKey, TValue> operator +(Dict<TKey, TValue> dict, TValue value) {
+			dict[dict.key] = value;
+			return dict;
+		}
+	}
+	public abstract class Expression:Attribute {
+		public static Dict<Map, Type> expressions = new Dict<Map,Type>()
+			-CodeKeys.Call+typeof(Call)-CodeKeys.Program+typeof(Program)-CodeKeys.Literal+typeof(Literal)
+			-CodeKeys.Select+typeof(Select)-CodeKeys.Root+typeof(Root)-CodeKeys.LastArgument+typeof(LastArgument)
+		    -CodeKeys.Search+typeof(Search);
+		public static Dict<Map,Type> statements=new Dict<Map,Type>()
+		    -CodeKeys.Keys+typeof(SearchStatement)-CodeKeys.Current+typeof(CurrentStatement)
+		    -CodeKeys.Key+typeof(KeyStatement)-CodeKeys.Discard+typeof(DiscardStatement);
 		public Compiled GetCompiled() {	
 			if(compiled==null) {	
 				compiled=Compile();
@@ -511,7 +515,7 @@ namespace Meta {
 			get { throw new Exception("The method or operation is not implemented."); }
 		}
 	}
-	public class CompiledFunction:Compiled {
+	public class CompiledFunction : Compiled {
 		private Compiled expression;
 		private Map parameter;
 		public CompiledFunction(Function function): base(function.Source) {
@@ -1023,8 +1027,6 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
-			System.Windows.Forms.TreeView l = new System.Windows.Forms.TreeView();
-			//l.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(l_BeforeExpand);
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -1256,6 +1258,7 @@ namespace Meta {
 				else {
 					TypeCode typeCode = Type.GetTypeCode(target);
 					if (typeCode == TypeCode.Object) {
+
 						if (target == typeof(Number) && meta.IsNumber) {
 							return meta.GetNumber();
 						}
@@ -1286,6 +1289,15 @@ namespace Meta {
 						else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
 						   && meta.ContainsKey(CodeKeys.Function)) {
 							return CreateDelegateFromCode(meta, target);
+						}
+						if (target.IsArray) {
+							List<object> list = new List<object>();
+							foreach (Map map in meta.Array) {
+								list.Add(ToDotNet(map, target.GetElementType()));
+							}
+							Array array=Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
+							list.ToArray().CopyTo(array,0);
+							return array;
 						}
 					}
 					else if (target.IsEnum) {
@@ -1343,7 +1355,7 @@ namespace Meta {
 				Type type = dotNet.GetType();
 				switch (Type.GetTypeCode(type)) {
 					case TypeCode.Boolean:
-						return (Boolean)dotNet;
+						return new Integer32(Convert.ToInt32((Boolean)dotNet));
 					case TypeCode.Byte:
 						return (Byte)dotNet;
 					case TypeCode.Char:
@@ -1361,7 +1373,7 @@ namespace Meta {
 					case TypeCode.String:
 						return (String)dotNet;
 					case TypeCode.Decimal:
-						return (Decimal)dotNet;
+						return new Rational((double)(Decimal)dotNet);
 					case TypeCode.Double:
 						return (Double)dotNet;
 					case TypeCode.Int16:
@@ -1622,7 +1634,6 @@ namespace Meta {
 		}
 		public override Map Copy() {
 			return this;
-			//return new ObjectMap(Object);
 		}
 	}
 	public class DictionaryMap : Map {
@@ -2229,7 +2240,6 @@ namespace Meta {
 				if (key.IsNumber) {
 					Number number = key.GetNumber();
 					if (number.GetInteger()!=null && number>0 && number<=Count) {
-					//if (number.GetInteger()!=null && Number.Greater(number,0) && Number.LessEqual(number,Count)) {
 						return text[number.GetInt32() - 1];
 					}
 					else {
@@ -2491,37 +2501,6 @@ namespace Meta {
 		public static Number operator %(Number a, Number b) {
 			return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
 		}
-
-		//public static Number Add(Number a, Number b) {
-		//    return a.Add(b);
-		//}
-		//public static Number Subtract(Number a, Number b) {
-		//    return a.Subtract(b);
-		//}
-		//public static Number Divide(Number a, Number b) {
-		//    return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
-		//}
-		//public static Number Multiply(Number a, Number b) {
-		//    return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
-		//}
-		//public static bool Greater(Number a, Number b) {
-		//    return a.Expand(b) > b.Expand(a);
-		//}
-		//public static bool Less(Number a, Number b) {
-		//    return a.LessThan(b);
-		//}
-		//public static bool GreaterEqual(Number a, Number b) {
-		//    return a.Expand(b) >= b.Expand(a);
-		//}
-		//public static bool LessEqual(Number a, Number b) {
-		//    return a.Expand(b) <= b.Expand(a);
-		//}
-		//public static Number BitwiseOr(Number a, Number b) {
-		//    return Convert.ToInt32(a.Numerator) | Convert.ToInt32(b.Numerator);
-		//}
-		//public static Number Modulus(Number a, Number b) {
-		//    return Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator);
-		//}
 		public int CompareTo(Number number) {
 			return GetDouble().CompareTo(number.GetDouble());
 		}
@@ -2649,8 +2628,7 @@ namespace Meta {
 			}
 		}
 		public Rational(double integer): this(integer, 1) {}
-		public Rational(Number i)
-			: this(i.Numerator, i.Denominator) {}
+		public Rational(Number i) : this(i.Numerator, i.Denominator) {}
 		public Rational(double numerator, double denominator) {
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
 			if (denominator < 0) {
@@ -2686,37 +2664,36 @@ namespace Meta {
 			return Convert.ToInt64(numerator.GetDouble());
 		}
 	}
-
-	public struct State{
-		public override bool Equals(object obj) {
-			State state=(State)obj;
-			return 
-				state.Column ==Column && state.index==index && state.Line==Line &&
-				state.FileName==FileName;
-		}
-		public override int GetHashCode() {
-			unchecked {
-				return index.GetHashCode()*Line.GetHashCode()*Column.GetHashCode()*FileName.GetHashCode();
-			}
-		}
-		public State(string fileName,string Text){
-			this.index=0;
-			this.FileName=fileName;
-			this.Line=1;
-			this.Column=0;
-			this.Text=Text;
-		}
-		public string Text;
-		public string FileName;
-		public int index;
-		public int Line;
-		public int Column;
-	}
 	public class Parser {
+		public struct State {
+			public override bool Equals(object obj) {
+				State state = (State)obj;
+				return
+					state.Column == Column && state.index == index && state.Line == Line &&
+					state.FileName == FileName;
+			}
+			public override int GetHashCode() {
+				unchecked {
+					return index.GetHashCode() * Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
+				}
+			}
+			public State(string fileName, string Text) {
+				this.index = 0;
+				this.FileName = fileName;
+				this.Line = 1;
+				this.Column = 0;
+				this.Text = Text;
+			}
+			public string Text;
+			public string FileName;
+			public int index;
+			public int Line;
+			public int Column;
+		}
 		public Stack<int> defaultKeys = new Stack<int>();
-		public State State;
+		public State state;
 		public Parser(string text, string filePath) {
-			State = new State(filePath, text+Syntax.endOfFile);
+			state = new State(filePath, text+Syntax.endOfFile);
 			Root.precondition=delegate(Parser p) {
 				return p.Look()==Syntax.root;
 			};
@@ -2838,13 +2815,13 @@ namespace Meta {
 			}
 			public override bool MatchString(Parser parser, ref string s) {
 				s="";
-				State oldState=parser.State;
+				State oldState=parser.state;
 				foreach(StringRule rule in rules) {
 					string result=null;
 					if(rule.MatchString(parser, ref result)) {
 						s+=result;}
 					else {
-						parser.State=oldState;
+						parser.state=oldState;
 						return false;
 					}
 				}
@@ -2890,19 +2867,13 @@ namespace Meta {
 			new Optional(Syntax.programEnd),
 			Whitespace
 		);
-		public static Rule File = new Ignore(new Sequence(
-			new Optional(
-				new Sequence('#','!',
-					new ZeroOrMoreChars(new CharsExcept(Syntax.unixNewLine.ToString())),
-					EndOfLine)),
-			new ReferenceAssignment(MapRule)));
 		Dictionary<State, string> errors = new Dictionary<State, string>();
-		public static Rule ComplexCall() {
+		public static Rule Call = new DelayedRule(delegate() {
 			return new Sequence(
 				new Assignment(CodeKeys.Call,
 				new Sequence(
 					new Assignment(1,
-						new Alternatives(FunctionProgram,LiteralExpression,CallSelect,Select,Search,List,Program,LastArgument)),
+						new Alternatives(FunctionProgram, LiteralExpression, CallSelect, Select, Search, List, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						new Append(
@@ -2915,24 +2886,24 @@ namespace Meta {
 												new Sequence(
 													Whitespace,
 													new ReferenceAssignment(new Alternatives(
-														LastArgument,FunctionProgram,
-														LiteralExpression,Call,Select,
-														Search,List,Program
+														LastArgument, FunctionProgram,
+														LiteralExpression, Call, Select,
+														Search, List, Program
 													)),
 													new Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
-									, Syntax.callEnd
+									, new Optional(Syntax.callEnd)
 									)
 									)))
 								));
-		}
-		public static Rule SimpleComplexCall() {
+		});
+		public static Rule SimpleCall = new DelayedRule(delegate() {
 			return new Sequence(
 				new Assignment(CodeKeys.Call,
 				new Sequence(
 					new Assignment(1,
-						new Alternatives(FunctionProgram,LiteralExpression,SmallSelect,Search,List,Program,LastArgument)),
+						new Alternatives(FunctionProgram, LiteralExpression, SmallSelect, Search, List, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						new Append(
@@ -2945,8 +2916,8 @@ namespace Meta {
 												new Sequence(
 													Whitespace,
 													new ReferenceAssignment(new Alternatives(
-														LastArgument,FunctionProgram,LiteralExpression,
-														Call,Select,Search,List,Program)),
+														LastArgument, FunctionProgram, LiteralExpression,
+														Call, Select, Search, List, Program)),
 													new Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
@@ -2954,12 +2925,6 @@ namespace Meta {
 									)
 									)))
 								));
-		}
-		public static Rule Call = new DelayedRule(delegate() {
-			return ComplexCall();
-		});
-		public static Rule SimpleCall = new DelayedRule(delegate() {
-			return SimpleComplexCall();
 		});
 		public static Rule FunctionExpression = new Sequence(
 			new Assignment(CodeKeys.Key,new LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
@@ -3037,7 +3002,7 @@ namespace Meta {
 									new Sequence(Whitespace,new ReferenceAssignment(Value),
 						new Optional(Syntax.arraySeparator))))),
 						new Optional(EndOfLine),
-						Syntax.arrayEnd),
+						new Optional(Syntax.arrayEnd)),
 						delegate(Parser p) {
 							p.defaultKeys.Pop();
 						})));
@@ -3116,7 +3081,7 @@ namespace Meta {
 		public static Rule AllStatements = new Sequence(
 			new ReferenceAssignment(
 				new Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
-			Syntax.statementEnd
+			new Optional(Syntax.statementEnd)
 		);
 		public static Rule FunctionProgram = new Sequence(
 			new Assignment(CodeKeys.Program,
@@ -3134,8 +3099,7 @@ namespace Meta {
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
 										new Optional(Syntax.functionAlternativeEnd))))))))));
-		public static Rule Program = ComplexProgram();
-		public static Rule ComplexProgram() {
+		public static Rule Program = new DelayedRule(delegate {
 			return new Sequence(
 				new Assignment(CodeKeys.Program,
 					new Sequence(
@@ -3153,11 +3117,11 @@ namespace Meta {
 													new Optional(Syntax.programSeparator)
 													)))),
 									Whitespace
-									,Syntax.programEnd
+									,new Optional(Syntax.programEnd)
 									)
 									)))
 			));
-		}
+		});
 		public abstract class Action {
 			public static implicit operator Action(StringRule rule) {
 				return new Match(rule);
@@ -3259,17 +3223,17 @@ namespace Meta {
 		    public Dictionary<State,CachedResult> cached=new Dictionary<State,CachedResult>();
 		    protected override bool MatchImplementation(Parser parser, ref Map map) {
 		        CachedResult cachedResult;
-		        State oldState=parser.State;
-		        if(cached.TryGetValue(parser.State,out cachedResult)) {
+		        State oldState=parser.state;
+		        if(cached.TryGetValue(parser.state,out cachedResult)) {
 		            map=cachedResult.map;
-		            if(parser.State.Text.Length==parser.State.index+1) {
+		            if(parser.state.Text.Length==parser.state.index+1) {
 		                return false;
 		            }
-					parser.State=cachedResult.state;
+					parser.state=cachedResult.state;
 		            return true;
 		        }
 		        if(rule.Match(parser,ref map)) {
-		            cached[oldState]=new CachedResult(map,parser.State);
+		            cached[oldState]=new CachedResult(map,parser.state);
 		            return true;
 		        }
 		        return false;
@@ -3293,19 +3257,19 @@ namespace Meta {
 					}
 				}
 				calls++;
-				State oldState=parser.State;
+				State oldState=parser.state;
 				bool matched;
 				Map result=null;
 				matched=MatchImplementation(parser, ref result);
 				if (!matched) {
 					mismatches++;
-					parser.State=oldState;
+					parser.state=oldState;
 				}
 				else {
 					if (result != null) {
 						result.Source = new Extent(
-							new Source(oldState.Line, oldState.Column, parser.State.FileName),
-							new Source(parser.State.Line, parser.State.Column, parser.State.FileName));
+							new Source(oldState.Line, oldState.Column, parser.state.FileName),
+							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
 					}
 				}
 				map=result;
@@ -3326,11 +3290,11 @@ namespace Meta {
 		        char character = parser.Look();
 		        calls++;
 		        if (MatchCharacter(character)) {
-		            parser.State.index++;
-		            parser.State.Column++;
+		            parser.state.index++;
+		            parser.state.Column++;
 		            if (character.Equals(Syntax.unixNewLine)) {
-		                parser.State.Line++;
-		                parser.State.Column = 1;
+		                parser.state.Line++;
+		                parser.state.Column = 1;
 					}
 		            map=new Integer32(character);
 		            return true;
@@ -3347,11 +3311,11 @@ namespace Meta {
 				char next=parser.Look();
 				if(CheckNext(next)){
 					map=next;
-					parser.State.index++;
-					parser.State.Column++;
+					parser.state.index++;
+					parser.state.Column++;
 					if(next.Equals(Syntax.unixNewLine)) {
-						parser.State.Line++;
-						parser.State.Column= 1;
+						parser.state.Line++;
+						parser.state.Column= 1;
 					}
 					return true;
 				}
@@ -3389,7 +3353,7 @@ namespace Meta {
 			}
 			public override bool MatchString(Parser parser, ref string s) {
 				int offset=0;
-				int column=parser.State.Column;
+				int column=parser.state.Column;
 				int line=0;
 				while((max==-1 || offset<max) && rule.CheckNext(parser.Look(offset))) {
 					offset++;
@@ -3399,11 +3363,11 @@ namespace Meta {
 						column= 1;
 					}
 				}
-				s=parser.State.Text.Substring(parser.State.index,offset);
+				s=parser.state.Text.Substring(parser.state.index,offset);
 				if(offset>=min && (max==-1 || offset <= max)){
-					parser.State.index+=offset;
-					parser.State.Column=column;
-					parser.State.Line+=line;
+					parser.state.index+=offset;
+					parser.state.Column=column;
+					parser.state.Line+=line;
 					return true;
 				}
 				return false;
@@ -3598,17 +3562,10 @@ namespace Meta {
 			}
 		}
 		private char Look(int offset) {
-			try {
-				return State.Text[State.index + offset];
-			}
-			catch 
-			{
-				return 'a';
-			}
+			return state.Text[state.index + offset];
 		}
 		private char Look() {
-			//return Look(0);
-			return State.Text[State.index];
+			return Look(0);
 		}
 		public static Map Parse(string file) {
 			return ParseString(System.IO.File.ReadAllText(file), file);
@@ -3616,8 +3573,8 @@ namespace Meta {
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			Map result=null;
-			Parser.File.Match(parser, ref result);
-			if (parser.State.index != parser.State.Text.Length-1) {
+			Parser.MapRule.Match(parser, ref result);
+			if (parser.state.index != parser.state.Text.Length-1) {
 				List<State> sorted=new List<State>(parser.errors.Keys);
 				sorted.Sort(delegate(State a, State b) {
 					return a.Line.CompareTo(b.Line);
@@ -3627,8 +3584,7 @@ namespace Meta {
 				}
 				throw new SyntaxException("Expected end of file.", parser);
 			}
-			foreach (CachedRule rule in CachedRule.cachedRules)
-			{
+			foreach (CachedRule rule in CachedRule.cachedRules) {
 				rule.cached.Clear();
 			}
 			return result;
@@ -3642,8 +3598,6 @@ namespace Meta {
 		public const char programSeparator = ';';
 		public const char programStart = '{';
 		public const char programEnd ='}';
-		//public const char functionStart = '?';
-		//public const char functionEnd = '?';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callSeparator = ',';
@@ -4134,7 +4088,7 @@ namespace Meta {
 	}
 	public class SyntaxException : MetaException {
 		public SyntaxException(string message, Parser parser)
-			: base(message, new Source(parser.State.Line, parser.State.Column, parser.State.FileName)) {
+			: base(message, new Source(parser.state.Line, parser.state.Column, parser.state.FileName)) {
 		}
 	}
 	public class ExecutionException : MetaException {
@@ -4313,11 +4267,6 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static bool Equal(object a, object b) {
-			if( a is Map ) {
-				if(((Map)a).IsNumber) 
-				{
-				}
-			}
 			return a.Equals(b);
 		}
 		public static Map Filter(Map array, Map condition) {
@@ -4366,8 +4315,7 @@ namespace Meta {
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {
-			Map result=new ListMap(new List<Map>(array.Array));//.Mutable();//.DeepCopy();
-			//Map result=array.DeepCopy();
+			Map result=new ListMap(new List<Map>(array.Array));
 			result.Append(item);
 			return result;
 		}
@@ -4408,20 +4356,8 @@ namespace Meta {
 							field.SetValue(obj, Transform.ToDotNet(value, field.FieldType));}
 						else if (member is PropertyInfo) {
 							PropertyInfo property = (PropertyInfo)member;
-							//if (typeof(IList).IsAssignableFrom(property.PropertyType) && !(value is ObjectMap)) {
-							//    if (value.ArrayCount != 0) {
-							//        IList list = (IList)property.GetValue(obj, null);
-							//        list.Clear();
-							//        Type t = DotNetMap.GetListAddFunctionType(list, value);
-							//        if (t == null) {
-							//            t = DotNetMap.GetListAddFunctionType(list, value);
-							//            throw new ApplicationException("Cannot convert argument.");}
-							//        else {
-							//            foreach (Map map in value.Array) {
-							//                list.Add(Transform.ToDotNet(map, t));}}}}
-							//else {
-								object converted = Transform.ToDotNet(value, property.PropertyType);
-								property.SetValue(obj, converted, null);
+							object converted = Transform.ToDotNet(value, property.PropertyType);
+							property.SetValue(obj, converted, null);
 						}
 						else if (member is EventInfo) {
 							EventInfo eventInfo = (EventInfo)member;
@@ -4725,38 +4661,8 @@ namespace Meta {
 		public static implicit operator Map(double number) {
 		    return new Rational(number);
 		}
-		public static implicit operator Map(decimal number) {
-		    return (double)number;
-		}
-		public static implicit operator Map(float number) {
-		    return (double)number;
-		}
-		public static implicit operator Map(bool boolean) {
-		    return Convert.ToInt32(boolean);
-		}
-		public static implicit operator Map(char character) {
-		    return (int)character;
-		}
-		public static implicit operator Map(byte integer) {
-		    return (int)integer;
-		}
-		public static implicit operator Map(sbyte integer) {
-		    return (int)integer;
-		}
-		public static implicit operator Map(uint integer) {
-		    return (double)integer;
-		}
-		public static implicit operator Map(ushort integer) {
-		    return (int)integer;
-		}
 		public static implicit operator Map(int integer) {
-		    return new Integer32(integer);
-		}
-		public static implicit operator Map(long integer) {
-		    return (double)integer;
-		}
-		public static implicit operator Map(ulong integer) {
-		    return (double)integer;
+			return new Integer32(integer);
 		}
 		public virtual Extent Source {
 			get {
