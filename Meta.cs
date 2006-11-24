@@ -2728,18 +2728,18 @@ namespace Meta {
 			return new CachedRule(new Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
-		public class Ignore:Rule {
-			private Rule rule;
-			public Ignore(Rule rule) {
-				this.rule=rule;
-			}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				return rule.Match(parser,ref map);
-			}
-		}
-		public static Rule EndOfLine = new Ignore(new Sequence(
+		//public class Ignore:Rule {
+		//    private Rule rule;
+		//    public Ignore(Rule rule) {
+		//        this.rule=rule;
+		//    }
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        return rule.Match(parser,ref map);
+		//    }
+		//}
+		public static Rule EndOfLine = new Sequence(
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
-			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine)));
+			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = new Sequence(new CustomProduction(
 	        delegate(Parser p, Map map, ref Map result) {
@@ -3127,13 +3127,13 @@ namespace Meta {
 				return new Match(rule);
 			}
 			public static implicit operator Action(string s) {
-				return new Match(new Ignore(StringRule2(s)));
+				return new Match(StringRule2(s));
 			}
 			public static implicit operator Action(char c) {
-				return new Match(new Ignore(new OneChar(new SingleChar(c))));
+				return new Match(new OneChar(new SingleChar(c)));
 			}
 			public static implicit operator Action(Rule rule) {
-				return new Match(new Ignore(rule));
+				return new Match(rule);
 			}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
@@ -3242,10 +3242,10 @@ namespace Meta {
 		public abstract class Rule {
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
-				return new Ignore(StringRule2(s));
+				return StringRule2(s);
 			}
 			public static implicit operator Rule(char c) {
-			    return new Ignore(new OneChar(new SingleChar(c)));
+			    return new OneChar(new SingleChar(c));
 			}
 			public int mismatches=0;
 			public int calls=0;
