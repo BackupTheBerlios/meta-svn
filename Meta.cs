@@ -217,7 +217,7 @@ namespace Meta {
 	}
 	public delegate Map MetaConversion(object obj);
 	public delegate object Conversion(Map map);
-
+	
 	public delegate Map FastCall(Map context);
 	public class EmittedCall : Compiled {
 		public Compiled[] arguments;
@@ -372,7 +372,10 @@ namespace Meta {
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
 			    if (value != null && value.IsConstant) {
-			        return new OptimizedSearch(value, Source);}
+					return new CustomCompiled(Source, delegate(Map context) {
+						return value;
+					});
+				}
 			    else {
 			        return new FastSearch(key, count, Source);}}
 			else {
@@ -409,16 +412,16 @@ namespace Meta {
 			return result;
 		}
 	}
-	public class OptimizedSearch : Compiled {
-		private Map literal;
-		public OptimizedSearch(Map literal, Extent source)
-			: base(source) {
-			this.literal = literal;
-		}
-		public override Map Evaluate(Map context) {
-			return literal;
-		}
-	}
+	//public class OptimizedSearch : Compiled {
+	//    private Map literal;
+	//    public OptimizedSearch(Map literal, Extent source)
+	//        : base(source) {
+	//        this.literal = literal;
+	//    }
+	//    public override Map Evaluate(Map context) {
+	//        return literal;
+	//    }
+	//}
 	public class CompiledSearch : Compiled {
 		private Compiled expression;
 		public CompiledSearch(Compiled expression, Extent source): base(source) {
@@ -615,17 +618,6 @@ namespace Meta {
 			}
 		}
 	}
-	//public class CompiledFunctionProgram:Compiled {
-	//    private Map value;
-	//    public CompiledFunctionProgram(Extent source,Map value):base(source) {
-	//        this.value=value;
-	//    }
-	//    public override Map Evaluate(Map context) {
-	//        Map map=new FunctionMap(value);
-	//        map.Scope=context;
-	//        return map;
-	//    }
-	//}
 	public class Program : ScopeExpression {
 		public override Structure GetStructure() {
 			return statementList[statementList.Count - 1].Current();
@@ -642,8 +634,6 @@ namespace Meta {
 							Map map=new FunctionMap(value);
 							map.Scope=context;
 							return map;
-
-							//return new CompiledFunctionProgram(Source,((CompiledLiteral)compiled.value).literal);
 						});
 					}
 				}
