@@ -32,6 +32,10 @@ using java.math;
 
 namespace Meta {
 	public abstract class Compiled {
+		//public static implicit operator Compiled(CompiledEvaluate c) {
+		//    return new CustomCompiled(c)
+
+		//}
 		public Extent Source;
 		public Compiled(Extent source) {
 			this.Source = source;
@@ -52,13 +56,6 @@ namespace Meta {
 		}
 	}
 	public abstract class Expression:Attribute {
-		public static Dict<Map, Type> expressions = new Dict<Map,Type>()
-			-CodeKeys.Call+typeof(Call)-CodeKeys.Program+typeof(Program)-CodeKeys.Literal+typeof(Literal)
-			-CodeKeys.Select+typeof(Select)-CodeKeys.Root+typeof(Root)-CodeKeys.LastArgument+typeof(LastArgument)
-		    -CodeKeys.Search+typeof(Search);
-		public static Dict<Map,Type> statements=new Dict<Map,Type>()
-		    -CodeKeys.Keys+typeof(SearchStatement)-CodeKeys.Current+typeof(CurrentStatement)
-		    -CodeKeys.Key+typeof(KeyStatement)-CodeKeys.Discard+typeof(DiscardStatement);
 		public Compiled GetCompiled() {	
 			if(compiled==null) {	
 				compiled=Compile();
@@ -93,14 +90,14 @@ namespace Meta {
 		}
 		public Structure EvaluateStructure() {
 			if (!evaluated) {	
-				structure = StructureImplementation();
+				structure = GetStructure();
 				evaluated = true;
 			}
 			return structure;
 		}
-		public abstract Structure StructureImplementation();
+		public abstract Structure GetStructure();
 		public Compiled Compile() {
-			Compiled result = CompileImplementation(this.Parent);
+			Compiled result = GetCompiled(this.Parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.End)) {
 					sources[Source.End] = new List<Expression>();
@@ -110,22 +107,27 @@ namespace Meta {
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		public abstract Compiled CompileImplementation(Expression parent);
+		public abstract Compiled GetCompiled(Expression parent);
 	}
 	public class LastArgument : Expression {
-		public LastArgument(Map code, Expression parent)
-			: base(code.Source, parent) {}
-		public override Structure StructureImplementation() {
+		public LastArgument(Map code, Expression parent) : base(code.Source, parent) {}
+		public override Structure GetStructure() {
 			return null;
 		}
-		public override Compiled CompileImplementation(Expression parent) {
-			return new CompiledLastArgument(Source);
+		public override Compiled GetCompiled(Expression parent) {
+			return new CustomCompiled(Source, delegate(Map map) {
+				return Map.arguments.Peek();
+			});
 		}
 	}
-	public class CompiledLastArgument : Compiled {
-		public CompiledLastArgument(Extent source): base(source) {}
+	public delegate Map CompiledEvaluate(Map map);
+	public class CustomCompiled : Compiled {
+		private CompiledEvaluate c;
+		public CustomCompiled(Extent source,CompiledEvaluate c): base(source) {
+			this.c = c;
+		}
 		public override Map Evaluate(Map context) {
-			return Map.arguments.Peek();
+			return c(context);
 		}
 	}
 	public class Call : Expression {
@@ -139,7 +141,7 @@ namespace Meta {
 				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -196,7 +198,7 @@ namespace Meta {
 			m = null;
 			return false;
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -279,7 +281,7 @@ namespace Meta {
 		}
 	}
 	public class Search : Expression {
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			Map key;
 			int count;
 			Map value;
@@ -364,7 +366,7 @@ namespace Meta {
 			: base(code.Source, parent) {
 			this.expression = code.GetExpression(this);
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			int count;
 			Map key;
 			Map value;
@@ -529,7 +531,7 @@ namespace Meta {
 		}
 	}
 	public class Function:Program {
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			return new CompiledFunction(this);
 		}
 		public Expression expression;
@@ -613,22 +615,22 @@ namespace Meta {
 			}
 		}
 	}
-	public class CompiledFunctionProgram:Compiled {
-		private Map value;
-		public CompiledFunctionProgram(Extent source,Map value):base(source) {
-			this.value=value;
-		}
-		public override Map Evaluate(Map context) {
-			Map map=new FunctionMap(value);
-			map.Scope=context;
-			return map;
-		}
-	}
+	//public class CompiledFunctionProgram:Compiled {
+	//    private Map value;
+	//    public CompiledFunctionProgram(Extent source,Map value):base(source) {
+	//        this.value=value;
+	//    }
+	//    public override Map Evaluate(Map context) {
+	//        Map map=new FunctionMap(value);
+	//        map.Scope=context;
+	//        return map;
+	//    }
+	//}
 	public class Program : ScopeExpression {
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			return statementList[statementList.Count - 1].Current();
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			if(statementList.Count==1) {
 				KeyStatement statement=statementList[0] as KeyStatement;
 				if(statement!=null) {
@@ -636,7 +638,13 @@ namespace Meta {
 					Map value=statement.value.GetConstant();
 					CompiledStatement compiled=statement.Compile();
 					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-						return new CompiledFunctionProgram(Source,((CompiledLiteral)compiled.value).literal);
+						return new CustomCompiled(Source,delegate(Map context) {
+							Map map=new FunctionMap(value);
+							map.Scope=context;
+							return map;
+
+							//return new CompiledFunctionProgram(Source,((CompiledLiteral)compiled.value).literal);
+						});
 					}
 				}
 			}
@@ -927,12 +935,12 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			return new LiteralStructure(literal);
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			return new CompiledLiteral(literal, Source);
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
@@ -946,12 +954,12 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			return new LiteralStructure(Gac.gac);
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			return new CompiledRoot(Source);
 		}
 	}
@@ -978,7 +986,7 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			Map selected = subs[0].GetConstant();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].GetConstant();
@@ -989,7 +997,7 @@ namespace Meta {
 			}
 			return new LiteralStructure(selected);
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			return new CompiledSelect(subs.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile();}), Source);
 		}
@@ -3157,7 +3165,8 @@ namespace Meta {
 			private Map key;
 			public Assignment(Map key, Rule rule): base(rule) {this.key = key;}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				if (map != null) {result[key] = map;
+				if (map != null) {
+					result[key] = map;
 				}
 			}
 		}
@@ -3168,7 +3177,8 @@ namespace Meta {
 		public class ReferenceAssignment : Action {
 			public ReferenceAssignment(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = map;}
+				result = map;
+			}
 		}
 		public class Append : Action {
 			public Append(Rule rule): base(rule) {}
@@ -4411,10 +4421,10 @@ namespace Meta {
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
 		}
-		public override Structure StructureImplementation() {
+		public override Structure GetStructure() {
 			return new LiteralStructure(literal);
 		}
-		public override Compiled CompileImplementation(Expression parent) {
+		public override Compiled GetCompiled(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
@@ -4723,13 +4733,18 @@ namespace Meta {
 			}
 			return Expression;
 		}
-
+		public static Dict<Map, Type> expressions = new Dict<Map, Type>()
+			- CodeKeys.Call + typeof(Call) - CodeKeys.Program + typeof(Program) - CodeKeys.Literal + typeof(Literal)
+			- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root) - CodeKeys.LastArgument + typeof(LastArgument)
+			- CodeKeys.Search + typeof(Search);
+		public static Dict<Map, Type> statements = new Dict<Map, Type>()
+			- CodeKeys.Keys + typeof(SearchStatement) - CodeKeys.Current + typeof(CurrentStatement)
+			- CodeKeys.Key + typeof(KeyStatement) - CodeKeys.Discard + typeof(DiscardStatement);
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
 		        foreach(Map key in Keys) {
-					if(Expression.expressions.ContainsKey(key)) {
-						return (Expression)Expression.expressions[key].GetConstructor(
-							new Type[] {typeof(Map),typeof(Expression)}
+					if(expressions.ContainsKey(key)) {
+						return (Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
 						).Invoke(new object[] {this[key],parent});
 					}
 				}
@@ -4740,12 +4755,11 @@ namespace Meta {
 			return null;
 		}
 		public Statement GetStatement(Program program, int index) {
-			foreach(KeyValuePair<Map,Type> pair in Expression.statements) {
+			foreach(KeyValuePair<Map,Type> pair in statements) {
 			    if(ContainsKey(pair.Key)) {
 			        return (Statement)pair.Value.GetConstructors()[0].Invoke(
-			            new object[] {
-			                this[pair.Key].GetExpression(program),
-			                this[CodeKeys.Value].GetExpression(program),
+			            new object[] {this[pair.Key].GetExpression(program),
+							this[CodeKeys.Value].GetExpression(program),
 			                program,
 			                index
 						}
