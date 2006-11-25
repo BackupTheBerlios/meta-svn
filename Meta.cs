@@ -110,7 +110,6 @@ namespace Meta {
 			};
 		}
 	}
-
 	public class Call : Expression {
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
@@ -584,25 +583,6 @@ namespace Meta {
 		}
 	}
 	public delegate void StatementDelegate(ref Map context,Map value);
-	//public class CompiledStatement:CompiledStatement {
-	//    private StatementDelegate s;
-	//    public override void AssignImplementation(ref Map context, Map value) {
-	//        s(ref context,value);
-	//    }
-	//    public CompiledStatement(Compiled value,StatementDelegate s):base(value) {
-	//        this.s = s;
-	//    }
-	//}
-	//public abstract class CompiledStatement {
-	//    public CompiledStatement(Compiled value) {
-	//        this.value = value;
-	//    }
-	//    public void Assign(ref Map context) {
-	//        AssignImplementation(ref context, value(context));
-	//    }
-	//    public abstract void AssignImplementation(ref Map context, Map value);
-	//    public readonly Compiled value;
-	//}
 	public class CompiledStatement {
 		private StatementDelegate s;
 		public void Assign(ref Map context) {
@@ -2996,6 +2976,7 @@ namespace Meta {
 											new Assignment(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
 										new Optional(Syntax.functionAlternativeEnd))))))))));
+
 		public static Rule Program = new DelayedRule(delegate {
 			return new Sequence(
 				new Assignment(CodeKeys.Program,
@@ -3019,6 +3000,7 @@ namespace Meta {
 									)))
 			));
 		});
+
 		public abstract class Action {
 			public static implicit operator Action(StringRule rule) {
 				return new Match(rule);
