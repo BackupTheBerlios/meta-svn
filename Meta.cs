@@ -2642,12 +2642,12 @@ namespace Meta {
 				new Sequence(
 					new ReferenceAssignment(
 						OneOrMoreChars(CharsExcept(""+Syntax.@string))),
-					new Optional(Syntax.@string)))));
+					Optional(Syntax.@string)))));
 
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
 			new CustomAction(
-			new Optional(new Sequence(
+			Optional(new Sequence(
 				Syntax.fraction,
 				new ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
@@ -2689,7 +2689,7 @@ namespace Meta {
 							Syntax.windowsNewLine[0]+Syntax.unixNewLine))),
 			Syntax.function,
 			Assign(CodeKeys.Expression,Expression),
-			new Optional(EndOfLine));
+			Optional(EndOfLine));
 
 		public static Rule Entry = new Alternatives(
 			new Sequence(Assign(CodeKeys.Function,Function)),
@@ -2699,21 +2699,21 @@ namespace Meta {
 				new CustomAction(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
 				}),
-			 new Optional(EndOfLine)));
+			 Optional(EndOfLine)));
 
 		public static Rule MapRule = new Sequence(
-			new Optional(Syntax.programStart),
+			Optional(Syntax.programStart),
 			Whitespace,
 			new ReferenceAssignment(
 				OneOrMore(
 					new CustomAction(
 						new Sequence(
-							new ReferenceAssignment(Entry), Whitespace, new Optional(Syntax.programSeparator), Whitespace),
+							new ReferenceAssignment(Entry), Whitespace, Optional(Syntax.programSeparator), Whitespace),
 						delegate(Parser parser, Map map, ref Map result) {
 							result = Library.Merge(result, map);
 						}
 			))),
-			new Optional(Syntax.programEnd),
+			Optional(Syntax.programEnd),
 			Whitespace
 		);
 		Dictionary<State, string> errors = new Dictionary<State, string>();
@@ -2739,10 +2739,10 @@ namespace Meta {
 														LiteralExpression, Call, Select,
 														Search, List, Program
 													)),
-													new Optional(Syntax.callSeparator)
+													Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
-									, new Optional(Syntax.callEnd)
+									, Optional(Syntax.callEnd)
 									)
 									)))
 								));
@@ -2767,7 +2767,7 @@ namespace Meta {
 													new ReferenceAssignment(new Alternatives(
 														LastArgument, FunctionProgram, LiteralExpression,
 														Call, Select, Search, List, Program)),
-													new Optional(Syntax.callSeparator)
+													Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
 									, Syntax.callEnd
@@ -2776,12 +2776,12 @@ namespace Meta {
 								));
 		});
 		public static Rule FunctionExpression = new Sequence(
-			Assign(CodeKeys.Key,new LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+			Assign(CodeKeys.Key,LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
 			Assign(CodeKeys.Value,new Sequence(Assign(CodeKeys.Literal,Function)))
 		);
 
 		private static Rule Simple(char c, Map literal) {
-			return new Sequence(c,new ReferenceAssignment(new LiteralRule(literal)));
+			return new Sequence(c,new ReferenceAssignment(LiteralRule(literal)));
 		}
 		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
 		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
@@ -2794,7 +2794,7 @@ namespace Meta {
 			Assign(CodeKeys.Literal,new Alternatives(EmptyMap,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = new Sequence(
-			'<',new ReferenceAssignment(Expression),new Optional('>')
+			'<',new ReferenceAssignment(Expression),Optional('>')
 		);
 		private static Rule LookupStringExpression = new Sequence(Assign(CodeKeys.Literal,LookupString));
 		private static Rule Search = new CachedRule(new Sequence(
@@ -2850,9 +2850,9 @@ namespace Meta {
 							ZeroOrMore(
 								Autokey(
 									new Sequence(Whitespace,new ReferenceAssignment(Value),
-						new Optional(Syntax.arraySeparator))))),
-						new Optional(EndOfLine),
-						new Optional(Syntax.arrayEnd)),
+						Optional(Syntax.arraySeparator))))),
+						Optional(EndOfLine),
+						Optional(Syntax.arrayEnd)),
 						delegate(Parser p) {
 							p.defaultKeys.Pop();
 						})));
@@ -2900,14 +2900,14 @@ namespace Meta {
 				action,
 				rule != null ? (Action)rule : null,
 				Assign(CodeKeys.Value, Expression),
-				new Optional(EndOfLine)
+				Optional(EndOfLine)
 			);
 		}
 		public static Rule DiscardStatement = ComplexStatement(
-			null,Assign(CodeKeys.Discard, new LiteralRule(Map.Empty))
+			null,Assign(CodeKeys.Discard, LiteralRule(Map.Empty))
 		);
 		public static Rule CurrentStatement = ComplexStatement(
-			'&',Assign(CodeKeys.Current, new LiteralRule(Map.Empty))
+			'&',Assign(CodeKeys.Current, LiteralRule(Map.Empty))
 		);
 		public static Rule Prefix(Rule pre,Rule rule) {
 			return new Sequence(pre,new ReferenceAssignment(rule));
@@ -2917,7 +2917,7 @@ namespace Meta {
 			Assign(
 				CodeKeys.Key,
 				new Alternatives(
-					Prefix('<',new Sequence(new ReferenceAssignment(Expression),new Optional('>'))),
+					Prefix('<',new Sequence(new ReferenceAssignment(Expression),Optional('>'))),
 					new Sequence(Assign(CodeKeys.Literal,LookupString)),
 					Expression)));
 
@@ -2931,14 +2931,14 @@ namespace Meta {
 		public static Rule AllStatements = new Sequence(
 			new ReferenceAssignment(
 				new Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
-			new Optional(Syntax.statementEnd)
+			Optional(Syntax.statementEnd)
 		);
 		public static Rule FunctionProgram = new Sequence(
 			Assign(CodeKeys.Program,
 				new Sequence(
 					Assign(1,
 						new Sequence(
-							Assign(CodeKeys.Key, new LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+							Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
 							Assign(CodeKeys.Value, new Sequence(
 								Assign(CodeKeys.Literal,
 									new Sequence(
@@ -2947,8 +2947,8 @@ namespace Meta {
 											ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst))),
 										Syntax.functionAlternativeStart,
 											Assign(CodeKeys.Expression, Expression),
-										new Optional(EndOfLine),
-										new Optional(Syntax.functionAlternativeEnd))))))))));
+										Optional(EndOfLine),
+										Optional(Syntax.functionAlternativeEnd))))))))));
 
 		public static Rule Program = new DelayedRule(delegate {
 			return new Sequence(
@@ -2965,10 +2965,10 @@ namespace Meta {
 												new Sequence(
 													Whitespace,
 													new ReferenceAssignment(AllStatements),
-													new Optional(Syntax.programSeparator)
+													Optional(Syntax.programSeparator)
 													)))),
 									Whitespace
-									,new Optional(Syntax.programEnd)
+									,Optional(Syntax.programEnd)
 									)
 									)))
 			));
@@ -3283,15 +3283,11 @@ namespace Meta {
 				}
 			}
 		}
-		public class LiteralRule : Rule {
-			private Map literal;
-			public LiteralRule(Map literal) {
-				this.literal = literal;
-			}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				map=literal;
+		public static Rule LiteralRule(Map literal) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
+				map = literal;
 				return true;
-			}
+			});
 		}
 		public static Rule ZeroOrMore(Action action) {
 			return new CustomRule(delegate(Parser parser, ref Map map) {
@@ -3319,22 +3315,19 @@ namespace Meta {
 				return matched;
 			});
 		}
-		public class Optional : Rule {
-			private Rule rule;
-			public Optional(Rule rule) {
-				this.rule = rule;}
-			protected override bool MatchImplementation(Parser parser, ref Map match) {
-				Map matched=null;
+		public static Rule Optional(Rule rule) {
+			return new CustomRule(delegate(Parser parser, ref Map match) {
+				Map matched = null;
 				rule.Match(parser, ref matched);
 				if (matched == null) {
-					match=null;
+					match = null;
 					return true;
 				}
 				else {
-					match=matched;
+					match = matched;
 					return true;
 				}
-			}
+			});
 		}
 		private char Look(int offset) {
 			return state.Text[state.index + offset];
