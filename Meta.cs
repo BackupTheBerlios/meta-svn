@@ -2617,7 +2617,7 @@ namespace Meta {
 			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
 			Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
-		public static Rule Integer = Sequence(new CustomAction(
+		public static Rule Integer = Sequence(new Action(
 	        StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
@@ -2646,7 +2646,7 @@ namespace Meta {
 
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),
-			new CustomAction(
+			new Action(
 			Optional(Sequence(
 				Syntax.fraction,
 				ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
@@ -2697,7 +2697,7 @@ namespace Meta {
 			Sequence(
 				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
 				'=',
-				new CustomAction(Value, delegate(Parser parser, Map map, ref Map result) {
+				new Action(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
 				}),
 			 Optional(EndOfLine)));
@@ -2707,7 +2707,7 @@ namespace Meta {
 			Whitespace,
 			ReferenceAssignment(
 				OneOrMore(
-					new CustomAction(
+					new Action(
 						Sequence(
 							ReferenceAssignment(Entry), Whitespace, Optional(Syntax.programSeparator), Whitespace),
 						delegate(Parser parser, Map map, ref Map result) {
@@ -2975,7 +2975,7 @@ namespace Meta {
 			));
 		});
 
-		public abstract class Action {
+		public class Action {
 			public static implicit operator Action(string s) {
 				return StringRule2(s);
 			}
@@ -2983,56 +2983,64 @@ namespace Meta {
 				return StringRule(OneChar(SingleChar(c)));
 			}
 			public static implicit operator Action(Rule rule) {
-				return new CustomAction(rule, 
+				return new Action(rule, 
 					delegate { }
 					);
 			}
 			private Rule rule;
-			protected abstract void Effect(Parser parser, Map map, ref Map result);
-			public Action(Rule rule) {this.rule = rule;}
+			//protected abstract void Effect(Parser parser, Map map, ref Map result);
+			public Action(Rule rule, CustomActionDelegate action) { 
+				this.rule = rule;
+				this.action = action;
+			}
 			public bool Execute(Parser parser, ref Map result) {
 				Map map=null;
 				if (rule.Match(parser,ref map)) {
-					Effect(parser, map, ref result);
+					action(parser, map, ref result);
+					//Effect(parser, map, ref result);
 					return true;
 				}
 				return false;
 			}
+			private CustomActionDelegate action;
+			//protected override void Effect(Parser parser, Map map, ref Map result) {
+			//    this.action(parser, map, ref result);
+			//}
 		}
 		public static Action Autokey(Rule rule) {
-			return new CustomAction(rule,delegate(Parser parser, Map map, ref Map result) {
+			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
 				result.Append(map);
 			});
 		}
 		public static Action Assign(Map key, Rule rule) {
-			return new CustomAction(rule, delegate(Parser parser, Map map, ref Map result) {
+			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
 				if (map != null) {
 					result[key] = map;
 				}
 			});
 		}
 		public static Action ReferenceAssignment(Rule rule) {
-			return new CustomAction(rule,delegate(Parser parser, Map map, ref Map result) {
+			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
 				result = map;
 			});
 		}
 		public static Action Append(Rule rule) {
-			return new CustomAction(rule, delegate(Parser parser, Map map, ref Map result) {
+			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
 				foreach (Map m in map.Array) {
 					result.Append(m);
 				}
 			});
 		}
-		public class CustomAction : Action {
-			private CustomActionDelegate action;
-			public CustomAction(Rule rule, CustomActionDelegate action)
-				: base(rule) {
-				this.action = action;
-			}
-			protected override void Effect(Parser parser, Map map, ref Map result) {
-				this.action(parser, map, ref result);
-			}
-		}
+		//public class CustomAction : Action {
+		//    private CustomActionDelegate action;
+		//    public CustomAction(Rule rule, CustomActionDelegate action)
+		//        : base(rule) {
+		//        this.action = action;
+		//    }
+		//    protected override void Effect(Parser parser, Map map, ref Map result) {
+		//        this.action(parser, map, ref result);
+		//    }
+		//}
 		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public class CachedResult{
@@ -3080,30 +3088,6 @@ namespace Meta {
 				return false;
 			});
 		}
-		//public class CachedRule : Rule {
-		//    private Rule rule;
-		//    public CachedRule(Rule rule) {
-		//        this.rule = rule;
-		//    }
-		//    public static Dictionary<CacheKey, CachedResult> cached = new Dictionary<CacheKey, CachedResult>();
-		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		//        CachedResult cachedResult;
-		//        CacheKey key = new CacheKey(parser.state, rule);
-		//        if (cached.TryGetValue(key, out cachedResult)) {
-		//            map = cachedResult.map;
-		//            if (parser.state.Text.Length == parser.state.index + 1) {
-		//                return false;
-		//            }
-		//            parser.state = cachedResult.state;
-		//            return true;
-		//        }
-		//        if (rule.Match(parser, ref map)) {
-		//            cached[key] = new CachedResult(map, parser.state);
-		//            return true;
-		//        }
-		//        return false;
-		//    }
-		//}
 		public abstract class Rule {
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
