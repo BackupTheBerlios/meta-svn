@@ -2615,11 +2615,11 @@ namespace Meta {
 		        Search,List,Program,LastArgument));
 		});
 		public static Rule EndOfLine = new Sequence(
-			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
+			ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = new Sequence(new CustomAction(
-	        new OneOrMoreChars(new Chars(Syntax.integer)), 
+	        OneOrMoreChars(new Chars(Syntax.integer)), 
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
@@ -2630,7 +2630,7 @@ namespace Meta {
 				}
 			}));
 
-		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
+		public static Rule StringLine=ZeroOrMoreChars(new CharsExcept("\n\r"));
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(new CharsExcept(Syntax.character.ToString())),
@@ -2642,7 +2642,7 @@ namespace Meta {
 			new Alternatives(
 				new Sequence(
 					new ReferenceAssignment(
-						new OneOrMoreChars(new CharsExcept(""+Syntax.@string))),
+						OneOrMoreChars(new CharsExcept(""+Syntax.@string))),
 					new Optional(Syntax.@string)))));
 
 		public static Rule Number = new Sequence(
@@ -2677,8 +2677,8 @@ namespace Meta {
 			}
 		}
 		public static Rule LookupString = new CachedRule(new StringSequence(
-		    new OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
-		    new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
+		    OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
+		    ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
@@ -2688,7 +2688,7 @@ namespace Meta {
 		public static Rule Function = new Sequence(
 			Assign(
 				CodeKeys.Parameter,
-				new ZeroOrMoreChars(
+				ZeroOrMoreChars(
 						new CharsExcept(""+Syntax.@string+Syntax.function+Syntax.indentation+
 							Syntax.windowsNewLine[0]+Syntax.unixNewLine))),
 			Syntax.function,
@@ -2842,6 +2842,7 @@ namespace Meta {
 							new OneOrMore(Autokey(Prefix('.', new Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
+
 		public static Rule ListMap = new Sequence(
 			Syntax.arrayStart,
 			new ReferenceAssignment(
@@ -2947,7 +2948,7 @@ namespace Meta {
 									new Sequence(
 										Assign(
 											CodeKeys.Parameter,
-											new ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
+											ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
 										Syntax.functionAlternativeStart,
 											Assign(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
@@ -2982,7 +2983,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Action(char c) {
-				return new OneChar(new SingleChar(c));
+				return OneChar(new SingleChar(c));
 			}
 			public static implicit operator Action(Rule rule) {
 				return new CustomAction(rule, 
@@ -3078,7 +3079,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Rule(char c) {
-			    return new OneChar(new SingleChar(c));
+			    return OneChar(new SingleChar(c));
 			}
 			public int mismatches=0;
 			public int calls=0;
@@ -3174,41 +3175,109 @@ namespace Meta {
 		    public override bool CheckNext(char c) {
 		        return s.IndexOf(c)==-1;
 			}
-		}		
-		public class CharLoop:StringRule {
-			private CharRule rule;
-			private int min;
-			private int max;
-			public CharLoop(CharRule rule,int min,int max){
-				this.rule=rule;
-				this.min=min;
-				this.max=max;
+		}
+		public delegate bool StringDelegate(Parser parser, ref string s);
+		public class CustomStringRule:StringRule {
+			private StringDelegate del;
+			public CustomStringRule(StringDelegate del) {
+				this.del = del;
 			}
 			public override bool MatchString(Parser parser, ref string s) {
-				int offset=0;
-				int column=parser.state.Column;
-				int line=0;
-				while((max==-1 || offset<max) && rule.CheckNext(parser.Look(offset))) {
+				return del(parser, ref s);
+			}
+		}
+		public static StringRule CharLoop(CharRule rule, int min, int max) {
+			return new CustomStringRule(delegate(Parser parser, ref string s) {
+				int offset = 0;
+				int column = parser.state.Column;
+				int line = 0;
+				while ((max == -1 || offset < max) && rule.CheckNext(parser.Look(offset))) {
 					offset++;
 					column++;
-					if(parser.Look(offset).Equals(Syntax.unixNewLine)) {
+					if (parser.Look(offset).Equals(Syntax.unixNewLine)) {
 						line++;
-						column= 1;
+						column = 1;
 					}
 				}
-				s=parser.state.Text.Substring(parser.state.index,offset);
-				if(offset>=min && (max==-1 || offset <= max)){
-					parser.state.index+=offset;
-					parser.state.Column=column;
-					parser.state.Line+=line;
+				s = parser.state.Text.Substring(parser.state.index, offset);
+				if (offset >= min && (max == -1 || offset <= max)) {
+					parser.state.index += offset;
+					parser.state.Column = column;
+					parser.state.Line += line;
 					return true;
 				}
 				return false;
-			}
+			});
 		}
-		public class OneChar:CharLoop{
-			public OneChar(CharRule rule):base(rule,1,1) {}
+		//public class CharLoop : StringRule {
+		//    private CharRule rule;
+		//    private int min;
+		//    private int max;
+		//    public CharLoop(CharRule rule, int min, int max) {
+		//        this.rule = rule;
+		//        this.min = min;
+		//        this.max = max;
+		//    }
+		//    public override bool MatchString(Parser parser, ref string s) {
+		//        int offset = 0;
+		//        int column = parser.state.Column;
+		//        int line = 0;
+		//        while ((max == -1 || offset < max) && rule.CheckNext(parser.Look(offset))) {
+		//            offset++;
+		//            column++;
+		//            if (parser.Look(offset).Equals(Syntax.unixNewLine)) {
+		//                line++;
+		//                column = 1;
+		//            }
+		//        }
+		//        s = parser.state.Text.Substring(parser.state.index, offset);
+		//        if (offset >= min && (max == -1 || offset <= max)) {
+		//            parser.state.index += offset;
+		//            parser.state.Column = column;
+		//            parser.state.Line += line;
+		//            return true;
+		//        }
+		//        return false;
+		//    }
+		//}
+		//public class CharLoop:StringRule {
+		//    private CharRule rule;
+		//    private int min;
+		//    private int max;
+		//    public CharLoop(CharRule rule,int min,int max){
+		//        this.rule=rule;
+		//        this.min=min;
+		//        this.max=max;
+		//    }
+		//    public override bool MatchString(Parser parser, ref string s) {
+		//        int offset=0;
+		//        int column=parser.state.Column;
+		//        int line=0;
+		//        while((max==-1 || offset<max) && rule.CheckNext(parser.Look(offset))) {
+		//            offset++;
+		//            column++;
+		//            if(parser.Look(offset).Equals(Syntax.unixNewLine)) {
+		//                line++;
+		//                column= 1;
+		//            }
+		//        }
+		//        s=parser.state.Text.Substring(parser.state.index,offset);
+		//        if(offset>=min && (max==-1 || offset <= max)){
+		//            parser.state.index+=offset;
+		//            parser.state.Column=column;
+		//            parser.state.Line+=line;
+		//            return true;
+		//        }
+		//        return false;
+		//    }
+		//}
+		public static StringRule OneChar(CharRule rule) {
+			return CharLoop(rule, 1, 1);
 		}
+
+		//public class OneChar:CharLoop{
+		//    public OneChar(CharRule rule):base(rule,1,1) {}
+		//}
 		public class SingleChar:CharRule{
 			private char c;
 			public SingleChar(char c) {this.c=c;}
@@ -3216,12 +3285,23 @@ namespace Meta {
 				return next.Equals(c);
 			}
 		}
-		public class OneOrMoreChars:CharLoop{
-			public OneOrMoreChars(CharRule rule):base(rule,1,-1){}
+		public static StringRule OneOrMoreChars(CharRule rule) {
+			return CharLoop(rule, 1, -1);
 		}
-		public class ZeroOrMoreChars:CharLoop{
-			public ZeroOrMoreChars(CharRule rule):base(rule,0,-1){}
+		public static StringRule ZeroOrMoreChars(CharRule rule) {
+			return CharLoop(rule, 0, -1);
 		}
+
+		//public class ZeroOrMoreChars : CharLoop {
+		//    public ZeroOrMoreChars(CharRule rule) : base(rule, 0, -1) { }
+		//}
+
+		//public class OneOrMoreChars:CharLoop{
+		//    public OneOrMoreChars(CharRule rule):base(rule,1,-1){}
+		//}
+		//public class ZeroOrMoreChars:CharLoop{
+		//    public ZeroOrMoreChars(CharRule rule):base(rule,0,-1){}
+		//}
 		public abstract class StringRule:Rule {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				string s=null;
