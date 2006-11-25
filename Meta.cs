@@ -2614,11 +2614,11 @@ namespace Meta {
 		        Search,List,Program,LastArgument));
 		});
 		public static Rule EndOfLine = new Sequence(
-			ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
+			ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = new Sequence(new CustomAction(
-	        OneOrMoreChars(new Chars(Syntax.integer)), 
+	        OneOrMoreChars(Chars(Syntax.integer)), 
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
@@ -2629,10 +2629,10 @@ namespace Meta {
 				}
 			}));
 
-		public static Rule StringLine=ZeroOrMoreChars(new CharsExcept("\n\r"));
+		public static Rule StringLine=ZeroOrMoreChars(CharsExcept("\n\r"));
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
-			new ReferenceAssignment(new CharsExcept(Syntax.character.ToString())),
+			new ReferenceAssignment(CharsExcept(Syntax.character.ToString())),
 			Syntax.character
 		);
 		public static Rule String = new Sequence(
@@ -2641,7 +2641,7 @@ namespace Meta {
 			new Alternatives(
 				new Sequence(
 					new ReferenceAssignment(
-						OneOrMoreChars(new CharsExcept(""+Syntax.@string))),
+						OneOrMoreChars(CharsExcept(""+Syntax.@string))),
 					new Optional(Syntax.@string)))));
 
 		public static Rule Number = new Sequence(
@@ -2673,8 +2673,8 @@ namespace Meta {
 			});
 		}
 		public static Rule LookupString = new CachedRule(StringSequence(
-		    OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
-		    ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
+		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
+		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))));
 
 		public static Rule Value = new DelayedRule(delegate {
 			return new Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
@@ -2685,7 +2685,7 @@ namespace Meta {
 			Assign(
 				CodeKeys.Parameter,
 				ZeroOrMoreChars(
-						new CharsExcept(""+Syntax.@string+Syntax.function+Syntax.indentation+
+						CharsExcept(""+Syntax.@string+Syntax.function+Syntax.indentation+
 							Syntax.windowsNewLine[0]+Syntax.unixNewLine))),
 			Syntax.function,
 			Assign(CodeKeys.Expression,Expression),
@@ -2944,7 +2944,7 @@ namespace Meta {
 									new Sequence(
 										Assign(
 											CodeKeys.Parameter,
-											ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbiddenFirst))),
+											ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst))),
 										Syntax.functionAlternativeStart,
 											Assign(CodeKeys.Expression, Expression),
 										new Optional(EndOfLine),
@@ -2979,7 +2979,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Action(char c) {
-				return OneChar(new SingleChar(c));
+				return OneChar(SingleChar(c));
 			}
 			public static implicit operator Action(Rule rule) {
 				return new CustomAction(rule, 
@@ -3075,7 +3075,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Rule(char c) {
-			    return OneChar(new SingleChar(c));
+			    return OneChar(SingleChar(c));
 			}
 			public int mismatches=0;
 			public int calls=0;
@@ -3107,8 +3107,13 @@ namespace Meta {
 			}
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
-		public abstract class CharRule:Rule {
-			public abstract bool CheckNext(char next);
+		public delegate bool CheckNext(char next);
+		public class CharRule:Rule {
+			public CheckNext CheckNext;
+			public CharRule(CheckNext c) {
+				this.CheckNext = c;
+			}
+			//public abstract bool CheckNext(char next);
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				char next=parser.Look();
 				if(CheckNext(next)){
@@ -3126,26 +3131,36 @@ namespace Meta {
 				}
 			}
 		}
-		public class Chars:CharRule{
-			private string chars;
-			public Chars(string chars){
-				this.chars=chars;
-			}
-			public override bool CheckNext(char next) {
-				return chars.IndexOf(next)!=-1;
-			}
+		public static CharRule Chars(string chars) {
+			return new CharRule(delegate(char next) {
+				return chars.IndexOf(next) != -1;
+			});
 		}
-		public class CharsExcept: CharRule {
-			private string s;
-		    public CharsExcept(string characters){
-				s=characters+Syntax.endOfFile;
-			}
-		    public override bool CheckNext(char c) {
-		        return s.IndexOf(c)==-1;
-			}
+		//public class Chars:CharRule{
+		//    private string chars;
+		//    public Chars(string chars){
+		//        this.chars=chars;
+		//    }
+		//    public override bool CheckNext(char next) {
+		//        return chars.IndexOf(next)!=-1;
+		//    }
+		//}
+		public static CharRule CharsExcept(string characters) {
+			string s = characters + Syntax.endOfFile;
+			return new CharRule(delegate(char c) {
+				return s.IndexOf(c) == -1;
+			});
 		}
+		//public class CharsExcept: CharRule {
+		//    private string s;
+		//    public CharsExcept(string characters){
+		//        s=characters+Syntax.endOfFile;
+		//    }
+		//    public override bool CheckNext(char c) {
+		//        return s.IndexOf(c)==-1;
+		//    }
+		//}
 		public delegate bool StringDelegate(Parser parser, ref string s);
-
 		public static StringRule CharLoop(CharRule rule, int min, int max) {
 			return new StringRule(delegate(Parser parser, ref string s) {
 				int offset = 0;
@@ -3172,13 +3187,18 @@ namespace Meta {
 		public static StringRule OneChar(CharRule rule) {
 			return CharLoop(rule, 1, 1);
 		}
-		public class SingleChar:CharRule{
-			private char c;
-			public SingleChar(char c) {this.c=c;}
-			public override bool CheckNext(char next) {
+		public static CharRule SingleChar(char c) {
+			return new CharRule(delegate(char next) {
 				return next.Equals(c);
-			}
+			});
 		}
+		//public class SingleChar:CharRule{
+		//    private char c;
+		//    public SingleChar(char c) {this.c=c;}
+		//    public override bool CheckNext(char next) {
+		//        return next.Equals(c);
+		//    }
+		//}
 		public static StringRule OneOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 1, -1);
 		}
