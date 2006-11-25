@@ -584,25 +584,37 @@ namespace Meta {
 		}
 	}
 	public delegate void StatementDelegate(ref Map context,Map value);
-	public class CustomStatement:CompiledStatement {
+	//public class CompiledStatement:CompiledStatement {
+	//    private StatementDelegate s;
+	//    public override void AssignImplementation(ref Map context, Map value) {
+	//        s(ref context,value);
+	//    }
+	//    public CompiledStatement(Compiled value,StatementDelegate s):base(value) {
+	//        this.s = s;
+	//    }
+	//}
+	//public abstract class CompiledStatement {
+	//    public CompiledStatement(Compiled value) {
+	//        this.value = value;
+	//    }
+	//    public void Assign(ref Map context) {
+	//        AssignImplementation(ref context, value(context));
+	//    }
+	//    public abstract void AssignImplementation(ref Map context, Map value);
+	//    public readonly Compiled value;
+	//}
+	public class CompiledStatement {
 		private StatementDelegate s;
-		public override void AssignImplementation(ref Map context, Map value) {
-			s(ref context,value);
+		public void Assign(ref Map context) {
+			s(ref context, value(context));
 		}
-		public CustomStatement(Compiled value,StatementDelegate s):base(value) {
+		public CompiledStatement(Compiled value, StatementDelegate s) {
+			this.value = value;
 			this.s = s;
 		}
-	}
-	public abstract class CompiledStatement {
-		public CompiledStatement(Compiled value) {
-			this.value = value;
-		}
-		public void Assign(ref Map context) {
-			AssignImplementation(ref context, value(context));
-		}
-		public abstract void AssignImplementation(ref Map context, Map value);
 		public readonly Compiled value;
 	}
+
 	public abstract class Statement {
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
@@ -718,7 +730,7 @@ namespace Meta {
 		}
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
-			return new CustomStatement(value.Compile(), delegate { });
+			return new CompiledStatement(value.Compile(), delegate { });
 		}
 	}
 	public class KeyStatement : Statement {
@@ -775,7 +787,7 @@ namespace Meta {
 				}
 			}
 			Compiled s=key.Compile();
-			return new CustomStatement(value.Compile(), delegate(ref Map context, Map v) {
+			return new CompiledStatement(value.Compile(), delegate(ref Map context, Map v) {
 				context[s(context)] = v;
 			});
 		}
@@ -791,7 +803,7 @@ namespace Meta {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
-			return new CustomStatement(value.Compile(),delegate(ref Map context, Map v) {
+			return new CompiledStatement(value.Compile(),delegate(ref Map context, Map v) {
 				if (this.Index== 0) {
 					if(!(v is DictionaryMap))  {
 						context = v.Copy();
@@ -814,7 +826,7 @@ namespace Meta {
 		}
 		public override CompiledStatement Compile() {
 			Compiled k = key.Compile();
-			return new CustomStatement(value.Compile(),delegate (ref Map context, Map v) {
+			return new CompiledStatement(value.Compile(),delegate (ref Map context, Map v) {
 				Map selected = context;
 				Map eKey = k(context);
 				while (!selected.ContainsKey(eKey)) {
