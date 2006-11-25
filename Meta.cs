@@ -2656,27 +2656,24 @@ namespace Meta {
 				}
 			}));
 
-		public class StringSequence:StringRule{
-			private StringRule[] rules;
-			public StringSequence(params StringRule[] rules) {
-				this.rules=rules;
-			}
-			public override bool MatchString(Parser parser, ref string s) {
-				s="";
-				State oldState=parser.state;
-				foreach(StringRule rule in rules) {
-					string result=null;
-					if(rule.MatchString(parser, ref result)) {
-						s+=result;}
+		public static StringRule StringSequence(params StringRule[] rules) {
+			return new CustomStringRule(delegate(Parser parser, ref string s) {
+				s = "";
+				State oldState = parser.state;
+				foreach (StringRule rule in rules) {
+					string result = null;
+					if (rule.MatchString(parser, ref result)) {
+						s += result;
+					}
 					else {
-						parser.state=oldState;
+						parser.state = oldState;
 						return false;
 					}
 				}
 				return true;
-			}
+			});
 		}
-		public static Rule LookupString = new CachedRule(new StringSequence(
+		public static Rule LookupString = new CachedRule(StringSequence(
 		    OneChar(new CharsExcept(Syntax.lookupStringForbiddenFirst)),
 		    ZeroOrMoreChars(new CharsExcept(Syntax.lookupStringForbidden))));
 
@@ -3177,15 +3174,7 @@ namespace Meta {
 			}
 		}
 		public delegate bool StringDelegate(Parser parser, ref string s);
-		public class CustomStringRule:StringRule {
-			private StringDelegate del;
-			public CustomStringRule(StringDelegate del) {
-				this.del = del;
-			}
-			public override bool MatchString(Parser parser, ref string s) {
-				return del(parser, ref s);
-			}
-		}
+
 		public static StringRule CharLoop(CharRule rule, int min, int max) {
 			return new CustomStringRule(delegate(Parser parser, ref string s) {
 				int offset = 0;
@@ -3209,75 +3198,10 @@ namespace Meta {
 				return false;
 			});
 		}
-		//public class CharLoop : StringRule {
-		//    private CharRule rule;
-		//    private int min;
-		//    private int max;
-		//    public CharLoop(CharRule rule, int min, int max) {
-		//        this.rule = rule;
-		//        this.min = min;
-		//        this.max = max;
-		//    }
-		//    public override bool MatchString(Parser parser, ref string s) {
-		//        int offset = 0;
-		//        int column = parser.state.Column;
-		//        int line = 0;
-		//        while ((max == -1 || offset < max) && rule.CheckNext(parser.Look(offset))) {
-		//            offset++;
-		//            column++;
-		//            if (parser.Look(offset).Equals(Syntax.unixNewLine)) {
-		//                line++;
-		//                column = 1;
-		//            }
-		//        }
-		//        s = parser.state.Text.Substring(parser.state.index, offset);
-		//        if (offset >= min && (max == -1 || offset <= max)) {
-		//            parser.state.index += offset;
-		//            parser.state.Column = column;
-		//            parser.state.Line += line;
-		//            return true;
-		//        }
-		//        return false;
-		//    }
-		//}
-		//public class CharLoop:StringRule {
-		//    private CharRule rule;
-		//    private int min;
-		//    private int max;
-		//    public CharLoop(CharRule rule,int min,int max){
-		//        this.rule=rule;
-		//        this.min=min;
-		//        this.max=max;
-		//    }
-		//    public override bool MatchString(Parser parser, ref string s) {
-		//        int offset=0;
-		//        int column=parser.state.Column;
-		//        int line=0;
-		//        while((max==-1 || offset<max) && rule.CheckNext(parser.Look(offset))) {
-		//            offset++;
-		//            column++;
-		//            if(parser.Look(offset).Equals(Syntax.unixNewLine)) {
-		//                line++;
-		//                column= 1;
-		//            }
-		//        }
-		//        s=parser.state.Text.Substring(parser.state.index,offset);
-		//        if(offset>=min && (max==-1 || offset <= max)){
-		//            parser.state.index+=offset;
-		//            parser.state.Column=column;
-		//            parser.state.Line+=line;
-		//            return true;
-		//        }
-		//        return false;
-		//    }
-		//}
+
 		public static StringRule OneChar(CharRule rule) {
 			return CharLoop(rule, 1, 1);
 		}
-
-		//public class OneChar:CharLoop{
-		//    public OneChar(CharRule rule):base(rule,1,1) {}
-		//}
 		public class SingleChar:CharRule{
 			private char c;
 			public SingleChar(char c) {this.c=c;}
@@ -3291,17 +3215,15 @@ namespace Meta {
 		public static StringRule ZeroOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 0, -1);
 		}
-
-		//public class ZeroOrMoreChars : CharLoop {
-		//    public ZeroOrMoreChars(CharRule rule) : base(rule, 0, -1) { }
-		//}
-
-		//public class OneOrMoreChars:CharLoop{
-		//    public OneOrMoreChars(CharRule rule):base(rule,1,-1){}
-		//}
-		//public class ZeroOrMoreChars:CharLoop{
-		//    public ZeroOrMoreChars(CharRule rule):base(rule,0,-1){}
-		//}
+		public class CustomStringRule : StringRule {
+			private StringDelegate del;
+			public CustomStringRule(StringDelegate del) {
+				this.del = del;
+			}
+			public override bool MatchString(Parser parser, ref string s) {
+				return del(parser, ref s);
+			}
+		}
 		public abstract class StringRule:Rule {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
 				string s=null;
