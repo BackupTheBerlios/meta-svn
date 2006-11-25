@@ -2551,6 +2551,7 @@ namespace Meta {
 		}
 	}
 	public class Parser {
+		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
 		public struct State {
 			public override bool Equals(object obj) {
 				State state = (State)obj;
@@ -2988,7 +2989,6 @@ namespace Meta {
 					);
 			}
 			private Rule rule;
-			//protected abstract void Effect(Parser parser, Map map, ref Map result);
 			public Action(Rule rule, CustomActionDelegate action) { 
 				this.rule = rule;
 				this.action = action;
@@ -2997,15 +2997,11 @@ namespace Meta {
 				Map map=null;
 				if (rule.Match(parser,ref map)) {
 					action(parser, map, ref result);
-					//Effect(parser, map, ref result);
 					return true;
 				}
 				return false;
 			}
 			private CustomActionDelegate action;
-			//protected override void Effect(Parser parser, Map map, ref Map result) {
-			//    this.action(parser, map, ref result);
-			//}
 		}
 		public static Action Autokey(Rule rule) {
 			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
@@ -3031,49 +3027,43 @@ namespace Meta {
 				}
 			});
 		}
-		//public class CustomAction : Action {
-		//    private CustomActionDelegate action;
-		//    public CustomAction(Rule rule, CustomActionDelegate action)
-		//        : base(rule) {
-		//        this.action = action;
-		//    }
-		//    protected override void Effect(Parser parser, Map map, ref Map result) {
-		//        this.action(parser, map, ref result);
-		//    }
-		//}
 		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public class CachedResult{
-			public CachedResult(Map map,State state){
+			public CachedResult(Map map,State state) {
 				this.map=map;
 				this.state=state;
 			}
 			public Map map;
 			public State state;
 		}
-		public class CacheKey {
-			public State State;
-			public Rule Rule;
-			public CacheKey(State state,Rule rule) {
-				this.State = state;
-				this.Rule = rule;
-			}
-			public override bool Equals(object obj) {
-				CacheKey key=(CacheKey)obj;
-				return key.Rule.Equals(Rule) && key.State.Equals(State);
-			}
-			public override int GetHashCode() {
-				unchecked {
-					return State.GetHashCode() * Rule.GetHashCode();
-				}
-			}
-		}
-		public static Dictionary<CacheKey, CachedResult> cached = new Dictionary<CacheKey, CachedResult>();
+		//public class CacheKey {
+		//    public State State;
+		//    public Rule Rule;
+		//    public CacheKey(State state,Rule rule) {
+		//        this.State = state;
+		//        this.Rule = rule;
+		//    }
+		//    public override bool Equals(object obj) {
+		//        CacheKey key=(CacheKey)obj;
+		//        return key.Rule.Equals(Rule) && key.State.Equals(State);
+		//    }
+		//    public override int GetHashCode() {
+		//        unchecked {
+		//            return State.GetHashCode() * Rule.GetHashCode();
+		//        }
+		//    }
+		//}
+		//public static Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
 		public static Rule CachedRule(Rule rule) {
+			Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
+			allCached.Add(cached);
 			return new CustomRule(delegate(Parser parser, ref Map map) {
 				CachedResult cachedResult;
-				CacheKey key = new CacheKey(parser.state, rule);
-				if (cached.TryGetValue(key, out cachedResult)) {
+				//State oldState 
+				//CacheKey key = new CacheKey(parser.state, rule);
+				State state = parser.state;
+				if (cached.TryGetValue(state, out cachedResult)) {
 					map = cachedResult.map;
 					if (parser.state.Text.Length == parser.state.index + 1) {
 						return false;
@@ -3082,7 +3072,8 @@ namespace Meta {
 					return true;
 				}
 				if (rule.Match(parser, ref map)) {
-					cached[key] = new CachedResult(map, parser.state);
+					cached[state] = new CachedResult(map, parser.state);
+					//cached[state] = new CachedResult(map, parser.state);
 					return true;
 				}
 				return false;
@@ -3345,10 +3336,9 @@ namespace Meta {
 				}
 				throw new SyntaxException("Expected end of file.", parser);
 			}
-			Parser.cached.Clear();
-			//foreach (CachedRule rule in CachedRule.cachedRules) {
-			//    rule.cached.Clear();
-			//}
+			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
+				cached.Clear();
+			}
 			return result;
 		}
 	}
