@@ -2614,11 +2614,11 @@ namespace Meta {
 		        Search,List,Program,LastArgument));
 		});
 		public static Rule EndOfLine = Sequence(
-			new StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
+			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
 			Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = Sequence(new CustomAction(
-	        new StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
+	        StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
@@ -2629,7 +2629,7 @@ namespace Meta {
 				}
 			}));
 
-		public static Rule StringLine=new StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
+		public static Rule StringLine=StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
 		public static Rule CharacterDataExpression = Sequence(
 			Syntax.character,
 			new ReferenceAssignment(ReallyOneChar(CharsExcept(Syntax.character.ToString()))),
@@ -2641,7 +2641,7 @@ namespace Meta {
 			Alternatives(
 				Sequence(
 					new ReferenceAssignment(
-						new StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
+						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
 					Optional(Syntax.@string)))));
 
 		public static Rule Number = Sequence(
@@ -2673,7 +2673,7 @@ namespace Meta {
 			};
 		}
 		public static Rule LookupString = new CachedRule(
-			new StringRule(StringSequence(
+			StringRule(StringSequence(
 		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
@@ -2685,7 +2685,7 @@ namespace Meta {
 		public static Rule Function = Sequence(
 			Assign(
 				CodeKeys.Parameter,
-				new StringRule(ZeroOrMoreChars(
+				StringRule(ZeroOrMoreChars(
 						CharsExcept(""+Syntax.@string+Syntax.function+Syntax.indentation+
 							Syntax.windowsNewLine[0]+Syntax.unixNewLine)))),
 			Syntax.function,
@@ -2945,7 +2945,7 @@ namespace Meta {
 									Sequence(
 										Assign(
 											CodeKeys.Parameter,
-											new StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+											StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 										Syntax.functionAlternativeStart,
 											Assign(CodeKeys.Expression, Expression),
 										Optional(EndOfLine),
@@ -2980,7 +2980,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Action(char c) {
-				return new StringRule(OneChar(SingleChar(c)));
+				return StringRule(OneChar(SingleChar(c)));
 			}
 			public static implicit operator Action(Rule rule) {
 				return new CustomAction(rule, 
@@ -3076,7 +3076,7 @@ namespace Meta {
 				return StringRule2(s);
 			}
 			public static implicit operator Rule(char c) {
-			    return new StringRule(OneChar(SingleChar(c)));
+			    return StringRule(OneChar(SingleChar(c)));
 			}
 			public int mismatches=0;
 			public int calls=0;
@@ -3176,41 +3176,41 @@ namespace Meta {
 		public static StringDelegate ZeroOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 0, -1);
 		}
-		//public Rule StringRule(StringDelegate del) {
-		//    return CustomRule(delegate(Parser parser, ref Map map) {
-		//        string s = null;
-		//        if (del(parser, ref s)) {
-		//            map = s;
-		//            return true;
-		//        }
-		//        else {
-		//            return false;
-		//        }
-		//    });
-		//}
-		//    public bool MatchString(Parser parser, ref string s) {
-		//        return del(parser, ref s);
-		//    }
-		//}
-		public class StringRule:Rule {
-		    private StringDelegate del;
-		    public StringRule(StringDelegate del) {
-		        this.del = del;
-		    }
-		    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Rule StringRule(StringDelegate del) {
+		    return new CustomRule(delegate(Parser parser, ref Map map) {
 		        string s = null;
-		        if (MatchString(parser, ref s)) {
+		        if (del(parser, ref s)) {
 		            map = s;
 		            return true;
 		        }
 		        else {
 		            return false;
 		        }
-		    }
-			public bool MatchString(Parser parser, ref string s) {
-				return del(parser, ref s);
-			}
+		    });
 		}
+		//    public bool MatchString(Parser parser, ref string s) {
+		//        return del(parser, ref s);
+		//    }
+		//}
+		//public class StringRule:Rule {
+		//    private StringDelegate del;
+		//    public StringRule(StringDelegate del) {
+		//        this.del = del;
+		//    }
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        string s = null;
+		//        if (MatchString(parser, ref s)) {
+		//            map = s;
+		//            return true;
+		//        }
+		//        else {
+		//            return false;
+		//        }
+		//    }
+		//    public bool MatchString(Parser parser, ref string s) {
+		//        return del(parser, ref s);
+		//    }
+		//}
 		public delegate void PrePostDelegate(Parser parser);
 		public static Rule PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
 			return new CustomRule(delegate(Parser parser, ref Map map) {
