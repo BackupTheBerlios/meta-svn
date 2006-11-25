@@ -2610,7 +2610,7 @@ namespace Meta {
 			Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = DelayedRule(delegate() {
-			return new CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
+			return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
 		public static Rule EndOfLine = Sequence(
@@ -2672,7 +2672,7 @@ namespace Meta {
 				return true;
 			};
 		}
-		public static Rule LookupString = new CachedRule(
+		public static Rule LookupString = CachedRule(
 			StringRule(StringSequence(
 		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
@@ -2798,7 +2798,7 @@ namespace Meta {
 			'<',ReferenceAssignment(Expression),Optional('>')
 		);
 		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
-		private static Rule Search = new CachedRule(Sequence(
+		private static Rule Search = CachedRule(Sequence(
 			Assign(
 				CodeKeys.Search,
 				Alternatives(
@@ -2806,7 +2806,7 @@ namespace Meta {
 					Alternatives(LookupStringExpression,LookupAnythingExpression)))));
 
 		private static Rule SmallSelect = DelayedRule(delegate {
-			return new CachedRule(Sequence(
+			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
 					Sequence(
@@ -2818,7 +2818,7 @@ namespace Meta {
 		});
 
 		private static Rule CallSelect = DelayedRule(delegate{
-			return new CachedRule(Sequence(
+			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
 					Sequence(
@@ -2829,7 +2829,7 @@ namespace Meta {
 		});
 
 		private static Rule Select = DelayedRule(delegate{
-			return new CachedRule(Sequence(
+			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
 					Sequence(
@@ -3060,13 +3060,9 @@ namespace Meta {
 				}
 			}
 		}
-		public class CachedRule : Rule {
-			private Rule rule;
-			public CachedRule(Rule rule) {
-				this.rule = rule;
-			}
-			public static Dictionary<CacheKey, CachedResult> cached = new Dictionary<CacheKey, CachedResult>();
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Dictionary<CacheKey, CachedResult> cached = new Dictionary<CacheKey, CachedResult>();
+		public static Rule CachedRule(Rule rule) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
 				CachedResult cachedResult;
 				CacheKey key = new CacheKey(parser.state, rule);
 				if (cached.TryGetValue(key, out cachedResult)) {
@@ -3082,7 +3078,7 @@ namespace Meta {
 					return true;
 				}
 				return false;
-			}
+			});
 		}
 		//public class CachedRule : Rule {
 		//    private Rule rule;
@@ -3365,7 +3361,7 @@ namespace Meta {
 				}
 				throw new SyntaxException("Expected end of file.", parser);
 			}
-			CachedRule.cached.Clear();
+			Parser.cached.Clear();
 			//foreach (CachedRule rule in CachedRule.cachedRules) {
 			//    rule.cached.Clear();
 			//}
