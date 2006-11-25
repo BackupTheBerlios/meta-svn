@@ -2632,7 +2632,9 @@ namespace Meta {
 		public static Rule StringLine=ZeroOrMoreChars(CharsExcept("\n\r"));
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
-			new ReferenceAssignment(CharsExcept(Syntax.character.ToString())),
+			new ReferenceAssignment(ReallyOneChar(CharsExcept(Syntax.character.ToString()))),
+			//new ReferenceAssignment(CharsExcept(Syntax.character.ToString())),
+
 			Syntax.character
 		);
 		public static Rule String = new Sequence(
@@ -3108,28 +3110,28 @@ namespace Meta {
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
 		public delegate bool CheckNext(char next);
-		public class CharRule:Rule {
+		public class CharRule {
 			public CheckNext CheckNext;
 			public CharRule(CheckNext c) {
 				this.CheckNext = c;
 			}
 			//public abstract bool CheckNext(char next);
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				char next=parser.Look();
-				if(CheckNext(next)){
-					map=next;
-					parser.state.index++;
-					parser.state.Column++;
-					if(next.Equals(Syntax.unixNewLine)) {
-						parser.state.Line++;
-						parser.state.Column= 1;
-					}
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
+			//protected override bool MatchImplementation(Parser parser, ref Map map) {
+				//char next=parser.Look();
+				//if(CheckNext(next)){
+				//    map=next;
+				//    parser.state.index++;
+				//    parser.state.Column++;
+				//    if(next.Equals(Syntax.unixNewLine)) {
+				//        parser.state.Line++;
+				//        parser.state.Column= 1;
+				//    }
+				//    return true;
+				//}
+				//else {
+				//    return false;
+				//}
+			//}
 		}
 		public static CharRule Chars(string chars) {
 			return new CharRule(delegate(char next) {
@@ -3182,6 +3184,25 @@ namespace Meta {
 					return true;
 				}
 				return false;
+			});
+		}
+		public static Rule ReallyOneChar(CharRule rule) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
+				char next = parser.Look();
+				if (rule.CheckNext(next)) {
+				//if (CheckNext(next)) {
+					map = next;
+					parser.state.index++;
+					parser.state.Column++;
+					if (next.Equals(Syntax.unixNewLine)) {
+						parser.state.Line++;
+						parser.state.Column = 1;
+					}
+					return true;
+				}
+				else {
+					return false;
+				}
 			});
 		}
 		public static StringRule OneChar(CharRule rule) {
