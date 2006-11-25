@@ -2618,7 +2618,8 @@ namespace Meta {
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
-		public static Rule Integer = new Sequence(new CustomProduction(
+		public static Rule Integer = new Sequence(new CustomAction(
+	        new OneOrMoreChars(new Chars(Syntax.integer)), 
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
@@ -2627,39 +2628,9 @@ namespace Meta {
 				else {
 				    result=rational;
 				}
-			},
-	        new OneOrMoreChars(new Chars(Syntax.integer))));
+			}));
 
 		public static StringRule StringLine=new ZeroOrMoreChars(new CharsExcept("\n\r"));
-		public class StringIgnore:StringRule {
-			private Rule rule;
-			public StringIgnore(Rule rule) {
-				this.rule=rule;
-			}
-			public override bool MatchString(Parser parser, ref string s) {
-				Map map=null;
-				s="";
-				return rule.Match(parser,ref map);
-			}
-		}
-		public class StringLoop:StringRule {
-			private StringRule rule;
-			public StringLoop(StringRule rule) {
-				this.rule=rule;
-			}
-			public override bool MatchString(Parser parser, ref string s) {
-				while(true){
-					string result=null;
-					if(rule.MatchString(parser,ref result)){
-						s+=result;
-					}
-					else{
-						break;
-					}
-				}
-				return true;
-			}
-		}
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(new CharsExcept(Syntax.character.ToString())),
@@ -2676,14 +2647,14 @@ namespace Meta {
 
 		public static Rule Number = new Sequence(
 			new ReferenceAssignment(Integer),
-			new CustomProduction(delegate(Parser p, Map map, ref Map result) {
+			new CustomAction(
+			new Optional(new Sequence(
+				Syntax.fraction,
+				new ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
 					result=new Rational(result.GetNumber().GetDouble(),map.GetNumber().GetDouble());
 				}
-			},
-			new Optional(new Sequence(
-				Syntax.fraction,
-				new ReferenceAssignment(Integer)))));
+			}));
 
 		public class StringSequence:StringRule{
 			private StringRule[] rules;
@@ -2729,18 +2700,23 @@ namespace Meta {
 			new Sequence(
 				new Assignment(1,new Alternatives(Number,LookupString,LookupAnything)),
 				'=',
-				new CustomProduction(delegate(Parser parser, Map map, ref Map result) {
+				new CustomAction(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
-				},Value),
+				}),
 			 new Optional(EndOfLine)));
 
 		public static Rule MapRule = new Sequence(
 			new Optional(Syntax.programStart),
 			Whitespace,
 			new ReferenceAssignment(
-				new OneOrMore(new Merge(new Sequence(
-					new ReferenceAssignment(Entry), Whitespace, new Optional(Syntax.programSeparator), Whitespace)))
-			),
+				new OneOrMore(
+					new CustomAction(
+						new Sequence(
+							new ReferenceAssignment(Entry), Whitespace, new Optional(Syntax.programSeparator), Whitespace),
+						delegate(Parser parser, Map map, ref Map result) {
+							result = Library.Merge(result, map);
+						}
+			))),
 			new Optional(Syntax.programEnd),
 			Whitespace
 		);
@@ -2925,7 +2901,7 @@ namespace Meta {
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			return new Sequence(
 				action,
-				rule != null ? new Match(rule) : null,
+				rule != null ? (Action)rule : null,
 				new Assignment(CodeKeys.Value, Expression),
 				new Optional(EndOfLine)
 			);
@@ -3002,17 +2978,19 @@ namespace Meta {
 		});
 
 		public abstract class Action {
-			public static implicit operator Action(StringRule rule) {
-				return new Match(rule);
-			}
+			//public static implicit operator Action(StringRule rule) {
+			//    return new Match(rule);
+			//}
 			public static implicit operator Action(string s) {
-				return new Match(StringRule2(s));
+				return StringRule2(s);
 			}
 			public static implicit operator Action(char c) {
-				return new Match(new OneChar(new SingleChar(c)));
+				return new OneChar(new SingleChar(c));
 			}
 			public static implicit operator Action(Rule rule) {
-				return new Match(rule);
+				return new CustomAction(rule, 
+					delegate { }
+					);
 			}
 			private Rule rule;
 			protected abstract void Effect(Parser parser, Map map, ref Map result);
@@ -3041,10 +3019,10 @@ namespace Meta {
 				}
 			}
 		}
-		public class Match : Action {
-			public Match(Rule rule): base(rule) {}
-			protected override void Effect(Parser parser, Map map, ref Map result) {}
-		}
+		//public class Match : Action {
+		//    public Match(Rule rule): base(rule) {}
+		//    protected override void Effect(Parser parser, Map map, ref Map result) {}
+		//}
 		public class ReferenceAssignment : Action {
 			public ReferenceAssignment(Rule rule): base(rule) {}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
@@ -3059,15 +3037,15 @@ namespace Meta {
 				}
 			}
 		}
-		public class Merge : Action {
-			public Merge(Rule rule): base(rule) {}
-			protected override void Effect(Parser parser, Map map, ref Map result) {
-				result = Library.Merge(result, map);
-			}
-		}
-		public class CustomProduction : Action {
+		//public class Merge : Action {
+		//    public Merge(Rule rule): base(rule) {}
+		//    protected override void Effect(Parser parser, Map map, ref Map result) {
+		//        result = Library.Merge(result, map);
+		//    }
+		//}
+		public class CustomAction : Action {
 			private CustomActionDelegate action;
-			public CustomProduction(CustomActionDelegate action, Rule rule): base(rule) {
+			public CustomAction(Rule rule, CustomActionDelegate action): base(rule) {
 				this.action = action;
 			}
 			protected override void Effect(Parser parser, Map map, ref Map result) {
