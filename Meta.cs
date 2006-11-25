@@ -583,6 +583,16 @@ namespace Meta {
 			}
 		}
 	}
+	public delegate void StatementDelegate(ref Map context,Map value);
+	public class CustomStatement:CompiledStatement {
+		private StatementDelegate s;
+		public override void AssignImplementation(ref Map context, Map value) {
+			s(ref context,value);
+		}
+		public CustomStatement(Compiled value,StatementDelegate s):base(value) {
+			this.s = s;
+		}
+	}
 	public abstract class CompiledStatement {
 		public CompiledStatement(Compiled value) {
 			this.value = value;
@@ -702,30 +712,24 @@ namespace Meta {
 			}
 		}
 	}
-	public class CompiledDiscardStatement : CompiledStatement {
-		public CompiledDiscardStatement(Compiled value) : base(value) {
-		}
-		public override void AssignImplementation(ref Map context, Map value) {
-		}
-	}
 	public class DiscardStatement : Statement {
 		protected override Structure CurrentImplementation(Structure previous) {
 			return previous;
 		}
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
-			return new CompiledDiscardStatement(value.Compile());
+			return new CustomStatement(value.Compile(), delegate { });
 		}
 	}
-	public class CompiledKeyStatement : CompiledStatement {
-		private Compiled key;
-		public CompiledKeyStatement(Compiled key, Compiled value): base(value) {
-			this.key = key;
-		}
-		public override void AssignImplementation(ref Map context, Map value) {
-			context[key(context)] = value;
-		}
-	}
+	//public class CompiledKeyStatement : CompiledStatement {
+	//    private Compiled key;
+	//    public CompiledKeyStatement(Compiled key, Compiled value): base(value) {
+	//        this.key = key;
+	//    }
+	//    public override void AssignImplementation(ref Map context, Map value) {
+	//        context[key(context)] = value;
+	//    }
+	//}
 	public class KeyStatement : Statement {
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
@@ -779,7 +783,11 @@ namespace Meta {
 					}
 				}
 			}
-			return new CompiledKeyStatement(key.Compile(), value.Compile());
+			Compiled s=key.Compile();
+			return new CustomStatement(value.Compile(), delegate(ref Map context, Map v) {
+				context[s(context)] = v;
+			});
+			//return new CompiledKeyStatement(key.Compile(), value.Compile());
 		}
 		public Expression key;
 		public KeyStatement(Expression key, Expression value, Program program, int index)
