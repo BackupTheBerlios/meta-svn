@@ -2606,16 +2606,16 @@ namespace Meta {
 				}
 			};
 		}
-		public static Rule Whitespace = ZeroOrMore(new Alternatives(
+		public static Rule Whitespace = ZeroOrMore(Alternatives(
 			Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = new DelayedRule(delegate() {
-			return new CachedRule(new Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
+			return new CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
 		public static Rule EndOfLine = Sequence(
 			ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab)),
-			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
+			Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = Sequence(new CustomAction(
 	        OneOrMoreChars(Chars(Syntax.integer)), 
@@ -2638,7 +2638,7 @@ namespace Meta {
 		public static Rule String = Sequence(
 			Syntax.@string,
 			new ReferenceAssignment(
-			new Alternatives(
+			Alternatives(
 				Sequence(
 					new ReferenceAssignment(
 						OneOrMoreChars(CharsExcept(""+Syntax.@string))),
@@ -2677,7 +2677,7 @@ namespace Meta {
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))));
 
 		public static Rule Value = new DelayedRule(delegate {
-			return new Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
+			return Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
 		});
 		private static Rule LookupAnything = Sequence('<',new ReferenceAssignment(Value));
 
@@ -2691,10 +2691,10 @@ namespace Meta {
 			Assign(CodeKeys.Expression,Expression),
 			Optional(EndOfLine));
 
-		public static Rule Entry = new Alternatives(
+		public static Rule Entry = Alternatives(
 			Sequence(Assign(CodeKeys.Function,Function)),
 			Sequence(
-				Assign(1,new Alternatives(Number,LookupString,LookupAnything)),
+				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
 				'=',
 				new CustomAction(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
@@ -2722,11 +2722,11 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				Sequence(
 					Assign(1,
-						new Alternatives(FunctionProgram, LiteralExpression, CallSelect, Select, Search, List, Program, LastArgument)),
+						Alternatives(FunctionProgram, LiteralExpression, CallSelect, Select, Search, List, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						new Append(
-							new Alternatives(
+							Alternatives(
 								Sequence(
 									Whitespace,
 									new Append(
@@ -2734,7 +2734,7 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													new ReferenceAssignment(new Alternatives(
+													new ReferenceAssignment(Alternatives(
 														LastArgument, FunctionProgram,
 														LiteralExpression, Call, Select,
 														Search, List, Program
@@ -2752,11 +2752,11 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				Sequence(
 					Assign(1,
-						new Alternatives(FunctionProgram, LiteralExpression, SmallSelect, Search, List, Program, LastArgument)),
+						Alternatives(FunctionProgram, LiteralExpression, SmallSelect, Search, List, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						new Append(
-							new Alternatives(
+							Alternatives(
 								Sequence(
 									Whitespace,
 									new Append(
@@ -2764,7 +2764,7 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													new ReferenceAssignment(new Alternatives(
+													new ReferenceAssignment(Alternatives(
 														LastArgument, FunctionProgram, LiteralExpression,
 														Call, Select, Search, List, Program)),
 													Optional(Syntax.callSeparator)
@@ -2791,7 +2791,7 @@ namespace Meta {
 		);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = Sequence(
-			Assign(CodeKeys.Literal,new Alternatives(EmptyMap,Number,String,CharacterDataExpression))
+			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
 			'<',new ReferenceAssignment(Expression),Optional('>')
@@ -2800,9 +2800,9 @@ namespace Meta {
 		private static Rule Search = new CachedRule(Sequence(
 			Assign(
 				CodeKeys.Search,
-				new Alternatives(
+				Alternatives(
 					Prefix('!',Expression),
-					new Alternatives(LookupStringExpression,LookupAnythingExpression)))));
+					Alternatives(LookupStringExpression,LookupAnythingExpression)))));
 
 		private static Rule SmallSelect = new DelayedRule(delegate {
 			return new CachedRule(Sequence(
@@ -2810,9 +2810,9 @@ namespace Meta {
 					CodeKeys.Select,
 					Sequence(
 						Assign(1,
-							new Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
+							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						new Append(
-							OneOrMore(Autokey(Prefix('.', new Alternatives(
+							OneOrMore(Autokey(Prefix('.', Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -2821,10 +2821,10 @@ namespace Meta {
 				Assign(
 					CodeKeys.Select,
 					Sequence(
-						Assign(1,new Alternatives(SimpleCall)),
+						Assign(1,Alternatives(SimpleCall)),
 						new Append(
 							OneOrMore(Autokey(
-								Prefix('.', new Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+								Prefix('.', Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
 		private static Rule Select = new DelayedRule(delegate{
@@ -2833,16 +2833,16 @@ namespace Meta {
 					CodeKeys.Select,
 					Sequence(
 						Assign(1,
-							new Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
+							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						new Append(
-							OneOrMore(Autokey(Prefix('.', new Alternatives(
+							OneOrMore(Autokey(Prefix('.', Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
 		public static Rule ListMap = Sequence(
 			Syntax.arrayStart,
 			new ReferenceAssignment(
-				new PrePost(
+				PrePost(
 					delegate(Parser p) {p.defaultKeys.Push(1);},
 					Sequence(
 						Whitespace,
@@ -2880,7 +2880,7 @@ namespace Meta {
 						Whitespace,
 						Syntax.arrayStart,
 						new Append(
-							new Alternatives(
+							Alternatives(
 								Sequence(Whitespace,Assign(1,ListEntry),
 									Whitespace,
 									new Append(
@@ -2890,7 +2890,7 @@ namespace Meta {
 									Whitespace,
 									Syntax.arrayEnd))))));
 		}
-		public static Rule List = new PrePost(
+		public static Rule List = PrePost(
 			delegate(Parser p) {p.defaultKeys.Push(1);},
 			ComplexList(),
 			delegate(Parser p) {p.defaultKeys.Pop();}
@@ -2916,7 +2916,7 @@ namespace Meta {
 			'=',
 			Assign(
 				CodeKeys.Key,
-				new Alternatives(
+				Alternatives(
 					Prefix('<',Sequence(new ReferenceAssignment(Expression),Optional('>'))),
 					Sequence(Assign(CodeKeys.Literal,LookupString)),
 					Expression)));
@@ -2925,12 +2925,12 @@ namespace Meta {
 			':',
 			Assign(
 				CodeKeys.Keys,
-				new Alternatives(
+				Alternatives(
 					Sequence(Assign(CodeKeys.Literal,LookupString)),Expression)));
 
 		public static Rule AllStatements = Sequence(
 			new ReferenceAssignment(
-				new Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
+				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Optional(Syntax.statementEnd)
 		);
 		public static Rule FunctionProgram = Sequence(
@@ -2956,7 +2956,7 @@ namespace Meta {
 					Sequence(
 						Syntax.programStart,
 						new Append(
-							new Alternatives(
+							Alternatives(
 								Sequence(
 									Whitespace,
 									new Append(
@@ -3195,22 +3195,30 @@ namespace Meta {
 			}
 		}
 		public delegate void PrePostDelegate(Parser parser);
-		public class PrePost : Rule {
-			private PrePostDelegate pre;
-			private PrePostDelegate post;
-			private Rule rule;
-			public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
-				this.pre = pre;
-				this.rule = rule;
-				this.post = post;
-			}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Rule PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
 				pre(parser);
-				bool matched=rule.Match(parser, ref map);
+				bool matched = rule.Match(parser, ref map);
 				post(parser);
 				return matched;
-			}
+			});
 		}
+		//public class PrePost : Rule {
+		//    private PrePostDelegate pre;
+		//    private PrePostDelegate post;
+		//    private Rule rule;
+		//    public PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
+		//        this.pre = pre;
+		//        this.rule = rule;
+		//        this.post = post;
+		//    }
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        pre(parser);
+		//        bool matched=rule.Match(parser, ref map);
+		//        post(parser);
+		//        return matched;
+		//    }
+		//}
 		public static Rule StringRule2(string text) {
 			List<Action> actions = new List<Action>();
 			foreach (char c in text) {
@@ -3242,20 +3250,31 @@ namespace Meta {
 				return rule.Match(parser,ref map);
 			}
 		}
-		public class Alternatives : Rule {
-			private Rule[] cases;
-			public Alternatives(params Rule[] cases) {
-				this.cases = cases;}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Rule Alternatives(params Rule[] cases) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
 				foreach (Rule expression in cases) {
-					bool matched=expression.Match(parser, ref map);
+					bool matched = expression.Match(parser, ref map);
 					if (matched) {
 						return true;
 					}
 				}
 				return false;
-			}
+			});
 		}
+		//public class Alternatives : Rule {
+		//    private Rule[] cases;
+		//    public Alternatives(params Rule[] cases) {
+		//        this.cases = cases;}
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        foreach (Rule expression in cases) {
+		//            bool matched=expression.Match(parser, ref map);
+		//            if (matched) {
+		//                return true;
+		//            }
+		//        }
+		//        return false;
+		//    }
+		//}
 		public static Rule Sequence(params Action[] actions) {
 			return new CustomRule(delegate(Parser parser, ref Map match) {
 				Map result = new DictionaryMap();
