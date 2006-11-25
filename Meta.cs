@@ -34,22 +34,15 @@ namespace Meta {
 	public delegate Map CompiledEvaluate(Map map);
 	public class Compiled {
 		private CompiledEvaluate c;
-		public Extent Source;
-		public Compiled(Extent source, CompiledEvaluate c){
+		//public Extent Source;
+		public Compiled(CompiledEvaluate c){
 			this.c = c;
-			this.Source = source;
+			//this.Source = source;
 		}
 		public Map Evaluate(Map context) {
 			return c(context);
 		}
 	}
-	//public abstract class Compiled {
-		
-	//    public Compiled(Extent source) {
-		
-	//    }
-	//    public abstract Map Evaluate(Map context);
-	//}
 	public class Dict<TKey, TValue>:Dictionary<TKey,TValue> {
 		public Dict() {
 		}
@@ -123,7 +116,7 @@ namespace Meta {
 			return null;
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(Source, delegate(Map map) {
+			return new Compiled(delegate(Map map) {
 				return Map.arguments.Peek();
 			});
 		}
@@ -241,7 +234,7 @@ namespace Meta {
 					Transform.GetMetaConversion(methodInfo.ReturnType,il);
 					il.Emit(OpCodes.Ret);
 					FastCall fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),args);
-					return new Compiled(Source,delegate(Map context) {
+					return new Compiled(delegate(Map context) {
 						return fastCall(context);
 					});
 				}
@@ -252,7 +245,7 @@ namespace Meta {
 			List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile();
 			});
-			return new Compiled(Source, delegate(Map current) {
+			return new Compiled(delegate(Map current) {
 				Map result = compiled[0].Evaluate(current);
 				for (int i = 1; i < compiled.Count; i++) {
 					try {
@@ -406,12 +399,12 @@ namespace Meta {
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
 			    if (value != null && value.IsConstant) {
-					return new Compiled(Source, delegate(Map context) {
+					return new Compiled(delegate(Map context) {
 						return value;
 					});
 				}
 			    else {
-					return new Compiled(Source, delegate(Map context) {
+					return new Compiled(delegate(Map context) {
 						Map selected = context;
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
@@ -435,7 +428,7 @@ namespace Meta {
 			else {
 			    FindStuff(out count, out key, out value);
 				Compiled compiled = expression.Compile();
-				return new Compiled(Source, delegate(Map context) {
+				return new Compiled(delegate(Map context) {
 					Map k = compiled.Evaluate(context);
 					Map selected = context;
 					while (!selected.ContainsKey(k)) {
@@ -520,7 +513,7 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			Compiled e = expression.Compile();
 			Map parameter = key;
-			return new Compiled(Source,delegate (Map p) {
+			return new Compiled(delegate (Map p) {
 				Map context = new FunctionArgument(parameter, Map.arguments.Peek());
 				context.Scope = p;
 				return e.Evaluate(context);
@@ -619,7 +612,7 @@ namespace Meta {
 					Map value=statement.value.GetConstant();
 					CompiledStatement compiled=statement.Compile();
 					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-						return new Compiled(Source,delegate(Map context) {
+						return new Compiled(delegate(Map context) {
 							Map map=new FunctionMap(value);
 							map.Scope=context;
 							return map;
@@ -630,7 +623,7 @@ namespace Meta {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 
-			return new Compiled(Source,delegate(Map p) {
+			return new Compiled(delegate(Map p) {
 				Map context = new DictionaryMap();
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
@@ -921,7 +914,7 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(Source, delegate {
+			return new Compiled(delegate {
 				return literal;
 			});
 		}
@@ -936,7 +929,7 @@ namespace Meta {
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(Source, delegate {
+			return new Compiled(delegate {
 				return Gac.gac;
 			});
 		}
@@ -955,13 +948,13 @@ namespace Meta {
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
-			return new Compiled(Source, delegate(Map context) {
+			return new Compiled(delegate(Map context) {
 				Map selected = s[0].Evaluate(context);
 				for (int i = 1; i < s.Count; i++) {
 					Map key = s[i].Evaluate(context);
 					Map value = selected[key];
 					if (value == null) {
-						throw new KeyDoesNotExist(key, s[i].Source != null ? s[i].Source.Start : null, selected);
+						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
 					}
 					else {
 						selected = value;
