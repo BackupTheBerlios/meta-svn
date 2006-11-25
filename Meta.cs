@@ -2655,8 +2655,8 @@ namespace Meta {
 				}
 			}));
 
-		public static StringRule StringSequence(params StringDelegate[] rules) {
-			return new StringRule(delegate(Parser parser, ref string s) {
+		public static StringDelegate StringSequence(params StringDelegate[] rules) {
+			return delegate(Parser parser, ref string s) {
 				s = "";
 				State oldState = parser.state;
 				foreach (StringDelegate rule in rules) {
@@ -2670,11 +2670,12 @@ namespace Meta {
 					}
 				}
 				return true;
-			});
+			};
 		}
-		public static Rule LookupString = new CachedRule(StringSequence(
+		public static Rule LookupString = new CachedRule(
+			new StringRule(StringSequence(
 		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
-		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))));
+		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
 		public static Rule Value = new DelayedRule(delegate {
 			return Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
@@ -3175,6 +3176,22 @@ namespace Meta {
 		public static StringDelegate ZeroOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 0, -1);
 		}
+		//public Rule StringRule(StringDelegate del) {
+		//    return CustomRule(delegate(Parser parser, ref Map map) {
+		//        string s = null;
+		//        if (del(parser, ref s)) {
+		//            map = s;
+		//            return true;
+		//        }
+		//        else {
+		//            return false;
+		//        }
+		//    });
+		//}
+		//    public bool MatchString(Parser parser, ref string s) {
+		//        return del(parser, ref s);
+		//    }
+		//}
 		public class StringRule:Rule {
 		    private StringDelegate del;
 		    public StringRule(StringDelegate del) {
