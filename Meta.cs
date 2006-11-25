@@ -2606,7 +2606,7 @@ namespace Meta {
 				}
 			};
 		}
-		public static Rule Whitespace = ZeroOrMore(Characters(
+		public static Rule Whitespace = ZeroOrMore(new Alternatives(
 			Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = new DelayedRule(delegate() {
@@ -3107,61 +3107,6 @@ namespace Meta {
 			}
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
-		public static Rule Characters(params char[] characters) {
-			string chars=new string(characters);
-			return CharacterRule(new MatchCharacter(delegate(char next) {
-				return chars.IndexOf(next) != -1;
-			}));
-		}
-		//public class Characters : CharacterRule {
-		//    public string chars;
-		//    public Characters(params char[] characters){chars=new string(characters);}
-		//    protected override bool MatchCharacter(char next) {
-		//        return chars.IndexOf(next)!=-1;
-		//    }
-		//}
-		public delegate bool MatchCharacter(char c);
-		public static Rule CharacterRule(MatchCharacter del) {
-			return new CustomRule(delegate (Parser parser, ref Map map) {
-				char character = parser.Look();
-				//calls++;
-				if (del(character)) {
-					parser.state.index++;
-					parser.state.Column++;
-					if (character.Equals(Syntax.unixNewLine)) {
-						parser.state.Line++;
-						parser.state.Column = 1;
-					}
-					map = new Integer32(character);
-					return true;
-				}
-				else {
-					map = null;
-					return false;
-				}
-			});
-		}
-		//public abstract class CharacterRule : Rule {
-		//    protected abstract bool MatchCharacter(char c);
-		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		//        char character = parser.Look();
-		//        calls++;
-		//        if (MatchCharacter(character)) {
-		//            parser.state.index++;
-		//            parser.state.Column++;
-		//            if (character.Equals(Syntax.unixNewLine)) {
-		//                parser.state.Line++;
-		//                parser.state.Column = 1;
-		//            }
-		//            map=new Integer32(character);
-		//            return true;
-		//        }
-		//        else {
-		//            map=null;
-		//            return false;
-		//        }
-		//    }
-		//}
 		public abstract class CharRule:Rule {
 			public abstract bool CheckNext(char next);
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
