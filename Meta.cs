@@ -787,7 +787,6 @@ namespace Meta {
 			return new CustomStatement(value.Compile(), delegate(ref Map context, Map v) {
 				context[s(context)] = v;
 			});
-			//return new CompiledKeyStatement(key.Compile(), value.Compile());
 		}
 		public Expression key;
 		public KeyStatement(Expression key, Expression value, Program program, int index)
@@ -796,31 +795,24 @@ namespace Meta {
 			key.Statement = this;
 		}
 	}
-	public class CompiledCurrentStatement : CompiledStatement {
-		private int index;
-		public CompiledCurrentStatement(Compiled value, int index) : base(value) {
-			this.index = index;
-		}
-		public override void AssignImplementation(ref Map context, Map value) {
-			if (index == 0) {
-				if(!(value is DictionaryMap))  {
-					context = value.Copy();
-				}
-				else {
-					((DictionaryMap)context).dictionary = ((DictionaryMap)value).dictionary;
-				}
-			}
-			else {
-				context = value;
-			}
-		}
-	}
 	public class CurrentStatement : Statement {
 		protected override Structure CurrentImplementation(Structure previous) {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
-			return new CompiledCurrentStatement(value.Compile(), Index);
+			return new CustomStatement(value.Compile(),delegate(ref Map context, Map v) {
+				if (this.Index== 0) {
+					if(!(v is DictionaryMap))  {
+						context = v.Copy();
+					}
+					else {
+						((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
+					}
+				}
+				else {
+					context = v;
+				}
+			});
 		}
 		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) {
 		}
