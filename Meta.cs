@@ -31,18 +31,24 @@ using System.Windows;
 using java.math;
 
 namespace Meta {
-	public delegate Map CompiledEvaluate(Map map);
-	public class Compiled {
-		private CompiledEvaluate c;
-		//public Extent Source;
-		public Compiled(CompiledEvaluate c){
-			this.c = c;
-			//this.Source = source;
-		}
-		public Map Evaluate(Map context) {
-			return c(context);
-		}
-	}
+	public delegate Map Compiled(Map map);
+	//public class CustomCompiled : Compiled {
+	//    private CompiledEvaluate c;
+	//    public CustomCompiled(Extent source, CompiledEvaluate c)
+	//        : base(source) {
+	//        this.c = c;
+	//    }
+	//    public override Map Evaluate(Map context) {
+	//        return c(context);
+	//    }
+	//}
+	//public abstract class Compiled {
+	//    public Extent Source;
+	//    public Compiled(Extent source) {
+	//        this.Source = source;
+	//    }
+	//    public abstract Map Evaluate(Map context);
+	//}
 	public class Dict<TKey, TValue>:Dictionary<TKey,TValue> {
 		public Dict() {
 		}
@@ -116,11 +122,12 @@ namespace Meta {
 			return null;
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(delegate(Map map) {
+			return delegate(Map map) {
 				return Map.arguments.Peek();
-			});
+			};
 		}
 	}
+
 	public class Call : Expression {
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
@@ -222,8 +229,9 @@ namespace Meta {
 						il.Emit(OpCodes.Ldc_I4, i);
 						il.Emit(OpCodes.Ldelem_Ref);
 						il.Emit(OpCodes.Ldarg_1);
-						il.Emit(OpCodes.Callvirt,typeof(Compiled).GetMethod("Evaluate"));
-						Transform.GetConversion(type,il);
+						il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+						//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Evaluate"));
+						Transform.GetConversion(type, il);
 					}
 					if(method.IsStatic) {
 						il.Emit(OpCodes.Call,methodInfo);
@@ -234,9 +242,9 @@ namespace Meta {
 					Transform.GetMetaConversion(methodInfo.ReturnType,il);
 					il.Emit(OpCodes.Ret);
 					FastCall fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),args);
-					return new Compiled(delegate(Map context) {
+					return delegate(Map context) {
 						return fastCall(context);
-					});
+					};
 				}
 			}
 			if(calls.Count==2 && calls[0].GetConstant()!=null) {
@@ -245,11 +253,11 @@ namespace Meta {
 			List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile();
 			});
-			return new Compiled(delegate(Map current) {
-				Map result = compiled[0].Evaluate(current);
+			return delegate(Map current) {
+				Map result = compiled[0](current);
 				for (int i = 1; i < compiled.Count; i++) {
 					try {
-						result = result.Call(compiled[i].Evaluate(current));
+						result = result.Call(compiled[i](current));
 					}
 					catch (MetaException e) {
 						e.InvocationList.Add(new ExceptionLog(Source.Start));
@@ -263,7 +271,7 @@ namespace Meta {
 					}
 				}
 				return result;
-			});
+			};
 		}
 	}
 	public delegate Map MetaConversion(object obj);
@@ -399,12 +407,12 @@ namespace Meta {
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
 			    if (value != null && value.IsConstant) {
-					return new Compiled(delegate(Map context) {
+					return delegate(Map context) {
 						return value;
-					});
+					};
 				}
 			    else {
-					return new Compiled(delegate(Map context) {
+					return delegate(Map context) {
 						Map selected = context;
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
@@ -423,26 +431,26 @@ namespace Meta {
 							return selected[key];
 						}
 						return result;
-					});
+					};
 				}}
 			else {
 			    FindStuff(out count, out key, out value);
 				Compiled compiled = expression.Compile();
-				return new Compiled(delegate(Map context) {
-					Map k = compiled.Evaluate(context);
+				return delegate(Map context) {
+					Map k = compiled(context);
 					Map selected = context;
 					while (!selected.ContainsKey(k)) {
 						if (selected.Scope != null) {
 							selected = selected.Scope;
 						}
 						else {
-							Map m = compiled.Evaluate(context);
+							Map m = compiled(context);
 							bool b = context.ContainsKey(m);
 							throw new KeyNotFound(k, Source.Start, null);
 						}
 					}
 					return selected[k];
-				});
+				};
 			}
 		}
 	}
@@ -513,11 +521,11 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			Compiled e = expression.Compile();
 			Map parameter = key;
-			return new Compiled(delegate (Map p) {
+			return delegate (Map p) {
 				Map context = new FunctionArgument(parameter, Map.arguments.Peek());
 				context.Scope = p;
-				return e.Evaluate(context);
-			});
+				return e(context);
+			};
 		}
 		public Expression expression;
 		public Map key;
@@ -612,25 +620,25 @@ namespace Meta {
 					Map value=statement.value.GetConstant();
 					CompiledStatement compiled=statement.Compile();
 					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-						return new Compiled(delegate(Map context) {
+						return delegate(Map context) {
 							Map map=new FunctionMap(value);
 							map.Scope=context;
 							return map;
-						});
+						};
 					}
 				}
 			}
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 
-			return new Compiled(delegate(Map p) {
+			return delegate(Map p) {
 				Map context = new DictionaryMap();
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
 					statement.Assign(ref context);
 				}
 				return context;
-			});
+			};
 		}
 		public List<Statement> statementList= new List<Statement>();
 		public Program(Extent source,Expression parent):base(source,parent) {
@@ -648,7 +656,7 @@ namespace Meta {
 			this.value = value;
 		}
 		public void Assign(ref Map context) {
-			AssignImplementation(ref context, value.Evaluate(context));
+			AssignImplementation(ref context, value(context));
 		}
 		public abstract void AssignImplementation(ref Map context, Map value);
 		public readonly Compiled value;
@@ -783,7 +791,7 @@ namespace Meta {
 			this.key = key;
 		}
 		public override void AssignImplementation(ref Map context, Map value) {
-			context[key.Evaluate(context)] = value;
+			context[key(context)] = value;
 		}
 	}
 	public class KeyStatement : Statement {
@@ -884,7 +892,7 @@ namespace Meta {
 		}
 		public override void AssignImplementation(ref Map context, Map value) {
 			Map selected = context;
-			Map key = this.key.Evaluate(context);
+			Map key = this.key(context);
 			while (!selected.ContainsKey(key)) {
 				selected = selected.Scope;
 				if (selected == null) {
@@ -914,9 +922,9 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(delegate {
+			return delegate {
 				return literal;
-			});
+			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
@@ -929,9 +937,9 @@ namespace Meta {
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new Compiled(delegate {
+			return delegate {
 				return Gac.gac;
-			});
+			};
 		}
 	}
 	public class Select : Expression {
@@ -948,10 +956,10 @@ namespace Meta {
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
-			return new Compiled(delegate(Map context) {
-				Map selected = s[0].Evaluate(context);
+			return delegate(Map context) {
+				Map selected = s[0](context);
 				for (int i = 1; i < s.Count; i++) {
-					Map key = s[i].Evaluate(context);
+					Map key = s[i](context);
 					Map value = selected[key];
 					if (value == null) {
 						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
@@ -961,7 +969,7 @@ namespace Meta {
 					}
 				}
 				return selected;
-			});
+			};
 		}
 		private List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
@@ -4558,7 +4566,7 @@ namespace Meta {
 			Map result;
 		    Map function=this[CodeKeys.Function];
 		    if (function!=null) {
-		        result=function.GetExpression(null).GetCompiled().Evaluate(this);
+		        result=function.GetExpression(null).GetCompiled()(this);
 			}
 		    else {
 		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
