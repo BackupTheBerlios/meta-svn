@@ -721,15 +721,6 @@ namespace Meta {
 			return new CustomStatement(value.Compile(), delegate { });
 		}
 	}
-	//public class CompiledKeyStatement : CompiledStatement {
-	//    private Compiled key;
-	//    public CompiledKeyStatement(Compiled key, Compiled value): base(value) {
-	//        this.key = key;
-	//    }
-	//    public override void AssignImplementation(ref Map context, Map value) {
-	//        context[key(context)] = value;
-	//    }
-	//}
 	public class KeyStatement : Statement {
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
@@ -817,29 +808,23 @@ namespace Meta {
 		public CurrentStatement(Expression current,Expression value, Program program, int index): base(program, value, index) {
 		}
 	}
-	public class CompiledSearchStatement : CompiledStatement {
-		private Compiled key;
-		public CompiledSearchStatement(Compiled key, Compiled value) : base(value) {
-			this.key = key;
-		}
-		public override void AssignImplementation(ref Map context, Map value) {
-			Map selected = context;
-			Map key = this.key(context);
-			while (!selected.ContainsKey(key)) {
-				selected = selected.Scope;
-				if (selected == null) {
-					throw new KeyNotFound(key, key.Source.Start, null);
-				}
-			}
-			selected[key] = value;
-		}
-	}
 	public class SearchStatement : Statement {
 		protected override Structure CurrentImplementation(Structure previous) {
 			return previous;
 		}
 		public override CompiledStatement Compile() {
-			return new CompiledSearchStatement(key.Compile(), value.Compile());
+			Compiled k = key.Compile();
+			return new CustomStatement(value.Compile(),delegate (ref Map context, Map v) {
+				Map selected = context;
+				Map eKey = k(context);
+				while (!selected.ContainsKey(eKey)) {
+					selected = selected.Scope;
+					if (selected == null) {
+						throw new KeyNotFound(eKey, key.Source.Start, null);
+					}
+				}
+				selected[eKey] = v;
+			});
 		}
 		private Expression key;
 		public SearchStatement(Expression key, Expression value, Program program, int index) : base(program, value, index) {
