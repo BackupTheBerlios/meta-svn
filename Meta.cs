@@ -32,10 +32,6 @@ using java.math;
 
 namespace Meta {
 	public abstract class Compiled {
-		//public static implicit operator Compiled(CompiledEvaluate c) {
-		//    return new CustomCompiled(c)
-
-		//}
 		public Extent Source;
 		public Compiled(Extent source) {
 			this.Source = source;
@@ -211,8 +207,28 @@ namespace Meta {
 			if(calls.Count==2 && calls[0].GetConstant()!=null) {
 			    Structure s=calls[1].EvaluateStructure();
 			}
-			return new CompiledCall(calls.ConvertAll<Compiled>(delegate(Expression e) {
-				return e.Compile();}), Source);
+			List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
+				return e.Compile();
+			});
+			return new CustomCompiled(Source, delegate(Map current) {
+				Map result = compiled[0].Evaluate(current);
+				for (int i = 1; i < compiled.Count; i++) {
+					try {
+						result = result.Call(compiled[i].Evaluate(current));
+					}
+					catch (MetaException e) {
+						e.InvocationList.Add(new ExceptionLog(Source.Start));
+						throw e;
+					}
+					catch (Exception e) {
+						while (e.InnerException != null) {
+							e = e.InnerException;
+						}
+						throw new MetaException(e.Message + "\n" + e.StackTrace, Source.Start);
+					}
+				}
+				return result;
+			});
 		}
 	}
 	public delegate Map MetaConversion(object obj);
@@ -254,30 +270,6 @@ namespace Meta {
 		private MethodInfo method;
 		public override Map Evaluate(Map context) {
 			return fastCall(context);
-		}
-	}
-	public class CompiledCall : Compiled {
-		List<Compiled> calls;
-		public CompiledCall(List<Compiled> calls, Extent source) : base(source) {
-			this.calls = calls;
-		}
-		public override Map Evaluate(Map current) {
-			Map result = calls[0].Evaluate(current);
-			for (int i = 1; i < calls.Count; i++) {
-				try {
-					result = result.Call(calls[i].Evaluate(current));}
-				catch (MetaException e) {
-					e.InvocationList.Add(new ExceptionLog(Source.Start));
-					throw e;
-				}
-				catch (Exception e) {
-					while(e.InnerException!=null) {
-						e=e.InnerException;
-					}
-					throw new MetaException(e.Message+"\n"+e.StackTrace, Source.Start);
-				}
-			}
-			return result;
 		}
 	}
 	public class Search : Expression {
@@ -377,84 +369,46 @@ namespace Meta {
 					});
 				}
 			    else {
-			        return new FastSearch(key, count, Source);}}
+					return new CustomCompiled(Source, delegate(Map context) {
+						Map selected = context;
+						for (int i = 0; i < count; i++) {
+							selected = selected.Scope;
+						}
+						Map result=selected[key];
+						if (result==null) {
+							selected = context;
+							int realCount = 0;
+							while (!selected.ContainsKey(key)) {
+								selected = selected.Scope;
+								realCount++;
+								if (selected == null) {
+									throw new KeyNotFound(key, Source.Start, null);
+								}
+							}
+							return selected[key];
+						}
+						return result;
+					});
+				}}
 			else {
 			    FindStuff(out count, out key, out value);
-				return new CompiledSearch(expression.Compile(), Source);
-			}
-		}
-	}
-	public class FastSearch : Compiled {
-		private int count;
-		private Map key;
-		public FastSearch(Map key, int count, Extent source)
-			: base(source) {
-			this.key = key;
-			this.count = count;}
-		public override Map Evaluate(Map context) {
-			Map selected = context;
-			for (int i = 0; i < count; i++) {
-				selected = selected.Scope;
-			}
-			Map result=selected[key];
-			if (result==null) {
-				selected = context;
-				int realCount = 0;
-				while (!selected.ContainsKey(key)) {
-					selected = selected.Scope;
-					realCount++;
-					if (selected == null) {
-						throw new KeyNotFound(key, Source.Start, null);
+				Compiled compiled = expression.Compile();
+				return new CustomCompiled(Source, delegate(Map context) {
+					Map k = compiled.Evaluate(context);
+					Map selected = context;
+					while (!selected.ContainsKey(k)) {
+						if (selected.Scope != null) {
+							selected = selected.Scope;
+						}
+						else {
+							Map m = compiled.Evaluate(context);
+							bool b = context.ContainsKey(m);
+							throw new KeyNotFound(k, Source.Start, null);
+						}
 					}
-				}
-				return selected[key];
+					return selected[k];
+				});
 			}
-			return result;
-		}
-	}
-	//public class OptimizedSearch : Compiled {
-	//    private Map literal;
-	//    public OptimizedSearch(Map literal, Extent source)
-	//        : base(source) {
-	//        this.literal = literal;
-	//    }
-	//    public override Map Evaluate(Map context) {
-	//        return literal;
-	//    }
-	//}
-	public class CompiledSearch : Compiled {
-		private Compiled expression;
-		public CompiledSearch(Compiled expression, Extent source): base(source) {
-			this.expression = expression;
-		}
-		public override Map Evaluate(Map context) {
-			Map key = expression.Evaluate(context);
-			Map selected = context;
-			while (!selected.ContainsKey(key)) {
-				if (selected.Scope != null) {
-					selected = selected.Scope;
-				}
-				else {
-					Map m=expression.Evaluate(context);
-					bool b=context.ContainsKey(m);
-					throw new KeyNotFound(key, Source.Start, null);
-				}
-			}
-			return selected[key];
-		}
-	}
-	public class CompiledProgram : Compiled {
-		private List<CompiledStatement> statementList;
-		public CompiledProgram(List<CompiledStatement> statementList, Extent source): base(source) {
-			this.statementList = statementList;
-		}
-		public override Map Evaluate(Map parent) {
-			Map context = new DictionaryMap();
-			context.Scope = parent;
-			foreach (CompiledStatement statement in statementList) {
-				statement.Assign(ref context);
-			}
-			return context;
 		}
 	}
 	public class FunctionArgument:Map {
@@ -638,8 +592,18 @@ namespace Meta {
 					}
 				}
 			}
-			return new CompiledProgram(statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
-				return s.Compile();}), Source);}
+			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
+				return s.Compile();});
+
+			return new CustomCompiled(Source,delegate(Map p) {
+				Map context = new DictionaryMap();
+				context.Scope = p;
+				foreach (CompiledStatement statement in list) {
+					statement.Assign(ref context);
+				}
+				return context;
+			});
+		}
 		public List<Statement> statementList= new List<Statement>();
 		public Program(Extent source,Expression parent):base(source,parent) {
 		}
@@ -915,15 +879,6 @@ namespace Meta {
 			key.Statement = this;
 		}
 	}
-	public class CompiledLiteral : Compiled {
-		public readonly Map literal;
-		public CompiledLiteral(Map literal, Extent source) : base(source) {
-			this.literal = literal;
-		}
-		public override Map Evaluate(Map context) {
-			return literal;
-		}
-	}
 	public class Literal : Expression {
 		public override Structure GetStructure() {
 			return new LiteralStructure(literal);
@@ -931,16 +886,12 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
-			return new CompiledLiteral(literal, Source);
+			return new CustomCompiled(Source, delegate {
+				return literal;
+			});
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
-		}
-	}
-	public class CompiledRoot : Compiled {
-		public CompiledRoot(Extent source) : base(source) {}
-		public override Map Evaluate(Map selected) {
-			return Gac.gac;
 		}
 	}
 	public class Root : Expression {
@@ -950,29 +901,9 @@ namespace Meta {
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new CompiledRoot(Source);
-		}
-	}
-	public class CompiledSelect : Compiled {
-		List<Compiled> subs;
-		public CompiledSelect(List<Compiled> subs, Extent source): base(source) {
-			this.subs = subs;
-			if (subs[0] == null) {
-			}
-		}
-		public override Map Evaluate(Map context) {
-			Map selected = subs[0].Evaluate(context);
-			for (int i = 1; i < subs.Count; i++) {
-				Map key = subs[i].Evaluate(context);
-				Map value = selected[key];
-				if (value == null) {
-					throw new KeyDoesNotExist(key, subs[i].Source!=null?subs[i].Source.Start:null, selected);
-				}
-				else {
-					selected = value;
-				}
-			}
-			return selected;
+			return new CustomCompiled(Source, delegate {
+				return Gac.gac;
+			});
 		}
 	}
 	public class Select : Expression {
@@ -988,8 +919,21 @@ namespace Meta {
 			return new LiteralStructure(selected);
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return new CompiledSelect(subs.ConvertAll<Compiled>(delegate(Expression e) {
-				return e.Compile();}), Source);
+			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
+			return new CustomCompiled(Source, delegate(Map context) {
+				Map selected = s[0].Evaluate(context);
+				for (int i = 1; i < s.Count; i++) {
+					Map key = s[i].Evaluate(context);
+					Map value = selected[key];
+					if (value == null) {
+						throw new KeyDoesNotExist(key, s[i].Source != null ? s[i].Source.Start : null, selected);
+					}
+					else {
+						selected = value;
+					}
+				}
+				return selected;
+			});
 		}
 		private List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
@@ -2273,7 +2217,6 @@ namespace Meta {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
 				if (number==1) {
-					//return number>0 && Number.LessEqual(number,text.Length);}
 					return number > 0 && number <= text.Length;}
 				else {
 					return false;
@@ -2726,15 +2669,6 @@ namespace Meta {
 			return new CachedRule(new Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
-		//public class Ignore:Rule {
-		//    private Rule rule;
-		//    public Ignore(Rule rule) {
-		//        this.rule=rule;
-		//    }
-		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		//        return rule.Match(parser,ref map);
-		//    }
-		//}
 		public static Rule EndOfLine = new Sequence(
 			new ZeroOrMoreChars(new Chars(""+Syntax.space+Syntax.tab)),
 			new Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
