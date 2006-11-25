@@ -32,23 +32,6 @@ using java.math;
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
-	//public class CustomCompiled : Compiled {
-	//    private CompiledEvaluate c;
-	//    public CustomCompiled(Extent source, CompiledEvaluate c)
-	//        : base(source) {
-	//        this.c = c;
-	//    }
-	//    public override Map Evaluate(Map context) {
-	//        return c(context);
-	//    }
-	//}
-	//public abstract class Compiled {
-	//    public Extent Source;
-	//    public Compiled(Extent source) {
-	//        this.Source = source;
-	//    }
-	//    public abstract Map Evaluate(Map context);
-	//}
 	public class Dict<TKey, TValue>:Dictionary<TKey,TValue> {
 		public Dict() {
 		}
@@ -201,36 +184,22 @@ namespace Meta {
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
 				if (method.IsStatic) {
-					//(MethodInfo)method
 					List<Compiled> c=calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
 
-					//return new EmittedCall((MethodInfo)method, calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(
-					//    delegate(Expression e) {
-					//        return e.Compile();}), Source);
-
-
 					Compiled[] args = c.ToArray();
-					//Compiled[] args = arguments.ToArray();
 					ParameterInfo[] parameters = method.GetParameters();
 					DynamicMethod m;
-					//public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source) : base(source) {
-						//this.method = method;
-						//this.arguments = ;
-						//this.parameters = method.GetParameters();
 					MethodInfo methodInfo = (MethodInfo)method;
 					Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
-					//Type[] param = new Type[] { typeof(EmittedCall), typeof(Map) };
 					m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 					ILGenerator il = m.GetILGenerator();
 					for(int i=0;i<parameters.Length;i++) {
 						Type type=parameters[i].ParameterType;
 						il.Emit(OpCodes.Ldarg_0);
-						//il.Emit(OpCodes.Ldfld,typeof(EmittedCall).GetField("arguments"));
 						il.Emit(OpCodes.Ldc_I4, i);
 						il.Emit(OpCodes.Ldelem_Ref);
 						il.Emit(OpCodes.Ldarg_1);
 						il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Evaluate"));
 						Transform.GetConversion(type, il);
 					}
 					if(method.IsStatic) {
@@ -278,43 +247,6 @@ namespace Meta {
 	public delegate object Conversion(Map map);
 	
 	public delegate Map FastCall(Map context);
-	//public class EmittedCall : Compiled {
-	//    public Compiled[] arguments;
-	//    private ParameterInfo[] parameters;
-	//    private DynamicMethod m;
-	//    public EmittedCall(MethodInfo method, List<Compiled> arguments, Extent source) : base(source) {
-	//        this.method = method;
-	//        this.arguments = arguments.ToArray();
-	//        this.parameters = method.GetParameters();
-	//        Type[] param = new Type[] { typeof(EmittedCall), typeof(Map) };
-	//        m = new DynamicMethod("Optimized",typeof(Map),param,typeof(Map).Module);
-	//        ILGenerator il = m.GetILGenerator();
-	//        for(int i=0;i<parameters.Length;i++) {
-	//            Type type=parameters[i].ParameterType;
-	//            il.Emit(OpCodes.Ldarg_0);
-	//            il.Emit(OpCodes.Ldfld,typeof(EmittedCall).GetField("arguments"));
-	//            il.Emit(OpCodes.Ldc_I4, i);
-	//            il.Emit(OpCodes.Ldelem_Ref);
-	//            il.Emit(OpCodes.Ldarg_1);
-	//            il.Emit(OpCodes.Callvirt,typeof(Compiled).GetMethod("Evaluate"));
-	//            Transform.GetConversion(type,il);
-	//        }
-	//        if(method.IsStatic) {
-	//            il.Emit(OpCodes.Call,method);
-	//        }
-	//        else {
-	//            il.Emit(OpCodes.Callvirt,method);
-	//        }
-	//        Transform.GetMetaConversion(method.ReturnType,il);
-	//        il.Emit(OpCodes.Ret);
-	//        this.fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),this);
-	//    }
-	//    private FastCall fastCall;
-	//    private MethodInfo method;
-	//    public override Map Evaluate(Map context) {
-	//        return fastCall(context);
-	//    }
-	//}
 	public class Search : Expression {
 		public override Structure GetStructure() {
 			Map key;
