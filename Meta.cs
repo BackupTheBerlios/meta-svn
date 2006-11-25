@@ -2633,8 +2633,6 @@ namespace Meta {
 		public static Rule CharacterDataExpression = new Sequence(
 			Syntax.character,
 			new ReferenceAssignment(ReallyOneChar(CharsExcept(Syntax.character.ToString()))),
-			//new ReferenceAssignment(CharsExcept(Syntax.character.ToString())),
-
 			Syntax.character
 		);
 		public static Rule String = new Sequence(
@@ -3109,66 +3107,25 @@ namespace Meta {
 			}
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
-		public delegate bool CheckNext(char next);
-		public class CharRule {
-			public CheckNext CheckNext;
-			public CharRule(CheckNext c) {
-				this.CheckNext = c;
-			}
-			//public abstract bool CheckNext(char next);
-			//protected override bool MatchImplementation(Parser parser, ref Map map) {
-				//char next=parser.Look();
-				//if(CheckNext(next)){
-				//    map=next;
-				//    parser.state.index++;
-				//    parser.state.Column++;
-				//    if(next.Equals(Syntax.unixNewLine)) {
-				//        parser.state.Line++;
-				//        parser.state.Column= 1;
-				//    }
-				//    return true;
-				//}
-				//else {
-				//    return false;
-				//}
-			//}
-		}
+		public delegate bool CharRule(char next);
 		public static CharRule Chars(string chars) {
 			return new CharRule(delegate(char next) {
 				return chars.IndexOf(next) != -1;
 			});
 		}
-		//public class Chars:CharRule{
-		//    private string chars;
-		//    public Chars(string chars){
-		//        this.chars=chars;
-		//    }
-		//    public override bool CheckNext(char next) {
-		//        return chars.IndexOf(next)!=-1;
-		//    }
-		//}
 		public static CharRule CharsExcept(string characters) {
 			string s = characters + Syntax.endOfFile;
 			return new CharRule(delegate(char c) {
 				return s.IndexOf(c) == -1;
 			});
 		}
-		//public class CharsExcept: CharRule {
-		//    private string s;
-		//    public CharsExcept(string characters){
-		//        s=characters+Syntax.endOfFile;
-		//    }
-		//    public override bool CheckNext(char c) {
-		//        return s.IndexOf(c)==-1;
-		//    }
-		//}
 		public delegate bool StringDelegate(Parser parser, ref string s);
 		public static StringRule CharLoop(CharRule rule, int min, int max) {
 			return new StringRule(delegate(Parser parser, ref string s) {
 				int offset = 0;
 				int column = parser.state.Column;
 				int line = 0;
-				while ((max == -1 || offset < max) && rule.CheckNext(parser.Look(offset))) {
+				while ((max == -1 || offset < max) && rule(parser.Look(offset))) {
 					offset++;
 					column++;
 					if (parser.Look(offset).Equals(Syntax.unixNewLine)) {
@@ -3189,8 +3146,7 @@ namespace Meta {
 		public static Rule ReallyOneChar(CharRule rule) {
 			return new CustomRule(delegate(Parser parser, ref Map map) {
 				char next = parser.Look();
-				if (rule.CheckNext(next)) {
-				//if (CheckNext(next)) {
+				if (rule(next)) {
 					map = next;
 					parser.state.index++;
 					parser.state.Column++;
@@ -3213,13 +3169,6 @@ namespace Meta {
 				return next.Equals(c);
 			});
 		}
-		//public class SingleChar:CharRule{
-		//    private char c;
-		//    public SingleChar(char c) {this.c=c;}
-		//    public override bool CheckNext(char next) {
-		//        return next.Equals(c);
-		//    }
-		//}
 		public static StringRule OneOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 1, -1);
 		}
