@@ -2657,12 +2657,13 @@ namespace Meta {
 			}));
 
 		public static StringRule StringSequence(params StringRule[] rules) {
-			return new CustomStringRule(delegate(Parser parser, ref string s) {
+			return new StringRule(delegate(Parser parser, ref string s) {
 				s = "";
 				State oldState = parser.state;
 				foreach (StringRule rule in rules) {
 					string result = null;
 					if (rule.MatchString(parser, ref result)) {
+					//if (rule.MatchString(parser, ref result)) {
 						s += result;
 					}
 					else {
@@ -3176,7 +3177,7 @@ namespace Meta {
 		public delegate bool StringDelegate(Parser parser, ref string s);
 
 		public static StringRule CharLoop(CharRule rule, int min, int max) {
-			return new CustomStringRule(delegate(Parser parser, ref string s) {
+			return new StringRule(delegate(Parser parser, ref string s) {
 				int offset = 0;
 				int column = parser.state.Column;
 				int line = 0;
@@ -3215,27 +3216,37 @@ namespace Meta {
 		public static StringRule ZeroOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 0, -1);
 		}
-		public class CustomStringRule : StringRule {
+		public class StringRule:Rule {
 			private StringDelegate del;
-			public CustomStringRule(StringDelegate del) {
+			public StringRule(StringDelegate del) {
 				this.del = del;
 			}
-			public override bool MatchString(Parser parser, ref string s) {
-				return del(parser, ref s);
-			}
-		}
-		public abstract class StringRule:Rule {
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				string s=null;
-				if(MatchString(parser,ref s)) {
-					map=s;return true;
+				string s = null;
+				if (MatchString(parser, ref s)) {
+					map = s;
+					return true;
 				}
 				else {
 					return false;
 				}
 			}
-			public abstract bool MatchString(Parser parser,ref string s);
+			public bool MatchString(Parser parser, ref string s) {
+				return del(parser, ref s);
+			}
 		}
+		//public abstract class StringRule:Rule {
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        string s=null;
+		//        if(MatchString(parser,ref s)) {
+		//            map=s;return true;
+		//        }
+		//        else {
+		//            return false;
+		//        }
+		//    }
+		//    public abstract bool MatchString(Parser parser,ref string s);
+		//}
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
