@@ -3043,32 +3043,102 @@ namespace Meta {
 			public Map map;
 			public State state;
 		}
-		public class CachedRule:Rule {
+		//public static List<CachedRule> cachedRules = new List<CachedRule>();
+		//public static Rule CachedRule((Rule rule) {
+		//        this.rule = rule;
+		//        cachedRules.Add(this);
+		//    }
+		//    public Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        CachedResult cachedResult;
+		//        State oldState = parser.state;
+		//        if (cached.TryGetValue(parser.state, out cachedResult)) {
+		//            map = cachedResult.map;
+		//            if (parser.state.Text.Length == parser.state.index + 1) {
+		//                return false;
+		//            }
+		//            parser.state = cachedResult.state;
+		//            return true;
+		//        }
+		//        if (rule.Match(parser, ref map)) {
+		//            cached[oldState] = new CachedResult(map, parser.state);
+		//            return true;
+		//        }
+		//        return false;
+		//    }
+		//}
+		public class CacheKey {
+			public State State;
+			public Rule Rule;
+			public CacheKey(State state,Rule rule) {
+				this.State = state;
+				this.Rule = rule;
+			}
+			public override bool Equals(object obj) {
+				CacheKey key=(CacheKey)obj;
+				return key.Rule.Equals(Rule) && key.State.Equals(State);
+			}
+			public override int GetHashCode() {
+				unchecked {
+					return State.GetHashCode() * Rule.GetHashCode();
+				}
+			}
+		}
+		public class CachedRule : Rule {
 			public static List<CachedRule> cachedRules = new List<CachedRule>();
-		    private Rule rule;
-		    public CachedRule(Rule rule) {
-		        this.rule=rule;
+			private Rule rule;
+			public CachedRule(Rule rule) {
+				this.rule = rule;
 				cachedRules.Add(this);
 			}
-		    public Dictionary<State,CachedResult> cached=new Dictionary<State,CachedResult>();
-		    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		        CachedResult cachedResult;
-		        State oldState=parser.state;
-		        if(cached.TryGetValue(parser.state,out cachedResult)) {
-		            map=cachedResult.map;
-		            if(parser.state.Text.Length==parser.state.index+1) {
-		                return false;
-		            }
-					parser.state=cachedResult.state;
-		            return true;
-		        }
-		        if(rule.Match(parser,ref map)) {
-		            cached[oldState]=new CachedResult(map,parser.state);
-		            return true;
-		        }
-		        return false;
-		    }
+			public Dictionary<CacheKey, CachedResult> cached = new Dictionary<CacheKey, CachedResult>();
+			protected override bool MatchImplementation(Parser parser, ref Map map) {
+				CachedResult cachedResult;
+				//State oldState = parser.state;
+				CacheKey key = new CacheKey(parser.state, rule);
+				if (cached.TryGetValue(key, out cachedResult)) {
+				//if (cached.TryGetValue(parser.state, out cachedResult)) {
+					map = cachedResult.map;
+					if (parser.state.Text.Length == parser.state.index + 1) {
+						return false;
+					}
+					parser.state = cachedResult.state;
+					return true;
+				}
+				if (rule.Match(parser, ref map)) {
+					cached[key] = new CachedResult(map, parser.state);
+					//cached[oldState] = new CachedResult(map, parser.state);
+					return true;
+				}
+				return false;
+			}
 		}
+		//public class CachedRule : Rule {
+		//    public static List<CachedRule> cachedRules = new List<CachedRule>();
+		//    private Rule rule;
+		//    public CachedRule(Rule rule) {
+		//        this.rule = rule;
+		//        cachedRules.Add(this);
+		//    }
+		//    public Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        CachedResult cachedResult;
+		//        State oldState = parser.state;
+		//        if (cached.TryGetValue(parser.state, out cachedResult)) {
+		//            map = cachedResult.map;
+		//            if (parser.state.Text.Length == parser.state.index + 1) {
+		//                return false;
+		//            }
+		//            parser.state = cachedResult.state;
+		//            return true;
+		//        }
+		//        if (rule.Match(parser, ref map)) {
+		//            cached[oldState] = new CachedResult(map, parser.state);
+		//            return true;
+		//        }
+		//        return false;
+		//    }
+		//}
 		public abstract class Rule {
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
@@ -3223,19 +3293,6 @@ namespace Meta {
 				return rule.Match(parser, ref map);
 			});
 		}
-		//public class DelayedRule : Rule {
-		//    private RuleFunction ruleFunction;
-		//    private Rule rule;
-		//    public DelayedRule(RuleFunction ruleFunction) {
-		//        this.ruleFunction = ruleFunction;
-		//    }
-		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		//        if (rule == null) {
-		//            rule = ruleFunction();
-		//        }
-		//        return rule.Match(parser,ref map);
-		//    }
-		//}
 		public static Rule Alternatives(params Rule[] cases) {
 			return new CustomRule(delegate(Parser parser, ref Map map) {
 				foreach (Rule expression in cases) {
