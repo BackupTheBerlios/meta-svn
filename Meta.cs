@@ -2554,8 +2554,7 @@ namespace Meta {
 		public struct State {
 			public override bool Equals(object obj) {
 				State state = (State)obj;
-				return
-					state.Column == Column && state.index == index && state.Line == Line &&
+				return state.Column == Column && state.index == index && state.Line == Line &&
 					state.FileName == FileName;
 			}
 			public override int GetHashCode() {
@@ -2607,7 +2606,7 @@ namespace Meta {
 				}
 			};
 		}
-		public static Rule Whitespace = new ZeroOrMore(new Characters(
+		public static Rule Whitespace = ZeroOrMore(Characters(
 			Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = new DelayedRule(delegate() {
@@ -2663,7 +2662,6 @@ namespace Meta {
 				foreach (StringRule rule in rules) {
 					string result = null;
 					if (rule.MatchString(parser, ref result)) {
-					//if (rule.MatchString(parser, ref result)) {
 						s += result;
 					}
 					else {
@@ -2707,7 +2705,7 @@ namespace Meta {
 			new Optional(Syntax.programStart),
 			Whitespace,
 			new ReferenceAssignment(
-				new OneOrMore(
+				OneOrMore(
 					new CustomAction(
 						new Sequence(
 							new ReferenceAssignment(Entry), Whitespace, new Optional(Syntax.programSeparator), Whitespace),
@@ -2732,7 +2730,7 @@ namespace Meta {
 								new Sequence(
 									Whitespace,
 									new Append(
-										new ZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												new Sequence(
 													Whitespace,
@@ -2762,7 +2760,7 @@ namespace Meta {
 								new Sequence(
 									Whitespace,
 									new Append(
-										new ZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												new Sequence(
 													Whitespace,
@@ -2814,7 +2812,7 @@ namespace Meta {
 						Assign(1,
 							new Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						new Append(
-							new OneOrMore(Autokey(Prefix('.', new Alternatives(
+							OneOrMore(Autokey(Prefix('.', new Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -2825,7 +2823,7 @@ namespace Meta {
 					new Sequence(
 						Assign(1,new Alternatives(SimpleCall)),
 						new Append(
-							new OneOrMore(Autokey(
+							OneOrMore(Autokey(
 								Prefix('.', new Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -2837,7 +2835,7 @@ namespace Meta {
 						Assign(1,
 							new Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						new Append(
-							new OneOrMore(Autokey(Prefix('.', new Alternatives(
+							OneOrMore(Autokey(Prefix('.', new Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -2849,7 +2847,7 @@ namespace Meta {
 					new Sequence(
 						Whitespace,
 						new ReferenceAssignment(
-							new ZeroOrMore(
+							ZeroOrMore(
 								Autokey(
 									new Sequence(Whitespace,new ReferenceAssignment(Value),
 						new Optional(Syntax.arraySeparator))))),
@@ -2886,7 +2884,7 @@ namespace Meta {
 								new Sequence(Whitespace,Assign(1,ListEntry),
 									Whitespace,
 									new Append(
-										new ZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												new Sequence(Syntax.arraySeparator,Whitespace,entryAction)))),
 									Whitespace,
@@ -2962,7 +2960,7 @@ namespace Meta {
 								new Sequence(
 									Whitespace,
 									new Append(
-										new ZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												new Sequence(
 													Whitespace,
@@ -3109,34 +3107,61 @@ namespace Meta {
 			}
 			protected abstract bool MatchImplementation(Parser parser, ref Map map);
 		}
-		public class Characters : CharacterRule {
-		    public string chars;
-		    public Characters(params char[] characters){chars=new string(characters);}
-		    protected override bool MatchCharacter(char next) {
-		        return chars.IndexOf(next)!=-1;
-			}
-		}		
-		public abstract class CharacterRule : Rule {
-		    protected abstract bool MatchCharacter(char c);
-		    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		        char character = parser.Look();
-		        calls++;
-		        if (MatchCharacter(character)) {
-		            parser.state.index++;
-		            parser.state.Column++;
-		            if (character.Equals(Syntax.unixNewLine)) {
-		                parser.state.Line++;
-		                parser.state.Column = 1;
-					}
-		            map=new Integer32(character);
-		            return true;
-				}
-		        else {
-		            map=null;
-		            return false;
-				}
-			}
+		public static Rule Characters(params char[] characters) {
+			string chars=new string(characters);
+			return CharacterRule(new MatchCharacter(delegate(char next) {
+				return chars.IndexOf(next) != -1;
+			}));
 		}
+		//public class Characters : CharacterRule {
+		//    public string chars;
+		//    public Characters(params char[] characters){chars=new string(characters);}
+		//    protected override bool MatchCharacter(char next) {
+		//        return chars.IndexOf(next)!=-1;
+		//    }
+		//}
+		public delegate bool MatchCharacter(char c);
+		public static Rule CharacterRule(MatchCharacter del) {
+			return new CustomRule(delegate (Parser parser, ref Map map) {
+				char character = parser.Look();
+				//calls++;
+				if (del(character)) {
+					parser.state.index++;
+					parser.state.Column++;
+					if (character.Equals(Syntax.unixNewLine)) {
+						parser.state.Line++;
+						parser.state.Column = 1;
+					}
+					map = new Integer32(character);
+					return true;
+				}
+				else {
+					map = null;
+					return false;
+				}
+			});
+		}
+		//public abstract class CharacterRule : Rule {
+		//    protected abstract bool MatchCharacter(char c);
+		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
+		//        char character = parser.Look();
+		//        calls++;
+		//        if (MatchCharacter(character)) {
+		//            parser.state.index++;
+		//            parser.state.Column++;
+		//            if (character.Equals(Syntax.unixNewLine)) {
+		//                parser.state.Line++;
+		//                parser.state.Column = 1;
+		//            }
+		//            map=new Integer32(character);
+		//            return true;
+		//        }
+		//        else {
+		//            map=null;
+		//            return false;
+		//        }
+		//    }
+		//}
 		public abstract class CharRule:Rule {
 			public abstract bool CheckNext(char next);
 			protected override bool MatchImplementation(Parser parser, ref Map map) {
@@ -3199,7 +3224,6 @@ namespace Meta {
 				return false;
 			});
 		}
-
 		public static StringRule OneChar(CharRule rule) {
 			return CharLoop(rule, 1, 1);
 		}
@@ -3235,18 +3259,6 @@ namespace Meta {
 				return del(parser, ref s);
 			}
 		}
-		//public abstract class StringRule:Rule {
-		//    protected override bool MatchImplementation(Parser parser, ref Map map) {
-		//        string s=null;
-		//        if(MatchString(parser,ref s)) {
-		//            map=s;return true;
-		//        }
-		//        else {
-		//            return false;
-		//        }
-		//    }
-		//    public abstract bool MatchString(Parser parser,ref string s);
-		//}
 		public delegate void PrePostDelegate(Parser parser);
 		public class PrePost : Rule {
 			private PrePostDelegate pre;
@@ -3346,34 +3358,20 @@ namespace Meta {
 				return true;
 			}
 		}
-		public class ZeroOrMoreString : ZeroOrMore {
-			public ZeroOrMoreString(Action action)
-				: base(action) {}
-			protected override bool MatchImplementation(Parser parser, ref Map result) {
-				bool match=base.MatchImplementation(parser, ref result);
-				if (match && result.IsString) {
-					result = result.GetString();}
-				return match;
-			}
-		}
-		public class ZeroOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Rule ZeroOrMore(Action action) {
+			return new CustomRule(delegate(Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;
 					}
 				}
-				map=list;
+				map = list;
 				return true;
-			}
-			private Action action;
-			public ZeroOrMore(Action action) {
-				this.action = action;
-			}
+			});
 		}
-		public class OneOrMore : Rule {
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
+		public static Rule OneOrMore (Action action) {
+			return new CustomRule(delegate (Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				bool matched = false;
 				while (true) {
@@ -3384,11 +3382,7 @@ namespace Meta {
 				}
 				map=list;
 				return matched;
-			}
-			private Action action;
-			public OneOrMore(Action action) {
-				this.action = action;
-			}
+			});
 		}
 		public class Optional : Rule {
 			private Rule rule;
