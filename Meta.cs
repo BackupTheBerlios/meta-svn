@@ -45,7 +45,21 @@ namespace Meta {
 			return dict;
 		}
 	}
-	public abstract class Expression:Attribute {
+	public abstract class Expression {
+		public static Expression LastArgument(Map code, Expression parent) {
+			return new CustomExpression(
+				code.Source,
+				parent,
+				delegate { return null; },
+				delegate(Expression p) {
+					return new Compiled(delegate(Map map) {
+						return Map.arguments.Peek();
+					});
+				}
+			);
+		}
+
+
 		public Compiled GetCompiled() {	
 			if(compiled==null) {	
 				compiled=Compile();
@@ -99,17 +113,36 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public abstract Compiled GetCompiled(Expression parent);
 	}
-	public class LastArgument : Expression {
-		public LastArgument(Map code, Expression parent) : base(code.Source, parent) {}
-		public override Structure GetStructure() {
-			return null;
+	public delegate Structure StructureDelegate();
+	public delegate Compiled CompiledDelegate(Expression parent);
+	public class CustomExpression : Expression {
+		private StructureDelegate structure;
+		private CompiledDelegate compiled;
+		public CustomExpression(Extent extent, Expression parent,StructureDelegate structure,CompiledDelegate compiled):base(extent,parent) {
+			this.structure = structure;
+			this.compiled = compiled;
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			return delegate(Map map) {
-				return Map.arguments.Peek();
-			};
+			return compiled(parent);
+		}
+		public override Structure GetStructure() {
+			return structure();
 		}
 	}
+
+
+
+	//public class LastArgument : Expression {
+	//    public LastArgument(Map code, Expression parent) : base(code.Source, parent) { }
+	//    public override Structure GetStructure() {
+	//        return null;
+	//    }
+	//    public override Compiled GetCompiled(Expression parent) {
+	//        return delegate(Map map) {
+	//            return Map.arguments.Peek();
+	//        };
+	//    }
+	//}
 	public class Call : Expression {
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
@@ -466,7 +499,7 @@ namespace Meta {
 			if (parameter.Count != 0) {
 				KeyStatement s = new KeyStatement(
 					new Literal(parameter, this),
-					new LastArgument(Map.Empty, this), this, 0);
+					LastArgument(Map.Empty, this), this, 0);
 				statementList.Add(s);
 				this.key=parameter;
 			}
@@ -1053,8 +1086,7 @@ namespace Meta {
 			}
 		}
 		public static void GetMetaConversion(Type type,ILGenerator il) {
-			if(!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) 
-			{
+			if(!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
 				if(type.Equals(typeof(Boolean))) {
 					il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToInt32",new Type[] {typeof(Boolean)}));
 					il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
@@ -1065,8 +1097,7 @@ namespace Meta {
 				else if(type.Equals(typeof(string))) {
 					il.Emit(OpCodes.Newobj,typeof(StringMap).GetConstructor(new Type[] {typeof(string)}));
 				}
-				else 
-				{
+				else {
 					switch (Type.GetTypeCode(type)) {
 						case TypeCode.Int32:
 							il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
@@ -2859,7 +2890,7 @@ namespace Meta {
 							p.defaultKeys.Pop();
 						})));
 
-		public static Rule ListEntry = new CustomRule(delegate(Parser p, ref Map map) {
+		public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
 				map = new DictionaryMap(
 					CodeKeys.Key,
@@ -2977,16 +3008,11 @@ namespace Meta {
 		});
 
 		public class Action {
-			public static implicit operator Action(string s) {
-				return StringRule2(s);
-			}
 			public static implicit operator Action(char c) {
 				return StringRule(OneChar(SingleChar(c)));
 			}
 			public static implicit operator Action(Rule rule) {
-				return new Action(rule, 
-					delegate { }
-					);
+				return new Action(rule,delegate { });
 			}
 			private Rule rule;
 			public Action(Rule rule, CustomActionDelegate action) { 
@@ -3037,31 +3063,11 @@ namespace Meta {
 			public Map map;
 			public State state;
 		}
-		//public class CacheKey {
-		//    public State State;
-		//    public Rule Rule;
-		//    public CacheKey(State state,Rule rule) {
-		//        this.State = state;
-		//        this.Rule = rule;
-		//    }
-		//    public override bool Equals(object obj) {
-		//        CacheKey key=(CacheKey)obj;
-		//        return key.Rule.Equals(Rule) && key.State.Equals(State);
-		//    }
-		//    public override int GetHashCode() {
-		//        unchecked {
-		//            return State.GetHashCode() * Rule.GetHashCode();
-		//        }
-		//    }
-		//}
-		//public static Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
 		public static Rule CachedRule(Rule rule) {
 			Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
 			allCached.Add(cached);
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				CachedResult cachedResult;
-				//State oldState 
-				//CacheKey key = new CacheKey(parser.state, rule);
 				State state = parser.state;
 				if (cached.TryGetValue(state, out cachedResult)) {
 					map = cachedResult.map;
@@ -3073,16 +3079,22 @@ namespace Meta {
 				}
 				if (rule.Match(parser, ref map)) {
 					cached[state] = new CachedResult(map, parser.state);
-					//cached[state] = new CachedResult(map, parser.state);
 					return true;
 				}
 				return false;
 			});
 		}
-		public abstract class Rule {
+		public class Rule {
+			public Rule(ParseFunction parseFunction) {
+				this.parseFunction = parseFunction;
+			}
 			public Precondition precondition;
 			public static implicit operator Rule(string s) {
-				return StringRule2(s);
+				List<Action> actions = new List<Action>();
+				foreach (char c in s) {
+					actions.Add(c);
+				}
+				return Sequence(actions.ToArray());
 			}
 			public static implicit operator Rule(char c) {
 			    return StringRule(OneChar(SingleChar(c)));
@@ -3100,7 +3112,7 @@ namespace Meta {
 				State oldState=parser.state;
 				bool matched;
 				Map result=null;
-				matched=MatchImplementation(parser, ref result);
+				matched=parseFunction(parser, ref result);
 				if (!matched) {
 					mismatches++;
 					parser.state=oldState;
@@ -3115,7 +3127,7 @@ namespace Meta {
 				map=result;
 				return matched;
 			}
-			protected abstract bool MatchImplementation(Parser parser, ref Map map);
+			private ParseFunction parseFunction;
 		}
 		public delegate bool CharRule(char next);
 		public static CharRule Chars(string chars) {
@@ -3154,7 +3166,7 @@ namespace Meta {
 			};
 		}
 		public static Rule ReallyOneChar(CharRule rule) {
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				char next = parser.Look();
 				if (rule(next)) {
 					map = next;
@@ -3186,7 +3198,7 @@ namespace Meta {
 			return CharLoop(rule, 0, -1);
 		}
 		public static Rule StringRule(StringDelegate del) {
-		    return new CustomRule(delegate(Parser parser, ref Map map) {
+		    return new Rule(delegate(Parser parser, ref Map map) {
 		        string s = null;
 		        if (del(parser, ref s)) {
 		            map = s;
@@ -3199,34 +3211,18 @@ namespace Meta {
 		}
 		public delegate void PrePostDelegate(Parser parser);
 		public static Rule PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				pre(parser);
 				bool matched = rule.Match(parser, ref map);
 				post(parser);
 				return matched;
 			});
 		}
-		public static Rule StringRule2(string text) {
-			List<Action> actions = new List<Action>();
-			foreach (char c in text) {
-				actions.Add(c);
-			}
-			return Sequence(actions.ToArray());
-		}
 		public delegate bool ParseFunction(Parser parser, ref Map map);
-		public class CustomRule : Rule {
-			private ParseFunction parseFunction;
-			public CustomRule(ParseFunction parseFunction) {
-				this.parseFunction = parseFunction;
-			}
-			protected override bool MatchImplementation(Parser parser, ref Map map) {
-				return parseFunction(parser, ref map);
-			}
-		}
 		public delegate Rule RuleFunction();
 		public static Rule DelayedRule(RuleFunction ruleFunction) {
 			Rule rule=null;
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				if (rule == null) {
 					rule = ruleFunction();
 				}
@@ -3234,7 +3230,7 @@ namespace Meta {
 			});
 		}
 		public static Rule Alternatives(params Rule[] cases) {
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				foreach (Rule expression in cases) {
 					bool matched = expression.Match(parser, ref map);
 					if (matched) {
@@ -3245,7 +3241,7 @@ namespace Meta {
 			});
 		}
 		public static Rule Sequence(params Action[] actions) {
-			return new CustomRule(delegate(Parser parser, ref Map match) {
+			return new Rule(delegate(Parser parser, ref Map match) {
 				Map result = new DictionaryMap();
 				bool success = true;
 				foreach (Action action in actions) {
@@ -3268,13 +3264,13 @@ namespace Meta {
 			});
 		}
 		public static Rule LiteralRule(Map literal) {
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				map = literal;
 				return true;
 			});
 		}
 		public static Rule ZeroOrMore(Action action) {
-			return new CustomRule(delegate(Parser parser, ref Map map) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
@@ -3286,7 +3282,7 @@ namespace Meta {
 			});
 		}
 		public static Rule OneOrMore (Action action) {
-			return new CustomRule(delegate (Parser parser, ref Map map) {
+			return new Rule(delegate (Parser parser, ref Map map) {
 				Map list = new DictionaryMap();
 				bool matched = false;
 				while (true) {
@@ -3300,7 +3296,7 @@ namespace Meta {
 			});
 		}
 		public static Rule Optional(Rule rule) {
-			return new CustomRule(delegate(Parser parser, ref Map match) {
+			return new Rule(delegate(Parser parser, ref Map match) {
 				Map matched = null;
 				rule.Match(parser, ref matched);
 				if (matched == null) {
@@ -4477,18 +4473,24 @@ namespace Meta {
 		}
 		public static Dict<Map, Type> expressions = new Dict<Map, Type>()
 			- CodeKeys.Call + typeof(Call) - CodeKeys.Program + typeof(Program) - CodeKeys.Literal + typeof(Literal)
-			- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root) - CodeKeys.LastArgument + typeof(LastArgument)
+			- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root)// - CodeKeys.LastArgument + typeof(LastArgument)
 			- CodeKeys.Search + typeof(Search);
 		public static Dict<Map, Type> statements = new Dict<Map, Type>()
 			- CodeKeys.Keys + typeof(SearchStatement) - CodeKeys.Current + typeof(CurrentStatement)
 			- CodeKeys.Key + typeof(KeyStatement) - CodeKeys.Discard + typeof(DiscardStatement);
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
-		        foreach(Map key in Keys) {
-					if(expressions.ContainsKey(key)) {
-						return (Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
-						).Invoke(new object[] {this[key],parent});
-					}
+				if (ContainsKey(CodeKeys.LastArgument)) {
+					return Expression.LastArgument(this[CodeKeys.LastArgument], parent);
+				}
+			//        return new Call(this[codekeys+ typeof(Call) - CodeKeys.Program + typeof(Program) - CodeKeys.Literal + typeof(Literal)
+			//- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root) - CodeKeys.LastArgument + typeof(LastArgument)
+			//- CodeKeys.Search + typeof(Search);
+				foreach(Map key in Keys) {
+				    if(expressions.ContainsKey(key)) {
+				        return (Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
+				        ).Invoke(new object[] {this[key],parent});
+				    }
 				}
 			}
 			if (ContainsKey(CodeKeys.Expression)) {
