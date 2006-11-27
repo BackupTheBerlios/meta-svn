@@ -1756,16 +1756,16 @@ namespace Meta {
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
 				foreach (MemberInfo member in type.GetMembers(bindingFlags)) {
 					MethodInfo method = member as MethodInfo;
-					if (method != null) {
+					if (method != null && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
 						string name = TypeMap.GetMethodName(method);
 						data[name] = new MethodMember(method);
 					}
 					FieldInfo field = member as FieldInfo;
-					if (field != null) {
+					if (field != null && field.IsPublic) {
 						data[field.Name] = new FieldMember(field);
 					}
 					Type t = member as Type;
-					if (t != null) {
+					if (t != null && t.IsPublic) {
 						data[t.Name] = new TypeMember(t);
 					}
 				}
