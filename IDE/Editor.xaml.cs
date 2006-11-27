@@ -772,7 +772,7 @@ public partial class Editor : System.Windows.Window {
 		//Parser.cached.Clear();
 		Parser parser = new Parser(text, fileName);
 		Map map = null;
-		bool matched = Parser.MapRule.Match(parser, ref map);
+		bool matched = Parser.Value.Match(parser, ref map);
 		LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 		LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 		lib.Statement = new LiteralStatement(gac);
