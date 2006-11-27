@@ -141,7 +141,16 @@ namespace Meta {
 					Map result = new DictionaryMap();
 					result.IsConstant=false;
 					foreach (Map key in type.Keys) {
-						result[key] = Map.Empty;
+						Member member = type[key];
+						Map value;
+						if (member is MethodMember) {
+							value = member.Get(null);
+						}
+						else {
+							value = Map.Empty;
+						}
+						result[key] = value;
+
 					}
 					return result;
 				}
@@ -151,10 +160,28 @@ namespace Meta {
 					return result;
 				}
 				else if(method is MethodInfo) {
-					//Console.WriteLine("test");
+					Console.WriteLine("test");
 				}
 			}
 			return null;
+		}
+		public static Map GetInstanceStructure(Type t) {
+			Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(t);
+			Map result = new DictionaryMap();
+			result.IsConstant = false;
+			foreach (Map key in type.Keys) {
+				Member member = type[key];
+				Map value;
+				if (member is MethodMember) {
+					value = member.Get(null);
+				}
+				else {
+					value = Map.Empty;
+				}
+				result[key] = value;
+
+			}
+			return result;
 		}
 		public bool CallStuff(out List<object> arguments, out MethodBase m) {
 			Map first = (Map)calls[0].GetConstant();
@@ -171,7 +198,7 @@ namespace Meta {
 				}
 				if (method != null) {
 					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0)) {
-						if (method.method.IsStatic || method.method is ConstructorInfo) {
+						//if (method.method.IsStatic || method.method is ConstructorInfo) {
 							arguments = new List<object>();
 							for (int i = 0; i < method.parameters.Length; i++) {
 								Map arg = calls[i + 1].EvaluateMapStructure();
@@ -184,7 +211,7 @@ namespace Meta {
 							}
 							m = method.method;
 							return true;
-						}
+						//}
 					}
 				}
 			}
@@ -852,10 +879,13 @@ namespace Meta {
 	}
 	public class Select : Expression {
 		public override Map GetStructure() {
-			Map selected = subs[0].GetConstant();
+			// maybe wrong
+			Map selected = subs[0].GetStructure();
+			//Map selected = subs[0].GetConstant();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].GetConstant();
 				if (key != null && key.Equals(new StringMap("get_Parent"))) {
+					subs[0].GetStructure();
 					Console.WriteLine("hello");
 				}
 				if (selected == null || key == null || !selected.ContainsKey(key)) {
