@@ -2582,6 +2582,9 @@ namespace Meta {
 		}
 	}
 	public class Parser {
+		static Parser() {
+			Console.WriteLine("test");
+		}
 		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
 		public struct State {
 			public override bool Equals(object obj) {
@@ -4483,9 +4486,6 @@ namespace Meta {
 				if (ContainsKey(CodeKeys.LastArgument)) {
 					return Expression.LastArgument(this[CodeKeys.LastArgument], parent);
 				}
-			//        return new Call(this[codekeys+ typeof(Call) - CodeKeys.Program + typeof(Program) - CodeKeys.Literal + typeof(Literal)
-			//- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root) - CodeKeys.LastArgument + typeof(LastArgument)
-			//- CodeKeys.Search + typeof(Search);
 				foreach(Map key in Keys) {
 				    if(expressions.ContainsKey(key)) {
 				        return (Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
