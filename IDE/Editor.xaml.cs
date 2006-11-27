@@ -366,7 +366,13 @@ public partial class Editor : System.Windows.Window {
 		public string Signature() {
 			if (original != null) {
 				XmlComments comments = new XmlComments(original);
-				return comments.Summary.InnerXml;
+				XmlNode node=comments.Summary;
+				foreach(XmlNode n in node.ChildNodes) {
+					if (n.Name == "see") {
+						n.InnerText = n.Attributes["cref"].Value.Substring(2);
+					}
+				}
+				return node.InnerText;
 			}
 			return "";
 		}
@@ -505,6 +511,7 @@ public partial class Editor : System.Windows.Window {
 						e.Handled = true;
 					}
 					else if (e.Key == Key.Space) {
+						e.Handled = true;
 						StartIntellisense();
 						intellisense.Items.Clear();
 						//List<Expression> list=new List<Meta.Expression>();
@@ -515,72 +522,56 @@ public partial class Editor : System.Windows.Window {
 						sources.Sort(delegate(Source a,Source b) {
 							return a.CompareTo(b);
 						});
-						Map map=null;
+						Map s=null;
 						sources.Reverse();
 						foreach(Source source in sources) {
 							foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
 								Program program=expression as Program;
 								if(program!=null) {
-									//map=program.GetStructure();
-									map=program.statementList[program.statementList.Count - 1].CurrentMap();
+									s=program.statementList[program.statementList.Count - 1].CurrentMap();
 									break;
 								}
 							}
-							if(map!=null) {
+							if(s!=null) {
 								break;
 							}
 						}
-						Console.WriteLine();
-						//foreach(Source source in Meta.Expression.sources.Keys) {
-						//Dictionary<Source,List<Expression>> dict=Meta.Expression.sources
-						//if (Meta.Expression.sources.ContainsKey(key)) {
-						//    List<Meta.Expression> list = Meta.Expression.sources[key];
-						//    for (int i = 0; i < list.Count; i++) {
-						//        if (list[i] is Search || list[i] is Select || list[i] is Call) {
-						//            PositionIntellisense();
-						//            intellisense.Items.Clear();
-						//            Map s = list[i].EvaluateStructure();
-						//            List<string> keys = new List<string>();
-						//            if (s != null) {
-						//                foreach (Map m in s.Keys) {
-						//                    keys.Add(m.ToString());
-						//                }
-						//            }
-						//            keys.Sort(delegate(string a, string b) {
-						//                return a.CompareTo(b);
-						//            });
-						//            if (keys.Count != 0) {
-						//                intellisense.Visibility = Visibility.Visible;
-						//                toolTip.Visibility = Visibility.Visible;
-						//            }
-						//            intellisenseItems.Clear();
-						//            intellisense.Items.Clear();
-						//            foreach (string k in keys) {
-						//                MethodBase m = null;
-						//                MemberInfo original = null;
-						//                if (s.ContainsKey(k)) {
-						//                    Map value = s[k];
-						//                    Method method = value as Method;
-						//                    if (method != null) {
-						//                        m = method.method;
-						//                        original = method.original;
-						//                    }
-						//                    TypeMap typeMap = value as TypeMap;
-						//                    if (typeMap != null) {
-						//                        original = typeMap.Type;
-						//                    }
-						//                }
-						//                intellisenseItems.Add(new Item(k, original));
-						//            }
-						//            if (intellisense.Items.Count != 0) {
-						//                intellisense.SelectedIndex = 0;
-						//            }
-						//        }
-						//    }
-						//}
-						//else {
-						//    MessageBox.Show("no intellisense" + Meta.Expression.sources.Count);
-						//}
+			            List<string> keys = new List<string>();
+			            if (s != null) {
+			                foreach (Map m in s.Keys) {
+			                    keys.Add(m.ToString());
+			                }
+			            }
+			            keys.Sort(delegate(string a, string b) {
+			                return a.CompareTo(b);
+			            });
+			            if (keys.Count != 0) {
+							PositionIntellisense();
+							intellisense.Visibility = Visibility.Visible;
+			                toolTip.Visibility = Visibility.Visible;
+			            }
+			            intellisenseItems.Clear();
+			            intellisense.Items.Clear();
+			            foreach (string k in keys) {
+			                MethodBase m = null;
+			                MemberInfo original = null;
+			                if (s.ContainsKey(k)) {
+			                    Map value = s[k];
+			                    Method method = value as Method;
+			                    if (method != null) {
+			                        m = method.method;
+			                        original = method.original;
+			                    }
+			                    TypeMap typeMap = value as TypeMap;
+			                    if (typeMap != null) {
+			                        original = typeMap.Type;
+			                    }
+			                }
+			                intellisenseItems.Add(new Item(k, original));
+			            }
+			            if (intellisense.Items.Count != 0) {
+			                intellisense.SelectedIndex = 0;
+			            }
 						Meta.Expression.sources.Clear();
 					}
 				}
