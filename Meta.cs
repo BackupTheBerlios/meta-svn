@@ -160,7 +160,8 @@ namespace Meta {
 					return result;
 				}
 				else if(method is MethodInfo) {
-					Console.WriteLine("test");
+					return GetInstanceStructure(((MethodInfo)method).ReflectedType);
+					//Console.WriteLine("test");
 				}
 			}
 			return null;
@@ -179,7 +180,6 @@ namespace Meta {
 					value = Map.Empty;
 				}
 				result[key] = value;
-
 			}
 			return result;
 		}
