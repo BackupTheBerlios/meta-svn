@@ -172,6 +172,9 @@ namespace Meta {
 					result.IsConstant = false;
 					return new LiteralStructure(result);
 				}
+				else if(method is MethodInfo) {
+					Console.WriteLine("test");
+				}
 			}
 			return null;
 		}
@@ -886,9 +889,15 @@ namespace Meta {
 	}
 	public class Select : Expression {
 		public override Structure GetStructure() {
+			//Structure selected = subs[0].GetStructure();
 			Map selected = subs[0].GetConstant();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].GetConstant();
+				//Map key = subs[i].GetConstant();
+				if (key != null && key.Equals(new StringMap("get_Parent"))) {
+					//subs[0].getco
+					Console.WriteLine("hello");
+				}
 				if (selected == null || key == null || !selected.ContainsKey(key)) {
 					return null;
 				}
