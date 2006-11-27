@@ -64,7 +64,8 @@ public partial class Editor : System.Windows.Window {
 	public void Complete() {
 		if (intellisense.SelectedItem != null) {
 			int index = textBox.SelectionStart;
-			textBox.SelectionStart = textBox.Text.LastIndexOf('.', textBox.SelectionStart) + 1;
+			textBox.SelectionStart = searchStart+1;//textBox.Text.LastIndexOf('.', textBox.SelectionStart) + 1;
+			//textBox.SelectionStart = textBox.Text.LastIndexOf('.', textBox.SelectionStart) + 1;
 			textBox.SelectionLength = index - textBox.SelectionStart;
 			textBox.SelectedText = ((Item)intellisense.SelectedItem).ToString();
 			intellisense.Visibility = Visibility.Hidden;
@@ -363,14 +364,18 @@ public partial class Editor : System.Windows.Window {
 	//}
 	public class Item{
 		public string Signature() {
-			XmlComments comments=new XmlComments(original);
-			return comments.Summary.InnerText;
+			if (original != null) {
+				XmlComments comments = new XmlComments(original);
+				return comments.Summary.InnerXml;
+			}
+			return "";
 		}
 		private string text;
-		private MemberInfo member;
+		//private MemberInfo member;
 		private MemberInfo original;
-		public Item(string text, MemberInfo member,MemberInfo original) {
-			this.member = member;
+		public Item(string text, MemberInfo original) {
+		//public Item(string text, MemberInfo member,MemberInfo original) {
+			//this.member = member;
 			this.text = text;
 			this.original = original;
 		}
@@ -462,8 +467,6 @@ public partial class Editor : System.Windows.Window {
 						EditingCommands.SelectToLineEnd.Execute(null, textBox);
 						EditingCommands.Delete.Execute(null, textBox);
 					}
-					else if (e.Key == Key.Space) {
-					}
 					else {
 						e.Handled = false;
 					}
@@ -500,6 +503,85 @@ public partial class Editor : System.Windows.Window {
 					if (e.Key == Key.I) {
 						StartIterativeSearch();
 						e.Handled = true;
+					}
+					else if (e.Key == Key.Space) {
+						StartIntellisense();
+						intellisense.Items.Clear();
+						//List<Expression> list=new List<Meta.Expression>();
+						List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
+						sources.RemoveAll(delegate (Source source){
+							return source.FileName!=fileName;
+						});
+						sources.Sort(delegate(Source a,Source b) {
+							return a.CompareTo(b);
+						});
+						Map map=null;
+						sources.Reverse();
+						foreach(Source source in sources) {
+							foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
+								Program program=expression as Program;
+								if(program!=null) {
+									//map=program.GetStructure();
+									map=program.statementList[program.statementList.Count - 1].CurrentMap();
+									break;
+								}
+							}
+							if(map!=null) {
+								break;
+							}
+						}
+						Console.WriteLine();
+						//foreach(Source source in Meta.Expression.sources.Keys) {
+						//Dictionary<Source,List<Expression>> dict=Meta.Expression.sources
+						//if (Meta.Expression.sources.ContainsKey(key)) {
+						//    List<Meta.Expression> list = Meta.Expression.sources[key];
+						//    for (int i = 0; i < list.Count; i++) {
+						//        if (list[i] is Search || list[i] is Select || list[i] is Call) {
+						//            PositionIntellisense();
+						//            intellisense.Items.Clear();
+						//            Map s = list[i].EvaluateStructure();
+						//            List<string> keys = new List<string>();
+						//            if (s != null) {
+						//                foreach (Map m in s.Keys) {
+						//                    keys.Add(m.ToString());
+						//                }
+						//            }
+						//            keys.Sort(delegate(string a, string b) {
+						//                return a.CompareTo(b);
+						//            });
+						//            if (keys.Count != 0) {
+						//                intellisense.Visibility = Visibility.Visible;
+						//                toolTip.Visibility = Visibility.Visible;
+						//            }
+						//            intellisenseItems.Clear();
+						//            intellisense.Items.Clear();
+						//            foreach (string k in keys) {
+						//                MethodBase m = null;
+						//                MemberInfo original = null;
+						//                if (s.ContainsKey(k)) {
+						//                    Map value = s[k];
+						//                    Method method = value as Method;
+						//                    if (method != null) {
+						//                        m = method.method;
+						//                        original = method.original;
+						//                    }
+						//                    TypeMap typeMap = value as TypeMap;
+						//                    if (typeMap != null) {
+						//                        original = typeMap.Type;
+						//                    }
+						//                }
+						//                intellisenseItems.Add(new Item(k, original));
+						//            }
+						//            if (intellisense.Items.Count != 0) {
+						//                intellisense.SelectedIndex = 0;
+						//            }
+						//        }
+						//    }
+						//}
+						//else {
+						//    MessageBox.Show("no intellisense" + Meta.Expression.sources.Count);
+						//}
+						Meta.Expression.sources.Clear();
 					}
 				}
 				else if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt) {
@@ -538,28 +620,7 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 			else if (e.Key == Key.OemPeriod) {
-				string text = textBox.Text.Substring(0, textBox.SelectionStart);
-				searchStart = textBox.SelectionStart;
-				Interpreter.profiling = false;
-				foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
-					cached.Clear();
-				}
-
-				//Parser.cached.Clear();
-				Parser parser = new Parser(text, fileName);
-				Map map = null;
-				bool matched = Parser.MapRule.Match(parser, ref map);
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-				LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
-				lib.Statement = new LiteralStatement(gac);
-				KeyStatement.intellisense = true;
-				map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
-				map[CodeKeys.Function].Compile(lib);
-				Source key = new Source(
-					parser.state.Line,
-					parser.state.Column,
-					parser.state.FileName
-				);
+				Source key=StartIntellisense();
 				intellisense.Items.Clear();
 				if (Meta.Expression.sources.ContainsKey(key)) {
 					List<Meta.Expression> list = Meta.Expression.sources[key];
@@ -584,17 +645,21 @@ public partial class Editor : System.Windows.Window {
 							intellisenseItems.Clear();
 							intellisense.Items.Clear();
 							foreach (string k in keys) {
-								MethodBase m=null;
-								MemberInfo original=null;
+								MethodBase m = null;
+								MemberInfo original = null;
 								if (s.ContainsKey(k)) {
-									Method method = s[k] as Method;
+									Map value = s[k];
+									Method method = value as Method;
 									if (method != null) {
 										m = method.method;
 										original = method.original;
 									}
+									TypeMap typeMap = value as TypeMap;
+									if (typeMap != null) {
+										original = typeMap.Type;
+									}
 								}
-								intellisenseItems.Add(new Item(k,m,original));
-								//intellisense.Items.Add(new Item(k,m));
+								intellisenseItems.Add(new Item(k, original));
 							}
 							if (intellisense.Items.Count != 0) {
 								intellisense.SelectedIndex = 0;
@@ -647,7 +712,9 @@ public partial class Editor : System.Windows.Window {
 					toolTip.Visibility = Visibility.Hidden;
 				}
 				else {
-					int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+					int index = searchStart;//textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+					//int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
+					//int index = textBox.Text.Substring(0, textBox.SelectionStart).LastIndexOf('.');
 					if (index != -1) {
 						string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
 						//if (text.Length != 0) {
@@ -699,6 +766,82 @@ public partial class Editor : System.Windows.Window {
 			textBox.Focus();
 			textBox.SelectionStart = 0;
 		};
+	}
+
+	private Source StartIntellisense() {
+		string text = textBox.Text.Substring(0, textBox.SelectionStart);
+		searchStart = textBox.SelectionStart;
+		Interpreter.profiling = false;
+		foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+			cached.Clear();
+		}
+
+		//Parser.cached.Clear();
+		Parser parser = new Parser(text, fileName);
+		Map map = null;
+		bool matched = Parser.MapRule.Match(parser, ref map);
+		LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+		LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
+		lib.Statement = new LiteralStatement(gac);
+		KeyStatement.intellisense = true;
+		map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
+		map[CodeKeys.Function].Compile(lib);
+		Source key = new Source(
+			parser.state.Line,
+			parser.state.Column,
+			parser.state.FileName
+		);
+		return key;
+		//intellisense.Items.Clear();
+		//if (Meta.Expression.sources.ContainsKey(key)) {
+		//    List<Meta.Expression> list = Meta.Expression.sources[key];
+		//    for (int i = 0; i < list.Count; i++) {
+		//        if (list[i] is Search || list[i] is Select || list[i] is Call) {
+		//            PositionIntellisense();
+		//            intellisense.Items.Clear();
+		//            Map s = list[i].EvaluateStructure();
+		//            List<string> keys = new List<string>();
+		//            if (s != null) {
+		//                foreach (Map m in s.Keys) {
+		//                    keys.Add(m.ToString());
+		//                }
+		//            }
+		//            keys.Sort(delegate(string a, string b) {
+		//                return a.CompareTo(b);
+		//            });
+		//            if (keys.Count != 0) {
+		//                intellisense.Visibility = Visibility.Visible;
+		//                toolTip.Visibility = Visibility.Visible;
+		//            }
+		//            intellisenseItems.Clear();
+		//            intellisense.Items.Clear();
+		//            foreach (string k in keys) {
+		//                MethodBase m = null;
+		//                MemberInfo original = null;
+		//                if (s.ContainsKey(k)) {
+		//                    Map value = s[k];
+		//                    Method method = value as Method;
+		//                    if (method != null) {
+		//                        m = method.method;
+		//                        original = method.original;
+		//                    }
+		//                    TypeMap typeMap = value as TypeMap;
+		//                    if (typeMap != null) {
+		//                        original = typeMap.Type;
+		//                    }
+		//                }
+		//                intellisenseItems.Add(new Item(k, original));
+		//            }
+		//            if (intellisense.Items.Count != 0) {
+		//                intellisense.SelectedIndex = 0;
+		//            }
+		//        }
+		//    }
+		//}
+		//else {
+		//    MessageBox.Show("no intellisense" + Meta.Expression.sources.Count);
+		//}
+		//Meta.Expression.sources.Clear();
 	}
 	public void Open() {
 		OpenFileDialog dialog = new OpenFileDialog();

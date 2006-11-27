@@ -2073,6 +2073,15 @@ namespace Meta {
 				return Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
 			}
 		}
+		public int CompareTo(Source source) {
+			int line = Line.CompareTo(source.Line);
+			if (line != 0) {
+				return line;
+			}
+			else {
+				return Column.CompareTo(source.Column);
+			}
+		}
 		public override bool Equals(object obj) {
 			Source source = obj as Source;
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
