@@ -160,7 +160,7 @@ namespace Meta {
 					return result;
 				}
 				else if(method is MethodInfo) {
-					return GetInstanceStructure(((MethodInfo)method).ReflectedType);
+					return GetInstanceStructure(((MethodInfo)method).ReturnType);
 					//Console.WriteLine("test");
 				}
 			}
