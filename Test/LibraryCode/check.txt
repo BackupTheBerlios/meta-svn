@@ -7,14 +7,12 @@
 					!"Library"
 					"Double_Map"
 				"contains"=,
-					|,
-						"m"=-
+					|.
+						-
 							!"ObjectMap_Object"
 							,
 								lastArgument=""
-						&=.
-							!"m"
-							"ContainsKey_Map"
+						"ContainsKey_Map"
 				"foreach"=.
 					!"Library"
 					"Foreach_Map_Map"
@@ -27,15 +25,13 @@
 								!"a"
 				"containedBy"=,
 					key|,
-						map|,
-							"m"=-
-								!"ObjectMap_Object"
-								!"map"
-							&=-
-								.
-									!"m"
-									"ContainsKey_Map"
-								!"key"
+						map|-
+							.
+								-
+									!"ObjectMap_Object"
+									!"map"
+								"ContainsKey_Map"
+							!"key"
 				"modify"=.
 					!"Library"
 					"Modify_Map_Map"
@@ -78,15 +74,12 @@
 				"keys"=,
 					arg|-
 						!"DictionaryMap_IEnumerable`1"
-						,
-							"m"=-
-								!"ObjectMap_Object"
-								!"arg"
-							&=-
-								.
-									!"m"
-									"get_Keys"
-								0
+						-
+							.
+								-
+									!"ObjectMap_Object"
+									!"arg"
+								"get_Keys"
 				"product"=.
 					!"Number"
 					"op_Multiply_Number_Number"
@@ -106,13 +99,12 @@
 					!"Serialization"
 					"Serialize_Map"
 				"writeLine"=,
-					|,
+					a|,
 						-
 							.
 								!"Library"
 								"WriteLine_String"
-							,
-								lastArgument=""
+							!"a"
 						&=,
 							lastArgument=""
 				"join"=.
@@ -237,15 +229,13 @@
 										!"b"
 										!"key"
 				"length"=,
-					arg|,
-						"m"=.
+					arg|-
+						.
 							-
 								!"ObjectMap_Object"
 								!"arg"
 							"get_ArrayCount"
-						&=-
-							!"m"
-							0
+						0
 				"select"=.
 					!"Library"
 					"Select_Map_Map"
@@ -341,48 +331,36 @@
 					!"accumulate"
 					!"and"
 				"integerToString"=,
-					arg|,
-						"m"=-
-							!"ObjectMap_Object"
-							!"arg"
-						&=-
-							.
-								!"m"
-								"ToString"
-							0
+					arg|-
+						.
+							-
+								!"ObjectMap_Object"
+								!"arg"
+							"ToString"
 				"count"=,
-					arg|,
-						"m"=-
-							!"ObjectMap_Object"
-							!"arg"
-						&=-
-							.
-								!"m"
-								"get_Count"
-							0
+					arg|-
+						.
+							-
+								!"ObjectMap_Object"
+								!"arg"
+							"get_Count"
 				"equal"=.
 					!"Library"
 					"Equal_Object_Object"
 				"isNumber"=,
-					arg|,
-						"m"=-
-							!"ObjectMap_Object"
-							!"arg"
-						&=-
-							.
-								!"m"
-								"get_IsNumber"
-							0
+					arg|-
+						.
+							-
+								!"ObjectMap_Object"
+								!"arg"
+							"get_IsNumber"
 				"isString"=,
-					arg|,
-						"m"=-
-							!"ObjectMap_Object"
-							!"arg"
-						&=-
-							.
-								!"m"
-								"get_IsString"
-							0
+					arg|-
+						.
+							-
+								!"ObjectMap_Object"
+								!"arg"
+							"get_IsString"
 				"joinAll"=.
 					!"Library"
 					"JoinAll_Map"
@@ -446,7 +424,6 @@
 							!"mscorlib"
 							"Console"
 							"ReadLine"
-						0
 				"append"=.
 					!"Library"
 					"Append_Map_Map"
@@ -475,9 +452,9 @@
 				"callIf"=,
 					map|,
 						key|,
-							func|,
-								"which"=,
-									"stuff"=,
+							func|-
+								.
+									,
 										0=,
 											|0
 										1=,
@@ -486,15 +463,10 @@
 												.
 													!"map"
 													!"key"
-									&=.
-										!"stuff"
-										-
-											!"contains"
-											!"map"
-											!"key"
-								&=-
-									!"which"
-									0
+									-
+										!"contains"
+										!"map"
+										!"key"
 				"callKey"=,
 					key|,
 						map|-
@@ -552,7 +524,6 @@
 								!"mscorlib"
 								"Encoding"
 								"get_Default"
-							0
 				"compareNumber"=.
 					!"Library"
 					"CompareNumber_Number_Number"
@@ -573,11 +544,7 @@
 									!"mscorlib"
 									"Encoding"
 									"get_Default"
-								0
-	&=,
-		"m"=-
+	&=.
+		-
 			!"lib"
-			0
-		&=.
-			!"m"
-			"lib""
+		"lib""

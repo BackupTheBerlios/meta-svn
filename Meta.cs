@@ -159,7 +159,6 @@ namespace Meta {
 				}
 				else if(method is MethodInfo) {
 					return GetInstanceStructure(((MethodInfo)method).ReturnType);
-					//Console.WriteLine("test");
 				}
 			}
 			return null;
@@ -196,20 +195,18 @@ namespace Meta {
 				}
 				if (method != null) {
 					if (method.parameters.Length == calls.Count - 1 || (calls.Count == 2 && method.parameters.Length == 0)) {
-						//if (method.method.IsStatic || method.method is ConstructorInfo) {
-							arguments = new List<object>();
-							for (int i = 0; i < method.parameters.Length; i++) {
-								Map arg = calls[i + 1].EvaluateMapStructure();
-								if (arg == null) {
-									m = method.method;
-									return true;}
-								else if(method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length!=0) {
-									arguments.Add(Transform.ToDotNet(arg, method.parameters[i].ParameterType));
-								}
+						arguments = new List<object>();
+						for (int i = 0; i < method.parameters.Length; i++) {
+							Map arg = calls[i + 1].EvaluateMapStructure();
+							if (arg == null) {
+								m = method.method;
+								return true;}
+							else if(method.method.GetCustomAttributes(typeof(CompilableAttribute),false).Length!=0) {
+								arguments.Add(Transform.ToDotNet(arg, method.parameters[i].ParameterType));
 							}
-							m = method.method;
-							return true;
-						//}
+						}
+						m = method.method;
+						return true;
 					}
 				}
 			}
@@ -2780,7 +2777,7 @@ namespace Meta {
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
 		public static Rule Value = DelayedRule(delegate {
-			return Alternatives(MapRule,FunctionMap,ListMap,String,Number,CharacterDataExpression);
+			return Alternatives(FunctionMap,MapRule, ListMap, String, Number, CharacterDataExpression);
 		});
 		private static Rule LookupAnything = Sequence('<',ReferenceAssignment(Value));
 
@@ -3039,13 +3036,14 @@ namespace Meta {
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
 				Sequence(
-					Assign(
-						CodeKeys.Parameter,
-						StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+					Assign(CodeKeys.Parameter,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 					Syntax.functionAlternativeStart,
-						Assign(CodeKeys.Expression, Value),
+						Whitespace,
+						Assign(CodeKeys.Expression, Expression),
 					Optional(EndOfLine),
-					Optional(Syntax.functionAlternativeEnd))));
+					Whitespace,
+					Optional(Syntax.functionAlternativeEnd),
+			Whitespace)));
 
 		public static Rule FunctionProgram = Sequence(
 			Assign(CodeKeys.Program,
@@ -3666,6 +3664,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3688,12 +3692,6 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 			public class MergeSort : Test {
