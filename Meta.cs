@@ -1425,7 +1425,7 @@ namespace Meta {
 		public override Type GetClass() {
 			return this.Type;
 		}
-		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
+		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 		protected override BindingFlags BindingFlags {
 			get {
 				return bindingFlags;
@@ -1512,7 +1512,7 @@ namespace Meta {
 		}
 	}
 	public class ObjectMap : DotNetMap {
-		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
 		//const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		protected override BindingFlags BindingFlags {
 			get {
@@ -1758,7 +1758,7 @@ namespace Meta {
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
 				foreach (MemberInfo member in type.GetMembers(bindingFlags)) {
 					MethodInfo method = member as MethodInfo;
-					if (method != null && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
+					if (method != null) {// && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
 						string name = TypeMap.GetMethodName(method);
 						data[name] = new MethodMember(method);
 					}
@@ -1772,7 +1772,7 @@ namespace Meta {
 						if (get != null) {
 							data[TypeMap.GetMethodName(get)] = new MethodMember(get);
 						}
-						MethodInfo set = property.GetGetMethod();
+						MethodInfo set = property.GetSetMethod();
 						if (set != null) {
 							data[TypeMap.GetMethodName(set)] = new MethodMember(set);
 						}
