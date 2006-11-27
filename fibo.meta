@@ -1,11 +1,13 @@
-|{
-	fibo=n<if(
-		less(n,2),
-		<1>,
-		<sum(
-			fibo(difference(n,1))
-			fibo(difference(n,2))
-		)>
-	)>;
-	&fibo(28);
+{
+	|{
+		fibo=n<if(
+			less(n,2),
+			<1>,
+			<sum(
+				fibo(difference(n,1))
+				fibo(difference(n,2))
+			)>
+		)>;
+		&fibo(28);
+	}
 }

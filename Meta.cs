@@ -2780,7 +2780,7 @@ namespace Meta {
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
 		public static Rule Value = DelayedRule(delegate {
-			return Alternatives(MapRule,ListMap,String,Number,CharacterDataExpression);
+			return Alternatives(MapRule,FunctionMap,ListMap,String,Number,CharacterDataExpression);
 		});
 		private static Rule LookupAnything = Sequence('<',ReferenceAssignment(Value));
 
@@ -3036,6 +3036,17 @@ namespace Meta {
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Optional(Syntax.statementEnd)
 		);
+		public static Rule FunctionMap = Sequence(
+			Assign(CodeKeys.Function,
+				Sequence(
+					Assign(
+						CodeKeys.Parameter,
+						StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+					Syntax.functionAlternativeStart,
+						Assign(CodeKeys.Expression, Value),
+					Optional(EndOfLine),
+					Optional(Syntax.functionAlternativeEnd))));
+
 		public static Rule FunctionProgram = Sequence(
 			Assign(CodeKeys.Program,
 				Sequence(
@@ -3391,8 +3402,9 @@ namespace Meta {
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
 			Map result=null;
-			Parser.MapRule.Match(parser, ref result);
-			if (parser.state.index != parser.state.Text.Length-1) {
+			Parser.Value.Match(parser, ref result);
+			//Parser.MapRule.Match(parser, ref result);
+			if (parser.state.index != parser.state.Text.Length - 1) {
 				List<State> sorted=new List<State>(parser.errors.Keys);
 				sorted.Sort(delegate(State a, State b) {
 					return a.Line.CompareTo(b.Line);
@@ -3654,36 +3666,36 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class LibraryCode : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
-			//    }
-			//}
-			//public class Serialization : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class Basic : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
-			//public class Fibo : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
+				}
+			}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
