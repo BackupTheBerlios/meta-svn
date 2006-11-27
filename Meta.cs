@@ -1382,11 +1382,13 @@ namespace Meta {
 		public MethodBase method;
 		protected object obj;
 		protected Type type;
-		public Method(MethodBase method, object obj, Type type) {
+		public MemberInfo original;
+		public Method(MethodBase method, object obj, Type type,MemberInfo original) {
 			this.method = method;
 			this.obj = obj;
 			this.type = type;
 			this.parameters = method.GetParameters();
+			this.original = original;
 		}
 		public ParameterInfo[] parameters;
 		public override Map Call(Map argument) {
@@ -1403,7 +1405,7 @@ namespace Meta {
 			else {
 				CallDelegate call = new CallDelegate(delegate(Map map) {
 					return DecideCall(map, arguments);});
-				return new Method(invokeMethod, call, typeof(CallDelegate));
+				return new Method(invokeMethod, call, typeof(CallDelegate),call.Method);
 			}
 		}
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
@@ -1499,7 +1501,7 @@ namespace Meta {
 					ConstructorInfo method = Type.GetConstructor(new Type[] {});
 					if (method == null) {
 						throw new Exception("Default constructor for " + Type + " not found.");}
-					constructor = new Method(method, Object, Type);
+					constructor = new Method(method, Object, Type,method);
 				}
 				return constructor;
 			}
@@ -1527,7 +1529,8 @@ namespace Meta {
 		}
 		public override Map Call(Map arg) {
 			if (this.Type.IsSubclassOf(typeof(Delegate))) {
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type).Call(arg);}
+				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type, Type.GetMethod("Invoke")).Call(arg);
+			}
 			else {
 				throw new Exception("Object is not callable.");
 			}
@@ -1708,10 +1711,18 @@ namespace Meta {
 		public int recursive;
 	}
 	public abstract class Member {
+		public abstract MemberInfo Original {
+			get;
+		}
 		public abstract void Set(object obj, Map value);
 		public abstract Map Get(object obj);
 	}
 	public class TypeMember : Member {
+		public override MemberInfo Original {
+			get {
+				return type;
+			}
+		}
 		public override void Set(object obj, Map value) {
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -1724,6 +1735,11 @@ namespace Meta {
 		}
 	}
 	public class FieldMember : Member {
+		public override MemberInfo Original {
+			get {
+				return field;
+			}
+		}
 		private FieldInfo field;
 		public FieldMember(FieldInfo field) {
 			this.field = field;
@@ -1736,13 +1752,22 @@ namespace Meta {
 		}
 	}
 	public class MethodMember : Member {
+		public override MemberInfo Original {
+			get {
+				return original;
+			}
+		}
+		private MemberInfo original;
 		private MethodBase method;
-		public MethodMember(MethodInfo method) {
-			this.method = method;}
+		public MethodMember(MethodInfo method,MemberInfo original) {
+			this.method = method;
+			this.original = original;
+		}
 		public override void Set(object obj, Map value) {
 			throw new Exception("The method or operation is not implemented.");}
 		public override Map Get(object obj) {
-			return new Method(method, obj, method.DeclaringType);
+			return new Method(method, obj, method.DeclaringType,original);
+			//return new Method(method, obj, method.DeclaringType);
 		}
 	}
 	public class MemberCache {
@@ -1757,21 +1782,30 @@ namespace Meta {
 					MethodInfo method = member as MethodInfo;
 					if (method != null) {
 						string name = TypeMap.GetMethodName(method);
-						data[name] = new MethodMember(method);
+						data[name] = new MethodMember(method,method);
+						//data[name] = new MethodMember(method);
 					}
 					FieldInfo field = member as FieldInfo;
 					if (field != null && field.IsPublic) {
 						data[field.Name] = new FieldMember(field);
 					}
+					EventInfo e = member as EventInfo;
+					if (e != null) {
+						MethodInfo add=e.GetAddMethod();
+						if (add != null) {
+							data[TypeMap.GetMethodName(add)] = new MethodMember(add, e);
+						}
+					}
 					PropertyInfo property = member as PropertyInfo;
 					if (property != null) {
 						MethodInfo get=property.GetGetMethod();
 						if (get != null) {
-							data[TypeMap.GetMethodName(get)] = new MethodMember(get);
+							data[TypeMap.GetMethodName(get)] = new MethodMember(get,property);
+							//data[TypeMap.GetMethodName(get)] = new MethodMember(get);
 						}
 						MethodInfo set = property.GetSetMethod();
 						if (set != null) {
-							data[TypeMap.GetMethodName(set)] = new MethodMember(set);
+							data[TypeMap.GetMethodName(set)] = new MethodMember(set,property);
 						}
 					}
 					Type t = member as Type;
@@ -1849,7 +1883,7 @@ namespace Meta {
 			return name;
 		}
 		private Dictionary<Map, Member> data;
-		private Dictionary<Map, Member> Members {
+		public Dictionary<Map, Member> Members {
 			get {
 				if (data == null) {
 					data = MemberCache.GetMembers(type);
@@ -2098,7 +2132,7 @@ namespace Meta {
 					selected[type.Name] = new TypeMap(type);
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
-							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type);
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type,constructor);
 						}
 					}
 				}
@@ -4121,7 +4155,7 @@ namespace Meta {
 						}
 						else if (member is EventInfo) {
 							EventInfo eventInfo = (EventInfo)member;
-							new Method(eventInfo.GetAddMethod(), obj, type).Call(value);
+							new Method(eventInfo.GetAddMethod(), obj, type,eventInfo).Call(value);
 						}
 						else {
 							throw new Exception("unknown member type");

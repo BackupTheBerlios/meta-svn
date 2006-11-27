@@ -363,14 +363,16 @@ public partial class Editor : System.Windows.Window {
 	//}
 	public class Item{
 		public string Signature() {
-			XmlComments comments=new XmlComments(member);
+			XmlComments comments=new XmlComments(original);
 			return comments.Summary.InnerText;
 		}
 		private string text;
 		private MemberInfo member;
-		public Item(string text,MemberInfo member) {
+		private MemberInfo original;
+		public Item(string text, MemberInfo member,MemberInfo original) {
 			this.member = member;
 			this.text = text;
+			this.original = original;
 		}
 		public override string ToString() {
 			return text;
@@ -583,13 +585,15 @@ public partial class Editor : System.Windows.Window {
 							intellisense.Items.Clear();
 							foreach (string k in keys) {
 								MethodBase m=null;
+								MemberInfo original=null;
 								if (s.ContainsKey(k)) {
 									Method method = s[k] as Method;
 									if (method != null) {
 										m = method.method;
+										original = method.original;
 									}
 								}
-								intellisenseItems.Add(new Item(k,m));
+								intellisenseItems.Add(new Item(k,m,original));
 								//intellisense.Items.Add(new Item(k,m));
 							}
 							if (intellisense.Items.Count != 0) {
