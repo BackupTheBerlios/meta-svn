@@ -1526,7 +1526,9 @@ namespace Meta {
 		//const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		protected override BindingFlags BindingFlags {
 			get {
-				return bindingFlags;}}
+				return bindingFlags;
+			}
+		}
 		public static MemberCache cache = new MemberCache(bindingFlags);
 		protected override MemberCache MemberCache {
 			get {
@@ -1540,16 +1542,19 @@ namespace Meta {
 		}
 		public override Map Call(Map arg) {
 			if (this.Type.IsSubclassOf(typeof(Delegate))) {
-				return new Method(Type.GetMethod("Invoke"), this.Object, this.Type, Type.GetMethod("Invoke")).Call(arg);
+				MethodInfo invoke=Type.GetMethod("Invoke");
+				return new Method(invoke, this.Object, this.Type, invoke).Call(arg);
 			}
 			else {
-				throw new Exception("Object is not callable.");
+				throw new Exception("The object is not callable.");
 			}
 		}
 		public override int GetHashCode() {
-			return Object.GetHashCode();}
+			return Object.GetHashCode();
+		}
 		public override bool Equals(object o) {
-			return o is ObjectMap && Object.Equals(((ObjectMap)o).Object);}
+			return o is ObjectMap && Object.Equals(((ObjectMap)o).Object);
+		}
 		public ObjectMap(string text): this(text, text.GetType()) {}
 		public ObjectMap(Map target): this(target, target.GetType()) {}
 		public ObjectMap(object target, Type type): base(target, type) 
@@ -1778,7 +1783,6 @@ namespace Meta {
 			throw new Exception("The method or operation is not implemented.");}
 		public override Map Get(object obj) {
 			return new Method(method, obj, method.DeclaringType,original);
-			//return new Method(method, obj, method.DeclaringType);
 		}
 	}
 	public class MemberCache {
@@ -3650,36 +3654,36 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class LibraryCode : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
-				}
-			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+			//public class LibraryCode : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
+			//    }
+			//}
+			//public class Serialization : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
+			//public class Basic : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+			//    }
+			//}
+			//public class Fibo : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+			//    }
+			//}
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
