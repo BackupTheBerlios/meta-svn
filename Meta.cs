@@ -76,30 +76,35 @@ namespace Meta {
 			this.Parent = parent;
 		}
 		private bool evaluated = false;
-		private Structure structure;
-		public Map GetConstant() {	
-			Structure s=EvaluateStructure();
-			return s !=null && s.IsConstant? ((LiteralStructure)s).Literal:null;
+		private Map structure;
+		//private Structure structure;
+		public Map GetConstant() {
+			Map s = EvaluateStructure();
+			return s != null && s.IsConstant ? s : null;
+
+			//Structure s=EvaluateStructure();
+			//return s !=null && s.IsConstant? ((LiteralStructure)s).Literal:null;
 		}
-		public Map EvaluateMapStructure() {	
-			Structure s=EvaluateStructure();
-			Map m;
-			if(s!=null) {
-				m=((LiteralStructure)s).Literal;
-			}
-			else {	
-				m=null;
-			}
-			return m;
+		public Map EvaluateMapStructure() {
+			return EvaluateStructure();
+			//Structure s=EvaluateStructure();
+			//Map m;
+			//if(s!=null) {
+			//    m=((LiteralStructure)s).Literal;
+			//}
+			//else {	
+			//    m=null;
+			//}
+			//return m;
 		}
-		public Structure EvaluateStructure() {
+		public Map EvaluateStructure() {
 			if (!evaluated) {	
 				structure = GetStructure();
 				evaluated = true;
 			}
 			return structure;
 		}
-		public abstract Structure GetStructure();
+		public abstract Map GetStructure();
 		public Compiled Compile() {
 			Compiled result = GetCompiled(this.Parent);
 			if (Source != null) {
@@ -113,7 +118,7 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public abstract Compiled GetCompiled(Expression parent);
 	}
-	public delegate Structure StructureDelegate();
+	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
 	public class CustomExpression : Expression {
 		private StructureDelegate structure;
@@ -125,7 +130,7 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			return compiled(parent);
 		}
-		public override Structure GetStructure() {
+		public override Map GetStructure() {
 			return structure();
 		}
 	}
@@ -154,7 +159,7 @@ namespace Meta {
 				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
-		public override Structure GetStructure() {
+		public override Map GetStructure() {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -165,15 +170,17 @@ namespace Meta {
 					foreach (Map key in type.Keys) {
 						result[key] = Map.Empty;
 					}
-					return new LiteralStructure(result);
+					return result;
+					//return new LiteralStructure(result);
 				}
 				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
 					Map result = (Map)method.Invoke(null, arguments.ToArray());
 					result.IsConstant = false;
-					return new LiteralStructure(result);
+					return result;
+					//return new LiteralStructure(result);
 				}
 				else if(method is MethodInfo) {
-					Console.WriteLine("test");
+					//Console.WriteLine("test");
 				}
 			}
 			return null;
@@ -252,7 +259,8 @@ namespace Meta {
 				}
 			}
 			if(calls.Count==2 && calls[0].GetConstant()!=null) {
-			    Structure s=calls[1].EvaluateStructure();
+				Map s = calls[1].EvaluateStructure();
+				//Structure s = calls[1].EvaluateStructure();
 			}
 			List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile();
@@ -283,13 +291,14 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
-		public override Structure GetStructure() {
+		public override Map GetStructure() {
 			Map key;
 			int count;
 			Map value;
 			if (FindStuff(out count, out key, out value)) {
 				if(value!=null) {
-					return new LiteralStructure(value);
+					return value;
+					//return new LiteralStructure(value);
 				}
 				else {
 					return null;
@@ -301,13 +310,14 @@ namespace Meta {
 		}
 		private bool FindStuff(out int count, out Map key, out Map value) {
 			Expression current = this;
-			Structure keyStructure = expression.EvaluateStructure();
-			if(keyStructure!=null ) {
-				key=((LiteralStructure)keyStructure).Literal;
-			}
-			else {
-				key=null;
-			}
+			key = expression.EvaluateStructure();
+			//Structure keyStructure = expression.EvaluateStructure();
+			//if (keyStructure != null) {
+			//    key=((LiteralStructure)keyStructure).Literal;
+			//}
+			//else {
+			//    key=null;
+			//}
 			count = 0;
 			int programCounter=0;
 			if (key != null && key.IsConstant) {
@@ -576,7 +586,7 @@ namespace Meta {
 		}
 	}
 	public class Program : ScopeExpression {
-		public override Structure GetStructure() {
+		public override Map GetStructure() {
 			return statementList[statementList.Count - 1].Current();
 		}
 		public override Compiled GetCompiled(Expression parent) {
@@ -634,16 +644,18 @@ namespace Meta {
 	public abstract class Statement {
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
-		private Structure pre;
-		private Structure current;
+		private Map pre;
+		private Map current;
 		public Map PreMap() {
-			Structure s=Pre();
-			if(s!=null) {
-				return ((LiteralStructure)s).Literal;
-			}
-			else {
-				return null;
-			}
+			Map s = Pre();
+			//Structure s = Pre();
+			return s;
+			//if (s != null) {
+			//    return ((LiteralStructure)s).Literal;
+			//}
+			//else {
+			//    return null;
+			//}
 		}
 		public IEnumerable<Map> PreKeys() {
 			if(PreMap()!=null) {
@@ -653,10 +665,11 @@ namespace Meta {
 				return new List<Map>();
 			}
 		}
-		public virtual Structure Pre() {
+		public virtual Map Pre() {
 			if (!preEvaluated) {
 				if (Previous == null) {
-					pre = new LiteralStructure(new DictionaryMap());
+					pre = new DictionaryMap();
+					//pre = new LiteralStructure(new DictionaryMap());
 				}
 				else {
 					pre = Previous.Current();
@@ -666,12 +679,15 @@ namespace Meta {
 			return pre;
 		}
 		public Map CurrentMap() {
-			Structure s=Current();
-			return s!=null?((LiteralStructure)s).Literal:null;
+			Map s = Current();
+			//Structure s = Current();
+			return s;
+			//return s != null ? ((LiteralStructure)s).Literal : null;
 		}
-		public Structure Current() {
+		public Map Current() {
 			if (!currentEvaluated) {
-				Structure pre = Pre();
+				Map pre = Pre();
+				//Structure pre = Pre();
 				if (pre != null) {
 					current = CurrentImplementation(pre);}
 				else {
@@ -716,7 +732,7 @@ namespace Meta {
 			}
 			return true;
 		}
-		protected abstract Structure CurrentImplementation(Structure previous);
+		protected abstract Map CurrentImplementation(Map previous);
 		public Statement Previous {
 			get {
 				if (Index == 0) {
@@ -741,7 +757,7 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		protected override Structure CurrentImplementation(Structure previous) {
+		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
@@ -760,20 +776,21 @@ namespace Meta {
 		}
 		public static bool intellisense = false;
 		public override bool DoesNotAddKey(Map key) {
-			Structure structure=this.key.EvaluateStructure();
-			Map k;
-			if(structure!=null) {
-				k=((LiteralStructure)structure).Literal;
-			}
-			else {
-				k=null;
-			}
+			Map k = this.key.EvaluateStructure();
+			//Structure structure = this.key.EvaluateStructure();
+			//Map k;
+			//if(structure!=null) {
+			//    k=((LiteralStructure)structure).Literal;
+			//}
+			//else {
+			//    k=null;
+			//}
 			if (k != null && k.IsConstant && !k.Equals(key)) {
 				return true;
 			}
 			return false;
 		}
-		protected override Structure CurrentImplementation(Structure previous) {
+		protected override Map CurrentImplementation(Map previous) {
 			Map k=key.GetConstant();
 			if (k != null) {
 				Map val=value.EvaluateMapStructure();
@@ -782,12 +799,14 @@ namespace Meta {
 					val.IsConstant=false;
 				}
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
-					((LiteralStructure)previous).Literal[k] = val;
+					previous[k] = val;
+					//((LiteralStructure)previous).Literal[k] = val;
 				}
 				else {
 					Map m=new DictionaryMap();
 					m.IsConstant=false;
-					((LiteralStructure)previous).Literal[k] = m;
+					previous[k] = m;
+					//((LiteralStructure)previous).Literal[k] = m;
 				}
 				return previous;
 			}
@@ -815,7 +834,7 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		protected override Structure CurrentImplementation(Structure previous) {
+		protected override Map CurrentImplementation(Map previous) {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
@@ -837,7 +856,7 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		protected override Structure CurrentImplementation(Structure previous) {
+		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
 		public override CompiledStatement Compile() {
@@ -861,8 +880,9 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
-		public override Structure GetStructure() {
-			return new LiteralStructure(literal);
+		public override Map GetStructure() {
+			return literal;
+			//return new LiteralStructure(literal);
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
@@ -876,8 +896,9 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		public override Structure GetStructure() {
-			return new LiteralStructure(Gac.gac);
+		public override Map GetStructure() {
+			return Gac.gac;
+			//return new LiteralStructure(Gac.gac);
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
@@ -888,7 +909,7 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
-		public override Structure GetStructure() {
+		public override Map GetStructure() {
 			//Structure selected = subs[0].GetStructure();
 			Map selected = subs[0].GetConstant();
 			for (int i = 1; i < subs.Count; i++) {
@@ -903,7 +924,8 @@ namespace Meta {
 				}
 				selected = selected[key];
 			}
-			return new LiteralStructure(selected);
+			return selected;
+			//return new LiteralStructure(selected);
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
@@ -4171,8 +4193,9 @@ namespace Meta {
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
 		}
-		public override Structure GetStructure() {
-			return new LiteralStructure(literal);
+		public override Map GetStructure() {
+			return literal;
+			//return new LiteralStructure(literal);
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");
@@ -4183,10 +4206,10 @@ namespace Meta {
 		public LiteralStatement(LiteralExpression program)
 			: base(null, null, 0) {
 			this.program = program;}
-		public override Structure Pre() {
+		public override Map Pre() {
 			return program.EvaluateStructure();
 		}
-		protected override Structure CurrentImplementation(Structure previous) {
+		protected override Map CurrentImplementation(Map previous) {
 			return program.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
@@ -4198,35 +4221,35 @@ namespace Meta {
 		}
 	}
 	public delegate T SingleDelegate<T>(T t);
-	public abstract class Structure {
-		public abstract bool IsConstant {
-			get;
-		}
-		public abstract bool IsNumber {
-			get;
-		}
-	}
-	public class LiteralStructure:Structure {
-		public override bool IsConstant {
-			get { 
-				return literal.IsConstant;
-			}
-		}
-		public override bool IsNumber {
-			get {
-				return literal.IsNumber;
-			}
-		}
-		public Map Literal {
-			get {
-				return literal;
-			}
-		}
-		private Map literal;
-		public LiteralStructure(Map literal) {
-			this.literal=literal;
-		}
-	}
+	//public abstract class Structure {
+	//    public abstract bool IsConstant {
+	//        get;
+	//    }
+	//    public abstract bool IsNumber {
+	//        get;
+	//    }
+	//}
+	//public class LiteralStructure:Structure {
+	//    public override bool IsConstant {
+	//        get { 
+	//            return literal.IsConstant;
+	//        }
+	//    }
+	//    public override bool IsNumber {
+	//        get {
+	//            return literal.IsNumber;
+	//        }
+	//    }
+	//    public Map Literal {
+	//        get {
+	//            return literal;
+	//        }
+	//    }
+	//    private Map literal;
+	//    public LiteralStructure(Map literal) {
+	//        this.literal=literal;
+	//    }
+	//}
 	public class MergeCompile:CompilableAttribute {
 		public override Map GetStructure() {
 			return null;
