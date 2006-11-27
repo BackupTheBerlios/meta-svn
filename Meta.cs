@@ -1513,6 +1513,7 @@ namespace Meta {
 	}
 	public class ObjectMap : DotNetMap {
 		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+		//const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		protected override BindingFlags BindingFlags {
 			get {
 				return bindingFlags;}}
@@ -1750,7 +1751,8 @@ namespace Meta {
 	public class MemberCache {
 		private BindingFlags bindingFlags;
 		public MemberCache(BindingFlags bindingFlags) {
-			this.bindingFlags = bindingFlags;}
+			this.bindingFlags = bindingFlags;
+		}
 		public Dictionary<Map, Member> GetMembers(Type type) {
 			if (!cache.ContainsKey(type)) {
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
@@ -1765,7 +1767,7 @@ namespace Meta {
 						data[field.Name] = new FieldMember(field);
 					}
 					Type t = member as Type;
-					if (t != null && t.IsPublic) {
+					if (t != null) {
 						data[t.Name] = new TypeMember(t);
 					}
 				}
@@ -1773,6 +1775,28 @@ namespace Meta {
 			}
 			return cache[type];
 		}
+		//public Dictionary<Map, Member> GetMembers(Type type) {
+		//    if (!cache.ContainsKey(type)) {
+		//        Dictionary<Map, Member> data = new Dictionary<Map, Member>();
+		//        foreach (MemberInfo member in type.GetMembers(bindingFlags)) {
+		//            MethodInfo method = member as MethodInfo;
+		//            if (method != null && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
+		//                string name = TypeMap.GetMethodName(method);
+		//                data[name] = new MethodMember(method);
+		//            }
+		//            FieldInfo field = member as FieldInfo;
+		//            if (field != null && field.IsPublic) {
+		//                data[field.Name] = new FieldMember(field);
+		//            }
+		//            Type t = member as Type;
+		//            if (t != null && t.IsPublic) {
+		//                data[t.Name] = new TypeMember(t);
+		//            }
+		//        }
+		//        cache[type] = data;
+		//    }
+		//    return cache[type];
+		//}
 		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
 	}
 	public abstract class DotNetMap : Map {
