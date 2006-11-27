@@ -58,8 +58,6 @@ namespace Meta {
 				}
 			);
 		}
-
-
 		public Compiled GetCompiled() {	
 			if(compiled==null) {	
 				compiled=Compile();
@@ -851,7 +849,6 @@ namespace Meta {
 	public class Literal : Expression {
 		public override Map GetStructure() {
 			return literal;
-			//return new LiteralStructure(literal);
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
@@ -1758,7 +1755,7 @@ namespace Meta {
 				Dictionary<Map, Member> data = new Dictionary<Map, Member>();
 				foreach (MemberInfo member in type.GetMembers(bindingFlags)) {
 					MethodInfo method = member as MethodInfo;
-					if (method != null) {// && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
+					if (method != null) {
 						string name = TypeMap.GetMethodName(method);
 						data[name] = new MethodMember(method);
 					}
@@ -1786,28 +1783,6 @@ namespace Meta {
 			}
 			return cache[type];
 		}
-		//public Dictionary<Map, Member> GetMembers(Type type) {
-		//    if (!cache.ContainsKey(type)) {
-		//        Dictionary<Map, Member> data = new Dictionary<Map, Member>();
-		//        foreach (MemberInfo member in type.GetMembers(bindingFlags)) {
-		//            MethodInfo method = member as MethodInfo;
-		//            if (method != null && (method.IsPublic || method.Name.StartsWith("get_") || method.Name.StartsWith("set_") || method.Name.StartsWith("add_") || method.Name.StartsWith("remove"))) {
-		//                string name = TypeMap.GetMethodName(method);
-		//                data[name] = new MethodMember(method);
-		//            }
-		//            FieldInfo field = member as FieldInfo;
-		//            if (field != null && field.IsPublic) {
-		//                data[field.Name] = new FieldMember(field);
-		//            }
-		//            Type t = member as Type;
-		//            if (t != null && t.IsPublic) {
-		//                data[t.Name] = new TypeMember(t);
-		//            }
-		//        }
-		//        cache[type] = data;
-		//    }
-		//    return cache[type];
-		//}
 		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
 	}
 	public abstract class DotNetMap : Map {
