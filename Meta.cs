@@ -1766,6 +1766,17 @@ namespace Meta {
 					if (field != null && field.IsPublic) {
 						data[field.Name] = new FieldMember(field);
 					}
+					PropertyInfo property = member as PropertyInfo;
+					if (property != null) {
+						MethodInfo get=property.GetGetMethod();
+						if (get != null) {
+							data[TypeMap.GetMethodName(get)] = new MethodMember(get);
+						}
+						MethodInfo set = property.GetGetMethod();
+						if (set != null) {
+							data[TypeMap.GetMethodName(set)] = new MethodMember(set);
+						}
+					}
 					Type t = member as Type;
 					if (t != null) {
 						data[t.Name] = new TypeMember(t);
