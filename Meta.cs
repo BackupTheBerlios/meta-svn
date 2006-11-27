@@ -575,7 +575,12 @@ namespace Meta {
 	}
 	public class Program : ScopeExpression {
 		public override Map GetStructure() {
-			return statementList[statementList.Count - 1].Current();
+			if (statementList.Count == 0) {
+				return new DictionaryMap();
+			}
+			else {
+				return statementList[statementList.Count - 1].Current();
+			}
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			if(statementList.Count==1) {
@@ -1163,9 +1168,11 @@ namespace Meta {
 			if(target.Equals(typeof(Map))) {
 				return meta;
 			}
-			else
-			{
-				Type type=meta.GetType();
+			else if (target.Equals(typeof(object)) && meta is ObjectMap) {
+				return ((ObjectMap)meta).Object;
+			}
+			else {
+				Type type = meta.GetType();
 				if (type.IsSubclassOf(target)) {
 					return meta;
 				}
@@ -1176,16 +1183,19 @@ namespace Meta {
 						if (target == typeof(Number) && meta.IsNumber) {
 							return meta.GetNumber();
 						}
-						if(target==typeof(System.Drawing.Point) && meta.IsNormal) {
+						if (target == typeof(System.Drawing.Point) && meta.IsNormal) {
 							return new System.Drawing.Point(meta[1].GetInt32(), meta[2].GetInt32());
 						}
+						if (target == typeof(System.Windows.Point) && meta.IsNormal) {
+							return new System.Windows.Point(meta[1].GetInt32(), meta[2].GetInt32());
+						}
 						if (target == typeof(Rectangle) && meta.IsNormal) {
-							int x=meta[1][1].GetInt32();
-							int y=meta[1][2].GetInt32();
+							int x = meta[1][1].GetInt32();
+							int y = meta[1][2].GetInt32();
 							return new Rectangle(x,
 								y,
-								meta[2][1].GetInt32()-x,
-								meta[2][2].GetInt32()-y);
+								meta[2][1].GetInt32() - x,
+								meta[2][2].GetInt32() - y);
 						}
 						if (target == typeof(Color) && meta.IsNormal) {
 							return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
@@ -1209,13 +1219,14 @@ namespace Meta {
 							foreach (Map map in meta.Array) {
 								list.Add(ToDotNet(map, target.GetElementType()));
 							}
-							Array array=Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
-							list.ToArray().CopyTo(array,0);
+							Array array = Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
+							list.ToArray().CopyTo(array, 0);
 							return array;
 						}
 					}
 					else if (target.IsEnum) {
-						return Enum.ToObject(target, meta.GetNumber().GetInt32());}
+						return Enum.ToObject(target, meta.GetNumber().GetInt32());
+					}
 					else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
 						return ((ObjectMap)meta).Object;
 					}

@@ -21,6 +21,7 @@ using NetMatters;
 
 
 public partial class Editor : System.Windows.Window {
+	//RichTextBox textBox = new RichTextBox();
 	TextBox textBox = new TextBox();
 	private void Save() {
 		if (fileName == null) {
@@ -79,8 +80,8 @@ public partial class Editor : System.Windows.Window {
 		Rect r = textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
 		Canvas.SetLeft(intellisense, r.Right);
 		Canvas.SetTop(intellisense, r.Bottom);
-		Canvas.SetLeft(toolTip, r.Right + intellisense.Width);
-		Canvas.SetTop(toolTip, r.Bottom);
+		Canvas.SetLeft(toolTip, r.Right);
+		Canvas.SetTop(toolTip, r.Bottom + 110);
 	}
 	ScrollViewer scrollViewer = new ScrollViewer();
 	public void SetBreakpoint() {
@@ -377,7 +378,6 @@ public partial class Editor : System.Windows.Window {
 			return "";
 		}
 		private string text;
-		//private MemberInfo member;
 		private MemberInfo original;
 		public Item(string text, MemberInfo original) {
 		//public Item(string text, MemberInfo member,MemberInfo original) {
@@ -389,6 +389,7 @@ public partial class Editor : System.Windows.Window {
 			return text;
 		}
 	}
+	//public class X:Spell
 	public static Editor editor;
 	public static List<Item> intellisenseItems = new List<Item>();
 	public Editor() {
@@ -435,6 +436,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		InitializeComponent();
 		textBox.FontSize = 16;
+		textBox.SpellCheck.IsEnabled = true;
 		intellisense.MaxHeight = 100;
 		toolTip.Text = "Tooltip!!!!";
 		toolTip.Width = 300;
@@ -546,7 +548,6 @@ public partial class Editor : System.Windows.Window {
 			                return a.CompareTo(b);
 			            });
 			            if (keys.Count != 0) {
-							PositionIntellisense();
 							intellisense.Visibility = Visibility.Visible;
 			                toolTip.Visibility = Visibility.Visible;
 			            }
@@ -572,6 +573,7 @@ public partial class Editor : System.Windows.Window {
 			            if (intellisense.Items.Count != 0) {
 			                intellisense.SelectedIndex = 0;
 			            }
+						PositionIntellisense();
 						Meta.Expression.sources.Clear();
 					}
 				}
@@ -617,7 +619,6 @@ public partial class Editor : System.Windows.Window {
 					List<Meta.Expression> list = Meta.Expression.sources[key];
 					for (int i = 0; i < list.Count; i++) {
 						if (list[i] is Search || list[i] is Select || list[i] is Call) {
-							PositionIntellisense();
 							intellisense.Items.Clear();
 							Map s = list[i].EvaluateStructure();
 							List<string> keys = new List<string>();
@@ -655,6 +656,7 @@ public partial class Editor : System.Windows.Window {
 							if (intellisense.Items.Count != 0) {
 								intellisense.SelectedIndex = 0;
 							}
+							PositionIntellisense();
 						}
 					}
 				}
