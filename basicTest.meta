@@ -34,6 +34,7 @@
 		shortFunction={
 			arg|asdf;
 		};
+		bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
 		shortFunctionTest=!"shortFunction"("hello");
 		listTest=[1,2,3,"hello",asdf];
 		counter=0;

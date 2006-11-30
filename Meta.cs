@@ -29,6 +29,9 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Windows;
 using java.math;
+using SdlDotNet.Sprites;
+using SdlDotNet.Windows;
+using SdlDotNet;
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
@@ -927,6 +930,7 @@ namespace Meta {
 			lib.Statement = new LiteralStatement(gac);
 			callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 			callable[CodeKeys.Function].Compile(lib);
+			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
 		public static bool profiling = false;
@@ -945,6 +949,8 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//new Surface(new Bitmap(File.Open("",FileMode.Open)));
+			//new Surface(
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -1164,6 +1170,9 @@ namespace Meta {
 		public static object ToDotNet(Map meta,Type target) {
 			if(target.Equals(typeof(Map))) {
 				return meta;
+			}
+			else if (target.Equals(typeof(Stream)) && meta is FileMap) {
+				return File.Open(((FileMap)meta).Path,FileMode.Open);
 			}
 			else if (target.Equals(typeof(object)) && meta is ObjectMap) {
 				return ((ObjectMap)meta).Object;
@@ -1565,6 +1574,96 @@ namespace Meta {
 		}
 		public override Map Copy() {
 			return this;
+		}
+	}
+	public class DirectoryMap : Map {
+		public override Map this[Map key] {
+			get {
+				if (ContainsKey(key)) {
+					return new FileMap(Path.Combine(path,key.GetString()));
+				}
+				return null;
+			}
+			set {
+				throw new ApplicationException("Cannot set key in directory.");
+			}
+		}
+		public override IEnumerable<Map> Keys {
+			get {
+				foreach (string file in Directory.GetFiles(path)) {
+					yield return file;
+				}
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				yield break;
+			}
+		}
+		private string path;
+		public DirectoryMap(string path) {
+			this.path = path;
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		public override bool ContainsKey(Map key) {
+			if(key.IsString) {
+				return File.Exists(Path.Combine(path, key.GetString()));
+			}
+			return false;
+		}
+		public override Number GetNumber() {
+			// not really correct
+			return null;
+		}
+		public override Map Copy() {
+			return this;
+		}
+	}
+	public class FileMap : Map {
+		public override Map this[Map key] {
+			get {
+				return null;
+			}
+			set {
+				throw new Exception("Cannot set key in file.");
+			}
+		}
+		public string Path {
+			get {
+				return path;
+			}
+		}
+		public override IEnumerable<Map> Keys {
+			get {
+				yield break;
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				yield break;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		public override bool ContainsKey(Map key) {
+			return false;
+		}
+		public override Number GetNumber() {
+			return null;
+		}
+		public override Map Copy() {
+			return this;
+		}
+		private string path;
+		public FileMap(string path) {
+			this.path = path;
 		}
 	}
 	public class DictionaryMap : Map {
@@ -3664,12 +3763,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -3694,12 +3787,18 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-			public class MergeSort : Test {
+			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
+			////public class MergeSort : Test {
+			////    public override object GetResult(out int level) {
+			////        level = 2;
+			////        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			////    }
+			////}
 		}
 		namespace TestClasses {
 			public class MemberTest {

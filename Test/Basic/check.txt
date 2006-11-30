@@ -36,6 +36,11 @@ Entry (KeyValuePair`2)
 										"asdf"
 Entry (KeyValuePair`2)
 	Key (StringMap):
+		"bitmapSize"
+	Value (Integer32):
+		16
+Entry (KeyValuePair`2)
+	Key (StringMap):
 		"shortFunctionTest"
 	Value (StringMap):
 		"hello"
