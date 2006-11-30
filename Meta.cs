@@ -2244,78 +2244,78 @@ namespace Meta {
 			}
 		}
 	}
-	//public class AssemblyMap:Map {
-	//    public override Map this[Map key] {
-	//        get {
-	//            return Data[key];
-	//        }
-	//        set {
-	//            Data[key] = value;
-	//        }
-	//    }
-	//    private Map Data {
-	//        get {
-	//            if (data == null) {
-	//                data = GetData();
-	//            }
-	//            return data;
-	//        }
-	//    }
-	//    public static Map LoadAssembly(Assembly assembly) {
-	//        Map val = new DictionaryMap();
-	//        foreach (Type type in assembly.GetExportedTypes()) {
-	//            if (type.DeclaringType == null) {
-	//                Map selected = val;
-	//                string name;
-	//                if (type.IsGenericTypeDefinition) {
-	//                    name = type.Name.Split('`')[0];
-	//                }
-	//                else {
-	//                    name = type.Name;
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
-	//                    if (constructor.GetParameters().Length != 0) {
-	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    private Map GetData() {
-	//        return LoadAssembly(assembly);
-	//    }
-	//    private Map data;
-	//    public override IEnumerable<Map> Keys {
-	//        get {
-	//            return Data.Keys;
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get {
-	//            yield break;
-	//        }
-	//    }
-	//    public override int ArrayCount {
-	//        get {
-	//            return 0;
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key) {
-	//        return Data.ContainsKey(key);
-	//    }
-	//    public override Number GetNumber() {
-	//        return null;
-	//    }
-	//    public override Map Copy() {
-	//        return CopyMap(this);
-	//    }
-	//    private Assembly assembly;
-	//    public AssemblyMap(Assembly assembly) {
-	//        this.assembly = assembly;
-	//    }
-	//}
+	public class AssemblyMap : Map {
+		public override Map this[Map key] {
+			get {
+				return Data[key];
+			}
+			set {
+				Data[key] = value;
+			}
+		}
+		private Map Data {
+			get {
+				if (data == null) {
+					data = GetData();
+				}
+				return data;
+			}
+		}
+		public static Map LoadAssembly(Assembly assembly) {
+			Map val = new DictionaryMap();
+			foreach (Type type in assembly.GetExportedTypes()) {
+				if (type.DeclaringType == null) {
+					Map selected = val;
+					string name;
+					if (type.IsGenericTypeDefinition) {
+						name = type.Name.Split('`')[0];
+					}
+					else {
+						name = type.Name;
+					}
+					selected[type.Name] = new TypeMap(type);
+					foreach (ConstructorInfo constructor in type.GetConstructors()) {
+						if (constructor.GetParameters().Length != 0) {
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
+						}
+					}
+				}
+			}
+			return val;
+		}
+		private Map GetData() {
+			return LoadAssembly(assembly);
+		}
+		private Map data;
+		public override IEnumerable<Map> Keys {
+			get {
+				return Data.Keys;
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				yield break;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		public override bool ContainsKey(Map key) {
+			return Data.ContainsKey(key);
+		}
+		public override Number GetNumber() {
+			return null;
+		}
+		public override Map Copy() {
+			return CopyMap(this);
+		}
+		private Assembly assembly;
+		public AssemblyMap(Assembly assembly) {
+			this.assembly = assembly;
+		}
+	}
 	public class Gac : Map {
 		List<Map> keys = null;
 		public override IEnumerable<Map> Keys {
@@ -2368,6 +2368,7 @@ namespace Meta {
 		public static readonly Map gac = new Gac();
 		private Gac() {
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+			//cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		public static Map LoadAssembly(Assembly assembly) {
@@ -2411,7 +2412,8 @@ namespace Meta {
 							}
 						}
 						if (assembly != null) {
-							value = LoadAssembly(assembly);
+							value = new AssemblyMap(assembly);
+							//value = LoadAssembly(assembly);
 							cache[key] = value;
 						}
 						else {

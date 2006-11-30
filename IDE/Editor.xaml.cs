@@ -399,9 +399,9 @@ public partial class Editor : System.Windows.Window {
 									LiteralExpression literal = (LiteralExpression)x;
 									Map structure=literal.GetStructure();
 
-									if (!(structure is Gac)) {
+									//if (!(structure is Gac)) {
 										s = Library.Merge(structure, s);
-									}
+									//}
 								}
 								x = x.Parent;
 							}
