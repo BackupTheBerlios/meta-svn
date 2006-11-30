@@ -43,6 +43,14 @@ commandLine|,
 	"asdf"="hello"
 	"shortFunction"=,
 		arg|!"asdf"
+	"bitmapSize"=-
+		.
+			-
+				.
+					!"System.Drawing"
+					"Bitmap_Stream"
+				!"internet.bmp"
+			"get_Width"
 	"shortFunctionTest"=-
 		!"shortFunction"
 		"hello"

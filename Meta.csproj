@@ -39,6 +39,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Fusion.cs" />
     <Compile Include="Meta.cs" />
   </ItemGroup>
   <ItemGroup>

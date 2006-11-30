@@ -18,6 +18,10 @@ using System.Collections;
 using System.Xml;
 using System.Runtime.InteropServices;
 using NetMatters;
+using System.Timers;
+using System.Windows.Threading;
+using System.Threading;
+//using System.Windows.Forms;
 
 
 public partial class Editor : System.Windows.Window {
@@ -147,222 +151,6 @@ public partial class Editor : System.Windows.Window {
 		textBox.Cursor = Cursors.IBeam;
 		iterativeSearch = null;
 	}
-
-	//public static string GetDoc(MemberInfo memberInfo, bool isSignature, bool isSummary, bool isParameters) {
-	//    XmlNode comment = GetComments(memberInfo);
-	//    string text = "";
-	//    string summary = "";
-	//    ArrayList parameters = new ArrayList();
-	//    if (comment != null && comment.ChildNodes != null) {
-	//        foreach (XmlNode node in comment.ChildNodes) {
-	//            switch (node.Name) {
-	//                case "summary":
-	//                    summary = node.InnerXml;
-	//                    break;
-	//                case "param":
-	//                    parameters.Add(node);
-	//                    break;
-	//                default:
-	//                    break;
-	//            }
-	//        }
-	//    }
-	//    if (isSignature) {
-	//        MemberInfo[] overloaded;
-	//        if (memberInfo.DeclaringType != null) {
-	//            overloaded = memberInfo.DeclaringType.GetMember(memberInfo.Name);
-	//        }
-	//        else {
-	//            overloaded = new MemberInfo[] { memberInfo };
-	//        }
-	//        string overloadedText = "";
-	//        if (isParameters) {
-	//            //if (overloadNumber > 1) {
-	//                //overloadedText = (overloadIndex + 1).ToString() + " of " + overloadNumber.ToString() + "   ";
-	//                //text += overloadedText;
-	//            //}
-	//        }
-	//        else if (overloaded.Length > 1) {
-	//            overloadedText = " ( +" + overloaded.Length.ToString() + " overloads)";
-	//        }
-
-	//        if (memberInfo is MethodBase) {
-	//            if (memberInfo is MethodInfo) {
-	//                text += ((MethodInfo)memberInfo).ReturnType + " ";
-	//            }
-	//            text += ((MethodBase)memberInfo).Name;
-	//            text += " (";
-	//            bool firstParameter = true;
-	//            foreach (ParameterInfo parameter in ((MethodBase)memberInfo).GetParameters()) {
-	//                if (!firstParameter) {
-	//                    text += " ";
-	//                }
-	//                string parameterName = parameter.ParameterType.ToString();
-	//                text += parameterName;
-	//                text += " " + parameter.Name + ",";
-	//                firstParameter = false;
-	//            }
-	//            if (((MethodBase)memberInfo).GetParameters().Length > 0) {
-	//                text = text.Remove(text.Length - 1, 1);
-	//            }
-	//            text += ")";
-	//            //						if(memberInfos.Length>1) {
-	//            //							text+=" ( +"+(memberInfos.Length-1)+" overloads)";
-	//            //						}
-	//        }
-	//        else if (memberInfo is PropertyInfo) {
-	//            text += ((PropertyInfo)memberInfo).PropertyType + " " + ((PropertyInfo)memberInfo).Name;
-	//        }
-	//        else if (memberInfo is FieldInfo) {
-	//            text += ((FieldInfo)memberInfo).FieldType + " " + ((FieldInfo)memberInfo).Name;
-	//        }
-	//        else if (memberInfo is Type) {
-	//            if (((Type)memberInfo).IsInterface) {
-	//                text += "interface ";
-	//            }
-	//            else {
-	//                if (((Type)memberInfo).IsAbstract) {
-	//                    text += "abstract ";
-	//                }
-	//                if (((Type)memberInfo).IsValueType) {
-	//                    text += "struct ";
-	//                }
-	//                else {
-	//                    text += "class ";
-	//                }
-	//            }
-	//            text += ((Type)memberInfo).Name;
-	//        }
-	//        else if (memberInfo is EventInfo) {
-	//            text += ((EventInfo)memberInfo).EventHandlerType.FullName + " " +
-	//                memberInfo.Name;
-	//        }
-	//        text = text.Replace("System.String", "string").Replace("System.Object", "object")
-	//            .Replace("System.Boolean", "bool")
-	//            .Replace("System.Byte", "byte").Replace("System.Char", "char")
-	//            .Replace("System.Decimal", "decimal").Replace("System.Double", "double")
-	//            .Replace("System.Enum", "enum").Replace("System.Single", "float")
-	//            .Replace("System.Int32", "int").Replace("System.Int64", "long")
-	//            .Replace("System.SByte", "sbyte").Replace("System.Int16", "short")
-	//            .Replace("System.UInt32", "uint").Replace("System.UInt16", "ushort")
-	//            .Replace("System.UInt64", "ulong").Replace("System.Void", "void");
-	//        //if (!isParameters) {
-	//        //    text += overloadedText;
-	//        //}
-	//        text += "\n";
-	//    }
-	//    text += summary + "\n";
-	//    if (isParameters) {
-	//        //text+="\nparameters: \n";
-	//        foreach (XmlNode node in parameters) {
-	//            text += node.Attributes["name"].Value + ": " + node.InnerXml + "\n";
-	//            //						text+=node.Attributes["name"].Value+": "+node.InnerXml;
-	//        }
-	//    }
-	//    return text.Replace("<para>", "").Replace("\r\n", "").Replace("</para>", "").Replace("<see cref=\"", "")
-	//        .Replace("\" />", "").Replace("T:", "").Replace("F:", "").Replace("P:", "")
-	//        .Replace("M:", "").Replace("E:", "").Replace("     ", " ").Replace("    ", " ")
-	//        .Replace("   ", " ").Replace("  ", " ").Replace("\n ", "\n");
-	//}
-	//public static string CreateParamsDescription(ParameterInfo[] parameters) {
-	//    string text = "";
-	//    if (parameters.Length > 0) {
-	//        text += "(";
-	//        foreach (ParameterInfo parameter in parameters) {
-	//            text += parameter.ParameterType.FullName + ",";
-	//        }
-	//        text = text.Remove(text.Length - 1, 1);
-	//        text += ")";
-	//    }
-	//    return text;
-	//}
-	//private static Hashtable comments = new Hashtable();
-	//public static XmlDocument LoadAssemblyComments(Assembly assembly) {
-	//    if (!comments.ContainsKey(assembly)) {
-	//        string dllPath = assembly.Location;
-	//        string dllName = System.IO.Path.GetFileNameWithoutExtension(dllPath);
-	//        string dllDirectory = System.IO.Path.GetDirectoryName(dllPath);
-
-	//        string assemblyDirFile = System.IO.Path.Combine(dllDirectory, dllName + ".xml");
-	//        string runtimeDirFile = System.IO.Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), dllName + ".xml");
-	//        string other = System.IO.Path.Combine(@"C:\Programme\Reference Assemblies\Microsoft\Framework\v3.0", dllName+".xml");
-
-	//        string fileName;
-	//        if (File.Exists(assemblyDirFile)) {
-	//            fileName = assemblyDirFile;
-	//        }
-	//        if (File.Exists(other)) {
-	//            fileName = other;
-	//        }
-	//        else if (File.Exists(runtimeDirFile)) {
-	//            fileName = runtimeDirFile;
-	//        }
-	//        else {
-	//            return null;
-	//        }
-
-	//        XmlDocument xml = new XmlDocument();
-	//        xml.Load(fileName);
-	//        comments[assembly] = xml;
-	//    }
-	//    return (XmlDocument)comments[assembly];
-	//}
-	//public static XmlNode GetComments(MemberInfo mi) {
-	//    Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
-	//    XmlDocument doc = LoadAssemblyComments(declType.Assembly);
-	//    if (doc == null)
-	//        return null;
-	//    string xpath;
-
-	//    // Handle nested classes
-	//    string typeName = declType.FullName.Replace("+", ".");
-
-	//    // Based on the member type, get the correct xpath query
-	//    switch (mi.MemberType) {
-	//        case MemberTypes.NestedType:
-	//        case MemberTypes.TypeInfo:
-	//            xpath = "//member[@name='T:" + typeName + "']";
-	//            break;
-
-	//        case MemberTypes.Constructor:
-	//            xpath = "//member[@name='M:" + typeName + "." +
-	//                "#ctor" + CreateParamsDescription(
-	//                ((ConstructorInfo)mi).GetParameters()) + "']";
-	//            break;
-
-	//        case MemberTypes.Method:
-	//            xpath = "//member[@name='M:" + typeName + "." +
-	//                mi.Name + CreateParamsDescription(
-	//                ((MethodInfo)mi).GetParameters());
-	//            if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
-	//                xpath += "~{" +
-	//                    ((MethodInfo)mi).ReturnType.FullName + "}";
-	//            }
-	//            xpath += "']";
-	//            break;
-
-	//        case MemberTypes.Property:
-	//            xpath = "//member[@name='P:" + typeName + "." +
-	//                mi.Name + CreateParamsDescription(
-	//                ((PropertyInfo)mi).GetIndexParameters()) + "']";
-	//            break;
-
-	//        case MemberTypes.Field:
-	//            xpath = "//member[@name='F:" + typeName + "." + mi.Name + "']";
-	//            break;
-
-	//        case MemberTypes.Event:
-	//            xpath = "//member[@name='E:" + typeName + "." + mi.Name + "']";
-	//            break;
-
-	//        // Unknown member type, nothing to do
-	//        default:
-	//            return null;
-	//    }
-
-	//    // Get the node from the document
-	//    return doc.SelectSingleNode(xpath);
-	//}
 	public class Item{
 		public string Signature() {
 			if (original != null) {
@@ -380,8 +168,6 @@ public partial class Editor : System.Windows.Window {
 		private string text;
 		private MemberInfo original;
 		public Item(string text, MemberInfo original) {
-		//public Item(string text, MemberInfo member,MemberInfo original) {
-			//this.member = member;
 			this.text = text;
 			this.original = original;
 		}
@@ -390,35 +176,52 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	public bool Compile() {
-		string text=textBox.Text;
-		Interpreter.profiling = false;
-		foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
-			cached.Clear();
+		if (Compile(textBox.Text)) {
+			message.Content = "";
+			return true;
 		}
-		foreach (Rectangle line in errors) {
-			canvas.Children.Remove(line);
-		}
-		errors.Clear();
-		Parser parser = new Parser(text, fileName);
-		Map map = null;
-		bool matched = Parser.Value.Match(parser, ref map);
-		if (parser.state.index != text.Length) {
-			Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
-			Rectangle line = new Rectangle();
-			errors.Add(line);
-			line.Width = 10;
-			line.Height = 3;
-			line.Fill = Brushes.Red;
-			Canvas.SetTop(line, r.Bottom);
-			Canvas.SetLeft(line, r.Right);
-			canvas.Children.Add(line);
-			return false;
+		else {
 			message.Content = "Parse error";
+			return false;
 		}
-		message.Content = "";
-		return true;
 	}
-	//public class X:Spell
+	public bool Compile(string text) {
+		try {
+			//string text = textBox.Text;
+			Interpreter.profiling = false;
+			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+				cached.Clear();
+			}
+
+			Parser parser = new Parser(text, fileName);
+			Map map = null;
+			bool matched = Parser.Value.Match(parser, ref map);
+			Dispatcher.Invoke(DispatcherPriority.Normal,new System.Windows.Forms.MethodInvoker(delegate {
+				foreach (Rectangle line in errors) {
+					canvas.Children.Remove(line);
+				}
+				errors.Clear();
+			}));
+			if (parser.state.index != text.Length) {
+				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
+					Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
+					Rectangle line = new Rectangle();
+					errors.Add(line);
+					line.Width = 10;
+					line.Height = 3;
+					line.Fill = Brushes.Red;
+					Canvas.SetTop(line, r.Bottom);
+					Canvas.SetLeft(line, r.Right);
+					canvas.Children.Add(line);
+				}));
+				return false;
+			}
+			return true;
+		}
+		catch (Exception e) {
+			throw e;
+		}
+	}
 	public static List<Rectangle> errors = new List<Rectangle>();
 	public static Editor editor;
 	public static FindAndReplace findAndReplace;
@@ -562,18 +365,45 @@ public partial class Editor : System.Windows.Window {
 						sources.Sort(delegate(Source a,Source b) {
 							return a.CompareTo(b);
 						});
-						Map s=null;
+						//Map s=null;
 						sources.Reverse();
+						Program start = null;
 						foreach(Source source in sources) {
 							foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
 								Program program=expression as Program;
 								if(program!=null) {
-									s=program.statementList[program.statementList.Count - 1].CurrentMap();
+									start = program;//.statementList[program.statementList.Count - 1].CurrentMap();
+									//s = program.statementList[program.statementList.Count - 1].CurrentMap();
 									break;
 								}
 							}
-							if(s!=null) {
+							if(start!=null) {
 								break;
+							}
+						}
+						Map s=Map.Empty;
+						if (start != null) {
+							Meta.Expression x = start;
+							while (x!=null) {
+								if (x is Program) {
+									Program p = x as Program;
+									Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
+									if (p is Function) {
+										result = p.statementList[p.statementList.Count - 2].CurrentMap();
+									}
+									if (result != null) {
+										s = Library.Merge(result,s);
+									}
+								}
+								else if (x is LiteralExpression) {
+									LiteralExpression literal = (LiteralExpression)x;
+									Map structure=literal.GetStructure();
+
+									if (!(structure is Gac)) {
+										s = Library.Merge(structure, s);
+									}
+								}
+								x = x.Parent;
 							}
 						}
 			            List<string> keys = new List<string>();
@@ -727,11 +557,17 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(
 			new CommandBinding(compile,delegate{Compile();})
 		);
-
+		DispatcherTimer timer = new DispatcherTimer();
+		timer.Interval = new TimeSpan(10000);
+		timer.Tick += delegate {
+			string text = textBox.Text;
+			Thread thread = new Thread(new ThreadStart(delegate {
+				Compile(text);
+			}));
+			thread.Start();
+		};
+		timer.Start();
 		CommandBindings.Add(new CommandBinding(execute, delegate {
-			//TextRange range = new TextRange(word.Start, word.End);
-			//range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(Colors.Blue));
-			//range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
 			Save();
 			if (Compile()) {
 				Process.Start(System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"), fileName);
@@ -779,7 +615,9 @@ public partial class Editor : System.Windows.Window {
 			}
 		};
 		textBox.SelectionChanged += delegate {
-			editorLine.Content = "Ln " + (textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
+			int line=(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
+			editorLine.Content = "Ln " + line;
+			textBox.ScrollToLine(line-1);
 		};
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
@@ -787,10 +625,10 @@ public partial class Editor : System.Windows.Window {
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
+		textBox.Padding = new Thickness(100,0,0,200);
 		dockPanel.Children.Add(scrollViewer);
 		const int width = 0;
 		const int height = 0;
-
 		Canvas.SetLeft(textBox, width/2);
 		Canvas.SetTop(textBox, height/2);
 		textBox.SizeChanged += delegate {

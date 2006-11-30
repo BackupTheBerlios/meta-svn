@@ -32,6 +32,7 @@ using java.math;
 using SdlDotNet.Sprites;
 using SdlDotNet.Windows;
 using SdlDotNet;
+using System.GACManagedAccess;
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
@@ -1131,35 +1132,40 @@ namespace Meta {
 		    else if(target.Equals(typeof(Number))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
 		    }
-		    else if(target.Equals(typeof(Map))) {
-		    }
-		    else if(target.Equals(typeof(Boolean))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
-				il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToBoolean",new Type[] {typeof(int)}));
-		    }
-			else if(target.Equals(typeof(String))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetString",BindingFlags.Instance|BindingFlags.Public));
+			else if (target.Equals(typeof(Stream))) {
+				il.Emit(OpCodes.Castclass, typeof(FileMap));
+				il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
+				//il.Emit(OpCodes.Castclass, target);
 			}
-			else if(target.Equals(typeof(int))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetInt32"));
+			else if (target.Equals(typeof(Map))) {
 			}
-			else if(target.Equals(typeof(Single))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt,typeof(Number).GetMethod("GetSingle"));
+			else if (target.Equals(typeof(Boolean))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
+				il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToBoolean", new Type[] { typeof(int) }));
 			}
-			else if(target.Equals(typeof(object))) {
+			else if (target.Equals(typeof(String))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetString", BindingFlags.Instance | BindingFlags.Public));
 			}
-			else if(target.Equals(typeof(Type))) {
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetClass"));
+			else if (target.Equals(typeof(int))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt32"));
+			}
+			else if (target.Equals(typeof(Single))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetSingle"));
+			}
+			else if (target.Equals(typeof(object))) {
+			}
+			else if (target.Equals(typeof(Type))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetClass"));
 			}
 			else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))) {
-				int token=(int)target.TypeHandle.Value;
-				if(!Transform.types.ContainsKey(token)) {
-				    Transform.types[token]=target;
+				int token = (int)target.TypeHandle.Value;
+				if (!Transform.types.ContainsKey(token)) {
+					Transform.types[token] = target;
 				}
-				il.Emit(OpCodes.Ldc_I4,(int)token);
-				il.Emit(OpCodes.Call,typeof(Transform).GetMethod("CreateDelegateFromCode",new Type[] {typeof(Map),typeof(int)}));
+				il.Emit(OpCodes.Ldc_I4, (int)token);
+				il.Emit(OpCodes.Call, typeof(Transform).GetMethod("CreateDelegateFromCode", new Type[] { typeof(Map), typeof(int) }));
 			}
 			else {
 				il.Emit(OpCodes.Castclass, typeof(ObjectMap));
@@ -1466,7 +1472,8 @@ namespace Meta {
 			string name = "";
 			for(int i=0;i<parameters.Length;i++) {
 				if (i != 0) {
-					name += "_";
+					name += "-";
+					//name += "_";
 				}
 				name+=parameters[i].ParameterType.Name;
 			}
@@ -1587,7 +1594,8 @@ namespace Meta {
 			set {
 				throw new ApplicationException("Cannot set key in directory.");
 			}
-		}
+		}
+
 		public override IEnumerable<Map> Keys {
 			get {
 				foreach (string file in Directory.GetFiles(path)) {
@@ -1624,6 +1632,9 @@ namespace Meta {
 		}
 	}
 	public class FileMap : Map {
+		public Stream GetStream() {
+			return File.Open(path, FileMode.Open);
+		}
 		public override Map this[Map key] {
 			get {
 				return null;
@@ -2233,7 +2244,48 @@ namespace Meta {
 			}
 		}
 	}
-	public class Gac : SpecialMap{
+	public class Gac : Map {
+		public override IEnumerable<Map> Keys {
+			get {
+				AssemblyCacheEnum assemblies = new AssemblyCacheEnum(null);
+				while (true) {
+					string name = assemblies.GetNextAssembly();
+					if (name == null) {
+						break;
+					}
+					AssemblyName n = new AssemblyName(name);
+					yield return n.Name;
+				}
+				foreach (Map key in cache.Keys) {
+					yield return key;
+				}
+
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				yield break;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return 0;
+			}
+		}
+		public override bool ContainsKey(Map key) {
+			return new List<Map>(Keys).Contains(key);
+		}
+		public override Map Copy() {
+			Map copy = new DictionaryMap();
+			foreach (Map key in Keys) {
+				copy[key] = this[key];
+			}
+			copy.Scope = Scope;
+			return copy;
+		}
+		public override Number GetNumber() {
+			return null;
+		}
 		public static readonly Map gac = new Gac();
 		private Gac() {
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
@@ -2246,13 +2298,15 @@ namespace Meta {
 					Map selected = val;
 					string name;
 					if (type.IsGenericTypeDefinition) {
-						name = type.Name.Split('`')[0];}
+						name = type.Name.Split('`')[0];
+					}
 					else {
-						name = type.Name;}
+						name = type.Name;
+					}
 					selected[type.Name] = new TypeMap(type);
 					foreach (ConstructorInfo constructor in type.GetConstructors()) {
 						if (constructor.GetParameters().Length != 0) {
-							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type,constructor);
+							selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
 						}
 					}
 				}
@@ -2267,18 +2321,20 @@ namespace Meta {
 						Assembly assembly;
 						string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
 						if (File.Exists(path)) {
-							assembly = Assembly.LoadFile(path);}
+							assembly = Assembly.LoadFile(path);
+						}
 						else {
 							try {
 								assembly = Assembly.LoadWithPartialName(key.GetString());
 							}
-							catch(Exception e) {
+							catch (Exception e) {
 								return null;
 							}
 						}
 						if (assembly != null) {
 							value = LoadAssembly(assembly);
-							cache[key] = value;}
+							cache[key] = value;
+						}
 						else {
 							value = null;
 						}
@@ -2297,6 +2353,74 @@ namespace Meta {
 			}
 		}
 	}
+	//public class Gac : SpecialMap {
+	//    public static readonly Map gac = new Gac();
+	//    private Gac() {
+	//        cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
+	//    }
+	//    private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
+	//    public static Map LoadAssembly(Assembly assembly) {
+	//        Map val = new DictionaryMap();
+	//        foreach (Type type in assembly.GetExportedTypes()) {
+	//            if (type.DeclaringType == null) {
+	//                Map selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition) {
+	//                    name = type.Name.Split('`')[0];
+	//                }
+	//                else {
+	//                    name = type.Name;
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
+	//                    if (constructor.GetParameters().Length != 0) {
+	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    public override Map this[Map key] {
+	//        get {
+	//            Map value;
+	//            if (!cache.ContainsKey(key)) {
+	//                if (key.IsString) {
+	//                    Assembly assembly;
+	//                    string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
+	//                    if (File.Exists(path)) {
+	//                        assembly = Assembly.LoadFile(path);
+	//                    }
+	//                    else {
+	//                        try {
+	//                            assembly = Assembly.LoadWithPartialName(key.GetString());
+	//                        }
+	//                        catch (Exception e) {
+	//                            return null;
+	//                        }
+	//                    }
+	//                    if (assembly != null) {
+	//                        value = LoadAssembly(assembly);
+	//                        cache[key] = value;
+	//                    }
+	//                    else {
+	//                        value = null;
+	//                    }
+	//                }
+	//                else {
+	//                    value = null;
+	//                }
+	//            }
+	//            else {
+	//                value = cache[key];
+	//            }
+	//            return value;
+	//        }
+	//        set {
+	//            cache[key] = value;
+	//        }
+	//    }
+	//}
 	public class StringMap : Map {
 		public override bool IsNormal {
 			get {
@@ -3157,6 +3281,7 @@ namespace Meta {
 											CodeKeys.Parameter,
 											StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 										Syntax.functionAlternativeStart,
+			Whitespace,
 											Assign(CodeKeys.Expression, Expression),
 										Optional(EndOfLine),
 										Optional(Syntax.functionAlternativeEnd))))))))));
@@ -3793,12 +3918,12 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			////public class MergeSort : Test {
-			////    public override object GetResult(out int level) {
-			////        level = 2;
-			////        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			////    }
-			////}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -4336,6 +4461,8 @@ namespace Meta {
 	public class LiteralExpression : Expression {
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
+			if(literal==null) {
+			}
 			this.literal = literal;
 		}
 		public override Map GetStructure() {
