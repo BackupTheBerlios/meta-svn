@@ -233,8 +233,12 @@ public partial class Editor : System.Windows.Window {
 		RoutedUICommand deleteLine = new RoutedUICommand();
 		BindKey(deleteLine, Key.L, ModifierKeys.Control);
 		this.CommandBindings.Add(new CommandBinding(deleteLine, delegate {
-			int start = Math.Max(0, textBox.Text.LastIndexOf('\n', textBox.SelectionStart));
-			int end = Math.Max(0, textBox.Text.IndexOf('\n', Math.Max(start + 1, textBox.SelectionStart)));
+			int realStart = Math.Min(textBox.SelectionStart, textBox.Text.Length - 1);
+			int start = Math.Max(0, textBox.Text.LastIndexOf('\n', realStart));
+			int end = textBox.Text.IndexOf('\n', realStart);
+			if (end == -1) {
+				end = textBox.Text.Length-1;
+			}
 			textBox.SelectionStart = start;
 			textBox.SelectionLength = end - start;
 			textBox.SelectedText = "";
@@ -356,6 +360,7 @@ public partial class Editor : System.Windows.Window {
 					else if (e.Key == Key.Space) {
 						e.Handled = true;
 						StartIntellisense();
+						searchStart--;
 						intellisense.Items.Clear();
 						//List<Expression> list=new List<Meta.Expression>();
 						List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
@@ -406,6 +411,9 @@ public partial class Editor : System.Windows.Window {
 								x = x.Parent;
 							}
 						}
+						Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
+						MessageBox.Show(directory.Count.ToString());
+						s=Library.Merge(directory.Copy(),s);
 			            List<string> keys = new List<string>();
 			            if (s != null) {
 			                foreach (Map m in s.Keys) {
@@ -687,7 +695,7 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	private bool MatchingBrace(string openBraces, string closeBraces, bool direction) {
-		return false;
+		//return false;
 		char previous = textBox.Text[textBox.SelectionStart - 1];
 		char next = textBox.Text[textBox.SelectionStart];
 		int forward = openBraces.IndexOf(previous);

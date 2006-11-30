@@ -1584,6 +1584,11 @@ namespace Meta {
 		}
 	}
 	public class DirectoryMap : Map {
+		public override int Count {
+			get {
+				return new List<Map>(Keys).Count;
+			}
+		}
 		public override Map this[Map key] {
 			get {
 				if (ContainsKey(key)) {
@@ -1628,10 +1633,15 @@ namespace Meta {
 			return null;
 		}
 		public override Map Copy() {
-			return this;
+			return CopyMap(this);
 		}
 	}
 	public class FileMap : Map {
+		public override int Count {
+			get { 
+				throw new Exception("The method or operation is not implemented."); 
+			}
+		}
 		public Stream GetStream() {
 			return File.Open(path, FileMode.Open);
 		}
@@ -2245,6 +2255,11 @@ namespace Meta {
 		}
 	}
 	public class AssemblyMap : Map {
+		public override int Count {
+			get {
+				return new List<Map>(Keys).Count;
+			}
+		}
 		public override Map this[Map key] {
 			get {
 				return Data[key];
@@ -2317,6 +2332,11 @@ namespace Meta {
 		}
 	}
 	public class Gac : Map {
+		public override int Count {
+			get {
+				return new List<Map>(Keys).Count;
+			}
+		}
 		List<Map> keys = null;
 		public override IEnumerable<Map> Keys {
 			get {
@@ -4695,10 +4715,11 @@ namespace Meta {
 		public virtual Map Mutable() {
 			return this;
 		}
-		public virtual int Count {
-			get { 
-				throw new Exception("The method or operation is not implemented."); 
-			}
+		public abstract int Count {
+			get;
+			// { 
+			//    throw new Exception("The method or operation is not implemented."); 
+			//}
 		}
 		public virtual void Append(Map map) {
 			throw new Exception("The method or operation is not implemented.");
