@@ -2244,17 +2244,96 @@ namespace Meta {
 			}
 		}
 	}
+	//public class AssemblyMap:Map {
+	//    public override Map this[Map key] {
+	//        get {
+	//            return Data[key];
+	//        }
+	//        set {
+	//            Data[key] = value;
+	//        }
+	//    }
+	//    private Map Data {
+	//        get {
+	//            if (data == null) {
+	//                data = GetData();
+	//            }
+	//            return data;
+	//        }
+	//    }
+	//    public static Map LoadAssembly(Assembly assembly) {
+	//        Map val = new DictionaryMap();
+	//        foreach (Type type in assembly.GetExportedTypes()) {
+	//            if (type.DeclaringType == null) {
+	//                Map selected = val;
+	//                string name;
+	//                if (type.IsGenericTypeDefinition) {
+	//                    name = type.Name.Split('`')[0];
+	//                }
+	//                else {
+	//                    name = type.Name;
+	//                }
+	//                selected[type.Name] = new TypeMap(type);
+	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
+	//                    if (constructor.GetParameters().Length != 0) {
+	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        return val;
+	//    }
+	//    private Map GetData() {
+	//        return LoadAssembly(assembly);
+	//    }
+	//    private Map data;
+	//    public override IEnumerable<Map> Keys {
+	//        get {
+	//            return Data.Keys;
+	//        }
+	//    }
+	//    public override IEnumerable<Map> Array {
+	//        get {
+	//            yield break;
+	//        }
+	//    }
+	//    public override int ArrayCount {
+	//        get {
+	//            return 0;
+	//        }
+	//    }
+	//    public override bool ContainsKey(Map key) {
+	//        return Data.ContainsKey(key);
+	//    }
+	//    public override Number GetNumber() {
+	//        return null;
+	//    }
+	//    public override Map Copy() {
+	//        return CopyMap(this);
+	//    }
+	//    private Assembly assembly;
+	//    public AssemblyMap(Assembly assembly) {
+	//        this.assembly = assembly;
+	//    }
+	//}
 	public class Gac : Map {
+		List<Map> keys = null;
 		public override IEnumerable<Map> Keys {
 			get {
-				AssemblyCacheEnum assemblies = new AssemblyCacheEnum(null);
-				while (true) {
-					string name = assemblies.GetNextAssembly();
-					if (name == null) {
-						break;
+				if (keys == null) {
+					keys = new List<Map>();
+					AssemblyCacheEnum assemblies = new AssemblyCacheEnum(null);
+					while (true) {
+						string name = assemblies.GetNextAssembly();
+						if (name == null) {
+							break;
+						}
+						AssemblyName n = new AssemblyName(name);
+						keys.Add(n.Name);
 					}
-					AssemblyName n = new AssemblyName(name);
-					yield return n.Name;
+				}
+				foreach (Map key in keys) {
+					yield return key;
 				}
 				foreach (Map key in cache.Keys) {
 					yield return key;
@@ -4568,6 +4647,14 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public static Map CopyMap(Map map) {
+			Map copy = new DictionaryMap();
+			foreach (Map key in map.Keys) {
+				copy[key] = map[key];
+			}
+			copy.Scope = map.Scope;
+			return copy;
+		}
 		public virtual Integer32 GetInteger() {
 			Number number=GetNumber();
 			if(number!=null) {
