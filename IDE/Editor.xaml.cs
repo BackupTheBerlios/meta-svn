@@ -297,9 +297,9 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
 		textBox.FontFamily = new FontFamily("Courier New");
 		textBox.AcceptsTab = true;
-		intellisense.MouseDoubleClick += delegate {
-			Complete();
-		};
+		//intellisense.MouseDoubleClick += delegate {
+		//    Complete();
+		//};
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 			if (Intellisense) {
 				e.Handled = true;
@@ -378,7 +378,6 @@ public partial class Editor : System.Windows.Window {
 								Program program=expression as Program;
 								if(program!=null) {
 									start = program;//.statementList[program.statementList.Count - 1].CurrentMap();
-									//s = program.statementList[program.statementList.Count - 1].CurrentMap();
 									break;
 								}
 							}
@@ -412,7 +411,6 @@ public partial class Editor : System.Windows.Window {
 							}
 						}
 						Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
-						MessageBox.Show(directory.Count.ToString());
 						s=Library.Merge(directory.Copy(),s);
 			            List<string> keys = new List<string>();
 			            if (s != null) {
@@ -475,6 +473,8 @@ public partial class Editor : System.Windows.Window {
 		};
 		textBox.PreviewTextInput += new TextCompositionEventHandler(textBox_PreviewTextInput);
 		textBox.KeyDown += delegate(object obj, KeyEventArgs e) {
+			//if (e.Key != Key.LeftShift) {
+			//}
 			if (e.Key == Key.Return) {
 				string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
 				textBox.SelectedText = "\n".PadRight(1 + line.Length - line.TrimStart('\t').Length, '\t');
@@ -488,8 +488,99 @@ public partial class Editor : System.Windows.Window {
 					toolTip.Visibility = Visibility.Hidden;
 				}
 			}
+			else if (e.Key == Key.D8 || e.Key==Key.OemComma) {
+				StartIntellisense();
+				int index = textBox.SelectionStart;
+				string text=textBox.Text;
+				int open = 1;
+				int argIndex = 0;
+				Source realSource=null;
+				if (e.Key == Key.D8) {
+					open = 0;
+				}
+				if (e.Key == Key.OemComma) {
+					argIndex++;
+				}
+				while (index>=0) {
+					char c = text[index];
+					switch (c) {
+						case '(':
+							open--;
+							break;
+						case ')':
+							open++;
+							break;
+						case ',':
+							if (open == 1) {
+								argIndex++;
+							}
+							break;
+					}
+					if (open==0) {
+						int line=textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart)+1;
+						int selection=textBox.SelectionStart;
+						int column=selection-text.LastIndexOf('\n',selection-1)+1;
+						realSource = new Source(line, column, fileName);
+						break;
+					}
+					index--;
+				}
+				if (realSource != null) {
+					List<Source> sources = new List<Source>(Meta.Expression.sources.Keys);
+					sources.RemoveAll(delegate(Source s) {
+						return s.FileName != fileName;
+					});
+					sources.Sort(delegate(Source a, Source b) {
+						return a.CompareTo(b);
+					});
+					//Map s=null;
+					sources.Reverse();
+					Meta.Expression start = null;
+					foreach (Source source in sources) {
+						if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
+							foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
+								//Program program = expression as Program;
+								if (expression is Select || expression is Search) {
+									start = expression;
+									if (start.Parent is Call) {
+										start = ((Call)start.Parent).calls[0];
+									}
+									//if (start is Search && start.Parent is Select) {
+									//    start = start.Parent;
+									//}
+									//start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
+								//if (expression is Call) {
+								//    start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
+									break;
+								}
+							}
+						}
+						if (start != null) {
+							break;
+						}
+					}
+					if (start != null) {
+						Map structure=start.GetStructure();
+						if (structure != null) {
+							if (structure is Method) {
+								XmlNodeList parameters=new XmlComments(((Method)structure).method).Params;
+								if (parameters.Count > argIndex) {
+									XmlNode node=parameters[argIndex];
+									
+									string t = node.Attributes["name"].Value+":\n"+node.InnerText;
+									PositionIntellisense();
+									toolTip.Visibility = Visibility.Visible;
+									toolTip.Text = t;
+								}
+								//string text = new XmlComments(((Method)structure).method).ToString();
+
+							}
+						}
+					}
+				}
+			}
 			else if (e.Key == Key.OemPeriod) {
-				Source key=StartIntellisense();
+				Source key = StartIntellisense();
 				intellisense.Items.Clear();
 				if (Meta.Expression.sources.ContainsKey(key)) {
 					List<Meta.Expression> list = Meta.Expression.sources[key];
@@ -549,15 +640,15 @@ public partial class Editor : System.Windows.Window {
 		MenuItem file = new MenuItem();
 		MenuItem save = new MenuItem();
 		MenuItem run = new MenuItem();
-		MenuItem open = new MenuItem();
+		MenuItem openItem = new MenuItem();
 		MenuItem comp = new MenuItem();
 		RoutedUICommand execute = new RoutedUICommand("Run","Run",GetType());
 		RoutedUICommand compile = new RoutedUICommand("Compile", "Compile", GetType());
 		file.Header = "File";
-		open.Header = "Open";
+		openItem.Header = "Open";
 		comp.Header = "Compile";
 		comp.Command = compile;
-		open.Command=ApplicationCommands.Open;
+		openItem.Command=ApplicationCommands.Open;
 		save.Header = "Save";
 		save.Command = ApplicationCommands.Save;
 		run.Header = "Run";
@@ -593,7 +684,7 @@ public partial class Editor : System.Windows.Window {
 		//DockPanel.SetDock(editorLine, Dock.Bottom);
 		dockPanel.Children.Add(status);
 
-		file.Items.Add(open);
+		file.Items.Add(openItem);
 		file.Items.Add(comp);
 		file.Items.Add(save);
 		file.Items.Add(run);

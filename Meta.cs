@@ -1524,7 +1524,10 @@ namespace Meta {
 				if (constructor == null) {
 					ConstructorInfo method = Type.GetConstructor(new Type[] {});
 					if (method == null) {
-						throw new Exception("Default constructor for " + Type + " not found.");}
+						return null;
+						//throw new Exception("Default constructor for " + Type + " not found.");
+						//throw new Exception("Default constructor for " + Type + " not found.");
+					}
 					constructor = new Method(method, Object, Type,method);
 				}
 				return constructor;
