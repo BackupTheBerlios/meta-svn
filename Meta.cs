@@ -162,7 +162,10 @@ namespace Meta {
 					return result;
 				}
 				else if(method is MethodInfo) {
-					return GetInstanceStructure(((MethodInfo)method).ReturnType);
+					Type type = ((MethodInfo)method).ReturnType;
+					if (type != typeof(Map) && !type.IsSubclassOf(typeof(Map))) {
+						return GetInstanceStructure(type);
+					}
 				}
 			}
 			return null;
@@ -1595,7 +1598,13 @@ namespace Meta {
 		public override Map this[Map key] {
 			get {
 				if (ContainsKey(key)) {
-					return new FileMap(Path.Combine(path,key.GetString()));
+					string p=Path.Combine(path,key.GetString());
+					if (File.Exists(p)) {
+						return new FileMap(p);
+					}
+					else if (Directory.Exists(p)) {
+						return new DirectoryMap(p);
+					}
 				}
 				return null;
 			}
@@ -1607,7 +1616,10 @@ namespace Meta {
 		public override IEnumerable<Map> Keys {
 			get {
 				foreach (string file in Directory.GetFiles(path)) {
-					yield return file;
+					yield return Path.GetFileName(file);
+				}
+				foreach (string directory in Directory.GetDirectories(path)) {
+					yield return new DirectoryInfo(directory).Name;
 				}
 			}
 		}
@@ -1627,7 +1639,8 @@ namespace Meta {
 		}
 		public override bool ContainsKey(Map key) {
 			if(key.IsString) {
-				return File.Exists(Path.Combine(path, key.GetString()));
+				string p = Path.Combine(path, key.GetString());
+				return File.Exists(p)||Directory.Exists(p);
 			}
 			return false;
 		}

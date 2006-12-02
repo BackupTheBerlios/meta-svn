@@ -657,7 +657,7 @@ public partial class Editor : System.Windows.Window {
 			new CommandBinding(compile,delegate{Compile();})
 		);
 		DispatcherTimer timer = new DispatcherTimer();
-		timer.Interval = new TimeSpan(10000);
+		timer.Interval = new TimeSpan(30000);
 		timer.Tick += delegate {
 			string text = textBox.Text;
 			Thread thread = new Thread(new ThreadStart(delegate {
