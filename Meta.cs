@@ -635,13 +635,36 @@ namespace Meta {
 		public void Assign(ref Map context) {
 			foreach (Source breakpoint in Interpreter.breakpoints) {
 				if (start.FileName == breakpoint.FileName) {
-					if (breakpoint.Line >= start.Line && breakpoint.Column >= start.Column) {
-						if (breakpoint.Line <= end.Line && breakpoint.Column<=start.Column) {
+					if (start<=breakpoint) {
+						if (end >= breakpoint) {
+							bool x = end >= breakpoint;
 							if (Interpreter.Breakpoint != null) {
 								Interpreter.Breakpoint(context);
 							}
 						}
 					}
+					//if (start.Line >= breakpoint.Line && start.Column <= breakpoint.Column) {
+					//    if (end.Line >= breakpoint.Line || end.Column.Column <= start.Column) {
+					//        if (Interpreter.Breakpoint != null) {
+					//            Interpreter.Breakpoint(context);
+					//        }
+					//    }
+					//}
+					//if (start.Line>=breakpoint.Line && start.Column<=breakpoint.Column) {
+					//    if (end.Line>=breakpoint.Line || end.Column.Column <= start.Column) {
+					//        if (Interpreter.Breakpoint != null) {
+					//            Interpreter.Breakpoint(context);
+					//        }
+					//    }
+					//}
+
+					//if (breakpoint.Line >= start.Line && breakpoint.Column >= start.Column) {
+					//    if (breakpoint.Line <= end.Line && breakpoint.Column<=start.Column) {
+					//        if (Interpreter.Breakpoint != null) {
+					//            Interpreter.Breakpoint(context);
+					//        }
+					//    }
+					//}
 				}
 			}
 			s(ref context, value(context));
@@ -2252,6 +2275,30 @@ namespace Meta {
 		}
 	}
 	public class Source {
+		//public static void CheckComparison(Source a, Source b) {
+		//    if (a.FileName != b.FileName) {
+		//        throw new Exception("Cannot compare sources in different files.");
+		//    }
+		//}
+		public static bool operator <(Source a,Source b) {
+			return a.Line < b.Line || (a.Line == b.Line && a.Column < b.Column);
+		}
+		public static bool operator >(Source a, Source b) {
+			return a.Line > b.Line || (a.Line == b.Line && a.Column > b.Column);
+		}
+		public static bool operator <=(Source a, Source b) {
+			return a < b || a == b;
+		}
+		public static bool operator >=(Source a, Source b) {
+			return a > b || a == b;
+		}
+		public static bool operator ==(Source a, Source b) {
+			return Object.ReferenceEquals(a,b) || a.Equals(b);
+		}
+		public static bool operator !=(Source a, Source b) {
+			return !(a == b);
+		}
+
 		public override string ToString() {
 			return FileName + ", " + "line " + Line + ", column " + Column;}
 		public readonly int Line;
@@ -3115,10 +3162,6 @@ namespace Meta {
 				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
 
 		public static Rule Whitespace = Alternatives(Comment,Empty);
-		//public static Rule Whitespace = Empty;
-
-		//public static Rule Whitespace = ZeroOrMore(Alternatives(
-		//    Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = DelayedRule(delegate() {
 			return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,

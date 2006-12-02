@@ -21,6 +21,7 @@ using NetMatters;
 using System.Timers;
 using System.Windows.Threading;
 using System.Threading;
+using Editing;
 //using System.Windows.Forms;
 
 
@@ -37,11 +38,23 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 	}
+	//public class Box : TextBox {
+	//    public int Line {
+	//        get {
+	//            return GetLineIndexFromCharacterIndex(SelectionStart);
+	//        }
+	//    }
+	//    public int Column {
+	//        get {
+	//            return SelectionStart - Text.LastIndexOf('\n', SelectionStart - 1) + 1;
+	//        }
+	//    }
+	//}
 	static Box textBox = new Box();
 	static Canvas canvas = new Canvas();
-	public class View : ListView {
+	public class View : EditBox {
 	}
-	ListView watch = new View();
+	EditBox watch = new View();
 	private void Save() {
 		if (fileName == null) {
 			SaveFileDialog dialog = new SaveFileDialog();
@@ -280,7 +293,41 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static List<Item> intellisenseItems = new List<Item>();
 	public static List<Breakpoint> breakpoints = new List<Breakpoint>();
+	public class Watch {
+		public Watch(string expression) {
+			this.expression = expression;
+		}
+		private string expression;
+		public string Expression {
+			get {
+				return expression;
+			}
+			set {
+				expression=value;
+			}
+		}
+		private string val;
+		private Map context;
+		public void SetContext(Map context) {
+			this.context = context;
+			Value = "some other value";
+		}
+		//public Map Context {
+		//    get {
+		//        return context;
+		//    }
+		//}
+		public string Value {
+			get {
+				return val;
+			}
+			set {
+				val = value;
+			}
+		}
+	}
 	public Editor() {
+		//watch.Items.Add(new Watch("apply"));
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
 		editor = this;
@@ -538,8 +585,6 @@ public partial class Editor : System.Windows.Window {
 		};
 		textBox.PreviewTextInput += new TextCompositionEventHandler(textBox_PreviewTextInput);
 		textBox.KeyDown += delegate(object obj, KeyEventArgs e) {
-			//if (e.Key != Key.LeftShift) {
-			//}
 			if (e.Key == Key.Return) {
 				string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
 				textBox.SelectedText = "\n".PadRight(1 + line.Length - line.TrimStart('\t').Length, '\t');
@@ -763,6 +808,9 @@ public partial class Editor : System.Windows.Window {
 				foreach (Breakpoint b in breakpoints) {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
 				}
+				Interpreter.Breakpoint += delegate(Map map){
+					MessageBox.Show(map.Count.ToString());
+				};
 				Interpreter.Run(fileName, Map.Empty);
 				//MessageBox.Show("Debugging");
 			}
