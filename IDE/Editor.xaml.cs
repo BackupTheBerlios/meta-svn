@@ -27,6 +27,9 @@ using System.Threading;
 public partial class Editor : System.Windows.Window {
 	TextBox textBox = new TextBox();
 	Canvas canvas = new Canvas();
+	public class View : ListView {
+	}
+	ListView watch = new View();
 	private void Save() {
 		if (fileName == null) {
 			SaveFileDialog dialog = new SaveFileDialog();
@@ -457,7 +460,19 @@ public partial class Editor : System.Windows.Window {
 			                        original = typeMap.Type;
 			                    }
 			                }
-			                intellisenseItems.Add(new Item(k, original));
+							if (k.Equals("apply")) {
+							}
+
+							if (original != null) {
+								intellisenseItems.Add(new Item(k, original));
+							}
+							else if (s.ContainsKey(k) && s[k] !=null && s[k].Source!=null && s[k].Source.Start.FileName.Equals(DocumentationPath)) {
+								MessageBox.Show(k.ToString());
+								intellisenseItems.Add(new MetaItem(k));
+							}
+							else {
+								intellisenseItems.Add(new Item(k, null));
+							}
 			            }
 			            if (intellisense.Items.Count != 0) {
 			                intellisense.SelectedIndex = 0;
@@ -636,9 +651,6 @@ public partial class Editor : System.Windows.Window {
 								if (original != null) {
 									intellisenseItems.Add(new Item(k, original));
 								}
-								else if (s.ContainsKey(k) && s[k].Source.Start.FileName.Equals(DocumentationPath)) {
-									intellisenseItems.Add(new MetaItem(k));
-								}
 								else {
 									intellisenseItems.Add(new Item(k, null));
 								}
@@ -701,10 +713,10 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(debug, delegate {
 			Save();
 			if (Compile()) {
-				MessageBox.Show("Debugging");
+				watch.Height = 100;
+				//MessageBox.Show("Debugging");
 			}
 		}));
-
 
 		BindKey(compile, Key.F3, ModifierKeys.None);
 		BindKey(execute, Key.F5, ModifierKeys.Control);
@@ -764,7 +776,6 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetLeft(textBox, width/2);
 		Canvas.SetTop(textBox, height/2);
 
-		ListView watch = new ListView();
 		watch.Height = 100;
 		DockPanel.SetDock(watch, Dock.Bottom);
 		watch.Background = Brushes.Green;

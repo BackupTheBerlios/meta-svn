@@ -2365,8 +2365,10 @@ namespace Meta {
 						if (name == null) {
 							break;
 						}
-						AssemblyName n = new AssemblyName(name);
-						keys.Add(n.Name);
+						if (!name.Contains("DirectX")) {
+							AssemblyName n = new AssemblyName(name);
+							keys.Add(n.Name);
+						}
 					}
 				}
 				foreach (Map key in keys) {
