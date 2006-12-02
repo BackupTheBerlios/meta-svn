@@ -70,7 +70,7 @@ namespace Meta {
 		}
 		public Compiled compiled;
 		public bool isFunction = false;
-		public readonly Extent Source;
+		public Extent Source;
 		public readonly Expression Parent;
 		public Statement Statement;
 		public Expression(Extent source, Expression parent) {	
@@ -863,11 +863,18 @@ namespace Meta {
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
 			return delegate {
+				if (literal != null) {
+					literal.Source = Source;
+				}
+				if (literal != null && literal.Equals(new StringMap("apply")) && Source == null) {
+				}
 				return literal;
 			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
+			if (code !=null && code.Equals(new StringMap("apply"))) {
+			}
 		}
 	}
 	public class Root : Expression {
@@ -926,6 +933,11 @@ namespace Meta {
 		}
 	}
 	public class Interpreter {
+		public static string LibraryPath {
+			get {
+				return Path.Combine(Interpreter.InstallationPath, @"library.meta");
+			}
+		}
 		public static Map Run(string path, Map argument) {
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
@@ -2615,6 +2627,8 @@ namespace Meta {
 			}
 		}
 		public override Map Copy() {
+			if (Equals(new StringMap("apply"))) {
+			}
 			return this;
 		}
 		public override IEnumerable<Map> Array {
@@ -3545,6 +3559,8 @@ namespace Meta {
 						result.Source = new Extent(
 							new Source(oldState.Line, oldState.Column, parser.state.FileName),
 							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+						if (result.Equals(new StringMap("apply"))) {
+						}
 					}
 				}
 				map=result;
@@ -4011,7 +4027,7 @@ namespace Meta {
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"library.meta")));
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
 				}
 			}
 			public class Serialization : Test {
@@ -4581,8 +4597,6 @@ namespace Meta {
 	public class LiteralExpression : Expression {
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
-			if(literal==null) {
-			}
 			this.literal = literal;
 		}
 		public override Map GetStructure() {
@@ -4819,11 +4833,13 @@ namespace Meta {
 		public static implicit operator Map(int integer) {
 			return new Integer32(integer);
 		}
+		private Extent source;
 		public virtual Extent Source {
 			get {
-				return null;
+				return source;
 			}
 			set {
+				source = value;
 			}
 		}
 		public virtual bool IsConstant {
@@ -4892,8 +4908,13 @@ namespace Meta {
 				}
 				foreach(Map key in Keys) {
 				    if(expressions.ContainsKey(key)) {
-				        return (Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
+				        Expression x=(Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
 				        ).Invoke(new object[] {this[key],parent});
+						x.Source = Source;
+						if (x is Literal && ((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
+						}
+						return x;
+						//e.Source = Source;
 				    }
 				}
 			}

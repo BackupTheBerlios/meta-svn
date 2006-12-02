@@ -185,12 +185,15 @@ public partial class Editor : System.Windows.Window {
 	}
 	public class MetaItem:Item {
 		public static Map documentation = Parser.Parse(DocumentationPath);
-		private Map name;
+		private Map key;
 		public MetaItem(Map name):base(name.ToString(),null) {
-			this.name = name;
+			this.key = name;
 		}
 		public override string Signature() {
-			return name.ToString();
+			if(documentation.ContainsKey(key)) {
+				return documentation[key].ToString();
+			}
+			return "";
 		}
 	}
 	public bool Compile() {
@@ -430,14 +433,15 @@ public partial class Editor : System.Windows.Window {
 						}
 						Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
 						s=Library.Merge(directory.Copy(),s);
-			            List<string> keys = new List<string>();
+			            List<Map> keys = new List<Map>();
 			            if (s != null) {
-			                foreach (Map m in s.Keys) {
-			                    keys.Add(m.ToString());
-			                }
+							keys.AddRange(s.Keys);
+							//foreach (Map m in s.Keys) {
+							//    keys.Add(m.ToString());
+							//}
 			            }
-			            keys.Sort(delegate(string a, string b) {
-			                return a.CompareTo(b);
+			            keys.Sort(delegate(Map a,Map b) {
+			                return a.ToString().CompareTo(b.ToString());
 			            });
 			            if (keys.Count != 0) {
 							intellisense.Visibility = Visibility.Visible;
@@ -445,7 +449,7 @@ public partial class Editor : System.Windows.Window {
 			            }
 			            intellisenseItems.Clear();
 			            intellisense.Items.Clear();
-			            foreach (string k in keys) {
+			            foreach (Map k in keys) {
 			                MethodBase m = null;
 			                MemberInfo original = null;
 			                if (s.ContainsKey(k)) {
@@ -460,18 +464,16 @@ public partial class Editor : System.Windows.Window {
 			                        original = typeMap.Type;
 			                    }
 			                }
-							if (k.Equals("apply")) {
+							if (k.Equals(new StringMap("apply"))) {
 							}
-
-							if (original != null) {
-								intellisenseItems.Add(new Item(k, original));
-							}
-							else if (s.ContainsKey(k) && s[k] !=null && s[k].Source!=null && s[k].Source.Start.FileName.Equals(DocumentationPath)) {
-								MessageBox.Show(k.ToString());
+							if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
 								intellisenseItems.Add(new MetaItem(k));
 							}
+							else if (original != null) {
+								intellisenseItems.Add(new Item(k.ToString(), original));
+							}
 							else {
-								intellisenseItems.Add(new Item(k, null));
+								intellisenseItems.Add(new Item(k.ToString(), null));
 							}
 			            }
 			            if (intellisense.Items.Count != 0) {
@@ -693,16 +695,16 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(
 			new CommandBinding(compile,delegate{Compile();})
 		);
-		DispatcherTimer timer = new DispatcherTimer();
-		timer.Interval = new TimeSpan(30000);
-		timer.Tick += delegate {
-			string text = textBox.Text;
-			Thread thread = new Thread(new ThreadStart(delegate {
-				Compile(text);
-			}));
-			thread.Start();
-		};
-		timer.Start();
+		//DispatcherTimer timer = new DispatcherTimer();
+		//timer.Interval = new TimeSpan(30000);
+		//timer.Tick += delegate {
+		//    string text = textBox.Text;
+		//    Thread thread = new Thread(new ThreadStart(delegate {
+		//        Compile(text);
+		//    }));
+		//    thread.Start();
+		//};
+		//timer.Start();
 		CommandBindings.Add(new CommandBinding(execute, delegate {
 			Save();
 			if (Compile()) {
