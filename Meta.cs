@@ -2197,7 +2197,8 @@ namespace Meta {
 		public readonly Source End;
 		public Extent(Source start, Source end) {
 			this.Start = start;
-			this.End = end;}
+			this.End = end;
+		}
 		public override int GetHashCode() {
 			return Start.GetHashCode() * End.GetHashCode();}
 		public override bool Equals(object obj) {

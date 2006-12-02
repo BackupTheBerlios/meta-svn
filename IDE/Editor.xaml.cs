@@ -152,7 +152,7 @@ public partial class Editor : System.Windows.Window {
 		iterativeSearch = null;
 	}
 	public class Item{
-		public string Signature() {
+		public virtual string Signature() {
 			if (original != null) {
 				XmlComments comments = new XmlComments(original);
 				XmlNode node=comments.Summary;
@@ -173,6 +173,21 @@ public partial class Editor : System.Windows.Window {
 		}
 		public override string ToString() {
 			return text;
+		}
+	}
+	public static string DocumentationPath {
+		get {
+			return System.IO.Path.Combine(Interpreter.InstallationPath, "documentation.meta");
+		}
+	}
+	public class MetaItem:Item {
+		public static Map documentation = Parser.Parse(DocumentationPath);
+		private Map name;
+		public MetaItem(Map name):base(name.ToString(),null) {
+			this.name = name;
+		}
+		public override string Signature() {
+			return name.ToString();
 		}
 	}
 	public bool Compile() {
@@ -618,7 +633,15 @@ public partial class Editor : System.Windows.Window {
 										original = typeMap.Type;
 									}
 								}
-								intellisenseItems.Add(new Item(k, original));
+								if (original != null) {
+									intellisenseItems.Add(new Item(k, original));
+								}
+								else if (s.ContainsKey(k) && s[k].Source.Start.FileName.Equals(DocumentationPath)) {
+									intellisenseItems.Add(new MetaItem(k));
+								}
+								else {
+									intellisenseItems.Add(new Item(k, null));
+								}
 							}
 							if (intellisense.Items.Count != 0) {
 								intellisense.SelectedIndex = 0;
@@ -633,7 +656,7 @@ public partial class Editor : System.Windows.Window {
 				Meta.Expression.sources.Clear();
 			}
 		};
-		DockPanel dockPanel = new DockPanel();
+		DockPanel dock = new DockPanel();
 
 		Menu menu = new Menu();
 		DockPanel.SetDock(menu, Dock.Top);
@@ -642,8 +665,10 @@ public partial class Editor : System.Windows.Window {
 		MenuItem run = new MenuItem();
 		MenuItem openItem = new MenuItem();
 		MenuItem comp = new MenuItem();
+		MenuItem debugItem = new MenuItem();
 		RoutedUICommand execute = new RoutedUICommand("Run","Run",GetType());
 		RoutedUICommand compile = new RoutedUICommand("Compile", "Compile", GetType());
+		debugItem.Header = "Debug";
 		file.Header = "File";
 		openItem.Header = "Open";
 		comp.Header = "Compile";
@@ -672,8 +697,18 @@ public partial class Editor : System.Windows.Window {
 				Process.Start(System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"), fileName);
 			}
 		}));
+		RoutedUICommand debug = new RoutedUICommand("Debug", "Debug", GetType());
+		CommandBindings.Add(new CommandBinding(debug, delegate {
+			Save();
+			if (Compile()) {
+				MessageBox.Show("Debugging");
+			}
+		}));
+
+
 		BindKey(compile, Key.F3, ModifierKeys.None);
-		BindKey(execute, Key.F5, ModifierKeys.None);
+		BindKey(execute, Key.F5, ModifierKeys.Control);
+		BindKey(debug, Key.F5, ModifierKeys.None);
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, delegate { Open(); }));
 		StackPanel status = new StackPanel();
 		status.Orientation = Orientation.Horizontal;
@@ -682,14 +717,13 @@ public partial class Editor : System.Windows.Window {
 		status.Children.Add(message);
 		DockPanel.SetDock(status, Dock.Bottom);
 		//DockPanel.SetDock(editorLine, Dock.Bottom);
-		dockPanel.Children.Add(status);
 
 		file.Items.Add(openItem);
 		file.Items.Add(comp);
 		file.Items.Add(save);
 		file.Items.Add(run);
 		menu.Items.Add(file);
-		dockPanel.Children.Add(menu);
+		dock.Children.Add(menu);
 
 		DockPanel.SetDock(textBox, Dock.Bottom);
 		textBox.TextChanged += delegate {
@@ -725,11 +759,21 @@ public partial class Editor : System.Windows.Window {
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
 		textBox.Padding = new Thickness(100,0,0,200);
-		dockPanel.Children.Add(scrollViewer);
 		const int width = 0;
 		const int height = 0;
 		Canvas.SetLeft(textBox, width/2);
 		Canvas.SetTop(textBox, height/2);
+
+		ListView watch = new ListView();
+		watch.Height = 100;
+		DockPanel.SetDock(watch, Dock.Bottom);
+		watch.Background = Brushes.Green;
+		dock.Children.Add(status);
+		dock.Children.Add(watch);
+		dock.Children.Add(scrollViewer);
+		watch.Height = 0;
+
+
 		textBox.SizeChanged += delegate {
 			canvas.Width = textBox.ActualWidth + width;
 			canvas.Height = textBox.ActualHeight + height;
@@ -744,7 +788,7 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetZIndex(intellisense, 100);
 		canvas.Children.Add(intellisense);
 		canvas.Children.Add(toolTip);
-		this.Content = dockPanel;
+		this.Content = dock;
 		this.Loaded += delegate {
 			Open(@"D:\meta\mail.meta");
 			textBox.Focus();
