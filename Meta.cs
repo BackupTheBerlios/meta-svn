@@ -502,8 +502,10 @@ namespace Meta {
 			isFunction = true;
 			Map parameter = code[CodeKeys.Parameter];
 			if (parameter.Count != 0) {
+				Literal para=new Literal(parameter, this);
+				para.Source=code.Source;
 				KeyStatement s = new KeyStatement(
-					new Literal(parameter, this),
+					para,
 					LastArgument(Map.Empty, this), this, 0);
 				statementList.Add(s);
 				this.key=parameter;
@@ -628,10 +630,26 @@ namespace Meta {
 	public delegate void StatementDelegate(ref Map context,Map value);
 	public class CompiledStatement {
 		private StatementDelegate s;
+		private Source start;
+		private Source end;
 		public void Assign(ref Map context) {
+			foreach (Source breakpoint in Interpreter.breakpoints) {
+				if (start.FileName == breakpoint.FileName) {
+					if (breakpoint.Line >= start.Line && breakpoint.Column >= start.Column) {
+						if (breakpoint.Line <= end.Line && breakpoint.Column<=start.Column) {
+							if (Interpreter.Breakpoint != null) {
+								Interpreter.Breakpoint(context);
+							}
+						}
+					}
+				}
+			}
 			s(ref context, value(context));
 		}
-		public CompiledStatement(Compiled value, StatementDelegate s) {
+		public CompiledStatement(Source start,Source end,Compiled value, StatementDelegate s) {
+			//this.extent = extent;
+			this.start = start;
+			this.end = end;
 			this.value = value;
 			this.s = s;
 		}
@@ -748,7 +766,8 @@ namespace Meta {
 		}
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
-			return new CompiledStatement(value.Compile(), delegate { });
+			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate { });
+			//return new CompiledStatement(value.Compile(), delegate { });
 		}
 	}
 	public class KeyStatement : Statement {
@@ -798,7 +817,8 @@ namespace Meta {
 				}
 			}
 			Compiled s=key.Compile();
-			return new CompiledStatement(value.Compile(), delegate(ref Map context, Map v) {
+			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
+			//return new CompiledStatement(value.Compile(), delegate(ref Map context, Map v) {
 				context[s(context)] = v;
 			});
 		}
@@ -814,8 +834,9 @@ namespace Meta {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
-			return new CompiledStatement(value.Compile(),delegate(ref Map context, Map v) {
-				if (this.Index== 0) {
+			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
+			//return new CompiledStatement(value.Compile(),delegate(ref Map context, Map v) {
+				if (this.Index == 0) {
 					if(!(v is DictionaryMap))  {
 						context = v.Copy();
 					}
@@ -837,7 +858,8 @@ namespace Meta {
 		}
 		public override CompiledStatement Compile() {
 			Compiled k = key.Compile();
-			return new CompiledStatement(value.Compile(),delegate (ref Map context, Map v) {
+			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
+			//return new CompiledStatement(value.Compile(),delegate (ref Map context, Map v) {
 				Map selected = context;
 				Map eKey = k(context);
 				while (!selected.ContainsKey(eKey)) {
@@ -866,15 +888,17 @@ namespace Meta {
 				if (literal != null) {
 					literal.Source = Source;
 				}
-				if (literal != null && literal.Equals(new StringMap("apply")) && Source == null) {
-				}
+				//if (literal != null && literal.Equals(new StringMap("apply")) && Source == null) {
+				//}
 				return literal;
 			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
-			if (code !=null && code.Equals(new StringMap("apply"))) {
-			}
+			//if (code.Source == null && !code.IsNumber) {
+			//}
+			//if (code.Source == null) {
+			//}
 		}
 	}
 	public class Root : Expression {
@@ -932,7 +956,10 @@ namespace Meta {
 			}
 		}
 	}
+	public delegate void DebugDelegate(Map context);
 	public class Interpreter {
+		public static DebugDelegate Breakpoint;
+		public static List<Source> breakpoints = new List<Source>();
 		public static string LibraryPath {
 			get {
 				return Path.Combine(Interpreter.InstallationPath, @"library.meta");
@@ -1549,7 +1576,13 @@ namespace Meta {
 			}
 		}
 		public override Map Call(Map argument) {
-			return Library.With(Constructor.Call(new DictionaryMap()), argument);
+			if (Constructor != null) {
+				return Library.With(Constructor.Call(new DictionaryMap()), argument);
+			}
+			else {
+				int asdf = 0;
+				throw new MetaException("Type does not have a default constructor.", null);
+			}
 		}
 	}
 	public class ObjectMap : DotNetMap {
@@ -3002,12 +3035,21 @@ namespace Meta {
 			return Convert.ToInt64(numerator.GetDouble());
 		}
 	}
+	public class Error {
+		public string Text;
+		public Source Source;
+		public Error(string text,Source source) {
+			this.Text = text;
+			this.Source = source;
+		}
+	}
 	public class Parser {
 		static Parser() {
 			Console.WriteLine("test");
 		}
 		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
 		public struct State {
+			public Error[] Errors;
 			public override bool Equals(object obj) {
 				State state = (State)obj;
 				return state.Column == Column && state.index == index && state.Line == Line &&
@@ -3024,6 +3066,7 @@ namespace Meta {
 				this.Line = 1;
 				this.Column = 0;
 				this.Text = Text;
+				this.Errors = new Error[] { };
 			}
 			public string Text;
 			public string FileName;
@@ -3062,13 +3105,26 @@ namespace Meta {
 				}
 			};
 		}
-		public static Rule Whitespace = ZeroOrMore(Alternatives(
-			Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
+		public static Rule Comment = DelayedRule(delegate {
+			return Sequence('/', '/', StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))), EndOfLine);
+		});
+
+		public static Rule Empty = ZeroOrMore(
+			Alternatives(
+				Comment,
+				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
+
+		public static Rule Whitespace = Alternatives(Comment,Empty);
+		//public static Rule Whitespace = Empty;
+
+		//public static Rule Whitespace = ZeroOrMore(Alternatives(
+		//    Syntax.unixNewLine,Syntax.windowsNewLine[0],Syntax.tab,Syntax.space));
 
 		public static Rule Expression = DelayedRule(delegate() {
 			return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 		        Search,List,Program,LastArgument));
 		});
+		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
 		public static Rule EndOfLine = Sequence(
 			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
 			Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
@@ -3079,9 +3135,11 @@ namespace Meta {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
 				    result=new Integer32(rational.GetInt32());
+					result.Source = rational.Source;
 				}
 				else {
 				    result=rational;
+					result.Source = rational.Source;
 				}
 			}));
 
@@ -3108,6 +3166,7 @@ namespace Meta {
 				ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
 					result=new Rational(result.GetNumber().GetDouble(),map.GetNumber().GetDouble());
+					result.Source = map.Source;
 				}
 			}));
 
@@ -3316,9 +3375,12 @@ namespace Meta {
 
 		public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
+				Map key = new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek()));
+				// not really correct
+				key.Source = map.Source;
 				map = new DictionaryMap(
 					CodeKeys.Key,
-					new DictionaryMap(CodeKeys.Literal,new Integer32(p.defaultKeys.Peek())),
+					key,
 					CodeKeys.Value,
 					map
 				);
@@ -3329,6 +3391,21 @@ namespace Meta {
 				return false;
 			}
 		});
+		//public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
+		//    if (Parser.Expression.Match(p, ref map)) {
+		//        map = new DictionaryMap(
+		//            CodeKeys.Key,
+		//            new DictionaryMap(CodeKeys.Literal,new Integer32(p.defaultKeys.Peek())),
+		//            CodeKeys.Value,
+		//            map
+		//        );
+		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+		//        return true;
+		//    }
+		//    else {
+		//        return false;
+		//    }
+		//});
 		public static Rule ComplexList() {
 			Action entryAction = ReferenceAssignment(ListEntry);
 			return Sequence(
@@ -3388,7 +3465,8 @@ namespace Meta {
 		public static Rule AllStatements = Sequence(
 			ReferenceAssignment(
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
-			Optional(Syntax.statementEnd)
+			OptionalError(Syntax.statementEnd,"Missing ';'")
+			//Optional(Syntax.statementEnd)
 		);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
@@ -3443,7 +3521,21 @@ namespace Meta {
 									)))
 			));
 		});
-
+		public static Rule OptionalError(Rule rule, string text) {
+			return Alternatives(rule, Error(text));
+			//return new Rule(delegate(Parser parser, ref Map map) {
+			//});
+		}
+		public static Rule Error(string text) {
+			return new Rule(delegate (Parser parser,ref Map map) {
+				Error[] errors=new Error[parser.state.Errors.Length+1];
+				parser.state.Errors.CopyTo(errors, 0);
+				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+				parser.state.Errors = errors;
+				//parser.Errors.Add(new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName)));
+				return true;
+			});
+		}
 		public class Action {
 			public static implicit operator Action(char c) {
 				return StringRule(OneChar(SingleChar(c)));
@@ -3702,6 +3794,14 @@ namespace Meta {
 				}
 			});
 		}
+		//public static Rule LiteralRule(Map literal) {
+		//    return new Rule(delegate(Parser parser, ref Map map) {
+		//        map = literal.Copy();
+		//        Source source=new Source(parser.state.Line,parser.state.Column,parser.state.FileName);
+		//        map.Source = new Extent(source, source);
+		//        return true;
+		//    });
+		//}
 		public static Rule LiteralRule(Map literal) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				map = literal;
@@ -4911,8 +5011,14 @@ namespace Meta {
 				        Expression x=(Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
 				        ).Invoke(new object[] {this[key],parent});
 						x.Source = Source;
-						if (x is Literal && ((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
+						if (Source == null) {// && !(x is Literal && (((Literal)x).literal.IsNumber))) {//((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
 						}
+
+						//if (Source==null && !(x is Literal &&(((Literal)x).literal.IsNumber))) {//((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
+						//}
+
+						//if (x is Literal && ((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
+						//}
 						return x;
 						//e.Source = Source;
 				    }

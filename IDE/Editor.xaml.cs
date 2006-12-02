@@ -25,8 +25,20 @@ using System.Threading;
 
 
 public partial class Editor : System.Windows.Window {
-	TextBox textBox = new TextBox();
-	Canvas canvas = new Canvas();
+	public class Box : TextBox {
+		public int Line {
+			get {
+				return GetLineIndexFromCharacterIndex(SelectionStart);
+			}
+		}
+		public int Column {
+			get {
+				return SelectionStart - Text.LastIndexOf('\n', SelectionStart - 1) + 1;
+			}
+		}
+	}
+	static Box textBox = new Box();
+	static Canvas canvas = new Canvas();
 	public class View : ListView {
 	}
 	ListView watch = new View();
@@ -91,9 +103,9 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetTop(toolTip, r.Bottom + 110);
 	}
 	ScrollViewer scrollViewer = new ScrollViewer();
-	public void SetBreakpoint() {
+	//public void SetBreakpoint() {
 
-	}
+	//}
 	public void FindMatchingBrace() {
 		const string openBraces = "({[<";
 		const string closeBraces = ")}]>";
@@ -223,6 +235,9 @@ public partial class Editor : System.Windows.Window {
 				}
 				errors.Clear();
 			}));
+			foreach (Error error in parser.state.Errors) {
+				MessageBox.Show(error.Text+error.Source.ToString());
+			}
 			if (parser.state.index != text.Length) {
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
 					Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
@@ -246,7 +261,25 @@ public partial class Editor : System.Windows.Window {
 	public static List<Rectangle> errors = new List<Rectangle>();
 	public static Editor editor;
 	public static FindAndReplace findAndReplace;
+	public class Breakpoint {
+		public int line;
+		public int column;
+		public Breakpoint(int line,int column) {
+			this.line = line;
+			this.column = column;
+			Ellipse point=new Ellipse();
+			point.Width=10;
+			point.Height=10;
+			point.Fill=Brushes.Red;
+			Rect r=textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
+			point.Opacity = 0.5;
+			Canvas.SetLeft(point,r.Left);
+			Canvas.SetTop(point, r.Top);
+			canvas.Children.Add(point);
+		}
+	}
 	public static List<Item> intellisenseItems = new List<Item>();
+	public static List<Breakpoint> breakpoints = new List<Breakpoint>();
 	public Editor() {
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
@@ -488,10 +521,10 @@ public partial class Editor : System.Windows.Window {
 						FindMatchingBrace();
 						e.Handled = true;
 					}
-					else if (e.SystemKey == Key.H) {
-						SetBreakpoint();
-						e.Handled = true;
-					}
+					//else if (e.SystemKey == Key.H) {
+					//    SetBreakpoint();
+					//    e.Handled = true;
+					//}
 				}
 				else if (e.KeyboardDevice.Modifiers == (ModifierKeys.Alt | ModifierKeys.Shift)) {
 					if (e.SystemKey == Key.I) {
@@ -551,7 +584,8 @@ public partial class Editor : System.Windows.Window {
 					if (open==0) {
 						int line=textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart)+1;
 						int selection=textBox.SelectionStart;
-						int column=selection-text.LastIndexOf('\n',selection-1)+1;
+						int column=textBox.Column;
+						//int column=selection-text.LastIndexOf('\n',selection-1)+1;
 						realSource = new Source(line, column, fileName);
 						break;
 					}
@@ -680,11 +714,14 @@ public partial class Editor : System.Windows.Window {
 		MenuItem openItem = new MenuItem();
 		MenuItem comp = new MenuItem();
 		MenuItem debugItem = new MenuItem();
+		MenuItem breakpointItem = new MenuItem();
 		RoutedUICommand execute = new RoutedUICommand("Run","Run",GetType());
 		RoutedUICommand compile = new RoutedUICommand("Compile", "Compile", GetType());
+		RoutedUICommand breakpoint = new RoutedUICommand("Breakpoint", "Breakpoint", GetType());
 		debugItem.Header = "Debug";
 		file.Header = "File";
 		openItem.Header = "Open";
+		breakpointItem.Header = "Toggle Breakpoint";
 		comp.Header = "Compile";
 		comp.Command = compile;
 		openItem.Command=ApplicationCommands.Open;
@@ -692,9 +729,15 @@ public partial class Editor : System.Windows.Window {
 		save.Command = ApplicationCommands.Save;
 		run.Header = "Run";
 		run.Command = execute;
+		file.Items.Add(breakpointItem);
+		file.Items.Add(debugItem);
 		CommandBindings.Add(
 			new CommandBinding(compile,delegate{Compile();})
 		);
+		CommandBindings.Add(new CommandBinding(breakpoint,delegate {
+			breakpoints.Add(new Breakpoint(textBox.Line, textBox.Column));
+		}));
+		BindKey(breakpoint, Key.H, ModifierKeys.Alt);
 		//DispatcherTimer timer = new DispatcherTimer();
 		//timer.Interval = new TimeSpan(30000);
 		//timer.Tick += delegate {
@@ -716,9 +759,15 @@ public partial class Editor : System.Windows.Window {
 			Save();
 			if (Compile()) {
 				watch.Height = 100;
+				Interpreter.breakpoints.Clear();
+				foreach (Breakpoint b in breakpoints) {
+					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
+				}
+				Interpreter.Run(fileName, Map.Empty);
 				//MessageBox.Show("Debugging");
 			}
 		}));
+		debugItem.Command = debug;
 
 		BindKey(compile, Key.F3, ModifierKeys.None);
 		BindKey(execute, Key.F5, ModifierKeys.Control);
@@ -762,7 +811,8 @@ public partial class Editor : System.Windows.Window {
 			}
 		};
 		textBox.SelectionChanged += delegate {
-			int line=(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
+			int line=(textBox.Line + 1);
+			//int line=(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
 			editorLine.Content = "Ln " + line;
 			textBox.ScrollToLine(line-1);
 		};
