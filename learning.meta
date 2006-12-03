@@ -1,4 +1,4 @@
-{
+[
 |,
 	&mergeAll +
 		MathML
@@ -7,12 +7,12 @@
 		mscorlib
 		!"System.Windows.Forms"
 		!"System.Drawing"
-	printNodes=nodes<data<depth<-
+	printNodes=nodes{data{depth{-
 		joinAll
-		Map data entry<joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
+		Map data entry{joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
 			key=(node.get_Text
 			&If (contains entry key) ?
-				value=entry.<key
+				value=entry.{key
 				&ifElse
 					isString value
 					?+
@@ -20,8 +20,8 @@
 							type=ifElse
 								contains data key
 								?
-									name=(keys data.<key>).1
-									value=data.<key>.<name
+									name=(keys data.{key}).1
+									value=data.{key}.{name
 								?
 									name="rtf"
 									value=0
@@ -45,11 +45,11 @@
 									BorderStyle=BorderStyle.None
 									ContentsResized=sender?e?sender.set_Height_Int32 ((e.get_NewRectangle).get_Height
 									Rtf=joinAll +
-										"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
-										If (contains data key) ?data.<key>.rtf
+										"[\rtf1\ansi[\fonttbl\f0\fswiss Helvetica;]\f0["
+										If (contains data key) ?data.{key}.rtf
 										value
-										"}"
-							&(types.<type.name>
+										"]"
+							&(types.{type.name}
 					?+
 						,
 							p=FlowLayoutPanel,
@@ -73,8 +73,8 @@
 				?.
 					,
 						1=0
-						0=map.<key
-					isString map.<key
+						0=map.{key
+					isString map.{key
 		suspend=0
 		AddSuspend=panel?
 			suspend:append suspend panel
@@ -83,13 +83,13 @@
 			&func
 	load=file?
 		data:Meta.Parser.Parse_String file
-		(tree.get_Nodes).<"AddRange_TreeNode[]" (getNodes data
+		(tree.get_Nodes).{"AddRange_TreeNode<>" (getNodes data
 		(loadText
 	loadText=?
 		controls=(panel.get_Controls
 		result=printNodes (tree.get_Nodes) data 0
 		(controls.Clear
-		controls.<"AddRange_Control[]" result
+		controls.{"AddRange_Control<>" result
 	tree=TreeView,
 		Width=200
 		Dock=DockStyle.Left
@@ -112,12 +112,12 @@
 		Text="Learning"
 		Controls=+
 			panel
-			Splitter {Dock=DockStyle.Left
+			Splitter [Dock=DockStyle.Left
 			tree
 		Load=??,
 			load "D:\Meta\0.2\relativity.learn"
 			form.Close0
-		Menu=<"MainMenu_MenuItem[]" +
+		Menu={"MainMenu_MenuItem<>" +
 			MenuItem,
 				Text="File"
 				MenuItems=+

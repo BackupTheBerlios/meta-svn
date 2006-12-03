@@ -3162,11 +3162,15 @@ namespace Meta {
 				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
 
 		public static Rule Whitespace = Alternatives(Comment,Empty);
-
 		public static Rule Expression = DelayedRule(delegate() {
-			return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
-		        Search,List,Program,LastArgument));
+			return CachedRule(Alternatives(List,LiteralExpression, Call, CallSelect, Select, FunctionProgram,
+				Search, Program, LastArgument));
 		});
+
+		//public static Rule Expression = DelayedRule(delegate() {
+		//    return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
+		//        Search,List,Program,LastArgument));
+		//});
 		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
 		public static Rule EndOfLine = Sequence(
 			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
@@ -3236,7 +3240,7 @@ namespace Meta {
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
 		public static Rule Value = DelayedRule(delegate {
-			return Alternatives(FunctionMap,MapRule, ListMap, String, Number, CharacterDataExpression);
+			return Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression);
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
 
@@ -3281,7 +3285,7 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				Sequence(
 					Assign(1,
-						Alternatives(FunctionProgram, LiteralExpression, CallSelect, Select, Search, List, Program, LastArgument)),
+						Alternatives(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
@@ -3293,10 +3297,10 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													ReferenceAssignment(Alternatives(
+													ReferenceAssignment(Alternatives(List,
 														LastArgument, FunctionProgram,
 														LiteralExpression, Call, Select,
-														Search, List, Program
+														Search, Program
 													)),
 													Optional(Syntax.callSeparator)
 													)))),
@@ -3311,7 +3315,7 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				Sequence(
 					Assign(1,
-						Alternatives(FunctionProgram, LiteralExpression, SmallSelect, Search, List, Program, LastArgument)),
+						Alternatives(List,FunctionProgram, LiteralExpression, SmallSelect, Search, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
@@ -3323,9 +3327,9 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													ReferenceAssignment(Alternatives(
+													ReferenceAssignment(Alternatives(List,
 														LastArgument, FunctionProgram, LiteralExpression,
-														Call, Select, Search, List, Program)),
+														Call, Select, Search, Program)),
 													Optional(Syntax.callSeparator)
 													)))),
 									Whitespace
@@ -3926,12 +3930,18 @@ namespace Meta {
 		public const char comment='/';
 		public const char statementEnd=';';
 		public const char statement='=';
-		public const char arrayStart = '[';
-		public const char arrayEnd = ']';
+		public const char programStart = '[';
+		public const char programEnd = ']';
+		public const char functionAlternativeStart = '{';
+		public const char functionAlternativeEnd = '}';
+		//public const char programStart = '{';
+		//public const char programEnd = '}';
+		//public const char functionAlternativeStart = '<';
+		//public const char functionAlternativeEnd = '>';
+		public const char arrayStart = '<';
+		public const char arrayEnd = '>';
 		public const char arraySeparator = ',';
 		public const char programSeparator = ';';
-		public const char programStart = '{';
-		public const char programEnd ='}';
 		public const char lastArgument = '@';
 		public const char autokey = '.';
 		public const char callSeparator = ',';
@@ -3953,13 +3963,12 @@ namespace Meta {
 		public const char space = ' ';
 		public const char tab = '\t';
 		public const char current = '&';
-		public const char functionAlternativeStart = '<';
-		public const char functionAlternativeEnd = '>';
 		public const char lookupAnythingStart='<';
 		public const char lookupAnythingEnd='>';
 		public static readonly string integer = "0123456789-";
 		public static readonly string lookupStringForbidden =
-			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
+
+			"" + current + functionAlternativeStart + functionAlternativeEnd + lastArgument + explicitCall + indentation + '\r' + '\n' +
 			function+ @string+emptyMap+ search + root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
 			'-'+ searchStatement+ select+ ' '+ '-'+ arrayStart+ arrayEnd+ '*'+ lookupAnythingEnd+ 
@@ -4172,18 +4181,19 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class LibraryCode : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-				}
-			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
 					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+				}
+			}
+
 			public class Basic : Test {
 				public override object GetResult(out int level) {
 					level = 2;

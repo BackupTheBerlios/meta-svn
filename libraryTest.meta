@@ -1,21 +1,21 @@
-<{
-	test={
-		booleanTest={
-			not={
+{[
+	test=[
+		booleanTest=[
+			not=[
 				true=not(0);
 				false=not(1);
-			};
-			and={
+			];
+			and=[
 				true=and(1,1);
 				false=and(1,0);
-			};
-			orTest={
+			];
+			orTest=[
 				true=or(1,1);
 				false=or(0,0);
 				otherTrue=or(0,1);
-			};
-		};
-		numberTest={
+			];
+		];
+		numberTest=[
 			positiveAdd=sum(100,1000);
 			negativeAdd=sum(-100,91);
 			differenceTest=sum(
@@ -43,119 +43,119 @@
 					7
 				)
 			);
-		};
-		bitwiseTest={
+		];
+		bitwiseTest=[
 			or=0;
-		};
-		mapTest={
+		];
+		mapTest=[
 			IfTest=if(
 				1
-				{
+				[
 					arg|"If,test,successful";
-				}
-				{
+				]
+				[
 					|0;
-				}
+				]
 			);
 			sliceTest=slice("die,Katze,lief,im,Schnee.",5,10);
-			Map={
+			Map=[
 				&apply(
-					[1,2,3]
-					{
+					<1,2,3>
+					[
 						argument|sum(
 							argument
 							1
 						);
-					}
+					]
 				);
-			};
-			keyTestMap={
+			];
+			keyTestMap=[
 				x="hello";
-			};
+			];
 			vectorAllLessTest=vectorAllLess(
-				[1,2,3]
-				[2,3,6]
+				<1,2,3>
+				<2,3,6>
 			);
 			containsTest=contains(keyTestMap,"x");
 			containedBy1=containedBy("x",keyTestMap);
 			containedBy2=containedBy("y",keyTestMap);
 			containedBy3=containedBy("x",0);
 			keysTest=keys(
-				{
+				[
 					jjqwv="aeäquq";
 					oere="i,ke";
 					1="oiq";
-				}
+				]
 			);
-			equal={
-				map={
+			equal=[
+				map=[
 					true=equal(
-						{
+						[
 							x="hello";
 							y="world";
-						}
-						{
+						]
+						[
 							x="hello";
 							y="world";
-						}
+						]
 					);
 					false=equal(
-						{
+						[
 							x="y";
 							y="z";
-						}
-						{
+						]
+						[
 							x="y";
 							y="a";
-						}
+						]
 					);
-				};
-			};
+				];
+			];
 			tryTest=try(
-				{
+				[
 					arg|"hello";
-				}
-				{
+				]
+				[
 					argument|argument.ToString(0);
-				}
+				]
 			);
 			integerToString=integerToString(5);
-		};
-		filterTest=filter([1,100,2,4,100,100],equal(100));
+		];
+		filterTest=filter(<1,100,2,4,100,100>,equal(100));
 		reverseTest=reverse("hello");
 		sumTest=accumulate(
-			{
-				first|{
+			[
+				first|[
 					second|sum(
 						first
 						second
 					);
-				};
-			}
-			[2,5,6,8]
+				];
+			]
+			<2,5,6,8>
 		);
-		lengthTest=length([1,2,3,4,5]);
-		isStringTest={
+		lengthTest=length(<1,2,3,4,5>);
+		isStringTest=[
 			no=isString(2);
 			yes=isString("hi");
-		};
+		];
 		withTest=!"System.Windows.Forms".Form(
-			{
+			[
 				Text="hello,world";
-			}
+			]
 		);
 		countTest=count(
-			{
+			[
 				orange="orange";
 				banana="yellow";
 				apple="red";
 				strawberries="red";
-			}
+			]
 		);
 		vectorSumTest=vectorSum(
-			[1,2,3,4,3,2,1]
-			[1,2,3,4,5,6,7]
+			<1,2,3,4,3,2,1>
+			<1,2,3,4,5,6,7>
 		);
-	};
+	];
 	&test;
-}>
+]}
