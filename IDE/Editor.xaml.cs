@@ -22,6 +22,7 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Threading;
 using Editing;
+using _treeListView;
 //using System.Windows.Forms;
 
 
@@ -52,9 +53,9 @@ public partial class Editor : System.Windows.Window {
 	//}
 	static Box textBox = new Box();
 	static Canvas canvas = new Canvas();
-	public class View : EditBox {
+	public class View : TreeListView {
 	}
-	EditBox watch = new View();
+	TreeListView watch = new View();
 	private void Save() {
 		if (fileName == null) {
 			SaveFileDialog dialog = new SaveFileDialog();
@@ -328,6 +329,13 @@ public partial class Editor : System.Windows.Window {
 	}
 	public Editor() {
 		//watch.Items.Add(new Watch("apply"));
+		TreeListViewItem treeItem=new TreeListViewItem();
+		treeItem.Header = new TextBox();
+		//treeItem.Header = new TextBox();
+		//treeItem.Header = "hello";
+		treeItem.Items.Add("hi");
+		watch.Items.Add(treeItem);
+		watch.Items.Add(new TextBox());
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
 		editor = this;
@@ -809,6 +817,7 @@ public partial class Editor : System.Windows.Window {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
 				}
 				Interpreter.Breakpoint += delegate(Map map){
+					//foreach()
 					MessageBox.Show(map.Count.ToString());
 				};
 				Interpreter.Run(fileName, Map.Empty);

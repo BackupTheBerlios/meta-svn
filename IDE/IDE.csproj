@@ -66,6 +66,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters.cs" />
     <Compile Include="EditBox.cs" />
     <Compile Include="EditBoxAdorner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Replace.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TreeListView.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

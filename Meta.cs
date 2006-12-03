@@ -3153,7 +3153,7 @@ namespace Meta {
 			};
 		}
 		public static Rule Comment = DelayedRule(delegate {
-			return Sequence('/', '/', StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))), EndOfLine);
+			return Sequence(Syntax.comment,Syntax.comment,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))), EndOfLine);
 		});
 
 		public static Rule Empty = ZeroOrMore(
@@ -3238,7 +3238,7 @@ namespace Meta {
 		public static Rule Value = DelayedRule(delegate {
 			return Alternatives(FunctionMap,MapRule, ListMap, String, Number, CharacterDataExpression);
 		});
-		private static Rule LookupAnything = Sequence('<',ReferenceAssignment(Value));
+		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
 
 		public static Rule Function = Sequence(
 			Assign(
@@ -3254,7 +3254,7 @@ namespace Meta {
 			Sequence(Assign(CodeKeys.Function,Function)),
 			Sequence(
 				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
-				'=',
+				Syntax.statement,
 				new Action(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
 				}),
@@ -3353,14 +3353,14 @@ namespace Meta {
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
-			'<',ReferenceAssignment(Expression),Optional('>')
+			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),Optional(Syntax.lookupAnythingEnd)
 		);
 		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
 		private static Rule Search = CachedRule(Sequence(
 			Assign(
 				CodeKeys.Search,
 				Alternatives(
-					Prefix('!',Expression),
+					Prefix(Syntax.search,Expression),
 					Alternatives(LookupStringExpression,LookupAnythingExpression)))));
 
 		private static Rule SmallSelect = DelayedRule(delegate {
@@ -3371,7 +3371,7 @@ namespace Meta {
 						Assign(1,
 							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						Append(
-							OneOrMore(Autokey(Prefix('.', Alternatives(
+							OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -3383,7 +3383,7 @@ namespace Meta {
 						Assign(1,Alternatives(SimpleCall)),
 						Append(
 							OneOrMore(Autokey(
-								Prefix('.', Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+								Prefix(Syntax.select, Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
 		private static Rule Select = DelayedRule(delegate{
@@ -3394,7 +3394,7 @@ namespace Meta {
 						Assign(1,
 							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						Append(
-							OneOrMore(Autokey(Prefix('.', Alternatives(
+							OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -3484,22 +3484,22 @@ namespace Meta {
 			null,Assign(CodeKeys.Discard, LiteralRule(Map.Empty))
 		);
 		public static Rule CurrentStatement = ComplexStatement(
-			'&',Assign(CodeKeys.Current, LiteralRule(Map.Empty))
+			Syntax.current,Assign(CodeKeys.Current, LiteralRule(Map.Empty))
 		);
 		public static Rule Prefix(Rule pre,Rule rule) {
 			return Sequence(pre,ReferenceAssignment(rule));
 		}
 		public static Rule NormalStatement = ComplexStatement(
-			'=',
+			Syntax.statement,
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix('<',Sequence(ReferenceAssignment(Expression),Optional('>'))),
+					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),Optional(Syntax.lookupAnythingEnd))),
 					Sequence(Assign(CodeKeys.Literal,LookupString)),
 					Expression)));
 
 		public static Rule Statement = ComplexStatement(
-			':',
+			Syntax.searchStatement,
 			Assign(
 				CodeKeys.Keys,
 				Alternatives(
@@ -3904,7 +3904,6 @@ namespace Meta {
 			Parser parser = new Parser(text, fileName);
 			Map result=null;
 			Parser.Value.Match(parser, ref result);
-			//Parser.MapRule.Match(parser, ref result);
 			if (parser.state.index != parser.state.Text.Length - 1) {
 				List<State> sorted=new List<State>(parser.errors.Keys);
 				sorted.Sort(delegate(State a, State b) {
@@ -3922,7 +3921,11 @@ namespace Meta {
 		}
 	}
 	public class Syntax {
+		public const char searchStatement=':';
+		public const char search='!';
+		public const char comment='/';
 		public const char statementEnd=';';
+		public const char statement='=';
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
 		public const char arraySeparator = ',';
@@ -3952,12 +3955,14 @@ namespace Meta {
 		public const char current = '&';
 		public const char functionAlternativeStart = '<';
 		public const char functionAlternativeEnd = '>';
+		public const char lookupAnythingStart='<';
+		public const char lookupAnythingEnd='>';
 		public static readonly string integer = "0123456789-";
 		public static readonly string lookupStringForbidden =
 			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
-			function+ @string+emptyMap+ '!'+ root+ callStart+ callEnd+ 
-			character+ programStart+ '*'+ '$'+ '\\'+ '<'+ '='+ arrayStart+
-			'-'+ ':'+ select+ ' '+ '-'+ '['+ ']'+ '*'+ '>'+ 
+			function+ @string+emptyMap+ search + root+ callStart+ callEnd+ 
+			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
+			'-'+ ':'+ select+ ' '+ '-'+ '['+ ']'+ '*'+ lookupAnythingEnd+ 
 			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
 	}
