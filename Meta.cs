@@ -3962,7 +3962,7 @@ namespace Meta {
 			""+current+ lastArgument+ explicitCall+ indentation+ '\r'+ '\n'+
 			function+ @string+emptyMap+ search + root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
-			'-'+ ':'+ select+ ' '+ '-'+ '['+ ']'+ '*'+ lookupAnythingEnd+ 
+			'-'+ searchStatement+ select+ ' '+ '-'+ arrayStart+ arrayEnd+ '*'+ lookupAnythingEnd+ 
 			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;
 		public static readonly string lookupStringForbiddenFirst = lookupStringForbidden+integer;
 	}
