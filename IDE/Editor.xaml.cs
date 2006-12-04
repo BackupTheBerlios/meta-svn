@@ -23,7 +23,6 @@ using System.Windows.Threading;
 using System.Threading;
 using Editing;
 using _treeListView;
-//using System.Windows.Forms;
 
 
 public partial class Editor : System.Windows.Window {
@@ -39,18 +38,6 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 	}
-	//public class Box : TextBox {
-	//    public int Line {
-	//        get {
-	//            return GetLineIndexFromCharacterIndex(SelectionStart);
-	//        }
-	//    }
-	//    public int Column {
-	//        get {
-	//            return SelectionStart - Text.LastIndexOf('\n', SelectionStart - 1) + 1;
-	//        }
-	//    }
-	//}
 	static Box textBox = new Box();
 	static Canvas canvas = new Canvas();
 	public class View : TreeListView {
@@ -117,9 +104,6 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetTop(toolTip, r.Bottom + 110);
 	}
 	ScrollViewer scrollViewer = new ScrollViewer();
-	//public void SetBreakpoint() {
-
-	//}
 	public void FindMatchingBrace() {
 		const string openBraces = "({[<";
 		const string closeBraces = ")}]>";
@@ -234,7 +218,6 @@ public partial class Editor : System.Windows.Window {
 	}
 	public bool Compile(string text) {
 		try {
-			//string text = textBox.Text;
 			Interpreter.profiling = false;
 			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
 				cached.Clear();
@@ -250,7 +233,17 @@ public partial class Editor : System.Windows.Window {
 				errors.Clear();
 			}));
 			foreach (Error error in parser.state.Errors) {
-				MessageBox.Show(error.Text+error.Source.ToString());
+				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
+					Rect r = textBox.GetRectFromCharacterIndex(error.State.index);
+					Rectangle line = new Rectangle();
+					errors.Add(line);
+					line.Width = 10;
+					line.Height = 3;
+					line.Fill = Brushes.Red;
+					Canvas.SetTop(line, r.Bottom);
+					Canvas.SetLeft(line, r.Right);
+					canvas.Children.Add(line);
+				}));
 			}
 			if (parser.state.index != text.Length) {
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
@@ -313,11 +306,6 @@ public partial class Editor : System.Windows.Window {
 			this.context = context;
 			Value = "some other value";
 		}
-		//public Map Context {
-		//    get {
-		//        return context;
-		//    }
-		//}
 		public string Value {
 			get {
 				return val;
@@ -403,9 +391,6 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
 		textBox.FontFamily = new FontFamily("Courier New");
 		textBox.AcceptsTab = true;
-		//intellisense.MouseDoubleClick += delegate {
-		//    Complete();
-		//};
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 			if (Intellisense) {
 				e.Handled = true;
@@ -468,7 +453,6 @@ public partial class Editor : System.Windows.Window {
 						StartIntellisense();
 						searchStart--;
 						intellisense.Items.Clear();
-						//List<Expression> list=new List<Meta.Expression>();
 						List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
 						sources.RemoveAll(delegate (Source source){
 							return source.FileName!=fileName;
@@ -476,14 +460,13 @@ public partial class Editor : System.Windows.Window {
 						sources.Sort(delegate(Source a,Source b) {
 							return a.CompareTo(b);
 						});
-						//Map s=null;
 						sources.Reverse();
 						Program start = null;
 						foreach(Source source in sources) {
 							foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
 								Program program=expression as Program;
 								if(program!=null) {
-									start = program;//.statementList[program.statementList.Count - 1].CurrentMap();
+									start = program;
 									break;
 								}
 							}
@@ -509,9 +492,7 @@ public partial class Editor : System.Windows.Window {
 									LiteralExpression literal = (LiteralExpression)x;
 									Map structure=literal.GetStructure();
 
-									//if (!(structure is Gac)) {
-										s = Library.Merge(structure, s);
-									//}
+									s = Library.Merge(structure, s);
 								}
 								x = x.Parent;
 							}
@@ -521,9 +502,6 @@ public partial class Editor : System.Windows.Window {
 			            List<Map> keys = new List<Map>();
 			            if (s != null) {
 							keys.AddRange(s.Keys);
-							//foreach (Map m in s.Keys) {
-							//    keys.Add(m.ToString());
-							//}
 			            }
 			            keys.Sort(delegate(Map a,Map b) {
 			                return a.ToString().CompareTo(b.ToString());
@@ -573,10 +551,6 @@ public partial class Editor : System.Windows.Window {
 						FindMatchingBrace();
 						e.Handled = true;
 					}
-					//else if (e.SystemKey == Key.H) {
-					//    SetBreakpoint();
-					//    e.Handled = true;
-					//}
 				}
 				else if (e.KeyboardDevice.Modifiers == (ModifierKeys.Alt | ModifierKeys.Shift)) {
 					if (e.SystemKey == Key.I) {
@@ -635,7 +609,6 @@ public partial class Editor : System.Windows.Window {
 						int line=textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart)+1;
 						int selection=textBox.SelectionStart;
 						int column=textBox.Column;
-						//int column=selection-text.LastIndexOf('\n',selection-1)+1;
 						realSource = new Source(line, column, fileName);
 						break;
 					}
@@ -788,16 +761,18 @@ public partial class Editor : System.Windows.Window {
 			breakpoints.Add(new Breakpoint(textBox.Line, textBox.Column));
 		}));
 		BindKey(breakpoint, Key.H, ModifierKeys.Alt);
-		//DispatcherTimer timer = new DispatcherTimer();
-		//timer.Interval = new TimeSpan(30000);
-		//timer.Tick += delegate {
-		//    string text = textBox.Text;
-		//    Thread thread = new Thread(new ThreadStart(delegate {
-		//        Compile(text);
-		//    }));
-		//    thread.Start();
-		//};
-		//timer.Start();
+		DispatcherTimer timer = new DispatcherTimer();
+		timer.Interval = new TimeSpan(30000);
+		timer.Tick += delegate {
+			timer.Stop();
+			string text = textBox.Text;
+			Thread thread = new Thread(new ThreadStart(delegate {
+				Compile(text);
+				timer.Start();
+			}));
+			thread.Start();
+		};
+		timer.Start();
 		CommandBindings.Add(new CommandBinding(execute, delegate {
 			Save();
 			if (Compile()) {
@@ -837,7 +812,6 @@ public partial class Editor : System.Windows.Window {
 
 		status.Children.Add(message);
 		DockPanel.SetDock(status, Dock.Bottom);
-		//DockPanel.SetDock(editorLine, Dock.Bottom);
 
 		file.Items.Add(openItem);
 		file.Items.Add(comp);
@@ -870,7 +844,6 @@ public partial class Editor : System.Windows.Window {
 		};
 		textBox.SelectionChanged += delegate {
 			int line=(textBox.Line + 1);
-			//int line=(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1);
 			editorLine.Content = "Ln " + line;
 			textBox.ScrollToLine(line-1);
 		};
@@ -951,7 +924,6 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	private bool MatchingBrace(string openBraces, string closeBraces, bool direction) {
-		//return false;
 		char previous = textBox.Text[textBox.SelectionStart - 1];
 		char next = textBox.Text[textBox.SelectionStart];
 		int forward = openBraces.IndexOf(previous);

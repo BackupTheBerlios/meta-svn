@@ -2952,9 +2952,11 @@ namespace Meta {
 		}
 	}
 	public class Error {
+		public Parser.State State;
 		public string Text;
 		public Source Source;
-		public Error(string text,Source source) {
+		public Error(string text,Source source,Parser.State state) {
+			this.State = state;
 			this.Text = text;
 			this.Source = source;
 		}
@@ -3424,7 +3426,7 @@ namespace Meta {
 			return new Rule(delegate (Parser parser,ref Map map) {
 				Error[] errors=new Error[parser.state.Errors.Length+1];
 				parser.state.Errors.CopyTo(errors, 0);
-				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName),parser.state);
 				parser.state.Errors = errors;
 				return true;
 			});
