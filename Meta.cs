@@ -260,7 +260,6 @@ namespace Meta {
 			}
 			if(calls.Count==2 && calls[0].GetConstant()!=null) {
 				Map s = calls[1].EvaluateStructure();
-				//Structure s = calls[1].EvaluateStructure();
 			}
 			List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
 				return e.Compile();
@@ -643,34 +642,11 @@ namespace Meta {
 							}
 						}
 					}
-					//if (start.Line >= breakpoint.Line && start.Column <= breakpoint.Column) {
-					//    if (end.Line >= breakpoint.Line || end.Column.Column <= start.Column) {
-					//        if (Interpreter.Breakpoint != null) {
-					//            Interpreter.Breakpoint(context);
-					//        }
-					//    }
-					//}
-					//if (start.Line>=breakpoint.Line && start.Column<=breakpoint.Column) {
-					//    if (end.Line>=breakpoint.Line || end.Column.Column <= start.Column) {
-					//        if (Interpreter.Breakpoint != null) {
-					//            Interpreter.Breakpoint(context);
-					//        }
-					//    }
-					//}
-
-					//if (breakpoint.Line >= start.Line && breakpoint.Column >= start.Column) {
-					//    if (breakpoint.Line <= end.Line && breakpoint.Column<=start.Column) {
-					//        if (Interpreter.Breakpoint != null) {
-					//            Interpreter.Breakpoint(context);
-					//        }
-					//    }
-					//}
 				}
 			}
 			s(ref context, value(context));
 		}
 		public CompiledStatement(Source start,Source end,Compiled value, StatementDelegate s) {
-			//this.extent = extent;
 			this.start = start;
 			this.end = end;
 			this.value = value;
@@ -790,7 +766,6 @@ namespace Meta {
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate { });
-			//return new CompiledStatement(value.Compile(), delegate { });
 		}
 	}
 	public class KeyStatement : Statement {
@@ -841,7 +816,6 @@ namespace Meta {
 			}
 			Compiled s=key.Compile();
 			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
-			//return new CompiledStatement(value.Compile(), delegate(ref Map context, Map v) {
 				context[s(context)] = v;
 			});
 		}
@@ -858,7 +832,6 @@ namespace Meta {
 		}
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
-			//return new CompiledStatement(value.Compile(),delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
 					if(!(v is DictionaryMap))  {
 						context = v.Copy();
@@ -882,7 +855,6 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			Compiled k = key.Compile();
 			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
-			//return new CompiledStatement(value.Compile(),delegate (ref Map context, Map v) {
 				Map selected = context;
 				Map eKey = k(context);
 				while (!selected.ContainsKey(eKey)) {
@@ -911,23 +883,16 @@ namespace Meta {
 				if (literal != null) {
 					literal.Source = Source;
 				}
-				//if (literal != null && literal.Equals(new StringMap("apply")) && Source == null) {
-				//}
 				return literal;
 			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
-			//if (code.Source == null && !code.IsNumber) {
-			//}
-			//if (code.Source == null) {
-			//}
 		}
 	}
 	public class Root : Expression {
 		public override Map GetStructure() {
 			return Gac.gac;
-			//return new LiteralStructure(Gac.gac);
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
@@ -941,7 +906,6 @@ namespace Meta {
 		public override Map GetStructure() {
 			// maybe wrong
 			Map selected = subs[0].GetStructure();
-			//Map selected = subs[0].GetConstant();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].GetConstant();
 				if (key != null && key.Equals(new StringMap("get_Parent"))) {
@@ -1001,17 +965,13 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			//try {
-				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
-				map.Scope = Gac.gac;
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-				map[CodeKeys.Function].Compile(gac);
-				Gac.gac["library"] = map.Call(new DictionaryMap());
-				Gac.gac["library"].Scope = Gac.gac;
-			//}
-			//catch (Exception e) {
-			//}
+			Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+			map.Scope = Gac.gac;
+			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+			map[CodeKeys.Function].Compile(gac);
+			Gac.gac["library"] = map.Call(new DictionaryMap());
+			Gac.gac["library"].Scope = Gac.gac;
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -1019,8 +979,6 @@ namespace Meta {
 			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
 			l.GetHashCode();
 			s.Equals(l);
-			//new Surface(new Bitmap(File.Open("",FileMode.Open)));
-			//new Surface(
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -1204,7 +1162,6 @@ namespace Meta {
 			else if (target.Equals(typeof(Stream))) {
 				il.Emit(OpCodes.Castclass, typeof(FileMap));
 				il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
-				//il.Emit(OpCodes.Castclass, target);
 			}
 			else if (target.Equals(typeof(Map))) {
 			}
@@ -1536,18 +1493,6 @@ namespace Meta {
 				return this;
 			}
 		}
-		public static string ConstructorName(ConstructorInfo constructor) {
-			ParameterInfo[] parameters=constructor.GetParameters();
-			string name = "";
-			for(int i=0;i<parameters.Length;i++) {
-				if (i != 0) {
-					name += "-";
-					//name += "_";
-				}
-				name+=parameters[i].ParameterType.Name;
-			}
-			return name;
-		}
 		public TypeMap(Type type): base(null, type) {
 		}
 		public override bool ContainsKey(Map key) {
@@ -1594,8 +1539,6 @@ namespace Meta {
 					ConstructorInfo method = Type.GetConstructor(new Type[] {});
 					if (method == null) {
 						return null;
-						//throw new Exception("Default constructor for " + Type + " not found.");
-						//throw new Exception("Default constructor for " + Type + " not found.");
 					}
 					constructor = new Method(method, Object, Type,method);
 				}
@@ -1614,7 +1557,6 @@ namespace Meta {
 	}
 	public class ObjectMap : DotNetMap {
 		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
-		//const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 		protected override BindingFlags BindingFlags {
 			get {
 				return bindingFlags;
@@ -2003,7 +1945,6 @@ namespace Meta {
 					if (method != null) {
 						string name = TypeMap.GetMethodName(method);
 						data[name] = new MethodMember(method,method);
-						//data[name] = new MethodMember(method);
 					}
 					FieldInfo field = member as FieldInfo;
 					if (field != null && field.IsPublic) {
@@ -2021,7 +1962,6 @@ namespace Meta {
 						MethodInfo get=property.GetGetMethod();
 						if (get != null) {
 							data[TypeMap.GetMethodName(get)] = new MethodMember(get,property);
-							//data[TypeMap.GetMethodName(get)] = new MethodMember(get);
 						}
 						MethodInfo set = property.GetSetMethod();
 						if (set != null) {
@@ -2279,11 +2219,6 @@ namespace Meta {
 		}
 	}
 	public class Source {
-		//public static void CheckComparison(Source a, Source b) {
-		//    if (a.FileName != b.FileName) {
-		//        throw new Exception("Cannot compare sources in different files.");
-		//    }
-		//}
 		public static bool operator <(Source a,Source b) {
 			return a.Line < b.Line || (a.Line == b.Line && a.Column < b.Column);
 		}
@@ -2503,7 +2438,6 @@ namespace Meta {
 		public static readonly Map gac = new Gac();
 		private Gac() {
 			cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-			//cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
 		}
 		private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
 		public static Map LoadAssembly(Assembly assembly) {
@@ -2548,7 +2482,6 @@ namespace Meta {
 						}
 						if (assembly != null) {
 							value = new AssemblyMap(assembly);
-							//value = LoadAssembly(assembly);
 							cache[key] = value;
 						}
 						else {
@@ -2569,74 +2502,6 @@ namespace Meta {
 			}
 		}
 	}
-	//public class Gac : SpecialMap {
-	//    public static readonly Map gac = new Gac();
-	//    private Gac() {
-	//        cache["Meta"] = LoadAssembly(Assembly.GetExecutingAssembly());
-	//    }
-	//    private Dictionary<Map, Map> cache = new Dictionary<Map, Map>();
-	//    public static Map LoadAssembly(Assembly assembly) {
-	//        Map val = new DictionaryMap();
-	//        foreach (Type type in assembly.GetExportedTypes()) {
-	//            if (type.DeclaringType == null) {
-	//                Map selected = val;
-	//                string name;
-	//                if (type.IsGenericTypeDefinition) {
-	//                    name = type.Name.Split('`')[0];
-	//                }
-	//                else {
-	//                    name = type.Name;
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
-	//                    if (constructor.GetParameters().Length != 0) {
-	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            Map value;
-	//            if (!cache.ContainsKey(key)) {
-	//                if (key.IsString) {
-	//                    Assembly assembly;
-	//                    string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
-	//                    if (File.Exists(path)) {
-	//                        assembly = Assembly.LoadFile(path);
-	//                    }
-	//                    else {
-	//                        try {
-	//                            assembly = Assembly.LoadWithPartialName(key.GetString());
-	//                        }
-	//                        catch (Exception e) {
-	//                            return null;
-	//                        }
-	//                    }
-	//                    if (assembly != null) {
-	//                        value = LoadAssembly(assembly);
-	//                        cache[key] = value;
-	//                    }
-	//                    else {
-	//                        value = null;
-	//                    }
-	//                }
-	//                else {
-	//                    value = null;
-	//                }
-	//            }
-	//            else {
-	//                value = cache[key];
-	//            }
-	//            return value;
-	//        }
-	//        set {
-	//            cache[key] = value;
-	//        }
-	//    }
-	//}
 	public class StringMap : Map {
 		public override bool IsNormal {
 			get {
@@ -3170,11 +3035,6 @@ namespace Meta {
 			return CachedRule(Alternatives(List,LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 				Search, Program, LastArgument));
 		});
-
-		//public static Rule Expression = DelayedRule(delegate() {
-		//    return CachedRule(Alternatives(LiteralExpression, Call, CallSelect, Select, FunctionProgram,
-		//        Search,List,Program,LastArgument));
-		//});
 		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
 		public static Rule EndOfLine = Sequence(
 			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
@@ -3442,21 +3302,6 @@ namespace Meta {
 				return false;
 			}
 		});
-		//public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
-		//    if (Parser.Expression.Match(p, ref map)) {
-		//        map = new DictionaryMap(
-		//            CodeKeys.Key,
-		//            new DictionaryMap(CodeKeys.Literal,new Integer32(p.defaultKeys.Peek())),
-		//            CodeKeys.Value,
-		//            map
-		//        );
-		//        p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-		//        return true;
-		//    }
-		//    else {
-		//        return false;
-		//    }
-		//});
 		public static Rule ComplexList() {
 			Action entryAction = ReferenceAssignment(ListEntry);
 			return Sequence(
@@ -3518,7 +3363,6 @@ namespace Meta {
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Whitespace,
 			OptionalError(Syntax.statementEnd,"Missing ';'")
-			//Optional(Syntax.statementEnd)
 		);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
@@ -3575,8 +3419,6 @@ namespace Meta {
 		});
 		public static Rule OptionalError(Rule rule, string text) {
 			return Alternatives(rule, Error(text));
-			//return new Rule(delegate(Parser parser, ref Map map) {
-			//});
 		}
 		public static Rule Error(string text) {
 			return new Rule(delegate (Parser parser,ref Map map) {
@@ -3584,7 +3426,6 @@ namespace Meta {
 				parser.state.Errors.CopyTo(errors, 0);
 				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
 				parser.state.Errors = errors;
-				//parser.Errors.Add(new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName)));
 				return true;
 			});
 		}
@@ -3846,14 +3687,6 @@ namespace Meta {
 				}
 			});
 		}
-		//public static Rule LiteralRule(Map literal) {
-		//    return new Rule(delegate(Parser parser, ref Map map) {
-		//        map = literal.Copy();
-		//        Source source=new Source(parser.state.Line,parser.state.Column,parser.state.FileName);
-		//        map.Source = new Extent(source, source);
-		//        return true;
-		//    });
-		//}
 		public static Rule LiteralRule(Map literal) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				map = literal;
@@ -3939,10 +3772,6 @@ namespace Meta {
 		public const char programEnd = ']';
 		public const char functionAlternativeStart = '{';
 		public const char functionAlternativeEnd = '}';
-		//public const char programStart = '{';
-		//public const char programEnd = '}';
-		//public const char functionAlternativeStart = '<';
-		//public const char functionAlternativeEnd = '>';
 		public const char arrayStart = '<';
 		public const char arrayEnd = '>';
 		public const char arraySeparator = ',';
@@ -4549,6 +4378,20 @@ namespace Meta {
 	    }
 	}
 	public class Library {
+		public static Map Sum(Map numbers) {
+			Number n = 0;
+			foreach (Map m in numbers.Array) {
+				n=n+m.GetNumber();
+			}
+			return n;
+		}
+		public static Map Product(Map numbers) {
+			Number n = 1;
+			foreach (Map m in numbers.Array) {
+				n = n * m.GetNumber();
+			}
+			return n;
+		}
 		public static Map Slice(Map array,int start,int end) {
 			return new DictionaryMap(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
 		}
@@ -4650,30 +4493,12 @@ namespace Meta {
 				return Map.Empty;
 			}
 		}
-		//public static Map JoinAll(Map arrays) {
-		//    if (arrays.ArrayCount == 0) {
-		//        return Map.Empty;
-		//    }
-		//    else {
-		//        Map result = arrays[1];//new List<Map>();
-		//        List<Map> list = new List<Map>(arrays.Array);
-		//        foreach (Map array in list.GetRange(1, list.Count - 1)) {
-		//            foreach (Map m in array.Array) {
-		//                result.Append(m);
-		//            }
-		//            //result.AddRange(array.Array);
-		//        }
-		//        return result;
-		//    }
-		//    //return new DictionaryMap(result);
-		//}
 		public static Map JoinAll(Map arrays) {
 			List<Map> result = new List<Map>();
 			foreach (Map array in arrays.Array) {
 				result.AddRange(array.Array);
 			}
 			return new ListMap(result);
-			//return new DictionaryMap(result);
 		}
 		public static Map If(bool condition, Map then) {
 			if (condition) {
@@ -4785,7 +4610,6 @@ namespace Meta {
 		}
 		public override Map GetStructure() {
 			return literal;
-			//return new LiteralStructure(literal);
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");
@@ -4900,11 +4724,6 @@ namespace Meta {
 			}
 			return false;
 		}
-		//public override bool Equals(object obj) {
-		//    Map map = obj as Map;
-		//    foreach (Map key in Keys) {
-		//    }
-		//}
 		public static Map CopyMap(Map map) {
 			Map copy = new DictionaryMap();
 			foreach (Map key in map.Keys) {
@@ -4953,9 +4772,6 @@ namespace Meta {
 		}
 		public abstract int Count {
 			get;
-			// { 
-			//    throw new Exception("The method or operation is not implemented."); 
-			//}
 		}
 		public virtual void Append(Map map) {
 			throw new Exception("The method or operation is not implemented.");
@@ -5099,7 +4915,7 @@ namespace Meta {
 		}
 		public static Dict<Map, Type> expressions = new Dict<Map, Type>()
 			- CodeKeys.Call + typeof(Call) - CodeKeys.Program + typeof(Program) - CodeKeys.Literal + typeof(Literal)
-			- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root)// - CodeKeys.LastArgument + typeof(LastArgument)
+			- CodeKeys.Select + typeof(Select) - CodeKeys.Root + typeof(Root)
 			- CodeKeys.Search + typeof(Search);
 		public static Dict<Map, Type> statements = new Dict<Map, Type>()
 			- CodeKeys.Keys + typeof(SearchStatement) - CodeKeys.Current + typeof(CurrentStatement)
@@ -5114,16 +4930,7 @@ namespace Meta {
 				        Expression x=(Expression)expressions[key].GetConstructor(new Type[] {typeof(Map),typeof(Expression)}
 				        ).Invoke(new object[] {this[key],parent});
 						x.Source = Source;
-						if (Source == null) {// && !(x is Literal && (((Literal)x).literal.IsNumber))) {//((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
-						}
-
-						//if (Source==null && !(x is Literal &&(((Literal)x).literal.IsNumber))) {//((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
-						//}
-
-						//if (x is Literal && ((Literal)x).literal.Equals(new StringMap("apply")) && Source == null) {
-						//}
 						return x;
-						//e.Source = Source;
 				    }
 				}
 			}

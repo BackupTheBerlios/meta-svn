@@ -30,7 +30,7 @@
 	// this is a comment
 	listTest=<"this",1,"is","a",<"long","list">>;
 	commandLine|[
-		&unionAll(<0,<"AssignedToCurrent">>);
+		&union(<0,<"AssignedToCurrent">>);
 		asdf="hello";
 		shortFunction=[// another comment
 			arg|asdf;
@@ -70,7 +70,7 @@
 			hashTest=!!"hashTestData";
 		];
 		negativeInteger=100;
-		negativeInteger=unionAll(<
+		negativeInteger=union(<
 			negativeInteger,
 			[
 				x="hello";
@@ -130,7 +130,7 @@
 			];
 			SetB=[
 				newB|[
-					b:unionAll(<
+					b:union(<
 						b,
 						[
 							1=newB.value;
@@ -222,7 +222,7 @@
 				decimalValue=5;
 			]
 		);
-		TestClass=unionAll(<
+		TestClass=union(<
 			TestClass,
 			[
 				boolTest=1;
@@ -235,13 +235,13 @@
 		integerOverload=MemberTest.OverloadedMethod_Int32(5);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-		MemberTest:unionAll(<
+		MemberTest:union(<
 			MemberTest,
 			[
 				classField="a";
 			]>
 		);
-		memberTest:unionAll(<
+		memberTest:union(<
 			memberTest,
 			[
 				instanceField="b";
@@ -362,7 +362,7 @@
 		decimalTest=5;
 		fractionTest=40;
 		stringTest="hello";
-		stringTest=unionAll(<
+		stringTest=union(<
 			stringTest,
 			[
 				5=stringTest.1;
@@ -389,7 +389,7 @@
 				whileDecision=not(equal(start,10));
 				whileBranches=[
 					1=[
-						arg|loop(sum(arg,1));
+						arg|loop(sum(<arg,1>));
 					];
 					0=arg{arg};
 				];
@@ -448,7 +448,7 @@
 			z="a";
 		];
 		copiedData=copySourceData;
-		copiedData=unionAll(<
+		copiedData=union(<
 			copiedData,
 			[
 				x="changed";

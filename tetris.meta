@@ -1,17 +1,17 @@
 |[
-	&unionAll(<!"System.Drawing",SdlDotNet,SdlDotNet.Events,SdlDotNet.Key,OdeDotNet,
+	&union(<!"System.Drawing",SdlDotNet,SdlDotNet.Events,SdlDotNet.Key,OdeDotNet,
 		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1)>);
 	range=Meta.Library.Range_Number;
-	repeat=times?value?foreach(
+	repeat=times?value?mapping(
 		range(times),
 		?value?
 	)??;
-	vectorSum=a{b{foreach(keys(a),key{sum(a.<key>,b.<key>)})}};
-	level=unionAll(
-		foreach(
+	vectorSum=a{b{mapping(keys(a),key{sum(a.<key>,b.<key>)})}};
+	level=union(
+		mapping(
 			range(10),
-			x?unionAll(
-				foreach(
+			x?union(
+				mapping(
 					range(15),
 					y?[
 						<x,y>=0;
@@ -51,7 +51,7 @@
 		position:vectorSum(position,vector);
 	];
 	checkPosition=pos?branch(less(pos.2,15),?level.{vectorSum(pos,<0,1>)}?,?1?)?;
-	realPosition=?foreach(
+	realPosition=?mapping(
 		active,
 		block?vectorSum(block,position)
 	)?;
@@ -62,7 +62,7 @@
 			?[move(<0,1>);moved:difference(moved,1);]?,
 			?[moved:sum(moved,speed);]?
 		);
-		foreach(
+		mapping(
 			level,
 			key?value?draw(
 				key,
@@ -77,11 +77,11 @@
 			not(equal(1,pos.2)),
 			?level.{vectorSum(pos,<0,-1>)}?
 		)?;
-		foreach(
+		mapping(
 			range(15),
 			y?if(
 				andAll(
-					foreach(
+					mapping(
 						range(10),
 						x?level.{<x,y>}?
 					)
@@ -100,18 +100,18 @@
 		);
 		branch(
 			orAll(
-				foreach(
+				mapping(
 					realPosition(),
 					block?checkPosition(block)?
 				)
 			),
 			?[
-				level:union(level,unionAll(foreach(realPosition(),block?[{block}=1;])));
+				level:union(level,union(mapping(realPosition(),block?[{block}=1;])));
 				makePiece();
 			]?,
 			?0?
 		);
-		foreach(active,block?draw(vectorSum(position,block),<0,0,255>)?
+		mapping(active,block?draw(vectorSum(position,block),<0,0,255>)?
 		);
 		Flip();
 	]?;
@@ -121,14 +121,14 @@
 	if=condition?then?branch(condition,then,?0?)??;
 	moved=0;
 	keyDown=[
-		{Key.Space}=?[active:foreach(active,block?<opposite(block.2),block.1>?);]?;
+		{Key.Space}=?[active:mapping(active,block?<opposite(block.2),block.1>?);]?;
 		{Key.LeftArrow}=?if(
-			andAll(foreach(realPosition(),pos?greater(pos.1,1))),
+			andAll(mapping(realPosition(),pos?greater(pos.1,1))),
 			?move(<-1,0>)?
 		)?;
 		{Key.DownArrow}=?[speed:1;]?;
 		{Key.RightArrow}=?if(
-			andAll(foreach(realPosition(),pos?less(pos.1,10))),
+			andAll(mapping(realPosition(),pos?less(pos.1,10))),
 			?move(<1,0>)?
 		)?;
 	];

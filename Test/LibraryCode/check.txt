@@ -3,42 +3,18 @@
 		|,
 			&=!"Meta"
 			"lib"=,
-				"accumulate"=.
+				"branch"=.
 					!"Library"
-					"Sum_Map_Map"
-				"try"=.
+					"IfElse_Boolean_Map_Map"
+				"mapping"=.
 					!"Library"
-					"Try_Map_Map"
-				"contains"=,
-					|.
-						-
-							!"ObjectMap_Object"
-							,
-								lastArgument=""
-						"ContainsKey_Map"
-				"join"=.
+					"Apply_Map_Map"
+				"concatenation"=.
 					!"Library"
 					"JoinAll_Map"
 				"union"=.
 					!"Library"
-					"Merge_Map_Map"
-				"unionAll"=.
-					!"Library"
 					"MergeAll_Map"
-				"if"=,
-					condition|,
-						then|-
-							!"branch"
-							!"condition"
-							!"then"
-							,
-								|0
-				"branch"=.
-					!"Library"
-					"IfElse_Boolean_Map_Map"
-				"foreach"=.
-					!"Library"
-					"Apply_Map_Map"
 				"greater"=.
 					!"Number"
 					"op_GreaterThan_Number_Number"
@@ -46,8 +22,8 @@
 					!"Number"
 					"op_LessThan_Number_Number"
 				"sum"=.
-					!"Number"
-					"op_Addition_Number_Number"
+					!"Library"
+					"Sum_Map"
 				"power"=.
 					!"Library"
 					"Raise_Number_Number"
@@ -61,25 +37,25 @@
 					a|,
 						b|.
 							,
-								1=!"a"
 								0=!"b"
+								1=!"a"
 							-
-								!"greater"
+								!"less"
 								!"a"
 								!"b"
 				"minimum"=,
 					a|,
 						b|.
 							,
-								1=!"a"
 								0=!"b"
+								1=!"a"
 							-
-								!"less"
+								!"greater"
 								!"a"
 								!"b"
 				"product"=.
-					!"Number"
-					"op_Multiply_Number_Number"
+					!"Library"
+					"Product_Map"
 				"modulo"=.
 					!"Number"
 					"op_Modulus_Number_Number"

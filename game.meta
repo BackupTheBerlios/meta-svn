@@ -1,19 +1,20 @@
 {[
-	&unionAll(<!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
+	&union(<!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
 		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet>);
+	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
 	random=Meta.Library.Random_Int32_Int32;
 	print={[
 		Library.WriteLine_String(@);
 		&@;
 	]};
 	range=Meta.Library.Range_Number;
-	vectorLength=vector{power(sum(power(vector.1,2),power(vector.2,2)),1/2)};
-	vectorDifference=a{b{foreach(keys(a),key{difference(a.<key>,b.<key>)})}};
+	vectorLength=vector{power(sum(<power(vector.1,2),power(vector.2,2)>),1/2)};
+	vectorDifference=a{b{mapping(keys(a),key{difference(a.<key>,b.<key>)})}};
 	compareNumber=Library.CompareNumber_Number_Number;
 	callKey=key{map{branch(contains(map,key),{map.<key>()}{0})}};
 	world=World();
-	vectorDotProduct=vector{number{foreach(vector,entry{product(number,entry)})}};
-	productVector=a{b{foreach(range(length(a)),index{product(a.<index>,b.<index>)})}};
+	vectorDotProduct=vector{number{mapping(vector,entry{product(<number,entry>)})}};
+	productVector=a{b{mapping(range(length(a)),index{product(<a.<index>,b.<index>>)})}};
 	vectorProduct=productVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
 	Fill_Color(Color.get_White());
@@ -32,8 +33,8 @@
 	world.set_Gravity_Vector3(vector(0,1/100,0));
 	bubble=size{[
 		body=Body_World(world);
-		radius={product(size,4)};
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1/1000));
+		radius={product(<size,4>)};
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(<size,size>),1/1000));
 		keyUp=0;
 		keyDown=0;
 		position=<random(1,790),random(1,590)>;
@@ -67,7 +68,7 @@
 		center=a{b{quotient(Sum(a,b),2)}};
 		keyDown=[
 			!"key"={[
-				lengths=foreach(
+				lengths=mapping(
 					bubbles,
 					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))}
 				);
@@ -84,14 +85,14 @@
 	]}};
 	paused=0;
 	add_Quit_QuitEventHandler({e{[Events.Close();Events.QuitApplication();]}});
-	add_KeyboardDown_KeyboardEventHandler({e{foreach(players,player{callKey(player.keyDown,e.get_Key())})}});
-	add_KeyboardUp_KeyboardEventHandler({e{foreach(players,player{callKey(player.keyUp,e.get_Key())})}});
+	add_KeyboardDown_KeyboardEventHandler({e{mapping(players,player{callKey(player.keyDown,e.get_Key())})}});
+	add_KeyboardUp_KeyboardEventHandler({e{mapping(players,player{callKey(player.keyUp,e.get_Key())})}});
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Library.EnumerableToArray_Map;
 	space.add_Collision_CollisionEventHandler({e{[
 		a=e.get_Geom1();
 		b=e.get_Geom2();
-		foreach(
+		mapping(
 			enumerableToArray(a.Collide_Geom_Int32(b,13)),
 			contactGeom{[
 				contact=world.CreateContactJoint_Contact_JointGroup(
@@ -103,9 +104,9 @@
 		);
 	]}});
 	players=<player(Return,Color.get_Blue())>;
-	bubbles=join(<
-		foreach(range(10),{bubble(random(1,5))}),
-		foreach(range(10),{bubble(random(1,2))})
+	bubbles=concatenation(<
+		mapping(range(10),{bubble(random(1,5))}),
+		mapping(range(10),{bubble(random(1,2))})
 	>);
 	Events.set_TargetFps_Int32(500);
 	paused=0;
@@ -115,9 +116,9 @@
 		print(Events.get_Fps());
 		space.CheckCollisions();
 		world.Step();
-		foreach(bubbles,b{[b.move();b.draw(b.color);]});
-		foreach(players,player{player.draw(Color.get_Blue())});
-		foreach(
+		mapping(bubbles,b{[b.move();b.draw(b.color);]});
+		mapping(players,player{player.draw(Color.get_Blue())});
+		mapping(
 			players,
 			player{branch(
 				not(equal(0,player.currentBubble)),
