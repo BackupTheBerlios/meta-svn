@@ -1773,9 +1773,9 @@ namespace Meta {
 			}
 			return false;
 		}
-		public DictionaryMap(params Map[] list){
-		    for (int i = 0; i <= list.Length - 2; i += 2) {
-		        this[list[i]] = list[i + 1];
+		public DictionaryMap(params Map[] keysAndValues){
+		    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
+		        this[keysAndValues[i]] = keysAndValues[i + 1];
 		    }
 		}
 		public DictionaryMap(System.Collections.Generic.ICollection<Map> list) {
@@ -3069,7 +3069,7 @@ namespace Meta {
 				Sequence(
 					ReferenceAssignment(
 						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
-					OptionalError(Syntax.@string)))));
+					RealOptional(Syntax.@string)))));
 
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),
@@ -3137,15 +3137,21 @@ namespace Meta {
 				OneOrMore(
 					new Action(
 						Sequence(
-							ReferenceAssignment(Entry), Whitespace, OptionalError(Syntax.programSeparator), Whitespace),
+							ReferenceAssignment(Entry), Whitespace, RealOptional(Syntax.programSeparator), Whitespace),
 						delegate(Parser parser, Map map, ref Map result) {
 							result = Library.Merge(result, map);
 						}
 			))),
-			OptionalError(Syntax.programEnd),
+			RealOptional(Syntax.programEnd),
 			Whitespace
 		);
 		Dictionary<State, string> errors = new Dictionary<State, string>();
+		private static Rule Arg=DelayedRule(delegate {
+			return Alternatives(List,
+				LastArgument, FunctionProgram,
+				LiteralExpression, Call, Select,
+				Search, Program);
+		});
 		public static Rule Call = DelayedRule(delegate() {
 			return Sequence(
 				Assign(CodeKeys.Call,
@@ -3158,17 +3164,23 @@ namespace Meta {
 							Alternatives(
 								Sequence(
 									Whitespace,
+									Assign(1,Alternatives(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
 									Append(
 										ZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
-													ReferenceAssignment(Alternatives(List,
-														LastArgument, FunctionProgram,
-														LiteralExpression, Call, Select,
-														Search, Program
-													)),
-													OptionalError(Syntax.callSeparator)
+													Optional(Syntax.callSeparator),
+
+													Whitespace,
+													ReferenceAssignment(
+													Arg
+														//Alternatives(List,
+														//    LastArgument, FunctionProgram,
+														//    LiteralExpression, Call, Select,
+														//    Search, Program
+														//)
+													)
 													)))),
 									Whitespace
 									, OptionalError(Syntax.callEnd)
@@ -3196,7 +3208,7 @@ namespace Meta {
 													ReferenceAssignment(Alternatives(List,
 														LastArgument, FunctionProgram, LiteralExpression,
 														Call, Select, Search, Program)),
-													OptionalError(Syntax.callSeparator)
+													RealOptional(Syntax.callSeparator)
 													)))),
 									Whitespace
 									, Syntax.callEnd
@@ -3223,7 +3235,7 @@ namespace Meta {
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
-			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
+			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),RealOptional(Syntax.lookupAnythingEnd)
 		);
 		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
 		private static Rule Search = CachedRule(Sequence(
@@ -3279,9 +3291,9 @@ namespace Meta {
 							ZeroOrMore(
 								Autokey(
 									Sequence(Whitespace,ReferenceAssignment(Value),
-						OptionalError(Syntax.arraySeparator))))),
+						RealOptional(Syntax.arraySeparator))))),
 						Whitespace,
-						OptionalError(Syntax.arrayEnd)),
+						RealOptional(Syntax.arrayEnd)),
 						delegate(Parser p) {
 							p.defaultKeys.Pop();
 						})));
@@ -3349,7 +3361,7 @@ namespace Meta {
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd))),
+					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),RealOptional(Syntax.lookupAnythingEnd))),
 					Sequence(Assign(CodeKeys.Literal,LookupString)),
 					Expression)));
 
@@ -3364,7 +3376,9 @@ namespace Meta {
 			ReferenceAssignment(
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Whitespace,
-			OptionalError(Syntax.statementEnd)
+			RealOptional(Syntax.statementEnd)
+			//OptionalError(Syntax.statementEnd,"Missing ':'")
+			//OptionalError(Syntax.statementEnd)
 		);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
@@ -3374,7 +3388,7 @@ namespace Meta {
 						Whitespace,
 						Assign(CodeKeys.Expression, Expression),
 					Whitespace,
-					OptionalError(Syntax.functionAlternativeEnd),
+					RealOptional(Syntax.functionAlternativeEnd),
 			Whitespace)));
 
 		public static Rule FunctionProgram = Sequence(
@@ -3392,7 +3406,7 @@ namespace Meta {
 										Syntax.functionAlternativeStart,Whitespace,
 											Assign(CodeKeys.Expression, Expression),
 										Whitespace,
-										OptionalError(Syntax.functionAlternativeEnd))))))))));
+										RealOptional(Syntax.functionAlternativeEnd))))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -3408,16 +3422,19 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													ReferenceAssignment(AllStatements),
-													OptionalError(Syntax.programSeparator)
-													)))),
-									Whitespace
-									,OptionalError(Syntax.programEnd))
+													ReferenceAssignment(AllStatements))))),
+									Whitespace,RealOptional(Syntax.programEnd))
 									)))
 			));
 		});
 		public static Rule OptionalError(char c) {
-			return OptionalError(c,"Missing '"+c+"'");
+			return Optional(c);
+		}
+		//public static Rule SomeOptional(char c, string text) {
+		//    return Alternatives(c, Error(text));
+		//}
+		public static Rule RealOptional(char c) {
+			return Alternatives(c, Error("Missing '" + c + "'"));
 		}
 		public static Rule OptionalError(Rule rule, string text) {
 			return Alternatives(rule, Error(text));
