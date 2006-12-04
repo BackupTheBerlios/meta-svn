@@ -4505,7 +4505,7 @@ namespace Meta {
 				return then.Call(Map.Empty);}
 			return Map.Empty;
 		}
-		public static Map Apply(Map array, Map func) {
+		public static Map Apply(Map func,Map array) {
 			List<Map> result = new List<Map>();
 			foreach (Map map in array.Array) {
 				result.Add(func.Call(map));}

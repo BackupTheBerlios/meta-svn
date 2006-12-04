@@ -328,11 +328,8 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	public Editor() {
-		//watch.Items.Add(new Watch("apply"));
 		TreeListViewItem treeItem=new TreeListViewItem();
 		treeItem.Header = new TextBox();
-		//treeItem.Header = new TextBox();
-		//treeItem.Header = "hello";
 		treeItem.Items.Add("hi");
 		watch.Items.Add(treeItem);
 		watch.Items.Add(new TextBox());
@@ -820,8 +817,12 @@ public partial class Editor : System.Windows.Window {
 					//foreach()
 					MessageBox.Show(map.Count.ToString());
 				};
-				Interpreter.Run(fileName, Map.Empty);
-				//MessageBox.Show("Debugging");
+				try {
+					Interpreter.Run(fileName, Map.Empty);
+				}
+				catch (Exception e) {
+					MessageBox.Show(e.ToString());
+				}
 			}
 		}));
 		debugItem.Command = debug;

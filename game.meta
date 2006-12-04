@@ -9,12 +9,12 @@
 	]};
 	range=Meta.Library.Range_Number;
 	vectorLength=vector{power(sum(<power(vector.1,2),power(vector.2,2)>),1/2)};
-	vectorDifference=a{b{mapping(keys(a),key{difference(a.<key>,b.<key>)})}};
+	vectorDifference=a{b{mapping(key{difference(a.<key>,b.<key>)},keys(a))}};
 	compareNumber=Library.CompareNumber_Number_Number;
 	callKey=key{map{branch(contains(map,key),{map.<key>()}{0})}};
 	world=World();
-	vectorDotProduct=vector{number{mapping(vector,entry{product(<number,entry>)})}};
-	productVector=a{b{mapping(range(length(a)),index{product(<a.<index>,b.<index>>)})}};
+	vectorDotProduct=vector{number{mapping(entry{product(<number,entry>)},vector)}};
+	productVector=a{b{mapping(index{product(<a.<index>,b.<index>>)},range(length(a)))}};
 	vectorProduct=productVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
 	Fill_Color(Color.get_White());
@@ -69,8 +69,8 @@
 		keyDown=[
 			!"key"={[
 				lengths=mapping(
-					bubbles,
-					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))}
+					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))},
+					bubbles
 				);
 				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.{a},lengths.{b})}});
 				index=sorted.1;
@@ -85,28 +85,28 @@
 	]}};
 	paused=0;
 	add_Quit_QuitEventHandler({e{[Events.Close();Events.QuitApplication();]}});
-	add_KeyboardDown_KeyboardEventHandler({e{mapping(players,player{callKey(player.keyDown,e.get_Key())})}});
-	add_KeyboardUp_KeyboardEventHandler({e{mapping(players,player{callKey(player.keyUp,e.get_Key())})}});
+	add_KeyboardDown_KeyboardEventHandler({e{mapping(player{callKey(player.keyDown,e.get_Key())},players)}});
+	add_KeyboardUp_KeyboardEventHandler({e{mapping(player{callKey(player.keyUp,e.get_Key())},players)}});
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Library.EnumerableToArray_Map;
 	space.add_Collision_CollisionEventHandler({e{[
 		a=e.get_Geom1();
 		b=e.get_Geom2();
 		mapping(
-			enumerableToArray(a.Collide_Geom_Int32(b,13)),
 			contactGeom{[
 				contact=world.CreateContactJoint_Contact_JointGroup(
 					Contact([Geom=contactGeom;]),
 					contactGroup
 				);
 				contact.Attach_Body_Body(a.get_Body(),b.get_Body());
-			]}
+			]},
+			enumerableToArray(a.Collide_Geom_Int32(b,13))
 		);
 	]}});
 	players=<player(Return,Color.get_Blue())>;
 	bubbles=concatenation(<
-		mapping(range(10),{bubble(random(1,5))}),
-		mapping(range(10),{bubble(random(1,2))})
+		mapping({bubble(random(1,5))},range(10)),
+		mapping({bubble(random(1,2))},range(10))
 	>);
 	Events.set_TargetFps_Int32(500);
 	paused=0;
@@ -116,10 +116,9 @@
 		print(Events.get_Fps());
 		space.CheckCollisions();
 		world.Step();
-		mapping(bubbles,b{[b.move();b.draw(b.color);]});
-		mapping(players,player{player.draw(Color.get_Blue())});
+		mapping(b{[b.move();b.draw(b.color);]},bubbles);
+		mapping(player{player.draw(Color.get_Blue())},players);
 		mapping(
-			players,
 			player{branch(
 				not(equal(0,player.currentBubble)),
 				{[
@@ -131,7 +130,8 @@
 					);
 				]}
 				{0}
-			)}
+			)},
+			players
 		);
 		Flip();
 	]);
