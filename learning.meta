@@ -1,6 +1,6 @@
 [
 |,
-	&mergeAll +
+	&unionAll +
 		MathML
 		!"MathML.Rendering"
 		System
@@ -63,7 +63,7 @@
 							Map (enumerableToArray (node.get_Nodes)) asdf?asdf.AddSuspend p
 							&p
 	data=0
-	getNodes=data?Map (keys (mergeAll data)) key?
+	getNodes=data?Map (keys (unionAll data)) key?
 		&TreeNode,
 			CheckChanged=0
 			Text=key

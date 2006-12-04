@@ -26,19 +26,17 @@
 				)
 			);
 			differenceTest2=difference(103,2);
-			divideTest=divide(5,103);
+			divideTest=quotient(5,103);
 			productInteger=product(19,1023);
 			minusproduct=product(-1,-2);
 			productFraction=product(3/2,7/3);
 			smallerDecreasingTest=less(4,1);
-			nonincreasingTest=lessEqual(1,1);
-			nondecreasingTest=greaterEqual(1,2);
 			strictlyIncreasingTest=greater(23,23);
 			smallerTest=less(0,1);
 			greaterTest=greater(3,5);
 			divide=product(
 				1000
-				divide(
+				quotient(
 					1
 					7
 				)
@@ -48,7 +46,7 @@
 			or=0;
 		];
 		mapTest=[
-			IfTest=if(
+			IfTest=branch(
 				1
 				[
 					arg|"If,test,successful";
@@ -57,9 +55,8 @@
 					|0;
 				]
 			);
-			sliceTest=slice("die,Katze,lief,im,Schnee.",5,10);
 			Map=[
-				&apply(
+				&foreach(
 					<1,2,3>
 					[
 						argument|sum(
@@ -72,14 +69,7 @@
 			keyTestMap=[
 				x="hello";
 			];
-			vectorAllLessTest=vectorAllLess(
-				<1,2,3>
-				<2,3,6>
-			);
 			containsTest=contains(keyTestMap,"x");
-			containedBy1=containedBy("x",keyTestMap);
-			containedBy2=containedBy("y",keyTestMap);
-			containedBy3=containedBy("x",0);
 			keysTest=keys(
 				[
 					jjqwv="aeäquq";
@@ -119,10 +109,7 @@
 					argument|argument.ToString(0);
 				]
 			);
-			integerToString=integerToString(5);
 		];
-		filterTest=filter(<1,100,2,4,100,100>,equal(100));
-		reverseTest=reverse("hello");
 		sumTest=accumulate(
 			[
 				first|[
@@ -135,10 +122,6 @@
 			<2,5,6,8>
 		);
 		lengthTest=length(<1,2,3,4,5>);
-		isStringTest=[
-			no=isString(2);
-			yes=isString("hi");
-		];
 		withTest=!"System.Windows.Forms".Form(
 			[
 				Text="hello,world";
@@ -151,10 +134,6 @@
 				apple="red";
 				strawberries="red";
 			]
-		);
-		vectorSumTest=vectorSum(
-			<1,2,3,4,3,2,1>
-			<1,2,3,4,5,6,7>
 		);
 	];
 	&test;

@@ -1,15 +1,17 @@
 |[
-	&mergeAll(<!"System.Drawing",SdlDotNet,SdlDotNet.Events,SdlDotNet.Key,OdeDotNet,
+	&unionAll(<!"System.Drawing",SdlDotNet,SdlDotNet.Events,SdlDotNet.Key,OdeDotNet,
 		SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1)>);
-	repeat=times?value?apply(
+	range=Meta.Library.Range_Number;
+	repeat=times?value?foreach(
 		range(times),
 		?value?
 	)??;
-	level=mergeAll(
-		apply(
+	vectorSum=a{b{foreach(keys(a),key{sum(a.<key>,b.<key>)})}};
+	level=unionAll(
+		foreach(
 			range(10),
-			x?mergeAll(
-				apply(
+			x?unionAll(
+				foreach(
 					range(15),
 					y?[
 						<x,y>=0;
@@ -48,14 +50,14 @@
 	move=vector?[
 		position:vectorSum(position,vector);
 	];
-	checkPosition=pos?if(less(pos.2,15),?level.{vectorSum(pos,<0,1>)}?,?1?)?;
-	realPosition=?apply(
+	checkPosition=pos?branch(less(pos.2,15),?level.{vectorSum(pos,<0,1>)}?,?1?)?;
+	realPosition=?foreach(
 		active,
 		block?vectorSum(block,position)
 	)?;
 	x=?[
 		Fill_Color(<0,0,0>);
-		if(
+		branch(
 			greater(moved,1),
 			?[move(<0,1>);moved:difference(moved,1);]?,
 			?[moved:sum(moved,speed);]?
@@ -64,22 +66,22 @@
 			level,
 			key?value?draw(
 				key,
-				if(
+				branch(
 					level.{key},
 					?<0,255,0>?,
 					?<255,0,0>?
 				)
 			)??
 		);
-		moveDown=pos?ifOnly(
+		moveDown=pos?if(
 			not(equal(1,pos.2)),
 			?level.{vectorSum(pos,<0,-1>)}?
 		)?;
-		apply(
+		foreach(
 			range(15),
-			y?ifOnly(
+			y?if(
 				andAll(
-					apply(
+					foreach(
 						range(10),
 						x?level.{<x,y>}?
 					)
@@ -87,7 +89,7 @@
 				?[
 					level:modify(
 						level,
-						key?value?if(
+						key?value?branch(
 							lessEqual(key.2,y),
 							?moveDown(key)?,
 							?value?
@@ -96,37 +98,37 @@
 				]?
 			)?
 		);
-		if(
+		branch(
 			orAll(
-				apply(
+				foreach(
 					realPosition(),
 					block?checkPosition(block)?
 				)
 			),
 			?[
-				level:merge(level,mergeAll(apply(realPosition(),block?[{block}=1;])));
+				level:union(level,unionAll(foreach(realPosition(),block?[{block}=1;])));
 				makePiece();
 			]?,
 			?0?
 		);
-		apply(active,block?draw(vectorSum(position,block),<0,0,255>)?
+		foreach(active,block?draw(vectorSum(position,block),<0,0,255>)?
 		);
 		Flip();
 	]?;
 	Keyboard.EnableKeyRepeat_Int32_Int32(10,10);
 	music=Music_String("D:\Meta\grantgreen.wav");
 	add_Tick_TickEventHandler(??x()??);
-	ifOnly=condition?then?if(condition,then,?0?)??;
+	if=condition?then?branch(condition,then,?0?)??;
 	moved=0;
 	keyDown=[
-		{Key.Space}=?[active:apply(active,block?<opposite(block.2),block.1>?);]?;
-		{Key.LeftArrow}=?ifOnly(
-			andAll(apply(realPosition(),pos?greater(pos.1,1))),
+		{Key.Space}=?[active:foreach(active,block?<opposite(block.2),block.1>?);]?;
+		{Key.LeftArrow}=?if(
+			andAll(foreach(realPosition(),pos?greater(pos.1,1))),
 			?move(<-1,0>)?
 		)?;
 		{Key.DownArrow}=?[speed:1;]?;
-		{Key.RightArrow}=?ifOnly(
-			andAll(apply(realPosition(),pos?less(pos.1,10))),
+		{Key.RightArrow}=?if(
+			andAll(foreach(realPosition(),pos?less(pos.1,10))),
 			?move(<1,0>)?
 		)?;
 	];

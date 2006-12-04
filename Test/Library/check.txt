@@ -100,16 +100,6 @@ Entry (KeyValuePair`2)
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
-				"nonincreasingTest"
-			Value (Integer32):
-				1
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"nondecreasingTest"
-			Value (Integer32):
-				0
-		Entry (KeyValuePair`2)
-			Key (StringMap):
 				"strictlyIncreasingTest"
 			Value (Integer32):
 				0
@@ -148,11 +138,6 @@ Entry (KeyValuePair`2)
 				"If,test,successful"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
-				"sliceTest"
-			Value (DictionaryMap):
-				"Katze,"
-		Entry (KeyValuePair`2)
-			Key (StringMap):
 				"Map"
 			Value (DictionaryMap):
 				""
@@ -167,29 +152,9 @@ Entry (KeyValuePair`2)
 						"hello"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
-				"vectorAllLessTest"
-			Value (Integer32):
-				1
-		Entry (KeyValuePair`2)
-			Key (StringMap):
 				"containsTest"
 			Value (Integer32):
 				1
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"containedBy1"
-			Value (Integer32):
-				1
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"containedBy2"
-			Value (Integer32):
-				0
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"containedBy3"
-			Value (Integer32):
-				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"keysTest"
@@ -232,21 +197,6 @@ Entry (KeyValuePair`2)
 				"tryTest"
 			Value (StringMap):
 				"hello"
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"integerToString"
-			Value (StringMap):
-				"5"
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"filterTest"
-	Value (DictionaryMap):
-		"ddd"
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"reverseTest"
-	Value (DictionaryMap):
-		"olleh"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"sumTest"
@@ -259,20 +209,6 @@ Entry (KeyValuePair`2)
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"isStringTest"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"no"
-			Value (Integer32):
-				0
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"yes"
-			Value (Integer32):
-				1
-Entry (KeyValuePair`2)
-	Key (StringMap):
 		"withTest"
 	Value (ObjectMap):
 		System.Windows.Forms.Form, Text: hello,world
@@ -281,8 +217,3 @@ Entry (KeyValuePair`2)
 		"countTest"
 	Value (Integer32):
 		4
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"vectorSumTest"
-	Value (DictionaryMap):
-		""

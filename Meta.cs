@@ -1001,7 +1001,7 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			try {
+			//try {
 				Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
 				map.Scope = Gac.gac;
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
@@ -1009,9 +1009,9 @@ namespace Meta {
 				map[CodeKeys.Function].Compile(gac);
 				Gac.gac["library"] = map.Call(new DictionaryMap());
 				Gac.gac["library"].Scope = Gac.gac;
-			}
-			catch (Exception e) {
-			}
+			//}
+			//catch (Exception e) {
+			//}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -3512,6 +3512,7 @@ namespace Meta {
 		public static Rule AllStatements = Sequence(
 			ReferenceAssignment(
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
+			Whitespace,
 			OptionalError(Syntax.statementEnd,"Missing ';'")
 			//Optional(Syntax.statementEnd)
 		);
@@ -4642,12 +4643,30 @@ namespace Meta {
 				return Map.Empty;
 			}
 		}
+		//public static Map JoinAll(Map arrays) {
+		//    if (arrays.ArrayCount == 0) {
+		//        return Map.Empty;
+		//    }
+		//    else {
+		//        Map result = arrays[1];//new List<Map>();
+		//        List<Map> list = new List<Map>(arrays.Array);
+		//        foreach (Map array in list.GetRange(1, list.Count - 1)) {
+		//            foreach (Map m in array.Array) {
+		//                result.Append(m);
+		//            }
+		//            //result.AddRange(array.Array);
+		//        }
+		//        return result;
+		//    }
+		//    //return new DictionaryMap(result);
+		//}
 		public static Map JoinAll(Map arrays) {
 			List<Map> result = new List<Map>();
 			foreach (Map array in arrays.Array) {
 				result.AddRange(array.Array);
 			}
-			return new DictionaryMap(result);
+			return new ListMap(result);
+			//return new DictionaryMap(result);
 		}
 		public static Map If(bool condition, Map then) {
 			if (condition) {

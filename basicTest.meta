@@ -4,7 +4,7 @@
 		Permission is hereby granted, free of charge, to any person obtaining
 		a copy of this software and associated documentation files (the
 		'Software'), to deal in the Software without restriction, including
-		without limitation the rights to use, copy, modify, merge, publish 
+		without limitation the rights to use, copy, modify, union, publish 
 		distribute, sublicense, and/or sell copies of the Software, and to
 		permit persons to whom the Software is furnished to do so, subject to
 		the following conditions:
@@ -30,7 +30,7 @@
 	// this is a comment
 	listTest=<"this",1,"is","a",<"long","list">>;
 	commandLine|[
-		&merge(0,<"AssignedToCurrent">);
+		&union(0,<"AssignedToCurrent">);
 		asdf="hello";
 		shortFunction=[// another comment
 			arg|asdf;
@@ -70,7 +70,7 @@
 			hashTest=!!"hashTestData";
 		];
 		negativeInteger=100;
-		negativeInteger=merge(
+		negativeInteger=union(
 			negativeInteger,
 			[
 				x="hello";
@@ -130,7 +130,7 @@
 			];
 			SetB=[
 				newB|[
-					b:merge(
+					b:union(
 						b,
 						[
 							1=newB.value;
@@ -222,7 +222,7 @@
 				decimalValue=5;
 			]
 		);
-		TestClass=merge(
+		TestClass=union(
 			TestClass,
 			[
 				boolTest=1;
@@ -235,13 +235,13 @@
 		integerOverload=MemberTest.OverloadedMethod_Int32(5);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-		MemberTest:merge(
+		MemberTest:union(
 			MemberTest,
 			[
 				classField="a";
 			]
 		);
-		memberTest:merge(
+		memberTest:union(
 			memberTest,
 			[
 				instanceField="b";
@@ -361,7 +361,7 @@
 		decimalTest=5;
 		fractionTest=40;
 		stringTest="hello";
-		stringTest=merge(
+		stringTest=union(
 			stringTest,
 			[
 				5=stringTest.1;
@@ -447,7 +447,7 @@
 			z="a";
 		];
 		copiedData=copySourceData;
-		copiedData=merge(
+		copiedData=union(
 			copiedData,
 			[
 				x="changed";

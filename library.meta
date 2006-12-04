@@ -2,109 +2,41 @@
 	lib={[
 		&Meta;
 		lib=[
-			double=Library.Double_Map;
-			contains={ObjectMap_Object(@).ContainsKey_Map};
-			foreach=Library.Foreach_Map_Map;
-			flip=func{a{b{func(b,a)}}};
-			containedBy=key{map{ObjectMap_Object(map).ContainsKey_Map(key)}};
-			modify=Library.Modify_Map_Map;
-			sum=Number.op_Addition_Number_Number;
-			power=Library.Raise_Number_Number;
-			or=a{b{[1=1;0=b;].<a>}};
-			repeat=times{value{apply(
-				range(times),
-				{value}
-			)}};
-			ifOnly=condition{then{if(condition,then,{0})}};
-			merge=Library.Merge_Map_Map;
 			accumulate=Library.Sum_Map_Map;
-			keys=arg{!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys())};
-			product=Number.op_Multiply_Number_Number;
-			not=arg{[0=1;1=0;].<arg>};
-			stringToNumber=Library.StringToNumber_Map;
-			parse=Parser.Parse_String;
-			toString=Serialization.Serialize_Map;
-			writeLine=a{[Library.WriteLine_String(a);&@;]};
+			try=Library.Try_Map_Map;
+			contains={ObjectMap_Object(@).ContainsKey_Map};
+			
 			join=Library.Join_Map_Map;
-			range=Library.Range_Number;
-			reverse=Library.Reverse_Map;
-			ifSingle=Library.If_Boolean_Map;
-			if=Library.IfElse_Boolean_Map_Map;
-			filter=Library.Filter_Map_Map;
-			apply=Library.Apply_Map_Map;
-			applyTo=flip(apply);
-			divide=Number.op_Division_Number_Number;
-			quotient=Number.op_Division_Number_Number;
-			difference=Number.op_Subtraction_Number_Number;
+			joinAll=Library.JoinAll_Map;
+			union=Library.Merge_Map_Map;
+			unionAll=Library.MergeAll_Map;
+
+
+			if=condition{then{branch(condition,then,{0})}};
+			branch=Library.IfElse_Boolean_Map_Map;
+			
+			foreach=Library.Apply_Map_Map;
+			
 			greater=Number.op_GreaterThan_Number_Number;
 			less=Number.op_LessThan_Number_Number;
-			greaterEqual=Number.op_GreaterThanOrEqual_Number_Number;
-			rest=Library.Rest_Map;
-			times=n{do{[
-				x=rest{if(lessEqual(rest,n),{0},{0})};
-				x(1);
-			]}};
-			lessEqual=Number.op_LessThanOrEqual_Number_Number;
-			vectorSum=a{b{apply(keys(a),key{sum(a.<key>,b.<key>)})}};
-			vectorLength=vector{power(sum(power(vector.1,2),power(vector.2,2)),1/2)};
-			vectorDifference=a{b{apply(keys(a),key{difference(a.<key>,b.<key>)})}};
-			length=arg{ObjectMap_Object(arg).get_ArrayCount(0)};
-			select=Library.Select_Map_Map;
-			slice=Library.Slice_Map_Int32_Int32;
-			orAll=accumulate(or);
-			vectorAllLess=a{b{accumulate(
-				and,
-				apply(
-					range(length(a)),
-					index{less(a.<index>,b.<index>)}
-				)
-			)}};
-			lessEqualArray=a{b{accumulate(and,apply(range(length(a)),index{lessEqual(a.<index>,b.<index>)}))}};
+			sum=Number.op_Addition_Number_Number;
+			power=Library.Raise_Number_Number;
+			quotient=Number.op_Division_Number_Number;
+			difference=Number.op_Subtraction_Number_Number;
 			maximum=a{b{[1=a;0=b;].<greater(a,b)>}};
-			callKey=map{key{if(contains(map,key),{0})}};
 			minimum=a{b{[1=a;0=b;].<less(a,b)>}};
-			bitwiseOr=Number.op_BitwiseOr_Number_Number;
-			and=a{b{[1=b;0=0;].<a>}};
-			andAll=accumulate(and);
-			integerToString=arg{ObjectMap_Object(arg).ToString()};
-			count=arg{ObjectMap_Object(arg).get_Count()};
-			equal=Library.Equal_Object_Object;
-			isNumber=arg{ObjectMap_Object(arg).get_IsNumber()};
-			isString=arg{ObjectMap_Object(arg).get_IsString()};
-			joinAll=Library.JoinAll_Map;
-			mergeAll=Library.MergeAll_Map;
-			negate=arg{difference(0,arg)};
-			opposite=negate;
+			product=Number.op_Multiply_Number_Number;
 			modulo=Number.op_Modulus_Number_Number;
-			vectorDotProduct=vector{number{apply(vector,entry{product(number,entry)})}};
-			productVector=a{b{apply(range(length(a)),index{product(a.<index>,b.<index>)})}};
-			vectorProduct=productVector;
-			print={[
-				writeLine(toString(@));
-				&@;
-			]};
-			printAll=applyTo(print);
-			readLine={mscorlib.Console.ReadLine()};
-			append=Library.Append_Map_Map;
-			empty=equal(0);
-			prepend=array{item{join(<item>,array)}};
-			switch=Library.Switch_Map_Map;
-			while=Library.While_Map_Map;
-			callIf=map{key{func{[0={0};1={func(map.<key>)};].<contains(map,key)>()}}};
-			callKey=key{map{if(contains(map,key),{map.<key>()}{0})}};
-			floor=Library.Floor_Number;
-			random=Library.Random_Int32_Int32;
-			discard=array{func{filter(array,{not(func(@))})}};
-			enumerableToArray=Library.EnumerableToArray_Map;
-			try=Library.Try_Map_Map;
-			readTextFile=file{mscorlib.File.ReadAllText_String_Encoding(file,mscorlib.Encoding.get_Default())};
-			compareNumber=Library.CompareNumber_Number_Number;
-			sort=Library.Sort_Map_Map;
-			writeTextFile=file{text{mscorlib.File.WriteAllText_String_String_Encoding(
-				file,
-				text,
-				mscorlib.Encoding.get_Default()
-			)}};
+			opposite=arg{difference(0,arg)};
+			
+			or=a{b{[0=a;1=1;].<b>}};
+			and=a{b{[1=b;0=0;].<a>}};
+			not=arg{[0=1;1=0;].<arg>};
+			
+			length=arg{ObjectMap_Object(arg).get_ArrayCount(0)};
+			count=arg{ObjectMap_Object(arg).get_Count()};
+			keys=arg{!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys())};
+			equal=Library.Equal_Object_Object;
 		];
 	]};
 	&lib().lib;

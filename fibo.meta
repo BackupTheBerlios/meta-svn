@@ -1,5 +1,5 @@
 {[
-	fibo=n{if(
+	fibo=n{branch(
 		less(n,2),
 		{1},
 		{sum(

@@ -563,7 +563,7 @@ Entry (KeyValuePair`2)
 																					Key (StringMap):
 																						"literal"
 																					Value (StringMap):
-																						"merge"
+																						"union"
 																Entry (KeyValuePair`2)
 																	Key (Integer32):
 																		2
