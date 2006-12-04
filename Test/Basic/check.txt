@@ -257,8 +257,17 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"negativeInteger"
-	Value (Integer32):
-		100
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (EmptyMap):
+				0
+			Value (Integer32):
+				99
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"x"
+			Value (StringMap):
+				"hello"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerIncrementTest"
@@ -563,23 +572,10 @@ Entry (KeyValuePair`2)
 																					Key (StringMap):
 																						"literal"
 																					Value (StringMap):
-																						"union"
+																						"unionAll"
 																Entry (KeyValuePair`2)
 																	Key (Integer32):
 																		2
-																	Value (DictionaryMap):
-																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"search"
-																			Value (DictionaryMap):
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"literal"
-																					Value (StringMap):
-																						"b"
-																Entry (KeyValuePair`2)
-																	Key (Integer32):
-																		3
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
@@ -604,7 +600,33 @@ Entry (KeyValuePair`2)
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
-																										"select"
+																										"search"
+																									Value (DictionaryMap):
+																										Entry (KeyValuePair`2)
+																											Key (StringMap):
+																												"literal"
+																											Value (StringMap):
+																												"b"
+																				Entry (KeyValuePair`2)
+																					Key (Integer32):
+																						2
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"key"
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"literal"
+																									Value (Integer32):
+																										2
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"value"
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"program"
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
 																											Key (Integer32):
@@ -612,22 +634,43 @@ Entry (KeyValuePair`2)
 																											Value (DictionaryMap):
 																												Entry (KeyValuePair`2)
 																													Key (StringMap):
-																														"search"
+																														"key"
 																													Value (DictionaryMap):
 																														Entry (KeyValuePair`2)
 																															Key (StringMap):
 																																"literal"
-																															Value (StringMap):
-																																"newB"
-																										Entry (KeyValuePair`2)
-																											Key (Integer32):
-																												2
-																											Value (DictionaryMap):
+																															Value (Integer32):
+																																1
 																												Entry (KeyValuePair`2)
 																													Key (StringMap):
-																														"literal"
-																													Value (StringMap):
 																														"value"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"select"
+																															Value (DictionaryMap):
+																																Entry (KeyValuePair`2)
+																																	Key (Integer32):
+																																		1
+																																	Value (DictionaryMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StringMap):
+																																				"search"
+																																			Value (DictionaryMap):
+																																				Entry (KeyValuePair`2)
+																																					Key (StringMap):
+																																						"literal"
+																																					Value (StringMap):
+																																						"newB"
+																																Entry (KeyValuePair`2)
+																																	Key (Integer32):
+																																		2
+																																	Value (DictionaryMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StringMap):
+																																				"literal"
+																																			Value (StringMap):
+																																				"value"
 										Entry (KeyValuePair`2)
 											Key (Integer32):
 												2
@@ -1371,8 +1414,67 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"TestClass"
-	Value (TypeMap):
-		Meta.Test.TestClasses.TestClass
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"CallStaticEvent_Object"
+			Value (Method):
+				System.Object CallStaticEvent(System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"add_staticEvent_NormalEvent"
+			Value (Method):
+				Void add_staticEvent(Meta.Test.TestClasses.NormalEvent)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"remove_staticEvent_NormalEvent"
+			Value (Method):
+				Void remove_staticEvent(Meta.Test.TestClasses.NormalEvent)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"TestClass_staticEvent_Object"
+			Value (Method):
+				System.Object TestClass_staticEvent(System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"TakeDelegate_TestDelegate"
+			Value (Method):
+				Void TakeDelegate(TestDelegate)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"GetResultFromDelegate"
+			Value (Method):
+				System.Object GetResultFromDelegate()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"Equals_Object_Object"
+			Value (Method):
+				Boolean Equals(System.Object, System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"ReferenceEquals_Object_Object"
+			Value (Method):
+				Boolean ReferenceEquals(System.Object, System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"boolTest"
+			Value (Integer32):
+				1
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"del"
+			Value (EmptyMap):
+				0
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"NestedClass"
+			Value (TypeMap):
+				Meta.Test.TestClasses.TestClass+NestedClass
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"TestDelegate"
+			Value (TypeMap):
+				Meta.Test.TestClasses.TestClass+TestDelegate
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"nestedClassTest"
@@ -1391,13 +1493,91 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"MemberTest"
-	Value (TypeMap):
-		Meta.Test.TestClasses.MemberTest
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"Compile_Int32"
+			Value (Method):
+				Void Compile(Int32)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"OverloadedMethod_String"
+			Value (Method):
+				System.String OverloadedMethod(System.String)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"OverloadedMethod_Int32"
+			Value (Method):
+				System.String OverloadedMethod(Int32)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"OverloadedMethod_MemberTest_Int32"
+			Value (Method):
+				System.String OverloadedMethod(Meta.Test.TestClasses.MemberTest, Int32)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"get_ClassProperty"
+			Value (Method):
+				System.String get_ClassProperty()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"set_ClassProperty_String"
+			Value (Method):
+				Void set_ClassProperty(System.String)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"Equals_Object_Object"
+			Value (Method):
+				Boolean Equals(System.Object, System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"ReferenceEquals_Object_Object"
+			Value (Method):
+				Boolean ReferenceEquals(System.Object, System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"classField"
+			Value (StringMap):
+				"a"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"memberTest"
-	Value (ObjectMap):
-		Meta.Test.TestClasses.MemberTest
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"get_InstanceProperty"
+			Value (Method):
+				System.String get_InstanceProperty()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"set_InstanceProperty_String"
+			Value (Method):
+				Void set_InstanceProperty(System.String)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"GetType"
+			Value (Method):
+				System.Type GetType()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"ToString"
+			Value (Method):
+				System.String ToString()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"Equals_Object"
+			Value (Method):
+				Boolean Equals(System.Object)
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"GetHashCode"
+			Value (Method):
+				Int32 GetHashCode()
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"instanceField"
+			Value (StringMap):
+				"b"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"stringOverload"
@@ -1417,12 +1597,12 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"classPropertyValue"
 	Value (StringMap):
-		"b"
+		"default"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"instancePropertyValue"
 	Value (StringMap):
-		"b"
+		"default"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"interceptedSymbol"
@@ -2148,11 +2328,11 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"stringTest"
-	Value (StringMap):
-		"hello"
+	Value (DictionaryMap):
+		"hellh"
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"hello"
+		"hellh"
 	Value (StringMap):
 		"hi"
 Entry (KeyValuePair`2)

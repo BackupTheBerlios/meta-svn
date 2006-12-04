@@ -8,8 +8,8 @@
 		!"System.Windows.Forms"
 		!"System.Drawing"
 	printNodes=nodes{data{depth{-
-		joinAll
-		Map data entry{joinAll (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
+		join
+		Map data entry{join (Map (enumerableToArray nodes) node?If (node.get_Checked) ?
 			key=(node.get_Text
 			&If (contains entry key) ?
 				value=entry.{key
@@ -44,7 +44,7 @@
 									KeyPress=?e?e.set_Handled_Boolean 1
 									BorderStyle=BorderStyle.None
 									ContentsResized=sender?e?sender.set_Height_Int32 ((e.get_NewRectangle).get_Height
-									Rtf=joinAll +
+									Rtf=join +
 										"[\rtf1\ansi[\fonttbl\f0\fswiss Helvetica;]\f0["
 										If (contains data key) ?data.{key}.rtf
 										value
@@ -68,7 +68,7 @@
 			CheckChanged=0
 			Text=key
 			Checked=1
-			Nodes=getNodes (joinAll (Map data map?If
+			Nodes=getNodes (join (Map data map?If
 				contains map key
 				?.
 					,

@@ -1,6 +1,4 @@
 {[
-	&union(<!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
-		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet>);
 	&unionAll(<!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
 		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet>);
 	random=Meta.Library.Random_Int32_Int32;
@@ -105,7 +103,7 @@
 		);
 	]}});
 	players=<player(Return,Color.get_Blue())>;
-	bubbles=joinAll(<
+	bubbles=join(<
 		foreach(range(10),{bubble(random(1,5))}),
 		foreach(range(10),{bubble(random(1,2))})
 	>);

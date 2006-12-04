@@ -5,9 +5,7 @@
 			accumulate=Library.Sum_Map_Map;
 			try=Library.Try_Map_Map;
 			contains={ObjectMap_Object(@).ContainsKey_Map};
-			
-			join=Library.Join_Map_Map;
-			joinAll=Library.JoinAll_Map;
+			join=Library.JoinAll_Map;
 			union=Library.Merge_Map_Map;
 			unionAll=Library.MergeAll_Map;
 

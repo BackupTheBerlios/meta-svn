@@ -1015,6 +1015,10 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			StringMap s=new StringMap("hellh");
+			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
+			l.GetHashCode();
+			s.Equals(l);
 			//new Surface(new Bitmap(File.Open("",FileMode.Open)));
 			//new Surface(
 			DateTime start = DateTime.Now;
@@ -4454,6 +4458,9 @@ namespace Meta {
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
 	public class ListMap : Map {
+		public override int GetHashCode() {
+			return list.Count;
+		}
 		public override Number GetNumber() {
 			if(Count==0) {
 				return 0;
@@ -4879,6 +4886,25 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public override bool Equals(object obj) {
+			Map map = obj as Map;
+			if (map != null && map.Count == Count) {
+				foreach (Map key in this.Keys) {
+					Map otherValue = map[key];
+					Map thisValue = this[key];
+					if (otherValue == null || otherValue.GetHashCode() != thisValue.GetHashCode() || !otherValue.Equals(thisValue)) {
+						return false;
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		//public override bool Equals(object obj) {
+		//    Map map = obj as Map;
+		//    foreach (Map key in Keys) {
+		//    }
+		//}
 		public static Map CopyMap(Map map) {
 			Map copy = new DictionaryMap();
 			foreach (Map key in map.Keys) {

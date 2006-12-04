@@ -30,7 +30,7 @@
 	// this is a comment
 	listTest=<"this",1,"is","a",<"long","list">>;
 	commandLine|[
-		&union(0,<"AssignedToCurrent">);
+		&unionAll(<0,<"AssignedToCurrent">>);
 		asdf="hello";
 		shortFunction=[// another comment
 			arg|asdf;
@@ -70,11 +70,11 @@
 			hashTest=!!"hashTestData";
 		];
 		negativeInteger=100;
-		negativeInteger=union(
+		negativeInteger=unionAll(<
 			negativeInteger,
 			[
 				x="hello";
-			]
+			]>
 		);
 		integerIncrementTest=5;
 		integerIncrementTest=[
@@ -130,11 +130,11 @@
 			];
 			SetB=[
 				newB|[
-					b:union(
+					b:unionAll(<
 						b,
 						[
 							1=newB.value;
-						]
+						]>
 					);
 					&"changed";
 				];
@@ -222,11 +222,11 @@
 				decimalValue=5;
 			]
 		);
-		TestClass=union(
+		TestClass=unionAll(<
 			TestClass,
 			[
 				boolTest=1;
-			]
+			]>
 		);
 		boolTest=TestClass.boolTest;
 		MemberTest=/.Meta.MemberTest;
@@ -235,20 +235,21 @@
 		integerOverload=MemberTest.OverloadedMethod_Int32(5);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-		MemberTest:union(
+		MemberTest:unionAll(<
 			MemberTest,
 			[
 				classField="a";
-			]
+			]>
 		);
-		memberTest:union(
+		memberTest:unionAll(<
 			memberTest,
 			[
 				instanceField="b";
-			]
+			]>
 		);
 		Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty(0));
 		classPropertyValue=MemberTest.get_ClassProperty(0);
+		memberTest.set_InstanceProperty_String("b");
 		memberTest.set_InstanceProperty_String(MemberTest.get_ClassProperty(0));
 		instancePropertyValue=memberTest.get_InstanceProperty(0);
 		interceptedSymbol="/hello/";
@@ -361,13 +362,13 @@
 		decimalTest=5;
 		fractionTest=40;
 		stringTest="hello";
-		stringTest=union(
+		stringTest=unionAll(<
 			stringTest,
 			[
 				5=stringTest.1;
-			]
+			]>
 		);
-		hello="hi";
+		hellh="hi";
 		stringStrategyHashTest=!stringTest;
 		x=[aLongText="hello,world!";];
 		arrayList=/.mscorlib.ArrayList(0);
@@ -447,11 +448,11 @@
 			z="a";
 		];
 		copiedData=copySourceData;
-		copiedData=union(
+		copiedData=unionAll(<
 			copiedData,
 			[
 				x="changed";
-			]
+			]>
 		);
 		characterLiterals=[
 			a='a';

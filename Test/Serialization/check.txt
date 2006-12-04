@@ -4,7 +4,7 @@
 			Permission is hereby granted, free of charge, to any person obtaining
 			a copy of this software and associated documentation files (the
 			'Software'), to deal in the Software without restriction, including
-			without limitation the rights to use, copy, modify, merge, publish 
+			without limitation the rights to use, copy, modify, union, publish 
 			distribute, sublicense, and/or sell copies of the Software, and to
 			permit persons to whom the Software is furnished to do so, subject to
 			the following conditions:
@@ -36,10 +36,11 @@ listTest=,
 		2="list"
 commandLine|,
 	&=-
-		!"merge"
-		0
+		!"unionAll"
 		,
-			1="AssignedToCurrent"
+			1=0
+			2=,
+				1="AssignedToCurrent"
 	"asdf"="hello"
 	"shortFunction"=,
 		arg|!"asdf"
@@ -95,10 +96,11 @@ commandLine|,
 		"hashTest"=!!"hashTestData"
 	"negativeInteger"=100
 	"negativeInteger"=-
-		!"merge"
-		!"negativeInteger"
+		!"unionAll"
 		,
-			"x"="hello"
+			1=!"negativeInteger"
+			2=,
+				"x"="hello"
 	"integerIncrementTest"=5
 	"integerIncrementTest"=,
 		0=!"integerIncrementTest"
@@ -146,12 +148,13 @@ commandLine|,
 		"SetB"=,
 			newB|,
 				"b":-
-					!"merge"
-					!"b"
+					!"unionAll"
 					,
-						1=.
-							!"newB"
-							"value"
+						1=!"b"
+						2=,
+							1=.
+								!"newB"
+								"value"
 				&="changed"
 		"x"=,
 			"a"="b"
@@ -255,10 +258,11 @@ commandLine|,
 			"doubleValue"=4
 			"decimalValue"=5
 	"TestClass"=-
-		!"merge"
-		!"TestClass"
+		!"unionAll"
 		,
-			"boolTest"=1
+			1=!"TestClass"
+			2=,
+				"boolTest"=1
 	"boolTest"=.
 		!"TestClass"
 		"boolTest"
@@ -292,15 +296,17 @@ commandLine|,
 		!"memberTest"
 		3247
 	"MemberTest":-
-		!"merge"
-		!"MemberTest"
+		!"unionAll"
 		,
-			"classField"="a"
+			1=!"MemberTest"
+			2=,
+				"classField"="a"
 	"memberTest":-
-		!"merge"
-		!"memberTest"
+		!"unionAll"
 		,
-			"instanceField"="b"
+			1=!"memberTest"
+			2=,
+				"instanceField"="b"
 	-
 		.
 			!"Meta"
@@ -316,6 +322,11 @@ commandLine|,
 			!"MemberTest"
 			"get_ClassProperty"
 		0
+	-
+		.
+			!"memberTest"
+			"set_InstanceProperty_String"
+		"b"
 	-
 		.
 			!"memberTest"
@@ -511,13 +522,14 @@ commandLine|,
 	"fractionTest"=40
 	"stringTest"="hello"
 	"stringTest"=-
-		!"merge"
-		!"stringTest"
+		!"unionAll"
 		,
-			5=.
-				!"stringTest"
-				1
-	"hello"="hi"
+			1=!"stringTest"
+			2=,
+				5=.
+					!"stringTest"
+					1
+	"hellh"="hi"
 	"stringStrategyHashTest"=!!"stringTest"
 	"x"=,
 		"aLongText"="hello,world!"
@@ -679,10 +691,11 @@ commandLine|,
 		"z"="a"
 	"copiedData"=!"copySourceData"
 	"copiedData"=-
-		!"merge"
-		!"copiedData"
+		!"unionAll"
 		,
-			"x"="changed"
+			1=!"copiedData"
+			2=,
+				"x"="changed"
 	"characterLiterals"=,
 		"a"=97
 		"space"=32
