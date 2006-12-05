@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy %287%29 of game.meta" />
     <None Include="documentation.meta" />
     <None Include="fibo.meta" />
     <None Include="game.meta" />

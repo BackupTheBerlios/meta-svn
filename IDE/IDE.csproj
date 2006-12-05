@@ -66,9 +66,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters.cs" />
-    <Compile Include="EditBox.cs" />
-    <Compile Include="EditBoxAdorner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -90,7 +87,6 @@
     <Compile Include="Replace.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TreeListView.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

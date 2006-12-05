@@ -87,7 +87,7 @@ namespace Meta {
 			return EvaluateStructure();
 		}
 		public Map EvaluateStructure() {
-			if (!evaluated) {	
+			if (!evaluated) {
 				structure = GetStructure();
 				evaluated = true;
 			}
@@ -945,6 +945,15 @@ namespace Meta {
 	}
 	public delegate void DebugDelegate(Map context);
 	public class Interpreter {
+		public static Application Application {
+			get {
+				return application;
+			}
+			set {
+				application = value;
+			}
+		}
+		private static Application application;
 		public static DebugDelegate Breakpoint;
 		public static List<Source> breakpoints = new List<Source>();
 		public static string LibraryPath {
@@ -975,6 +984,9 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			string multilineliteral = @"part of the text
+                                       other part of the text";
+
 			StringMap s=new StringMap("hellh");
 			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
 			l.GetHashCode();
@@ -1546,6 +1558,9 @@ namespace Meta {
 			}
 		}
 		public override Map Call(Map argument) {
+			if (this.Type.Equals(typeof(Application)) && Interpreter.Application!=null) {
+				return Library.With(new ObjectMap(Interpreter.Application), argument);
+			}
 			if (Constructor != null) {
 				return Library.With(Constructor.Call(new DictionaryMap()), argument);
 			}
@@ -3069,7 +3084,7 @@ namespace Meta {
 				Sequence(
 					ReferenceAssignment(
 						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
-					RealOptional(Syntax.@string)))));
+					OptionalError(Syntax.@string)))));
 
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),
@@ -3137,12 +3152,12 @@ namespace Meta {
 				OneOrMore(
 					new Action(
 						Sequence(
-							ReferenceAssignment(Entry), Whitespace, RealOptional(Syntax.programSeparator), Whitespace),
+							ReferenceAssignment(Entry), Whitespace, OptionalError(Syntax.programSeparator), Whitespace),
 						delegate(Parser parser, Map map, ref Map result) {
 							result = Library.Merge(result, map);
 						}
 			))),
-			RealOptional(Syntax.programEnd),
+			OptionalError(Syntax.programEnd),
 			Whitespace
 		);
 		Dictionary<State, string> errors = new Dictionary<State, string>();
@@ -3170,24 +3185,16 @@ namespace Meta {
 											Autokey(
 												Sequence(
 													Whitespace,
-													Optional(Syntax.callSeparator),
-
+													Syntax.callSeparator,
 													Whitespace,
-													ReferenceAssignment(
-													Arg
-														//Alternatives(List,
-														//    LastArgument, FunctionProgram,
-														//    LiteralExpression, Call, Select,
-														//    Search, Program
-														//)
-													)
-													)))),
+													ReferenceAssignment(Arg))))),
 									Whitespace
 									, OptionalError(Syntax.callEnd)
 									)
 									)))
 								));
 		});
+		// combine with above!!!!!!!!!!!!!
 		public static Rule SimpleCall = DelayedRule(delegate() {
 			return Sequence(
 				Assign(CodeKeys.Call,
@@ -3208,7 +3215,9 @@ namespace Meta {
 													ReferenceAssignment(Alternatives(List,
 														LastArgument, FunctionProgram, LiteralExpression,
 														Call, Select, Search, Program)),
-													RealOptional(Syntax.callSeparator)
+													// should be optional error
+													Optional(Syntax.callSeparator)
+													//OptionalError(Syntax.callSeparator)
 													)))),
 									Whitespace
 									, Syntax.callEnd
@@ -3235,7 +3244,7 @@ namespace Meta {
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
-			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),RealOptional(Syntax.lookupAnythingEnd)
+			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
 		);
 		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
 		private static Rule Search = CachedRule(Sequence(
@@ -3291,9 +3300,9 @@ namespace Meta {
 							ZeroOrMore(
 								Autokey(
 									Sequence(Whitespace,ReferenceAssignment(Value),
-						RealOptional(Syntax.arraySeparator))))),
+						OptionalError(Syntax.arraySeparator))))),
 						Whitespace,
-						RealOptional(Syntax.arrayEnd)),
+						OptionalError(Syntax.arrayEnd)),
 						delegate(Parser p) {
 							p.defaultKeys.Pop();
 						})));
@@ -3330,7 +3339,7 @@ namespace Meta {
 									Append(
 										ZeroOrMore(
 											Autokey(
-												Sequence(Syntax.arraySeparator,Whitespace,entryAction)))),
+												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))),
 									Whitespace,
 									Syntax.arrayEnd))))));
 		}
@@ -3361,7 +3370,7 @@ namespace Meta {
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),RealOptional(Syntax.lookupAnythingEnd))),
+					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd))),
 					Sequence(Assign(CodeKeys.Literal,LookupString)),
 					Expression)));
 
@@ -3376,9 +3385,7 @@ namespace Meta {
 			ReferenceAssignment(
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Whitespace,
-			RealOptional(Syntax.statementEnd)
-			//OptionalError(Syntax.statementEnd,"Missing ':'")
-			//OptionalError(Syntax.statementEnd)
+			OptionalError(Syntax.statementEnd)
 		);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
@@ -3388,7 +3395,7 @@ namespace Meta {
 						Whitespace,
 						Assign(CodeKeys.Expression, Expression),
 					Whitespace,
-					RealOptional(Syntax.functionAlternativeEnd),
+					OptionalError(Syntax.functionAlternativeEnd),
 			Whitespace)));
 
 		public static Rule FunctionProgram = Sequence(
@@ -3406,7 +3413,7 @@ namespace Meta {
 										Syntax.functionAlternativeStart,Whitespace,
 											Assign(CodeKeys.Expression, Expression),
 										Whitespace,
-										RealOptional(Syntax.functionAlternativeEnd))))))))));
+										OptionalError(Syntax.functionAlternativeEnd))))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -3423,24 +3430,23 @@ namespace Meta {
 												Sequence(
 													Whitespace,
 													ReferenceAssignment(AllStatements))))),
-									Whitespace,RealOptional(Syntax.programEnd))
+									Whitespace,OptionalError(Syntax.programEnd))
 									)))
 			));
 		});
-		public static Rule OptionalError(char c) {
-			return Optional(c);
-		}
 		//public static Rule SomeOptional(char c, string text) {
 		//    return Alternatives(c, Error(text));
 		//}
-		public static Rule RealOptional(char c) {
+		public static Rule OptionalError(char c) {
 			return Alternatives(c, Error("Missing '" + c + "'"));
 		}
-		public static Rule OptionalError(Rule rule, string text) {
-			return Alternatives(rule, Error(text));
-		}
+		//public static Rule OptionalError(Rule rule, string text) {
+		//    return Alternatives(rule, Error(text));
+		//}
 		public static Rule Error(string text) {
 			return new Rule(delegate (Parser parser,ref Map map) {
+				if (text.Contains(";")) {
+				}
 				Error[] errors=new Error[parser.state.Errors.Length+1];
 				parser.state.Errors.CopyTo(errors, 0);
 				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName),parser.state);
@@ -3765,15 +3771,23 @@ namespace Meta {
 			Parser parser = new Parser(text, fileName);
 			Map result=null;
 			Parser.Value.Match(parser, ref result);
-			if (parser.state.index != parser.state.Text.Length - 1) {
-				List<State> sorted=new List<State>(parser.errors.Keys);
-				sorted.Sort(delegate(State a, State b) {
-					return a.Line.CompareTo(b.Line);
-				});
-				if (parser.errors.Count != 0) {
-					string error = parser.errors[sorted[0]];
+			if (parser.state.index != parser.state.Text.Length - 1 || parser.state.Errors.Length!=0) {
+				//List<State> sorted=new List<State>(parser.errors.Keys);
+				//sorted.Sort(delegate(State a, State b) {
+				//    return a.Line.CompareTo(b.Line);
+				//});
+				//if (parser.errors.Count != 0) {
+				//    string error = parser.errors[sorted[0]];
+				//}
+				string t = "";
+				if (parser.state.index != parser.state.Text.Length - 1) {
+					t += "Expected end of file. " + new Source(parser.state.Line, parser.state.Column, parser.state.FileName).ToString()+"\n";
 				}
-				throw new SyntaxException("Expected end of file.", parser);
+				foreach (Error error in parser.state.Errors) {
+					t += error.Text + error.Source.ToString()+"\n";
+				}
+				throw new SyntaxException(t, parser);
+				//throw new SyntaxException("Expected end of file.", parser);
 			}
 			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
 				cached.Clear();
@@ -4526,8 +4540,13 @@ namespace Meta {
 		}
 		public static Map Apply(Map func,Map array) {
 			List<Map> result = new List<Map>();
-			foreach (Map map in array.Array) {
-				result.Add(func.Call(map));}
+			try {
+				foreach (Map map in array.Array) {
+					result.Add(func.Call(map));
+				}
+			}
+			catch (Exception e) {
+			}
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {

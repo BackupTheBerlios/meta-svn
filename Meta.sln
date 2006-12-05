@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDE", "IDE\IDE.csproj", "{C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlComments", "XmlComments\XmlComments.csproj", "{B1966BD7-9F0E-43C5-928D-11C8D561C727}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bla", "Bla\Bla.csproj", "{A7840D1E-8E65-4D0F-AB3F-899008676543}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{B1966BD7-9F0E-43C5-928D-11C8D561C727}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1966BD7-9F0E-43C5-928D-11C8D561C727}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1966BD7-9F0E-43C5-928D-11C8D561C727}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7840D1E-8E65-4D0F-AB3F-899008676543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7840D1E-8E65-4D0F-AB3F-899008676543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7840D1E-8E65-4D0F-AB3F-899008676543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7840D1E-8E65-4D0F-AB3F-899008676543}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -376,6 +376,13 @@
 		arrayListResult=arrayList.get_Item_Int32(0);
 		textBox=/."System.Windows.Forms".TextBox(0);
 		textBox.set_Text_String("Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh.");
+		textBox.set_Text_String("
+			Alle meine Entchen,
+			schwimmen auf dem See,
+			schwimmen auf dem See,
+			Köpfchen in das Wasser,
+			Schwänzchen in die Höh
+		");
 		lines=textBox.get_Lines(0);
 		alleMeineText=lines.GetValue_Int32(0);
 		form=/."System.Windows.Forms".Form(0);

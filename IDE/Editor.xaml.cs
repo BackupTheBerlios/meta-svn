@@ -21,10 +21,13 @@ using NetMatters;
 using System.Timers;
 using System.Windows.Threading;
 using System.Threading;
-using Editing;
+using System.Globalization;
 using _treeListView;
 
 
+public class Settings {
+	public static string lastFile;
+}
 public partial class Editor : System.Windows.Window {
 	public class Box : TextBox {
 		public int Line {
@@ -61,6 +64,8 @@ public partial class Editor : System.Windows.Window {
 	}
 	public void Open(string file) {
 		fileName = file;
+		Settings.lastFile = fileName;
+		SaveSettings();
 		textBox.Text = File.ReadAllText(fileName);
 	}
 	public static TextBox toolTip = new TextBox();
@@ -216,6 +221,7 @@ public partial class Editor : System.Windows.Window {
 			return false;
 		}
 	}
+	static	bool e = false;
 	public bool Compile(string text) {
 		try {
 			Interpreter.profiling = false;
@@ -233,29 +239,23 @@ public partial class Editor : System.Windows.Window {
 				errors.Clear();
 			}));
 			foreach (Error error in parser.state.Errors) {
+				e = true;
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
-					Rect r = textBox.GetRectFromCharacterIndex(error.State.index);
-					Rectangle line = new Rectangle();
-					errors.Add(line);
-					line.Width = 10;
-					line.Height = 3;
-					line.Fill = Brushes.Red;
-					Canvas.SetTop(line, r.Bottom);
-					Canvas.SetLeft(line, r.Right);
-					canvas.Children.Add(line);
+					MakeLine(error.State.index,error.Text);
 				}));
 			}
 			if (parser.state.index != text.Length) {
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
-					Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
-					Rectangle line = new Rectangle();
-					errors.Add(line);
-					line.Width = 10;
-					line.Height = 3;
-					line.Fill = Brushes.Red;
-					Canvas.SetTop(line, r.Bottom);
-					Canvas.SetLeft(line, r.Right);
-					canvas.Children.Add(line);
+					MakeLine(parser.state.index, "Expected end of file.");
+					//Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
+					//Rectangle line = new Rectangle();
+					//errors.Add(line);
+					//line.Width = 10;
+					//line.Height = 3;
+					//line.Fill = Brushes.Red;
+					//Canvas.SetTop(line, r.Bottom);
+					//Canvas.SetLeft(line, r.Right);
+					//canvas.Children.Add(line);
 				}));
 				return false;
 			}
@@ -264,6 +264,34 @@ public partial class Editor : System.Windows.Window {
 		catch (Exception e) {
 			throw e;
 		}
+	}
+
+	private void MakeLine(int index,string text) {
+		Rect r = textBox.GetRectFromCharacterIndex(index);
+		Rectangle line = new Rectangle();
+		errors.Add(line);
+		line.Width = 10;
+		line.Height = 3;
+		line.Fill = Brushes.Red;
+		Label label = new Label();
+		label.Content = text;
+		label.Background = Brushes.LightYellow;
+		Canvas.SetTop(label, r.Bottom);
+		Canvas.SetLeft(label, r.Right);
+		label.Visibility = Visibility.Hidden;
+
+		line.MouseEnter += delegate {
+			Canvas.SetTop(label, r.Bottom);
+			Canvas.SetLeft(label, r.Right);
+			label.Visibility = Visibility.Visible;
+		};
+		line.MouseLeave += delegate {
+			label.Visibility = Visibility.Hidden;
+		};
+		Canvas.SetTop(line, r.Bottom);
+		Canvas.SetLeft(line, r.Right);
+		canvas.Children.Add(label);
+		canvas.Children.Add(line);
 	}
 	public static List<Rectangle> errors = new List<Rectangle>();
 	public static Editor editor;
@@ -315,7 +343,36 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 	}
+	public static string ProgramName {
+		get {
+			return "Meta Edit";
+		}
+	}
+	public static string Version {
+		get {
+			return "0.1";
+		}
+	}
+	public static void LoadSettings() {
+		using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey(ProgramName).CreateSubKey(Version)) {
+			foreach (FieldInfo field in typeof(Settings).GetFields()) {
+				field.SetValue(null, key.GetValue(field.Name, null));
+			}
+		}
+	}
+	public static void SaveSettings() {
+		using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software", true).CreateSubKey(ProgramName).CreateSubKey(Version)) {
+			foreach (FieldInfo field in typeof(Settings).GetFields()) {
+				key.SetValue(field.Name, field.GetValue(null));
+			}
+		}
+	}
 	public Editor() {
+
+		textBox.MouseEnter += delegate {
+			//MessageBox.Show("hello");
+		};
+		LoadSettings();
 		TreeListViewItem treeItem=new TreeListViewItem();
 		treeItem.Header = new TextBox();
 		treeItem.Items.Add("hi");
@@ -542,6 +599,9 @@ public partial class Editor : System.Windows.Window {
 			            if (intellisense.Items.Count != 0) {
 			                intellisense.SelectedIndex = 0;
 			            }
+						foreach (Item item in intellisenseItems) {
+							intellisense.Items.Add(item);
+						}
 						PositionIntellisense();
 						Meta.Expression.sources.Clear();
 					}
@@ -793,6 +853,7 @@ public partial class Editor : System.Windows.Window {
 					MessageBox.Show(map.Count.ToString());
 				};
 				try {
+					Interpreter.Application = Application.Current;
 					Interpreter.Run(fileName, Map.Empty);
 				}
 				catch (Exception e) {
@@ -847,6 +908,7 @@ public partial class Editor : System.Windows.Window {
 			editorLine.Content = "Ln " + line;
 			textBox.ScrollToLine(line-1);
 		};
+		//textBox.Background = Brushes.Green;
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
 		DockPanel.SetDock(canvas, Dock.Top);
@@ -884,9 +946,46 @@ public partial class Editor : System.Windows.Window {
 		canvas.Children.Add(toolTip);
 		this.Content = dock;
 		this.Loaded += delegate {
-			Open(@"D:\meta\mail.meta");
+			if (Settings.lastFile != null) {
+				Open(Settings.lastFile);
+			}
+			//Open(@"D:\meta\mail.meta");
 			textBox.Focus();
 		};
+		////Rect r = textBox.GetRectFromCharacterIndex(error.State.index);
+		//Rectangle realLine = new Rectangle();
+		//errors.Add(realLine);
+		//realLine.Width = 10;
+		//realLine.Height = 3;
+		//realLine.Fill = Brushes.Red;
+		////Label label = new Label();
+		////label.Content = error.Text;
+		//realLine.Focusable = true;
+		//realLine.GotFocus += delegate {
+		//    MessageBox.Show("hello");
+		//};
+		//realLine.MouseDown += delegate {
+		//    MessageBox.Show("hello");
+		//};
+		//realLine.GotMouseCapture += delegate {
+		//    MessageBox.Show("hello");
+		//};
+		//realLine.MouseEnter += delegate {
+		//    Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
+		//        MessageBox.Show("hello");
+		//        //Canvas.SetTop(label, r.Bottom);
+		//        //Canvas.SetLeft(label, r.Right);
+		//        //label.Visibility = Visibility.Visible;
+		//    }));
+		//};
+		////realLine.Stroke = Brushes.Gold;
+		//realLine.MouseLeave += delegate {
+		//    MessageBox.Show("hello");
+		//    //label.Visibility = Visibility.Hidden;
+		//};
+		//Canvas.SetTop(realLine, 100);
+		//Canvas.SetLeft(realLine, 100);
+		//canvas.Children.Add(realLine);
 	}
 	private Source StartIntellisense() {
 		string text = textBox.Text.Substring(0, textBox.SelectionStart);
@@ -976,4 +1075,66 @@ public partial class Editor : System.Windows.Window {
 		}
 		return false;
 	}
+}
+namespace _treeListView {
+	/// <summary>
+	/// Convert Level to left margin
+	/// Pass a prarameter if you want a unit length other than 19.0.
+	/// </summary>
+	public class LevelToIndentConverter : IValueConverter {
+		public object Convert(object o, Type type, object parameter,
+							  CultureInfo culture) {
+			return new Thickness((int)o * c_IndentSize, 0, 0, 0);
+		}
+
+		public object ConvertBack(object o, Type type, object parameter,
+								  CultureInfo culture) {
+			throw new NotSupportedException();
+		}
+
+		private const double c_IndentSize = 19.0;
+	}
+}
+namespace _treeListView {
+	public class TreeListView : TreeView {
+		protected override DependencyObject
+						   GetContainerForItemOverride() {
+			return new TreeListViewItem();
+		}
+
+		protected override bool
+						   IsItemItsOwnContainerOverride(object item) {
+			return item is TreeListViewItem;
+		}
+	}
+
+	public class TreeListViewItem : TreeViewItem {
+		/// <summary>
+		/// Item's hierarchy in the tree
+		/// </summary>
+		public int Level {
+			get {
+				if (_level == -1) {
+					TreeListViewItem parent =
+						ItemsControl.ItemsControlFromItemContainer(this)
+							as TreeListViewItem;
+					_level = (parent != null) ? parent.Level + 1 : 0;
+				}
+				return _level;
+			}
+		}
+
+
+		protected override DependencyObject
+						   GetContainerForItemOverride() {
+			return new TreeListViewItem();
+		}
+
+		protected override bool IsItemItsOwnContainerOverride(object item) {
+			return item is TreeListViewItem;
+		}
+
+		private int _level = -1;
+	}
+
 }
