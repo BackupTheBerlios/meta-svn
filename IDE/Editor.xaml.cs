@@ -637,20 +637,23 @@ public partial class Editor : System.Windows.Window {
 					toolTip.Visibility = Visibility.Hidden;
 				}
 			}
-			else if (e.Key == Key.D8 || e.Key==Key.OemComma) {
+			else if (e.Key == Key.D9) {
+				toolTip.Visibility = Visibility.Hidden;
+			}
+			else if (e.Key == Key.D8 || e.Key == Key.OemComma) {
 				StartIntellisense();
 				int index = textBox.SelectionStart;
-				string text=textBox.Text;
+				string text = textBox.Text;
 				int open = 1;
 				int argIndex = 0;
-				Source realSource=null;
+				Source realSource = null;
 				if (e.Key == Key.D8) {
 					open = 0;
 				}
 				if (e.Key == Key.OemComma) {
 					argIndex++;
 				}
-				while (index>=0) {
+				while (index >= 0) {
 					char c = text[index];
 					switch (c) {
 						case '(':
@@ -665,10 +668,10 @@ public partial class Editor : System.Windows.Window {
 							}
 							break;
 					}
-					if (open==0) {
-						int line=textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart)+1;
-						int selection=textBox.SelectionStart;
-						int column=textBox.Column;
+					if (open == 0) {
+						int line = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1;
+						int selection = textBox.SelectionStart;
+						int column = textBox.Column;
 						realSource = new Source(line, column, fileName);
 						break;
 					}
@@ -698,8 +701,8 @@ public partial class Editor : System.Windows.Window {
 									//    start = start.Parent;
 									//}
 									//start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
-								//if (expression is Call) {
-								//    start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
+									//if (expression is Call) {
+									//    start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
 									break;
 								}
 							}
@@ -709,14 +712,14 @@ public partial class Editor : System.Windows.Window {
 						}
 					}
 					if (start != null) {
-						Map structure=start.GetStructure();
+						Map structure = start.GetStructure();
 						if (structure != null) {
 							if (structure is Method) {
-								XmlNodeList parameters=new XmlComments(((Method)structure).method).Params;
+								XmlNodeList parameters = new XmlComments(((Method)structure).method).Params;
 								if (parameters.Count > argIndex) {
-									XmlNode node=parameters[argIndex];
-									
-									string t = node.Attributes["name"].Value+":\n"+node.InnerText;
+									XmlNode node = parameters[argIndex];
+
+									string t = node.Attributes["name"].Value + ":\n" + node.InnerText;
 									PositionIntellisense();
 									toolTip.Visibility = Visibility.Visible;
 									toolTip.Text = t;
@@ -829,7 +832,9 @@ public partial class Editor : System.Windows.Window {
 			Thread thread = new Thread(new ThreadStart(delegate {
 				Compile(text);
 				timer.Start();
+				//thread.Abort();
 			}));
+			thread.Priority = ThreadPriority.Lowest;
 			thread.Start();
 		};
 		timer.Start();
@@ -903,12 +908,32 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 		};
+		Stack<int> history = new Stack<int>();
+		bool ignoreChange = false;
 		textBox.SelectionChanged += delegate {
-			int line=(textBox.Line + 1);
-			editorLine.Content = "Ln " + line;
-			textBox.ScrollToLine(line-1);
+			if (!ignoreChange) {
+				int line = (textBox.Line + 1);
+				DispatcherTimer t = new DispatcherTimer();
+				t.Interval = new TimeSpan(20000);
+				int i = textBox.SelectionStart;
+				t.Tick += delegate {
+					history.Push(i);
+					t.Stop();
+				};
+				t.Start();
+				editorLine.Content = "Ln " + line;
+				textBox.ScrollToLine(line - 1);
+			}
 		};
-		//textBox.Background = Brushes.Green;
+		RoutedUICommand back = new RoutedUICommand();
+		CommandBindings.Add(new CommandBinding(back, delegate {
+			if (history.Count != 0) {
+				ignoreChange = true;
+				textBox.SelectionStart = history.Pop();
+				ignoreChange = false;
+			}
+		}));
+		BindKey(back, Key.OemMinus, ModifierKeys.Control);
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
 		DockPanel.SetDock(canvas, Dock.Top);

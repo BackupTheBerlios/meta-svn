@@ -11,7 +11,7 @@
 	vectorLength=vector{power(sum(<power(vector.1,2),power(vector.2,2)>),1/2)};
 	vectorDifference=a{b{mapping(key{difference(a.<key>,b.<key>)},keys(a))}};
 	compareNumber=Library.CompareNumber_Number_Number;
-	callKey=key{map{branch(contains(map,key),{map.<key>()}{0})}};
+	callKey=key{map{branch(contains(map,key),{map.<key>()},{0})}};
 	world=World();
 	vectorDotProduct=vector{number{mapping(entry{product(<number,entry>)},vector)}};
 	productVector=a{b{mapping(index{product(<a.<index>,b.<index>>)},range(length(a)))}};
@@ -38,7 +38,7 @@
 		keyUp=0;
 		keyDown=0;
 		position=<random(1,790),random(1,590)>;
-		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1 position.2,0));
+		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
 		geom=space.CreateSphere_Single(radius());
 		geom.set_Position_Vector3(body.get_Position());
 		geom.set_Body_Body(body);
@@ -63,7 +63,7 @@
 		currentJoint=0;
 		setCurrentJoint=joint{[currentJoint:joint;]};
 		currentBubble=0;
-		setCurrentBubble=b{[currentBubble:b;];
+		setCurrentBubble=b{[currentBubble:b;]};
 		toVector=v{Vector3_Single_Single_Single(v.1,v.2,0)};
 		center=a{b{quotient(Sum(a,b),2)}};
 		keyDown=[
@@ -72,9 +72,9 @@
 					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))},
 					bubbles
 				);
-				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.{a},lengths.{b})}});
+				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.<a>,lengths.<b>)}});
 				index=sorted.1;
-				bubble=bubbles.{index};
+				bubble=bubbles.<index>;
 				joint=HingeJoint_World_JointGroup(world,jointGroup);
 				joint.Attach_Body_Body(bubble.body,body);
 				joint.set_Anchor_Vector3(bubble.body.get_Position());
@@ -128,12 +128,12 @@
 						Line_Int16_Int16_Int16_Int16(a.get_X(),a.get_Y(),b.get_X(),b.get_Y()),
 						Color.get_Black()
 					);
-				]}
+				]},
 				{0}
 			)},
 			players
 		);
 		Flip();
-	]);
+	]}});
 	Run();
 ]}
