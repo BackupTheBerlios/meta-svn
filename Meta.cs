@@ -3296,11 +3296,14 @@ namespace Meta {
 					delegate(Parser p) {p.defaultKeys.Push(1);},
 					Sequence(
 						Whitespace,
-						ReferenceAssignment(
+						Assign(1,Value),
+						Whitespace,
+						Append(
 							ZeroOrMore(
 								Autokey(
-									Sequence(Whitespace,ReferenceAssignment(Value),
-						OptionalError(Syntax.arraySeparator))))),
+									Sequence(
+										OptionalError(Syntax.arraySeparator),
+										ReferenceAssignment(Sequence(Whitespace, ReferenceAssignment(Value))))))),
 						Whitespace,
 						OptionalError(Syntax.arrayEnd)),
 						delegate(Parser p) {
@@ -3370,8 +3373,10 @@ namespace Meta {
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix(Syntax.lookupAnythingStart,Sequence(ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd))),
-					Sequence(Assign(CodeKeys.Literal,LookupString)),
+					Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
+					//Select,
+					//Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
+					Sequence(Assign(CodeKeys.Literal, LookupString)),
 					Expression)));
 
 		public static Rule Statement = ComplexStatement(

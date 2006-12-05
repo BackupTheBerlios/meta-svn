@@ -336,7 +336,7 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static string ProgramName {
 		get {
-			return "Meta Edit";
+			return "Meta Develop";
 		}
 	}
 	public static string Version {
