@@ -247,15 +247,6 @@ public partial class Editor : System.Windows.Window {
 			if (parser.state.index != text.Length) {
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
 					MakeLine(parser.state.index, "Expected end of file.");
-					//Rect r = textBox.GetRectFromCharacterIndex(parser.state.index);
-					//Rectangle line = new Rectangle();
-					//errors.Add(line);
-					//line.Width = 10;
-					//line.Height = 3;
-					//line.Fill = Brushes.Red;
-					//Canvas.SetTop(line, r.Bottom);
-					//Canvas.SetLeft(line, r.Right);
-					//canvas.Children.Add(line);
 				}));
 				return false;
 			}
@@ -368,10 +359,6 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	public Editor() {
-
-		textBox.MouseEnter += delegate {
-			//MessageBox.Show("hello");
-		};
 		LoadSettings();
 		TreeListViewItem treeItem=new TreeListViewItem();
 		treeItem.Header = new TextBox();
@@ -685,24 +672,16 @@ public partial class Editor : System.Windows.Window {
 					sources.Sort(delegate(Source a, Source b) {
 						return a.CompareTo(b);
 					});
-					//Map s=null;
 					sources.Reverse();
 					Meta.Expression start = null;
 					foreach (Source source in sources) {
 						if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
 							foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
-								//Program program = expression as Program;
 								if (expression is Select || expression is Search) {
 									start = expression;
 									if (start.Parent is Call) {
 										start = ((Call)start.Parent).calls[0];
 									}
-									//if (start is Search && start.Parent is Select) {
-									//    start = start.Parent;
-									//}
-									//start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
-									//if (expression is Call) {
-									//    start = ((Call)expression).calls[0];//.statementList[program.statementList.Count - 1].CurrentMap();
 									break;
 								}
 							}
@@ -724,8 +703,6 @@ public partial class Editor : System.Windows.Window {
 									toolTip.Visibility = Visibility.Visible;
 									toolTip.Text = t;
 								}
-								//string text = new XmlComments(((Method)structure).method).ToString();
-
 							}
 						}
 					}
@@ -832,7 +809,6 @@ public partial class Editor : System.Windows.Window {
 			Thread thread = new Thread(new ThreadStart(delegate {
 				Compile(text);
 				timer.Start();
-				//thread.Abort();
 			}));
 			thread.Priority = ThreadPriority.Lowest;
 			thread.Start();
@@ -854,7 +830,6 @@ public partial class Editor : System.Windows.Window {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
 				}
 				Interpreter.Breakpoint += delegate(Map map){
-					//foreach()
 					MessageBox.Show(map.Count.ToString());
 				};
 				try {
@@ -974,43 +949,8 @@ public partial class Editor : System.Windows.Window {
 			if (Settings.lastFile != null) {
 				Open(Settings.lastFile);
 			}
-			//Open(@"D:\meta\mail.meta");
 			textBox.Focus();
 		};
-		////Rect r = textBox.GetRectFromCharacterIndex(error.State.index);
-		//Rectangle realLine = new Rectangle();
-		//errors.Add(realLine);
-		//realLine.Width = 10;
-		//realLine.Height = 3;
-		//realLine.Fill = Brushes.Red;
-		////Label label = new Label();
-		////label.Content = error.Text;
-		//realLine.Focusable = true;
-		//realLine.GotFocus += delegate {
-		//    MessageBox.Show("hello");
-		//};
-		//realLine.MouseDown += delegate {
-		//    MessageBox.Show("hello");
-		//};
-		//realLine.GotMouseCapture += delegate {
-		//    MessageBox.Show("hello");
-		//};
-		//realLine.MouseEnter += delegate {
-		//    Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
-		//        MessageBox.Show("hello");
-		//        //Canvas.SetTop(label, r.Bottom);
-		//        //Canvas.SetLeft(label, r.Right);
-		//        //label.Visibility = Visibility.Visible;
-		//    }));
-		//};
-		////realLine.Stroke = Brushes.Gold;
-		//realLine.MouseLeave += delegate {
-		//    MessageBox.Show("hello");
-		//    //label.Visibility = Visibility.Hidden;
-		//};
-		//Canvas.SetTop(realLine, 100);
-		//Canvas.SetLeft(realLine, 100);
-		//canvas.Children.Add(realLine);
 	}
 	private Source StartIntellisense() {
 		string text = textBox.Text.Substring(0, textBox.SelectionStart);
@@ -1102,10 +1042,6 @@ public partial class Editor : System.Windows.Window {
 	}
 }
 namespace _treeListView {
-	/// <summary>
-	/// Convert Level to left margin
-	/// Pass a prarameter if you want a unit length other than 19.0.
-	/// </summary>
 	public class LevelToIndentConverter : IValueConverter {
 		public object Convert(object o, Type type, object parameter,
 							  CultureInfo culture) {
@@ -1134,9 +1070,6 @@ namespace _treeListView {
 	}
 
 	public class TreeListViewItem : TreeViewItem {
-		/// <summary>
-		/// Item's hierarchy in the tree
-		/// </summary>
 		public int Level {
 			get {
 				if (_level == -1) {
