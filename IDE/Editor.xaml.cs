@@ -24,7 +24,7 @@ using System.Threading;
 using System.Globalization;
 using _treeListView;
 
-
+public delegate void MethodInvoker();
 public class Settings {
 	public static string lastFile;
 }
@@ -37,7 +37,12 @@ public partial class Editor : System.Windows.Window {
 		}
 		public int Column {
 			get {
-				return SelectionStart - Text.LastIndexOf('\n', SelectionStart - 1) + 1;
+				if (Text.Length == 0) {
+					return 0;
+				}
+				else {
+					return SelectionStart - Text.LastIndexOf('\n',Math.Max(0, SelectionStart - 1)) + 1;
+				}
 			}
 		}
 	}
@@ -65,6 +70,7 @@ public partial class Editor : System.Windows.Window {
 	public void Open(string file) {
 		fileName = file;
 		Settings.lastFile = fileName;
+		this.Title = System.IO.Path.GetFileNameWithoutExtension(fileName) + " - " + ProgramName;
 		SaveSettings();
 		textBox.Text = File.ReadAllText(fileName);
 	}
@@ -179,13 +185,16 @@ public partial class Editor : System.Windows.Window {
 						n.InnerText = n.Attributes["cref"].Value.Substring(2);
 					}
 				}
-				return node.InnerText;
+				//if (node.InnerText.Length != "") {
+					return node.InnerText;
 			}
 			return "";
 		}
 		private string text;
 		private MemberInfo original;
+		//private MethodBase method;
 		public Item(string text, MemberInfo original) {
+			//this.method = method;
 			this.text = text;
 			this.original = original;
 		}
@@ -221,7 +230,6 @@ public partial class Editor : System.Windows.Window {
 			return false;
 		}
 	}
-	static	bool e = false;
 	public bool Compile(string text) {
 		try {
 			Interpreter.profiling = false;
@@ -239,7 +247,6 @@ public partial class Editor : System.Windows.Window {
 				errors.Clear();
 			}));
 			foreach (Error error in parser.state.Errors) {
-				e = true;
 				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
 					MakeLine(error.State.index,error.Text);
 				}));
@@ -306,6 +313,111 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static List<Item> intellisenseItems = new List<Item>();
 	public static List<Breakpoint> breakpoints = new List<Breakpoint>();
+
+
+	public class SubItem : TreeListViewItem {
+		public void MakeSureComputed() {
+			SetMap(map,true);
+		}
+		private StackPanel panel = new StackPanel();
+		private Label key = new Label();
+		private Label value = new Label();
+		private Map map;
+		public SubItem(Map key,Map value,bool expand) {
+			this.key.Content = key.ToString();
+			Items.Clear();
+			this.map = value;
+			if (expand) {
+				SetMap(value,false);
+			}
+			bool wasExpanded = false;
+			this.Expanded += delegate {
+				if (!wasExpanded) {
+					wasExpanded = true;
+					//foreach (SubItem item in Items) {
+					MakeSureComputed();
+				}
+				//}
+			};
+			panel.Orientation = Orientation.Horizontal;
+			panel.Children.Add(this.key);
+			panel.Children.Add(this.value);
+			this.Header = panel;
+		}
+		public void SetMap(Map map,bool expand) {
+			value.Content = "";
+			Items.Clear();
+			if (map.IsString) {
+				value.Content = map.GetString();
+			}
+			else if (map.IsNumber) {
+				this.value.Content = map.GetNumber().ToString();
+			}
+			else {
+				foreach (KeyValuePair<Map, Map> entry in map) {
+					Items.Add(new SubItem(entry.Key, entry.Value, expand));
+				}
+			}
+		}
+	}
+	public class MyItem : TreeListViewItem {
+		private StackPanel panel = new StackPanel();
+		private TextBox text = new TextBox();
+		private Label label = new Label();
+		private Map value;
+		public MyItem() {
+			panel.Orientation = Orientation.Horizontal;
+			panel.Children.Add(text);
+			panel.Children.Add(label);
+			bool fresh = true;
+			text.TextChanged += delegate {
+				if (fresh) {
+					fresh = false;
+					editor.watch.Items.Add(new MyItem());
+				}
+			};
+			bool wasExpanded = false;
+			//this.Expanded += delegate {
+			//    if (!wasExpanded) {
+			//        wasExpanded = true;
+			//        //foreach (SubItem item in Items) {
+			//        MakeSureComputed();
+			//        //}
+			//    }
+			//};
+			this.Header = panel;
+		}
+
+		public MyItem(Map key, Map value):this() {
+			text.Text = key.ToString();
+			SetMap(value,false);
+		}
+		private bool expanded = false;
+		public void Update(Map context) {
+			Parser parser = new Parser(text.Text, "watch window");
+			Map expression=null;
+			if(Parser.Expression.Match(parser, ref expression)) {
+				Map result = expression.GetExpression().Compile()(context);
+				SetMap(result,true);
+			}
+		}
+		private void SetMap(Map map,bool carryOn) {
+			Items.Clear();
+			if(map.IsString) {
+				text.Text = map.GetString();
+			}
+			else if (map.IsNumber) {
+				text.Text = map.GetNumber().ToString();
+			}
+			else {
+				foreach (KeyValuePair<Map, Map> entry in map) {
+					if (carryOn) {
+						Items.Add(new SubItem(entry.Key, entry.Value,true));
+					}
+				}
+			}
+		}
+	}
 	public class Watch {
 		public Watch(string expression) {
 			this.expression = expression;
@@ -358,16 +470,58 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 	}
+	//public Editor editor;
 	public Editor() {
+		editor = this;
 		LoadSettings();
-		TreeListViewItem treeItem=new TreeListViewItem();
-		treeItem.Header = new TextBox();
-		treeItem.Items.Add("hi");
-		watch.Items.Add(treeItem);
-		watch.Items.Add(new TextBox());
+		watch.Items.Add(new MyItem());
+		//TreeListViewItem treeItem=new TreeListViewItem();
+		//treeItem.Header = new TextBox();
+		//treeItem.Items.Add("hi");
+		//watch.Items.Add(treeItem);
+		//watch.Items.Add(new TextBox());
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
 		editor = this;
+		textBox.AcceptsReturn = true;
+		RoutedUICommand gotoLine = new RoutedUICommand();
+		BindKey(gotoLine, Key.G, ModifierKeys.Control);
+		CommandBindings.Add(new CommandBinding(gotoLine, delegate {
+			Window window = new Window();
+			StackPanel panel=new StackPanel();
+			TextBox box=new TextBox();
+			Button button = new Button();
+			window.Title = "Go to line";
+			button.Content = "OK";
+			panel.Children.Add(box);
+			panel.Children.Add(button);
+			window.Content = panel;
+			box.Text = (textBox.Line+1).ToString();
+			box.Select(0, box.Text.Length);
+			box.Focus();
+			window.Width = 40;
+			window.Height = 70;
+			MethodInvoker go=delegate {
+				int line;
+				if(int.TryParse(box.Text,out line)) {
+					textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(line-1);
+					window.Close();
+				}
+			};
+			window.KeyDown += delegate(object sender, KeyEventArgs e) {
+				if (e.Key == Key.Enter) {
+					go();
+				}
+				else if (e.Key == Key.Escape) {
+					window.Close();
+				}
+			};
+			box.AcceptsReturn = false;
+			button.Click += delegate {
+				go();
+			};
+			window.ShowDialog();
+		}));
 		RoutedUICommand deleteLine = new RoutedUICommand();
 		BindKey(deleteLine, Key.L, ModifierKeys.Control);
 		this.CommandBindings.Add(new CommandBinding(deleteLine, delegate {
@@ -436,7 +590,15 @@ public partial class Editor : System.Windows.Window {
 		textBox.FontFamily = new FontFamily("Courier New");
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
-			if (Intellisense) {
+			if (e.Key == Key.Return) {
+				string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
+				textBox.SelectedText = Environment.NewLine.PadRight(2 + line.Length - line.TrimStart('\t').Length, '\t');
+				textBox.SelectionStart = textBox.SelectionStart + textBox.SelectionLength;
+				textBox.SelectionLength = 0;
+				textBox.Focus();
+				e.Handled = true;
+			}
+			else if (Intellisense) {
 				e.Handled = true;
 				if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt) {
 					if (e.SystemKey == Key.L) {
@@ -611,14 +773,7 @@ public partial class Editor : System.Windows.Window {
 		};
 		textBox.PreviewTextInput += new TextCompositionEventHandler(textBox_PreviewTextInput);
 		textBox.KeyDown += delegate(object obj, KeyEventArgs e) {
-			if (e.Key == Key.Return) {
-				string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
-				textBox.SelectedText = "\n".PadRight(1 + line.Length - line.TrimStart('\t').Length, '\t');
-				textBox.SelectionStart = textBox.SelectionStart + textBox.SelectionLength;
-				textBox.SelectionLength = 0;
-				textBox.Focus();
-			}
-			else if (e.Key == Key.Escape) {
+			if (e.Key == Key.Escape) {
 				if (Intellisense) {
 					intellisense.Visibility = Visibility.Hidden;
 					toolTip.Visibility = Visibility.Hidden;
@@ -693,15 +848,25 @@ public partial class Editor : System.Windows.Window {
 					if (start != null) {
 						Map structure = start.GetStructure();
 						if (structure != null) {
-							if (structure is Method) {
-								XmlNodeList parameters = new XmlComments(((Method)structure).method).Params;
+							Method method=structure as Method;
+							if (method!=null) {
+								XmlNodeList parameters = new XmlComments(method.method).Params;
+								string argText = null;
 								if (parameters.Count > argIndex) {
 									XmlNode node = parameters[argIndex];
+									argText= node.Attributes["name"].Value + ":\n" + node.InnerText;
+								}
+								else {
+									ParameterInfo[] param = method.method.GetParameters();
+									if (param.Length > argIndex) {
+										argText = param[argIndex].Name;
 
-									string t = node.Attributes["name"].Value + ":\n" + node.InnerText;
+									}
+								}
+								if (argText != null) {
 									PositionIntellisense();
 									toolTip.Visibility = Visibility.Visible;
-									toolTip.Text = t;
+									toolTip.Text = argText;
 								}
 							}
 						}
@@ -783,6 +948,28 @@ public partial class Editor : System.Windows.Window {
 		RoutedUICommand breakpoint = new RoutedUICommand("Breakpoint", "Breakpoint", GetType());
 		debugItem.Header = "Debug";
 		file.Header = "File";
+		MenuItem view = new MenuItem();
+		view.Header = "View";
+		MenuItem watchItem = new MenuItem();
+		RoutedUICommand watchCommand = new RoutedUICommand();
+		watchItem.Command = watchCommand;
+		watchItem.Header = "Watch";
+		watch.Height = 100;
+		watch.Visibility = Visibility.Collapsed;
+		BindKey(watchCommand,Key.W,ModifierKeys.Control);
+		CommandBindings.Add(new CommandBinding(watchCommand, delegate {
+
+			//if (watch.Height == 0) {
+			//    watch.Height==100
+			//}
+			if (watch.Visibility == Visibility.Visible) {
+				watch.Visibility = Visibility.Collapsed;
+			}
+			else {
+				watch.Visibility = Visibility.Visible;
+			}
+		}));
+		view.Items.Add(watchItem);
 		openItem.Header = "Open";
 		breakpointItem.Header = "Toggle Breakpoint";
 		comp.Header = "Compile";
@@ -821,7 +1008,10 @@ public partial class Editor : System.Windows.Window {
 			}
 		}));
 		RoutedUICommand debug = new RoutedUICommand("Debug", "Debug", GetType());
+		bool debugging = false;
+		bool continueDebugging=false;
 		CommandBindings.Add(new CommandBinding(debug, delegate {
+			debugging = true;
 			Save();
 			if (Compile()) {
 				watch.Height = 100;
@@ -830,16 +1020,29 @@ public partial class Editor : System.Windows.Window {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
 				}
 				Interpreter.Breakpoint += delegate(Map map){
-					MessageBox.Show(map.Count.ToString());
+					Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+						for (int i = 0; i < watch.Items.Count; i++) {
+							((MyItem)watch.Items[i]).Update(map);
+						}
+					}));
+					while (!continueDebugging) {
+						Thread.Sleep(500);
+					}
+					continueDebugging = false;
 				};
-				try {
-					Interpreter.Application = Application.Current;
-					Interpreter.Run(fileName, Map.Empty);
-				}
-				catch (Exception e) {
-					MessageBox.Show(e.ToString());
-				}
+				Thread thread=new Thread(new ThreadStart(delegate {
+					try {
+						Interpreter.Application = Application.Current;
+						Interpreter.Run(fileName, Map.Empty);
+					}
+					catch (Exception e) {
+						MessageBox.Show(e.ToString());
+					}
+				}));
+				thread.TrySetApartmentState(ApartmentState.STA);
+				thread.Start();
 			}
+			debugging = false;
 		}));
 		debugItem.Command = debug;
 
@@ -859,6 +1062,7 @@ public partial class Editor : System.Windows.Window {
 		file.Items.Add(save);
 		file.Items.Add(run);
 		menu.Items.Add(file);
+		menu.Items.Add(view);
 		dock.Children.Add(menu);
 
 		DockPanel.SetDock(textBox, Dock.Bottom);
@@ -896,8 +1100,7 @@ public partial class Editor : System.Windows.Window {
 					t.Stop();
 				};
 				t.Start();
-				editorLine.Content = "Ln " + line;
-				textBox.ScrollToLine(line - 1);
+				editorLine.Content = "Ln " + line + " Col " + (textBox.Column+1);
 			}
 		};
 		RoutedUICommand back = new RoutedUICommand();
@@ -927,7 +1130,7 @@ public partial class Editor : System.Windows.Window {
 		dock.Children.Add(status);
 		dock.Children.Add(watch);
 		dock.Children.Add(scrollViewer);
-		watch.Height = 0;
+		//watch.Height = 0;
 
 
 		textBox.SizeChanged += delegate {
@@ -952,6 +1155,7 @@ public partial class Editor : System.Windows.Window {
 			textBox.Focus();
 		};
 	}
+
 	private Source StartIntellisense() {
 		string text = textBox.Text.Substring(0, textBox.SelectionStart);
 		searchStart = textBox.SelectionStart;

@@ -31,7 +31,7 @@
 	listTest=<"this",1,"is","a",<"long","list">
 	>;
 	commandLine|[
-		&union(<0,<"AssignedToCurrent">>);
+		&merge(<0,<"AssignedToCurrent">>);
 		asdf="hello";
 		shortFunction=[// another comment
 			arg|asdf;
@@ -71,7 +71,7 @@
 			hashTest=!!"hashTestData";
 		];
 		negativeInteger=100;
-		negativeInteger=union(<
+		negativeInteger=merge(<
 			negativeInteger,
 			[
 				x="hello";
@@ -131,7 +131,7 @@
 			];
 			SetB=[
 				newB|[
-					b:union(<
+					b:merge(<
 						b,
 						[
 							1=newB.value;
@@ -223,7 +223,7 @@
 				decimalValue=5;
 			]
 		);
-		TestClass=union(<
+		TestClass=merge(<
 			TestClass,
 			[
 				boolTest=1;
@@ -236,13 +236,13 @@
 		integerOverload=MemberTest.OverloadedMethod_Int32(5);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 		memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-		MemberTest:union(<
+		MemberTest:merge(<
 			MemberTest,
 			[
 				classField="a";
 			]>
 		);
-		memberTest:union(<
+		memberTest:merge(<
 			memberTest,
 			[
 				instanceField="b";
@@ -363,7 +363,7 @@
 		decimalTest=5;
 		fractionTest=40;
 		stringTest="hello";
-		stringTest=union(<
+		stringTest=merge(<
 			stringTest,
 			[
 				5=stringTest.1;
@@ -449,7 +449,7 @@
 			z="a";
 		];
 		copiedData=copySourceData;
-		copiedData=union(<
+		copiedData=merge(<
 			copiedData,
 			[
 				x="changed";

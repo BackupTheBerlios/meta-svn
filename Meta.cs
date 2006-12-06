@@ -962,6 +962,7 @@ namespace Meta {
 			}
 		}
 		public static Map Run(string path, Map argument) {
+			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
@@ -974,7 +975,8 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
+			Map map = Parser.Parse(LibraryPath);
+			//Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
@@ -3374,7 +3376,7 @@ namespace Meta {
 				CodeKeys.Key,
 				Alternatives(
 					Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
-					//Select,
+					Select,
 					//Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
 					Sequence(Assign(CodeKeys.Literal, LookupString)),
 					Expression)));
@@ -4545,13 +4547,13 @@ namespace Meta {
 		}
 		public static Map Apply(Map func,Map array) {
 			List<Map> result = new List<Map>();
-			try {
+			//try {
 				foreach (Map map in array.Array) {
 					result.Add(func.Call(map));
 				}
-			}
-			catch (Exception e) {
-			}
+			//}
+			//catch (Exception e) {
+			//}
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {

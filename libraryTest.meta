@@ -59,7 +59,7 @@
 				]
 			);
 			Map=[
-				&mapping(
+				&map(
 					[
 						argument|sum(<
 							argument,
