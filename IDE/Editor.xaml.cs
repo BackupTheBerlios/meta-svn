@@ -396,9 +396,19 @@ public partial class Editor : System.Windows.Window {
 		public void Update(Map context) {
 			Parser parser = new Parser(text.Text, "watch window");
 			Map expression=null;
+			// should simply exist in parser instance!!!!
+			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+				cached.Clear();
+			}
 			if(Parser.Expression.Match(parser, ref expression)) {
-				Map result = expression.GetExpression().Compile()(context);
-				SetMap(result,true);
+				try {
+					Map result = expression.GetExpression().Compile()(context);
+					SetMap(result, true);
+				}
+				catch (Exception e) {
+					this.text.Text = e.ToString();
+					//Messageb
+				}
 			}
 		}
 		private void SetMap(Map map,bool carryOn) {
@@ -469,6 +479,11 @@ public partial class Editor : System.Windows.Window {
 				key.SetValue(field.Name, field.GetValue(null));
 			}
 		}
+	}
+	public static RowDefinition Row() {
+		RowDefinition row = new RowDefinition();
+		row.Height = GridLength.Auto;
+		return row;
 	}
 	//public Editor editor;
 	public Editor() {
@@ -932,10 +947,18 @@ public partial class Editor : System.Windows.Window {
 				Meta.Expression.sources.Clear();
 			}
 		};
-		DockPanel dock = new DockPanel();
+		Grid grid = new Grid();
+		grid.ColumnDefinitions.Add(new ColumnDefinition());
+		grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(new RowDefinition());
+		//grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(Row());
+		//grid.RowDefinitions.Add(new RowDefinition());
+		grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(Row());
 
 		Menu menu = new Menu();
-		DockPanel.SetDock(menu, Dock.Top);
+		//DockPanel.SetDock(menu, Dock.Top);
 		MenuItem file = new MenuItem();
 		MenuItem save = new MenuItem();
 		MenuItem run = new MenuItem();
@@ -954,7 +977,7 @@ public partial class Editor : System.Windows.Window {
 		RoutedUICommand watchCommand = new RoutedUICommand();
 		watchItem.Command = watchCommand;
 		watchItem.Header = "Watch";
-		watch.Height = 100;
+		//watch.Height = 100;
 		watch.Visibility = Visibility.Collapsed;
 		BindKey(watchCommand,Key.W,ModifierKeys.Control);
 		CommandBindings.Add(new CommandBinding(watchCommand, delegate {
@@ -969,6 +992,7 @@ public partial class Editor : System.Windows.Window {
 				watch.Visibility = Visibility.Visible;
 			}
 		}));
+
 		view.Items.Add(watchItem);
 		openItem.Header = "Open";
 		breakpointItem.Header = "Toggle Breakpoint";
@@ -1014,7 +1038,7 @@ public partial class Editor : System.Windows.Window {
 			debugging = true;
 			Save();
 			if (Compile()) {
-				watch.Height = 100;
+				//watch.Height = 100;
 				Interpreter.breakpoints.Clear();
 				foreach (Breakpoint b in breakpoints) {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
@@ -1055,7 +1079,7 @@ public partial class Editor : System.Windows.Window {
 		status.Children.Add(editorLine);
 
 		status.Children.Add(message);
-		DockPanel.SetDock(status, Dock.Bottom);
+		//DockPanel.SetDock(status, Dock.Bottom);
 
 		file.Items.Add(openItem);
 		file.Items.Add(comp);
@@ -1063,9 +1087,8 @@ public partial class Editor : System.Windows.Window {
 		file.Items.Add(run);
 		menu.Items.Add(file);
 		menu.Items.Add(view);
-		dock.Children.Add(menu);
 
-		DockPanel.SetDock(textBox, Dock.Bottom);
+		//DockPanel.SetDock(textBox, Dock.Bottom);
 		textBox.TextChanged += delegate {
 			if(Intellisense) {
 				if (textBox.SelectionStart <= searchStart) {
@@ -1114,7 +1137,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(back, Key.OemMinus, ModifierKeys.Control);
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
-		DockPanel.SetDock(canvas, Dock.Top);
+		//DockPanel.SetDock(canvas, Dock.Top);
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
@@ -1124,12 +1147,26 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetLeft(textBox, width/2);
 		Canvas.SetTop(textBox, height/2);
 
-		watch.Height = 100;
-		DockPanel.SetDock(watch, Dock.Bottom);
+		//watch.Height = 100;
+		//DockPanel.SetDock(watch, Dock.Bottom);
 		watch.Background = Brushes.Green;
-		dock.Children.Add(status);
-		dock.Children.Add(watch);
-		dock.Children.Add(scrollViewer);
+
+		GridSplitter splitter = new GridSplitter();
+		splitter.ResizeDirection = GridResizeDirection.Rows;
+        splitter.HorizontalAlignment=HorizontalAlignment.Stretch;
+        splitter.VerticalAlignment=VerticalAlignment.Top;
+		splitter.Background = Brushes.Yellow;
+		splitter.Height = 15;
+		Grid.SetRow(menu, 0);
+		Grid.SetRow(scrollViewer, 1);
+		Grid.SetRow(splitter, 2);
+		Grid.SetRow(watch, 3);
+		Grid.SetRow(status, 4);
+		grid.Children.Add(menu);
+		grid.Children.Add(splitter);
+		grid.Children.Add(scrollViewer);
+		grid.Children.Add(status);
+		grid.Children.Add(watch);
 		//watch.Height = 0;
 
 
@@ -1147,7 +1184,7 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetZIndex(intellisense, 100);
 		canvas.Children.Add(intellisense);
 		canvas.Children.Add(toolTip);
-		this.Content = dock;
+		this.Content = grid;
 		this.Loaded += delegate {
 			if (Settings.lastFile != null) {
 				Open(Settings.lastFile);
