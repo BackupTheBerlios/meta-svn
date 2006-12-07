@@ -1,16 +1,12 @@
 {[
-	&merge(<!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
+	&merge(<System,mscorlib,!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
 		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet>);
 	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
 	random=Meta.Library.Random_Int32_Int32;
-	print={[
-		Library.WriteLine_String(@);
-		&@;
-	]};
 	range=Meta.Library.Range_Number;
 	vectorLength=vector{power(sum(<power(vector.1,2),power(vector.2,2)>),1/2)};
 	vectorDifference=a{b{map(key{difference(a.<key>,b.<key>)},keys(a))}};
-	compareNumber=Library.CompareNumber_Number_Number;
+	compareNumber=Meta.Library.CompareNumber_Number_Number;
 	callKey=key{map{branch(contains(map,key),{map.<key>()},{0})}};
 	world=World();
 	vectorDotProduct=vector{number{map(entry{product(<number,entry>)},vector)}};
@@ -30,7 +26,6 @@
 	makeBox(<798,50,100>,<400,600,0>);
 	makeBox(<50,598,100>,<0,300,0>);
 	makeBox(<50,598,100>,<800,300,0>);
-	world.set_Gravity_Vector3(vector(0,1/100,0));
 	bubble=size{[
 		body=Body_World(world);
 		radius={product(<size,4>)};
@@ -68,6 +63,7 @@
 		center=a{b{quotient(Sum(a,b),2)}};
 		keyDown=[
 			!"key"={[
+				
 				lengths=map(
 					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))},
 					bubbles
@@ -88,7 +84,7 @@
 	add_KeyboardDown_KeyboardEventHandler({e{map(player{callKey(player.keyDown,e.get_Key())},players)}});
 	add_KeyboardUp_KeyboardEventHandler({e{map(player{callKey(player.keyUp,e.get_Key())},players)}});
 	contactGroup=JointGroup_Int32(0);
-	enumerableToArray=Library.EnumerableToArray_Map;
+	enumerableToArray=Meta.Library.EnumerableToArray_Map;
 	space.add_Collision_CollisionEventHandler({e{[
 		a=e.get_Geom1();
 		b=e.get_Geom2();
@@ -113,7 +109,6 @@
 	add_Tick_TickEventHandler({{[
 		Fill_Color(Color.get_White());
 		contactGroup.Empty();
-		print(Events.get_Fps());
 		space.CheckCollisions();
 		world.Step();
 		map(b{[b.move();b.draw(b.color);]},bubbles);

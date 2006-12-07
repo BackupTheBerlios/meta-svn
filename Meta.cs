@@ -989,7 +989,7 @@ namespace Meta {
 			string multilineliteral = @"part of the text
                                        other part of the text";
 
-			StringMap s=new StringMap("hellh");
+			StringMap s = new StringMap("hellh");
 			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
 			l.GetHashCode();
 			s.Equals(l);
@@ -1001,7 +1001,7 @@ namespace Meta {
 						new Test.MetaTest().Run();
 					}
 					catch (Exception e) {
-						string text=e.ToString();
+						string text = e.ToString();
 						if(text.Length>1000) {
 							text=text.Substring(0,1000)+"...";
 						}
@@ -1630,6 +1630,12 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					string p=Path.Combine(path,key.GetString());
+					if (key.Equals(new StringMap("GuiExample"))) {
+					}
+					string dll = Path.Combine(path,key.GetString() + ".dll");
+					if (File.Exists(dll)) {
+						return new AssemblyMap(Assembly.LoadFrom(dll));
+					}
 					if (File.Exists(p)) {
 						return new FileMap(p);
 					}
@@ -1646,6 +1652,17 @@ namespace Meta {
 
 		public override IEnumerable<Map> Keys {
 			get {
+				foreach (string dll in Directory.GetFiles(path,"*.dll")) {
+					Assembly assembly=null;
+					try {
+						assembly=Assembly.LoadFrom(dll);
+					}
+					catch(Exception e) {
+					};
+					if (assembly != null) {
+						yield return Path.GetFileNameWithoutExtension(dll);
+					}
+				}
 				foreach (string file in Directory.GetFiles(path)) {
 					yield return Path.GetFileName(file);
 				}
@@ -1669,11 +1686,12 @@ namespace Meta {
 			}
 		}
 		public override bool ContainsKey(Map key) {
-			if(key.IsString) {
-				string p = Path.Combine(path, key.GetString());
-				return File.Exists(p)||Directory.Exists(p);
-			}
-			return false;
+			return new List<Map>(Keys).Contains(key);
+			//if(key.IsString) {
+			//    string p = Path.Combine(path, key.GetString());
+			//    return File.Exists(p)||Directory.Exists(p);
+			//}
+			//return false;
 		}
 		public override Number GetNumber() {
 			// not really correct
@@ -4845,7 +4863,12 @@ namespace Meta {
 			clone.Expression=Expression;
 			clone.IsConstant = this.IsConstant;
 			foreach (Map key in Keys) {
-				clone[key] = this[key].Copy();
+				try {
+					clone[key] = this[key].Copy();
+				}
+				catch {
+					clone[key] = this[key].Copy();
+				}
 			}
 			return clone;
 		}

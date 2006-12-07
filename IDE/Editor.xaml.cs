@@ -220,8 +220,8 @@ public partial class Editor : System.Windows.Window {
 			return "";
 		}
 	}
-	public bool Compile() {
-		if (Compile(textBox.Text)) {
+	public bool Compile(bool automatic) {
+		if (Compile(textBox.Text,automatic)) {
 			message.Content = "";
 			return true;
 		}
@@ -230,7 +230,7 @@ public partial class Editor : System.Windows.Window {
 			return false;
 		}
 	}
-	public bool Compile(string text) {
+	public bool Compile(string text,bool automatic) {
 		try {
 			Interpreter.profiling = false;
 			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
@@ -256,6 +256,23 @@ public partial class Editor : System.Windows.Window {
 					MakeLine(parser.state.index, "Expected end of file.");
 				}));
 				return false;
+			}
+			if (!automatic) {
+				Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+					errorList.Visibility = Visibility.Visible;
+					errorList.Items.Clear();
+					foreach (Error error in parser.state.Errors) {
+						ListViewItem item = new ListViewItem();
+						item.Content = error.Text;
+						Error e = error;
+						item.Selected += delegate {
+							textBox.SelectionStart = e.State.index;
+							Keyboard.Focus(textBox);
+						};
+						errorList.Items.Add(item);
+						//errorList.Items.Add(error.Text);
+					}
+				}));
 			}
 			return true;
 		}
@@ -360,6 +377,8 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 	}
+	public static Map debuggingContext;
+	ListView errorList = new ListView();
 	public class MyItem : TreeListViewItem {
 		private StackPanel panel = new StackPanel();
 		private TextBox text = new TextBox();
@@ -369,11 +388,15 @@ public partial class Editor : System.Windows.Window {
 			panel.Orientation = Orientation.Horizontal;
 			panel.Children.Add(text);
 			panel.Children.Add(label);
+			text.TabIndex = 0;
 			bool fresh = true;
 			text.TextChanged += delegate {
 				if (fresh) {
 					fresh = false;
 					editor.watch.Items.Add(new MyItem());
+				}
+				if (debuggingContext != null) {
+					Update(debuggingContext);
 				}
 			};
 			bool wasExpanded = false;
@@ -406,7 +429,8 @@ public partial class Editor : System.Windows.Window {
 					SetMap(result, true);
 				}
 				catch (Exception e) {
-					this.text.Text = e.ToString();
+					this.label.Content = "error";
+					//this.text.Text = e.ToString();
 					//Messageb
 				}
 			}
@@ -414,10 +438,10 @@ public partial class Editor : System.Windows.Window {
 		private void SetMap(Map map,bool carryOn) {
 			Items.Clear();
 			if(map.IsString) {
-				text.Text = map.GetString();
+				label.Content = map.GetString();
 			}
 			else if (map.IsNumber) {
-				text.Text = map.GetNumber().ToString();
+				label.Content = map.GetNumber().ToString();
 			}
 			else {
 				foreach (KeyValuePair<Map, Map> entry in map) {
@@ -487,6 +511,9 @@ public partial class Editor : System.Windows.Window {
 	}
 	//public Editor editor;
 	public Editor() {
+		errorList.Background = Brushes.LightBlue;
+		errorList.Height = 100;
+		errorList.Visibility = Visibility.Collapsed;
 		editor = this;
 		LoadSettings();
 		watch.Items.Add(new MyItem());
@@ -670,104 +697,105 @@ public partial class Editor : System.Windows.Window {
 						e.Handled = true;
 					}
 					else if (e.Key == Key.Space) {
-						e.Handled = true;
-						StartIntellisense();
-						searchStart--;
-						intellisense.Items.Clear();
-						List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
-						sources.RemoveAll(delegate (Source source){
-							return source.FileName!=fileName;
-						});
-						sources.Sort(delegate(Source a,Source b) {
-							return a.CompareTo(b);
-						});
-						sources.Reverse();
-						Program start = null;
-						foreach(Source source in sources) {
-							foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
-								Program program=expression as Program;
-								if(program!=null) {
-									start = program;
+						if(!DoArgumentHelp(e)) {
+							e.Handled = true;
+							StartIntellisense();
+							searchStart--;
+							intellisense.Items.Clear();
+							List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
+							sources.RemoveAll(delegate (Source source){
+								return source.FileName!=fileName;
+							});
+							sources.Sort(delegate(Source a,Source b) {
+								return a.CompareTo(b);
+							});
+							sources.Reverse();
+							Program start = null;
+							foreach(Source source in sources) {
+								foreach(Meta.Expression expression in Meta.Expression.sources[source]) {
+									Program program=expression as Program;
+									if(program!=null) {
+										start = program;
+										break;
+									}
+								}
+								if(start!=null) {
 									break;
 								}
 							}
-							if(start!=null) {
-								break;
-							}
-						}
-						Map s=Map.Empty;
-						if (start != null) {
-							Meta.Expression x = start;
-							while (x!=null) {
-								if (x is Program) {
-									Program p = x as Program;
-									Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
-									if (p is Function) {
-										result = p.statementList[p.statementList.Count - 2].CurrentMap();
+							Map s=Map.Empty;
+							if (start != null) {
+								Meta.Expression x = start;
+								while (x!=null) {
+									if (x is Program) {
+										Program p = x as Program;
+										Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
+										if (p is Function) {
+											result = p.statementList[p.statementList.Count - 2].CurrentMap();
+										}
+										if (result != null) {
+											s = Library.Merge(result,s);
+										}
 									}
-									if (result != null) {
-										s = Library.Merge(result,s);
-									}
-								}
-								else if (x is LiteralExpression) {
-									LiteralExpression literal = (LiteralExpression)x;
-									Map structure=literal.GetStructure();
+									else if (x is LiteralExpression) {
+										LiteralExpression literal = (LiteralExpression)x;
+										Map structure=literal.GetStructure();
 
-									s = Library.Merge(structure, s);
+										s = Library.Merge(structure, s);
+									}
+									x = x.Parent;
 								}
-								x = x.Parent;
 							}
+							Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
+							s=Library.Merge(directory.Copy(),s);
+							List<Map> keys = new List<Map>();
+							if (s != null) {
+								keys.AddRange(s.Keys);
+							}
+							keys.Sort(delegate(Map a,Map b) {
+								return a.ToString().CompareTo(b.ToString());
+							});
+							if (keys.Count != 0) {
+								intellisense.Visibility = Visibility.Visible;
+								toolTip.Visibility = Visibility.Visible;
+							}
+							intellisenseItems.Clear();
+							intellisense.Items.Clear();
+							foreach (Map k in keys) {
+								MethodBase m = null;
+								MemberInfo original = null;
+								if (s.ContainsKey(k)) {
+									Map value = s[k];
+									Method method = value as Method;
+									if (method != null) {
+										m = method.method;
+										original = method.original;
+									}
+									TypeMap typeMap = value as TypeMap;
+									if (typeMap != null) {
+										original = typeMap.Type;
+									}
+								}
+								if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
+									intellisenseItems.Add(new MetaItem(k));
+								}
+								else if (original != null) {
+									intellisenseItems.Add(new Item(k.ToString(), original));
+								}
+								else {
+									intellisenseItems.Add(new Item(k.ToString(), null));
+								}
+							}
+							if (intellisense.Items.Count != 0) {
+								intellisense.SelectedIndex = 0;
+							}
+							foreach (Item item in intellisenseItems) {
+								intellisense.Items.Add(item);
+							}
+							PositionIntellisense();
+							Meta.Expression.sources.Clear();
 						}
-						Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
-						s=Library.Merge(directory.Copy(),s);
-			            List<Map> keys = new List<Map>();
-			            if (s != null) {
-							keys.AddRange(s.Keys);
-			            }
-			            keys.Sort(delegate(Map a,Map b) {
-			                return a.ToString().CompareTo(b.ToString());
-			            });
-			            if (keys.Count != 0) {
-							intellisense.Visibility = Visibility.Visible;
-			                toolTip.Visibility = Visibility.Visible;
-			            }
-			            intellisenseItems.Clear();
-			            intellisense.Items.Clear();
-			            foreach (Map k in keys) {
-			                MethodBase m = null;
-			                MemberInfo original = null;
-			                if (s.ContainsKey(k)) {
-			                    Map value = s[k];
-			                    Method method = value as Method;
-			                    if (method != null) {
-			                        m = method.method;
-			                        original = method.original;
-			                    }
-			                    TypeMap typeMap = value as TypeMap;
-			                    if (typeMap != null) {
-			                        original = typeMap.Type;
-			                    }
-			                }
-							if (k.Equals(new StringMap("apply"))) {
-							}
-							if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
-								intellisenseItems.Add(new MetaItem(k));
-							}
-							else if (original != null) {
-								intellisenseItems.Add(new Item(k.ToString(), original));
-							}
-							else {
-								intellisenseItems.Add(new Item(k.ToString(), null));
-							}
-			            }
-			            if (intellisense.Items.Count != 0) {
-			                intellisense.SelectedIndex = 0;
-			            }
-						foreach (Item item in intellisenseItems) {
-							intellisense.Items.Add(item);
-						}
-						PositionIntellisense();
-						Meta.Expression.sources.Clear();
+						e.Handled = true;
 					}
 				}
 				else if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt) {
@@ -795,98 +823,11 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 			else if (e.Key == Key.D9) {
-				toolTip.Visibility = Visibility.Hidden;
+				DoArgumentHelp(e);
+				//toolTip.Visibility = Visibility.Hidden;
 			}
 			else if (e.Key == Key.D8 || e.Key == Key.OemComma) {
-				StartIntellisense();
-				int index = textBox.SelectionStart;
-				string text = textBox.Text;
-				int open = 1;
-				int argIndex = 0;
-				Source realSource = null;
-				if (e.Key == Key.D8) {
-					open = 0;
-				}
-				if (e.Key == Key.OemComma) {
-					argIndex++;
-				}
-				while (index >= 0) {
-					char c = text[index];
-					switch (c) {
-						case '(':
-							open--;
-							break;
-						case ')':
-							open++;
-							break;
-						case ',':
-							if (open == 1) {
-								argIndex++;
-							}
-							break;
-					}
-					if (open == 0) {
-						int line = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1;
-						int selection = textBox.SelectionStart;
-						int column = textBox.Column;
-						realSource = new Source(line, column, fileName);
-						break;
-					}
-					index--;
-				}
-				if (realSource != null) {
-					List<Source> sources = new List<Source>(Meta.Expression.sources.Keys);
-					sources.RemoveAll(delegate(Source s) {
-						return s.FileName != fileName;
-					});
-					sources.Sort(delegate(Source a, Source b) {
-						return a.CompareTo(b);
-					});
-					sources.Reverse();
-					Meta.Expression start = null;
-					foreach (Source source in sources) {
-						if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
-							foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
-								if (expression is Select || expression is Search) {
-									start = expression;
-									if (start.Parent is Call) {
-										start = ((Call)start.Parent).calls[0];
-									}
-									break;
-								}
-							}
-						}
-						if (start != null) {
-							break;
-						}
-					}
-					if (start != null) {
-						Map structure = start.GetStructure();
-						if (structure != null) {
-							Method method=structure as Method;
-							if (method!=null) {
-								XmlNodeList parameters = new XmlComments(method.method).Params;
-								string argText = null;
-								if (parameters.Count > argIndex) {
-									XmlNode node = parameters[argIndex];
-									argText= node.Attributes["name"].Value + ":\n" + node.InnerText;
-								}
-								else {
-									ParameterInfo[] param = method.method.GetParameters();
-									if (param.Length > argIndex) {
-										argText = param[argIndex].Name;
-
-									}
-								}
-								if (argText != null) {
-									PositionIntellisense();
-									toolTip.Visibility = Visibility.Visible;
-									toolTip.Text = argText;
-								}
-							}
-						}
-					}
-				}
+				DoArgumentHelp(e);
 			}
 			else if (e.Key == Key.OemPeriod) {
 				Source key = StartIntellisense();
@@ -956,6 +897,7 @@ public partial class Editor : System.Windows.Window {
 		//grid.RowDefinitions.Add(new RowDefinition());
 		grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(Row());
 
 		Menu menu = new Menu();
 		//DockPanel.SetDock(menu, Dock.Top);
@@ -973,27 +915,7 @@ public partial class Editor : System.Windows.Window {
 		file.Header = "File";
 		MenuItem view = new MenuItem();
 		view.Header = "View";
-		MenuItem watchItem = new MenuItem();
-		RoutedUICommand watchCommand = new RoutedUICommand();
-		watchItem.Command = watchCommand;
-		watchItem.Header = "Watch";
-		//watch.Height = 100;
 		watch.Visibility = Visibility.Collapsed;
-		BindKey(watchCommand,Key.W,ModifierKeys.Control);
-		CommandBindings.Add(new CommandBinding(watchCommand, delegate {
-
-			//if (watch.Height == 0) {
-			//    watch.Height==100
-			//}
-			if (watch.Visibility == Visibility.Visible) {
-				watch.Visibility = Visibility.Collapsed;
-			}
-			else {
-				watch.Visibility = Visibility.Visible;
-			}
-		}));
-
-		view.Items.Add(watchItem);
 		openItem.Header = "Open";
 		breakpointItem.Header = "Toggle Breakpoint";
 		comp.Header = "Compile";
@@ -1006,7 +928,7 @@ public partial class Editor : System.Windows.Window {
 		file.Items.Add(breakpointItem);
 		file.Items.Add(debugItem);
 		CommandBindings.Add(
-			new CommandBinding(compile,delegate{Compile();})
+			new CommandBinding(compile,delegate{Compile(false);})
 		);
 		CommandBindings.Add(new CommandBinding(breakpoint,delegate {
 			breakpoints.Add(new Breakpoint(textBox.Line, textBox.Column));
@@ -1018,7 +940,7 @@ public partial class Editor : System.Windows.Window {
 			timer.Stop();
 			string text = textBox.Text;
 			Thread thread = new Thread(new ThreadStart(delegate {
-				Compile(text);
+				Compile(text,true);
 				timer.Start();
 			}));
 			thread.Priority = ThreadPriority.Lowest;
@@ -1027,7 +949,7 @@ public partial class Editor : System.Windows.Window {
 		timer.Start();
 		CommandBindings.Add(new CommandBinding(execute, delegate {
 			Save();
-			if (Compile()) {
+			if (Compile(false)) {
 				Process.Start(System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"), fileName);
 			}
 		}));
@@ -1037,14 +959,16 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(debug, delegate {
 			debugging = true;
 			Save();
-			if (Compile()) {
-				//watch.Height = 100;
+			if (Compile(false)) {
+				watch.Height = 100;
+				watch.Visibility = Visibility.Visible;
 				Interpreter.breakpoints.Clear();
 				foreach (Breakpoint b in breakpoints) {
 					Interpreter.breakpoints.Add(new Source(b.line, b.column, fileName));
 				}
 				Interpreter.Breakpoint += delegate(Map map){
 					Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+						debuggingContext = map;
 						for (int i = 0; i < watch.Items.Count; i++) {
 							((MyItem)watch.Items[i]).Update(map);
 						}
@@ -1054,7 +978,8 @@ public partial class Editor : System.Windows.Window {
 					}
 					continueDebugging = false;
 				};
-				Thread thread=new Thread(new ThreadStart(delegate {
+				Thread thread=null;
+				thread=new Thread(new ThreadStart(delegate {
 					try {
 						Interpreter.Application = Application.Current;
 						Interpreter.Run(fileName, Map.Empty);
@@ -1062,6 +987,7 @@ public partial class Editor : System.Windows.Window {
 					catch (Exception e) {
 						MessageBox.Show(e.ToString());
 					}
+					thread.Abort();
 				}));
 				thread.TrySetApartmentState(ApartmentState.STA);
 				thread.Start();
@@ -1137,7 +1063,6 @@ public partial class Editor : System.Windows.Window {
 		BindKey(back, Key.OemMinus, ModifierKeys.Control);
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
-		//DockPanel.SetDock(canvas, Dock.Top);
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
@@ -1147,8 +1072,6 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetLeft(textBox, width/2);
 		Canvas.SetTop(textBox, height/2);
 
-		//watch.Height = 100;
-		//DockPanel.SetDock(watch, Dock.Bottom);
 		watch.Background = Brushes.Green;
 
 		GridSplitter splitter = new GridSplitter();
@@ -1161,14 +1084,14 @@ public partial class Editor : System.Windows.Window {
 		Grid.SetRow(scrollViewer, 1);
 		Grid.SetRow(splitter, 2);
 		Grid.SetRow(watch, 3);
-		Grid.SetRow(status, 4);
+		Grid.SetRow(errorList, 4);
+		Grid.SetRow(status, 5);
 		grid.Children.Add(menu);
 		grid.Children.Add(splitter);
 		grid.Children.Add(scrollViewer);
 		grid.Children.Add(status);
 		grid.Children.Add(watch);
-		//watch.Height = 0;
-
+		grid.Children.Add(errorList);
 
 		textBox.SizeChanged += delegate {
 			canvas.Width = textBox.ActualWidth + width;
@@ -1191,6 +1114,102 @@ public partial class Editor : System.Windows.Window {
 			}
 			textBox.Focus();
 		};
+	}
+
+	private bool DoArgumentHelp(KeyEventArgs e) {
+		StartIntellisense();
+		int index = textBox.SelectionStart;
+		string text = textBox.Text;
+		int open = 1;
+		int argIndex = 0;
+		Source realSource = null;
+		if (e.Key == Key.D8) {
+			open = 0;
+		}
+		if (e.Key == Key.OemComma) {
+			argIndex++;
+		}
+		while (index >= 0) {
+			char c = text[index];
+			switch (c) {
+				case '(':
+					open--;
+					break;
+				case ')':
+					open++;
+					break;
+				case ',':
+					if (open == 1) {
+						argIndex++;
+					}
+					break;
+			}
+			if (open == 0) {
+				int line = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart) + 1;
+				int selection = textBox.SelectionStart;
+				int column = textBox.Column;
+				realSource = new Source(line, column, fileName);
+				break;
+			}
+			index--;
+		}
+		if (realSource != null) {
+			List<Source> sources = new List<Source>(Meta.Expression.sources.Keys);
+			sources.RemoveAll(delegate(Source s) {
+				return s.FileName != fileName;
+			});
+			sources.Sort(delegate(Source a, Source b) {
+				return a.CompareTo(b);
+			});
+			sources.Reverse();
+			Meta.Expression start = null;
+			foreach (Source source in sources) {
+				if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
+					foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
+						if (expression is Select || expression is Search) {
+							start = expression;
+							if (start.Parent is Call) {
+								start = ((Call)start.Parent).calls[0];
+							}
+							break;
+						}
+					}
+				}
+				if (start != null) {
+					break;
+				}
+			}
+			if (start != null) {
+				Map structure = start.GetStructure();
+				if (structure != null) {
+					Method method = structure as Method;
+					if (method != null) {
+						XmlNodeList parameters = new XmlComments(method.method).Params;
+						string t = null;
+						string paramName;
+						ParameterInfo[] param = method.method.GetParameters();
+						if (param.Length > argIndex) {
+							paramName = param[argIndex].Name;
+							t=paramName;
+							foreach(XmlNode node in parameters) {
+								if (node.Attributes["name"].Value.Equals(paramName)) {
+									//XmlNode node = parameters[argIndex];
+									t = node.Attributes["name"].Value + ":\n" + node.InnerText;
+								}
+							}
+							//if (t != null) {
+								PositionIntellisense();
+								toolTip.Visibility = Visibility.Visible;
+								toolTip.Text = t;
+								return true;
+							//}
+						}
+					}
+				}
+			}
+		}
+		toolTip.Visibility = Visibility.Hidden;
+		return false;
 	}
 
 	private Source StartIntellisense() {
