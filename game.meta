@@ -50,7 +50,7 @@
 			asdf=GetPosition();
 			DrawFilledCircle_Circle_Color(Circle_Point_Int16(asdf,radius()),c);
 		]};
-	]};	
+	]};
 	player=key{c{[
 		&bubble(1);
 		jointGroup=JointGroup_Int32(0);

@@ -50,7 +50,7 @@ public partial class Editor : System.Windows.Window {
 	static Canvas canvas = new Canvas();
 	public class View : TreeListView {
 	}
-	TreeListView watch = new View();
+	public static TreeListView watch = new View();
 	private void Save() {
 		if (fileName == null) {
 			SaveFileDialog dialog = new SaveFileDialog();
@@ -230,6 +230,14 @@ public partial class Editor : System.Windows.Window {
 			return false;
 		}
 	}
+	public static void HideWatch() {
+		watch.Visibility = Visibility.Collapsed;
+	}
+
+	public static void HideErrors() {
+		errorList.Visibility = Visibility.Collapsed;
+	}
+
 	public bool Compile(string text,bool automatic) {
 		try {
 			Interpreter.profiling = false;
@@ -258,21 +266,26 @@ public partial class Editor : System.Windows.Window {
 				return false;
 			}
 			if (!automatic) {
-				Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
-					errorList.Visibility = Visibility.Visible;
-					errorList.Items.Clear();
-					foreach (Error error in parser.state.Errors) {
-						ListViewItem item = new ListViewItem();
-						item.Content = error.Text;
-						Error e = error;
-						item.Selected += delegate {
-							textBox.SelectionStart = e.State.index;
-							Keyboard.Focus(textBox);
-						};
-						errorList.Items.Add(item);
-						//errorList.Items.Add(error.Text);
-					}
-				}));
+				if (parser.state.Errors.Length != 0) {
+					Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+						errorList.Visibility = Visibility.Visible;
+						errorList.Items.Clear();
+						foreach (Error error in parser.state.Errors) {
+							ListViewItem item = new ListViewItem();
+							item.Content = error.Text;
+							Error e = error;
+							item.Selected += delegate {
+								textBox.SelectionStart = e.State.index;
+								Keyboard.Focus(textBox);
+							};
+							errorList.Items.Add(item);
+							//errorList.Items.Add(error.Text);
+						}
+					}));
+				}
+				else {
+					HideErrors();
+				}
 			}
 			return true;
 		}
@@ -378,7 +391,7 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	public static Map debuggingContext;
-	ListView errorList = new ListView();
+	public static ListView errorList = new ListView();
 	public class MyItem : TreeListViewItem {
 		private StackPanel panel = new StackPanel();
 		private TextBox text = new TextBox();
@@ -393,21 +406,13 @@ public partial class Editor : System.Windows.Window {
 			text.TextChanged += delegate {
 				if (fresh) {
 					fresh = false;
-					editor.watch.Items.Add(new MyItem());
+					watch.Items.Add(new MyItem());
 				}
 				if (debuggingContext != null) {
 					Update(debuggingContext);
 				}
 			};
 			bool wasExpanded = false;
-			//this.Expanded += delegate {
-			//    if (!wasExpanded) {
-			//        wasExpanded = true;
-			//        //foreach (SubItem item in Items) {
-			//        MakeSureComputed();
-			//        //}
-			//    }
-			//};
 			this.Header = panel;
 		}
 
@@ -426,6 +431,7 @@ public partial class Editor : System.Windows.Window {
 			if(Parser.Expression.Match(parser, ref expression)) {
 				try {
 					Map result = expression.GetExpression().Compile()(context);
+					this.label.Content = "";
 					SetMap(result, true);
 				}
 				catch (Exception e) {
@@ -894,9 +900,15 @@ public partial class Editor : System.Windows.Window {
 		grid.RowDefinitions.Add(new RowDefinition());
 		//grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(Row());
+
+		//RowDefinition row = Row();
+		//row.Height = new GridLength(20);
+		//row.maxh
+		//grid.RowDefinitions.Add(row);
+
 		//grid.RowDefinitions.Add(new RowDefinition());
 		grid.RowDefinitions.Add(Row());
-		grid.RowDefinitions.Add(Row());
+		//grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(Row());
 
 		Menu menu = new Menu();
@@ -987,6 +999,7 @@ public partial class Editor : System.Windows.Window {
 					catch (Exception e) {
 						MessageBox.Show(e.ToString());
 					}
+					HideWatch();
 					thread.Abort();
 				}));
 				thread.TrySetApartmentState(ApartmentState.STA);
@@ -1083,9 +1096,9 @@ public partial class Editor : System.Windows.Window {
 		Grid.SetRow(menu, 0);
 		Grid.SetRow(scrollViewer, 1);
 		Grid.SetRow(splitter, 2);
-		Grid.SetRow(watch, 3);
-		Grid.SetRow(errorList, 4);
-		Grid.SetRow(status, 5);
+		Grid.SetRow(watch, 2);
+		Grid.SetRow(errorList, 3);
+		Grid.SetRow(status, 4);
 		grid.Children.Add(menu);
 		grid.Children.Add(splitter);
 		grid.Children.Add(scrollViewer);

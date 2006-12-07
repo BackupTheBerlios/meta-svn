@@ -976,7 +976,6 @@ namespace Meta {
 		public static bool profiling = false;
 		static Interpreter() {
 			Map map = Parser.Parse(LibraryPath);
-			//Map map = Parser.Parse(Path.Combine(Interpreter.InstallationPath, "library.meta"));
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
@@ -1687,14 +1686,8 @@ namespace Meta {
 		}
 		public override bool ContainsKey(Map key) {
 			return new List<Map>(Keys).Contains(key);
-			//if(key.IsString) {
-			//    string p = Path.Combine(path, key.GetString());
-			//    return File.Exists(p)||Directory.Exists(p);
-			//}
-			//return false;
 		}
 		public override Number GetNumber() {
-			// not really correct
 			return null;
 		}
 		public override Map Copy() {
@@ -3237,7 +3230,6 @@ namespace Meta {
 														Call, Select, Search, Program)),
 													// should be optional error
 													Optional(Syntax.callSeparator)
-													//OptionalError(Syntax.callSeparator)
 													)))),
 									Whitespace
 									, Syntax.callEnd
@@ -3395,7 +3387,6 @@ namespace Meta {
 				Alternatives(
 					Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
 					Select,
-					//Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
 					Sequence(Assign(CodeKeys.Literal, LookupString)),
 					Expression)));
 
@@ -3459,15 +3450,9 @@ namespace Meta {
 									)))
 			));
 		});
-		//public static Rule SomeOptional(char c, string text) {
-		//    return Alternatives(c, Error(text));
-		//}
 		public static Rule OptionalError(char c) {
 			return Alternatives(c, Error("Missing '" + c + "'"));
 		}
-		//public static Rule OptionalError(Rule rule, string text) {
-		//    return Alternatives(rule, Error(text));
-		//}
 		public static Rule Error(string text) {
 			return new Rule(delegate (Parser parser,ref Map map) {
 				if (text.Contains(";")) {
@@ -3797,13 +3782,6 @@ namespace Meta {
 			Map result=null;
 			Parser.Value.Match(parser, ref result);
 			if (parser.state.index != parser.state.Text.Length - 1 || parser.state.Errors.Length!=0) {
-				//List<State> sorted=new List<State>(parser.errors.Keys);
-				//sorted.Sort(delegate(State a, State b) {
-				//    return a.Line.CompareTo(b.Line);
-				//});
-				//if (parser.errors.Count != 0) {
-				//    string error = parser.errors[sorted[0]];
-				//}
 				string t = "";
 				if (parser.state.index != parser.state.Text.Length - 1) {
 					t += "Expected end of file. " + new Source(parser.state.Line, parser.state.Column, parser.state.FileName).ToString()+"\n";
@@ -3812,7 +3790,6 @@ namespace Meta {
 					t += error.Text + error.Source.ToString()+"\n";
 				}
 				throw new SyntaxException(t, parser);
-				//throw new SyntaxException("Expected end of file.", parser);
 			}
 			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
 				cached.Clear();
@@ -4565,13 +4542,9 @@ namespace Meta {
 		}
 		public static Map Apply(Map func,Map array) {
 			List<Map> result = new List<Map>();
-			//try {
-				foreach (Map map in array.Array) {
-					result.Add(func.Call(map));
-				}
-			//}
-			//catch (Exception e) {
-			//}
+			foreach (Map map in array.Array) {
+				result.Add(func.Call(map));
+			}
 			return new DictionaryMap(result);
 		}
 		public static Map Append(Map array, Map item) {
