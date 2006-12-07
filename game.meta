@@ -1,10 +1,10 @@
 {[
-	&merge(<System,mscorlib,!"System.Drawing",SdlDotNet,SdlDotNet.Video.SetVideoModeWindow_Int32_Int32_Boolean(800,600,1),
-		SdlDotNet.Events,SdlDotNet.Key,OdeDotNet>);
+	&merge(<System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,
+		WindowsBase>);
 	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
-	vectorLength=vector{power(sum(<power(vector.1,2),power(vector.2,2)>),1/2)};
+	vectorLength=vector{power(sum(power(vector.1,2),power(vector.2,2)),1/2)};
 	vectorDifference=a{b{map(key{difference(a.<key>,b.<key>)},keys(a))}};
 	compareNumber=Meta.Library.CompareNumber_Number_Number;
 	callKey=key{map{branch(contains(map,key),{map.<key>()},{0})}};
@@ -13,11 +13,9 @@
 	productVector=a{b{map(index{product(<a.<index>,b.<index>>)},range(length(a)))}};
 	vectorProduct=productVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
-	Fill_Color(Color.get_White());
 	sort=Meta.Library.Sort_Map_Map;
 	createBox=space.CreateBox_Single_Single_Single;
 	vector=Vector3_Single_Single_Single;
-	Events.add_ChannelFinished_ChannelFinishedEventHandler;
 	makeBox=size{position{[
 		box=createBox(size.1,size.2,size.3);
 		box.set_Position_Vector3(vector(position.1,position.2,position.3));
@@ -26,12 +24,11 @@
 	makeBox(<798,50,100>,<400,600,0>);
 	makeBox(<50,598,100>,<0,300,0>);
 	makeBox(<50,598,100>,<800,300,0>);
+	canvas=Canvas();
 	bubble=size{[
 		body=Body_World(world);
-		radius={product(<size,4>)};
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(<size,size>),1/1000));
-		keyUp=0;
-		keyDown=0;
+		radius={product(size,4)};
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1/1000));
 		position=<random(1,790),random(1,590)>;
 		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
 		geom=space.CreateSphere_Single(radius());
@@ -39,50 +36,43 @@
 		geom.set_Body_Body(body);
 		speed=<random(-6,6),random(-6,6)>;
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
-		color=Color.get_Red();
+		color=Brushes.get_Red();
 		setColor=c{[color:c;]};
 		GetPosition={[
 			pos=body.get_Position();
 			&<pos.get_X(),pos.get_Y()>;
 		]};
-		move={0};
-		draw=c{[
-			asdf=GetPosition();
-			DrawFilledCircle_Circle_Color(Circle_Point_Int16(asdf,radius()),c);
-		]};
+		ellipse=Ellipse([
+			Width=product(2,radius());
+			Height=product(2,radius());
+			Fill=Brushes.get_Red();
+			Canvas.LeftProperty=GetPosition().1;
+			Canvas.TopProperty=GetPosition().2;
+		]);
+		canvas.get_Children().Add_UIElement(ellipse);
 	]};
-	player=key{c{[
+	jointGroup=JointGroup_Int32(0);
+	currentBubble=0;
+	line=Line([
+		Canvas.LeftProperty=0;
+		Canvas.RightProperty=0;
+	]);
+	line.set_Stroke_Brush(Brushes.get_Black());
+	line.set_StrokeThickness_Double(2);
+	line.set_X1_Double(100);
+	line.set_Y1_Double(100);
+	line.set_X2_Double(200);
+	line.set_Y2_Double(200);
+	line.set_Visibility_Visibility(Visibility.Visible);
+	setCurrentBubble=b{[currentBubble:b;]};
+	player=c{[
 		&bubble(1);
-		jointGroup=JointGroup_Int32(0);
 		setColor(c);
 		currentJoint=0;
 		setCurrentJoint=joint{[currentJoint:joint;]};
-		currentBubble=0;
-		setCurrentBubble=b{[currentBubble:b;]};
 		toVector=v{Vector3_Single_Single_Single(v.1,v.2,0)};
-		center=a{b{quotient(Sum(a,b),2)}};
-		keyDown=[
-			!"key"={[
-				
-				lengths=map(
-					b{vectorLength(vectorDifference(GetPosition(),b.GetPosition()))},
-					bubbles
-				);
-				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.<a>,lengths.<b>)}});
-				index=sorted.1;
-				bubble=bubbles.<index>;
-				joint=HingeJoint_World_JointGroup(world,jointGroup);
-				joint.Attach_Body_Body(bubble.body,body);
-				joint.set_Anchor_Vector3(bubble.body.get_Position());
-				setCurrentBubble(bubble);
-			]};
-		];
-		keyUp=[!"key"={[jointGroup.Empty();currentBubble:0;]};];
-	]}};
+	]};
 	paused=0;
-	add_Quit_QuitEventHandler({e{[Events.Close();Events.QuitApplication();]}});
-	add_KeyboardDown_KeyboardEventHandler({e{map(player{callKey(player.keyDown,e.get_Key())},players)}});
-	add_KeyboardUp_KeyboardEventHandler({e{map(player{callKey(player.keyUp,e.get_Key())},players)}});
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
 	space.add_Collision_CollisionEventHandler({e{[
@@ -99,36 +89,79 @@
 			enumerableToArray(a.Collide_Geom_Int32(b,13))
 		);
 	]}});
-	players=<player(Return,Color.get_Blue())>;
 	bubbles=join(<
-		map({bubble(random(1,5))},range(10)),
-		map({bubble(random(1,2))},range(10))
+		map({bubble(random(1,5))},range(3))
 	>);
-	Events.set_TargetFps_Int32(500);
-	paused=0;
-	add_Tick_TickEventHandler({{[
-		Fill_Color(Color.get_White());
-		contactGroup.Empty();
-		space.CheckCollisions();
-		world.Step();
-		map(b{[b.move();b.draw(b.color);]},bubbles);
-		map(player{player.draw(Color.get_Blue())},players);
-		map(
-			player{branch(
-				not(equal(0,player.currentBubble)),
-				{[
-					a=player.currentBubble.body.get_Position();
-					b=player.body.get_Position();
-					DrawLine_Line_Color(
-						Line_Int16_Int16_Int16_Int16(a.get_X(),a.get_Y(),b.get_X(),b.get_Y()),
-						Color.get_Black()
-					);
-				]},
-				{0}
-			)},
-			players
+	p=player();
+	window=Window([
+		Content=canvas;
+		Title="Weird game";
+		Background=Brushes.get_Yellow();
+	]);
+	window.add_KeyUp_KeyEventHandler({e{if(
+		equal(e.get_Key(),Key.Enter),
+		{[
+			jointGroup.Empty();
+			currentBubble:0;
+			line.set_Visibility_Visibility(Visibility.Hidden);
+		]}
+	)}});
+	window.add_KeyDown_KeyEventHandler({e{[
+		if(
+			and(equal(e.get_Key(),Key.Enter),equal(currentBubble,0)),
+			{[
+				lengths=map(
+					b{vectorLength(vectorDifference(p.GetPosition(),b.GetPosition()))},
+					bubbles
+				);
+				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.<a>,lengths.<b>)}});
+				index=sorted.1;
+				bubble=bubbles.<index>;
+				currentBubble:bubble;
+				joint=HingeJoint_World_JointGroup(world,jointGroup);
+				joint.Attach_Body_Body(bubble.body,p.body);
+				joint.set_Anchor_Vector3(bubble.body.get_Position());
+				setCurrentBubble(bubble);
+				pos1=bubble.GetPosition();
+				pos2=p.GetPosition();
+				line.set_X1_Double(pos1.1);
+				line.set_Y1_Double(pos1.2);
+				line.set_X2_Double(pos2.1);
+				line.set_Y2_Double(pos2.2);
+				line.set_Visibility_Visibility(Visibility.Visible);
+			]}
 		);
-		Flip();
 	]}});
-	Run();
+	canvas.get_Children().Add_UIElement(line);
+	timer=DispatcherTimer_DispatcherPriority(DispatcherPriority.Normal);
+	timer.set_Interval_TimeSpan(TimeSpan_Int64(10000));
+	timer.add_Tick_EventHandler(
+		{{[
+			contactGroup.Empty();
+			space.CheckCollisions();
+			world.Step();
+			map(
+				a{[
+					pos=a.GetPosition();
+					Canvas.SetLeft_UIElement_Double(a.ellipse,difference(pos.1,a.radius()));
+					Canvas.SetTop_UIElement_Double(a.ellipse,difference(pos.2,a.radius()));
+				]},
+				join(<bubbles,<p>>)
+			);
+			if(
+				not(equal(0,currentBubble)),
+				{[
+					print("hello!!!!!");
+			pos1=currentBubble.GetPosition();
+			pos2=p.GetPosition();
+			line.set_X1_Double(pos1.1);
+			line.set_Y1_Double(pos1.2);
+			line.set_X2_Double(pos2.1);
+			line.set_Y2_Double(pos2.2);
+			]});
+
+		]}}
+	);
+	window.add_Loaded_RoutedEventHandler({{timer.Start()}});
+	Application().Run_Window(window);
 ]}

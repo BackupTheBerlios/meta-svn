@@ -390,7 +390,7 @@
 				whileDecision=not(equal(start,10));
 				whileBranches=[
 					1=[
-						arg|loop(sum(<arg,1>));
+						arg|loop(sum(arg,1));
 					];
 					0=arg{arg};
 				];

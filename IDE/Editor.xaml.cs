@@ -239,7 +239,7 @@ public partial class Editor : System.Windows.Window {
 	}
 
 	public bool Compile(string text,bool automatic) {
-		try {
+		//try {
 			Interpreter.profiling = false;
 			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
 				cached.Clear();
@@ -288,10 +288,10 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 			return true;
-		}
-		catch (Exception e) {
-			throw e;
-		}
+		//}
+		//catch (Exception e) {
+		//    throw e;
+		//}
 	}
 
 	private void MakeLine(int index,string text) {
@@ -436,8 +436,6 @@ public partial class Editor : System.Windows.Window {
 				}
 				catch (Exception e) {
 					this.label.Content = "error";
-					//this.text.Text = e.ToString();
-					//Messageb
 				}
 			}
 		}
@@ -516,6 +514,17 @@ public partial class Editor : System.Windows.Window {
 		return row;
 	}
 	//public Editor editor;
+	public static Thread debugThread;
+	public static void StopDebugging() {
+		Interpreter.stopping = true;
+		continueDebugging = true;
+		//if (debugThread != null) {
+		//    debugThread.Abort();
+			HideWatch();
+		//}
+	}
+	public static bool continueDebugging = false;
+
 	public Editor() {
 		errorList.Background = Brushes.LightBlue;
 		errorList.Height = 100;
@@ -552,8 +561,10 @@ public partial class Editor : System.Windows.Window {
 			MethodInvoker go=delegate {
 				int line;
 				if(int.TryParse(box.Text,out line)) {
-					textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(line-1);
-					window.Close();
+					if (line < textBox.LineCount) {
+						textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(line - 1);
+						window.Close();
+					}
 				}
 			};
 			window.KeyDown += delegate(object sender, KeyEventArgs e) {
@@ -737,7 +748,7 @@ public partial class Editor : System.Windows.Window {
 										Program p = x as Program;
 										Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
 										if (p is Function) {
-											result = p.statementList[p.statementList.Count - 2].CurrentMap();
+											result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
 										}
 										if (result != null) {
 											s = Library.Merge(result,s);
@@ -896,21 +907,6 @@ public partial class Editor : System.Windows.Window {
 		};
 		Grid grid = new Grid();
 		grid.ColumnDefinitions.Add(new ColumnDefinition());
-		grid.RowDefinitions.Add(Row());
-		grid.RowDefinitions.Add(new RowDefinition());
-		//grid.RowDefinitions.Add(Row());
-		grid.RowDefinitions.Add(Row());
-
-		//RowDefinition row = Row();
-		//row.Height = new GridLength(20);
-		//row.maxh
-		//grid.RowDefinitions.Add(row);
-
-		//grid.RowDefinitions.Add(new RowDefinition());
-		grid.RowDefinitions.Add(Row());
-		//grid.RowDefinitions.Add(Row());
-		grid.RowDefinitions.Add(Row());
-
 		Menu menu = new Menu();
 		//DockPanel.SetDock(menu, Dock.Top);
 		MenuItem file = new MenuItem();
@@ -966,8 +962,12 @@ public partial class Editor : System.Windows.Window {
 			}
 		}));
 		RoutedUICommand debug = new RoutedUICommand("Debug", "Debug", GetType());
+		RoutedUICommand stopDebug = new RoutedUICommand();
+		BindKey(stopDebug, Key.F5, ModifierKeys.Shift);
+		CommandBindings.Add(new CommandBinding(stopDebug, delegate {
+			StopDebugging();
+		}));
 		bool debugging = false;
-		bool continueDebugging=false;
 		CommandBindings.Add(new CommandBinding(debug, delegate {
 			debugging = true;
 			Save();
@@ -990,20 +990,23 @@ public partial class Editor : System.Windows.Window {
 					}
 					continueDebugging = false;
 				};
-				Thread thread=null;
-				thread=new Thread(new ThreadStart(delegate {
+				debugThread=new Thread(new ThreadStart(delegate {
 					try {
 						Interpreter.Application = Application.Current;
 						Interpreter.Run(fileName, Map.Empty);
 					}
+					catch (ThreadAbortException e) {
+						return;
+					}
 					catch (Exception e) {
 						MessageBox.Show(e.ToString());
 					}
-					HideWatch();
-					thread.Abort();
+					Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+						StopDebugging();
+					}));
 				}));
-				thread.TrySetApartmentState(ApartmentState.STA);
-				thread.Start();
+				debugThread.TrySetApartmentState(ApartmentState.STA);
+				debugThread.Start();
 			}
 			debugging = false;
 		}));
@@ -1069,7 +1072,7 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(back, delegate {
 			if (history.Count != 0) {
 				ignoreChange = true;
-				textBox.SelectionStart = history.Pop();
+				textBox.Select(history.Pop(),0);
 				ignoreChange = false;
 			}
 		}));
@@ -1093,18 +1096,38 @@ public partial class Editor : System.Windows.Window {
         splitter.VerticalAlignment=VerticalAlignment.Top;
 		splitter.Background = Brushes.Yellow;
 		splitter.Height = 15;
+
+		watch.VerticalAlignment = VerticalAlignment.Stretch;
+		errorList.VerticalAlignment = VerticalAlignment.Top;
+
+		grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(new RowDefinition());
+		//grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(Row());
+
+		//RowDefinition row = Row();
+		//row.Height = new GridLength(20);
+		//row.maxh
+		//grid.RowDefinitions.Add(row);
+
+		//grid.RowDefinitions.Add(new RowDefinition());
+		grid.RowDefinitions.Add(Row());
+		//grid.RowDefinitions.Add(Row());
+		grid.RowDefinitions.Add(Row());
+
+
 		Grid.SetRow(menu, 0);
 		Grid.SetRow(scrollViewer, 1);
 		Grid.SetRow(splitter, 2);
-		Grid.SetRow(watch, 2);
+		Grid.SetRow(watch, 3);
 		Grid.SetRow(errorList, 3);
 		Grid.SetRow(status, 4);
 		grid.Children.Add(menu);
-		grid.Children.Add(splitter);
 		grid.Children.Add(scrollViewer);
 		grid.Children.Add(status);
 		grid.Children.Add(watch);
 		grid.Children.Add(errorList);
+		grid.Children.Add(splitter);
 
 		textBox.SizeChanged += delegate {
 			canvas.Width = textBox.ActualWidth + width;
@@ -1203,11 +1226,11 @@ public partial class Editor : System.Windows.Window {
 						ParameterInfo[] param = method.method.GetParameters();
 						if (param.Length > argIndex) {
 							paramName = param[argIndex].Name;
-							t=paramName;
+							t=param[argIndex].ParameterType.Name+" "+paramName;
 							foreach(XmlNode node in parameters) {
 								if (node.Attributes["name"].Value.Equals(paramName)) {
 									//XmlNode node = parameters[argIndex];
-									t = node.Attributes["name"].Value + ":\n" + node.InnerText;
+									t+= ":\n" + node.InnerText;
 								}
 							}
 							//if (t != null) {
@@ -1238,10 +1261,15 @@ public partial class Editor : System.Windows.Window {
 		bool matched = Parser.Value.Match(parser, ref map);
 		LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 		LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
+		LiteralExpression directory=new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)),lib);
 		lib.Statement = new LiteralStatement(gac);
+		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
-		map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
-		map[CodeKeys.Function].Compile(lib);
+		map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
+		//map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(directory);
+		//map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
+		map[CodeKeys.Function].Compile(directory);
+		//map[CodeKeys.Function].Compile(lib);
 		Source key = new Source(
 			parser.state.Line,
 			parser.state.Column,

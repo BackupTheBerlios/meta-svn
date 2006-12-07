@@ -19,31 +19,19 @@ k{[
 			];
 		];
 		numberTest=[
-			positiveAdd=sum(<100,1000>);
-			negativeAdd=sum(<-100,91>);
-			differenceTest=sum(<
-				1/4,
-				product(<
-					1/100,
-					-1
-				>)
-			>);
+			positiveAdd=sum(100,1000);
+			negativeAdd=sum(-100,91);
+			differenceTest=sum(1/4,product(1/100,-1));
 			differenceTest2=difference(103,2);
 			divideTest=quotient(5,103);
-			productInteger=product(<19,1023>);
-			minusproduct=product(<-1,-2>);
-			productFraction=product(<3/2,7/3>);
+			productInteger=product(19,1023);
+			minusproduct=product(-1,-2);
+			productFraction=product(3/2,7/3);
 			smallerDecreasingTest=less(4,1);
 			strictlyIncreasingTest=greater(23,23);
 			smallerTest=less(0,1);
 			greaterTest=greater(3,5);
-			divide=product(<
-				1000,
-				quotient(
-					1,
-					7
-				)
-			>);
+			divide=product(1000,quotient(1,7));
 		];
 		bitwiseTest=[
 			or=0;
@@ -61,10 +49,7 @@ k{[
 			Map=[
 				&map(
 					[
-						argument|sum(<
-							argument,
-							1
-						>);
+						argument|sum(argument,1);
 					],
 					<1,2,3>
 				);
@@ -116,10 +101,7 @@ k{[
 		sumTest=accumulate(
 			[
 				first|[
-					second|sum(<
-						first,
-						second
-					>);
+					second|sum(first,second);
 				];
 			],
 			<2,5,6,8>

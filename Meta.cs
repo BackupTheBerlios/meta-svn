@@ -611,6 +611,9 @@ namespace Meta {
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
 					statement.Assign(ref context);
+					//if (Interpreter.stopping) {
+
+					//}
 				}
 				return context;
 			};
@@ -945,6 +948,7 @@ namespace Meta {
 	}
 	public delegate void DebugDelegate(Map context);
 	public class Interpreter {
+		public static bool stopping = false;
 		public static Application Application {
 			get {
 				return application;
@@ -1169,6 +1173,10 @@ namespace Meta {
 				}
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
 			}
+			else if(target.Equals(typeof(double))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetDouble"));
+			}
 		    else if(target.Equals(typeof(Number))) {
 				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetNumber"));
 		    }
@@ -1177,6 +1185,7 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
 			}
 			else if (target.Equals(typeof(Map))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetObject"));
 			}
 			else if (target.Equals(typeof(Boolean))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
@@ -1296,7 +1305,8 @@ namespace Meta {
 							case TypeCode.Decimal:
 								return (decimal)(meta.GetNumber().GetInt64());
 							case TypeCode.Double:
-								return (double)(meta.GetNumber().GetInt64());
+								return (double)(meta.GetNumber().GetDouble());
+								//return (double)(meta.GetNumber().GetInt64());
 							case TypeCode.Int16:
 								return Convert.ToInt16(meta.GetNumber().GetRealInt64());
 							case TypeCode.Int32:
@@ -1572,6 +1582,9 @@ namespace Meta {
 		}
 	}
 	public class ObjectMap : DotNetMap {
+		public override object GetObject() {
+			return Object;
+		}
 		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
 		protected override BindingFlags BindingFlags {
 			get {
@@ -1627,6 +1640,8 @@ namespace Meta {
 		}
 		public override Map this[Map key] {
 			get {
+				//if (key.Equals(new StringMap("OdeDotNet"))) {
+				//}
 				if (ContainsKey(key)) {
 					string p=Path.Combine(path,key.GetString());
 					if (key.Equals(new StringMap("GuiExample"))) {
@@ -4413,20 +4428,6 @@ namespace Meta {
 	    }
 	}
 	public class Library {
-		public static Map Sum(Map numbers) {
-			Number n = 0;
-			foreach (Map m in numbers.Array) {
-				n=n+m.GetNumber();
-			}
-			return n;
-		}
-		public static Map Product(Map numbers) {
-			Number n = 1;
-			foreach (Map m in numbers.Array) {
-				n = n * m.GetNumber();
-			}
-			return n;
-		}
 		public static Map Slice(Map array,int start,int end) {
 			return new DictionaryMap(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
 		}
@@ -4451,7 +4452,7 @@ namespace Meta {
 			return Map.Empty;
 		}
 		public static Map Double(Map d) {
-			return new ObjectMap((object)(float)d.GetNumber().GetDouble());
+			return new ObjectMap((object)(double)d.GetNumber().GetDouble());
 		}
 		public static void WriteLine(string s) {
 			Console.WriteLine(s);
@@ -4489,9 +4490,11 @@ namespace Meta {
 			return new DictionaryMap();
 		}
 		public static Map Raise(Number a, Number b) {
-			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));}
+			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
+		}
 		public static int CompareNumber(Number a, Number b) {
-			return a.CompareTo(b);}
+			return a.CompareTo(b);
+		}
 		public static Map Sort(Map array, Map function) {
 			List<Map> result = new List<Map>(array.Array);
 			result.Sort(delegate(Map a, Map b) {
@@ -4746,6 +4749,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual object GetObject() {
+			return this;
+		}
 		public override bool Equals(object obj) {
 			Map map = obj as Map;
 			if (map != null && map.Count == Count) {
