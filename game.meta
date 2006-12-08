@@ -36,8 +36,6 @@
 		geom.set_Body_Body(body);
 		speed=<random(-6,6),random(-6,6)>;
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
-		color=Brushes.get_Red();
-		setColor=c{[color:c;]};
 		GetPosition={[
 			pos=body.get_Position();
 			&<pos.get_X(),pos.get_Y()>;
@@ -59,15 +57,11 @@
 	]);
 	line.set_Stroke_Brush(Brushes.get_Black());
 	line.set_StrokeThickness_Double(2);
-	line.set_X1_Double(100);
-	line.set_Y1_Double(100);
-	line.set_X2_Double(200);
-	line.set_Y2_Double(200);
-	line.set_Visibility_Visibility(Visibility.Visible);
+	line.set_Visibility_Visibility(Visibility.Hidden);
 	setCurrentBubble=b{[currentBubble:b;]};
 	player=c{[
 		&bubble(1);
-		setColor(c);
+		ellipse.set_Fill_Brush(Brushes.get_Green());
 		currentJoint=0;
 		setCurrentJoint=joint{[currentJoint:joint;]};
 		toVector=v{Vector3_Single_Single_Single(v.1,v.2,0)};
@@ -89,13 +83,16 @@
 			enumerableToArray(a.Collide_Geom_Int32(b,13))
 		);
 	]}});
-	bubbles=join(<
-		map({bubble(random(1,5))},range(3))
-	>);
+	slowBubble=size{[
+		&bubble(size);
+		ellipse.set_Fill_Brush(Brushes.get_Blue());
+	]};
+	bubbles=map({bubble(random(1,5))},range(30));
+	//normalBubbles=map({bubble(random(1,3))},range(30));
 	p=player();
 	window=Window([
 		Content=canvas;
-		Title="Weird game";
+		Title="Bubblemania";
 		Background=Brushes.get_Yellow();
 	]);
 	window.add_KeyUp_KeyEventHandler({e{if(
@@ -151,15 +148,14 @@
 			if(
 				not(equal(0,currentBubble)),
 				{[
-					print("hello!!!!!");
-			pos1=currentBubble.GetPosition();
-			pos2=p.GetPosition();
-			line.set_X1_Double(pos1.1);
-			line.set_Y1_Double(pos1.2);
-			line.set_X2_Double(pos2.1);
-			line.set_Y2_Double(pos2.2);
-			]});
-
+					pos1=currentBubble.GetPosition();
+					pos2=p.GetPosition();
+					line.set_X1_Double(pos1.1);
+					line.set_Y1_Double(pos1.2);
+					line.set_X2_Double(pos2.1);
+					line.set_Y2_Double(pos2.2);
+				]}
+			);
 		]}}
 	);
 	window.add_Loaded_RoutedEventHandler({{timer.Start()}});
