@@ -192,7 +192,21 @@ public partial class Editor : System.Windows.Window {
 		textBox.Cursor = Cursors.IBeam;
 		iterativeSearch = null;
 	}
-	public class Item{
+	public class PreviewItem:Item {
+		private Map map;
+		public PreviewItem(Map map):base("",null) {
+			this.map = map;
+		}
+		public override string ToString() {
+			if (map is FileMap) {
+				return ((FileMap)map).path;
+			}
+			else {
+				return map.ToString();
+			}
+		}
+	}
+	public class Item {
 		public virtual string Signature() {
 			if (original != null) {
 				XmlComments comments = new XmlComments(original);
@@ -908,7 +922,8 @@ public partial class Editor : System.Windows.Window {
 									intellisenseItems.Add(new Item(k.ToString(), original));
 								}
 								else {
-									intellisenseItems.Add(new Item(k.ToString(), null));
+									intellisenseItems.Add(new PreviewItem(k));
+									//intellisenseItems.Add(new Item(k.ToString(), null));
 								}
 							}
 							if (intellisense.Items.Count != 0) {
@@ -1160,7 +1175,8 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 		};
-		Stack<int> history = new Stack<int>();
+		int historyIndex=0;
+		List<int> history = new List<int>();
 		bool ignoreChange = false;
 		textBox.SelectionChanged += delegate {
 			if (!ignoreChange) {
@@ -1169,7 +1185,10 @@ public partial class Editor : System.Windows.Window {
 				t.Interval = new TimeSpan(20000);
 				int i = textBox.SelectionStart;
 				t.Tick += delegate {
-					history.Push(i);
+					history.RemoveRange(historyIndex, history.Count - historyIndex);
+					history.Add(i);
+					historyIndex++;
+					//history.Push(i);
 					t.Stop();
 				};
 				t.Start();
@@ -1180,11 +1199,29 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(back, delegate {
 			if (history.Count != 0) {
 				ignoreChange = true;
-				textBox.Select(history.Pop(),0);
+				if (historyIndex > 0) {
+					textBox.Select(history[historyIndex - 1], 0);
+					historyIndex--;
+				}
+				//textBox.Select(history.Pop(), 0);
+				//textBox.Select(history.Pop(), 0);
 				ignoreChange = false;
 			}
 		}));
 		BindKey(back, Key.OemMinus, ModifierKeys.Control);
+		MakeCommand(ModifierKeys.Control | ModifierKeys.Shift, Key.OemMinus, delegate {
+			if (historyIndex<history.Count) {
+				ignoreChange = true;
+				//if (historyIndex > 0) {
+				textBox.Select(history[historyIndex], 0);
+				historyIndex++;
+				//}
+				//textBox.Select(history.Pop(), 0);
+				//textBox.Select(history.Pop(), 0);
+				ignoreChange = false;
+			}
+
+		});
 		canvas.Children.Add(textBox);
 		canvas.Background = Brushes.Yellow;
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;

@@ -1755,7 +1755,7 @@ namespace Meta {
 		public override Map Copy() {
 			return this;
 		}
-		private string path;
+		public readonly string path;
 		public FileMap(string path) {
 			this.path = path;
 		}
