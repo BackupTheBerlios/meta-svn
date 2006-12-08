@@ -186,7 +186,6 @@ public partial class Editor : System.Windows.Window {
 				iterativeSearch.index-=2;
 			}
 			iterativeSearch.Find(forward);
-			//StopIterativeSearch();
 		}
 	}
 	public void StopIterativeSearch() {
@@ -543,6 +542,44 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static bool continueDebugging = false;
 
+	public void MakeCommand(ModifierKeys modifiers,Key key,MethodInvoker method) {
+		RoutedUICommand command = new RoutedUICommand();
+		BindKey(command,key,modifiers);
+		CommandBindings.Add(new CommandBinding(command, delegate { method(); }));
+	}
+	public static string GetIndentation(string line) {
+		return "".PadLeft(line.Length - LineWithoutIndentation(line).Length, '\t');
+	}
+	public static string LineWithoutIndentation(string line) {
+		return line.TrimStart('\t');
+	}
+	//public void Edit(MethodInvoker method) {
+	//    int oldStart = textBox.SelectionStart;
+	//    int oldLength = textBox.SelectionLength;
+
+	//    textBox.SelectionStart = oldStart;
+	//    textBox.SelectionLength = oldLength;
+	//}
+	public void Indent(bool increase) {
+		int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
+		int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+		int oldStart = textBox.SelectionStart;
+		int oldLength = textBox.SelectionLength;
+		for (int i = startLine; i <= endLine; i++) {
+			string line = textBox.GetLineText(i);
+			textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
+			textBox.SelectionLength = line.Length;
+			string lineStart=LineWithoutIndentation(line);
+			if(lineStart.StartsWith("//")) {
+				lineStart=lineStart.Remove(0,2);
+			}
+			int difference=increase?
+				1:-1;
+			textBox.SelectedText = "".PadLeft(Math.Max(0,GetIndentation(line).Length+difference),'\t') + lineStart;
+		}
+		textBox.SelectionStart = oldStart;
+		textBox.SelectionLength = oldLength;		
+	}
 	public Editor() {
 		errorList.Background = Brushes.LightBlue;
 		errorList.Height = 100;
@@ -550,6 +587,38 @@ public partial class Editor : System.Windows.Window {
 		editor = this;
 		LoadSettings();
 		watch.Items.Add(new MyItem());
+		MakeCommand(ModifierKeys.Control, Key.U, delegate {
+			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
+			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+			int oldStart = textBox.SelectionStart;
+			int oldLength = textBox.SelectionLength;
+			for (int i = startLine; i <= endLine; i++) {
+				string line = textBox.GetLineText(i);
+				textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
+				textBox.SelectionLength = line.Length;
+				string lineStart=LineWithoutIndentation(line);
+				if(lineStart.StartsWith("//")) {
+					lineStart=lineStart.Remove(0,2);
+				}
+				textBox.SelectedText = GetIndentation(line) + lineStart;
+			}
+			textBox.SelectionStart = oldStart;
+			textBox.SelectionLength = oldLength;
+		});
+		MakeCommand(ModifierKeys.Control, Key.K, delegate {
+			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
+			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+			int oldStart = textBox.SelectionStart;
+			int oldLength = textBox.SelectionLength;
+			for (int i = startLine; i <= endLine; i++) {
+				string line=textBox.GetLineText(i);
+				textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
+				textBox.SelectionLength = line.Length;
+				textBox.SelectedText = GetIndentation(line) + "//" + LineWithoutIndentation(line);
+			}
+			textBox.SelectionStart = oldStart;
+			textBox.SelectionLength = oldLength;
+		});
 		//TreeListViewItem treeItem=new TreeListViewItem();
 		//treeItem.Header = new TextBox();
 		//treeItem.Items.Add("hi");
@@ -667,6 +736,21 @@ public partial class Editor : System.Windows.Window {
 		textBox.FontFamily = new FontFamily("Courier New");
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
+			if (e.Key == Key.Tab) {
+				bool increase;
+				if(textBox.SelectionLength!=0) {
+					if(e.KeyboardDevice.Modifiers==ModifierKeys.Shift) {
+						Indent(false);
+						e.Handled=true;
+						return;
+					}
+					else if(e.KeyboardDevice.Modifiers==ModifierKeys.None) {
+						Indent(true);
+						e.Handled=true;
+						return;
+					}
+				}
+			}
 			if (e.Key == Key.Return) {
 				string line = textBox.GetLineText(textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart));
 				textBox.SelectedText = Environment.NewLine.PadRight(2 + line.Length - line.TrimStart('\t').Length, '\t');
