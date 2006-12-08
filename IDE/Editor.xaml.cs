@@ -52,8 +52,12 @@ public partial class Editor : System.Windows.Window {
 					return 0;
 				}
 				else {
-					return SelectionStart - Text.LastIndexOf('\n',Math.Max(0, SelectionStart - 1)) + 1;
+					return SelectionStart - Text.LastIndexOf('\n', Math.Max(0, SelectionStart - 1))-1;
+					//return SelectionStart - Text.LastIndexOf('\n', Math.Max(0, SelectionStart - 1)) + 1;
 				}
+			}
+			set {
+				SelectionStart = textBox.Text.LastIndexOf('\n', SelectionStart)+1 + value;
 			}
 		}
 	}
@@ -717,7 +721,22 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.MoveToDocumentEnd, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.MoveToDocumentStart, Key.U, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.MoveToLineEnd, Key.Oem1, ModifierKeys.Alt);
-		BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
+
+		MakeCommand(ModifierKeys.Alt, Key.U, delegate {
+			int lineIndex=textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
+			string line=textBox.GetLineText(lineIndex);
+			int position = GetIndentation(line).Length;
+			if (textBox.Column != position) {
+				textBox.Column = position;
+			}
+			else {
+				EditingCommands.MoveToLineStart.Execute(null, textBox);
+			}
+		});
+		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
+
+		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
+
 		BindKey(EditingCommands.MoveUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.SelectDownByLine, Key.K, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectDownByPage, Key.K, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
