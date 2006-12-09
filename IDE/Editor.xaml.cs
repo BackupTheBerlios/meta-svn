@@ -53,7 +53,6 @@ public partial class Editor : System.Windows.Window {
 				}
 				else {
 					return SelectionStart - Text.LastIndexOf('\n', Math.Max(0, SelectionStart - 1))-1;
-					//return SelectionStart - Text.LastIndexOf('\n', Math.Max(0, SelectionStart - 1)) + 1;
 				}
 			}
 			set {
@@ -220,16 +219,13 @@ public partial class Editor : System.Windows.Window {
 						n.InnerText = n.Attributes["cref"].Value.Substring(2);
 					}
 				}
-				//if (node.InnerText.Length != "") {
-					return node.InnerText;
+				return node.InnerText;
 			}
 			return "";
 		}
 		private string text;
 		private MemberInfo original;
-		//private MethodBase method;
 		public Item(string text, MemberInfo original) {
-			//this.method = method;
 			this.text = text;
 			this.original = original;
 		}
@@ -274,59 +270,54 @@ public partial class Editor : System.Windows.Window {
 	}
 
 	public bool Compile(string text,bool automatic) {
-		//try {
-			Interpreter.profiling = false;
-			foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
-				cached.Clear();
-			}
+		Interpreter.profiling = false;
+		foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+			cached.Clear();
+		}
 
-			Parser parser = new Parser(text, fileName);
-			Map map = null;
-			bool matched = Parser.Value.Match(parser, ref map);
-			Dispatcher.Invoke(DispatcherPriority.Normal,new System.Windows.Forms.MethodInvoker(delegate {
-				foreach (Rectangle line in errors) {
-					canvas.Children.Remove(line);
-				}
-				errors.Clear();
+		Parser parser = new Parser(text, fileName);
+		Map map = null;
+		bool matched = Parser.Value.Match(parser, ref map);
+		Dispatcher.Invoke(DispatcherPriority.Normal,new System.Windows.Forms.MethodInvoker(delegate {
+			foreach (Rectangle line in errors) {
+				canvas.Children.Remove(line);
+			}
+			errors.Clear();
+		}));
+		foreach (Error error in parser.state.Errors) {
+			Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
+				MakeLine(error.State.index,error.Text);
 			}));
-			foreach (Error error in parser.state.Errors) {
-				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
-					MakeLine(error.State.index,error.Text);
+		}
+		if (parser.state.index != text.Length) {
+			Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
+				MakeLine(parser.state.index, "Expected end of file.");
+			}));
+			return false;
+		}
+		if (!automatic) {
+			if (parser.state.Errors.Length != 0) {
+				Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
+					errorList.Visibility = Visibility.Visible;
+					errorList.Items.Clear();
+					foreach (Error error in parser.state.Errors) {
+						ListViewItem item = new ListViewItem();
+						item.Content = error.Text;
+						Error e = error;
+						item.Selected += delegate {
+							textBox.SelectionStart = e.State.index;
+							Keyboard.Focus(textBox);
+						};
+						errorList.Items.Add(item);
+						//errorList.Items.Add(error.Text);
+					}
 				}));
 			}
-			if (parser.state.index != text.Length) {
-				Dispatcher.Invoke(DispatcherPriority.Normal, new System.Windows.Forms.MethodInvoker(delegate {
-					MakeLine(parser.state.index, "Expected end of file.");
-				}));
-				return false;
+			else {
+				HideErrors();
 			}
-			if (!automatic) {
-				if (parser.state.Errors.Length != 0) {
-					Dispatcher.Invoke(DispatcherPriority.Normal, new MethodInvoker(delegate {
-						errorList.Visibility = Visibility.Visible;
-						errorList.Items.Clear();
-						foreach (Error error in parser.state.Errors) {
-							ListViewItem item = new ListViewItem();
-							item.Content = error.Text;
-							Error e = error;
-							item.Selected += delegate {
-								textBox.SelectionStart = e.State.index;
-								Keyboard.Focus(textBox);
-							};
-							errorList.Items.Add(item);
-							//errorList.Items.Add(error.Text);
-						}
-					}));
-				}
-				else {
-					HideErrors();
-				}
-			}
-			return true;
-		//}
-		//catch (Exception e) {
-		//    throw e;
-		//}
+		}
+		return true;
 	}
 
 	private void MakeLine(int index,string text) {
@@ -338,6 +329,7 @@ public partial class Editor : System.Windows.Window {
 		line.Fill = Brushes.Red;
 		Label label = new Label();
 		label.Content = text;
+		label.FontFamily = font;
 		label.Background = Brushes.LightYellow;
 		Canvas.SetTop(label, r.Bottom);
 		Canvas.SetLeft(label, r.Right);
@@ -399,10 +391,8 @@ public partial class Editor : System.Windows.Window {
 			this.Expanded += delegate {
 				if (!wasExpanded) {
 					wasExpanded = true;
-					//foreach (SubItem item in Items) {
 					MakeSureComputed();
 				}
-				//}
 			};
 			panel.Orientation = Orientation.Horizontal;
 			panel.Children.Add(this.key);
@@ -548,15 +538,11 @@ public partial class Editor : System.Windows.Window {
 		row.Height = GridLength.Auto;
 		return row;
 	}
-	//public Editor editor;
 	public static Thread debugThread;
 	public static void StopDebugging() {
 		Interpreter.stopping = true;
 		continueDebugging = true;
-		//if (debugThread != null) {
-		//    debugThread.Abort();
-			HideWatch();
-		//}
+		HideWatch();
 	}
 	public static bool continueDebugging = false;
 
@@ -571,18 +557,12 @@ public partial class Editor : System.Windows.Window {
 	public static string LineWithoutIndentation(string line) {
 		return line.TrimStart('\t');
 	}
-	//public void Edit(MethodInvoker method) {
-	//    int oldStart = textBox.SelectionStart;
-	//    int oldLength = textBox.SelectionLength;
-
-	//    textBox.SelectionStart = oldStart;
-	//    textBox.SelectionLength = oldLength;
-	//}
 	public void Indent(bool increase) {
 		int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
 		int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
 		int oldStart = textBox.SelectionStart;
 		int oldLength = textBox.SelectionLength;
+		int removed = 0;
 		for (int i = startLine; i <= endLine; i++) {
 			string line = textBox.GetLineText(i);
 			textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
@@ -590,15 +570,24 @@ public partial class Editor : System.Windows.Window {
 			string lineStart=LineWithoutIndentation(line);
 			if(lineStart.StartsWith("//")) {
 				lineStart=lineStart.Remove(0,2);
+				removed += 2;
 			}
 			int difference=increase?
 				1:-1;
 			textBox.SelectedText = "".PadLeft(Math.Max(0,GetIndentation(line).Length+difference),'\t') + lineStart;
 		}
 		textBox.SelectionStart = oldStart;
-		textBox.SelectionLength = oldLength;		
+		textBox.SelectionLength = oldLength-removed;
 	}
+	public static FontFamily font;
 	public Editor() {
+		try {
+			font = new FontFamily("Consolas");
+		}
+		catch (Exception e) {
+			font = new FontFamily("Courier New");
+		}
+
 		errorList.Background = Brushes.LightBlue;
 		errorList.Height = 100;
 		errorList.Visibility = Visibility.Collapsed;
@@ -637,11 +626,6 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionStart = oldStart;
 			textBox.SelectionLength = oldLength;
 		});
-		//TreeListViewItem treeItem=new TreeListViewItem();
-		//treeItem.Header = new TextBox();
-		//treeItem.Items.Add("hi");
-		//watch.Items.Add(treeItem);
-		//watch.Items.Add(new TextBox());
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
 		editor = this;
@@ -733,11 +717,6 @@ public partial class Editor : System.Windows.Window {
 				EditingCommands.MoveToLineStart.Execute(null, textBox);
 			}
 		});
-		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
-
-		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
-		//FontFamily family = intellisense.FontFamily;
-
 		BindKey(EditingCommands.MoveUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.SelectDownByLine, Key.K, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectDownByPage, Key.K, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
@@ -767,17 +746,9 @@ public partial class Editor : System.Windows.Window {
 		intellisense.Width = 400;
 		intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
-		FontFamily font;
-		try {
-			font = new FontFamily("Consolas");
-		}
-		catch (Exception e) {
-			font = new FontFamily("Courier New");
-		}
 		intellisense.FontFamily = font;
 		intellisense.FontSize = 14;
 		textBox.FontFamily = font;
-		//textBox.FontWeight = FontWeights.UltraBold;
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Tab) {
@@ -953,7 +924,6 @@ public partial class Editor : System.Windows.Window {
 								}
 								else {
 									intellisenseItems.Add(new PreviewItem(k));
-									//intellisenseItems.Add(new Item(k.ToString(), null));
 								}
 							}
 							if (intellisense.Items.Count != 0) {
@@ -994,7 +964,6 @@ public partial class Editor : System.Windows.Window {
 			}
 			else if (e.Key == Key.D9) {
 				DoArgumentHelp(e);
-				//toolTip.Visibility = Visibility.Hidden;
 			}
 			else if (e.Key == Key.D8 || e.Key == Key.OemComma) {
 				DoArgumentHelp(e);
@@ -1062,7 +1031,6 @@ public partial class Editor : System.Windows.Window {
 		Grid grid = new Grid();
 		grid.ColumnDefinitions.Add(new ColumnDefinition());
 		Menu menu = new Menu();
-		//DockPanel.SetDock(menu, Dock.Top);
 		MenuItem file = new MenuItem();
 		MenuItem save = new MenuItem();
 		MenuItem run = new MenuItem();
@@ -1175,7 +1143,6 @@ public partial class Editor : System.Windows.Window {
 		status.Children.Add(editorLine);
 
 		status.Children.Add(message);
-		//DockPanel.SetDock(status, Dock.Bottom);
 
 		file.Items.Add(openItem);
 		file.Items.Add(comp);
@@ -1184,7 +1151,6 @@ public partial class Editor : System.Windows.Window {
 		menu.Items.Add(file);
 		menu.Items.Add(view);
 
-		//DockPanel.SetDock(textBox, Dock.Bottom);
 		textBox.TextChanged += delegate {
 			if(Intellisense) {
 				if (textBox.SelectionStart <= searchStart) {
@@ -1219,7 +1185,6 @@ public partial class Editor : System.Windows.Window {
 					history.RemoveRange(historyIndex, history.Count - historyIndex);
 					history.Add(i);
 					historyIndex++;
-					//history.Push(i);
 					t.Stop();
 				};
 				t.Start();
@@ -1272,17 +1237,9 @@ public partial class Editor : System.Windows.Window {
 
 		grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(new RowDefinition());
-		//grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(Row());
 
-		//RowDefinition row = Row();
-		//row.Height = new GridLength(20);
-		//row.maxh
-		//grid.RowDefinitions.Add(row);
-
-		//grid.RowDefinitions.Add(new RowDefinition());
 		grid.RowDefinitions.Add(Row());
-		//grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(Row());
 
 
@@ -1399,16 +1356,13 @@ public partial class Editor : System.Windows.Window {
 							t=param[argIndex].ParameterType.Name+" "+paramName;
 							foreach(XmlNode node in parameters) {
 								if (node.Attributes["name"].Value.Equals(paramName)) {
-									//XmlNode node = parameters[argIndex];
 									t+= ":\n" + node.InnerText;
 								}
 							}
-							//if (t != null) {
-								PositionIntellisense();
-								toolTip.Visibility = Visibility.Visible;
-								toolTip.Text = t;
-								return true;
-							//}
+							PositionIntellisense();
+							toolTip.Visibility = Visibility.Visible;
+							toolTip.Text = t;
+							return true;
 						}
 					}
 				}
@@ -1436,10 +1390,7 @@ public partial class Editor : System.Windows.Window {
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
 		map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
-		//map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(directory);
-		//map[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
 		map[CodeKeys.Function].Compile(directory);
-		//map[CodeKeys.Function].Compile(lib);
 		Source key = new Source(
 			parser.state.Line,
 			parser.state.Column,

@@ -1,6 +1,5 @@
 {[
-	&merge(<System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,
-		WindowsBase>);
+	&merge(<System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase>);
 	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
@@ -125,16 +124,11 @@
 				currentBubble:bubble;
 				
 				joint=SliderJoint_World_JointGroup(world,jointGroup);
-				joint.Attach_Body_Body(bubble.body,p.body);
-				
+				joint.Attach_Body_Body(bubble.body,p.body);			
 				
 				bounce=1;
 				
-				//high=vectorDifference(bubble.GetPosition(),p.GetPosition());
-				absolute=number{branch(less(number,0),{difference(0,number)},{number})};
-				//high=map(absolute,high);
-				//high=map(product(3/2),high);
-				
+				absolute=number{branch(less(number,0),{difference(0,number)},{number})};				
 				
 				middle=map({vectorLength(vectorDifference(p.GetPosition(),bubble.GetPosition()))},range(3));
 				high=map(product(3/2),middle);
@@ -148,10 +142,6 @@
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop,low.1);
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop2,low.2);
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop3,low.3);
-				
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
 				
 				joint.SetParam_JointParameters_Single(JointParameters.StopErp,erp);
 				joint.SetParam_JointParameters_Single(JointParameters.StopErp2,erp);
