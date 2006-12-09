@@ -33,6 +33,7 @@ using SdlDotNet.Sprites;
 using SdlDotNet.Windows;
 using SdlDotNet;
 using System.GACManagedAccess;
+using System.Globalization;
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
@@ -1702,7 +1703,7 @@ namespace Meta {
 				yield break;
 			}
 		}
-		private string path;
+		public readonly string path;
 		public DirectoryMap(string path) {
 			this.path = path;
 		}
@@ -3126,6 +3127,57 @@ namespace Meta {
 						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
 					OptionalError(Syntax.@string)))));
 
+		//public static return new Rule(delegate(Parser parser, ref Map map) {
+		//        CachedResult cachedResult;
+		//        State state = parser.state;
+		//        if (cached.TryGetValue(state, out cachedResult)) {
+		//            map = cachedResult.map;
+		//            if (parser.state.Text.Length == parser.state.index + 1) {
+		//                return false;
+		//            }
+		//            parser.state = cachedResult.state;
+		//            return true;
+		//        }
+		//        if (rule.Match(parser, ref map)) {
+		//            cached[state] = new CachedResult(map, parser.state);
+		//            return true;
+		//        }
+		//        return false;
+		//    })
+		public static Rule Decimal = Sequence(new Action(
+	        Sequence(
+				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer)))),
+				Append(Syntax.decimalSeparator),
+				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
+	        delegate(Parser p, Map map, ref Map result) {
+				Rational rational = new Rational(double.Parse(map.GetString(),CultureInfo.InvariantCulture));//map[1].GetString() + "." + map[2].GetString()));
+				//Rational rational = new Rational(double.Parse(map[1].GetString() + "." + map[2].GetString()));
+				if (rational.GetInteger() != null) {
+				    result=new Integer32(rational.GetInt32());
+					result.Source = rational.Source;
+				}
+				else {
+				    result=rational;
+					result.Source = rational.Source;
+				}
+			}));
+
+		//public static Rule Decimal = Sequence(
+		//    ReferenceAssignment(Integer),
+		//        new Action(
+		//        Optional(Sequence(
+		//            Syntax.decimalSeparator,
+		//            ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
+		//            if(map!=null) {
+		//                int first=result.GetNumber().GetInteger().GetInt32();
+		//                int second=map.GetNumber().GetInteger().GetInt32();
+		//                int log=Math.Log10(second
+		//                result = new Rational(first Math.Log10(, map.GetNumber().GetDouble());
+		//                //result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
+		//                result.Source = map.Source;
+		//            }
+		//        }));
+
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),
 			new Action(
@@ -3280,7 +3332,7 @@ namespace Meta {
 		);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = Sequence(
-			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Number,String,CharacterDataExpression))
+			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
 			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
@@ -3828,6 +3880,7 @@ namespace Meta {
 		}
 	}
 	public class Syntax {
+		public const char decimalSeparator = '.';
 		public const char searchStatement=':';
 		public const char search='!';
 		public const char comment='/';

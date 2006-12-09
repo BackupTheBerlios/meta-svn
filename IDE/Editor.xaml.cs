@@ -204,12 +204,20 @@ public partial class Editor : System.Windows.Window {
 	}
 	public class PreviewItem:Item {
 		private Map map;
-		public PreviewItem(Map map):base("",null) {
+		private Map key;
+		public PreviewItem(Map key,Map map):base("",null) {
 			this.map = map;
+			this.key=key;
 		}
 		public override string ToString() {
+			return key.ToString();
+		}
+		public override string Signature() {
 			if (map is FileMap) {
 				return ((FileMap)map).path;
+			}
+			else if (map is DirectoryMap) {
+				return ((DirectoryMap)map).path;
 			}
 			else {
 				return map.ToString();
@@ -929,6 +937,8 @@ public partial class Editor : System.Windows.Window {
 										original = typeMap.Type;
 									}
 								}
+								if (k.Equals(new StringMap("internet.bmp"))) {
+								}
 								if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
 									intellisenseItems.Add(new MetaItem(k));
 								}
@@ -936,7 +946,7 @@ public partial class Editor : System.Windows.Window {
 									intellisenseItems.Add(new Item(k.ToString(), original));
 								}
 								else {
-									intellisenseItems.Add(new PreviewItem(k));
+									intellisenseItems.Add(new PreviewItem(k,s[k]));
 								}
 							}
 							if (intellisense.Items.Count != 0) {

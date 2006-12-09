@@ -46,6 +46,11 @@ Entry (KeyValuePair`2)
 		"hello"
 Entry (KeyValuePair`2)
 	Key (StringMap):
+		"decimal"
+	Value (Rational):
+		6,92497326853996E+15/4294967296
+Entry (KeyValuePair`2)
+	Key (StringMap):
 		"listTest"
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)

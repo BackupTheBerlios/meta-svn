@@ -38,6 +38,7 @@
 		];  //comment
 		bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
 		shortFunctionTest=!"shortFunction"("hello");
+		decimal=1612345.9834;
 		listTest=<1,2,3,"hello",asdf>;
 		counter=0;
 		inlineProgram=[
