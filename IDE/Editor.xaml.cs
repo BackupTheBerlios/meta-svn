@@ -129,13 +129,19 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetTop(toolTip, r.Bottom + 110);
 	}
 	ScrollViewer scrollViewer = new ScrollViewer();
-	public void FindMatchingBrace() {
-		const string openBraces = "({[<";
-		const string closeBraces = ")}]>";
+	const string openBraces = "({[<";
+	const string closeBraces = ")}]>";
+	public int FindMatchingBrace() {
 		bool direction = true;
-		if (!MatchingBrace(openBraces, closeBraces, true)) {
-			MatchingBrace(closeBraces, openBraces, false);
+		
+		int index=FindMatchingBrace(openBraces, closeBraces, true);
+		if(index==-1) {
+			index=FindMatchingBrace(closeBraces, openBraces, false);
 		}
+		return index;
+		//if (!FindMatchingBrace(openBraces, closeBraces, true)) {
+		//    FindMatchingBrace(closeBraces, openBraces, false);
+		//}
 	}
 	public class IterativeSearch {
 		public void Back() {
@@ -596,9 +602,10 @@ public partial class Editor : System.Windows.Window {
 		watch.Items.Add(new MyItem());
 		MakeCommand(ModifierKeys.Control, Key.U, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
-			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength-1);
 			int oldStart = textBox.SelectionStart;
 			int oldLength = textBox.SelectionLength;
+			int removed = 0;
 			for (int i = startLine; i <= endLine; i++) {
 				string line = textBox.GetLineText(i);
 				textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
@@ -606,25 +613,28 @@ public partial class Editor : System.Windows.Window {
 				string lineStart=LineWithoutIndentation(line);
 				if(lineStart.StartsWith("//")) {
 					lineStart=lineStart.Remove(0,2);
+					removed+=2;
 				}
 				textBox.SelectedText = GetIndentation(line) + lineStart;
 			}
 			textBox.SelectionStart = oldStart;
-			textBox.SelectionLength = oldLength;
+			textBox.SelectionLength = oldLength-removed;
 		});
 		MakeCommand(ModifierKeys.Control, Key.K, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
-			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength-2);
 			int oldStart = textBox.SelectionStart;
 			int oldLength = textBox.SelectionLength;
+			int added=0;
 			for (int i = startLine; i <= endLine; i++) {
 				string line=textBox.GetLineText(i);
 				textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
 				textBox.SelectionLength = line.Length;
 				textBox.SelectedText = GetIndentation(line) + "//" + LineWithoutIndentation(line);
+				added += 2;
 			}
 			textBox.SelectionStart = oldStart;
-			textBox.SelectionLength = oldLength;
+			textBox.SelectionLength = oldLength+added;
 		});
 		findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
@@ -940,7 +950,11 @@ public partial class Editor : System.Windows.Window {
 				}
 				else if (e.KeyboardDevice.Modifiers == ModifierKeys.Alt) {
 					if (e.SystemKey == Key.I) {
-						FindMatchingBrace();
+						int index = FindMatchingBrace();
+						if (index != -1) {
+							textBox.SelectionStart = index;
+						}
+						//FindMatchingBrace();
 						e.Handled = true;
 					}
 				}
@@ -1065,7 +1079,7 @@ public partial class Editor : System.Windows.Window {
 		}));
 		BindKey(breakpoint, Key.H, ModifierKeys.Alt);
 		DispatcherTimer timer = new DispatcherTimer();
-		timer.Interval = new TimeSpan(30000);
+		timer.Interval = new TimeSpan(0,0,3);
 		timer.Tick += delegate {
 			timer.Stop();
 			string text = textBox.Text;
@@ -1189,6 +1203,40 @@ public partial class Editor : System.Windows.Window {
 				};
 				t.Start();
 				editorLine.Content = "Ln " + line + " Col " + (textBox.Column+1);
+
+
+
+				char c = textBox.Text[textBox.SelectionStart];
+				if ((openBraces + closeBraces).IndexOf(c) != -1) {
+					//index = FindMatchingBrace();
+
+					//Rect r = textBox.GetRectFromCharacterIndex(index);
+					//Rectangle line = new Rectangle();
+					//errors.Add(line);
+					//line.Width = 10;
+					//line.Height = 3;
+					//line.Fill = Brushes.Red;
+					//Label label = new Label();
+					//label.Content = text;
+					//label.FontFamily = font;
+					//label.Background = Brushes.LightYellow;
+					//Canvas.SetTop(label, r.Bottom);
+					//Canvas.SetLeft(label, r.Right);
+					//label.Visibility = Visibility.Hidden;
+
+					//line.MouseEnter += delegate {
+					//    Canvas.SetTop(label, r.Bottom);
+					//    Canvas.SetLeft(label, r.Right);
+					//    label.Visibility = Visibility.Visible;
+					//};
+					//line.MouseLeave += delegate {
+					//    label.Visibility = Visibility.Hidden;
+					//};
+					//Canvas.SetTop(line, r.Bottom);
+					//Canvas.SetLeft(line, r.Right);
+					//canvas.Children.Add(label);
+					//canvas.Children.Add(line);
+				}
 			}
 		};
 		RoutedUICommand back = new RoutedUICommand();
@@ -1409,7 +1457,7 @@ public partial class Editor : System.Windows.Window {
 			iterativeSearch.OnKeyDown(e);
 		}
 	}
-	private bool MatchingBrace(string openBraces, string closeBraces, bool direction) {
+	private int FindMatchingBrace(string openBraces, string closeBraces, bool direction) {
 		char previous = textBox.Text[textBox.SelectionStart - 1];
 		char next = textBox.Text[textBox.SelectionStart];
 		int forward = openBraces.IndexOf(previous);
@@ -1426,7 +1474,8 @@ public partial class Editor : System.Windows.Window {
 				brace = openBraces[backward];
 			}
 			else {
-				return false;
+				return -1;
+				//return false;
 			}
 			char closingBrace = closeBraces[index];
 			int pos;
@@ -1455,13 +1504,68 @@ public partial class Editor : System.Windows.Window {
 					braces++;
 				}
 				if (braces < 0) {
-					textBox.SelectionStart = pos;
-					return true;
+					return pos;
+					//textBox.SelectionStart = pos;
+					//return true;
 				}
 			}
 		}
-		return false;
+		return -1;
+		//return false;
 	}
+	//private bool MatchingBrace(string openBraces, string closeBraces, bool direction) {
+	//    char previous = textBox.Text[textBox.SelectionStart - 1];
+	//    char next = textBox.Text[textBox.SelectionStart];
+	//    int forward = openBraces.IndexOf(previous);
+	//    int backward = openBraces.IndexOf(next);
+	//    if (forward != -1 || backward != -1) {
+	//        char brace;
+	//        int index;
+	//        if (forward != -1) {
+	//            index = forward;
+	//            brace = openBraces[forward];
+	//        }
+	//        else if (backward != -1) {
+	//            index = backward;
+	//            brace = openBraces[backward];
+	//        }
+	//        else {
+	//            return false;
+	//        }
+	//        char closingBrace = closeBraces[index];
+	//        int pos;
+	//        if (direction) {
+	//            pos = textBox.SelectionStart + 2;
+	//        }
+	//        else {
+	//            pos = textBox.SelectionStart - 2;
+	//        }
+	//        int braces = 0;
+	//        while (true) {
+	//            if (direction) {
+	//                pos++;
+	//            }
+	//            else {
+	//                pos--;
+	//            }
+	//            if (pos <= 0 || pos >= textBox.Text.Length) {
+	//                break;
+	//            }
+	//            char c = textBox.Text[pos];
+	//            if (c == closingBrace) {
+	//                braces--;
+	//            }
+	//            else if (c == brace) {
+	//                braces++;
+	//            }
+	//            if (braces < 0) {
+	//                textBox.SelectionStart = pos;
+	//                return true;
+	//            }
+	//        }
+	//    }
+	//    return false;
+	//}
 }
 namespace _treeListView {
 	public class LevelToIndentConverter : IValueConverter {

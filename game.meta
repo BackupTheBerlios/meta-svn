@@ -131,13 +131,16 @@
 				absolute=number{branch(less(number,0),{difference(0,number)},{number})};				
 				
 				middle=map({vectorLength(vectorDifference(p.GetPosition(),bubble.GetPosition()))},range(3));
-				high=map(product(3/2),middle);
+				middle=map(absolute,vectorDifference(p.GetPosition(),bubble.GetPosition()));
+				high=map(product(10/9),middle);
 				
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
-	
-				low=map(product(1/2),middle);
+				//joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
+				//joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
+				//joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
+
+				//low=map(product(8/9),middle);
+				high=middle;
+				low=middle;
 				
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop,low.1);
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop2,low.2);
@@ -164,7 +167,7 @@
 	]}});
 	canvas.get_Children().Add_UIElement(line);
 	timer=DispatcherTimer_DispatcherPriority(DispatcherPriority.Normal);
-	timer.set_Interval_TimeSpan(TimeSpan_Int64(10000));
+	timer.set_Interval_TimeSpan(TimeSpan_Int64(1000000));
 	timer.add_Tick_EventHandler(
 		{{[
 			contactGroup.Empty();
