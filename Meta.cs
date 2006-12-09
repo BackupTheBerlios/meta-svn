@@ -3374,16 +3374,16 @@ namespace Meta {
 					Sequence(
 						Whitespace,
 						Syntax.arrayStart,
-						Append(
-							Alternatives(
+						Append(Optional(
 								Sequence(Whitespace,Assign(1,ListEntry),
 									Whitespace,
 									Append(
 										ZeroOrMore(
 											Autokey(
-												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))),
-									Whitespace,
-									Syntax.arrayEnd))))));
+												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))))
+						)),
+						Whitespace,
+						Syntax.arrayEnd)));
 		}
 		public static Rule List = PrePost(
 			delegate(Parser p) {p.defaultKeys.Push(1);},
@@ -3533,8 +3533,10 @@ namespace Meta {
 		}
 		public static Action Append(Rule rule) {
 			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
-				foreach (Map m in map.Array) {
-					result.Append(m);
+				if (map != null) {
+					foreach (Map m in map.Array) {
+						result.Append(m);
+					}
 				}
 			});
 		}
