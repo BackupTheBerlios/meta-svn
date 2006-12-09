@@ -752,7 +752,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.SelectUpByLine, Key.L, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		InitializeComponent();
-		textBox.FontSize = 12;
+		textBox.FontSize = 14;
 		textBox.SpellCheck.IsEnabled = true;
 		intellisense.MaxHeight = 100;
 		toolTip.Text = "Tooltip!!!!";
@@ -764,17 +764,20 @@ public partial class Editor : System.Windows.Window {
 				toolTip.Text = ((Item)intellisense.SelectedItem).Signature();
 			}
 		};
-		intellisense.Width = 300;
+		intellisense.Width = 400;
 		intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
-		//FontFamily.
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
+		FontFamily font;
 		try {
-			textBox.FontFamily = new FontFamily("Consolas");
+			font = new FontFamily("Consolas");
 		}
 		catch (Exception e) {
-			textBox.FontFamily = new FontFamily("Courier New");
+			font = new FontFamily("Courier New");
 		}
-		textBox.FontWeight = FontWeights.Black;
+		intellisense.FontFamily = font;
+		intellisense.FontSize = 14;
+		textBox.FontFamily = font;
+		//textBox.FontWeight = FontWeights.UltraBold;
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Tab) {

@@ -3428,7 +3428,8 @@ namespace Meta {
 			ReferenceAssignment(
 				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
 			Whitespace,
-			OptionalError(Syntax.statementEnd)
+			OptionalError(Syntax.statementEnd),
+			Whitespace
 		);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
