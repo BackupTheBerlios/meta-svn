@@ -44,6 +44,10 @@
     <Compile Include="Meta.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="OdeDotNet, Version=0.0.1.1642, Culture=neutral, PublicKeyToken=c54d8a056f43ac6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OdeDotNet-0.0.1-source\src\bin\Debug\OdeDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
@@ -52,6 +56,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
+    <Reference Include="Tao.Ode, Version=0.5.0.2, Culture=neutral, PublicKeyToken=e499629dc69cd531">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OdeDotNet-0.0.1-source\src\bin\Debug\Tao.Ode.dll</HintPath>
+    </Reference>
     <Reference Include="vjslib" />
     <Reference Include="WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>

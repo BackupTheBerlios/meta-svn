@@ -1047,6 +1047,7 @@ public partial class Editor : System.Windows.Window {
 				Meta.Expression.sources.Clear();
 			}
 		};
+		
 		Grid grid = new Grid();
 		grid.ColumnDefinitions.Add(new ColumnDefinition());
 		Menu menu = new Menu();
@@ -1222,8 +1223,6 @@ public partial class Editor : System.Windows.Window {
 					textBox.Select(history[historyIndex - 1], 0);
 					historyIndex--;
 				}
-				//textBox.Select(history.Pop(), 0);
-				//textBox.Select(history.Pop(), 0);
 				ignoreChange = false;
 			}
 		}));
@@ -1231,12 +1230,8 @@ public partial class Editor : System.Windows.Window {
 		MakeCommand(ModifierKeys.Control | ModifierKeys.Shift, Key.OemMinus, delegate {
 			if (historyIndex<history.Count) {
 				ignoreChange = true;
-				//if (historyIndex > 0) {
 				textBox.Select(history[historyIndex], 0);
 				historyIndex++;
-				//}
-				//textBox.Select(history.Pop(), 0);
-				//textBox.Select(history.Pop(), 0);
 				ignoreChange = false;
 			}
 
@@ -1262,7 +1257,7 @@ public partial class Editor : System.Windows.Window {
 		splitter.Height = 15;
 
 		watch.VerticalAlignment = VerticalAlignment.Stretch;
-		errorList.VerticalAlignment = VerticalAlignment.Top;
+		errorList.VerticalAlignment = VerticalAlignment.Stretch;
 
 		grid.RowDefinitions.Add(Row());
 		grid.RowDefinitions.Add(new RowDefinition());
