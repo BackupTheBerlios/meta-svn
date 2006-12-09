@@ -3127,23 +3127,6 @@ namespace Meta {
 						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
 					OptionalError(Syntax.@string)))));
 
-		//public static return new Rule(delegate(Parser parser, ref Map map) {
-		//        CachedResult cachedResult;
-		//        State state = parser.state;
-		//        if (cached.TryGetValue(state, out cachedResult)) {
-		//            map = cachedResult.map;
-		//            if (parser.state.Text.Length == parser.state.index + 1) {
-		//                return false;
-		//            }
-		//            parser.state = cachedResult.state;
-		//            return true;
-		//        }
-		//        if (rule.Match(parser, ref map)) {
-		//            cached[state] = new CachedResult(map, parser.state);
-		//            return true;
-		//        }
-		//        return false;
-		//    })
 		public static Rule Decimal = Sequence(new Action(
 	        Sequence(
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer)))),
@@ -3161,22 +3144,6 @@ namespace Meta {
 					result.Source = rational.Source;
 				}
 			}));
-
-		//public static Rule Decimal = Sequence(
-		//    ReferenceAssignment(Integer),
-		//        new Action(
-		//        Optional(Sequence(
-		//            Syntax.decimalSeparator,
-		//            ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
-		//            if(map!=null) {
-		//                int first=result.GetNumber().GetInteger().GetInt32();
-		//                int second=map.GetNumber().GetInteger().GetInt32();
-		//                int log=Math.Log10(second
-		//                result = new Rational(first Math.Log10(, map.GetNumber().GetDouble());
-		//                //result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
-		//                result.Source = map.Source;
-		//            }
-		//        }));
 
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),

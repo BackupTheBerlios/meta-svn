@@ -203,6 +203,27 @@ public partial class Editor : System.Windows.Window {
 		iterativeSearch = null;
 	}
 	public class PreviewItem:Item {
+		public override Control GetPreview() {
+			FileMap fileMap = map as FileMap;
+			if (fileMap!=null) {
+				string extension = System.IO.Path.GetExtension(fileMap.path);
+				switch (extension) {
+					case ".bmp":
+					case ".ico":
+					case ".png":
+					case ".jpg";
+					case ".jpeg":
+					case ".gif":
+					case ".tiff":
+						Image image=new Image();
+						image.Source = new BitmapImage(new Uri(fileMap.path));
+						Label label = new Label();
+						label.Content = image;
+						return label;
+				}
+			}
+			return null;
+		}
 		private Map map;
 		private Map key;
 		public PreviewItem(Map key,Map map):base("",null) {
@@ -225,6 +246,9 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	public class Item {
+		public virtual Control GetPreview() {
+			return null;
+		}
 		public virtual string Signature() {
 			if (original != null) {
 				XmlComments comments = new XmlComments(original);
@@ -757,9 +781,20 @@ public partial class Editor : System.Windows.Window {
 		toolTip.Width = 300;
 		Label l;
 		toolTip.TextWrapping = TextWrapping.Wrap;
+		Control preview=null;
 		intellisense.SelectionChanged += delegate {
 			if (intellisense.SelectedItem != null) {
-				toolTip.Text = ((Item)intellisense.SelectedItem).Signature();
+				Item item = ((Item)intellisense.SelectedItem);
+				toolTip.Text = item.Signature();
+				if(preview!=null) {
+					canvas.Children.Remove(preview);
+				}
+				preview=item.GetPreview();
+				if (preview != null) {
+					canvas.Children.Add(preview);
+					Canvas.SetLeft(preview, Canvas.GetLeft(intellisense)+500);
+					Canvas.SetTop(preview, Canvas.GetTop(intellisense));
+				}
 			}
 		};
 		toolTip.FontFamily = font;
