@@ -211,7 +211,7 @@ public partial class Editor : System.Windows.Window {
 					case ".bmp":
 					case ".ico":
 					case ".png":
-					case ".jpg";
+					case ".jpg":
 					case ".jpeg":
 					case ".gif":
 					case ".tiff":
@@ -919,7 +919,8 @@ public partial class Editor : System.Windows.Window {
 									break;
 								}
 							}
-							Map s=Map.Empty;
+							Map s=new DictionaryMap();
+							List<Map> maps = new List<Map>();
 							if (start != null) {
 								Meta.Expression x = start;
 								while (x!=null) {
@@ -930,18 +931,22 @@ public partial class Editor : System.Windows.Window {
 											result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
 										}
 										if (result != null) {
-											s = Library.Merge(result,s);
+											maps.Add(result);
+											//s = Library.Merge(result, s);
+											//s = Library.Merge(result, s);
 										}
 									}
 									else if (x is LiteralExpression) {
 										LiteralExpression literal = (LiteralExpression)x;
 										Map structure=literal.GetStructure();
 
-										s = Library.Merge(structure, s);
+										maps.Add(structure);
+										//s = Library.Merge(structure, s);
 									}
 									x = x.Parent;
 								}
 							}
+							s = Library.MergeAll(maps);
 							Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
 							s=Library.Merge(directory.Copy(),s);
 							List<Map> keys = new List<Map>();
