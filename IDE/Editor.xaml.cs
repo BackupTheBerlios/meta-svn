@@ -23,6 +23,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Globalization;
 using _treeListView;
+using System.Windows.Media;
 using System;
 using System.IO;
 using System.Xml;
@@ -753,6 +754,8 @@ public partial class Editor : System.Windows.Window {
 				toolTip.Text = ((Item)intellisense.SelectedItem).Signature();
 			}
 		};
+		toolTip.FontFamily = font;
+		toolTip.FontSize = 14;
 		intellisense.Width = 400;
 		intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
@@ -1189,6 +1192,7 @@ public partial class Editor : System.Windows.Window {
 		int historyIndex=0;
 		List<int> history = new List<int>();
 		bool ignoreChange = false;
+		Rectangle brace=null;
 		textBox.SelectionChanged += delegate {
 			if (!ignoreChange) {
 				int line = (textBox.Line + 1);
@@ -1205,37 +1209,26 @@ public partial class Editor : System.Windows.Window {
 				editorLine.Content = "Ln " + line + " Col " + (textBox.Column+1);
 
 
-
-				char c = textBox.Text[textBox.SelectionStart];
-				if ((openBraces + closeBraces).IndexOf(c) != -1) {
-					//index = FindMatchingBrace();
-
-					//Rect r = textBox.GetRectFromCharacterIndex(index);
-					//Rectangle line = new Rectangle();
-					//errors.Add(line);
-					//line.Width = 10;
-					//line.Height = 3;
-					//line.Fill = Brushes.Red;
-					//Label label = new Label();
-					//label.Content = text;
-					//label.FontFamily = font;
-					//label.Background = Brushes.LightYellow;
-					//Canvas.SetTop(label, r.Bottom);
-					//Canvas.SetLeft(label, r.Right);
-					//label.Visibility = Visibility.Hidden;
-
-					//line.MouseEnter += delegate {
-					//    Canvas.SetTop(label, r.Bottom);
-					//    Canvas.SetLeft(label, r.Right);
-					//    label.Visibility = Visibility.Visible;
-					//};
-					//line.MouseLeave += delegate {
-					//    label.Visibility = Visibility.Hidden;
-					//};
-					//Canvas.SetTop(line, r.Bottom);
-					//Canvas.SetLeft(line, r.Right);
-					//canvas.Children.Add(label);
-					//canvas.Children.Add(line);
+				if(brace!=null) {
+					canvas.Children.Remove(brace);
+				}
+				if (textBox.Text.Length != 0) {
+					char c = textBox.Text[textBox.SelectionStart];
+					if ((openBraces + closeBraces).IndexOf(c) != -1) {
+						int index = FindMatchingBrace();
+						if (index != -1) {
+							Rect r = textBox.GetRectFromCharacterIndex(index);
+							brace = new Rectangle();
+							FormattedText formattedText=new FormattedText("a", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch),textBox.FontSize,Brushes.LightGray);
+							brace.Width = formattedText.Width;
+							brace.Height = formattedText.Height;
+							brace.Opacity = 0.6;
+							brace.Fill = Brushes.Gray;
+							Canvas.SetTop(brace, r.Top);
+							Canvas.SetLeft(brace, r.Right);
+							canvas.Children.Add(brace);
+						}
+					}
 				}
 			}
 		};
@@ -1458,7 +1451,8 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	private int FindMatchingBrace(string openBraces, string closeBraces, bool direction) {
-		char previous = textBox.Text[textBox.SelectionStart - 1];
+		char previous = textBox.SelectionStart>0?
+			textBox.Text[textBox.SelectionStart - 1]:'a';
 		char next = textBox.Text[textBox.SelectionStart];
 		int forward = openBraces.IndexOf(previous);
 		int backward = openBraces.IndexOf(next);
