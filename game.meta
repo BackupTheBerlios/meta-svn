@@ -30,7 +30,7 @@
 	bubble=size{[
 		body=Body_World(world);
 		radius={product(size,4)};
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1/1000));
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1));
 		position=<random(1,790),random(1,590)>;
 		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
 		geom=space.CreateSphere_Single(radius());
@@ -107,6 +107,19 @@
 			line.set_Visibility_Visibility(Visibility.Hidden);
 		]}
 	)}});
+	springConstant=1;
+	dampeningConstant=0;
+	stepSize=1/50;
+	//h kp / (h kp + kd)
+	//CFM = 1 / (h kp + kd)
+	erp=quotient(product(stepSize,springConstant),sum(product(stepSize,springConstant),dampeningConstant)
+	cfm=quotient(1,sum(product(stepSize,springConstant),dampeningConstant));
+	//erp=1/10;
+	//cfm=1/2;
+	print(erp);
+	print(cfm);
+	//world.set_Cfm_Single(cfm);
+	//world.set_Erp_Single(erp);
 	//bla=HingeJoint_World_JointGroup(asdf,asdf);
 	//bla.SetParam_JointParameters_Single(JointParameters.Bounce,1);
 	window.add_KeyDown_KeyEventHandler({e{[
@@ -121,22 +134,43 @@
 				index=sorted.1;
 				bubble=bubbles.<index>;
 				currentBubble:bubble;
-				joint=HingeJoint_World_JointGroup(world,jointGroup);
-				joint.Attach_Body_Body(bubble.body,p.body);
-				joint.set_Anchor_Vector3(bubble.body.get_Position());
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp2,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp3,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm2,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm3,1/2);
 				
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp2,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp3,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm2,1/2);
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm3,1/2);
+				joint=SliderJoint_World_JointGroup(world,jointGroup);
+				joint.Attach_Body_Body(bubble.body,p.body);
+				//joint.set_Anchor_Vector3(bubble.body.get_Position());
+				
+				
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp,erp);
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp2,erp);
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionErp3,erp);
+				//
+				bounce=1;
+				//joint.SetParam_JointParameters_Single(JointParameters.Bounce,bounce);
+				//joint.SetParam_JointParameters_Single(JointParameters.Bounce,bounce);
+				//joint.SetParam_JointParameters_Single(JointParameters.Bounce,bounce);
+	
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop,1);
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop2,1);
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop3,1);
+	
+				joint.SetParam_JointParameters_Single(JointParameters.LowStop,-1);
+				joint.SetParam_JointParameters_Single(JointParameters.LowStop2,-1);
+				joint.SetParam_JointParameters_Single(JointParameters.LowStop3,-1);
+				
+				//joint.SetParam_JointParameters_Single(JointParameters.Cfm,cfm);
+				//joint.SetParam_JointParameters_Single(JointParameters.Cfm2,cfm);
+				//joint.SetParam_JointParameters_Single(JointParameters.Cfm3,cfm);
+				
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm,cfm);
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm2,cfm);
+				//joint.SetParam_JointParameters_Single(JointParameters.SuspensionCfm3,cfm);
+				//
+				joint.SetParam_JointParameters_Single(JointParameters.StopErp,erp);
+				joint.SetParam_JointParameters_Single(JointParameters.StopErp2,erp);
+				joint.SetParam_JointParameters_Single(JointParameters.StopErp3,erp);
+				joint.SetParam_JointParameters_Single(JointParameters.StopCfm,cfm);
+				joint.SetParam_JointParameters_Single(JointParameters.StopCfm2,cfm);
+				joint.SetParam_JointParameters_Single(JointParameters.StopCfm3,cfm);
 
 				setCurrentBubble(bubble);
 				pos1=bubble.GetPosition();
@@ -157,6 +191,12 @@
 			contactGroup.Empty();
 			space.CheckCollisions();
 			world.Step();
+			//world.Step_Single(stepSize);
+			//world.Step_Single(stepSize);
+			//world.Step_Single(stepSize);
+			//world.Step_Single(stepSize);
+			//world.Step_Single(stepSize);
+			//world.Step_Single(stepSize);
 			map(
 				a{[
 					pos=a.GetPosition();

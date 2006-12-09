@@ -992,8 +992,14 @@ namespace Meta {
 			string multilineliteral = @"part of the text
                                        other part of the text";
 
+
 			//Tao.Ode.Ode.join
 			//OdeDotNet.Joints.JointParameters.
+			OdeDotNet.Joints.SliderJoint x;
+			//OdeDotNet.Joints.JointParameters.hi
+
+			//x.ve
+			//x.Attach(
 			StringMap s = new StringMap("hellh");
 			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
 			l.GetHashCode();
@@ -1318,7 +1324,10 @@ namespace Meta {
 							case TypeCode.SByte:
 								return Convert.ToSByte(meta.GetNumber().GetInt64());
 							case TypeCode.Single:
-								return (float)meta.GetNumber().GetSingle();
+								float result=(float)meta.GetNumber().GetSingle();
+								if (result < 1.0) {
+								}
+								return result;
 								//return (float)meta.GetNumber().GetInt64();
 							case TypeCode.String:
 								return meta.GetString();

@@ -736,6 +736,7 @@ public partial class Editor : System.Windows.Window {
 		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
 
 		//BindKey(EditingCommands.MoveToLineStart, Key.U, ModifierKeys.Alt);
+		//FontFamily family = intellisense.FontFamily;
 
 		BindKey(EditingCommands.MoveUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.SelectDownByLine, Key.K, ModifierKeys.Alt | ModifierKeys.Shift);
@@ -751,7 +752,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.SelectUpByLine, Key.L, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		InitializeComponent();
-		textBox.FontSize = 16;
+		textBox.FontSize = 12;
 		textBox.SpellCheck.IsEnabled = true;
 		intellisense.MaxHeight = 100;
 		toolTip.Text = "Tooltip!!!!";
@@ -765,8 +766,15 @@ public partial class Editor : System.Windows.Window {
 		};
 		intellisense.Width = 300;
 		intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
+		//FontFamily.
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
-		textBox.FontFamily = new FontFamily("Courier New");
+		try {
+			textBox.FontFamily = new FontFamily("Consolas");
+		}
+		catch (Exception e) {
+			textBox.FontFamily = new FontFamily("Courier New");
+		}
+		textBox.FontWeight = FontWeights.Black;
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
 			if (e.Key == Key.Tab) {
