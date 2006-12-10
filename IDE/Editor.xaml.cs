@@ -185,22 +185,16 @@ public partial class Editor : System.Windows.Window {
 	}
 	public IterativeSearch iterativeSearch;
 	public void StartIterativeSearch(bool forward) {
-		if (iterativeSearch == null) {
-			iterativeSearch = new IterativeSearch(textBox,forward);
+		if (forward) {
+			iterativeSearch.index++;
 		}
 		else {
-			if (forward) {
-				iterativeSearch.index++;
-			}
-			else {
-				iterativeSearch.index-=2;
-			}
-			iterativeSearch.Find(forward);
+			iterativeSearch.index-=2;
 		}
+		iterativeSearch.Find(forward);
 	}
 	public void StopIterativeSearch() {
 		textBox.Cursor = Cursors.IBeam;
-		iterativeSearch = null;
 	}
 	public class PreviewItem:Item {
 		public override Control GetPreview() {
@@ -230,9 +224,6 @@ public partial class Editor : System.Windows.Window {
 			this.map = map;
 			this.key = key;
 		}
-		//public override string ToString() {
-		//    return key.ToString();
-		//}
 		public override string Signature() {
 			if (map is FileMap) {
 				return ((FileMap)map).path;
@@ -620,6 +611,7 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static FontFamily font;
 	public Editor() {
+		iterativeSearch = new IterativeSearch(textBox, true);
 		try {
 			font = new FontFamily("Consolas");
 		}
@@ -1509,7 +1501,8 @@ public partial class Editor : System.Windows.Window {
 	private int FindMatchingBrace(string openBraces, string closeBraces, bool direction) {
 		char previous = textBox.SelectionStart>0?
 			textBox.Text[textBox.SelectionStart - 1]:'a';
-		char next = textBox.Text[textBox.SelectionStart];
+		char next = textBox.SelectionStart<textBox.Text.Length?
+			textBox.Text[textBox.SelectionStart]:'a';
 		int forward = openBraces.IndexOf(previous);
 		int backward = openBraces.IndexOf(next);
 		if (forward != -1 || backward != -1) {
@@ -1525,7 +1518,6 @@ public partial class Editor : System.Windows.Window {
 			}
 			else {
 				return -1;
-				//return false;
 			}
 			char closingBrace = closeBraces[index];
 			int pos;
@@ -1554,68 +1546,19 @@ public partial class Editor : System.Windows.Window {
 					braces++;
 				}
 				if (braces < 0) {
+					if(Editor.openBraces.Contains(brace.ToString())) {
+						pos++;
+					}
+					else {
+						//pos;
+						//pos--;
+					}
 					return pos;
-					//textBox.SelectionStart = pos;
-					//return true;
 				}
 			}
 		}
 		return -1;
-		//return false;
 	}
-	//private bool MatchingBrace(string openBraces, string closeBraces, bool direction) {
-	//    char previous = textBox.Text[textBox.SelectionStart - 1];
-	//    char next = textBox.Text[textBox.SelectionStart];
-	//    int forward = openBraces.IndexOf(previous);
-	//    int backward = openBraces.IndexOf(next);
-	//    if (forward != -1 || backward != -1) {
-	//        char brace;
-	//        int index;
-	//        if (forward != -1) {
-	//            index = forward;
-	//            brace = openBraces[forward];
-	//        }
-	//        else if (backward != -1) {
-	//            index = backward;
-	//            brace = openBraces[backward];
-	//        }
-	//        else {
-	//            return false;
-	//        }
-	//        char closingBrace = closeBraces[index];
-	//        int pos;
-	//        if (direction) {
-	//            pos = textBox.SelectionStart + 2;
-	//        }
-	//        else {
-	//            pos = textBox.SelectionStart - 2;
-	//        }
-	//        int braces = 0;
-	//        while (true) {
-	//            if (direction) {
-	//                pos++;
-	//            }
-	//            else {
-	//                pos--;
-	//            }
-	//            if (pos <= 0 || pos >= textBox.Text.Length) {
-	//                break;
-	//            }
-	//            char c = textBox.Text[pos];
-	//            if (c == closingBrace) {
-	//                braces--;
-	//            }
-	//            else if (c == brace) {
-	//                braces++;
-	//            }
-	//            if (braces < 0) {
-	//                textBox.SelectionStart = pos;
-	//                return true;
-	//            }
-	//        }
-	//    }
-	//    return false;
-	//}
 }
 namespace _treeListView {
 	public class LevelToIndentConverter : IValueConverter {
