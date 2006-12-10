@@ -1,19 +1,19 @@
-{[
-	lib={[
+()[
+	lib=()[
 		&Meta;
 		lib=[
 			makeDouble=Library.Double_Map;
 		
 			branch=Library.IfElse_Boolean_Map_Map;
 			map=Library.Apply_Map_Map;
-			if=condition{callable{branch(condition,callable,{0})}};
+			if=(condition)(callable)branch(condition,callable,()0);
 
 			join=Library.JoinAll_Map;
 			merge=Library.MergeAll_Map;
 			
 			writeLine=Library.WriteLine_String;
 			toString=Serialization.Serialize_Map;
-			print=a{writeLine(toString(a))};
+			print=(a)writeLine(toString(a));
 			
 			sum=Number.op_Addition_Number_Number;
 			quotient=Number.op_Division_Number_Number;
@@ -23,20 +23,20 @@
 			greater=Number.op_GreaterThan_Number_Number;
 			less=Number.op_LessThan_Number_Number;
 			power=Library.Raise_Number_Number;
-			maximum=a{b{[0=b;1=a;].<less(a,b)>}};
-			minimum=a{b{[0=b;1=a;].<greater(a,b)>}};
+			maximum=(a)(b)[0=b;1=a;].<less(a,b)>;
+			minimum=(a)(b)[0=b;1=a;].<greater(a,b)>;
 			modulo=Number.op_Modulus_Number_Number;
-			opposite=arg{difference(0,arg)};
+			opposite=(arg)difference(0,arg);
 			
-			or=a{b{[0=a;1=1;].<b>}};
-			and=a{b{[1=b;0=0;].<a>}};
-			not=arg{[0=1;1=0;].<arg>};
+			or=(a)(b)[0=a;1=1;].<b>;
+			and=(a)(b)[1=b;0=0;].<a>;
+			not=(arg)[0=1;1=0;].<arg>;
 			
-			length=arg{ObjectMap_Object(arg).get_ArrayCount(0)};
-			count=arg{ObjectMap_Object(arg).get_Count()};
-			keys=arg{!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys())};
+			length=(arg)ObjectMap_Object(arg).get_ArrayCount(0);
+			count=(arg)ObjectMap_Object(arg).get_Count();
+			keys=(arg)!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys());
 			equal=Library.Equal_Object_Object;
 		];
-	]};
+	];
 	&lib().lib;
-]}
+]

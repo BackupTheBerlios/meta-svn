@@ -3,36 +3,62 @@
 		|,
 			&=!"Meta"
 			"lib"=,
+				"makeDouble"=.
+					!"Library"
+					"Double_Map"
 				"branch"=.
 					!"Library"
 					"IfElse_Boolean_Map_Map"
-				"mapping"=.
+				"map"=.
 					!"Library"
 					"Apply_Map_Map"
-				"concatenation"=.
+				"if"=,
+					condition|,
+						callable|-
+							!"branch"
+							!"condition"
+							!"callable"
+							,
+								|0
+				"join"=.
 					!"Library"
 					"JoinAll_Map"
-				"union"=.
+				"merge"=.
 					!"Library"
 					"MergeAll_Map"
-				"greater"=.
-					!"Number"
-					"op_GreaterThan_Number_Number"
-				"less"=.
-					!"Number"
-					"op_LessThan_Number_Number"
+				"writeLine"=.
+					!"Library"
+					"WriteLine_String"
+				"toString"=.
+					!"Serialization"
+					"Serialize_Map"
+				"print"=,
+					a|-
+						!"writeLine"
+						-
+							!"toString"
+							!"a"
 				"sum"=.
-					!"Library"
-					"Sum_Map"
-				"power"=.
-					!"Library"
-					"Raise_Number_Number"
+					!"Number"
+					"op_Addition_Number_Number"
 				"quotient"=.
 					!"Number"
 					"op_Division_Number_Number"
 				"difference"=.
 					!"Number"
 					"op_Subtraction_Number_Number"
+				"product"=.
+					!"Number"
+					"op_Multiply_Number_Number"
+				"greater"=.
+					!"Number"
+					"op_GreaterThan_Number_Number"
+				"less"=.
+					!"Number"
+					"op_LessThan_Number_Number"
+				"power"=.
+					!"Library"
+					"Raise_Number_Number"
 				"maximum"=,
 					a|,
 						b|.
@@ -53,9 +79,6 @@
 								!"greater"
 								!"a"
 								!"b"
-				"product"=.
-					!"Library"
-					"Product_Map"
 				"modulo"=.
 					!"Number"
 					"op_Modulus_Number_Number"
@@ -99,6 +122,7 @@
 								!"ObjectMap_Object"
 								!"arg"
 							"get_Count"
+						0
 				"keys"=,
 					arg|-
 						!"DictionaryMap_IEnumerable`1"
@@ -108,6 +132,7 @@
 									!"ObjectMap_Object"
 									!"arg"
 								"get_Keys"
+							0
 				"equal"=.
 					!"Library"
 					"Equal_Object_Object"

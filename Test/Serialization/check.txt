@@ -1,49 +1,13 @@
-﻿"license="
-	Copyright (c) 2005, 2006 Christian Staudenmeyer
-			
-			Permission is hereby granted, free of charge, to any person obtaining
-			a copy of this software and associated documentation files (the
-			'Software'), to deal in the Software without restriction, including
-			without limitation the rights to use, copy, modify, union, publish 
-			distribute, sublicense, and/or sell copies of the Software, and to
-			permit persons to whom the Software is furnished to do so, subject to
-			the following conditions:
-			
-			The above copyright notice and this permission notice shall be
-			included in all copies or substantial portions of the Software.
-			
-			THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND 
-			EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-			MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-			NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-			BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-			ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-			CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-			SOFTWARE.
-"
-shortFunc=,
-arg|!"arg"
-1="hello"
-x=,
-	hello="world"
-listTest=,
-	1="this"
-	2=1
-	3="is"
-	4="a"
-	5=,
-		1="long"
-		2="list"
-commandLine|,
+﻿"commandLine|,
 	&=-
-		!"union"
+		!"merge"
 		,
 			1=0
 			2=,
 				1="AssignedToCurrent"
 	"asdf"="hello"
 	"shortFunction"=,
-		arg|!"asdf"
+		asdf|!"asdf"
 	"bitmapSize"=-
 		.
 			-
@@ -52,9 +16,11 @@ commandLine|,
 					"Bitmap_Stream"
 				!"internet.bmp"
 			"get_Width"
+		0
 	"shortFunctionTest"=-
 		!"shortFunction"
 		"hello"
+	"decimal"=6,92497326853996E+15/4294967296
 	"listTest"=,
 		1=1
 		2=2
@@ -77,8 +43,8 @@ commandLine|,
 		2=0
 		3=0
 	"scoping"=,
+		"scopingValue"="right"
 		"test"=,
-			"scopingValue"="right"
 			arg|!"scopingValue"
 	"scopingValue"="wrong"
 	"scopingTest"=.
@@ -96,7 +62,7 @@ commandLine|,
 		"hashTest"=!!"hashTestData"
 	"negativeInteger"=100
 	"negativeInteger"=-
-		!"union"
+		!"merge"
 		,
 			1=!"negativeInteger"
 			2=,
@@ -148,7 +114,7 @@ commandLine|,
 		"SetB"=,
 			newB|,
 				"b":-
-					!"union"
+					!"merge"
 					,
 						1=!"b"
 						2=,
@@ -179,18 +145,18 @@ commandLine|,
 				"z"=1
 	"scopeTest"="default"
 	"scopeFunction"=,
-		"inScope"="right"
 		arg|,
 			"scopeTest":!"inScope"
 	"inScope"="wrong"
+	"inScope"="right"
 	4=-
 		!"scopeFunction"
 		0
 	"scopeFromFunctionData"="wrong"
 	"scopeFunctionFunction"=,
-		"scopeFromFunctionData"="right"
 		arg|,
 			arg|!"scopeFromFunctionData"
+	"scopeFromFunctionData"="right"
 	"scopeFromFunction"=-
 		!"scopeFunctionFunction"
 		0
@@ -258,7 +224,7 @@ commandLine|,
 			"doubleValue"=4
 			"decimalValue"=5
 	"TestClass"=-
-		!"union"
+		!"merge"
 		,
 			1=!"TestClass"
 			2=,
@@ -296,13 +262,13 @@ commandLine|,
 		!"memberTest"
 		3247
 	"MemberTest":-
-		!"union"
+		!"merge"
 		,
 			1=!"MemberTest"
 			2=,
 				"classField"="a"
 	"memberTest":-
-		!"union"
+		!"merge"
 		,
 			1=!"memberTest"
 			2=,
@@ -408,7 +374,8 @@ commandLine|,
 	"delayedFunction"=,
 		arg|,
 			arg|,
-				"x"="y"
+				|,
+					"x"="y"
 	"delayedFunctionResult"=-
 		!"delayedFunction"
 		0
@@ -522,7 +489,7 @@ commandLine|,
 	"fractionTest"=40
 	"stringTest"="hello"
 	"stringTest"=-
-		!"union"
+		!"merge"
 		,
 			1=!"stringTest"
 			2=,
@@ -608,9 +575,8 @@ commandLine|,
 						!"loop"
 						-
 							!"sum"
-							,
-								1=!"arg"
-								2=1
+							!"arg"
+							1
 				0=,
 					arg|!"arg"
 			&=-
@@ -640,7 +606,6 @@ commandLine|,
 		!"myArg"
 		0
 	"documentedFunction"=,
-		"doc"="This,function,returns,#hello,."
 		arg|"hello"
 	"docFunctionResult"=-
 		!"documentedFunction"
@@ -692,7 +657,7 @@ commandLine|,
 		"z"="a"
 	"copiedData"=!"copySourceData"
 	"copiedData"=-
-		!"union"
+		!"merge"
 		,
 			1=!"copiedData"
 			2=,

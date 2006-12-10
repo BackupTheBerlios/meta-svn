@@ -3617,15 +3617,25 @@ namespace Meta {
 		//    Whitespace
 		//);
 		public static Rule FunctionMap = Sequence(
+			Syntax.functionStart,
 			Assign(CodeKeys.Function,
 				Sequence(
 					Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-					Syntax.functionAlternativeStart,
 						Whitespace,
+						OptionalError(Syntax.functionEnd),
 						Assign(CodeKeys.Expression, Expression),
 					Whitespace,
-					OptionalError(Syntax.functionAlternativeEnd),
 			Whitespace)));
+		//public static Rule FunctionMap = Sequence(
+		//    Assign(CodeKeys.Function,
+		//        Sequence(
+		//            Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//            Syntax.functionAlternativeStart,
+		//                Whitespace,
+		//                Assign(CodeKeys.Expression, Expression),
+		//            Whitespace,
+		//            OptionalError(Syntax.functionAlternativeEnd),
+		//    Whitespace)));
 		//public static Rule FunctionMap = Sequence(
 		//    Assign(CodeKeys.Function,
 		//        Sequence(
@@ -3637,7 +3647,9 @@ namespace Meta {
 		//            OptionalError(Syntax.functionAlternativeEnd),
 		//    Whitespace)));
 
+
 		public static Rule FunctionProgram = Sequence(
+			Syntax.functionStart,
 			Assign(CodeKeys.Program,
 				Sequence(
 					Assign(1,
@@ -3649,10 +3661,27 @@ namespace Meta {
 										Assign(
 											CodeKeys.Parameter,
 											StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-										Syntax.functionAlternativeStart,Whitespace,
+											Syntax.functionEnd,
+											Whitespace,
 											Assign(CodeKeys.Expression, Expression),
-										Whitespace,
-										OptionalError(Syntax.functionAlternativeEnd))))))))));
+										Whitespace)))))))));
+
+		//public static Rule FunctionProgram = Sequence(
+		//    Assign(CodeKeys.Program,
+		//        Sequence(
+		//            Assign(1,
+		//                Sequence(
+		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+		//                    Assign(CodeKeys.Value, Sequence(
+		//                        Assign(CodeKeys.Literal,
+		//                            Sequence(
+		//                                Assign(
+		//                                    CodeKeys.Parameter,
+		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//                                Syntax.functionAlternativeStart,Whitespace,
+		//                                    Assign(CodeKeys.Expression, Expression),
+		//                                Whitespace,
+		//                                OptionalError(Syntax.functionAlternativeEnd))))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -4033,8 +4062,8 @@ namespace Meta {
 		public const char programEnd = ']';
 		public const char functionStart = '(';
 		public const char functionEnd = ')';
-		public const char functionAlternativeStart = '{';
-		public const char functionAlternativeEnd = '}';
+		//public const char functionAlternativeStart = '{';
+		//public const char functionAlternativeEnd = '}';
 		public const char arrayStart = '<';
 		public const char arrayEnd = '>';
 		public const char arraySeparator = ',';
@@ -4065,8 +4094,12 @@ namespace Meta {
 		public static readonly string integer = "0123456789-";
 		public static readonly string lookupStringForbidden =
 
-			"" + current + functionAlternativeStart + functionAlternativeEnd + lastArgument + explicitCall + indentation + '\r' + '\n' +
+			"" + current + 
+			//functionAlternativeStart + 
+			//functionAlternativeEnd + 
+			lastArgument + explicitCall + indentation + '\r' + '\n' +
 			//function+
+			functionStart+functionEnd+
 			@string+emptyMap+ search + root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
 			'-'+ searchStatement+ select+ ' '+ '-'+ arrayStart+ arrayEnd+ '*'+ lookupAnythingEnd+ 
