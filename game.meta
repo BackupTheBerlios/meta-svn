@@ -1,15 +1,15 @@
 (){
 	&merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase]);
-	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
+	contains=()Meta.ObjectMap_Object(@).ContainsKey_Map;
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
-	vectorLength=vector{power(add(power(vector.1,2),power(vector.2,2)),1/2)};
-	vectorDifference=a{b{map(key{subtract(a.<key>,b.<key>)},keys(a))}};
+	vectorLength=(vector)power(add(power(vector.1,2),power(vector.2,2)),1/2);
+	vectorDifference=(a)(b)map((key)subtract(a.<key>,b.<key>),keys(a));
 	compareNumber=Meta.Library.CompareNumber_Number_Number;
-	callKey=key{map{branch(contains(map,key),{map.<key>()},{0})}};
+	callKey=(key)(map)branch(contains(map,key),()map.<key>(),()0);
 	world=World();
-	vectorDotmultiply=vector{number{map(entry{multiply([number,entry])},vector)}};
-	multiplyVector=a{b{map(index{multiply([a.<index>,b.<index>])},range(length(a)))}};
+	vectorDotmultiply=(vector)(number)map((entry)multiply([number,entry]),vector);
+	multiplyVector=(a)(b)map((index)multiply([a.<index>,b.<index>]),range(length(a)));
 	vectormultiply=multiplyVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
 	sort=Meta.Library.Sort_Map_Map;
@@ -26,7 +26,7 @@
 	canvas=Canvas();
 	bubble=(size){
 		body=Body_World(world);
-		radius={multiply(size,4)};
+		radius=()multiply(size,4);
 		body.set_Mass_Mass(Mass.Sphere_Single_Single(multiply(size,size),1));
 		position=[random(1,790),random(1,590)];
 		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
@@ -35,10 +35,10 @@
 		geom.set_Body_Body(body);
 		speed=[random(-6,6),random(-6,6)];
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
-		GetPosition={{
+		GetPosition=(){
 			pos=body.get_Position();
 			&[pos.get_X(),pos.get_Y(),pos.get_Z()];
-		}};
+		};
 		ellipse=Ellipse({
 			Width=multiply(2,radius());
 			Height=multiply(2,radius());
@@ -62,13 +62,13 @@
 		&bubble(1);
 		ellipse.set_Fill_Brush(Brushes.get_Green());
 		currentJoint=0;
-		setCurrentJoint=joint{{currentJoint:joint;}};
-		toVector=v{Vector3_Single_Single_Single(v.1,v.2,0)};
+		setCurrentJoint=(joint){currentJoint:joint;};
+		toVector=(v)Vector3_Single_Single_Single(v.1,v.2,0);
 	};
 	paused=0;
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
-	space.add_Collision_CollisionEventHandler((e)(){
+	space.add_Collision_CollisionEventHandler(()(e){
 		a=e.get_Geom1();
 		b=e.get_Geom2();
 		map(
@@ -97,11 +97,11 @@
 	});
 	window.add_KeyUp_KeyEventHandler(()(e)if(
 		equal(e.get_Key(),Key.Enter),
-		{{
+		(){
 			jointGroup.Empty();
 			currentBubble:0;
 			line.set_Visibility_Visibility(Visibility.Hidden);
-		}}
+		}
 	));
 	springConstant=1/2;
 	dampeningConstant=2;
@@ -113,12 +113,12 @@
 	window.add_KeyDown_KeyEventHandler(()(e){
 		if(
 			and(equal(e.get_Key(),Key.Enter),equal(currentBubble,0)),
-			{{
+			(){
 				lengths=map(
-					b{vectorLength(vectorsubtract(p.GetPosition(),b.GetPosition()))},
+					(b)vectorLength(vectorDifference(p.GetPosition(),b.GetPosition())),
 					bubbles
 				);
-				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.<a>,lengths.<b>)}});
+				sorted=sort(keys(bubbles),(a)(b)compareNumber(lengths.<a>,lengths.<b>));
 				index=sorted.1;
 				bubble=bubbles.<index>;
 				currentBubble:bubble;
@@ -128,19 +128,18 @@
 				
 				bounce=1;
 				
-				absolute=number{branch(less(number,0),{subtract(0,number)},{number})};				
+				absolute=(number)branch(less(number,0),()subtract(0,number),()number);
 				
-				middle=map({vectorLength(vectorsubtract(p.GetPosition(),bubble.GetPosition()))},range(3));
-				middle=map(absolute,vectorsubtract(p.GetPosition(),bubble.GetPosition()));
+				middle=map(()vectorLength(vectorDifference(p.GetPosition(),bubble.GetPosition())),range(3));
+				middle=map(absolute,vectorDifference(p.GetPosition(),bubble.GetPosition()));
 				high=map(multiply(10/9),middle);
 				
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
-				//joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
-
-				//low=map(multiply(8/9),middle);
 				high=middle;
 				low=middle;
+
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
+				joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
 				
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop,low.1);
 				joint.SetParam_JointParameters_Single(JointParameters.LowStop2,low.2);
@@ -162,7 +161,7 @@
 				line.set_X2_Double(pos2.1);
 				line.set_Y2_Double(pos2.2);
 				line.set_Visibility_Visibility(Visibility.Visible);
-			}}
+			}
 		);
 	});
 	canvas.get_Children().Add_UIElement(line);
@@ -174,23 +173,23 @@
 			space.CheckCollisions();
 			world.Step_Single(stepSize);
 			map(
-				a{{
+				(a){
 					pos=a.GetPosition();
 					Canvas.SetLeft_UIElement_Double(a.ellipse,subtract(pos.1,a.radius()));
 					Canvas.SetTop_UIElement_Double(a.ellipse,subtract(pos.2,a.radius()));
-				}},
-				join([bubbles,<p>])
+				},
+				join([bubbles,[p]])
 			);
 			if(
 				not(equal(0,currentBubble)),
-				{{
+				(){
 					pos1=currentBubble.GetPosition();
 					pos2=p.GetPosition();
 					line.set_X1_Double(pos1.1);
 					line.set_Y1_Double(pos1.2);
 					line.set_X2_Double(pos2.1);
 					line.set_Y2_Double(pos2.2);
-				}}
+				}
 			);
 		}
 	);

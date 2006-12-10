@@ -3611,7 +3611,7 @@ namespace Meta {
 											StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 											Syntax.functionEnd,
 											Whitespace,
-											Assign(CodeKeys.Expression, Expression),
+										Assign(CodeKeys.Expression, Expression),
 										Whitespace)))))))));
 
 		public static Rule Program = DelayedRule(delegate {
@@ -4011,7 +4011,6 @@ namespace Meta {
 		public const char indentation = '\t';
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
-		//public const char function = '|';
 		public const char @string = '\"';
 		public const char emptyMap = '0';
 		public const char explicitCall = '-';
@@ -4024,14 +4023,8 @@ namespace Meta {
 		public const char lookupAnythingEnd='>';
 		public static readonly string integer = "0123456789-";
 		public static readonly string lookupStringForbidden =
-
-			"" + current + 
-			//functionAlternativeStart + 
-			//functionAlternativeEnd + 
-			lastArgument + explicitCall + indentation + '\r' + '\n' +
-			//function+
-			functionStart+functionEnd+
-			@string+emptyMap+ search + root+ callStart+ callEnd+ 
+			"" + current + lastArgument + explicitCall + indentation + '\r' + '\n' + functionStart+
+			functionEnd+ @string+emptyMap+ search + root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
 			'-'+ searchStatement+ select+ ' '+ '-'+ arrayStart+ arrayEnd+ '*'+ lookupAnythingEnd+ 
 			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;
