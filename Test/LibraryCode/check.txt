@@ -38,16 +38,16 @@
 						-
 							!"toString"
 							!"a"
-				"sum"=.
+				"add"=.
 					!"Number"
 					"op_Addition_Number_Number"
-				"quotient"=.
+				"divide"=.
 					!"Number"
 					"op_Division_Number_Number"
-				"difference"=.
+				"subtract"=.
 					!"Number"
 					"op_Subtraction_Number_Number"
-				"product"=.
+				"multiply"=.
 					!"Number"
 					"op_Multiply_Number_Number"
 				"greater"=.
@@ -84,7 +84,7 @@
 					"op_Modulus_Number_Number"
 				"opposite"=,
 					arg|-
-						!"difference"
+						!"subtract"
 						0
 						!"arg"
 				"or"=,

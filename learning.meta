@@ -1,4 +1,4 @@
-[
+{
 |,
 	&union +
 		MathML
@@ -25,7 +25,7 @@
 								?
 									name="rtf"
 									value=0
-							margin=Padding_Int32_Int32_Int32_Int32 (product depth 10) 10 0 0
+							margin=Padding_Int32_Int32_Int32_Int32 (multiply depth 10) 10 0 0
 							types=,
 								mathml=?MathMLControl,
 									Margin=margin
@@ -45,10 +45,10 @@
 									BorderStyle=BorderStyle.None
 									ContentsResized=sender?e?sender.set_Height_Int32 ((e.get_NewRectangle).get_Height
 									Rtf=join +
-										"[\rtf1\ansi[\fonttbl\f0\fswiss Helvetica;]\f0["
+										"{\rtf1\ansi{\fonttbl\f0\fswiss Helvetica;}\f0{"
 										If (contains data key) ?data.{key}.rtf
 										value
-										"]"
+										"}"
 							&(types.{type.name}
 					?+
 						,
@@ -112,7 +112,7 @@
 		Text="Learning"
 		Controls=+
 			panel
-			Splitter [Dock=DockStyle.Left
+			Splitter {Dock=DockStyle.Left
 			tree
 		Load=??,
 			load "D:\Meta\0.2\relativity.learn"

@@ -1,111 +1,111 @@
-(k)[
+(k){
 	accumulate=Meta.Library.Sum_Map_Map;
 	try=Meta.Library.Try_Map_Map;
 	contains=()Meta.ObjectMap_Object(@).ContainsKey_Map;
-	test=[
-		booleanTest=[
-			not=[
+	test={
+		booleanTest={
+			not={
 				true=not(0);
 				false=not(1);
-			];
-			and=[
+			};
+			and={
 				true=and(1,1);
 				false=and(1,0);
-			];
-			orTest=[
+			};
+			orTest={
 				true=or(1,1);
 				false=or(0,0);
 				otherTrue=or(0,1);
-			];
-		];
-		numberTest=[
-			positiveAdd=sum(100,1000);
-			negativeAdd=sum(-100,91);
-			differenceTest=sum(1/4,product(1/100,-1));
-			differenceTest2=difference(103,2);
-			divideTest=quotient(5,103);
-			productInteger=product(19,1023);
-			minusproduct=product(-1,-2);
-			productFraction=product(3/2,7/3);
+			};
+		};
+		numberTest={
+			positiveAdd=add(100,1000);
+			negativeAdd=add(-100,91);
+			differenceTest=add(1/4,multiply(1/100,-1));
+			differenceTest2=subtract(103,2);
+			divideTest=divide(5,103);
+			multiplyInteger=multiply(19,1023);
+			minusmultiply=multiply(-1,-2);
+			multiplyFraction=multiply(3/2,7/3);
 			smallerDecreasingTest=less(4,1);
 			strictlyIncreasingTest=greater(23,23);
 			smallerTest=less(0,1);
 			greaterTest=greater(3,5);
-			divide=product(1000,quotient(1,7));
-		];
-		bitwiseTest=[
+			divide=multiply(1000,divide(1,7));
+		};
+		bitwiseTest={
 			or=0;
-		];
-		mapTest=[
+		};
+		mapTest={
 			IfTest=branch(
 				1,
 				(arg)"If,test,successful",
 				()0
 			);
-			Map=[
+			Map={
 				&map(
-					(argument)sum(argument,1),
-					<1,2,3>
+					(argument)add(argument,1),
+					[1,2,3]
 				);
-			];
-			keyTestMap=[
+			};
+			keyTestMap={
 				x="hello";
-			];
+			};
 			containsTest=contains(keyTestMap,"x");
 			keysTest=keys(
-				[
+				{
 					jjqwv="aeäquq";
 					oere="i,ke";
 					1="oiq";
-				]
+				}
 			);
-			equal=[
-				map=[
+			equal={
+				map={
 					true=equal(
-						[
+						{
 							x="hello";
 							y="world";
-						],
-						[
+						},
+						{
 							x="hello";
 							y="world";
-						]
+						}
 					);
 					false=equal(
-						[
+						{
 							x="y";
 							y="z";
-						],
-						[
+						},
+						{
 							x="y";
 							y="a";
-						]
+						}
 					);
-				];
-			];
+				};
+			};
 			tryTest=try(
 				(arg)"hello",
 				(argument)argument.ToString(0)
 			);
-		];
+		};
 		sumTest=accumulate(
-			(first)(second)sum(first,second),
-			<2,5,6,8>
+			(first)(second)add(first,second),
+			[2,5,6,8]
 		);
-		lengthTest=length(<1,2,3,4,5>);
+		lengthTest=length([1,2,3,4,5]);
 		withTest=!"System.Windows.Forms".Form(
-			[
+			{
 				Text="hello,world";
-			]
+			}
 		);
 		countTest=count(
-			[
+			{
 				orange="orange";
 				banana="yellow";
 				apple="red";
 				strawberries="red";
-			]
+			}
 		);
-	];
+	};
 	&test;
-]
+}

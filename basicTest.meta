@@ -1,4 +1,4 @@
-(commandLine)[
+(commandLine){
 	// Copyright (c) 2005, 2006 Christian Staudenmeyer
 	//	
 	// Permission is hereby granted, free of charge, to any person obtaining
@@ -20,127 +20,127 @@
 	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 	// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	// SOFTWARE.
-	&merge(<0,<"AssignedToCurrent">>);
+	&merge([0,["AssignedToCurrent"]]);
 	asdf="hello";
 	shortFunction=(asdf)asdf; // another comment
 	bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
 	shortFunctionTest=!"shortFunction"("hello");
 	decimal=1612345.9834;
-	listTest=<1,2,3,"hello",asdf>;
+	listTest=[1,2,3,"hello",asdf];
 	counter=0;
-	inlineProgram=[
+	inlineProgram={
 		hello="world";
 		x="y";
-	];
-	SetCounter=()[
+	};
+	SetCounter=(){
 			counter:@;
-	];
+	};
 	1=SetCounter(5);
-	LIST=<0,0,0>;
-	scoping=[
+	LIST=[0,0,0];
+	scoping={
 		scopingValue="right";
 		test=(arg)scopingValue;
-	];
+	};
 	scopingValue="wrong";
 	scopingTest=scoping.test;
 	lexicalScoping=scopingTest(0);
 	unicodeText="äaba";
-	integerHashTest=[
+	integerHashTest={
 		2="correct,hash,content";
-		hashTestData=[
-			0=[
+		hashTestData={
+			0={
 				0=0;
-			];
-		];
+			};
+		};
 		hashTest=!!"hashTestData";
-	];
+	};
 	negativeInteger=100;
-	negativeInteger=merge(<
+	negativeInteger=merge([
 		negativeInteger,
-		[
+		{
 			x="hello";
-		]>
+		}]
 	);
 	integerIncrementTest=5;
-	integerIncrementTest=[
+	integerIncrementTest={
 		0=integerIncrementTest;
-	];
+	};
 	integerDecrementTest=5;
 	integerDecrementTest=!"integerDecrementTest".0;
 	negativeNumber=-123;
-	mapNumbers=[
-		integer=[
+	mapNumbers={
+		integer={
 			0=5;
-		];
-		negative=[
-			0=5;
-			negative=0;
-		];
-		fraction=[
-			0=5;
-			denominator=7;
-		];
-		negativeFraction=[
+		};
+		negative={
 			0=5;
 			negative=0;
+		};
+		fraction={
+			0=5;
 			denominator=7;
-		];
-	];
+		};
+		negativeFraction={
+			0=5;
+			negative=0;
+			denominator=7;
+		};
+	};
 	fraction=3/2;
-	literalEscapeTest=<
+	literalEscapeTest=[
 		"asdf",
 		"asdf"
-	>;
+	];
 	2="ImpliedAutokey";
 	3="Autokey";
 	commandLineArguments=commandLine;
-	aMap=[
+	aMap={
 		a="a";
-	];
+	};
 	"normal,symbol"="NormalSymbol";
 	lookupSymbol="LookupSymbol";
 	"long,key,symbol"="LookupExtendedSymbol";
 	lookedUpNormalSymbol=!"normal,symbol";
 	lookedUpSymbol=!"lookupSymbol";
 	lookedUpLongSymbol=!"long,key,symbol";
-	object=[
+	object={
 		a="default";
 		autoSearch="default";
 		b=0;
-		SetA=(arg)[
+		SetA=(arg){
 			a:"c";
 			autoSearch:"changed";
-		];
-		SetB=(newB)[
-			b:merge(<
+		};
+		SetB=(newB){
+			b:merge([
 				b,
-				[
+				{
 					1=newB.value;
-				]>
+				}]
 			);
 			&"changed";
-		];
-		x=[
+		};
+		x={
 			a="b";
 			c="d";
-		];
-		1=(arg)[
+		};
+		1=(arg){
 			a:"b";
-		];
-	];
+		};
+	};
 	a="default";
 	b=0;
 	aSet=object.SetA(0);
-	bSet=object.SetB([
-		value=[
+	bSet=object.SetB({
+		value={
 			x=7;
 			z=1;
-		];
-	]);
+		};
+	});
 	scopeTest="default";
-	scopeFunction=(arg)[
+	scopeFunction=(arg){
 		scopeTest:inScope;
-	];
+	};
 	inScope="wrong";
 	inScope="right";
 	4=scopeFunction(0);
@@ -149,45 +149,45 @@
 	scopeFromFunctionData="right";
 	scopeFromFunction=scopeFunctionFunction(0);
 	scopeFromFunctionTest=scopeFromFunction(0);
-	ReturnEverything=(everything)[&everything;];
-	everythingReturned=ReturnEverything(<"a","b","c">);
-	variableAsArgument=ReturnEverything(<"x","y","z">);
-	ReturnFunction=(arg)[
-		&(arg)[&<1,2,3>;];
-	];
-	SetCurrent=(current)[
-		&[
+	ReturnEverything=(everything){&everything;};
+	everythingReturned=ReturnEverything(["a","b","c"]);
+	variableAsArgument=ReturnEverything(["x","y","z"]);
+	ReturnFunction=(arg){
+		&(arg){&[1,2,3];};
+	};
+	SetCurrent=(current){
+		&{
 			asdf=current;
 			x=current.symbol;
-		];
+		};
 		&x;
-	];
+	};
 	thisSet=SetCurrent(
-		[
+		{
 			symbol="haha";
-		]
+		}
 	);
-	FirstLevel=(arg)<SecondLevel(arg)>;
+	FirstLevel=(arg)[SecondLevel(arg)];
 	SecondLevel=(arg)arg;
 	argTest=FirstLevel(
-		[
+		{
 			a="z";
-		]
+		}
 	);
 	TestClass=/.Meta.TestClass;
 	nestedClassTest=TestClass.NestedClass.field;
 	testClass=TestClass(
-		[
+		{
 			floatValue=3;
 			doubleValue=4;
 			decimalValue=5;
-		]
+		}
 	);
-	TestClass=merge(<
+	TestClass=merge([
 		TestClass,
-		[
+		{
 			boolTest=1;
-		]>
+		}]
 	);
 	boolTest=TestClass.boolTest;
 	MemberTest=/.Meta.MemberTest;
@@ -196,17 +196,17 @@
 	integerOverload=MemberTest.OverloadedMethod_Int32(5);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-	MemberTest:merge(<
+	MemberTest:merge([
 		MemberTest,
-		[
+		{
 			classField="a";
-		]>
+		}]
 	);
-	memberTest:merge(<
+	memberTest:merge([
 		memberTest,
-		[
+		{
 			instanceField="b";
-		]>
+		}]
 	);
 	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty(0));
 	classPropertyValue=MemberTest.get_ClassProperty(0);
@@ -217,16 +217,16 @@
 	positionalNoConversion=/.Meta.PositionalNoConversion_String_String_String("m","n","o");
 	positionalNoConversionConcatenated=positionalNoConversion.Concatenate_String_String_String("r","s","t");
 	namedNoConversion=/.Meta.NamedNoConversion_Map(
-		[
+		{
 			1="m";
 			y="n";
-		]
+		}
 	);
 	namedNoConversionConcatenated=namedNoConversion.Concatenate_Map(
-		[
+		{
 			c="t";
 			1="r";
-		]
+		}
 	);
 	indexerNoConversion=/.Meta.IndexerNoConversion(0);
 	indexerNoConversion.set_Item_String_String("abc","hihi");
@@ -236,29 +236,29 @@
 	xyz="w";
 	literalFunction=(arg)5;
 	literalFunctionResult=!"literalFunction"(0);
-	someFunction=(arg)[&"simple,function,this";];
+	someFunction=(arg){&"simple,function,this";};
 	callFunction=(arg)someFunction;
 	callFunctionResult=callFunction(0);
-	delayedFunction=(arg)(arg)()[
+	delayedFunction=(arg)(arg)(){
 		x="y";
-	];
+	};
 	delayedFunctionResult=delayedFunction(0);
 	delayedFunctionDirect=delayedFunction(0,0);
 	value="xyz";
 	selectionFunction=(arg)value;
 	selectionFunctionResult=selectionFunction(0);
 	upperLevel="unchanged";
-	SetUpperLevel=(arg)[
+	SetUpperLevel=(arg){
 		upperLevel:arg;
-	];
-	ChangeUpperLevel=(arg)[
+	};
+	ChangeUpperLevel=(arg){
 		1=SetUpperLevel("changed");
-	];
+	};
 	5=ChangeUpperLevel(0);
 	staticEventChanged=0;
-	ChangeStaticEvent=(arg)[
+	ChangeStaticEvent=(arg){
 		staticEventChanged:arg;
-	];
+	};
 	asdf="hello";
 	TestClass.add_staticEvent_NormalEvent(
 		(arg)ChangeStaticEvent(1)
@@ -270,10 +270,10 @@
 	staticEventResult=TestClass.CallStaticEvent_Object(testClass);
 	instanceEventChanged=0;
 	testClass.add_instanceEvent_IntEvent(
-		(arg)[
+		(arg){
 			instanceEventChanged:1;
 			&arg;
-		]
+		}
 	);
 	instanceEventResult=testClass.CallInstanceEvent_Object(5);
 	one=1;
@@ -281,31 +281,31 @@
 	firstIf="unchanged";
 	secondIf="unchanged";
 	firstIfCondition=equal(1,one);
-	firstIfBranches=[
+	firstIfBranches={
 		1=(arg)"then";
 		0=(arg)"else";
-	];
+	};
 	firstIf=firstIfBranches.<firstIfCondition>(0);
 	bigNumber=50020202;
 	secondSwitch="unchanged";
-	secondSwitchCases=<"one","two","three">;
+	secondSwitchCases=["one","two","three"];
 	secondSwitch=secondSwitchCases.3;
 	emptyMap=0;
-	emptyFunction=(arg)[x="hello";];
+	emptyFunction=(arg){x="hello";};
 	emptyFunctionResult=emptyFunction(0);
 	font=/."System.Drawing".Font_String_Single("Courier,New",10);
 	decimalTest=5;
 	fractionTest=40;
 	stringTest="hello";
-	stringTest=merge(<
+	stringTest=merge([
 		stringTest,
-		[
+		{
 			5=stringTest.1;
-		]>
+		}]
 	);
 	hellh="hi";
 	stringStrategyHashTest=!stringTest;
-	x=[aLongText="hello,world!";];
+	x={aLongText="hello,world!";};
 	arrayList=/.mscorlib.ArrayList(0);
 	7=arrayList.Add_Object("hello");
 	arrayListResult=arrayList.get_Item_Int32(0);
@@ -319,60 +319,60 @@
 	tabText="			hello";
 	escapedText="'#'n'''t";
 	whileCounter=0;
-	loop=(start)[
+	loop=(start){
 		whileDecision=not(equal(start,10));
-		whileBranches=[
-			1=(arg)loop(sum(arg,1));
+		whileBranches={
+			1=(arg)loop(add(arg,1));
 			0=(arg)arg;
-		];
+		};
 		&whileBranches.<whileDecision>(start);
-	];
+	};
 	whileCounter=loop(3);
-	returnInMap=(arg)[result=arg;];
+	returnInMap=(arg){result=arg;};
 	literalAsArgument=returnInMap(1);
 	returnFunction=(arg)(arg)"functionResult";
 	returnArg=(arg)arg;
-	myArg=(arg)[
+	myArg=(arg){
 		hello="world";
-	];
+	};
 	funcReturnTest=returnArg(myArg,0);
 	documentedFunction=(arg)"hello";
 	docFunctionResult=documentedFunction(0);
 	topLevel="default";
-	deep=[
-		map=[
-			test=(arg)[
+	deep={
+		map={
+			test=(arg){
 				topLevel:"changed";
-			];
-		];
-	];
+			};
+		};
+	};
 	8=deep.map.test(0);
-	outerFunction=(arg)[
-		innerFunction=(arg)[
+	outerFunction=(arg){
+		innerFunction=(arg){
 			&arg;
-		];
+		};
 		1=innerFunction(0);
-	];
+	};
 	outerFunctionTest=outerFunction("right");
 	newLines=" ";
 	app=!"System.Windows.Forms".Application;
 	app.set_VisualStyleState_VisualStyleState(!"System.Windows.Forms".VisualStyleState.ClientAreaEnabled);
 	enumTest=!"System.Windows.Forms".Application.get_VisualStyleState(0);
 	oneTwoThreeHello="asdf";
-	copySourceData=[
+	copySourceData={
 		x="y";
 		z="a";
-	];
+	};
 	copiedData=copySourceData;
-	copiedData=merge(<
+	copiedData=merge([
 		copiedData,
-		[
+		{
 			x="changed";
-		]>
+		}]
 	);
-	characterLiterals=[
+	characterLiterals={
 		a='a';
 		space=' ';
 		tab='	';
-	];
-]
+	};
+}

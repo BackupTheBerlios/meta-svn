@@ -1,121 +1,121 @@
-{[
-	&merge(<System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase>);
+(){
+	&merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase]);
 	contains={Meta.ObjectMap_Object(@).ContainsKey_Map};
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
-	vectorLength=vector{power(sum(power(vector.1,2),power(vector.2,2)),1/2)};
-	vectorDifference=a{b{map(key{difference(a.<key>,b.<key>)},keys(a))}};
+	vectorLength=vector{power(add(power(vector.1,2),power(vector.2,2)),1/2)};
+	vectorDifference=a{b{map(key{subtract(a.<key>,b.<key>)},keys(a))}};
 	compareNumber=Meta.Library.CompareNumber_Number_Number;
 	callKey=key{map{branch(contains(map,key),{map.<key>()},{0})}};
 	world=World();
-	vectorDotProduct=vector{number{map(entry{product(<number,entry>)},vector)}};
-	productVector=a{b{map(index{product(<a.<index>,b.<index>>)},range(length(a)))}};
-	vectorProduct=productVector;
+	vectorDotmultiply=vector{number{map(entry{multiply([number,entry])},vector)}};
+	multiplyVector=a{b{map(index{multiply([a.<index>,b.<index>])},range(length(a)))}};
+	vectormultiply=multiplyVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
 	sort=Meta.Library.Sort_Map_Map;
 	createBox=space.CreateBox_Single_Single_Single;
 	vector=Vector3_Single_Single_Single;
-	makeBox=size{position{[
+	makeBox=(size)(position){
 		box=createBox(size.1,size.2,size.3);
 		box.set_Position_Vector3(vector(position.1,position.2,position.3));
-	]}};
-	makeBox(<798,50,100>,<400,0,0>);
-	makeBox(<798,50,100>,<400,600,0>);
-	makeBox(<50,598,100>,<0,300,0>);
-	makeBox(<50,598,100>,<800,300,0>);
+	};
+	makeBox([798,50,100],[400,0,0]);
+	makeBox([798,50,100],[400,600,0]);
+	makeBox([50,598,100],[0,300,0]);
+	makeBox([50,598,100],[800,300,0]);
 	canvas=Canvas();
-	bubble=size{[
+	bubble=(size){
 		body=Body_World(world);
-		radius={product(size,4)};
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(product(size,size),1));
-		position=<random(1,790),random(1,590)>;
+		radius={multiply(size,4)};
+		body.set_Mass_Mass(Mass.Sphere_Single_Single(multiply(size,size),1));
+		position=[random(1,790),random(1,590)];
 		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
 		geom=space.CreateSphere_Single(radius());
 		geom.set_Position_Vector3(body.get_Position());
 		geom.set_Body_Body(body);
-		speed=<random(-6,6),random(-6,6)>;
+		speed=[random(-6,6),random(-6,6)];
 		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
-		GetPosition={[
+		GetPosition={{
 			pos=body.get_Position();
-			&<pos.get_X(),pos.get_Y(),pos.get_Z()>;
-		]};
-		ellipse=Ellipse([
-			Width=product(2,radius());
-			Height=product(2,radius());
+			&[pos.get_X(),pos.get_Y(),pos.get_Z()];
+		}};
+		ellipse=Ellipse({
+			Width=multiply(2,radius());
+			Height=multiply(2,radius());
 			Fill=Brushes.get_Red();
 			Canvas.LeftProperty=GetPosition().1;
 			Canvas.TopProperty=GetPosition().2;
-		]);
+		});
 		canvas.get_Children().Add_UIElement(ellipse);
-	]};
+	};
 	jointGroup=JointGroup_Int32(0);
 	currentBubble=0;
-	line=Line([
+	line=Line({
 		Canvas.LeftProperty=0;
 		Canvas.RightProperty=0;
-	]);
+	});
 	line.set_Stroke_Brush(Brushes.get_Black());
 	line.set_StrokeThickness_Double(2);
 	line.set_Visibility_Visibility(Visibility.Hidden);
-	setCurrentBubble=b{[currentBubble:b;]};
-	player=c{[
+	setCurrentBubble=(b){currentBubble:b;};
+	player=(c){
 		&bubble(1);
 		ellipse.set_Fill_Brush(Brushes.get_Green());
 		currentJoint=0;
-		setCurrentJoint=joint{[currentJoint:joint;]};
+		setCurrentJoint=joint{{currentJoint:joint;}};
 		toVector=v{Vector3_Single_Single_Single(v.1,v.2,0)};
-	]};
+	};
 	paused=0;
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
-	space.add_Collision_CollisionEventHandler({e{[
+	space.add_Collision_CollisionEventHandler((e)(){
 		a=e.get_Geom1();
 		b=e.get_Geom2();
 		map(
-			contactGeom{[
+			(contactGeom){
 				contact=world.CreateContactJoint_Contact_JointGroup(
-					Contact([Geom=contactGeom;]),
+					Contact({Geom=contactGeom;}),
 					contactGroup
 				);
 				contact.Attach_Body_Body(a.get_Body(),b.get_Body());
-			]},
+			},
 			enumerableToArray(a.Collide_Geom_Int32(b,13))
 		);
-	]}});
-	slowBubble=size{[
+	});
+	slowBubble=(size){
 		&bubble(size);
 		ellipse.set_Fill_Brush(Brushes.get_Blue());
-	]};
-	bubbles=map({bubble(random(1,5))},range(30));
+	};
+	bubbles=map(()bubble(random(1,5)),range(30));
 	p=player();
-	window=Window([
+	window=Window({
 		Content=canvas;
 		Title="Bubblemania";
 		Width=800;
 		Height=620;
 		Background=Brushes.get_Yellow();
-	]);
-	window.add_KeyUp_KeyEventHandler({e{if(
+	});
+	window.add_KeyUp_KeyEventHandler(()(e)if(
 		equal(e.get_Key(),Key.Enter),
-		{[
+		{{
 			jointGroup.Empty();
 			currentBubble:0;
 			line.set_Visibility_Visibility(Visibility.Hidden);
-		]}
-	)}});
+		}}
+	));
 	springConstant=1/2;
 	dampeningConstant=2;
 	stepSize=1;
-	erp=quotient(product(stepSize,springConstant),sum(product(stepSize,springConstant),dampeningConstant)
-	cfm=quotient(1,sum(product(stepSize,springConstant),dampeningConstant));
+	erp=divide(multiply(stepSize,springConstant),add(multiply(stepSize,springConstant),dampeningConstant)
+	cfm=divide(1,add(multiply(stepSize,springConstant),dampeningConstant));
 	print(erp);
 	print(cfm);
-	window.add_KeyDown_KeyEventHandler({e{[
+	window.add_KeyDown_KeyEventHandler(()(e){
 		if(
 			and(equal(e.get_Key(),Key.Enter),equal(currentBubble,0)),
-			{[
+			{{
 				lengths=map(
-					b{vectorLength(vectorDifference(p.GetPosition(),b.GetPosition()))},
+					b{vectorLength(vectorsubtract(p.GetPosition(),b.GetPosition()))},
 					bubbles
 				);
 				sorted=sort(keys(bubbles),a{b{compareNumber(lengths.<a>,lengths.<b>)}});
@@ -128,17 +128,17 @@
 				
 				bounce=1;
 				
-				absolute=number{branch(less(number,0),{difference(0,number)},{number})};				
+				absolute=number{branch(less(number,0),{subtract(0,number)},{number})};				
 				
-				middle=map({vectorLength(vectorDifference(p.GetPosition(),bubble.GetPosition()))},range(3));
-				middle=map(absolute,vectorDifference(p.GetPosition(),bubble.GetPosition()));
-				high=map(product(10/9),middle);
+				middle=map({vectorLength(vectorsubtract(p.GetPosition(),bubble.GetPosition()))},range(3));
+				middle=map(absolute,vectorsubtract(p.GetPosition(),bubble.GetPosition()));
+				high=map(multiply(10/9),middle);
 				
 				//joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
 				//joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
 				//joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
 
-				//low=map(product(8/9),middle);
+				//low=map(multiply(8/9),middle);
 				high=middle;
 				low=middle;
 				
@@ -162,38 +162,38 @@
 				line.set_X2_Double(pos2.1);
 				line.set_Y2_Double(pos2.2);
 				line.set_Visibility_Visibility(Visibility.Visible);
-			]}
+			}}
 		);
-	]}});
+	});
 	canvas.get_Children().Add_UIElement(line);
 	timer=DispatcherTimer_DispatcherPriority(DispatcherPriority.Normal);
 	timer.set_Interval_TimeSpan(TimeSpan_Int64(1000000));
 	timer.add_Tick_EventHandler(
-		{{[
+		()(){
 			contactGroup.Empty();
 			space.CheckCollisions();
 			world.Step_Single(stepSize);
 			map(
-				a{[
+				a{{
 					pos=a.GetPosition();
-					Canvas.SetLeft_UIElement_Double(a.ellipse,difference(pos.1,a.radius()));
-					Canvas.SetTop_UIElement_Double(a.ellipse,difference(pos.2,a.radius()));
-				]},
-				join(<bubbles,<p>>)
+					Canvas.SetLeft_UIElement_Double(a.ellipse,subtract(pos.1,a.radius()));
+					Canvas.SetTop_UIElement_Double(a.ellipse,subtract(pos.2,a.radius()));
+				}},
+				join([bubbles,<p>])
 			);
 			if(
 				not(equal(0,currentBubble)),
-				{[
+				{{
 					pos1=currentBubble.GetPosition();
 					pos2=p.GetPosition();
 					line.set_X1_Double(pos1.1);
 					line.set_Y1_Double(pos1.2);
 					line.set_X2_Double(pos2.1);
 					line.set_Y2_Double(pos2.2);
-				]}
+				}}
 			);
-		]}}
+		}
 	);
-	window.add_Loaded_RoutedEventHandler({{timer.Start()}});
+	window.add_Loaded_RoutedEventHandler(()()timer.Start());
 	Application().Run_Window(window);
-]}
+}

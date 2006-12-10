@@ -3327,31 +3327,6 @@ namespace Meta {
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
 
-		//public static Rule Function = Sequence(
-		//    Syntax.functionStart,
-		//    Assign(
-		//        CodeKeys.Parameter,
-		//        StringRule(
-		//            ZeroOrMoreChars(
-		//                CharsExcept(
-		//                    "" + Syntax.@string + Syntax.function + Syntax.indentation +
-		//                    Syntax.functionEnd+Syntax.functionStart+
-		//                    Syntax.windowsNewLine[0] + Syntax.unixNewLine)))),
-		//    Syntax.functionEnd,
-		//    Syntax.function,
-		//    Assign(CodeKeys.Expression, Expression),
-		//    Whitespace);
-
-		//public static Rule Function = Sequence(
-		//    Assign(
-		//        CodeKeys.Parameter,
-		//        StringRule(ZeroOrMoreChars(
-		//                CharsExcept("" + Syntax.@string + Syntax.function + Syntax.indentation +
-		//                    Syntax.windowsNewLine[0] + Syntax.unixNewLine)))),
-		//    Syntax.function,
-		//    Assign(CodeKeys.Expression, Expression),
-		//    Whitespace);
-
 		public static Rule Entry = Alternatives(
 			//Sequence(Assign(CodeKeys.Function, Function)),
 			//Sequence(Assign(CodeKeys.Function, Function)),
@@ -3609,13 +3584,7 @@ namespace Meta {
 			OptionalError(Syntax.statementEnd),
 			Whitespace
 		);
-		//public static Rule AllStatements = Sequence(
-		//    ReferenceAssignment(
-		//        Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
-		//    Whitespace,
-		//    OptionalError(Syntax.statementEnd),
-		//    Whitespace
-		//);
+
 		public static Rule FunctionMap = Sequence(
 			Syntax.functionStart,
 			Assign(CodeKeys.Function,
@@ -3626,27 +3595,6 @@ namespace Meta {
 						Assign(CodeKeys.Expression, Expression),
 					Whitespace,
 			Whitespace)));
-		//public static Rule FunctionMap = Sequence(
-		//    Assign(CodeKeys.Function,
-		//        Sequence(
-		//            Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//            Syntax.functionAlternativeStart,
-		//                Whitespace,
-		//                Assign(CodeKeys.Expression, Expression),
-		//            Whitespace,
-		//            OptionalError(Syntax.functionAlternativeEnd),
-		//    Whitespace)));
-		//public static Rule FunctionMap = Sequence(
-		//    Assign(CodeKeys.Function,
-		//        Sequence(
-		//            Assign(CodeKeys.Parameter,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//            Syntax.functionAlternativeStart,
-		//                Whitespace,
-		//                Assign(CodeKeys.Expression, Expression),
-		//            Whitespace,
-		//            OptionalError(Syntax.functionAlternativeEnd),
-		//    Whitespace)));
-
 
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
@@ -3665,23 +3613,6 @@ namespace Meta {
 											Whitespace,
 											Assign(CodeKeys.Expression, Expression),
 										Whitespace)))))))));
-
-		//public static Rule FunctionProgram = Sequence(
-		//    Assign(CodeKeys.Program,
-		//        Sequence(
-		//            Assign(1,
-		//                Sequence(
-		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-		//                    Assign(CodeKeys.Value, Sequence(
-		//                        Assign(CodeKeys.Literal,
-		//                            Sequence(
-		//                                Assign(
-		//                                    CodeKeys.Parameter,
-		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//                                Syntax.functionAlternativeStart,Whitespace,
-		//                                    Assign(CodeKeys.Expression, Expression),
-		//                                Whitespace,
-		//                                OptionalError(Syntax.functionAlternativeEnd))))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -4058,14 +3989,14 @@ namespace Meta {
 		public const char comment='/';
 		public const char statementEnd=';';
 		public const char statement='=';
-		public const char programStart = '[';
-		public const char programEnd = ']';
+		public const char programStart = '{';
+		public const char programEnd = '}';
 		public const char functionStart = '(';
 		public const char functionEnd = ')';
 		//public const char functionAlternativeStart = '{';
 		//public const char functionAlternativeEnd = '}';
-		public const char arrayStart = '<';
-		public const char arrayEnd = '>';
+		public const char arrayStart = '[';
+		public const char arrayEnd = ']';
 		public const char arraySeparator = ',';
 		public const char programSeparator = ';';
 		public const char lastArgument = '@';
