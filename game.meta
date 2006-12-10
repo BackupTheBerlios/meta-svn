@@ -1,7 +1,7 @@
 (){
 	&merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase]);
 	contains=()Meta.ObjectMap_Object(@).ContainsKey_Map;
-	random=Meta.Library.Random_Int32_Int32
+	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
 	vectorLength=(vector)power(add(power(vector.1,2),power(vector.2,2)),1/2);
 	vectorDifference=(a)(b)map((key)subtract(a.<key>,b.<key>),keys(a));

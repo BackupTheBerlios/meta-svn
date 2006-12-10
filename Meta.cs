@@ -3596,23 +3596,95 @@ namespace Meta {
 					Whitespace,
 			Whitespace)));
 
+		public static Rule FunctionPart = DelayedRule(delegate {
+			return Sequence(
+				Assign(CodeKeys.Program,
+					Sequence(
+						Assign(1,
+							Sequence(
+								Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+								Assign(CodeKeys.Value, Sequence(
+									Assign(CodeKeys.Literal,
+										Sequence(
+											Assign(
+												CodeKeys.Parameter,
+												StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+											Assign(
+												CodeKeys.Expression,
+												Alternatives(
+													Sequence(
+														Syntax.functionSeparator,
+														ReferenceAssignment(FunctionPart)
+													),
+													Sequence(
+														Syntax.functionEnd,
+														Whitespace,
+														ReferenceAssignment(Expression)
+													))),
+											Whitespace)))))))));
+		});
+
+		//public static Rule FunctionPart = Sequence(
+		//    Assign(CodeKeys.Program,
+		//        Sequence(
+		//            Assign(1,
+		//                Sequence(
+		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+		//                    Assign(CodeKeys.Value, Sequence(
+		//                        Assign(CodeKeys.Literal,
+		//                            Sequence(
+		//                                Assign(
+		//                                    CodeKeys.Parameter,
+		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//                                Assign(
+		//                                    CodeKeys.Expression,
+		//                                    Alternatives(
+		//                                        Sequence(
+		//                                            Syntax.functionSeparator,
+		//                                            ReferenceAssignment(FunctionPart)
+		//                                        )
+		//                                        Sequence(
+		//                                            Syntax.functionEnd,
+		//                                            Whitespace,
+		//                                            ReferenceAssignment(Expression)
+		//                                        ),
+		//                                            Whitespace)))))))));
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
-			Assign(CodeKeys.Program,
-				Sequence(
-					Assign(1,
-						Sequence(
-							Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-							Assign(CodeKeys.Value, Sequence(
-								Assign(CodeKeys.Literal,
-									Sequence(
-										Assign(
-											CodeKeys.Parameter,
-											StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-											Syntax.functionEnd,
-											Whitespace,
-										Assign(CodeKeys.Expression, Expression),
-										Whitespace)))))))));
+			ReferenceAssignment(FunctionPart));
+			//Assign(CodeKeys.Program,
+			//    Sequence(
+			//        Assign(1,
+			//            Sequence(
+			//                Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+			//                Assign(CodeKeys.Value, Sequence(
+			//                    Assign(CodeKeys.Literal,
+			//                        Sequence(
+			//                            Assign(
+			//                                CodeKeys.Parameter,
+			//                                StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+			//                                Syntax.functionEnd,
+			//                                Whitespace,
+			//                            Assign(CodeKeys.Expression, Expression),
+			//                            Whitespace)))))))));
+
+		//public static Rule FunctionProgram = Sequence(
+		//    Syntax.functionStart,
+		//    Assign(CodeKeys.Program,
+		//        Sequence(
+		//            Assign(1,
+		//                Sequence(
+		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+		//                    Assign(CodeKeys.Value, Sequence(
+		//                        Assign(CodeKeys.Literal,
+		//                            Sequence(
+		//                                Assign(
+		//                                    CodeKeys.Parameter,
+		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//                                    Syntax.functionEnd,
+		//                                    Whitespace,
+		//                                Assign(CodeKeys.Expression, Expression),
+		//                                Whitespace)))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -3983,6 +4055,7 @@ namespace Meta {
 		}
 	}
 	public class Syntax {
+		public const char functionSeparator=',';
 		public const char decimalSeparator = '.';
 		public const char searchStatement=':';
 		public const char search='!';

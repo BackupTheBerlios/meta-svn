@@ -145,7 +145,7 @@
 	inScope="right";
 	4=scopeFunction(0);
 	scopeFromFunctionData="wrong";
-	scopeFunctionFunction=(arg)(arg)!"scopeFromFunctionData";
+	scopeFunctionFunction=(arg,arg)!"scopeFromFunctionData";
 	scopeFromFunctionData="right";
 	scopeFromFunction=scopeFunctionFunction(0);
 	scopeFromFunctionTest=scopeFromFunction(0);
@@ -239,7 +239,7 @@
 	someFunction=(arg){&"simple,function,this";};
 	callFunction=(arg)someFunction;
 	callFunctionResult=callFunction(0);
-	delayedFunction=(arg)(arg)(){
+	delayedFunction=(arg,arg)(){
 		x="y";
 	};
 	delayedFunctionResult=delayedFunction(0);
