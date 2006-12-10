@@ -144,9 +144,6 @@ public partial class Editor : System.Windows.Window {
 			index=FindMatchingBrace(closeBraces, openBraces, false);
 		}
 		return index;
-		//if (!FindMatchingBrace(openBraces, closeBraces, true)) {
-		//    FindMatchingBrace(closeBraces, openBraces, false);
-		//}
 	}
 	public class IterativeSearch {
 		public bool Active {
@@ -1544,7 +1541,17 @@ public partial class Editor : System.Windows.Window {
 		if (forward != -1 || backward != -1) {
 			char brace;
 			int index;
-			if (forward != -1) {
+			if (forward != -1 && backward != -1) {
+				if (openBraces == Editor.closeBraces) {
+					index = forward;
+					brace = openBraces[forward];
+				}
+				else {
+					index = backward;
+					brace = openBraces[backward];
+				}
+			}
+			else if (forward != -1) {
 				index = forward;
 				brace = openBraces[forward];
 			}
