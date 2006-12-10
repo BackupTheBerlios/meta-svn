@@ -1678,27 +1678,56 @@ namespace Meta {
 			}
 		}
 
+		private List<Map> keys;
 		public override IEnumerable<Map> Keys {
 			get {
-				foreach (string dll in Directory.GetFiles(path,"*.dll")) {
-					Assembly assembly=null;
-					try {
-						assembly=Assembly.LoadFrom(dll);
+				if (keys == null) {
+					keys = new List<Map>();
+					foreach (string dll in Directory.GetFiles(path, "*.dll")) {
+						Assembly assembly = null;
+						try {
+							assembly = Assembly.LoadFrom(dll);
+						}
+						catch (Exception e) {
+						};
+						if (assembly != null) {
+							keys.Add(Path.GetFileNameWithoutExtension(dll));
+							//yield return Path.GetFileNameWithoutExtension(dll);
+						}
 					}
-					catch(Exception e) {
-					};
-					if (assembly != null) {
-						yield return Path.GetFileNameWithoutExtension(dll);
+					foreach (string file in Directory.GetFiles(path)) {
+						keys.Add(Path.GetFileName(file));
+						//yield return Path.GetFileName(file);
+					}
+					foreach (string directory in Directory.GetDirectories(path)) {
+						keys.Add(new DirectoryInfo(directory).Name);
+						//yield return new DirectoryInfo(directory).Name;
 					}
 				}
-				foreach (string file in Directory.GetFiles(path)) {
-					yield return Path.GetFileName(file);
-				}
-				foreach (string directory in Directory.GetDirectories(path)) {
-					yield return new DirectoryInfo(directory).Name;
-				}
+				return keys;
 			}
 		}
+		//public override IEnumerable<Map> Keys {
+		//    get {
+		//        foreach (string dll in Directory.GetFiles(path,"*.dll")) {
+		//            Assembly assembly=null;
+		//            try {
+		//                assembly=Assembly.LoadFrom(dll);
+		//            }
+		//            catch(Exception e) {
+		//            };
+		//            if (assembly != null) {
+		//                yield return Path.GetFileNameWithoutExtension(dll);
+		//            }
+		//        }
+		//        foreach (string file in Directory.GetFiles(path)) {
+		//            yield return Path.GetFileName(file);
+		//        }
+		//        foreach (string directory in Directory.GetDirectories(path)) {
+		//            yield return new DirectoryInfo(directory).Name;
+		//        }
+		//    }
+		//}
 		public override IEnumerable<Map> Array {
 			get {
 				yield break;
@@ -3298,18 +3327,34 @@ namespace Meta {
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
 
-		public static Rule Function = Sequence(
-			Assign(
-				CodeKeys.Parameter,
-				StringRule(ZeroOrMoreChars(
-						CharsExcept(""+Syntax.@string+Syntax.function+Syntax.indentation+
-							Syntax.windowsNewLine[0]+Syntax.unixNewLine)))),
-			Syntax.function,
-			Assign(CodeKeys.Expression,Expression),
-			Whitespace);
+		//public static Rule Function = Sequence(
+		//    Syntax.functionStart,
+		//    Assign(
+		//        CodeKeys.Parameter,
+		//        StringRule(
+		//            ZeroOrMoreChars(
+		//                CharsExcept(
+		//                    "" + Syntax.@string + Syntax.function + Syntax.indentation +
+		//                    Syntax.functionEnd+Syntax.functionStart+
+		//                    Syntax.windowsNewLine[0] + Syntax.unixNewLine)))),
+		//    Syntax.functionEnd,
+		//    Syntax.function,
+		//    Assign(CodeKeys.Expression, Expression),
+		//    Whitespace);
+
+		//public static Rule Function = Sequence(
+		//    Assign(
+		//        CodeKeys.Parameter,
+		//        StringRule(ZeroOrMoreChars(
+		//                CharsExcept("" + Syntax.@string + Syntax.function + Syntax.indentation +
+		//                    Syntax.windowsNewLine[0] + Syntax.unixNewLine)))),
+		//    Syntax.function,
+		//    Assign(CodeKeys.Expression, Expression),
+		//    Whitespace);
 
 		public static Rule Entry = Alternatives(
-			Sequence(Assign(CodeKeys.Function,Function)),
+			//Sequence(Assign(CodeKeys.Function, Function)),
+			//Sequence(Assign(CodeKeys.Function, Function)),
 			Sequence(
 				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
 				Syntax.statement,
@@ -3397,10 +3442,10 @@ namespace Meta {
 									)))
 								));
 		});
-		public static Rule FunctionExpression = Sequence(
-			Assign(CodeKeys.Key,LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-			Assign(CodeKeys.Value,Sequence(Assign(CodeKeys.Literal,Function)))
-		);
+		//public static Rule FunctionExpression = Sequence(
+		//    Assign(CodeKeys.Key,LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+		//    Assign(CodeKeys.Value,Sequence(Assign(CodeKeys.Literal,Function)))
+		//);
 
 		private static Rule Simple(char c, Map literal) {
 			return Sequence(c,ReferenceAssignment(LiteralRule(literal)));
@@ -3559,21 +3604,38 @@ namespace Meta {
 
 		public static Rule AllStatements = Sequence(
 			ReferenceAssignment(
-				Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
+				Alternatives(CurrentStatement, NormalStatement, Statement, DiscardStatement)),
 			Whitespace,
 			OptionalError(Syntax.statementEnd),
 			Whitespace
 		);
+		//public static Rule AllStatements = Sequence(
+		//    ReferenceAssignment(
+		//        Alternatives(FunctionExpression,CurrentStatement,NormalStatement,Statement,DiscardStatement)),
+		//    Whitespace,
+		//    OptionalError(Syntax.statementEnd),
+		//    Whitespace
+		//);
 		public static Rule FunctionMap = Sequence(
 			Assign(CodeKeys.Function,
 				Sequence(
-					Assign(CodeKeys.Parameter,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+					Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
 					Syntax.functionAlternativeStart,
 						Whitespace,
 						Assign(CodeKeys.Expression, Expression),
 					Whitespace,
 					OptionalError(Syntax.functionAlternativeEnd),
 			Whitespace)));
+		//public static Rule FunctionMap = Sequence(
+		//    Assign(CodeKeys.Function,
+		//        Sequence(
+		//            Assign(CodeKeys.Parameter,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//            Syntax.functionAlternativeStart,
+		//                Whitespace,
+		//                Assign(CodeKeys.Expression, Expression),
+		//            Whitespace,
+		//            OptionalError(Syntax.functionAlternativeEnd),
+		//    Whitespace)));
 
 		public static Rule FunctionProgram = Sequence(
 			Assign(CodeKeys.Program,
@@ -3969,6 +4031,8 @@ namespace Meta {
 		public const char statement='=';
 		public const char programStart = '[';
 		public const char programEnd = ']';
+		public const char functionStart = '(';
+		public const char functionEnd = ')';
 		public const char functionAlternativeStart = '{';
 		public const char functionAlternativeEnd = '}';
 		public const char arrayStart = '<';
@@ -3987,7 +4051,7 @@ namespace Meta {
 		public const char indentation = '\t';
 		public const char unixNewLine = '\n';
 		public const string windowsNewLine = "\r\n";
-		public const char function = '|';
+		//public const char function = '|';
 		public const char @string = '\"';
 		public const char emptyMap = '0';
 		public const char explicitCall = '-';
@@ -4002,7 +4066,8 @@ namespace Meta {
 		public static readonly string lookupStringForbidden =
 
 			"" + current + functionAlternativeStart + functionAlternativeEnd + lastArgument + explicitCall + indentation + '\r' + '\n' +
-			function+ @string+emptyMap+ search + root+ callStart+ callEnd+ 
+			//function+
+			@string+emptyMap+ search + root+ callStart+ callEnd+ 
 			character+ programStart+ '*'+ '$'+ '\\'+ lookupAnythingStart+ statement+ arrayStart+
 			'-'+ searchStatement+ select+ ' '+ '-'+ arrayStart+ arrayEnd+ '*'+ lookupAnythingEnd+ 
 			programStart+ programSeparator +callSeparator+programEnd+arrayEnd+statementEnd;

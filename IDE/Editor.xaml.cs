@@ -226,13 +226,13 @@ public partial class Editor : System.Windows.Window {
 		}
 		private Map map;
 		private Map key;
-		public PreviewItem(Map key,Map map):base("",null) {
+		public PreviewItem(Map key,Map map):base(key.ToString(),null) {
 			this.map = map;
-			this.key=key;
+			this.key = key;
 		}
-		public override string ToString() {
-			return key.ToString();
-		}
+		//public override string ToString() {
+		//    return key.ToString();
+		//}
 		public override string Signature() {
 			if (map is FileMap) {
 				return ((FileMap)map).path;
@@ -895,7 +895,7 @@ public partial class Editor : System.Windows.Window {
 					else if (e.Key == Key.Space) {
 						if(!DoArgumentHelp(e)) {
 							e.Handled = true;
-							StartIntellisense();
+							//StartIntellisense();
 							searchStart--;
 							intellisense.Items.Clear();
 							List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
@@ -946,9 +946,13 @@ public partial class Editor : System.Windows.Window {
 									x = x.Parent;
 								}
 							}
+							Map directory = new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
+							//s = Library.Merge(directory, s);
+							maps.Add(directory);
+							maps.Reverse();
 							s = Library.MergeAll(maps);
-							Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
-							s=Library.Merge(directory.Copy(),s);
+							//Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
+							//s=Library.Merge(directory,s);
 							List<Map> keys = new List<Map>();
 							if (s != null) {
 								keys.AddRange(s.Keys);
@@ -1229,6 +1233,7 @@ public partial class Editor : System.Windows.Window {
 					if (index != -1) {
 						string text = textBox.Text.Substring(index + 1, textBox.SelectionStart - index - 1);
 						intellisense.Items.Clear();
+						//intellisense.
 						foreach (Item item in intellisenseItems) {
 							if (item.ToString().ToLower().Contains(text.ToLower())) {
 								intellisense.Items.Add(item);
@@ -1262,7 +1267,7 @@ public partial class Editor : System.Windows.Window {
 				if(brace!=null) {
 					canvas.Children.Remove(brace);
 				}
-				if (textBox.Text.Length != 0) {
+				if (textBox.Text.Length != 0 && textBox.SelectionStart<textBox.Text.Length) {
 					char c = textBox.Text[textBox.SelectionStart];
 					if ((openBraces + closeBraces).IndexOf(c) != -1) {
 						int index = FindMatchingBrace();
@@ -1274,6 +1279,7 @@ public partial class Editor : System.Windows.Window {
 							brace.Height = formattedText.Height;
 							brace.Opacity = 0.6;
 							brace.Fill = Brushes.Gray;
+							brace.Focusable = false;
 							Canvas.SetTop(brace, r.Top);
 							Canvas.SetLeft(brace, r.Right);
 							canvas.Children.Add(brace);

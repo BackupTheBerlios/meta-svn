@@ -20,7 +20,7 @@ Entry (KeyValuePair`2)
 					Key (StringMap):
 						"parameter"
 					Value (StringMap):
-						"arg"
+						"asdf"
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"expression"
@@ -165,13 +165,13 @@ Entry (KeyValuePair`2)
 	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
+				"scopingValue"
+			Value (StringMap):
+				"right"
+		Entry (KeyValuePair`2)
+			Key (StringMap):
 				"test"
-			Value (DictionaryMap):
-				Entry (KeyValuePair`2)
-					Key (StringMap):
-						"scopingValue"
-					Value (StringMap):
-						"right"
+			Value (FunctionMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -202,12 +202,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopingTest"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"scopingValue"
-			Value (StringMap):
-				"right"
+	Value (FunctionMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -779,12 +774,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunction"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"inScope"
-			Value (StringMap):
-				"right"
+	Value (FunctionMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -832,7 +822,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"inScope"
 	Value (StringMap):
-		"wrong"
+		"right"
 Entry (KeyValuePair`2)
 	Key (Integer32):
 		4
@@ -842,16 +832,11 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFromFunctionData"
 	Value (StringMap):
-		"wrong"
+		"right"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunctionFunction"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"scopeFromFunctionData"
-			Value (StringMap):
-				"right"
+	Value (FunctionMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1856,7 +1841,7 @@ Entry (KeyValuePair`2)
 																							Key (StringMap):
 																								"literal"
 																							Value (StringMap):
-																								"x"
+																								"function"
 																				Entry (KeyValuePair`2)
 																					Key (StringMap):
 																						"value"
@@ -1864,8 +1849,42 @@ Entry (KeyValuePair`2)
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
 																								"literal"
-																							Value (StringMap):
-																								"y"
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"parameter"
+																									Value (StringMap):
+																										""
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"expression"
+																									Value (DictionaryMap):
+																										Entry (KeyValuePair`2)
+																											Key (StringMap):
+																												"program"
+																											Value (DictionaryMap):
+																												Entry (KeyValuePair`2)
+																													Key (Integer32):
+																														1
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"key"
+																															Value (DictionaryMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StringMap):
+																																		"literal"
+																																	Value (StringMap):
+																																		"x"
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"value"
+																															Value (DictionaryMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StringMap):
+																																		"literal"
+																																	Value (StringMap):
+																																		"y"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunctionResult"
@@ -1899,6 +1918,83 @@ Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
 													Value (StringMap):
+														"function"
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"value"
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"literal"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"parameter"
+															Value (StringMap):
+																""
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"expression"
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"program"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (Integer32):
+																				1
+																			Value (DictionaryMap):
+																				Entry (KeyValuePair`2)
+																					Key (StringMap):
+																						"key"
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"literal"
+																							Value (StringMap):
+																								"x"
+																				Entry (KeyValuePair`2)
+																					Key (StringMap):
+																						"value"
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"literal"
+																							Value (StringMap):
+																								"y"
+Entry (KeyValuePair`2)
+	Key (StringMap):
+		"delayedFunctionDirect"
+	Value (FunctionMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"function"
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"parameter"
+					Value (StringMap):
+						""
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"expression"
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"program"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (Integer32):
+										1
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"key"
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"literal"
+													Value (StringMap):
 														"x"
 										Entry (KeyValuePair`2)
 											Key (StringMap):
@@ -1909,15 +2005,6 @@ Entry (KeyValuePair`2)
 														"literal"
 													Value (StringMap):
 														"y"
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"delayedFunctionDirect"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"x"
-			Value (StringMap):
-				"y"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"value"
@@ -2956,12 +3043,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"documentedFunction"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"doc"
-			Value (StringMap):
-				"This,function,returns,#hello,."
+	Value (FunctionMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"

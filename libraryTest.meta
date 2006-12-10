@@ -39,18 +39,12 @@ k{[
 		mapTest=[
 			IfTest=branch(
 				1,
-				[
-					arg|"If,test,successful";
-				],
-				[
-					|0;
-				]
+				arg{"If,test,successful"},
+				{0}
 			);
 			Map=[
 				&map(
-					[
-						argument|sum(argument,1);
-					],
+					argument{sum(argument,1)},
 					<1,2,3>
 				);
 			];
@@ -90,20 +84,12 @@ k{[
 				];
 			];
 			tryTest=try(
-				[
-					arg|"hello";
-				],
-				[
-					argument|argument.ToString(0);
-				]
+				arg{"hello"},
+				argument{argument.ToString(0)}
 			);
 		];
 		sumTest=accumulate(
-			[
-				first|[
-					second|sum(first,second);
-				];
-			],
+			first{second{sum(first,second)}},
 			<2,5,6,8>
 		);
 		lengthTest=length(<1,2,3,4,5>);

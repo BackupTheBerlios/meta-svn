@@ -1,41 +1,28 @@
-[
-	license="Copyright (c) 2005, 2006 Christian Staudenmeyer
-		
-		Permission is hereby granted, free of charge, to any person obtaining
-		a copy of this software and associated documentation files (the
-		'Software'), to deal in the Software without restriction, including
-		without limitation the rights to use, copy, modify, union, publish 
-		distribute, sublicense, and/or sell copies of the Software, and to
-		permit persons to whom the Software is furnished to do so, subject to
-		the following conditions:
-		
-		The above copyright notice and this permission notice shall be
-		included in all copies or substantial portions of the Software.
-		
-		THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND 
-		EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-		MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-		NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-		BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-		ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-		SOFTWARE.";
-	shortFunc=[
-		arg|arg;
-	];
-	1="hello";
-	x=[
-		hello="world";
-	];
-	// this is a comment
-	listTest=<"this",1,"is","a",<"long","list">
-	>;
-	commandLine|[
+commandLine{[
+	// Copyright (c) 2005, 2006 Christian Staudenmeyer
+	//	
+	// Permission is hereby granted, free of charge, to any person obtaining
+	// a copy of this software and associated documentation files (the
+	// 'Software'), to deal in the Software without restriction, including
+	// without limitation the rights to use, copy, modify, union, publish 
+	// distribute, sublicense, and/or sell copies of the Software, and to
+	// permit persons to whom the Software is furnished to do so, subject to
+	// the following conditions:
+	// 
+	// The above copyright notice and this permission notice shall be
+	// included in all copies or substantial portions of the Software.
+	//
+	// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND 
+	// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+	// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+	// BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+	// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	// SOFTWARE.
 		&merge(<0,<"AssignedToCurrent">>);
 		asdf="hello";
-		shortFunction=[// another comment
-			arg|asdf;
-		];  //comment
+		shortFunction=asdf{asdf}; // another comment
 		bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
 		shortFunctionTest=!"shortFunction"("hello");
 		decimal=1612345.9834;
@@ -45,18 +32,14 @@
 			hello="world";
 			x="y";
 		];
-		SetCounter=[
-			|[
+		SetCounter={[
 				counter:@;
-			];
-		];
+		]};
 		1=SetCounter(5);
 		LIST=<0,0,0>;
 		scoping=[
-			test=[
-				scopingValue="right";
-				arg|scopingValue;
-			];
+			scopingValue="right";
+			test=arg{scopingValue};
 		];
 		scopingValue="wrong";
 		scopingTest=scoping.test;
@@ -124,32 +107,26 @@
 			a="default";
 			autoSearch="default";
 			b=0;
-			SetA=[
-				arg|[
+			SetA=arg{[
 					a:"c";
 					autoSearch:"changed";
-				];
-			];
-			SetB=[
-				newB|[
-					b:merge(<
-						b,
-						[
-							1=newB.value;
-						]>
-					);
-					&"changed";
-				];
-			];
+			]};
+			SetB=newB{[
+				b:merge(<
+					b,
+					[
+						1=newB.value;
+					]>
+				);
+				&"changed";
+			]};
 			x=[
 				a="b";
 				c="d";
 			];
-			1=[
-				arg|[
+			1=arg{[
 					a:"b";
-				];
-			];
+			]};
 		];
 		a="default";
 		b=0;
@@ -161,55 +138,37 @@
 			];
 		]);
 		scopeTest="default";
-		scopeFunction=[
-			inScope="right";
-			arg|[
+		scopeFunction=arg{[
 				scopeTest:inScope;
-			];
-		];
+		]};
 		inScope="wrong";
+		inScope="right";
 		4=scopeFunction(0);
 		scopeFromFunctionData="wrong";
-		scopeFunctionFunction=[
-			scopeFromFunctionData="right";
-			arg|[
-				arg|!"scopeFromFunctionData";
-			];
-		];
+		scopeFunctionFunction=arg{arg{!"scopeFromFunctionData"}};
+		scopeFromFunctionData="right";
 		scopeFromFunction=scopeFunctionFunction(0);
 		scopeFromFunctionTest=scopeFromFunction(0);
-		ReturnEverything=[
-			everything|[&everything;];
-		];
+		ReturnEverything=everything{[&everything;]};
 		everythingReturned=ReturnEverything(<"a","b","c">);
 		variableAsArgument=ReturnEverything(<"x","y","z">);
-		ReturnFunction=[
-			arg|[
-				&[
-					arg|[&<1,2,3>;];
-				];
+		ReturnFunction=arg{[
+			&arg{[&<1,2,3>;]};
+		]};
+		SetCurrent=current{[
+			&[
+				asdf=current;
+				x=current.symbol;
 			];
-		];
-		SetCurrent=[
-			current|[
-				&[
-					asdf=current;
-					x=current.symbol;
-				];
-				&x;
-			];
-		];
+			&x;
+		]};
 		thisSet=SetCurrent(
 			[
 				symbol="haha";
 			]
 		);
-		FirstLevel=[
-			arg|<SecondLevel(arg)>;
-		];
-		SecondLevel=[
-			arg|arg;
-		];
+		FirstLevel=arg{<SecondLevel(arg)>};
+		SecondLevel=arg{arg};
 		argTest=FirstLevel(
 			[
 				a="z";
@@ -275,72 +234,46 @@
 		interceptedSymbolTwo=1;
 		k="hello";
 		xyz="w";
-		literalFunction=[
-			arg|5;
-		];
+		literalFunction=arg{5};
 		literalFunctionResult=!"literalFunction"(0);
-		someFunction=[
-			arg|[
-				&"simple,function,this";
-			];
-		];
-		callFunction=[
-			arg|someFunction;
-		];
+		someFunction=arg{[&"simple,function,this";]};
+		callFunction=arg{someFunction};
 		callFunctionResult=callFunction(0);
-		delayedFunction=[
-			arg|[
-				arg|[
-					x="y";
-				];
-			];
-		];
+		delayedFunction=arg{arg{{[
+				x="y";
+			]}}};
 		delayedFunctionResult=delayedFunction(0);
 		delayedFunctionDirect=delayedFunction(0,0);
 		value="xyz";
-		selectionFunction=[
-			arg|value;
-		];
+		selectionFunction=arg{value};
 		selectionFunctionResult=selectionFunction(0);
 		upperLevel="unchanged";
-		SetUpperLevel=[
-			arg|[
-				upperLevel:arg;
-			];
-		];
-		ChangeUpperLevel=[
-			arg|[
-				1=SetUpperLevel("changed");
-			];
-		];
+		SetUpperLevel=arg{[
+			upperLevel:arg;
+		]};
+		ChangeUpperLevel=arg{[
+			1=SetUpperLevel("changed");
+		]};
 		5=ChangeUpperLevel(0);
 		staticEventChanged=0;
-		ChangeStaticEvent=[
-			arg|[
-				staticEventChanged:arg;
-			];
-		];
+		ChangeStaticEvent=arg{[
+			staticEventChanged:arg;
+		]};
 		asdf="hello";
 		TestClass.add_staticEvent_NormalEvent(
-			[
-				arg|ChangeStaticEvent(1);
-			]
+			arg{ChangeStaticEvent(1)}
 		);
 		6=TestClass.TakeDelegate_TestDelegate(
-			[
-				arg|arg;
-			]
+			arg{arg}
 		);
 		resultFromDelegate=TestClass.GetResultFromDelegate(0);
 		staticEventResult=TestClass.CallStaticEvent_Object(testClass);
 		instanceEventChanged=0;
 		testClass.add_instanceEvent_IntEvent(
-			[
-				arg|[
-					instanceEventChanged:1;
-					&arg;
-				];
-			]
+			arg{[
+				instanceEventChanged:1;
+				&arg;
+			]}
 		);
 		instanceEventResult=testClass.CallInstanceEvent_Object(5);
 		one=1;
@@ -386,59 +319,40 @@
 		tabText="			hello";
 		escapedText="'#'n'''t";
 		whileCounter=0;
-		loop=[
-			start|[
+		loop=start{[
 				whileDecision=not(equal(start,10));
 				whileBranches=[
-					1=[
-						arg|loop(sum(arg,1));
-					];
+					1=arg{loop(sum(arg,1))};
 					0=arg{arg};
 				];
 				&whileBranches.<whileDecision>(start);
-			];
-		];
+		]};
 		whileCounter=loop(3);
 		returnInMap=arg{[result=arg;]};
 		literalAsArgument=returnInMap(1);
-		returnFunction=arg{[
-			arg|"functionResult";
+		returnFunction=arg{arg{"functionResult"}};
+		returnArg=arg{arg};
+		myArg=arg{[
+			hello="world";
 		]};
-		returnArg=[
-			arg|arg;
-		];
-		myArg=[
-			arg|[
-				hello="world";
-			];
-		];
 		funcReturnTest=returnArg(myArg,0);
-		documentedFunction=[
-			doc="This,function,returns,#hello,.";
-			arg|"hello";
-		];
+		documentedFunction=arg{"hello"};
 		docFunctionResult=documentedFunction(0);
 		topLevel="default";
 		deep=[
 			map=[
-				test=[
-					arg|[
-						topLevel:"changed";
-					];
-				];
+				test=arg{[
+					topLevel:"changed";
+				]};
 			];
 		];
 		8=deep.map.test(0);
-		outerFunction=[
-			arg|[
-				innerFunction=[
-					arg|[
-						&arg;
-					];
-				];
-				1=innerFunction(0);
-			];
-		];
+		outerFunction=arg{[
+			innerFunction=arg{[
+				&arg;
+			]};
+			1=innerFunction(0);
+		]};
 		outerFunctionTest=outerFunction("right");
 		newLines=" ";
 		app=!"System.Windows.Forms".Application;
@@ -461,5 +375,4 @@
 			space=' ';
 			tab='	';
 		];
-	];
-]
+]}
