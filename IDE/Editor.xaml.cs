@@ -174,9 +174,15 @@ public partial class Editor : System.Windows.Window {
 			if (text.Length > 0) {
 				if (forward) {
 					index = textBox.Text.ToLower().IndexOf(text, index);
+					if (index == -1) {
+						index = textBox.Text.ToLower().IndexOf(text, 0);
+					}
 				}
 				else {
 					index = textBox.Text.ToLower().LastIndexOf(text, index+text.Length);
+					if (index == -1) {
+						index = textBox.Text.ToLower().LastIndexOf(text, textBox.Text.Length-1);
+					}
 				}
 				if (index != -1) {
 					textBox.Select(index, text.Length);
