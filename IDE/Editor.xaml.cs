@@ -66,6 +66,8 @@ public partial class Editor : System.Windows.Window {
 	public class View : TreeListView {
 	}
 	public static TreeListView watch = new View();
+	public static bool changes = false;
+
 	private void Save() {
 		if (fileName == null) {
 			SaveFileDialog dialog = new SaveFileDialog();
@@ -77,6 +79,7 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 		File.WriteAllText(fileName, textBox.Text);
+		changes = false;
 	}
 	private string fileName = null;
 	private void BindKey(RoutedUICommand command, Key key, ModifierKeys modifiers) {
@@ -88,6 +91,7 @@ public partial class Editor : System.Windows.Window {
 		this.Title = System.IO.Path.GetFileNameWithoutExtension(fileName) + " - " + ProgramName;
 		SaveSettings();
 		textBox.Text = File.ReadAllText(fileName);
+		changes = false;
 	}
 	public static TextBox toolTip = new TextBox();
 	public static ListBox intellisense = new ListBox();
@@ -145,8 +149,23 @@ public partial class Editor : System.Windows.Window {
 		//}
 	}
 	public class IterativeSearch {
+		public bool Active {
+			get {
+				return active;
+			}
+			set {
+				active = value;
+				if (active) {
+					textBox.Cursor = Cursors.ScrollS;
+				}
+				else {
+					textBox.Cursor = Cursors.IBeam;
+				}
+			}
+		}
+		private bool active = false;
 		public void Back() {
-			text = text.Substring(0, text.Length - 1);
+			text = text.Substring(0,Math.Max(0, text.Length - 1));
 			Find(!direction);
 		}
 		public void OnKeyDown(TextCompositionEventArgs e) {
@@ -178,7 +197,6 @@ public partial class Editor : System.Windows.Window {
 		public IterativeSearch(TextBox textBox,bool direction) {
 			this.direction = direction;
 			this.textBox = textBox;
-			textBox.Cursor = Cursors.ScrollS;
 			start = textBox.SelectionStart;
 			index = start;
 		}
@@ -191,6 +209,7 @@ public partial class Editor : System.Windows.Window {
 		else {
 			iterativeSearch.index-=2;
 		}
+		iterativeSearch.Active = true;
 		iterativeSearch.Find(forward);
 	}
 	public void StopIterativeSearch() {
@@ -705,6 +724,7 @@ public partial class Editor : System.Windows.Window {
 			};
 			window.ShowDialog();
 		}));
+		this.Closing += new System.ComponentModel.CancelEventHandler(Editor_Closing);
 		RoutedUICommand deleteLine = new RoutedUICommand();
 		BindKey(deleteLine, Key.L, ModifierKeys.Control);
 		this.CommandBindings.Add(new CommandBinding(deleteLine, delegate {
@@ -862,7 +882,7 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 			else {
-				if (iterativeSearch != null) {
+				if (iterativeSearch.Active) {
 					if (e.Key == Key.Back) {
 						editor.iterativeSearch.Back();
 						e.Handled = true;
@@ -1235,6 +1255,7 @@ public partial class Editor : System.Windows.Window {
 					}
 				}
 			}
+			changes = true;
 		};
 		int historyIndex=0;
 		List<int> history = new List<int>();
@@ -1368,6 +1389,21 @@ public partial class Editor : System.Windows.Window {
 		};
 	}
 
+	void Editor_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+		if (changes) {
+			switch (MessageBox.Show("Save changes?", "Save changes", MessageBoxButton.YesNoCancel)) {
+				case MessageBoxResult.Yes:
+					Save();
+					break;
+				case MessageBoxResult.No:
+					break;
+				case MessageBoxResult.Cancel:
+					e.Cancel = true;
+					return;
+			}
+		}
+	}
+
 	private bool DoArgumentHelp(KeyEventArgs e) {
 		StartIntellisense();
 		int index = textBox.SelectionStart;
@@ -1494,7 +1530,7 @@ public partial class Editor : System.Windows.Window {
 		}
 	}
 	void textBox_PreviewTextInput(object sender, TextCompositionEventArgs e) {
-		if (iterativeSearch != null) {
+		if (iterativeSearch.Active) {
 			iterativeSearch.OnKeyDown(e);
 		}
 	}
