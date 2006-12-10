@@ -152,12 +152,6 @@ public partial class Editor : System.Windows.Window {
 			}
 			set {
 				active = value;
-				if (active) {
-					textBox.Cursor = Cursors.ScrollS;
-				}
-				else {
-					textBox.Cursor = Cursors.IBeam;
-				}
 			}
 		}
 		private bool active = false;
@@ -211,6 +205,12 @@ public partial class Editor : System.Windows.Window {
 		}
 		else {
 			iterativeSearch.index-=2;
+		}
+		if (forward) {
+			textBox.Cursor = Cursors.ScrollS;
+		}
+		else {
+			textBox.Cursor = Cursors.ScrollN;
 		}
 		iterativeSearch.Active = true;
 		iterativeSearch.Find(forward);
