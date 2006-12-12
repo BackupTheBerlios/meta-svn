@@ -167,7 +167,7 @@ public partial class Editor : System.Windows.Window {
 		public void Find(bool forward) {
 			if (text.Length > 0) {
 				if (forward) {
-					index = textBox.Text.ToLower().IndexOf(text, index);
+					index = textBox.Text.ToLower().IndexOf(text,Math.Max(0,index));
 					if (index == -1) {
 						index = textBox.Text.ToLower().IndexOf(text, 0);
 					}
@@ -187,7 +187,7 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 		public int index;
-		private string text="";
+		public string text="";
 		private int start;
 		private TextBox textBox;
 		private bool direction;
@@ -200,6 +200,7 @@ public partial class Editor : System.Windows.Window {
 	}
 	public IterativeSearch iterativeSearch;
 	public void StartIterativeSearch(bool forward) {
+		iterativeSearch.Active = true;
 		if (forward) {
 			iterativeSearch.index++;
 		}
@@ -212,11 +213,12 @@ public partial class Editor : System.Windows.Window {
 		else {
 			textBox.Cursor = Cursors.ScrollN;
 		}
-		iterativeSearch.Active = true;
 		iterativeSearch.Find(forward);
 	}
 	public void StopIterativeSearch() {
 		textBox.Cursor = Cursors.IBeam;
+		iterativeSearch.text="";
+		iterativeSearch.Active = false;
 	}
 	public class PreviewItem:Item {
 		public override Control GetPreview() {
@@ -1166,7 +1168,11 @@ public partial class Editor : System.Windows.Window {
 		CommandBindings.Add(new CommandBinding(execute, delegate {
 			Save();
 			if (Compile(false)) {
-				Process.Start(System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"), fileName);
+				Process.Start(
+					System.IO.Path.Combine(@"D:\Meta\", @"bin\Debug\Meta.exe"),
+					fileName
+				);
+
 			}
 		}));
 		RoutedUICommand debug = new RoutedUICommand("Debug", "Debug", GetType());

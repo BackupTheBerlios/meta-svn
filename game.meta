@@ -1,29 +1,27 @@
 (){
 	&merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase]);
-	contains=()Meta.ObjectMap_Object(@).ContainsKey_Map;
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
 	vectorLength=(vector)power(add(power(vector.1,2),power(vector.2,2)),1/2);
-	vectorDifference=(a)(b)map((key)subtract(a.<key>,b.<key>),keys(a));
+	vectorDifference=(a,b)map((key)subtract(a.<key>,b.<key>),keys(a));
 	compareNumber=Meta.Library.CompareNumber_Number_Number;
-	callKey=(key)(map)branch(contains(map,key),()map.<key>(),()0);
 	world=World();
-	vectorDotmultiply=(vector)(number)map((entry)multiply([number,entry]),vector);
-	multiplyVector=(a)(b)map((index)multiply([a.<index>,b.<index>]),range(length(a)));
-	vectormultiply=multiplyVector;
 	space=Space_SpaceType(SpaceType.HashSpace);
 	sort=Meta.Library.Sort_Map_Map;
 	createBox=space.CreateBox_Single_Single_Single;
 	vector=Vector3_Single_Single_Single;
-	makeBox=(size)(position){
+	makeBox=(size,position){
 		box=createBox(size.1,size.2,size.3);
 		box.set_Position_Vector3(vector(position.1,position.2,position.3));
 	};
+	points=0;
 	makeBox([798,50,100],[400,0,0]);
 	makeBox([798,50,100],[400,600,0]);
 	makeBox([50,598,100],[0,300,0]);
 	makeBox([50,598,100],[800,300,0]);
 	canvas=Canvas();
+	points=0;
+	label=Label();
 	bubble=(size){
 		body=Body_World(world);
 		radius=()multiply(size,4);
@@ -104,12 +102,10 @@
 		}
 	));
 	springConstant=1/2;
+	toVector=(v)Vector3_Single_Single_Single(v.1,v.2,0);
+	fromVector=(vector)[vector.get_X(),vector.get_Y(),vector.get_Z()];
 	dampeningConstant=2;
 	stepSize=1;
-	erp=divide(multiply(stepSize,springConstant),add(multiply(stepSize,springConstant),dampeningConstant)
-	cfm=divide(1,add(multiply(stepSize,springConstant),dampeningConstant));
-	print(erp);
-	print(cfm);
 	window.add_KeyDown_KeyEventHandler(()(e){
 		if(
 			and(equal(e.get_Key(),Key.Enter),equal(currentBubble,0)),
@@ -124,34 +120,13 @@
 				currentBubble:bubble;
 				
 				joint=SliderJoint_World_JointGroup(world,jointGroup);
-				joint.Attach_Body_Body(bubble.body,p.body);			
+				joint.Attach_Body_Body(bubble.body,p.body);
 				
-				bounce=1;
 				
-				absolute=(number)branch(less(number,0),()subtract(0,number),()number);
-				
-				middle=map(()vectorLength(vectorDifference(p.GetPosition(),bubble.GetPosition())),range(3));
-				middle=map(absolute,vectorDifference(p.GetPosition(),bubble.GetPosition()));
-				high=map(multiply(10/9),middle);
-				
-				high=middle;
-				low=middle;
+				joint=HingeJoint_World_JointGroup(world,jointGroup);
+				joint.Attach_Body_Body(bubble.body,p.body);
+				joint.set_Anchor_Vector3(bubble.body.get_Position());
 
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop,high.1);
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop2,high.2);
-				joint.SetParam_JointParameters_Single(JointParameters.HiStop3,high.3);
-				
-				joint.SetParam_JointParameters_Single(JointParameters.LowStop,low.1);
-				joint.SetParam_JointParameters_Single(JointParameters.LowStop2,low.2);
-				joint.SetParam_JointParameters_Single(JointParameters.LowStop3,low.3);
-				
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp,erp);
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp2,erp);
-				joint.SetParam_JointParameters_Single(JointParameters.StopErp3,erp);
-				
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm,cfm);
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm2,cfm);
-				joint.SetParam_JointParameters_Single(JointParameters.StopCfm3,cfm);
 
 				setCurrentBubble(bubble);
 				pos1=bubble.GetPosition();
@@ -165,13 +140,14 @@
 		);
 	});
 	canvas.get_Children().Add_UIElement(line);
+	canvas.get_Children().Add_UIElement(label);
 	timer=DispatcherTimer_DispatcherPriority(DispatcherPriority.Normal);
-	timer.set_Interval_TimeSpan(TimeSpan_Int64(1000000));
+	timer.set_Interval_TimeSpan(TimeSpan_Int64(100000));
 	timer.add_Tick_EventHandler(
-		()(){
+		(,){
 			contactGroup.Empty();
 			space.CheckCollisions();
-			world.Step_Single(stepSize);
+			world.Step();
 			map(
 				(a){
 					pos=a.GetPosition();
@@ -180,6 +156,7 @@
 				},
 				join([bubbles,[p]])
 			);
+			label.set_Content_Object(toString(points));
 			if(
 				not(equal(0,currentBubble)),
 				(){
@@ -193,6 +170,6 @@
 			);
 		}
 	);
-	window.add_Loaded_RoutedEventHandler(()()timer.Start());
-	Application().Run_Window(window);
+	window.add_Loaded_RoutedEventHandler((,)timer.Start());
+	//Application().Run_Window(window);
 }

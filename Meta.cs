@@ -980,13 +980,22 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			Map map = Parser.Parse(LibraryPath);
-			map.Scope = Gac.gac;
-			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-			map[CodeKeys.Function].Compile(gac);
-			Gac.gac["library"] = map.Call(new DictionaryMap());
-			Gac.gac["library"].Scope = Gac.gac;
+			//try {
+			DictionaryMap x = new DictionaryMap();
+			x["test"] = Map.Empty;
+			bool contained1 =x.ContainsKey("test");
+			Map test = Map.CopyMap("test");
+			bool contained2=x.ContainsKey(test);
+				Map map = Parser.Parse(LibraryPath);
+				map.Scope = Gac.gac;
+				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+				map[CodeKeys.Function].Compile(gac);
+				Gac.gac["library"] = map.Call(new DictionaryMap());
+				Gac.gac["library"].Scope = Gac.gac;
+			//}
+			//catch (Exception e) {
+			//}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -1073,7 +1082,8 @@ namespace Meta {
 		public static void UseConsole() {
 			if (!useConsole) {
 				AllocConsole();
-				Console.SetBufferSize(80, 1000);
+				Console.WriteLine("hello!!");
+				//Console.SetBufferSize(80, 1000);
 			}
 			useConsole = true;
 		}
@@ -1837,14 +1847,23 @@ namespace Meta {
 				return true;
 			}
 		}
-		public override int GetHashCode() {
-			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);
-			}
-			else {
-				return Count;
-			}
-		}
+		//public override int GetHashCode() {
+		//    if (IsNumber) {
+		//        return (int)(GetNumber().Numerator % int.MaxValue);
+		//    }
+		//    else {
+		//        return int.MaxValue/Count;
+		//        //return Count;
+		//    }
+		//}
+		//public override int GetHashCode() {
+		//    if (IsNumber) {
+		//        return (int)(GetNumber().Numerator % int.MaxValue);
+		//    }
+		//    else {
+		//        return Count;
+		//    }
+		//}
 		public override bool Equals(object obj) {
 			Map map=obj as Map;
 			if (map!=null && map.Count==Count) {
@@ -2669,39 +2688,22 @@ namespace Meta {
 				cache[key] = value;
 			}
 		}
-		//public override Map this[Map key] {
-		//    get {
-		//        Map value=null;
-		//        if (!cache.ContainsKey(key)) {
-		//            if (key.IsString) {
-		//                if (new List<Map>(Keys).Contains(key)) {
-		//                    Assembly assembly;
-		//                    //string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
-		//                    assembly = Assembly.LoadWithPartialName(key.GetString());
-		//                    if (assembly != null) {
-		//                        value = new AssemblyMap(assembly);
-		//                        cache[key] = value;
-		//                    }
-		//                    else {
-		//                        value = null;
-		//                    }
-		//                }
-		//            }
-		//            else {
-		//                value = null;
-		//            }
-		//        }
-		//        else {
-		//            value = cache[key];
-		//        }
-		//        return value;
-		//    }
-		//    set {
-		//        cache[key] = value;
-		//    }
-		//}
 	}
 	public class StringMap : Map {
+		public override int GetHashCode() {
+			if (IsNumber) {
+				return (int)(GetNumber().Numerator % int.MaxValue);
+			}
+			else {
+				unchecked {
+					int hash = int.MaxValue / Count;
+					if (text.Length!=0) {
+						hash += new Integer32(text[0]).GetHashCode();
+					}
+					return hash;
+				}
+			}
+		}
 		public override bool IsNormal {
 			get {
 				return true;
@@ -2717,9 +2719,9 @@ namespace Meta {
 		public StringMap(string text) {
 			this.text = text;
 		}
-		public override int GetHashCode() {
-		    return text.Length;
-		}
+		//public override int GetHashCode() {
+		//    return text.Length;
+		//}
 		public override Map this[Map key] {
 			get {
 				if (key.IsNumber) {
@@ -4111,19 +4113,19 @@ namespace Meta {
 			return map.GetNumber().ToString();
 		}
 		private static string Serialize(Map map, int indentation) {
-			if(map.IsString) {
-				return String(map,indentation);
-			}
-			if (map is DotNetMap) {
-				return map.ToString();
-			}
-			else if (map.Count == 0) {
+			if (map.Count == 0) {
 				if (indentation < 0) {
 					return "";
 				}
 				else {
 					return "0";
 				}
+			}
+			else if(map.IsString) {
+				return String(map,indentation);
+			}
+			if (map is DotNetMap) {
+				return map.ToString();
 			}
 			else if (map.IsNumber) {
 				return Number(map);
@@ -4581,9 +4583,9 @@ namespace Meta {
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
 	public class ListMap : Map {
-		public override int GetHashCode() {
-			return list.Count;
-		}
+		//public override int GetHashCode() {
+		//    return list.Count;
+		//}
 		public override Number GetNumber() {
 			if(Count==0) {
 				return 0;
@@ -5003,6 +5005,23 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		//public static int GetHashCode() {
+		//}
+		public override int GetHashCode() {
+			if (IsNumber) {
+				return (int)(GetNumber().Numerator % int.MaxValue);
+			}
+			else {
+				unchecked {
+					int hash = int.MaxValue / Count;
+					if (ContainsKey(Integer32.One)) {
+						hash += this[Integer32.One].GetHashCode();
+					}
+					return hash;
+				}
+				//return Count;
+			}
+		}
 		public virtual object GetObject() {
 			return this;
 		}
@@ -5088,6 +5107,7 @@ namespace Meta {
 			Map.arguments.Pop();
 			return result;
 		}
+		public static Map One = new Integer32(1);
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {
 			Map clone = new DictionaryMap();
