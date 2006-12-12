@@ -19,17 +19,17 @@
 			};
 			
 			rational={
-				add=Number.op_Addition_Number_Number;
+				add=Number.Add_Number_Number;
 				floor=Meta.Library.Floor_Number;
-				divide=Number.op_Division_Number_Number;
-				subtract=Number.op_Subtraction_Number_Number;
-				multiply=Number.op_Multiply_Number_Number;
-				greater=Number.op_GreaterThan_Number_Number;
-				less=Number.op_LessThan_Number_Number;
+				divide=Number.Divide_Number_Number;
+				subtract=Number.Subtract_Number_Number;
+				multiply=Number.Multiply_Number_Number;
+				greater=Number.Greater_Number_Number;
+				less=Number.Less_Number_Number;
 				power=Library.Raise_Number_Number;
 				maximum=(a)(b){0=b;1=a;}.<rational.less(a,b)>;
 				minimum=(a)(b){0=b;1=a;}.<rational.greater(a,b)>;
-				modulo=Number.op_Modulus_Number_Number;
+				modulo=Number.Modulo_Number_Number;
 				opposite=(arg)rational.subtract(0,arg);
 			};
 			boolean={
