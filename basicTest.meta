@@ -20,7 +20,7 @@
 	// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 	// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	// SOFTWARE.
-	&merge([0,["AssignedToCurrent"]]);
+	&map.merge([0,["AssignedToCurrent"]]);
 	asdf="hello";
 	shortFunction=(asdf)asdf; // another comment
 	bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
@@ -55,7 +55,7 @@
 		hashTest=!!"hashTestData";
 	};
 	negativeInteger=100;
-	negativeInteger=merge([
+	negativeInteger=map.merge([
 		negativeInteger,
 		{
 			x="hello";
@@ -112,7 +112,7 @@
 			autoSearch:"changed";
 		};
 		SetB=(newB){
-			b:merge([
+			b:map.merge([
 				b,
 				{
 					1=newB.value;
@@ -183,7 +183,7 @@
 			decimalValue=5;
 		}
 	);
-	TestClass=merge([
+	TestClass=map.merge([
 		TestClass,
 		{
 			boolTest=1;
@@ -196,13 +196,13 @@
 	integerOverload=MemberTest.OverloadedMethod_Int32(5);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-	MemberTest:merge([
+	MemberTest:map.merge([
 		MemberTest,
 		{
 			classField="a";
 		}]
 	);
-	memberTest:merge([
+	memberTest:map.merge([
 		memberTest,
 		{
 			instanceField="b";
@@ -280,7 +280,7 @@
 	two=2;
 	firstIf="unchanged";
 	secondIf="unchanged";
-	firstIfCondition=equal(1,one);
+	firstIfCondition=map.equal(1,one);
 	firstIfBranches={
 		1=(arg)"then";
 		0=(arg)"else";
@@ -297,7 +297,7 @@
 	decimalTest=5;
 	fractionTest=40;
 	stringTest="hello";
-	stringTest=merge([
+	stringTest=map.merge([
 		stringTest,
 		{
 			5=stringTest.1;
@@ -320,9 +320,9 @@
 	escapedText="'#'n'''t";
 	whileCounter=0;
 	loop=(start){
-		whileDecision=not(equal(start,10));
+		whileDecision=boolean.not(map.equal(start,10));
 		whileBranches={
-			1=(arg)loop(add(arg,1));
+			1=(arg)loop(rational.add(arg,1));
 			0=(arg)arg;
 		};
 		&whileBranches.<whileDecision>(start);
@@ -364,7 +364,7 @@
 		z="a";
 	};
 	copiedData=copySourceData;
-	copiedData=merge([
+	copiedData=map.merge([
 		copiedData,
 		{
 			x="changed";

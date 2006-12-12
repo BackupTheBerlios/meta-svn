@@ -600,10 +600,17 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static bool continueDebugging = false;
 
-	public void MakeCommand(ModifierKeys modifiers,Key key,MethodInvoker method) {
+	public void MakeCommand(ModifierKeys modifiers, Key key, MethodInvoker method,string name,MenuItem parent) {
+		MenuItem item=new MenuItem();
+		item.Header=name;
+		item.Command = MakeCommand(modifiers, key, method);
+		parent.Items.Add(item);
+	}
+	public RoutedUICommand MakeCommand(ModifierKeys modifiers,Key key,MethodInvoker method) {
 		RoutedUICommand command = new RoutedUICommand();
 		BindKey(command,key,modifiers);
 		CommandBindings.Add(new CommandBinding(command, delegate { method(); }));
+		return command;
 	}
 	public static string GetIndentation(string line) {
 		return "".PadLeft(line.Length - LineWithoutIndentation(line).Length, '\t');
@@ -667,7 +674,7 @@ public partial class Editor : System.Windows.Window {
 				textBox.SelectedText = GetIndentation(line) + lineStart;
 			}
 			textBox.SelectionStart = oldStart;
-			textBox.SelectionLength = oldLength-removed;
+			textBox.SelectionLength = Math.Max(0,oldLength-removed);
 		});
 		MakeCommand(ModifierKeys.Control, Key.K, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
@@ -741,7 +748,8 @@ public partial class Editor : System.Windows.Window {
 			}
 			textBox.SelectionStart = start;
 			textBox.SelectionLength = end - start;
-			textBox.SelectedText = "";
+			ApplicationCommands.Cut.Execute(null,textBox);
+			//textBox.SelectedText = "";
 		}));
 		this.CommandBindings.Add(
 			new CommandBinding(

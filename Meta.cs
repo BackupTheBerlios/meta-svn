@@ -612,9 +612,6 @@ namespace Meta {
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
 					statement.Assign(ref context);
-					//if (Interpreter.stopping) {
-
-					//}
 				}
 				return context;
 			};
@@ -980,41 +977,19 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			//try {
-			DictionaryMap x = new DictionaryMap();
-			x["test"] = Map.Empty;
-			bool contained1 =x.ContainsKey("test");
-			Map test = Map.CopyMap("test");
-			bool contained2=x.ContainsKey(test);
-				Map map = Parser.Parse(LibraryPath);
-				map.Scope = Gac.gac;
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-				map[CodeKeys.Function].Compile(gac);
-				Gac.gac["library"] = map.Call(new DictionaryMap());
-				Gac.gac["library"].Scope = Gac.gac;
-			//}
-			//catch (Exception e) {
-			//}
+			Map map = Parser.Parse(LibraryPath);
+			map.Scope = Gac.gac;
+			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+			map[CodeKeys.Function].Compile(gac);
+			Gac.gac["library"] = map.Call(new DictionaryMap());
+			Gac.gac["library"].Scope = Gac.gac;
 		}
 		[STAThread]
 		public static void Main(string[] args) {
 			string multilineliteral = @"part of the text
                                        other part of the text";
 
-			//object asdfasdfa=new List<Map>(Gac.gac.Keys);
-
-			//Tao.Ode.Ode.join
-			//OdeDotNet.Joints.JointParameters.
-			OdeDotNet.Joints.SliderJoint x;
-			//OdeDotNet.Joints.JointParameters.hi
-
-			//x.ve
-			//x.Attach(
-			StringMap s = new StringMap("hellh");
-			ListMap l = new ListMap(new List<Map>(Array.ConvertAll<char,Map>("hellh".ToCharArray(),delegate(char c) {return c;})));
-			l.GetHashCode();
-			s.Equals(l);
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
@@ -1082,8 +1057,6 @@ namespace Meta {
 		public static void UseConsole() {
 			if (!useConsole) {
 				AllocConsole();
-				Console.WriteLine("hello!!");
-				//Console.SetBufferSize(80, 1000);
 			}
 			useConsole = true;
 		}
@@ -1326,7 +1299,6 @@ namespace Meta {
 								return (decimal)(meta.GetNumber().GetInt64());
 							case TypeCode.Double:
 								return (double)(meta.GetNumber().GetDouble());
-								//return (double)(meta.GetNumber().GetInt64());
 							case TypeCode.Int16:
 								return Convert.ToInt16(meta.GetNumber().GetRealInt64());
 							case TypeCode.Int32:
@@ -1337,10 +1309,7 @@ namespace Meta {
 								return Convert.ToSByte(meta.GetNumber().GetInt64());
 							case TypeCode.Single:
 								float result=(float)meta.GetNumber().GetSingle();
-								if (result < 1.0) {
-								}
 								return result;
-								//return (float)meta.GetNumber().GetInt64();
 							case TypeCode.String:
 								return meta.GetString();
 							case TypeCode.UInt16:
@@ -1664,8 +1633,6 @@ namespace Meta {
 		}
 		public override Map this[Map key] {
 			get {
-				//if (key.Equals(new StringMap("OdeDotNet"))) {
-				//}
 				if (ContainsKey(key)) {
 					string p=Path.Combine(path,key.GetString());
 					if (key.Equals(new StringMap("GuiExample"))) {
@@ -1702,42 +1669,18 @@ namespace Meta {
 						};
 						if (assembly != null) {
 							keys.Add(Path.GetFileNameWithoutExtension(dll));
-							//yield return Path.GetFileNameWithoutExtension(dll);
 						}
 					}
 					foreach (string file in Directory.GetFiles(path)) {
 						keys.Add(Path.GetFileName(file));
-						//yield return Path.GetFileName(file);
 					}
 					foreach (string directory in Directory.GetDirectories(path)) {
 						keys.Add(new DirectoryInfo(directory).Name);
-						//yield return new DirectoryInfo(directory).Name;
 					}
 				}
 				return keys;
 			}
 		}
-		//public override IEnumerable<Map> Keys {
-		//    get {
-		//        foreach (string dll in Directory.GetFiles(path,"*.dll")) {
-		//            Assembly assembly=null;
-		//            try {
-		//                assembly=Assembly.LoadFrom(dll);
-		//            }
-		//            catch(Exception e) {
-		//            };
-		//            if (assembly != null) {
-		//                yield return Path.GetFileNameWithoutExtension(dll);
-		//            }
-		//        }
-		//        foreach (string file in Directory.GetFiles(path)) {
-		//            yield return Path.GetFileName(file);
-		//        }
-		//        foreach (string directory in Directory.GetDirectories(path)) {
-		//            yield return new DirectoryInfo(directory).Name;
-		//        }
-		//    }
-		//}
 		public override IEnumerable<Map> Array {
 			get {
 				yield break;
@@ -1847,23 +1790,6 @@ namespace Meta {
 				return true;
 			}
 		}
-		//public override int GetHashCode() {
-		//    if (IsNumber) {
-		//        return (int)(GetNumber().Numerator % int.MaxValue);
-		//    }
-		//    else {
-		//        return int.MaxValue/Count;
-		//        //return Count;
-		//    }
-		//}
-		//public override int GetHashCode() {
-		//    if (IsNumber) {
-		//        return (int)(GetNumber().Numerator % int.MaxValue);
-		//    }
-		//    else {
-		//        return Count;
-		//    }
-		//}
 		public override bool Equals(object obj) {
 			Map map=obj as Map;
 			if (map!=null && map.Count==Count) {
@@ -2496,83 +2422,6 @@ namespace Meta {
 			this.name = name;
 		}
 	}
-	//public class AssemblyMap : Map {
-	//    public override int Count {
-	//        get {
-	//            return new List<Map>(Keys).Count;
-	//        }
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            return Data[key];
-	//        }
-	//        set {
-	//            Data[key] = value;
-	//        }
-	//    }
-	//    private Map Data {
-	//        get {
-	//            if (data == null) {
-	//                data = GetData();
-	//            }
-	//            return data;
-	//        }
-	//    }
-	//    public static Map LoadAssembly(Assembly assembly) {
-	//        Map val = new DictionaryMap();
-	//        foreach (Type type in assembly.GetExportedTypes()) {
-	//            if (type.DeclaringType == null) {
-	//                Map selected = val;
-	//                string name;
-	//                if (type.IsGenericTypeDefinition) {
-	//                    name = type.Name.Split('`')[0];
-	//                }
-	//                else {
-	//                    name = type.Name;
-	//                }
-	//                selected[type.Name] = new TypeMap(type);
-	//                foreach (ConstructorInfo constructor in type.GetConstructors()) {
-	//                    if (constructor.GetParameters().Length != 0) {
-	//                        selected[TypeMap.GetConstructorName(constructor)] = new Method(constructor, null, type, constructor);
-	//                    }
-	//                }
-	//            }
-	//        }
-	//        return val;
-	//    }
-	//    private Map GetData() {
-	//        return LoadAssembly(assembly);
-	//    }
-	//    private Map data;
-	//    public override IEnumerable<Map> Keys {
-	//        get {
-	//            return Data.Keys;
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get {
-	//            yield break;
-	//        }
-	//    }
-	//    public override int ArrayCount {
-	//        get {
-	//            return 0;
-	//        }
-	//    }
-	//    public override bool ContainsKey(Map key) {
-	//        return Data.ContainsKey(key);
-	//    }
-	//    public override Number GetNumber() {
-	//        return null;
-	//    }
-	//    public override Map Copy() {
-	//        return CopyMap(this);
-	//    }
-	//    private Assembly assembly;
-	//    public AssemblyMap(Assembly assembly) {
-	//        this.assembly = assembly;
-	//    }
-	//}
 	public class Gac : Map {
 		public override int Count {
 			get {
@@ -2662,17 +2511,8 @@ namespace Meta {
 				if (!cache.ContainsKey(key)) {
 					if (key.IsString) {
 						if (new List<Map>(Keys).Contains(key)) {
-							//Assembly assembly;
-							//string path = Path.Combine(Interpreter.InstallationPath, key.GetString() + ".dll");
-							value = new AssemblyMap(key.GetString());//
-							//assembly = Assembly.LoadWithPartialName(key.GetString());
-							//if (assembly != null) {
-							//    value = new AssemblyMap(assembly);
-								cache[key] = value;
-							//}
-							//else {
-							//    value = null;
-							//}
+							value = new AssemblyMap(key.GetString());
+							cache[key] = value;
 						}
 					}
 					else {
@@ -2698,7 +2538,7 @@ namespace Meta {
 				unchecked {
 					int hash = int.MaxValue / Count;
 					if (text.Length!=0) {
-						hash += new Integer32(text[0]).GetHashCode();
+						hash += GetHashCode(text[0]);
 					}
 					return hash;
 				}
@@ -2719,9 +2559,6 @@ namespace Meta {
 		public StringMap(string text) {
 			this.text = text;
 		}
-		//public override int GetHashCode() {
-		//    return text.Length;
-		//}
 		public override Map this[Map key] {
 			get {
 				if (key.IsNumber) {
@@ -2761,8 +2598,10 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
 				Number number = key.GetNumber();
-				if (number==1) {
-					return number > 0 && number <= text.Length;}
+				if (number.Equals(Integer32.One)) {
+				//if (number == 1) {
+					return number > 0 && number <= text.Length;
+				}
 				else {
 					return false;
 				}
@@ -2771,14 +2610,25 @@ namespace Meta {
 				return false;
 			}
 		}
+		//public override bool ContainsKey(Map key) {
+		//    if (key.IsNumber) {
+		//        Number number = key.GetNumber();
+		//        if (number==1) {
+		//            return number > 0 && number <= text.Length;}
+		//        else {
+		//            return false;
+		//        }
+		//    }
+		//    else {
+		//        return false;
+		//    }
+		//}
 		public override int ArrayCount {
 			get {
 				return text.Length;
 			}
 		}
 		public override Map Copy() {
-			if (Equals(new StringMap("apply"))) {
-			}
 			return this;
 		}
 		public override IEnumerable<Map> Array {
@@ -2797,21 +2647,24 @@ namespace Meta {
 		}
 	}
 	public abstract class Number:Map {
-		public static Number operator +(Number a,int b) {
-			return a.Add(new Integer32(b));
-		}
-		public static bool operator ==(Number a,int b) {
-			return a.Equals(new Integer32(b));
-		}
-		public static bool operator !=(Number a,int b) {
-			return !(a==b);
-		}
-		public static bool operator ==(Number a,Number b) {
-			return ReferenceEquals(a,b) || a.Equals(b);
-		}
-		public static bool operator !=(Number a,Number b) {
-			return !(a==b);
-		}
+		//public static Number Add(operator +(Number a, int b) {
+		//    return a.Add(new Integer32(b));
+		//}
+		//public static Number operator +(Number a,int b) {
+		//    return a.Add(new Integer32(b));
+		//}
+		//public static bool operator ==(Number a,int b) {
+		//    return a.Equals(new Integer32(b));
+		//}
+		//public static bool operator !=(Number a,int b) {
+		//    return !(a==b);
+		//}
+		//public static bool operator ==(Number a,Number b) {
+		//    return ReferenceEquals(a,b) || a.Equals(b);
+		//}
+		//public static bool operator !=(Number a,Number b) {
+		//    return !(a==b);
+		//}
 		public override string GetString() {
 			return null;
 		}
@@ -2872,7 +2725,7 @@ namespace Meta {
 		}
 		public override IEnumerable<Map> Keys {
 			get {
-				if (this!=0) {
+				if (!this.Equals(Integer32.Zero)) {
 					yield return Map.Empty;
 				}
 				if (this<0) {
@@ -3129,6 +2982,7 @@ namespace Meta {
 		public override double Numerator {
 			get {
 				return numerator.GetDouble();
+				//return numerator.GetDouble();
 			}
 		}
 		public override double Denominator {
@@ -3278,8 +3132,7 @@ namespace Meta {
 				Append(Syntax.decimalSeparator),
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
 	        delegate(Parser p, Map map, ref Map result) {
-				Rational rational = new Rational(double.Parse(map.GetString(),CultureInfo.InvariantCulture));//map[1].GetString() + "." + map[2].GetString()));
-				//Rational rational = new Rational(double.Parse(map[1].GetString() + "." + map[2].GetString()));
+				Rational rational = new Rational(double.Parse(map.GetString(),CultureInfo.InvariantCulture));
 				if (rational.GetInteger() != null) {
 				    result=new Integer32(rational.GetInt32());
 					result.Source = rational.Source;
@@ -3330,8 +3183,6 @@ namespace Meta {
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
 
 		public static Rule Entry = Alternatives(
-			//Sequence(Assign(CodeKeys.Function, Function)),
-			//Sequence(Assign(CodeKeys.Function, Function)),
 			Sequence(
 				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
 				Syntax.statement,
@@ -3419,11 +3270,6 @@ namespace Meta {
 									)))
 								));
 		});
-		//public static Rule FunctionExpression = Sequence(
-		//    Assign(CodeKeys.Key,LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-		//    Assign(CodeKeys.Value,Sequence(Assign(CodeKeys.Literal,Function)))
-		//);
-
 		private static Rule Simple(char c, Map literal) {
 			return Sequence(c,ReferenceAssignment(LiteralRule(literal)));
 		}
@@ -3626,67 +3472,9 @@ namespace Meta {
 											Whitespace)))))))));
 		});
 
-		//public static Rule FunctionPart = Sequence(
-		//    Assign(CodeKeys.Program,
-		//        Sequence(
-		//            Assign(1,
-		//                Sequence(
-		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-		//                    Assign(CodeKeys.Value, Sequence(
-		//                        Assign(CodeKeys.Literal,
-		//                            Sequence(
-		//                                Assign(
-		//                                    CodeKeys.Parameter,
-		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//                                Assign(
-		//                                    CodeKeys.Expression,
-		//                                    Alternatives(
-		//                                        Sequence(
-		//                                            Syntax.functionSeparator,
-		//                                            ReferenceAssignment(FunctionPart)
-		//                                        )
-		//                                        Sequence(
-		//                                            Syntax.functionEnd,
-		//                                            Whitespace,
-		//                                            ReferenceAssignment(Expression)
-		//                                        ),
-		//                                            Whitespace)))))))));
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
 			ReferenceAssignment(FunctionPart));
-			//Assign(CodeKeys.Program,
-			//    Sequence(
-			//        Assign(1,
-			//            Sequence(
-			//                Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-			//                Assign(CodeKeys.Value, Sequence(
-			//                    Assign(CodeKeys.Literal,
-			//                        Sequence(
-			//                            Assign(
-			//                                CodeKeys.Parameter,
-			//                                StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-			//                                Syntax.functionEnd,
-			//                                Whitespace,
-			//                            Assign(CodeKeys.Expression, Expression),
-			//                            Whitespace)))))))));
-
-		//public static Rule FunctionProgram = Sequence(
-		//    Syntax.functionStart,
-		//    Assign(CodeKeys.Program,
-		//        Sequence(
-		//            Assign(1,
-		//                Sequence(
-		//                    Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-		//                    Assign(CodeKeys.Value, Sequence(
-		//                        Assign(CodeKeys.Literal,
-		//                            Sequence(
-		//                                Assign(
-		//                                    CodeKeys.Parameter,
-		//                                    StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//                                    Syntax.functionEnd,
-		//                                    Whitespace,
-		//                                Assign(CodeKeys.Expression, Expression),
-		//                                Whitespace)))))))));
 
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
@@ -4068,8 +3856,6 @@ namespace Meta {
 		public const char programEnd = '}';
 		public const char functionStart = '(';
 		public const char functionEnd = ')';
-		//public const char functionAlternativeStart = '{';
-		//public const char functionAlternativeEnd = '}';
 		public const char arrayStart = '[';
 		public const char arrayEnd = ']';
 		public const char arraySeparator = ',';
@@ -4583,9 +4369,6 @@ namespace Meta {
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
 	public class ListMap : Map {
-		//public override int GetHashCode() {
-		//    return list.Count;
-		//}
 		public override Number GetNumber() {
 			if(Count==0) {
 				return 0;
@@ -5005,8 +4788,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
-		//public static int GetHashCode() {
-		//}
+		public static int GetHashCode(int i) {
+			return i % int.MaxValue;
+		}
 		public override int GetHashCode() {
 			if (IsNumber) {
 				return (int)(GetNumber().Numerator % int.MaxValue);
@@ -5019,7 +4803,6 @@ namespace Meta {
 					}
 					return hash;
 				}
-				//return Count;
 			}
 		}
 		public virtual object GetObject() {
@@ -5107,6 +4890,7 @@ namespace Meta {
 			Map.arguments.Pop();
 			return result;
 		}
+		public static Map Zero = new Integer32(0);
 		public static Map One = new Integer32(1);
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {

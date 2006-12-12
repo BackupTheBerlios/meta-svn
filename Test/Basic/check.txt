@@ -566,13 +566,30 @@ Entry (KeyValuePair`2)
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
-																				"search"
+																				"select"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"literal"
-																					Value (StringMap):
-																						"merge"
+																					Key (Integer32):
+																						1
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"search"
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"literal"
+																									Value (StringMap):
+																										"map"
+																				Entry (KeyValuePair`2)
+																					Key (Integer32):
+																						2
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"literal"
+																							Value (StringMap):
+																								"merge"
 																Entry (KeyValuePair`2)
 																	Key (Integer32):
 																		2
@@ -2544,13 +2561,30 @@ Entry (KeyValuePair`2)
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
-																		"search"
+																		"select"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"literal"
-																			Value (StringMap):
-																				"not"
+																			Key (Integer32):
+																				1
+																			Value (DictionaryMap):
+																				Entry (KeyValuePair`2)
+																					Key (StringMap):
+																						"search"
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"literal"
+																							Value (StringMap):
+																								"boolean"
+																		Entry (KeyValuePair`2)
+																			Key (Integer32):
+																				2
+																			Value (DictionaryMap):
+																				Entry (KeyValuePair`2)
+																					Key (StringMap):
+																						"literal"
+																					Value (StringMap):
+																						"not"
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																2
@@ -2565,13 +2599,30 @@ Entry (KeyValuePair`2)
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
 																					Key (StringMap):
-																						"search"
+																						"select"
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
-																							Key (StringMap):
-																								"literal"
-																							Value (StringMap):
-																								"equal"
+																							Key (Integer32):
+																								1
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"search"
+																									Value (DictionaryMap):
+																										Entry (KeyValuePair`2)
+																											Key (StringMap):
+																												"literal"
+																											Value (StringMap):
+																												"map"
+																						Entry (KeyValuePair`2)
+																							Key (Integer32):
+																								2
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"literal"
+																									Value (StringMap):
+																										"equal"
 																		Entry (KeyValuePair`2)
 																			Key (Integer32):
 																				2
@@ -2697,13 +2748,30 @@ Entry (KeyValuePair`2)
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
 																																					Key (StringMap):
-																																						"search"
+																																						"select"
 																																					Value (DictionaryMap):
 																																						Entry (KeyValuePair`2)
-																																							Key (StringMap):
-																																								"literal"
-																																							Value (StringMap):
-																																								"add"
+																																							Key (Integer32):
+																																								1
+																																							Value (DictionaryMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (StringMap):
+																																										"search"
+																																									Value (DictionaryMap):
+																																										Entry (KeyValuePair`2)
+																																											Key (StringMap):
+																																												"literal"
+																																											Value (StringMap):
+																																												"rational"
+																																						Entry (KeyValuePair`2)
+																																							Key (Integer32):
+																																								2
+																																							Value (DictionaryMap):
+																																								Entry (KeyValuePair`2)
+																																									Key (StringMap):
+																																										"literal"
+																																									Value (StringMap):
+																																										"add"
 																																		Entry (KeyValuePair`2)
 																																			Key (Integer32):
 																																				2

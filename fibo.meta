@@ -1,8 +1,8 @@
 (){
-	fibo=(n)branch(
-		less(n,2),
+	fibo=(n)flow.branch(
+		rational.less(n,2),
 		()1,
-		()add(fibo(subtract(n,1)),fibo(subtract(n,2)))
+		()rational.add(fibo(rational.subtract(n,1)),fibo(rational.subtract(n,2)))
 	);
 	&fibo(28);
 }

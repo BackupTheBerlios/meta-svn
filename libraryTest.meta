@@ -5,46 +5,46 @@
 	test={
 		booleanTest={
 			not={
-				true=not(0);
-				false=not(1);
+				true=boolean.not(0);
+				false=boolean.not(1);
 			};
 			and={
-				true=and(1,1);
-				false=and(1,0);
+				true=boolean.and(1,1);
+				false=boolean.and(1,0);
 			};
 			orTest={
-				true=or(1,1);
-				false=or(0,0);
-				otherTrue=or(0,1);
+				true=boolean.or(1,1);
+				false=boolean.or(0,0);
+				otherTrue=boolean.or(0,1);
 			};
 		};
 		numberTest={
-			positiveAdd=add(100,1000);
-			negativeAdd=add(-100,91);
-			differenceTest=add(1/4,multiply(1/100,-1));
-			differenceTest2=subtract(103,2);
-			divideTest=divide(5,103);
-			multiplyInteger=multiply(19,1023);
-			minusmultiply=multiply(-1,-2);
-			multiplyFraction=multiply(3/2,7/3);
-			smallerDecreasingTest=less(4,1);
-			strictlyIncreasingTest=greater(23,23);
-			smallerTest=less(0,1);
-			greaterTest=greater(3,5);
-			divide=multiply(1000,divide(1,7));
+			positiveAdd=rational.add(100,1000);
+			negativeAdd=rational.add(-100,91);
+			differenceTest=rational.add(1/4,rational.multiply(1/100,-1));
+			differenceTest2=rational.subtract(103,2);
+			divideTest=rational.divide(5,103);
+			multiplyInteger=rational.multiply(19,1023);
+			minusmultiply=rational.multiply(-1,-2);
+			multiplyFraction=rational.multiply(3/2,7/3);
+			smallerDecreasingTest=rational.less(4,1);
+			strictlyIncreasingTest=rational.greater(23,23);
+			smallerTest=rational.less(0,1);
+			greaterTest=rational.greater(3,5);
+			divide=rational.multiply(1000,rational.divide(1,7));
 		};
 		bitwiseTest={
 			or=0;
 		};
 		mapTest={
-			IfTest=branch(
+			IfTest=flow.branch(
 				1,
 				(arg)"If,test,successful",
 				()0
 			);
 			Map={
-				&map(
-					(argument)add(argument,1),
+				&flow.apply(
+					(argument)rational.add(argument,1),
 					[1,2,3]
 				);
 			};
@@ -52,7 +52,7 @@
 				x="hello";
 			};
 			containsTest=contains(keyTestMap,"x");
-			keysTest=keys(
+			keysTest=map.keys(
 				{
 					jjqwv="aeäquq";
 					oere="i,ke";
@@ -61,7 +61,7 @@
 			);
 			equal={
 				map={
-					true=equal(
+					true=map.equal(
 						{
 							x="hello";
 							y="world";
@@ -71,7 +71,7 @@
 							y="world";
 						}
 					);
-					false=equal(
+					false=map.equal(
 						{
 							x="y";
 							y="z";
@@ -85,20 +85,20 @@
 			};
 			tryTest=try(
 				(arg)"hello",
-				(argument)argument.ToString(0)
+				(argument)argument.rational.toString(0)
 			);
 		};
 		sumTest=accumulate(
-			(first)(second)add(first,second),
+			(first)(second)rational.add(first,second),
 			[2,5,6,8]
 		);
-		lengthTest=length([1,2,3,4,5]);
+		lengthTest=array.length([1,2,3,4,5]);
 		withTest=!"System.Windows.Forms".Form(
 			{
 				Text="hello,world";
 			}
 		);
-		countTest=count(
+		countTest=map.count(
 			{
 				orange="orange";
 				banana="yellow";
