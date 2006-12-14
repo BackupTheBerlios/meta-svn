@@ -1137,10 +1137,10 @@ namespace Meta {
 				if(type.Equals(typeof(Boolean))) {
 					il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToInt32",new Type[] {typeof(Boolean)}));
 					il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
-					il.Emit(OpCodes.Newobj, typeof(Number).GetConstructor(new Type[] { typeof(Integer32) }));
+					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Integer32) }));
 				}
 				else if (type.Equals(typeof(Num))) {
-					il.Emit(OpCodes.Newobj, typeof(Number).GetConstructor(new Type[] { typeof(Num) }));
+					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Num) }));
 				}
 				else if (type.Equals(typeof(void))) {
 					il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
@@ -1254,7 +1254,7 @@ namespace Meta {
 					TypeCode typeCode = Type.GetTypeCode(target);
 					if (typeCode == TypeCode.Object) {
 
-						if (target == typeof(Number) && meta.IsNumber) {
+						if (target == typeof(NumberMap) && meta.IsNumber) {
 							return meta.GetNumber();
 						}
 						if (target == typeof(System.Drawing.Point) && meta.IsNormal) {
@@ -1361,7 +1361,7 @@ namespace Meta {
 				Type type = dotNet.GetType();
 				switch (Type.GetTypeCode(type)) {
 					case TypeCode.Boolean:
-						return new Number(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+						return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
 						//return new Integer32(Convert.ToInt32((Boolean)dotNet));
 					case TypeCode.Byte:
 						return (Byte)dotNet;
@@ -1380,7 +1380,7 @@ namespace Meta {
 					case TypeCode.String:
 						return (String)dotNet;
 					case TypeCode.Decimal:
-						return new Number(new Rational((double)(Decimal)dotNet));
+						return new NumberMap(new Rational((double)(Decimal)dotNet));
 						//return new Rational((double)(Decimal)dotNet);
 					case TypeCode.Double:
 						return (Double)dotNet;
@@ -1395,11 +1395,11 @@ namespace Meta {
 					case TypeCode.DBNull:
 						return new ObjectMap(dotNet);
 					case TypeCode.Object:
-						if(dotNet is Number) {
-							return (Number)dotNet;
+						if(dotNet is NumberMap) {
+							return (NumberMap)dotNet;
 						}
 						if (dotNet.GetType().IsSubclassOf(typeof(Num)) || dotNet is Num) {
-							return new Number((Num)dotNet);
+							return new NumberMap((Num)dotNet);
 						}
 						else if (dotNet is Map) {
 							return (Map)dotNet;
@@ -2716,7 +2716,7 @@ namespace Meta {
 		//    }
 		//}
 		public static Map Raise(Num a,Num b) {
-			return new Number(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
+			return new NumberMap(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
 		}
 		public static Integer32 Zero = new Integer32(0);
 		public static Integer32 One = new Integer32(1);
@@ -2808,11 +2808,11 @@ namespace Meta {
 		public abstract double GetDouble();
 		public abstract BigInteger GetInteger();
 	}
-	public class Number : Map {
+	public class NumberMap : Map {
 		//public Number(int i) {
 		//    this.number = new Integer32(i);
 		//}
-		public Number(Num number) {
+		public NumberMap(Num number) {
 			this.number = number;
 		}
 		private Num number;
@@ -2848,7 +2848,7 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					if (key.Count == 0) {
-						return new Number(Num.Subtract(this.GetNum(),Num.One));
+						return new NumberMap(Num.Subtract(this.GetNum(),Num.One));
 						//return new Number(Num.Subtract(Number.One));
 						//return new Number(this.Subtract(new Integer32(1)));
 					}
@@ -2856,7 +2856,7 @@ namespace Meta {
 						return Map.Empty;
 					}
 					else if (key.Equals(NumberKeys.Denominator)) {
-						return new Number(new Rational(GetNum().Denominator));
+						return new NumberMap(new Rational(GetNum().Denominator));
 						//return new Rational(Denominator);
 					}
 					else {
@@ -3444,7 +3444,7 @@ namespace Meta {
 		}
 		private readonly Integer numerator;
 		private readonly Integer denominator;
-		public static Number Parse(string text) {
+		public static NumberMap Parse(string text) {
 			try {
 				string[] parts = text.Split('/');
 				int numerator = Convert.ToInt32(parts[0]);
@@ -3455,7 +3455,7 @@ namespace Meta {
 				else {
 					denominator = 1;
 				}
-				return new Number(new Rational(numerator, denominator));
+				return new NumberMap(new Rational(numerator, denominator));
 			}
 			catch (Exception e) {
 				return null;
@@ -3482,8 +3482,8 @@ namespace Meta {
 				return denominator.GetDouble();
 			}
 		}
-		public Number Clone() {
-			return new Number(new Rational(this));
+		public NumberMap Clone() {
+			return new NumberMap(new Rational(this));
 		}
 		public override double GetDouble() {
 			return numerator.GetDouble() / denominator.GetDouble();
@@ -3594,11 +3594,11 @@ namespace Meta {
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
 				if(rational.GetInteger()!=null) {
-					result = new Number(new Integer32(rational.GetInt32()));
+					result = new NumberMap(new Integer32(rational.GetInt32()));
 					result.Source = map.Source;
 				}
 				else {
-					result = new Number(rational);
+					result = new NumberMap(rational);
 					result.Source = map.Source;
 				}
 			}));
@@ -3626,11 +3626,11 @@ namespace Meta {
 	        delegate(Parser p, Map map, ref Map result) {
 				Rational rational = new Rational(double.Parse(map.GetString(),CultureInfo.InvariantCulture));
 				if (rational.GetInteger() != null) {
-					result = new Number(new Integer32(rational.GetInt32()));
+					result = new NumberMap(new Integer32(rational.GetInt32()));
 					result.Source = map.Source;
 				}
 				else {
-					result = new Number(rational);
+					result = new NumberMap(rational);
 					//result = rational;
 					result.Source = map.Source;
 					//result.Source = rational.Source;
@@ -3644,7 +3644,7 @@ namespace Meta {
 				Syntax.fraction,
 				ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
-					result = new Number(new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble()));
+					result = new NumberMap(new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble()));
 					//result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
 					result.Source = map.Source;
 				}
@@ -3847,7 +3847,7 @@ namespace Meta {
 
 		public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
-				Map key = new DictionaryMap(CodeKeys.Literal, new Number(new Integer32(p.defaultKeys.Peek())));
+				Map key = new DictionaryMap(CodeKeys.Literal, new NumberMap(new Integer32(p.defaultKeys.Peek())));
 				//Map key = new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek()));
 				// not really correct
 				key.Source = map.Source;
@@ -5275,7 +5275,7 @@ namespace Meta {
 			throw new Exception("The method or operation is not implemented.");
 		}
 
-		public Number zero = new Number(new Integer32(0));
+		public NumberMap zero = new NumberMap(new Integer32(0));
 		//public Number zero = new Integer32(0);
 		public string emptyString = "";
 		public override string GetString() {
@@ -5307,8 +5307,8 @@ namespace Meta {
 				}
 			}
 		}
-		public static Number Zero = new Number(new Integer32(0));
-		public static Number One = new Number(new Integer32(1));
+		public static NumberMap Zero = new NumberMap(new Integer32(0));
+		public static NumberMap One = new NumberMap(new Integer32(1));
 		public virtual object GetObject() {
 			return this;
 		}
@@ -5480,10 +5480,10 @@ namespace Meta {
 			return new StringMap(text);
 		}
 		public static implicit operator Map(double number) {
-			return new Number(new Rational(number));
+			return new NumberMap(new Rational(number));
 		}
 		public static implicit operator Map(int integer) {
-			return new Number(new Integer32(integer));
+			return new NumberMap(new Integer32(integer));
 		}
 		//public static implicit operator Map(double number) {
 		//    return new Rational(number);

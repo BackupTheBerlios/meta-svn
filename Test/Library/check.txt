@@ -9,7 +9,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Number):
+					Value (NumberMap):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -23,7 +23,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Number):
+					Value (NumberMap):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -37,7 +37,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Number):
+					Value (NumberMap):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -47,7 +47,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"otherTrue"
-					Value (Number):
+					Value (NumberMap):
 						1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -56,67 +56,67 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"positiveAdd"
-			Value (Number):
+			Value (NumberMap):
 				1100
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"negativeAdd"
-			Value (Number):
+			Value (NumberMap):
 				-9
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"differenceTest"
-			Value (Number):
+			Value (NumberMap):
 				6/25
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"differenceTest2"
-			Value (Number):
+			Value (NumberMap):
 				101
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"divideTest"
-			Value (Number):
+			Value (NumberMap):
 				5/103
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"multiplyInteger"
-			Value (Number):
+			Value (NumberMap):
 				19437
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"minusmultiply"
-			Value (Number):
+			Value (NumberMap):
 				2
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"multiplyFraction"
-			Value (Number):
+			Value (NumberMap):
 				7/2
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"smallerDecreasingTest"
-			Value (Number):
+			Value (NumberMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"strictlyIncreasingTest"
-			Value (Number):
+			Value (NumberMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"smallerTest"
-			Value (Number):
+			Value (NumberMap):
 				1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"greaterTest"
-			Value (Number):
+			Value (NumberMap):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"divide"
-			Value (Number):
+			Value (NumberMap):
 				1000/7
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -153,26 +153,26 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"containsTest"
-			Value (Number):
+			Value (NumberMap):
 				1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"keysTest"
 			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
-					Key (Number):
+					Key (NumberMap):
 						1
 					Value (StringMap):
 						"jjqwv"
 				Entry (KeyValuePair`2)
-					Key (Number):
+					Key (NumberMap):
 						2
 					Value (StringMap):
 						"oere"
 				Entry (KeyValuePair`2)
-					Key (Number):
+					Key (NumberMap):
 						3
-					Value (Number):
+					Value (NumberMap):
 						1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -185,12 +185,12 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"true"
-							Value (Number):
+							Value (NumberMap):
 								1
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"false"
-							Value (Number):
+							Value (NumberMap):
 								0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -200,12 +200,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"sumTest"
-	Value (Number):
+	Value (NumberMap):
 		21
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"lengthTest"
-	Value (Number):
+	Value (NumberMap):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -215,5 +215,5 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"countTest"
-	Value (Number):
+	Value (NumberMap):
 		4

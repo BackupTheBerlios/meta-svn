@@ -34,6 +34,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Printing;
+using System.Windows.Annotations;
 
 
 public delegate void MethodInvoker();
@@ -684,20 +685,16 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionLength = Math.Max(0,oldLength-removed);
 		});
 		MakeCommand(ModifierKeys.Control, Key.P, delegate {
-			//PrintDialog print = new PrintDialog();
-			PrintDialog dlg = new PrintDialog();
-			if ((bool)dlg.ShowDialog().GetValueOrDefault())
+			PrintDialog print = new PrintDialog();
+			if ((bool)print.ShowDialog().GetValueOrDefault())
 			{
-				dlg.PrintVisual(textBox, "sawdust");
+				//print.PrintVisual(textBox, "sawdust");
+				//print.PrintDocument(new AnnotationDocumentPaginator(, "");
 			}
-			//print.PrintTicket=
 		});
 		MakeCommand(ModifierKeys.Control, Key.K, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
 			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength-2);
-			//if (startLine > endLine) {
-			//    startLine = endLine;
-			//}
 			if (endLine < startLine) {
 				endLine = startLine;
 			}
