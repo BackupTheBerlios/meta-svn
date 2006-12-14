@@ -630,13 +630,19 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
 			textBox.SelectionLength = line.Length;
 			string lineStart=LineWithoutIndentation(line);
-			if(lineStart.StartsWith("//")) {
-				lineStart=lineStart.Remove(0,2);
-				removed += 2;
-			}
+			//if(lineStart.StartsWith("//")) {
+			//    lineStart=lineStart.Remove(0,2);
+			//    if (increase) {
+			//        removed -= 2;
+			//    }
+			//    else {
+			//        removed += 2;
+			//    }
+			//}
 			int difference=increase?
 				1:-1;
 			textBox.SelectedText = "".PadLeft(Math.Max(0,GetIndentation(line).Length+difference),'\t') + lineStart;
+			removed += difference;
 		}
 		textBox.SelectionStart = oldStart;
 		textBox.SelectionLength = oldLength-removed;
@@ -689,6 +695,12 @@ public partial class Editor : System.Windows.Window {
 		MakeCommand(ModifierKeys.Control, Key.K, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
 			int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength-2);
+			//if (startLine > endLine) {
+			//    startLine = endLine;
+			//}
+			if (endLine < startLine) {
+				endLine = startLine;
+			}
 			int oldStart = textBox.SelectionStart;
 			int oldLength = textBox.SelectionLength;
 			int added=0;
@@ -779,7 +791,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.MoveRightByCharacter, Key.Oem3, ModifierKeys.Alt);
 		BindKey(EditingCommands.MoveUpByLine, Key.L, ModifierKeys.Alt);
 		BindKey(EditingCommands.MoveLeftByWord, Key.J, ModifierKeys.Alt | ModifierKeys.Control);
-		BindKey(EditingCommands.MoveRightByWord, Key.M, ModifierKeys.Alt | ModifierKeys.Control);
+		BindKey(EditingCommands.MoveRightByWord, Key.Oem3, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.MoveToDocumentEnd, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.MoveToDocumentStart, Key.U, ModifierKeys.Alt | ModifierKeys.Control);
 		BindKey(EditingCommands.MoveToLineEnd, Key.Oem1, ModifierKeys.Alt);
@@ -801,7 +813,7 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.SelectLeftByCharacter, Key.J, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectLeftByWord, Key.J, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectRightByCharacter, Key.Oem3, ModifierKeys.Alt | ModifierKeys.Shift);
-		BindKey(EditingCommands.SelectRightByWord, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
+		BindKey(EditingCommands.SelectRightByWord, Key.Oem3, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectToDocumentEnd, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectToDocumentStart, Key.U, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectToLineEnd, Key.Oem1, ModifierKeys.Alt | ModifierKeys.Shift);
@@ -1292,7 +1304,7 @@ public partial class Editor : System.Windows.Window {
 			if (!ignoreChange) {
 				int line = (textBox.Line + 1);
 				DispatcherTimer t = new DispatcherTimer();
-				t.Interval = new TimeSpan(20000);
+				t.Interval = new TimeSpan(0,0,1);
 				int i = textBox.SelectionStart;
 				t.Tick += delegate {
 					history.RemoveRange(historyIndex, history.Count - historyIndex);
