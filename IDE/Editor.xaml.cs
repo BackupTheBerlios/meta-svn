@@ -1316,21 +1316,27 @@ public partial class Editor : System.Windows.Window {
 					canvas.Children.Remove(brace);
 				}
 				if (textBox.Text.Length != 0 && textBox.SelectionStart<textBox.Text.Length) {
-					char c = textBox.Text[textBox.SelectionStart];
-					if ((openBraces + closeBraces).IndexOf(c) != -1) {
-						int index = FindMatchingBrace();
-						if (index != -1) {
-							Rect r = textBox.GetRectFromCharacterIndex(index);
-							brace = new Rectangle();
-							FormattedText formattedText=new FormattedText("a", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch),textBox.FontSize,Brushes.LightGray);
-							brace.Width = formattedText.Width;
-							brace.Height = formattedText.Height;
-							brace.Opacity = 0.6;
-							brace.Fill = Brushes.Gray;
-							brace.Focusable = false;
-							Canvas.SetTop(brace, r.Top);
-							Canvas.SetLeft(brace, r.Right);
-							canvas.Children.Add(brace);
+					for (int diff = -1; diff < 1; diff++) {
+						char c = textBox.Text[Math.Max(0,Math.Min(textBox.Text.Length,textBox.SelectionStart+diff))];
+						if ((openBraces + closeBraces).IndexOf(c) != -1) {
+							int index = FindMatchingBrace();
+							if (index !=-1) {
+								if (index>textBox.SelectionStart) {
+									index--;
+								}
+								Rect r = textBox.GetRectFromCharacterIndex(index);
+								brace = new Rectangle();
+								FormattedText formattedText = new FormattedText("a", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(textBox.FontFamily, textBox.FontStyle, textBox.FontWeight, textBox.FontStretch), textBox.FontSize, Brushes.LightGray);
+								brace.Width = formattedText.Width;
+								brace.Height = formattedText.Height;
+								brace.Opacity = 0.6;
+								brace.Fill = Brushes.Gray;
+								brace.Focusable = false;
+								Canvas.SetTop(brace, r.Top);
+								Canvas.SetLeft(brace, r.Right);
+								canvas.Children.Add(brace);
+							}
+							break;
 						}
 					}
 				}
