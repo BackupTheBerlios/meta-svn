@@ -2,10 +2,10 @@
 	&map.merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase,flow,boolean,map,rational]);
 	
 	random=Meta.Library.Random_Int32_Int32;
-	range=Meta.Library.Range_Num;
+	range=Meta.Library.Range_Number;
 	vectorLength=(vector)rational.power(rational.add(rational.power(vector.1,2),rational.power(vector.2,2)),1/2);
 	vectorDifference=(a,b)flow.apply((key)rational.subtract(a.<key>,b.<key>),map.keys(a));
-	compareNumber=Meta.Library.CompareNumber_Num_Num;
+	compareNumber=Meta.Library.CompareNumber_Number_Number;
 	sort=Meta.Library.Sort_Map_Map;
 	with=Meta.Library.With_Map_Map;
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;

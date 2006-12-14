@@ -48,29 +48,29 @@
 								!"a"
 				"rational"=,
 					"add"=.
-						!"Num"
-						"Add_Num_Num"
+						!"Number"
+						"Add_Number_Number"
 					"floor"=.
 						!"Library"
-						"Floor_Num"
+						"Floor_Number"
 					"divide"=.
-						!"Num"
-						"Divide_Num_Num"
+						!"Number"
+						"Divide_Number_Number"
 					"subtract"=.
-						!"Num"
-						"Subtract_Num_Num"
+						!"Number"
+						"Subtract_Number_Number"
 					"multiply"=.
-						!"Num"
-						"Multiply_Num_Num"
+						!"Number"
+						"Multiply_Number_Number"
 					"greater"=.
-						!"Num"
-						"Greater_Num_Num"
+						!"Number"
+						"Greater_Number_Number"
 					"less"=.
-						!"Num"
-						"Less_Num_Num"
+						!"Number"
+						"Less_Number_Number"
 					"power"=.
-						!"Num"
-						"Raise_Num_Num"
+						!"Number"
+						"Raise_Number_Number"
 					"maximum"=,
 						a|,
 							b|.
@@ -96,8 +96,8 @@
 									!"a"
 									!"b"
 					"modulo"=.
-						!"Num"
-						"Modulo_Num_Num"
+						!"Number"
+						"Modulo_Number_Number"
 					"opposite"=,
 						arg|-
 							.

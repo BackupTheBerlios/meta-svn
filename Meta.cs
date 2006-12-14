@@ -479,7 +479,7 @@ namespace Meta {
 		public override bool ContainsKey(Map k) {
 			return k.Equals(this.key);
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			throw new Exception("The method or operation is not implemented.");
 		}
 		public override int Count {
@@ -570,7 +570,7 @@ namespace Meta {
 		public override bool ContainsKey(Map k) {
 			return k.Equals(CodeKeys.Function);
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override int Count {
@@ -1139,8 +1139,8 @@ namespace Meta {
 					il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
 					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Integer32) }));
 				}
-				else if (type.Equals(typeof(Num))) {
-					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Num) }));
+				else if (type.Equals(typeof(Number))) {
+					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 				}
 				else if (type.Equals(typeof(void))) {
 					il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
@@ -1177,9 +1177,9 @@ namespace Meta {
 			}
 			else if(target.Equals(typeof(double))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(Num).GetMethod("GetDouble"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetDouble"));
 			}
-			else if (target.Equals(typeof(Num))) {
+			else if (target.Equals(typeof(Number))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 			}
 			//else if (target.Equals(typeof(Number))) {
@@ -1205,12 +1205,12 @@ namespace Meta {
 			}
 			else if (target.Equals(typeof(int))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(Num).GetMethod("GetInt32"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt32"));
 				//il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt32"));
 			}
 			else if (target.Equals(typeof(Single))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(Num).GetMethod("GetSingle"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetSingle"));
 				//il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetSingle"));
 			}
 			else if (target.Equals(typeof(object))) {
@@ -1236,7 +1236,7 @@ namespace Meta {
 			if(target.Equals(typeof(Map))) {
 				return meta;
 			}
-			if(target.Equals(typeof(Num))) {
+			if(target.Equals(typeof(Number))) {
 				return meta.GetNumber();
 			}
 			else if (target.Equals(typeof(Stream)) && meta is FileMap) {
@@ -1398,8 +1398,8 @@ namespace Meta {
 						if(dotNet is NumberMap) {
 							return (NumberMap)dotNet;
 						}
-						if (dotNet.GetType().IsSubclassOf(typeof(Num)) || dotNet is Num) {
-							return new NumberMap((Num)dotNet);
+						if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
+							return new NumberMap((Number)dotNet);
 						}
 						else if (dotNet is Map) {
 							return (Map)dotNet;
@@ -1428,7 +1428,7 @@ namespace Meta {
 				return 0;
 			}
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override string GetString() {
@@ -1735,7 +1735,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			return new List<Map>(Keys).Contains(key);
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override Map Copy() {
@@ -1782,7 +1782,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			return false;
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override Map Copy() {
@@ -1877,7 +1877,7 @@ namespace Meta {
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			if (Count == 0) {
 				return new Integer32(0);
 				//return new Number(new Integer32(0));
@@ -2078,7 +2078,7 @@ namespace Meta {
 		public override string GetString() {
 			return null;
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override bool IsNormal {
@@ -2355,7 +2355,7 @@ namespace Meta {
 		}
 	}
 	public abstract class SpecialMap:Map {
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override string GetString() {
@@ -2455,7 +2455,7 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			return Data.ContainsKey(key);
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override Map Copy() {
@@ -2531,7 +2531,7 @@ namespace Meta {
 			copy.Scope = Scope;
 			return copy;
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public static readonly Map gac = new Gac();
@@ -2606,7 +2606,7 @@ namespace Meta {
 				return true;
 			}
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return null;
 		}
 		public override string Serialize() {
@@ -2619,9 +2619,9 @@ namespace Meta {
 		public override Map this[Map key] {
 			get {
 				if (key.IsNumber) {
-					Num number = key.GetNumber();
+					Number number = key.GetNumber();
 					//Number number = key.GetNumber();
-					if (number.GetInteger() != null && Num.Greater(number, Integer32.Zero) && Num.LessEqual(number, new Integer32(Count))) {
+					if (number.GetInteger() != null && Number.Greater(number, Integer32.Zero) && Number.LessEqual(number, new Integer32(Count))) {
 					//if (number.GetInteger() != null && Number.Greater(number, Integer32.Zero) && Number.LessEqual(number, new Integer32(Count))) {
 						return text[number.GetInt32() - 1];
 					}
@@ -2656,9 +2656,9 @@ namespace Meta {
 		}
 		public override bool ContainsKey(Map key) {
 			if (key.IsNumber) {
-				Num number = key.GetNumber();
+				Number number = key.GetNumber();
 				if (number.Equals(Map.One)) {
-					return Num.Greater(number, Integer32.Zero) && Num.LessEqual(number, new Integer32(text.Length));
+					return Number.Greater(number, Integer32.Zero) && Number.LessEqual(number, new Integer32(text.Length));
 				}
 				else {
 					return false;
@@ -2691,13 +2691,13 @@ namespace Meta {
 			}
 		}
 	}
-	public abstract class Num {
-		public int CompareTo(Num number) {
+	public abstract class Number {
+		public int CompareTo(Number number) {
 			return this.GetDouble().CompareTo(number.GetDouble());
 			//return GetDouble().CompareTo(number.GetDouble());
 		}
 		public override bool Equals(object obj) {
-			Num num = obj as Num;
+			Number num = obj as Number;
 			if (num != null) {
 				return num.Numerator == Numerator && num.Denominator == Denominator;
 			}
@@ -2715,7 +2715,7 @@ namespace Meta {
 		//        return false;
 		//    }
 		//}
-		public static Map Raise(Num a,Num b) {
+		public static Map Raise(Number a,Number b) {
 			return new NumberMap(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
 		}
 		public static Integer32 Zero = new Integer32(0);
@@ -2741,34 +2741,34 @@ namespace Meta {
 				return a;
 			}
 		}
-		public double Expand(Num b) {
+		public double Expand(Number b) {
 			return Numerator * (LeastCommonMultiple(this, b) / Denominator);
 		}
-		public static Num Add(Num a, Num b) {
+		public static Number Add(Number a, Number b) {
 			return a.Add(b);
 		}
-		public static Num Subtract(Num a, Num b) {
+		public static Number Subtract(Number a, Number b) {
 			return a.Subtract(b);
 		}
-		public static Num Divide(Num a, Num b) {
+		public static Number Divide(Number a, Number b) {
 			return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
 		}
-		public static Num Multiply(Num a, Num b) {
+		public static Number Multiply(Number a, Number b) {
 			return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
 		}
-		public static bool Greater(Num a, Num b) {
+		public static bool Greater(Number a, Number b) {
 			return a.Expand(b) > b.Expand(a);
 		}
-		public static bool Less(Num a, Num b) {
+		public static bool Less(Number a, Number b) {
 			return a.LessThan(b);
 		}
-		public static bool GreaterEqual(Num a, Num b) {
+		public static bool GreaterEqual(Number a, Number b) {
 			return a.Expand(b) >= b.Expand(a);
 		}
-		public static bool LessEqual(Num a, Num b) {
+		public static bool LessEqual(Number a, Number b) {
 			return a.Expand(b) <= b.Expand(a);
 		}
-		public static Num Modulo(Num a, Num b) {
+		public static Number Modulo(Number a, Number b) {
 			return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
 		}
 
@@ -2787,36 +2787,30 @@ namespace Meta {
 		}
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
-		public static double LeastCommonMultiple(Num a, Num b) {
+		public static double LeastCommonMultiple(Number a, Number b) {
 			return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
 		}
-		public virtual Num Subtract(Num b) {
+		public virtual Number Subtract(Number b) {
 			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
 		}
-		public virtual bool LessThan(Num b) {
+		public virtual bool LessThan(Number b) {
 			return Expand(b) < b.Expand(this);
 		}
 		public virtual bool LessThan(int b) {
 			return LessThan(new Integer32(b));
 		}
-		public virtual Num Add(Num b) {
+		public virtual Number Add(Number b) {
 			return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
 		}
-		//public virtual Number Add(Number b) {
-		//    return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-		//}
 		public abstract double GetDouble();
 		public abstract BigInteger GetInteger();
 	}
 	public class NumberMap : Map {
-		//public Number(int i) {
-		//    this.number = new Integer32(i);
-		//}
-		public NumberMap(Num number) {
+		public NumberMap(Number number) {
 			this.number = number;
 		}
-		private Num number;
-		public Num GetNum() {
+		private Number number;
+		public Number GetNum() {
 			return number;
 		}
 		public override string GetString() {
@@ -2848,7 +2842,7 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					if (key.Count == 0) {
-						return new NumberMap(Num.Subtract(this.GetNum(),Num.One));
+						return new NumberMap(Number.Subtract(this.GetNum(),Number.One));
 						//return new Number(Num.Subtract(Number.One));
 						//return new Number(this.Subtract(new Integer32(1)));
 					}
@@ -2872,10 +2866,10 @@ namespace Meta {
 		}
 		public override IEnumerable<Map> Keys {
 			get {
-				if (!this.number.Equals(Num.Zero)) {
+				if (!this.number.Equals(Number.Zero)) {
 					yield return Map.Empty;
 				}
-				if (Num.Less(this.GetNum(), Num.Zero)) {
+				if (Number.Less(this.GetNum(), Number.Zero)) {
 				//if (Num.Less(this, Num.Zero)) {
 					yield return NumberKeys.Negative;
 				}
@@ -2884,7 +2878,7 @@ namespace Meta {
 				}
 			}
 		}
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			return this.number;
 		}
 
@@ -2899,7 +2893,7 @@ namespace Meta {
 		public override bool Equals(object obj) {
 			Map map = obj as Map;
 			if (map != null && map.IsNumber) {
-				Num b = map.GetNumber();
+				Number b = map.GetNumber();
 				return b != null && b.Numerator == number.Numerator && b.Denominator == number.Denominator;
 			}
 			else {
@@ -3337,7 +3331,7 @@ namespace Meta {
 	//}
 
 
-	public abstract class IntegerBase : Num {
+	public abstract class IntegerBase : Number {
 	}
 	public class Integer:IntegerBase {
 		public override BigInteger GetInteger() {
@@ -3385,7 +3379,7 @@ namespace Meta {
 	    public override double GetDouble() {
 	        return integer;
 	    }
-		public override Num Subtract(Num b) {
+		public override Number Subtract(Number b) {
 			Integer32 i = b as Integer32;
 			if (i != null) {
 				try {
@@ -3395,7 +3389,7 @@ namespace Meta {
 			}
 			return base.Subtract(b);
 		}
-	    public override bool LessThan(Num b) {
+	    public override bool LessThan(Number b) {
 			Integer32 i = b as Integer32;
 			if (i != null) {
 				try {
@@ -3405,7 +3399,7 @@ namespace Meta {
 			}
 	        return base.LessThan(b);
 	    }
-		public override Num Add(Num b) {
+		public override Number Add(Number b) {
 			Integer32 i = b as Integer32;
 			if (i != null) {
 				try {
@@ -3435,7 +3429,7 @@ namespace Meta {
 	        }
 	    }
 	}
-	public class Rational: Num {
+	public class Rational: Number {
 		public override BigInteger GetInteger() {
 			if (Denominator == 1.0d && Numerator < int.MaxValue && Numerator > int.MinValue) {
 				return new BigInteger(Denominator.ToString());
@@ -3462,7 +3456,7 @@ namespace Meta {
 			}
 		}
 		public Rational(double integer): this(integer, 1) {}
-		public Rational(Num i) : this(i.Numerator, i.Denominator) { }
+		public Rational(Number i) : this(i.Numerator, i.Denominator) { }
 		public Rational(double numerator, double denominator) {
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
 			if (denominator < 0) {
@@ -3675,7 +3669,7 @@ namespace Meta {
 		public static Rule Value = DelayedRule(delegate {
 			return Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression);
 		});
-		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,ReferenceAssignment(Value));
+		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,Whitespace,ReferenceAssignment(Value));
 
 		public static Rule Entry = Alternatives(
 			Sequence(
@@ -3779,7 +3773,7 @@ namespace Meta {
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
 		);
 		private static Rule LookupAnythingExpression = Sequence(
-			Syntax.lookupAnythingStart,ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
+			Syntax.lookupAnythingStart,Whitespace, ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
 		);
 		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
 		private static Rule Search = CachedRule(Sequence(
@@ -3909,7 +3903,7 @@ namespace Meta {
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix(Syntax.lookupAnythingStart, Sequence(ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
+					Prefix(Syntax.lookupAnythingStart, Sequence(Whitespace,ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
 					Select,
 					Sequence(Assign(CodeKeys.Literal, LookupString)),
 					Expression)));
@@ -4865,7 +4859,7 @@ namespace Meta {
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
 	public class ListMap : Map {
-		public override Num GetNumber() {
+		public override Number GetNumber() {
 			if(Count==0) {
 				return Integer32.Zero;
 				//return 0;
@@ -4932,9 +4926,9 @@ namespace Meta {
 	    public override bool ContainsKey(Map key) {
 	        bool containsKey;
 	        if (key.IsNumber) {
-				Num integer = key.GetNumber();
+				Number integer = key.GetNumber();
 				//Number integer = key.GetNumber();
-				if (Num.GreaterEqual(integer, Num.One) && Num.LessEqual(integer, new Integer32(list.Count))) {
+				if (Number.GreaterEqual(integer, Number.One) && Number.LessEqual(integer, new Integer32(list.Count))) {
 				//if (Number.GreaterEqual(integer,1) && Number.LessEqual(integer,list.Count)) {
 //if (integer >= 1 && integer <= list.Count) {
 					containsKey = true;
@@ -4981,7 +4975,7 @@ namespace Meta {
 		public static Map Rest(Map m) {
 			return new DictionaryMap(new List<Map>(m.Array).GetRange(1,m.ArrayCount-1));
 		}
-		public static Num Floor(Num n){
+		public static Number Floor(Number n){
 			return new Rational(n.GetRealInt64());
 		}
 		public static Map While(Map condition,Map body) {
@@ -5028,7 +5022,7 @@ namespace Meta {
 			}
 			return new DictionaryMap();
 		}
-		public static int CompareNumber(Num a, Num b) {
+		public static int CompareNumber(Number a, Number b) {
 			return a.CompareTo(b);
 		}
 		//public static int CompareNumber(Number a, Number b) {
@@ -5173,9 +5167,9 @@ namespace Meta {
 			}
 			return arg;
 		}
-		public static Map Range(Num arg) {
+		public static Map Range(Number arg) {
 			Map result = new DictionaryMap();
-			for (int i = 1; Num.LessEqual(new Integer32(i),arg); i++) {
+			for (int i = 1; Number.LessEqual(new Integer32(i),arg); i++) {
 				result.Append(i);
 			}
 			return result;
@@ -5284,8 +5278,8 @@ namespace Meta {
 		public override Map Copy() {
 			return new DictionaryMap();
 		}
-		public override Num GetNumber() {
-			return Num.Zero;
+		public override Number GetNumber() {
+			return Number.Zero;
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
@@ -5355,7 +5349,7 @@ namespace Meta {
 			if (ArrayCount == Count) {
 				StringBuilder text = new StringBuilder("");
 				foreach (Map map in Array) {
-					Num number = map.GetNumber();
+					Number number = map.GetNumber();
 					if (number == null) {
 						return null;
 					}
@@ -5523,7 +5517,7 @@ namespace Meta {
 		public abstract IEnumerable<Map> Array {
 			get;
 		}
-		public abstract Num GetNumber();
+		public abstract Number GetNumber();
 		//public abstract Number GetNumber();
 		public abstract bool ContainsKey(Map key);
 		public abstract IEnumerable<Map> Keys {
