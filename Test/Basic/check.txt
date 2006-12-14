@@ -48,7 +48,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"decimal"
 	Value (NumberMap):
-		6,92497326853996E+15/4294967296
+		6924973268539959/4294967296
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"listTest"
@@ -248,7 +248,7 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hashTestData"
 			Value (DictionaryMap):
-				Meta.Integer32
+				2
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hashTest"
@@ -272,7 +272,7 @@ Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerIncrementTest"
 	Value (DictionaryMap):
-		Meta.Integer32
+		6
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerDecrementTest"
@@ -291,7 +291,7 @@ Entry (KeyValuePair`2)
 			Key (StringMap):
 				"integer"
 			Value (DictionaryMap):
-				Meta.Integer32
+				6
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"negative"

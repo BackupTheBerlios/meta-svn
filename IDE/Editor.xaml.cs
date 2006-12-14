@@ -418,7 +418,7 @@ public partial class Editor : System.Windows.Window {
 			point.Height=10;
 			point.Fill=Brushes.Red;
 			Rect r=textBox.GetRectFromCharacterIndex(textBox.SelectionStart);
-			point.Opacity = 0.5;
+			//point.Opacity = 0.5;
 			Canvas.SetLeft(point,r.Left);
 			Canvas.SetTop(point, r.Top);
 			canvas.Children.Add(point);
@@ -650,6 +650,8 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static FontFamily font;
 	public Editor() {
+		//this.Opacity = 0.5;
+		//textBox.Opacity = 0.5;
 		iterativeSearch = new IterativeSearch(textBox, true);
 		try {
 			font = new FontFamily("Consolas");
@@ -1358,8 +1360,11 @@ public partial class Editor : System.Windows.Window {
 			}
 
 		});
+		//this.Opacity = 0.5;
+		//this.OpacityMask
 		canvas.Children.Add(textBox);
-		canvas.Background = Brushes.Yellow;
+		//canvas.Background = Brushes.Yellow;
+		//canvas.Opacity = 0.0;
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
@@ -1416,6 +1421,14 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetZIndex(intellisense, 100);
 		canvas.Children.Add(intellisense);
 		canvas.Children.Add(toolTip);
+		//grid.Opacity = 0.5;
+
+		//Background = Brushes.Transparent;
+
+		//Background = Brushes.Transparent;
+		//this.WindowStyle = WindowStyle.None;
+		//this.AllowsTransparency = true;
+		//this.Opacity = 0.5;
 		this.Content = grid;
 		this.Loaded += delegate {
 			if (Settings.lastFile != null) {
@@ -1423,6 +1436,7 @@ public partial class Editor : System.Windows.Window {
 			}
 			textBox.Focus();
 		};
+		//this.Opacity = 0.5;
 	}
 
 	void Editor_Closing(object sender, System.ComponentModel.CancelEventArgs e) {

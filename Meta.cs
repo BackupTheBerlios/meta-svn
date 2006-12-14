@@ -982,13 +982,17 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			Map map = Parser.Parse(LibraryPath);
-			map.Scope = Gac.gac;
-			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-			map[CodeKeys.Function].Compile(gac);
-			Gac.gac["library"] = map.Call(new DictionaryMap());
-			Gac.gac["library"].Scope = Gac.gac;
+			try {
+				Map map = Parser.Parse(LibraryPath);
+				map.Scope = Gac.gac;
+				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+				map[CodeKeys.Function].Compile(gac);
+				Gac.gac["library"] = map.Call(new DictionaryMap());
+				Gac.gac["library"].Scope = Gac.gac;
+			}
+			catch (Exception e) {
+			}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -2588,7 +2592,7 @@ namespace Meta {
 	public class StringMap : Map {
 		public override int GetHashCode() {
 			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);
+				return (int)(GetNumber().Numerator.GetInt32() % int.MaxValue);
 				//return (int)(GetNumber().Numerator % int.MaxValue);
 			}
 			else {
@@ -2694,7 +2698,6 @@ namespace Meta {
 	public abstract class Number {
 		public int CompareTo(Number number) {
 			return this.GetDouble().CompareTo(number.GetDouble());
-			//return GetDouble().CompareTo(number.GetDouble());
 		}
 		public override bool Equals(object obj) {
 			Number num = obj as Number;
@@ -2705,16 +2708,6 @@ namespace Meta {
 				return false;
 			}
 		}
-		//public override bool Equals(object obj) {
-		//    Map map = obj as Map;
-		//    if (map != null && map.IsNumber) {
-		//        Num b = map.GetNumber();
-		//        return b != null && b.Numerator == number.Numerator && b.Denominator == number.Denominator;
-		//    }
-		//    else {
-		//        return false;
-		//    }
-		//}
 		public static Map Raise(Number a,Number b) {
 			return new NumberMap(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
 		}
@@ -2742,7 +2735,8 @@ namespace Meta {
 			}
 		}
 		public double Expand(Number b) {
-			return Numerator * (LeastCommonMultiple(this, b) / Denominator);
+			return Numerator.GetDouble() * (LeastCommonMultiple(this, b) / Denominator.GetDouble());
+			//return Numerator * (LeastCommonMultiple(this, b) / Denominator);
 		}
 		public static Number Add(Number a, Number b) {
 			return a.Add(b);
@@ -2751,10 +2745,11 @@ namespace Meta {
 			return a.Subtract(b);
 		}
 		public static Number Divide(Number a, Number b) {
-			return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
+			return new Rational((a.Numerator * b.Denominator).GetDouble(), a.Denominator.GetDouble() * b.Numerator.GetDouble());
+			//return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
 		}
 		public static Number Multiply(Number a, Number b) {
-			return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
+			return new Rational((a.Numerator * b.Numerator).GetDouble(), (a.Denominator * b.Denominator).GetDouble());
 		}
 		public static bool Greater(Number a, Number b) {
 			return a.Expand(b) > b.Expand(a);
@@ -2779,16 +2774,17 @@ namespace Meta {
 		}
 		public abstract int GetInt32();
 		//public abstract BigInteger GetInteger();
-		public abstract double Numerator {
+		public abstract IntegerBase Numerator {
 			get;
 		}
-		public abstract double Denominator {
+		public abstract IntegerBase Denominator {
 			get;
 		}
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
 		public static double LeastCommonMultiple(Number a, Number b) {
-			return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
+			return (a.Denominator * b.Denominator).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
+			//return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
 		}
 		public virtual Number Subtract(Number b) {
 			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
@@ -2873,7 +2869,8 @@ namespace Meta {
 				//if (Num.Less(this, Num.Zero)) {
 					yield return NumberKeys.Negative;
 				}
-				if (number.Denominator != 1.0d) {
+				if (!number.Denominator.Equals(Number.One)) {
+				//if (number.Denominator != 1.0d) {
 					yield return NumberKeys.Denominator;
 				}
 			}
@@ -2883,7 +2880,7 @@ namespace Meta {
 		}
 
 		public override string ToString() {
-			if (number.Denominator == 1) {
+			if (number.Denominator.Equals(Number.One)) {
 				return number.Numerator.ToString();
 			}
 			else {
@@ -2894,457 +2891,54 @@ namespace Meta {
 			Map map = obj as Map;
 			if (map != null && map.IsNumber) {
 				Number b = map.GetNumber();
-				return b != null && b.Numerator == number.Numerator && b.Denominator == number.Denominator;
+				return b != null && b.Numerator.Equals(number.Numerator) && b.Denominator.Equals(number.Denominator);
+				//return b != null && b.Numerator == number.Numerator && b.Denominator == number.Denominator;
 			}
 			else {
 				return false;
 			}
 		}
 		public override int GetHashCode() {
-			return (int)(number.Numerator % int.MaxValue);
+			return (int)(number.Numerator.GetDouble() % int.MaxValue);
 		}
-		//public abstract double Numerator {
-		//    get;
-		//}
-		//public abstract double Denominator {
-		//    get;
-		//}
-		//public abstract long GetInt64();
-		//public abstract long GetRealInt64();
-
 		public int GetInt32() {
 			return GetNumber().GetInt32();
 		}
-		//public static double GreatestCommonDivisor(double a, double b) {
-		//    if (a == b) {
-		//        return a;
-		//    }
-		//    a = Math.Abs(a);
-		//    b = Math.Abs(b);
-		//    while (a != 0 && b != 0) {
-		//        if (a > b) {
-		//            a = a % b;
-		//        }
-		//        else {
-		//            b = b % a;
-		//        }
-		//    }
-		//    if (a == 0) {
-		//        return b;
-		//    }
-		//    else {
-		//        return a;
-		//    }
-		//}
-		//public static double LeastCommonMultiple(Number a, Number b) {
-		//    return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
-		//}
-		//public virtual Number Subtract(Number b) {
-		//    return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
-		//}
-		//public virtual bool LessThan(Number b) {
-		//    return Expand(b) < b.Expand(this);
-		//}
-		//public virtual bool LessThan(int b) {
-		//    return LessThan(new Integer32(b));
-		//}
-		//public virtual Number Add(Number b) {
-		//    return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-		//}
-		//public abstract double GetDouble();
-
-		//public double Expand(Number b) {
-		//    return Numerator * (LeastCommonMultiple(this, b) / Denominator);
-		//}
-		//public static Number Add(Number a, Number b) {
-		//    return a.Add(b);
-		//}
-		//public static Number Subtract(Number a, Number b) {
-		//    return a.Subtract(b);
-		//}
-		//public static Number Divide(Number a, Number b) {
-		//    return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
-		//}
-		//public static Number Multiply(Number a, Number b) {
-		//    return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
-		//}
-		//public static bool Greater(Number a, Number b) {
-		//    return a.Expand(b) > b.Expand(a);
-		//}
-		//public static bool Less(Number a, Number b) {
-		//    return a.LessThan(b);
-		//}
-		//public static bool GreaterEqual(Number a, Number b) {
-		//    return a.Expand(b) >= b.Expand(a);
-		//}
-		//public static bool LessEqual(Number a, Number b) {
-		//    return a.Expand(b) <= b.Expand(a);
-		//}
-		//public static Number Modulo(Number a, Number b) {
-		//    return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
-		//}
-		//public int CompareTo(Number number) {
-		//    return this.number.GetDouble().CompareTo(number.number.GetDouble());
-		//    //return GetDouble().CompareTo(number.GetDouble());
-		//}
 	}
-	//public abstract class Number : Map {
-	//    public override string GetString() {
-	//        return null;
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get {
-	//            yield break;
-	//        }
-	//    }
-	//    public override int Count {
-	//        get {
-	//            return new List<Map>(Keys).Count;
-	//        }
-	//    }
-	//    public override Map Copy() {
-	//        return this;
-	//    }
-	//    public override int ArrayCount {
-	//        get { return 0; }
-	//    }
-	//    public override string Serialize() {
-	//        return this.ToString();
-	//    }
-	//    public override bool ContainsKey(Map key) {
-	//        return new List<Map>(Keys).Contains(key);
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            if (ContainsKey(key)) {
-	//                if (key.Count == 0) {
-	//                    return this.Subtract(new Integer32(1));
-	//                }
-	//                else if (key.Equals(NumberKeys.Negative)) {
-	//                    return Map.Empty;
-	//                }
-	//                else if (key.Equals(NumberKeys.Denominator)) {
-	//                    return new Rational(Denominator);
-	//                }
-	//                else {
-	//                    throw new ApplicationException("Error.");
-	//                }
-	//            }
-	//            else {
-	//                return null;
-	//            }
-	//        }
-	//        set {
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Keys {
-	//        get {
-	//            if (!this.Equals(Integer32.Zero)) {
-	//                yield return Map.Empty;
-	//            }
-	//            if (Number.Less(this, Integer32.Zero)) {
-	//                yield return NumberKeys.Negative;
-	//            }
-	//            if (Denominator != 1.0d) {
-	//                yield return NumberKeys.Denominator;
-	//            }
-	//        }
-	//    }
-	//    public override Number GetNumber() {
-	//        return this;
-	//    }
-	//    public float GetSingle() {
-	//        return (float)GetDouble();
-	//    }
-	//    public override string ToString() {
-	//        if (Denominator == 1) {
-	//            return Numerator.ToString();
-	//        }
-	//        else {
-	//            return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
-	//        }
-	//    }
-	//    public override bool Equals(object obj) {
-	//        Map map = obj as Map;
-	//        if (map != null && map.IsNumber) {
-	//            Number b = map.GetNumber();
-	//            return b != null && b.Numerator == Numerator && b.Denominator == Denominator;
-	//        }
-	//        else {
-	//            return false;
-	//        }
-	//    }
-	//    public override int GetHashCode() {
-	//        return (int)(Numerator % int.MaxValue);
-	//    }
-	//    public abstract double Numerator {
-	//        get;
-	//    }
-	//    public abstract double Denominator {
-	//        get;
-	//    }
-	//    public abstract long GetInt64();
-	//    public abstract long GetRealInt64();
-
-	//    public static double GreatestCommonDivisor(double a, double b) {
-	//        if (a == b) {
-	//            return a;
-	//        }
-	//        a = Math.Abs(a);
-	//        b = Math.Abs(b);
-	//        while (a != 0 && b != 0) {
-	//            if (a > b) {
-	//                a = a % b;
-	//            }
-	//            else {
-	//                b = b % a;
-	//            }
-	//        }
-	//        if (a == 0) {
-	//            return b;
-	//        }
-	//        else {
-	//            return a;
-	//        }
-	//    }
-	//    public static double LeastCommonMultiple(Number a, Number b) {
-	//        return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
-	//    }
-	//    public virtual Number Subtract(Number b) {
-	//        return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public virtual bool LessThan(Number b) {
-	//        return Expand(b) < b.Expand(this);
-	//    }
-	//    public virtual bool LessThan(int b) {
-	//        return LessThan(new Integer32(b));
-	//    }
-	//    public virtual Number Add(Number b) {
-	//        return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public double Expand(Number b) {
-	//        return Numerator * (LeastCommonMultiple(this, b) / Denominator);
-	//    }
-	//    public static Number Add(Number a, Number b) {
-	//        return a.Add(b);
-	//    }
-	//    public static Number Subtract(Number a, Number b) {
-	//        return a.Subtract(b);
-	//    }
-	//    public static Number Divide(Number a, Number b) {
-	//        return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
-	//    }
-	//    public static Number Multiply(Number a, Number b) {
-	//        return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
-	//    }
-	//    public static bool Greater(Number a, Number b) {
-	//        return a.Expand(b) > b.Expand(a);
-	//    }
-	//    public static bool Less(Number a, Number b) {
-	//        return a.LessThan(b);
-	//    }
-	//    public static bool GreaterEqual(Number a, Number b) {
-	//        return a.Expand(b) >= b.Expand(a);
-	//    }
-	//    public static bool LessEqual(Number a, Number b) {
-	//        return a.Expand(b) <= b.Expand(a);
-	//    }
-	//    public static Number Modulo(Number a, Number b) {
-	//        return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
-	//    }
-
-	//    public int CompareTo(Number number) {
-	//        return GetDouble().CompareTo(number.GetDouble());
-	//    }
-	//    public abstract double GetDouble();
-	//}
-	//public abstract class Number:Map {
-	//    public override string GetString() {
-	//        return null;
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get { 
-	//            yield break;
-	//        }
-	//    }
-	//    public override int Count {
-	//        get { 
-	//            return new List<Map>(Keys).Count;
-	//        }
-	//    }
-	//    public override Map Copy() {
-	//        return this;
-	//    }
-	//    public override int ArrayCount {
-	//        get {return 0;}
-	//    }
-	//    public override string Serialize() {
-	//        return this.ToString();
-	//    }
-	//    public override bool ContainsKey(Map key) {
-	//        return new List<Map>(Keys).Contains(key);
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            if (ContainsKey(key)) {
-	//                if (key.Count==0) {
-	//                    return this.Subtract(new Integer32(1));
-	//                }
-	//                else if (key.Equals(NumberKeys.Negative)) {
-	//                    return Map.Empty;
-	//                }
-	//                else if (key.Equals(NumberKeys.Denominator)) {
-	//                    return new Rational(Denominator);
-	//                }
-	//                else {
-	//                    throw new ApplicationException("Error.");
-	//                }
-	//            }
-	//            else {
-	//                return null;
-	//            }
-	//        }
-	//        set 
-	//        {
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Keys {
-	//        get {
-	//            if (!this.Equals(Integer32.Zero)) {
-	//                yield return Map.Empty;
-	//            }
-	//            if (Number.Less(this,Integer32.Zero)) {
-	//                yield return NumberKeys.Negative;
-	//            }
-	//            if (Denominator != 1.0d) {
-	//                yield return NumberKeys.Denominator;
-	//            }
-	//        }
-	//    }
-	//    public override Number GetNumber() {
-	//        return this;
-	//    }
-	//    public float GetSingle() {
-	//        return (float)GetDouble();
-	//    }
-	//    public override string ToString() {
-	//        if (Denominator == 1) {
-	//            return Numerator.ToString();
-	//        }
-	//        else {
-	//            return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
-	//        }
-	//    }
-	//    public override bool Equals(object obj) {
-	//        Map map = obj as Map;
-	//        if(map!=null && map.IsNumber) {
-	//            Number b=map.GetNumber();
-	//            return b!=null && b.Numerator == Numerator && b.Denominator == Denominator;
-	//        }
-	//        else {
-	//            return false;
-	//        }
-	//    }
-	//    public override int GetHashCode() {
-	//        return (int)(Numerator % int.MaxValue);
-	//    }
-	//    public abstract double Numerator {
-	//        get;
-	//    }
-	//    public abstract double Denominator {
-	//        get;
-	//    }
-	//    public abstract long GetInt64();
-	//    public abstract long GetRealInt64();
-
-	//    public static double GreatestCommonDivisor(double a, double b) {
-	//        if(a==b) {
-	//            return a;
-	//        }
-	//        a = Math.Abs(a);
-	//        b = Math.Abs(b);
-	//        while (a != 0 && b != 0) {
-	//            if (a > b) {
-	//                a = a % b;
-	//            }
-	//            else {
-	//                b = b % a;
-	//            }
-	//        }
-	//        if (a == 0) {
-	//            return b;
-	//        }
-	//        else {
-	//            return a;
-	//        }
-	//    }
-	//    public static double LeastCommonMultiple(Number a, Number b) {
-	//        return a.Denominator * b.Denominator / GreatestCommonDivisor(a.Denominator, b.Denominator);
-	//    }
-	//    public virtual Number Subtract(Number b) {
-	//        return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public virtual bool LessThan(Number b) {
-	//        return Expand(b) < b.Expand(this);
-	//    }
-	//    public virtual bool LessThan(int b) {
-	//        return LessThan(new Integer32(b));
-	//    }
-	//    public virtual Number Add(Number b) {
-	//         return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public double Expand(Number b) {
-	//        return Numerator * (LeastCommonMultiple(this, b) / Denominator);
-	//    }
-	//    public static Number Add(Number a, Number b) {
-	//        return a.Add(b);
-	//    }
-	//    public static Number Subtract(Number a, Number b) {
-	//        return a.Subtract(b);
-	//    }
-	//    public static Number Divide(Number a, Number b) {
-	//        return new Rational(a.Numerator * b.Denominator, a.Denominator * b.Numerator);
-	//    }
-	//    public static Number Multiply(Number a, Number b) {
-	//        return new Rational(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
-	//    }
-	//    public static bool Greater(Number a, Number b) {
-	//        return a.Expand(b) > b.Expand(a);
-	//    }
-	//    public static bool Less(Number a, Number b) {
-	//        return a.LessThan(b);
-	//    }
-	//    public static bool GreaterEqual(Number a, Number b) {
-	//        return a.Expand(b) >= b.Expand(a);
-	//    }
-	//    public static bool LessEqual(Number a, Number b) {
-	//        return a.Expand(b) <= b.Expand(a);
-	//    }
-	//    public static Number Modulo(Number a, Number b) {
-	//        return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
-	//    }
-
-	//    public int CompareTo(Number number) {
-	//        return GetDouble().CompareTo(number.GetDouble());
-	//    }
-	//    public abstract double GetDouble();
-	//}
-
-
 	public abstract class IntegerBase : Number {
+		public override bool Equals(object obj) {
+			IntegerBase integer = obj as IntegerBase;
+			if (integer != null) {
+				return GetBigInteger().Equals(integer.GetBigInteger());
+			}
+			return base.Equals(obj);
+		}
+		public abstract BigInteger GetBigInteger();
+		public static Number operator *(IntegerBase a, IntegerBase b) {
+			return new Rational(a.GetDouble() * b.GetDouble());
+			//return new Integer(a.GetDouble() * b.GetDouble());
+		}
 	}
 	public class Integer:IntegerBase {
+		public override string ToString() {
+			return integer.ToString();
+		}
+		public override BigInteger GetBigInteger() {
+			return integer;
+		}
 		public override BigInteger GetInteger() {
 			return integer;
 		}
-		public override double Denominator {
+		public override IntegerBase Denominator {
 			get {
-				return 1.0d;
+				return Integer.One;
+				//return 1.0d;
 			}
 		}
-		public override double Numerator {
-			get { 
-				return integer.doubleValue();
+		public override IntegerBase Numerator {
+			get {
+				return this;
+				//return integer.doubleValue();
 			}
 		}
 		public override double GetDouble() {
@@ -3369,6 +2963,19 @@ namespace Meta {
 		}
 	}
 	public class Integer32:IntegerBase{
+		public override string ToString() {
+			return integer.ToString();
+		}
+		public override bool Equals(object obj) {
+			Integer32 other = obj as Integer32;
+			if (other != null) {
+				return other.integer.Equals(this.integer);
+			}
+			return base.Equals(obj);
+		}
+		public override BigInteger GetBigInteger() {
+			return new BigInteger(integer.ToString());
+		}
 		public override BigInteger GetInteger() {
 			return new BigInteger(integer.ToString());
 		}
@@ -3409,9 +3016,9 @@ namespace Meta {
 			}
 			return base.Add(b);
 		}
-	    public override double Denominator {
+		public override IntegerBase Denominator {
 	        get {
-	            return 1;
+	            return Integer.One;
 	        }
 	    }
 	    public override int GetInt32() {
@@ -3423,16 +3030,19 @@ namespace Meta {
 	    public override long GetRealInt64() {
 	        return integer;
 	    }
-	    public override double Numerator {
+		public override IntegerBase Numerator {
 	        get {
-	            return integer;
-	        }
+				return this;
+				//return integer;
+			}
 	    }
 	}
 	public class Rational: Number {
 		public override BigInteger GetInteger() {
-			if (Denominator == 1.0d && Numerator < int.MaxValue && Numerator > int.MinValue) {
-				return new BigInteger(Denominator.ToString());
+			if (Denominator.GetDouble() == 1.0d && Numerator.GetDouble() < int.MaxValue && Numerator.GetDouble() > int.MinValue) {
+			//if (Denominator == 1.0d && Numerator < int.MaxValue && Numerator > int.MinValue) {
+				return new BigInteger(Denominator.GetDouble().ToString());
+				//return new BigInteger(Denominator.ToString());
 			}
 			return null;
 		}
@@ -3456,7 +3066,7 @@ namespace Meta {
 			}
 		}
 		public Rational(double integer): this(integer, 1) {}
-		public Rational(Number i) : this(i.Numerator, i.Denominator) { }
+		public Rational(Number i) : this(i.Numerator.GetDouble(), i.Denominator.GetDouble()) { }
 		public Rational(double numerator, double denominator) {
 			double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
 			if (denominator < 0) {
@@ -3466,16 +3076,36 @@ namespace Meta {
 			this.numerator = new Integer(Convert.ToInt64((numerator / greatestCommonDivisor)).ToString());
 			this.denominator = new Integer(Convert.ToInt64(denominator / greatestCommonDivisor).ToString());
 		}
-		public override double Numerator {
+		//public Rational(double numerator, double denominator) {
+		//    double greatestCommonDivisor = GreatestCommonDivisor(numerator, denominator);
+		//    if (denominator < 0) {
+		//        numerator = -numerator;
+		//        denominator = -denominator;
+		//    }
+		//    this.numerator = new Integer(Convert.ToInt64((numerator / greatestCommonDivisor)).ToString());
+		//    this.denominator = new Integer(Convert.ToInt64(denominator / greatestCommonDivisor).ToString());
+		//}
+		public override IntegerBase Numerator {
 			get {
-				return numerator.GetDouble();
+				return numerator;
 			}
 		}
-		public override double Denominator {
+		public override IntegerBase Denominator {
 			get {
-				return denominator.GetDouble();
+				return denominator;
 			}
 		}
+
+		//public override double Numerator {
+		//    get {
+		//        return numerator.GetDouble();
+		//    }
+		//}
+		//public override double Denominator {
+		//    get {
+		//        return denominator.GetDouble();
+		//    }
+		//}
 		public NumberMap Clone() {
 			return new NumberMap(new Rational(this));
 		}
@@ -3586,14 +3216,18 @@ namespace Meta {
 		public static Rule Integer = Sequence(new Action(
 	        StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
 	        delegate(Parser p, Map map, ref Map result) {
-				Rational rational=new Rational(double.Parse(map.GetString()),1.0);
-				if(rational.GetInteger()!=null) {
-					result = new NumberMap(new Integer32(rational.GetInt32()));
-					result.Source = map.Source;
+				try {
+					Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
+					if (rational.GetInteger() != null) {
+						result = new NumberMap(new Integer32(rational.GetInt32()));
+						result.Source = map.Source;
+					}
+					else {
+						result = new NumberMap(rational);
+						result.Source = map.Source;
+					}
 				}
-				else {
-					result = new NumberMap(rational);
-					result.Source = map.Source;
+				catch (Exception e) {
 				}
 			}));
 
@@ -3618,16 +3252,20 @@ namespace Meta {
 				Append(Syntax.decimalSeparator),
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
 	        delegate(Parser p, Map map, ref Map result) {
-				Rational rational = new Rational(double.Parse(map.GetString(),CultureInfo.InvariantCulture));
-				if (rational.GetInteger() != null) {
-					result = new NumberMap(new Integer32(rational.GetInt32()));
-					result.Source = map.Source;
+				try {
+					Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
+					if (rational.GetInteger() != null) {
+						result = new NumberMap(new Integer32(rational.GetInt32()));
+						result.Source = map.Source;
+					}
+					else {
+						result = new NumberMap(rational);
+						//result = rational;
+						result.Source = map.Source;
+						//result.Source = rational.Source;
+					}
 				}
-				else {
-					result = new NumberMap(rational);
-					//result = rational;
-					result.Source = map.Source;
-					//result.Source = rational.Source;
+				catch (Exception e) {
 				}
 			}));
 
@@ -4389,6 +4027,9 @@ namespace Meta {
 			return map.GetNumber().ToString();
 		}
 		private static string Serialize(Map map, int indentation) {
+			if (map is NumberMap) {
+				int asdf = 0;
+			}
 			if (map.Count == 0) {
 				if (indentation < 0) {
 					return "";
@@ -5288,7 +4929,8 @@ namespace Meta {
 		}
 		public override int GetHashCode() {
 			if (IsNumber) {
-				return (int)(GetNumber().Numerator % int.MaxValue);
+				return (int)(GetNumber().Numerator.GetInt32() % int.MaxValue);
+				//return (int)(GetNumber().Numerator % int.MaxValue);
 			}
 			else {
 				unchecked {
