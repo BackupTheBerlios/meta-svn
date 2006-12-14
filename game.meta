@@ -1,11 +1,12 @@
 (){
 	&map.merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase]);
 	random=Meta.Library.Random_Int32_Int32;
-	range=Meta.Library.Range_Number;
+	range=Meta.Library.Range_Num;
 	vectorLength=(vector)rational.power(rational.add(rational.power(vector.1,2),rational.power(vector.2,2)),1/2);
-	vectorDifference=(a,b)Map((key)rational.subtract(a.<key>,b.<key>),map.keys(a));
-	compareNumber=Meta.Library.CompareNumber_Number_Number;
+	vectorDifference=(a,b)flow.apply((key)rational.subtract(a.<key>,b.<key>),map.keys(a));
+	compareNumber=Meta.Library.CompareNumber_Num_Num;
 	sort=Meta.Library.Sort_Map_Map;
+	with=Meta.Library.With_Map_Map;
 	
 	vector=Vector3_Single_Single_Single;
 	world=World();
@@ -13,7 +14,7 @@
 	createBox=space.CreateBox_Single_Single_Single;
 	makeBox=(size,position){
 		box=createBox(size.1,size.2,size.3);
-		box.set_Position_Vector3(vectboolean.or(position.1,position.2,position.3));
+		box.set_Position_Vector3(vector(position.1,position.2,position.3));
 	};
 	points=0;
 	makeBox([798,50,100],[400,0,0]);
@@ -24,23 +25,29 @@
 	points=0;
 	label=Label();
 	bubble=(size){
-		body=Body_World(world);
-		radius=()rational.multiply(size,4);
-		body.set_Mass_Mass(Mass.Sphere_Single_Single(rational.multiply(size,size),1/1000));
-		position=[random(1,790),random(1,590)];
-		body.set_Position_Vector3(Vector3_Single_Single_Single(position.1,position.2,0));
-		geom=space.CreateSphere_Single(radius());
-		geom.set_Position_Vector3(body.get_Position());
-		geom.set_Body_Body(body);
-		speed=[random(-6,6),random(-6,6)];
-		body.set_LinearVel_Vector3(Vector3_Single_Single_Single(speed.1,speed.2,0));
+		body=with(
+			Body_World(world),
+			{
+				Mass=Mass.Sphere_Single_Single(rational.multiply(size,size),1/1000);
+				Position=vector(random(1,790),random(1,590),0);
+				LinearVel=vector(random(-6,6),random(-6,6),0);
+			}
+		);
+		radius=rational.multiply(size,4);
+		geom=with(
+			space.CreateSphere_Single(radius),
+			{
+				Position=body.get_Position();
+				Body=body;
+			}
+		);
 		GetPosition=(){
 			pos=body.get_Position();
 			&[pos.get_X(),pos.get_Y(),pos.get_Z()];
 		};
 		ellipse=Ellipse({
-			Width=rational.multiply(2,radius());
-			Height=rational.multiply(2,radius());
+			Width=rational.multiply(2,radius);
+			Height=rational.multiply(2,radius);
 			Fill=Brushes.get_Red();
 			Canvas.LeftProperty=GetPosition().1;
 			Canvas.TopProperty=GetPosition().2;
@@ -66,7 +73,7 @@
 	space.add_Collision_CollisionEventHandler((,e){
 		a=e.get_Geom1();
 		b=e.get_Geom2();
-		Map(
+		flow.apply(
 			(contactGeom){
 				contact=world.CreateContactJoint_Contact_JointGroup(
 					Contact({Geom=contactGeom;}),
@@ -81,7 +88,7 @@
 		&bubble(size);
 		ellipse.set_Fill_Brush(Brushes.get_Blue());
 	};
-	bubbles=Map(()bubble(random(1,5)),range(30));
+	bubbles=flow.apply(()bubble(random(1,5)),range(30));
 	p=player();
 	window=Window({
 		Content=canvas;
@@ -102,8 +109,8 @@
 		flow.if(
 			boolean.and(map.equal(e.get_Key(),Key.Enter),map.equal(currentBubble,0)),
 			(){
-				lengths=Map(
-					(b)vectorarray.length(vectorDifference(p.GetPosition(),b.GetPosition())),
+				lengths=flow.apply(
+					(b)vectorLength(vectorDifference(p.GetPosition(),b.GetPosition())),
 					bubbles
 				);
 				sorted=sort(map.keys(bubbles),(a,b)compareNumber(lengths.<a>,lengths.<b>));
@@ -133,17 +140,16 @@
 		(,){
 			contactGroup.Empty();
 			space.CheckCollisions();
-			//world.Step_Single(1/10);
 			world.Step();
-			Map(
+			flow.apply(
 				(a){
 					pos=a.GetPosition();
-					Canvas.SetLeft_UIElement_Double(a.ellipse,rational.subtract(pos.1,a.radius()));
-					Canvas.SetTop_UIElement_Double(a.ellipse,rational.subtract(pos.2,a.radius()));
+					Canvas.SetLeft_UIElement_Double(a.ellipse,rational.subtract(pos.1,a.radius));
+					Canvas.SetTop_UIElement_Double(a.ellipse,rational.subtract(pos.2,a.radius));
 				},
 				array.join([bubbles,[p]])
 			);
-			label.set_Content_Object(rational.toString(points));
+			label.set_Content_Object(map.toString(points));
 			flow.if(
 				boolean.not(map.equal(0,currentBubble)),
 				(){
