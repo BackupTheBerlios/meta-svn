@@ -156,13 +156,16 @@ public partial class Editor : System.Windows.Window {
 			}
 		}
 		private bool active = false;
+		public string oldText="";
 		public void Back() {
 			text = text.Substring(0,Math.Max(0, text.Length - 1));
+			oldText = text;
 			Find(!direction);
 		}
 		public void OnKeyDown(TextCompositionEventArgs e) {
 			text+=e.Text;
 			Find(direction);
+			oldText = text;
 			e.Handled = true;
 		}
 		public void Find(bool forward) {
@@ -184,7 +187,7 @@ public partial class Editor : System.Windows.Window {
 					textBox.Select(index, text.Length);
 				}
 				else {
-					editor.StopIterativeSearch();
+					//editor.StopIterativeSearch();
 				}
 			}
 		}
@@ -202,6 +205,9 @@ public partial class Editor : System.Windows.Window {
 	}
 	public IterativeSearch iterativeSearch;
 	public void StartIterativeSearch(bool forward) {
+		if (iterativeSearch.Active && iterativeSearch.text == "") {
+			iterativeSearch.text = iterativeSearch.oldText;
+		}
 		iterativeSearch.Active = true;
 		if (forward) {
 			iterativeSearch.index++;
@@ -622,7 +628,7 @@ public partial class Editor : System.Windows.Window {
 	}
 	public void Indent(bool increase) {
 		int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);
-		int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength);
+		int endLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart + textBox.SelectionLength-2);
 		int oldStart = textBox.SelectionStart;
 		int oldLength = textBox.SelectionLength;
 		int removed = 0;
@@ -631,27 +637,16 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionStart = textBox.GetCharacterIndexFromLineIndex(i);
 			textBox.SelectionLength = line.Length;
 			string lineStart=LineWithoutIndentation(line);
-			//if(lineStart.StartsWith("//")) {
-			//    lineStart=lineStart.Remove(0,2);
-			//    if (increase) {
-			//        removed -= 2;
-			//    }
-			//    else {
-			//        removed += 2;
-			//    }
-			//}
 			int difference=increase?
 				1:-1;
 			textBox.SelectedText = "".PadLeft(Math.Max(0,GetIndentation(line).Length+difference),'\t') + lineStart;
 			removed += difference;
 		}
 		textBox.SelectionStart = oldStart;
-		textBox.SelectionLength = oldLength-removed;
+		textBox.SelectionLength = oldLength+removed;
 	}
 	public static FontFamily font;
 	public Editor() {
-		//this.Opacity = 0.5;
-		//textBox.Opacity = 0.5;
 		iterativeSearch = new IterativeSearch(textBox, true);
 		try {
 			font = new FontFamily("Consolas");
@@ -725,6 +720,7 @@ public partial class Editor : System.Windows.Window {
 			TextBox box=new TextBox();
 			Button button = new Button();
 			window.Title = "Go to line";
+			window.ShowInTaskbar = false;
 			button.Content = "OK";
 			panel.Children.Add(box);
 			panel.Children.Add(button);
@@ -1301,6 +1297,7 @@ public partial class Editor : System.Windows.Window {
 		Rectangle brace=null;
 		textBox.SelectionChanged += delegate {
 			if (!ignoreChange) {
+				textBox.ScrollToLine(Math.Max(0,textBox.Line-1));
 				int line = (textBox.Line + 1);
 				DispatcherTimer t = new DispatcherTimer();
 				t.Interval = new TimeSpan(0,0,1);

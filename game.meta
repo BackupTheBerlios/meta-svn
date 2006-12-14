@@ -1,6 +1,5 @@
 (){
 	&map.merge([System,mscorlib,OdeDotNet,PresentationCore,PresentationFramework,WindowsBase,flow,boolean,map,rational]);
-	
 	random=Meta.Library.Random_Int32_Int32;
 	range=Meta.Library.Range_Number;
 	vectorLength=(vector)rational.power(rational.add(rational.power(vector.1,2),rational.power(vector.2,2)),1/2);
@@ -9,7 +8,7 @@
 	sort=Meta.Library.Sort_Map_Map;
 	with=Meta.Library.With_Map_Map;
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
-	
+
 	uncurry=(func)(arg){
 		result=func;
 		apply(
@@ -20,7 +19,6 @@
 		);
 		&result;
 	};
-
 		
 	makeVector=uncurry(Vector3_Single_Single_Single);
 	world=World();
