@@ -33,7 +33,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Windows;
-
+using System.Printing;
 
 
 public delegate void MethodInvoker();
@@ -168,6 +168,7 @@ public partial class Editor : System.Windows.Window {
 			if (text.Length > 0) {
 				if (forward) {
 					index = textBox.Text.ToLower().IndexOf(text,Math.Max(0,index));
+					//textBox.print
 					if (index == -1) {
 						index = textBox.Text.ToLower().IndexOf(text, 0);
 					}
@@ -675,6 +676,15 @@ public partial class Editor : System.Windows.Window {
 			}
 			textBox.SelectionStart = oldStart;
 			textBox.SelectionLength = Math.Max(0,oldLength-removed);
+		});
+		MakeCommand(ModifierKeys.Control, Key.P, delegate {
+			//PrintDialog print = new PrintDialog();
+			PrintDialog dlg = new PrintDialog();
+			if ((bool)dlg.ShowDialog().GetValueOrDefault())
+			{
+				dlg.PrintVisual(textBox, "sawdust");
+			}
+			//print.PrintTicket=
 		});
 		MakeCommand(ModifierKeys.Control, Key.K, delegate {
 			int startLine = textBox.GetLineIndexFromCharacterIndex(textBox.SelectionStart);

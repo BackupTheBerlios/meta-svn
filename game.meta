@@ -63,7 +63,7 @@
 	paused=0;
 	contactGroup=JointGroup_Int32(0);
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
-	space.add_Collision_CollisionEventHandler(()(e){
+	space.add_Collision_CollisionEventHandler((,e){
 		a=e.get_Geom1();
 		b=e.get_Geom2();
 		Map(
@@ -90,7 +90,7 @@
 		Height=620;
 		Background=Brushes.get_Yellow();
 	});
-	window.add_KeyUp_KeyEventHandler(()(e)flow.if(
+	window.add_KeyUp_KeyEventHandler((,e)flow.if(
 		map.equal(e.get_Key(),Key.Enter),
 		(){
 			jointGroup.Empty();
@@ -98,7 +98,7 @@
 			line.set_Visibility_Visibility(Visibility.Hidden);
 		}
 	));
-	window.add_KeyDown_KeyEventHandler(()(e){
+	window.add_KeyDown_KeyEventHandler((,e){
 		flow.if(
 			boolean.and(map.equal(e.get_Key(),Key.Enter),map.equal(currentBubble,0)),
 			(){
@@ -106,7 +106,7 @@
 					(b)vectorarray.length(vectorDifference(p.GetPosition(),b.GetPosition())),
 					bubbles
 				);
-				sorted=sort(map.keys(bubbles),(a)(b)compareNumber(lengths.<a>,lengths.<b>));
+				sorted=sort(map.keys(bubbles),(a,b)compareNumber(lengths.<a>,lengths.<b>));
 				index=sorted.1;
 				bubble=bubbles.<index>;
 

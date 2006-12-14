@@ -1,10 +1,12 @@
 ﻿"commandLine|,
 	&=-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=0
-			2=,
-				1="AssignedToCurrent"
+			Meta.Integer32=Meta.Integer32
+			Meta.Integer32=,
+				Meta.Integer32="AssignedToCurrent"
 	"asdf"="hello"
 	"shortFunction"=,
 		asdf|!"asdf"
@@ -16,18 +18,18 @@
 					"Bitmap_Stream"
 				!"internet.bmp"
 			"get_Width"
-		0
+		Meta.Integer32
 	"shortFunctionTest"=-
 		!"shortFunction"
 		"hello"
-	"decimal"=6,92497326853996E+15/4294967296
+	"decimal"=Meta.Rational
 	"listTest"=,
-		1=1
-		2=2
-		3=3
-		4="hello"
-		5=!"asdf"
-	"counter"=0
+		Meta.Integer32=Meta.Integer32
+		Meta.Integer32=Meta.Integer32
+		Meta.Integer32=Meta.Integer32
+		Meta.Integer32="hello"
+		Meta.Integer32=!"asdf"
+	"counter"=Meta.Integer32
 	"inlineProgram"=,
 		"hello"="world"
 		"x"="y"
@@ -35,13 +37,13 @@
 		|,
 			"counter":,
 				lastArgument=0
-	1=-
+	Meta.Integer32=-
 		!"SetCounter"
-		5
+		Meta.Integer32
 	"LIST"=,
-		1=0
-		2=0
-		3=0
+		Meta.Integer32=Meta.Integer32
+		Meta.Integer32=Meta.Integer32
+		Meta.Integer32=Meta.Integer32
 	"scoping"=,
 		"scopingValue"="right"
 		"test"=,
@@ -52,48 +54,50 @@
 		"test"
 	"lexicalScoping"=-
 		!"scopingTest"
-		0
+		Meta.Integer32
 	"unicodeText"="äaba"
 	"integerHashTest"=,
-		2="correct,hash,content"
+		Meta.Integer32="correct,hash,content"
 		"hashTestData"=,
-			0=,
-				0=0
+			Meta.Integer32=,
+				Meta.Integer32=Meta.Integer32
 		"hashTest"=!!"hashTestData"
-	"negativeInteger"=100
+	"negativeInteger"=Meta.Integer32
 	"negativeInteger"=-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"negativeInteger"
-			2=,
+			Meta.Integer32=!"negativeInteger"
+			Meta.Integer32=,
 				"x"="hello"
-	"integerIncrementTest"=5
+	"integerIncrementTest"=Meta.Integer32
 	"integerIncrementTest"=,
-		0=!"integerIncrementTest"
-	"integerDecrementTest"=5
+		Meta.Integer32=!"integerIncrementTest"
+	"integerDecrementTest"=Meta.Integer32
 	"integerDecrementTest"=.
 		!"integerDecrementTest"
-		0
-	"negativeNumber"=-123
+		Meta.Integer32
+	"negativeNumber"=Meta.Integer32
 	"mapNumbers"=,
 		"integer"=,
-			0=5
+			Meta.Integer32=Meta.Integer32
 		"negative"=,
-			0=5
-			"negative"=0
+			Meta.Integer32=Meta.Integer32
+			"negative"=Meta.Integer32
 		"fraction"=,
-			0=5
-			"denominator"=7
+			Meta.Integer32=Meta.Integer32
+			"denominator"=Meta.Integer32
 		"negativeFraction"=,
-			0=5
-			"negative"=0
-			"denominator"=7
-	"fraction"=3/2
+			Meta.Integer32=Meta.Integer32
+			"negative"=Meta.Integer32
+			"denominator"=Meta.Integer32
+	"fraction"=Meta.Rational
 	"literalEscapeTest"=,
-		1="asdf"
-		2="asdf"
-	2="ImpliedAutokey"
-	3="Autokey"
+		Meta.Integer32="asdf"
+		Meta.Integer32="asdf"
+	Meta.Integer32="ImpliedAutokey"
+	Meta.Integer32="Autokey"
 	"commandLineArguments"=!"commandLine"
 	"aMap"=,
 		"a"="a"
@@ -106,7 +110,7 @@
 	"object"=,
 		"a"="default"
 		"autoSearch"="default"
-		"b"=0
+		"b"=Meta.Integer32
 		"SetA"=,
 			arg|,
 				"a":"c"
@@ -114,44 +118,46 @@
 		"SetB"=,
 			newB|,
 				"b":-
-					!"merge"
+					.
+						!"map"
+						"merge"
 					,
-						1=!"b"
-						2=,
-							1=.
+						Meta.Integer32=!"b"
+						Meta.Integer32=,
+							Meta.Integer32=.
 								!"newB"
 								"value"
 				&="changed"
 		"x"=,
 			"a"="b"
 			"c"="d"
-		1=,
+		Meta.Integer32=,
 			arg|,
 				"a":"b"
 	"a"="default"
-	"b"=0
+	"b"=Meta.Integer32
 	"aSet"=-
 		.
 			!"object"
 			"SetA"
-		0
+		Meta.Integer32
 	"bSet"=-
 		.
 			!"object"
 			"SetB"
 		,
 			"value"=,
-				"x"=7
-				"z"=1
+				"x"=Meta.Integer32
+				"z"=Meta.Integer32
 	"scopeTest"="default"
 	"scopeFunction"=,
 		arg|,
 			"scopeTest":!"inScope"
 	"inScope"="wrong"
 	"inScope"="right"
-	4=-
+	Meta.Integer32=-
 		!"scopeFunction"
-		0
+		Meta.Integer32
 	"scopeFromFunctionData"="wrong"
 	"scopeFunctionFunction"=,
 		arg|,
@@ -159,33 +165,33 @@
 	"scopeFromFunctionData"="right"
 	"scopeFromFunction"=-
 		!"scopeFunctionFunction"
-		0
+		Meta.Integer32
 	"scopeFromFunctionTest"=-
 		!"scopeFromFunction"
-		0
+		Meta.Integer32
 	"ReturnEverything"=,
 		everything|,
 			&=!"everything"
 	"everythingReturned"=-
 		!"ReturnEverything"
 		,
-			1="a"
-			2="b"
-			3="c"
+			Meta.Integer32="a"
+			Meta.Integer32="b"
+			Meta.Integer32="c"
 	"variableAsArgument"=-
 		!"ReturnEverything"
 		,
-			1="x"
-			2="y"
-			3="z"
+			Meta.Integer32="x"
+			Meta.Integer32="y"
+			Meta.Integer32="z"
 	"ReturnFunction"=,
 		arg|,
 			&=,
 				arg|,
 					&=,
-						1=1
-						2=2
-						3=3
+						Meta.Integer32=Meta.Integer32
+						Meta.Integer32=Meta.Integer32
+						Meta.Integer32=Meta.Integer32
 	"SetCurrent"=,
 		current|,
 			&=,
@@ -200,7 +206,7 @@
 			"symbol"="haha"
 	"FirstLevel"=,
 		arg|,
-			1=-
+			Meta.Integer32=-
 				!"SecondLevel"
 				!"arg"
 	"SecondLevel"=,
@@ -220,15 +226,17 @@
 	"testClass"=-
 		!"TestClass"
 		,
-			"floatValue"=3
-			"doubleValue"=4
-			"decimalValue"=5
+			"floatValue"=Meta.Integer32
+			"doubleValue"=Meta.Integer32
+			"decimalValue"=Meta.Integer32
 	"TestClass"=-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"TestClass"
-			2=,
-				"boolTest"=1
+			Meta.Integer32=!"TestClass"
+			Meta.Integer32=,
+				"boolTest"=Meta.Integer32
 	"boolTest"=.
 		!"TestClass"
 		"boolTest"
@@ -238,7 +246,7 @@
 		"MemberTest"
 	"memberTest"=-
 		!"MemberTest"
-		0
+		Meta.Integer32
 	"stringOverload"=-
 		.
 			!"MemberTest"
@@ -248,30 +256,34 @@
 		.
 			!"MemberTest"
 			"OverloadedMethod_Int32"
-		5
+		Meta.Integer32
 	"memberTestOverload"=-
 		.
 			!"MemberTest"
 			"OverloadedMethod_MemberTest_Int32"
 		!"memberTest"
-		3247
+		Meta.Integer32
 	"memberTestOverload"=-
 		.
 			!"MemberTest"
 			"OverloadedMethod_MemberTest_Int32"
 		!"memberTest"
-		3247
+		Meta.Integer32
 	"MemberTest":-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"MemberTest"
-			2=,
+			Meta.Integer32=!"MemberTest"
+			Meta.Integer32=,
 				"classField"="a"
 	"memberTest":-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"memberTest"
-			2=,
+			Meta.Integer32=!"memberTest"
+			Meta.Integer32=,
 				"instanceField"="b"
 	-
 		.
@@ -282,12 +294,12 @@
 			.
 				!"memberTest"
 				"get_InstanceProperty"
-			0
+			Meta.Integer32
 	"classPropertyValue"=-
 		.
 			!"MemberTest"
 			"get_ClassProperty"
-		0
+		Meta.Integer32
 	-
 		.
 			!"memberTest"
@@ -301,12 +313,12 @@
 			.
 				!"MemberTest"
 				"get_ClassProperty"
-			0
+			Meta.Integer32
 	"instancePropertyValue"=-
 		.
 			!"memberTest"
 			"get_InstanceProperty"
-		0
+		Meta.Integer32
 	"interceptedSymbol"="/hello/"
 	"positionalNoConversion"=-
 		.
@@ -329,7 +341,7 @@
 			"Meta"
 			"NamedNoConversion_Map"
 		,
-			1="m"
+			Meta.Integer32="m"
 			"y"="n"
 	"namedNoConversionConcatenated"=-
 		.
@@ -337,13 +349,13 @@
 			"Concatenate_Map"
 		,
 			"c"="t"
-			1="r"
+			Meta.Integer32="r"
 	"indexerNoConversion"=-
 		.
 			/
 			"Meta"
 			"IndexerNoConversion"
-		0
+		Meta.Integer32
 	-
 		.
 			!"indexerNoConversion"
@@ -355,14 +367,14 @@
 			!"indexerNoConversion"
 			"get_Item_String"
 		"abc"
-	"interceptedSymbolTwo"=1
+	"interceptedSymbolTwo"=Meta.Integer32
 	"k"="hello"
 	"xyz"="w"
 	"literalFunction"=,
-		arg|5
+		arg|Meta.Integer32
 	"literalFunctionResult"=-
 		!"literalFunction"
-		0
+		Meta.Integer32
 	"someFunction"=,
 		arg|,
 			&="simple,function,this"
@@ -370,7 +382,7 @@
 		arg|!"someFunction"
 	"callFunctionResult"=-
 		!"callFunction"
-		0
+		Meta.Integer32
 	"delayedFunction"=,
 		arg|,
 			arg|,
@@ -378,30 +390,30 @@
 					"x"="y"
 	"delayedFunctionResult"=-
 		!"delayedFunction"
-		0
+		Meta.Integer32
 	"delayedFunctionDirect"=-
 		!"delayedFunction"
-		0
-		0
+		Meta.Integer32
+		Meta.Integer32
 	"value"="xyz"
 	"selectionFunction"=,
 		arg|!"value"
 	"selectionFunctionResult"=-
 		!"selectionFunction"
-		0
+		Meta.Integer32
 	"upperLevel"="unchanged"
 	"SetUpperLevel"=,
 		arg|,
 			"upperLevel":!"arg"
 	"ChangeUpperLevel"=,
 		arg|,
-			1=-
+			Meta.Integer32=-
 				!"SetUpperLevel"
 				"changed"
-	5=-
+	Meta.Integer32=-
 		!"ChangeUpperLevel"
-		0
-	"staticEventChanged"=0
+		Meta.Integer32
+	"staticEventChanged"=Meta.Integer32
 	"ChangeStaticEvent"=,
 		arg|,
 			"staticEventChanged":!"arg"
@@ -413,8 +425,8 @@
 		,
 			arg|-
 				!"ChangeStaticEvent"
-				1
-	6=-
+				Meta.Integer32
+	Meta.Integer32=-
 		.
 			!"TestClass"
 			"TakeDelegate_TestDelegate"
@@ -424,78 +436,82 @@
 		.
 			!"TestClass"
 			"GetResultFromDelegate"
-		0
+		Meta.Integer32
 	"staticEventResult"=-
 		.
 			!"TestClass"
 			"CallStaticEvent_Object"
 		!"testClass"
-	"instanceEventChanged"=0
+	"instanceEventChanged"=Meta.Integer32
 	-
 		.
 			!"testClass"
 			"add_instanceEvent_IntEvent"
 		,
 			arg|,
-				"instanceEventChanged":1
+				"instanceEventChanged":Meta.Integer32
 				&=!"arg"
 	"instanceEventResult"=-
 		.
 			!"testClass"
 			"CallInstanceEvent_Object"
-		5
-	"one"=1
-	"two"=2
+		Meta.Integer32
+	"one"=Meta.Integer32
+	"two"=Meta.Integer32
 	"firstIf"="unchanged"
 	"secondIf"="unchanged"
 	"firstIfCondition"=-
-		!"equal"
-		1
+		.
+			!"map"
+			"equal"
+		Meta.Integer32
 		!"one"
 	"firstIfBranches"=,
-		1=,
+		Meta.Integer32=,
 			arg|"then"
-		0=,
+		Meta.Integer32=,
 			arg|"else"
 	"firstIf"=-
 		.
 			!"firstIfBranches"
 			!"firstIfCondition"
-		0
-	"bigNumber"=50020202
+		Meta.Integer32
+	"bigNumber"=Meta.Integer32
 	"secondSwitch"="unchanged"
 	"secondSwitchCases"=,
-		1="one"
-		2="two"
-		3="three"
+		Meta.Integer32="one"
+		Meta.Integer32="two"
+		Meta.Integer32="three"
 	"secondSwitch"=.
 		!"secondSwitchCases"
-		3
-	"emptyMap"=0
+		Meta.Integer32
+	"emptyMap"=Meta.Integer32
 	"emptyFunction"=,
 		arg|,
 			"x"="hello"
 	"emptyFunctionResult"=-
 		!"emptyFunction"
-		0
+		Meta.Integer32
 	"font"=-
 		.
 			/
 			"System.Drawing"
 			"Font_String_Single"
 		"Courier,New"
-		10
-	"decimalTest"=5
-	"fractionTest"=40
+		Meta.Integer32
+	"decimalTest"=Meta.Integer32
+	"fractionTest"=Meta.Integer32
 	"stringTest"="hello"
 	"stringTest"=-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"stringTest"
-			2=,
-				5=.
+			Meta.Integer32=!"stringTest"
+			Meta.Integer32=,
+				Meta.Integer32=.
 					!"stringTest"
-					1
+					Meta.Integer32
 	"hellh"="hi"
 	"stringStrategyHashTest"=!!"stringTest"
 	"x"=,
@@ -505,8 +521,8 @@
 			/
 			"mscorlib"
 			"ArrayList"
-		0
-	7=-
+		Meta.Integer32
+	Meta.Integer32=-
 		.
 			!"arrayList"
 			"Add_Object"
@@ -515,13 +531,13 @@
 		.
 			!"arrayList"
 			"get_Item_Int32"
-		0
+		Meta.Integer32
 	"textBox"=-
 		.
 			/
 			"System.Windows.Forms"
 			"TextBox"
-		0
+		Meta.Integer32
 	-
 		.
 			!"textBox"
@@ -531,18 +547,18 @@
 		.
 			!"textBox"
 			"get_Lines"
-		0
+		Meta.Integer32
 	"alleMeineText"=-
 		.
 			!"lines"
 			"GetValue_Int32"
-		0
+		Meta.Integer32
 	"form"=-
 		.
 			/
 			"System.Windows.Forms"
 			"Form"
-		0
+		Meta.Integer32
 	-
 		.
 			!"form"
@@ -551,33 +567,39 @@
 			.
 				!"System.Drawing"
 				"Point_Int32_Int32"
-			5
-			1000
+			Meta.Integer32
+			Meta.Integer32
 	"automaticConversionTest"=-
 		.
 			!"form"
 			"get_Location"
-		0
+		Meta.Integer32
 	"tabText"="			hello"
 	"escapedText"="'#'n'''t"
-	"whileCounter"=0
+	"whileCounter"=Meta.Integer32
 	"loop"=,
 		start|,
 			"whileDecision"=-
-				!"not"
+				.
+					!"boolean"
+					"not"
 				-
-					!"equal"
+					.
+						!"map"
+						"equal"
 					!"start"
-					10
+					Meta.Integer32
 			"whileBranches"=,
-				1=,
+				Meta.Integer32=,
 					arg|-
 						!"loop"
 						-
-							!"add"
+							.
+								!"rational"
+								"add"
 							!"arg"
-							1
-				0=,
+							Meta.Integer32
+				Meta.Integer32=,
 					arg|!"arg"
 			&=-
 				.
@@ -586,13 +608,13 @@
 				!"start"
 	"whileCounter"=-
 		!"loop"
-		3
+		Meta.Integer32
 	"returnInMap"=,
 		arg|,
 			"result"=!"arg"
 	"literalAsArgument"=-
 		!"returnInMap"
-		1
+		Meta.Integer32
 	"returnFunction"=,
 		arg|,
 			arg|"functionResult"
@@ -604,32 +626,32 @@
 	"funcReturnTest"=-
 		!"returnArg"
 		!"myArg"
-		0
+		Meta.Integer32
 	"documentedFunction"=,
 		arg|"hello"
 	"docFunctionResult"=-
 		!"documentedFunction"
-		0
+		Meta.Integer32
 	"topLevel"="default"
 	"deep"=,
 		"map"=,
 			"test"=,
 				arg|,
 					"topLevel":"changed"
-	8=-
+	Meta.Integer32=-
 		.
 			!"deep"
 			"map"
 			"test"
-		0
+		Meta.Integer32
 	"outerFunction"=,
 		arg|,
 			"innerFunction"=,
 				arg|,
 					&=!"arg"
-			1=-
+			Meta.Integer32=-
 				!"innerFunction"
-				0
+				Meta.Integer32
 	"outerFunctionTest"=-
 		!"outerFunction"
 		"right"
@@ -650,19 +672,21 @@
 			!"System.Windows.Forms"
 			"Application"
 			"get_VisualStyleState"
-		0
+		Meta.Integer32
 	"oneTwoThreeHello"="asdf"
 	"copySourceData"=,
 		"x"="y"
 		"z"="a"
 	"copiedData"=!"copySourceData"
 	"copiedData"=-
-		!"merge"
+		.
+			!"map"
+			"merge"
 		,
-			1=!"copiedData"
-			2=,
+			Meta.Integer32=!"copiedData"
+			Meta.Integer32=,
 				"x"="changed"
 	"characterLiterals"=,
-		"a"=97
-		"space"=32
-		"tab"=9"
+		"a"=Meta.Integer32
+		"space"=Meta.Integer32
+		"tab"=Meta.Integer32"
