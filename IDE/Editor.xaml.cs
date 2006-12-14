@@ -22,7 +22,6 @@ using System.Timers;
 using System.Windows.Threading;
 using System.Threading;
 using System.Globalization;
-using _treeListView;
 using System.Windows.Media;
 using System;
 using System.IO;
@@ -753,7 +752,6 @@ public partial class Editor : System.Windows.Window {
 			};
 			window.ShowDialog();
 		}));
-		this.Closing += new System.ComponentModel.CancelEventHandler(Editor_Closing);
 		RoutedUICommand deleteLine = new RoutedUICommand();
 		BindKey(deleteLine, Key.L, ModifierKeys.Control);
 		this.CommandBindings.Add(new CommandBinding(deleteLine, delegate {
@@ -1363,11 +1361,7 @@ public partial class Editor : System.Windows.Window {
 			}
 
 		});
-		//this.Opacity = 0.5;
-		//this.OpacityMask
 		canvas.Children.Add(textBox);
-		//canvas.Background = Brushes.Yellow;
-		//canvas.Opacity = 0.0;
 		scrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
 		scrollViewer.Content = canvas;
@@ -1424,14 +1418,8 @@ public partial class Editor : System.Windows.Window {
 		Canvas.SetZIndex(intellisense, 100);
 		canvas.Children.Add(intellisense);
 		canvas.Children.Add(toolTip);
-		//grid.Opacity = 0.5;
 
-		//Background = Brushes.Transparent;
 
-		//Background = Brushes.Transparent;
-		//this.WindowStyle = WindowStyle.None;
-		//this.AllowsTransparency = true;
-		//this.Opacity = 0.5;
 		this.Content = grid;
 		this.Loaded += delegate {
 			if (Settings.lastFile != null) {
@@ -1439,24 +1427,21 @@ public partial class Editor : System.Windows.Window {
 			}
 			textBox.Focus();
 		};
-		//this.Opacity = 0.5;
-	}
-
-	void Editor_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-		if (changes) {
-			switch (MessageBox.Show("Save changes?", "Save changes", MessageBoxButton.YesNoCancel)) {
-				case MessageBoxResult.Yes:
-					Save();
-					break;
-				case MessageBoxResult.No:
-					break;
-				case MessageBoxResult.Cancel:
-					e.Cancel = true;
-					return;
+		this.Closing += delegate(object sender, System.ComponentModel.CancelEventArgs e) {
+			if (changes) {
+				switch (MessageBox.Show("Save changes?", "Save changes", MessageBoxButton.YesNoCancel)) {
+					case MessageBoxResult.Yes:
+						Save();
+						break;
+					case MessageBoxResult.No:
+						break;
+					case MessageBoxResult.Cancel:
+						e.Cancel = true;
+						return;
+				}
 			}
-		}
+		};
 	}
-
 	private bool DoArgumentHelp(KeyEventArgs e) {
 		StartIntellisense();
 		int index = textBox.SelectionStart;
@@ -1658,8 +1643,6 @@ public partial class Editor : System.Windows.Window {
 		}
 		return -1;
 	}
-}
-namespace _treeListView {
 	public class LevelToIndentConverter : IValueConverter {
 		public object Convert(object o, Type type, object parameter,
 							  CultureInfo culture) {
@@ -1673,8 +1656,6 @@ namespace _treeListView {
 
 		private const double c_IndentSize = 19.0;
 	}
-}
-namespace _treeListView {
 	public class TreeListView : TreeView {
 		protected override DependencyObject
 						   GetContainerForItemOverride() {
