@@ -1660,10 +1660,7 @@ namespace Meta {
 		}
 		public ObjectMap(string text): this(text, text.GetType()) {}
 		public ObjectMap(Map target): this(target, target.GetType()) {}
-		public ObjectMap(object target, Type type): base(target, type) 
-		{
-			if (target is Integer32) {
-			}
+		public ObjectMap(object target, Type type): base(target, type) {
 		}
 		public ObjectMap(object target): base(target, target.GetType()) 
 		{
@@ -2682,6 +2679,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Number {
+		//public int CompareTo(Number number) {
+		//    return this.GetDouble().CompareTo(number.GetDouble());
+		//}
 		public int CompareTo(Number number) {
 			return this.GetDouble().CompareTo(number.GetDouble());
 		}
