@@ -3402,7 +3402,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"enumTest"
-	Value (Integer32):
+	Value (NumberMap):
+		2
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"oneTwoThreeHello"
