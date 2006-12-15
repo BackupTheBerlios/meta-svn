@@ -29,27 +29,13 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Windows;
 using java.math;
-using SdlDotNet.Sprites;
-using SdlDotNet.Windows;
-using SdlDotNet;
-using System.GACManagedAccess;
 using System.Globalization;
+
+using System.Runtime.InteropServices;
+
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
-	//public class Dict<TKey, TValue>:Dictionary<TKey,TValue> {
-	//    public Dict() {
-	//    }
-	//    public TKey key;
-	//    public static Dict<TKey, TValue> operator -(Dict<TKey, TValue> dict, TKey key) {
-	//        dict.key = key;
-	//        return dict;
-	//    }
-	//    public static Dict<TKey, TValue> operator +(Dict<TKey, TValue> dict, TValue value) {
-	//        dict[dict.key] = value;
-	//        return dict;
-	//    }
-	//}
 	public abstract class Expression {
 		public static Expression LastArgument(Map code, Expression parent) {
 			return new CustomExpression(
@@ -63,7 +49,7 @@ namespace Meta {
 				}
 			);
 		}
-		public Compiled GetCompiled() {	
+		public Compiled GetCompiled() {
 			if(compiled==null) {	
 				compiled=Compile();
 			}
@@ -222,6 +208,7 @@ namespace Meta {
 			m = null;
 			return false;
 		}
+		DynamicMethod m;
 		public override Compiled GetCompiled(Expression parent) {
 			List<object> arguments;
 			MethodBase method;
@@ -231,7 +218,6 @@ namespace Meta {
 
 					Compiled[] args = c.ToArray();
 					ParameterInfo[] parameters = method.GetParameters();
-					DynamicMethod m;
 					MethodInfo methodInfo = (MethodInfo)method;
 					Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
 					m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
@@ -255,7 +241,12 @@ namespace Meta {
 					il.Emit(OpCodes.Ret);
 					FastCall fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),args);
 					return delegate(Map context) {
-						return fastCall(context);
+						try {
+							return fastCall(context);
+						}
+						catch (Exception e) {
+							throw e;
+						}
 					};
 				}
 			}
@@ -1076,10 +1067,10 @@ namespace Meta {
 		}
 	}
 	public class Transform {
-		public static Dictionary<int,Type> types=new Dictionary<int,Type>();
+		public static Dictionary<int, Type> types = new Dictionary<int, Type>();
 		public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
-			Type type=types[typeToken];
-			return CreateDelegateFromCode(code,type);
+			Type type = types[typeToken];
+			return CreateDelegateFromCode(code, type);
 		}
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
@@ -1127,7 +1118,8 @@ namespace Meta {
 			public object Call(object[] arguments) {
 				Map pos = this.callable;
 				foreach (object argument in arguments) {
-					pos = pos.Call(Transform.ToMeta(argument));}
+					pos = pos.Call(Transform.ToMeta(argument));
+				}
 				if (returnType != typeof(void)) {
 					return Meta.Transform.ToDotNet(pos, this.returnType);
 				}
@@ -1136,50 +1128,196 @@ namespace Meta {
 				}
 			}
 		}
-		public static void GetMetaConversion(Type type,ILGenerator il) {
-			if(!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
-				if(type.Equals(typeof(Boolean))) {
-					il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToInt32",new Type[] {typeof(Boolean)}));
-					il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
-					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Integer32) }));
-				}
-				else if (type.Equals(typeof(Number))) {
-					il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
-				}
-				else if (type.Equals(typeof(void))) {
-					il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
-				}
-				else if (type.Equals(typeof(string))) {
-					il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
-				}
-				else {
-					switch (Type.GetTypeCode(type)) {
-						case TypeCode.Int32:
-							il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-							break;
-						default:
-							if (type.IsValueType) {
-								il.Emit(OpCodes.Box, type);
+
+		public static void GetMetaConversion(Type type, ILGenerator il) {
+			if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
+				switch (Type.GetTypeCode(type)) {
+					case TypeCode.Boolean:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Boolean) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+					case TypeCode.Byte:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Byte) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (Byte)dotNet;
+					case TypeCode.Char:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Char) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (Char)dotNet;
+					case TypeCode.SByte:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(SByte) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (SByte)dotNet;
+					case TypeCode.Single:
+						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (Single)dotNet;
+					case TypeCode.UInt16:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(UInt16) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (UInt16)dotNet;
+					case TypeCode.UInt32:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt32) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (UInt32)dotNet;
+					case TypeCode.UInt64:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt64) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+						//return (UInt64)dotNet;
+					case TypeCode.String:
+						il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
+						break;
+						//return (String)dotNet;
+					case TypeCode.Decimal:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDouble", new Type[] { typeof(Decimal) }));
+						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+					case TypeCode.Double:
+						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+					case TypeCode.Int16:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Int16) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+					case TypeCode.Int32:
+						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+					case TypeCode.Int64:
+						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(Int64) }));
+						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+						break;
+					case TypeCode.DateTime:
+					case TypeCode.DBNull:
+					case TypeCode.Object:
+						if (type.Equals(typeof(void))) {
+							il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
+						}
+						else {
+							//if (!type.IsValueType) {
+							//    Label label = il.DefineLabel();
+							//    il.Emit(OpCodes.Dup);
+							//    il.Emit(OpCodes.Brtrue, label);
+							//    il.Emit(OpCodes.Pop);
+							//    il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
+							//    il.Emit(OpCodes.Ret);
+							//    il.MarkLabel(label);
+							//}
+
+
+							//else if (type.Equals(typeof(Number))) {
+							//    il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+							//}
+
+							//else if (dotNet is NumberMap) {
+							//    return (NumberMap)dotNet;
+							//}
+							if (type.IsSubclassOf(typeof(Number)) || type.Equals(typeof(Number))) {
+								il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+								//return new NumberMap((Number)dotNet);
 							}
-							il.Emit(OpCodes.Newobj, typeof(ObjectMap).GetConstructor(new Type[] { typeof(object) }));
-							break;
+							//else if (dotNet is Map) {
+							//    return (Map)dotNet;
+							//}
+							else {
+								if (type.IsValueType) {
+									il.Emit(OpCodes.Box, type);
+								}
+								il.Emit(OpCodes.Newobj, typeof(ObjectMap).GetConstructor(new Type[] { typeof(object) }));
+								//return new ObjectMap(dotNet);
+							}
+						}
+						break;
+					default:
+						throw new ApplicationException("Cannot convert object.");
 					}
 				}
 			}
-		}
-		public static object MakeEnum(int value,int type) {
-			object x=Enum.ToObject(types[type], value);
-			return x;
-		}
-		public static void GetConversion(Type target,ILGenerator il) {
-			if (target.IsEnum) {
-				int token=(int)target.TypeHandle.Value;
-				if(!Transform.types.ContainsKey(token)) {
-				    Transform.types[token]=target;
-				}
-				il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
+		public static Map ToMeta(object dotNet) {
+			if (dotNet == null) {
+				return Map.Empty;
 			}
-			else if(target.Equals(typeof(double))) {
+			else {
+				Type type = dotNet.GetType();
+				switch (Type.GetTypeCode(type)) {
+					case TypeCode.Boolean:
+						return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+					case TypeCode.Byte:
+						return (Byte)dotNet;
+					case TypeCode.Char:
+						return (Char)dotNet;
+					case TypeCode.SByte:
+						return (SByte)dotNet;
+					case TypeCode.Single:
+						return (Single)dotNet;
+					case TypeCode.UInt16:
+						return (UInt16)dotNet;
+					case TypeCode.UInt32:
+						return (UInt32)dotNet;
+					case TypeCode.UInt64:
+						return (UInt64)dotNet;
+					case TypeCode.String:
+						return (String)dotNet;
+					case TypeCode.Decimal:
+						return new NumberMap(new Rational((double)(Decimal)dotNet));
+					case TypeCode.Double:
+						return (Double)dotNet;
+					case TypeCode.Int16:
+						return (Int16)dotNet;
+					case TypeCode.Int32:
+						return (Int32)dotNet;
+					case TypeCode.Int64:
+						return (Int64)dotNet;
+					case TypeCode.DateTime:
+						return new ObjectMap(dotNet);
+					case TypeCode.DBNull:
+						return new ObjectMap(dotNet);
+					case TypeCode.Object:
+						if (dotNet is NumberMap) {
+							return (NumberMap)dotNet;
+						}
+						if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
+							return new NumberMap((Number)dotNet);
+						}
+						else if (dotNet is Map) {
+							return (Map)dotNet;
+						}
+						else {
+							return new ObjectMap(dotNet);
+						}
+					default:
+						throw new ApplicationException("Cannot convert object.");
+				}
+			}
+		}
+		public static void GetConversion(Type target, ILGenerator il) {
+			if (target.IsEnum) {
+				int token = (int)target.TypeHandle.Value;
+				if (!Transform.types.ContainsKey(token)) {
+					Transform.types[token] = target;
+				}
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
+			}
+			else if (target.Equals(typeof(double))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetDouble"));
 			}
@@ -1227,15 +1365,15 @@ namespace Meta {
 				il.Emit(OpCodes.Castclass, target);
 			}
 		}
-		public static object ToDotNet(Map meta,Type target) {
-			if(target.Equals(typeof(Map))) {
+		public static object ToDotNet(Map meta, Type target) {
+			if (target.Equals(typeof(Map))) {
 				return meta;
 			}
-			if(target.Equals(typeof(Number))) {
+			if (target.Equals(typeof(Number))) {
 				return meta.GetNumber();
 			}
 			else if (target.Equals(typeof(Stream)) && meta is FileMap) {
-				return File.Open(((FileMap)meta).Path,FileMode.Open);
+				return File.Open(((FileMap)meta).Path, FileMode.Open);
 			}
 			else if (target.Equals(typeof(object)) && meta is ObjectMap) {
 				return ((ObjectMap)meta).Object;
@@ -1324,7 +1462,7 @@ namespace Meta {
 							case TypeCode.SByte:
 								return Convert.ToSByte(meta.GetNumber().GetInt64());
 							case TypeCode.Single:
-								float result=(float)meta.GetNumber().GetSingle();
+								float result = (float)meta.GetNumber().GetSingle();
 								return result;
 							case TypeCode.String:
 								return meta.GetString();
@@ -1342,64 +1480,332 @@ namespace Meta {
 			}
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 		}
-		public static Map ToMeta(object dotNet) {
-			if (dotNet == null) {
-				return Map.Empty;
-			}
-			else {
-				Type type = dotNet.GetType();
-				switch (Type.GetTypeCode(type)) {
-					case TypeCode.Boolean:
-						return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
-					case TypeCode.Byte:
-						return (Byte)dotNet;
-					case TypeCode.Char:
-						return (Char)dotNet;
-					case TypeCode.SByte:
-						return (SByte)dotNet;
-					case TypeCode.Single:
-						return (Single)dotNet;
-					case TypeCode.UInt16:
-						return (UInt16)dotNet;
-					case TypeCode.UInt32:
-						return (UInt32)dotNet;
-					case TypeCode.UInt64:
-						return (UInt64)dotNet;
-					case TypeCode.String:
-						return (String)dotNet;
-					case TypeCode.Decimal:
-						return new NumberMap(new Rational((double)(Decimal)dotNet));
-					case TypeCode.Double:
-						return (Double)dotNet;
-					case TypeCode.Int16:
-						return (Int16)dotNet;
-					case TypeCode.Int32:
-						return (Int32)dotNet;
-					case TypeCode.Int64:
-						return (Int64)dotNet;
-					case TypeCode.DateTime:
-						return new ObjectMap(dotNet);
-					case TypeCode.DBNull:
-						return new ObjectMap(dotNet);
-					case TypeCode.Object:
-						if(dotNet is NumberMap) {
-							return (NumberMap)dotNet;
-						}
-						if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
-							return new NumberMap((Number)dotNet);
-						}
-						else if (dotNet is Map) {
-							return (Map)dotNet;
-						}
-						else {
-							return new ObjectMap(dotNet);
-						}
-					default:
-						throw new ApplicationException("Cannot convert object.");
-				}
-			}
-		}
 	}
+	//public class Transform {
+	//    public static Dictionary<int,Type> types=new Dictionary<int,Type>();
+	//    public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
+	//        Type type=types[typeToken];
+	//        return CreateDelegateFromCode(code,type);
+	//    }
+	//    public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
+	//        MethodInfo invoke = delegateType.GetMethod("Invoke");
+	//        ParameterInfo[] parameters = invoke.GetParameters();
+	//        List<Type> arguments = new List<Type>();
+	//        arguments.Add(typeof(MetaDelegate));
+	//        foreach (ParameterInfo parameter in parameters) {
+	//            arguments.Add(parameter.ParameterType);
+	//        }
+	//        DynamicMethod method = new DynamicMethod("EventHandler",
+	//            invoke.ReturnType,
+	//            arguments.ToArray(),
+	//            typeof(Map).Module);
+	//        ILGenerator il = method.GetILGenerator();
+	//        LocalBuilder local = il.DeclareLocal(typeof(object[]));
+	//        il.Emit(OpCodes.Ldc_I4, parameters.Length);
+	//        il.Emit(OpCodes.Newarr, typeof(object));
+	//        il.Emit(OpCodes.Stloc, local);
+	//        for (int i = 0; i < parameters.Length; i++) {
+	//            il.Emit(OpCodes.Ldloc, local);
+	//            il.Emit(OpCodes.Ldc_I4, i);
+	//            il.Emit(OpCodes.Ldarg, i + 1);
+	//            il.Emit(OpCodes.Stelem_Ref);
+	//        }
+	//        il.Emit(OpCodes.Ldarg_0);
+	//        il.Emit(OpCodes.Ldloc, local);
+	//        il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+	//        if (invoke.ReturnType == typeof(void)) {
+	//            il.Emit(OpCodes.Pop);
+	//            il.Emit(OpCodes.Ret);
+	//        }
+	//        else {
+	//            il.Emit(OpCodes.Castclass, invoke.ReturnType);
+	//            il.Emit(OpCodes.Ret);
+	//        }
+	//        return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+	//    }
+	//    public class MetaDelegate {
+	//        private Map callable;
+	//        private Type returnType;
+	//        public MetaDelegate(Map callable, Type returnType) {
+	//            this.callable = callable;
+	//            this.returnType = returnType;
+	//        }
+	//        public object Call(object[] arguments) {
+	//            Map pos = this.callable;
+	//            foreach (object argument in arguments) {
+	//                pos = pos.Call(Transform.ToMeta(argument));}
+	//            if (returnType != typeof(void)) {
+	//                return Meta.Transform.ToDotNet(pos, this.returnType);
+	//            }
+	//            else {
+	//                return null;
+	//            }
+	//        }
+	//    }
+	//    public static void GetMetaConversion(Type type,ILGenerator il) {
+	//        if(!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
+	//            if(type.Equals(typeof(Boolean))) {
+	//                il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToInt32",new Type[] {typeof(Boolean)}));
+	//                il.Emit(OpCodes.Newobj,typeof(Integer32).GetConstructor(new Type[] {typeof(int)}));
+	//                il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Integer32) }));
+	//            }
+	//            else if (type.Equals(typeof(Number))) {
+	//                il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
+	//            }
+	//            else if (type.Equals(typeof(void))) {
+	//                il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
+	//            }
+	//            else if (type.Equals(typeof(string))) {
+	//                il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
+	//            }
+	//            else {
+	//                switch (Type.GetTypeCode(type)) {
+	//                    case TypeCode.Int32:
+	//                        il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+	//                        break;
+	//                    default:
+	//                        if (type.IsValueType) {
+	//                            il.Emit(OpCodes.Box, type);
+	//                        }
+	//                        il.Emit(OpCodes.Newobj, typeof(ObjectMap).GetConstructor(new Type[] { typeof(object) }));
+	//                        break;
+	//                }
+	//            }
+	//        }
+	//    }
+	//    public static object MakeEnum(int value,int type) {
+	//        object x=Enum.ToObject(types[type], value);
+	//        return x;
+	//    }
+	//    public static void GetConversion(Type target,ILGenerator il) {
+	//        if (target.IsEnum) {
+	//            int token=(int)target.TypeHandle.Value;
+	//            if(!Transform.types.ContainsKey(token)) {
+	//                Transform.types[token]=target;
+	//            }
+	//            il.Emit(OpCodes.Callvirt,typeof(Map).GetMethod("GetInt32"));
+	//        }
+	//        else if(target.Equals(typeof(double))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+	//            il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetDouble"));
+	//        }
+	//        else if (target.Equals(typeof(Number))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+	//        }
+	//        else if (target.Equals(typeof(Stream))) {
+	//            il.Emit(OpCodes.Castclass, typeof(FileMap));
+	//            il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
+	//        }
+	//        else if (target.Equals(typeof(Map))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetObject"));
+	//        }
+	//        else if (target.Equals(typeof(Boolean))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
+	//            il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToBoolean", new Type[] { typeof(int) }));
+	//        }
+	//        else if (target.Equals(typeof(String))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetString", BindingFlags.Instance | BindingFlags.Public));
+	//        }
+	//        else if (target.Equals(typeof(int))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+	//            il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt32"));
+	//        }
+	//        else if (target.Equals(typeof(Single))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+	//            il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetSingle"));
+	//        }
+	//        else if (target.Equals(typeof(object))) {
+	//        }
+	//        else if (target.Equals(typeof(Type))) {
+	//            il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetClass"));
+	//        }
+	//        else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))) {
+	//            int token = (int)target.TypeHandle.Value;
+	//            if (!Transform.types.ContainsKey(token)) {
+	//                Transform.types[token] = target;
+	//            }
+	//            il.Emit(OpCodes.Ldc_I4, (int)token);
+	//            il.Emit(OpCodes.Call, typeof(Transform).GetMethod("CreateDelegateFromCode", new Type[] { typeof(Map), typeof(int) }));
+	//        }
+	//        else {
+	//            il.Emit(OpCodes.Castclass, typeof(ObjectMap));
+	//            il.Emit(OpCodes.Callvirt, typeof(ObjectMap).GetMethod("get_Object"));
+	//            il.Emit(OpCodes.Castclass, target);
+	//        }
+	//    }
+	//    public static object ToDotNet(Map meta,Type target) {
+	//        if(target.Equals(typeof(Map))) {
+	//            return meta;
+	//        }
+	//        if(target.Equals(typeof(Number))) {
+	//            return meta.GetNumber();
+	//        }
+	//        else if (target.Equals(typeof(Stream)) && meta is FileMap) {
+	//            return File.Open(((FileMap)meta).Path,FileMode.Open);
+	//        }
+	//        else if (target.Equals(typeof(object)) && meta is ObjectMap) {
+	//            return ((ObjectMap)meta).Object;
+	//        }
+	//        else {
+	//            Type type = meta.GetType();
+	//            if (type.IsSubclassOf(target)) {
+	//                return meta;
+	//            }
+	//            else {
+	//                TypeCode typeCode = Type.GetTypeCode(target);
+	//                if (typeCode == TypeCode.Object) {
+
+	//                    if (target == typeof(NumberMap) && meta.IsNumber) {
+	//                        return meta.GetNumber();
+	//                    }
+	//                    if (target == typeof(System.Drawing.Point) && meta.IsNormal) {
+	//                        return new System.Drawing.Point(meta[1].GetInt32(), meta[2].GetInt32());
+	//                    }
+	//                    if (target == typeof(System.Windows.Point) && meta.IsNormal) {
+	//                        return new System.Windows.Point(meta[1].GetInt32(), meta[2].GetInt32());
+	//                    }
+	//                    if (target == typeof(Rectangle) && meta.IsNormal) {
+	//                        int x = meta[1][1].GetInt32();
+	//                        int y = meta[1][2].GetInt32();
+	//                        return new Rectangle(x,
+	//                            y,
+	//                            meta[2][1].GetInt32() - x,
+	//                            meta[2][2].GetInt32() - y);
+	//                    }
+	//                    if (target == typeof(Color) && meta.IsNormal) {
+	//                        return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
+	//                    }
+	//                    if (target == typeof(Type) && meta is TypeMap) {
+	//                        return ((TypeMap)meta).Type;
+	//                    }
+	//                    // remove?
+	//                    else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+	//                        return ((ObjectMap)meta).Object;
+	//                    }
+	//                    else if (target.IsAssignableFrom(type)) {
+	//                        return meta;
+	//                    }
+	//                    else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+	//                       && meta.ContainsKey(CodeKeys.Function)) {
+	//                        return CreateDelegateFromCode(meta, target);
+	//                    }
+	//                    if (target.IsArray) {
+	//                        List<object> list = new List<object>();
+	//                        foreach (Map map in meta.Array) {
+	//                            list.Add(ToDotNet(map, target.GetElementType()));
+	//                        }
+	//                        Array array = Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
+	//                        list.ToArray().CopyTo(array, 0);
+	//                        return array;
+	//                    }
+	//                }
+	//                else if (target.IsEnum) {
+	//                    return Enum.ToObject(target, meta.GetNumber().GetInt32());
+	//                }
+	//                else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+	//                    return ((ObjectMap)meta).Object;
+	//                }
+	//                else {
+	//                    switch (typeCode) {
+	//                        case TypeCode.Boolean:
+	//                            return Convert.ToBoolean(meta.GetNumber().GetInt32());
+	//                        case TypeCode.Byte:
+	//                            return Convert.ToByte(meta.GetNumber().GetInt32());
+	//                        case TypeCode.Char:
+	//                            return Convert.ToChar(meta.GetNumber().GetInt32());
+	//                        case TypeCode.DateTime:
+	//                            return null;
+	//                        case TypeCode.DBNull:
+	//                            return null;
+	//                        case TypeCode.Decimal:
+	//                            return (decimal)(meta.GetNumber().GetInt64());
+	//                        case TypeCode.Double:
+	//                            return (double)(meta.GetNumber().GetDouble());
+	//                        case TypeCode.Int16:
+	//                            return Convert.ToInt16(meta.GetNumber().GetRealInt64());
+	//                        case TypeCode.Int32:
+	//                            return meta.GetNumber().GetInt32();
+	//                        case TypeCode.Int64:
+	//                            return Convert.ToInt64(meta.GetNumber().GetInt64());
+	//                        case TypeCode.SByte:
+	//                            return Convert.ToSByte(meta.GetNumber().GetInt64());
+	//                        case TypeCode.Single:
+	//                            float result=(float)meta.GetNumber().GetSingle();
+	//                            return result;
+	//                        case TypeCode.String:
+	//                            return meta.GetString();
+	//                        case TypeCode.UInt16:
+	//                            return Convert.ToUInt16(meta.GetNumber().GetInt64());
+	//                        case TypeCode.UInt32:
+	//                            return Convert.ToUInt32(meta.GetNumber().GetInt64());
+	//                        case TypeCode.UInt64:
+	//                            return Convert.ToUInt64(meta.GetNumber().GetInt64());
+	//                        default:
+	//                            throw new ApplicationException("not implemented");
+	//                    }
+	//                }
+	//            }
+	//        }
+	//        throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
+	//    }
+	//    public static Map ToMeta(object dotNet) {
+	//        if (dotNet == null) {
+	//            return Map.Empty;
+	//        }
+	//        else {
+	//            Type type = dotNet.GetType();
+	//            switch (Type.GetTypeCode(type)) {
+	//                case TypeCode.Boolean:
+	//                    return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+	//                case TypeCode.Byte:
+	//                    return (Byte)dotNet;
+	//                case TypeCode.Char:
+	//                    return (Char)dotNet;
+	//                case TypeCode.SByte:
+	//                    return (SByte)dotNet;
+	//                case TypeCode.Single:
+	//                    return (Single)dotNet;
+	//                case TypeCode.UInt16:
+	//                    return (UInt16)dotNet;
+	//                case TypeCode.UInt32:
+	//                    return (UInt32)dotNet;
+	//                case TypeCode.UInt64:
+	//                    return (UInt64)dotNet;
+	//                case TypeCode.String:
+	//                    return (String)dotNet;
+	//                case TypeCode.Decimal:
+	//                    return new NumberMap(new Rational((double)(Decimal)dotNet));
+	//                case TypeCode.Double:
+	//                    return (Double)dotNet;
+	//                case TypeCode.Int16:
+	//                    return (Int16)dotNet;
+	//                case TypeCode.Int32:
+	//                    return (Int32)dotNet;
+	//                case TypeCode.Int64:
+	//                    return (Int64)dotNet;
+	//                case TypeCode.DateTime:
+	//                    return new ObjectMap(dotNet);
+	//                case TypeCode.DBNull:
+	//                    return new ObjectMap(dotNet);
+	//                case TypeCode.Object:
+	//                    if(dotNet is NumberMap) {
+	//                        return (NumberMap)dotNet;
+	//                    }
+	//                    if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
+	//                        return new NumberMap((Number)dotNet);
+	//                    }
+	//                    else if (dotNet is Map) {
+	//                        return (Map)dotNet;
+	//                    }
+	//                    else {
+	//                        return new ObjectMap(dotNet);
+	//                    }
+	//                default:
+	//                    throw new ApplicationException("Cannot convert object.");
+	//            }
+	//        }
+	//    }
+	//}
 	public delegate Map CallDelegate(Map argument);
 	public class Method : Map {
 		public override void Append(Map map) {
@@ -5123,5 +5529,453 @@ namespace Meta {
 				yield return new KeyValuePair<Map, Map>(key, this[key]);
 			}
 		}
+	}
+//-------------------------------------------------------------
+// GACWrap.cs
+//
+// This implements managed wrappers to GAC API Interfaces
+//-------------------------------------------------------------
+
+	//-------------------------------------------------------------
+	// Interfaces defined by fusion
+	//-------------------------------------------------------------
+	[ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("e707dcde-d1cd-11d2-bab9-00c04f8eceae")]
+	internal interface IAssemblyCache {
+		[PreserveSig()]
+		int UninstallAssembly(
+							int flags,
+							[MarshalAs(UnmanagedType.LPWStr)]
+							String assemblyName,
+							InstallReference refData,
+							out AssemblyCacheUninstallDisposition disposition);
+
+		[PreserveSig()]
+		int QueryAssemblyInfo(
+							int flags,
+							[MarshalAs(UnmanagedType.LPWStr)]
+							String assemblyName,
+							ref AssemblyInfo assemblyInfo);
+		[PreserveSig()]
+		int Reserved(
+							int flags,
+							IntPtr pvReserved,
+							out Object ppAsmItem,
+							[MarshalAs(UnmanagedType.LPWStr)]
+							String assemblyName);
+		[PreserveSig()]
+		int Reserved(out Object ppAsmScavenger);
+
+		[PreserveSig()]
+		int InstallAssembly(
+							int flags,
+							[MarshalAs(UnmanagedType.LPWStr)]
+							String assemblyFilePath,
+							InstallReference refData);
+	}// IAssemblyCache
+
+	[ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("CD193BC0-B4BC-11d2-9833-00C04FC31D2E")]
+	internal interface IAssemblyName {
+		[PreserveSig()]
+		int SetProperty(
+				int PropertyId,
+				IntPtr pvProperty,
+				int cbProperty);
+
+		[PreserveSig()]
+		int GetProperty(
+				int PropertyId,
+				IntPtr pvProperty,
+				ref int pcbProperty);
+
+		[PreserveSig()]
+		int Finalize();
+
+		[PreserveSig()]
+		int GetDisplayName(
+				StringBuilder pDisplayName,
+				ref int pccDisplayName,
+				int displayFlags);
+
+		[PreserveSig()]
+		int Reserved(ref Guid guid,
+			Object obj1,
+			Object obj2,
+			String string1,
+			Int64 llFlags,
+			IntPtr pvReserved,
+			int cbReserved,
+			out IntPtr ppv);
+
+		[PreserveSig()]
+		int GetName(
+				ref int pccBuffer,
+				StringBuilder pwzName);
+
+		[PreserveSig()]
+		int GetVersion(
+				out int versionHi,
+				out int versionLow);
+		[PreserveSig()]
+		int IsEqual(
+				IAssemblyName pAsmName,
+				int cmpFlags);
+
+		[PreserveSig()]
+		int Clone(out IAssemblyName pAsmName);
+	}// IAssemblyName
+
+	[ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("21b8916c-f28e-11d2-a473-00c04f8ef448")]
+	internal interface IAssemblyEnum {
+		[PreserveSig()]
+		int GetNextAssembly(
+				IntPtr pvReserved,
+				out IAssemblyName ppName,
+				int flags);
+		[PreserveSig()]
+		int Reset();
+		[PreserveSig()]
+		int Clone(out IAssemblyEnum ppEnum);
+	}// IAssemblyEnum
+
+	[ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("582dac66-e678-449f-aba6-6faaec8a9394")]
+	internal interface IInstallReferenceItem {
+		// A pointer to a FUSION_INSTALL_REFERENCE structure. 
+		// The memory is allocated by the GetReference method and is freed when 
+		// IInstallReferenceItem is released. Callers must not hold a reference to this 
+		// buffer after the IInstallReferenceItem object is released. 
+		// This uses the InstallReferenceOutput object to avoid allocation 
+		// issues with the interop layer. 
+		// This cannot be marshaled directly - must use IntPtr 
+		[PreserveSig()]
+		int GetReference(
+				out IntPtr pRefData,
+				int flags,
+				IntPtr pvReserced);
+	}// IInstallReferenceItem
+
+	[ComImport, InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("56b1a988-7c0c-4aa2-8639-c3eb5a90226f")]
+	internal interface IInstallReferenceEnum {
+		[PreserveSig()]
+		int GetNextInstallReferenceItem(
+				out IInstallReferenceItem ppRefItem,
+				int flags,
+				IntPtr pvReserced);
+	}// IInstallReferenceEnum
+
+	public enum AssemblyCommitFlags {
+		Default = 1,
+		Force = 2
+	}// enum AssemblyCommitFlags
+
+	public enum AssemblyCacheUninstallDisposition {
+		Unknown = 0,
+		Uninstalled = 1,
+		StillInUse = 2,
+		AlreadyUninstalled = 3,
+		DeletePending = 4,
+		HasInstallReference = 5,
+		ReferenceNotFound = 6
+	}
+
+	[Flags]
+	internal enum AssemblyCacheFlags {
+		GAC = 2,
+	}
+
+	internal enum CreateAssemblyNameObjectFlags {
+		CANOF_DEFAULT = 0,
+		CANOF_PARSE_DISPLAY_NAME = 1,
+	}
+
+	[Flags]
+	internal enum AssemblyNameDisplayFlags {
+		VERSION = 0x01,
+		CULTURE = 0x02,
+		PUBLIC_KEY_TOKEN = 0x04,
+		PROCESSORARCHITECTURE = 0x20,
+		RETARGETABLE = 0x80,
+		// This enum will change in the future to include
+		// more attributes.
+		ALL = VERSION
+									| CULTURE
+									| PUBLIC_KEY_TOKEN
+									| PROCESSORARCHITECTURE
+									| RETARGETABLE
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	public class InstallReference {
+		public InstallReference(Guid guid, String id, String data) {
+			cbSize = (int)(2 * IntPtr.Size + 16 + (id.Length + data.Length) * 2);
+			flags = 0;
+			// quiet compiler warning 
+			if (flags == 0) { }
+			guidScheme = guid;
+			identifier = id;
+			description = data;
+		}
+
+		public Guid GuidScheme {
+			get { return guidScheme; }
+		}
+
+		public String Identifier {
+			get { return identifier; }
+		}
+
+		public String Description {
+			get { return description; }
+		}
+
+		int cbSize;
+		int flags;
+		Guid guidScheme;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		String identifier;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		String description;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct AssemblyInfo {
+		public int cbAssemblyInfo; // size of this structure for future expansion
+		public int assemblyFlags;
+		public long assemblySizeInKB;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public String currentAssemblyPath;
+		public int cchBuf; // size of path buf.
+	}
+
+	[ComVisible(false)]
+	public class InstallReferenceGuid {
+		public static bool IsValidGuidScheme(Guid guid) {
+			return (guid.Equals(UninstallSubkeyGuid) ||
+					guid.Equals(FilePathGuid) ||
+					guid.Equals(OpaqueGuid) ||
+					guid.Equals(Guid.Empty));
+		}
+
+		public readonly static Guid UninstallSubkeyGuid = new Guid("8cedc215-ac4b-488b-93c0-a50a49cb2fb8");
+		public readonly static Guid FilePathGuid = new Guid("b02f9d65-fb77-4f7a-afa5-b391309f11c9");
+		public readonly static Guid OpaqueGuid = new Guid("2ec93463-b0c3-45e1-8364-327e96aea856");
+		// these GUID cannot be used for installing into GAC.
+		public readonly static Guid MsiGuid = new Guid("25df0fc1-7f97-4070-add7-4b13bbfd7cb8");
+		public readonly static Guid OsInstallGuid = new Guid("d16d444c-56d8-11d5-882d-0080c847b195");
+	}
+
+	[ComVisible(false)]
+	public static class AssemblyCache {
+		public static void InstallAssembly(String assemblyPath, InstallReference reference, AssemblyCommitFlags flags) {
+			if (reference != null) {
+				if (!InstallReferenceGuid.IsValidGuidScheme(reference.GuidScheme))
+					throw new ArgumentException("Invalid reference guid.", "guid");
+			}
+
+			IAssemblyCache ac = null;
+
+			int hr = 0;
+
+			hr = Utils.CreateAssemblyCache(out ac, 0);
+			if (hr >= 0) {
+				hr = ac.InstallAssembly((int)flags, assemblyPath, reference);
+			}
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+		}
+
+		// assemblyName has to be fully specified name. 
+		// A.k.a, for v1.0/v1.1 assemblies, it should be "name, Version=xx, Culture=xx, PublicKeyToken=xx".
+		// For v2.0 assemblies, it should be "name, Version=xx, Culture=xx, PublicKeyToken=xx, ProcessorArchitecture=xx".
+		// If assemblyName is not fully specified, a random matching assembly will be uninstalled. 
+		public static void UninstallAssembly(String assemblyName, InstallReference reference, out AssemblyCacheUninstallDisposition disp) {
+			AssemblyCacheUninstallDisposition dispResult = AssemblyCacheUninstallDisposition.Uninstalled;
+			if (reference != null) {
+				if (!InstallReferenceGuid.IsValidGuidScheme(reference.GuidScheme))
+					throw new ArgumentException("Invalid reference guid.", "guid");
+			}
+
+			IAssemblyCache ac = null;
+
+			int hr = Utils.CreateAssemblyCache(out ac, 0);
+			if (hr >= 0) {
+				hr = ac.UninstallAssembly(0, assemblyName, reference, out dispResult);
+			}
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			disp = dispResult;
+		}
+
+		// See comments in UninstallAssembly
+		public static String QueryAssemblyInfo(String assemblyName) {
+			if (assemblyName == null) {
+				throw new ArgumentException("Invalid name", "assemblyName");
+			}
+
+			AssemblyInfo aInfo = new AssemblyInfo();
+
+			aInfo.cchBuf = 1024;
+			// Get a string with the desired length
+			aInfo.currentAssemblyPath = new String('\0', aInfo.cchBuf);
+
+			IAssemblyCache ac = null;
+			int hr = Utils.CreateAssemblyCache(out ac, 0);
+			if (hr >= 0) {
+				hr = ac.QueryAssemblyInfo(0, assemblyName, ref aInfo);
+			}
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			return aInfo.currentAssemblyPath;
+		}
+	}
+
+	[ComVisible(false)]
+	public class AssemblyCacheEnum {
+		// null means enumerate all the assemblies
+		public AssemblyCacheEnum(String assemblyName) {
+			IAssemblyName fusionName = null;
+			int hr = 0;
+
+			if (assemblyName != null) {
+				hr = Utils.CreateAssemblyNameObject(
+						out fusionName,
+						assemblyName,
+						CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
+						IntPtr.Zero);
+			}
+
+			if (hr >= 0) {
+				hr = Utils.CreateAssemblyEnum(
+						out m_AssemblyEnum,
+						IntPtr.Zero,
+						fusionName,
+						AssemblyCacheFlags.GAC,
+						IntPtr.Zero);
+			}
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+		}
+
+		public String GetNextAssembly() {
+			int hr = 0;
+			IAssemblyName fusionName = null;
+
+			if (done) {
+				return null;
+			}
+
+			// Now get next IAssemblyName from m_AssemblyEnum
+			hr = m_AssemblyEnum.GetNextAssembly((IntPtr)0, out fusionName, 0);
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			if (fusionName != null) {
+				return GetFullName(fusionName);
+			}
+			else {
+				done = true;
+				return null;
+			}
+		}
+
+		private String GetFullName(IAssemblyName fusionAsmName) {
+			StringBuilder sDisplayName = new StringBuilder(1024);
+			int iLen = 1024;
+
+			int hr = fusionAsmName.GetDisplayName(sDisplayName, ref iLen, (int)AssemblyNameDisplayFlags.ALL);
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			return sDisplayName.ToString();
+		}
+
+		private IAssemblyEnum m_AssemblyEnum = null;
+		private bool done;
+	}// class AssemblyCacheEnum
+
+	public class AssemblyCacheInstallReferenceEnum {
+		public AssemblyCacheInstallReferenceEnum(String assemblyName) {
+			IAssemblyName fusionName = null;
+
+			int hr = Utils.CreateAssemblyNameObject(
+						out fusionName,
+						assemblyName,
+						CreateAssemblyNameObjectFlags.CANOF_PARSE_DISPLAY_NAME,
+						IntPtr.Zero);
+
+			if (hr >= 0) {
+				hr = Utils.CreateInstallReferenceEnum(out refEnum, fusionName, 0, IntPtr.Zero);
+			}
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+		}
+
+		public InstallReference GetNextReference() {
+			IInstallReferenceItem item = null;
+			int hr = refEnum.GetNextInstallReferenceItem(out item, 0, IntPtr.Zero);
+			if ((uint)hr == 0x80070103) {   // ERROR_NO_MORE_ITEMS
+				return null;
+			}
+
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			IntPtr refData;
+			InstallReference instRef = new InstallReference(Guid.Empty, String.Empty, String.Empty);
+
+			hr = item.GetReference(out refData, 0, IntPtr.Zero);
+			if (hr < 0) {
+				Marshal.ThrowExceptionForHR(hr);
+			}
+
+			Marshal.PtrToStructure(refData, instRef);
+			return instRef;
+		}
+
+		private IInstallReferenceEnum refEnum;
+	}
+
+	internal class Utils {
+		[DllImport("fusion.dll")]
+		internal static extern int CreateAssemblyEnum(
+				out IAssemblyEnum ppEnum,
+				IntPtr pUnkReserved,
+				IAssemblyName pName,
+				AssemblyCacheFlags flags,
+				IntPtr pvReserved);
+
+		[DllImport("fusion.dll")]
+		internal static extern int CreateAssemblyNameObject(
+				out IAssemblyName ppAssemblyNameObj,
+				[MarshalAs(UnmanagedType.LPWStr)]
+				String szAssemblyName,
+				CreateAssemblyNameObjectFlags flags,
+				IntPtr pvReserved);
+
+		[DllImport("fusion.dll")]
+		internal static extern int CreateAssemblyCache(
+				out IAssemblyCache ppAsmCache,
+				int reserved);
+
+		[DllImport("fusion.dll")]
+		internal static extern int CreateInstallReferenceEnum(
+				out IInstallReferenceEnum ppRefEnum,
+				IAssemblyName pName,
+				int dwFlags,
+				IntPtr pvReserved);
 	}
 }

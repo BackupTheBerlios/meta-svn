@@ -411,7 +411,7 @@ public partial class Editor : System.Windows.Window {
 	}
 	public static List<Rectangle> errors = new List<Rectangle>();
 	public static Editor editor;
-	public static FindAndReplace findAndReplace;
+	//public static FindAndReplace findAndReplace;
 	public class Breakpoint {
 		public int line;
 		public int column;
@@ -707,7 +707,7 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionStart = oldStart;
 			textBox.SelectionLength = oldLength+added;
 		});
-		findAndReplace=new FindAndReplace(textBox);
+		//findAndReplace=new FindAndReplace(textBox);
 		this.WindowState = WindowState.Maximized;
 		editor = this;
 		textBox.AcceptsReturn = true;
@@ -766,12 +766,12 @@ public partial class Editor : System.Windows.Window {
 			ApplicationCommands.Cut.Execute(null,textBox);
 			//textBox.SelectedText = "";
 		}));
-		this.CommandBindings.Add(
-			new CommandBinding(
-				ApplicationCommands.Find,
-				delegate {
-					findAndReplace.ShowDialog();
-				}));
+		//this.CommandBindings.Add(
+		//    new CommandBinding(
+		//        ApplicationCommands.Find,
+		//        delegate {
+		//            findAndReplace.ShowDialog();
+		//        }));
 
 		BindKey(ApplicationCommands.Find, Key.F, ModifierKeys.Control);
 		BindKey(EditingCommands.Backspace, Key.N, ModifierKeys.Alt);
