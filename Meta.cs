@@ -1137,52 +1137,43 @@ namespace Meta {
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
 					case TypeCode.Byte:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Byte) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (Byte)dotNet;
 					case TypeCode.Char:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Char) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (Char)dotNet;
 					case TypeCode.SByte:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(SByte) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (SByte)dotNet;
 					case TypeCode.Single:
 						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (Single)dotNet;
 					case TypeCode.UInt16:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(UInt16) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (UInt16)dotNet;
 					case TypeCode.UInt32:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt32) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (UInt32)dotNet;
 					case TypeCode.UInt64:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt64) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
 						il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
-						//return (UInt64)dotNet;
 					case TypeCode.String:
 						il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
 						break;
-						//return (String)dotNet;
 					case TypeCode.Decimal:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDouble", new Type[] { typeof(Decimal) }));
 						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
@@ -1213,37 +1204,23 @@ namespace Meta {
 							il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
 						}
 						else {
-							//if (!type.IsValueType) {
-							//    Label label = il.DefineLabel();
-							//    il.Emit(OpCodes.Dup);
-							//    il.Emit(OpCodes.Brtrue, label);
-							//    il.Emit(OpCodes.Pop);
-							//    il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
-							//    il.Emit(OpCodes.Ret);
-							//    il.MarkLabel(label);
-							//}
-
-
-							//else if (type.Equals(typeof(Number))) {
-							//    il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
-							//}
-
-							//else if (dotNet is NumberMap) {
-							//    return (NumberMap)dotNet;
-							//}
+							if (!type.IsValueType) {
+								Label label = il.DefineLabel();
+								il.Emit(OpCodes.Dup);
+								il.Emit(OpCodes.Brtrue, label);
+								il.Emit(OpCodes.Pop);
+								il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
+								il.Emit(OpCodes.Ret);
+								il.MarkLabel(label);
+							}
 							if (type.IsSubclassOf(typeof(Number)) || type.Equals(typeof(Number))) {
 								il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
-								//return new NumberMap((Number)dotNet);
 							}
-							//else if (dotNet is Map) {
-							//    return (Map)dotNet;
-							//}
 							else {
 								if (type.IsValueType) {
 									il.Emit(OpCodes.Box, type);
 								}
 								il.Emit(OpCodes.Newobj, typeof(ObjectMap).GetConstructor(new Type[] { typeof(object) }));
-								//return new ObjectMap(dotNet);
 							}
 						}
 						break;
@@ -1252,63 +1229,161 @@ namespace Meta {
 					}
 				}
 			}
+		public delegate Map MetaConversion(object o);
+		public static Dictionary<Type, MetaConversion> metaConversions = new Dictionary<Type, MetaConversion>();
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
 				return Map.Empty;
 			}
 			else {
-				Type type = dotNet.GetType();
-				switch (Type.GetTypeCode(type)) {
-					case TypeCode.Boolean:
-						return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
-					case TypeCode.Byte:
-						return (Byte)dotNet;
-					case TypeCode.Char:
-						return (Char)dotNet;
-					case TypeCode.SByte:
-						return (SByte)dotNet;
-					case TypeCode.Single:
-						return (Single)dotNet;
-					case TypeCode.UInt16:
-						return (UInt16)dotNet;
-					case TypeCode.UInt32:
-						return (UInt32)dotNet;
-					case TypeCode.UInt64:
-						return (UInt64)dotNet;
-					case TypeCode.String:
-						return (String)dotNet;
-					case TypeCode.Decimal:
-						return new NumberMap(new Rational((double)(Decimal)dotNet));
-					case TypeCode.Double:
-						return (Double)dotNet;
-					case TypeCode.Int16:
-						return (Int16)dotNet;
-					case TypeCode.Int32:
-						return (Int32)dotNet;
-					case TypeCode.Int64:
-						return (Int64)dotNet;
-					case TypeCode.DateTime:
-						return new ObjectMap(dotNet);
-					case TypeCode.DBNull:
-						return new ObjectMap(dotNet);
-					case TypeCode.Object:
-						if (dotNet is NumberMap) {
-							return (NumberMap)dotNet;
-						}
-						if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
-							return new NumberMap((Number)dotNet);
-						}
-						else if (dotNet is Map) {
-							return (Map)dotNet;
-						}
-						else {
-							return new ObjectMap(dotNet);
-						}
-					default:
-						throw new ApplicationException("Cannot convert object.");
+				Type type=dotNet.GetType();
+				if (type.IsEnum) {
 				}
+				if (!metaConversions.ContainsKey(type)) {
+					//MethodInfo methodInfo = (MethodInfo)method;
+					Type[] param = new Type[] { typeof(object) };
+					DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
+					ILGenerator il = m.GetILGenerator();
+					//for (int i = 0; i < parameters.Length; i++) {
+					//    Type type = parameters[i].ParameterType;
+					//    il.Emit(OpCodes.Ldarg_0);
+					//    il.Emit(OpCodes.Ldc_I4, i);
+					//    il.Emit(OpCodes.Ldelem_Ref);
+					//    il.Emit(OpCodes.Ldarg_1);
+					//    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+					//    Transform.GetConversion(type, il);
+					//}
+					//if (method.IsStatic) {
+					//    il.Emit(OpCodes.Call, methodInfo);
+					//}
+					//else {
+					//    il.Emit(OpCodes.Callvirt, methodInfo);
+					//}
+					il.Emit(OpCodes.Ldarg_0);
+					//if (type.IsValueType) {
+					//    il.Emit(OpCodes.Unbox_Any);
+					//}
+					if (type.IsValueType) {//.Equals(typeof(int))) {
+					//if (type.Equals(typeof(int))) {
+						il.Emit(OpCodes.Unbox_Any, type);
+					}
+					GetMetaConversion(type, il);
+					//Transform.GetMetaConversion(methodInfo.ReturnType, il);
+					il.Emit(OpCodes.Ret);
+					metaConversions[type]=(MetaConversion)m.CreateDelegate(typeof(MetaConversion));
+
+				}
+				return metaConversions[type](dotNet);
+
+				//Type type = dotNet.GetType();
+				//switch (Type.GetTypeCode(type)) {
+				//    case TypeCode.Boolean:
+				//        return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+				//    case TypeCode.Byte:
+				//        return (Byte)dotNet;
+				//    case TypeCode.Char:
+				//        return (Char)dotNet;
+				//    case TypeCode.SByte:
+				//        return (SByte)dotNet;
+				//    case TypeCode.Single:
+				//        return (Single)dotNet;
+				//    case TypeCode.UInt16:
+				//        return (UInt16)dotNet;
+				//    case TypeCode.UInt32:
+				//        return (UInt32)dotNet;
+				//    case TypeCode.UInt64:
+				//        return (UInt64)dotNet;
+				//    case TypeCode.String:
+				//        return (String)dotNet;
+				//    case TypeCode.Decimal:
+				//        return new NumberMap(new Rational((double)(Decimal)dotNet));
+				//    case TypeCode.Double:
+				//        return (Double)dotNet;
+				//    case TypeCode.Int16:
+				//        return (Int16)dotNet;
+				//    case TypeCode.Int32:
+				//        return (Int32)dotNet;
+				//    case TypeCode.Int64:
+				//        return (Int64)dotNet;
+				//    case TypeCode.DateTime:
+				//        return new ObjectMap(dotNet);
+				//    case TypeCode.DBNull:
+				//        return new ObjectMap(dotNet);
+				//    case TypeCode.Object:
+				//        if (dotNet is NumberMap) {
+				//            return (NumberMap)dotNet;
+				//        }
+				//        if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
+				//            return new NumberMap((Number)dotNet);
+				//        }
+				//        else if (dotNet is Map) {
+				//            return (Map)dotNet;
+				//        }
+				//        else {
+				//            return new ObjectMap(dotNet);
+				//        }
+				//    default:
+				//        throw new ApplicationException("Cannot convert object.");
+				//}
 			}
 		}
+		//public static Map ToMeta(object dotNet) {
+		//    if (dotNet == null) {
+		//        return Map.Empty;
+		//    }
+		//    else {
+		//        Type type = dotNet.GetType();
+		//        switch (Type.GetTypeCode(type)) {
+		//            case TypeCode.Boolean:
+		//                return new NumberMap(new Integer32(Convert.ToInt32((Boolean)dotNet)));
+		//            case TypeCode.Byte:
+		//                return (Byte)dotNet;
+		//            case TypeCode.Char:
+		//                return (Char)dotNet;
+		//            case TypeCode.SByte:
+		//                return (SByte)dotNet;
+		//            case TypeCode.Single:
+		//                return (Single)dotNet;
+		//            case TypeCode.UInt16:
+		//                return (UInt16)dotNet;
+		//            case TypeCode.UInt32:
+		//                return (UInt32)dotNet;
+		//            case TypeCode.UInt64:
+		//                return (UInt64)dotNet;
+		//            case TypeCode.String:
+		//                return (String)dotNet;
+		//            case TypeCode.Decimal:
+		//                return new NumberMap(new Rational((double)(Decimal)dotNet));
+		//            case TypeCode.Double:
+		//                return (Double)dotNet;
+		//            case TypeCode.Int16:
+		//                return (Int16)dotNet;
+		//            case TypeCode.Int32:
+		//                return (Int32)dotNet;
+		//            case TypeCode.Int64:
+		//                return (Int64)dotNet;
+		//            case TypeCode.DateTime:
+		//                return new ObjectMap(dotNet);
+		//            case TypeCode.DBNull:
+		//                return new ObjectMap(dotNet);
+		//            case TypeCode.Object:
+		//                if (dotNet is NumberMap) {
+		//                    return (NumberMap)dotNet;
+		//                }
+		//                if (dotNet.GetType().IsSubclassOf(typeof(Number)) || dotNet is Number) {
+		//                    return new NumberMap((Number)dotNet);
+		//                }
+		//                else if (dotNet is Map) {
+		//                    return (Map)dotNet;
+		//                }
+		//                else {
+		//                    return new ObjectMap(dotNet);
+		//                }
+		//            default:
+		//                throw new ApplicationException("Cannot convert object.");
+		//        }
+		//    }
+		//}
 		public static void GetConversion(Type target, ILGenerator il) {
 			if (target.IsEnum) {
 				int token = (int)target.TypeHandle.Value;
