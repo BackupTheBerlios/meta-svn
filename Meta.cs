@@ -3852,29 +3852,6 @@ namespace Meta {
 				}
 			});
 		}
-		//public static Rule Sequence(params Action[] actions) {
-		//    return new Rule(delegate(Parser parser, ref Map match) {
-		//        Map result = new DictionaryMap();
-		//        bool success = true;
-		//        foreach (Action action in actions) {
-		//            if (action != null) {
-		//                bool matched = action.Execute(parser, ref result);
-		//                if (!matched) {
-		//                    success = false;
-		//                    break;
-		//                }
-		//            }
-		//        }
-		//        if (!success) {
-		//            match = null;
-		//            return false;
-		//        }
-		//        else {
-		//            match = result;
-		//            return true;
-		//        }
-		//    });
-		//}
 		public static Rule LiteralRule(Map literal) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				map = literal;
@@ -3884,7 +3861,6 @@ namespace Meta {
 		public static Rule ZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				Map list = new ListMap();
-				//Map list = new DictionaryMap();
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;

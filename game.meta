@@ -9,7 +9,7 @@
 	with=Meta.Library.With_Map_Map;
 	enumerableToArray=Meta.Library.EnumerableToArray_Map;
 
-	uncurry=(func)(arg){
+	uncurry=(func,arg){
 		result=func;
 		apply(
 			(a){
