@@ -3144,40 +3144,38 @@ namespace Meta {
 				}
 			};
 		}
-		public static Rule Comment = DelayedRule(delegate {
-			return Sequence(Syntax.comment,Syntax.comment,StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))), EndOfLine);
-		});
+		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
+		public static Rule EndOfLine = Sequence(
+			StringRule(ZeroOrMoreChars(Chars("" + Syntax.space + Syntax.tab))),
+			Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine));
 
-		public static Rule Empty = ZeroOrMore(
+		public static Rule Comment = Sequence(
+			Syntax.comment,
+			Syntax.comment,
+			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))),
+			EndOfLine);
+		
+		public static Rule Whitespace = ZeroOrMore(
 			Alternatives(
 				Comment,
 				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
 
-		public static Rule Whitespace = Alternatives(Comment,Empty);
 		public static Rule Expression = DelayedRule(delegate() {
 			return CachedRule(Alternatives(List,LiteralExpression, Call, CallSelect, Select, FunctionProgram,
 				Search, Program, LastArgument));
 		});
-		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
-		public static Rule EndOfLine = Sequence(
-			StringRule(ZeroOrMoreChars(Chars(""+Syntax.space+Syntax.tab))),
-			Alternatives(Syntax.unixNewLine,Syntax.windowsNewLine));
 
 		public static Rule Integer = Sequence(new Action(
 	        StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
 	        delegate(Parser p, Map map, ref Map result) {
-				try {
-					Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
-					if (rational.GetInteger() != null) {
-						result = new NumberMap(new Integer32(rational.GetInt32()));
-						result.Source = map.Source;
-					}
-					else {
-						result = new NumberMap(rational);
-						result.Source = map.Source;
-					}
+				Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
+				if (rational.GetInteger() != null) {
+					result = new NumberMap(new Integer32(rational.GetInt32()));
+					result.Source = map.Source;
 				}
-				catch (Exception e) {
+				else {
+					result = new NumberMap(rational);
+					result.Source = map.Source;
 				}
 			}));
 
@@ -3197,7 +3195,7 @@ namespace Meta {
 					OptionalError(Syntax.@string)))));
 
 		public static Rule Decimal = Sequence(new Action(
-	        Sequence(
+	        SequenceList(
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer)))),
 				Append(Syntax.decimalSeparator),
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
@@ -3255,7 +3253,6 @@ namespace Meta {
 			return Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression);
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,Whitespace,ReferenceAssignment(Value));
-
 		public static Rule Entry = Alternatives(
 			Sequence(
 				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
@@ -3290,14 +3287,14 @@ namespace Meta {
 		public static Rule Call = DelayedRule(delegate() {
 			return Sequence(
 				Assign(CodeKeys.Call,
-				Sequence(
+				SequenceList(
 					Assign(1,
 						Alternatives(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
 							Alternatives(
-								Sequence(
+								SequenceList(
 									Whitespace,
 									Assign(1,Alternatives(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
 									Append(
@@ -3318,14 +3315,14 @@ namespace Meta {
 		public static Rule SimpleCall = DelayedRule(delegate() {
 			return Sequence(
 				Assign(CodeKeys.Call,
-				Sequence(
+				SequenceList(
 					Assign(1,
 						Alternatives(List,FunctionProgram, LiteralExpression, SmallSelect, Search, Program, LastArgument)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
 							Alternatives(
-								Sequence(
+								SequenceList(
 									Whitespace,
 									Append(
 										ZeroOrMore(
@@ -3372,7 +3369,7 @@ namespace Meta {
 			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
-					Sequence(
+					SequenceList(
 						Assign(1,
 							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						Append(
@@ -3384,7 +3381,7 @@ namespace Meta {
 			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
-					Sequence(
+					SequenceList(
 						Assign(1,Alternatives(SimpleCall)),
 						Append(
 							OneOrMore(Autokey(
@@ -3395,7 +3392,7 @@ namespace Meta {
 			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
-					Sequence(
+					SequenceList(
 						Assign(1,
 							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
 						Append(
@@ -3408,7 +3405,7 @@ namespace Meta {
 			ReferenceAssignment(
 				PrePost(
 					delegate(Parser p) {p.defaultKeys.Push(1);},
-					Sequence(
+					SequenceList(
 						Whitespace,
 						Assign(1,Value),
 						Whitespace,
@@ -3446,11 +3443,11 @@ namespace Meta {
 			Action entryAction = ReferenceAssignment(ListEntry);
 			return Sequence(
 				Assign(CodeKeys.Program,
-					Sequence(
+					SequenceList(
 						Whitespace,
 						Syntax.arrayStart,
 						Append(Optional(
-								Sequence(Whitespace,Assign(1,ListEntry),
+								SequenceList(Whitespace,Assign(1,ListEntry),
 									Whitespace,
 									Append(
 										ZeroOrMore(
@@ -3553,11 +3550,11 @@ namespace Meta {
 		public static Rule Program = DelayedRule(delegate {
 			return Sequence(
 				Assign(CodeKeys.Program,
-					Sequence(
+					SequenceList(
 						Syntax.programStart,
 						Append(
 							Alternatives(
-								Sequence(
+								SequenceList(
 									Whitespace,
 									Append(
 										ZeroOrMore(
@@ -3821,8 +3818,20 @@ namespace Meta {
 			});
 		}
 		public static Rule Sequence(params Action[] actions) {
+			return Sequence(false,actions);
+		}
+		public static Rule SequenceList(params Action[] actions) {
+			return Sequence(true, actions);
+		}
+		public static Rule Sequence(bool list,params Action[] actions) {
 			return new Rule(delegate(Parser parser, ref Map match) {
-				Map result = new DictionaryMap();
+				Map result;
+				if (list) {
+					result = new ListMap();
+				}
+				else {
+					result = new DictionaryMap();
+				}
 				bool success = true;
 				foreach (Action action in actions) {
 					if (action != null) {
@@ -3843,6 +3852,29 @@ namespace Meta {
 				}
 			});
 		}
+		//public static Rule Sequence(params Action[] actions) {
+		//    return new Rule(delegate(Parser parser, ref Map match) {
+		//        Map result = new DictionaryMap();
+		//        bool success = true;
+		//        foreach (Action action in actions) {
+		//            if (action != null) {
+		//                bool matched = action.Execute(parser, ref result);
+		//                if (!matched) {
+		//                    success = false;
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        if (!success) {
+		//            match = null;
+		//            return false;
+		//        }
+		//        else {
+		//            match = result;
+		//            return true;
+		//        }
+		//    });
+		//}
 		public static Rule LiteralRule(Map literal) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				map = literal;
@@ -3851,7 +3883,8 @@ namespace Meta {
 		}
 		public static Rule ZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
-				Map list = new DictionaryMap();
+				Map list = new ListMap();
+				//Map list = new DictionaryMap();
 				while (true) {
 					if (!action.Execute(parser, ref list)) {
 						break;
