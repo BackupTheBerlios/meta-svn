@@ -274,7 +274,7 @@ public partial class Editor : System.Windows.Window {
 			if (original != null) {
 				Comments comments = Comments.GetComment(original);
 				//Comments comments = new Comments(original);
-				XmlNode node = comments._summary;
+				XmlNode node = comments.Summary;
 				//XmlNode node = comments.Summary;
 				if (node != null) {
 					foreach (XmlNode n in node.ChildNodes) {
@@ -1513,7 +1513,7 @@ public partial class Editor : System.Windows.Window {
 				if (structure != null) {
 					Method method = structure as Method;
 					if (method != null) {
-						XmlNodeList parameters = Comments.GetComment(method.method)._params;
+						XmlNodeList parameters = Comments.GetComment(method.method).Parameters;
 						//XmlNodeList parameters = new Comments(method.method)._params;
 						string t = null;
 						string paramName;
@@ -1705,16 +1705,15 @@ public partial class Editor : System.Windows.Window {
 	// for specific types or members of types.
 
 	public class Comments {
+
 		private static Dictionary<string, XmlDocument> _assemblyDocs = new Dictionary<string, XmlDocument>();
 		public static Dictionary<string, Comments> cache = new Dictionary<string, Comments>();
-		private static BindingFlags _bindingFlags =
-			BindingFlags.Instance | BindingFlags.Static |
+		private static BindingFlags _bindingFlags = BindingFlags.Instance | BindingFlags.Static |
 			BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
 
 
-		private XmlNode _comments;
-		public XmlNode _summary;
-		public XmlNodeList _params;
+		public XmlNode Summary;
+		public XmlNodeList Parameters;
 
 
 		public static Comments GetComment(MemberInfo member) {
@@ -1722,29 +1721,19 @@ public partial class Editor : System.Windows.Window {
 			if (!cache.ContainsKey(name)) {
 				Load(member);
 			}
-			//if (!cache.ContainsKey(name)) {
-			//}
-			return cache[name];
+			if (cache.ContainsKey(name)) {
+				return cache[name];
+			}
+			return new Comments();
+		}
+		public Comments() {
+			Summary = new XmlDocument();
+			Parameters = new XmlDocument().ChildNodes;
 		}
 		private Comments(XmlNode node) {
-			_comments = node;
-			//_comments = GetComments(mi);
-			if (_comments != null) {
-				_summary = _comments.SelectSingleNode("summary");
-				_params = _comments.SelectNodes("param");
-			}
-			else {
-				_comments = new XmlDocument();
-			}
-		}
-		private Comments(MemberInfo mi) {
-			_comments = GetComments(mi);
-			if (_comments != null) {
-				_summary = _comments.SelectSingleNode("summary");
-				_params = _comments.SelectNodes("param");
-			}
-			else {
-				_comments = new XmlDocument();
+			if (node != null) {
+				Summary = node.SelectSingleNode("summary");
+				Parameters = node.SelectNodes("param");
 			}
 		}
 		private static string GetName(MemberInfo mi) {
@@ -1764,86 +1753,25 @@ public partial class Editor : System.Windows.Window {
 					//    xpath += "~{" + ((MethodInfo)mi).ReturnType.FullName + "}";
 					//}
 					return text;
-					//xpath += "']";
-					//break;
-
-					//xpath = "/doc/members/member[@name='M:" + typeName + "." +
-					//    mi.Name + CreateParamsDescription(((MethodInfo)mi).GetParameters());
-					//if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
-					//    xpath += "~{" + ((MethodInfo)mi).ReturnType.FullName + "}";
-					//}
-					//xpath += "']";
-					//break;
-
 				case MemberTypes.Property:
 					return "P:" + typeName + "." +
 						mi.Name + CreateParamsDescription(((PropertyInfo)mi).GetIndexParameters());
 				case MemberTypes.Field:
 					return "F:" + typeName + "." + mi.Name;
-					//xpath = "/doc/members/member[@name='F:" + typeName + "." + mi.Name + "']";
-					//break;
 				case MemberTypes.Event:
 					return "E:" + typeName + "." + mi.Name;
-					//xpath = "/doc/members/member[@name='E:" + typeName + "." + mi.Name + "']";
 				default:
 					throw new Exception("unknown member type");
 			}
 		}
 		public static void Load(MemberInfo member) {
-			XmlDocument document = LoadAssemblyComments(member.Module.Assembly);
-			foreach(XmlNode node in document.SelectSingleNode("/doc/members").ChildNodes) {
-				cache[node.Attributes["name"].Value]=new Comments(node);
+			Assembly assembly=member.Module.Assembly;
+			if (!_assemblyDocs.ContainsKey(assembly.FullName)) {
+				XmlDocument document = LoadAssemblyComments(assembly);
+				foreach (XmlNode node in document.SelectSingleNode("/doc/members").ChildNodes) {
+					cache[node.Attributes["name"].Value] = new Comments(node);
+				}
 			}
-		}
-		private static XmlNode GetComments(MemberInfo mi) {
-			Type declType = (mi is Type) ? ((Type)mi) : mi.DeclaringType;
-			XmlDocument doc = LoadAssemblyComments(declType.Assembly);
-			if (doc == null) {
-				return null;
-			}
-			string xpath;
-
-			string typeName = declType.FullName.Replace("+", ".");
-			switch (mi.MemberType) {
-				case MemberTypes.NestedType:
-				case MemberTypes.TypeInfo:
-					xpath = "/doc/members/member[@name='T:" + typeName + "']";
-					break;
-
-				case MemberTypes.Constructor:
-					xpath = "/doc/members/member[@name='M:" + typeName + "." +
-						"#ctor" + CreateParamsDescription(((ConstructorInfo)mi).GetParameters()) + "']";
-					break;
-
-				case MemberTypes.Method:
-					xpath = "/doc/members/member[@name='M:" + typeName + "." +
-						mi.Name + CreateParamsDescription(((MethodInfo)mi).GetParameters());
-					if (mi.Name == "op_Implicit" || mi.Name == "op_Explicit") {
-						xpath += "~{" + ((MethodInfo)mi).ReturnType.FullName + "}";
-					}
-					xpath += "']";
-					break;
-
-				case MemberTypes.Property:
-					xpath = "/doc/members/member[@name='P:" + typeName + "." +
-						mi.Name + CreateParamsDescription(((PropertyInfo)mi).GetIndexParameters()) + "']"; // have args when indexers
-					break;
-
-				case MemberTypes.Field:
-					xpath = "/doc/members/member[@name='F:" + typeName + "." + mi.Name + "']";
-					break;
-
-				case MemberTypes.Event:
-					xpath = "/doc/members/member[@name='E:" + typeName + "." + mi.Name + "']";
-					break;
-
-				// Unknown type, nothing to do
-				default:
-					return null;
-			}
-
-			// Get the appropriate node from the document
-			return doc.SelectSingleNode(xpath);
 		}
 		private static string CreateParamsDescription(ParameterInfo[] parameters) {
 			StringBuilder paramDesc = new StringBuilder();
