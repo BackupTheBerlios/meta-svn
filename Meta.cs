@@ -2563,16 +2563,18 @@ namespace Meta {
 				return Count == 0;
 			}
 		}
+		private int hashCode;
 		public override int GetHashCode() {
-			if (text.Length==0) {
-				return 0;
-			}
-			else {
-				unchecked {
-					return int.MaxValue / Count + (text[0] % int.MaxValue);
-					//return int.MaxValue / Count + GetHashCode(text[0]);
-				}
-			}
+			return hashCode;
+			//if (text.Length==0) {
+			//    return 0;
+			//}
+			//else {
+			//    unchecked {
+			//        return int.MaxValue / text.Length + (text[0] % int.MaxValue);
+			//        //return int.MaxValue / Count + GetHashCode(text[0]);
+			//    }
+			//}
 		}
 		public override bool IsNormal {
 			get {
@@ -2588,6 +2590,20 @@ namespace Meta {
 		private string text;
 		public StringMap(string text) {
 			this.text = text;
+			//if (text != null) {
+				//this.text = string.Intern(text);
+			//}
+
+			if (text.Length == 0) {
+				hashCode=0;
+			}
+			else {
+				unchecked {
+					hashCode=int.MaxValue / text.Length + (text[0] % int.MaxValue);
+					//return int.MaxValue / Count + GetHashCode(text[0]);
+				}
+			}
+
 		}
 		public override Map this[Map key] {
 			get {
@@ -2613,6 +2629,8 @@ namespace Meta {
 		public override bool Equals(object obj) {
 			StringMap stringMap = obj as StringMap;
 			if (stringMap!=null) {
+				//return ReferenceEquals(stringMap.text, text);
+				//return ReferenceEquals(stringMap.text, text);
 				return stringMap.text.Equals(text);
 			}
 			else {
@@ -3189,21 +3207,41 @@ namespace Meta {
 
 		public static Rule Expression = DelayedRule(delegate() {
 			return CachedRule(Alternatives(List, LiteralExpression, Call, CallSelect, Select, Program,FunctionProgram, Search));
-				//Search, Program, LastArgument));
 		});
 
 		public static Rule Integer = Sequence(new Action(
 	        StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
 	        delegate(Parser p, Map map, ref Map result) {
-				Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
-				if (rational.GetInteger() != null) {
-					result = new NumberMap(new Integer32(rational.GetInt32()));
-					result.Source = map.Source;
+				string text=map.GetString();
+				int smallInteger;
+				if(int.TryParse(text,out smallInteger)) {
+					result=new NumberMap(new Integer32(smallInteger));
 				}
 				else {
-					result = new NumberMap(rational);
-					result.Source = map.Source;
+					result=new NumberMap(new Integer(text));
 				}
+				result.Source=map.Source;
+
+				//BigInteger
+				//Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
+				//if (rational.GetInteger() != null) {
+				//    result = new NumberMap(new Integer32(rational.GetInt32()));
+				//    result.Source = map.Source;
+				//}
+				//else {
+				//    result = new NumberMap(rational);
+				//    result.Source = map.Source;
+				//}
+
+				//Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
+				//if (rational.GetInteger() != null) {
+				//    result = new NumberMap(new Integer32(rational.GetInt32()));
+				//    result.Source = map.Source;
+				//}
+				//else {
+				//    result = new NumberMap(rational);
+				//    result.Source = map.Source;
+				//}
 			}));
 
 		public static Rule StringLine=StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
@@ -3227,7 +3265,7 @@ namespace Meta {
 				Append(Syntax.decimalSeparator),
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
 	        delegate(Parser p, Map map, ref Map result) {
-				try {
+				//try {
 					Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
 					if (rational.GetInteger() != null) {
 						result = new NumberMap(new Integer32(rational.GetInt32()));
@@ -3237,9 +3275,9 @@ namespace Meta {
 						result = new NumberMap(rational);
 						result.Source = map.Source;
 					}
-				}
-				catch (Exception e) {
-				}
+				//}
+				//catch (Exception e) {
+				//}
 			}));
 
 		public static Rule Number = Sequence(
@@ -4316,18 +4354,18 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-			//public class Fibo : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-			//    }
-			//}
-			//public class MergeSort : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
