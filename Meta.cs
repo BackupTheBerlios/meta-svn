@@ -3401,8 +3401,16 @@ namespace Meta {
 					SequenceList(
 						Autokey(Alternatives(Root, Search, Program, LiteralExpression)),
 				new FastAction(
-						FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-							LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
+						FastOneOrMore(
+							Autokey(
+								FastSequence(
+									Syntax.select,
+									new FastAction(Alternatives(
+										LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
+
+				//new FastAction(
+				//        FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+				//            LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
 		});
 
 		private static Rule CallSelect = DelayedRule(delegate{
@@ -3410,13 +3418,13 @@ namespace Meta {
 				Assign(
 					CodeKeys.Select,
 					SequenceList(
-						Assign(1,Alternatives(SimpleCall)),
+						Autokey(SimpleCall),
 						new FastAction(
 							FastOneOrMore(
 								Autokey(
-									Prefix(
+									FastSequence(
 										Syntax.select,
-										Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+										new FastAction(Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression))))))))));
 		});
 
 		private static Rule Select = DelayedRule(delegate{
@@ -3517,15 +3525,19 @@ namespace Meta {
 		public static Rule CurrentStatement = ComplexStatement(
 			Syntax.current,Assign(CodeKeys.Current, LiteralRule(Map.Empty))
 		);
-		public static Rule Prefix(Rule pre,Rule rule) {
-			return Sequence(pre,ReferenceAssignment(rule));
+		public static Rule Prefix(Rule pre, Rule rule) {
+			return Sequence(pre, ReferenceAssignment(rule));
 		}
 		public static Rule NormalStatement = ComplexStatement(
 			Syntax.statement,
 			Assign(
 				CodeKeys.Key,
 				Alternatives(
-					Prefix(Syntax.lookupAnythingStart, Sequence(Whitespace,ReferenceAssignment(Expression), OptionalError(Syntax.lookupAnythingEnd))),
+					Sequence(
+						Syntax.lookupAnythingStart,
+						Whitespace,
+						new FastAction(Expression),
+						OptionalError(Syntax.lookupAnythingEnd)),
 					Select,
 					Sequence(Assign(CodeKeys.Literal, LookupString)),
 					Expression)));
@@ -3714,16 +3726,6 @@ namespace Meta {
 				return matched;
 			});
 		}
-		//public static Rule OneOrMore(Action action) {
-		//    return new Rule(delegate(Parser parser, ref Map map) {
-		//        map = new ListMap();
-		//        bool matched = false;
-		//        while (action.Execute(parser, ref map)) {
-		//            matched = true;
-		//        }
-		//        return matched;
-		//    });
-		//}
 		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public class CachedResult{
@@ -3755,27 +3757,6 @@ namespace Meta {
 				return false;
 			});
 		}
-		//public static Rule CachedRule(Rule rule) {
-		//    Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
-		//    allCached.Add(cached);
-		//    return new Rule(delegate(Parser parser, ref Map map) {
-		//        CachedResult cachedResult;
-		//        State state = parser.state;
-		//        if (cached.TryGetValue(state, out cachedResult)) {
-		//            map = cachedResult.map;
-		//            if (parser.state.Text.Length == parser.state.index + 1) {
-		//                return false;
-		//            }
-		//            parser.state = cachedResult.state;
-		//            return true;
-		//        }
-		//        if (rule.Match(parser, ref map)) {
-		//            cached[state] = new CachedResult(map, parser.state);
-		//            return true;
-		//        }
-		//        return false;
-		//    });
-		//}
 		public class Rule {
 			public Rule(ParseFunction parseFunction) {
 				this.parseFunction = parseFunction;
@@ -3959,6 +3940,18 @@ namespace Meta {
 		}
 		public static Rule SequenceList(params Action[] actions) {
 			return Sequence(true, actions);
+		}
+		public static Rule FastSequence(params Action[] actions) {
+			return new Rule(delegate(Parser parser, ref Map match) {
+				foreach (Action action in actions) {
+					if (!action.Execute(parser, ref match)) {
+						//if (!action.Execute(parser, ref match)) {
+						match = null;
+						return false;
+					}
+				}
+				return true;
+			});
 		}
 		public static Rule Sequence(bool list,params Action[] actions) {
 			return new Rule(delegate(Parser parser, ref Map match) {
