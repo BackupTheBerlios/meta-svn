@@ -3188,8 +3188,7 @@ namespace Meta {
 				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
 
 		public static Rule Expression = DelayedRule(delegate() {
-			return CachedRule(Alternatives(List,LiteralExpression, Call, CallSelect, Select, FunctionProgram,
-				Search, Program));
+			return CachedRule(Alternatives(List, LiteralExpression, Call, CallSelect, Select, Program,FunctionProgram, Search));
 				//Search, Program, LastArgument));
 		});
 
@@ -3347,7 +3346,7 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				SequenceList(
 					Assign(1,
-						Alternatives(List,FunctionProgram, LiteralExpression, SmallSelect, Search, Program)),
+						Alternatives(List, FunctionProgram, LiteralExpression, Program,SmallSelect, Search)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
@@ -3401,32 +3400,10 @@ namespace Meta {
 					CodeKeys.Select,
 					SequenceList(
 						Autokey(Alternatives(Root, Search, Program, LiteralExpression)),
-				//Append(
-					new FastAction(
-							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-								LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
+				new FastAction(
+						FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+							LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
 		});
-		//private static Rule SmallSelect = DelayedRule(delegate {
-		//    return CachedRule(Sequence(
-		//        Assign(
-		//            CodeKeys.Select,
-		//            SequenceList(
-		//                Autokey(Alternatives(Root, Search, LastArgument, Program, LiteralExpression)),
-		//                //Append(
-		//                    OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-		//                        LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))));
-		//});
-
-		//private static Rule SmallSelect = DelayedRule(delegate {
-		//    return CachedRule(Sequence(
-		//        Assign(
-		//            CodeKeys.Select,
-		//            SequenceList(
-		//                Autokey(Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
-		//                Append(
-		//                    OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-		//                        LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
-		//});
 
 		private static Rule CallSelect = DelayedRule(delegate{
 			return CachedRule(Sequence(
@@ -3464,7 +3441,6 @@ namespace Meta {
 						Assign(1,Value),
 						Whitespace,
 						new FastAction(
-						//Append(
 							FastZeroOrMore(
 								Autokey(
 									Sequence(
@@ -3613,7 +3589,7 @@ namespace Meta {
 			ReferenceAssignment(FunctionPart));
 
 		public static Rule Program = DelayedRule(delegate {
-			return Sequence(
+			return CachedRule(Sequence(
 				Assign(CodeKeys.Program,
 					SequenceList(
 						Syntax.programStart,
@@ -3622,16 +3598,36 @@ namespace Meta {
 								SequenceList(
 									Whitespace,
 									new FastAction(
-									//Append(
+				//Append(
 										FastZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
 													ReferenceAssignment(AllStatements))))),
-									Whitespace,OptionalError(Syntax.programEnd))
+									Whitespace, OptionalError(Syntax.programEnd))
 									)))
-			));
+			)));
 		});
+		//public static Rule Program = DelayedRule(delegate {
+		//    return Sequence(
+		//        Assign(CodeKeys.Program,
+		//            SequenceList(
+		//                Syntax.programStart,
+		//                Append(
+		//                    Alternatives(
+		//                        SequenceList(
+		//                            Whitespace,
+		//                            new FastAction(
+		//                            //Append(
+		//                                FastZeroOrMore(
+		//                                    Autokey(
+		//                                        Sequence(
+		//                                            Whitespace,
+		//                                            ReferenceAssignment(AllStatements))))),
+		//                            Whitespace,OptionalError(Syntax.programEnd))
+		//                            )))
+		//    ));
+		//});
 		public static Rule OptionalError(char c) {
 			return Alternatives(c, Error("Missing '" + c + "'"));
 		}
@@ -3759,6 +3755,27 @@ namespace Meta {
 				return false;
 			});
 		}
+		//public static Rule CachedRule(Rule rule) {
+		//    Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
+		//    allCached.Add(cached);
+		//    return new Rule(delegate(Parser parser, ref Map map) {
+		//        CachedResult cachedResult;
+		//        State state = parser.state;
+		//        if (cached.TryGetValue(state, out cachedResult)) {
+		//            map = cachedResult.map;
+		//            if (parser.state.Text.Length == parser.state.index + 1) {
+		//                return false;
+		//            }
+		//            parser.state = cachedResult.state;
+		//            return true;
+		//        }
+		//        if (rule.Match(parser, ref map)) {
+		//            cached[state] = new CachedResult(map, parser.state);
+		//            return true;
+		//        }
+		//        return false;
+		//    });
+		//}
 		public class Rule {
 			public Rule(ParseFunction parseFunction) {
 				this.parseFunction = parseFunction;
