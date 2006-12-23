@@ -1788,14 +1788,14 @@ namespace Meta {
 	}
 	public class DictionaryMap : Map {
 		private Expression expression;
-		public override Expression Expression {
-			get {
-				return expression;
-			}
-			set {
-				expression=value;
-			}
-		}
+		//public override Expression Expression {
+		//    get {
+		//        return expression;
+		//    }
+		//    set {
+		//        expression=value;
+		//    }
+		//}
 		public override Extent Source {
 			get {
 				return source;
@@ -2567,7 +2567,8 @@ namespace Meta {
 			}
 			else {
 				unchecked {
-					return int.MaxValue / Count + GetHashCode(text[0]);
+					return int.MaxValue / Count + (text[0] % int.MaxValue);
+					//return int.MaxValue / Count + GetHashCode(text[0]);
 				}
 			}
 		}
@@ -2608,12 +2609,21 @@ namespace Meta {
 			}
 		}
 		public override bool Equals(object obj) {
-			if (obj is StringMap) {
-				return ((StringMap)obj).text == text;}
+			StringMap stringMap = obj as StringMap;
+			if (stringMap!=null) {
+				return stringMap.text.Equals(text);
+			}
 			else {
 				return base.Equals(obj);
 			}
 		}
+		//public override bool Equals(object obj) {
+		//    if (obj is StringMap) {
+		//        return ((StringMap)obj).text == text;}
+		//    else {
+		//        return base.Equals(obj);
+		//    }
+		//}
 		public override int Count {
 			get {
 				return text.Length;
@@ -4946,7 +4956,8 @@ namespace Meta {
 			Map clone = new DictionaryMap();
 			clone.Scope = Scope;
 			clone.Source = Source;
-			clone.Expression=Expression;
+			clone.expression = expression;
+			//clone.Expression = Expression;
 			clone.IsConstant = this.IsConstant;
 			foreach (Map key in Keys) {
 				try {
@@ -5054,18 +5065,28 @@ namespace Meta {
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
-		public virtual Expression Expression {
-			get {
-				return null;
-			}
-			set {
-			}
-		}
+		//public Expression Expression {
+		//    get {
+		//        return expression;
+		//    }
+		//    set {
+		//        expression = value;
+		//    }
+		//}
+		private Expression expression;
+
+		//public Expression Expression {
+		//    get {
+		//        return null;
+		//    }
+		//    set {
+		//    }
+		//}
 		public virtual Expression GetExpression(Expression parent) {
-			if (Expression == null) {
-				Expression = CreateExpression(parent);
+			if (expression == null) {
+				expression = CreateExpression(parent);
 			}
-			return Expression;
+			return expression;
 		}
 		static Map() {
 			statements[CodeKeys.Keys] = typeof(SearchStatement);
