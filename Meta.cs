@@ -3267,8 +3267,9 @@ namespace Meta {
 		public static Rule MapRule = Sequence(
 			Syntax.programStart,
 			Whitespace,
-			ReferenceAssignment(
-				OneOrMore(
+			//ReferenceAssignment(
+			new FastAction(
+				FastOneOrMore(
 					new Action(
 						Sequence(
 							ReferenceAssignment(Entry), Whitespace, OptionalError(Syntax.programSeparator), Whitespace),
@@ -3366,18 +3367,38 @@ namespace Meta {
 				Alternatives(
 					Prefix(Syntax.search,Expression),
 					Alternatives(LookupStringExpression,LookupAnythingExpression)))));
-
 		private static Rule SmallSelect = DelayedRule(delegate {
 			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
 					SequenceList(
-						Assign(1,
-							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
-						Append(
-							OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+						Autokey(Alternatives(Root, Search, LastArgument, Program, LiteralExpression)),
+				//Append(
+					new FastAction(
+							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+								LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
 		});
+		//private static Rule SmallSelect = DelayedRule(delegate {
+		//    return CachedRule(Sequence(
+		//        Assign(
+		//            CodeKeys.Select,
+		//            SequenceList(
+		//                Autokey(Alternatives(Root, Search, LastArgument, Program, LiteralExpression)),
+		//                //Append(
+		//                    OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+		//                        LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))));
+		//});
+
+		//private static Rule SmallSelect = DelayedRule(delegate {
+		//    return CachedRule(Sequence(
+		//        Assign(
+		//            CodeKeys.Select,
+		//            SequenceList(
+		//                Autokey(Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
+		//                Append(
+		//                    OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+		//                        LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+		//});
 
 		private static Rule CallSelect = DelayedRule(delegate{
 			return CachedRule(Sequence(
@@ -3385,9 +3406,12 @@ namespace Meta {
 					CodeKeys.Select,
 					SequenceList(
 						Assign(1,Alternatives(SimpleCall)),
-						Append(
-							OneOrMore(Autokey(
-								Prefix(Syntax.select, Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
+						new FastAction(
+							FastOneOrMore(
+								Autokey(
+									Prefix(
+										Syntax.select,
+										Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
 		private static Rule Select = DelayedRule(delegate{
@@ -3397,8 +3421,8 @@ namespace Meta {
 					SequenceList(
 						Assign(1,
 							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
-						Append(
-							OneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+						new FastAction(
+							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -3591,6 +3615,17 @@ namespace Meta {
 				return true;
 			});
 		}
+		public class FastAction:Action {
+			public FastAction(Rule rule):base(rule,delegate{}) {
+			}
+			public override bool Execute(Parser parser, ref Map result) {
+				if (rule.MatchFast(parser, ref result)) {
+					//action(parser, result, ref result);
+					return true;
+				}
+				return false;
+			}
+		}
 		public class Action {
 			public static implicit operator Action(char c) {
 				return StringRule(OneChar(SingleChar(c)));
@@ -3598,12 +3633,20 @@ namespace Meta {
 			public static implicit operator Action(Rule rule) {
 				return new Action(rule,delegate { });
 			}
-			private Rule rule;
+			protected Rule rule;
 			public Action(Rule rule, CustomActionDelegate action) { 
 				this.rule = rule;
 				this.action = action;
 			}
-			public bool Execute(Parser parser, ref Map result) {
+			//public bool ExecuteFast(Parser parser, ref Map result) {
+			//    //Map map = null;
+			//    if (rule.Match(parser, ref result)) {
+			//        action(parser, result, ref result);
+			//        return true;
+			//    }
+			//    return false;
+			//}
+			public virtual bool Execute(Parser parser, ref Map result) {
 				Map map=null;
 				if (rule.Match(parser,ref map)) {
 					action(parser, map, ref result);
@@ -3611,7 +3654,7 @@ namespace Meta {
 				}
 				return false;
 			}
-			private CustomActionDelegate action;
+			protected CustomActionDelegate action;
 		}
 		public static Action Autokey(Rule rule) {
 			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
@@ -3620,9 +3663,7 @@ namespace Meta {
 		}
 		public static Action Assign(Map key, Rule rule) {
 			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
-				if (map != null) {
-					result[key] = map;
-				}
+				result[key] = map;
 			});
 		}
 		public static Action ReferenceAssignment(Rule rule) {
@@ -3632,13 +3673,30 @@ namespace Meta {
 		}
 		public static Action Append(Rule rule) {
 			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
-				if (map != null) {
-					foreach (Map m in map.Array) {
-						result.Append(m);
-					}
+				foreach (Map m in map.Array) {
+					result.Append(m);
 				}
 			});
 		}
+		public static Rule FastOneOrMore(Action action) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				bool matched = false;
+				while (action.Execute(parser, ref map)) {
+					matched = true;
+				}
+				return matched;
+			});
+		}
+		//public static Rule OneOrMore(Action action) {
+		//    return new Rule(delegate(Parser parser, ref Map map) {
+		//        map = new ListMap();
+		//        bool matched = false;
+		//        while (action.Execute(parser, ref map)) {
+		//            matched = true;
+		//        }
+		//        return matched;
+		//    });
+		//}
 		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public class CachedResult{
@@ -3687,7 +3745,36 @@ namespace Meta {
 			}
 			public int mismatches=0;
 			public int calls=0;
-
+			public bool MatchFast(Parser parser, ref Map map) {
+				if (precondition != null) {
+					if (!precondition(parser)) {
+						return false;
+					}
+				}
+				calls++;
+				State oldState = parser.state;
+				bool matched;
+				//Map result = null;
+				matched = parseFunction(parser, ref map);
+				if (!matched) {
+					mismatches++;
+					parser.state = oldState;
+				}
+				else {
+					if (map != null) {
+						map.Source = new Extent(
+							new Source(oldState.Line, oldState.Column, parser.state.FileName),
+							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+					}
+					//if (result != null) {
+					//    result.Source = new Extent(
+					//        new Source(oldState.Line, oldState.Column, parser.state.FileName),
+					//        new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+					//}
+				}
+				//map = result;
+				return matched;
+			}
 			public bool Match(Parser parser, ref Map map) {
 				if(precondition!=null) { 
 					if(!precondition(parser)) {
@@ -3722,9 +3809,9 @@ namespace Meta {
 			});
 		}
 		public static CharRule CharsExcept(string characters) {
-			string s = characters + Syntax.endOfFile;
+			string chars = characters + Syntax.endOfFile;
 			return new CharRule(delegate(char c) {
-				return s.IndexOf(c) == -1;
+				return chars.IndexOf(c) == -1;
 			});
 		}
 		public delegate bool StringDelegate(Parser parser, ref string s);
@@ -3835,6 +3922,7 @@ namespace Meta {
 				}
 				foreach (Action action in actions) {
 					if (!action.Execute(parser, ref match)) {
+					//if (!action.Execute(parser, ref match)) {
 						match = null;
 						return false;
 					}
@@ -3848,24 +3936,31 @@ namespace Meta {
 				return true;
 			});
 		}
-		public static Rule ZeroOrMore(Action action) {
+		public static Rule FastZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
-				map = new ListMap();
 				while (action.Execute(parser, ref map));
 				return true;
 			});
 		}
-		public static Rule OneOrMore (Action action) {
-			return new Rule(delegate (Parser parser, ref Map map) {
+		public static Rule ZeroOrMore(Action action) {
+			return new Rule(delegate(Parser parser, ref Map map) {
 				map = new ListMap();
-				bool matched = false;
-				while (action.Execute(parser, ref map)) {
-					matched = true;
-				}
-				return matched;
+				while (action.Execute(parser, ref map))
+					;
+				return true;
 			});
 		}
-		public static Rule Optional(Rule rule) {
+		//public static Rule OneOrMoreFast(Action action) {
+		//    return new Rule(delegate(Parser parser, ref Map map) {
+		//        //map = new ListMap();
+		//        bool matched = false;
+		//        while (action.Execute(parser, ref map)) {
+		//            matched = true;
+		//        }
+		//        return matched;
+		//    });
+		//}
+		public static Rule Optional(Rule rule) { 
 			return new Rule(delegate(Parser parser, ref Map match) {
 				rule.Match(parser, ref match);
 				return true;
@@ -5065,23 +5160,10 @@ namespace Meta {
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
-		//public Expression Expression {
-		//    get {
-		//        return expression;
-		//    }
-		//    set {
-		//        expression = value;
-		//    }
-		//}
+
 		private Expression expression;
 
-		//public Expression Expression {
-		//    get {
-		//        return null;
-		//    }
-		//    set {
-		//    }
-		//}
+
 		public virtual Expression GetExpression(Expression parent) {
 			if (expression == null) {
 				expression = CreateExpression(parent);
