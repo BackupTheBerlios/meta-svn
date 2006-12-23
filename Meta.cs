@@ -988,10 +988,11 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			DateTime start = DateTime.Now;
 			string multilineliteral = @"part of the text
                                        other part of the text";
 
-			DateTime start = DateTime.Now;
+			//DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
 					try {
@@ -1042,6 +1043,7 @@ namespace Meta {
 					}
 				}
 			}
+			Console.WriteLine((DateTime.Now - start).TotalSeconds);
 		}
 		private static void DebugPrint(string text) {
 			if (useConsole) {
@@ -3125,6 +3127,7 @@ namespace Meta {
 			Program.precondition=delegate(Parser p) {
 				return p.Look()==Syntax.programStart;
 			};
+
 			LiteralExpression.precondition=delegate(Parser p) {
 				switch(p.Look()){
 					case Syntax.@string:
@@ -3145,6 +3148,33 @@ namespace Meta {
 						return false;
 				}
 			};
+			LookupAnythingExpression.precondition = delegate(Parser p) {
+				return p.Look() == Syntax.lookupAnythingStart;
+			};
+			Comment.precondition = delegate(Parser p) {
+				return p.Look() == Syntax.comment && p.Look(1) == Syntax.comment;
+			};
+			List.precondition = delegate(Parser p) {
+				return p.Look() == Syntax.arrayStart;
+			};
+			//CurrentStatement.precondition = delegate(Parser p) {
+			//    return p.Look() == Syntax.current;
+			//};
+			LookupStringExpression.precondition = delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			};
+			LookupString.precondition = delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			};
+			Search.precondition = delegate(Parser p) {
+				char c = p.Look();
+				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
+			};
+
+
+			//Statement.precondition=delegate (Parser p) {
+			//    //return p.Look()==Syntax.searchStatement;
+			//}
 		}
 		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
 		public static Rule EndOfLine = Sequence(
@@ -3157,14 +3187,15 @@ namespace Meta {
 			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))),
 			EndOfLine);
 		
-		public static Rule Whitespace = ZeroOrMore(
+		public static Rule Whitespace = FastZeroOrMore(
 			Alternatives(
 				Comment,
 				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
 
 		public static Rule Expression = DelayedRule(delegate() {
 			return CachedRule(Alternatives(List,LiteralExpression, Call, CallSelect, Select, FunctionProgram,
-				Search, Program, LastArgument));
+				Search, Program));
+				//Search, Program, LastArgument));
 		});
 
 		public static Rule Integer = Sequence(new Action(
@@ -3283,7 +3314,7 @@ namespace Meta {
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 		private static Rule Arg=DelayedRule(delegate {
 			return Alternatives(List,
-				LastArgument, FunctionProgram,
+				FunctionProgram,
 				LiteralExpression, Call, Select,
 				Search, Program);
 		});
@@ -3292,7 +3323,7 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				SequenceList(
 					Assign(1,
-						Alternatives(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program, LastArgument)),
+						Alternatives(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
@@ -3300,8 +3331,9 @@ namespace Meta {
 								SequenceList(
 									Whitespace,
 									Assign(1,Alternatives(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
-									Append(
-										ZeroOrMore(
+									//Append(
+									new FastAction(
+										FastZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
@@ -3320,20 +3352,21 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				SequenceList(
 					Assign(1,
-						Alternatives(List,FunctionProgram, LiteralExpression, SmallSelect, Search, Program, LastArgument)),
+						Alternatives(List,FunctionProgram, LiteralExpression, SmallSelect, Search, Program)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
 							Alternatives(
 								SequenceList(
 									Whitespace,
-									Append(
-										ZeroOrMore(
+									new FastAction(
+									//Append(
+										FastZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
 													ReferenceAssignment(Alternatives(List,
-														LastArgument, FunctionProgram, LiteralExpression,
+														 FunctionProgram, LiteralExpression,
 														Call, Select, Search, Program)),
 													// should be optional error
 													Optional(Syntax.callSeparator)
@@ -3349,10 +3382,10 @@ namespace Meta {
 		}
 		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
 		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
-		public static Rule LastArgument = Simple(
-			Syntax.lastArgument,
-			new DictionaryMap(CodeKeys.LastArgument, Map.Empty)
-		);
+		//public static Rule LastArgument = Simple(
+		//    Syntax.lastArgument,
+		//    new DictionaryMap(CodeKeys.LastArgument, Map.Empty)
+		//);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = Sequence(
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
@@ -3372,7 +3405,7 @@ namespace Meta {
 				Assign(
 					CodeKeys.Select,
 					SequenceList(
-						Autokey(Alternatives(Root, Search, LastArgument, Program, LiteralExpression)),
+						Autokey(Alternatives(Root, Search, Program, LiteralExpression)),
 				//Append(
 					new FastAction(
 							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
@@ -3420,7 +3453,7 @@ namespace Meta {
 					CodeKeys.Select,
 					SequenceList(
 						Assign(1,
-							Alternatives(Root,Search,LastArgument,Program,LiteralExpression)),
+							Alternatives(Root,Search,Program,LiteralExpression)),
 						new FastAction(
 							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
@@ -3435,8 +3468,9 @@ namespace Meta {
 						Whitespace,
 						Assign(1,Value),
 						Whitespace,
-						Append(
-							ZeroOrMore(
+						new FastAction(
+						//Append(
+							FastZeroOrMore(
 								Autokey(
 									Sequence(
 										OptionalError(Syntax.arraySeparator),
@@ -3475,8 +3509,9 @@ namespace Meta {
 						Append(Optional(
 								SequenceList(Whitespace,Assign(1,ListEntry),
 									Whitespace,
-									Append(
-										ZeroOrMore(
+									new FastAction(
+									//Append(
+										FastZeroOrMore(
 											Autokey(
 												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))))
 						)),
@@ -3591,8 +3626,9 @@ namespace Meta {
 							Alternatives(
 								SequenceList(
 									Whitespace,
-									Append(
-										ZeroOrMore(
+									new FastAction(
+									//Append(
+										FastZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
@@ -3938,15 +3974,14 @@ namespace Meta {
 		}
 		public static Rule FastZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
-				while (action.Execute(parser, ref map));
+				while(action.Execute(parser, ref map));
 				return true;
 			});
 		}
 		public static Rule ZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				map = new ListMap();
-				while (action.Execute(parser, ref map))
-					;
+				while (action.Execute(parser, ref map));
 				return true;
 			});
 		}
@@ -4276,18 +4311,18 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class Fibo : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+			//    }
+			//}
+			//public class MergeSort : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {

@@ -109,7 +109,7 @@ Entry (KeyValuePair`2)
 					Key (StringMap):
 						"parameter"
 					Value (StringMap):
-						""
+						"arg"
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"expression"
@@ -137,9 +137,13 @@ Entry (KeyValuePair`2)
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
-														"lastArgument"
-													Value (EmptyMap):
-														0
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"arg"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"LIST"

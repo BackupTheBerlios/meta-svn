@@ -32,8 +32,8 @@
 		hello="world";
 		x="y";
 	};
-	SetCounter=(){
-			counter:@;
+	SetCounter=(arg){
+		counter:arg;
 	};
 	1=SetCounter(5);
 	LIST=[0,0,0];
