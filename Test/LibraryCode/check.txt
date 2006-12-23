@@ -19,7 +19,7 @@
 								!"condition"
 								!"callable"
 								,
-									|Meta.Integer32
+									|0
 				"array"=,
 					"join"=.
 						!"Library"
@@ -31,7 +31,7 @@
 									!"ObjectMap_Object"
 									!"arg"
 								"get_ArrayCount"
-							Meta.Integer32
+							0
 				"console"=,
 					"writeLine"=.
 						!"Library"
@@ -75,8 +75,8 @@
 						a|,
 							b|.
 								,
-									Meta.Integer32=!"b"
-									Meta.Integer32=!"a"
+									0=!"b"
+									1=!"a"
 								-
 									.
 										!"rational"
@@ -87,8 +87,8 @@
 						a|,
 							b|.
 								,
-									Meta.Integer32=!"b"
-									Meta.Integer32=!"a"
+									0=!"b"
+									1=!"a"
 								-
 									.
 										!"rational"
@@ -103,28 +103,28 @@
 							.
 								!"rational"
 								"subtract"
-							Meta.Integer32
+							0
 							!"arg"
 				"boolean"=,
 					"or"=,
 						a|,
 							b|.
 								,
-									Meta.Integer32=!"a"
-									Meta.Integer32=Meta.Integer32
+									0=!"a"
+									1=1
 								!"b"
 					"and"=,
 						a|,
 							b|.
 								,
-									Meta.Integer32=!"b"
-									Meta.Integer32=Meta.Integer32
+									1=!"b"
+									0=0
 								!"a"
 					"not"=,
 						arg|.
 							,
-								Meta.Integer32=Meta.Integer32
-								Meta.Integer32=Meta.Integer32
+								0=1
+								1=0
 							!"arg"
 				"map"=,
 					"toString"=.
@@ -140,7 +140,7 @@
 									!"ObjectMap_Object"
 									!"arg"
 								"get_Count"
-							Meta.Integer32
+							0
 					"keys"=,
 						arg|-
 							!"DictionaryMap_IEnumerable`1"
@@ -150,7 +150,7 @@
 										!"ObjectMap_Object"
 										!"arg"
 									"get_Keys"
-								Meta.Integer32
+								0
 					"equal"=.
 						!"Library"
 						"Equal_Object_Object"

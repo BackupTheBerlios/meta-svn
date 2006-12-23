@@ -11,15 +11,9 @@
 
 	uncurry=(func,arg){
 		result=func;
-		apply(
-			(a){
-				result:result(a);
-			},
-			arg
-		);
+		apply((a){result:result(a);},arg);
 		&result;
 	};
-		
 	makeVector=uncurry(Vector3_Single_Single_Single);
 	world=World();
 	space=with(
@@ -43,7 +37,7 @@
 	);
 	points=0;
 	canvas=Canvas();
-	flow.apply(
+	apply(
 		(stuff){
 			position=stuff.2;
 			size=stuff.1;

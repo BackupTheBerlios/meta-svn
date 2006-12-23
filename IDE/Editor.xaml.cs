@@ -648,6 +648,7 @@ public partial class Editor : System.Windows.Window {
 		textBox.SelectionLength = oldLength+removed;
 	}
 	public static FontFamily font;
+	public const int fontSize=14;
 	public Editor() {
 		iterativeSearch = new IterativeSearch(textBox, true);
 		try {
@@ -767,7 +768,6 @@ public partial class Editor : System.Windows.Window {
 			textBox.SelectionStart = start;
 			textBox.SelectionLength = end - start;
 			ApplicationCommands.Cut.Execute(null,textBox);
-			//textBox.SelectedText = "";
 		}));
 		//this.CommandBindings.Add(
 		//    new CommandBinding(
@@ -817,7 +817,8 @@ public partial class Editor : System.Windows.Window {
 		BindKey(EditingCommands.SelectUpByLine, Key.L, ModifierKeys.Alt | ModifierKeys.Shift);
 		BindKey(EditingCommands.SelectUpByPage, Key.L, ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift);
 		InitializeComponent();
-		textBox.FontSize = 14;
+		textBox.FontSize = fontSize;
+		//textBox.FontWeight = FontWeights.ExtraLight;
 		textBox.SpellCheck.IsEnabled = true;
 		intellisense.MaxHeight = 100;
 		toolTip.Text = "Tooltip!!!!";
@@ -841,12 +842,12 @@ public partial class Editor : System.Windows.Window {
 			}
 		};
 		toolTip.FontFamily = font;
-		toolTip.FontSize = 14;
+		toolTip.FontSize = fontSize;
 		intellisense.Width = 400;
 		intellisense.SetValue(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Hidden);
 		CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, delegate { Save(); }));
 		intellisense.FontFamily = font;
-		intellisense.FontSize = 14;
+		intellisense.FontSize = fontSize;
 		textBox.FontFamily = font;
 		textBox.AcceptsTab = true;
 		textBox.PreviewKeyDown += delegate(object sender, KeyEventArgs e) {
@@ -938,7 +939,6 @@ public partial class Editor : System.Windows.Window {
 					else if (e.Key == Key.Space) {
 						if(!DoArgumentHelp(e)) {
 							e.Handled = true;
-							//StartIntellisense();
 							searchStart--;
 							intellisense.Items.Clear();
 							List<Source> sources=new List<Source>(Meta.Expression.sources.Keys);
@@ -975,8 +975,6 @@ public partial class Editor : System.Windows.Window {
 										}
 										if (result != null) {
 											maps.Add(result);
-											//s = Library.Merge(result, s);
-											//s = Library.Merge(result, s);
 										}
 									}
 									else if (x is LiteralExpression) {
@@ -984,18 +982,14 @@ public partial class Editor : System.Windows.Window {
 										Map structure=literal.GetStructure();
 
 										maps.Add(structure);
-										//s = Library.Merge(structure, s);
 									}
 									x = x.Parent;
 								}
 							}
 							Map directory = new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
-							//s = Library.Merge(directory, s);
 							maps.Add(directory);
 							maps.Reverse();
 							s = Library.MergeAll(maps);
-							//Map directory=new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
-							//s=Library.Merge(directory,s);
 							List<Map> keys = new List<Map>();
 							if (s != null) {
 								keys.AddRange(s.Keys);
@@ -1023,8 +1017,6 @@ public partial class Editor : System.Windows.Window {
 									if (typeMap != null) {
 										original = typeMap.Type;
 									}
-								}
-								if (k.Equals(new StringMap("internet.bmp"))) {
 								}
 								if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
 									intellisenseItems.Add(new MetaItem(k));
@@ -1768,8 +1760,10 @@ public partial class Editor : System.Windows.Window {
 			Assembly assembly=member.Module.Assembly;
 			if (!_assemblyDocs.ContainsKey(assembly.FullName)) {
 				XmlDocument document = LoadAssemblyComments(assembly);
-				foreach (XmlNode node in document.SelectSingleNode("/doc/members").ChildNodes) {
-					cache[node.Attributes["name"].Value] = new Comments(node);
+				if (document != null) {
+					foreach (XmlNode node in document.SelectSingleNode("/doc/members").ChildNodes) {
+						cache[node.Attributes["name"].Value] = new Comments(node);
+					}
 				}
 			}
 		}
@@ -1795,22 +1789,15 @@ public partial class Editor : System.Windows.Window {
 					if (paramName.EndsWith("&"))
 						paramName = paramName.Substring(0, paramName.Length - 1) + "@";
 
-					// Handle multidimensional arrays
 					if (paramType.IsArray && paramType.GetArrayRank() > 1) {
 						paramName = paramName.Replace(",", "0:,").Replace("]", "0:]");
 					}
-
-					// Append the fixed up parameter name
 					paramDesc.Append(paramName);
 					if (i != parameters.Length - 1)
 						paramDesc.Append(",");
 				}
-
-				// End the list
 				paramDesc.Append(")");
 			}
-
-			// Return the parameter list description
 			return paramDesc.ToString();
 		}
 
