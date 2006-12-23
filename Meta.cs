@@ -1516,7 +1516,7 @@ namespace Meta {
 			else {
 				CallDelegate call = new CallDelegate(delegate(Map map) {
 					return DecideCall(map, arguments);});
-				return new Method(invokeMethod, call, typeof(CallDelegate),call.Method);
+				return new Method(invokeMethod, call, typeof(CallDelegate), method);
 			}
 		}
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
@@ -1535,13 +1535,7 @@ namespace Meta {
 		public override Type GetClass() {
 			return this.Type;
 		}
-		private const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-		//protected override BindingFlags BindingFlags {
-		//    get {
-		//        return bindingFlags;
-		//    }
-		//}
-		public static MemberCache cache = new MemberCache(bindingFlags);
+		public static MemberCache cache = new MemberCache(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 		protected override MemberCache MemberCache {
 			get {
 				return cache;
@@ -1624,13 +1618,7 @@ namespace Meta {
 		public override object GetObject() {
 			return Object;
 		}
-		const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
-		//protected override BindingFlags BindingFlags {
-		//    get {
-		//        return bindingFlags;
-		//    }
-		//}
-		public static MemberCache cache = new MemberCache(bindingFlags);
+		public static MemberCache cache = new MemberCache(BindingFlags.Public | BindingFlags.Instance);
 		protected override MemberCache MemberCache {
 			get {
 				return cache;
@@ -1660,8 +1648,7 @@ namespace Meta {
 		public ObjectMap(Map target): this(target, target.GetType()) {}
 		public ObjectMap(object target, Type type): base(target, type) {
 		}
-		public ObjectMap(object target): base(target, target.GetType()) 
-		{
+		public ObjectMap(object target): base(target, target.GetType()) {
 		}
 		public override string ToString() {
 			return Object.ToString();
@@ -1680,8 +1667,6 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					string p=Path.Combine(path,key.GetString());
-					if (key.Equals(new StringMap("GuiExample"))) {
-					}
 					string dll = Path.Combine(path,key.GetString() + ".dll");
 					if (File.Exists(dll)) {
 						return new AssemblyMap(Assembly.LoadFrom(dll));
@@ -2089,14 +2074,6 @@ namespace Meta {
 			}
 			return false;
 		}
-		protected BindingFlags BindingFlags {
-			get {
-				return BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
-			}
-		}
-		//protected abstract BindingFlags BindingFlags {
-		//    get;
-		//}
 		public override int ArrayCount {
 			get {
 				return 0;
@@ -2190,11 +2167,8 @@ namespace Meta {
 			}
 		}
 		public Delegate CreateEventDelegate(string name, Map code) {
-			return Transform.CreateDelegateFromCode(code, type.GetEvent(name, BindingFlags).EventHandlerType);
+			return Transform.CreateDelegateFromCode(code, type.GetEvent(name).EventHandlerType);
 		}
-		//public Delegate CreateEventDelegate(string name, Map code) {
-		//    return Transform.CreateDelegateFromCode(code, type.GetEvent(name, BindingFlags).EventHandlerType);
-		//}
 	}
 	public interface ISerializeEnumerableSpecial {
 		string Serialize();
@@ -2582,17 +2556,18 @@ namespace Meta {
 		}
 	}
 	public class StringMap : Map {
+		public override bool IsNumber {
+			get {
+				return Count == 0;
+			}
+		}
 		public override int GetHashCode() {
-			if (IsNumber) {
-				return (int)(GetNumber().Numerator.GetInt32() % int.MaxValue);
+			if (text.Length==0) {
+				return 0;
 			}
 			else {
 				unchecked {
-					int hash = int.MaxValue / Count;
-					if (text.Length!=0) {
-						hash += GetHashCode(text[0]);
-					}
-					return hash;
+					return int.MaxValue / Count + GetHashCode(text[0]);
 				}
 			}
 		}
@@ -3480,12 +3455,21 @@ namespace Meta {
 			delegate(Parser p) {p.defaultKeys.Pop();}
 		);
 		public static Rule ComplexStatement(Rule rule, Action action) {
-			return Sequence(
-				action,
-				rule != null ? (Action)rule : null,
-				Assign(CodeKeys.Value, Expression),
-				Whitespace
-			);
+			if (rule == null) {
+				return Sequence(
+					action,
+					Assign(CodeKeys.Value, Expression),
+					Whitespace
+				);
+			}
+			else {
+				return Sequence(
+					action,
+					rule,
+					Assign(CodeKeys.Value, Expression),
+					Whitespace
+				);
+			}
 		}
 		public static Rule DiscardStatement = ComplexStatement(
 			null,Assign(CodeKeys.Discard, LiteralRule(Map.Empty))
@@ -3714,8 +3698,6 @@ namespace Meta {
 						result.Source = new Extent(
 							new Source(oldState.Line, oldState.Column, parser.state.FileName),
 							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
-						if (result.Equals(new StringMap("apply"))) {
-						}
 					}
 				}
 				map=result;
@@ -3762,7 +3744,8 @@ namespace Meta {
 		public static Rule ReallyOneChar(CharRule rule) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				char next = parser.Look();
-				if (rule(next)) {
+				bool matched=rule(next);
+				if(matched) {
 					map = next;
 					parser.state.index++;
 					parser.state.Column++;
@@ -3770,11 +3753,8 @@ namespace Meta {
 						parser.state.Line++;
 						parser.state.Column = 1;
 					}
-					return true;
 				}
-				else {
-					return false;
-				}
+				return matched;
 			});
 		}
 		public static StringDelegate OneChar(CharRule rule) {
@@ -3794,13 +3774,9 @@ namespace Meta {
 		public static Rule StringRule(StringDelegate del) {
 		    return new Rule(delegate(Parser parser, ref Map map) {
 		        string s = null;
-		        if (del(parser, ref s)) {
-		            map = s;
-		            return true;
-		        }
-		        else {
-		            return false;
-		        }
+				bool success=del(parser, ref s);
+				map=s;
+				return success;
 		    });
 		}
 		public delegate void PrePostDelegate(Parser parser);
@@ -3826,8 +3802,7 @@ namespace Meta {
 		public static Rule Alternatives(params Rule[] cases) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				foreach (Rule expression in cases) {
-					bool matched = expression.Match(parser, ref map);
-					if (matched) {
+					if (expression.Match(parser, ref map)) {
 						return true;
 					}
 				}
@@ -3842,31 +3817,19 @@ namespace Meta {
 		}
 		public static Rule Sequence(bool list,params Action[] actions) {
 			return new Rule(delegate(Parser parser, ref Map match) {
-				Map result;
 				if (list) {
-					result = new ListMap();
+					match = new ListMap();
 				}
 				else {
-					result = new DictionaryMap();
+					match = new DictionaryMap();
 				}
-				bool success = true;
 				foreach (Action action in actions) {
-					if (action != null) {
-						bool matched = action.Execute(parser, ref result);
-						if (!matched) {
-							success = false;
-							break;
-						}
+					if (!action.Execute(parser, ref match)) {
+						match = null;
+						return false;
 					}
 				}
-				if (!success) {
-					match = null;
-					return false;
-				}
-				else {
-					match = result;
-					return true;
-				}
+				return true;
 			});
 		}
 		public static Rule LiteralRule(Map literal) {
@@ -3877,42 +3840,25 @@ namespace Meta {
 		}
 		public static Rule ZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
-				Map list = new ListMap();
-				while (true) {
-					if (!action.Execute(parser, ref list)) {
-						break;
-					}
-				}
-				map = list;
+				map = new ListMap();
+				while (action.Execute(parser, ref map));
 				return true;
 			});
 		}
 		public static Rule OneOrMore (Action action) {
 			return new Rule(delegate (Parser parser, ref Map map) {
-				Map list = new DictionaryMap();
+				map = new ListMap();
 				bool matched = false;
-				while (true) {
-					if (!action.Execute(parser, ref list)) {
-						break;
-					}
+				while (action.Execute(parser, ref map)) {
 					matched = true;
 				}
-				map=list;
 				return matched;
 			});
 		}
 		public static Rule Optional(Rule rule) {
 			return new Rule(delegate(Parser parser, ref Map match) {
-				Map matched = null;
-				rule.Match(parser, ref matched);
-				if (matched == null) {
-					match = null;
-					return true;
-				}
-				else {
-					match = matched;
-					return true;
-				}
+				rule.Match(parser, ref match);
+				return true;
 			});
 		}
 		private char Look(int offset) {
@@ -5084,7 +5030,7 @@ namespace Meta {
 				return GetString()!=null;
 			}
 		}
-		public bool IsNumber {
+		public virtual bool IsNumber {
 		    get {
 				return GetNumber()!=null;
 			}
