@@ -3157,9 +3157,6 @@ namespace Meta {
 			List.precondition = delegate(Parser p) {
 				return p.Look() == Syntax.arrayStart;
 			};
-			//CurrentStatement.precondition = delegate(Parser p) {
-			//    return p.Look() == Syntax.current;
-			//};
 			LookupStringExpression.precondition = delegate(Parser p) {
 				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
 			};
@@ -3170,11 +3167,9 @@ namespace Meta {
 				char c = p.Look();
 				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
 			};
-
-
-			//Statement.precondition=delegate (Parser p) {
-			//    //return p.Look()==Syntax.searchStatement;
-			//}
+			FunctionProgram.precondition=delegate(Parser p) {
+				return p.Look() == Syntax.functionStart;
+			};
 		}
 		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
 		public static Rule EndOfLine = Sequence(
