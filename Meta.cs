@@ -378,20 +378,7 @@ namespace Meta {
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
-						Map result=selected[key];
-						if (result==null) {
-							selected = context;
-							int realCount = 0;
-							while (!selected.ContainsKey(key)) {
-								selected = selected.Scope;
-								realCount++;
-								if (selected == null) {
-									throw new KeyNotFound(key, Source.Start, null);
-								}
-							}
-							return selected[key];
-						}
-						return result;
+						return selected[key];
 					};
 				}}
 			else {
@@ -2591,7 +2578,7 @@ namespace Meta {
 		public StringMap(string text) {
 			this.text = text;
 			//if (text != null) {
-				//this.text = string.Intern(text);
+			//this.text = string.Intern(text);
 			//}
 
 			if (text.Length == 0) {
@@ -2629,21 +2616,12 @@ namespace Meta {
 		public override bool Equals(object obj) {
 			StringMap stringMap = obj as StringMap;
 			if (stringMap!=null) {
-				//return ReferenceEquals(stringMap.text, text);
-				//return ReferenceEquals(stringMap.text, text);
 				return stringMap.text.Equals(text);
 			}
 			else {
 				return base.Equals(obj);
 			}
 		}
-		//public override bool Equals(object obj) {
-		//    if (obj is StringMap) {
-		//        return ((StringMap)obj).text == text;}
-		//    else {
-		//        return base.Equals(obj);
-		//    }
-		//}
 		public override int Count {
 			get {
 				return text.Length;
