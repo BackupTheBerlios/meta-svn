@@ -52,7 +52,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"listTest"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -147,7 +147,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"LIST"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -351,7 +351,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalEscapeTest"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -991,7 +991,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"everythingReturned"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -1010,7 +1010,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"variableAsArgument"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -1412,7 +1412,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"argTest"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -2181,7 +2181,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (NumberMap):
 		5
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -2350,7 +2350,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"secondSwitchCases"
-	Value (DictionaryMap):
+	Value (ListMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1

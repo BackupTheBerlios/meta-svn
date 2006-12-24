@@ -255,13 +255,13 @@ namespace Meta {
 					il.Emit(OpCodes.Ret);
 					FastCall fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),args);
 					return delegate(Map context) {
-						try {
+						//try {
 							return fastCall(context);
-						}
-						catch (Exception e) {
-							Console.WriteLine(method);
-							throw e;
-						}
+						//}
+						//catch (Exception e) {
+						//    Console.WriteLine(method);
+						//    throw e;
+						//}
 					};
 				}
 			}
@@ -465,6 +465,8 @@ namespace Meta {
 					return delegate(Map context) {
 						Map selected = context;
 						//MakeSearched(key);
+						if (key.Equals(new StringMap("i"))) {
+						}
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
@@ -473,7 +475,11 @@ namespace Meta {
 						//}
 						//else {
 							//return selected.GetFast(key);
-							return selected[key];
+							Map result=selected[key];
+							if (result == null) {
+								throw new KeyNotFound(key,expression.Source.Start, null);
+							}
+							return result;
 						//}
 					};
 				}}
@@ -702,9 +708,42 @@ namespace Meta {
 			}
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
+			bool useList = true;
+			//bool useList = true;
+			int count = 1;
+			//try {
+				foreach (Statement statement in statementList) {
+					KeyStatement keyStatement = statement as KeyStatement;
+					if (keyStatement != null) {
+						Literal literal = keyStatement.key as Literal;
+						if (literal != null) {
+							if (literal.literal.Equals(new NumberMap(new Integer32(count)))) {
+								count++;
+								//useList = true;
+								continue;
+							}
+						}
 
+					}
+					useList = false;
+					break;
+				}
+			//}
+			//catch (Exception e) {
+			//}
+			if (useList) {
+			}
 			return delegate(Map p) {
-				Map context = new DictionaryMap();
+				Map context;
+				if (useList) {
+				    context = new ListMap();
+				}
+				else {
+					context = new DictionaryMap();
+				}
+
+
+				//Map context = new DictionaryMap();
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
 					statement.Assign(ref context);
@@ -947,11 +986,16 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
-					if(!(v is DictionaryMap))  {
+					if (!(v is DictionaryMap || v is ListMap)) {// && !(v is ListMap)) {
+					//if(!(v is DictionaryMap))  {
 						context = v.Copy();
 					}
+					//if (v is ListMap) {
+					//    ((ListMap)context).list = ((ListMap)v).list;
+					//}
 					else {
-						((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
+						context.CopyInternal(v);
+						//((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
 					}
 				}
 				else {
@@ -1053,20 +1097,30 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
 			return delegate(Map context) {
-				Map selected = s[0](context);
-				for (int i = 1; i < s.Count; i++) {
-					Map key = s[i](context);
-					Map value = selected[key];
-					if (value == null) {
-						object a=key.Count;
-						object x = key.ToString();
-						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
+				try {
+					Map selected = s[0](context);
+					for (int i = 1; i < s.Count; i++) {
+						Map key = s[i](context);
+						if (key == null) {
+							key = s[i](context);
+						}
+						//if (key.Equals(new StringMap("i"))) {
+						//}
+						Map value = selected[key];
+						if (value == null) {
+							object a = key.Count;
+							object x = key.ToString();
+							throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
+						}
+						else {
+							selected = value;
+						}
 					}
-					else {
-						selected = value;
-					}
+					return selected;
 				}
-				return selected;
+				catch (Exception e) {
+					throw e;
+				}
 			};
 		}
 		private List<Expression> subs = new List<Expression>();
@@ -2030,6 +2084,11 @@ namespace Meta {
 		}
 	}
 	public class DictionaryMap : Map {
+		public override void CopyInternal(Map map) {
+			foreach (Map key in map.Keys) {
+				this.dictionary[key] = map[key];
+			}
+		}
 		//public override Map GetFast(int index) {
 		//    int count=0;
 		//    foreach (Map map in dictionary.Values) {
@@ -2098,7 +2157,6 @@ namespace Meta {
 			int index = 1;
 			foreach (Map entry in list) {
 				this[index] = entry;
-				//this[index] = Transform.ToMeta(entry);
 				index++;
 			}
 		}
@@ -2155,7 +2213,8 @@ namespace Meta {
 			get {
 				int i = 1;
 				while (this.ContainsKey(i)) {
-					i++;}
+					i++;
+				}
 				return i - 1;
 			}
 		}
@@ -4855,13 +4914,17 @@ namespace Meta {
 			}
 			return null;
 		}
-	    public override Map Copy() {
-	        return this;
-	    }
+		public override Map Copy() {
+			return DeepCopy();
+		}
+
+		//public override Map Copy() {
+		//    return this;
+		//}
 	    public override void Append(Map map){
 	        list.Add(map);
 	    }
-	    private List<Map> list;
+	    public List<Map> list;
 
 	    public ListMap(): this(5) {
 	    }
@@ -4894,7 +4957,7 @@ namespace Meta {
 	                    return;
 	                }
 	            }
-	            throw new Exception("Method or operation not implemented.");
+	            throw new Exception("Cannot set non-number key in ListMap.");
 	        }
 	    }
 	    public override int Count {
@@ -5272,6 +5335,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual void CopyInternal(Map map) {
+			throw new Exception("not implemented");
+		}
 		//public virtual Map GetFast(int index) {
 		//    throw new Exception("not implemented");
 		//}
