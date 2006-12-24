@@ -259,6 +259,7 @@ namespace Meta {
 							return fastCall(context);
 						}
 						catch (Exception e) {
+							Console.WriteLine(method);
 							throw e;
 						}
 					};
@@ -1366,30 +1367,50 @@ namespace Meta {
 					}
 				}
 			}
-		public delegate Map MetaConversion(object o);
+		//public delegate Map MetaConversion(object o);
 		public static Dictionary<Type, MetaConversion> metaConversions = new Dictionary<Type, MetaConversion>();
+		public static MetaConversion GetMetaConversion(Type type) {
+			//Type type = dotNet.GetType();
+			MetaConversion conversion;
+			if (!metaConversions.TryGetValue(type, out conversion)) {
+				//MethodInfo methodInfo = (MethodInfo)method;
+				Type[] param = new Type[] { typeof(object) };
+				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
+				ILGenerator il = m.GetILGenerator();
+				il.Emit(OpCodes.Ldarg_0);
+				if (type.IsValueType) {
+					il.Emit(OpCodes.Unbox_Any, type);
+				}
+				GetMetaConversion(type, il);
+				il.Emit(OpCodes.Ret);
+				conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
+				metaConversions[type] = conversion;
+			}
+			return conversion;
+		}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
 				return Map.Empty;
 			}
 			else {
-				Type type=dotNet.GetType();
-				MetaConversion conversion;
-				if (!metaConversions.TryGetValue(type,out conversion)) {
-					//MethodInfo methodInfo = (MethodInfo)method;
-					Type[] param = new Type[] { typeof(object) };
-					DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
-					ILGenerator il = m.GetILGenerator();
-					il.Emit(OpCodes.Ldarg_0);
-					if (type.IsValueType) {
-						il.Emit(OpCodes.Unbox_Any, type);
-					}
-					GetMetaConversion(type, il);
-					il.Emit(OpCodes.Ret);
-					conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
-					metaConversions[type]=conversion;
-				}
-				return conversion(dotNet);
+				//Type type=dotNet.GetType();
+				//MetaConversion conversion;
+				//if (!metaConversions.TryGetValue(type,out conversion)) {
+				//    //MethodInfo methodInfo = (MethodInfo)method;
+				//    Type[] param = new Type[] { typeof(object) };
+				//    DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
+				//    ILGenerator il = m.GetILGenerator();
+				//    il.Emit(OpCodes.Ldarg_0);
+				//    if (type.IsValueType) {
+				//        il.Emit(OpCodes.Unbox_Any, type);
+				//    }
+				//    GetMetaConversion(type, il);
+				//    il.Emit(OpCodes.Ret);
+				//    conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
+				//    metaConversions[type]=conversion;
+				//}
+				return GetMetaConversion(dotNet.GetType())(dotNet);
+				//return conversion(dotNet);
 			}
 		}
 		public static bool GetConversion(Type target, ILGenerator il) {
@@ -1669,7 +1690,15 @@ namespace Meta {
 			this.type = type;
 			this.parameters = method.GetParameters();
 			this.original = original;
+			if (method.IsConstructor) {
+				this.returnType = method.ReflectedType;
+			}
+			else {
+				this.returnType = ((MethodInfo)method).ReturnType;
+			}
+			this.metaConversion = Transform.GetMetaConversion(returnType);
 		}
+		MetaConversion metaConversion;
 		public ParameterInfo[] parameters;
 		public override Map Call(Map argument) {
 		    return DecideCall(argument, new List<object>());
@@ -1684,10 +1713,26 @@ namespace Meta {
 			}
 			else {
 				CallDelegate call = new CallDelegate(delegate(Map map) {
-					return DecideCall(map, arguments);});
+					return DecideCall(map, arguments);
+				});
 				return new Method(invokeMethod, call, typeof(CallDelegate), method);
 			}
 		}
+		//private Map DecideCall(Map argument, List<object> oldArguments) {
+		//    List<object> arguments = new List<object>(oldArguments);
+		//    if (parameters.Length != 0) {
+		//        arguments.Add(Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType));
+		//    }
+		//    if (arguments.Count >= parameters.Length) {
+		//        return Invoke(argument, arguments.ToArray());
+		//    }
+		//    else {
+		//        CallDelegate call = new CallDelegate(delegate(Map map) {
+		//            return DecideCall(map, arguments);});
+		//        return new Method(invokeMethod, call, typeof(CallDelegate), method);
+		//    }
+		//}
+		Type returnType;
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
 		private Map Invoke(Map argument, object[] arguments) {
 			object result;
@@ -1697,7 +1742,8 @@ namespace Meta {
 			else {
 				result = method.Invoke(obj, arguments);
 			}
-			return Transform.ToMeta(result);
+			return metaConversion(result);
+			//return Transform.ToMeta(result);
 		}
 	}
 	public class TypeMap : DotNetMap {
