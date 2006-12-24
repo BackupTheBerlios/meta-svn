@@ -38,6 +38,7 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public abstract bool ContainsSearchStatements();
 		public static Expression LastArgument(Map code, Expression parent) {
 			return new CustomExpression(
 				code.Source,
@@ -98,9 +99,13 @@ namespace Meta {
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
 	public class CustomExpression : Expression {
+		public override bool ContainsSearchStatements() {
+			return false;
+		}
 		private StructureDelegate structure;
 		private CompiledDelegate compiled;
-		public CustomExpression(Extent extent, Expression parent,StructureDelegate structure,CompiledDelegate compiled):base(extent,parent) {
+		public CustomExpression(Extent extent, Expression parent, StructureDelegate structure, CompiledDelegate compiled)
+			: base(extent, parent) {
 			this.structure = structure;
 			this.compiled = compiled;
 		}
@@ -112,6 +117,14 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
+		public override bool ContainsSearchStatements() {
+			foreach (Expression expression in calls) {
+				if (expression.ContainsSearchStatements()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
 			this.calls = new List<Expression>();
@@ -283,11 +296,16 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
+		public override bool ContainsSearchStatements() {
+			return expression.ContainsSearchStatements();
+		}
+		public static Dictionary<Map, int> search = new Dictionary<Map, int>();
 		public override Map GetStructure() {
 			Map key;
 			int count;
 			Map value;
-			if (FindStuff(out count, out key, out value)) {
+			Map map;
+			if (FindStuff(out count, out key, out value,out map)) {
 				if(value!=null) {
 					return value;
 				}
@@ -299,11 +317,13 @@ namespace Meta {
 				return null;
 			}
 		}
-		private bool FindStuff(out int count, out Map key, out Map value) {
+		private bool FindStuff(out int count, out Map key, out Map value,out Map map) {
 			Expression current = this;
 			key = expression.EvaluateStructure();
 			count = 0;
-			int programCounter=0;
+			int programCounter = 0;
+			if (key != null && key.Equals(new StringMap("fibo"))) {
+			}
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
 				while (true) {
@@ -328,15 +348,16 @@ namespace Meta {
 					}
 					if (structure.ContainsKey(key)) {
 						value = structure[key];
+						map = structure;
 						return true;
 					}
-					else if(programCounter<1 && statement is KeyStatement) {
-						if(hasCrossedFunction) {
-							Map map=statement.CurrentMap();
-							if(map!=null && map.IsConstant) {
-								if(map.ContainsKey(key)) {
-									value=map[key];
-									if(value.IsConstant) {
+					else if (programCounter < 1 && statement is KeyStatement) {
+						if (hasCrossedFunction) {
+							map = statement.CurrentMap();
+							if (map != null && map.IsConstant) {
+								if (map.ContainsKey(key)) {
+									value = map[key];
+									if (value.IsConstant) {
 										return true;
 									}
 								}
@@ -345,18 +366,80 @@ namespace Meta {
 					}
 					if (hasCrossedFunction) {
 						if (!statement.NeverAddsKey(key)) {
-							break;}
+							break;
+						}
 					}
 					count++;
-					if(current.Statement!=null && current.Statement.program!=null && !current.Statement.program.isFunction) {
+					if (current.Statement != null && current.Statement.program != null && !current.Statement.program.isFunction) {
 						programCounter++;
 					}
 					current = current.Parent;
 				}
 			}
 			value = null;
+			map = null;
 			return false;
 		}
+		//private bool FindStuff(out int count, out Map key, out Map value) {
+		//    Expression current = this;
+		//    key = expression.EvaluateStructure();
+		//    count = 0;
+		//    int programCounter=0;
+		//    if (key != null && key.Equals(new StringMap("fibo"))) {
+		//    }
+		//    if (key != null && key.IsConstant) {
+		//        bool hasCrossedFunction = false;
+		//        while (true) {
+		//            while (current.Statement == null) {
+		//                if (current.isFunction) {
+		//                    hasCrossedFunction = true;
+		//                    count++;
+		//                }
+		//                current = current.Parent;
+		//                if (current == null) {
+		//                    break;
+		//                }
+		//            }
+		//            if (current == null) {
+		//                break;
+		//            }
+		//            Statement statement = current.Statement;
+		//            Map structure = statement.PreMap();
+		//            if (structure == null) {
+		//                statement.Pre();
+		//                break;
+		//            }
+		//            if (structure.ContainsKey(key)) {
+		//                value = structure[key];
+		//                return true;
+		//            }
+		//            else if(programCounter<1 && statement is KeyStatement) {
+		//                if(hasCrossedFunction) {
+		//                    Map map=statement.CurrentMap();
+		//                    if(map!=null && map.IsConstant) {
+		//                        if(map.ContainsKey(key)) {
+		//                            value=map[key];
+		//                            if(value.IsConstant) {
+		//                                return true;
+		//                            }
+		//                        }
+		//                    }
+		//                }
+		//            }
+		//            if (hasCrossedFunction) {
+		//                if (!statement.NeverAddsKey(key)) {
+		//                    break;}
+		//            }
+		//            count++;
+		//            if(current.Statement!=null && current.Statement.program!=null && !current.Statement.program.isFunction) {
+		//                programCounter++;
+		//            }
+		//            current = current.Parent;
+		//        }
+		//    }
+		//    value = null;
+		//    return false;
+		//}
 		private Expression expression;
 		public Search(Map code, Expression parent)
 			: base(code.Source, parent) {
@@ -366,27 +449,40 @@ namespace Meta {
 			int count;
 			Map key;
 			Map value;
-			if (FindStuff(out count, out key, out value)) {
+			Map map;
+			if (FindStuff(out count, out key, out value,out map)) {
 			    if (value != null && value.IsConstant) {
 					return delegate(Map context) {
 						return value;
 					};
 				}
 			    else {
+					int index = -1;
+					if (map != null && map.Count == 1) {
+						index = 0;
+					}
 					return delegate(Map context) {
 						Map selected = context;
+						//MakeSearched(key);
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
-						return selected[key];
+						//if (index == 0) {
+						//    return selected.GetFast(0);
+						//}
+						//else {
+							//return selected.GetFast(key);
+							return selected[key];
+						//}
 					};
 				}}
 			else {
-			    FindStuff(out count, out key, out value);
+			    FindStuff(out count, out key, out value,out map);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
 					Map k = compiled(context);
 					Map selected = context;
+					MakeSearched(k);
 					while (!selected.ContainsKey(k)) {
 						if (selected.Scope != null) {
 							selected = selected.Scope;
@@ -401,8 +497,20 @@ namespace Meta {
 				};
 			}
 		}
+		public void MakeSearched(Map key) {
+			if (!search.ContainsKey(key)) {
+				search[key] = 0;
+			}
+			search[key]++;
+		}
 	}
 	public class FunctionArgument:Map {
+		//public override Map GetFast(int index) {
+		//    if (index == 0) {
+		//        return value;
+		//    }
+		//    return null;
+		//}
 		public override Map this[Map key] {
 			get {
 				if(key.Equals(this.key)) {
@@ -559,6 +667,14 @@ namespace Meta {
 		}
 	}
 	public class Program : ScopeExpression {
+		public override bool ContainsSearchStatements() {
+			foreach (Statement statement in statementList) {
+				if (statement is SearchStatement || statement.ContainsSearchStatement()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public override Map GetStructure() {
 			if (statementList.Count == 0) {
 				return new DictionaryMap();
@@ -636,6 +752,7 @@ namespace Meta {
 	}
 
 	public abstract class Statement {
+		public abstract bool ContainsSearchStatement();
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
 		private Map pre;
@@ -740,6 +857,9 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
+		public override bool ContainsSearchStatement() {
+			return value.ContainsSearchStatements();
+		}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -749,6 +869,9 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
+		public override bool ContainsSearchStatement() {
+			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
+		}
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
 				List<Map> list=new List<Map>(PreKeys());
@@ -768,11 +891,15 @@ namespace Meta {
 		protected override Map CurrentImplementation(Map previous) {
 			Map k=key.GetConstant();
 			if (k != null) {
+				//if (k.Equals(new StringMap("fibo"))) {
+				//}
 				Map val=value.EvaluateMapStructure();
 				if (val == null) {
 				    val = new DictionaryMap();
 					val.IsConstant=false;
 				}
+				//if (value is Search || value is Call || value is Literal || value is Program || (intellisense && (value is Literal || value is Program))) {
+				//if (value is Search || value is Call || value is Literal || value is Program || (intellisense && (value is Literal || value is Program))) {
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
 					previous[k] = val;
 				}
@@ -810,6 +937,9 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
+		public override bool ContainsSearchStatement() {
+			return value.ContainsSearchStatements();
+		}
 		protected override Map CurrentImplementation(Map previous) {
 			return value.EvaluateStructure();
 		}
@@ -832,6 +962,9 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
+		public override bool ContainsSearchStatement() {
+			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
+		}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -856,6 +989,9 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
+		public override bool ContainsSearchStatements() {
+			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
+		}
 		public override Map GetStructure() {
 			return literal;
 		}
@@ -874,6 +1010,9 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
+		public override bool ContainsSearchStatements() {
+			return false;
+		}
 		public override Map GetStructure() {
 			return Gac.gac;
 		}
@@ -886,6 +1025,14 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
+		public override bool ContainsSearchStatements() {
+			foreach (Expression expression in subs) {
+				if (expression.ContainsSearchStatements()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public override Map GetStructure() {
 			// maybe wrong
 			Map selected = subs[0].GetStructure();
@@ -1244,7 +1391,7 @@ namespace Meta {
 				return metaConversions[type](dotNet);
 			}
 		}
-		public static void GetConversion(Type target, ILGenerator il) {
+		public static bool GetConversion(Type target, ILGenerator il) {
 			if (target.IsEnum) {
 				int token = (int)target.TypeHandle.Value;
 				if (!Transform.types.ContainsKey(token)) {
@@ -1277,6 +1424,13 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt32"));
 			}
+			else if (target.Equals(typeof(decimal))) {
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt64"));
+				//il.Emit(OpCodes.Castclass, typeof(decimal));
+				il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDecimal", new Type[] { typeof(long) }));
+				//il.Emit(OpCodes.
+			}
 			else if (target.Equals(typeof(Single))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetSingle"));
@@ -1297,10 +1451,48 @@ namespace Meta {
 			else {
 				il.Emit(OpCodes.Castclass, typeof(ObjectMap));
 				il.Emit(OpCodes.Callvirt, typeof(ObjectMap).GetMethod("get_Object"));
+				//il.Emit(OpCodes.Call,typeof(Convert).GetMethod("ToDecimal",new Type[] {typeof(long)}));
 				il.Emit(OpCodes.Castclass, target);
+				if (target.IsValueType) {
+					il.Emit(OpCodes.Unbox_Any, target);
+				}
 			}
+			//else {
+			//    return false;
+			//}
+			return true;
 		}
-		public static object ToDotNet(Map meta, Type target) {
+		public delegate object DotNetConversion(Map map);
+		public static Dictionary<Type,DotNetConversion> dotNetConversions=new Dictionary<Type,DotNetConversion>();
+		public static object ToDotNet(Map meta, Type type) {
+			//if (dotNet == null) {
+			//    return Map.Empty;
+			//}
+			//else {
+			//    Type type = dotNet.GetType();
+			if (!dotNetConversions.ContainsKey(type)) {
+				//MethodInfo methodInfo = (MethodInfo)method;
+
+				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
+				ILGenerator il = m.GetILGenerator();
+				il.Emit(OpCodes.Ldarg_0);
+				//if (type.IsValueType) {
+				//    il.Emit(OpCodes.Unbox_Any, type);
+				//}
+				if(!GetConversion(type, il)) {
+					return OldToDotNet(meta,type);
+				}
+				if (type.IsValueType) {
+					il.Emit(OpCodes.Box, type);
+				}
+				il.Emit(OpCodes.Ret);
+				dotNetConversions[type] = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
+
+			}
+			return dotNetConversions[type](meta);
+		}
+		public static object OldToDotNet(Map meta,Type target) {
+			//GetConversion(target)
 			if (target.Equals(typeof(Map))) {
 				return meta;
 			}
@@ -1415,6 +1607,122 @@ namespace Meta {
 			}
 			throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
 		}
+		// implement with delegates
+		//public static object ToDotNet(Map meta, Type target) {
+		//    if (target.Equals(typeof(Map))) {
+		//        return meta;
+		//    }
+		//    if (target.Equals(typeof(Number))) {
+		//        return meta.GetNumber();
+		//    }
+		//    else if (target.Equals(typeof(Stream)) && meta is FileMap) {
+		//        return File.Open(((FileMap)meta).Path, FileMode.Open);
+		//    }
+		//    else if (target.Equals(typeof(object)) && meta is ObjectMap) {
+		//        return ((ObjectMap)meta).Object;
+		//    }
+		//    else {
+		//        Type type = meta.GetType();
+		//        if (type.IsSubclassOf(target)) {
+		//            return meta;
+		//        }
+		//        else {
+		//            TypeCode typeCode = Type.GetTypeCode(target);
+		//            if (typeCode == TypeCode.Object) {
+
+		//                if (target == typeof(NumberMap) && meta.IsNumber) {
+		//                    return meta.GetNumber();
+		//                }
+		//                if (target == typeof(System.Drawing.Point) && meta.IsNormal) {
+		//                    return new System.Drawing.Point(meta[1].GetInt32(), meta[2].GetInt32());
+		//                }
+		//                if (target == typeof(System.Windows.Point) && meta.IsNormal) {
+		//                    return new System.Windows.Point(meta[1].GetInt32(), meta[2].GetInt32());
+		//                }
+		//                if (target == typeof(Rectangle) && meta.IsNormal) {
+		//                    int x = meta[1][1].GetInt32();
+		//                    int y = meta[1][2].GetInt32();
+		//                    return new Rectangle(x,
+		//                        y,
+		//                        meta[2][1].GetInt32() - x,
+		//                        meta[2][2].GetInt32() - y);
+		//                }
+		//                if (target == typeof(Color) && meta.IsNormal) {
+		//                    return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
+		//                }
+		//                if (target == typeof(Type) && meta is TypeMap) {
+		//                    return ((TypeMap)meta).Type;
+		//                }
+		//                // remove?
+		//                else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+		//                    return ((ObjectMap)meta).Object;
+		//                }
+		//                else if (target.IsAssignableFrom(type)) {
+		//                    return meta;
+		//                }
+		//                else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
+		//                   && meta.ContainsKey(CodeKeys.Function)) {
+		//                    return CreateDelegateFromCode(meta, target);
+		//                }
+		//                if (target.IsArray) {
+		//                    List<object> list = new List<object>();
+		//                    foreach (Map map in meta.Array) {
+		//                        list.Add(ToDotNet(map, target.GetElementType()));
+		//                    }
+		//                    Array array = Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
+		//                    list.ToArray().CopyTo(array, 0);
+		//                    return array;
+		//                }
+		//            }
+		//            else if (target.IsEnum) {
+		//                return Enum.ToObject(target, meta.GetNumber().GetInt32());
+		//            }
+		//            else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
+		//                return ((ObjectMap)meta).Object;
+		//            }
+		//            else {
+		//                switch (typeCode) {
+		//                    case TypeCode.Boolean:
+		//                        return Convert.ToBoolean(meta.GetNumber().GetInt32());
+		//                    case TypeCode.Byte:
+		//                        return Convert.ToByte(meta.GetNumber().GetInt32());
+		//                    case TypeCode.Char:
+		//                        return Convert.ToChar(meta.GetNumber().GetInt32());
+		//                    case TypeCode.DateTime:
+		//                        return null;
+		//                    case TypeCode.DBNull:
+		//                        return null;
+		//                    case TypeCode.Decimal:
+		//                        return (decimal)(meta.GetNumber().GetInt64());
+		//                    case TypeCode.Double:
+		//                        return (double)(meta.GetNumber().GetDouble());
+		//                    case TypeCode.Int16:
+		//                        return Convert.ToInt16(meta.GetNumber().GetRealInt64());
+		//                    case TypeCode.Int32:
+		//                        return meta.GetNumber().GetInt32();
+		//                    case TypeCode.Int64:
+		//                        return Convert.ToInt64(meta.GetNumber().GetInt64());
+		//                    case TypeCode.SByte:
+		//                        return Convert.ToSByte(meta.GetNumber().GetInt64());
+		//                    case TypeCode.Single:
+		//                        float result = (float)meta.GetNumber().GetSingle();
+		//                        return result;
+		//                    case TypeCode.String:
+		//                        return meta.GetString();
+		//                    case TypeCode.UInt16:
+		//                        return Convert.ToUInt16(meta.GetNumber().GetInt64());
+		//                    case TypeCode.UInt32:
+		//                        return Convert.ToUInt32(meta.GetNumber().GetInt64());
+		//                    case TypeCode.UInt64:
+		//                        return Convert.ToUInt64(meta.GetNumber().GetInt64());
+		//                    default:
+		//                        throw new ApplicationException("not implemented");
+		//                }
+		//            }
+		//        }
+		//    }
+		//    throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
+		//}
 	}
 	public delegate Map CallDelegate(Map argument);
 	public class Method : Map {
@@ -1776,6 +2084,16 @@ namespace Meta {
 		}
 	}
 	public class DictionaryMap : Map {
+		//public override Map GetFast(int index) {
+		//    int count=0;
+		//    foreach (Map map in dictionary.Values) {
+		//        if (count == index) {
+		//            return map;
+		//        }
+		//        count++;
+		//    }
+		//    return null;
+		//}
 		private Expression expression;
 		//public override Expression Expression {
 		//    get {
@@ -4888,7 +5206,11 @@ namespace Meta {
 			return result;
 		}
 	}
+	// why is this even needed?
 	public class LiteralExpression : Expression {
+		public override bool ContainsSearchStatements() {
+			return false;
+		}
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
@@ -4901,6 +5223,9 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
+		public override bool ContainsSearchStatement() {
+			return false;
+		}
 		private LiteralExpression program;
 		public LiteralStatement(LiteralExpression program)
 			: base(null, null, 0) {
@@ -4995,6 +5320,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		//public virtual Map GetFast(int index) {
+		//    throw new Exception("not implemented");
+		//}
 		public static int GetHashCode(int i) {
 			return i % int.MaxValue;
 		}
