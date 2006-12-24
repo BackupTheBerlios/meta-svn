@@ -2247,12 +2247,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"resultFromDelegate"
-	Value (StringMap):
-		"argumentString"
+	Value (ObjectMap):
+		argumentString
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"staticEventResult"
-	Value (DictionaryMap):
+	Value (ObjectMap):
 		0
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2262,7 +2262,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"instanceEventResult"
-	Value (NumberMap):
+	Value (ObjectMap):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -2475,8 +2475,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"arrayListResult"
-	Value (StringMap):
-		"hello"
+	Value (ObjectMap):
+		hello
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"textBox"
@@ -2490,8 +2490,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"alleMeineText"
-	Value (StringMap):
-		"Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh."
+	Value (ObjectMap):
+		Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh.
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"form"

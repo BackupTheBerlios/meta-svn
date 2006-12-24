@@ -1109,7 +1109,7 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			try {
+			//try {
 				Map map = Parser.Parse(LibraryPath);
 				map.Scope = Gac.gac;
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
@@ -1117,9 +1117,9 @@ namespace Meta {
 				map[CodeKeys.Function].Compile(gac);
 				Gac.gac["library"] = map.Call(new DictionaryMap());
 				Gac.gac["library"].Scope = Gac.gac;
-			}
-			catch (Exception e) {
-			}
+			//}
+			//catch (Exception e) {
+			//}
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -1268,7 +1268,12 @@ namespace Meta {
 		}
 
 		public static void GetMetaConversion(Type type, ILGenerator il) {
-			if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
+			if (type.Equals(typeof(void))) {
+				//il.Emit(OpCodes.Pop);
+				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));//).GetMethod("get_Empty", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
+				//il.Emit(OpCodes.Call, typeof(Map).GetMethod("get_Empty", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
+			}
+			else if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
 				switch (Type.GetTypeCode(type)) {
 					case TypeCode.Boolean:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Boolean) }));
@@ -1377,11 +1382,16 @@ namespace Meta {
 				Type[] param = new Type[] { typeof(object) };
 				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
 				ILGenerator il = m.GetILGenerator();
-				il.Emit(OpCodes.Ldarg_0);
-				if (type.IsValueType) {
-					il.Emit(OpCodes.Unbox_Any, type);
-				}
-				GetMetaConversion(type, il);
+				//if (type.Equals(typeof(void))) {
+				//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Empty"));
+				//}
+				//else {
+					il.Emit(OpCodes.Ldarg_0);
+					if (type.IsValueType) {
+						il.Emit(OpCodes.Unbox_Any, type);
+					}
+					GetMetaConversion(type, il);
+				//}
 				il.Emit(OpCodes.Ret);
 				conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
 				metaConversions[type] = conversion;
@@ -1480,11 +1490,11 @@ namespace Meta {
 			}
 			return true;
 		}
-		public delegate object DotNetConversion(Map map);
-		public static Dictionary<Type,DotNetConversion> dotNetConversions=new Dictionary<Type,DotNetConversion>();
-		public static object ToDotNet(Map meta, Type type) {
-			DotNetConversion conversion;
-			if (!dotNetConversions.TryGetValue(type,out conversion)) {
+		//public delegate object DotNetConversion(Map map);
+		public static Dictionary<Type,Conversion> dotNetConversions=new Dictionary<Type,Conversion>();
+		public static Conversion GetConversion(Type type) {
+			Conversion conversion;
+			if (!dotNetConversions.TryGetValue(type, out conversion)) {
 				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
 				ILGenerator il = m.GetILGenerator();
 				il.Emit(OpCodes.Ldarg_0);
@@ -1495,12 +1505,34 @@ namespace Meta {
 					il.Emit(OpCodes.Box, type);
 				}
 				il.Emit(OpCodes.Ret);
-				conversion = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
-				dotNetConversions[type]=conversion;
+				conversion = (Conversion)m.CreateDelegate(typeof(Conversion));
+				dotNetConversions[type] = conversion;
 			}
-			return conversion(meta);
+			return conversion;
+		}
+		public static object ToDotNet(Map meta, Type type) {
+			return GetConversion(type)(meta);
 			//return dotNetConversions[type](meta);
 		}
+		//public static object ToDotNet(Map meta, Type type) {
+		//    DotNetConversion conversion;
+		//    if (!dotNetConversions.TryGetValue(type,out conversion)) {
+		//        DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
+		//        ILGenerator il = m.GetILGenerator();
+		//        il.Emit(OpCodes.Ldarg_0);
+		//        GetConversion(type, il);
+		//        //    return OldToDotNet(meta,type);
+		//        //}
+		//        if (type.IsValueType) {
+		//            il.Emit(OpCodes.Box, type);
+		//        }
+		//        il.Emit(OpCodes.Ret);
+		//        conversion = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
+		//        dotNetConversions[type]=conversion;
+		//    }
+		//    return conversion(meta);
+		//    //return dotNetConversions[type](meta);
+		//}
 		//public static object OldToDotNet(Map meta,Type target) {
 		//    if (target.Equals(typeof(Map))) {
 		//        return meta;
@@ -1697,8 +1729,13 @@ namespace Meta {
 				this.returnType = ((MethodInfo)method).ReturnType;
 			}
 			this.metaConversion = Transform.GetMetaConversion(returnType);
+			foreach (ParameterInfo parameter in parameters) {
+				conversions.Add(Transform.GetConversion(parameter.ParameterType));
+				//conversions.Add(Transform.GetConversion(parameter.ParameterType));
+			}
 		}
-		MetaConversion metaConversion;
+		private List<Conversion> conversions=new List<Conversion>();
+		private MetaConversion metaConversion;
 		public ParameterInfo[] parameters;
 		public override Map Call(Map argument) {
 		    return DecideCall(argument, new List<object>());
@@ -1706,7 +1743,8 @@ namespace Meta {
 		private Map DecideCall(Map argument, List<object> oldArguments) {
 			List<object> arguments = new List<object>(oldArguments);
 			if (parameters.Length != 0) {
-				arguments.Add(Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType));
+				arguments.Add(conversions[arguments.Count](argument));
+				//arguments.Add(Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType));
 			}
 			if (arguments.Count >= parameters.Length) {
 				return Invoke(argument, arguments.ToArray());
@@ -1718,20 +1756,6 @@ namespace Meta {
 				return new Method(invokeMethod, call, typeof(CallDelegate), method);
 			}
 		}
-		//private Map DecideCall(Map argument, List<object> oldArguments) {
-		//    List<object> arguments = new List<object>(oldArguments);
-		//    if (parameters.Length != 0) {
-		//        arguments.Add(Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType));
-		//    }
-		//    if (arguments.Count >= parameters.Length) {
-		//        return Invoke(argument, arguments.ToArray());
-		//    }
-		//    else {
-		//        CallDelegate call = new CallDelegate(delegate(Map map) {
-		//            return DecideCall(map, arguments);});
-		//        return new Method(invokeMethod, call, typeof(CallDelegate), method);
-		//    }
-		//}
 		Type returnType;
 		MethodInfo invokeMethod = typeof(CallDelegate).GetMethod("Invoke");
 		private Map Invoke(Map argument, object[] arguments) {
@@ -1742,8 +1766,12 @@ namespace Meta {
 			else {
 				result = method.Invoke(obj, arguments);
 			}
-			return metaConversion(result);
-			//return Transform.ToMeta(result);
+			if (result == null) {
+				return Map.Empty;
+			}
+			else {
+				return metaConversion(result);
+			}
 		}
 	}
 	public class TypeMap : DotNetMap {
@@ -2059,6 +2087,8 @@ namespace Meta {
 			}
 			return false;
 		}
+		public DictionaryMap() {
+		}
 		public DictionaryMap(params Map[] keysAndValues){
 		    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
 		        this[keysAndValues[i]] = keysAndValues[i + 1];
@@ -2066,8 +2096,9 @@ namespace Meta {
 		}
 		public DictionaryMap(System.Collections.Generic.ICollection<Map> list) {
 			int index = 1;
-			foreach (object entry in list) {
-				this[index] = Transform.ToMeta(entry);
+			foreach (Map entry in list) {
+				this[index] = entry;
+				//this[index] = Transform.ToMeta(entry);
 				index++;
 			}
 		}
@@ -2954,8 +2985,12 @@ namespace Meta {
 		public static Number Subtract(Number a, Number b) {
 			return a.Subtract(b);
 		}
+		public virtual Number Divide(Number b) {
+			return new Rational((Numerator * b.Denominator).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
+			//return new Rational((a.Numerator * b.Denominator).GetDouble(), a.Denominator.GetDouble() * b.Numerator.GetDouble());
+		}
 		public static Number Divide(Number a, Number b) {
-			return new Rational((a.Numerator * b.Denominator).GetDouble(), a.Denominator.GetDouble() * b.Numerator.GetDouble());
+			return a.Divide(b);
 		}
 		public static Number Multiply(Number a, Number b) {
 			return new Rational((a.Numerator * b.Numerator).GetDouble(), (a.Denominator * b.Denominator).GetDouble());
@@ -4542,37 +4577,37 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class Serialization : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class LibraryCode : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-			//    }
-			//}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+				}
+			}
 
-			//public class Basic : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
-			//public class Fibo : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
