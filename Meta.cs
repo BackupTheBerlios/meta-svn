@@ -725,6 +725,10 @@ namespace Meta {
 						}
 
 					}
+					//else if (statement is CurrentStatement && count == statementList.Count) {
+					//    useList = true;
+					//    break;
+					//}
 					useList = false;
 					break;
 				}
@@ -986,17 +990,18 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
-					if (!(v is DictionaryMap || v is ListMap)) {// && !(v is ListMap)) {
-					//if(!(v is DictionaryMap))  {
-						context = v.Copy();
-					}
-					//if (v is ListMap) {
-					//    ((ListMap)context).list = ((ListMap)v).list;
+					//if (!(v is DictionaryMap)) {// && !(v is ListMap)) {
+					////if(!(v is DictionaryMap))  {
+					//    context.Scope = v.Scope;
+					//    context = v.Copy();
 					//}
-					else {
+					////if (v is ListMap) {
+					////    ((ListMap)context).list = ((ListMap)v).list;
+					////}
+					//else {
 						context.CopyInternal(v);
 						//((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
-					}
+					//}
 				}
 				else {
 					context = v;
@@ -2997,6 +3002,13 @@ namespace Meta {
 		//public int CompareTo(Number number) {
 		//    return this.GetDouble().CompareTo(number.GetDouble());
 		//}
+		public virtual Number Multiply(Number b) {
+			return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
+			//return new Rational((Numerator * b.Numerator).GetDouble(), (Denominator * b.Denominator).GetDouble());
+		}
+		public static Number Multiply(Number a, Number b) {
+			return a.Multiply(b);
+		}
 		public int CompareTo(Number number) {
 			return this.GetDouble().CompareTo(number.GetDouble());
 		}
@@ -3045,15 +3057,22 @@ namespace Meta {
 			return a.Subtract(b);
 		}
 		public virtual Number Divide(Number b) {
-			return new Rational((Numerator * b.Denominator).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
+			return new Rational((Numerator.Multiply(b.Denominator)).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
+			//return new Rational((Numerator * b.Denominator).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
 			//return new Rational((a.Numerator * b.Denominator).GetDouble(), a.Denominator.GetDouble() * b.Numerator.GetDouble());
 		}
 		public static Number Divide(Number a, Number b) {
 			return a.Divide(b);
 		}
-		public static Number Multiply(Number a, Number b) {
-			return new Rational((a.Numerator * b.Numerator).GetDouble(), (a.Denominator * b.Denominator).GetDouble());
-		}
+		//public virtual Number Multiply(Number b) {
+		//    return new Rational((Numerator * b.Numerator).GetDouble(), (Denominator * b.Denominator).GetDouble());
+		//}
+		//public static Number Multiply(Number a, Number b) {
+		//    return a.Mutliply(b);
+		//}
+		//public static Number Multiply(Number a, Number b) {
+		//    return new Rational((a.Numerator * b.Numerator).GetDouble(), (a.Denominator * b.Denominator).GetDouble());
+		//}
 		public static bool Greater(Number a, Number b) {
 			return a.Expand(b) > b.Expand(a);
 		}
@@ -3089,7 +3108,8 @@ namespace Meta {
 		public abstract long GetInt64();
 		public abstract long GetRealInt64();
 		public static double LeastCommonMultiple(Number a, Number b) {
-			return (a.Denominator * b.Denominator).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
+			return (a.Denominator.Multiply(b.Denominator)).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
+			//return (a.Denominator * b.Denominator).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
 		}
 		public virtual Number Subtract(Number b) {
 			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
@@ -3204,6 +3224,13 @@ namespace Meta {
 		}
 	}
 	public abstract class IntegerBase : Number {
+		public override Number Multiply(Number b) {
+			IntegerBase integer = b as IntegerBase;
+			if (integer != null) {
+				return new Integer(integer.GetBigInteger().multiply(GetBigInteger()));
+			}
+			return base.Multiply(b);
+		}
 		public override bool Equals(object obj) {
 			IntegerBase integer = obj as IntegerBase;
 			if (integer != null) {
@@ -3212,11 +3239,12 @@ namespace Meta {
 			return base.Equals(obj);
 		}
 		public abstract BigInteger GetBigInteger();
-		public static Number operator *(IntegerBase a, IntegerBase b) {
-			return new Rational(a.GetDouble() * b.GetDouble());
-		}
+		//public static Number operator *(IntegerBase a, IntegerBase b) {
+		//    return new Rational(a.GetDouble() * b.GetDouble());
+		//}
 	}
 	public class Integer:IntegerBase {
+
 		public override string ToString() {
 			return integer.ToString();
 		}
@@ -3250,6 +3278,9 @@ namespace Meta {
 		public Integer(int i) {
 			this.integer=new BigInteger(i.ToString());
 		}
+		public Integer(BigInteger integer) {
+			this.integer = integer;
+		}
 		public Integer(string text) {
 			this.integer=new BigInteger(text);
 		}
@@ -3258,6 +3289,17 @@ namespace Meta {
 		}
 	}
 	public class Integer32:IntegerBase{
+		public override Number Multiply(Number b) {
+			Integer32 i = b as Integer32;
+			if (i != null) {
+				try {
+					return new Integer32(i.integer * integer);
+				}
+				catch (Exception e) {
+				}
+			}
+			return base.Multiply(b);
+		}
 		public override bool LessEqual(Number number) {
 			Integer32 other = number as Integer32;
 			if (other != null) {
@@ -4626,7 +4668,8 @@ namespace Meta {
 				int count = 0;
 				foreach (KeyValuePair<Map, Map> pair in map) {
 					if (pair.Value.IsNumber) {
-						count++;}
+						count++;
+					}
 					else {
 						count += Leaves(pair.Value);}}
 				return count;
@@ -5011,7 +5054,8 @@ namespace Meta {
 		}
 
 		public static Map Slice(Map array,int start,int end) {
-			return new DictionaryMap(new List<Map>(array.Array).GetRange(start-1,Math.Max(end-start+1,0)));
+			return new ListMap(new List<Map>(array.Array).GetRange(start - 1, Math.Max(end - start + 1, 0)));
+			//return new DictionaryMap(new List<Map>(array.Array).GetRange(start - 1, Math.Max(end - start + 1, 0)));
 		}
 		public static Map Select(Map array,Map function) {
 			foreach(Map m in array.Array) {

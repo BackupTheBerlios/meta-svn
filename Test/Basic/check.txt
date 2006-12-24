@@ -991,7 +991,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"everythingReturned"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
@@ -1010,7 +1010,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"variableAsArgument"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (NumberMap):
 				1
