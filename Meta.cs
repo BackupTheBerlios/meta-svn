@@ -293,7 +293,7 @@ namespace Meta {
 		}
 	}
 	public delegate Map MetaConversion(object obj);
-	public delegate object Conversion(Map map);
+	public delegate object DotNetConversion(Map map);
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
@@ -323,8 +323,6 @@ namespace Meta {
 			key = expression.EvaluateStructure();
 			count = 0;
 			int programCounter = 0;
-			//if (key != null && key.Equals(new StringMap("fibo"))) {
-			//}
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
 				while (true) {
@@ -381,66 +379,6 @@ namespace Meta {
 			map = null;
 			return false;
 		}
-		//private bool FindStuff(out int count, out Map key, out Map value) {
-		//    Expression current = this;
-		//    key = expression.EvaluateStructure();
-		//    count = 0;
-		//    int programCounter=0;
-		//    if (key != null && key.Equals(new StringMap("fibo"))) {
-		//    }
-		//    if (key != null && key.IsConstant) {
-		//        bool hasCrossedFunction = false;
-		//        while (true) {
-		//            while (current.Statement == null) {
-		//                if (current.isFunction) {
-		//                    hasCrossedFunction = true;
-		//                    count++;
-		//                }
-		//                current = current.Parent;
-		//                if (current == null) {
-		//                    break;
-		//                }
-		//            }
-		//            if (current == null) {
-		//                break;
-		//            }
-		//            Statement statement = current.Statement;
-		//            Map structure = statement.PreMap();
-		//            if (structure == null) {
-		//                statement.Pre();
-		//                break;
-		//            }
-		//            if (structure.ContainsKey(key)) {
-		//                value = structure[key];
-		//                return true;
-		//            }
-		//            else if(programCounter<1 && statement is KeyStatement) {
-		//                if(hasCrossedFunction) {
-		//                    Map map=statement.CurrentMap();
-		//                    if(map!=null && map.IsConstant) {
-		//                        if(map.ContainsKey(key)) {
-		//                            value=map[key];
-		//                            if(value.IsConstant) {
-		//                                return true;
-		//                            }
-		//                        }
-		//                    }
-		//                }
-		//            }
-		//            if (hasCrossedFunction) {
-		//                if (!statement.NeverAddsKey(key)) {
-		//                    break;}
-		//            }
-		//            count++;
-		//            if(current.Statement!=null && current.Statement.program!=null && !current.Statement.program.isFunction) {
-		//                programCounter++;
-		//            }
-		//            current = current.Parent;
-		//        }
-		//    }
-		//    value = null;
-		//    return false;
-		//}
 		private Expression expression;
 		public Search(Map code, Expression parent)
 			: base(code.Source, parent) {
@@ -512,12 +450,6 @@ namespace Meta {
 		}
 	}
 	public class FunctionArgument:Map {
-		//public override Map GetFast(int index) {
-		//    if (index == 0) {
-		//        return value;
-		//    }
-		//    return null;
-		//}
 		public override Map this[Map key] {
 			get {
 				if(key.Equals(this.key)) {
@@ -709,7 +641,6 @@ namespace Meta {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 			bool useList = true;
-			//bool useList = true;
 			int count = 1;
 			//try {
 				foreach (Statement statement in statementList) {
@@ -725,10 +656,6 @@ namespace Meta {
 						}
 
 					}
-					//else if (statement is CurrentStatement && count == statementList.Count) {
-					//    useList = true;
-					//    break;
-					//}
 					useList = false;
 					break;
 				}
@@ -747,7 +674,6 @@ namespace Meta {
 				}
 
 
-				//Map context = new DictionaryMap();
 				context.Scope = p;
 				foreach (CompiledStatement statement in list) {
 					statement.Assign(ref context);
@@ -935,15 +861,11 @@ namespace Meta {
 		protected override Map CurrentImplementation(Map previous) {
 			Map k=key.GetConstant();
 			if (k != null) {
-				//if (k.Equals(new StringMap("fibo"))) {
-				//}
 				Map val=value.EvaluateMapStructure();
 				if (val == null) {
 				    val = new DictionaryMap();
 					val.IsConstant=false;
 				}
-				//if (value is Search || value is Call || value is Literal || value is Program || (intellisense && (value is Literal || value is Program))) {
-				//if (value is Search || value is Call || value is Literal || value is Program || (intellisense && (value is Literal || value is Program))) {
 				if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
 					previous[k] = val;
 				}
@@ -990,18 +912,13 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
-					if (!(v is DictionaryMap)) {// && !(v is ListMap)) {
-					//if(!(v is DictionaryMap))  {
+					if (!(v is DictionaryMap)) {
 					    Map scope=context.Scope;
 					    context = v.Copy();
 						context.Scope = scope;
 					}
-					//if (v is ListMap) {
-					//    ((ListMap)context).list = ((ListMap)v).list;
-					//}
 					else {
 						context.CopyInternal(v);
-						//((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
 					}
 				}
 				else {
@@ -1110,8 +1027,6 @@ namespace Meta {
 						if (key == null) {
 							key = s[i](context);
 						}
-						//if (key.Equals(new StringMap("i"))) {
-						//}
 						Map value = selected[key];
 						if (value == null) {
 							object a = key.Count;
@@ -1169,17 +1084,13 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			//try {
-				Map map = Parser.Parse(LibraryPath);
-				map.Scope = Gac.gac;
-				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-				map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-				map[CodeKeys.Function].Compile(gac);
-				Gac.gac["library"] = map.Call(new DictionaryMap());
-				Gac.gac["library"].Scope = Gac.gac;
-			//}
-			//catch (Exception e) {
-			//}
+			Map map = Parser.Parse(LibraryPath);
+			map.Scope = Gac.gac;
+			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+			map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
+			map[CodeKeys.Function].Compile(gac);
+			Gac.gac["library"] = map.Call(new DictionaryMap());
+			Gac.gac["library"].Scope = Gac.gac;
 		}
 		[STAThread]
 		public static void Main(string[] args) {
@@ -1187,7 +1098,6 @@ namespace Meta {
 			string multilineliteral = @"part of the text
                                        other part of the text";
 
-			//DateTime start = DateTime.Now;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
 					try {
@@ -1329,9 +1239,7 @@ namespace Meta {
 
 		public static void GetMetaConversion(Type type, ILGenerator il) {
 			if (type.Equals(typeof(void))) {
-				//il.Emit(OpCodes.Pop);
 				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));//).GetMethod("get_Empty", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
-				//il.Emit(OpCodes.Call, typeof(Map).GetMethod("get_Empty", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
 			}
 			else if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
 				switch (Type.GetTypeCode(type)) {
@@ -1432,26 +1340,20 @@ namespace Meta {
 					}
 				}
 			}
-		//public delegate Map MetaConversion(object o);
 		public static Dictionary<Type, MetaConversion> metaConversions = new Dictionary<Type, MetaConversion>();
 		public static MetaConversion GetMetaConversion(Type type) {
-			//Type type = dotNet.GetType();
 			MetaConversion conversion;
 			if (!metaConversions.TryGetValue(type, out conversion)) {
-				//MethodInfo methodInfo = (MethodInfo)method;
 				Type[] param = new Type[] { typeof(object) };
 				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
 				ILGenerator il = m.GetILGenerator();
-				//if (type.Equals(typeof(void))) {
-				//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Empty"));
-				//}
-				//else {
-					il.Emit(OpCodes.Ldarg_0);
-					if (type.IsValueType) {
-						il.Emit(OpCodes.Unbox_Any, type);
-					}
-					GetMetaConversion(type, il);
-				//}
+
+				il.Emit(OpCodes.Ldarg_0);
+				if (type.IsValueType) {
+					il.Emit(OpCodes.Unbox_Any, type);
+				}
+				GetMetaConversion(type, il);
+
 				il.Emit(OpCodes.Ret);
 				conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
 				metaConversions[type] = conversion;
@@ -1463,24 +1365,7 @@ namespace Meta {
 				return Map.Empty;
 			}
 			else {
-				//Type type=dotNet.GetType();
-				//MetaConversion conversion;
-				//if (!metaConversions.TryGetValue(type,out conversion)) {
-				//    //MethodInfo methodInfo = (MethodInfo)method;
-				//    Type[] param = new Type[] { typeof(object) };
-				//    DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
-				//    ILGenerator il = m.GetILGenerator();
-				//    il.Emit(OpCodes.Ldarg_0);
-				//    if (type.IsValueType) {
-				//        il.Emit(OpCodes.Unbox_Any, type);
-				//    }
-				//    GetMetaConversion(type, il);
-				//    il.Emit(OpCodes.Ret);
-				//    conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
-				//    metaConversions[type]=conversion;
-				//}
 				return GetMetaConversion(dotNet.GetType())(dotNet);
-				//return conversion(dotNet);
 			}
 		}
 		public static bool GetConversion(Type target, ILGenerator il) {
@@ -1519,9 +1404,7 @@ namespace Meta {
 			else if (target.Equals(typeof(decimal))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetInt64"));
-				//il.Emit(OpCodes.Castclass, typeof(decimal));
 				il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDecimal", new Type[] { typeof(long) }));
-				//il.Emit(OpCodes.
 			}
 			else if (target.Equals(typeof(Single))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
@@ -1550,29 +1433,25 @@ namespace Meta {
 			}
 			return true;
 		}
-		//public delegate object DotNetConversion(Map map);
-		public static Dictionary<Type,Conversion> dotNetConversions=new Dictionary<Type,Conversion>();
-		public static Conversion GetConversion(Type type) {
-			Conversion conversion;
+		public static Dictionary<Type,DotNetConversion> dotNetConversions=new Dictionary<Type,DotNetConversion>();
+		public static DotNetConversion GetConversion(Type type) {
+			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
 				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
 				ILGenerator il = m.GetILGenerator();
 				il.Emit(OpCodes.Ldarg_0);
 				GetConversion(type, il);
-				//    return OldToDotNet(meta,type);
-				//}
 				if (type.IsValueType) {
 					il.Emit(OpCodes.Box, type);
 				}
 				il.Emit(OpCodes.Ret);
-				conversion = (Conversion)m.CreateDelegate(typeof(Conversion));
+				conversion = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
 				dotNetConversions[type] = conversion;
 			}
 			return conversion;
 		}
 		public static object ToDotNet(Map meta, Type type) {
 			return GetConversion(type)(meta);
-			//return dotNetConversions[type](meta);
 		}
 		//public static object ToDotNet(Map meta, Type type) {
 		//    DotNetConversion conversion;
@@ -1791,10 +1670,9 @@ namespace Meta {
 			this.metaConversion = Transform.GetMetaConversion(returnType);
 			foreach (ParameterInfo parameter in parameters) {
 				conversions.Add(Transform.GetConversion(parameter.ParameterType));
-				//conversions.Add(Transform.GetConversion(parameter.ParameterType));
 			}
 		}
-		private List<Conversion> conversions=new List<Conversion>();
+		private List<DotNetConversion> conversions=new List<DotNetConversion>();
 		private MetaConversion metaConversion;
 		public ParameterInfo[] parameters;
 		public override Map Call(Map argument) {
@@ -1804,7 +1682,6 @@ namespace Meta {
 			List<object> arguments = new List<object>(oldArguments);
 			if (parameters.Length != 0) {
 				arguments.Add(conversions[arguments.Count](argument));
-				//arguments.Add(Transform.ToDotNet(argument, parameters[arguments.Count].ParameterType));
 			}
 			if (arguments.Count >= parameters.Length) {
 				return Invoke(argument, arguments.ToArray());
@@ -2095,25 +1972,7 @@ namespace Meta {
 				this.dictionary[key] = map[key];
 			}
 		}
-		//public override Map GetFast(int index) {
-		//    int count=0;
-		//    foreach (Map map in dictionary.Values) {
-		//        if (count == index) {
-		//            return map;
-		//        }
-		//        count++;
-		//    }
-		//    return null;
-		//}
 		private Expression expression;
-		//public override Expression Expression {
-		//    get {
-		//        return expression;
-		//    }
-		//    set {
-		//        expression=value;
-		//    }
-		//}
 		public override Extent Source {
 			get {
 				return source;
@@ -2885,15 +2744,6 @@ namespace Meta {
 		private int hashCode;
 		public override int GetHashCode() {
 			return hashCode;
-			//if (text.Length==0) {
-			//    return 0;
-			//}
-			//else {
-			//    unchecked {
-			//        return int.MaxValue / text.Length + (text[0] % int.MaxValue);
-			//        //return int.MaxValue / Count + GetHashCode(text[0]);
-			//    }
-			//}
 		}
 		public override bool IsNormal {
 			get {
@@ -2909,9 +2759,6 @@ namespace Meta {
 		private string text;
 		public StringMap(string text) {
 			this.text = text;
-			//if (text != null) {
-			//this.text = string.Intern(text);
-			//}
 
 			if (text.Length == 0) {
 				hashCode=0;
@@ -2919,7 +2766,6 @@ namespace Meta {
 			else {
 				unchecked {
 					hashCode=int.MaxValue / text.Length + (text[0] % int.MaxValue);
-					//return int.MaxValue / Count + GetHashCode(text[0]);
 				}
 			}
 
@@ -3000,12 +2846,8 @@ namespace Meta {
 		}
 	}
 	public abstract class Number {
-		//public int CompareTo(Number number) {
-		//    return this.GetDouble().CompareTo(number.GetDouble());
-		//}
 		public virtual Number Multiply(Number b) {
 			return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
-			//return new Rational((Numerator * b.Numerator).GetDouble(), (Denominator * b.Denominator).GetDouble());
 		}
 		public static Number Multiply(Number a, Number b) {
 			return a.Multiply(b);
@@ -3059,21 +2901,10 @@ namespace Meta {
 		}
 		public virtual Number Divide(Number b) {
 			return new Rational((Numerator.Multiply(b.Denominator)).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
-			//return new Rational((Numerator * b.Denominator).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
-			//return new Rational((a.Numerator * b.Denominator).GetDouble(), a.Denominator.GetDouble() * b.Numerator.GetDouble());
 		}
 		public static Number Divide(Number a, Number b) {
 			return a.Divide(b);
 		}
-		//public virtual Number Multiply(Number b) {
-		//    return new Rational((Numerator * b.Numerator).GetDouble(), (Denominator * b.Denominator).GetDouble());
-		//}
-		//public static Number Multiply(Number a, Number b) {
-		//    return a.Mutliply(b);
-		//}
-		//public static Number Multiply(Number a, Number b) {
-		//    return new Rational((a.Numerator * b.Numerator).GetDouble(), (a.Denominator * b.Denominator).GetDouble());
-		//}
 		public static bool Greater(Number a, Number b) {
 			return a.Expand(b) > b.Expand(a);
 		}
@@ -3085,7 +2916,6 @@ namespace Meta {
 		}
 		public static bool LessEqual(Number a, Number b) {
 			return a.LessEqual(b);
-			//return a.Expand(b) <= b.Expand(a);
 		}
 		public virtual bool LessEqual(Number number) {
 			return Expand(number) <= number.Expand(this);
@@ -3110,7 +2940,6 @@ namespace Meta {
 		public abstract long GetRealInt64();
 		public static double LeastCommonMultiple(Number a, Number b) {
 			return (a.Denominator.Multiply(b.Denominator)).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
-			//return (a.Denominator * b.Denominator).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
 		}
 		public virtual Number Subtract(Number b) {
 			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
@@ -3240,9 +3069,6 @@ namespace Meta {
 			return base.Equals(obj);
 		}
 		public abstract BigInteger GetBigInteger();
-		//public static Number operator *(IntegerBase a, IntegerBase b) {
-		//    return new Rational(a.GetDouble() * b.GetDouble());
-		//}
 	}
 	public class Integer:IntegerBase {
 
@@ -3571,27 +3397,6 @@ namespace Meta {
 					result=new NumberMap(new Integer(text));
 				}
 				result.Source=map.Source;
-
-				//BigInteger
-				//Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
-				//if (rational.GetInteger() != null) {
-				//    result = new NumberMap(new Integer32(rational.GetInt32()));
-				//    result.Source = map.Source;
-				//}
-				//else {
-				//    result = new NumberMap(rational);
-				//    result.Source = map.Source;
-				//}
-
-				//Rational rational = new Rational(double.Parse(map.GetString()), 1.0);
-				//if (rational.GetInteger() != null) {
-				//    result = new NumberMap(new Integer32(rational.GetInt32()));
-				//    result.Source = map.Source;
-				//}
-				//else {
-				//    result = new NumberMap(rational);
-				//    result.Source = map.Source;
-				//}
 			}));
 
 		public static Rule StringLine=StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
@@ -3615,19 +3420,15 @@ namespace Meta {
 				Append(Syntax.decimalSeparator),
 				Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
 	        delegate(Parser p, Map map, ref Map result) {
-				//try {
-					Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
-					if (rational.GetInteger() != null) {
-						result = new NumberMap(new Integer32(rational.GetInt32()));
-						result.Source = map.Source;
-					}
-					else {
-						result = new NumberMap(rational);
-						result.Source = map.Source;
-					}
-				//}
-				//catch (Exception e) {
-				//}
+				Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
+				if (rational.GetInteger() != null) {
+					result = new NumberMap(new Integer32(rational.GetInt32()));
+					result.Source = map.Source;
+				}
+				else {
+					result = new NumberMap(rational);
+					result.Source = map.Source;
+				}
 			}));
 
 		public static Rule Number = Sequence(
@@ -3680,7 +3481,6 @@ namespace Meta {
 		public static Rule MapRule = Sequence(
 			Syntax.programStart,
 			Whitespace,
-			//ReferenceAssignment(
 			new FastAction(
 				FastOneOrMore(
 					new Action(
@@ -3713,7 +3513,6 @@ namespace Meta {
 								SequenceList(
 									Whitespace,
 									Assign(1,Alternatives(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
-									//Append(
 									new FastAction(
 										FastZeroOrMore(
 											Autokey(
@@ -3742,7 +3541,6 @@ namespace Meta {
 								SequenceList(
 									Whitespace,
 									new FastAction(
-									//Append(
 										FastZeroOrMore(
 											Autokey(
 												Sequence(
@@ -3764,10 +3562,6 @@ namespace Meta {
 		}
 		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
 		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
-		//public static Rule LastArgument = Simple(
-		//    Syntax.lastArgument,
-		//    new DictionaryMap(CodeKeys.LastArgument, Map.Empty)
-		//);
 		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
 		private static Rule LiteralExpression = Sequence(
 			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
@@ -3795,10 +3589,6 @@ namespace Meta {
 									Syntax.select,
 									new FastAction(Alternatives(
 										LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
-
-				//new FastAction(
-				//        FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
-				//            LookupStringExpression, LookupAnythingExpression, LiteralExpression)))))))));
 		});
 
 		private static Rule CallSelect = DelayedRule(delegate{
@@ -3877,7 +3667,6 @@ namespace Meta {
 								SequenceList(Whitespace,Assign(1,ListEntry),
 									Whitespace,
 									new FastAction(
-									//Append(
 										FastZeroOrMore(
 											Autokey(
 												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))))
@@ -3998,7 +3787,6 @@ namespace Meta {
 								SequenceList(
 									Whitespace,
 									new FastAction(
-				//Append(
 										FastZeroOrMore(
 											Autokey(
 												Sequence(
@@ -4008,26 +3796,6 @@ namespace Meta {
 									)))
 			)));
 		});
-		//public static Rule Program = DelayedRule(delegate {
-		//    return Sequence(
-		//        Assign(CodeKeys.Program,
-		//            SequenceList(
-		//                Syntax.programStart,
-		//                Append(
-		//                    Alternatives(
-		//                        SequenceList(
-		//                            Whitespace,
-		//                            new FastAction(
-		//                            //Append(
-		//                                FastZeroOrMore(
-		//                                    Autokey(
-		//                                        Sequence(
-		//                                            Whitespace,
-		//                                            ReferenceAssignment(AllStatements))))),
-		//                            Whitespace,OptionalError(Syntax.programEnd))
-		//                            )))
-		//    ));
-		//});
 		public static Rule OptionalError(char c) {
 			return Alternatives(c, Error("Missing '" + c + "'"));
 		}
@@ -4047,7 +3815,6 @@ namespace Meta {
 			}
 			public override bool Execute(Parser parser, ref Map result) {
 				if (rule.MatchFast(parser, ref result)) {
-					//action(parser, result, ref result);
 					return true;
 				}
 				return false;
@@ -4065,14 +3832,6 @@ namespace Meta {
 				this.rule = rule;
 				this.action = action;
 			}
-			//public bool ExecuteFast(Parser parser, ref Map result) {
-			//    //Map map = null;
-			//    if (rule.Match(parser, ref result)) {
-			//        action(parser, result, ref result);
-			//        return true;
-			//    }
-			//    return false;
-			//}
 			public virtual bool Execute(Parser parser, ref Map result) {
 				Map map=null;
 				if (rule.Match(parser,ref map)) {
@@ -4171,7 +3930,6 @@ namespace Meta {
 				calls++;
 				State oldState = parser.state;
 				bool matched;
-				//Map result = null;
 				matched = parseFunction(parser, ref map);
 				if (!matched) {
 					mismatches++;
@@ -4183,13 +3941,7 @@ namespace Meta {
 							new Source(oldState.Line, oldState.Column, parser.state.FileName),
 							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
 					}
-					//if (result != null) {
-					//    result.Source = new Extent(
-					//        new Source(oldState.Line, oldState.Column, parser.state.FileName),
-					//        new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
-					//}
 				}
-				//map = result;
 				return matched;
 			}
 			public bool Match(Parser parser, ref Map map) {
@@ -4333,7 +4085,6 @@ namespace Meta {
 			return new Rule(delegate(Parser parser, ref Map match) {
 				foreach (Action action in actions) {
 					if (!action.Execute(parser, ref match)) {
-						//if (!action.Execute(parser, ref match)) {
 						match = null;
 						return false;
 					}
@@ -4351,7 +4102,6 @@ namespace Meta {
 				}
 				foreach (Action action in actions) {
 					if (!action.Execute(parser, ref match)) {
-					//if (!action.Execute(parser, ref match)) {
 						match = null;
 						return false;
 					}
@@ -4378,16 +4128,6 @@ namespace Meta {
 				return true;
 			});
 		}
-		//public static Rule OneOrMoreFast(Action action) {
-		//    return new Rule(delegate(Parser parser, ref Map map) {
-		//        //map = new ListMap();
-		//        bool matched = false;
-		//        while (action.Execute(parser, ref map)) {
-		//            matched = true;
-		//        }
-		//        return matched;
-		//    });
-		//}
 		public static Rule Optional(Rule rule) { 
 			return new Rule(delegate(Parser parser, ref Map match) {
 				rule.Match(parser, ref match);
@@ -4961,7 +4701,6 @@ namespace Meta {
 		public override Map Copy() {
 			return DeepCopy();
 		}
-
 		//public override Map Copy() {
 		//    return this;
 		//}
@@ -5056,7 +4795,6 @@ namespace Meta {
 
 		public static Map Slice(Map array,int start,int end) {
 			return new ListMap(new List<Map>(array.Array).GetRange(start - 1, Math.Max(end - start + 1, 0)));
-			//return new DictionaryMap(new List<Map>(array.Array).GetRange(start - 1, Math.Max(end - start + 1, 0)));
 		}
 		public static Map Select(Map array,Map function) {
 			foreach(Map m in array.Array) {
@@ -5383,9 +5121,6 @@ namespace Meta {
 		public virtual void CopyInternal(Map map) {
 			throw new Exception("not implemented");
 		}
-		//public virtual Map GetFast(int index) {
-		//    throw new Exception("not implemented");
-		//}
 		public static int GetHashCode(int i) {
 			return i % int.MaxValue;
 		}
@@ -5433,20 +5168,6 @@ namespace Meta {
 			copy.Scope = map.Scope;
 			return copy;
 		}
-		//public virtual Integer32 GetInteger() {
-		//    Num number=GetNumber();
-		//    if(number!=null) {
-		//        return number.GetInteger().;
-		//    }
-		//    throw new Exception("Map is not a number.");
-		//}
-		//public virtual int GetInt32() {
-		//    Number number=GetNumber();
-		//    if(number!=null) {
-		//        return number.GetInt32();
-		//    }
-		//    throw new Exception("Map is not a number.");
-		//}
 		public virtual string GetString() {
 			if (ArrayCount == Count) {
 				StringBuilder text = new StringBuilder("");
@@ -5499,7 +5220,6 @@ namespace Meta {
 			clone.Scope = Scope;
 			clone.Source = Source;
 			clone.expression = expression;
-			//clone.Expression = Expression;
 			clone.IsConstant = this.IsConstant;
 			foreach (Map key in Keys) {
 				try {
