@@ -1852,7 +1852,7 @@ namespace Meta {
 		//}
 	}
 	public delegate Map CallDelegate(Map argument);
-	public class Method : ScopeMap {
+	public class Method : Map {
 		public override void Append(Map map) {
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -2241,6 +2241,15 @@ namespace Meta {
 		}
 	}
 	public class DictionaryMap : ScopeMap {
+		//private Expression expression;
+		public override Expression Expression {
+			get {
+				return expression;
+			}
+			set {
+				expression = value;
+			}
+		}
 		public override void CopyInternal(Map map) {
 			foreach (Map key in map.Keys) {
 				this.dictionary[key] = map[key];
@@ -3230,7 +3239,7 @@ namespace Meta {
 		public abstract double GetDouble();
 		public abstract BigInteger GetInteger();
 	}
-	public class NumberMap : ScopeMap {
+	public class NumberMap : Map {
 		public NumberMap(Number number) {
 			this.number = number;
 		}
@@ -4694,43 +4703,43 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class Serialization : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class LibraryCode : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-			//    }
-			//}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+				}
+			}
 
-			//public class Basic : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			//public class MergeSort : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -5569,13 +5578,33 @@ namespace Meta {
 		public static implicit operator Map(int integer) {
 			return new NumberMap(new Integer32(integer));
 		}
-		private Extent source;
+		//private Expression Expression {
+		//    get {
+		//        //this
+		//        Expression value;
+		//        allExpressions.TryGetValue(this, out value);
+		//        return value;
+		//        //return _expression;
+		//    }
+		//    set {
+		//        //Hashtable t;
+		//        if (value != null) {
+		//            allExpressions[this] = value;
+		//        }
+		//        //_expression = value;
+		//    }
+		//}
+
+		//private Extent source;
+		public static Dictionary<Map, Extent> sources = new Dictionary<Map, Extent>(1000,new Comparer());
 		public virtual Extent Source {
 			get {
+				Extent source;
+				sources.TryGetValue(this,out source);
 				return source;
 			}
 			set {
-				source = value;
+				sources[this] = value;
 			}
 		}
 		public virtual bool IsConstant {
@@ -5625,7 +5654,7 @@ namespace Meta {
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
-		private Expression _expression;
+		//private Expression _expression;
 		public class Comparer : IEqualityComparer<Map> {
 			bool IEqualityComparer<Map>.Equals(Map x, Map y) {
 				return ReferenceEquals(x, y);
@@ -5634,11 +5663,18 @@ namespace Meta {
 				return ((object)obj).GetHashCode();
 			}
 		}
-		public static Dictionary<Map, Expression> allExpressions = new Dictionary<Map, Expression>(1000,new Comparer());
+		//public static Dictionary<Map, Expression> allExpressions = new Dictionary<Map, Expression>(1000,new Comparer());
 		//public class Hasher {
 		//    public Hasher() {
 		//}
-		private Expression Expression;
+		//private Expression Expression;
+		public virtual Expression Expression {
+			get {
+				return null;
+			}
+			set {
+			}
+		}
 		//private Expression Expression {
 		//    get {
 		//        //this
