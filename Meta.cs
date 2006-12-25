@@ -323,8 +323,8 @@ namespace Meta {
 			key = expression.EvaluateStructure();
 			count = 0;
 			int programCounter = 0;
-			if (key != null && key.Equals(new StringMap("fibo"))) {
-			}
+			//if (key != null && key.Equals(new StringMap("fibo"))) {
+			//}
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
 				while (true) {
@@ -465,8 +465,8 @@ namespace Meta {
 					return delegate(Map context) {
 						Map selected = context;
 						//MakeSearched(key);
-						if (key.Equals(new StringMap("i"))) {
-						}
+						//if (key.Equals(new StringMap("i"))) {
+						//}
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
@@ -990,18 +990,19 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
-					//if (!(v is DictionaryMap)) {// && !(v is ListMap)) {
-					////if(!(v is DictionaryMap))  {
-					//    context.Scope = v.Scope;
-					//    context = v.Copy();
+					if (!(v is DictionaryMap)) {// && !(v is ListMap)) {
+					//if(!(v is DictionaryMap))  {
+					    Map scope=context.Scope;
+					    context = v.Copy();
+						context.Scope = scope;
+					}
+					//if (v is ListMap) {
+					//    ((ListMap)context).list = ((ListMap)v).list;
 					//}
-					////if (v is ListMap) {
-					////    ((ListMap)context).list = ((ListMap)v).list;
-					////}
-					//else {
+					else {
 						context.CopyInternal(v);
 						//((DictionaryMap)context).dictionary = ((DictionaryMap)v).dictionary;
-					//}
+					}
 				}
 				else {
 					context = v;
@@ -4679,43 +4680,43 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
-			public class LibraryCode : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-				}
-			}
+			//public class Serialization : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
+			//public class LibraryCode : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+			//    }
+			//}
 
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
+			//public class Basic : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+			//    }
+			//}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class MergeSort : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {
