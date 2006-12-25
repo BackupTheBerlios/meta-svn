@@ -31,6 +31,7 @@ using System.Windows;
 using java.math;
 using System.Globalization;
 using Meta.Fusion;
+using System.Collections;
 
 using System.Runtime.InteropServices;
 
@@ -38,6 +39,7 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public static Expression LastArgument(Map code, Expression parent) {
 			return new CustomExpression(
@@ -100,6 +102,9 @@ namespace Meta {
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
 	public class CustomExpression : Expression {
+		public override bool ContainsFunctions() {
+			return false;
+		}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -118,6 +123,14 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
+		public override bool ContainsFunctions() {
+			foreach(Expression expression in calls) {
+				if(expression.ContainsFunctions()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in calls) {
 				if (expression.ContainsSearchStatements()) {
@@ -298,6 +311,9 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
+		public override bool ContainsFunctions() {
+			return expression.ContainsFunctions();
+		}
 		public override bool ContainsSearchStatements() {
 			return expression.ContainsSearchStatements();
 		}
@@ -409,7 +425,8 @@ namespace Meta {
 
 					il.Emit(OpCodes.Ldarg_1);
 					for (int i = 0; i < count; i++) {
-						il.Emit(OpCodes.Ldfld,typeof(Map).GetField("Scope"));
+						il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
+						//il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
 					}
 					il.Emit(OpCodes.Ldarg_0);
 					il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
@@ -607,7 +624,7 @@ namespace Meta {
 	//        search[key]++;
 	//    }
 	//}
-	public class FunctionArgument:Map {
+	public class FunctionArgument:ScopeMap {
 		public override Map this[Map key] {
 			get {
 				if(key.Equals(this.key)) {
@@ -671,38 +688,65 @@ namespace Meta {
 		}
 	}
 	public class Function:Program {
+		//public class EmptyMap : Map {
+		//    public EmptyMap(Map scope) {
+		//        this.Scope = scope;
+		//    }
+		//}
+		public override bool ContainsFunctions() {
+			return true;
+		}
 		public override Compiled GetCompiled(Expression parent) {
 			Compiled e = expression.Compile();
 			Map parameter = key;
-			return delegate (Map p) {
-				Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-				//Map context = new FunctionArgument(parameter, Map.arguments.Peek());
-				context.Scope = p;
-				return e(context);
-			};
+			if (expression.ContainsFunctions() || (parameter!=null && parameter.Count!=0)) {
+				return delegate(Map p) {
+					Map context = new FunctionArgument(parameter, Map.arguments.Pop());
+					//Map context = new FunctionArgument(parameter, Map.arguments.Peek());
+					context.Scope = p;
+					return e(context);
+				};
+			}
+			else {
+				return delegate(Map p) {
+					//Map context = new ListMap();
+					//Map context = new FunctionArgument(parameter, Map.arguments.Peek());
+					//context.Scope = p;
+					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
+					////Map context = new FunctionArgument(parameter, Map.arguments.Peek());
+					//context.Scope = p;
+					//Console.WriteLine(expression);
+					Map context = new EmptyMap(p);
+					Map.arguments.Pop();
+
+					return e(context);
+					//return e(new EmptyMap(p));
+				};
+			}
 		}
 		public Expression expression;
 		public Map key;
 		public Function(Expression parent,Map code):base(code.Source,parent) {
 			isFunction = true;
 			Map parameter = code[CodeKeys.Parameter];
-			if (parameter.Count == 0) {
-				parameter="arg";
-			}
-			Literal para=new Literal(parameter, this);
-			para.Source=code.Source;
-			KeyStatement s = new KeyStatement(
-				para,
-				LastArgument(Map.Empty, this), this, 0);
-			statementList.Add(s);
-			this.key=parameter;
+			//if (parameter.Count == 0) {
+			//    parameter="arg";
 			//}
+			if(parameter.Count!=0) {
+				Literal para=new Literal(parameter, this);
+				para.Source=code.Source;
+				KeyStatement s = new KeyStatement(
+					para,
+					LastArgument(Map.Empty, this), this, 0);
+				statementList.Add(s);
+				this.key=parameter;
+			}
 			this.expression=code[CodeKeys.Expression].GetExpression(this);
 			CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
 			statementList.Add(c);
 		}
 	}
-	public class FunctionMap:Map {
+	public class FunctionMap:ScopeMap {
 		public override Map Copy() {
 			return DeepCopy();
 		}
@@ -767,6 +811,23 @@ namespace Meta {
 		}
 	}
 	public class Program : ScopeExpression {
+		public override bool ContainsFunctions() {
+			foreach (Statement statement in statementList) {
+				KeyStatement keyStatement = statement as KeyStatement;
+				if (keyStatement != null) {
+					Literal literal=keyStatement.key as Literal;
+					if(literal!=null) {
+						if (literal.literal.Equals(CodeKeys.Function)) {
+							return true;
+						}
+					}
+				}
+				if (statement.ContainsFunctions()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public override bool ContainsSearchStatements() {
 			foreach (Statement statement in statementList) {
 				if (statement is SearchStatement || statement.ContainsSearchStatement()) {
@@ -791,11 +852,18 @@ namespace Meta {
 					Map value=statement.value.GetConstant();
 					CompiledStatement compiled=statement.Compile();
 					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-						return delegate(Map context) {
-							Map map=new FunctionMap(value);
-							map.Scope=context;
-							return map;
-						};
+						//if (statement.value.ContainsFunctions()) {
+							return delegate(Map context) {
+								Map map = new FunctionMap(value);
+								map.Scope = context;
+								return map;
+							};
+						//}
+						//else {
+						//    return delegate(Map context) {
+						//        return value;
+						//    };
+						//}
 					}
 				}
 			}
@@ -883,6 +951,7 @@ namespace Meta {
 	}
 
 	public abstract class Statement {
+		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatement();
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
@@ -988,6 +1057,9 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
+		public override bool ContainsFunctions() {
+			return value.ContainsFunctions();
+		}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1000,6 +1072,9 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
+		public override bool ContainsFunctions() {
+			return key.ContainsFunctions() || value.ContainsFunctions();
+		}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1064,6 +1139,9 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
+		public override bool ContainsFunctions() {
+			return value.ContainsFunctions();
+		}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1091,6 +1169,9 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
+		public override bool ContainsFunctions() {
+			return key.ContainsFunctions() || value.ContainsFunctions();
+		}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1118,6 +1199,12 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
+		public override bool ContainsFunctions() {
+			Expression expression = literal.GetExpression();
+
+			return expression != null && expression.ContainsFunctions();
+			//return false;
+		}
 		public override bool ContainsSearchStatements() {
 			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
 		}
@@ -1128,17 +1215,20 @@ namespace Meta {
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
 			return delegate {
-				if (literal != null) {
-					literal.Source = Source;
-				}
 				return literal;
 			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
+			if (literal != null) {
+				literal.Source = code.Source;
+			}
 		}
 	}
 	public class Root : Expression {
+		public override bool ContainsFunctions() {
+			return false;
+		}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -1154,6 +1244,14 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
+		public override bool ContainsFunctions() {
+			foreach (Expression expression in subs) {
+				if (expression.ContainsFunctions()) {
+					return true;
+				}
+			}
+			return false;
+		}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in subs) {
 				if (expression.ContainsSearchStatements()) {
@@ -1754,7 +1852,7 @@ namespace Meta {
 		//}
 	}
 	public delegate Map CallDelegate(Map argument);
-	public class Method : Map {
+	public class Method : ScopeMap {
 		public override void Append(Map map) {
 			throw new Exception("The method or operation is not implemented.");
 		}
@@ -2002,7 +2100,7 @@ namespace Meta {
 			return this;
 		}
 	}
-	public class DirectoryMap : Map {
+	public class DirectoryMap : ScopeMap {
 		public override int Count {
 			get {
 				return new List<Map>(Keys).Count;
@@ -2080,7 +2178,7 @@ namespace Meta {
 			return CopyMap(this);
 		}
 	}
-	public class FileMap : Map {
+	public class FileMap : ScopeMap {
 		public override int Count {
 			get { 
 				throw new Exception("The method or operation is not implemented."); 
@@ -2131,7 +2229,18 @@ namespace Meta {
 			this.path = path;
 		}
 	}
-	public class DictionaryMap : Map {
+	public abstract class ScopeMap : Map {
+		private Map scope;
+		public override Map Scope {
+			get {
+				return scope;
+			}
+			set {
+				scope = value;
+			}
+		}
+	}
+	public class DictionaryMap : ScopeMap {
 		public override void CopyInternal(Map map) {
 			foreach (Map key in map.Keys) {
 				this.dictionary[key] = map[key];
@@ -2384,7 +2493,7 @@ namespace Meta {
 		}
 		private Dictionary<Type, Dictionary<Map, Member>> cache = new Dictionary<Type, Dictionary<Map, Member>>();
 	}
-	public abstract class DotNetMap : Map {
+	public abstract class DotNetMap : ScopeMap {
 		public override IEnumerable<Map> Array {
 			get {
 				yield break;
@@ -2669,7 +2778,7 @@ namespace Meta {
 			return source != null && Line == source.Line && Column == source.Column && FileName == source.FileName;
 		}
 	}
-	public abstract class SpecialMap:Map {
+	public abstract class SpecialMap:ScopeMap {
 		public override Number GetNumber() {
 			return null;
 		}
@@ -2704,7 +2813,7 @@ namespace Meta {
 			}
 		}
 	}
-	public class AssemblyMap : Map {
+	public class AssemblyMap : ScopeMap {
 		public override int Count {
 			get {
 				return new List<Map>(Keys).Count;
@@ -2793,7 +2902,7 @@ namespace Meta {
 			this.name = name;
 		}
 	}
-	public class Gac : Map {
+	public class Gac : ScopeMap {
 		public override int Count {
 			get {
 				return new List<Map>(Keys).Count;
@@ -2900,7 +3009,7 @@ namespace Meta {
 			}
 		}
 	}
-	public class StringMap : Map {
+	public class StringMap : ScopeMap {
 		public override bool IsNumber {
 			get {
 				return Count == 0;
@@ -3121,7 +3230,7 @@ namespace Meta {
 		public abstract double GetDouble();
 		public abstract BigInteger GetInteger();
 	}
-	public class NumberMap : Map {
+	public class NumberMap : ScopeMap {
 		public NumberMap(Number number) {
 			this.number = number;
 		}
@@ -4856,7 +4965,7 @@ namespace Meta {
 		public KeyNotFound(Map key, Source source, Map map)
 			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
-	public class ListMap : Map {
+	public class ListMap : ScopeMap {
 		public override Number GetNumber() {
 			if(Count==0) {
 				return Integer32.Zero;
@@ -5171,6 +5280,11 @@ namespace Meta {
 	}
 	// why is this even needed?
 	public class LiteralExpression : Expression {
+		public override bool ContainsFunctions() {
+			Expression expression = literal.GetExpression();
+			return expression!=null && expression.ContainsFunctions();
+			//return false;
+		}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -5186,6 +5300,9 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
+		public override bool ContainsFunctions() {
+			return false;
+		}
 		public override bool ContainsSearchStatement() {
 			return false;
 		}
@@ -5216,7 +5333,12 @@ namespace Meta {
 	public abstract class CompilableAttribute : Attribute {
 		public abstract Map GetStructure();
 	}
-	public class EmptyMap:Map {
+	public class EmptyMap:ScopeMap {
+		public EmptyMap() {
+		}
+		public EmptyMap(Map scope) {
+			this.Scope = scope;
+		}
 		public override Map Mutable() {
 			return new DictionaryMap();
 		}
@@ -5270,8 +5392,8 @@ namespace Meta {
 			throw new Exception("The method or operation is not implemented.");
 		}
 
-		public NumberMap zero = new NumberMap(new Integer32(0));
-		public string emptyString = "";
+		//public NumberMap zero = new NumberMap(new Integer32(0));
+		public const string emptyString = "";
 		public override string GetString() {
 			return emptyString;
 		}
@@ -5312,6 +5434,9 @@ namespace Meta {
 			return GetNumber().GetInt32();
 		}
 		public override bool Equals(object obj) {
+			if (ReferenceEquals(obj, this)) {
+				return true;
+			}
 			Map map = obj as Map;
 			if (map != null && map.Count == Count) {
 				foreach (Map key in this.Keys) {
@@ -5384,7 +5509,7 @@ namespace Meta {
 			Map clone = new DictionaryMap();
 			clone.Scope = Scope;
 			clone.Source = Source;
-			clone.expression = expression;
+			clone.Expression = Expression;
 			clone.IsConstant = this.IsConstant;
 			foreach (Map key in Keys) {
 				try {
@@ -5485,23 +5610,87 @@ namespace Meta {
 			get;
 			set;
 		}
-		public Map Scope;
+		//public Map Scope;
+		public virtual Map Scope {
+			get {
+				return null;
+			}
+			set {
+			}
+		}
+		//public Map Scope;
 		public void Compile(Expression parent) {
 			GetExpression(parent).Compile();
 		}
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
+		private Expression _expression;
+		public class Comparer : IEqualityComparer<Map> {
+			bool IEqualityComparer<Map>.Equals(Map x, Map y) {
+				return ReferenceEquals(x, y);
+			}
+			int IEqualityComparer<Map>.GetHashCode(Map obj) {
+				return ((object)obj).GetHashCode();
+			}
+		}
+		public static Dictionary<Map, Expression> allExpressions = new Dictionary<Map, Expression>(1000,new Comparer());
+		//public class Hasher {
+		//    public Hasher() {
+		//}
+		private Expression Expression;
+		//private Expression Expression {
+		//    get {
+		//        //this
+		//        Expression value;
+		//        allExpressions.TryGetValue(this, out value);
+		//        return value;
+		//        //return _expression;
+		//    }
+		//    set {
+		//        //Hashtable t;
+		//        if (value != null) {
+		//            allExpressions[this] = value;
+		//        }
+		//        //_expression = value;
+		//    }
+		//}
 
-		private Expression expression;
-
+		//public static readonly DependencyProperty ExpressionProperty = DependencyProperty.Register(
+		//  "AquariumGraphic",
+		//    typeof(Expression),
+		//  //typeof(Uri),
+		//  typeof(Map));
+		//  //  ,
+		//  //new FrameworkPropertyMetadata(null,
+		//  //    FrameworkPropertyMetadataOptions.AffectsRender,
+		//  //    new PropertyChangedCallback(OnUriChanged)
+		//  //)
+		////);
+		////private Expression expression;
 
 		public virtual Expression GetExpression(Expression parent) {
-			if (expression == null) {
-				expression = CreateExpression(parent);
+			if (Expression == null) {
+				Expression = CreateExpression(parent);
 			}
-			return expression;
+			return Expression;
 		}
+		//public virtual Expression GetExpression(Expression parent) {
+		//    if (expression == null) {
+		//        expression = CreateExpression(parent);
+		//    }
+		//    return expression;
+		//}
+
+		//private Expression expression;
+
+
+		//public virtual Expression GetExpression(Expression parent) {
+		//    if (expression == null) {
+		//        expression = CreateExpression(parent);
+		//    }
+		//    return expression;
+		//}
 		static Map() {
 			statements[CodeKeys.Keys] = typeof(SearchStatement);
 			statements[CodeKeys.Current] = typeof(CurrentStatement);
