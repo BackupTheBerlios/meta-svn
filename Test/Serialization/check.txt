@@ -22,7 +22,7 @@
 	"shortFunctionTest"=-
 		!"shortFunction"
 		"hello"
-	"decimal"=Meta.Rational
+	"decimal"=6924973268539959/4294967296
 	"listTest"=,
 		1=1
 		2=2
@@ -91,7 +91,7 @@
 			0=5
 			"negative"=0
 			"denominator"=7
-	"fraction"=Meta.Rational
+	"fraction"=3/2
 	"literalEscapeTest"=,
 		1="asdf"
 		2="asdf"
