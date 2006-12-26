@@ -872,9 +872,11 @@ namespace Meta {
 			bool useList = true;
 			int count = 1;
 			//try {
+			int listCount = 0;
 				foreach (Statement statement in statementList) {
 					KeyStatement keyStatement = statement as KeyStatement;
 					if (keyStatement != null) {
+						listCount++;
 						Literal literal = keyStatement.key as Literal;
 						if (literal != null) {
 							if (literal.literal.Equals(new Integer32(count))) {
@@ -887,20 +889,22 @@ namespace Meta {
 
 					}
 					useList = false;
-					break;
+					//break;
 				}
 			//}
 			//catch (Exception e) {
 			//}
+			//int listCount=statementList.FindAll(delegate(Statement statement) { return statement is KeyStatement; }).Count;
 			if (useList) {
 			}
 			return delegate(Map p) {
 				Map context;
 				if (useList) {
-				    context = new ListMap();
+				    context = new ListMap(statementList.Count);
 				}
 				else {
-					context = new DictionaryMap();
+					context = new DictionaryMap(listCount);
+					//context = new DictionaryMap(statementList.Count);
 				}
 
 
@@ -2300,20 +2304,24 @@ namespace Meta {
 			return false;
 		}
 		public DictionaryMap() {
+			this.dictionary = new Dictionary<Map, Map>();
 		}
-		public DictionaryMap(params Map[] keysAndValues){
+		public DictionaryMap(int capacity) {
+			this.dictionary=new Dictionary<Map, Map>(capacity);
+		}
+		public DictionaryMap(params Map[] keysAndValues):this(keysAndValues.Length/2){
 		    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
 		        this[keysAndValues[i]] = keysAndValues[i + 1];
 		    }
 		}
-		public DictionaryMap(System.Collections.Generic.ICollection<Map> list) {
+		public DictionaryMap(System.Collections.Generic.ICollection<Map> list):this(list.Count) {
 			int index = 1;
 			foreach (Map entry in list) {
 				this[index] = entry;
 				index++;
 			}
 		}
-		public DictionaryMap(IEnumerable<Map> list) {
+		public DictionaryMap(IEnumerable<Map> list):this() {
 			foreach(Map map in list) {
 				this.Append(map);
 			}
@@ -2371,7 +2379,7 @@ namespace Meta {
 				return i - 1;
 			}
 		}
-		public Dictionary<Map, Map> dictionary=new Dictionary<Map, Map>();
+		public Dictionary<Map, Map> dictionary;//=new Dictionary<Map, Map>();
 		public override Map this[Map key] {
 			get {
 				Map val;
@@ -4949,43 +4957,43 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
-			public class LibraryCode : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-				}
-			}
+			//public class Serialization : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
+			//public class LibraryCode : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+			//    }
+			//}
 
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
+			//public class Basic : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+			//    }
+			//}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class MergeSort : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {
