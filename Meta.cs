@@ -418,22 +418,43 @@ namespace Meta {
 					if (map != null && map.Count == 1) {
 						index = 0;
 					}
-					Compiled conversion;
-					Type[] param = new Type[] { typeof(Map),typeof(Map) };
-					DynamicMethod m = new DynamicMethod("ToCompiled", typeof(Map), param, typeof(Map).Module);
-					ILGenerator il = m.GetILGenerator();
+					return delegate(Map context) {
+						Map selected = context;
+						for (int i = 0; i < count; i++) {
+							selected = selected.Scope;
+							//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
+							//il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
+						}
+						Map result = selected[key];
+						if (result == null) {
+							throw new KeyNotFound(key, expression.Source.Start, null);
+						}
+						return result;
+						//il.Emit(OpCodes.Ldarg_0);
+						//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
 
-					il.Emit(OpCodes.Ldarg_1);
-					for (int i = 0; i < count; i++) {
-						il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
-						//il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
-					}
-					il.Emit(OpCodes.Ldarg_0);
-					il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
+						//il.Emit(OpCodes.Ret);
+						//conversion = (Compiled)m.CreateDelegate(typeof(Compiled),key);
+						//return conversion;
 
-					il.Emit(OpCodes.Ret);
-					conversion = (Compiled)m.CreateDelegate(typeof(Compiled),key);
-					return conversion;
+					};
+					//Compiled conversion;
+					//Type[] param = new Type[] { typeof(Map),typeof(Map) };
+					//DynamicMethod m = new DynamicMethod("ToCompiled", typeof(Map), param, typeof(Map).Module);
+					//ILGenerator il = m.GetILGenerator();
+
+					//il.Emit(OpCodes.Ldarg_1);
+					//for (int i = 0; i < count; i++) {
+					//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
+					//    //il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
+					//}
+					//il.Emit(OpCodes.Ldarg_0);
+					//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
+
+					//il.Emit(OpCodes.Ret);
+					//conversion = (Compiled)m.CreateDelegate(typeof(Compiled),key);
+					//return conversion;
+
 					//    Map result = selected[key];
 					//    if (result == null) {
 					//        throw new KeyNotFound(key, expression.Source.Start, null);
