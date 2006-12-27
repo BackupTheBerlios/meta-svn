@@ -334,6 +334,7 @@ namespace Meta {
 				return null;
 			}
 		}
+		// this is a mess
 		private bool FindStuff(out int count, out Map key, out Map value, out Map map) {
 			Expression current = this;
 			key = expression.EvaluateStructure();
@@ -347,7 +348,22 @@ namespace Meta {
 					while (current.Statement == null) {
 						if (current.isFunction) {
 							hasCrossedFunction = true;
-							count++;
+							//if (count != 1) {
+							//if (current.Statement != null) {
+							//if (current.Parent.Statement == null) {
+
+							// TERRIBLE hack
+							if (current.Parent is Call) {
+							}
+							else {
+								count++;
+							}
+							//}
+								//if (current.Statement != null) {
+								//    current = current.Parent;
+								//}
+							//}
+							//}
 						}
 						current = current.Parent;
 						if (current == null) {
@@ -415,12 +431,20 @@ namespace Meta {
 					};
 				}
 				else {
+					if (key.Equals(new StringMap("ChangeStaticEvent"))) {
+						FindStuff(out count, out key, out value, out map);
+					}
 					int index = -1;
 					if (map != null && map.Count == 1) {
 						index = 0;
 					}
+					if (key.Equals(new StringMap("fibo"))) {
+						FindStuff(out count, out key, out value, out map);
+					}
 					return delegate(Map context) {
 						Map selected = context;
+						if(key.Equals(new StringMap("ChangeStaticEvent"))) {
+						}
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
@@ -433,6 +457,8 @@ namespace Meta {
 				}
 			}
 			else {
+				if (key.Equals(new StringMap("fibo"))) {
+				}
 				FindStuff(out count, out key, out value, out map);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
@@ -548,8 +574,11 @@ namespace Meta {
 		}
 		public Expression expression;
 		public Map key;
-		public Function(Expression parent,Map code):base(code.Source,parent) {
+		public Function(Expression parent,Statement statement,Map code):base(code.Source,parent) {
 			isFunction = true;
+			if (parent is Program) {
+				this.Statement = statement;
+			}
 			if (parent == null) {
 			}
 			Map parameter = code[CodeKeys.Parameter];
@@ -931,7 +960,8 @@ namespace Meta {
 				if (value is Literal) {
 					//if (program.statementList.Count == 1) {
 					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {//.GetExpression(program) != null) {
-						((Literal)value).literal[CodeKeys.Function].Compile(program);
+						((Literal)value).literal[CodeKeys.Function].GetFunction(program, this);//.Compile(program);
+						//((Literal)value).literal[CodeKeys.Function].Compile(program);
 					}
 					//}
 				}
@@ -2063,6 +2093,9 @@ namespace Meta {
 		public DictionaryMap(int capacity) {
 			this.dictionary=new Dictionary<Map, Map>(capacity);
 		}
+		public DictionaryMap(Dictionary<Map, Map> dictionary) {
+			this.dictionary = dictionary;
+		}
 		public DictionaryMap(params Map[] keysAndValues):this(keysAndValues.Length/2){
 		    for (int i = 0; i <= keysAndValues.Length - 2; i += 2) {
 		        this[keysAndValues[i]] = keysAndValues[i + 1];
@@ -2094,7 +2127,7 @@ namespace Meta {
 			}
 		}
 		public override Map Copy() {
-			Map clone = new CopyMap(this);//new DictionaryMap();
+			Map clone = new DictionaryMap(dictionary);//new DictionaryMap();
 			//clone.Scope = Scope;
 			//clone.Source = Source;
 			clone.Expression = Expression;
@@ -2103,7 +2136,7 @@ namespace Meta {
 			//    //try {
 			//    clone[key] = this[key];//.Copy();
 			//    //}
-			//    //catch {
+			//    //catchk {
 			//    //    clone[key] = this[key].Copy();
 			//    //}
 			//}
@@ -4510,43 +4543,43 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class Serialization : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class LibraryCode : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-			//    }
-			//}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+				}
+			}
 
-			//public class Basic : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			//public class MergeSort : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -5308,7 +5341,8 @@ namespace Meta {
 			Map result;
 		    Map function=this[CodeKeys.Function];
 		    if (function!=null) {
-		        result=function.GetExpression(null).GetCompiled()(this);
+				result = function.GetExpression(null).GetCompiled()(this.Scope);
+				//result = function.GetExpression(null).GetCompiled()(this);
 			}
 		    else {
 		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
@@ -5476,6 +5510,12 @@ namespace Meta {
 		}
 		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
 		public static Dictionary<Map, Type> statements = new Dictionary<Map, Type>();
+		public Expression GetFunction(Expression parent,Statement statement) {
+			if (ContainsKey(CodeKeys.Expression)) {
+				return new Function(parent,statement,this);
+			}
+			throw new Exception("some error");
+		}
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
 				if (ContainsKey(CodeKeys.LastArgument)) {
@@ -5491,8 +5531,9 @@ namespace Meta {
 				}
 			}
 			if (ContainsKey(CodeKeys.Expression)) {
-		        return new Function(parent,this);
-		    }
+				// probably wrong, or parent is added later
+				return new Function(parent,null, this);
+			}
 			return null;
 		}
 		public Statement GetStatement(Program program, int index) {

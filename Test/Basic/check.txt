@@ -11,7 +11,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"shortFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -100,7 +100,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SetCounter"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -175,7 +175,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"test"
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -206,7 +206,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopingTest"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -460,7 +460,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"SetA"
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -525,7 +525,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"SetB"
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -727,7 +727,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -795,7 +795,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -857,7 +857,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunctionFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -900,7 +900,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFromFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -931,7 +931,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ReturnEverything"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1012,7 +1012,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ReturnFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1150,7 +1150,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SetCurrent"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1284,7 +1284,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"FirstLevel"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1352,7 +1352,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SecondLevel"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1633,7 +1633,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1660,7 +1660,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"someFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1699,7 +1699,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"callFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1725,7 +1725,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"callFunctionResult"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1764,7 +1764,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1841,7 +1841,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunctionResult"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1901,7 +1901,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunctionDirect"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1949,7 +1949,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"selectionFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1985,7 +1985,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SetUpperLevel"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2032,7 +2032,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ChangeUpperLevel"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2110,7 +2110,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ChangeStaticEvent"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2211,7 +2211,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -2233,7 +2233,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (EmptyMap):
 				0
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -2289,7 +2289,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"emptyFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2435,7 +2435,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"loop"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2806,7 +2806,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnInMap"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2862,7 +2862,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2901,7 +2901,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnArg"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2927,7 +2927,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"myArg"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2979,7 +2979,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"documentedFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3019,7 +3019,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"test"
-					Value (CopyMap):
+					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"function"
@@ -3067,7 +3067,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"outerFunction"
-	Value (CopyMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3195,7 +3195,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"innerFunction"
-			Value (CopyMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
