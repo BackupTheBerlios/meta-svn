@@ -10,7 +10,7 @@
 
 			array={
 				join=Library.JoinAll_Map;
-				length=(arg)ObjectMap_Object(arg).get_ArrayCount(0);
+				length=(arg)Meta.ObjectMap_Object(arg).get_ArrayCount(0);
 			};
 			
 			console={
@@ -40,8 +40,8 @@
 			map={
 				toString=Serialization.Serialize_Map;
 				merge=Library.MergeAll_Map;
-				count=(arg)ObjectMap_Object(arg).get_Count();
-				keys=(arg)!"DictionaryMap_IEnumerable`1"(ObjectMap_Object(arg).get_Keys());
+				count=(arg)Meta.ObjectMap_Object(arg).get_Count();
+				keys=(arg)Meta.<"DictionaryMap_IEnumerable`1">(Meta.ObjectMap_Object(arg).get_Keys());
 				equal=Library.Equal_Object_Object;
 			};
 		};

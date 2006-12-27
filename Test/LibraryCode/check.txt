@@ -28,7 +28,9 @@
 						arg|-
 							.
 								-
-									!"ObjectMap_Object"
+									.
+										!"Meta"
+										"ObjectMap_Object"
 									!"arg"
 								"get_ArrayCount"
 							0
@@ -137,17 +139,23 @@
 						arg|-
 							.
 								-
-									!"ObjectMap_Object"
+									.
+										!"Meta"
+										"ObjectMap_Object"
 									!"arg"
 								"get_Count"
 							0
 					"keys"=,
 						arg|-
-							!"DictionaryMap_IEnumerable`1"
+							.
+								!"Meta"
+								"DictionaryMap_IEnumerable`1"
 							-
 								.
 									-
-										!"ObjectMap_Object"
+										.
+											!"Meta"
+											"ObjectMap_Object"
 										!"arg"
 									"get_Keys"
 								0

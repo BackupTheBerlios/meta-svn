@@ -11,7 +11,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"shortFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -100,7 +100,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SetCounter"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -117,7 +117,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -175,7 +175,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"test"
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -206,7 +206,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopingTest"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -460,7 +460,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"SetA"
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -477,7 +477,7 @@ Entry (KeyValuePair`2)
 								Entry (KeyValuePair`2)
 									Key (StringMap):
 										"program"
-									Value (ListMap):
+									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (Integer32):
 												1
@@ -525,7 +525,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"SetB"
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -542,7 +542,7 @@ Entry (KeyValuePair`2)
 								Entry (KeyValuePair`2)
 									Key (StringMap):
 										"program"
-									Value (ListMap):
+									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (Integer32):
 												1
@@ -563,7 +563,7 @@ Entry (KeyValuePair`2)
 														Entry (KeyValuePair`2)
 															Key (StringMap):
 																"call"
-															Value (ListMap):
+															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
 																	Key (Integer32):
 																		1
@@ -571,7 +571,7 @@ Entry (KeyValuePair`2)
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
 																				"select"
-																			Value (ListMap):
+																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
 																					Key (Integer32):
 																						1
@@ -601,7 +601,7 @@ Entry (KeyValuePair`2)
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
 																				"program"
-																			Value (ListMap):
+																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
 																					Key (Integer32):
 																						1
@@ -648,7 +648,7 @@ Entry (KeyValuePair`2)
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
 																										"program"
-																									Value (ListMap):
+																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
 																											Key (Integer32):
 																												1
@@ -669,7 +669,7 @@ Entry (KeyValuePair`2)
 																														Entry (KeyValuePair`2)
 																															Key (StringMap):
 																																"select"
-																															Value (ListMap):
+																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
 																																	Key (Integer32):
 																																		1
@@ -727,7 +727,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -744,7 +744,7 @@ Entry (KeyValuePair`2)
 								Entry (KeyValuePair`2)
 									Key (StringMap):
 										"program"
-									Value (ListMap):
+									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (Integer32):
 												1
@@ -795,7 +795,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -812,7 +812,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -857,7 +857,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFunctionFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -873,51 +873,34 @@ Entry (KeyValuePair`2)
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
-								"program"
+								"literal"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer32):
-										1
+									Key (StringMap):
+										"function"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"key"
-											Value (DictionaryMap):
-												Entry (KeyValuePair`2)
-													Key (StringMap):
-														"literal"
-													Value (StringMap):
-														"function"
+												"parameter"
+											Value (StringMap):
+												"arg"
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"value"
+												"expression"
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
-														"literal"
+														"search"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (StringMap):
-																"parameter"
+																"literal"
 															Value (StringMap):
-																"arg"
-														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"expression"
-															Value (DictionaryMap):
-																Entry (KeyValuePair`2)
-																	Key (StringMap):
-																		"search"
-																	Value (DictionaryMap):
-																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"literal"
-																			Value (StringMap):
-																				"scopeFromFunctionData"
+																"scopeFromFunctionData"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scopeFromFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -948,7 +931,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ReturnEverything"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -965,7 +948,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -1029,7 +1012,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ReturnFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1046,7 +1029,145 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (Integer32):
+										1
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"current"
+											Value (EmptyMap):
+												0
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"value"
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"literal"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"function"
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"parameter"
+																	Value (StringMap):
+																		"arg"
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"expression"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"program"
+																			Value (DictionaryMap):
+																				Entry (KeyValuePair`2)
+																					Key (Integer32):
+																						1
+																					Value (DictionaryMap):
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"current"
+																							Value (EmptyMap):
+																								0
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"value"
+																							Value (DictionaryMap):
+																								Entry (KeyValuePair`2)
+																									Key (StringMap):
+																										"program"
+																									Value (DictionaryMap):
+																										Entry (KeyValuePair`2)
+																											Key (Integer32):
+																												1
+																											Value (DictionaryMap):
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"key"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																1
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"value"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																1
+																										Entry (KeyValuePair`2)
+																											Key (Integer32):
+																												2
+																											Value (DictionaryMap):
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"key"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																2
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"value"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																2
+																										Entry (KeyValuePair`2)
+																											Key (Integer32):
+																												3
+																											Value (DictionaryMap):
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"key"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																3
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"value"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (Integer32):
+																																3
+Entry (KeyValuePair`2)
+	Key (StringMap):
+		"SetCurrent"
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"function"
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"parameter"
+					Value (StringMap):
+						"current"
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"expression"
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"program"
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -1064,161 +1185,6 @@ Entry (KeyValuePair`2)
 													Key (StringMap):
 														"program"
 													Value (DictionaryMap):
-														Entry (KeyValuePair`2)
-															Key (Integer32):
-																1
-															Value (DictionaryMap):
-																Entry (KeyValuePair`2)
-																	Key (StringMap):
-																		"key"
-																	Value (DictionaryMap):
-																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"literal"
-																			Value (StringMap):
-																				"function"
-																Entry (KeyValuePair`2)
-																	Key (StringMap):
-																		"value"
-																	Value (DictionaryMap):
-																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"literal"
-																			Value (DictionaryMap):
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"parameter"
-																					Value (StringMap):
-																						"arg"
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"expression"
-																					Value (DictionaryMap):
-																						Entry (KeyValuePair`2)
-																							Key (StringMap):
-																								"program"
-																							Value (ListMap):
-																								Entry (KeyValuePair`2)
-																									Key (Integer32):
-																										1
-																									Value (DictionaryMap):
-																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"current"
-																											Value (EmptyMap):
-																												0
-																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"value"
-																											Value (DictionaryMap):
-																												Entry (KeyValuePair`2)
-																													Key (StringMap):
-																														"program"
-																													Value (ListMap):
-																														Entry (KeyValuePair`2)
-																															Key (Integer32):
-																																1
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"key"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				1
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"value"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				1
-																														Entry (KeyValuePair`2)
-																															Key (Integer32):
-																																2
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"key"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				2
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"value"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				2
-																														Entry (KeyValuePair`2)
-																															Key (Integer32):
-																																3
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"key"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				3
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"value"
-																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (Integer32):
-																																				3
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"SetCurrent"
-	Value (FunctionMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"function"
-			Value (DictionaryMap):
-				Entry (KeyValuePair`2)
-					Key (StringMap):
-						"parameter"
-					Value (StringMap):
-						"current"
-				Entry (KeyValuePair`2)
-					Key (StringMap):
-						"expression"
-					Value (DictionaryMap):
-						Entry (KeyValuePair`2)
-							Key (StringMap):
-								"program"
-							Value (ListMap):
-								Entry (KeyValuePair`2)
-									Key (Integer32):
-										1
-									Value (DictionaryMap):
-										Entry (KeyValuePair`2)
-											Key (StringMap):
-												"current"
-											Value (EmptyMap):
-												0
-										Entry (KeyValuePair`2)
-											Key (StringMap):
-												"value"
-											Value (DictionaryMap):
-												Entry (KeyValuePair`2)
-													Key (StringMap):
-														"program"
-													Value (ListMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -1265,7 +1231,7 @@ Entry (KeyValuePair`2)
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
 																				"select"
-																			Value (ListMap):
+																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
 																					Key (Integer32):
 																						1
@@ -1318,7 +1284,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"FirstLevel"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1335,7 +1301,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -1356,7 +1322,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"call"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -1386,7 +1352,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SecondLevel"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1667,7 +1633,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1694,7 +1660,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"someFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1711,7 +1677,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -1733,7 +1699,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"callFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1759,7 +1725,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"callFunctionResult"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1776,7 +1742,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -1798,7 +1764,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1814,24 +1780,20 @@ Entry (KeyValuePair`2)
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
-								"program"
+								"literal"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer32):
-										1
+									Key (StringMap):
+										"function"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"key"
-											Value (DictionaryMap):
-												Entry (KeyValuePair`2)
-													Key (StringMap):
-														"literal"
-													Value (StringMap):
-														"function"
+												"parameter"
+											Value (StringMap):
+												"arg"
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"value"
+												"expression"
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
@@ -1839,77 +1801,47 @@ Entry (KeyValuePair`2)
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (StringMap):
-																"parameter"
-															Value (StringMap):
-																"arg"
-														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"expression"
+																"function"
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
-																		"program"
+																		"parameter"
+																	Value (StringMap):
+																		""
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"expression"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (Integer32):
-																				1
+																			Key (StringMap):
+																				"program"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"key"
+																					Key (Integer32):
+																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"literal"
-																							Value (StringMap):
-																								"function"
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"value"
-																					Value (DictionaryMap):
-																						Entry (KeyValuePair`2)
-																							Key (StringMap):
-																								"literal"
+																								"key"
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
-																										"parameter"
+																										"literal"
 																									Value (StringMap):
-																										""
+																										"x"
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"value"
+																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
-																										"expression"
-																									Value (DictionaryMap):
-																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"program"
-																											Value (ListMap):
-																												Entry (KeyValuePair`2)
-																													Key (Integer32):
-																														1
-																													Value (DictionaryMap):
-																														Entry (KeyValuePair`2)
-																															Key (StringMap):
-																																"key"
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"literal"
-																																	Value (StringMap):
-																																		"x"
-																														Entry (KeyValuePair`2)
-																															Key (StringMap):
-																																"value"
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"literal"
-																																	Value (StringMap):
-																																		"y"
+																										"literal"
+																									Value (StringMap):
+																										"y"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunctionResult"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -1925,68 +1857,51 @@ Entry (KeyValuePair`2)
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
-								"program"
+								"literal"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer32):
-										1
+									Key (StringMap):
+										"function"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"key"
-											Value (DictionaryMap):
-												Entry (KeyValuePair`2)
-													Key (StringMap):
-														"literal"
-													Value (StringMap):
-														"function"
+												"parameter"
+											Value (StringMap):
+												""
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"value"
+												"expression"
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
-														"literal"
+														"program"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"parameter"
-															Value (StringMap):
-																""
-														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"expression"
+															Key (Integer32):
+																1
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
-																		"program"
-																	Value (ListMap):
+																		"key"
+																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
-																			Key (Integer32):
-																				1
-																			Value (DictionaryMap):
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"key"
-																					Value (DictionaryMap):
-																						Entry (KeyValuePair`2)
-																							Key (StringMap):
-																								"literal"
-																							Value (StringMap):
-																								"x"
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"value"
-																					Value (DictionaryMap):
-																						Entry (KeyValuePair`2)
-																							Key (StringMap):
-																								"literal"
-																							Value (StringMap):
-																								"y"
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"x"
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"value"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"y"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"delayedFunctionDirect"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2003,7 +1918,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2034,7 +1949,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"selectionFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2070,7 +1985,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"SetUpperLevel"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2087,7 +2002,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2117,7 +2032,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ChangeUpperLevel"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2134,7 +2049,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2155,7 +2070,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"call"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -2195,7 +2110,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"ChangeStaticEvent"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2212,7 +2127,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2296,7 +2211,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -2318,7 +2233,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (EmptyMap):
 				0
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -2374,7 +2289,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"emptyFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2391,7 +2306,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2520,7 +2435,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"loop"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2537,7 +2452,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2558,7 +2473,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"call"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -2566,7 +2481,7 @@ Entry (KeyValuePair`2)
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
 																		"select"
-																	Value (ListMap):
+																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (Integer32):
 																				1
@@ -2596,7 +2511,7 @@ Entry (KeyValuePair`2)
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
 																		"call"
-																	Value (ListMap):
+																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (Integer32):
 																				1
@@ -2604,7 +2519,7 @@ Entry (KeyValuePair`2)
 																				Entry (KeyValuePair`2)
 																					Key (StringMap):
 																						"select"
-																					Value (ListMap):
+																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
 																							Key (Integer32):
 																								1
@@ -2669,7 +2584,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"program"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -2689,96 +2604,57 @@ Entry (KeyValuePair`2)
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
-																				"program"
+																				"literal"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer32):
-																						1
+																					Key (StringMap):
+																						"function"
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"key"
-																							Value (DictionaryMap):
-																								Entry (KeyValuePair`2)
-																									Key (StringMap):
-																										"literal"
-																									Value (StringMap):
-																										"function"
+																								"parameter"
+																							Value (StringMap):
+																								"arg"
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"value"
+																								"expression"
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
-																										"literal"
+																										"call"
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"parameter"
-																											Value (StringMap):
-																												"arg"
+																											Key (Integer32):
+																												1
+																											Value (DictionaryMap):
+																												Entry (KeyValuePair`2)
+																													Key (StringMap):
+																														"search"
+																													Value (DictionaryMap):
+																														Entry (KeyValuePair`2)
+																															Key (StringMap):
+																																"literal"
+																															Value (StringMap):
+																																"loop"
 																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"expression"
+																											Key (Integer32):
+																												2
 																											Value (DictionaryMap):
 																												Entry (KeyValuePair`2)
 																													Key (StringMap):
 																														"call"
-																													Value (ListMap):
+																													Value (DictionaryMap):
 																														Entry (KeyValuePair`2)
 																															Key (Integer32):
 																																1
 																															Value (DictionaryMap):
 																																Entry (KeyValuePair`2)
 																																	Key (StringMap):
-																																		"search"
+																																		"select"
 																																	Value (DictionaryMap):
-																																		Entry (KeyValuePair`2)
-																																			Key (StringMap):
-																																				"literal"
-																																			Value (StringMap):
-																																				"loop"
-																														Entry (KeyValuePair`2)
-																															Key (Integer32):
-																																2
-																															Value (DictionaryMap):
-																																Entry (KeyValuePair`2)
-																																	Key (StringMap):
-																																		"call"
-																																	Value (ListMap):
 																																		Entry (KeyValuePair`2)
 																																			Key (Integer32):
 																																				1
-																																			Value (DictionaryMap):
-																																				Entry (KeyValuePair`2)
-																																					Key (StringMap):
-																																						"select"
-																																					Value (ListMap):
-																																						Entry (KeyValuePair`2)
-																																							Key (Integer32):
-																																								1
-																																							Value (DictionaryMap):
-																																								Entry (KeyValuePair`2)
-																																									Key (StringMap):
-																																										"search"
-																																									Value (DictionaryMap):
-																																										Entry (KeyValuePair`2)
-																																											Key (StringMap):
-																																												"literal"
-																																											Value (StringMap):
-																																												"rational"
-																																						Entry (KeyValuePair`2)
-																																							Key (Integer32):
-																																								2
-																																							Value (DictionaryMap):
-																																								Entry (KeyValuePair`2)
-																																									Key (StringMap):
-																																										"literal"
-																																									Value (StringMap):
-																																										"add"
-																																		Entry (KeyValuePair`2)
-																																			Key (Integer32):
-																																				2
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
 																																					Key (StringMap):
@@ -2788,16 +2664,38 @@ Entry (KeyValuePair`2)
 																																							Key (StringMap):
 																																								"literal"
 																																							Value (StringMap):
-																																								"arg"
+																																								"rational"
 																																		Entry (KeyValuePair`2)
 																																			Key (Integer32):
-																																				3
+																																				2
 																																			Value (DictionaryMap):
 																																				Entry (KeyValuePair`2)
 																																					Key (StringMap):
 																																						"literal"
-																																					Value (Integer32):
-																																						1
+																																					Value (StringMap):
+																																						"add"
+																														Entry (KeyValuePair`2)
+																															Key (Integer32):
+																																2
+																															Value (DictionaryMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StringMap):
+																																		"search"
+																																	Value (DictionaryMap):
+																																		Entry (KeyValuePair`2)
+																																			Key (StringMap):
+																																				"literal"
+																																			Value (StringMap):
+																																				"arg"
+																														Entry (KeyValuePair`2)
+																															Key (Integer32):
+																																3
+																															Value (DictionaryMap):
+																																Entry (KeyValuePair`2)
+																																	Key (StringMap):
+																																		"literal"
+																																	Value (Integer32):
+																																		1
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																2
@@ -2817,47 +2715,30 @@ Entry (KeyValuePair`2)
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
-																				"program"
+																				"literal"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (Integer32):
-																						1
+																					Key (StringMap):
+																						"function"
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"key"
-																							Value (DictionaryMap):
-																								Entry (KeyValuePair`2)
-																									Key (StringMap):
-																										"literal"
-																									Value (StringMap):
-																										"function"
+																								"parameter"
+																							Value (StringMap):
+																								"arg"
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"value"
+																								"expression"
 																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
 																									Key (StringMap):
-																										"literal"
+																										"search"
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
 																											Key (StringMap):
-																												"parameter"
+																												"literal"
 																											Value (StringMap):
 																												"arg"
-																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"expression"
-																											Value (DictionaryMap):
-																												Entry (KeyValuePair`2)
-																													Key (StringMap):
-																														"search"
-																													Value (DictionaryMap):
-																														Entry (KeyValuePair`2)
-																															Key (StringMap):
-																																"literal"
-																															Value (StringMap):
-																																"arg"
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										3
@@ -2874,7 +2755,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"call"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -2882,7 +2763,7 @@ Entry (KeyValuePair`2)
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
 																		"select"
-																	Value (ListMap):
+																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (Integer32):
 																				1
@@ -2925,7 +2806,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnInMap"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2942,7 +2823,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -2981,7 +2862,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -2997,47 +2878,30 @@ Entry (KeyValuePair`2)
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
-								"program"
+								"literal"
 							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
-									Key (Integer32):
-										1
+									Key (StringMap):
+										"function"
 									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (StringMap):
-												"key"
+												"parameter"
+											Value (StringMap):
+												"arg"
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"expression"
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"literal"
 													Value (StringMap):
-														"function"
-										Entry (KeyValuePair`2)
-											Key (StringMap):
-												"value"
-											Value (DictionaryMap):
-												Entry (KeyValuePair`2)
-													Key (StringMap):
-														"literal"
-													Value (DictionaryMap):
-														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"parameter"
-															Value (StringMap):
-																"arg"
-														Entry (KeyValuePair`2)
-															Key (StringMap):
-																"expression"
-															Value (DictionaryMap):
-																Entry (KeyValuePair`2)
-																	Key (StringMap):
-																		"literal"
-																	Value (StringMap):
-																		"functionResult"
+														"functionResult"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"returnArg"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3063,7 +2927,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"myArg"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3080,7 +2944,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -3115,7 +2979,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"documentedFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3155,7 +3019,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"test"
-					Value (FunctionMap):
+					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"function"
@@ -3172,7 +3036,7 @@ Entry (KeyValuePair`2)
 										Entry (KeyValuePair`2)
 											Key (StringMap):
 												"program"
-											Value (ListMap):
+											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (Integer32):
 														1
@@ -3203,7 +3067,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"outerFunction"
-	Value (FunctionMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"function"
@@ -3220,7 +3084,7 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"program"
-							Value (ListMap):
+							Value (DictionaryMap):
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										1
@@ -3240,64 +3104,47 @@ Entry (KeyValuePair`2)
 											Value (DictionaryMap):
 												Entry (KeyValuePair`2)
 													Key (StringMap):
-														"program"
+														"literal"
 													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
-															Key (Integer32):
-																1
+															Key (StringMap):
+																"function"
 															Value (DictionaryMap):
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
-																		"key"
-																	Value (DictionaryMap):
-																		Entry (KeyValuePair`2)
-																			Key (StringMap):
-																				"literal"
-																			Value (StringMap):
-																				"function"
+																		"parameter"
+																	Value (StringMap):
+																		"arg"
 																Entry (KeyValuePair`2)
 																	Key (StringMap):
-																		"value"
+																		"expression"
 																	Value (DictionaryMap):
 																		Entry (KeyValuePair`2)
 																			Key (StringMap):
-																				"literal"
+																				"program"
 																			Value (DictionaryMap):
 																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"parameter"
-																					Value (StringMap):
-																						"arg"
-																				Entry (KeyValuePair`2)
-																					Key (StringMap):
-																						"expression"
+																					Key (Integer32):
+																						1
 																					Value (DictionaryMap):
 																						Entry (KeyValuePair`2)
 																							Key (StringMap):
-																								"program"
-																							Value (ListMap):
+																								"current"
+																							Value (EmptyMap):
+																								0
+																						Entry (KeyValuePair`2)
+																							Key (StringMap):
+																								"value"
+																							Value (DictionaryMap):
 																								Entry (KeyValuePair`2)
-																									Key (Integer32):
-																										1
+																									Key (StringMap):
+																										"search"
 																									Value (DictionaryMap):
 																										Entry (KeyValuePair`2)
 																											Key (StringMap):
-																												"current"
-																											Value (EmptyMap):
-																												0
-																										Entry (KeyValuePair`2)
-																											Key (StringMap):
-																												"value"
-																											Value (DictionaryMap):
-																												Entry (KeyValuePair`2)
-																													Key (StringMap):
-																														"search"
-																													Value (DictionaryMap):
-																														Entry (KeyValuePair`2)
-																															Key (StringMap):
-																																"literal"
-																															Value (StringMap):
-																																"arg"
+																												"literal"
+																											Value (StringMap):
+																												"arg"
 								Entry (KeyValuePair`2)
 									Key (Integer32):
 										2
@@ -3318,7 +3165,7 @@ Entry (KeyValuePair`2)
 												Entry (KeyValuePair`2)
 													Key (StringMap):
 														"call"
-													Value (ListMap):
+													Value (DictionaryMap):
 														Entry (KeyValuePair`2)
 															Key (Integer32):
 																1
@@ -3348,7 +3195,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"innerFunction"
-			Value (FunctionMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"function"
@@ -3365,7 +3212,7 @@ Entry (KeyValuePair`2)
 								Entry (KeyValuePair`2)
 									Key (StringMap):
 										"program"
-									Value (ListMap):
+									Value (DictionaryMap):
 										Entry (KeyValuePair`2)
 											Key (Integer32):
 												1
@@ -3391,7 +3238,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (DictionaryMap):
+			Value (EmptyMap):
 				0
 Entry (KeyValuePair`2)
 	Key (StringMap):

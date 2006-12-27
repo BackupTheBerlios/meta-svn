@@ -49,7 +49,6 @@ namespace Meta {
 				delegate(Expression p) {
 					return new Compiled(delegate(Map map) {
 						return Map.arguments.Pop();
-						//return Map.arguments.Peek();
 					});
 				}
 			);
@@ -339,6 +338,8 @@ namespace Meta {
 			Expression current = this;
 			key = expression.EvaluateStructure();
 			count = 0;
+			if (key != null && key.Equals(new StringMap("rational"))) {
+			}
 			int programCounter = 0;
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
@@ -422,46 +423,13 @@ namespace Meta {
 						Map selected = context;
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
-							//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
-							//il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
 						}
 						Map result = selected[key];
 						if (result == null) {
 							throw new KeyNotFound(key, expression.Source.Start, null);
 						}
 						return result;
-						//il.Emit(OpCodes.Ldarg_0);
-						//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
-
-						//il.Emit(OpCodes.Ret);
-						//conversion = (Compiled)m.CreateDelegate(typeof(Compiled),key);
-						//return conversion;
-
 					};
-					//Compiled conversion;
-					//Type[] param = new Type[] { typeof(Map),typeof(Map) };
-					//DynamicMethod m = new DynamicMethod("ToCompiled", typeof(Map), param, typeof(Map).Module);
-					//ILGenerator il = m.GetILGenerator();
-
-					//il.Emit(OpCodes.Ldarg_1);
-					//for (int i = 0; i < count; i++) {
-					//    il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Scope"));
-					//    //il.Emit(OpCodes.Ldfld, typeof(Map).GetField("Scope"));
-					//}
-					//il.Emit(OpCodes.Ldarg_0);
-					//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("get_Item"));
-
-					//il.Emit(OpCodes.Ret);
-					//conversion = (Compiled)m.CreateDelegate(typeof(Compiled),key);
-					//return conversion;
-
-					//    Map result = selected[key];
-					//    if (result == null) {
-					//        throw new KeyNotFound(key, expression.Source.Start, null);
-					//    }
-					//    return result;
-					//    //}
-					//};
 				}
 			}
 			else {
@@ -492,159 +460,6 @@ namespace Meta {
 			search[key]++;
 		}
 	}
-	//public class Search : Expression {
-	//    public override bool ContainsSearchStatements() {
-	//        return expression.ContainsSearchStatements();
-	//    }
-	//    public static Dictionary<Map, int> search = new Dictionary<Map, int>();
-	//    public override Map GetStructure() {
-	//        Map key;
-	//        int count;
-	//        Map value;
-	//        Map map;
-	//        if (FindStuff(out count, out key, out value,out map)) {
-	//            if(value!=null) {
-	//                return value;
-	//            }
-	//            else {
-	//                return null;
-	//            }
-	//        }
-	//        else {
-	//            return null;
-	//        }
-	//    }
-	//    private bool FindStuff(out int count, out Map key, out Map value,out Map map) {
-	//        Expression current = this;
-	//        key = expression.EvaluateStructure();
-	//        count = 0;
-	//        int programCounter = 0;
-	//        if (key != null && key.IsConstant) {
-	//            bool hasCrossedFunction = false;
-	//            while (true) {
-	//                while (current.Statement == null) {
-	//                    if (current.isFunction) {
-	//                        hasCrossedFunction = true;
-	//                        count++;
-	//                    }
-	//                    current = current.Parent;
-	//                    if (current == null) {
-	//                        break;
-	//                    }
-	//                }
-	//                if (current == null) {
-	//                    break;
-	//                }
-	//                Statement statement = current.Statement;
-	//                Map structure = statement.PreMap();
-	//                if (structure == null) {
-	//                    statement.Pre();
-	//                    break;
-	//                }
-	//                if (structure.ContainsKey(key)) {
-	//                    value = structure[key];
-	//                    map = structure;
-	//                    return true;
-	//                }
-	//                else if (programCounter < 1 && statement is KeyStatement) {
-	//                    if (hasCrossedFunction) {
-	//                        map = statement.CurrentMap();
-	//                        if (map != null && map.IsConstant) {
-	//                            if (map.ContainsKey(key)) {
-	//                                value = map[key];
-	//                                if (value.IsConstant) {
-	//                                    return true;
-	//                                }
-	//                            }
-	//                        }
-	//                    }
-	//                }
-	//                if (hasCrossedFunction) {
-	//                    if (!statement.NeverAddsKey(key)) {
-	//                        break;
-	//                    }
-	//                }
-	//                count++;
-	//                if (current.Statement != null && current.Statement.program != null && !current.Statement.program.isFunction) {
-	//                    programCounter++;
-	//                }
-	//                current = current.Parent;
-	//            }
-	//        }
-	//        value = null;
-	//        map = null;
-	//        return false;
-	//    }
-	//    private Expression expression;
-	//    public Search(Map code, Expression parent)
-	//        : base(code.Source, parent) {
-	//        this.expression = code.GetExpression(this);
-	//    }
-	//    public override Compiled GetCompiled(Expression parent) {
-	//        int count;
-	//        Map key;
-	//        Map value;
-	//        Map map;
-	//        if (FindStuff(out count, out key, out value,out map)) {
-	//            if (value != null && value.IsConstant) {
-	//                return delegate(Map context) {
-	//                    return value;
-	//                };
-	//            }
-	//            else {
-	//                int index = -1;
-	//                if (map != null && map.Count == 1) {
-	//                    index = 0;
-	//                }
-	//                return delegate(Map context) {
-	//                    Map selected = context;
-	//                    //MakeSearched(key);
-	//                    //if (key.Equals(new StringMap("i"))) {
-	//                    //}
-	//                    for (int i = 0; i < count; i++) {
-	//                        selected = selected.Scope;
-	//                    }
-	//                    //if (index == 0) {
-	//                    //    return selected.GetFast(0);
-	//                    //}
-	//                    //else {
-	//                        //return selected.GetFast(key);
-	//                        Map result=selected[key];
-	//                        if (result == null) {
-	//                            throw new KeyNotFound(key,expression.Source.Start, null);
-	//                        }
-	//                        return result;
-	//                    //}
-	//                };
-	//            }}
-	//        else {
-	//            FindStuff(out count, out key, out value,out map);
-	//            Compiled compiled = expression.Compile();
-	//            return delegate(Map context) {
-	//                Map k = compiled(context);
-	//                Map selected = context;
-	//                MakeSearched(k);
-	//                while (!selected.ContainsKey(k)) {
-	//                    if (selected.Scope != null) {
-	//                        selected = selected.Scope;
-	//                    }
-	//                    else {
-	//                        Map m = compiled(context);
-	//                        bool b = context.ContainsKey(m);
-	//                        throw new KeyNotFound(k, Source.Start, null);
-	//                    }
-	//                }
-	//                return selected[k];
-	//            };
-	//        }
-	//    }
-	//    public void MakeSearched(Map key) {
-	//        if (!search.ContainsKey(key)) {
-	//            search[key] = 0;
-	//        }
-	//        search[key]++;
-	//    }
-	//}
 	public class FunctionArgument:ScopeMap {
 		public override Map this[Map key] {
 			get {
@@ -709,11 +524,6 @@ namespace Meta {
 		}
 	}
 	public class Function:Program {
-		//public class EmptyMap : Map {
-		//    public EmptyMap(Map scope) {
-		//        this.Scope = scope;
-		//    }
-		//}
 		public override bool ContainsFunctions() {
 			return true;
 		}
@@ -723,25 +533,16 @@ namespace Meta {
 			if (expression.ContainsFunctions() || (parameter!=null && parameter.Count!=0)) {
 				return delegate(Map p) {
 					Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-					//Map context = new FunctionArgument(parameter, Map.arguments.Peek());
 					context.Scope = p;
 					return e(context);
 				};
 			}
 			else {
 				return delegate(Map p) {
-					//Map context = new ListMap();
-					//Map context = new FunctionArgument(parameter, Map.arguments.Peek());
-					//context.Scope = p;
-					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-					////Map context = new FunctionArgument(parameter, Map.arguments.Peek());
-					//context.Scope = p;
-					//Console.WriteLine(expression);
 					Map context = new EmptyMap(p);
 					Map.arguments.Pop();
 
 					return e(context);
-					//return e(new EmptyMap(p));
 				};
 			}
 		}
@@ -749,10 +550,9 @@ namespace Meta {
 		public Map key;
 		public Function(Expression parent,Map code):base(code.Source,parent) {
 			isFunction = true;
+			if (parent == null) {
+			}
 			Map parameter = code[CodeKeys.Parameter];
-			//if (parameter.Count == 0) {
-			//    parameter="arg";
-			//}
 			if(parameter.Count!=0) {
 				Literal para=new Literal(parameter, this);
 				para.Source=code.Source;
@@ -767,70 +567,70 @@ namespace Meta {
 			statementList.Add(c);
 		}
 	}
-	public class FunctionMap:ScopeMap {
-		public override Map Copy() {
-			return DeepCopy();
-		}
-		public override Map this[Map key] {
-			get {
-				if(object.ReferenceEquals(key,CodeKeys.Function) || key.Equals(CodeKeys.Function)) {
-					return value;
-				}
-				else {
-					return null;
-				}
-			}
-			set {
-				if(key.Equals(CodeKeys.Function)) {
-					this.value=value;
-				}
-				else {
-					throw new Exception("The method or operation is not implemented.");
-				}
-			}
-		}
-		public override IEnumerable<Map> Keys {
-			get { 
-				yield return CodeKeys.Function;
-			}
-		}
-		public override bool IsNormal {
-			get { 
-				return true;
-			}
-		}
-		public override string GetString() {
-			return null;
-		}
-		public override void Append(Map map) {
-			throw new Exception("The method or operation is not implemented.");
-		}
-		public override IEnumerable<Map> Array {
-			get { 
-				yield break;
-			}
-		}
-		public override int ArrayCount {
-			get {
-				return 0;
-			}
-		}
-		private Map value;
-		public FunctionMap(Map value) {
-			this.value=value;
-		}
-		public override bool ContainsKey(Map k) {
-			return k.Equals(CodeKeys.Function);
-		}
-		public override NumberMap GetNumber() {
-			return null;
-		}
-		public override int Count {
-			get { 
-				return 1;
-			}
-		}
-	}
+	//public class FunctionMap:ScopeMap {
+	//    public override Map Copy() {
+	//        return DeepCopy();
+	//    }
+	//    public override Map this[Map key] {
+	//        get {
+	//            if(object.ReferenceEquals(key,CodeKeys.Function) || key.Equals(CodeKeys.Function)) {
+	//                return value;
+	//            }
+	//            else {
+	//                return null;
+	//            }
+	//        }
+	//        set {
+	//            if(key.Equals(CodeKeys.Function)) {
+	//                this.value=value;
+	//            }
+	//            else {
+	//                throw new Exception("The method or operation is not implemented.");
+	//            }
+	//        }
+	//    }
+	//    public override IEnumerable<Map> Keys {
+	//        get { 
+	//            yield return CodeKeys.Function;
+	//        }
+	//    }
+	//    public override bool IsNormal {
+	//        get { 
+	//            return true;
+	//        }
+	//    }
+	//    public override string GetString() {
+	//        return null;
+	//    }
+	//    public override void Append(Map map) {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override IEnumerable<Map> Array {
+	//        get { 
+	//            yield break;
+	//        }
+	//    }
+	//    public override int ArrayCount {
+	//        get {
+	//            return 0;
+	//        }
+	//    }
+	//    private Map value;
+	//    public FunctionMap(Map value) {
+	//        this.value=value;
+	//    }
+	//    public override bool ContainsKey(Map k) {
+	//        return k.Equals(CodeKeys.Function);
+	//    }
+	//    public override NumberMap GetNumber() {
+	//        return null;
+	//    }
+	//    public override int Count {
+	//        get { 
+	//            return 1;
+	//        }
+	//    }
+	//}
 	public class Program : ScopeExpression {
 		public override bool ContainsFunctions() {
 			foreach (Statement statement in statementList) {
@@ -866,33 +666,25 @@ namespace Meta {
 			}
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			if(statementList.Count==1) {
-				KeyStatement statement=statementList[0] as KeyStatement;
-				if(statement!=null) {
-					Map key=statement.key.GetConstant();
-					Map value=statement.value.GetConstant();
-					CompiledStatement compiled=statement.Compile();
-					if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-						//if (statement.value.ContainsFunctions()) {
-							return delegate(Map context) {
-								Map map = new FunctionMap(value);
-								map.Scope = context;
-								return map;
-							};
-						//}
-						//else {
-						//    return delegate(Map context) {
-						//        return value;
-						//    };
-						//}
-					}
-				}
-			}
+			//if(statementList.Count==1) {
+			//    KeyStatement statement=statementList[0] as KeyStatement;
+			//    if(statement!=null) {
+			//        Map key=statement.key.GetConstant();
+			//        Map value=statement.value.GetConstant();
+			//        CompiledStatement compiled=statement.Compile();
+			//        if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
+			//                return delegate(Map context) {
+			//                    Map map = new FunctionMap(value);
+			//                    map.Scope = context;
+			//                    return map;
+			//                };
+			//        }
+			//    }
+			//}
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 			bool useList = true;
 			int count = 1;
-			//try {
 			int listCount = 0;
 				foreach (Statement statement in statementList) {
 					KeyStatement keyStatement = statement as KeyStatement;
@@ -901,21 +693,14 @@ namespace Meta {
 						Literal literal = keyStatement.key as Literal;
 						if (literal != null) {
 							if (literal.literal.Equals(new Integer32(count))) {
-							//if (literal.literal.Equals(new NumberMap(new Integer32(count)))) {
 								count++;
-								//useList = true;
 								continue;
 							}
 						}
 
 					}
 					useList = false;
-					//break;
 				}
-			//}
-			//catch (Exception e) {
-			//}
-			//int listCount=statementList.FindAll(delegate(Statement statement) { return statement is KeyStatement; }).Count;
 			if (useList) {
 			}
 			return delegate(Map p) {
@@ -925,7 +710,6 @@ namespace Meta {
 				}
 				else {
 					context = new DictionaryMap(listCount);
-					//context = new DictionaryMap(statementList.Count);
 				}
 
 
@@ -1142,13 +926,24 @@ namespace Meta {
 		}
 		public override CompiledStatement Compile() {
 			Map k = key.GetConstant();
-			if (k != null && k.Equals(CodeKeys.Function)) {
+			// this should be done for all statements, not just for the key statement
+			//if (k != null && k.Equals(CodeKeys.Function)) {
 				if (value is Literal) {
-					if(program.statementList.Count == 1) {
-						((Literal)value).literal.Compile(program);
+					//if (program.statementList.Count == 1) {
+					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {//.GetExpression(program) != null) {
+						((Literal)value).literal[CodeKeys.Function].Compile(program);
 					}
+					//}
 				}
-			}
+			//}
+			// we could do this, too:
+			//if (k != null && k.Equals(CodeKeys.Function)) {
+			//    if (value is Literal) {
+			//        if(program.statementList.Count == 1) {
+			//            ((Literal)value).literal.Compile(program);
+			//        }
+			//    }
+			//}
 			Compiled s=key.Compile();
 			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (v is ObjectMap && ((ObjectMap)v).Object is Integer32) {
@@ -1229,7 +1024,6 @@ namespace Meta {
 			Expression expression = literal.GetExpression();
 
 			return expression != null && expression.ContainsFunctions();
-			//return false;
 		}
 		public override bool ContainsSearchStatements() {
 			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
@@ -1240,8 +1034,16 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
-			return delegate {
-				return literal;
+			return delegate(Map context) {
+				Map copy=literal.Copy();
+				copy.Scope = context;
+				copy.Expression = literal.Expression;
+				copy.Source = literal.Source;
+				copy.IsConstant = literal.IsConstant;
+				//if (copy.ContainsKey(CodeKeys.Function)) {
+				//}
+				return copy;
+				//return literal;
 			};
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
@@ -1528,49 +1330,40 @@ namespace Meta {
 
 		public static void GetMetaConversion(Type type, ILGenerator il) {
 			if (type.Equals(typeof(void))) {
-				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));//).GetMethod("get_Empty", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
+				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));
 			}
 			else if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
 				switch (Type.GetTypeCode(type)) {
 					case TypeCode.Boolean:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Boolean) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Byte:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Byte) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Char:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Char) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.SByte:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(SByte) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Single:
 						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.UInt16:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(UInt16) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.UInt32:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt32) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.UInt64:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt64) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.String:
 						il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
@@ -1578,25 +1371,20 @@ namespace Meta {
 					case TypeCode.Decimal:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDouble", new Type[] { typeof(Decimal) }));
 						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Double:
 						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Int16:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Int16) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Int32:
 						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.Int64:
 						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(Int64) }));
 						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
-						//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 						break;
 					case TypeCode.DateTime:
 					case TypeCode.DBNull:
@@ -1615,9 +1403,7 @@ namespace Meta {
 								il.MarkLabel(label);
 							}
 							if (type.IsSubclassOf(typeof(NumberMap)) || type.Equals(typeof(NumberMap))) {
-							//if (type.IsSubclassOf(typeof(Number)) || type.Equals(typeof(Number))) {
 								il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(NumberMap) }));
-								//il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(Number) }));
 							}
 							else {
 								if (type.IsValueType) {
@@ -1671,7 +1457,6 @@ namespace Meta {
 			else if (target.Equals(typeof(double))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(NumberMap).GetMethod("GetDouble"));
-				//il.Emit(OpCodes.Callvirt, typeof(Number).GetMethod("GetDouble"));
 			}
 			else if (target.Equals(typeof(NumberMap))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
@@ -1746,140 +1531,6 @@ namespace Meta {
 		public static object ToDotNet(Map meta, Type type) {
 			return GetConversion(type)(meta);
 		}
-		//public static object ToDotNet(Map meta, Type type) {
-		//    DotNetConversion conversion;
-		//    if (!dotNetConversions.TryGetValue(type,out conversion)) {
-		//        DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
-		//        ILGenerator il = m.GetILGenerator();
-		//        il.Emit(OpCodes.Ldarg_0);
-		//        GetConversion(type, il);
-		//        //    return OldToDotNet(meta,type);
-		//        //}
-		//        if (type.IsValueType) {
-		//            il.Emit(OpCodes.Box, type);
-		//        }
-		//        il.Emit(OpCodes.Ret);
-		//        conversion = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
-		//        dotNetConversions[type]=conversion;
-		//    }
-		//    return conversion(meta);
-		//    //return dotNetConversions[type](meta);
-		//}
-		//public static object OldToDotNet(Map meta,Type target) {
-		//    if (target.Equals(typeof(Map))) {
-		//        return meta;
-		//    }
-		//    if (target.Equals(typeof(Number))) {
-		//        return meta.GetNumber();
-		//    }
-		//    else if (target.Equals(typeof(Stream)) && meta is FileMap) {
-		//        return File.Open(((FileMap)meta).Path, FileMode.Open);
-		//    }
-		//    else if (target.Equals(typeof(object)) && meta is ObjectMap) {
-		//        return ((ObjectMap)meta).Object;
-		//    }
-		//    else {
-		//        Type type = meta.GetType();
-		//        if (type.IsSubclassOf(target)) {
-		//            return meta;
-		//        }
-		//        else {
-		//            TypeCode typeCode = Type.GetTypeCode(target);
-		//            if (typeCode == TypeCode.Object) {
-
-		//                if (target == typeof(NumberMap) && meta.IsNumber) {
-		//                    return meta.GetNumber();
-		//                }
-		//                if (target == typeof(System.Drawing.Point) && meta.IsNormal) {
-		//                    return new System.Drawing.Point(meta[1].GetInt32(), meta[2].GetInt32());
-		//                }
-		//                if (target == typeof(System.Windows.Point) && meta.IsNormal) {
-		//                    return new System.Windows.Point(meta[1].GetInt32(), meta[2].GetInt32());
-		//                }
-		//                if (target == typeof(Rectangle) && meta.IsNormal) {
-		//                    int x = meta[1][1].GetInt32();
-		//                    int y = meta[1][2].GetInt32();
-		//                    return new Rectangle(x,
-		//                        y,
-		//                        meta[2][1].GetInt32() - x,
-		//                        meta[2][2].GetInt32() - y);
-		//                }
-		//                if (target == typeof(Color) && meta.IsNormal) {
-		//                    return Color.FromArgb(meta[1].GetInt32(), meta[2].GetInt32(), meta[3].GetInt32());
-		//                }
-		//                if (target == typeof(Type) && meta is TypeMap) {
-		//                    return ((TypeMap)meta).Type;
-		//                }
-		//                // remove?
-		//                else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//                    return ((ObjectMap)meta).Object;
-		//                }
-		//                else if (target.IsAssignableFrom(type)) {
-		//                    return meta;
-		//                }
-		//                else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))
-		//                   && meta.ContainsKey(CodeKeys.Function)) {
-		//                    return CreateDelegateFromCode(meta, target);
-		//                }
-		//                if (target.IsArray) {
-		//                    List<object> list = new List<object>();
-		//                    foreach (Map map in meta.Array) {
-		//                        list.Add(ToDotNet(map, target.GetElementType()));
-		//                    }
-		//                    Array array = Array.CreateInstance(target.GetElementType(), meta.ArrayCount);
-		//                    list.ToArray().CopyTo(array, 0);
-		//                    return array;
-		//                }
-		//            }
-		//            else if (target.IsEnum) {
-		//                return Enum.ToObject(target, meta.GetNumber().GetInt32());
-		//            }
-		//            else if (meta is ObjectMap && target.IsAssignableFrom(((ObjectMap)meta).Type)) {
-		//                return ((ObjectMap)meta).Object;
-		//            }
-		//            else {
-		//                switch (typeCode) {
-		//                    case TypeCode.Boolean:
-		//                        return Convert.ToBoolean(meta.GetNumber().GetInt32());
-		//                    case TypeCode.Byte:
-		//                        return Convert.ToByte(meta.GetNumber().GetInt32());
-		//                    case TypeCode.Char:
-		//                        return Convert.ToChar(meta.GetNumber().GetInt32());
-		//                    case TypeCode.DateTime:
-		//                        return null;
-		//                    case TypeCode.DBNull:
-		//                        return null;
-		//                    case TypeCode.Decimal:
-		//                        return (decimal)(meta.GetNumber().GetInt64());
-		//                    case TypeCode.Double:
-		//                        return (double)(meta.GetNumber().GetDouble());
-		//                    case TypeCode.Int16:
-		//                        return Convert.ToInt16(meta.GetNumber().GetRealInt64());
-		//                    case TypeCode.Int32:
-		//                        return meta.GetNumber().GetInt32();
-		//                    case TypeCode.Int64:
-		//                        return Convert.ToInt64(meta.GetNumber().GetInt64());
-		//                    case TypeCode.SByte:
-		//                        return Convert.ToSByte(meta.GetNumber().GetInt64());
-		//                    case TypeCode.Single:
-		//                        float result = (float)meta.GetNumber().GetSingle();
-		//                        return result;
-		//                    case TypeCode.String:
-		//                        return meta.GetString();
-		//                    case TypeCode.UInt16:
-		//                        return Convert.ToUInt16(meta.GetNumber().GetInt64());
-		//                    case TypeCode.UInt32:
-		//                        return Convert.ToUInt32(meta.GetNumber().GetInt64());
-		//                    case TypeCode.UInt64:
-		//                        return Convert.ToUInt64(meta.GetNumber().GetInt64());
-		//                    default:
-		//                        throw new ApplicationException("not implemented");
-		//                }
-		//            }
-		//        }
-		//    }
-		//    throw new ApplicationException("Cannot convert " + Serialization.Serialize(meta) + " to " + target.ToString() + ".");
-		//}
 	}
 	public delegate Map CallDelegate(Map argument);
 	public class Method : Map {
@@ -2271,7 +1922,6 @@ namespace Meta {
 		}
 	}
 	public class DictionaryMap : ScopeMap {
-		//private Expression expression;
 		public override Expression Expression {
 			get {
 				return expression;
@@ -2361,7 +2011,20 @@ namespace Meta {
 			}
 		}
 		public override Map Copy() {
-			return DeepCopy();
+			Map clone = new DictionaryMap();
+			clone.Scope = Scope;
+			clone.Source = Source;
+			clone.Expression = Expression;
+			clone.IsConstant = this.IsConstant;
+			foreach (Map key in Keys) {
+				//try {
+					clone[key] = this[key];//.Copy();
+				//}
+				//catch {
+				//    clone[key] = this[key].Copy();
+				//}
+			}
+			return clone;
 		}
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
@@ -2400,7 +2063,7 @@ namespace Meta {
 				return i - 1;
 			}
 		}
-		public Dictionary<Map, Map> dictionary;//=new Dictionary<Map, Map>();
+		public Dictionary<Map, Map> dictionary;
 		public override Map this[Map key] {
 			get {
 				Map val;
@@ -3162,121 +2825,7 @@ namespace Meta {
 			}
 		}
 	}
-	//public abstract class Number {
-	//    public virtual Number Multiply(Number b) {
-	//        return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
-	//    }
-	//    public static Number Multiply(Number a, Number b) {
-	//        return a.Multiply(b);
-	//    }
-	//    public int CompareTo(Number number) {
-	//        return this.GetDouble().CompareTo(number.GetDouble());
-	//    }
-	//    public override bool Equals(object obj) {
-	//        Number num = obj as Number;
-	//        if (num != null) {
-	//            return num.Numerator == Numerator && num.Denominator == Denominator;
-	//        }
-	//        else {
-	//            return false;
-	//        }
-	//    }
-	//    public static Map Raise(Number a,Number b) {
-	//        return new NumberMap(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
-	//    }
-	//    public static Integer32 Zero = new Integer32(0);
-	//    public static Integer32 One = new Integer32(1);
-	//    public static double GreatestCommonDivisor(double a, double b) {
-	//        if (a == b) {
-	//            return a;
-	//        }
-	//        a = Math.Abs(a);
-	//        b = Math.Abs(b);
-	//        while (a != 0 && b != 0) {
-	//            if (a > b) {
-	//                a = a % b;
-	//            }
-	//            else {
-	//                b = b % a;
-	//            }
-	//        }
-	//        if (a == 0) {
-	//            return b;
-	//        }
-	//        else {
-	//            return a;
-	//        }
-	//    }
-	//    public double Expand(Number b) {
-	//        return Numerator.GetDouble() * (LeastCommonMultiple(this, b) / Denominator.GetDouble());
-	//    }
-	//    public static Number Add(Number a, Number b) {
-	//        return a.Add(b);
-	//    }
-	//    public static Number Subtract(Number a, Number b) {
-	//        return a.Subtract(b);
-	//    }
-	//    public virtual Number Divide(Number b) {
-	//        return new Rational((Numerator.Multiply(b.Denominator)).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
-	//    }
-	//    public static Number Divide(Number a, Number b) {
-	//        return a.Divide(b);
-	//    }
-	//    public static bool Greater(Number a, Number b) {
-	//        return a.Expand(b) > b.Expand(a);
-	//    }
-	//    public static bool Less(Number a, Number b) {
-	//        return a.LessThan(b);
-	//    }
-	//    public static bool GreaterEqual(Number a, Number b) {
-	//        return a.Expand(b) >= b.Expand(a);
-	//    }
-	//    public static bool LessEqual(Number a, Number b) {
-	//        return a.LessEqual(b);
-	//    }
-	//    public virtual bool LessEqual(Number number) {
-	//        return Expand(number) <= number.Expand(this);
-	//    }
-	//    public static Number Modulo(Number a, Number b) {
-	//        return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
-	//    }
-
-
-
-	//    public float GetSingle() {
-	//        return (float)GetDouble();
-	//    }
-	//    public abstract int GetInt32();
-	//    public abstract IntegerBase Numerator {
-	//        get;
-	//    }
-	//    public abstract IntegerBase Denominator {
-	//        get;
-	//    }
-	//    public abstract long GetInt64();
-	//    public abstract long GetRealInt64();
-	//    public static double LeastCommonMultiple(Number a, Number b) {
-	//        return (a.Denominator.Multiply(b.Denominator)).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
-	//    }
-	//    public virtual Number Subtract(Number b) {
-	//        return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public virtual bool LessThan(Number b) {
-	//        return Expand(b) < b.Expand(this);
-	//    }
-	//    public virtual bool LessThan(int b) {
-	//        return LessThan(new Integer32(b));
-	//    }
-	//    public virtual Number Add(Number b) {
-	//        return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-	//    }
-	//    public abstract double GetDouble();
-	//    public abstract BigInteger GetInteger();
-	//}
 	public abstract class NumberMap : Map {
-		//public override int GetHashCode() {
-		//    return (int)(Numerator.GetDouble() % int.MaxValue);
-		//}
 			public virtual NumberMap Multiply(NumberMap b) {
 				return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
 			}
@@ -3293,12 +2842,10 @@ namespace Meta {
 				}
 				else {
 					return base.Equals(obj);
-					//return false;
 				}
 			}
 		public static Map Raise(NumberMap a, NumberMap b) {
 			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
-			//return new NumberMap(new Rational(Math.Pow(a.GetDouble(), b.GetDouble())));
 		}
 			public static Integer32 Zero = new Integer32(0);
 			public static Integer32 One = new Integer32(1);
@@ -3388,19 +2935,9 @@ namespace Meta {
 			}
 			public abstract double GetDouble();
 			public abstract BigInteger GetInteger();
-
-
-
-		//public NumberMap(NumberMap number) {
-		//    this.number = number;
-		//}
-		//private NumberMap number;
 		public NumberMap GetNum() {
 			return this;
 		}
-		//public NumberMap GetNum() {
-		//    return number;
-		//}
 		public override string GetString() {
 			return null;
 		}
@@ -3431,14 +2968,12 @@ namespace Meta {
 				if (ContainsKey(key)) {
 					if (key.Count == 0) {
 						return NumberMap.Subtract(this.GetNum(), NumberMap.One);
-						//return new NumberMap(Number.Subtract(this.GetNum(), Number.One));
 					}
 					else if (key.Equals(NumberKeys.Negative)) {
 						return Map.Empty;
 					}
 					else if (key.Equals(NumberKeys.Denominator)) {
 						return new Rational(GetNum().Denominator);
-						//return new NumberMap(new Rational(GetNum().Denominator));
 					}
 					else {
 						throw new ApplicationException("Error.");
@@ -3464,22 +2999,8 @@ namespace Meta {
 				}
 			}
 		}
-		//public override IEnumerable<Map> Keys {
-		//    get {
-		//        if (!this.number.Equals(NumberMap.Zero)) {
-		//            yield return Map.Empty;
-		//        }
-		//        if (NumberMap.Less(this.GetNum(), NumberMap.Zero)) {
-		//            yield return NumberKeys.Negative;
-		//        }
-		//        if (!number.Denominator.Equals(NumberMap.One)) {
-		//            yield return NumberKeys.Denominator;
-		//        }
-		//    }
-		//}
 		public override NumberMap GetNumber() {
 			return this;
-			//return this.number;
 		}
 
 		public override string ToString() {
@@ -3490,119 +3011,7 @@ namespace Meta {
 				return Numerator.ToString() + Syntax.fraction + Denominator.ToString();
 			}
 		}
-		//public override bool Equals(object obj) {
-		//    NumberMap other = obj as NumberMap;
-		//    if (other != null) {
-		//        return other.number.Equals(number);
-		//    }
-		//    else {
-		//        return base.Equals(obj);
-		//    }
-		//}
-		//public override int GetHashCode() {
-		//    return (int)(Numerator.GetDouble() % int.MaxValue);
-		//}
-		//public int GetInt32() {
-		//    return GetNumber().GetInt32();
-		//}
 	}
-	//public class NumberMap : Map {
-	//    public NumberMap(Number number) {
-	//        this.number = number;
-	//    }
-	//    private Number number;
-	//    public Number GetNum() {
-	//        return number;
-	//    }
-	//    public override string GetString() {
-	//        return null;
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get {
-	//            yield break;
-	//        }
-	//    }
-	//    public override int Count {
-	//        get {
-	//            return new List<Map>(Keys).Count;
-	//        }
-	//    }
-	//    public override Map Copy() {
-	//        return this;
-	//    }
-	//    public override int ArrayCount {
-	//        get { return 0; }
-	//    }
-	//    public override string Serialize() {
-	//        return this.ToString();
-	//    }
-	//    public override bool ContainsKey(Map key) {
-	//        return new List<Map>(Keys).Contains(key);
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            if (ContainsKey(key)) {
-	//                if (key.Count == 0) {
-	//                    return new NumberMap(Number.Subtract(this.GetNum(),Number.One));
-	//                }
-	//                else if (key.Equals(NumberKeys.Negative)) {
-	//                    return Map.Empty;
-	//                }
-	//                else if (key.Equals(NumberKeys.Denominator)) {
-	//                    return new NumberMap(new Rational(GetNum().Denominator));
-	//                }
-	//                else {
-	//                    throw new ApplicationException("Error.");
-	//                }
-	//            }
-	//            else {
-	//                return null;
-	//            }
-	//        }
-	//        set {
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Keys {
-	//        get {
-	//            if (!this.number.Equals(Number.Zero)) {
-	//                yield return Map.Empty;
-	//            }
-	//            if (Number.Less(this.GetNum(), Number.Zero)) {
-	//                yield return NumberKeys.Negative;
-	//            }
-	//            if (!number.Denominator.Equals(Number.One)) {
-	//                yield return NumberKeys.Denominator;
-	//            }
-	//        }
-	//    }
-	//    public override Number GetNumber() {
-	//        return this.number;
-	//    }
-
-	//    public override string ToString() {
-	//        if (number.Denominator.Equals(Number.One)) {
-	//            return number.Numerator.ToString();
-	//        }
-	//        else {
-	//            return number.Numerator.ToString() + Syntax.fraction + number.Denominator.ToString();
-	//        }
-	//    }
-	//    public override bool Equals(object obj) {
-	//        NumberMap other = obj as NumberMap;
-	//        if (other != null) {
-	//            return other.number.Equals(number);
-	//        }
-	//        else {
-	//            return base.Equals(obj);
-	//        }
-	//    }
-	//    public override int GetHashCode() {
-	//        return (int)(number.Numerator.GetDouble() % int.MaxValue);
-	//    }
-	//    public int GetInt32() {
-	//        return GetNumber().GetInt32();
-	//    }
-	//}
 	public abstract class IntegerBase : NumberMap {
 		public override NumberMap Multiply(NumberMap b) {
 			IntegerBase integer = b as IntegerBase;
@@ -3778,7 +3187,6 @@ namespace Meta {
 					denominator = 1;
 				}
 				return new Rational(numerator, denominator);
-				//return new NumberMap(new Rational(numerator, denominator));
 			}
 			catch (Exception e) {
 				return null;
@@ -3807,7 +3215,6 @@ namespace Meta {
 		}
 		public NumberMap Clone() {
 			return new Rational(this);
-			//return new NumberMap(new Rational(this));
 		}
 		public override double GetDouble() {
 			return numerator.GetDouble() / denominator.GetDouble();
@@ -3944,11 +3351,9 @@ namespace Meta {
 				int smallInteger;
 				if(int.TryParse(text,out smallInteger)) {
 					result = new Integer32(smallInteger);
-					//result = new NumberMap(new Integer32(smallInteger));
 				}
 				else {
 					result = new Integer(text);
-					//result = new NumberMap(new Integer(text));
 				}
 				result.Source=map.Source;
 			}));
@@ -3977,12 +3382,10 @@ namespace Meta {
 				Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
 				if (rational.GetInteger() != null) {
 					result = new Integer32(rational.GetInt32());
-					//result = new NumberMap(new Integer32(rational.GetInt32()));
 					result.Source = map.Source;
 				}
 				else {
 					result = rational;
-					//result = new NumberMap(rational);
 					result.Source = map.Source;
 				}
 			}));
@@ -3995,7 +3398,6 @@ namespace Meta {
 				ReferenceAssignment(Integer))), delegate(Parser p, Map map, ref Map result) {
 				if(map!=null) {
 					result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
-					//result = new NumberMap(new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble()));
 					result.Source = map.Source;
 				}
 			}));
@@ -4198,7 +3600,6 @@ namespace Meta {
 		public static Rule ListEntry = new Rule(delegate(Parser p, ref Map map) {
 			if (Parser.Expression.Match(p, ref map)) {
 				Map key = new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek()));
-				//Map key = new DictionaryMap(CodeKeys.Literal, new NumberMap(new Integer32(p.defaultKeys.Peek())));
 				// not really correct
 				key.Source = map.Source;
 				map = new DictionaryMap(
@@ -4305,31 +3706,59 @@ namespace Meta {
 
 		public static Rule FunctionPart = DelayedRule(delegate {
 			return Sequence(
-				Assign(CodeKeys.Program,
+				Assign(CodeKeys.Literal,
 					Sequence(
-						Assign(1,
+						Assign(
+							CodeKeys.Function,
 							Sequence(
-								Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
-								Assign(CodeKeys.Value, Sequence(
-									Assign(CodeKeys.Literal,
+								Assign(
+									CodeKeys.Parameter,
+									StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+								Assign(
+									CodeKeys.Expression,
+									Alternatives(
 										Sequence(
-											Assign(
-												CodeKeys.Parameter,
-												StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-											Assign(
-												CodeKeys.Expression,
-												Alternatives(
-													Sequence(
-														Syntax.functionSeparator,
-														ReferenceAssignment(FunctionPart)
-													),
-													Sequence(
-														Syntax.functionEnd,
-														Whitespace,
-														ReferenceAssignment(Expression)
-													))),
-											Whitespace)))))))));
+											Syntax.functionSeparator,
+											ReferenceAssignment(FunctionPart)
+										),
+										Sequence(
+											Syntax.functionEnd,
+											Whitespace,
+											ReferenceAssignment(Expression)
+										))),
+								Whitespace)))));
 		});
+
+		//))))));
+		//});
+
+		//public static Rule FunctionPart = DelayedRule(delegate {
+		//    return Sequence(
+		//        Assign(CodeKeys.Program,
+		//            Sequence(
+		//                Assign(1,
+		//                    Sequence(
+		//                        Assign(CodeKeys.Key, LiteralRule(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))),
+		//                        Assign(CodeKeys.Value, Sequence(
+		//                            Assign(CodeKeys.Literal,
+		//                                Sequence(
+		//                                    Assign(
+		//                                        CodeKeys.Parameter,
+		//                                        StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//                                    Assign(
+		//                                        CodeKeys.Expression,
+		//                                        Alternatives(
+		//                                            Sequence(
+		//                                                Syntax.functionSeparator,
+		//                                                ReferenceAssignment(FunctionPart)
+		//                                            ),
+		//                                            Sequence(
+		//                                                Syntax.functionEnd,
+		//                                                Whitespace,
+		//                                                ReferenceAssignment(Expression)
+		//                                            ))),
+		//                                    Whitespace)))))))));
+		//});
 
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
@@ -4836,7 +4265,11 @@ namespace Meta {
 			else if (value.IsString) {
 				return String(value, indentation);
 			}
+			else if(value.ContainsKey(CodeKeys.Function)) {
+				return ","+NewLine()+ Indentation(indentation+1)+ Function(value[CodeKeys.Function], indentation+1);
+			}
 			else {
+				//return Map(value, indentation);
 				return "error";
 			}
 		}
@@ -5259,9 +4692,6 @@ namespace Meta {
 		public override Map Copy() {
 			return DeepCopy();
 		}
-		//public override Map Copy() {
-		//    return this;
-		//}
 	    public override void Append(Map map){
 	        list.Add(map);
 	    }
@@ -5320,7 +4750,6 @@ namespace Meta {
 	        bool containsKey;
 	        if (key.IsNumber) {
 				NumberMap integer = key.GetNumber();
-				//Number integer = key.GetNumber();
 				if (NumberMap.GreaterEqual(integer, NumberMap.One) && NumberMap.LessEqual(integer, new Integer32(list.Count))) {
 					containsKey = true;
 	            }
@@ -5568,7 +4997,6 @@ namespace Meta {
 		public override bool ContainsFunctions() {
 			Expression expression = literal.GetExpression();
 			return expression!=null && expression.ContainsFunctions();
-			//return false;
 		}
 		public override bool ContainsSearchStatements() {
 			return false;
@@ -5676,14 +5104,14 @@ namespace Meta {
 		public override Map Call(Map arg) {
 			throw new Exception("The method or operation is not implemented.");
 		}
-
-		//public NumberMap zero = new NumberMap(new Integer32(0));
 		public const string emptyString = "";
 		public override string GetString() {
 			return emptyString;
 		}
 		public override Map Copy() {
-			return new DictionaryMap();
+			Map copy=new EmptyMap();
+			copy.Scope = Scope;
+			return copy;
 		}
 		public override NumberMap GetNumber() {
 			return NumberMap.Zero;
@@ -5711,9 +5139,7 @@ namespace Meta {
 			}
 		}
 		public static NumberMap Zero = new Integer32(0);
-		//public static NumberMap Zero = new NumberMap(new Integer32(0));
 		public static NumberMap One = new Integer32(1);
-		//public static NumberMap One = new NumberMap(new Integer32(1));
 		public virtual object GetObject() {
 			return this;
 		}
@@ -5788,7 +5214,6 @@ namespace Meta {
 		    else {
 		        throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
 		    }
-			//Map.arguments.Pop();
 			return result;
 		}
 		public static Map Empty=new EmptyMap();
@@ -5852,30 +5277,11 @@ namespace Meta {
 		}
 		public static implicit operator Map(double number) {
 			return new Rational(number);
-			//return new NumberMap(new Rational(number));
 		}
 		public static implicit operator Map(int integer) {
 			return new Integer32(integer);
-			//return new NumberMap(new Integer32(integer));
 		}
-		//private Expression Expression {
-		//    get {
-		//        //this
-		//        Expression value;
-		//        allExpressions.TryGetValue(this, out value);
-		//        return value;
-		//        //return _expression;
-		//    }
-		//    set {
-		//        //Hashtable t;
-		//        if (value != null) {
-		//            allExpressions[this] = value;
-		//        }
-		//        //_expression = value;
-		//    }
-		//}
 
-		//private Extent source;
 		public static Dictionary<Map, Extent> sources = new Dictionary<Map, Extent>(1000,new Comparer());
 		public virtual Extent Source {
 			get {
@@ -5919,7 +5325,6 @@ namespace Meta {
 			get;
 			set;
 		}
-		//public Map Scope;
 		public virtual Map Scope {
 			get {
 				return null;
@@ -5927,14 +5332,12 @@ namespace Meta {
 			set {
 			}
 		}
-		//public Map Scope;
 		public void Compile(Expression parent) {
 			GetExpression(parent).Compile();
 		}
 		public Expression GetExpression() {
 			return GetExpression(null);
 		}
-		//private Expression _expression;
 		public class Comparer : IEqualityComparer<Map> {
 			bool IEqualityComparer<Map>.Equals(Map x, Map y) {
 				return ReferenceEquals(x, y);
@@ -5943,11 +5346,7 @@ namespace Meta {
 				return ((object)obj).GetHashCode();
 			}
 		}
-		//public static Dictionary<Map, Expression> allExpressions = new Dictionary<Map, Expression>(1000,new Comparer());
-		//public class Hasher {
-		//    public Hasher() {
-		//}
-		//private Expression Expression;
+
 		public virtual Expression Expression {
 			get {
 				return null;
@@ -5955,58 +5354,12 @@ namespace Meta {
 			set {
 			}
 		}
-		//private Expression Expression {
-		//    get {
-		//        //this
-		//        Expression value;
-		//        allExpressions.TryGetValue(this, out value);
-		//        return value;
-		//        //return _expression;
-		//    }
-		//    set {
-		//        //Hashtable t;
-		//        if (value != null) {
-		//            allExpressions[this] = value;
-		//        }
-		//        //_expression = value;
-		//    }
-		//}
-
-		//public static readonly DependencyProperty ExpressionProperty = DependencyProperty.Register(
-		//  "AquariumGraphic",
-		//    typeof(Expression),
-		//  //typeof(Uri),
-		//  typeof(Map));
-		//  //  ,
-		//  //new FrameworkPropertyMetadata(null,
-		//  //    FrameworkPropertyMetadataOptions.AffectsRender,
-		//  //    new PropertyChangedCallback(OnUriChanged)
-		//  //)
-		////);
-		////private Expression expression;
-
 		public virtual Expression GetExpression(Expression parent) {
 			if (Expression == null) {
 				Expression = CreateExpression(parent);
 			}
 			return Expression;
 		}
-		//public virtual Expression GetExpression(Expression parent) {
-		//    if (expression == null) {
-		//        expression = CreateExpression(parent);
-		//    }
-		//    return expression;
-		//}
-
-		//private Expression expression;
-
-
-		//public virtual Expression GetExpression(Expression parent) {
-		//    if (expression == null) {
-		//        expression = CreateExpression(parent);
-		//    }
-		//    return expression;
-		//}
 		static Map() {
 			statements[CodeKeys.Keys] = typeof(SearchStatement);
 			statements[CodeKeys.Current] = typeof(CurrentStatement);
