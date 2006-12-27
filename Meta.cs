@@ -1034,11 +1034,14 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
+			if (literal.ContainsKey(CodeKeys.Function)) {
+				literal[CodeKeys.Function].Compile(parent);
+			}
 			return delegate(Map context) {
 				Map copy=literal.Copy();
 				copy.Scope = context;
 				copy.Expression = literal.Expression;
-				copy.Source = literal.Source;
+				//copy.Source = literal.Source;
 				copy.IsConstant = literal.IsConstant;
 				//if (copy.ContainsKey(CodeKeys.Function)) {
 				//}
@@ -1921,6 +1924,55 @@ namespace Meta {
 			}
 		}
 	}
+	public class CopyMap : ScopeMap {
+		public override Map this[Map key] {
+			get {
+				return copy[key];
+			}
+			set {
+				copy[key] = value;
+			}
+		}
+		public override IEnumerable<Map> Keys {
+			get {
+				return copy.Keys;
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				return copy.Array;
+			}
+		}
+		public override int Count {
+			get {
+				return copy.Count;
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return copy.ArrayCount;
+			}
+		}
+		public override Map Copy() {
+			return this;
+			//Map clone=new CopyMap(copy);
+			//clone.Scope=copy.Scope;
+			//clone.Expression=copy.Expression;
+			//clone.Source=copy.Source;
+			//clone.IsConstant = copy.IsConstant;
+			//return clone;
+		}
+		private Map copy;
+		public CopyMap(Map original) {
+			this.copy = original;
+		}
+		public override NumberMap GetNumber() {
+			return copy.GetNumber();
+		}
+		public override bool ContainsKey(Map key) {
+			return copy.ContainsKey(key);
+		}
+	}
 	public class DictionaryMap : ScopeMap {
 		public override Expression Expression {
 			get {
@@ -2011,21 +2063,37 @@ namespace Meta {
 			}
 		}
 		public override Map Copy() {
-			Map clone = new DictionaryMap();
+			Map clone = new CopyMap(this);//new DictionaryMap();
 			clone.Scope = Scope;
-			clone.Source = Source;
+			//clone.Source = Source;
 			clone.Expression = Expression;
 			clone.IsConstant = this.IsConstant;
-			foreach (Map key in Keys) {
-				//try {
-					clone[key] = this[key];//.Copy();
-				//}
-				//catch {
-				//    clone[key] = this[key].Copy();
-				//}
-			}
+			//foreach (Map key in Keys) {
+			//    //try {
+			//    clone[key] = this[key];//.Copy();
+			//    //}
+			//    //catch {
+			//    //    clone[key] = this[key].Copy();
+			//    //}
+			//}
 			return clone;
 		}
+		//public override Map Copy() {
+		//    Map clone = new DictionaryMap();
+		//    clone.Scope = Scope;
+		//    clone.Source = Source;
+		//    clone.Expression = Expression;
+		//    clone.IsConstant = this.IsConstant;
+		//    foreach (Map key in Keys) {
+		//        //try {
+		//            clone[key] = this[key];//.Copy();
+		//        //}
+		//        //catch {
+		//        //    clone[key] = this[key].Copy();
+		//        //}
+		//    }
+		//    return clone;
+		//}
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
@@ -4411,31 +4479,31 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			//public class Serialization : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-			//    }
-			//}
-			//public class LibraryCode : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 1;
-			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-			//    }
-			//}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
+			public class LibraryCode : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+				}
+			}
 
-			//public class Basic : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-			//    }
-			//}
-			//public class Library : Test {
-			//    public override object GetResult(out int level) {
-			//        level = 2;
-			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-			//    }
-			//}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5293,6 +5361,7 @@ namespace Meta {
 				sources[this] = value;
 			}
 		}
+		// probably buggy
 		public virtual bool IsConstant {
 			get {
 				return true;
