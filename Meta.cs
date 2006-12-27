@@ -443,8 +443,6 @@ namespace Meta {
 					}
 					return delegate(Map context) {
 						Map selected = context;
-						if(key.Equals(new StringMap("ChangeStaticEvent"))) {
-						}
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
@@ -457,8 +455,6 @@ namespace Meta {
 				}
 			}
 			else {
-				if (key.Equals(new StringMap("fibo"))) {
-				}
 				FindStuff(out count, out key, out value, out map);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
@@ -1068,15 +1064,17 @@ namespace Meta {
 				literal[CodeKeys.Function].Compile(parent);
 				//literal[CodeKeys.Function].Compile(parent);
 				return delegate(Map context) {
-					Map copy = literal.Copy();
-					copy.Scope = context;
-					//copy.Expression = literal.Expression;
-					////copy.Source = literal.Source;
-					//copy.IsConstant = literal.IsConstant;
-					//if (copy.ContainsKey(CodeKeys.Function)) {
-					//}
-					return copy;
-					//return literal;
+					return literal.Copy(context);
+
+					//Map copy = literal.Copy();
+					//copy.Scope = context;
+					////copy.Expression = literal.Expression;
+					//////copy.Source = literal.Source;
+					////copy.IsConstant = literal.IsConstant;
+					////if (copy.ContainsKey(CodeKeys.Function)) {
+					////}
+					//return copy;
+					////return literal;
 				};
 			}
 			else {
@@ -1966,7 +1964,7 @@ namespace Meta {
 		}
 	}
 	public abstract class ScopeMap : Map {
-		private Map scope;
+		protected Map scope;
 		public override Map Scope {
 			get {
 				return scope;
@@ -2024,8 +2022,17 @@ namespace Meta {
 			//return clone;
 		}
 		private Map copy;
-		public CopyMap(Map original) {
+		public CopyMap(Map scope, Map original) {
+			this.scope = scope;
 			this.copy = original;
+		}
+		public override Expression Expression {
+			get {
+				return copy.Expression;
+			}
+			set {
+				throw new Exception("not implemented");
+			}
 		}
 		public override NumberMap GetNumber() {
 			return copy.GetNumber();
@@ -2126,11 +2133,14 @@ namespace Meta {
 				}
 			}
 		}
+		public override Map Copy(Map scope) {
+			return new CopyMap(scope, this);
+		}
 		public override Map Copy() {
-			Map clone = new DictionaryMap(dictionary);//new DictionaryMap();
+			Map clone = new CopyMap(null, this);//(dictionary);//new DictionaryMap();
 			//clone.Scope = Scope;
 			//clone.Source = Source;
-			clone.Expression = Expression;
+			//clone.Expression = Expression;
 			//clone.IsConstant = this.IsConstant;
 			//foreach (Map key in Keys) {
 			//    //try {
@@ -4543,43 +4553,43 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
-			public class LibraryCode : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-				}
-			}
+			//public class Serialization : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
+			//public class LibraryCode : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+			//    }
+			//}
 
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
+			//public class Basic : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
+			//public class Library : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+			//    }
+			//}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class MergeSort : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 		}
 		namespace TestClasses {
 			public class MemberTest {
@@ -5250,6 +5260,11 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual Map Copy(Map scope) {
+			Map copy = Copy();
+			copy.Scope = scope;
+			return copy;
+		}
 		public virtual void CopyInternal(Map map) {
 			throw new Exception("not implemented");
 		}
