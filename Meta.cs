@@ -268,13 +268,7 @@ namespace Meta {
 					il.Emit(OpCodes.Ret);
 					FastCall fastCall=(FastCall)m.CreateDelegate(typeof(FastCall),args);
 					return delegate(Map context) {
-						//try {
-							return fastCall(context);
-						//}
-						//catch (Exception e) {
-						//    Console.WriteLine(method);
-						//    throw e;
-						//}
+						return fastCall(context);
 					};
 				}
 			}
@@ -346,22 +340,12 @@ namespace Meta {
 					while (current.Statement == null) {
 						if (current.isFunction) {
 							hasCrossedFunction = true;
-							//if (count != 1) {
-							//if (current.Statement != null) {
-							//if (current.Parent.Statement == null) {
-
 							// TERRIBLE hack
 							if (current.Parent is Call) {
 							}
 							else {
 								count++;
 							}
-							//}
-								//if (current.Statement != null) {
-								//    current = current.Parent;
-								//}
-							//}
-							//}
 						}
 						current = current.Parent;
 						if (current == null) {
@@ -586,70 +570,6 @@ namespace Meta {
 			statementList.Add(c);
 		}
 	}
-	//public class FunctionMap:ScopeMap {
-	//    public override Map Copy() {
-	//        return DeepCopy();
-	//    }
-	//    public override Map this[Map key] {
-	//        get {
-	//            if(object.ReferenceEquals(key,CodeKeys.Function) || key.Equals(CodeKeys.Function)) {
-	//                return value;
-	//            }
-	//            else {
-	//                return null;
-	//            }
-	//        }
-	//        set {
-	//            if(key.Equals(CodeKeys.Function)) {
-	//                this.value=value;
-	//            }
-	//            else {
-	//                throw new Exception("The method or operation is not implemented.");
-	//            }
-	//        }
-	//    }
-	//    public override IEnumerable<Map> Keys {
-	//        get { 
-	//            yield return CodeKeys.Function;
-	//        }
-	//    }
-	//    public override bool IsNormal {
-	//        get { 
-	//            return true;
-	//        }
-	//    }
-	//    public override string GetString() {
-	//        return null;
-	//    }
-	//    public override void Append(Map map) {
-	//        throw new Exception("The method or operation is not implemented.");
-	//    }
-	//    public override IEnumerable<Map> Array {
-	//        get { 
-	//            yield break;
-	//        }
-	//    }
-	//    public override int ArrayCount {
-	//        get {
-	//            return 0;
-	//        }
-	//    }
-	//    private Map value;
-	//    public FunctionMap(Map value) {
-	//        this.value=value;
-	//    }
-	//    public override bool ContainsKey(Map k) {
-	//        return k.Equals(CodeKeys.Function);
-	//    }
-	//    public override NumberMap GetNumber() {
-	//        return null;
-	//    }
-	//    public override int Count {
-	//        get { 
-	//            return 1;
-	//        }
-	//    }
-	//}
 	public class Program : ScopeExpression {
 		public override bool ContainsFunctions() {
 			foreach (Statement statement in statementList) {
@@ -685,21 +605,6 @@ namespace Meta {
 			}
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			//if(statementList.Count==1) {
-			//    KeyStatement statement=statementList[0] as KeyStatement;
-			//    if(statement!=null) {
-			//        Map key=statement.key.GetConstant();
-			//        Map value=statement.value.GetConstant();
-			//        CompiledStatement compiled=statement.Compile();
-			//        if(key!=null && value!=null && statement.value is Literal && key.Equals(CodeKeys.Function)) {
-			//                return delegate(Map context) {
-			//                    Map map = new FunctionMap(value);
-			//                    map.Scope = context;
-			//                    return map;
-			//                };
-			//        }
-			//    }
-			//}
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 			bool useList = true;
@@ -951,12 +856,9 @@ namespace Meta {
 					//if (program.statementList.Count == 1) {
 					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {//.GetExpression(program) != null) {
 						((Literal)value).literal.GetFunction(program, this);//.Compile(program);
-						//((Literal)value).literal[CodeKeys.Function].GetFunction(program, this);//.Compile(program);
-						//((Literal)value).literal[CodeKeys.Function].Compile(program);
 					}
 					//}
 				}
-			//}
 			// we could do this, too:
 			//if (k != null && k.Equals(CodeKeys.Function)) {
 			//    if (value is Literal) {
@@ -1057,20 +959,8 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			if (literal.ContainsKey(CodeKeys.Function)) {
 				literal.Compile(parent);
-				//literal[CodeKeys.Function].Compile(parent);
-				//literal[CodeKeys.Function].Compile(parent);
 				return delegate(Map context) {
 					return literal.Copy(context);
-
-					//Map copy = literal.Copy();
-					//copy.Scope = context;
-					////copy.Expression = literal.Expression;
-					//////copy.Source = literal.Source;
-					////copy.IsConstant = literal.IsConstant;
-					////if (copy.ContainsKey(CodeKeys.Function)) {
-					////}
-					//return copy;
-					////return literal;
 				};
 			}
 			else {
@@ -1079,22 +969,6 @@ namespace Meta {
 				};
 			}
 		}
-		//public override Compiled GetCompiled(Expression parent) {
-		//    if (literal.ContainsKey(CodeKeys.Function)) {
-		//        literal[CodeKeys.Function].Compile(parent);
-		//    }
-		//    return delegate(Map context) {
-		//        Map copy=literal.Copy();
-		//        copy.Scope = context;
-		//        //copy.Expression = literal.Expression;
-		//        ////copy.Source = literal.Source;
-		//        //copy.IsConstant = literal.IsConstant;
-		//        //if (copy.ContainsKey(CodeKeys.Function)) {
-		//        //}
-		//        return copy;
-		//        //return literal;
-		//    };
-		//}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
 			if (literal != null) {
@@ -1142,10 +1016,6 @@ namespace Meta {
 			Map selected = subs[0].GetStructure();
 			for (int i = 1; i < subs.Count; i++) {
 				Map key = subs[i].GetConstant();
-				//if (key != null && key.Equals(new StringMap("get_Parent"))) {
-				//    subs[0].GetStructure();
-				//    Console.WriteLine("hello");
-				//}
 				if (selected == null || key == null || !selected.ContainsKey(key)) {
 					return null;
 				}
@@ -1215,10 +1085,6 @@ namespace Meta {
 			lib.Statement = new LiteralStatement(gac);
 			callable.GetFunction(lib, new LiteralStatement(lib));
 			callable.Compile(lib);
-			//callable[CodeKeys.Function].Compile(lib);
-
-			//callable[CodeKeys.Function].GetExpression(lib).Statement = new LiteralStatement(lib);
-			//callable[CodeKeys.Function].Compile(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
@@ -1230,26 +1096,12 @@ namespace Meta {
 				LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 				map.GetFunction(gac,new LiteralStatement(gac));
 				map.Compile(gac);
-				//map[CodeKeys.Function].Compile(gac);
 				Gac.gac["library"] = map.Call(new DictionaryMap());
 				Gac.gac["library"].Scope = Gac.gac;
 			}
 			catch (Exception e) {
 			}
 		}
-		//static Interpreter() {
-		//    try {
-		//        Map map = Parser.Parse(LibraryPath);
-		//        map.Scope = Gac.gac;
-		//        LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-		//        map[CodeKeys.Function].GetExpression(gac).Statement = new LiteralStatement(gac);
-		//        map[CodeKeys.Function].Compile(gac);
-		//        Gac.gac["library"] = map.Call(new DictionaryMap());
-		//        Gac.gac["library"].Scope = Gac.gac;
-		//    }
-		//    catch (Exception e) {
-		//    }
-		//}
 		[STAThread]
 		public static void Main(string[] args) {
 			DateTime start = DateTime.Now;
@@ -2027,12 +1879,6 @@ namespace Meta {
 		}
 		public override Map Copy() {
 			return this;
-			//Map clone=new CopyMap(copy);
-			//clone.Scope=copy.Scope;
-			//clone.Expression=copy.Expression;
-			//clone.Source=copy.Source;
-			//clone.IsConstant = copy.IsConstant;
-			//return clone;
 		}
 		private Map copy;
 		public CopyMap(Map scope, Map original) {
@@ -2150,37 +1996,9 @@ namespace Meta {
 			return new CopyMap(scope, this);
 		}
 		public override Map Copy() {
-			Map clone = new CopyMap(null, this);//(dictionary);//new DictionaryMap();
-			//clone.Scope = Scope;
-			//clone.Source = Source;
-			//clone.Expression = Expression;
-			//clone.IsConstant = this.IsConstant;
-			//foreach (Map key in Keys) {
-			//    //try {
-			//    clone[key] = this[key];//.Copy();
-			//    //}
-			//    //catchk {
-			//    //    clone[key] = this[key].Copy();
-			//    //}
-			//}
+			Map clone = new CopyMap(null, this);
 			return clone;
 		}
-		//public override Map Copy() {
-		//    Map clone = new DictionaryMap();
-		//    clone.Scope = Scope;
-		//    clone.Source = Source;
-		//    clone.Expression = Expression;
-		//    clone.IsConstant = this.IsConstant;
-		//    foreach (Map key in Keys) {
-		//        //try {
-		//            clone[key] = this[key];//.Copy();
-		//        //}
-		//        //catch {
-		//        //    clone[key] = this[key].Copy();
-		//        //}
-		//    }
-		//    return clone;
-		//}
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
@@ -4391,7 +4209,6 @@ namespace Meta {
 				return ","+NewLine()+ Indentation(indentation+1)+ Function(value[CodeKeys.Function], indentation+1);
 			}
 			else {
-				//return Map(value, indentation);
 				return "error";
 			}
 		}
@@ -5332,25 +5149,7 @@ namespace Meta {
 		}
 		public virtual Map Call(Map argument) {
 			Map.arguments.Push(argument);
-			Map result;
-			//Map function = this[CodeKeys.Function];
-			//if (function != null) {
-				result = GetExpression(null).GetCompiled()(this.Scope);
-				//result = function.GetExpression(null).GetCompiled()(this);
-			//}
-			//else {
-			//    throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-			//}
-
-			//Map function=this[CodeKeys.Function];
-			//if (function!=null) {
-			//    result = function.GetExpression(null).GetCompiled()(this.Scope);
-			//    //result = function.GetExpression(null).GetCompiled()(this);
-			//}
-			//else {
-			//    throw new ApplicationException("Map is not a function: " + Meta.Serialization.Serialize(this));
-			//}
-			return result;
+			return GetExpression(null).GetCompiled()(this.Scope);
 		}
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {
@@ -5517,9 +5316,6 @@ namespace Meta {
 			if (ContainsKey(CodeKeys.Function)) {
 				return new Function(parent, statement, this);
 			}
-			//if (ContainsKey(CodeKeys.Expression)) {
-			//    return new Function(parent,statement,this);
-			//}
 			throw new Exception("some error");
 		}
 		public Expression CreateExpression(Expression parent) {
