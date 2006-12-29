@@ -321,8 +321,6 @@ namespace Meta {
 			}
 			return true;
 		}
-		//public abstract class Generator {
-		//}
 		public class DynamicGenerator {
 		}
 		public class NormalGenerator {
@@ -335,28 +333,13 @@ namespace Meta {
 				ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
 				ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
 				tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
-				//TypeBuilder ntb = tb.DefineNestedType("NestedHello", TypeAttributes.NestedPublic, typeof(HelloClass), new Type[] { typeof(IHelloWorld) });
-				//ntb.AddInterfaceImplementation(typeof(IHelloWorld));
 				MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
-				//MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Virtual, returnType, parameters);
-				//MethodBuilder meth = ntb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Virtual, typeof(void), Type.EmptyTypes);
 				ILGenerator il = meth.GetILGenerator();
 				return il;
 			}
 			public void Generate() {
-				//il.Emit(OpCodes.Ldstr, "Hello World!");
-				//MethodInfo infoMethod =  typeof(Console).GetMethod("WriteLine", new Type[] {typeof(string)});
-				//il.Emit(OpCodes.Call, infoMethod);
-				//il.Emit(OpCodes.Ret);
-				//MethodInfo myHelloMethodInfo = typeof(IHelloWorld).GetMethod("HelloWorld");
-
-				//ntb.DefineMethodOverride(meth, myHelloMethodInfo);
 				Type myType = tb.CreateType();
-				//Type myNestedClassType = ntb.CreateType();
-				//IHelloWorld ihw = (IHelloWorld)Activator.CreateInstance(myNestedClassType);
-				//ihw.HelloWorld();
 				ab.Save("MetaDynamic.dll");
-				//ab.Save("Hello.dll");
 				return;
 
 		}
@@ -375,34 +358,22 @@ namespace Meta {
 						MethodInfo methodInfo = (MethodInfo)method;
 						Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
 
-
-						//NormalGenerator generator = new NormalGenerator();
-
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-
-
-						//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
 
 						ILGenerator il = m.GetILGenerator();
 						List<LocalBuilder> locals = new List<LocalBuilder>();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
 							LocalBuilder local = il.DeclareLocal(type);
-							//LocalBuilder local = il.DeclareLocal(typeof(Map));
 							locals.Add(local);
 							il.Emit(OpCodes.Ldarg_0);
-							//index++;
 							il.Emit(OpCodes.Ldc_I4, i);
-							//index++;
 							il.Emit(OpCodes.Ldelem_Ref);
-							//index++;
 							il.Emit(OpCodes.Ldarg_1);
-							//index++;
 							il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 							Transform.GetConversion(type, il);
 							il.Emit(OpCodes.Stloc, local);
 						}
-						//Label end = il.DefineLabel();
 						int firstIndex = 0;
 						int lastIndex = 0;
 						if (locals.Count != 0) {
@@ -416,17 +387,8 @@ namespace Meta {
 							il.DeclareLocal(local.LocalType);
 						}
 						Dictionary<int, List<Label>> labels = new Dictionary<int, List<Label>>();
-						//int index = 0;
 						int index = 0;
 						foreach (ILInstruction instruction in reader.instructions) {
-
-							//Console.WriteLine(instruction.GetCode());
-							//if (labels.ContainsKey(index)) {
-							////if (labels.ContainsKey(index)) {
-							//    foreach (Label label in labels[index]) {
-							//        il.MarkLabel(label);
-							//    }
-							//}
 							int count;
 							if (instruction.Code == OpCodes.Ret) {
 								//il.Emit(OpCodes.Br, end);
@@ -460,8 +422,6 @@ namespace Meta {
 								il.Emit(OpCodes.Brtrue, label);
 								index++;
 							}
-							//else if(instruction.Code==OpCodes.Br_S
-							//Console.WriteLine(instruction.GetCode());
 							else {
 								if (instruction.Operand == null) {
 									il.Emit(instruction.Code);
@@ -489,115 +449,15 @@ namespace Meta {
 							}
 							index++;
 							if (labels.ContainsKey(index+1)) {
-								//if (labels.ContainsKey(index)) {
 								foreach (Label label in labels[index+1]) {
 									il.MarkLabel(label);
 								}
 							}
 						}
-						//il.MarkLabel(end);
-						//il.Emit(OpCodes.Ldarg_1);
-						//if (method.IsStatic) {
-						//    il.Emit(OpCodes.Call, methodInfo);
-						//}
-						//else {
-						//    il.Emit(OpCodes.Callvirt, methodInfo);
-						//}
 						Transform.GetMetaConversion(methodInfo.ReturnType, il);
 						il.Emit(OpCodes.Ret);
-						//generator.Generate();
-						//return delegate {
-						//    return null;
-						//};
 						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
 						return fastCall;
-
-
-						//List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-
-						//Compiled[] args = c.ToArray();
-						//ParameterInfo[] parameters = method.GetParameters();
-						//MethodInfo methodInfo = (MethodInfo)method;
-						//Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
-						//m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-						//ILGenerator il = m.GetILGenerator();
-						//List<LocalBuilder> locals = new List<LocalBuilder>();
-						//for (int i = 0; i < parameters.Length; i++) {
-						//    Type type = parameters[i].ParameterType;
-						//    LocalBuilder local = il.DeclareLocal(typeof(Map));
-						//    ;
-						//    locals.Add(local);
-						//    il.Emit(OpCodes.Ldarg_0);
-						//    il.Emit(OpCodes.Ldc_I4, i);
-						//    il.Emit(OpCodes.Ldelem_Ref);
-						//    il.Emit(OpCodes.Ldarg_1);
-						//    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//    Transform.GetConversion(type, il);
-						//    il.Emit(OpCodes.Stloc, local);
-						//}
-						//Label end = il.DefineLabel();
-						//int firstIndex = 0;
-						//int lastIndex = 0;
-						//if (locals.Count != 0) {
-						//    firstIndex = locals[0].LocalIndex;
-						//    lastIndex = locals[locals.Count - 1].LocalIndex + 1;
-						//}
-
-						//MethodBodyReader reader = new MethodBodyReader((MethodInfo)method);
-						//MethodBody body = method.GetMethodBody();
-						//foreach (LocalVariableInfo local in body.LocalVariables) {
-						//    il.DeclareLocal(local.LocalType);
-						//}
-						//foreach (ILInstruction instruction in reader.instructions) {
-						//    int count;
-						//    if (instruction.Code == OpCodes.Ret) {
-						//        //il.Emit(OpCodes.Br, end);
-						//    }
-						//    else if (GetArgument(instruction, out count)) {
-						//        il.Emit(OpCodes.Ldloc, count + firstIndex);
-						//    }
-						//    else if (GetStore(instruction, out count)) {
-						//        il.Emit(OpCodes.Stloc, count + lastIndex);
-						//    }
-						//    else if (GetLoad(instruction, out count)) {
-						//        il.Emit(OpCodes.Ldloc, count + lastIndex);
-						//    }
-						//    //Console.WriteLine(instruction.GetCode());
-						//    else {
-						//        if (instruction.Operand == null) {
-						//            il.Emit(instruction.Code);
-						//        }
-						//        else {
-						//            if (instruction.Operand is int) {
-						//                il.Emit(instruction.Code, (int)instruction.Operand);
-						//            }
-						//            else if (instruction.Operand is FieldInfo) {
-						//                il.Emit(instruction.Code, (FieldInfo)instruction.Operand);
-						//            }
-						//            else if (instruction.Operand is MethodInfo) {
-						//                il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
-						//            }
-						//            else if (instruction.Operand is MethodBase) {
-						//                il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
-						//            }
-						//            else {
-						//                il.Emit(instruction.Code, (byte)instruction.Operand);
-						//            }
-						//        }
-						//    }
-						//}
-						//il.MarkLabel(end);
-						//il.Emit(OpCodes.Ldarg_1);
-						////if (method.IsStatic) {
-						////    il.Emit(OpCodes.Call, methodInfo);
-						////}
-						////else {
-						////    il.Emit(OpCodes.Callvirt, methodInfo);
-						////}
-						//Transform.GetMetaConversion(methodInfo.ReturnType, il);
-						//il.Emit(OpCodes.Ret);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-						//return fastCall;
 					}
 					else {
 						List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
