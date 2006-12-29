@@ -360,8 +360,8 @@ namespace Meta {
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 
 						NormalGenerator generator = new NormalGenerator();
-						ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
-						//ILGenerator il = m.GetILGenerator();
+						//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
+						ILGenerator il = m.GetILGenerator();
 						List<LocalBuilder> locals = new List<LocalBuilder>();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
@@ -391,13 +391,9 @@ namespace Meta {
 						int index = 0;
 						foreach (ILInstruction instruction in reader.instructions) {
 							int count;
-							Console.WriteLine(instruction.GetCode());
 							if (instruction.Code == OpCodes.Ret) {
-								Console.WriteLine("Yippie!!! return");
 								Transform.GetMetaConversion(methodInfo.ReturnType, il);
 								il.Emit(OpCodes.Ret);
-								// ugly hack
-								index--;
 								//il.Emit(OpCodes.Br, end);
 							}
 							else if (GetArgument(instruction, out count)) {
@@ -427,10 +423,11 @@ namespace Meta {
 								Label label = il.DefineLabel();
 								labels[target].Add(label);
 								il.Emit(OpCodes.Brtrue, label);
-								index+=4;
+								index++;
 							}
 							else if (instruction.Code == OpCodes.Brfalse_S) {
-								int target = (int)instruction.Operand;
+								// terrible hack
+								int target = (int)instruction.Operand +1;
 								if (!labels.ContainsKey(target)) {
 									labels[target] = new List<Label>();
 								}
@@ -465,23 +462,18 @@ namespace Meta {
 								}
 							}
 							index++;
-							if (labels.ContainsKey(index + 1)) {
-								foreach (Label label in labels[index + 1]) {
+							if (labels.ContainsKey(index+1)) {
+								foreach (Label label in labels[index+1]) {
 									il.MarkLabel(label);
 								}
 							}
-							//if (labels.ContainsKey(index+1)) {
-							//    foreach (Label label in labels[index+1]) {
-							//        il.MarkLabel(label);
-							//    }
-							//}
 						}
 						//Transform.GetMetaConversion(methodInfo.ReturnType, il);
 						//il.Emit(OpCodes.Ret);
 						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-						generator.Generate();
-						//return fastCall;
+						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
+						//generator.Generate();
+						return fastCall;
 						return null;
 					}
 					else {
