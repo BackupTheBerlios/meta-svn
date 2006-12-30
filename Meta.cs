@@ -40,6 +40,9 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public virtual bool IsILCompilable(Expression parent) {
+			return false;
+		}
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public static Expression LastArgument(Map code, Expression parent) {
@@ -1329,9 +1332,16 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
+		public override bool IsILCompilable(Expression parent) {
+			Expression expression = literal.GetExpression(parent);
+			if (expression != null) {
+				return expression.IsILCompilable(parent);
+			}
+			return true;
+			//return false;
+		}
 		public override bool ContainsFunctions() {
 			Expression expression = literal.GetExpression();
-
 			return expression != null && expression.ContainsFunctions();
 		}
 		public override bool ContainsSearchStatements() {
@@ -4778,6 +4788,12 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
+			public class FiboFast : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
+				}
+			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -5133,6 +5149,20 @@ namespace Meta {
 	public class InlineAttribute:Attribute {
 	}
 	public class Library {
+		public class Int32 {
+			public static int Add(int a,int b) {
+				return a + b;
+			}
+			public static bool Less(int a, int b) {
+				return a < b;
+			}
+			public static int Subtract(int a, int b) {
+				return a - b;
+			}
+			public static int Multiply(int a, int b) {
+				return a * b;
+			}
+		}
 		public static Map MergeAll(List<Map> maps) {
 			Map s = new DictionaryMap();
 			foreach (Map m in maps) {
