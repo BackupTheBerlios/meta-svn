@@ -58,10 +58,7 @@ namespace Meta {
 		}
 		public Compiled GetCompiled() {
 			if(compiled==null) {
-				//compiled = CompileIL();
-				//if (compiled == null) {
-					compiled = Compile();
-				//}
+				compiled = Compile();
 			}
 			return compiled;
 		}
@@ -103,25 +100,27 @@ namespace Meta {
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
-			//ParameterInfo[] parameters = method.GetParameters();
-			//MethodInfo methodInfo = (MethodInfo)method;
-			Type[] param = new Type[] { typeof(Map) };
-			//Type[] param = new Type[] { this.GetType(), typeof(Map) };
+			Emitter emitter = new Emitter(typeof(Map), new Type[] { typeof(Map) });
 
-			DynamicMethod m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-
-			//NormalGenerator generator = new NormalGenerator();
-			//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
-			ILGenerator il = m.GetILGenerator();
-			CompileIL(il, parent,OpCodes.Ldarg_0);
-			//CompileIL(il, parent);
-			il.Emit(OpCodes.Ret);
-			List<LocalBuilder> locals = new List<LocalBuilder>();
-			Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-			//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), this);
-			return fastCall;
+			//ILGenerator il = m.GetILGenerator();
+			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
+			emitter.il.Emit(OpCodes.Ret);
+			return emitter.GetDelegate();
+			//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
+			//return fastCall;
 		}
-		//public abstract Compiled GetCompiled(Expression parent);
+		//public virtual Compiled GetCompiled(Expression parent) {
+		//    Type[] param = new Type[] { typeof(Map) };
+
+		//    DynamicMethod m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
+
+		//    ILGenerator il = m.GetILGenerator();
+		//    CompileIL(il, parent,OpCodes.Ldarg_0);
+		//    il.Emit(OpCodes.Ret);
+		//    List<LocalBuilder> locals = new List<LocalBuilder>();
+		//    Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
+		//    return fastCall;
+		//}
 	}
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
@@ -144,6 +143,42 @@ namespace Meta {
 		}
 		public override Map GetStructure() {
 			return structure();
+		}
+	}
+	public class Emitter {
+		DynamicMethod dynamicMethod;
+		public ILGenerator il;
+		private StaticEmitter emitter;
+		public Emitter(Type returnType, Type[] parameters) {
+			this.dynamicMethod = new DynamicMethod("Optimized", typeof(Map), parameters, typeof(Map).Module);
+			this.il = dynamicMethod.GetILGenerator();
+			this.emitter = new StaticEmitter(returnType, parameters);
+
+		}
+		public Compiled GetDelegate() {
+			return (Compiled)dynamicMethod.CreateDelegate(typeof(Compiled));
+		}
+
+	}
+	public class StaticEmitter {
+		public ILGenerator il;
+		private AssemblyBuilder ab;
+		private TypeBuilder tb;
+		public StaticEmitter(Type returnType, Type[] parameters) {
+			AppDomain cd = System.Threading.Thread.GetDomain();
+			AssemblyName an = new AssemblyName();
+			an.Name = "HelloClass";
+			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
+			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
+			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
+			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
+			il = meth.GetILGenerator();
+			//return il;
+		}
+		public void Generate() {
+			Type myType = tb.CreateType();
+			ab.Save("MetaDynamic.dll");
+			return;
 		}
 	}
 	public class Call : Expression {
@@ -340,29 +375,6 @@ namespace Meta {
 			return true;
 		}
 
-		//public class DynamicGenerator {
-
-		//}
-		public class NormalGenerator {
-			private AssemblyBuilder ab;
-			private TypeBuilder tb;
-			public ILGenerator GetILGenerator(Type returnType, Type[] parameters) {
-				AppDomain cd = System.Threading.Thread.GetDomain();
-				AssemblyName an = new AssemblyName();
-				an.Name = "HelloClass";
-				ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
-				ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
-				tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
-				MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
-				ILGenerator il = meth.GetILGenerator();
-				return il;
-			}
-			public void Generate() {
-				Type myType = tb.CreateType();
-				ab.Save("MetaDynamic.dll");
-				return;
-			}
-		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<object> arguments;
 			MethodBase method;
@@ -382,7 +394,7 @@ namespace Meta {
 
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 
-						NormalGenerator generator = new NormalGenerator();
+						StaticEmitter generator = new StaticEmitter(typeof(Map), param);
 						//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
 						ILGenerator il = m.GetILGenerator();
 						List<LocalBuilder> locals = new List<LocalBuilder>();
@@ -560,158 +572,6 @@ namespace Meta {
 				return result;
 			};
 		}
-		//public override Compiled GetCompiled(Expression parent) {
-		//    List<object> arguments;
-		//    MethodBase method;
-		//    if (CallStuff(out arguments, out method)) {
-		//        if (method.IsStatic) {
-		//            if (method.GetCustomAttributes(typeof(InlineAttribute), false).Length != 0) {
-
-
-		//                List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-
-		//                Compiled[] args = c.ToArray();
-		//                ParameterInfo[] parameters = method.GetParameters();
-		//                MethodInfo methodInfo = (MethodInfo)method;
-		//                Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
-		//                m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-		//                ILGenerator il = m.GetILGenerator();
-		//                List<LocalBuilder> locals = new List<LocalBuilder>();
-		//                for (int i = 0; i < parameters.Length; i++) {
-		//                    Type type = parameters[i].ParameterType;
-		//                    LocalBuilder local = il.DeclareLocal(typeof(Map));
-		//                    ;
-		//                    locals.Add(local);
-		//                    il.Emit(OpCodes.Ldarg_0);
-		//                    il.Emit(OpCodes.Ldc_I4, i);
-		//                    il.Emit(OpCodes.Ldelem_Ref);
-		//                    il.Emit(OpCodes.Ldarg_1);
-		//                    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-		//                    Transform.GetConversion(type, il);
-		//                    il.Emit(OpCodes.Stloc, local);
-		//                }
-		//                Label end = il.DefineLabel();
-		//                int firstIndex = 0;
-		//                int lastIndex = 0;
-		//                if (locals.Count != 0) {
-		//                    firstIndex = locals[0].LocalIndex;
-		//                    lastIndex = locals[locals.Count - 1].LocalIndex + 1;
-		//                }
-
-		//                MethodBodyReader reader = new MethodBodyReader((MethodInfo)method);
-		//                MethodBody body = method.GetMethodBody();
-		//                foreach (LocalVariableInfo local in body.LocalVariables) {
-		//                    il.DeclareLocal(local.LocalType);
-		//                }
-		//                foreach (ILInstruction instruction in reader.instructions) {
-		//                    int count;
-		//                    if (instruction.Code == OpCodes.Ret) {
-		//                        //il.Emit(OpCodes.Br, end);
-		//                    }
-		//                    else if (GetArgument(instruction, out count)) {
-		//                        il.Emit(OpCodes.Ldloc, count + firstIndex);
-		//                    }
-		//                    else if (GetStore(instruction, out count)) {
-		//                        il.Emit(OpCodes.Stloc, count + lastIndex);
-		//                    }
-		//                    else if (GetLoad(instruction, out count)) {
-		//                        il.Emit(OpCodes.Ldloc, count + lastIndex);
-		//                    }
-		//                    //Console.WriteLine(instruction.GetCode());
-		//                    else {
-		//                        if (instruction.Operand == null) {
-		//                            il.Emit(instruction.Code);
-		//                        }
-		//                        else {
-		//                            if (instruction.Operand is int) {
-		//                                il.Emit(instruction.Code, (int)instruction.Operand);
-		//                            }
-		//                            else if (instruction.Operand is FieldInfo) {
-		//                                il.Emit(instruction.Code, (FieldInfo)instruction.Operand);
-		//                            }
-		//                            else if (instruction.Operand is MethodInfo) {
-		//                                il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
-		//                            }
-		//                            else if (instruction.Operand is MethodBase) {
-		//                                il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
-		//                            }
-		//                            else {
-		//                                il.Emit(instruction.Code, (byte)instruction.Operand);
-		//                            }
-		//                        }
-		//                    }
-		//                }
-		//                il.MarkLabel(end);
-		//                il.Emit(OpCodes.Ldarg_1);
-		//                //if (method.IsStatic) {
-		//                //    il.Emit(OpCodes.Call, methodInfo);
-		//                //}
-		//                //else {
-		//                //    il.Emit(OpCodes.Callvirt, methodInfo);
-		//                //}
-		//                Transform.GetMetaConversion(methodInfo.ReturnType, il);
-		//                il.Emit(OpCodes.Ret);
-		//                Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-		//                return fastCall;
-		//            }
-		//            else 
-		//            {
-		//                List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-
-		//                Compiled[] args = c.ToArray();
-		//                ParameterInfo[] parameters = method.GetParameters();
-		//                MethodInfo methodInfo = (MethodInfo)method;
-		//                Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
-		//                m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-		//                ILGenerator il = m.GetILGenerator();
-		//                for (int i = 0; i < parameters.Length; i++) {
-		//                    Type type = parameters[i].ParameterType;
-		//                    il.Emit(OpCodes.Ldarg_0);
-		//                    il.Emit(OpCodes.Ldc_I4, i);
-		//                    il.Emit(OpCodes.Ldelem_Ref);
-		//                    il.Emit(OpCodes.Ldarg_1);
-		//                    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-		//                    Transform.GetConversion(type, il);
-		//                }
-		//                if (method.IsStatic) {
-		//                    il.Emit(OpCodes.Call, methodInfo);
-		//                }
-		//                else {
-		//                    il.Emit(OpCodes.Callvirt, methodInfo);
-		//                }
-		//                Transform.GetMetaConversion(methodInfo.ReturnType, il);
-		//                il.Emit(OpCodes.Ret);
-		//                Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-		//                return fastCall;
-		//            }
-		//        }
-		//    }
-		//    if(calls.Count==2 && calls[0].GetConstant()!=null) {
-		//        Map s = calls[1].EvaluateStructure();
-		//    }
-		//    List<Compiled> compiled = calls.ConvertAll<Compiled>(delegate(Expression e) {
-		//        return e.Compile();
-		//    });
-		//    return delegate(Map current) {
-		//        Map result = compiled[0](current);
-		//        for (int i = 1; i < compiled.Count; i++) {
-		//            try {
-		//                result = result.Call(compiled[i](current));
-		//            }
-		//            catch (MetaException e) {
-		//                e.InvocationList.Add(new ExceptionLog(Source.Start));
-		//                throw e;
-		//            }
-		//            catch (Exception e) {
-		//                while (e.InnerException != null) {
-		//                    e = e.InnerException;
-		//                }
-		//                throw new MetaException(e.Message + "\n" + e.StackTrace, Source.Start);
-		//            }
-		//        }
-		//        return result;
-		//    };
-		//}
 	}
 	public delegate Map MetaConversion(object obj);
 	public delegate object DotNetConversion(Map map);
@@ -1369,19 +1229,6 @@ namespace Meta {
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		//public override Compiled GetCompiled(Expression parent) {
-		//    if (literal.ContainsKey(CodeKeys.Function)) {
-		//        literal.Compile(parent);
-		//        return delegate(Map context) {
-		//            return literal.Copy(context);
-		//        };
-		//    }
-		//    else {
-		//        return delegate {
-		//            return literal;
-		//        };
-		//    }
-		//}
 		public static List<Map> literals = new List<Map>();
 		public override void CompileIL(ILGenerator il, Expression parent,OpCode context) {
 			if (index == -1) {
@@ -1393,32 +1240,12 @@ namespace Meta {
 			il.Emit(OpCodes.Callvirt,typeof(List<Map>).GetMethod("get_Item"));
 			if (literal.ContainsKey(CodeKeys.Function)) {
 				literal.Compile(parent);
-				//return delegate(Map context) {
-				//    return literal.Copy(context);
-				//};
 				il.Emit(context);
-				//il.Emit(OpCodes.Ldarg_0);
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
 			}
 			else {
-				//return delegate {
-				//    return literal;
-				//};
 			}
 		}
-		//public override Compiled GetCompiled(Expression parent) {
-		//    if (literal.ContainsKey(CodeKeys.Function)) {
-		//        literal.Compile(parent);
-		//        return delegate(Map context) {
-		//            return literal.Copy(context);
-		//        };
-		//    }
-		//    else {
-		//        return delegate {
-		//            return literal;
-		//        };
-		//    }
-		//}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
 			if (literal != null) {
