@@ -100,27 +100,11 @@ namespace Meta {
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
-			Emitter emitter = new Emitter(typeof(Map), new Type[] { typeof(Map) });
-
-			//ILGenerator il = m.GetILGenerator();
+			Emitter emitter = new Emitter(typeof(Compiled));
 			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
 			emitter.il.Emit(OpCodes.Ret);
-			return emitter.GetDelegate();
-			//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-			//return fastCall;
+			return (Compiled)emitter.GetDelegate();
 		}
-		//public virtual Compiled GetCompiled(Expression parent) {
-		//    Type[] param = new Type[] { typeof(Map) };
-
-		//    DynamicMethod m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-
-		//    ILGenerator il = m.GetILGenerator();
-		//    CompileIL(il, parent,OpCodes.Ldarg_0);
-		//    il.Emit(OpCodes.Ret);
-		//    List<LocalBuilder> locals = new List<LocalBuilder>();
-		//    Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-		//    return fastCall;
-		//}
 	}
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
@@ -149,14 +133,16 @@ namespace Meta {
 		DynamicMethod dynamicMethod;
 		public ILGenerator il;
 		private StaticEmitter emitter;
-		public Emitter(Type returnType, Type[] parameters) {
-			this.dynamicMethod = new DynamicMethod("Optimized", typeof(Map), parameters, typeof(Map).Module);
+		private Type type;
+		public Emitter(Type type) {
+			this.type = type;
+			MethodInfo invoke=type.GetMethod("Invoke");
+			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
+			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
 			this.il = dynamicMethod.GetILGenerator();
-			this.emitter = new StaticEmitter(returnType, parameters);
-
 		}
-		public Compiled GetDelegate() {
-			return (Compiled)dynamicMethod.CreateDelegate(typeof(Compiled));
+		public object GetDelegate() {
+			return dynamicMethod.CreateDelegate(type);
 		}
 
 	}
@@ -173,7 +159,6 @@ namespace Meta {
 			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
 			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
 			il = meth.GetILGenerator();
-			//return il;
 		}
 		public void Generate() {
 			Type myType = tb.CreateType();
@@ -182,9 +167,6 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		//public override Compiled CompileIL() {
-		//    return base.CompileIL();
-		//}
 		public override bool ContainsFunctions() {
 			foreach(Expression expression in calls) {
 				if(expression.ContainsFunctions()) {
@@ -388,14 +370,8 @@ namespace Meta {
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
 						Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
-						//if (method.Name == "SpecialLess") {
-						//    Console.WriteLine("whatever");
-						//}
 
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-
-						StaticEmitter generator = new StaticEmitter(typeof(Map), param);
-						//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
 						ILGenerator il = m.GetILGenerator();
 						List<LocalBuilder> locals = new List<LocalBuilder>();
 						for (int i = 0; i < parameters.Length; i++) {
@@ -1742,15 +1718,15 @@ namespace Meta {
 		public static DotNetConversion GetConversion(Type type) {
 			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
-				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(object), new Type[] { typeof(Map) }, typeof(Map).Module);
-				ILGenerator il = m.GetILGenerator();
+				Emitter emitter = new Emitter(typeof(DotNetConversion));
+				ILGenerator il = emitter.il;
 				il.Emit(OpCodes.Ldarg_0);
 				GetConversion(type, il);
 				if (type.IsValueType) {
 					il.Emit(OpCodes.Box, type);
 				}
 				il.Emit(OpCodes.Ret);
-				conversion = (DotNetConversion)m.CreateDelegate(typeof(DotNetConversion));
+				conversion = (DotNetConversion)emitter.GetDelegate();
 				dotNetConversions[type] = conversion;
 			}
 			return conversion;
