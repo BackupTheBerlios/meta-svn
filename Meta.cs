@@ -101,10 +101,10 @@ namespace Meta {
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
-			Emitter emitter = new Emitter(typeof(Compiled));
+			Emitter<Compiled> emitter = new Emitter<Compiled>();
 			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
 			emitter.il.Emit(OpCodes.Ret);
-			return (Compiled)emitter.GetDelegate();
+			return emitter.GetDelegate();
 		}
 	}
 	public delegate Map StructureDelegate();
@@ -130,7 +130,7 @@ namespace Meta {
 			return structure();
 		}
 	}
-	public class Emitter {
+	public class Emitter<T> {
 		public void Box(Type type) {
 			il.Emit(OpCodes.Box, type);
 		}
@@ -140,22 +140,39 @@ namespace Meta {
 		public void UnboxAny(Type type) {
 			il.Emit(OpCodes.Unbox_Any, type);
 		}
+		public void LoadConstant(int i) {
+			il.Emit(OpCodes.Ldc_I4, i);
+		}
+		public void Call(MethodInfo method) {
+			il.Emit(
+				method.IsStatic ?
+					OpCodes.Call :
+					OpCodes.Callvirt,
+				method);
+		}
+		public void LoadField(FieldInfo field) {
+			il.Emit(
+				field.IsStatic ?
+					OpCodes.Ldsfld :
+					OpCodes.Ldfld,
+				field);
+		}
 		public void LoadArgument(int index) {
 			il.Emit(OpCodes.Ldarg, index);
 		}
 		DynamicMethod dynamicMethod;
 		public ILGenerator il;
 		private StaticEmitter emitter;
-		private Type type;
-		public Emitter(Type type) {
-			this.type = type;
-			MethodInfo invoke=type.GetMethod("Invoke");
+		//private Type type;
+		public Emitter() {
+			//this.type = type;
+			MethodInfo invoke=typeof(T).GetMethod("Invoke");
 			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
 			this.il = dynamicMethod.GetILGenerator();
 		}
 		public object GetDelegate() {
-			return dynamicMethod.CreateDelegate(type);
+			return dynamicMethod.CreateDelegate(typeof(T));
 		}
 
 	}
@@ -506,9 +523,10 @@ namespace Meta {
 						Compiled[] args = c.ToArray();
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
-						Type[] param = new Type[] { typeof(Compiled[]),typeof(Map) };
-						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-						ILGenerator il = m.GetILGenerator();
+						//Type[] param = new Type[] { typeof(Map) };
+						//m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
+						//ILGenerator il = m.GetILGenerator();
+						Emitter<Compiled> emitter = new Emitter<Compiled>();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
 							int index = Expression.compiles.IndexOf(c[i]);
@@ -517,52 +535,61 @@ namespace Meta {
 								index = compiles.Count - 1;
 							}
 							if (calls[i + 1] is Literal) {
-								calls[i + 1].CompileIL(il, this, OpCodes.Ldarg_1);
-								//calls[i + 1].CompileIL(il, this, OpCodes.Ldarg_1);
+								calls[i + 1].CompileIL(emitter.il, this, OpCodes.Ldarg_0);
 							}
 							else {
+								emitter.LoadField(typeof(Expression).GetField("compiles"));
+								emitter.LoadConstant(index);
+								emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+								emitter.LoadArgument(0);
+								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+								//il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+								//il.Emit(OpCodes.Ldc_I4, index);
+								//il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
 								//il.Emit(OpCodes.Ldarg_0);
-								//il.Emit(OpCodes.Ldc_I4, i);
-								il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-								il.Emit(OpCodes.Ldc_I4, index);
-								il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-
-
-								//il.Emit(OpCodes.Ldelem_Ref);
-								il.Emit(OpCodes.Ldarg_1);
-								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+								//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 							}
-							Transform.GetConversion(type, il);
+							Transform.GetConversion(type, emitter.il);
+							//Transform.GetConversion(type, il);
 						}
-						if (method.IsStatic) {
-							il.Emit(OpCodes.Call, methodInfo);
-						}
-						else {
-							il.Emit(OpCodes.Callvirt, methodInfo);
-						}
-						Transform.GetMetaConversion(methodInfo.ReturnType, il);
-						il.Emit(OpCodes.Ret);
-						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled),args);
-						return fastCall;
+						emitter.Call(methodInfo);
+						//if (method.IsStatic) {
+						//    il.Emit(OpCodes.Call, methodInfo);
+						//    il.Emit(OpCodes.Call, methodInfo);
+						//}
+						//else {
+						//    il.Emit(OpCodes.Callvirt, methodInfo);
+						//}
+						Transform.GetMetaConversion(methodInfo.ReturnType, emitter.il);
+						emitter.Return();
+						//il.Emit(OpCodes.Ret);
+						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
+						//return fastCall;
+						return emitter.GetDelegate();
 
 						//List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 
 						//Compiled[] args = c.ToArray();
 						//ParameterInfo[] parameters = method.GetParameters();
 						//MethodInfo methodInfo = (MethodInfo)method;
-						//Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
+						//Type[] param = new Type[] {typeof(Map) };
 						//m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 						//ILGenerator il = m.GetILGenerator();
 						//for (int i = 0; i < parameters.Length; i++) {
 						//    Type type = parameters[i].ParameterType;
-						//    if (calls[i+1] is Literal) {
-						//        calls[i+1].CompileIL(il, this, OpCodes.Ldarg_1);
+						//    int index = Expression.compiles.IndexOf(c[i]);
+						//    if (index == -1) {
+						//        compiles.Add(c[i]);
+						//        index = compiles.Count - 1;
+						//    }
+						//    if (calls[i + 1] is Literal) {
+						//        calls[i + 1].CompileIL(il, this, OpCodes.Ldarg_0);
 						//    }
 						//    else {
+						//        il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+						//        il.Emit(OpCodes.Ldc_I4, index);
+						//        il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
 						//        il.Emit(OpCodes.Ldarg_0);
-						//        il.Emit(OpCodes.Ldc_I4, i);
-						//        il.Emit(OpCodes.Ldelem_Ref);
-						//        il.Emit(OpCodes.Ldarg_1);
 						//        il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 						//    }
 						//    Transform.GetConversion(type, il);
@@ -575,7 +602,7 @@ namespace Meta {
 						//}
 						//Transform.GetMetaConversion(methodInfo.ReturnType, il);
 						//il.Emit(OpCodes.Ret);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
+						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
 						//return fastCall;
 					}
 				}
@@ -1682,14 +1709,14 @@ namespace Meta {
 		public static MetaConversion GetMetaConversion(Type type) {
 			MetaConversion conversion;
 			if (!metaConversions.TryGetValue(type, out conversion)) {
-				Emitter emitter = new Emitter(typeof(MetaConversion));
+				Emitter<MetaConversion> emitter = new Emitter<MetaConversion>();
 				emitter.LoadArgument(0);
 				if (type.IsValueType) {
 					emitter.UnboxAny(type);
 				}
 				GetMetaConversion(type, emitter.il);
 				emitter.Return();
-				conversion = (MetaConversion)emitter.GetDelegate();
+				conversion = emitter.GetDelegate();
 				metaConversions[type] = conversion;
 			}
 			return conversion;
@@ -1771,7 +1798,7 @@ namespace Meta {
 		public static DotNetConversion GetDotNetConversion(Type type) {
 			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
-				Emitter emitter = new Emitter(typeof(DotNetConversion));
+				Emitter<DotNetConversion> emitter = new Emitter<DotNetConversion>();
 				ILGenerator il = emitter.il;
 				emitter.LoadArgument(0);
 				GetConversion(type, il);
@@ -1779,7 +1806,7 @@ namespace Meta {
 					emitter.Box(type);
 				}
 				emitter.Return();
-				conversion = (DotNetConversion)emitter.GetDelegate();
+				conversion = emitter.GetDelegate();
 				dotNetConversions[type] = conversion;
 			}
 			return conversion;
