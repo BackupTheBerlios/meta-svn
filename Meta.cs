@@ -40,9 +40,9 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
-		public virtual bool IsILCompilable(Expression parent) {
-			return false;
-		}
+		//public virtual bool IsILCompilable(Expression parent) {
+		//    return false;
+		//}
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public static Expression LastArgument(Map code, Expression parent) {
@@ -1332,14 +1332,6 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
-		public override bool IsILCompilable(Expression parent) {
-			Expression expression = literal.GetExpression(parent);
-			if (expression != null) {
-				return expression.IsILCompilable(parent);
-			}
-			return true;
-			//return false;
-		}
 		public override bool ContainsFunctions() {
 			Expression expression = literal.GetExpression();
 			return expression != null && expression.ContainsFunctions();
@@ -3243,9 +3235,9 @@ namespace Meta {
 					return base.Equals(obj);
 				}
 			}
-		public static Map Raise(NumberMap a, NumberMap b) {
-			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
-		}
+			public static Map Raise(NumberMap a, NumberMap b) {
+				return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
+			}
 			public static Integer32 Zero = new Integer32(0);
 			public static Integer32 One = new Integer32(1);
 			public static Integer32 Two = new Integer32(2);

@@ -34,6 +34,23 @@
 									!"arg"
 								"get_ArrayCount"
 							0
+				"int32"=,
+					"less"=.
+						!"Library"
+						"Int32"
+						"Less_Int32_Int32"
+					"add"=.
+						!"Library"
+						"Int32"
+						"Add_Int32_Int32"
+					"subtract"=.
+						!"Library"
+						"Int32"
+						"Subtract_Int32_Int32"
+					"multiply"=.
+						!"Library"
+						"Int32"
+						"Multiply_Int32_Int32"
 				"console"=,
 					"writeLine"=.
 						!"Library"
