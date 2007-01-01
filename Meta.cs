@@ -452,6 +452,20 @@ namespace Meta {
 						foreach (LocalVariableInfo local in body.LocalVariables) {
 							il.DeclareLocal(local.LocalType);
 						}
+						for (int i = 0; i < parameters.Length; i++) {
+							Type type=parameters[i].ParameterType;
+							LocalBuilder local=emitter.DeclareLocal(type);
+							if (calls[i + 1] is Literal) {
+							}
+							else {
+
+								calls[i + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
+								il.Emit(OpCodes.Ldarg_0);
+								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+								Transform.GetConversion(type, il);
+								emitter.StoreLocal(local);
+							}
+						}
 						Dictionary<int, List<Label>> labels = new Dictionary<int, List<Label>>();
 						int index = 0;
 						for(int i=0;i<reader.instructions.Count;i++) {
@@ -468,25 +482,15 @@ namespace Meta {
 								if (calls[count + 1] is Literal) {
 									Literal literal = (Literal)calls[count + 1];
 									calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-									//if (literal.literal.GetExpression(parent) != null) {
-									//    calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-									//}
-									//else {
-									//    calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-									//    //calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
-									//}
+									Transform.GetConversion(type, il);
 								}
 								else {
-									calls[count + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
-									il.Emit(OpCodes.Ldarg_0);
-									emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-									//il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-									//il.Emit(OpCodes.Ldc_I4, id);
-									//il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+									emitter.LoadLocal(count + firstIndex);
+									//calls[count + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
 									//il.Emit(OpCodes.Ldarg_0);
-									//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+									//emitter.Call(typeof(Compiled).GetMethod("Invoke"));
 								}
-								Transform.GetConversion(type, il);
+								//Transform.GetConversion(type, il);
 							}
 							else if (GetStore(instruction, out count)) {
 								emitter.StoreLocal(count + lastIndex);
