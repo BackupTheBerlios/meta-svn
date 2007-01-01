@@ -40,6 +40,10 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public static int GetIndex(Compiled c) {
+			compiles.Add(c);
+			return compiles.Count - 1;
+		}
 		public static List<Compiled> compiles = new List<Compiled>();
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
@@ -55,7 +59,7 @@ namespace Meta {
 				}
 			);
 		}
-		public virtual void CompileIL(ILGenerator il,Expression parent,OpCode context) {
+		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
 		}
 		public Compiled GetCompiled() {
 			if(compiled==null) {
@@ -102,7 +106,7 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
 			Emitter emitter = new Emitter(typeof(Compiled));
-			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
+			CompileIL(emitter, parent, OpCodes.Ldarg_0);
 			emitter.Return();
 			return (Compiled)emitter.GetDelegate();
 		}
@@ -134,7 +138,14 @@ namespace Meta {
 		public void Box(Type type) {
 			il.Emit(OpCodes.Box, type);
 		}
+		public void StoreLocal(LocalBuilder local) {
+			StoreLocal(local.LocalIndex);
+		}
 		public void StoreLocal(int index) {
+			il.Emit(OpCodes.Stloc, index);
+		}
+		public void LoadLocal(LocalBuilder local) {
+			LoadLocal(local.LocalIndex);
 		}
 		public void LoadLocal(int index) {
 			il.Emit(OpCodes.Ldloc, index);
@@ -144,6 +155,9 @@ namespace Meta {
 		}
 		public void Emit(OpCode code, int operand) {
 			il.Emit(code, operand);
+		}
+		public LocalBuilder DeclareLocal(Type type) {
+			return il.DeclareLocal(type);
 		}
 		public void Emit(OpCode code) {
 			il.Emit(code);
@@ -169,12 +183,18 @@ namespace Meta {
 		public void Emit(OpCode code, byte b) {
 			il.Emit(code, b);
 		}
+		public void Call(Type type, string method) {
+			Call(type.GetMethod(method));
+		}
 		public void Call(MethodInfo method) {
 			il.Emit(
 				method.IsStatic ?
 					OpCodes.Call :
 					OpCodes.Callvirt,
 				method);
+		}
+		public void LoadField(Type type, string field) {
+			LoadField(type.GetField(field));
 		}
 		public void LoadField(FieldInfo field) {
 			il.Emit(
@@ -429,25 +449,6 @@ namespace Meta {
 						Emitter emitter = new Emitter(typeof(Compiled));
 						ILGenerator il =emitter.il;
 						List<LocalBuilder> locals = new List<LocalBuilder>();
-						//for (int i = 0; i < parameters.Length; i++) {
-						//    Type type = parameters[i].ParameterType;
-						//    LocalBuilder local = il.DeclareLocal(type);
-						//    locals.Add(local);
-						//    compiles.Add(c[i]);
-						//    int id = compiles.Count - 1;
-						//    if (calls[i+1] is Literal) {
-						//        calls[i+1].CompileIL(il, this, OpCodes.Ldarg_0);
-						//    }
-						//    else {
-						//        il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-						//        il.Emit(OpCodes.Ldc_I4, id);
-						//        il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-						//        il.Emit(OpCodes.Ldarg_0);
-						//        il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//    }
-						//    Transform.GetConversion(type, il);
-						//    il.Emit(OpCodes.Stloc, local);
-						//}
 						int firstIndex = 0;
 						int lastIndex = 0;
 						if (locals.Count != 0) {
@@ -462,20 +463,26 @@ namespace Meta {
 						}
 						Dictionary<int, List<Label>> labels = new Dictionary<int, List<Label>>();
 						int index = 0;
-						foreach (ILInstruction instruction in reader.instructions) {
+						for(int i=0;i<reader.instructions.Count;i++) {
 							int count;
+							ILInstruction instruction=reader.instructions[i];
 							if (instruction.Code == OpCodes.Ret) {
 								Transform.GetMetaConversion(methodInfo.ReturnType, il);
 								emitter.Return();
 							}
 							else if (GetArgument(instruction, out count)) {
 								Type type = parameters[count].ParameterType;
-								LocalBuilder local = il.DeclareLocal(type);
-								locals.Add(local); // necessary?
 								compiles.Add(c[count]);
 								int id = compiles.Count - 1;
 								if (calls[count + 1] is Literal) {
-									calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
+									Literal literal = (Literal)calls[count + 1];
+									if (literal.literal.GetExpression(parent) != null) {
+										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+									}
+									else {
+										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+										//calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
+									}
 								}
 								else {
 									il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
@@ -485,8 +492,6 @@ namespace Meta {
 									il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 								}
 								Transform.GetConversion(type, il);
-								//il.Emit(OpCodes.Stloc, local);
-								//emitter.LoadLocal(count + firstIndex);
 							}
 							else if (GetStore(instruction, out count)) {
 								emitter.StoreLocal(count + lastIndex);
@@ -495,11 +500,11 @@ namespace Meta {
 								emitter.LoadLocal(count + lastIndex);
 							}
 							else if (instruction.Code == OpCodes.Br_S) {
-								int target=(int)instruction.Operand;
-								if(!labels.ContainsKey(target)) {
-									labels[target]=new List<Label>();
+								int target = (int)instruction.Operand;
+								if (!labels.ContainsKey(target)) {
+									labels[target] = new List<Label>();
 								}
-								Label label=il.DefineLabel();
+								Label label = il.DefineLabel();
 								labels[target].Add(label);
 								emitter.Break(label);
 								index++;
@@ -516,7 +521,7 @@ namespace Meta {
 							}
 							else if (instruction.Code == OpCodes.Brfalse_S) {
 								// terrible hack
-								int target = (int)instruction.Operand +1;
+								int target = (int)instruction.Operand + 1;
 								if (!labels.ContainsKey(target)) {
 									labels[target] = new List<Label>();
 								}
@@ -551,12 +556,103 @@ namespace Meta {
 								}
 							}
 							index++;
-							if (labels.ContainsKey(index+1)) {
-								foreach (Label label in labels[index+1]) {
+							if (labels.ContainsKey(index + 1)) {
+								foreach (Label label in labels[index + 1]) {
 									il.MarkLabel(label);
 								}
 							}
 						}
+						//foreach (ILInstruction instruction in reader.instructions) {
+						//    int count;
+						//    if (instruction.Code == OpCodes.Ret) {
+						//        Transform.GetMetaConversion(methodInfo.ReturnType, il);
+						//        emitter.Return();
+						//    }
+						//    else if (GetArgument(instruction, out count)) {
+						//        Type type = parameters[count].ParameterType;
+						//        compiles.Add(c[count]);
+						//        int id = compiles.Count - 1;
+						//        if (calls[count + 1] is Literal) {
+						//            calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
+						//        }
+						//        else {
+						//            il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+						//            il.Emit(OpCodes.Ldc_I4, id);
+						//            il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+						//            il.Emit(OpCodes.Ldarg_0);
+						//            il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+						//        }
+						//        Transform.GetConversion(type, il);
+						//    }
+						//    else if (GetStore(instruction, out count)) {
+						//        emitter.StoreLocal(count + lastIndex);
+						//    }
+						//    else if (GetLoad(instruction, out count)) {
+						//        emitter.LoadLocal(count + lastIndex);
+						//    }
+						//    else if (instruction.Code == OpCodes.Br_S) {
+						//        int target=(int)instruction.Operand;
+						//        if(!labels.ContainsKey(target)) {
+						//            labels[target]=new List<Label>();
+						//        }
+						//        Label label=il.DefineLabel();
+						//        labels[target].Add(label);
+						//        emitter.Break(label);
+						//        index++;
+						//    }
+						//    else if (instruction.Code == OpCodes.Brtrue_S) {
+						//        int target = (int)instruction.Operand;
+						//        if (!labels.ContainsKey(target)) {
+						//            labels[target] = new List<Label>();
+						//        }
+						//        Label label = il.DefineLabel();
+						//        labels[target].Add(label);
+						//        emitter.BreakTrue(label);
+						//        index++;
+						//    }
+						//    else if (instruction.Code == OpCodes.Brfalse_S) {
+						//        // terrible hack
+						//        int target = (int)instruction.Operand +1;
+						//        if (!labels.ContainsKey(target)) {
+						//            labels[target] = new List<Label>();
+						//        }
+						//        Label label = il.DefineLabel();
+						//        labels[target].Add(label);
+						//        emitter.BreakFalse(label);
+						//        index++;
+						//    }
+						//    else {
+						//        if (instruction.Operand == null) {
+						//            emitter.Emit(instruction.Code);
+						//        }
+						//        else {
+						//            if (instruction.Operand is int) {
+						//                il.Emit(instruction.Code, (int)instruction.Operand);
+						//            }
+						//            else if (instruction.Operand is FieldInfo) {
+						//                emitter.LoadField((FieldInfo)instruction.Operand);
+						//                index += 4;
+						//            }
+						//            else if (instruction.Operand is MethodInfo) {
+						//                emitter.Call((MethodInfo)instruction.Operand);
+						//                index += 4;
+						//            }
+						//            else if (instruction.Operand is ConstructorInfo) {
+						//                emitter.CreateInstance((ConstructorInfo)instruction.Operand);
+						//                index += 4;
+						//            }
+						//            else {
+						//                emitter.Emit(instruction.Code, (byte)instruction.Operand);
+						//            }
+						//        }
+						//    }
+						//    index++;
+						//    if (labels.ContainsKey(index+1)) {
+						//        foreach (Label label in labels[index+1]) {
+						//            il.MarkLabel(label);
+						//        }
+						//    }
+						//}
 						return (Compiled)emitter.GetDelegate();
 					}
 					else {
@@ -572,7 +668,7 @@ namespace Meta {
 							compiles.Add(c[i]);
 							int index = compiles.Count - 1;
 							if (calls[i + 1] is Literal) {
-								calls[i + 1].CompileIL(emitter.il, this, OpCodes.Ldarg_0);
+								calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
 							}
 							else {
 								emitter.LoadField(typeof(Expression).GetField("compiles"));
@@ -1270,11 +1366,12 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public static List<Map> literals = new List<Map>();
-		public override void CompileIL(ILGenerator il, Expression parent,OpCode context) {
+		public override void CompileIL(Emitter emitter, Expression parent,OpCode context) {
 			if (index == -1) {
 				literals.Add(literal);
 				index = literals.Count - 1;
 			}
+			ILGenerator il = emitter.il;
 			il.Emit(OpCodes.Ldsfld, typeof(Literal).GetField("literals"));
 			il.Emit(OpCodes.Ldc_I4, index);
 			il.Emit(OpCodes.Callvirt,typeof(List<Map>).GetMethod("get_Item"));
@@ -1305,11 +1402,14 @@ namespace Meta {
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
-		public override Compiled GetCompiled(Expression parent) {
-			return delegate {
-				return Gac.gac;
-			};
+		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+			emitter.LoadField(typeof(Gac).GetField("gac"));
 		}
+		//public override Compiled GetCompiled(Expression parent) {
+		//    return delegate {
+		//        return Gac.gac;
+		//    };
+		//}
 	}
 	public class Select : Expression {
 		public override bool ContainsFunctions() {
@@ -1340,33 +1440,57 @@ namespace Meta {
 			}
 			return selected;
 		}
-		public override Compiled GetCompiled(Expression parent) {
-			List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
-			return delegate(Map context) {
-				try {
-					Map selected = s[0](context);
-					for (int i = 1; i < s.Count; i++) {
-						Map key = s[i](context);
-						if (key == null) {
-							key = s[i](context);
-						}
-						Map value = selected[key];
-						if (value == null) {
-							object a = key.Count;
-							object x = key.ToString();
-							throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
-						}
-						else {
-							selected = value;
-						}
-					}
-					return selected;
-				}
-				catch (Exception e) {
-					throw e;
-				}
-			};
+		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+			LocalBuilder selected=emitter.DeclareLocal(typeof(Map));
+			emitter.LoadField(typeof(Expression), "compiles");
+			emitter.LoadConstant(GetIndex(subs[0].GetCompiled(parent)));
+			emitter.Call(typeof(List<Compiled>), "get_Item");
+			emitter.Emit(context);
+			emitter.Call(typeof(Compiled),("Invoke"));
+			emitter.StoreLocal(selected);
+			foreach(Expression sub in subs.GetRange(1,subs.Count-1)) {
+				LocalBuilder key=emitter.DeclareLocal(typeof(Map));
+				emitter.LoadField(typeof(Expression),"compiles");
+				emitter.LoadConstant(GetIndex(sub.GetCompiled(parent)));
+				emitter.Call(typeof(List<Compiled>), "get_Item");
+				emitter.Emit(context);
+				emitter.Call(typeof(Compiled), "Invoke");
+				emitter.StoreLocal(key);
+				emitter.LoadLocal(selected);
+				emitter.LoadLocal(key);
+				emitter.Call(typeof(Map), "get_Item");
+				emitter.StoreLocal(selected);
+			}
+			emitter.LoadLocal(selected);
+			emitter.Return();
 		}
+		//public override Compiled GetCompiled(Expression parent) {
+		//    List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
+		//    return delegate(Map context) {
+		//        //try {
+		//            Map selected = s[0](context);
+		//            for (int i = 1; i < s.Count; i++) {
+		//                Map key = s[i](context);
+		//                //if (key == null) {
+		//                //    key = s[i](context);
+		//                //}
+		//                Map value = selected[key];
+		//                if (value == null) {
+		//                    //object a = key.Count;
+		//                    //object x = key.ToString();
+		//                    throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
+		//                }
+		//                else {
+		//                    selected = value;
+		//                }
+		//            }
+		//            return selected;
+		//        //}
+		//        //catch (Exception e) {
+		//        //    throw e;
+		//        //}
+		//    };
+		//}
 		private List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
 			foreach (Map m in code.Array) {
