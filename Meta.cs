@@ -390,32 +390,19 @@ namespace Meta {
 							Type type = parameters[i].ParameterType;
 							LocalBuilder local = il.DeclareLocal(type);
 							locals.Add(local);
-							//if (calls[i] is Literal) {
-							//    calls[i].CompileIL(il, this,OpCodes.Ldarg_1);
-							//}
-							//else {
+							if (calls[i+1] is Literal) {
+								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_1);
+							}
+							else {
 								il.Emit(OpCodes.Ldarg_0);
 								il.Emit(OpCodes.Ldc_I4, i);
 								il.Emit(OpCodes.Ldelem_Ref);
 								il.Emit(OpCodes.Ldarg_1);
 								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-							//}
+							}
 							Transform.GetConversion(type, il);
 							il.Emit(OpCodes.Stloc, local);
-							//}
 						}
-						//for (int i = 0; i < parameters.Length; i++) {
-						//    Type type = parameters[i].ParameterType;
-						//    LocalBuilder local = il.DeclareLocal(type);
-						//    locals.Add(local);
-						//    il.Emit(OpCodes.Ldarg_0);
-						//    il.Emit(OpCodes.Ldc_I4, i);
-						//    il.Emit(OpCodes.Ldelem_Ref);
-						//    il.Emit(OpCodes.Ldarg_1);
-						//    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//    Transform.GetConversion(type, il);
-						//    il.Emit(OpCodes.Stloc, local);
-						//}
 						int firstIndex = 0;
 						int lastIndex = 0;
 						if (locals.Count != 0) {
@@ -435,7 +422,6 @@ namespace Meta {
 							if (instruction.Code == OpCodes.Ret) {
 								Transform.GetMetaConversion(methodInfo.ReturnType, il);
 								il.Emit(OpCodes.Ret);
-								//il.Emit(OpCodes.Br, end);
 							}
 							else if (GetArgument(instruction, out count)) {
 								il.Emit(OpCodes.Ldloc, count + firstIndex);
@@ -509,13 +495,8 @@ namespace Meta {
 								}
 							}
 						}
-						//Transform.GetMetaConversion(methodInfo.ReturnType, il);
-						//il.Emit(OpCodes.Ret);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
 						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
-						//generator.Generate();
 						return fastCall;
-						return null;
 					}
 					else {
 						List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
@@ -528,8 +509,8 @@ namespace Meta {
 						ILGenerator il = m.GetILGenerator();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
-							if (calls[i] is Literal) {
-								calls[i].CompileIL(il, this, OpCodes.Ldarg_1);
+							if (calls[i+1] is Literal) {
+								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_1);
 							}
 							else {
 								il.Emit(OpCodes.Ldarg_0);

@@ -86,7 +86,7 @@
 						"Greater_NumberMap_NumberMap"
 					"less"=.
 						!"NumberMap"
-						"Less_NumberMap_NumberMap"
+						"SpecialLess_Map_Map"
 					"power"=.
 						!"NumberMap"
 						"Raise_NumberMap_NumberMap"
