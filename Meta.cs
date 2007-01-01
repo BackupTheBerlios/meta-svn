@@ -103,8 +103,8 @@ namespace Meta {
 		public virtual Compiled GetCompiled(Expression parent) {
 			Emitter<Compiled> emitter = new Emitter<Compiled>();
 			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
-			emitter.il.Emit(OpCodes.Ret);
-			return emitter.GetDelegate();
+			emitter.Return();
+			return (Compiled)emitter.GetDelegate();
 		}
 	}
 	public delegate Map StructureDelegate();
@@ -408,13 +408,18 @@ namespace Meta {
 							Type type = parameters[i].ParameterType;
 							LocalBuilder local = il.DeclareLocal(type);
 							locals.Add(local);
+							compiles.Add(c[i]);
+							int id = compiles.Count - 1;
 							if (calls[i+1] is Literal) {
 								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_1);
 							}
 							else {
-								il.Emit(OpCodes.Ldarg_0);
-								il.Emit(OpCodes.Ldc_I4, i);
-								il.Emit(OpCodes.Ldelem_Ref);
+								il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+								il.Emit(OpCodes.Ldc_I4, id);
+								il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+								//il.Emit(OpCodes.Ldarg_0);
+								//il.Emit(OpCodes.Ldc_I4, i);
+								//il.Emit(OpCodes.Ldelem_Ref);
 								il.Emit(OpCodes.Ldarg_1);
 								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 							}
@@ -523,17 +528,14 @@ namespace Meta {
 						Compiled[] args = c.ToArray();
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
-						//Type[] param = new Type[] { typeof(Map) };
-						//m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-						//ILGenerator il = m.GetILGenerator();
 						Emitter<Compiled> emitter = new Emitter<Compiled>();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
-							int index = Expression.compiles.IndexOf(c[i]);
-							if (index == -1) {
+							//int index = Expression.compiles.IndexOf(c[i]);
+							//if (index == -1) {
 								compiles.Add(c[i]);
-								index = compiles.Count - 1;
-							}
+								int index = compiles.Count - 1;
+							//}
 							if (calls[i + 1] is Literal) {
 								calls[i + 1].CompileIL(emitter.il, this, OpCodes.Ldarg_0);
 							}
@@ -543,67 +545,13 @@ namespace Meta {
 								emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
 								emitter.LoadArgument(0);
 								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-								//il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-								//il.Emit(OpCodes.Ldc_I4, index);
-								//il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-								//il.Emit(OpCodes.Ldarg_0);
-								//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 							}
 							Transform.GetConversion(type, emitter.il);
-							//Transform.GetConversion(type, il);
 						}
 						emitter.Call(methodInfo);
-						//if (method.IsStatic) {
-						//    il.Emit(OpCodes.Call, methodInfo);
-						//    il.Emit(OpCodes.Call, methodInfo);
-						//}
-						//else {
-						//    il.Emit(OpCodes.Callvirt, methodInfo);
-						//}
 						Transform.GetMetaConversion(methodInfo.ReturnType, emitter.il);
 						emitter.Return();
-						//il.Emit(OpCodes.Ret);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-						//return fastCall;
-						return emitter.GetDelegate();
-
-						//List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-
-						//Compiled[] args = c.ToArray();
-						//ParameterInfo[] parameters = method.GetParameters();
-						//MethodInfo methodInfo = (MethodInfo)method;
-						//Type[] param = new Type[] {typeof(Map) };
-						//m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-						//ILGenerator il = m.GetILGenerator();
-						//for (int i = 0; i < parameters.Length; i++) {
-						//    Type type = parameters[i].ParameterType;
-						//    int index = Expression.compiles.IndexOf(c[i]);
-						//    if (index == -1) {
-						//        compiles.Add(c[i]);
-						//        index = compiles.Count - 1;
-						//    }
-						//    if (calls[i + 1] is Literal) {
-						//        calls[i + 1].CompileIL(il, this, OpCodes.Ldarg_0);
-						//    }
-						//    else {
-						//        il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-						//        il.Emit(OpCodes.Ldc_I4, index);
-						//        il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-						//        il.Emit(OpCodes.Ldarg_0);
-						//        il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//    }
-						//    Transform.GetConversion(type, il);
-						//}
-						//if (method.IsStatic) {
-						//    il.Emit(OpCodes.Call, methodInfo);
-						//}
-						//else {
-						//    il.Emit(OpCodes.Callvirt, methodInfo);
-						//}
-						//Transform.GetMetaConversion(methodInfo.ReturnType, il);
-						//il.Emit(OpCodes.Ret);
-						//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-						//return fastCall;
+						return (Compiled) emitter.GetDelegate();
 					}
 				}
 			}
@@ -1186,11 +1134,9 @@ namespace Meta {
 			// this should be done for all statements, not just for the key statement
 			//if (k != null && k.Equals(CodeKeys.Function)) {
 				if (value is Literal) {
-					//if (program.statementList.Count == 1) {
-					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {//.GetExpression(program) != null) {
-						((Literal)value).literal.GetFunction(program, this);//.Compile(program);
+					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {
+						((Literal)value).literal.GetFunction(program, this);
 					}
-					//}
 				}
 			// we could do this, too:
 			//if (k != null && k.Equals(CodeKeys.Function)) {
@@ -1716,7 +1662,7 @@ namespace Meta {
 				}
 				GetMetaConversion(type, emitter.il);
 				emitter.Return();
-				conversion = emitter.GetDelegate();
+				conversion = (MetaConversion) emitter.GetDelegate();
 				metaConversions[type] = conversion;
 			}
 			return conversion;
@@ -1806,7 +1752,7 @@ namespace Meta {
 					emitter.Box(type);
 				}
 				emitter.Return();
-				conversion = emitter.GetDelegate();
+				conversion = (DotNetConversion) emitter.GetDelegate();
 				dotNetConversions[type] = conversion;
 			}
 			return conversion;
