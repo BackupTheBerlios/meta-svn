@@ -399,7 +399,7 @@ namespace Meta {
 						Compiled[] args = c.ToArray();
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
-						Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
+						Type[] param = new Type[] { typeof(Map) };
 
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 						ILGenerator il = m.GetILGenerator();
@@ -411,16 +411,13 @@ namespace Meta {
 							compiles.Add(c[i]);
 							int id = compiles.Count - 1;
 							if (calls[i+1] is Literal) {
-								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_1);
+								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_0);
 							}
 							else {
 								il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
 								il.Emit(OpCodes.Ldc_I4, id);
 								il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-								//il.Emit(OpCodes.Ldarg_0);
-								//il.Emit(OpCodes.Ldc_I4, i);
-								//il.Emit(OpCodes.Ldelem_Ref);
-								il.Emit(OpCodes.Ldarg_1);
+								il.Emit(OpCodes.Ldarg_0);
 								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 							}
 							Transform.GetConversion(type, il);
@@ -518,7 +515,7 @@ namespace Meta {
 								}
 							}
 						}
-						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), args);
+						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
 						return fastCall;
 					}
 					else {
