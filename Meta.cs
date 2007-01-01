@@ -52,18 +52,6 @@ namespace Meta {
 		public static List<Compiled> compiles = new List<Compiled>();
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
-		//public static Expression LastArgument(Map code, Expression parent) {
-		//    return new CustomExpression(
-		//        code.Source,
-		//        parent,
-		//        delegate { return null; },
-		//        delegate(Expression p) {
-		//            return new Compiled(delegate(Map map) {
-		//                return Map.arguments.Pop();
-		//            });
-		//        }
-		//    );
-		//}
 		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter,GetCompiled(parent));
 		}
@@ -359,7 +347,6 @@ namespace Meta {
 			m = null;
 			return false;
 		}
-		//DynamicMethod m;
 		public static bool GetStore(ILInstruction instruction,out int count) {
 			if(instruction.Code==OpCodes.Stloc) {
 				count=(int)instruction.Operand;
@@ -480,20 +467,24 @@ namespace Meta {
 								int id = compiles.Count - 1;
 								if (calls[count + 1] is Literal) {
 									Literal literal = (Literal)calls[count + 1];
-									if (literal.literal.GetExpression(parent) != null) {
-										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-									}
-									else {
-										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-										//calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
-									}
+									calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+									//if (literal.literal.GetExpression(parent) != null) {
+									//    calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+									//}
+									//else {
+									//    calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+									//    //calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
+									//}
 								}
 								else {
-									il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-									il.Emit(OpCodes.Ldc_I4, id);
-									il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+									calls[count + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
 									il.Emit(OpCodes.Ldarg_0);
-									il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+									emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+									//il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+									//il.Emit(OpCodes.Ldc_I4, id);
+									//il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+									//il.Emit(OpCodes.Ldarg_0);
+									//il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
 								}
 								Transform.GetConversion(type, il);
 							}
@@ -1443,25 +1434,52 @@ namespace Meta {
 			}
 			return selected;
 		}
-		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
-			LocalBuilder selected=emitter.DeclareLocal(typeof(Map));
-			GetCachedCompile(emitter, subs[0].GetCompiled(parent));
-			emitter.Emit(context);
-			emitter.Call(typeof(Compiled),("Invoke"));
-			emitter.StoreLocal(selected);
-			foreach(Expression sub in subs.GetRange(1,subs.Count-1)) {
-				LocalBuilder key=emitter.DeclareLocal(typeof(Map));
-				GetCachedCompile(emitter, sub.GetCompiled(parent));
-				emitter.Emit(context);
-				emitter.Call(typeof(Compiled), "Invoke");
-				emitter.StoreLocal(key);
-				emitter.LoadLocal(selected);
-				emitter.LoadLocal(key);
-				emitter.Call(typeof(Map), "get_Item");
-				emitter.StoreLocal(selected);
-			}
-			emitter.LoadLocal(selected);
-			emitter.Return();
+		//public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+		//    LocalBuilder selected=emitter.DeclareLocal(typeof(Map));
+		//    GetCachedCompile(emitter, subs[0].GetCompiled(parent));
+		//    emitter.Emit(context);
+		//    emitter.Call(typeof(Compiled),("Invoke"));
+		//    emitter.StoreLocal(selected);
+		//    foreach(Expression sub in subs.GetRange(1,subs.Count-1)) {
+		//        LocalBuilder key=emitter.DeclareLocal(typeof(Map));
+		//        GetCachedCompile(emitter, sub.GetCompiled(parent));
+		//        emitter.Emit(context);
+		//        emitter.Call(typeof(Compiled), "Invoke");
+		//        emitter.StoreLocal(key);
+		//        emitter.LoadLocal(selected);
+		//        emitter.LoadLocal(key);
+		//        emitter.Call(typeof(Map), "get_Item");
+		//        emitter.StoreLocal(selected);
+		//    }
+		//    emitter.LoadLocal(selected);
+		//    emitter.Return();
+		//}
+		public override Compiled GetCompiled(Expression parent) {
+			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
+			return delegate(Map context) {
+				//try {
+				Map selected = s[0](context);
+				for (int i = 1; i < s.Count; i++) {
+					Map key = s[i](context);
+					//if (key == null) {
+					//    key = s[i](context);
+					//}
+					Map value = selected[key];
+					if (value == null) {
+						//object a = key.Count;
+						//object x = key.ToString();
+						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
+					}
+					else {
+						selected = value;
+					}
+				}
+				return selected;
+				//}
+				//catch (Exception e) {
+				//    throw e;
+				//}
+			};
 		}
 		private List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
