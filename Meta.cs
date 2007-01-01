@@ -136,6 +136,9 @@ namespace Meta {
 		public void Return() {
 			il.Emit(OpCodes.Ret);
 		}
+		public void UnboxAny(Type type) {
+			il.Emit(OpCodes.Unbox_Any, type);
+		}
 		public void LoadArgument(int index) {
 			il.Emit(OpCodes.Ldarg, index);
 		}
@@ -1634,22 +1637,40 @@ namespace Meta {
 		public static MetaConversion GetMetaConversion(Type type) {
 			MetaConversion conversion;
 			if (!metaConversions.TryGetValue(type, out conversion)) {
-				Type[] param = new Type[] { typeof(object) };
-				DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
-				ILGenerator il = m.GetILGenerator();
-
-				il.Emit(OpCodes.Ldarg_0);
+				Emitter emitter = new Emitter(typeof(MetaConversion));
+				emitter.LoadArgument(0);
 				if (type.IsValueType) {
-					il.Emit(OpCodes.Unbox_Any, type);
+					emitter.UnboxAny(type);
+					//il.Emit(OpCodes.Unbox_Any, type);
 				}
-				GetMetaConversion(type, il);
-
-				il.Emit(OpCodes.Ret);
-				conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
+				GetMetaConversion(type, emitter.il);
+				emitter.Return();
+				//il.Emit(OpCodes.Ret);
+				conversion = (MetaConversion)emitter.GetDelegate();//m.CreateDelegate(typeof(MetaConversion));
+				//conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
 				metaConversions[type] = conversion;
 			}
 			return conversion;
 		}
+		//public static MetaConversion GetMetaConversion(Type type) {
+		//    MetaConversion conversion;
+		//    if (!metaConversions.TryGetValue(type, out conversion)) {
+		//        Type[] param = new Type[] { typeof(object) };
+		//        DynamicMethod m = new DynamicMethod("ToMetaConversion", typeof(Map), param, typeof(Map).Module);
+		//        ILGenerator il = m.GetILGenerator();
+
+		//        il.Emit(OpCodes.Ldarg_0);
+		//        if (type.IsValueType) {
+		//            il.Emit(OpCodes.Unbox_Any, type);
+		//        }
+		//        GetMetaConversion(type, il);
+
+		//        il.Emit(OpCodes.Ret);
+		//        conversion = (MetaConversion)m.CreateDelegate(typeof(MetaConversion));
+		//        metaConversions[type] = conversion;
+		//    }
+		//    return conversion;
+		//}
 		public static Map ToMeta(object dotNet) {
 			if (dotNet == null) {
 				return Map.Empty;
