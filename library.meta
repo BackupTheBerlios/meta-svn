@@ -31,7 +31,7 @@
 				subtract=NumberMap.Subtract_NumberMap_NumberMap;
 				multiply=NumberMap.Multiply_NumberMap_NumberMap;
 				greater=NumberMap.Greater_NumberMap_NumberMap;
-				less=NumberMap.Less_NumberMap_NumberMap;
+				less=NumberMap.SpecialLess_Map_Map;
 				power=NumberMap.Raise_NumberMap_NumberMap;
 				maximum=(a)(b){0=b;1=a;}.<rational.less(a,b)>;
 				minimum=(a)(b){0=b;1=a;}.<rational.greater(a,b)>;

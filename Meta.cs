@@ -40,9 +40,6 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
-		//public virtual bool IsILCompilable(Expression parent) {
-		//    return false;
-		//}
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public static Expression LastArgument(Map code, Expression parent) {
@@ -57,15 +54,14 @@ namespace Meta {
 				}
 			);
 		}
-		public virtual Compiled CompileIL() {
-			return null;
+		public virtual void CompileIL(ILGenerator il,Expression parent,OpCode context) {
 		}
 		public Compiled GetCompiled() {
 			if(compiled==null) {
-				compiled = CompileIL();
-				if (compiled == null) {
+				//compiled = CompileIL();
+				//if (compiled == null) {
 					compiled = Compile();
-				}
+				//}
 			}
 			return compiled;
 		}
@@ -106,7 +102,26 @@ namespace Meta {
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		public abstract Compiled GetCompiled(Expression parent);
+		public virtual Compiled GetCompiled(Expression parent) {
+			//ParameterInfo[] parameters = method.GetParameters();
+			//MethodInfo methodInfo = (MethodInfo)method;
+			Type[] param = new Type[] { typeof(Map) };
+			//Type[] param = new Type[] { this.GetType(), typeof(Map) };
+
+			DynamicMethod m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
+
+			//NormalGenerator generator = new NormalGenerator();
+			//ILGenerator il = generator.GetILGenerator(typeof(Map), param);//m.GetILGenerator();
+			ILGenerator il = m.GetILGenerator();
+			CompileIL(il, parent,OpCodes.Ldarg_0);
+			//CompileIL(il, parent);
+			il.Emit(OpCodes.Ret);
+			List<LocalBuilder> locals = new List<LocalBuilder>();
+			Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
+			//Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled), this);
+			return fastCall;
+		}
+		//public abstract Compiled GetCompiled(Expression parent);
 	}
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
@@ -132,9 +147,9 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		public override Compiled CompileIL() {
-			return base.CompileIL();
-		}
+		//public override Compiled CompileIL() {
+		//    return base.CompileIL();
+		//}
 		public override bool ContainsFunctions() {
 			foreach(Expression expression in calls) {
 				if(expression.ContainsFunctions()) {
@@ -324,8 +339,10 @@ namespace Meta {
 			}
 			return true;
 		}
-		public class DynamicGenerator {
-		}
+
+		//public class DynamicGenerator {
+
+		//}
 		public class NormalGenerator {
 			private AssemblyBuilder ab;
 			private TypeBuilder tb;
@@ -359,6 +376,9 @@ namespace Meta {
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
 						Type[] param = new Type[] { typeof(Compiled[]), typeof(Map) };
+						//if (method.Name == "SpecialLess") {
+						//    Console.WriteLine("whatever");
+						//}
 
 						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
 
@@ -370,14 +390,32 @@ namespace Meta {
 							Type type = parameters[i].ParameterType;
 							LocalBuilder local = il.DeclareLocal(type);
 							locals.Add(local);
-							il.Emit(OpCodes.Ldarg_0);
-							il.Emit(OpCodes.Ldc_I4, i);
-							il.Emit(OpCodes.Ldelem_Ref);
-							il.Emit(OpCodes.Ldarg_1);
-							il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+							//if (calls[i] is Literal) {
+							//    calls[i].CompileIL(il, this,OpCodes.Ldarg_1);
+							//}
+							//else {
+								il.Emit(OpCodes.Ldarg_0);
+								il.Emit(OpCodes.Ldc_I4, i);
+								il.Emit(OpCodes.Ldelem_Ref);
+								il.Emit(OpCodes.Ldarg_1);
+								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+							//}
 							Transform.GetConversion(type, il);
 							il.Emit(OpCodes.Stloc, local);
+							//}
 						}
+						//for (int i = 0; i < parameters.Length; i++) {
+						//    Type type = parameters[i].ParameterType;
+						//    LocalBuilder local = il.DeclareLocal(type);
+						//    locals.Add(local);
+						//    il.Emit(OpCodes.Ldarg_0);
+						//    il.Emit(OpCodes.Ldc_I4, i);
+						//    il.Emit(OpCodes.Ldelem_Ref);
+						//    il.Emit(OpCodes.Ldarg_1);
+						//    il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+						//    Transform.GetConversion(type, il);
+						//    il.Emit(OpCodes.Stloc, local);
+						//}
 						int firstIndex = 0;
 						int lastIndex = 0;
 						if (locals.Count != 0) {
@@ -490,11 +528,16 @@ namespace Meta {
 						ILGenerator il = m.GetILGenerator();
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
-							il.Emit(OpCodes.Ldarg_0);
-							il.Emit(OpCodes.Ldc_I4, i);
-							il.Emit(OpCodes.Ldelem_Ref);
-							il.Emit(OpCodes.Ldarg_1);
-							il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+							if (calls[i] is Literal) {
+								calls[i].CompileIL(il, this, OpCodes.Ldarg_1);
+							}
+							else {
+								il.Emit(OpCodes.Ldarg_0);
+								il.Emit(OpCodes.Ldc_I4, i);
+								il.Emit(OpCodes.Ldelem_Ref);
+								il.Emit(OpCodes.Ldarg_1);
+								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+							}
 							Transform.GetConversion(type, il);
 						}
 						if (method.IsStatic) {
@@ -1332,6 +1375,7 @@ namespace Meta {
 		}
 	}
 	public class Literal : Expression {
+		private int index = -1;
 		public override bool ContainsFunctions() {
 			Expression expression = literal.GetExpression();
 			return expression != null && expression.ContainsFunctions();
@@ -1344,19 +1388,56 @@ namespace Meta {
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public override Compiled GetCompiled(Expression parent) {
+		//public override Compiled GetCompiled(Expression parent) {
+		//    if (literal.ContainsKey(CodeKeys.Function)) {
+		//        literal.Compile(parent);
+		//        return delegate(Map context) {
+		//            return literal.Copy(context);
+		//        };
+		//    }
+		//    else {
+		//        return delegate {
+		//            return literal;
+		//        };
+		//    }
+		//}
+		public static List<Map> literals = new List<Map>();
+		public override void CompileIL(ILGenerator il, Expression parent,OpCode context) {
+			if (index == -1) {
+				literals.Add(literal);
+				index = literals.Count - 1;
+			}
+			il.Emit(OpCodes.Ldsfld, typeof(Literal).GetField("literals"));
+			il.Emit(OpCodes.Ldc_I4, index);
+			il.Emit(OpCodes.Callvirt,typeof(List<Map>).GetMethod("get_Item"));
 			if (literal.ContainsKey(CodeKeys.Function)) {
 				literal.Compile(parent);
-				return delegate(Map context) {
-					return literal.Copy(context);
-				};
+				//return delegate(Map context) {
+				//    return literal.Copy(context);
+				//};
+				il.Emit(context);
+				//il.Emit(OpCodes.Ldarg_0);
+				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
 			}
 			else {
-				return delegate {
-					return literal;
-				};
+				//return delegate {
+				//    return literal;
+				//};
 			}
 		}
+		//public override Compiled GetCompiled(Expression parent) {
+		//    if (literal.ContainsKey(CodeKeys.Function)) {
+		//        literal.Compile(parent);
+		//        return delegate(Map context) {
+		//            return literal.Copy(context);
+		//        };
+		//    }
+		//    else {
+		//        return delegate {
+		//            return literal;
+		//        };
+		//    }
+		//}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
 			if (literal != null) {
@@ -1478,6 +1559,7 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
+			//try {
 			//DateTime start = DateTime.Now;
 			//Fibo(32);
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
@@ -1492,9 +1574,9 @@ namespace Meta {
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 
-			//}
-			//catch (Exception e) {
-			//}
+		//}
+		//catch (Exception e) {
+		//}
 		}
 		public static int Fibo(int x) {
 			if (x < 2) {
@@ -3280,7 +3362,10 @@ namespace Meta {
 		public static bool Greater(NumberMap a, NumberMap b) {
 				return a.Expand(b) > b.Expand(a);
 			}
-		public static bool Less(NumberMap a, NumberMap b) {
+		public static bool SpecialLess(Map a, Map b) {
+			return a.LessThan(b);
+		}
+		public static bool Less(Map a, Map b) {
 				return a.LessThan(b);
 			}
 		public static bool GreaterEqual(NumberMap a, NumberMap b) {
@@ -3317,9 +3402,12 @@ namespace Meta {
 		public virtual NumberMap Subtract(NumberMap b) {
 				return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
 			}
-		public virtual bool LessThan(NumberMap b) {
-				return Expand(b) < b.Expand(this);
-			}
+		public override bool LessThan(Map b) {
+			return Expand(b.GetNumber()) < b.GetNumber().Expand(this);
+		}
+		//public virtual bool LessThan(NumberMap b) {
+		//        return Expand(b) < b.Expand(this);
+		//    }
 			//public virtual bool LessThan(int b) {
 			//    return LessThan(new Integer32(b));
 			//}
@@ -3523,7 +3611,7 @@ namespace Meta {
 			}
 			return base.Subtract(b);
 		}
-		public override bool LessThan(NumberMap b) {
+		public override bool LessThan(Map b) {
 			Integer32 i = b as Integer32;
 			if (i != null) {
 				try {
@@ -4774,16 +4862,17 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+
 			public class FiboFast : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
+				}
+			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 			public class Serialization : Test {
@@ -5505,6 +5594,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual bool LessThan(Map map) {
+			return GetNumber().LessThan(map.GetNumber());
+		}
 		public virtual int GetInt32() {
 			return GetNumber().GetInt32();
 		}
