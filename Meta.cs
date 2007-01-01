@@ -101,7 +101,7 @@ namespace Meta {
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
-			Emitter<Compiled> emitter = new Emitter<Compiled>();
+			Emitter emitter = new Emitter(typeof(Compiled));
 			CompileIL(emitter.il, parent, OpCodes.Ldarg_0);
 			emitter.Return();
 			return (Compiled)emitter.GetDelegate();
@@ -130,9 +130,29 @@ namespace Meta {
 			return structure();
 		}
 	}
-	public class Emitter<T> {
+	public class Emitter {
 		public void Box(Type type) {
 			il.Emit(OpCodes.Box, type);
+		}
+		public void StoreLocal(int index) {
+		}
+		public void LoadLocal(int index) {
+			il.Emit(OpCodes.Ldloc, index);
+		}
+		public void Break(Label label) {
+			il.Emit(OpCodes.Br, label);
+		}
+		public void Emit(OpCode code, int operand) {
+			il.Emit(code, operand);
+		}
+		public void Emit(OpCode code) {
+			il.Emit(code);
+		}
+		public void BreakFalse(Label label) {
+			il.Emit(OpCodes.Brfalse, label);
+		}
+		public void BreakTrue(Label label) {
+			il.Emit(OpCodes.Brtrue, label);
 		}
 		public void Return() {
 			il.Emit(OpCodes.Ret);
@@ -142,6 +162,12 @@ namespace Meta {
 		}
 		public void LoadConstant(int i) {
 			il.Emit(OpCodes.Ldc_I4, i);
+		}
+		public void CreateInstance(ConstructorInfo constructor) {
+			il.Emit(OpCodes.Newobj, constructor);
+		}
+		public void Emit(OpCode code, byte b) {
+			il.Emit(code, b);
 		}
 		public void Call(MethodInfo method) {
 			il.Emit(
@@ -163,18 +189,17 @@ namespace Meta {
 		DynamicMethod dynamicMethod;
 		public ILGenerator il;
 		private StaticEmitter emitter;
-		//private Type type;
-		public Emitter() {
-			//this.type = type;
-			MethodInfo invoke=typeof(T).GetMethod("Invoke");
+		private Type type;
+		public Emitter(Type type) {
+			this.type = type;
+			MethodInfo invoke=type.GetMethod("Invoke");
 			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
 			this.il = dynamicMethod.GetILGenerator();
 		}
 		public object GetDelegate() {
-			return dynamicMethod.CreateDelegate(typeof(T));
+			return dynamicMethod.CreateDelegate(type);
 		}
-
 	}
 	public class StaticEmitter {
 		public ILGenerator il;
@@ -310,7 +335,7 @@ namespace Meta {
 			m = null;
 			return false;
 		}
-		DynamicMethod m;
+		//DynamicMethod m;
 		public static bool GetStore(ILInstruction instruction,out int count) {
 			if(instruction.Code==OpCodes.Stloc) {
 				count=(int)instruction.Operand;
@@ -401,28 +426,28 @@ namespace Meta {
 						MethodInfo methodInfo = (MethodInfo)method;
 						Type[] param = new Type[] { typeof(Map) };
 
-						m = new DynamicMethod("Optimized", typeof(Map), param, typeof(Map).Module);
-						ILGenerator il = m.GetILGenerator();
+						Emitter emitter = new Emitter(typeof(Compiled));
+						ILGenerator il =emitter.il;
 						List<LocalBuilder> locals = new List<LocalBuilder>();
-						for (int i = 0; i < parameters.Length; i++) {
-							Type type = parameters[i].ParameterType;
-							LocalBuilder local = il.DeclareLocal(type);
-							locals.Add(local);
-							compiles.Add(c[i]);
-							int id = compiles.Count - 1;
-							if (calls[i+1] is Literal) {
-								calls[i+1].CompileIL(il, this, OpCodes.Ldarg_0);
-							}
-							else {
-								il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-								il.Emit(OpCodes.Ldc_I4, id);
-								il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-								il.Emit(OpCodes.Ldarg_0);
-								il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-							}
-							Transform.GetConversion(type, il);
-							il.Emit(OpCodes.Stloc, local);
-						}
+						//for (int i = 0; i < parameters.Length; i++) {
+						//    Type type = parameters[i].ParameterType;
+						//    LocalBuilder local = il.DeclareLocal(type);
+						//    locals.Add(local);
+						//    compiles.Add(c[i]);
+						//    int id = compiles.Count - 1;
+						//    if (calls[i+1] is Literal) {
+						//        calls[i+1].CompileIL(il, this, OpCodes.Ldarg_0);
+						//    }
+						//    else {
+						//        il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+						//        il.Emit(OpCodes.Ldc_I4, id);
+						//        il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+						//        il.Emit(OpCodes.Ldarg_0);
+						//        il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+						//    }
+						//    Transform.GetConversion(type, il);
+						//    il.Emit(OpCodes.Stloc, local);
+						//}
 						int firstIndex = 0;
 						int lastIndex = 0;
 						if (locals.Count != 0) {
@@ -441,16 +466,33 @@ namespace Meta {
 							int count;
 							if (instruction.Code == OpCodes.Ret) {
 								Transform.GetMetaConversion(methodInfo.ReturnType, il);
-								il.Emit(OpCodes.Ret);
+								emitter.Return();
 							}
 							else if (GetArgument(instruction, out count)) {
-								il.Emit(OpCodes.Ldloc, count + firstIndex);
+								Type type = parameters[count].ParameterType;
+								LocalBuilder local = il.DeclareLocal(type);
+								locals.Add(local); // necessary?
+								compiles.Add(c[count]);
+								int id = compiles.Count - 1;
+								if (calls[count + 1] is Literal) {
+									calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
+								}
+								else {
+									il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
+									il.Emit(OpCodes.Ldc_I4, id);
+									il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
+									il.Emit(OpCodes.Ldarg_0);
+									il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
+								}
+								Transform.GetConversion(type, il);
+								//il.Emit(OpCodes.Stloc, local);
+								//emitter.LoadLocal(count + firstIndex);
 							}
 							else if (GetStore(instruction, out count)) {
-								il.Emit(OpCodes.Stloc, count + lastIndex);
+								emitter.StoreLocal(count + lastIndex);
 							}
 							else if (GetLoad(instruction, out count)) {
-								il.Emit(OpCodes.Ldloc, count + lastIndex);
+								emitter.LoadLocal(count + lastIndex);
 							}
 							else if (instruction.Code == OpCodes.Br_S) {
 								int target=(int)instruction.Operand;
@@ -459,7 +501,7 @@ namespace Meta {
 								}
 								Label label=il.DefineLabel();
 								labels[target].Add(label);
-								il.Emit(OpCodes.Br,label);
+								emitter.Break(label);
 								index++;
 							}
 							else if (instruction.Code == OpCodes.Brtrue_S) {
@@ -469,7 +511,7 @@ namespace Meta {
 								}
 								Label label = il.DefineLabel();
 								labels[target].Add(label);
-								il.Emit(OpCodes.Brtrue, label);
+								emitter.BreakTrue(label);
 								index++;
 							}
 							else if (instruction.Code == OpCodes.Brfalse_S) {
@@ -480,31 +522,31 @@ namespace Meta {
 								}
 								Label label = il.DefineLabel();
 								labels[target].Add(label);
-								il.Emit(OpCodes.Brfalse, label);
+								emitter.BreakFalse(label);
 								index++;
 							}
 							else {
 								if (instruction.Operand == null) {
-									il.Emit(instruction.Code);
+									emitter.Emit(instruction.Code);
 								}
 								else {
 									if (instruction.Operand is int) {
 										il.Emit(instruction.Code, (int)instruction.Operand);
 									}
 									else if (instruction.Operand is FieldInfo) {
-										il.Emit(instruction.Code, (FieldInfo)instruction.Operand);
+										emitter.LoadField((FieldInfo)instruction.Operand);
 										index += 4;
 									}
 									else if (instruction.Operand is MethodInfo) {
-										il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
+										emitter.Call((MethodInfo)instruction.Operand);
 										index += 4;
 									}
-									else if (instruction.Operand is MethodBase) {
-										il.Emit(instruction.Code, (MethodInfo)instruction.Operand);
+									else if (instruction.Operand is ConstructorInfo) {
+										emitter.CreateInstance((ConstructorInfo)instruction.Operand);
 										index += 4;
 									}
 									else {
-										il.Emit(instruction.Code, (byte)instruction.Operand);
+										emitter.Emit(instruction.Code, (byte)instruction.Operand);
 									}
 								}
 							}
@@ -515,8 +557,7 @@ namespace Meta {
 								}
 							}
 						}
-						Compiled fastCall = (Compiled)m.CreateDelegate(typeof(Compiled));
-						return fastCall;
+						return (Compiled)emitter.GetDelegate();
 					}
 					else {
 
@@ -525,14 +566,11 @@ namespace Meta {
 						Compiled[] args = c.ToArray();
 						ParameterInfo[] parameters = method.GetParameters();
 						MethodInfo methodInfo = (MethodInfo)method;
-						Emitter<Compiled> emitter = new Emitter<Compiled>();
+						Emitter emitter = new Emitter(typeof(Compiled));
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type = parameters[i].ParameterType;
-							//int index = Expression.compiles.IndexOf(c[i]);
-							//if (index == -1) {
-								compiles.Add(c[i]);
-								int index = compiles.Count - 1;
-							//}
+							compiles.Add(c[i]);
+							int index = compiles.Count - 1;
 							if (calls[i + 1] is Literal) {
 								calls[i + 1].CompileIL(emitter.il, this, OpCodes.Ldarg_0);
 							}
@@ -680,7 +718,6 @@ namespace Meta {
 			: base(code.Source, parent) {
 			this.expression = code.GetExpression(this);
 		}
-		public delegate Map MetaDelegate(Map map,Map key);
 		public override Compiled GetCompiled(Expression parent) {
 			int count;
 			Map key;
@@ -1501,6 +1538,7 @@ namespace Meta {
 			Type type = types[typeToken];
 			return CreateDelegateFromCode(code, type);
 		}
+		// refactor this stuff
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
@@ -1537,6 +1575,8 @@ namespace Meta {
 			}
 			return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 		}
+
+		// remove
 		public class MetaDelegate {
 			private Map callable;
 			private Type returnType;
@@ -1557,7 +1597,6 @@ namespace Meta {
 				}
 			}
 		}
-
 		public static void GetMetaConversion(Type type, ILGenerator il) {
 			if (type.Equals(typeof(void))) {
 				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));
@@ -1652,7 +1691,7 @@ namespace Meta {
 		public static MetaConversion GetMetaConversion(Type type) {
 			MetaConversion conversion;
 			if (!metaConversions.TryGetValue(type, out conversion)) {
-				Emitter<MetaConversion> emitter = new Emitter<MetaConversion>();
+				Emitter emitter = new Emitter(typeof(MetaConversion));
 				emitter.LoadArgument(0);
 				if (type.IsValueType) {
 					emitter.UnboxAny(type);
@@ -1741,7 +1780,7 @@ namespace Meta {
 		public static DotNetConversion GetDotNetConversion(Type type) {
 			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
-				Emitter<DotNetConversion> emitter = new Emitter<DotNetConversion>();
+				Emitter emitter = new Emitter(typeof(DotNetConversion));
 				ILGenerator il = emitter.il;
 				emitter.LoadArgument(0);
 				GetConversion(type, il);
@@ -4669,7 +4708,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
 			public class FiboFast : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -4698,12 +4742,6 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
 			public class MergeSort : Test {
@@ -5500,7 +5538,7 @@ namespace Meta {
 		}
 		public virtual Map Call(Map argument) {
 			Map.arguments.Push(argument);
-			return GetExpression(null).GetCompiled()(this.Scope);
+			return GetExpression().GetCompiled()(this.Scope);
 		}
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {
