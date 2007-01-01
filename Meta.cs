@@ -130,6 +130,15 @@ namespace Meta {
 		}
 	}
 	public class Emitter {
+		public void Box(Type type) {
+			il.Emit(OpCodes.Box, type);
+		}
+		public void Return() {
+			il.Emit(OpCodes.Ret);
+		}
+		public void LoadArgument(int index) {
+			il.Emit(OpCodes.Ldarg, index);
+		}
 		DynamicMethod dynamicMethod;
 		public ILGenerator il;
 		private StaticEmitter emitter;
@@ -1715,24 +1724,24 @@ namespace Meta {
 			return true;
 		}
 		public static Dictionary<Type,DotNetConversion> dotNetConversions=new Dictionary<Type,DotNetConversion>();
-		public static DotNetConversion GetConversion(Type type) {
+		public static DotNetConversion GetDotNetConversion(Type type) {
 			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
 				Emitter emitter = new Emitter(typeof(DotNetConversion));
 				ILGenerator il = emitter.il;
-				il.Emit(OpCodes.Ldarg_0);
+				emitter.LoadArgument(0);
 				GetConversion(type, il);
 				if (type.IsValueType) {
-					il.Emit(OpCodes.Box, type);
+					emitter.Box(type);
 				}
-				il.Emit(OpCodes.Ret);
+				emitter.Return();
 				conversion = (DotNetConversion)emitter.GetDelegate();
 				dotNetConversions[type] = conversion;
 			}
 			return conversion;
 		}
 		public static object ToDotNet(Map meta, Type type) {
-			return GetConversion(type)(meta);
+			return GetDotNetConversion(type)(meta);
 		}
 	}
 	public delegate Map CallDelegate(Map argument);
@@ -1816,7 +1825,7 @@ namespace Meta {
 			}
 			this.metaConversion = Transform.GetMetaConversion(returnType);
 			foreach (ParameterInfo parameter in parameters) {
-				conversions.Add(Transform.GetConversion(parameter.ParameterType));
+				conversions.Add(Transform.GetDotNetConversion(parameter.ParameterType));
 			}
 		}
 		private List<DotNetConversion> conversions=new List<DotNetConversion>();
