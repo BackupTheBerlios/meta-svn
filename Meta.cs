@@ -40,6 +40,11 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public static void GetCachedCompile(Emitter emitter,Compiled c) {
+			emitter.LoadField(typeof(Expression), "compiles");
+			emitter.LoadConstant(GetIndex(c));
+			emitter.Call(typeof(List<Compiled>), "get_Item");
+		}
 		public static int GetIndex(Compiled c) {
 			compiles.Add(c);
 			return compiles.Count - 1;
@@ -47,19 +52,20 @@ namespace Meta {
 		public static List<Compiled> compiles = new List<Compiled>();
 		public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
-		public static Expression LastArgument(Map code, Expression parent) {
-			return new CustomExpression(
-				code.Source,
-				parent,
-				delegate { return null; },
-				delegate(Expression p) {
-					return new Compiled(delegate(Map map) {
-						return Map.arguments.Pop();
-					});
-				}
-			);
-		}
+		//public static Expression LastArgument(Map code, Expression parent) {
+		//    return new CustomExpression(
+		//        code.Source,
+		//        parent,
+		//        delegate { return null; },
+		//        delegate(Expression p) {
+		//            return new Compiled(delegate(Map map) {
+		//                return Map.arguments.Pop();
+		//            });
+		//        }
+		//    );
+		//}
 		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
+			GetCachedCompile(emitter,GetCompiled(parent));
 		}
 		public Compiled GetCompiled() {
 			if(compiled==null) {
@@ -113,25 +119,23 @@ namespace Meta {
 	}
 	public delegate Map StructureDelegate();
 	public delegate Compiled CompiledDelegate(Expression parent);
-	public class CustomExpression : Expression {
+
+	public class LastArgument : Expression {
 		public override bool ContainsFunctions() {
 			return false;
 		}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
-		private StructureDelegate structure;
-		private CompiledDelegate compiled;
-		public CustomExpression(Extent extent, Expression parent, StructureDelegate structure, CompiledDelegate compiled)
-			: base(extent, parent) {
-			this.structure = structure;
-			this.compiled = compiled;
-		}
-		public override Compiled GetCompiled(Expression parent) {
-			return compiled(parent);
+		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+			emitter.LoadField(typeof(Map), "arguments");
+			emitter.Call(typeof(Stack<Map>), "Pop");
 		}
 		public override Map GetStructure() {
-			return structure();
+			return null;
+		}
+		public LastArgument(Map code, Expression parent)
+			: base(code.Source, parent) {
 		}
 	}
 	public class Emitter {
@@ -963,8 +967,6 @@ namespace Meta {
 			if (parent is Program || parent is LiteralExpression) {
 				this.Statement = statement;
 			}
-			if (parent == null) {
-			}
 			code = code[CodeKeys.Function];
 			Map parameter = code[CodeKeys.Parameter];
 			if(parameter.Count!=0) {
@@ -972,7 +974,8 @@ namespace Meta {
 				para.Source=code.Source;
 				KeyStatement s = new KeyStatement(
 					para,
-					LastArgument(Map.Empty, this), this, 0);
+					new LastArgument(Map.Empty, this), this, 0);
+					//LastArgument(Map.Empty, this), this, 0);
 				statementList.Add(s);
 				this.key=parameter;
 			}
@@ -1442,17 +1445,13 @@ namespace Meta {
 		}
 		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
 			LocalBuilder selected=emitter.DeclareLocal(typeof(Map));
-			emitter.LoadField(typeof(Expression), "compiles");
-			emitter.LoadConstant(GetIndex(subs[0].GetCompiled(parent)));
-			emitter.Call(typeof(List<Compiled>), "get_Item");
+			GetCachedCompile(emitter, subs[0].GetCompiled(parent));
 			emitter.Emit(context);
 			emitter.Call(typeof(Compiled),("Invoke"));
 			emitter.StoreLocal(selected);
 			foreach(Expression sub in subs.GetRange(1,subs.Count-1)) {
 				LocalBuilder key=emitter.DeclareLocal(typeof(Map));
-				emitter.LoadField(typeof(Expression),"compiles");
-				emitter.LoadConstant(GetIndex(sub.GetCompiled(parent)));
-				emitter.Call(typeof(List<Compiled>), "get_Item");
+				GetCachedCompile(emitter, sub.GetCompiled(parent));
 				emitter.Emit(context);
 				emitter.Call(typeof(Compiled), "Invoke");
 				emitter.StoreLocal(key);
@@ -1464,33 +1463,6 @@ namespace Meta {
 			emitter.LoadLocal(selected);
 			emitter.Return();
 		}
-		//public override Compiled GetCompiled(Expression parent) {
-		//    List<Compiled> s=subs.ConvertAll<Compiled>(delegate(Expression e) {return e.Compile();});
-		//    return delegate(Map context) {
-		//        //try {
-		//            Map selected = s[0](context);
-		//            for (int i = 1; i < s.Count; i++) {
-		//                Map key = s[i](context);
-		//                //if (key == null) {
-		//                //    key = s[i](context);
-		//                //}
-		//                Map value = selected[key];
-		//                if (value == null) {
-		//                    //object a = key.Count;
-		//                    //object x = key.ToString();
-		//                    throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
-		//                }
-		//                else {
-		//                    selected = value;
-		//                }
-		//            }
-		//            return selected;
-		//        //}
-		//        //catch (Exception e) {
-		//        //    throw e;
-		//        //}
-		//    };
-		//}
 		private List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
 			foreach (Map m in code.Array) {
@@ -1855,7 +1827,6 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
 			}
 			else if (target.Equals(typeof(Map))) {
-				//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetObject"));
 			}
 			else if (target.Equals(typeof(Boolean))) {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
@@ -1865,7 +1836,6 @@ namespace Meta {
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetString", BindingFlags.Instance | BindingFlags.Public));
 			}
 			else if (target.Equals(typeof(int))) {
-				//il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
 				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
 			}
 			else if (target.Equals(typeof(decimal))) {
@@ -5834,7 +5804,7 @@ namespace Meta {
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
 				if (ContainsKey(CodeKeys.LastArgument)) {
-					return Expression.LastArgument(this[CodeKeys.LastArgument], parent);
+					return new LastArgument(this[CodeKeys.LastArgument], parent);
 				}
 				foreach(Map key in Keys) {
 				    if(expressions.ContainsKey(key)) {
