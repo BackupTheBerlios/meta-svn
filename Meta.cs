@@ -67,6 +67,9 @@ namespace Meta {
 		public Extent Source;
 		public readonly Expression Parent;
 		public Statement Statement;
+		public virtual Map Call(Map argument, Map scope) {
+			return GetCompiled()(scope);
+		}
 		public Expression(Extent source, Expression parent) {	
 			this.Source = source;
 			this.Parent = parent;
@@ -1066,6 +1069,10 @@ namespace Meta {
 	//    }
 	//}
 	public class Program : ScopeExpression {
+		public override Map Call(Map argument, Map scope) {
+			Map.arguments.Push(argument);
+			return GetCompiled()(scope);
+		}
 		//public override bool ContainsFunctions() {
 		//    foreach (Statement statement in statementList) {
 		//        KeyStatement keyStatement = statement as KeyStatement;
@@ -5898,9 +5905,17 @@ namespace Meta {
 			return null;
 		}
 		public virtual Map Call(Map argument) {
-			Map.arguments.Push(argument);
-			return GetExpression().GetCompiled()(this.Scope);
+			return GetExpression().Call(argument, this.Scope);
+			//Map.arguments.Push(argument);
+			//return GetExpression().GetCompiled()(this.Scope);
 		}
+		//public virtual Map Call(Map argument) {
+		//    //Expression expression = GetExpression();
+		//    //if (expression.isFunction) {
+		//    Map.arguments.Push(argument);
+		//    //}
+		//    return GetExpression().GetCompiled()(this.Scope);
+		//}
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {
 			Map clone = new DictionaryMap();
