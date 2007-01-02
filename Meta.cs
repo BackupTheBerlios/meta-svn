@@ -1683,14 +1683,15 @@ namespace Meta {
 			ParameterInfo[] parameters = invoke.GetParameters();
 			Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
 			ILGenerator il = emitter.il;
-			LocalBuilder local = il.DeclareLocal(typeof(object[]));
+			LocalBuilder local = il.DeclareLocal(typeof(Map[]));
 			emitter.LoadConstant(parameters.Length);
-			emitter.NewArray(typeof(object));
+			emitter.NewArray(typeof(Map));
 			emitter.StoreLocal(local);
 			for (int i = 0; i < parameters.Length; i++) {
 				emitter.LoadLocal(local);
 				emitter.LoadConstant(i);
 				emitter.LoadArgument(i + 1);
+				Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
 				emitter.StoreElementReference();
 			}
 			emitter.LoadArgument(0);
@@ -1712,10 +1713,10 @@ namespace Meta {
 			public MetaDelegate(Map callable) {
 				this.callable = callable;
 			}
-			public Map Call(object[] arguments) {
+			public Map Call(Map[] arguments) {
 				Map pos = this.callable;
-				foreach (object argument in arguments) {
-					pos = pos.Call(Transform.ToMeta(argument));
+				foreach (Map argument in arguments) {
+					pos = pos.Call(argument);
 				}
 				return pos;
 			}
@@ -1793,7 +1794,6 @@ namespace Meta {
 								emitter.Pop();
 								emitter.LoadField(typeof(Map),"Empty");
 								emitter.Break(end);
-								//emitter.Return();
 								emitter.MarkLabel(label);
 							}
 							if (type.IsValueType) {
@@ -3345,14 +3345,9 @@ namespace Meta {
 		public static NumberMap Modulo(NumberMap a, NumberMap b) {
 				return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
 			}
-
-
-
 			public float GetSingle() {
 				return (float)GetDouble();
 			}
-			//public abstract int GetInt32();
-			//public abstract int GetInt32();
 			public abstract IntegerBase Numerator {
 				get;
 			}
