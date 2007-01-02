@@ -127,6 +127,12 @@ namespace Meta {
 		}
 	}
 	public class Emitter {
+		public void MarkLabel(Label label) {
+			il.MarkLabel(label);
+		}
+		public Label DefineLabel() {
+			return il.DefineLabel();
+		}
 		public void Box(Type type) {
 			il.Emit(OpCodes.Box, type);
 		}
@@ -169,7 +175,13 @@ namespace Meta {
 		public void LoadConstant(int i) {
 			il.Emit(OpCodes.Ldc_I4, i);
 		}
-		public void CreateInstance(ConstructorInfo constructor) {
+		public void NewObject(Type type) {
+			NewObject(type, new Type[] { });
+		}
+		public void NewObject(Type type, params Type[] parameters) {
+			NewObject(type.GetConstructor(parameters));
+		}
+		public void NewObject(ConstructorInfo constructor) {
 			il.Emit(OpCodes.Newobj, constructor);
 		}
 		public void Emit(OpCode code, byte b) {
@@ -177,6 +189,9 @@ namespace Meta {
 		}
 		public void Call(Type type, string method) {
 			Call(type.GetMethod(method));
+		}
+		public void Call(Type type, string method, params Type[] parameters) {
+			Call(type.GetMethod(method,parameters));
 		}
 		public void Call(MethodInfo method) {
 			il.Emit(
@@ -438,7 +453,6 @@ namespace Meta {
 						Type[] param = new Type[] { typeof(Map) };
 
 						Emitter emitter = new Emitter(typeof(Compiled));
-						ILGenerator il =emitter.il;
 						List<LocalBuilder> locals = new List<LocalBuilder>();
 						int firstIndex = 0;
 						int lastIndex = 0;
@@ -450,7 +464,7 @@ namespace Meta {
 						MethodBodyReader reader = new MethodBodyReader((MethodInfo)method);
 						MethodBody body = method.GetMethodBody();
 						foreach (LocalVariableInfo local in body.LocalVariables) {
-							il.DeclareLocal(local.LocalType);
+							emitter.DeclareLocal(local.LocalType);
 						}
 						for (int i = 0; i < parameters.Length; i++) {
 							Type type=parameters[i].ParameterType;
@@ -460,9 +474,9 @@ namespace Meta {
 							else {
 
 								calls[i + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
-								il.Emit(OpCodes.Ldarg_0);
+								emitter.LoadArgument(0);
 								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-								Transform.GetConversion(type, il);
+								Transform.GetDotNetConversion(type, emitter);
 								emitter.StoreLocal(local);
 							}
 						}
@@ -472,7 +486,8 @@ namespace Meta {
 							int count;
 							ILInstruction instruction=reader.instructions[i];
 							if (instruction.Code == OpCodes.Ret) {
-								Transform.GetMetaConversion(methodInfo.ReturnType, il);
+								Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
+								//Transform.GetMetaConversion(methodInfo.ReturnType, il);
 								emitter.Return();
 							}
 							else if (GetArgument(instruction, out count)) {
@@ -494,8 +509,9 @@ namespace Meta {
 									//else {
 										Literal literal = (Literal)calls[count + 1];
 										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-										Transform.GetConversion(type, il);
-									//}
+										Transform.GetDotNetConversion(type, emitter);
+										//Transform.GetConversion(type, il);
+										//}
 								}
 								else {
 									emitter.LoadLocal(count + firstIndex);
@@ -512,7 +528,7 @@ namespace Meta {
 								if (!labels.ContainsKey(target)) {
 									labels[target] = new List<Label>();
 								}
-								Label label = il.DefineLabel();
+								Label label = emitter.DefineLabel();
 								labels[target].Add(label);
 								emitter.Break(label);
 								index++;
@@ -522,7 +538,7 @@ namespace Meta {
 								if (!labels.ContainsKey(target)) {
 									labels[target] = new List<Label>();
 								}
-								Label label = il.DefineLabel();
+								Label label = emitter.DefineLabel();
 								labels[target].Add(label);
 								emitter.BreakTrue(label);
 								index++;
@@ -533,7 +549,7 @@ namespace Meta {
 								if (!labels.ContainsKey(target)) {
 									labels[target] = new List<Label>();
 								}
-								Label label = il.DefineLabel();
+								Label label = emitter.DefineLabel();
 								labels[target].Add(label);
 								emitter.BreakFalse(label);
 								index++;
@@ -544,7 +560,7 @@ namespace Meta {
 								}
 								else {
 									if (instruction.Operand is int) {
-										il.Emit(instruction.Code, (int)instruction.Operand);
+										emitter.Emit(instruction.Code, (int)instruction.Operand);
 									}
 									else if (instruction.Operand is FieldInfo) {
 										emitter.LoadField((FieldInfo)instruction.Operand);
@@ -555,7 +571,7 @@ namespace Meta {
 										index += 4;
 									}
 									else if (instruction.Operand is ConstructorInfo) {
-										emitter.CreateInstance((ConstructorInfo)instruction.Operand);
+										emitter.NewObject((ConstructorInfo)instruction.Operand);
 										index += 4;
 									}
 									else {
@@ -566,7 +582,7 @@ namespace Meta {
 							index++;
 							if (labels.ContainsKey(index + 1)) {
 								foreach (Label label in labels[index + 1]) {
-									il.MarkLabel(label);
+									emitter.MarkLabel(label);
 								}
 							}
 						}
@@ -594,10 +610,10 @@ namespace Meta {
 								emitter.LoadArgument(0);
 								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
 							}
-							Transform.GetConversion(type, emitter.il);
+							Transform.GetDotNetConversion(type, emitter);
 						}
 						emitter.Call(methodInfo);
-						Transform.GetMetaConversion(methodInfo.ReturnType, emitter.il);
+						Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
 						emitter.Return();
 						return (Compiled) emitter.GetDelegate();
 					}
@@ -1632,63 +1648,64 @@ namespace Meta {
 				}
 			}
 		}
-		public static void GetMetaConversion(Type type, ILGenerator il) {
+		public static void GetMetaConversion(Type type, Emitter emitter) {
+			ILGenerator il = emitter.il;
 			if (type.Equals(typeof(void))) {
-				il.Emit(OpCodes.Newobj, typeof(DictionaryMap).GetConstructor(new Type[] { }));
+				emitter.NewObject(typeof(DictionaryMap));
 			}
 			else if (!type.IsSubclassOf(typeof(Map)) && !type.Equals(typeof(Map))) {
 				switch (Type.GetTypeCode(type)) {
 					case TypeCode.Boolean:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Boolean) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32", typeof(Boolean));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.Byte:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Byte) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32",typeof(Byte));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.Char:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Char) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32", typeof(Char));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.SByte:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(SByte) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32", typeof(SByte));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.Single:
-						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						emitter.NewObject(typeof(Rational),typeof(double));
 						break;
 					case TypeCode.UInt16:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(UInt16) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32", typeof(UInt16));
+						emitter.NewObject(typeof(Integer32),new Type[] { typeof(int) });
 						break;
 					case TypeCode.UInt32:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt32) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						emitter.Call(typeof(Convert),"ToString", typeof(UInt32) );
+						emitter.NewObject(typeof(Integer),typeof(string));
 						break;
 					case TypeCode.UInt64:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(UInt64) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						emitter.Call(typeof(Convert),"ToString", typeof(UInt64));
+						emitter.NewObject(typeof(Integer),typeof(string));
 						break;
 					case TypeCode.String:
-						il.Emit(OpCodes.Newobj, typeof(StringMap).GetConstructor(new Type[] { typeof(string) }));
+						emitter.NewObject(typeof(StringMap),typeof(string));
 						break;
 					case TypeCode.Decimal:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDouble", new Type[] { typeof(Decimal) }));
-						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						emitter.Call(typeof(Convert),"ToDouble",typeof(Decimal));
+						emitter.NewObject(typeof(Rational),typeof(double));
 						break;
 					case TypeCode.Double:
-						il.Emit(OpCodes.Newobj, typeof(Rational).GetConstructor(new Type[] { typeof(double) }));
+						emitter.NewObject(typeof(Rational),typeof(double));
 						break;
 					case TypeCode.Int16:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToInt32", new Type[] { typeof(Int16) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.Call(typeof(Convert),"ToInt32", typeof(Int16));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.Int32:
-						il.Emit(OpCodes.Newobj, typeof(Integer32).GetConstructor(new Type[] { typeof(int) }));
+						emitter.NewObject(typeof(Integer32),typeof(int));
 						break;
 					case TypeCode.Int64:
-						il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToString", new Type[] { typeof(Int64) }));
-						il.Emit(OpCodes.Newobj, typeof(Integer).GetConstructor(new Type[] { typeof(string) }));
+						emitter.Call(typeof(Convert),"ToString", typeof(Int64));
+						emitter.NewObject(typeof(Integer),typeof(string));
 						break;
 					case TypeCode.DateTime:
 					case TypeCode.DBNull:
@@ -1731,7 +1748,7 @@ namespace Meta {
 				if (type.IsValueType) {
 					emitter.UnboxAny(type);
 				}
-				GetMetaConversion(type, emitter.il);
+				GetMetaConversion(type, emitter);
 				emitter.Return();
 				conversion = (MetaConversion) emitter.GetDelegate();
 				metaConversions[type] = conversion;
@@ -1746,7 +1763,8 @@ namespace Meta {
 				return GetMetaConversion(dotNet.GetType())(dotNet);
 			}
 		}
-		public static bool GetConversion(Type target, ILGenerator il) {
+		public static bool GetDotNetConversion(Type target, Emitter emitter) {
+			ILGenerator il = emitter.il;
 			if (target.IsEnum) {
 				int token = (int)target.TypeHandle.Value;
 				if (!Transform.types.ContainsKey(token)) {
@@ -1816,7 +1834,7 @@ namespace Meta {
 				Emitter emitter = new Emitter(typeof(DotNetConversion));
 				ILGenerator il = emitter.il;
 				emitter.LoadArgument(0);
-				GetConversion(type, il);
+				GetDotNetConversion(type, emitter);
 				if (type.IsValueType) {
 					emitter.Box(type);
 				}
