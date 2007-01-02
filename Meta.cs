@@ -33,6 +33,7 @@ using System.Globalization;
 using Meta.Fusion;
 using System.Collections;
 using SDILReader;
+using System.Diagnostics;
 
 using System.Runtime.InteropServices;
 
@@ -246,6 +247,7 @@ namespace Meta {
 		}
 		private AssemblyBuilder ab;
 		private TypeBuilder tb;
+		const string assemblyPath = @"d:\meta\bin\Release\";
 		public Emitter(Type type,Type instance) {
 			this.type = type;
 
@@ -256,8 +258,9 @@ namespace Meta {
 			AppDomain cd = System.Threading.Thread.GetDomain();
 			AssemblyName an = new AssemblyName();
 			an.Name = "HelloClass";
-			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
+			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave,assemblyPath);
 			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
+			//ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
 			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
 			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, parameters.ToArray());
 			//MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
@@ -279,14 +282,42 @@ namespace Meta {
 		public object GetDelegate() {
 			return dynamicMethod.CreateDelegate(type);
 		}
+		public string DynamicPath {
+			get {
+				return Path.Combine(assemblyPath, "MetaDynamic.dll");
+			}
+		}
+		public string ModulePath {
+			get {
+				return Path.Combine(assemblyPath, "HelloModule.dll");
+			}
+		}
 		public object GetDelegate(object instance) {
 			Type myType = tb.CreateType();
-			//ab.Save("MetaDynamic.dll");
-			Delegate del=Delegate.CreateDelegate(type,instance,myType.GetMethod("HelloWorld"));
+			ab.Save("MetaDynamic.dll");
+			//string modulePath=@"d:\meta\hellomodule.dll";
+			//string dynamicPath=@"d:\meta\metadynamic.dll";
+			//File.Copy(ModulePath,modulePath, true);// Path.GetDirectoryName(ModulePath)
+			//File.Copy(DynamicPath, dynamicPath, true);// Path.GetDirectoryName(ModulePath)
+			Delegate del = Delegate.CreateDelegate(type, instance, myType.GetMethod("HelloWorld"));
+			ProcessStartInfo start = new ProcessStartInfo(@"C:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);// @"d:\meta\metadynamic.dll");
+			start.UseShellExecute = false;
+			start.RedirectStandardError = true;
+			start.RedirectStandardInput = true;
+			start.RedirectStandardOutput = true;
+			start.CreateNoWindow = true;
+			Process process=Process.Start(start);
+			StreamReader reader = process.StandardOutput;
+			Directory.SetCurrentDirectory(assemblyPath);
+			process.WaitForExit();
+			if (process.ExitCode == 1) {
+				Console.WriteLine(reader.ReadToEnd());
+				Process.Start(@"C:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
+				Console.ReadLine();
+			}
+			else {
+			}
 			return del;
-
-
-			//return dynamicMethod.CreateDelegate(type,instance);
 		}
 	}
 	public class StaticEmitter {
@@ -1720,12 +1751,13 @@ namespace Meta {
 				this.callable = callable;
 				this.returnType = returnType;
 			}
-			public object Call(object[] arguments) {
+			public Map Call(object[] arguments) {
 				Map pos = this.callable;
 				foreach (object argument in arguments) {
 					pos = pos.Call(Transform.ToMeta(argument));
 				}
-				return pos;
+				return pos;//, returnType);
+				//return Transform.ToDotNet(pos, returnType);
 			}
 		}
 		public static void GetMetaConversion(Type type, Emitter emitter) {
