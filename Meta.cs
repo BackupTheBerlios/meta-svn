@@ -1682,15 +1682,9 @@ namespace Meta {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
 			Emitter emitter = new Emitter(delegateType, typeof(Map));
-			//Emitter emitter = new Emitter(delegateType, typeof(MetaDelegate));
-			//ILGenerator il = emitter.il;
 			LocalBuilder current = emitter.DeclareLocal(typeof(Map));
 			emitter.LoadArgument(0);
 			emitter.StoreLocal(current);
-			//LocalBuilder local = il.DeclareLocal(typeof(Map[]));
-			//emitter.LoadConstant(parameters.Length);
-			//emitter.NewArray(typeof(Map));
-			//emitter.StoreLocal(local);
 
 			for (int i = 0; i < parameters.Length; i++) {
 				emitter.LoadLocal(current);
@@ -1698,40 +1692,18 @@ namespace Meta {
 				Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
 				emitter.Call(typeof(Map), "Call");
 				emitter.StoreLocal(current);
-				//emitter.LoadLocal(local);
-				//emitter.LoadConstant(i);
-				//emitter.LoadArgument(i + 1);
-				//Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
-				//emitter.StoreElementReference();
 			}
 
-			//emitter.LoadArgument(0);
-			//emitter.LoadLocal(local);
-			//emitter.Call(typeof(MetaDelegate),"Call");
-			emitter.LoadLocal(current);
 			if (invoke.ReturnType == typeof(void)) {
-				emitter.Pop();
 				emitter.Return();
 			}
 			else {
+				emitter.LoadLocal(current);
 				Transform.GetDotNetConversion(invoke.ReturnType, emitter);
 				emitter.CastClass(invoke.ReturnType);
 				emitter.Return();
 			}
 			return (Delegate)emitter.GetDelegate(code);
-		}
-		public class MetaDelegate {
-			private Map callable;
-			public MetaDelegate(Map callable) {
-				this.callable = callable;
-			}
-			public Map Call(Map[] arguments) {
-				Map pos = this.callable;
-				foreach (Map argument in arguments) {
-					pos = pos.Call(argument);
-				}
-				return pos;
-			}
 		}
 		public static void GetMetaConversion(Type type, Emitter emitter) {
 			Label end=emitter.DefineLabel();
