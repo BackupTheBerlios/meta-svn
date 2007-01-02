@@ -130,6 +130,15 @@ namespace Meta {
 		public void MarkLabel(Label label) {
 			il.MarkLabel(label);
 		}
+		public void Duplicate() {
+			il.Emit(OpCodes.Dup);
+		}
+		public void BranchTrue(Label label) {
+			il.Emit(OpCodes.Brtrue, label);
+		}
+		public void Pop() {
+			il.Emit(OpCodes.Pop);
+		}
 		public Label DefineLabel() {
 			return il.DefineLabel();
 		}
@@ -1711,27 +1720,22 @@ namespace Meta {
 					case TypeCode.DBNull:
 					case TypeCode.Object:
 						if (type.Equals(typeof(void))) {
-							il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
+							emitter.LoadField(typeof(Map),"Empty");
 						}
 						else {
 							if (!type.IsValueType) {
-								Label label = il.DefineLabel();
-								il.Emit(OpCodes.Dup);
-								il.Emit(OpCodes.Brtrue, label);
-								il.Emit(OpCodes.Pop);
-								il.Emit(OpCodes.Ldsfld, typeof(Map).GetField("Empty"));
-								il.Emit(OpCodes.Ret);
-								il.MarkLabel(label);
+								Label label = emitter.DefineLabel();
+								emitter.Duplicate();
+								emitter.BranchTrue(label);
+								emitter.Pop();
+								emitter.LoadField(typeof(Map),"Empty");
+								emitter.Return();
+								emitter.MarkLabel(label);
 							}
-							if (type.IsSubclassOf(typeof(NumberMap)) || type.Equals(typeof(NumberMap))) {
-								il.Emit(OpCodes.Newobj, typeof(NumberMap).GetConstructor(new Type[] { typeof(NumberMap) }));
+							if (type.IsValueType) {
+								emitter.Box(type);
 							}
-							else {
-								if (type.IsValueType) {
-									il.Emit(OpCodes.Box, type);
-								}
-								il.Emit(OpCodes.Newobj, typeof(ObjectMap).GetConstructor(new Type[] { typeof(object) }));
-							}
+							emitter.NewObject(typeof(ObjectMap),typeof(object));
 						}
 						break;
 					default:
