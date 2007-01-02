@@ -1681,22 +1681,34 @@ namespace Meta {
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
-			Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
-			ILGenerator il = emitter.il;
-			LocalBuilder local = il.DeclareLocal(typeof(Map[]));
-			emitter.LoadConstant(parameters.Length);
-			emitter.NewArray(typeof(Map));
-			emitter.StoreLocal(local);
-			for (int i = 0; i < parameters.Length; i++) {
-				emitter.LoadLocal(local);
-				emitter.LoadConstant(i);
-				emitter.LoadArgument(i + 1);
-				Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
-				emitter.StoreElementReference();
-			}
+			Emitter emitter = new Emitter(delegateType, typeof(Map));
+			//Emitter emitter = new Emitter(delegateType, typeof(MetaDelegate));
+			//ILGenerator il = emitter.il;
+			LocalBuilder current = emitter.DeclareLocal(typeof(Map));
 			emitter.LoadArgument(0);
-			emitter.LoadLocal(local);
-			emitter.Call(typeof(MetaDelegate),"Call");
+			emitter.StoreLocal(current);
+			//LocalBuilder local = il.DeclareLocal(typeof(Map[]));
+			//emitter.LoadConstant(parameters.Length);
+			//emitter.NewArray(typeof(Map));
+			//emitter.StoreLocal(local);
+
+			for (int i = 0; i < parameters.Length; i++) {
+				emitter.LoadLocal(current);
+				emitter.LoadArgument(i+1);
+				Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
+				emitter.Call(typeof(Map), "Call");
+				emitter.StoreLocal(current);
+				//emitter.LoadLocal(local);
+				//emitter.LoadConstant(i);
+				//emitter.LoadArgument(i + 1);
+				//Transform.GetMetaConversion(parameters[i].ParameterType, emitter);
+				//emitter.StoreElementReference();
+			}
+
+			//emitter.LoadArgument(0);
+			//emitter.LoadLocal(local);
+			//emitter.Call(typeof(MetaDelegate),"Call");
+			emitter.LoadLocal(current);
 			if (invoke.ReturnType == typeof(void)) {
 				emitter.Pop();
 				emitter.Return();
@@ -1706,7 +1718,7 @@ namespace Meta {
 				emitter.CastClass(invoke.ReturnType);
 				emitter.Return();
 			}
-			return (Delegate)emitter.GetDelegate(new MetaDelegate(code));
+			return (Delegate)emitter.GetDelegate(code);
 		}
 		public class MetaDelegate {
 			private Map callable;
