@@ -181,6 +181,9 @@ namespace Meta {
 		public void UnboxAny(Type type) {
 			il.Emit(OpCodes.Unbox_Any, type);
 		}
+		public void NewArray(Type type) {
+			il.Emit(OpCodes.Newarr, type);
+		}
 		public void LoadConstant(int i) {
 			il.Emit(OpCodes.Ldc_I4, i);
 		}
@@ -222,6 +225,9 @@ namespace Meta {
 					OpCodes.Ldfld,
 				field);
 		}
+		public void StoreElementReference() {
+			il.Emit(OpCodes.Stelem_Ref);
+		}
 		public void LoadArgument(int index) {
 			il.Emit(OpCodes.Ldarg, index);
 		}
@@ -238,13 +244,35 @@ namespace Meta {
 			// use this to generate verifiable il
 			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
+		private AssemblyBuilder ab;
+		private TypeBuilder tb;
 		public Emitter(Type type,Type instance) {
 			this.type = type;
+
 			MethodInfo invoke = type.GetMethod("Invoke");
 			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
 			parameters.Insert(0, instance);
+
+			AppDomain cd = System.Threading.Thread.GetDomain();
+			AssemblyName an = new AssemblyName();
+			an.Name = "HelloClass";
+			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
+			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
+			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
+			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, parameters.ToArray());
+			//MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
+			il = meth.GetILGenerator();
+
+
+
+			//MethodInfo invoke = type.GetMethod("Invoke");
+			//List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
+
+
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
-			this.il = dynamicMethod.GetILGenerator();
+
+			//this.il = dynamicMethod.GetILGenerator();
+
 			// use this to generate verifiable il
 			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
@@ -252,7 +280,13 @@ namespace Meta {
 			return dynamicMethod.CreateDelegate(type);
 		}
 		public object GetDelegate(object instance) {
-			return dynamicMethod.CreateDelegate(type,instance);
+			Type myType = tb.CreateType();
+			//ab.Save("MetaDynamic.dll");
+			Delegate del=Delegate.CreateDelegate(type,instance,myType.GetMethod("HelloWorld"));
+			return del;
+
+
+			//return dynamicMethod.CreateDelegate(type,instance);
 		}
 	}
 	public class StaticEmitter {
@@ -1612,6 +1646,36 @@ namespace Meta {
 			}
 		}
 	}
+	//public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
+	//    MethodInfo invoke = delegateType.GetMethod("Invoke");
+	//    ParameterInfo[] parameters = invoke.GetParameters();
+	//    Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
+	//    LocalBuilder local = emitter.DeclareLocal(typeof(Map[]));
+	//    emitter.LoadConstant(parameters.Length);
+	//    emitter.NewArray(typeof(Map));
+	//    emitter.StoreLocal(local);
+	//    for (int i = 0; i < parameters.Length; i++) {
+	//        emitter.LoadLocal(local);
+	//        emitter.LoadConstant(i);
+	//        emitter.LoadArgument(i + 1);
+	//        Transform.GetMetaConversion(parameters[i].ParameterType,emitter);
+	//        emitter.CastClass(typeof(Map));
+	//        emitter.StoreElementReference();
+	//    }
+	//    emitter.LoadArgument(0);
+	//    emitter.LoadLocal(local);
+	//    emitter.Call(typeof(MetaDelegate),"Call");
+	//    if (invoke.ReturnType == typeof(void)) {
+	//        emitter.Pop();
+	//        emitter.Return();
+	//    }
+	//    else {
+	//        Transform.GetDotNetConversion(invoke.ReturnType, emitter);
+	//        emitter.CastClass(invoke.ReturnType);
+	//        emitter.Return();
+	//    }
+	//    return (Delegate)emitter.GetDelegate(new MetaDelegate(code, invoke.ReturnType));
+	//}
 	public class Transform {
 		public static Dictionary<int, Type> types = new Dictionary<int, Type>();
 		public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
@@ -1622,48 +1686,32 @@ namespace Meta {
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
-			//List<Type> arguments = new List<Type>();
-			//arguments.Add(typeof(MetaDelegate));
-			//foreach (ParameterInfo parameter in parameters) {
-			//    arguments.Add(parameter.ParameterType);
-			//}
 			Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
-			//DynamicMethod method = new DynamicMethod("EventHandler",
-			//    invoke.ReturnType,
-			//    arguments.ToArray(),
-			//    typeof(Map).Module);
 			ILGenerator il = emitter.il;
-			//ILGenerator il = method.GetILGenerator();
-			//DynamicMethod method = new DynamicMethod("EventHandler",
-			//    invoke.ReturnType,
-			//    arguments.ToArray(),
-			//    typeof(Map).Module);
-			//ILGenerator il = method.GetILGenerator();
 			LocalBuilder local = il.DeclareLocal(typeof(object[]));
-			il.Emit(OpCodes.Ldc_I4, parameters.Length);
-			il.Emit(OpCodes.Newarr, typeof(object));
-			il.Emit(OpCodes.Stloc, local);
+			emitter.LoadConstant(parameters.Length);
+			emitter.NewArray(typeof(object));
+			emitter.StoreLocal(local);
 			for (int i = 0; i < parameters.Length; i++) {
-				il.Emit(OpCodes.Ldloc, local);
-				il.Emit(OpCodes.Ldc_I4, i);
-				il.Emit(OpCodes.Ldarg, i + 1);
-				il.Emit(OpCodes.Stelem_Ref);
+				emitter.LoadLocal(local);
+				emitter.LoadConstant(i);
+				emitter.LoadArgument(i + 1);
+				emitter.StoreElementReference();
 			}
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldloc, local);
-			il.Emit(OpCodes.Call, typeof(MetaDelegate).GetMethod("Call"));
+			emitter.LoadArgument(0);
+			emitter.LoadLocal(local);
+			emitter.Call(typeof(MetaDelegate),"Call");
 			if (invoke.ReturnType == typeof(void)) {
-				il.Emit(OpCodes.Pop);
-				il.Emit(OpCodes.Ret);
+				emitter.Pop();
+				emitter.Return();
 			}
 			else {
-				il.Emit(OpCodes.Castclass, invoke.ReturnType);
-				il.Emit(OpCodes.Ret);
+				Transform.GetDotNetConversion(invoke.ReturnType, emitter);
+				emitter.CastClass(invoke.ReturnType);
+				emitter.Return();
 			}
 			return (Delegate)emitter.GetDelegate(new MetaDelegate(code, invoke.ReturnType));
-			//return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 		}
-
 		// remove
 		public class MetaDelegate {
 			private Map callable;
@@ -1677,12 +1725,7 @@ namespace Meta {
 				foreach (object argument in arguments) {
 					pos = pos.Call(Transform.ToMeta(argument));
 				}
-				if (returnType != typeof(void)) {
-					return Meta.Transform.ToDotNet(pos, this.returnType);
-				}
-				else {
-					return null;
-				}
+				return pos;
 			}
 		}
 		public static void GetMetaConversion(Type type, Emitter emitter) {
@@ -4789,6 +4832,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -4817,12 +4866,6 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 1;
 					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
-				}
-			}
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
 			public class MergeSort : Test {
