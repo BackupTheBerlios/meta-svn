@@ -196,6 +196,9 @@ namespace Meta {
 		public void Emit(OpCode code, byte b) {
 			il.Emit(code, b);
 		}
+		public void CastClass(Type type) {
+			il.Emit(OpCodes.Castclass, type);
+		}
 		public void Call(Type type, string method) {
 			Call(type.GetMethod(method));
 		}
@@ -223,7 +226,7 @@ namespace Meta {
 			il.Emit(OpCodes.Ldarg, index);
 		}
 		DynamicMethod dynamicMethod;
-		public ILGenerator il;
+		ILGenerator il;
 		private StaticEmitter emitter;
 		private Type type;
 		public Emitter(Type type) {
@@ -232,6 +235,8 @@ namespace Meta {
 			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
 			this.il = dynamicMethod.GetILGenerator();
+			// use this to generate verifiable il
+			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
 		public object GetDelegate() {
 			return dynamicMethod.CreateDelegate(type);
@@ -1658,7 +1663,6 @@ namespace Meta {
 			}
 		}
 		public static void GetMetaConversion(Type type, Emitter emitter) {
-			ILGenerator il = emitter.il;
 			if (type.Equals(typeof(void))) {
 				emitter.NewObject(typeof(DictionaryMap));
 			}
@@ -1768,65 +1772,65 @@ namespace Meta {
 			}
 		}
 		public static bool GetDotNetConversion(Type target, Emitter emitter) {
-			ILGenerator il = emitter.il;
 			if (target.IsEnum) {
 				int token = (int)target.TypeHandle.Value;
 				if (!Transform.types.ContainsKey(token)) {
 					Transform.types[token] = target;
 				}
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
+				emitter.Call(typeof(Map),"GetInt32");
 			}
 			else if (target.Equals(typeof(double))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(NumberMap).GetMethod("GetDouble"));
+				emitter.Call(typeof(Map),"GetNumber");
+				emitter.Call(typeof(NumberMap),"GetDouble");
 			}
 			else if (target.Equals(typeof(NumberMap))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
+				emitter.Call(typeof(Map),"GetNumber");
 			}
 			else if (target.Equals(typeof(Stream))) {
-				il.Emit(OpCodes.Castclass, typeof(FileMap));
-				il.Emit(OpCodes.Callvirt, typeof(FileMap).GetMethod("GetStream"));
+				emitter.CastClass(typeof(FileMap));
+				emitter.Call(typeof(FileMap),"GetStream");
 			}
 			else if (target.Equals(typeof(Map))) {
 			}
 			else if (target.Equals(typeof(Boolean))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
-				il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToBoolean", new Type[] { typeof(int) }));
+				emitter.Call(typeof(Map),"GetInt32");
+				emitter.Call(typeof(Convert),"ToBoolean", typeof(int));
 			}
 			else if (target.Equals(typeof(String))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetString", BindingFlags.Instance | BindingFlags.Public));
+				emitter.Call(typeof(Map),"GetString");
 			}
 			else if (target.Equals(typeof(int))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetInt32"));
+				emitter.Call(typeof(Map), "GetInt32");
 			}
 			else if (target.Equals(typeof(decimal))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(NumberMap).GetMethod("GetInt64"));
-				il.Emit(OpCodes.Call, typeof(Convert).GetMethod("ToDecimal", new Type[] { typeof(long) }));
+				emitter.Call(typeof(Map),"GetNumber");
+				emitter.Call(typeof(NumberMap),"GetInt64");
+				emitter.Call(typeof(Convert), "ToDecimal", typeof(long));
 			}
 			else if (target.Equals(typeof(Single))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetNumber"));
-				il.Emit(OpCodes.Callvirt, typeof(NumberMap).GetMethod("GetSingle"));
+				emitter.Call(typeof(Map),"GetNumber");
+				emitter.Call(typeof(NumberMap),"GetSingle");
 			}
 			else if (target.Equals(typeof(object))) {
 			}
 			else if (target.Equals(typeof(Type))) {
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("GetClass"));
+				emitter.Call(typeof(Map),"GetClass");
 			}
 			else if ((target.IsSubclassOf(typeof(Delegate)) || target.Equals(typeof(Delegate)))) {
 				int token = (int)target.TypeHandle.Value;
 				if (!Transform.types.ContainsKey(token)) {
 					Transform.types[token] = target;
 				}
-				il.Emit(OpCodes.Ldc_I4, (int)token);
-				il.Emit(OpCodes.Call, typeof(Transform).GetMethod("CreateDelegateFromCode", new Type[] { typeof(Map), typeof(int) }));
+				
+				emitter.LoadConstant((int)token);
+				emitter.Call(typeof(Transform),"CreateDelegateFromCode", typeof(Map), typeof(int));
 			}
 			else {
-				il.Emit(OpCodes.Castclass, typeof(ObjectMap));
-				il.Emit(OpCodes.Callvirt, typeof(ObjectMap).GetMethod("get_Object"));
-				il.Emit(OpCodes.Castclass, target);
+				emitter.CastClass(typeof(ObjectMap));
+				emitter.Call(typeof(ObjectMap),"get_Object");
+				emitter.CastClass(target);
 				if (target.IsValueType) {
-					il.Emit(OpCodes.Unbox_Any, target);
+					emitter.UnboxAny(target);
 				}
 			}
 			return true;
@@ -1836,7 +1840,6 @@ namespace Meta {
 			DotNetConversion conversion;
 			if (!dotNetConversions.TryGetValue(type, out conversion)) {
 				Emitter emitter = new Emitter(typeof(DotNetConversion));
-				ILGenerator il = emitter.il;
 				emitter.LoadArgument(0);
 				GetDotNetConversion(type, emitter);
 				if (type.IsValueType) {
