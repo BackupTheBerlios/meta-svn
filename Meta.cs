@@ -51,7 +51,7 @@ namespace Meta {
 			return compiles.Count - 1;
 		}
 		public static List<Compiled> compiles = new List<Compiled>();
-		public abstract bool ContainsFunctions();
+		//public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter,GetCompiled(parent));
@@ -110,9 +110,9 @@ namespace Meta {
 	public delegate Compiled CompiledDelegate(Expression parent);
 
 	public class LastArgument : Expression {
-		public override bool ContainsFunctions() {
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    return false;
+		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -335,14 +335,14 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		public override bool ContainsFunctions() {
-			foreach(Expression expression in calls) {
-				if(expression.ContainsFunctions()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    foreach(Expression expression in calls) {
+		//        if(expression.ContainsFunctions()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in calls) {
 				if (expression.ContainsSearchStatements()) {
@@ -739,9 +739,9 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
-		public override bool ContainsFunctions() {
-			return expression.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    return expression.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatements() {
 			return expression.ContainsSearchStatements();
 		}
@@ -945,7 +945,7 @@ namespace Meta {
 			search[key]++;
 		}
 	}
-	public class FunctionArgument : PerfectMapBase {
+	public class FunctionArgument : DictionaryBaseMap {
 		public override Map GetFromIndex(int i) {
 			//if (i == 0) {
 				return value;
@@ -1019,73 +1019,70 @@ namespace Meta {
 			get { return 1; }
 		}
 	}
-	public class Function:Program {
-		public override bool ContainsFunctions() {
-			return true;
-		}
-		public override Compiled GetCompiled(Expression parent) {
-			Compiled e = expression.Compile();
-			Map parameter = key;
-			if (expression.ContainsFunctions() || (parameter != null && parameter.Count != 0)) {
-				Mapping mapping = UsePerfectMap();
-				return delegate(Map p) {
-					Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-					context.Scope = p;
-					return e(context);
-				};
-			}
-			else {
-				return delegate(Map p) {
-					Map.arguments.Pop();
-					return e(new EmptyMap(p));
-				};
-			}
-		}
-		public Expression expression;
-		public Map key;
-		public Function(Expression parent,Statement statement,Map code):base(code.Source,parent) {
-			isFunction = true;
-			// very messy
-			if (parent is Program || parent is LiteralExpression) {
-				this.Statement = statement;
-			}
-			code = code[CodeKeys.Function];
-			Map parameter = code[CodeKeys.Parameter];
-			if(parameter.Count!=0) {
-				Literal para=new Literal(parameter, this);
-				para.Source=code.Source;
-				KeyStatement s = new KeyStatement(
-					para,
-					new LastArgument(Map.Empty, this), this, 0);
-					//LastArgument(Map.Empty, this), this, 0);
-				statementList.Add(s);
-				this.key=parameter;
-			}
-			this.expression=code[CodeKeys.Expression].GetExpression(this);
-			CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
-			statementList.Add(c);
-		}
-	}
+	//public class Function:Program {
+	//    //public override bool ContainsFunctions() {
+	//    //    return true;
+	//    //}
+	//    public override Compiled GetCompiled(Expression parent) {
+	//        Compiled e = expression.Compile();
+	//        Map parameter = key;
+	//        //if (expression.ContainsFunctions() || (parameter != null && parameter.Count != 0)) {
+	//            Mapping mapping = UsePerfectMap();
+	//            return delegate(Map p) {
+	//                Map context = new FunctionArgument(parameter, Map.arguments.Pop());
+	//                context.Scope = p;
+	//                return e(context);
+	//            };
+	//        //}
+	//        //else {
+	//        //    return delegate(Map p) {
+	//        //        Map.arguments.Pop();
+	//        //        return e(new EmptyMap(p));
+	//        //    };
+	//        //}
+	//    }
+	//    public Expression expression;
+	//    public Map key;
+	//    public Function(Expression parent,Statement statement,Map code):base(code.Source,parent) {
+	//        isFunction = true;
+	//        // very messy
+	//        if (parent is Program || parent is LiteralExpression) {
+	//            this.Statement = statement;
+	//        }
+	//        code = code[CodeKeys.Function];
+	//        Map parameter = code[CodeKeys.Parameter];
+	//        if(parameter.Count!=0) {
+	//            Literal para=new Literal(parameter, this);
+	//            para.Source=code.Source;
+	//            KeyStatement s = new KeyStatement(
+	//                para,
+	//                new LastArgument(Map.Empty, this), this, 0);
+	//            statementList.Add(s);
+	//            this.key=parameter;
+	//        }
+	//        this.expression=code[CodeKeys.Expression].GetExpression(this);
+	//        CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
+	//        statementList.Add(c);
+	//    }
+	//}
 	public class Program : ScopeExpression {
-		public override bool ContainsFunctions() {
-			foreach (Statement statement in statementList) {
-				KeyStatement keyStatement = statement as KeyStatement;
-				if (keyStatement != null) {
-					Literal literal=keyStatement.key as Literal;
-					if(literal!=null) {
-						if (literal.literal.Equals(CodeKeys.Function)) {
-							return true;
-						}
-					}
-				}
-				if (statement.ContainsFunctions()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    foreach (Statement statement in statementList) {
+		//        KeyStatement keyStatement = statement as KeyStatement;
+		//        if (keyStatement != null) {
+		//            Literal literal=keyStatement.key as Literal;
+		//            if(literal!=null) {
+		//                if (literal.literal.Equals(CodeKeys.Function)) {
+		//                    return true;
+		//                }
+		//            }
+		//        }
+		//        if (statement.ContainsFunctions()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Statement statement in statementList) {
 				if (statement is SearchStatement || statement.ContainsSearchStatement()) {
@@ -1109,14 +1106,9 @@ namespace Meta {
 			foreach (Statement statement in statementList) {
 				KeyStatement keyStatement = statement as KeyStatement;
 				if (keyStatement != null) {
-					//listCount++;
 					Literal literal = keyStatement.key as Literal;
 					if (literal != null) {
 						keys.Add(literal.literal);
-						//if (literal.literal.Equals(new Integer32(count))) {
-						//    count++;
-						//    continue;
-						//}
 					}
 					else {
 						usePerfectMap = false;
@@ -1127,11 +1119,8 @@ namespace Meta {
 						usePerfectMap = false;
 					}
 				}
-				//useList = false;
 				index++;
 			}
-			//if (useList) {
-			//}
 			Mapping mapping=null;
 			if (usePerfectMap) {
 				return new Mapping(keys);
@@ -1148,32 +1137,25 @@ namespace Meta {
 			int listCount = 0;
 			bool usePerfectMap = true;
 			List<Map> keys = new List<Map>();
-			//Mapping mapping=new 
-			//int index = 0;
-				foreach (Statement statement in statementList) {
-					KeyStatement keyStatement = statement as KeyStatement;
-					if (keyStatement != null) {
-						listCount++;
-						Literal literal = keyStatement.key as Literal;
-						if (literal != null) {
-							keys.Add(literal.literal);
-							if (literal.literal.Equals(new Integer32(count))) {
-								count++;
-								continue;
-							}
-						}
-						else {
-							usePerfectMap = false;
+			foreach (Statement statement in statementList) {
+				KeyStatement keyStatement = statement as KeyStatement;
+				if (keyStatement != null) {
+					listCount++;
+					Literal literal = keyStatement.key as Literal;
+					if (literal != null) {
+						keys.Add(literal.literal);
+						if (literal.literal.Equals(new Integer32(count))) {
+							count++;
+							continue;
 						}
 					}
-					useList = false;
+					else {
+						usePerfectMap = false;
+					}
 				}
-			if (useList) {
+				useList = false;
 			}
 			Mapping mapping=UsePerfectMap();
-			//if (usePerfectMap) {
-			//    mapping = new Mapping(keys);
-			//}
 			return delegate(Map p) {
 				Map context;
 				if (useList) {
@@ -1237,7 +1219,7 @@ namespace Meta {
 	}
 
 	public abstract class Statement {
-		public abstract bool ContainsFunctions();
+		//public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatement();
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
@@ -1343,9 +1325,9 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		public override bool ContainsFunctions() {
-			return value.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    return value.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1358,9 +1340,9 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
-		public override bool ContainsFunctions() {
-			return key.ContainsFunctions() || value.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    return key.ContainsFunctions() || value.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1404,11 +1386,16 @@ namespace Meta {
 			Map k = key.GetConstant();
 			// this should be done for all statements, not just for the key statement
 			//if (k != null && k.Equals(CodeKeys.Function)) {
-				if (value is Literal) {
-					if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {
-						((Literal)value).literal.GetFunction(program, this);
-					}
+
+				if (value is Literal && ((Literal)value).literal.GetExpression(program)!=null) {
+					((Literal)value).literal.Compile(program);//.ContainsKey(CodeKeys.Function)) {
+						//((Literal)value).literal.GetFunction(program, this);
+					//}
+					//if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {
+					//    ((Literal)value).literal.GetFunction(program, this);
+					//}
 				}
+
 			// we could do this, too:
 			//if (k != null && k.Equals(CodeKeys.Function)) {
 			//    if (value is Literal) {
@@ -1433,9 +1420,9 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		public override bool ContainsFunctions() {
-			return value.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    return value.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1463,9 +1450,9 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		public override bool ContainsFunctions() {
-			return key.ContainsFunctions() || value.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    return key.ContainsFunctions() || value.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1494,10 +1481,10 @@ namespace Meta {
 	}
 	public class Literal : Expression {
 		private int index = -1;
-		public override bool ContainsFunctions() {
-			Expression expression = literal.GetExpression();
-			return expression != null && expression.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    Expression expression = literal.GetExpression();
+		//    return expression != null && expression.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatements() {
 			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
 		}
@@ -1515,13 +1502,23 @@ namespace Meta {
 			emitter.LoadField(typeof(Literal), ("literals"));
 			emitter.LoadConstant(index);
 			emitter.Call(typeof(List<Map>), "get_Item");
-			if (literal.ContainsKey(CodeKeys.Function)) {
-				literal.Compile(parent);
-				emitter.Emit(context);
-				emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
-			}
-			else {
-			}
+			//if (literal.ContainsKey(CodeKeys.Function)) {
+			//try {
+				if (literal.GetExpression(parent) != null) {
+					literal.Compile(parent);
+					emitter.Emit(context);
+					emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+				}
+			//}
+			//catch (Exception e) {
+			//    literal.Compile(parent);
+			//    emitter.Emit(context);
+			//    emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+			//}
+
+			//}
+			//else {
+			//}
 		}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
@@ -1531,9 +1528,9 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		public override bool ContainsFunctions() {
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    return false;
+		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -1545,21 +1542,16 @@ namespace Meta {
 		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
 			emitter.LoadField(typeof(Gac).GetField("gac"));
 		}
-		//public override Compiled GetCompiled(Expression parent) {
-		//    return delegate {
-		//        return Gac.gac;
-		//    };
-		//}
 	}
 	public class Select : Expression {
-		public override bool ContainsFunctions() {
-			foreach (Expression expression in subs) {
-				if (expression.ContainsFunctions()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    foreach (Expression expression in subs) {
+		//        if (expression.ContainsFunctions()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in subs) {
 				if (expression.ContainsSearchStatements()) {
@@ -1603,17 +1595,11 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			return delegate(Map context) {
-				//try {
 				Map selected = s[0](context);
 				for (int i = 1; i < s.Count; i++) {
 					Map key = s[i](context);
-					//if (key == null) {
-					//    key = s[i](context);
-					//}
 					Map value = selected[key];
 					if (value == null) {
-						//object a = key.Count;
-						//object x = key.ToString();
 						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
 					}
 					else {
@@ -1621,10 +1607,6 @@ namespace Meta {
 					}
 				}
 				return selected;
-				//}
-				//catch (Exception e) {
-				//    throw e;
-				//}
 			};
 		}
 		private List<Expression> subs = new List<Expression>();
@@ -1660,24 +1642,27 @@ namespace Meta {
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 			lib.Statement = new LiteralStatement(gac);
-			callable.GetFunction(lib, new LiteralStatement(lib));
+			//callable.GetFunction(lib, new LiteralStatement(lib));
+			callable.GetExpression(lib).Statement = new LiteralStatement(lib);
 			callable.Compile(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			try {
-			//DateTime start = DateTime.Now;
-			//Fibo(32);
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
-			//return;
-			//try {
+			Console.WriteLine();
+		    try {
+		//    //DateTime start = DateTime.Now;
+		//    //Fibo(32);
+		//    //Console.WriteLine((DateTime.Now - start).TotalSeconds);
+		//    //return;
+		//    //try {
 
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-			map.GetFunction(gac, new LiteralStatement(gac));
+			map.GetExpression(gac).Statement=new LiteralStatement(gac);
+			//map.GetFunction(gac, new LiteralStatement(gac));
 			map.Compile(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
@@ -1689,16 +1674,10 @@ namespace Meta {
 		}
 		public static int Fibo(int x) {
 			if (x < 2) {
-				//throw new Exception("test");
 				return 1;
 			}
 			else {
-				//try {
-					return Fibo(x - 1) + Fibo(x - 2);
-				//}
-				//catch (Exception e) {
-				//    throw e;
-				//}
+				return Fibo(x - 1) + Fibo(x - 2);
 			}
 		}
 		public static NumberMap Fibo(NumberMap x) {
@@ -1759,8 +1738,6 @@ namespace Meta {
 							Console.WriteLine(e.ToString());
 							Console.ReadLine();
 						}
-						//Console.WriteLine((DateTime.Now - start).TotalSeconds);
-						//return;
 					}
 					else {
 						Console.WriteLine("File " + fileName + " not found.");
@@ -1799,7 +1776,6 @@ namespace Meta {
 			Type type = types[typeToken];
 			return CreateDelegateFromCode(code, type);
 		}
-		// refactor this stuff
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
@@ -2478,22 +2454,23 @@ namespace Meta {
 			foreach (Map key in keys) {
 				// make sure keys are unique?
 				mapping[key]=index;
-				//mapping.Add(key, index);
 				index++;
 			}
 		}
 	}
-	// would need default stuff somewhere, common base class for PerfectMap and DictionaryMap
-	public abstract class PerfectMapBase : DictionaryBaseMap {
-		//public abstract Map GetFromIndex(int i);
-	}
-	public class PerfectMap : PerfectMapBase {
+	//public abstract class PerfectMapBase : DictionaryBaseMap {
+	//}
+	public class PerfectMap : DictionaryBaseMap {
 		public override Map GetFromIndex(int i) {
 			return values[i];
 		}
 		public Map[] values;
 		public override Map this[Map key] {
 			get {
+				// improve performance
+				if (!mapping.mapping.ContainsKey(key)) {
+					Console.WriteLine("Error!");
+				}
 				int index = mapping.mapping[key];
 				Map result = values[index];
 				return result;
@@ -2514,12 +2491,6 @@ namespace Meta {
 		public override bool ContainsKey(Map key) {
 			return mapping.mapping.ContainsKey(key) && values[mapping.mapping[key]] != null;
 		}
-		// incorrect
-		//public override int ArrayCount {
-		//    get {
-		//        return 0;
-		//    }
-		//}
 		public override int Count {
 			get {
 				int i = 0;
@@ -2531,15 +2502,10 @@ namespace Meta {
 				return i;
 			}
 		}
-		// incorrect
-		//public override NumberMap GetNumber() {
-		//    return null;
-		//}
 		private Mapping mapping;
 		public PerfectMap(Mapping mapping) {
 			this.mapping = mapping;
 			this.values = new Map[mapping.mapping.Count];
-			//new List<Map>(keys).ToArray
 		}
 		public override Map Copy() {
 			return new CopyMap(this.scope, this);
@@ -2661,19 +2627,6 @@ namespace Meta {
 				this.Append(map);
 			}
 		}
-		//public override IEnumerable<Map> Array {
-		//    get {
-		//        for (int i = 1;; i++) {
-		//            Map m=this[i];
-		//            if(m!=null) {
-		//                yield return m;
-		//            }
-		//            else {
-		//                yield break;
-		//            }
-		//        }
-		//    }
-		//}
 		public override Map Copy(Map scope) {
 			return new CopyMap(scope, this);
 		}
@@ -2684,19 +2637,6 @@ namespace Meta {
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
-		//public override NumberMap GetNumber() {
-		//    if (Count == 0) {
-		//        return new Integer32(0);
-		//    }
-		//    else if (this.Count == 1) {
-		//        if (this.ContainsKey(Map.Empty)) {
-		//            if (this[Map.Empty].IsNumber) {
-		//                return this[Map.Empty].GetNumber().Add(new Integer32(1));
-		//            }
-		//        }
-		//    }
-		//    return null;
-		//}
 		public override string Serialize() {
 			if (this.Count == 0) {
 				return "0";
@@ -2709,15 +2649,6 @@ namespace Meta {
 			}
 			return null;
 		}
-		//public override int ArrayCount {
-		//    get {
-		//        int i = 1;
-		//        while (this.ContainsKey(i)) {
-		//            i++;
-		//        }
-		//        return i - 1;
-		//    }
-		//}
 		public Dictionary<Map, Map> dictionary;
 		public override Map this[Map key] {
 			get {
@@ -3386,6 +3317,9 @@ namespace Meta {
 			}
 		}
 		public override NumberMap GetNumber() {
+			if (Count == 0) {
+				return Integer32.Zero;
+			}
 			return null;
 		}
 		public override string Serialize() {
@@ -3582,12 +3516,6 @@ namespace Meta {
 		public override bool LessThan(Map b) {
 			return Expand(b.GetNumber()) < b.GetNumber().Expand(this);
 		}
-		//public virtual bool LessThan(NumberMap b) {
-		//        return Expand(b) < b.Expand(this);
-		//    }
-			//public virtual bool LessThan(int b) {
-			//    return LessThan(new Integer32(b));
-			//}
 		public virtual NumberMap Add(NumberMap b) {
 				return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
 			}
@@ -3813,9 +3741,6 @@ namespace Meta {
 	            return Integer.One;
 	        }
 	    }
-		//public override int GetInt32() {
-		//    return integer;
-		//}
 	    public override long GetInt64() {
 	        return integer;
 	    }
@@ -4354,42 +4279,117 @@ namespace Meta {
 			OptionalError(Syntax.statementEnd),
 			Whitespace
 		);
-
 		public static Rule FunctionMap = Sequence(
 			Syntax.functionStart,
-			Assign(CodeKeys.Function,
+			Assign(CodeKeys.Program,
 				Sequence(
-					Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-						Whitespace,
-						OptionalError(Syntax.functionEnd),
-						Assign(CodeKeys.Expression, Expression),
-					Whitespace,
-			Whitespace)));
-
+					Assign(
+						1,
+						Sequence(
+							Assign(
+								CodeKeys.Key,
+								Sequence(
+									Assign(
+										CodeKeys.Literal,
+										StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
+							Assign(
+								CodeKeys.Value,
+								Sequence(
+									Assign(
+										CodeKeys.LastArgument,
+										LiteralRule(0)))))),
+					Assign(
+						2,
+						Sequence(
+							Assign(
+								CodeKeys.Current,
+								LiteralRule(0)),
+							Whitespace,
+							OptionalError(Syntax.functionEnd),
+							Assign(
+								CodeKeys.Value,
+								Expression))))),
+				Whitespace,
+			Whitespace);
+		//public static Rule FunctionMap = Sequence(
+		//    Syntax.functionStart,
+		//    Assign(CodeKeys.Function,
+		//        Sequence(
+		//            Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//            Whitespace,
+		//            OptionalError(Syntax.functionEnd),
+		//            Assign(CodeKeys.Expression, Expression),
+		//            Whitespace,
+		//    Whitespace)));
 		public static Rule FunctionPart = DelayedRule(delegate {
 			return Sequence(
 				Assign(CodeKeys.Literal,
-					Sequence(
-						Assign(
-							CodeKeys.Function,
-							Sequence(
-								Assign(
-									CodeKeys.Parameter,
-									StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-								Assign(
-									CodeKeys.Expression,
-									Alternatives(
+					Alternatives(
+						Sequence(
+							Assign(
+								CodeKeys.Program,
+								Sequence(
+									Assign(
+										Integer32.One,
 										Sequence(
-											Syntax.functionSeparator,
-											ReferenceAssignment(FunctionPart)
-										),
+											Assign(
+												CodeKeys.Key,
+												Sequence(
+													Assign(
+														CodeKeys.Literal,
+														StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
+											Assign(
+												CodeKeys.Value,
+												Sequence(
+															Assign(
+																CodeKeys.LastArgument,
+																LiteralRule(0)))))),
+									Assign(
+										Integer32.Two,
 										Sequence(
-											Syntax.functionEnd,
-											Whitespace,
-											ReferenceAssignment(Expression)
-										))),
-								Whitespace)))));
+											Assign(
+												CodeKeys.Current,
+												LiteralRule(0)),
+											Assign(
+												CodeKeys.Value,
+												Alternatives(
+													Sequence(
+														Syntax.functionSeparator,
+														Assign(
+															CodeKeys.Literal,
+															FunctionPart)
+													),
+													Sequence(
+														Syntax.functionEnd,
+														Whitespace,
+														ReferenceAssignment(Expression)
+													))))),
+									Whitespace))))));
 		});
+		//public static Rule FunctionPart = DelayedRule(delegate {
+		//    return Sequence(
+		//        Assign(CodeKeys.Literal,
+		//            Sequence(
+		//                Assign(
+		//                    CodeKeys.Function,
+		//                    Sequence(
+		//                        Assign(
+		//                            CodeKeys.Parameter,
+		//                            StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
+		//                        Assign(
+		//                            CodeKeys.Expression,
+		//                            Alternatives(
+		//                                Sequence(
+		//                                    Syntax.functionSeparator,
+		//                                    ReferenceAssignment(FunctionPart)
+		//                                ),
+		//                                Sequence(
+		//                                    Syntax.functionEnd,
+		//                                    Whitespace,
+		//                                    ReferenceAssignment(Expression)
+		//                                ))),
+		//                        Whitespace)))));
+		//});
 
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
@@ -4831,6 +4831,10 @@ namespace Meta {
 			return Serialize(map, -1).Trim();
 		}
 		private static string Number(Map map) {
+			NumberMap number = map.GetNumber();
+			if (number == null) {
+				Console.WriteLine("hello");
+			}
 			return map.GetNumber().ToString();
 		}
 		private static string Serialize(Map map, int indentation) {
@@ -4875,17 +4879,17 @@ namespace Meta {
 			return text;
 		}
 		private static string Entry(int indentation, KeyValuePair<Map, Map> entry) {
-			if (entry.Key.Equals(CodeKeys.Function)) {
-				return Function(entry.Value, indentation + 1);
-			}
-			else {
+			//if (entry.Key.Equals(CodeKeys.Function)) {
+			//    return Function(entry.Value, indentation + 1);
+			//}
+			//else {
 				return (Indentation(indentation + 1)
 					+ Key(indentation, entry) +
 					"=" +
 					Serialize(entry.Value, indentation + 1)
 					+ Environment.NewLine).TrimEnd('\r', '\n')
 					+ Environment.NewLine;
-			}
+			//}
 		}
 		private static string Literal(Map value, int indentation) {
 			if (value.IsNumber) {
@@ -4894,16 +4898,20 @@ namespace Meta {
 			else if (value.IsString) {
 				return String(value, indentation);
 			}
-			else if(value.ContainsKey(CodeKeys.Function)) {
-				return ","+NewLine()+ Indentation(indentation+1)+ Function(value[CodeKeys.Function], indentation+1);
-			}
+			//else if(value.ContainsKey(CodeKeys.Function)) {
+			//    return ","+NewLine()+ Indentation(indentation+1)+ Function(value[CodeKeys.Function], indentation+1);
+			//}
 			else {
-				return "error";
+				return "," + NewLine() + Indentation(indentation + 1) + Expression(value, indentation + 1);
+				//return "error";
 			}
+			//else {
+			//    return "error";
+			//}
 		}
-		private static string Function(Map value, int indentation) {
-			return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);
-		}
+		//private static string Function(Map value, int indentation) {
+		//    return value[CodeKeys.Parameter].GetString() + "|" + Expression(value[CodeKeys.Expression], indentation);
+		//}
 		private static string Root() {
 			return "/";
 		}
@@ -4927,19 +4935,19 @@ namespace Meta {
 			}
 			return Serialize(map, indentation);
 		}
-		private static string FunctionStatement(Map map, int indentation) {
-			return map[CodeKeys.Parameter].GetString() + "|" +
-				Expression(map[CodeKeys.Expression], indentation);
-		}
+		//private static string FunctionStatement(Map map, int indentation) {
+		//    return map[CodeKeys.Parameter].GetString() + "|" +
+		//        Expression(map[CodeKeys.Expression], indentation);
+		//}
 		private static string KeyStatement(Map map, int indentation) {
 			Map key = map[CodeKeys.Key];
-			if (key.Equals(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))) {
-				return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);
-			}
-			else {
+			//if (key.Equals(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))) {
+			//    return FunctionStatement(map[CodeKeys.Value][CodeKeys.Literal], indentation);
+			//}
+			//else {
 				return Expression(map[CodeKeys.Key], indentation) + "="
 					+ Expression(map[CodeKeys.Value], indentation);
-			}
+			//}
 		}
 		private static string CurrentStatement(Map map, int indentation) {
 			return "&=" + Expression(map[CodeKeys.Value], indentation);
@@ -5039,30 +5047,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
-			public class Library : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
-				}
-			}
-			public class FiboFast : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
-				}
-			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -5075,10 +5059,35 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
 				}
 			}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
+			public class Library : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
+
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
+			public class FiboFast : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
+				}
+			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 		}
@@ -5208,17 +5217,20 @@ namespace Meta {
 		}
 	}
 	public class CodeKeys {
+		static CodeKeys() {
+			Console.WriteLine();
+		}
 		public static readonly Map LastArgument = "lastArgument";
 		public static readonly Map Discard = "discard";
 		public static readonly Map Key = "key";
-		public static readonly Map Expression = "expression";
-		public static readonly Map Parameter = "parameter";
+		//public static readonly Map Expression = "expression";
+		//public static readonly Map Parameter = "parameter";
 		public static readonly Map Root = "root";
 		public static readonly Map Search = "search";
 		public static readonly Map Current = "current";
 		public static readonly Map Scope = "scope";
 		public static readonly Map Literal = "literal";
-		public static readonly Map Function = "function";
+		//public static readonly Map Function = "function";
 		public static readonly Map Call = "call";
 		public static readonly Map Select = "select";
 		public static readonly Map Program = "program";
@@ -5646,10 +5658,10 @@ namespace Meta {
 	}
 	// why is this even needed?
 	public class LiteralExpression : Expression {
-		public override bool ContainsFunctions() {
-			Expression expression = literal.GetExpression();
-			return expression!=null && expression.ContainsFunctions();
-		}
+		//public override bool ContainsFunctions() {
+		//    Expression expression = literal.GetExpression();
+		//    return expression!=null && expression.ContainsFunctions();
+		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -5665,9 +5677,9 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
-		public override bool ContainsFunctions() {
-			return false;
-		}
+		//public override bool ContainsFunctions() {
+		//    return false;
+		//}
 		public override bool ContainsSearchStatement() {
 			return false;
 		}
@@ -5809,9 +5821,6 @@ namespace Meta {
 		public virtual object GetObject() {
 			return this;
 		}
-		//public int GetInt32() {
-		//    return GetNumber().GetInt32();
-		//}
 		public override bool Equals(object obj) {
 			if (ReferenceEquals(obj, this)) {
 				return true;
@@ -6020,6 +6029,7 @@ namespace Meta {
 			return Expression;
 		}
 		static Map() {
+			CodeKeys bla=new CodeKeys();
 			statements[CodeKeys.Keys] = typeof(SearchStatement);
 			statements[CodeKeys.Current] = typeof(CurrentStatement);
 			statements[CodeKeys.Key] = typeof(KeyStatement);
@@ -6031,21 +6041,38 @@ namespace Meta {
 			expressions[CodeKeys.Select] = typeof(Select);
 			expressions[CodeKeys.Root] = typeof(Root);
 			expressions[CodeKeys.Search]= typeof(Search);
-
 		}
 		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
 		public static Dictionary<Map, Type> statements = new Dictionary<Map, Type>();
-		public Expression GetFunction(Expression parent,Statement statement) {
-			if (ContainsKey(CodeKeys.Function)) {
-				//if (this[CodeKeys.Function][CodeKeys.Parameter].Count==0) {
-				//    return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(parent);
-				//}
-				//else {
-					return new Function(parent, statement, this);
-				//}
-			}
-			throw new Exception("some error");
-		}
+		//public class FastFunction : Function {
+		//    private Expression expression;
+		//    private Compiled compiled;
+		//    public FastFunction(Expression parent,Statement statement,Map code)
+		//        : base(parent, statement, code) {
+		//        this.isFunction = true;
+		//        expression=code[CodeKeys.Function][CodeKeys.Expression].GetExpression();
+		//        compiled = expression.GetCompiled(parent);
+		//    }
+		//    public override Compiled GetCompiled(Expression parent) {
+		//        return delegate (Map context){
+		//            Map.arguments.Pop();
+		//            return compiled(context);
+		//        };
+		//    }
+		//}
+
+		//public Expression GetFunction(Expression parent,Statement statement) {
+		//    if (ContainsKey(CodeKeys.Function)) {
+		//        //if (this[CodeKeys.Function][CodeKeys.Parameter].Count==0) {
+		//        //    //return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(parent);
+		//        //    return new FastFunction(parent, statement, this);
+		//        //}
+		//        //else {
+		//        return new Function(parent, statement, this);
+		//        //}
+		//    }
+		//    throw new Exception("some error");
+		//}
 		public Expression CreateExpression(Expression parent) {
 		    if(this.Count==1) {
 				if (ContainsKey(CodeKeys.LastArgument)) {
@@ -6060,13 +6087,13 @@ namespace Meta {
 				    }
 				}
 			}
-			if (ContainsKey(CodeKeys.Function)) {
-				return GetFunction(parent, null);
-			}
-			if (ContainsKey(CodeKeys.Expression)) {
-				// probably wrong, or parent is added later
-				return new Function(parent, null, this);
-			}
+			//if (ContainsKey(CodeKeys.Function)) {
+			//    return GetFunction(parent, null);
+			//}
+			//if (ContainsKey(CodeKeys.Expression)) {
+			//    // probably wrong, or parent is added later
+			//    return new Function(parent, null, this);
+			//}
 			return null;
 		}
 		public Statement GetStatement(Program program, int index) {

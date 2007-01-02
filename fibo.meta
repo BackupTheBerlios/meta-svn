@@ -4,5 +4,5 @@
 		()1,
 		()rational.add(fibo(rational.subtract(n,1)),fibo(rational.subtract(n,2)))
 	);
-	&fibo(30);
+	&fibo(28);
 }

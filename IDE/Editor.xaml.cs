@@ -970,9 +970,12 @@ public partial class Editor : System.Windows.Window {
 									if (x is Program) {
 										Program p = x as Program;
 										Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
-										if (p is Function) {
-											result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
-										}
+
+										// what is this?
+
+										//if (p is Function) {
+										//    result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
+										//}
 										if (result != null) {
 											maps.Add(result);
 										}
@@ -1548,8 +1551,10 @@ public partial class Editor : System.Windows.Window {
 		lib.Statement = new LiteralStatement(gac);
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
-		map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
-		map[CodeKeys.Function].Compile(directory);
+		map.GetExpression(directory).Statement = new LiteralStatement(directory);
+		map.Compile(directory);
+		//map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
+		//map[CodeKeys.Function].Compile(directory);
 		Source key = new Source(
 			parser.state.Line,
 			parser.state.Column,
