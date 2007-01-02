@@ -226,7 +226,7 @@ namespace Meta {
 			il.Emit(OpCodes.Ldarg, index);
 		}
 		DynamicMethod dynamicMethod;
-		ILGenerator il;
+		public ILGenerator il;
 		private StaticEmitter emitter;
 		private Type type;
 		public Emitter(Type type) {
@@ -238,8 +238,21 @@ namespace Meta {
 			// use this to generate verifiable il
 			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
+		public Emitter(Type type,Type instance) {
+			this.type = type;
+			MethodInfo invoke = type.GetMethod("Invoke");
+			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
+			parameters.Insert(0, instance);
+			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
+			this.il = dynamicMethod.GetILGenerator();
+			// use this to generate verifiable il
+			//dynamicMethod.GetDynamicILInfo().SetCode()
+		}
 		public object GetDelegate() {
 			return dynamicMethod.CreateDelegate(type);
+		}
+		public object GetDelegate(object instance) {
+			return dynamicMethod.CreateDelegate(type,instance);
 		}
 	}
 	public class StaticEmitter {
@@ -457,152 +470,154 @@ namespace Meta {
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
 				if (method.IsStatic) {
-					if (method.GetCustomAttributes(typeof(InlineAttribute), false).Length != 0) {
+					//if (method.GetCustomAttributes(typeof(InlineAttribute), false).Length != 0) {
 
-						List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
+					//    List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 
-						Compiled[] args = c.ToArray();
-						ParameterInfo[] parameters = method.GetParameters();
-						MethodInfo methodInfo = (MethodInfo)method;
-						Type[] param = new Type[] { typeof(Map) };
+					//    Compiled[] args = c.ToArray();
+					//    ParameterInfo[] parameters = method.GetParameters();
+					//    MethodInfo methodInfo = (MethodInfo)method;
+					//    Type[] param = new Type[] { typeof(Map) };
 
-						Emitter emitter = new Emitter(typeof(Compiled));
-						List<LocalBuilder> locals = new List<LocalBuilder>();
-						int firstIndex = 0;
-						int lastIndex = 0;
-						if (locals.Count != 0) {
-							firstIndex = locals[0].LocalIndex;
-							lastIndex = locals[locals.Count - 1].LocalIndex + 1;
-						}
+					//    Emitter emitter = new Emitter(typeof(Compiled));
+					//    List<LocalBuilder> locals = new List<LocalBuilder>();
+					//    int firstIndex = 0;
+					//    int lastIndex = 0;
+					//    if (locals.Count != 0) {
+					//        firstIndex = locals[0].LocalIndex;
+					//        lastIndex = locals[locals.Count - 1].LocalIndex + 1;
+					//    }
 
-						MethodBodyReader reader = new MethodBodyReader((MethodInfo)method);
-						MethodBody body = method.GetMethodBody();
-						foreach (LocalVariableInfo local in body.LocalVariables) {
-							emitter.DeclareLocal(local.LocalType);
-						}
-						for (int i = 0; i < parameters.Length; i++) {
-							Type type=parameters[i].ParameterType;
-							LocalBuilder local=emitter.DeclareLocal(type);
-							if (calls[i + 1] is Literal) {
-							}
-							else {
-
-								calls[i + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
-								emitter.LoadArgument(0);
-								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-								Transform.GetDotNetConversion(type, emitter);
-								emitter.StoreLocal(local);
-							}
-						}
-						Dictionary<int, List<Label>> labels = new Dictionary<int, List<Label>>();
-						int index = 0;
-						for(int i=0;i<reader.instructions.Count;i++) {
-							int count;
-							ILInstruction instruction=reader.instructions[i];
-							if (instruction.Code == OpCodes.Ret) {
-								Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
-								//Transform.GetMetaConversion(methodInfo.ReturnType, il);
-								emitter.Return();
-							}
-							else if (GetArgument(instruction, out count)) {
-								Type type = parameters[count].ParameterType;
-								compiles.Add(c[count]);
-								int id = compiles.Count - 1;
-								if (calls[count + 1] is Literal) {
-									ILInstruction next=reader.instructions[i+2];
-									MethodInfo call=next.Operand as MethodInfo;
-									//if (next.Code == OpCodes.Callvirt && call != null &&
-									//    next.Operand.Equals(typeof(Map).GetMethod("Call"))) {
-									//    emitter.LoadField(typeof(Map), "Empty");
-									//    Literal literal = (Literal)calls[count + 1];
-									//    Expression expression=literal.literal.GetExpression(parent);
-									//    expression.CompileIL(emitter, parent, OpCodes.Ldloc_0);
-									//    i += 2;
-									//    index += 8;
-									//}
-									//else {
-										Literal literal = (Literal)calls[count + 1];
-										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-										Transform.GetDotNetConversion(type, emitter);
-										//Transform.GetConversion(type, il);
-										//}
-								}
-								else {
-									emitter.LoadLocal(count + firstIndex);
-								}
-							}
-							else if (GetStore(instruction, out count)) {
-								emitter.StoreLocal(count + lastIndex);
-							}
-							else if (GetLoad(instruction, out count)) {
-								emitter.LoadLocal(count + lastIndex);
-							}
-							else if (instruction.Code == OpCodes.Br_S) {
-								int target = (int)instruction.Operand;
-								if (!labels.ContainsKey(target)) {
-									labels[target] = new List<Label>();
-								}
-								Label label = emitter.DefineLabel();
-								labels[target].Add(label);
-								emitter.Break(label);
-								index++;
-							}
-							else if (instruction.Code == OpCodes.Brtrue_S) {
-								int target = (int)instruction.Operand;
-								if (!labels.ContainsKey(target)) {
-									labels[target] = new List<Label>();
-								}
-								Label label = emitter.DefineLabel();
-								labels[target].Add(label);
-								emitter.BreakTrue(label);
-								index++;
-							}
-							else if (instruction.Code == OpCodes.Brfalse_S) {
-								// terrible hack
-								int target = (int)instruction.Operand + 1;
-								if (!labels.ContainsKey(target)) {
-									labels[target] = new List<Label>();
-								}
-								Label label = emitter.DefineLabel();
-								labels[target].Add(label);
-								emitter.BreakFalse(label);
-								index++;
-							}
-							else {
-								if (instruction.Operand == null) {
-									emitter.Emit(instruction.Code);
-								}
-								else {
-									if (instruction.Operand is int) {
-										emitter.Emit(instruction.Code, (int)instruction.Operand);
-									}
-									else if (instruction.Operand is FieldInfo) {
-										emitter.LoadField((FieldInfo)instruction.Operand);
-										index += 4;
-									}
-									else if (instruction.Operand is MethodInfo) {
-										emitter.Call((MethodInfo)instruction.Operand);
-										index += 4;
-									}
-									else if (instruction.Operand is ConstructorInfo) {
-										emitter.NewObject((ConstructorInfo)instruction.Operand);
-										index += 4;
-									}
-									else {
-										emitter.Emit(instruction.Code, (byte)instruction.Operand);
-									}
-								}
-							}
-							index++;
-							if (labels.ContainsKey(index + 1)) {
-								foreach (Label label in labels[index + 1]) {
-									emitter.MarkLabel(label);
-								}
-							}
-						}
-						return (Compiled)emitter.GetDelegate();
-					}
-					else {
+					//    MethodBodyReader reader = new MethodBodyReader((MethodInfo)method);
+					//    MethodBody body = method.GetMethodBody();
+					//    foreach (LocalVariableInfo local in body.LocalVariables) {
+					//        emitter.DeclareLocal(local.LocalType);
+					//    }
+					//    for (int i = 0; i < parameters.Length; i++) {
+					//        Type type=parameters[i].ParameterType;
+					//        LocalBuilder local=emitter.DeclareLocal(type);
+					//        Expression e = calls[i + 1];
+					//        if (e is Literal) {
+					//        }
+					//        else {
+					//            //e.GetStructure(
+					//            e.CompileIL(emitter, parent, OpCodes.Ldarg_0);
+					//            emitter.LoadArgument(0);
+					//            emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+					//            Transform.GetDotNetConversion(type, emitter);
+					//            emitter.StoreLocal(local);
+					//        }
+					//    }
+					//    Dictionary<int, List<Label>> labels = new Dictionary<int, List<Label>>();
+					//    int index = 0;
+					//    for(int i=0;i<reader.instructions.Count;i++) {
+					//        int count;
+					//        ILInstruction instruction=reader.instructions[i];
+					//        if (instruction.Code == OpCodes.Ret) {
+					//            Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
+					//            //Transform.GetMetaConversion(methodInfo.ReturnType, il);
+					//            emitter.Return();
+					//        }
+					//        else if (GetArgument(instruction, out count)) {
+					//            Type type = parameters[count].ParameterType;
+					//            compiles.Add(c[count]);
+					//            int id = compiles.Count - 1;
+					//            if (calls[count + 1] is Literal) {
+					//                ILInstruction next=reader.instructions[i+2];
+					//                MethodInfo call=next.Operand as MethodInfo;
+					//                //if (next.Code == OpCodes.Callvirt && call != null &&
+					//                //    next.Operand.Equals(typeof(Map).GetMethod("Call"))) {
+					//                //    emitter.LoadField(typeof(Map), "Empty");
+					//                //    Literal literal = (Literal)calls[count + 1];
+					//                //    Expression expression=literal.literal.GetExpression(parent);
+					//                //    expression.CompileIL(emitter, parent, OpCodes.Ldloc_0);
+					//                //    i += 2;
+					//                //    index += 8;
+					//                //}
+					//                //else {
+					//                    Literal literal = (Literal)calls[count + 1];
+					//                    calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+					//                    Transform.GetDotNetConversion(type, emitter);
+					//                    //Transform.GetConversion(type, il);
+					//                    //}
+					//            }
+					//            else {
+					//                emitter.LoadLocal(count + firstIndex);
+					//            }
+					//        }
+					//        else if (GetStore(instruction, out count)) {
+					//            emitter.StoreLocal(count + lastIndex);
+					//        }
+					//        else if (GetLoad(instruction, out count)) {
+					//            emitter.LoadLocal(count + lastIndex);
+					//        }
+					//        else if (instruction.Code == OpCodes.Br_S) {
+					//            int target = (int)instruction.Operand;
+					//            if (!labels.ContainsKey(target)) {
+					//                labels[target] = new List<Label>();
+					//            }
+					//            Label label = emitter.DefineLabel();
+					//            labels[target].Add(label);
+					//            emitter.Break(label);
+					//            index++;
+					//        }
+					//        else if (instruction.Code == OpCodes.Brtrue_S) {
+					//            int target = (int)instruction.Operand;
+					//            if (!labels.ContainsKey(target)) {
+					//                labels[target] = new List<Label>();
+					//            }
+					//            Label label = emitter.DefineLabel();
+					//            labels[target].Add(label);
+					//            emitter.BreakTrue(label);
+					//            index++;
+					//        }
+					//        else if (instruction.Code == OpCodes.Brfalse_S) {
+					//            // terrible hack
+					//            int target = (int)instruction.Operand + 1;
+					//            if (!labels.ContainsKey(target)) {
+					//                labels[target] = new List<Label>();
+					//            }
+					//            Label label = emitter.DefineLabel();
+					//            labels[target].Add(label);
+					//            emitter.BreakFalse(label);
+					//            index++;
+					//        }
+					//        else {
+					//            if (instruction.Operand == null) {
+					//                emitter.Emit(instruction.Code);
+					//            }
+					//            else {
+					//                if (instruction.Operand is int) {
+					//                    emitter.Emit(instruction.Code, (int)instruction.Operand);
+					//                }
+					//                else if (instruction.Operand is FieldInfo) {
+					//                    emitter.LoadField((FieldInfo)instruction.Operand);
+					//                    index += 4;
+					//                }
+					//                else if (instruction.Operand is MethodInfo) {
+					//                    emitter.Call((MethodInfo)instruction.Operand);
+					//                    index += 4;
+					//                }
+					//                else if (instruction.Operand is ConstructorInfo) {
+					//                    emitter.NewObject((ConstructorInfo)instruction.Operand);
+					//                    index += 4;
+					//                }
+					//                else {
+					//                    emitter.Emit(instruction.Code, (byte)instruction.Operand);
+					//                }
+					//            }
+					//        }
+					//        index++;
+					//        if (labels.ContainsKey(index + 1)) {
+					//            foreach (Label label in labels[index + 1]) {
+					//                emitter.MarkLabel(label);
+					//            }
+					//        }
+					//    }
+					//    return (Compiled)emitter.GetDelegate();
+					//}
+					//else {
+					{
 
 						List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 
@@ -1518,7 +1533,7 @@ namespace Meta {
 			DateTime start = DateTime.Now;
 
 
-			//Fibo(38);
+			//Fibo(new Integer32(30));
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			//return;
 			if (args.Length != 0) {
@@ -1607,16 +1622,23 @@ namespace Meta {
 		public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
 			MethodInfo invoke = delegateType.GetMethod("Invoke");
 			ParameterInfo[] parameters = invoke.GetParameters();
-			List<Type> arguments = new List<Type>();
-			arguments.Add(typeof(MetaDelegate));
-			foreach (ParameterInfo parameter in parameters) {
-				arguments.Add(parameter.ParameterType);
-			}
-			DynamicMethod method = new DynamicMethod("EventHandler",
-				invoke.ReturnType,
-				arguments.ToArray(),
-				typeof(Map).Module);
-			ILGenerator il = method.GetILGenerator();
+			//List<Type> arguments = new List<Type>();
+			//arguments.Add(typeof(MetaDelegate));
+			//foreach (ParameterInfo parameter in parameters) {
+			//    arguments.Add(parameter.ParameterType);
+			//}
+			Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
+			//DynamicMethod method = new DynamicMethod("EventHandler",
+			//    invoke.ReturnType,
+			//    arguments.ToArray(),
+			//    typeof(Map).Module);
+			ILGenerator il = emitter.il;
+			//ILGenerator il = method.GetILGenerator();
+			//DynamicMethod method = new DynamicMethod("EventHandler",
+			//    invoke.ReturnType,
+			//    arguments.ToArray(),
+			//    typeof(Map).Module);
+			//ILGenerator il = method.GetILGenerator();
 			LocalBuilder local = il.DeclareLocal(typeof(object[]));
 			il.Emit(OpCodes.Ldc_I4, parameters.Length);
 			il.Emit(OpCodes.Newarr, typeof(object));
@@ -1638,7 +1660,8 @@ namespace Meta {
 				il.Emit(OpCodes.Castclass, invoke.ReturnType);
 				il.Emit(OpCodes.Ret);
 			}
-			return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
+			return (Delegate)emitter.GetDelegate(new MetaDelegate(code, invoke.ReturnType));
+			//return (Delegate)method.CreateDelegate(delegateType, new MetaDelegate(code, invoke.ReturnType));
 		}
 
 		// remove
