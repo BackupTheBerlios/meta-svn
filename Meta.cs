@@ -1163,6 +1163,7 @@ namespace Meta {
 					if (literal != null && literal.GetStructure().IsConstant) {
 						Map key=literal.GetStructure();
 						Compiled comp = currentStatement.value.GetCompiled(this);
+						this.isFunction = true;
 						return delegate(Map context) {
 							FunctionArgument arg = new FunctionArgument(key, Map.arguments.Pop());
 							arg.Scope = context;
@@ -1404,7 +1405,9 @@ namespace Meta {
 			//if (k != null && k.Equals(CodeKeys.Function)) {
 
 				if (value is Literal && ((Literal)value).literal.GetExpression(program)!=null) {
-					((Literal)value).literal.Compile(program);//.ContainsKey(CodeKeys.Function)) {
+					((Literal)value).literal.GetExpression(program).Statement=this;
+					((Literal)value).literal.Compile(program);
+					//.ContainsKey(CodeKeys.Function)) {
 						//((Literal)value).literal.GetFunction(program, this);
 					//}
 					//if (((Literal)value).literal.ContainsKey(CodeKeys.Function)) {
@@ -5063,6 +5066,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -5087,7 +5096,6 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5098,12 +5106,6 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
-				}
-			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 		}
