@@ -864,28 +864,57 @@ namespace Meta {
 					if (mapping != null && mapping.mapping.ContainsKey(key)) {
 						index = mapping.mapping[key];
 					}
-
-					return delegate(Map context) {
-						//MakeSearched(key);
-						Map selected = context;
-						for (int i = 0; i < count; i++) {
-							selected = selected.Scope;
-						}
-						Map result;
-						if (index != -1) {
-						//if (index!=-1 && selected is PerfectMap) {
-						//if (index!=-1 && selected is PerfectMap) {
-							//result = ((PerfectMapBase)selected).GetFromIndex(index);
-							result = ((PerfectMapBase)selected).values[index];
-						}
-						else {
-							result = selected[key];
-						}
-						if (result == null) {
-							throw new KeyNotFound(key, expression.Source.Start, null);
-						}
-						return result;
-					};
+					if (index != -1) {
+						return delegate(Map context) {
+							//MakeSearched(key);
+							Map selected = context;
+							for (int i = 0; i < count; i++) {
+								selected = selected.Scope;
+							}
+							Map result = selected.GetFromIndex(index);
+							//Map result = ((PerfectMapBase)selected).GetFromIndex(index);
+							//Map result = ((PerfectMapBase)selected).values[index];
+							if (result == null) {
+								throw new KeyNotFound(key, expression.Source.Start, null);
+							}
+							return result;
+						};
+					}
+					else {
+						return delegate(Map context) {
+							//MakeSearched(key);
+							Map selected = context;
+							for (int i = 0; i < count; i++) {
+								selected = selected.Scope;
+							}
+							Map result = selected[key];
+							if (result == null) {
+								throw new KeyNotFound(key, expression.Source.Start, null);
+							}
+							return result;
+						};
+					}
+					//return delegate(Map context) {
+					//    //MakeSearched(key);
+					//    Map selected = context;
+					//    for (int i = 0; i < count; i++) {
+					//        selected = selected.Scope;
+					//    }
+					//    Map result;
+					//    if (index != -1) {
+					//    //if (index!=-1 && selected is PerfectMap) {
+					//    //if (index!=-1 && selected is PerfectMap) {
+					//        //result = ((PerfectMapBase)selected).GetFromIndex(index);
+					//        result = ((PerfectMapBase)selected).values[index];
+					//    }
+					//    else {
+					//        result = selected[key];
+					//    }
+					//    if (result == null) {
+					//        throw new KeyNotFound(key, expression.Source.Start, null);
+					//    }
+					//    return result;
+					//};
 				}
 			}
 			else {
@@ -917,12 +946,19 @@ namespace Meta {
 		}
 	}
 	public class FunctionArgument : PerfectMapBase {
-			//public class FunctionArgument : ScopeMap {
-//public class FunctionArgument:ScopeMap {
+		public override Map GetFromIndex(int i) {
+			//if (i == 0) {
+				return value;
+			//}
+			return null;
+		}
+		//public class FunctionArgument : ScopeMap {
+		//public class FunctionArgument:ScopeMap {
 		public override Map this[Map key] {
 			get {
 				if(key.Equals(this.key)) {
 					return value;
+					//return value[0];
 				}
 				else {
 					return null;
@@ -930,7 +966,8 @@ namespace Meta {
 			}
 			set {
 				if(key.Equals(this.key)) {
-					this.value=value;
+					//this.values[0] = value;
+					this.value = value;
 				}
 				else {
 					throw new Exception("The method or operation is not implemented.");
@@ -969,8 +1006,8 @@ namespace Meta {
 		private Map value;
 		public FunctionArgument(Map key,Map value) {
 			this.key=key;
-			this.value=value;
-			this.values = new Map[] { value };
+			this.value = value;
+			//this.values = new Map[] { value };
 		}
 		public override bool ContainsKey(Map k) {
 			return k.Equals(this.key);
@@ -2472,9 +2509,12 @@ namespace Meta {
 	// would need default stuff somewhere, common base class for PerfectMap and DictionaryMap
 	public abstract class PerfectMapBase : DictionaryBaseMap {
 		//public abstract Map GetFromIndex(int i);
-		public Map[] values;
 	}
 	public class PerfectMap : PerfectMapBase {
+		public override Map GetFromIndex(int i) {
+			return values[i];
+		}
+		public Map[] values;
 		public override Map this[Map key] {
 			get {
 				int index = mapping.mapping[key];
@@ -5753,6 +5793,9 @@ namespace Meta {
 		}
 	}
 	public abstract class Map:IEnumerable<KeyValuePair<Map, Map>>, ISerializeEnumerableSpecial {
+		public virtual Map GetFromIndex(int i) {
+			throw new Exception("not implemented");
+		}
 		public virtual bool LessThan(Map map) {
 			return GetNumber().LessThan(map.GetNumber());
 		}
