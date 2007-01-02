@@ -1,11 +1,11 @@
 ﻿Entry (KeyValuePair`2)
 	Key (StringMap):
 		"booleanTest"
-	Value (DictionaryMap):
+	Value (PerfectMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"not"
-			Value (DictionaryMap):
+			Value (PerfectMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
@@ -19,7 +19,7 @@
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"and"
-			Value (DictionaryMap):
+			Value (PerfectMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
@@ -33,7 +33,7 @@
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"orTest"
-			Value (DictionaryMap):
+			Value (PerfectMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
@@ -52,7 +52,7 @@
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"numberTest"
-	Value (DictionaryMap):
+	Value (PerfectMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"positiveAdd"
@@ -121,7 +121,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"bitwiseTest"
-	Value (DictionaryMap):
+	Value (PerfectMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"or"
@@ -130,7 +130,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"mapTest"
-	Value (DictionaryMap):
+	Value (PerfectMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"IfTest"
@@ -139,12 +139,12 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"Map"
-			Value (DictionaryMap):
+			Value (CopyMap):
 				""
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"keyTestMap"
-			Value (DictionaryMap):
+			Value (PerfectMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"x"
@@ -177,11 +177,11 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"equal"
-			Value (DictionaryMap):
+			Value (PerfectMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"map"
-					Value (DictionaryMap):
+					Value (PerfectMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"true"

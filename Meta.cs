@@ -751,7 +751,8 @@ namespace Meta {
 			int count;
 			Map value;
 			Map map;
-			if (FindStuff(out count, out key, out value, out map)) {
+			Statement statement;
+			if (FindStuff(out count, out key, out value, out map,out statement)) {
 				if (value != null) {
 					return value;
 				}
@@ -764,12 +765,15 @@ namespace Meta {
 			}
 		}
 		// this is a mess
-		private bool FindStuff(out int count, out Map key, out Map value, out Map map) {
+		private bool FindStuff(out int count, out Map key, out Map value, out Map map,out Statement s) {
 			Expression current = this;
 			key = expression.EvaluateStructure();
 			count = 0;
 			int programCounter = 0;
 			if (key != null && key.IsConstant) {
+				//if (key.Equals(new StringMap("fibo"))) {
+				//    Console.WriteLine("fibo");
+				//}
 				bool hasCrossedFunction = false;
 				while (true) {
 					while (current.Statement == null) {
@@ -799,6 +803,7 @@ namespace Meta {
 					if (structure.ContainsKey(key)) {
 						value = structure[key];
 						map = structure;
+						s = statement;
 						return true;
 					}
 					else if (programCounter < 1 && statement is KeyStatement) {
@@ -808,6 +813,7 @@ namespace Meta {
 								if (map.ContainsKey(key)) {
 									value = map[key];
 									if (value.IsConstant) {
+										s = statement;
 										return true;
 									}
 								}
@@ -828,6 +834,7 @@ namespace Meta {
 			}
 			value = null;
 			map = null;
+			s = null;
 			return false;
 		}
 		private Expression expression;
@@ -840,23 +847,40 @@ namespace Meta {
 			Map key;
 			Map value;
 			Map map;
-			if (FindStuff(out count, out key, out value, out map)) {
+			Statement statement;
+			if (FindStuff(out count, out key, out value, out map,out statement)) {
 				if (value != null && value.IsConstant) {
 					return delegate(Map context) {
 						return value;
 					};
 				}
 				else {
-					int index = -1;
-					if (map != null && map.Count == 1) {
-						index = 0;
+					//int index = -1;
+					//if (map != null && map.Count == 1) {
+					//    index = 0;
+					//}
+					int index=-1;
+					Mapping mapping=statement.program.UsePerfectMap();
+					if (mapping != null && mapping.mapping.ContainsKey(key)) {
+						index = mapping.mapping[key];
 					}
+
 					return delegate(Map context) {
+						//MakeSearched(key);
 						Map selected = context;
 						for (int i = 0; i < count; i++) {
 							selected = selected.Scope;
 						}
-						Map result = selected[key];
+						Map result;
+						if (index != -1) {
+						//if (index!=-1 && selected is PerfectMap) {
+						//if (index!=-1 && selected is PerfectMap) {
+							//result = ((PerfectMapBase)selected).GetFromIndex(index);
+							result = ((PerfectMapBase)selected).values[index];
+						}
+						else {
+							result = selected[key];
+						}
 						if (result == null) {
 							throw new KeyNotFound(key, expression.Source.Start, null);
 						}
@@ -865,7 +889,7 @@ namespace Meta {
 				}
 			}
 			else {
-				FindStuff(out count, out key, out value, out map);
+				FindStuff(out count, out key, out value, out map,out statement);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
 					Map k = compiled(context);
@@ -892,7 +916,9 @@ namespace Meta {
 			search[key]++;
 		}
 	}
-	public class FunctionArgument:ScopeMap {
+	public class FunctionArgument : PerfectMapBase {
+			//public class FunctionArgument : ScopeMap {
+//public class FunctionArgument:ScopeMap {
 		public override Map this[Map key] {
 			get {
 				if(key.Equals(this.key)) {
@@ -944,6 +970,7 @@ namespace Meta {
 		public FunctionArgument(Map key,Map value) {
 			this.key=key;
 			this.value=value;
+			this.values = new Map[] { value };
 		}
 		public override bool ContainsKey(Map k) {
 			return k.Equals(this.key);
@@ -962,9 +989,12 @@ namespace Meta {
 		public override Compiled GetCompiled(Expression parent) {
 			Compiled e = expression.Compile();
 			Map parameter = key;
-			if (expression.ContainsFunctions() || (parameter!=null && parameter.Count!=0)) {
+			if (expression.ContainsFunctions() || (parameter != null && parameter.Count != 0)) {
+				Mapping mapping = UsePerfectMap();
 				return delegate(Map p) {
 					Map context = new FunctionArgument(parameter, Map.arguments.Pop());
+					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
+					//Map context = new FunctionArgument(parameter, Map.arguments.Pop());
 					context.Scope = p;
 					return e(context);
 				};
@@ -1035,36 +1065,90 @@ namespace Meta {
 				return statementList[statementList.Count - 1].Current();
 			}
 		}
+		public Mapping UsePerfectMap() {
+			bool usePerfectMap = true;
+			List<Map> keys = new List<Map>();
+			int index = 0;
+			foreach (Statement statement in statementList) {
+				KeyStatement keyStatement = statement as KeyStatement;
+				if (keyStatement != null) {
+					//listCount++;
+					Literal literal = keyStatement.key as Literal;
+					if (literal != null) {
+						keys.Add(literal.literal);
+						//if (literal.literal.Equals(new Integer32(count))) {
+						//    count++;
+						//    continue;
+						//}
+					}
+					else {
+						usePerfectMap = false;
+					}
+				}
+				if (statement is CurrentStatement) {
+					if (index != statementList.Count - 1) {
+						usePerfectMap = false;
+					}
+				}
+				//useList = false;
+				index++;
+			}
+			//if (useList) {
+			//}
+			Mapping mapping=null;
+			if (usePerfectMap) {
+				return new Mapping(keys);
+			}
+			else {
+				return null;
+			}
+		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
 			bool useList = true;
 			int count = 1;
 			int listCount = 0;
+			bool usePerfectMap = true;
+			List<Map> keys = new List<Map>();
+			//Mapping mapping=new 
+			//int index = 0;
 				foreach (Statement statement in statementList) {
 					KeyStatement keyStatement = statement as KeyStatement;
 					if (keyStatement != null) {
 						listCount++;
 						Literal literal = keyStatement.key as Literal;
 						if (literal != null) {
+							keys.Add(literal.literal);
 							if (literal.literal.Equals(new Integer32(count))) {
 								count++;
 								continue;
 							}
 						}
-
+						else {
+							usePerfectMap = false;
+						}
 					}
 					useList = false;
 				}
 			if (useList) {
 			}
+			Mapping mapping=UsePerfectMap();
+			//if (usePerfectMap) {
+			//    mapping = new Mapping(keys);
+			//}
 			return delegate(Map p) {
 				Map context;
 				if (useList) {
 				    context = new ListMap(statementList.Count);
 				}
 				else {
-					context = new DictionaryMap(listCount);
+					if (mapping!=null) {
+						context = new PerfectMap(mapping);
+					}
+					else {
+						context = new DictionaryMap(listCount);
+					}
 				}
 
 
@@ -1324,7 +1408,7 @@ namespace Meta {
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
-					if (!(v is DictionaryMap)) {
+					if (!(v is DictionaryMap && context is DictionaryMap)) {
 					    Map scope=context.Scope;
 					    context = v.Copy();
 						context.Scope = scope;
@@ -1386,14 +1470,37 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public static List<Map> literals = new List<Map>();
-		public override void CompileIL(Emitter emitter, Expression parent,OpCode context) {
+		//public override Compiled GetCompiled(Expression parent) {
+		//    //emitter.LoadField(typeof(Literal), ("literals"));
+		//    //emitter.LoadConstant(index);
+		//    //emitter.Call(typeof(List<Map>), "get_Item");
+		//    if (literal.ContainsKey(CodeKeys.Function)) {
+		//        literal.Compile(parent);
+		//        return delegate(Map c) {
+		//            return literal.Copy(c);
+		//        };
+		//        //literal.Compile(parent);
+		//        //emitter.Emit(context);
+		//        //emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+
+		//        //literal.Compile(parent);
+		//        //emitter.Emit(context);
+		//        //emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+		//    }
+		//    else {
+		//        return delegate {
+		//            return literal;
+		//        };
+		//    }
+		//}
+		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
 			if (index == -1) {
 				literals.Add(literal);
 				index = literals.Count - 1;
 			}
-			emitter.LoadField(typeof(Literal),("literals"));
+			emitter.LoadField(typeof(Literal), ("literals"));
 			emitter.LoadConstant(index);
-			emitter.Call(typeof(List<Map>),"get_Item");
+			emitter.Call(typeof(List<Map>), "get_Item");
 			if (literal.ContainsKey(CodeKeys.Function)) {
 				literal.Compile(parent);
 				emitter.Emit(context);
@@ -1546,7 +1653,7 @@ namespace Meta {
 		}
 		public static bool profiling = false;
 		static Interpreter() {
-			//try {
+			try {
 			//DateTime start = DateTime.Now;
 			//Fibo(32);
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
@@ -1561,9 +1668,10 @@ namespace Meta {
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 
-		//}
-		//catch (Exception e) {
-		//}
+		}
+		catch (Exception e) {
+			Console.WriteLine(e);
+		}
 		}
 		public static int Fibo(int x) {
 			if (x < 2) {
@@ -1637,8 +1745,8 @@ namespace Meta {
 							Console.WriteLine(e.ToString());
 							Console.ReadLine();
 						}
-						Console.WriteLine((DateTime.Now - start).TotalSeconds);
-						return;
+						//Console.WriteLine((DateTime.Now - start).TotalSeconds);
+						//return;
 					}
 					else {
 						Console.WriteLine("File " + fileName + " not found.");
@@ -2349,7 +2457,115 @@ namespace Meta {
 			return copy.ContainsKey(key);
 		}
 	}
-	public class DictionaryMap : ScopeMap {
+	public class Mapping {
+		public Dictionary<Map, int> mapping = new Dictionary<Map, int>();
+		public Mapping(IEnumerable<Map> keys) {
+			int index=0;
+			foreach (Map key in keys) {
+				// make sure keys are unique?
+				mapping[key]=index;
+				//mapping.Add(key, index);
+				index++;
+			}
+		}
+	}
+	// would need default stuff somewhere, common base class for PerfectMap and DictionaryMap
+	public abstract class PerfectMapBase : DictionaryBaseMap {
+		//public abstract Map GetFromIndex(int i);
+		public Map[] values;
+	}
+	public class PerfectMap : PerfectMapBase {
+		public override Map this[Map key] {
+			get {
+				int index = mapping.mapping[key];
+				Map result = values[index];
+				return result;
+			}
+			set {
+				values[mapping.mapping[key]] = value;
+			}
+		}
+		public override IEnumerable<Map> Keys {
+			get {
+				foreach (Map key in mapping.mapping.Keys) {
+					if (values[mapping.mapping[key]] != null) {
+						yield return key;
+					}
+				}
+			}
+		}
+		public override bool ContainsKey(Map key) {
+			return mapping.mapping.ContainsKey(key) && values[mapping.mapping[key]] != null;
+		}
+		// incorrect
+		//public override int ArrayCount {
+		//    get {
+		//        return 0;
+		//    }
+		//}
+		public override int Count {
+			get {
+				int i = 0;
+				for (; i < values.Length; i++) {
+					if (values[i] == null) {
+						break;
+					}
+				}
+				return i;
+			}
+		}
+		// incorrect
+		//public override NumberMap GetNumber() {
+		//    return null;
+		//}
+		private Mapping mapping;
+		public PerfectMap(Mapping mapping) {
+			this.mapping = mapping;
+			this.values = new Map[mapping.mapping.Count];
+			//new List<Map>(keys).ToArray
+		}
+		public override Map Copy() {
+			return new CopyMap(this.scope, this);
+		}
+	}
+	public abstract class DictionaryBaseMap : ScopeMap {
+		public override IEnumerable<Map> Array {
+			get {
+				for (int i = 1; ; i++) {
+					Map m = this[i];
+					if (m != null) {
+						yield return m;
+					}
+					else {
+						yield break;
+					}
+				}
+			}
+		}
+		public override NumberMap GetNumber() {
+			if (Count == 0) {
+				return new Integer32(0);
+			}
+			else if (this.Count == 1) {
+				if (this.ContainsKey(Map.Empty)) {
+					if (this[Map.Empty].IsNumber) {
+						return this[Map.Empty].GetNumber().Add(new Integer32(1));
+					}
+				}
+			}
+			return null;
+		}
+		public override int ArrayCount {
+			get {
+				int i = 1;
+				while (this.ContainsKey(i)) {
+					i++;
+				}
+				return i - 1;
+			}
+		}
+	}
+	public class DictionaryMap : DictionaryBaseMap {
 		public override Expression Expression {
 			get {
 				return expression;
@@ -2428,19 +2644,19 @@ namespace Meta {
 				this.Append(map);
 			}
 		}
-		public override IEnumerable<Map> Array {
-			get {
-				for (int i = 1;; i++) {
-					Map m=this[i];
-					if(m!=null) {
-						yield return m;
-					}
-					else {
-						yield break;
-					}
-				}
-			}
-		}
+		//public override IEnumerable<Map> Array {
+		//    get {
+		//        for (int i = 1;; i++) {
+		//            Map m=this[i];
+		//            if(m!=null) {
+		//                yield return m;
+		//            }
+		//            else {
+		//                yield break;
+		//            }
+		//        }
+		//    }
+		//}
 		public override Map Copy(Map scope) {
 			return new CopyMap(scope, this);
 		}
@@ -2451,19 +2667,19 @@ namespace Meta {
 		public override void Append(Map map) {
 			this[ArrayCount + 1]=map;
 		}
-		public override NumberMap GetNumber() {
-			if (Count == 0) {
-				return new Integer32(0);
-			}
-			else if (this.Count == 1) {
-				if (this.ContainsKey(Map.Empty)) {
-					if (this[Map.Empty].IsNumber) {
-						return this[Map.Empty].GetNumber().Add(new Integer32(1));
-					}
-				}
-			}
-			return null;
-		}
+		//public override NumberMap GetNumber() {
+		//    if (Count == 0) {
+		//        return new Integer32(0);
+		//    }
+		//    else if (this.Count == 1) {
+		//        if (this.ContainsKey(Map.Empty)) {
+		//            if (this[Map.Empty].IsNumber) {
+		//                return this[Map.Empty].GetNumber().Add(new Integer32(1));
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
 		public override string Serialize() {
 			if (this.Count == 0) {
 				return "0";
@@ -2476,15 +2692,15 @@ namespace Meta {
 			}
 			return null;
 		}
-		public override int ArrayCount {
-			get {
-				int i = 1;
-				while (this.ContainsKey(i)) {
-					i++;
-				}
-				return i - 1;
-			}
-		}
+		//public override int ArrayCount {
+		//    get {
+		//        int i = 1;
+		//        while (this.ContainsKey(i)) {
+		//            i++;
+		//        }
+		//        return i - 1;
+		//    }
+		//}
 		public Dictionary<Map, Map> dictionary;
 		public override Map this[Map key] {
 			get {
