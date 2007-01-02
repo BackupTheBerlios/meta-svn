@@ -480,17 +480,26 @@ namespace Meta {
 								compiles.Add(c[count]);
 								int id = compiles.Count - 1;
 								if (calls[count + 1] is Literal) {
-									Literal literal = (Literal)calls[count + 1];
-									calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-									Transform.GetConversion(type, il);
+									ILInstruction next=reader.instructions[i+2];
+									MethodInfo call=next.Operand as MethodInfo;
+									//if (next.Code == OpCodes.Callvirt && call != null &&
+									//    next.Operand.Equals(typeof(Map).GetMethod("Call"))) {
+									//    emitter.LoadField(typeof(Map), "Empty");
+									//    Literal literal = (Literal)calls[count + 1];
+									//    Expression expression=literal.literal.GetExpression(parent);
+									//    expression.CompileIL(emitter, parent, OpCodes.Ldloc_0);
+									//    i += 2;
+									//    index += 8;
+									//}
+									//else {
+										Literal literal = (Literal)calls[count + 1];
+										calls[count + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+										Transform.GetConversion(type, il);
+									//}
 								}
 								else {
 									emitter.LoadLocal(count + firstIndex);
-									//calls[count + 1].CompileIL(emitter, parent, OpCodes.Ldarg_0);
-									//il.Emit(OpCodes.Ldarg_0);
-									//emitter.Call(typeof(Compiled).GetMethod("Invoke"));
 								}
-								//Transform.GetConversion(type, il);
 							}
 							else if (GetStore(instruction, out count)) {
 								emitter.StoreLocal(count + lastIndex);
@@ -561,97 +570,6 @@ namespace Meta {
 								}
 							}
 						}
-						//foreach (ILInstruction instruction in reader.instructions) {
-						//    int count;
-						//    if (instruction.Code == OpCodes.Ret) {
-						//        Transform.GetMetaConversion(methodInfo.ReturnType, il);
-						//        emitter.Return();
-						//    }
-						//    else if (GetArgument(instruction, out count)) {
-						//        Type type = parameters[count].ParameterType;
-						//        compiles.Add(c[count]);
-						//        int id = compiles.Count - 1;
-						//        if (calls[count + 1] is Literal) {
-						//            calls[count + 1].CompileIL(il, this, OpCodes.Ldarg_0);
-						//        }
-						//        else {
-						//            il.Emit(OpCodes.Ldsfld, typeof(Expression).GetField("compiles"));
-						//            il.Emit(OpCodes.Ldc_I4, id);
-						//            il.Emit(OpCodes.Callvirt, typeof(List<Compiled>).GetMethod("get_Item"));
-						//            il.Emit(OpCodes.Ldarg_0);
-						//            il.Emit(OpCodes.Callvirt, typeof(Compiled).GetMethod("Invoke"));
-						//        }
-						//        Transform.GetConversion(type, il);
-						//    }
-						//    else if (GetStore(instruction, out count)) {
-						//        emitter.StoreLocal(count + lastIndex);
-						//    }
-						//    else if (GetLoad(instruction, out count)) {
-						//        emitter.LoadLocal(count + lastIndex);
-						//    }
-						//    else if (instruction.Code == OpCodes.Br_S) {
-						//        int target=(int)instruction.Operand;
-						//        if(!labels.ContainsKey(target)) {
-						//            labels[target]=new List<Label>();
-						//        }
-						//        Label label=il.DefineLabel();
-						//        labels[target].Add(label);
-						//        emitter.Break(label);
-						//        index++;
-						//    }
-						//    else if (instruction.Code == OpCodes.Brtrue_S) {
-						//        int target = (int)instruction.Operand;
-						//        if (!labels.ContainsKey(target)) {
-						//            labels[target] = new List<Label>();
-						//        }
-						//        Label label = il.DefineLabel();
-						//        labels[target].Add(label);
-						//        emitter.BreakTrue(label);
-						//        index++;
-						//    }
-						//    else if (instruction.Code == OpCodes.Brfalse_S) {
-						//        // terrible hack
-						//        int target = (int)instruction.Operand +1;
-						//        if (!labels.ContainsKey(target)) {
-						//            labels[target] = new List<Label>();
-						//        }
-						//        Label label = il.DefineLabel();
-						//        labels[target].Add(label);
-						//        emitter.BreakFalse(label);
-						//        index++;
-						//    }
-						//    else {
-						//        if (instruction.Operand == null) {
-						//            emitter.Emit(instruction.Code);
-						//        }
-						//        else {
-						//            if (instruction.Operand is int) {
-						//                il.Emit(instruction.Code, (int)instruction.Operand);
-						//            }
-						//            else if (instruction.Operand is FieldInfo) {
-						//                emitter.LoadField((FieldInfo)instruction.Operand);
-						//                index += 4;
-						//            }
-						//            else if (instruction.Operand is MethodInfo) {
-						//                emitter.Call((MethodInfo)instruction.Operand);
-						//                index += 4;
-						//            }
-						//            else if (instruction.Operand is ConstructorInfo) {
-						//                emitter.CreateInstance((ConstructorInfo)instruction.Operand);
-						//                index += 4;
-						//            }
-						//            else {
-						//                emitter.Emit(instruction.Code, (byte)instruction.Operand);
-						//            }
-						//        }
-						//    }
-						//    index++;
-						//    if (labels.ContainsKey(index+1)) {
-						//        foreach (Label label in labels[index+1]) {
-						//            il.MarkLabel(label);
-						//        }
-						//    }
-						//}
 						return (Compiled)emitter.GetDelegate();
 					}
 					else {
@@ -1369,14 +1287,13 @@ namespace Meta {
 				literals.Add(literal);
 				index = literals.Count - 1;
 			}
-			ILGenerator il = emitter.il;
-			il.Emit(OpCodes.Ldsfld, typeof(Literal).GetField("literals"));
-			il.Emit(OpCodes.Ldc_I4, index);
-			il.Emit(OpCodes.Callvirt,typeof(List<Map>).GetMethod("get_Item"));
+			emitter.LoadField(typeof(Literal),("literals"));
+			emitter.LoadConstant(index);
+			emitter.Call(typeof(List<Map>),"get_Item");
 			if (literal.ContainsKey(CodeKeys.Function)) {
 				literal.Compile(parent);
-				il.Emit(context);
-				il.Emit(OpCodes.Callvirt, typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+				emitter.Emit(context);
+				emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
 			}
 			else {
 			}
