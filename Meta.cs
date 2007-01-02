@@ -1007,10 +1007,10 @@ namespace Meta {
 		}
 		private Map key;
 		private Map value;
-		public FunctionArgument(Map key,Map value) {
+		public FunctionArgument(Map key,Map value,Map scope) {
 			this.key=key;
 			this.value = value;
-			//this.values = new Map[] { value };
+			this.scope = scope;
 		}
 		public override bool ContainsKey(Map k) {
 			return k.Equals(this.key);
@@ -1022,56 +1022,16 @@ namespace Meta {
 			get { return 1; }
 		}
 	}
-	//public class Function:Program {
-	//    //public override bool ContainsFunctions() {
-	//    //    return true;
-	//    //}
-	//    public override Compiled GetCompiled(Expression parent) {
-	//        Compiled e = expression.Compile();
-	//        Map parameter = key;
-	//        //if (expression.ContainsFunctions() || (parameter != null && parameter.Count != 0)) {
-	//            Mapping mapping = UsePerfectMap();
-	//            return delegate(Map p) {
-	//                Map context = new FunctionArgument(parameter, Map.arguments.Pop());
-	//                context.Scope = p;
-	//                return e(context);
-	//            };
-	//        //}
-	//        //else {
-	//        //    return delegate(Map p) {
-	//        //        Map.arguments.Pop();
-	//        //        return e(new EmptyMap(p));
-	//        //    };
-	//        //}
-	//    }
-	//    public Expression expression;
-	//    public Map key;
-	//    public Function(Expression parent,Statement statement,Map code):base(code.Source,parent) {
-	//        isFunction = true;
-	//        // very messy
-	//        if (parent is Program || parent is LiteralExpression) {
-	//            this.Statement = statement;
-	//        }
-	//        code = code[CodeKeys.Function];
-	//        Map parameter = code[CodeKeys.Parameter];
-	//        if(parameter.Count!=0) {
-	//            Literal para=new Literal(parameter, this);
-	//            para.Source=code.Source;
-	//            KeyStatement s = new KeyStatement(
-	//                para,
-	//                new LastArgument(Map.Empty, this), this, 0);
-	//            statementList.Add(s);
-	//            this.key=parameter;
-	//        }
-	//        this.expression=code[CodeKeys.Expression].GetExpression(this);
-	//        CurrentStatement c = new CurrentStatement(null,expression, this, statementList.Count);
-	//        statementList.Add(c);
-	//    }
-	//}
 	public class Program : ScopeExpression {
 		public override Map Call(Map argument, Map scope) {
-			Map.arguments.Push(argument);
-			return GetCompiled()(scope);
+			if (comp != null) {
+				return comp(new FunctionArgument(cachedKey, argument, scope));
+			}
+			else {
+				//return base.Call(argument, scope);
+				//Map.arguments.Push(argument);
+				return GetCompiled()(scope);
+			}
 		}
 		//public override bool ContainsFunctions() {
 		//    foreach (Statement statement in statementList) {
@@ -1136,6 +1096,8 @@ namespace Meta {
 				return null;
 			}
 		}
+		private Map cachedKey;
+		private Compiled comp;
 		public override Compiled GetCompiled(Expression parent) {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();});
@@ -1169,13 +1131,17 @@ namespace Meta {
 					Literal literal = keyStatement.key as Literal;
 					if (literal != null && literal.GetStructure().IsConstant) {
 						Map key=literal.GetStructure();
-						Compiled comp = currentStatement.value.GetCompiled(this);
+						cachedKey = key;
+						comp = currentStatement.value.GetCompiled(this);
 						this.isFunction = true;
 						return delegate(Map context) {
-							FunctionArgument arg = new FunctionArgument(key, Map.arguments.Pop());
-							arg.Scope = context;
-							return comp(arg);
+							return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
 						};
+						//Compiled comp = currentStatement.value.GetCompiled(this);
+						//this.isFunction = true;
+						//return delegate(Map context) {
+						//    return comp(new FunctionArgument(key, Map.arguments.Pop(),context));
+						//};
 					}
 				}
 			}
@@ -2484,8 +2450,6 @@ namespace Meta {
 			}
 		}
 	}
-	//public abstract class PerfectMapBase : DictionaryBaseMap {
-	//}
 	public class PerfectMap : DictionaryBaseMap {
 		public override Map GetFromIndex(int i) {
 			return values[i];
@@ -4337,17 +4301,6 @@ namespace Meta {
 								Expression))))),
 				Whitespace,
 			Whitespace);
-		//public static Rule FunctionMap = Sequence(
-		//    Syntax.functionStart,
-		//    Assign(CodeKeys.Function,
-		//        Sequence(
-		//            Assign(CodeKeys.Parameter, StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//            Whitespace,
-		//            OptionalError(Syntax.functionEnd),
-		//            Assign(CodeKeys.Expression, Expression),
-		//            Whitespace,
-		//    Whitespace)));
-
 		public static Rule FunctionPart = DelayedRule(delegate {
 			return Alternatives(Sequence(
 				Assign(CodeKeys.Literal,
@@ -4400,77 +4353,6 @@ namespace Meta {
 						Whitespace,
 						ReferenceAssignment(Expression)))));
 		});
-		//public static Rule FunctionPart = DelayedRule(delegate {
-		//    return Sequence(
-		//        Assign(CodeKeys.Literal,
-		//            Alternatives(
-		//                Sequence(
-		//                    Assign(
-		//                        CodeKeys.Program,
-		//                        Sequence(
-		//                            Assign(
-		//                                Integer32.One,
-		//                                Sequence(
-		//                                    Assign(
-		//                                        CodeKeys.Key,
-		//                                        Sequence(
-		//                                            Assign(
-		//                                                CodeKeys.Literal,
-		//                                                StringRule(OneOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
-		//                                    Assign(
-		//                                        CodeKeys.Value,
-		//                                        Sequence(
-		//                                                    Assign(
-		//                                                        CodeKeys.LastArgument,
-		//                                                        LiteralRule(0)))))),
-		//                            Assign(
-		//                                Integer32.Two,
-		//                                Sequence(
-		//                                    Assign(
-		//                                        CodeKeys.Current,
-		//                                        LiteralRule(0)),
-		//                                    Assign(
-		//                                        CodeKeys.Value,
-		//                                        Alternatives(
-		//                                            Sequence(
-		//                                                Syntax.functionSeparator,
-		//                                                Assign(
-		//                                                    CodeKeys.Literal,
-		//                                                    FunctionPart)
-		//                                            ),
-		//                                            Sequence(
-		//                                                Syntax.functionEnd,
-		//                                                Whitespace,
-		//                                                ReferenceAssignment(Expression)
-		//                                            ))))),
-		//                            Whitespace))))));
-		//});
-
-
-		//public static Rule FunctionPart = DelayedRule(delegate {
-		//    return Sequence(
-		//        Assign(CodeKeys.Literal,
-		//            Sequence(
-		//                Assign(
-		//                    CodeKeys.Function,
-		//                    Sequence(
-		//                        Assign(
-		//                            CodeKeys.Parameter,
-		//                            StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))),
-		//                        Assign(
-		//                            CodeKeys.Expression,
-		//                            Alternatives(
-		//                                Sequence(
-		//                                    Syntax.functionSeparator,
-		//                                    ReferenceAssignment(FunctionPart)
-		//                                ),
-		//                                Sequence(
-		//                                    Syntax.functionEnd,
-		//                                    Whitespace,
-		//                                    ReferenceAssignment(Expression)
-		//                                ))),
-		//                        Whitespace)))));
-		//});
 
 		public static Rule FunctionProgram = Sequence(
 			Syntax.functionStart,
@@ -5016,10 +4898,6 @@ namespace Meta {
 			}
 			return Serialize(map, indentation);
 		}
-		//private static string FunctionStatement(Map map, int indentation) {
-		//    return map[CodeKeys.Parameter].GetString() + "|" +
-		//        Expression(map[CodeKeys.Expression], indentation);
-		//}
 		private static string KeyStatement(Map map, int indentation) {
 			Map key = map[CodeKeys.Key];
 			//if (key.Equals(new DictionaryMap(CodeKeys.Literal, CodeKeys.Function))) {
