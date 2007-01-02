@@ -1507,29 +1507,6 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public static List<Map> literals = new List<Map>();
-		//public override Compiled GetCompiled(Expression parent) {
-		//    //emitter.LoadField(typeof(Literal), ("literals"));
-		//    //emitter.LoadConstant(index);
-		//    //emitter.Call(typeof(List<Map>), "get_Item");
-		//    if (literal.ContainsKey(CodeKeys.Function)) {
-		//        literal.Compile(parent);
-		//        return delegate(Map c) {
-		//            return literal.Copy(c);
-		//        };
-		//        //literal.Compile(parent);
-		//        //emitter.Emit(context);
-		//        //emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
-
-		//        //literal.Compile(parent);
-		//        //emitter.Emit(context);
-		//        //emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
-		//    }
-		//    else {
-		//        return delegate {
-		//            return literal;
-		//        };
-		//    }
-		//}
 		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
 			if (index == -1) {
 				literals.Add(literal);
@@ -6060,7 +6037,12 @@ namespace Meta {
 		public static Dictionary<Map, Type> statements = new Dictionary<Map, Type>();
 		public Expression GetFunction(Expression parent,Statement statement) {
 			if (ContainsKey(CodeKeys.Function)) {
-				return new Function(parent, statement, this);
+				//if (this[CodeKeys.Function][CodeKeys.Parameter].Count==0) {
+				//    return this[CodeKeys.Function][CodeKeys.Expression].GetExpression(parent);
+				//}
+				//else {
+					return new Function(parent, statement, this);
+				//}
 			}
 			throw new Exception("some error");
 		}
