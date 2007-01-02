@@ -1155,6 +1155,22 @@ namespace Meta {
 				}
 				useList = false;
 			}
+			if (statementList.Count == 2) {
+				KeyStatement keyStatement = statementList[0] as KeyStatement;
+				CurrentStatement currentStatement = statementList[1] as CurrentStatement;
+				if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
+					Literal literal = keyStatement.key as Literal;
+					if (literal != null && literal.GetStructure().IsConstant) {
+						Map key=literal.GetStructure();
+						Compiled comp = currentStatement.value.GetCompiled(this);
+						return delegate(Map context) {
+							FunctionArgument arg = new FunctionArgument(key, Map.arguments.Pop());
+							arg.Scope = context;
+							return comp(arg);
+						};
+					}
+				}
+			}
 			Mapping mapping=UsePerfectMap();
 			return delegate(Map p) {
 				Map context;
