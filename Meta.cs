@@ -4347,8 +4347,9 @@ namespace Meta {
 		//            Assign(CodeKeys.Expression, Expression),
 		//            Whitespace,
 		//    Whitespace)));
+
 		public static Rule FunctionPart = DelayedRule(delegate {
-			return Sequence(
+			return Alternatives(Sequence(
 				Assign(CodeKeys.Literal,
 					Alternatives(
 						Sequence(
@@ -4363,7 +4364,7 @@ namespace Meta {
 												Sequence(
 													Assign(
 														CodeKeys.Literal,
-														StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
+														StringRule(OneOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
 											Assign(
 												CodeKeys.Value,
 												Sequence(
@@ -4390,8 +4391,62 @@ namespace Meta {
 														Whitespace,
 														ReferenceAssignment(Expression)
 													))))),
-									Whitespace))))));
+									Whitespace)))))),
+									Sequence(
+										Assign(
+											CodeKeys.Literal,
+									Sequence(
+						Syntax.functionEnd,
+						Whitespace,
+						ReferenceAssignment(Expression)))));
 		});
+		//public static Rule FunctionPart = DelayedRule(delegate {
+		//    return Sequence(
+		//        Assign(CodeKeys.Literal,
+		//            Alternatives(
+		//                Sequence(
+		//                    Assign(
+		//                        CodeKeys.Program,
+		//                        Sequence(
+		//                            Assign(
+		//                                Integer32.One,
+		//                                Sequence(
+		//                                    Assign(
+		//                                        CodeKeys.Key,
+		//                                        Sequence(
+		//                                            Assign(
+		//                                                CodeKeys.Literal,
+		//                                                StringRule(OneOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))))),
+		//                                    Assign(
+		//                                        CodeKeys.Value,
+		//                                        Sequence(
+		//                                                    Assign(
+		//                                                        CodeKeys.LastArgument,
+		//                                                        LiteralRule(0)))))),
+		//                            Assign(
+		//                                Integer32.Two,
+		//                                Sequence(
+		//                                    Assign(
+		//                                        CodeKeys.Current,
+		//                                        LiteralRule(0)),
+		//                                    Assign(
+		//                                        CodeKeys.Value,
+		//                                        Alternatives(
+		//                                            Sequence(
+		//                                                Syntax.functionSeparator,
+		//                                                Assign(
+		//                                                    CodeKeys.Literal,
+		//                                                    FunctionPart)
+		//                                            ),
+		//                                            Sequence(
+		//                                                Syntax.functionEnd,
+		//                                                Whitespace,
+		//                                                ReferenceAssignment(Expression)
+		//                                            ))))),
+		//                            Whitespace))))));
+		//});
+
+
 		//public static Rule FunctionPart = DelayedRule(delegate {
 		//    return Sequence(
 		//        Assign(CodeKeys.Literal,
