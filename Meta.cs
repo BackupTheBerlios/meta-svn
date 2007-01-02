@@ -295,10 +295,6 @@ namespace Meta {
 		public object GetDelegate(object instance) {
 			Type myType = tb.CreateType();
 			ab.Save("MetaDynamic.dll");
-			//string modulePath=@"d:\meta\hellomodule.dll";
-			//string dynamicPath=@"d:\meta\metadynamic.dll";
-			//File.Copy(ModulePath,modulePath, true);// Path.GetDirectoryName(ModulePath)
-			//File.Copy(DynamicPath, dynamicPath, true);// Path.GetDirectoryName(ModulePath)
 			Delegate del = Delegate.CreateDelegate(type, instance, myType.GetMethod("HelloWorld"));
 			ProcessStartInfo start = new ProcessStartInfo(@"C:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);// @"d:\meta\metadynamic.dll");
 			start.UseShellExecute = false;
@@ -313,9 +309,7 @@ namespace Meta {
 			if (process.ExitCode == 1) {
 				Console.WriteLine(reader.ReadToEnd());
 				Process.Start(@"C:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
-				Console.ReadLine();
-			}
-			else {
+				throw new Exception("code generation error");
 			}
 			return del;
 		}
@@ -1677,36 +1671,6 @@ namespace Meta {
 			}
 		}
 	}
-	//public static Delegate CreateDelegateFromCode(Map code, Type delegateType) {
-	//    MethodInfo invoke = delegateType.GetMethod("Invoke");
-	//    ParameterInfo[] parameters = invoke.GetParameters();
-	//    Emitter emitter = new Emitter(delegateType,typeof(MetaDelegate));
-	//    LocalBuilder local = emitter.DeclareLocal(typeof(Map[]));
-	//    emitter.LoadConstant(parameters.Length);
-	//    emitter.NewArray(typeof(Map));
-	//    emitter.StoreLocal(local);
-	//    for (int i = 0; i < parameters.Length; i++) {
-	//        emitter.LoadLocal(local);
-	//        emitter.LoadConstant(i);
-	//        emitter.LoadArgument(i + 1);
-	//        Transform.GetMetaConversion(parameters[i].ParameterType,emitter);
-	//        emitter.CastClass(typeof(Map));
-	//        emitter.StoreElementReference();
-	//    }
-	//    emitter.LoadArgument(0);
-	//    emitter.LoadLocal(local);
-	//    emitter.Call(typeof(MetaDelegate),"Call");
-	//    if (invoke.ReturnType == typeof(void)) {
-	//        emitter.Pop();
-	//        emitter.Return();
-	//    }
-	//    else {
-	//        Transform.GetDotNetConversion(invoke.ReturnType, emitter);
-	//        emitter.CastClass(invoke.ReturnType);
-	//        emitter.Return();
-	//    }
-	//    return (Delegate)emitter.GetDelegate(new MetaDelegate(code, invoke.ReturnType));
-	//}
 	public class Transform {
 		public static Dictionary<int, Type> types = new Dictionary<int, Type>();
 		public static Delegate CreateDelegateFromCode(Map code, int typeToken) {
@@ -1741,26 +1705,23 @@ namespace Meta {
 				emitter.CastClass(invoke.ReturnType);
 				emitter.Return();
 			}
-			return (Delegate)emitter.GetDelegate(new MetaDelegate(code, invoke.ReturnType));
+			return (Delegate)emitter.GetDelegate(new MetaDelegate(code));
 		}
-		// remove
 		public class MetaDelegate {
 			private Map callable;
-			private Type returnType;
-			public MetaDelegate(Map callable, Type returnType) {
+			public MetaDelegate(Map callable) {
 				this.callable = callable;
-				this.returnType = returnType;
 			}
 			public Map Call(object[] arguments) {
 				Map pos = this.callable;
 				foreach (object argument in arguments) {
 					pos = pos.Call(Transform.ToMeta(argument));
 				}
-				return pos;//, returnType);
-				//return Transform.ToDotNet(pos, returnType);
+				return pos;
 			}
 		}
 		public static void GetMetaConversion(Type type, Emitter emitter) {
+			Label end=emitter.DefineLabel();
 			if (type.Equals(typeof(void))) {
 				emitter.NewObject(typeof(DictionaryMap));
 			}
@@ -1831,7 +1792,8 @@ namespace Meta {
 								emitter.BranchTrue(label);
 								emitter.Pop();
 								emitter.LoadField(typeof(Map),"Empty");
-								emitter.Return();
+								emitter.Break(end);
+								//emitter.Return();
 								emitter.MarkLabel(label);
 							}
 							if (type.IsValueType) {
@@ -1844,6 +1806,7 @@ namespace Meta {
 						throw new ApplicationException("Cannot convert object.");
 					}
 				}
+				emitter.MarkLabel(end);
 			}
 		public static Dictionary<Type, MetaConversion> metaConversions = new Dictionary<Type, MetaConversion>();
 		public static MetaConversion GetMetaConversion(Type type) {
