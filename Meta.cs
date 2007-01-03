@@ -41,6 +41,12 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
+		public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context) {
+			throw new Exception("not implemented");
+		}
+		public virtual Type GetUnconvertedType() {
+			return null;
+		}
 		public static void GetCachedCompile(Emitter emitter,Compiled c) {
 			emitter.LoadField(typeof(Expression), "compiles");
 			emitter.LoadConstant(GetIndex(c));
@@ -518,8 +524,16 @@ namespace Meta {
 			}
 			return true;
 		}
-
-		public override Compiled GetCompiled(Expression parent) {
+		public override Type GetUnconvertedType() {
+			List<object> arguments;
+			MethodBase method;
+			if (CallStuff(out arguments, out method)) {
+				MethodInfo m=method as MethodInfo;
+				return m.ReturnType;
+			}
+			return null;
+		}
+		public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context) {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -528,7 +542,7 @@ namespace Meta {
 					Compiled[] args = c.ToArray();
 					ParameterInfo[] parameters = method.GetParameters();
 					MethodInfo methodInfo = (MethodInfo)method;
-					Emitter emitter = new Emitter(typeof(Compiled));
+					//Emitter emitter = new Emitter(typeof(Compiled));
 					for (int i = 0; i < parameters.Length; i++) {
 						Type type = parameters[i].ParameterType;
 						compiles.Add(c[i]);
@@ -545,6 +559,76 @@ namespace Meta {
 						}
 						Transform.GetDotNetConversion(type, emitter);
 					}
+					emitter.Call(methodInfo);
+					//Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
+					//emitter.Return();
+					//return (Compiled)emitter.GetDelegate();
+				}
+			}
+		}
+
+		public override Compiled GetCompiled(Expression parent) {
+			List<object> arguments;
+			MethodBase method;
+			if (CallStuff(out arguments, out method)) {
+				if (method.IsStatic) {
+					List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
+					Compiled[] args = c.ToArray();
+					ParameterInfo[] parameters = method.GetParameters();
+					MethodInfo methodInfo = (MethodInfo)method;
+					Emitter emitter = new Emitter(typeof(Compiled));
+					for (int i = 0; i < parameters.Length; i++) {
+						Expression e = calls[i + 1];
+						Type unconvertedType=e.GetUnconvertedType();
+						if (e is Call && unconvertedType != null && unconvertedType == parameters[i].ParameterType) {
+							Type type = parameters[i].ParameterType;
+							compiles.Add(c[i]);
+							int index = compiles.Count - 1;
+							e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0);
+							//if (calls[i + 1] is Literal) {
+							//    calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+							//}
+							//else {
+							//    emitter.LoadField(typeof(Expression).GetField("compiles"));
+							//    emitter.LoadConstant(index);
+							//    emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+							//    emitter.LoadArgument(0);
+							//    emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+							//}
+						}
+						else {
+							Type type = parameters[i].ParameterType;
+							compiles.Add(c[i]);
+							int index = compiles.Count - 1;
+							if (calls[i + 1] is Literal) {
+								calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+							}
+							else {
+								emitter.LoadField(typeof(Expression).GetField("compiles"));
+								emitter.LoadConstant(index);
+								emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+								emitter.LoadArgument(0);
+								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+							}
+							Transform.GetDotNetConversion(type, emitter);
+						}
+					}
+					//for (int i = 0; i < parameters.Length; i++) {
+					//    Type type = parameters[i].ParameterType;
+					//    compiles.Add(c[i]);
+					//    int index = compiles.Count - 1;
+					//    if (calls[i + 1] is Literal) {
+					//        calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+					//    }
+					//    else {
+					//        emitter.LoadField(typeof(Expression).GetField("compiles"));
+					//        emitter.LoadConstant(index);
+					//        emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+					//        emitter.LoadArgument(0);
+					//        emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+					//    }
+					//    Transform.GetDotNetConversion(type, emitter);
+					//}
 					emitter.Call(methodInfo);
 					Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
 					emitter.Return();
