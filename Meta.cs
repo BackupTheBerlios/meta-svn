@@ -67,6 +67,9 @@ namespace Meta {
 		public Extent Source;
 		public readonly Expression Parent;
 		public Statement Statement;
+		public virtual Map CallFast(Map scope) {
+			return GetCompiled()(scope);
+		}
 		public virtual Map Call(Map argument, Map scope) {
 			return GetCompiled()(scope);
 		}
@@ -1496,10 +1499,25 @@ namespace Meta {
 			emitter.Call(typeof(List<Map>), "get_Item");
 			//if (literal.ContainsKey(CodeKeys.Function)) {
 			//try {
-				if (literal.GetExpression(parent) != null) {
-					literal.Compile(parent);
-					emitter.Emit(context);
-					emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+			Expression expression=literal.GetExpression(parent);
+				if (expression != null) {
+					bool emit = true;
+					Literal l = expression as Literal;
+					if (l != null) {
+						Expression child = l.literal.GetExpression(expression);
+						if (child == null) {
+							emit = false;
+						}
+						//if (child is Literal) {
+						//    emit = false;
+						//}
+					}
+					//if(child!=null && child
+					if (emit) {
+						literal.Compile(parent);
+						emitter.Emit(context);
+						emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+					}
 				}
 			//}
 			//catch (Exception e) {
@@ -1685,7 +1703,7 @@ namespace Meta {
 			DateTime start = DateTime.Now;
 
 
-			//Fibo(new Integer32(30));
+			//Fibo(new Integer32(32));
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
 			//return;
 			if (args.Length != 0) {
@@ -5485,10 +5503,12 @@ namespace Meta {
 		[Inline]
 		public static Map IfElse(bool condition, Map then, Map els) {
 			if (condition) {
-				return then.Call(Map.Empty);
+				return then.CallFast();
+				//return then.Call(Map.Empty);
 			}
 			else {
-				return els.Call(Map.Empty);
+				return els.CallFast();
+				//return els.Call(Map.Empty);
 			}
 		}
 		public static Map Sum(Map func, Map arg) {
@@ -5836,6 +5856,9 @@ namespace Meta {
 		}
 		public virtual Type GetClass() {
 			return null;
+		}
+		public virtual Map CallFast() {
+			return GetExpression().CallFast(this.Scope);
 		}
 		public virtual Map Call(Map argument) {
 			return GetExpression().Call(argument, this.Scope);

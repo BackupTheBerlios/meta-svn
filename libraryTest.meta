@@ -39,7 +39,7 @@
 		mapTest={
 			IfTest=flow.branch(
 				1,
-				(arg)"If,test,successful",
+				()"If,test,successful",
 				()0
 			);
 			Map={
