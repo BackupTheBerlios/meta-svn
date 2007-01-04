@@ -69,9 +69,14 @@ namespace Meta {
 			return compiled;
 		}
 		public Compiled compiled;
-		public bool isFunction = false;
+		public virtual bool IsFunction {
+			get {
+				return false;
+			}
+		}
+		//public bool isFunction = false;
 		public Extent Source;
-		public readonly Expression Parent;
+		public Expression Parent;
 		public Statement Statement;
 		public virtual Map CallFast(Map scope) {
 			return GetCompiled()(scope);
@@ -702,7 +707,8 @@ namespace Meta {
 				bool hasCrossedFunction = false;
 				while (true) {
 					while (current.Statement == null) {
-						if (current.isFunction) {
+						if (current.IsFunction) {
+						//if (current.isFunction) {
 							hasCrossedFunction = true;
 							// TERRIBLE hack
 							if (current.Parent is Call) {
@@ -751,7 +757,8 @@ namespace Meta {
 						}
 					}
 					count++;
-					if (current.Statement != null && current.Statement.program != null && !current.Statement.program.isFunction) {
+					if (current.Statement != null && current.Statement.program != null && !current.Statement.program.IsFunction) {
+					//if (current.Statement != null && current.Statement.program != null && !current.Statement.program.isFunction) {
 						programCounter++;
 					}
 					current = current.Parent;
@@ -911,6 +918,17 @@ namespace Meta {
 		}
 	}
 	public class Program : ScopeExpression {
+		public override bool IsFunction {
+			get {
+				if (!_isFunctionChecked) {
+					_isFunction = CheckIsFunction();
+					_isFunctionChecked = true;
+				}
+				return _isFunction;
+			}
+		}
+		private bool _isFunctionChecked = false;
+		private bool _isFunction = false;
 		public override Map Call(Map argument, Map scope) {
 			if (comp != null) {
 				return comp(new FunctionArgument(cachedKey, argument, scope));
@@ -1019,7 +1037,9 @@ namespace Meta {
 						Map key=literal.GetStructure();
 						cachedKey = key;
 						comp = currentStatement.value.GetCompiled(this);
-						this.isFunction = true;
+						//this.isFunction = true;
+						this._isFunction = true;
+						//this.isFunction = true;
 						return delegate(Map context) {
 							return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
 						};
@@ -1050,7 +1070,29 @@ namespace Meta {
 			};
 		}
 		public List<Statement> statementList= new List<Statement>();
+		// make this a property
+		private bool CheckIsFunction() {
+			if (statementList.Count == 2) {
+				KeyStatement keyStatement = statementList[0] as KeyStatement;
+				CurrentStatement currentStatement = statementList[1] as CurrentStatement;
+				if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
+					Literal literal = keyStatement.key as Literal;
+					if (literal != null && literal.GetStructure().IsConstant) {
+						//Map key = literal.GetStructure();
+						//cachedKey = key;
+						//comp = currentStatement.value.GetCompiled(this);
+						return true;
+						//this.isFunction = true;
+						//return delegate(Map context) {
+						//    return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
+						//};
+					}
+				}
+			}
+			return false;
+		}
 		public Program(Extent source,Expression parent):base(source,parent) {
+			//CheckIsFunction();
 		}
 		public Program(Map code, Expression parent) : base(code.Source, parent) {
 			int index = 0;
@@ -1058,6 +1100,7 @@ namespace Meta {
 				statementList.Add(m.GetStatement(this, index));
 				index++;
 			}
+			//CheckIsFunction();
 		}
 	}
 	public delegate void StatementDelegate(ref Map context,Map value);
@@ -1459,7 +1502,7 @@ namespace Meta {
 				Program program = subs[0] as Program;
 				if (program != null) {
 					if (program.statementList.Count == 2) {
-						//program.GetCompiled(parent);
+						program.GetCompiled(parent);
 						KeyStatement first = program.statementList[0] as KeyStatement;
 						KeyStatement second = program.statementList[1] as KeyStatement;
 						if (first != null && second != null) {
@@ -1473,6 +1516,8 @@ namespace Meta {
 										Compiled sComp;
 										first.value.Statement = this.Statement;
 										second.value.Statement = this.Statement;
+										first.value.Parent = this;
+										second.value.Parent = this;
 										if(firstKey.Equals(Integer32.One)) {
 											fComp = first.value.GetCompiled(this);
 											sComp=second.value.GetCompiled(this);
@@ -1486,14 +1531,11 @@ namespace Meta {
 										return delegate(Map context) {
 											Map stuff = s[1](context);
 											int condition = stuff.GetInt32();
-											//Map map = new EmptyMap();
-											//map.Scope = context;
-											Map map = context;
 											if (condition == 1) {
-												return fComp(map);
+												return fComp(context);
 											}
 											else if (condition == 0) {
-												return sComp(map);
+												return sComp(context);
 											}
 											else {
 												throw new Exception("there was an error");
