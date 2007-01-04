@@ -1459,7 +1459,7 @@ namespace Meta {
 				Program program = subs[0] as Program;
 				if (program != null) {
 					if (program.statementList.Count == 2) {
-						program.GetCompiled(this);
+						//program.GetCompiled(parent);
 						KeyStatement first = program.statementList[0] as KeyStatement;
 						KeyStatement second = program.statementList[1] as KeyStatement;
 						if (first != null && second != null) {
@@ -1471,29 +1471,29 @@ namespace Meta {
 									if(first.value is Search && second.value is Search) {
 										Compiled fComp;
 										Compiled sComp;
+										first.value.Statement = this.Statement;
+										second.value.Statement = this.Statement;
 										if(firstKey.Equals(Integer32.One)) {
-											fComp = first.value.GetCompiled();
-											sComp=second.value.GetCompiled();
+											fComp = first.value.GetCompiled(this);
+											sComp=second.value.GetCompiled(this);
 										}
 										else {
-											fComp = second.value.GetCompiled();
-											sComp = first.value.GetCompiled();
+											fComp = second.value.GetCompiled(this);
+											sComp = first.value.GetCompiled(this);
 										}
 										//Compiled firstCompiled = first.value.GetCompiled(program);
 										//Compiled secondCompiled = second.value.GetCompiled(program);
 										return delegate(Map context) {
 											Map stuff = s[1](context);
 											int condition = stuff.GetInt32();
-											Map map = new EmptyMap();
-											map.Scope = context;
+											//Map map = new EmptyMap();
+											//map.Scope = context;
+											Map map = context;
 											if (condition == 1) {
-												return fComp(map);//.Call(Map.Empty);
-												//return first.value.GetCompiled(program)(map).Call(Map.Empty);
-												//return firstKey.GetExpression(program).Call(Map.Empty, context);
+												return fComp(map);
 											}
 											else if (condition == 0) {
-												return sComp(map);//.Call(Map.Empty);
-												//return second.value.GetCompiled(program)(map).Call(Map.Empty);
+												return sComp(map);
 											}
 											else {
 												throw new Exception("there was an error");
