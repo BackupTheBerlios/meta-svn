@@ -1335,10 +1335,10 @@ namespace Meta {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
-			if (value is Literal && ((Literal)value).literal.GetExpression(program) != null) {
-				((Literal)value).literal.GetExpression(program).Statement = this;
-				//((Literal)value).literal.Compile(program);
-			}
+			//if (value is Literal && ((Literal)value).literal.GetExpression(program) != null) {
+			//    ((Literal)value).literal.GetExpression(program).Statement = this;
+			//    //((Literal)value).literal.Compile(program);
+			//}
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
 					if (!(v is DictionaryMap && context is DictionaryMap)) {
@@ -1640,6 +1640,14 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			switch (args[0]) {
+				case "hello":
+					Console.WriteLine("x");
+					break;
+				case "whatever":
+					Console.WriteLine("bla");
+					break;
+			}
 			DateTime start = DateTime.Now;
 
 
@@ -3867,8 +3875,9 @@ namespace Meta {
 		public static Rule Comment = Sequence(
 			Syntax.comment,
 			Syntax.comment,
-			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))),
-			EndOfLine);
+			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))));
+			//StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))),
+			//EndOfLine);
 		
 		public static Rule Whitespace = FastZeroOrMore(
 			Alternatives(
@@ -3960,7 +3969,7 @@ namespace Meta {
 		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
 
 		public static Rule Value = DelayedRule(delegate {
-			return Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression);
+			return Sequence(Whitespace,ReferenceAssignment(Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression)),Whitespace);
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,Whitespace,ReferenceAssignment(Value));
 		public static Rule Entry = Alternatives(
