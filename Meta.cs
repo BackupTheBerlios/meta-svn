@@ -1469,6 +1469,16 @@ namespace Meta {
 								if (firstKey.Equals(Integer32.One) && secondKey.Equals(Integer32.Zero) ||
 									firstKey.Equals(Integer32.Zero) && secondKey.Equals(Integer.One)) {
 									if(first.value is Search && second.value is Search) {
+										Compiled fComp;
+										Compiled sComp;
+										if(firstKey.Equals(Integer32.One)) {
+											fComp = first.value.GetCompiled();
+											sComp=second.value.GetCompiled();
+										}
+										else {
+											fComp = second.value.GetCompiled();
+											sComp = first.value.GetCompiled();
+										}
 										//Compiled firstCompiled = first.value.GetCompiled(program);
 										//Compiled secondCompiled = second.value.GetCompiled(program);
 										return delegate(Map context) {
@@ -1477,12 +1487,12 @@ namespace Meta {
 											Map map = new EmptyMap();
 											map.Scope = context;
 											if (condition == 1) {
-												return first.value.GetCompiled()(map);//.Call(Map.Empty);
+												return fComp(map);//.Call(Map.Empty);
 												//return first.value.GetCompiled(program)(map).Call(Map.Empty);
 												//return firstKey.GetExpression(program).Call(Map.Empty, context);
 											}
 											else if (condition == 0) {
-												return second.value.GetCompiled()(map);//.Call(Map.Empty);
+												return sComp(map);//.Call(Map.Empty);
 												//return second.value.GetCompiled(program)(map).Call(Map.Empty);
 											}
 											else {
