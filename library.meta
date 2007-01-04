@@ -4,6 +4,10 @@
 		lib={
 			flow={
 				branch=Library.IfElse_Boolean_Map_Map;
+				branchMeta=(condition)(then)(else){
+					1=then;
+					0=else;
+				}.<condition>();
 				apply=Library.Apply_Map_Map;
 				if=(condition)(callable)flow.branch(condition,callable,()0);
 			};

@@ -41,7 +41,7 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public abstract class Expression {
-		public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context) {
+		public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
 			throw new Exception("not implemented");
 		}
 		public virtual Type GetUnconvertedType() {
@@ -533,7 +533,7 @@ namespace Meta {
 			}
 			return null;
 		}
-		public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context) {
+		public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
 			List<object> arguments;
 			MethodBase method;
 			if (CallStuff(out arguments, out method)) {
@@ -584,7 +584,7 @@ namespace Meta {
 							Type type = parameters[i].ParameterType;
 							compiles.Add(c[i]);
 							int index = compiles.Count - 1;
-							e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0);
+							e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0,type);
 							//if (calls[i + 1] is Literal) {
 							//    calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
 							//}
@@ -5231,10 +5231,13 @@ namespace Meta {
 	        }
 	    }
 	}
-	public class InlineAttribute:Attribute {
-	}
+	//public class InlineAttribute:Attribute {
+	//}
 	public class Library {
 		public class Int32 {
+			//public static int Cast(int a) {
+			//    return a;
+			//}
 			public static int Add(int a,int b) {
 				return a + b;
 			}
