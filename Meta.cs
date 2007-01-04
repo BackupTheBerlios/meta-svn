@@ -1335,6 +1335,10 @@ namespace Meta {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
+			if (value is Literal && ((Literal)value).literal.GetExpression(program) != null) {
+				((Literal)value).literal.GetExpression(program).Statement = this;
+				//((Literal)value).literal.Compile(program);
+			}
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
 					if (!(v is DictionaryMap && context is DictionaryMap)) {
