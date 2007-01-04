@@ -77,6 +77,7 @@
     <None Include="library.meta" />
     <None Include="libraryTest.meta" />
     <None Include="mergeSort.meta" />
+    <None Include="slowFibo.meta" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>

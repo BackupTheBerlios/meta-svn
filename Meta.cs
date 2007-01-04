@@ -1455,6 +1455,47 @@ namespace Meta {
 		//}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
+			if (subs.Count == 2) {
+				Program program = subs[0] as Program;
+				if (program != null) {
+					if (program.statementList.Count == 2) {
+						program.GetCompiled(this);
+						KeyStatement first = program.statementList[0] as KeyStatement;
+						KeyStatement second = program.statementList[1] as KeyStatement;
+						if (first != null && second != null) {
+							Map firstKey=first.key.GetConstant();
+							Map secondKey = second.key.GetConstant();
+							if (firstKey != null && secondKey != null) {
+								if (firstKey.Equals(Integer32.One) && secondKey.Equals(Integer32.Zero) ||
+									firstKey.Equals(Integer32.Zero) && secondKey.Equals(Integer.One)) {
+									if(first.value is Search && second.value is Search) {
+										//Compiled firstCompiled = first.value.GetCompiled(program);
+										//Compiled secondCompiled = second.value.GetCompiled(program);
+										return delegate(Map context) {
+											Map stuff = s[1](context);
+											int condition = stuff.GetInt32();
+											Map map = new EmptyMap();
+											map.Scope = context;
+											if (condition == 1) {
+												return first.value.GetCompiled()(map);//.Call(Map.Empty);
+												//return first.value.GetCompiled(program)(map).Call(Map.Empty);
+												//return firstKey.GetExpression(program).Call(Map.Empty, context);
+											}
+											else if (condition == 0) {
+												return second.value.GetCompiled()(map);//.Call(Map.Empty);
+												//return second.value.GetCompiled(program)(map).Call(Map.Empty);
+											}
+											else {
+												throw new Exception("there was an error");
+											}
+										};
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			return delegate(Map context) {
 				Map selected = s[0](context);
 				for (int i = 1; i < s.Count; i++) {
@@ -4867,6 +4908,12 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
+			public class FiboSlow : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"slowFibo.meta"), new DictionaryMap());
+				}
+			}
 			public class Fibo : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5701,7 +5748,12 @@ namespace Meta {
 			return GetExpression().CallFast(this.Scope);
 		}
 		public virtual Map Call(Map argument) {
-			return GetExpression().Call(argument, this.Scope);
+			try {
+				return GetExpression().Call(argument, this.Scope);
+			}
+			catch (Exception e) {
+			    return GetExpression().Call(argument, this.Scope);
+			}
 		}
 		public static Map Empty=new EmptyMap();
 		public Map DeepCopy() {
