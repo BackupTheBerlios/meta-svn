@@ -3745,24 +3745,9 @@ namespace Meta {
 			new FastAction(
 				Alternatives(
 					Sequence(
-						new FastAction(StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
-						OptionalError(Syntax.@string)
-					))));
-		public static Rule String = Sequence(
-			Syntax.@string,
-			new FastAction(
-				Alternatives(
-					Sequence(
 						new FastAction(StringRule(OneOrMoreChars(CharsExcept("" + Syntax.@string)))),
 						OptionalError(Syntax.@string)
 		))));
-		public static Rule String = Sequence(
-			Syntax.@string,
-			new FastAction(
-				Alternatives(
-					Sequence(
-						new FastAction(StringRule(OneOrMoreChars(CharsExcept("" + Syntax.@string)))),
-						OptionalError(Syntax.@string)))));
 		public static Rule Decimal = Sequence(
 			new Action(
 				SequenceList(
@@ -3819,25 +3804,42 @@ namespace Meta {
 				StringRule(
 					StringSequence(
 						OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
-						ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))))
-			)
-		);
-
+						ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))
+		))));
 		public static Rule Value = DelayedRule(delegate {
-			return Sequence(Whitespace,new FastAction(Alternatives(ListMap, FunctionMap, MapRule, String, Number, CharacterDataExpression)), Whitespace);
-		});
-		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart, Whitespace, new FastAction(Value));
-		public static Rule Entry = Alternatives(
-			Sequence(
-				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
-				Syntax.statement,
-				new Action(Value, delegate(Parser parser, Map map, ref Map result) {
-						result = new DictionaryMap(result[1], map);
-				}),
-			Whitespace
-			)
+			return Sequence(
+				Whitespace,
+				new FastAction(
+					Alternatives(
+						ListMap,
+						FunctionMap,
+						MapRule,
+						String,
+						Number,
+						CharacterDataExpression
+				)),
+				Whitespace
+		);});
+		private static Rule LookupAnything = Sequence(
+			Syntax.lookupAnythingStart,
+			Whitespace,
+			new FastAction(Value)
 		);
-
+		public static Rule Entry = Sequence(
+			new FastAction(
+				Alternatives(
+					Number,
+					LookupString,
+					LookupAnything
+			)),
+			Syntax.statement,
+			new Action(
+				Value,
+				delegate(Parser parser, Map map, ref Map result) {
+					result = new DictionaryMap(result, map);
+			}),
+			Whitespace
+		);
 		public static Rule MapRule = Sequence(
 			Syntax.programStart,
 			Whitespace,
@@ -3845,33 +3847,40 @@ namespace Meta {
 				OneOrMore(
 					new Action(
 						Sequence(
-							new FastAction(Entry), Whitespace, OptionalError(Syntax.programSeparator), Whitespace),
+							new FastAction(Entry),
+							Whitespace,
+							OptionalError(Syntax.programSeparator),
+							Whitespace
+						),
 						delegate(Parser parser, Map map, ref Map result) {
 							result = Library.Merge(result, map);
-						}
-			))),
+			}))),
 			OptionalError(Syntax.programEnd),
 			Whitespace
 		);
 		Dictionary<State, string> errors = new Dictionary<State, string>();
-		private static Rule Arg=DelayedRule(delegate {
-			return Alternatives(List,
-				FunctionProgram,
-				LiteralExpression, Call, Select,
-				Search, Program);
-		});
+		private static Rule Arg=DelayedRule(
+			delegate {
+				return Alternatives(
+					List,
+					FunctionProgram,
+					LiteralExpression,
+					Call,
+					Select,
+					Search,
+					Program
+		);});
 		public static Rule MakeCall(Rule m) {
-			return DelayedRule(delegate() {
-				return Sequence(
-					Assign(
-						CodeKeys.Call,
-						SequenceList(
-							Assign(1,
-								m),
+			return DelayedRule(
+				delegate() {
+					return Sequence(
+						Assign(
+							CodeKeys.Call,
+							SequenceList(
+								Autokey(m),
 								Whitespace,
 								Syntax.callStart,
 								Append(
-									Alternatives(
 										SequenceList(
 											Whitespace,
 											Assign(1, Alternatives(Arg, LiteralRule(new DictionaryMap(CodeKeys.Literal, Map.Empty)))),
@@ -3885,11 +3894,7 @@ namespace Meta {
 															new FastAction(Arg))))),
 											Whitespace
 											, OptionalError(Syntax.callEnd)
-											)
-											)))
-										));
-			});
-		}
+		)))));});}
 		public static Rule Call = MakeCall(DelayedRule(delegate { return Alternatives(List, FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program); }));
 		public static Rule SimpleCall = MakeCall(
 			DelayedRule(
