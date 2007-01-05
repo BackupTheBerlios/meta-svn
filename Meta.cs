@@ -57,7 +57,6 @@ namespace Meta {
 			return compiles.Count - 1;
 		}
 		public static List<Compiled> compiles = new List<Compiled>();
-		//public abstract bool ContainsFunctions();
 		public abstract bool ContainsSearchStatements();
 		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter,GetCompiled(parent));
@@ -74,7 +73,6 @@ namespace Meta {
 				return false;
 			}
 		}
-		//public bool isFunction = false;
 		public Extent Source;
 		public Expression Parent;
 		public Statement Statement;
@@ -127,9 +125,6 @@ namespace Meta {
 	public delegate Compiled CompiledDelegate(Expression parent);
 
 	public class LastArgument : Expression {
-		//public override bool ContainsFunctions() {
-		//    return false;
-		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -259,8 +254,6 @@ namespace Meta {
 			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
 			this.il = dynamicMethod.GetILGenerator();
-			// use this to generate verifiable il
-			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
 		private AssemblyBuilder ab;
 		private TypeBuilder tb;
@@ -281,9 +274,6 @@ namespace Meta {
 			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, parameters.ToArray());
 			il = meth.GetILGenerator();
 			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
-
-			// use this to generate verifiable il
-			//dynamicMethod.GetDynamicILInfo().SetCode()
 		}
 		public object GetDelegate() {
 			return dynamicMethod.CreateDelegate(type);
@@ -341,14 +331,6 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		//public override bool ContainsFunctions() {
-		//    foreach(Expression expression in calls) {
-		//        if(expression.ContainsFunctions()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in calls) {
 				if (expression.ContainsSearchStatements()) {
@@ -547,7 +529,6 @@ namespace Meta {
 					Compiled[] args = c.ToArray();
 					ParameterInfo[] parameters = method.GetParameters();
 					MethodInfo methodInfo = (MethodInfo)method;
-					//Emitter emitter = new Emitter(typeof(Compiled));
 					for (int i = 0; i < parameters.Length; i++) {
 						Type type = parameters[i].ParameterType;
 						compiles.Add(c[i]);
@@ -565,9 +546,6 @@ namespace Meta {
 						Transform.GetDotNetConversion(type, emitter);
 					}
 					emitter.Call(methodInfo);
-					//Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
-					//emitter.Return();
-					//return (Compiled)emitter.GetDelegate();
 				}
 			}
 		}
@@ -590,16 +568,6 @@ namespace Meta {
 							compiles.Add(c[i]);
 							int index = compiles.Count - 1;
 							e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0,type);
-							//if (calls[i + 1] is Literal) {
-							//    calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-							//}
-							//else {
-							//    emitter.LoadField(typeof(Expression).GetField("compiles"));
-							//    emitter.LoadConstant(index);
-							//    emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
-							//    emitter.LoadArgument(0);
-							//    emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-							//}
 						}
 						else {
 							Type type = parameters[i].ParameterType;
@@ -618,22 +586,6 @@ namespace Meta {
 							Transform.GetDotNetConversion(type, emitter);
 						}
 					}
-					//for (int i = 0; i < parameters.Length; i++) {
-					//    Type type = parameters[i].ParameterType;
-					//    compiles.Add(c[i]);
-					//    int index = compiles.Count - 1;
-					//    if (calls[i + 1] is Literal) {
-					//        calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-					//    }
-					//    else {
-					//        emitter.LoadField(typeof(Expression).GetField("compiles"));
-					//        emitter.LoadConstant(index);
-					//        emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
-					//        emitter.LoadArgument(0);
-					//        emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-					//    }
-					//    Transform.GetDotNetConversion(type, emitter);
-					//}
 					emitter.Call(methodInfo);
 					Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
 					emitter.Return();
@@ -672,9 +624,6 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
-		//public override bool ContainsFunctions() {
-		//    return expression.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatements() {
 			return expression.ContainsSearchStatements();
 		}
@@ -708,7 +657,6 @@ namespace Meta {
 				while (true) {
 					while (current.Statement == null) {
 						if (current.IsFunction) {
-						//if (current.isFunction) {
 							hasCrossedFunction = true;
 							// TERRIBLE hack
 							if (current.Parent is Call) {
@@ -758,7 +706,6 @@ namespace Meta {
 					}
 					count++;
 					if (current.Statement != null && current.Statement.program != null && !current.Statement.program.IsFunction) {
-					//if (current.Statement != null && current.Statement.program != null && !current.Statement.program.isFunction) {
 						programCounter++;
 					}
 					current = current.Parent;
@@ -794,7 +741,6 @@ namespace Meta {
 					}
 					if (index != -1) {
 						return delegate(Map context) {
-							//MakeSearched(key);
 							Map selected = context;
 							for (int i = 0; i < count; i++) {
 								selected = selected.Scope;
@@ -808,7 +754,6 @@ namespace Meta {
 					}
 					else {
 						return delegate(Map context) {
-							//MakeSearched(key);
 							Map selected = context;
 							for (int i = 0; i < count; i++) {
 								selected = selected.Scope;
@@ -828,7 +773,6 @@ namespace Meta {
 				return delegate(Map context) {
 					Map k = compiled(context);
 					Map selected = context;
-					//MakeSearched(k);
 					while (!selected.ContainsKey(k)) {
 						if (selected.Scope != null) {
 							selected = selected.Scope;
@@ -937,23 +881,6 @@ namespace Meta {
 				return GetCompiled()(scope);
 			}
 		}
-		//public override bool ContainsFunctions() {
-		//    foreach (Statement statement in statementList) {
-		//        KeyStatement keyStatement = statement as KeyStatement;
-		//        if (keyStatement != null) {
-		//            Literal literal=keyStatement.key as Literal;
-		//            if(literal!=null) {
-		//                if (literal.literal.Equals(CodeKeys.Function)) {
-		//                    return true;
-		//                }
-		//            }
-		//        }
-		//        if (statement.ContainsFunctions()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Statement statement in statementList) {
 				if (statement is SearchStatement || statement.ContainsSearchStatement()) {
@@ -1037,9 +964,7 @@ namespace Meta {
 						Map key=literal.GetStructure();
 						cachedKey = key;
 						comp = currentStatement.value.GetCompiled(this);
-						//this.isFunction = true;
 						this._isFunction = true;
-						//this.isFunction = true;
 						return delegate(Map context) {
 							return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
 						};
@@ -1070,7 +995,6 @@ namespace Meta {
 			};
 		}
 		public List<Statement> statementList= new List<Statement>();
-		// make this a property
 		private bool CheckIsFunction() {
 			if (statementList.Count == 2) {
 				KeyStatement keyStatement = statementList[0] as KeyStatement;
@@ -1078,21 +1002,13 @@ namespace Meta {
 				if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
 					Literal literal = keyStatement.key as Literal;
 					if (literal != null && literal.GetStructure().IsConstant) {
-						//Map key = literal.GetStructure();
-						//cachedKey = key;
-						//comp = currentStatement.value.GetCompiled(this);
 						return true;
-						//this.isFunction = true;
-						//return delegate(Map context) {
-						//    return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
-						//};
 					}
 				}
 			}
 			return false;
 		}
 		public Program(Extent source,Expression parent):base(source,parent) {
-			//CheckIsFunction();
 		}
 		public Program(Map code, Expression parent) : base(code.Source, parent) {
 			int index = 0;
@@ -1100,7 +1016,6 @@ namespace Meta {
 				statementList.Add(m.GetStatement(this, index));
 				index++;
 			}
-			//CheckIsFunction();
 		}
 	}
 	public delegate void StatementDelegate(ref Map context,Map value);
@@ -1238,9 +1153,6 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		//public override bool ContainsFunctions() {
-		//    return value.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1253,9 +1165,6 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
-		//public override bool ContainsFunctions() {
-		//    return key.ContainsFunctions() || value.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1325,9 +1234,6 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		//public override bool ContainsFunctions() {
-		//    return value.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatement() {
 			return value.ContainsSearchStatements();
 		}
@@ -1335,10 +1241,6 @@ namespace Meta {
 			return value.EvaluateStructure();
 		}
 		public override CompiledStatement Compile() {
-			//if (value is Literal && ((Literal)value).literal.GetExpression(program) != null) {
-			//    ((Literal)value).literal.GetExpression(program).Statement = this;
-			//    //((Literal)value).literal.Compile(program);
-			//}
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
 					if (!(v is DictionaryMap && context is DictionaryMap)) {
@@ -1359,9 +1261,6 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		//public override bool ContainsFunctions() {
-		//    return key.ContainsFunctions() || value.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatement() {
 			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
 		}
@@ -1390,10 +1289,6 @@ namespace Meta {
 	}
 	public class Literal : Expression {
 		private int index = -1;
-		//public override bool ContainsFunctions() {
-		//    Expression expression = literal.GetExpression();
-		//    return expression != null && expression.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatements() {
 			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
 		}
@@ -1436,9 +1331,6 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		//public override bool ContainsFunctions() {
-		//    return false;
-		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -1452,14 +1344,6 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
-		//public override bool ContainsFunctions() {
-		//    foreach (Expression expression in subs) {
-		//        if (expression.ContainsFunctions()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public override bool ContainsSearchStatements() {
 			foreach (Expression expression in subs) {
 				if (expression.ContainsSearchStatements()) {
@@ -1480,26 +1364,6 @@ namespace Meta {
 			}
 			return selected;
 		}
-		//public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
-		//    LocalBuilder selected=emitter.DeclareLocal(typeof(Map));
-		//    GetCachedCompile(emitter, subs[0].GetCompiled(parent));
-		//    emitter.Emit(context);
-		//    emitter.Call(typeof(Compiled),("Invoke"));
-		//    emitter.StoreLocal(selected);
-		//    foreach(Expression sub in subs.GetRange(1,subs.Count-1)) {
-		//        LocalBuilder key=emitter.DeclareLocal(typeof(Map));
-		//        GetCachedCompile(emitter, sub.GetCompiled(parent));
-		//        emitter.Emit(context);
-		//        emitter.Call(typeof(Compiled), "Invoke");
-		//        emitter.StoreLocal(key);
-		//        emitter.LoadLocal(selected);
-		//        emitter.LoadLocal(key);
-		//        emitter.Call(typeof(Map), "get_Item");
-		//        emitter.StoreLocal(selected);
-		//    }
-		//    emitter.LoadLocal(selected);
-		//    emitter.Return();
-		//}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			if (subs.Count == 2) {
@@ -1530,8 +1394,6 @@ namespace Meta {
 											fComp = second.value.GetCompiled(this);
 											sComp = first.value.GetCompiled(this);
 										}
-										//Compiled firstCompiled = first.value.GetCompiled(program);
-										//Compiled secondCompiled = second.value.GetCompiled(program);
 										return delegate(Map context) {
 											Map stuff = s[1](context);
 											int condition = stuff.GetInt32();
@@ -1608,19 +1470,13 @@ namespace Meta {
 		public static bool profiling = false;
 		static Interpreter() {
 			Console.WriteLine();
-			//try {
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			map.GetExpression(gac).Statement=new LiteralStatement(gac);
-			//map.GetFunction(gac, new LiteralStatement(gac));
 			map.Compile(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
-		//}
-		//catch (Exception e) {
-		//    Console.WriteLine(e);
-		//}
 		}
 		public static int Fibo(int x) {
 			if (x < 2) {
@@ -2423,13 +2279,11 @@ namespace Meta {
 		public Map[] values;
 		public override Map this[Map key] {
 			get {
-				// improve performance
-				if (!mapping.mapping.ContainsKey(key)) {
-					Console.WriteLine("Error!");
+				int index;
+				if(!mapping.mapping.TryGetValue(key,out index)) {
+					throw new KeyDoesNotExist(key,this.Source.Start,this);
 				}
-				int index = mapping.mapping[key];
-				Map result = values[index];
-				return result;
+				return values[index];
 			}
 			set {
 				values[mapping.mapping[key]] = value;
@@ -3876,8 +3730,6 @@ namespace Meta {
 			Syntax.comment,
 			Syntax.comment,
 			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))));
-			//StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))),
-			//EndOfLine);
 		
 		public static Rule Whitespace = FastZeroOrMore(
 			Alternatives(
@@ -5343,13 +5195,8 @@ namespace Meta {
 	        }
 	    }
 	}
-	//public class InlineAttribute:Attribute {
-	//}
 	public class Library {
 		public class Int32 {
-			//public static int Cast(int a) {
-			//    return a;
-			//}
 			public static int Add(int a,int b) {
 				return a + b;
 			}
@@ -5588,10 +5435,6 @@ namespace Meta {
 	}
 	// why is this even needed?
 	public class LiteralExpression : Expression {
-		//public override bool ContainsFunctions() {
-		//    Expression expression = literal.GetExpression();
-		//    return expression!=null && expression.ContainsFunctions();
-		//}
 		public override bool ContainsSearchStatements() {
 			return false;
 		}
@@ -5607,9 +5450,6 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
-		//public override bool ContainsFunctions() {
-		//    return false;
-		//}
 		public override bool ContainsSearchStatement() {
 			return false;
 		}
