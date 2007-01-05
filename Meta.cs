@@ -3936,34 +3936,49 @@ namespace Meta {
 				Alternative(
 					Prefix(Syntax.search,Expression),
 					Alternative(LookupStringExpression,LookupAnythingExpression))))));
-		private static Rule SmallSelect = DelayedRule(delegate {
-			return CachedRule(Sequence(
-				Assign(
-					CodeKeys.Select,
-					SequenceList(
-						Autokey(Alternative(Root, Search, Program, LiteralExpression)),
-				new FastAction(
-						OneOrMore(
-							Autokey(
-								FastSequence(
-									Syntax.select,
-									new FastAction(Alternative(
-										LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
-		});
 
-		private static Rule CallSelect = DelayedRule(delegate{
-			return CachedRule(Sequence(
-				Assign(
-					CodeKeys.Select,
-					SequenceList(
-						Autokey(SimpleCall),
-						new FastAction(
+		private static Rule MakeSelect(Rule m) {
+			return DelayedRule(delegate {
+				return CachedRule(Sequence(
+					Assign(
+						CodeKeys.Select,
+						SequenceList(
+							Autokey(m),
+					new FastAction(
 							OneOrMore(
 								Autokey(
 									FastSequence(
 										Syntax.select,
-										new FastAction(Alternative(LookupStringExpression,LookupAnythingExpression,LiteralExpression))))))))));
-		});
+										new FastAction(Alternative(
+											LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
+			});
+		}
+		private static Rule SmallSelect = MakeSelect(
+		DelayedRule(delegate {
+			return Alternative(Root, Search, Program, LiteralExpression);
+		}));
+		private static Rule CallSelect = MakeSelect(SimpleCall);
+		//                new FastAction(
+		//                    OneOrMore(
+		//                        Autokey(
+		//                            FastSequence(
+		//                                Syntax.select,
+		//                                new FastAction(Alternative(LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
+		//});
+
+		//private static Rule CallSelect = DelayedRule(delegate {
+		//    return CachedRule(Sequence(
+		//        Assign(
+		//            CodeKeys.Select,
+		//            SequenceList(
+		//                Autokey(SimpleCall),
+		//                new FastAction(
+		//                    OneOrMore(
+		//                        Autokey(
+		//                            FastSequence(
+		//                                Syntax.select,
+		//                                new FastAction(Alternative(LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
+		//});
 
 		private static Rule Select = DelayedRule(delegate{
 			return CachedRule(Sequence(
