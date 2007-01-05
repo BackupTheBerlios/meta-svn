@@ -762,5 +762,7 @@
 									1=,
 										search=,
 											literal="lib"
+									2=,
+										literal=0
 							2=,
 								literal="lib""

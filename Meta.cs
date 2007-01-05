@@ -3711,7 +3711,18 @@ namespace Meta {
 		);
 
 		public static Rule Expression = DelayedRule(delegate() {
-			return CachedRule(Alternative(List, LiteralExpression, Call, CallSelect, Select, Program,FunctionProgram, Search));
+			return CachedRule(
+				Alternative(
+					List,
+					LiteralExpression,
+					Call,
+					CallSelect,
+					Select,
+					Program,
+					FunctionProgram,
+					Search
+				)
+			);
 		});
 
 		public static Rule Integer = Sequence(new Action(
@@ -3758,7 +3769,8 @@ namespace Meta {
 					result = rational;
 					result.Source = map.Source;
 				}
-			}));
+			})
+		);
 
 		public static Rule Number = Sequence(
 			ReferenceAssignment(Integer),
@@ -3794,9 +3806,12 @@ namespace Meta {
 				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
 			},
 			CachedRule(
-			StringRule(StringSequence(
-		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
-		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))))));
+				StringRule(
+					StringSequence(
+						OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
+						ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))))
+			)
+		);
 
 		public static Rule Value = DelayedRule(delegate {
 			return Sequence(Whitespace,ReferenceAssignment(Alternative(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression)),Whitespace);
@@ -3809,7 +3824,9 @@ namespace Meta {
 				new Action(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
 				}),
-			 Whitespace));
+			Whitespace
+			)
+		);
 
 		public static Rule MapRule = Sequence(
 			Syntax.programStart,
@@ -3833,63 +3850,41 @@ namespace Meta {
 				LiteralExpression, Call, Select,
 				Search, Program);
 		});
-		public static Rule Call = DelayedRule(delegate() {
-			return Sequence(
-				Assign(CodeKeys.Call,
-				SequenceList(
-					Assign(1,
-						Alternative(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program)),
-						Whitespace,
-						Syntax.callStart,
-						Append(
-							Alternative(
-								SequenceList(
-									Whitespace,
-									Assign(1,Alternative(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
-									new FastAction(
-										ZeroOrMore(
-											Autokey(
-												Sequence(
-													Whitespace,
-													Syntax.callSeparator,
-													Whitespace,
-													ReferenceAssignment(Arg))))),
-									Whitespace
-									, OptionalError(Syntax.callEnd)
-									)
-									)))
-								));
-		});
-		// combine with above!!!!!!!!!!!!!
-		public static Rule SimpleCall = DelayedRule(delegate() {
-			return Sequence(
-				Assign(CodeKeys.Call,
-				SequenceList(
-					Assign(1,
-						Alternative(List, FunctionProgram, LiteralExpression, Program,SmallSelect, Search)),
-						Whitespace,
-						Syntax.callStart,
-						Append(
-							Alternative(
-								SequenceList(
-									Whitespace,
-									new FastAction(
-										ZeroOrMore(
-											Autokey(
-												Sequence(
-													Whitespace,
-													ReferenceAssignment(Alternative(List,
-														 FunctionProgram, LiteralExpression,
-														Call, Select, Search, Program)),
-													// should be optional error
-													Optional(Syntax.callSeparator)
-													)))),
-									Whitespace
-									, Syntax.callEnd
-									)
-									)))
-								));
-		});
+		public static Rule MakeCall(Rule m) {
+			return DelayedRule(delegate() {
+				return Sequence(
+					Assign(
+						CodeKeys.Call,
+						SequenceList(
+							Assign(1,
+								m),
+								Whitespace,
+								Syntax.callStart,
+								Append(
+									Alternative(
+										SequenceList(
+											Whitespace,
+											Assign(1, Alternative(Arg, LiteralRule(new DictionaryMap(CodeKeys.Literal, Map.Empty)))),
+											new FastAction(
+												ZeroOrMore(
+													Autokey(
+														Sequence(
+															Whitespace,
+															Syntax.callSeparator,
+															Whitespace,
+															ReferenceAssignment(Arg))))),
+											Whitespace
+											, OptionalError(Syntax.callEnd)
+											)
+											)))
+										));
+			});
+		}
+		public static Rule Call = MakeCall(DelayedRule(delegate { return Alternative(List, FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program); }));
+
+		public static Rule SimpleCall = MakeCall(DelayedRule(delegate() {
+			return Alternative(List, FunctionProgram, LiteralExpression, Program, SmallSelect, Search);
+		}));
 		private static Rule Simple(char c, Map literal) {
 			return Sequence(c,ReferenceAssignment(LiteralRule(literal)));
 		}
@@ -4183,25 +4178,28 @@ namespace Meta {
 			Syntax.functionStart,
 			ReferenceAssignment(FunctionPart)));
 
-		public static Rule Program = Condition(Syntax.programStart,DelayedRule(delegate {
-			return CachedRule(Sequence(
-				Assign(CodeKeys.Program,
-					SequenceList(
-						Syntax.programStart,
-						Append(
-							Alternative(
-								SequenceList(
-									Whitespace,
-									new FastAction(
-										ZeroOrMore(
-											Autokey(
-												Sequence(
-													Whitespace,
-													ReferenceAssignment(AllStatements))))),
-									Whitespace, OptionalError(Syntax.programEnd))
-									)))
-			)));
-		}));
+		public static Rule Program = Condition(
+			Syntax.programStart,
+			DelayedRule(delegate {
+				return CachedRule(
+					Sequence(
+						Assign(CodeKeys.Program,
+							SequenceList(
+								Syntax.programStart,
+								Append(
+									Alternative(
+										SequenceList(
+											Whitespace,
+											new FastAction(
+												ZeroOrMore(
+													Autokey(
+														Sequence(
+															Whitespace,
+															ReferenceAssignment(AllStatements))))),
+											Whitespace, OptionalError(Syntax.programEnd))
+											)))
+				)));
+			}));
 		public static Rule OptionalError(char c) {
 			return Alternative(c, Error("Missing '" + c + "'"));
 		}
@@ -4232,7 +4230,7 @@ namespace Meta {
 				return new Action(rule,delegate { });
 			}
 			protected Rule rule;
-			public Action(Rule rule, CustomActionDelegate action) { 
+			public Action(Rule rule, ActionDelegate action) { 
 				this.rule = rule;
 				this.action = action;
 			}
@@ -4244,7 +4242,7 @@ namespace Meta {
 				}
 				return false;
 			}
-			protected CustomActionDelegate action;
+			protected ActionDelegate action;
 		}
 		public static Action Autokey(Rule rule) {
 			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
@@ -4277,7 +4275,7 @@ namespace Meta {
 				return matched;
 			});
 		}
-		public delegate void CustomActionDelegate(Parser p, Map map, ref Map result);
+		public delegate void ActionDelegate(Parser p, Map map, ref Map result);
 		public delegate bool Precondition(Parser p);
 		public class CachedResult{
 			public CachedResult(Map map,State state) {
@@ -4291,18 +4289,18 @@ namespace Meta {
 			Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
 			allCached.Add(cached);
 			return new Rule(delegate(Parser parser, ref Map map) {
-				CachedResult cachedResult;
-				State state = parser.state;
+				CachedResult result;
 				if (parser.state.Text.Length == parser.state.index + 1) {
 					return false;
 				}
-				if (cached.TryGetValue(state, out cachedResult)) {
-					map = cachedResult.map;
-					parser.state = cachedResult.state;
+				if (cached.TryGetValue(parser.state, out result)) {
+					map = result.map;
+					parser.state = result.state;
 					return true;
 				}
+				State startState = parser.state;
 				if (rule.Match(parser, ref map)) {
-					cached[state] = new CachedResult(map, parser.state);
+					cached[startState] = new CachedResult(map, parser.state);
 					return true;
 				}
 				return false;
