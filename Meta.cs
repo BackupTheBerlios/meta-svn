@@ -3636,21 +3636,35 @@ namespace Meta {
 			this.Source = source;
 		}
 	}
+	// refactor
+	// use more side-effects
+	// remove special string and character rules, if possible
+	// remove duplication of rules
+	// maybe extract precondition automatically
 	public class Parser {
 		static Parser() {
 			Console.WriteLine("test");
 		}
+		public static Rule Condition(Precondition precondition,Rule rule) {
+			rule.precondition=precondition;
+			return rule;
+		}
+		public static Rule Condition(char c, Rule rule) {
+			return Condition(
+				delegate(Parser p) {
+					return p.Look() == c;
+				},
+				rule);
+
+		}
 		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
 		public struct State {
-			public Error[] Errors;
 			public override bool Equals(object obj) {
-				State state = (State)obj;
-				return state.Column == Column && state.index == index && state.Line == Line &&
-					state.FileName == FileName;
+				return ((State)obj).index == index && ((State)obj).FileName == FileName;
 			}
 			public override int GetHashCode() {
 				unchecked {
-					return index.GetHashCode() * Line.GetHashCode() * Column.GetHashCode() * FileName.GetHashCode();
+					return index.GetHashCode() * FileName.GetHashCode();
 				}
 			}
 			public State(string fileName, string Text) {
@@ -3666,78 +3680,38 @@ namespace Meta {
 			public int index;
 			public int Line;
 			public int Column;
+			public Error[] Errors;
 		}
 		public Stack<int> defaultKeys = new Stack<int>();
 		public State state;
 		public Parser(string text, string filePath) {
 			state = new State(filePath, text+Syntax.endOfFile);
-			Root.precondition=delegate(Parser p) {
-				return p.Look()==Syntax.root;
-			};
-			Program.precondition=delegate(Parser p) {
-				return p.Look()==Syntax.programStart;
-			};
-
-			LiteralExpression.precondition=delegate(Parser p) {
-				switch(p.Look()){
-					case Syntax.@string:
-					case Syntax.emptyMap:
-					case Syntax.negative:
-					case '1':
-					case '2':
-					case '3':
-					case '4':
-					case '5':
-					case '6':
-					case '7':
-					case '8':
-					case '9':
-					case '\'':
-						return true;
-						default:
-						return false;
-				}
-			};
-			LookupAnythingExpression.precondition = delegate(Parser p) {
-				return p.Look() == Syntax.lookupAnythingStart;
-			};
-			Comment.precondition = delegate(Parser p) {
-				return p.Look() == Syntax.comment && p.Look(1) == Syntax.comment;
-			};
-			List.precondition = delegate(Parser p) {
-				return p.Look() == Syntax.arrayStart;
-			};
-			LookupStringExpression.precondition = delegate(Parser p) {
-				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
-			};
-			LookupString.precondition = delegate(Parser p) {
-				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
-			};
-			Search.precondition = delegate(Parser p) {
-				char c = p.Look();
-				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
-			};
-			FunctionProgram.precondition=delegate(Parser p) {
-				return p.Look() == Syntax.functionStart;
-			};
 		}
-		public static Rule NewLine = Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine);
+		public static Rule NewLine = Alternative(
+			Syntax.lineFeed,
+			Syntax.carriageReturn
+		);
 		public static Rule EndOfLine = Sequence(
 			StringRule(ZeroOrMoreChars(Chars("" + Syntax.space + Syntax.tab))),
-			Alternatives(Syntax.unixNewLine, Syntax.windowsNewLine));
-
-		public static Rule Comment = Sequence(
+			Alternative(Syntax.lineFeed, Syntax.carriageReturn)
+		);
+		public static Rule Comment = Condition(Syntax.comment,Sequence(
 			Syntax.comment,
 			Syntax.comment,
-			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.windowsNewLine))));
-		
-		public static Rule Whitespace = FastZeroOrMore(
-			Alternatives(
+			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.carriageReturn.ToString())))
+		));		
+		public static Rule Whitespace = ZeroOrMore(
+			Alternative(
 				Comment,
-				Syntax.unixNewLine, Syntax.windowsNewLine[0], Syntax.tab, Syntax.space));
+				Syntax.lineFeed,
+				Syntax.carriageReturn,
+				Syntax.tab,
+				Syntax.space
+			)
+		);
 
 		public static Rule Expression = DelayedRule(delegate() {
-			return CachedRule(Alternatives(List, LiteralExpression, Call, CallSelect, Select, Program,FunctionProgram, Search));
+			return CachedRule(Alternative(List, LiteralExpression, Call, CallSelect, Select, Program,FunctionProgram, Search));
 		});
 
 		public static Rule Integer = Sequence(new Action(
@@ -3763,7 +3737,7 @@ namespace Meta {
 		public static Rule String = Sequence(
 			Syntax.@string,
 			ReferenceAssignment(
-			Alternatives(
+			Alternative(
 				Sequence(
 					ReferenceAssignment(
 						StringRule(OneOrMoreChars(CharsExcept(""+Syntax.@string)))),
@@ -3815,18 +3789,22 @@ namespace Meta {
 				return true;
 			};
 		}
-		public static Rule LookupString = CachedRule(
+		public static Rule LookupString = Condition(
+			delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			},
+			CachedRule(
 			StringRule(StringSequence(
 		    OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
-		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden)))));
+		    ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))))));
 
 		public static Rule Value = DelayedRule(delegate {
-			return Sequence(Whitespace,ReferenceAssignment(Alternatives(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression)),Whitespace);
+			return Sequence(Whitespace,ReferenceAssignment(Alternative(ListMap,FunctionMap, MapRule, String, Number, CharacterDataExpression)),Whitespace);
 		});
 		private static Rule LookupAnything = Sequence(Syntax.lookupAnythingStart,Whitespace,ReferenceAssignment(Value));
-		public static Rule Entry = Alternatives(
+		public static Rule Entry = Alternative(
 			Sequence(
-				Assign(1,Alternatives(Number,LookupString,LookupAnything)),
+				Assign(1,Alternative(Number,LookupString,LookupAnything)),
 				Syntax.statement,
 				new Action(Value, delegate(Parser parser, Map map, ref Map result) {
 						result = new DictionaryMap(result[1], map);
@@ -3837,7 +3815,7 @@ namespace Meta {
 			Syntax.programStart,
 			Whitespace,
 			new FastAction(
-				FastOneOrMore(
+				OneOrMore(
 					new Action(
 						Sequence(
 							ReferenceAssignment(Entry), Whitespace, OptionalError(Syntax.programSeparator), Whitespace),
@@ -3850,7 +3828,7 @@ namespace Meta {
 		);
 		Dictionary<State, string> errors = new Dictionary<State, string>();
 		private static Rule Arg=DelayedRule(delegate {
-			return Alternatives(List,
+			return Alternative(List,
 				FunctionProgram,
 				LiteralExpression, Call, Select,
 				Search, Program);
@@ -3860,16 +3838,16 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				SequenceList(
 					Assign(1,
-						Alternatives(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program)),
+						Alternative(List,FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
-							Alternatives(
+							Alternative(
 								SequenceList(
 									Whitespace,
-									Assign(1,Alternatives(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
+									Assign(1,Alternative(Arg,LiteralRule(new DictionaryMap(CodeKeys.Literal,Map.Empty)))),
 									new FastAction(
-										FastZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
@@ -3888,19 +3866,19 @@ namespace Meta {
 				Assign(CodeKeys.Call,
 				SequenceList(
 					Assign(1,
-						Alternatives(List, FunctionProgram, LiteralExpression, Program,SmallSelect, Search)),
+						Alternative(List, FunctionProgram, LiteralExpression, Program,SmallSelect, Search)),
 						Whitespace,
 						Syntax.callStart,
 						Append(
-							Alternatives(
+							Alternative(
 								SequenceList(
 									Whitespace,
 									new FastAction(
-										FastZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
-													ReferenceAssignment(Alternatives(List,
+													ReferenceAssignment(Alternative(List,
 														 FunctionProgram, LiteralExpression,
 														Call, Select, Search, Program)),
 													// should be optional error
@@ -3917,32 +3895,64 @@ namespace Meta {
 		}
 		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
 		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
-		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
-		private static Rule LiteralExpression = Sequence(
-			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
-		);
+		private static Rule Root = Condition(Syntax.root,Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty)));
+		private static Rule LiteralExpression = Condition(
+			delegate(Parser p) {
+				switch (p.Look()) {
+					case Syntax.@string:
+					case Syntax.emptyMap:
+					case Syntax.negative:
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
+					case '\'':
+						return true;
+					default:
+						return false;
+				}
+			},			
+			Sequence(
+			Assign(CodeKeys.Literal,Alternative(EmptyMap,Decimal,Number,String,CharacterDataExpression))
+		));
 		private static Rule LookupAnythingExpression = Sequence(
 			Syntax.lookupAnythingStart,Whitespace, ReferenceAssignment(Expression),OptionalError(Syntax.lookupAnythingEnd)
 		);
-		private static Rule LookupStringExpression = Sequence(Assign(CodeKeys.Literal,LookupString));
-		private static Rule Search = CachedRule(Sequence(
+		private static Rule LookupStringExpression = Condition(
+			delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			},
+			Sequence(Assign(CodeKeys.Literal,LookupString))
+		);
+		private static Rule Search = Condition(
+			delegate(Parser p) {
+				char c = p.Look();
+				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
+			},
+
+			CachedRule(Sequence(
 			Assign(
 				CodeKeys.Search,
-				Alternatives(
+				Alternative(
 					Prefix(Syntax.search,Expression),
-					Alternatives(LookupStringExpression,LookupAnythingExpression)))));
+					Alternative(LookupStringExpression,LookupAnythingExpression))))));
 		private static Rule SmallSelect = DelayedRule(delegate {
 			return CachedRule(Sequence(
 				Assign(
 					CodeKeys.Select,
 					SequenceList(
-						Autokey(Alternatives(Root, Search, Program, LiteralExpression)),
+						Autokey(Alternative(Root, Search, Program, LiteralExpression)),
 				new FastAction(
-						FastOneOrMore(
+						OneOrMore(
 							Autokey(
 								FastSequence(
 									Syntax.select,
-									new FastAction(Alternatives(
+									new FastAction(Alternative(
 										LookupStringExpression, LookupAnythingExpression, LiteralExpression))))))))));
 		});
 
@@ -3953,11 +3963,11 @@ namespace Meta {
 					SequenceList(
 						Autokey(SimpleCall),
 						new FastAction(
-							FastOneOrMore(
+							OneOrMore(
 								Autokey(
 									FastSequence(
 										Syntax.select,
-										new FastAction(Alternatives(LookupStringExpression,LookupAnythingExpression,LiteralExpression))))))))));
+										new FastAction(Alternative(LookupStringExpression,LookupAnythingExpression,LiteralExpression))))))))));
 		});
 
 		private static Rule Select = DelayedRule(delegate{
@@ -3966,9 +3976,9 @@ namespace Meta {
 					CodeKeys.Select,
 					SequenceList(
 						Assign(1,
-							Alternatives(Root,Search,Program,LiteralExpression)),
+							Alternative(Root,Search,Program,LiteralExpression)),
 						new FastAction(
-							FastOneOrMore(Autokey(Prefix(Syntax.select, Alternatives(
+							OneOrMore(Autokey(Prefix(Syntax.select, Alternative(
 								LookupStringExpression,LookupAnythingExpression,LiteralExpression)))))))));
 		});
 
@@ -3982,7 +3992,7 @@ namespace Meta {
 						Assign(1,Value),
 						Whitespace,
 						new FastAction(
-							FastZeroOrMore(
+							ZeroOrMore(
 								Autokey(
 									Sequence(
 										OptionalError(Syntax.arraySeparator),
@@ -4011,29 +4021,25 @@ namespace Meta {
 				return false;
 			}
 		});
-		public static Rule ComplexList() {
-			Action entryAction = ReferenceAssignment(ListEntry);
-			return Sequence(
+		public static Rule List = Condition(Syntax.arrayStart,PrePost(
+			delegate(Parser p) {p.defaultKeys.Push(1);},
+			 Sequence(
 				Assign(CodeKeys.Program,
 					SequenceList(
 						Whitespace,
 						Syntax.arrayStart,
 						Append(Optional(
-								SequenceList(Whitespace,Assign(1,ListEntry),
+								SequenceList(Whitespace, Assign(1, ListEntry),
 									Whitespace,
 									new FastAction(
-										FastZeroOrMore(
+										ZeroOrMore(
 											Autokey(
-												Sequence(OptionalError(Syntax.arraySeparator),Whitespace,entryAction)))))
+												Sequence(OptionalError(Syntax.arraySeparator), Whitespace, ReferenceAssignment(ListEntry))))))
 						)),
 						Whitespace,
-						Syntax.arrayEnd)));
-		}
-		public static Rule List = PrePost(
-			delegate(Parser p) {p.defaultKeys.Push(1);},
-			ComplexList(),
+						Syntax.arrayEnd))),
 			delegate(Parser p) {p.defaultKeys.Pop();}
-		);
+		));
 		public static Rule ComplexStatement(Rule rule, Action action) {
 			if (rule == null) {
 				return Sequence(
@@ -4064,7 +4070,7 @@ namespace Meta {
 			Syntax.statement,
 			Assign(
 				CodeKeys.Key,
-				Alternatives(
+				Alternative(
 					Sequence(
 						Syntax.lookupAnythingStart,
 						Whitespace,
@@ -4078,12 +4084,12 @@ namespace Meta {
 			Syntax.searchStatement,
 			Assign(
 				CodeKeys.Keys,
-				Alternatives(
+				Alternative(
 					Sequence(Assign(CodeKeys.Literal,LookupString)),Expression)));
 
 		public static Rule AllStatements = Sequence(
 			ReferenceAssignment(
-				Alternatives(CurrentStatement, NormalStatement, Statement, DiscardStatement)),
+				Alternative(CurrentStatement, NormalStatement, Statement, DiscardStatement)),
 			Whitespace,
 			OptionalError(Syntax.statementEnd),
 			Whitespace
@@ -4121,9 +4127,9 @@ namespace Meta {
 				Whitespace,
 			Whitespace);
 		public static Rule FunctionPart = DelayedRule(delegate {
-			return Alternatives(Sequence(
+			return Alternative(Sequence(
 				Assign(CodeKeys.Literal,
-					Alternatives(
+					Alternative(
 						Sequence(
 							Assign(
 								CodeKeys.Program,
@@ -4151,7 +4157,7 @@ namespace Meta {
 												LiteralRule(0)),
 											Assign(
 												CodeKeys.Value,
-												Alternatives(
+												Alternative(
 													Sequence(
 														Syntax.functionSeparator,
 														Assign(
@@ -4173,21 +4179,21 @@ namespace Meta {
 						ReferenceAssignment(Expression)))));
 		});
 
-		public static Rule FunctionProgram = Sequence(
+		public static Rule FunctionProgram = Condition(Syntax.functionStart, Sequence(
 			Syntax.functionStart,
-			ReferenceAssignment(FunctionPart));
+			ReferenceAssignment(FunctionPart)));
 
-		public static Rule Program = DelayedRule(delegate {
+		public static Rule Program = Condition(Syntax.programStart,DelayedRule(delegate {
 			return CachedRule(Sequence(
 				Assign(CodeKeys.Program,
 					SequenceList(
 						Syntax.programStart,
 						Append(
-							Alternatives(
+							Alternative(
 								SequenceList(
 									Whitespace,
 									new FastAction(
-										FastZeroOrMore(
+										ZeroOrMore(
 											Autokey(
 												Sequence(
 													Whitespace,
@@ -4195,9 +4201,9 @@ namespace Meta {
 									Whitespace, OptionalError(Syntax.programEnd))
 									)))
 			)));
-		});
+		}));
 		public static Rule OptionalError(char c) {
-			return Alternatives(c, Error("Missing '" + c + "'"));
+			return Alternative(c, Error("Missing '" + c + "'"));
 		}
 		public static Rule Error(string text) {
 			return new Rule(delegate (Parser parser,ref Map map) {
@@ -4262,7 +4268,7 @@ namespace Meta {
 				}
 			});
 		}
-		public static Rule FastOneOrMore(Action action) {
+		public static Rule OneOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				bool matched = false;
 				while (action.Execute(parser, ref map)) {
@@ -4287,11 +4293,11 @@ namespace Meta {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				CachedResult cachedResult;
 				State state = parser.state;
+				if (parser.state.Text.Length == parser.state.index + 1) {
+					return false;
+				}
 				if (cached.TryGetValue(state, out cachedResult)) {
 					map = cachedResult.map;
-					if (parser.state.Text.Length == parser.state.index + 1) {
-						return false;
-					}
 					parser.state = cachedResult.state;
 					return true;
 				}
@@ -4390,7 +4396,7 @@ namespace Meta {
 				while ((max == -1 || offset < max) && rule(parser.Look(offset))) {
 					offset++;
 					column++;
-					if (parser.Look(offset).Equals(Syntax.unixNewLine)) {
+					if (parser.Look(offset).Equals(Syntax.lineFeed)) {
 						line++;
 						column = 1;
 					}
@@ -4413,7 +4419,7 @@ namespace Meta {
 					map = next;
 					parser.state.index++;
 					parser.state.Column++;
-					if (next.Equals(Syntax.unixNewLine)) {
+					if (next.Equals(Syntax.lineFeed)) {
 						parser.state.Line++;
 						parser.state.Column = 1;
 					}
@@ -4435,6 +4441,7 @@ namespace Meta {
 		public static StringDelegate ZeroOrMoreChars(CharRule rule) {
 			return CharLoop(rule, 0, -1);
 		}
+		// get rid of this, if possible
 		public static Rule StringRule(StringDelegate del) {
 		    return new Rule(delegate(Parser parser, ref Map map) {
 		        string s = null;
@@ -4463,7 +4470,7 @@ namespace Meta {
 				return rule.Match(parser, ref map);
 			});
 		}
-		public static Rule Alternatives(params Rule[] cases) {
+		public static Rule Alternative(params Rule[] cases) {
 			return new Rule(delegate(Parser parser, ref Map map) {
 				foreach (Rule expression in cases) {
 					if (expression.Match(parser, ref map)) {
@@ -4513,16 +4520,9 @@ namespace Meta {
 				return true;
 			});
 		}
-		public static Rule FastZeroOrMore(Action action) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				while(action.Execute(parser, ref map));
-				return true;
-			});
-		}
 		public static Rule ZeroOrMore(Action action) {
 			return new Rule(delegate(Parser parser, ref Map map) {
-				map = new ListMap();
-				while (action.Execute(parser, ref map));
+				while(action.Execute(parser, ref map));
 				return true;
 			});
 		}
@@ -4587,8 +4587,8 @@ namespace Meta {
 		public const char fraction = '/';
 		public const char endOfFile = (char)65535;
 		public const char indentation = '\t';
-		public const char unixNewLine = '\n';
-		public const string windowsNewLine = "\r\n";
+		public const char lineFeed = '\n';
+		public const char carriageReturn = '\r';
 		public const char @string = '\"';
 		public const char emptyMap = '0';
 		public const char explicitCall = '-';
@@ -4825,24 +4825,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
-			public class FiboSlow : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"slowFibo.meta"), new DictionaryMap());
-				}
-			}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -4871,6 +4853,24 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
+				}
+			}
+			public class MergeSort : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+				}
+			}
+			public class FiboSlow : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"slowFibo.meta"), new DictionaryMap());
+				}
+			}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
 		}
