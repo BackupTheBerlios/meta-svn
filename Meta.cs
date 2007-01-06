@@ -40,13 +40,25 @@ using System.Runtime.InteropServices;
 
 namespace Meta {
 	public delegate Map Compiled(Map map);
-	public abstract class Expression {
-		public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
-			throw new Exception("not implemented");
+	public class ToMeta : Expression {
+		public Expression expression;
+		public ToMeta(Expression expression,Expression parent):base(null,parent) {
+			this.expression = expression;
 		}
-		public virtual Type GetUnconvertedType() {
+		public override Map GetStructure() {
 			return null;
 		}
+	}
+	public abstract class Expression {
+		public static Expression Optimize(Expression epression) {
+			return null;
+		}
+		//public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
+		//    throw new Exception("not implemented");
+		//}
+		//public virtual Type GetUnconvertedType() {
+		//    return null;
+		//}
 		public static void GetCachedCompile(Emitter emitter,Compiled c) {
 			emitter.LoadField(typeof(Expression), "compiles");
 			emitter.LoadConstant(GetIndex(c));
@@ -57,7 +69,7 @@ namespace Meta {
 			return compiles.Count - 1;
 		}
 		public static List<Compiled> compiles = new List<Compiled>();
-		public abstract bool ContainsSearchStatements();
+		//public abstract bool ContainsSearchStatements();
 		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter,GetCompiled(parent));
 		}
@@ -125,9 +137,9 @@ namespace Meta {
 	public delegate Compiled CompiledDelegate(Expression parent);
 
 	public class LastArgument : Expression {
-		public override bool ContainsSearchStatements() {
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    return false;
+		//}
 		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
 			emitter.LoadField(typeof(Map), "arguments");
 			emitter.Call(typeof(Stack<Map>), "Pop");
@@ -331,14 +343,14 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		public override bool ContainsSearchStatements() {
-			foreach (Expression expression in calls) {
-				if (expression.ContainsSearchStatements()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    foreach (Expression expression in calls) {
+		//        if (expression.ContainsSearchStatements()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
 			this.calls = new List<Expression>();
@@ -511,44 +523,44 @@ namespace Meta {
 			}
 			return true;
 		}
-		public override Type GetUnconvertedType() {
-			List<object> arguments;
-			MethodBase method;
-			if (CallStuff(out arguments, out method)) {
-				MethodInfo m=method as MethodInfo;
-				return m.ReturnType;
-			}
-			return null;
-		}
-		public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
-			List<object> arguments;
-			MethodBase method;
-			if (CallStuff(out arguments, out method)) {
-				if (method.IsStatic) {
-					List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-					Compiled[] args = c.ToArray();
-					ParameterInfo[] parameters = method.GetParameters();
-					MethodInfo methodInfo = (MethodInfo)method;
-					for (int i = 0; i < parameters.Length; i++) {
-						Type type = parameters[i].ParameterType;
-						compiles.Add(c[i]);
-						int index = compiles.Count - 1;
-						if (calls[i + 1] is Literal) {
-							calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-						}
-						else {
-							emitter.LoadField(typeof(Expression).GetField("compiles"));
-							emitter.LoadConstant(index);
-							emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
-							emitter.LoadArgument(0);
-							emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-						}
-						Transform.GetDotNetConversion(type, emitter);
-					}
-					emitter.Call(methodInfo);
-				}
-			}
-		}
+		//public override Type GetUnconvertedType() {
+		//    List<object> arguments;
+		//    MethodBase method;
+		//    if (CallStuff(out arguments, out method)) {
+		//        MethodInfo m=method as MethodInfo;
+		//        return m.ReturnType;
+		//    }
+		//    return null;
+		//}
+		//public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
+		//    List<object> arguments;
+		//    MethodBase method;
+		//    if (CallStuff(out arguments, out method)) {
+		//        if (method.IsStatic) {
+		//            List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
+		//            Compiled[] args = c.ToArray();
+		//            ParameterInfo[] parameters = method.GetParameters();
+		//            MethodInfo methodInfo = (MethodInfo)method;
+		//            for (int i = 0; i < parameters.Length; i++) {
+		//                Type type = parameters[i].ParameterType;
+		//                compiles.Add(c[i]);
+		//                int index = compiles.Count - 1;
+		//                if (calls[i + 1] is Literal) {
+		//                    calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
+		//                }
+		//                else {
+		//                    emitter.LoadField(typeof(Expression).GetField("compiles"));
+		//                    emitter.LoadConstant(index);
+		//                    emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+		//                    emitter.LoadArgument(0);
+		//                    emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+		//                }
+		//                Transform.GetDotNetConversion(type, emitter);
+		//            }
+		//            emitter.Call(methodInfo);
+		//        }
+		//    }
+		//}
 
 		public override Compiled GetCompiled(Expression parent) {
 			List<object> arguments;
@@ -562,14 +574,14 @@ namespace Meta {
 					Emitter emitter = new Emitter(typeof(Compiled));
 					for (int i = 0; i < parameters.Length; i++) {
 						Expression e = calls[i + 1];
-						Type unconvertedType=e.GetUnconvertedType();
-						if (e is Call && unconvertedType != null && unconvertedType == parameters[i].ParameterType) {
-							Type type = parameters[i].ParameterType;
-							compiles.Add(c[i]);
-							int index = compiles.Count - 1;
-							e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0,type);
-						}
-						else {
+						//Type unconvertedType=e.GetUnconvertedType();
+						//if (e is Call && unconvertedType != null && unconvertedType == parameters[i].ParameterType) {
+						//    Type type = parameters[i].ParameterType;
+						//    compiles.Add(c[i]);
+						//    int index = compiles.Count - 1;
+						//    e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0,type);
+						//}
+						//else {
 							Type type = parameters[i].ParameterType;
 							compiles.Add(c[i]);
 							int index = compiles.Count - 1;
@@ -584,7 +596,7 @@ namespace Meta {
 								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
 							}
 							Transform.GetDotNetConversion(type, emitter);
-						}
+						//}
 					}
 					emitter.Call(methodInfo);
 					Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
@@ -624,9 +636,9 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
-		public override bool ContainsSearchStatements() {
-			return expression.ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatements() {
+		//    return expression.ContainsSearchStatements();
+		//}
 		public static Dictionary<Map, int> search = new Dictionary<Map, int>();
 		public override Map GetStructure() {
 			Map key;
@@ -881,14 +893,14 @@ namespace Meta {
 				return GetCompiled()(scope);
 			}
 		}
-		public override bool ContainsSearchStatements() {
-			foreach (Statement statement in statementList) {
-				if (statement is SearchStatement || statement.ContainsSearchStatement()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    foreach (Statement statement in statementList) {
+		//        if (statement is SearchStatement || statement.ContainsSearchStatement()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override Map GetStructure() {
 			if (statementList.Count == 0) {
 				return new DictionaryMap();
@@ -1046,9 +1058,8 @@ namespace Meta {
 		}
 		public readonly Compiled value;
 	}
-
 	public abstract class Statement {
-		public abstract bool ContainsSearchStatement();
+		//public abstract bool ContainsSearchStatement();
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
 		private Map pre;
@@ -1153,9 +1164,9 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		public override bool ContainsSearchStatement() {
-			return value.ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatement() {
+		//    return value.ContainsSearchStatements();
+		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -1165,9 +1176,9 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
-		public override bool ContainsSearchStatement() {
-			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatement() {
+		//    return key.ContainsSearchStatements() || value.ContainsSearchStatements();
+		//}
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
 				List<Map> list=new List<Map>(PreKeys());
@@ -1234,9 +1245,9 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		public override bool ContainsSearchStatement() {
-			return value.ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatement() {
+		//    return value.ContainsSearchStatements();
+		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return value.EvaluateStructure();
 		}
@@ -1261,9 +1272,9 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		public override bool ContainsSearchStatement() {
-			return key.ContainsSearchStatements() || value.ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatement() {
+		//    return key.ContainsSearchStatements() || value.ContainsSearchStatements();
+		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -1289,9 +1300,9 @@ namespace Meta {
 	}
 	public class Literal : Expression {
 		private int index = -1;
-		public override bool ContainsSearchStatements() {
-			return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
-		}
+		//public override bool ContainsSearchStatements() {
+		//    return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
+		//}
 		public override Map GetStructure() {
 			return literal;
 		}
@@ -1331,9 +1342,9 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		public override bool ContainsSearchStatements() {
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    return false;
+		//}
 		public override Map GetStructure() {
 			return Gac.gac;
 		}
@@ -1344,14 +1355,14 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
-		public override bool ContainsSearchStatements() {
-			foreach (Expression expression in subs) {
-				if (expression.ContainsSearchStatements()) {
-					return true;
-				}
-			}
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    foreach (Expression expression in subs) {
+		//        if (expression.ContainsSearchStatements()) {
+		//            return true;
+		//        }
+		//    }
+		//    return false;
+		//}
 		public override Map GetStructure() {
 			// maybe wrong
 			Map selected = subs[0].GetStructure();
@@ -3636,947 +3647,6 @@ namespace Meta {
 			this.Source = source;
 		}
 	}
-	// refactor
-	// use more side-effects
-	// remove special string and character rules, if possible
-	// remove duplication of rules
-	// maybe extract precondition automatically
-	public class Parser {
-		static Parser() {
-			Console.WriteLine("test");
-		}
-		public static Rule Condition(Precondition precondition,Rule rule) {
-			rule.precondition=precondition;
-			return rule;
-		}
-		public static Rule Condition(char c, Rule rule) {
-			return Condition(
-				delegate(Parser p) {
-					return p.Look() == c;
-				},
-				rule
-			);
-		}
-		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
-		public struct State {
-			public override bool Equals(object obj) {
-				return ((State)obj).index == index && ((State)obj).FileName == FileName;
-			}
-			public override int GetHashCode() {
-				unchecked {
-					return index.GetHashCode() * FileName.GetHashCode();
-				}
-			}
-			public State(string fileName, string Text) {
-				this.index = 0;
-				this.FileName = fileName;
-				this.Line = 1;
-				this.Column = 0;
-				this.Text = Text;
-				this.Errors = new Error[] { };
-			}
-			public string Text;
-			public string FileName;
-			public int index;
-			public int Line;
-			public int Column;
-			public Error[] Errors;
-		}
-		public Stack<int> defaultKeys = new Stack<int>();
-		public State state;
-		public Parser(string text, string filePath) {
-			state = new State(filePath, text+Syntax.endOfFile);
-		}
-		public static Rule NewLine = Alternatives(
-			Syntax.lineFeed,
-			Syntax.carriageReturn
-		);
-		public static Rule EndOfLine = Sequence(
-			StringRule(ZeroOrMoreChars(Chars("" + Syntax.space + Syntax.tab))),
-			Alternatives(Syntax.lineFeed, Syntax.carriageReturn)
-		);
-		public static Rule Comment = Sequence(
-			Syntax.comment,
-			Syntax.comment,
-			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.carriageReturn.ToString())))
-		);		
-		public static Rule Whitespace = ZeroOrMore(
-			Alternatives(
-				Comment,
-				Syntax.lineFeed,
-				Syntax.carriageReturn,
-				Syntax.tab,
-				Syntax.space
-			));
-		public static Rule Expression = DelayedRule(delegate() {
-			return CachedRule(
-				Alternatives(
-					List,
-					LiteralExpression,
-					Call,
-					CallSelect,
-					Select,
-					Program,
-					FunctionProgram,
-					Search
-				));});
-		public static Rule Integer = Sequence(
-			new Action(
-				StringRule(OneOrMoreChars(Chars(Syntax.integer))), 
-				delegate(Parser p, Map map, ref Map result) {
-					string text=map.GetString();
-					int smallInteger;
-					if(int.TryParse(text,out smallInteger)) {
-						result = new Integer32(smallInteger);
-					}
-					else {
-						result = new Integer(text);
-					}
-					result.Source=map.Source;
-				}));
-		public static Rule StringLine=StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
-		public static Rule CharacterDataExpression = Sequence(
-			Syntax.character,
-			new FastAction(ReallyOneChar(CharsExcept(Syntax.character.ToString()))),
-			Syntax.character
-		);
-		public static Rule String = Sequence(
-			Syntax.@string,
-			new FastAction(
-				Alternatives(
-					Sequence(
-						new FastAction(StringRule(OneOrMoreChars(CharsExcept("" + Syntax.@string)))),
-						OptionalError(Syntax.@string)
-		))));
-		public static Rule Decimal = Sequence(
-			new Action(
-				SequenceList(
-					Append(StringRule(OneOrMoreChars(Chars(Syntax.integer)))),
-					Append(Syntax.decimalSeparator),
-					Append(StringRule(OneOrMoreChars(Chars(Syntax.integer))))),
-				delegate(Parser p, Map map, ref Map result) {
-					Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
-					if (rational.GetInteger() != null) {
-						result = new Integer32(rational.GetInt32());
-						result.Source = map.Source;
-					}
-					else {
-						result = rational;
-						result.Source = map.Source;
-					}
-		}));
-		public static Rule Number = Sequence(
-			new FastAction(Integer),
-			new Action(
-				Optional(
-					Sequence(
-						Syntax.fraction,
-						new FastAction(Integer))),
-				delegate(Parser p, Map map, ref Map result) {
-					if(map!=null) {
-						result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
-						result.Source = map.Source;
-					}
-		}));
-
-		public static StringDelegate StringSequence(params StringDelegate[] rules) {
-			return delegate(Parser parser, ref string s) {
-				s = "";
-				State oldState = parser.state;
-				foreach (StringDelegate rule in rules) {
-					string result = null;
-					if (rule(parser, ref result)) {
-						s += result;
-					}
-					else {
-						parser.state = oldState;
-						return false;
-					}
-				}
-				return true;
-			};
-		}
-		public static Rule LookupString = Condition(
-			delegate(Parser p) {
-				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
-			},
-			CachedRule(
-				StringRule(
-					StringSequence(
-						OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
-						ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))
-		))));
-		public static Rule Value = DelayedRule(delegate {
-			return Sequence(
-				Whitespace,
-				new FastAction(
-					Alternatives(
-						ListMap,
-						FunctionMap,
-						MapRule,
-						String,
-						Number,
-						CharacterDataExpression
-				)),
-				Whitespace
-		);});
-		private static Rule LookupAnything = Sequence(
-			Syntax.lookupAnythingStart,
-			Whitespace,
-			new FastAction(Value)
-		);
-		public static Rule Entry = Sequence(
-			new FastAction(
-				Alternatives(
-					Number,
-					LookupString,
-					LookupAnything
-			)),
-			Syntax.statement,
-			new Action(
-				Value,
-				delegate(Parser parser, Map map, ref Map result) {
-					result = new DictionaryMap(result, map);
-			}),
-			Whitespace
-		);
-		public static Rule MapRule = Sequence(
-			Syntax.programStart,
-			Whitespace,
-			new FastAction(
-				OneOrMore(
-					new Action(
-						Sequence(
-							new FastAction(Entry),
-							Whitespace,
-							OptionalError(Syntax.programSeparator),
-							Whitespace
-						),
-						delegate(Parser parser, Map map, ref Map result) {
-							result = Library.Merge(result, map);
-			}))),
-			OptionalError(Syntax.programEnd),
-			Whitespace
-		);
-		Dictionary<State, string> errors = new Dictionary<State, string>();
-		private static Rule Arg=DelayedRule(
-			delegate {
-				return Alternatives(
-					List,
-					FunctionProgram,
-					LiteralExpression,
-					Call,
-					Select,
-					Search,
-					Program
-		);});
-		public static Rule MakeCall(Rule m) {
-			return DelayedRule(
-				delegate() {
-					return Sequence(
-						Assign(
-							CodeKeys.Call,
-							SequenceList(
-								Autokey(m),
-								Whitespace,
-								Syntax.callStart,
-								Append(
-										SequenceList(
-											Whitespace,
-											Assign(1, Alternatives(Arg, LiteralRule(new DictionaryMap(CodeKeys.Literal, Map.Empty)))),
-											new FastAction(
-												ZeroOrMore(
-													Autokey(
-														Sequence(
-															Whitespace,
-															Syntax.callSeparator,
-															Whitespace,
-															new FastAction(Arg))))),
-											Whitespace
-											, OptionalError(Syntax.callEnd)
-		)))));});}
-		public static Rule Call = MakeCall(DelayedRule(delegate { return Alternatives(List, FunctionProgram, LiteralExpression, CallSelect, Select, Search, Program); }));
-		public static Rule SimpleCall = MakeCall(
-			DelayedRule(
-				delegate() {
-					return Alternatives(
-						List,
-						FunctionProgram,
-						LiteralExpression,
-						Program,
-						SmallSelect,
-						Search);}));
-		private static Rule Simple(char c, Map literal) {
-			return Sequence(c, new FastAction(LiteralRule(literal)));
-		}
-		private static Rule EmptyMap = Simple(Syntax.emptyMap,Map.Empty);
-		private static Rule Current = Simple(Syntax.current,new DictionaryMap(CodeKeys.Current, Map.Empty));
-		private static Rule Root = Simple(Syntax.root,new DictionaryMap(CodeKeys.Root,Map.Empty));
-		private static Rule LiteralExpression = Condition(
-			delegate(Parser p) {
-				switch (p.Look()) {
-					case Syntax.@string:
-					case Syntax.emptyMap:
-					case Syntax.negative:
-					case '1':
-					case '2':
-					case '3':
-					case '4':
-					case '5':
-					case '6':
-					case '7':
-					case '8':
-					case '9':
-					case '\'':
-						return true;
-					default:
-						return false;
-				}
-			},			
-			Sequence(
-			Assign(CodeKeys.Literal,Alternatives(EmptyMap,Decimal,Number,String,CharacterDataExpression))
-		));
-		private static Rule LookupAnythingExpression = Sequence(
-			Syntax.lookupAnythingStart,
-			Whitespace,
-			new FastAction(Expression),
-			OptionalError(Syntax.lookupAnythingEnd)
-		);
-		private static Rule LookupStringExpression = Condition(
-			delegate(Parser p) {
-				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
-			},
-			Sequence(Assign(CodeKeys.Literal,LookupString))
-		);
-		private static Rule Search = Condition(
-			delegate(Parser p) {
-				char c = p.Look();
-				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
-			},
-			CachedRule(Sequence(
-			Assign(
-				CodeKeys.Search,
-				Alternatives(
-					Prefix(Syntax.search,Expression),
-					Alternatives(LookupStringExpression,LookupAnythingExpression)
-		)))));
-		private static Rule MakeSelect(Rule m) {
-			return DelayedRule(
-				delegate {
-					return CachedRule(Sequence(
-						Assign(
-							CodeKeys.Select,
-							SequenceList(
-								Autokey(m),
-								new FastAction(
-									OneOrMore(
-										Autokey(
-											FastSequence(
-												Syntax.select,
-												new FastAction(
-													Alternatives(
-														LookupStringExpression,
-														LookupAnythingExpression,
-														LiteralExpression
-		))))))))));});}
-		private static Rule SmallSelect = MakeSelect(
-			DelayedRule(
-				delegate {
-					return Alternatives(Root, Search, Program, LiteralExpression);
-		}));
-		private static Rule CallSelect = MakeSelect(SimpleCall);
-		private static Rule Select = MakeSelect(
-			DelayedRule(
-				delegate{
-					return Alternatives(Root, Search, Program, LiteralExpression);
-		}));
-		public static Rule ListMap = Sequence(
-			Syntax.arrayStart,
-			new FastAction(
-				PrePost(
-					delegate(Parser p) {p.defaultKeys.Push(1);},
-					SequenceList(
-						Whitespace,
-						Assign(1,Value),
-						Whitespace,
-						new FastAction(
-							ZeroOrMore(
-								Autokey(
-									Sequence(
-										OptionalError(Syntax.arraySeparator),
-										new FastAction(Sequence(Whitespace, new FastAction(Value)))
-						)))),
-						Whitespace,
-						OptionalError(Syntax.arrayEnd)
-					),
-					delegate(Parser p) {
-						p.defaultKeys.Pop();
-		})));
-		public static Rule ListEntry = new Rule(
-			delegate(Parser p, ref Map map) {
-				if (Parser.Expression.Match(p, ref map)) {
-					Map key = new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek()));
-					key.Source = map.Source;
-					map = new DictionaryMap(
-						CodeKeys.Key,
-						key,
-						CodeKeys.Value,
-						map
-					);
-					p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
-					return true;
-				}
-				else {
-					return false;
-				}
-		});
-		public static Rule List = Condition(
-			Syntax.arrayStart,
-			PrePost(
-				delegate(Parser p) {p.defaultKeys.Push(1);},
-				Sequence(
-					Assign(
-						CodeKeys.Program,
-						Optional(
-							SequenceList(
-								Whitespace,
-								Syntax.arrayStart,
-								Whitespace,
-								Autokey(ListEntry),
-								Whitespace,
-								new FastAction(
-									ZeroOrMore(
-										Autokey(
-											Sequence(
-												OptionalError(Syntax.arraySeparator),
-												Whitespace,
-												new FastAction(ListEntry)
-								)))),
-								Whitespace,
-								Syntax.arrayEnd
-				)))),
-				delegate(Parser p) {p.defaultKeys.Pop();}
-		));
-		// refactor
-		public static Rule ComplexStatement(Rule rule, Action action) {
-			if (rule == null) {
-				return Sequence(
-					action,
-					Assign(CodeKeys.Value, Expression),
-					Whitespace
-				);
-			}
-			else {
-				return Sequence(
-					action,
-					rule,
-					Assign(CodeKeys.Value, Expression),
-					Whitespace
-				);
-			}
-		}
-		public static Rule DiscardStatement = ComplexStatement(
-			null,
-			Assign(
-				CodeKeys.Discard,
-				LiteralRule(Map.Empty)
-		));
-		public static Rule CurrentStatement = ComplexStatement(
-			Syntax.current,Assign(CodeKeys.Current, LiteralRule(Map.Empty))
-		);
-		public static Rule Prefix(Rule pre, Rule rule) {
-			return Sequence(pre, new FastAction(rule));
-		}
-		public static Rule NormalStatement = ComplexStatement(
-			Syntax.statement,
-			Assign(
-				CodeKeys.Key,
-				Alternatives(
-					Sequence(
-						Syntax.lookupAnythingStart,
-						Whitespace,
-						new FastAction(Expression),
-						OptionalError(Syntax.lookupAnythingEnd)
-					),
-					Select,
-					Sequence(Assign(CodeKeys.Literal, LookupString)),
-					Expression
-		)));
-		public static Rule Statement = ComplexStatement(
-			Syntax.searchStatement,
-			Assign(
-				CodeKeys.Keys,
-				Alternatives(
-					Sequence(Assign(CodeKeys.Literal,LookupString)),Expression
-		)));
-		public static Rule AllStatements = Sequence(
-			new FastAction(
-				Alternatives(
-					CurrentStatement,
-					NormalStatement,
-					Statement,
-					DiscardStatement
-			)),
-			Whitespace,
-			OptionalError(Syntax.programSeparator),
-			Whitespace
-		);
-		public static Rule FunctionMap = Sequence(
-			Syntax.functionStart,
-			Assign(
-				CodeKeys.Program,
-				Sequence(
-					Autokey(
-						Sequence(
-							Assign(
-								CodeKeys.Key,
-								Sequence(
-									Assign(
-										CodeKeys.Literal,
-										StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))
-							))),
-							Assign(
-								CodeKeys.Value,
-								Sequence(Assign(CodeKeys.LastArgument,LiteralRule(0))
-					)))),
-					Autokey(
-						Sequence(
-							Assign(CodeKeys.Current,LiteralRule(0)),
-							Whitespace,
-							OptionalError(Syntax.functionEnd),
-							Assign(CodeKeys.Value,Expression)
-			)))),
-			Whitespace
-		);
-
-		// somehow buggy
-		public static Rule FunctionPart = DelayedRule(delegate {
-			return Alternatives(
-				Sequence(
-					Assign(
-						CodeKeys.Literal,
-						Alternatives(
-							Sequence(
-								Assign(
-									CodeKeys.Program,
-									Sequence(
-										Autokey(
-											Sequence(
-												Assign(
-													CodeKeys.Key,
-													Sequence(
-														Assign(
-															CodeKeys.Literal,
-															StringRule(OneOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))
-												))),
-												Assign(
-													CodeKeys.Value,
-													Sequence(
-														Assign(
-															CodeKeys.LastArgument,
-															LiteralRule(0)
-										))))),
-										Autokey(
-											Sequence(
-												Assign(
-													CodeKeys.Current,
-													LiteralRule(0)
-												),
-												Assign(
-													CodeKeys.Value,
-													Alternatives(
-														Sequence(
-															Syntax.functionSeparator,
-															Assign(
-																CodeKeys.Literal,
-																FunctionPart)
-														),
-														Sequence(
-															Syntax.functionEnd,
-															Whitespace,
-															new FastAction(Expression)
-										))))),
-										Whitespace
-				)))))),
-				Sequence(
-					Assign(
-						CodeKeys.Literal,
-						Sequence(
-							Syntax.functionEnd,
-							Whitespace,
-							new FastAction(Expression)
-		))));});
-
-		public static Rule FunctionProgram = Sequence(
-			Syntax.functionStart,
-			new FastAction(FunctionPart)
-		);
-
-		public static Rule Program = Condition(
-			Syntax.programStart,
-			DelayedRule(
-				delegate {
-					return CachedRule(
-						Sequence(
-							Assign(
-								CodeKeys.Program,
-								SequenceList(
-									Syntax.programStart,
-									Whitespace,
-									new FastAction(
-										ZeroOrMore(
-											Autokey(
-												Sequence(
-													Whitespace,
-													new FastAction(AllStatements)
-									)))),
-									Whitespace,
-									OptionalError(Syntax.programEnd)
-		))));}));
-		public static Rule OptionalError(char c) {
-			return Alternatives(c, Error("Missing '" + c + "'"));
-		}
-		public static Rule Error(string text) {
-			return new Rule(delegate (Parser parser,ref Map map) {
-				Error[] errors=new Error[parser.state.Errors.Length+1];
-				parser.state.Errors.CopyTo(errors, 0);
-				errors[errors.Length-1]=new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName),parser.state);
-				parser.state.Errors = errors;
-				return true;
-			});
-		}
-		public class FastAction:Action {
-			public FastAction(Rule rule):base(rule,delegate{}) {
-			}
-			public override bool Execute(Parser parser, ref Map result) {
-				if (rule.MatchFast(parser, ref result)) {
-					return true;
-				}
-				return false;
-			}
-		}
-		public class Action {
-			public static implicit operator Action(char c) {
-				return StringRule(OneChar(SingleChar(c)));
-			}
-			public static implicit operator Action(Rule rule) {
-				return new Action(rule,delegate { });
-			}
-			protected Rule rule;
-			public Action(Rule rule, ActionDelegate action) { 
-				this.rule = rule;
-				this.action = action;
-			}
-			public virtual bool Execute(Parser parser, ref Map result) {
-				Map map=null;
-				if (rule.Match(parser,ref map)) {
-					action(parser, map, ref result);
-					return true;
-				}
-				return false;
-			}
-			protected ActionDelegate action;
-		}
-		public static Action Autokey(Rule rule) {
-			return new Action(rule,delegate(Parser parser, Map map, ref Map result) {
-				result.Append(map);
-			});
-		}
-		public static Action Assign(Map key, Rule rule) {
-			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
-				result[key] = map;
-			});
-		}
-		public static Action Append(Rule rule) {
-			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
-				foreach (Map m in map.Array) {
-					result.Append(m);
-				}
-			});
-		}
-		public static Rule OneOrMore(Action action) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				bool matched = false;
-				while (action.Execute(parser, ref map)) {
-					matched = true;
-				}
-				return matched;
-			});
-		}
-		public delegate void ActionDelegate(Parser p, Map map, ref Map result);
-		public delegate bool Precondition(Parser p);
-		public class CachedResult{
-			public CachedResult(Map map,State state) {
-				this.map=map;
-				this.state=state;
-			}
-			public Map map;
-			public State state;
-		}
-		public static Rule CachedRule(Rule rule) {
-			Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
-			allCached.Add(cached);
-			return new Rule(delegate(Parser parser, ref Map map) {
-				CachedResult result;
-				if (parser.state.Text.Length == parser.state.index + 1) {
-					return false;
-				}
-				if (cached.TryGetValue(parser.state, out result)) {
-					map = result.map;
-					parser.state = result.state;
-					return true;
-				}
-				State startState = parser.state;
-				if (rule.Match(parser, ref map)) {
-					cached[startState] = new CachedResult(map, parser.state);
-					return true;
-				}
-				return false;
-			});
-		}
-		public class Rule {
-			public Rule(ParseFunction parseFunction) {
-				this.parseFunction = parseFunction;
-			}
-			public Precondition precondition;
-			public static implicit operator Rule(string s) {
-				List<Action> actions = new List<Action>();
-				foreach (char c in s) {
-					actions.Add(c);
-				}
-				return Sequence(actions.ToArray());
-			}
-			public static implicit operator Rule(char c) {
-			    return StringRule(OneChar(SingleChar(c)));
-			}
-			public bool MatchFast(Parser parser, ref Map map) {
-				if (precondition != null) {
-					if (!precondition(parser)) {
-						return false;
-					}
-				}
-				State oldState = parser.state;
-				bool matched;
-				matched = parseFunction(parser, ref map);
-				if (!matched) {
-					parser.state = oldState;
-				}
-				else {
-					if (map != null) {
-						map.Source = new Extent(
-							new Source(oldState.Line, oldState.Column, parser.state.FileName),
-							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
-					}
-				}
-				return matched;
-			}
-			public bool Match(Parser parser, ref Map map) {
-				if(precondition!=null) { 
-					if(!precondition(parser)) {
-						return false;
-					}
-				}
-				State oldState=parser.state;
-				bool matched;
-				Map result=null;
-				matched=parseFunction(parser, ref result);
-				if (!matched) {
-					parser.state=oldState;
-				}
-				else {
-					if (result != null) {
-						result.Source = new Extent(
-							new Source(oldState.Line, oldState.Column, parser.state.FileName),
-							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
-					}
-				}
-				map=result;
-				return matched;
-			}
-			private ParseFunction parseFunction;
-		}
-		public delegate bool CharRule(char next);
-		public static CharRule Chars(string chars) {
-			return new CharRule(delegate(char next) {
-				return chars.IndexOf(next) != -1;
-			});
-		}
-		public static CharRule CharsExcept(string characters) {
-			string chars = characters + Syntax.endOfFile;
-			return new CharRule(delegate(char c) {
-				return chars.IndexOf(c) == -1;
-			});
-		}
-		public delegate bool StringDelegate(Parser parser, ref string s);
-		public static StringDelegate CharLoop(CharRule rule, int min, int max) {
-			return delegate(Parser parser, ref string s) {
-				int offset = 0;
-				int column = parser.state.Column;
-				int line = 0;
-				while ((max == -1 || offset < max) && rule(parser.Look(offset))) {
-					offset++;
-					column++;
-					if (parser.Look(offset).Equals(Syntax.lineFeed)) {
-						line++;
-						column = 1;
-					}
-				}
-				s = parser.state.Text.Substring(parser.state.index, offset);
-				if (offset >= min && (max == -1 || offset <= max)) {
-					parser.state.index += offset;
-					parser.state.Column = column;
-					parser.state.Line += line;
-					return true;
-				}
-				return false;
-		};}
-		public static Rule ReallyOneChar(CharRule rule) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				char next = parser.Look();
-				bool matched=rule(next);
-				if(matched) {
-					map = next;
-					parser.state.index++;
-					parser.state.Column++;
-					if (next.Equals(Syntax.lineFeed)) {
-						parser.state.Line++;
-						parser.state.Column = 1;
-					}
-				}
-				return matched;
-			});
-		}
-		public static StringDelegate OneChar(CharRule rule) {
-			return CharLoop(rule, 1, 1);
-		}
-		public static CharRule SingleChar(char c) {
-			return new CharRule(delegate(char next) {
-				return next.Equals(c);
-			});
-		}
-		public static StringDelegate OneOrMoreChars(CharRule rule) {
-			return CharLoop(rule, 1, -1);
-		}
-		public static StringDelegate ZeroOrMoreChars(CharRule rule) {
-			return CharLoop(rule, 0, -1);
-		}
-		// get rid of this, if possible
-		public static Rule StringRule(StringDelegate del) {
-		    return new Rule(delegate(Parser parser, ref Map map) {
-		        string s = null;
-				bool success=del(parser, ref s);
-				map=s;
-				return success;
-		    });
-		}
-		public delegate void PrePostDelegate(Parser parser);
-		public static Rule PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				pre(parser);
-				bool matched = rule.Match(parser, ref map);
-				post(parser);
-				return matched;
-		});}
-		public delegate bool ParseFunction(Parser parser, ref Map map);
-		public delegate Rule RuleFunction();
-		public static Rule DelayedRule(RuleFunction ruleFunction) {
-			Rule rule=null;
-			return new Rule(delegate(Parser parser, ref Map map) {
-				if (rule == null) {
-					rule = ruleFunction();
-				}
-				return rule.Match(parser, ref map);
-			});
-		}
-		public static Rule Alternatives(params Rule[] cases) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				foreach (Rule expression in cases) {
-					if (expression.Match(parser, ref map)) {
-						return true;
-					}
-				}
-				return false;
-			});
-		}
-		public static Rule Sequence(char c,params Action[] actions) {
-			List<Action> a = new List<Action>(actions);
-			a.Insert(0,c);
-			return Condition(c,Sequence(false, a.ToArray()));
-		}
-		public static Rule Sequence(params Action[] actions) {
-			return Sequence(false,actions);
-		}
-		public static Rule SequenceList(params Action[] actions) {
-			return Sequence(true, actions);
-		}
-		public static Rule FastSequence(params Action[] actions) {
-			return new Rule(delegate(Parser parser, ref Map match) {
-				foreach (Action action in actions) {
-					if (!action.Execute(parser, ref match)) {
-						match = null;
-						return false;
-				}}
-				return true;
-			});
-		}
-		public static Rule Sequence(bool list,params Action[] actions) {
-			return new Rule(delegate(Parser parser, ref Map match) {
-				if (list) {
-					match = new ListMap();
-				}
-				else {
-					match = new DictionaryMap();
-				}
-				foreach (Action action in actions) {
-					if (!action.Execute(parser, ref match)) {
-						match = null;
-						return false;
-				}}
-				return true;
-		});}
-		public static Rule LiteralRule(Map literal) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				map = literal;
-				return true;
-		});}
-		public static Rule ZeroOrMore(Action action) {
-			return new Rule(delegate(Parser parser, ref Map map) {
-				while(action.Execute(parser, ref map));
-				return true;
-		});}
-		public static Rule Optional(Rule rule) { 
-			return new Rule(delegate(Parser parser, ref Map match) {
-				rule.Match(parser, ref match);
-				return true;
-		});}
-		private char Look(int offset) {
-			return state.Text[state.index + offset];
-		}
-		private char Look() {
-			return Look(0);
-		}
-		public static Map Parse(string file) {
-			return ParseString(System.IO.File.ReadAllText(file), file);
-		}
-		public static Map ParseString(string text, string fileName) {
-			Parser parser = new Parser(text, fileName);
-			Map result=null;
-			Parser.Value.Match(parser, ref result);
-			if (parser.state.index != parser.state.Text.Length - 1 || parser.state.Errors.Length!=0) {
-				string t = "";
-				if (parser.state.index != parser.state.Text.Length - 1) {
-					t += "Expected end of file. " + new Source(parser.state.Line, parser.state.Column, parser.state.FileName).ToString()+"\n";
-				}
-				foreach (Error error in parser.state.Errors) {
-					t += error.Text + error.Source.ToString()+"\n";
-				}
-				throw new SyntaxException(t, parser);
-			}
-			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
-				cached.Clear();
-			}
-			return result;
-	}}
 	public class Syntax {
 		public const char functionSeparator=',';
 		public const char decimalSeparator = '.';
@@ -4807,6 +3877,975 @@ namespace Meta {
 			return "".PadLeft(Math.Max(0,indentation), '\t');
 		}
 	}
+	public class Parser {
+		public static Rule Condition(Precondition precondition, Rule rule) {
+			rule.precondition = precondition;
+			return rule;
+		}
+		public static Rule Condition(char c, Rule rule) {
+			return Condition(
+				delegate(Parser p) {
+					return p.Look() == c;
+				},
+				rule
+			);
+		}
+		public static List<Dictionary<State, CachedResult>> allCached = new List<Dictionary<State, CachedResult>>();
+		public struct State {
+			public override bool Equals(object obj) {
+				return ((State)obj).index == index && ((State)obj).FileName == FileName;
+			}
+			public override int GetHashCode() {
+				unchecked {
+					return index.GetHashCode() * FileName.GetHashCode();
+				}
+			}
+			public State(string fileName, string Text) {
+				this.index = 0;
+				this.FileName = fileName;
+				this.Line = 1;
+				this.Column = 0;
+				this.Text = Text;
+				this.Errors = new Error[] { };
+			}
+			public string Text;
+			public string FileName;
+			public int index;
+			public int Line;
+			public int Column;
+			public Error[] Errors;
+		}
+		public Stack<int> defaultKeys = new Stack<int>();
+		public State state;
+		public Parser(string text, string filePath) {
+			state = new State(filePath, text + Syntax.endOfFile);
+		}
+		public static Rule NewLine = Alternatives(
+			Syntax.lineFeed,
+			Syntax.carriageReturn
+		);
+		public static Rule EndOfLine = FastSequence(
+			StringRule(ZeroOrMoreChars(Chars("" + Syntax.space + Syntax.tab))),
+			Alternatives(Syntax.lineFeed, Syntax.carriageReturn)
+		);
+		public static Rule Program = Condition(
+			Syntax.programStart,
+			DelayedRule(
+				delegate {
+					return Cache(
+						Sequence(
+							Assign(
+								CodeKeys.Program,
+								SequenceList(
+									Syntax.programStart,
+									Whitespace,
+									new FastAction(
+										ZeroOrMore(
+											Autokey(
+												FastSequence(
+													Whitespace,
+													new FastAction(AllStatements)
+							)))))),
+							Whitespace,
+							OptionalError(Syntax.programEnd)
+		));
+				}));
+		public static Rule Comment = FastSequence(
+			Syntax.comment,
+			Syntax.comment,
+			StringRule(ZeroOrMoreChars(CharsExcept(Syntax.carriageReturn.ToString())))
+		);
+		public static Rule Whitespace = ZeroOrMore(
+			Alternatives(
+				Comment,
+				Syntax.lineFeed,
+				Syntax.carriageReturn,
+				Syntax.tab,
+				Syntax.space
+		));
+		public static Rule Expression = DelayedRule(delegate() {
+			return Cache(
+				Alternatives(
+					List,
+					LiteralExpression,
+					Call,
+					CallSelect,
+					Select,
+					Program,
+					FunctionProgram,
+					Search
+		));
+		});
+		public static Rule Integer = FastSequence(
+			new Action(
+				StringRule(OneOrMoreChars(Chars(Syntax.integer))),
+				delegate(Parser p, Map map, ref Map result) {
+					string text = map.GetString();
+					int smallInteger;
+					if (int.TryParse(text, out smallInteger)) {
+						result = new Integer32(smallInteger);
+					}
+					else {
+						result = new Integer(text);
+					}
+					result.Source = map.Source;
+				}
+		));
+		public static Rule StringLine = StringRule(ZeroOrMoreChars(CharsExcept("\n\r")));
+		public static Rule CharacterDataExpression = FastSequence(
+			Syntax.character,
+			new FastAction(ReallyOneChar(CharsExcept(Syntax.character.ToString()))),
+			Syntax.character
+		);
+		public static Rule String = FastSequence(
+			Syntax.@string,
+			new FastAction(StringRule(OneOrMoreChars(CharsExcept("" + Syntax.@string)))),
+			OptionalError(Syntax.@string)
+		);
+		public static Rule Decimal = FastSequence(
+			new Action(
+				StringRule(
+					StringSequence(
+						OneOrMoreChars(Chars(Syntax.integer)),
+			// ugly hack
+						OneOrMoreChars(Chars(Syntax.decimalSeparator.ToString())),
+						OneOrMoreChars(Chars(Syntax.integer))
+				)),
+				delegate(Parser p, Map map, ref Map result) {
+					Rational rational = new Rational(double.Parse(map.GetString(), CultureInfo.InvariantCulture));
+					if (rational.GetInteger() != null) {
+						result = new Integer32(rational.GetInt32());
+						result.Source = map.Source;
+					}
+					else {
+						result = rational;
+						result.Source = map.Source;
+					}
+				}
+		));
+		public static Rule Number = FastSequence(
+			new FastAction(Integer),
+			new Action(
+				Optional(
+					FastSequence(
+						Syntax.fraction,
+						new FastAction(Integer)
+				)),
+				delegate(Parser p, Map map, ref Map result) {
+					if (map != null) {
+						result = new Rational(result.GetNumber().GetDouble(), map.GetNumber().GetDouble());
+						result.Source = map.Source;
+					}
+				}
+		));
+		public static StringDelegate StringSequence(params StringDelegate[] rules) {
+			return delegate(Parser parser, ref string s) {
+				s = "";
+				State oldState = parser.state;
+				foreach (StringDelegate rule in rules) {
+					string result = null;
+					if (rule(parser, ref result)) {
+						s += result;
+					}
+					else {
+						parser.state = oldState;
+						return false;
+					}
+				}
+				return true;
+			};
+		}
+		public static Rule LookupString = Condition(
+			delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			},
+			Cache(
+				StringRule(
+					StringSequence(
+						OneChar(CharsExcept(Syntax.lookupStringForbiddenFirst)),
+						ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbidden))
+		))));
+		public static Rule Value = DelayedRule(delegate {
+			return FastSequence(
+				Whitespace,
+				new FastAction(
+					Alternatives(
+						ListMap,
+						FunctionMap,
+						MapRule,
+						String,
+						Number,
+						CharacterDataExpression
+				)),
+				Whitespace
+		);
+		});
+		private static Rule LookupAnything = FastSequence(
+			Syntax.lookupAnythingStart,
+			Whitespace,
+			new FastAction(Value)
+		);
+		public static Rule Entry = FastSequence(
+			new FastAction(
+				Alternatives(
+					Number,
+					LookupString,
+					LookupAnything
+			)),
+			Syntax.statement,
+			new Action(
+				Value,
+				delegate(Parser parser, Map map, ref Map result) {
+					result = new DictionaryMap(result, map);
+				}),
+			Whitespace
+		);
+		public static Rule MapRule = FastSequence(
+			Syntax.programStart,
+			Whitespace,
+			new FastAction(
+				OneOrMore(
+					new Action(
+						FastSequence(
+							new FastAction(Entry),
+							Whitespace,
+							OptionalError(Syntax.programSeparator),
+							Whitespace
+						),
+						delegate(Parser parser, Map map, ref Map result) {
+							result = Library.Merge(result, map);
+						}))),
+			OptionalError(Syntax.programEnd),
+			Whitespace
+		);
+		Dictionary<State, string> errors = new Dictionary<State, string>();
+		private static Rule Arg = DelayedRule(
+			delegate {
+				return Alternatives(
+					List,
+					FunctionProgram,
+					LiteralExpression,
+					Call,
+					Select,
+					Search,
+					Program
+			);
+			}
+		);
+		public static Rule MakeCall(Rule m) {
+			return DelayedRule(
+				delegate() {
+					return Sequence(
+						Assign(
+							CodeKeys.Call,
+							SequenceList(
+								Autokey(m),
+								Whitespace,
+								Syntax.callStart,
+								Whitespace,
+								Autokey(
+									Alternatives(
+										Arg,
+										LiteralRule(new DictionaryMap(CodeKeys.Literal, Map.Empty))
+								)),
+								new FastAction(
+									ZeroOrMore(
+										Autokey(
+											FastSequence(
+												Whitespace,
+												Syntax.callSeparator,
+												Whitespace,
+												new FastAction(Arg)
+								)))),
+								Whitespace,
+								OptionalError(Syntax.callEnd)
+		)));
+				});
+		}
+		public static Rule Call = MakeCall(
+			DelayedRule(
+				delegate {
+					return Alternatives(
+						List,
+						FunctionProgram,
+						LiteralExpression,
+						CallSelect,
+						Select,
+						Search,
+						Program
+		);
+				}));
+		public static Rule SimpleCall = MakeCall(
+			DelayedRule(
+				delegate() {
+					return Alternatives(
+						List,
+						FunctionProgram,
+						LiteralExpression,
+						Program,
+						SmallSelect,
+						Search
+		);
+				}));
+		private static Rule Simple(char c, Map literal) {
+			return FastSequence(c, new FastAction(LiteralRule(literal)));
+		}
+		private static Rule EmptyMap = Simple(Syntax.emptyMap, Map.Empty);
+		private static Rule Current = Simple(Syntax.current, new DictionaryMap(CodeKeys.Current, Map.Empty));
+		private static Rule Root = Simple(Syntax.root, new DictionaryMap(CodeKeys.Root, Map.Empty));
+		private static Rule LiteralExpression = Condition(
+			delegate(Parser p) {
+				switch (p.Look()) {
+					case Syntax.@string:
+					case Syntax.emptyMap:
+					case Syntax.negative:
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
+					case '\'':
+						return true;
+					default:
+						return false;
+				}
+			},
+			Sequence(
+				Assign(
+					CodeKeys.Literal,
+					Alternatives(
+						EmptyMap,
+						Decimal,
+						Number,
+						String,
+						CharacterDataExpression
+		))));
+		private static Rule LookupAnythingExpression = FastSequence(
+			Syntax.lookupAnythingStart,
+			Whitespace,
+			new FastAction(Expression),
+			OptionalError(Syntax.lookupAnythingEnd)
+		);
+		private static Rule LookupStringExpression = Condition(
+			delegate(Parser p) {
+				return Syntax.lookupStringForbiddenFirst.IndexOf(p.Look()) == -1;
+			},
+			Sequence(Assign(CodeKeys.Literal, LookupString))
+		);
+		private static Rule Search = Condition(
+			delegate(Parser p) {
+				char c = p.Look();
+				return c == Syntax.search || Syntax.lookupStringForbiddenFirst.IndexOf(c) == -1 || c == Syntax.lookupAnythingStart;
+			},
+			Cache(Sequence(
+				Assign(
+					CodeKeys.Search,
+					Alternatives(
+						Prefix(Syntax.search, Expression),
+						Alternatives(LookupStringExpression, LookupAnythingExpression)
+		)))));
+		private static Rule MakeSelect(Rule m) {
+			return DelayedRule(
+				delegate {
+					return Cache(Sequence(
+						Assign(
+							CodeKeys.Select,
+							SequenceList(
+								Autokey(m),
+								new FastAction(
+									OneOrMore(
+										Autokey(
+											FastSequence(
+												Syntax.select,
+												new FastAction(
+													Alternatives(
+														LookupStringExpression,
+														LookupAnythingExpression,
+														LiteralExpression
+		))))))))));
+				});
+		}
+		private static Rule SmallSelect = MakeSelect(
+			DelayedRule(
+				delegate {
+					return Alternatives(Root, Search, Program, LiteralExpression);
+				}));
+		private static Rule CallSelect = MakeSelect(SimpleCall);
+		private static Rule Select = MakeSelect(Alternatives(Root, Search, Program, LiteralExpression));
+		public static Rule ListMap = FastSequence(
+			Syntax.arrayStart,
+			new FastAction(
+				PrePost(
+					delegate(Parser p) { p.defaultKeys.Push(1); },
+					SequenceList(
+						Whitespace,
+						Autokey(Value),
+						Whitespace,
+						new FastAction(
+							ZeroOrMore(
+								Autokey(
+									FastSequence(
+										OptionalError(Syntax.arraySeparator),
+										new FastAction(FastSequence(Whitespace, new FastAction(Value)))
+						)))),
+						Whitespace,
+						OptionalError(Syntax.arrayEnd)
+					),
+					delegate(Parser p) {
+						p.defaultKeys.Pop();
+					})));
+		public static Rule ListEntry = new Rule(
+			delegate(Parser p, ref Map map) {
+				if (Parser.Expression.Match(p, ref map)) {
+					Map key = new DictionaryMap(CodeKeys.Literal, new Integer32(p.defaultKeys.Peek()));
+					key.Source = map.Source;
+					map = new DictionaryMap(
+						CodeKeys.Key,
+						key,
+						CodeKeys.Value,
+						map
+					);
+					p.defaultKeys.Push(p.defaultKeys.Pop() + 1);
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
+		public static Rule List = Condition(
+			Syntax.arrayStart,
+			PrePost(
+				delegate(Parser p) { p.defaultKeys.Push(1); },
+				Sequence(
+					Assign(
+						CodeKeys.Program,
+						Optional(
+							SequenceList(
+								Whitespace,
+								Syntax.arrayStart,
+								Whitespace,
+								Autokey(ListEntry),
+								Whitespace,
+								new FastAction(
+									ZeroOrMore(
+										Autokey(
+											FastSequence(
+												OptionalError(Syntax.arraySeparator),
+												Whitespace,
+												new FastAction(ListEntry)
+								)))),
+								Whitespace,
+								Syntax.arrayEnd
+				)))),
+				delegate(Parser p) { p.defaultKeys.Pop(); }
+		));
+		// refactor
+		public static Rule ComplexStatement(Rule rule, Action action) {
+			if (rule == null) {
+				return Sequence(
+					action,
+					Assign(CodeKeys.Value, Expression),
+					Whitespace
+				);
+			}
+			else {
+				return Sequence(
+					action,
+					rule,
+					Assign(CodeKeys.Value, Expression),
+					Whitespace
+				);
+			}
+		}
+		public static Rule DiscardStatement = ComplexStatement(
+			null,
+			Assign(
+				CodeKeys.Discard,
+				LiteralRule(Map.Empty)
+		));
+		public static Rule CurrentStatement = ComplexStatement(
+			Syntax.current, Assign(CodeKeys.Current, LiteralRule(Map.Empty))
+		);
+		public static Rule Prefix(Rule pre, Rule rule) {
+			return FastSequence(pre, new FastAction(rule));
+		}
+		public static Rule NormalStatement = ComplexStatement(
+			Syntax.statement,
+			Assign(
+				CodeKeys.Key,
+				Alternatives(
+					FastSequence(
+						Syntax.lookupAnythingStart,
+						Whitespace,
+						new FastAction(Expression),
+						OptionalError(Syntax.lookupAnythingEnd)
+					),
+					Select,
+					Sequence(Assign(CodeKeys.Literal, LookupString)),
+					Expression
+		)));
+		public static Rule Statement = ComplexStatement(
+			Syntax.searchStatement,
+			Assign(
+				CodeKeys.Keys,
+				Alternatives(
+					Sequence(Assign(CodeKeys.Literal, LookupString)), Expression
+		)));
+		public static Rule AllStatements = FastSequence(
+			new FastAction(
+				Alternatives(
+					CurrentStatement,
+					NormalStatement,
+					Statement,
+					DiscardStatement
+			)),
+			Whitespace,
+			OptionalError(Syntax.programSeparator),
+			Whitespace
+		);
+		public static Rule FunctionMap = Sequence(
+			Syntax.functionStart,
+			Assign(
+				CodeKeys.Program,
+				SequenceList(
+					Autokey(
+						Sequence(
+							Assign(
+								CodeKeys.Key,
+								Sequence(
+									Assign(
+										CodeKeys.Literal,
+										StringRule(ZeroOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))
+							))),
+							Assign(
+								CodeKeys.Value,
+								Sequence(Assign(CodeKeys.LastArgument, LiteralRule(0))
+					)))),
+					Autokey(
+						Sequence(
+							Assign(CodeKeys.Current, LiteralRule(0)),
+							Whitespace,
+							OptionalError(Syntax.functionEnd),
+							Assign(CodeKeys.Value, Expression)
+			)))),
+			Whitespace
+		);
+
+		// somehow buggy
+		public static Rule FunctionPart = DelayedRule(delegate {
+			return Alternatives(
+				Sequence(
+					Assign(
+						CodeKeys.Literal,
+						Alternatives(
+							Sequence(
+								Assign(
+									CodeKeys.Program,
+									Sequence(
+										Autokey(
+											Sequence(
+												Assign(
+													CodeKeys.Key,
+													Sequence(
+														Assign(
+															CodeKeys.Literal,
+															StringRule(OneOrMoreChars(CharsExcept(Syntax.lookupStringForbiddenFirst)))
+												))),
+												Assign(
+													CodeKeys.Value,
+													Sequence(
+														Assign(
+															CodeKeys.LastArgument,
+															LiteralRule(0)
+										))))),
+										Autokey(
+											Sequence(
+												Assign(
+													CodeKeys.Current,
+													LiteralRule(0)
+												),
+												Assign(
+													CodeKeys.Value,
+													Alternatives(
+														Sequence(
+															Syntax.functionSeparator,
+															Assign(
+																CodeKeys.Literal,
+																FunctionPart)
+														),
+														FastSequence(
+															Syntax.functionEnd,
+															Whitespace,
+															new FastAction(Expression)
+										))))),
+										Whitespace
+				)))))),
+				Sequence(
+					Assign(
+						CodeKeys.Literal,
+						FastSequence(
+							Syntax.functionEnd,
+							Whitespace,
+							new FastAction(Expression)
+		))));
+		});
+
+		public static Rule FunctionProgram = FastSequence(
+			Syntax.functionStart,
+			new FastAction(FunctionPart)
+		);
+
+
+		public static Rule OptionalError(char c) {
+			return Alternatives(c, Error("Missing '" + c + "'"));
+		}
+		public static Rule Error(string text) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				Error[] errors = new Error[parser.state.Errors.Length + 1];
+				parser.state.Errors.CopyTo(errors, 0);
+				errors[errors.Length - 1] = new Error(text, new Source(parser.state.Line, parser.state.Column, parser.state.FileName), parser.state);
+				parser.state.Errors = errors;
+				return true;
+			});
+		}
+		public class FastAction : Action {
+			public FastAction(Rule rule)
+				: base(rule, delegate { }) {
+			}
+			public override bool Execute(Parser parser, ref Map result) {
+				if (rule.MatchFast(parser, ref result)) {
+					return true;
+				}
+				return false;
+			}
+		}
+		public class Action {
+			public static implicit operator Action(char c) {
+				return StringRule(OneChar(SingleChar(c)));
+			}
+			public static implicit operator Action(Rule rule) {
+				return new Action(rule, delegate { });
+			}
+			protected Rule rule;
+			public Action(Rule rule, ActionDelegate action) {
+				this.rule = rule;
+				this.action = action;
+			}
+			public virtual bool Execute(Parser parser, ref Map result) {
+				Map map = null;
+				if (rule.Match(parser, ref map)) {
+					action(parser, map, ref result);
+					return true;
+				}
+				return false;
+			}
+			protected ActionDelegate action;
+		}
+		public static Action Autokey(Rule rule) {
+			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
+				result.Append(map);
+			});
+		}
+		public static Action Assign(Map key, Rule rule) {
+			return new Action(rule, delegate(Parser parser, Map map, ref Map result) {
+				result[key] = map;
+			});
+		}
+		public static Rule OneOrMore(Action action) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				bool matched = false;
+				while (action.Execute(parser, ref map)) {
+					matched = true;
+				}
+				return matched;
+			});
+		}
+		public delegate void ActionDelegate(Parser p, Map map, ref Map result);
+		public delegate bool Precondition(Parser p);
+		public class CachedResult {
+			public CachedResult(Map map, State state) {
+				this.map = map;
+				this.state = state;
+			}
+			public Map map;
+			public State state;
+		}
+		public static Rule Cache(Rule rule) {
+			Dictionary<State, CachedResult> cached = new Dictionary<State, CachedResult>();
+			allCached.Add(cached);
+			return new Rule(delegate(Parser parser, ref Map map) {
+				if (parser.state.Text.Length == parser.state.index + 1) {
+					return false;
+				}
+				CachedResult result;
+				if (cached.TryGetValue(parser.state, out result)) {
+					map = result.map;
+					parser.state = result.state;
+					return true;
+				}
+				State startState = parser.state;
+				if (rule.Match(parser, ref map)) {
+					cached[startState] = new CachedResult(map, parser.state);
+					return true;
+				}
+				return false;
+			});
+		}
+		public class Rule {
+			public Rule(ParseFunction parseFunction) {
+				this.parseFunction = parseFunction;
+			}
+			public Precondition precondition;
+			public static implicit operator Rule(char c) {
+				return StringRule(OneChar(SingleChar(c)));
+			}
+			public bool MatchFast(Parser parser, ref Map map) {
+				if (precondition != null) {
+					if (!precondition(parser)) {
+						return false;
+					}
+				}
+				State oldState = parser.state;
+				bool matched;
+				matched = parseFunction(parser, ref map);
+				if (!matched) {
+					parser.state = oldState;
+				}
+				else {
+					if (map != null) {
+						map.Source = new Extent(
+							new Source(oldState.Line, oldState.Column, parser.state.FileName),
+							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+					}
+				}
+				return matched;
+			}
+			public bool Match(Parser parser, ref Map map) {
+				if (precondition != null) {
+					if (!precondition(parser)) {
+						return false;
+					}
+				}
+				State oldState = parser.state;
+				bool matched;
+				Map result = null;
+				matched = parseFunction(parser, ref result);
+				if (!matched) {
+					parser.state = oldState;
+				}
+				else {
+					if (result != null) {
+						result.Source = new Extent(
+							new Source(oldState.Line, oldState.Column, parser.state.FileName),
+							new Source(parser.state.Line, parser.state.Column, parser.state.FileName));
+					}
+				}
+				map = result;
+				return matched;
+			}
+			private ParseFunction parseFunction;
+		}
+		public delegate bool CharRule(char next);
+		public static CharRule Chars(string chars) {
+			return new CharRule(delegate(char next) {
+				return chars.IndexOf(next) != -1;
+			});
+		}
+		public static CharRule CharsExcept(string characters) {
+			string chars = characters + Syntax.endOfFile;
+			return new CharRule(delegate(char c) {
+				return chars.IndexOf(c) == -1;
+			});
+		}
+		public delegate bool StringDelegate(Parser parser, ref string s);
+		public static StringDelegate CharLoop(CharRule rule, int min, int max) {
+			return delegate(Parser parser, ref string s) {
+				int offset = 0;
+				int column = parser.state.Column;
+				int line = 0;
+				while ((max == -1 || offset < max) && rule(parser.Look(offset))) {
+					offset++;
+					column++;
+					if (parser.Look(offset).Equals(Syntax.lineFeed)) {
+						line++;
+						column = 1;
+					}
+				}
+				s = parser.state.Text.Substring(parser.state.index, offset);
+				if (offset >= min && (max == -1 || offset <= max)) {
+					parser.state.index += offset;
+					parser.state.Column = column;
+					parser.state.Line += line;
+					return true;
+				}
+				return false;
+			};
+		}
+		public static Rule ReallyOneChar(CharRule rule) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				char next = parser.Look();
+				bool matched = rule(next);
+				if (matched) {
+					map = next;
+					parser.state.index++;
+					parser.state.Column++;
+					if (next.Equals(Syntax.lineFeed)) {
+						parser.state.Line++;
+						parser.state.Column = 1;
+					}
+				}
+				return matched;
+			});
+		}
+		public static StringDelegate OneChar(CharRule rule) {
+			return CharLoop(rule, 1, 1);
+		}
+		public static CharRule SingleChar(char c) {
+			return new CharRule(delegate(char next) {
+				return next.Equals(c);
+			});
+		}
+		public static StringDelegate OneOrMoreChars(CharRule rule) {
+			return CharLoop(rule, 1, -1);
+		}
+		public static StringDelegate ZeroOrMoreChars(CharRule rule) {
+			return CharLoop(rule, 0, -1);
+		}
+		public static Rule StringRule(StringDelegate del) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				string s = null;
+				bool success = del(parser, ref s);
+				map = s;
+				return success;
+			});
+		}
+		public delegate void PrePostDelegate(Parser parser);
+		public static Rule PrePost(PrePostDelegate pre, Rule rule, PrePostDelegate post) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				pre(parser);
+				bool matched = rule.Match(parser, ref map);
+				post(parser);
+				return matched;
+			});
+		}
+		public delegate bool ParseFunction(Parser parser, ref Map map);
+		public delegate Rule RuleFunction();
+		public static Rule DelayedRule(RuleFunction ruleFunction) {
+			Rule rule = null;
+			return new Rule(delegate(Parser parser, ref Map map) {
+				if (rule == null) {
+					rule = ruleFunction();
+				}
+				return rule.Match(parser, ref map);
+			});
+		}
+		public static Rule Alternatives(params Rule[] cases) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				foreach (Rule expression in cases) {
+					if (expression.Match(parser, ref map)) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}
+		public static Rule Sequence(char c, params Action[] actions) {
+			List<Action> a = new List<Action>(actions);
+			a.Insert(0, c);
+			return Condition(c, Sequence(false, a.ToArray()));
+		}
+		public static Rule Sequence(params Action[] actions) {
+			return Sequence(false, actions);
+		}
+		public static Rule SequenceList(params Action[] actions) {
+			return Sequence(true, actions);
+		}
+		public static Rule FastSequence(char c, params Action[] actions) {
+			List<Action> a = new List<Action>(actions);
+			a.Insert(0, c);
+			return Condition(c, FastSequence(a.ToArray()));
+		}
+		// rename?, make standard?
+		public static Rule FastSequence(params Action[] actions) {
+			return new Rule(delegate(Parser parser, ref Map match) {
+				foreach (Action action in actions) {
+					if (!action.Execute(parser, ref match)) {
+						match = null;
+						return false;
+					}
+				}
+				return true;
+			});
+		}
+		public static Rule Sequence(bool list, params Action[] actions) {
+			return new Rule(delegate(Parser parser, ref Map match) {
+				if (list) {
+					match = new ListMap();
+				}
+				else {
+					match = new DictionaryMap();
+				}
+				foreach (Action action in actions) {
+					if (!action.Execute(parser, ref match)) {
+						match = null;
+						return false;
+					}
+				}
+				return true;
+			});
+		}
+		public static Rule LiteralRule(Map literal) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				map = literal;
+				return true;
+			});
+		}
+		public static Rule ZeroOrMore(Action action) {
+			return new Rule(delegate(Parser parser, ref Map map) {
+				while (action.Execute(parser, ref map))
+					;
+				return true;
+			});
+		}
+		public static Rule Optional(Rule rule) {
+			return new Rule(delegate(Parser parser, ref Map match) {
+				rule.Match(parser, ref match);
+				return true;
+			});
+		}
+		private char Look(int offset) {
+			return state.Text[state.index + offset];
+		}
+		private char Look() {
+			return Look(0);
+		}
+		public static Map Parse(string file) {
+			return ParseString(System.IO.File.ReadAllText(file), file);
+		}
+		public static Map ParseString(string text, string fileName) {
+			Parser parser = new Parser(text, fileName);
+			Map result = null;
+			Parser.Value.Match(parser, ref result);
+			if (parser.state.index != parser.state.Text.Length - 1 || parser.state.Errors.Length != 0) {
+				string t = "";
+				if (parser.state.index != parser.state.Text.Length - 1) {
+					t += "Expected end of file. " + new Source(parser.state.Line, parser.state.Column, parser.state.FileName).ToString() + "\n";
+				}
+				foreach (Error error in parser.state.Errors) {
+					t += error.Text + error.Source.ToString() + "\n";
+				}
+				throw new SyntaxException(t, parser);
+			}
+			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
+				cached.Clear();
+			}
+			return result;
+		}
+	}
 	namespace Test {
 		public class MetaTest : TestRunner {
 			public static int Leaves(Map map) {
@@ -4827,9 +4866,31 @@ namespace Meta {
 			public class Serialization : Test {
 				public override object GetResult(out int level) {
 					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+					string fileName = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+					string text = File.ReadAllText(fileName);
+					for (int i = 0; i < 100; i++) {
+						Parser.ParseString(text,fileName);
+						foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+							cached.Clear();
+						}
+					}
+					return Meta.Serialization.Serialize(Parser.ParseString(text,fileName));//Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+					//return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
+			//public class Serialization : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        string text = File.ReadAllText(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"));
+			//        for (int i = 0; i < 5; i++) {
+			//            Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"));
+			//            foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+			//                cached.Clear();
+			//            }
+			//        }
+			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+			//    }
+			//}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -5434,9 +5495,9 @@ namespace Meta {
 	}
 	// why is this even needed?
 	public class LiteralExpression : Expression {
-		public override bool ContainsSearchStatements() {
-			return false;
-		}
+		//public override bool ContainsSearchStatements() {
+		//    return false;
+		//}
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
@@ -5449,9 +5510,9 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
-		public override bool ContainsSearchStatement() {
-			return false;
-		}
+		//public override bool ContainsSearchStatement() {
+		//    return false;
+		//}
 		private LiteralExpression program;
 		public LiteralStatement(LiteralExpression program)
 			: base(null, null, 0) {
@@ -5730,10 +5791,13 @@ namespace Meta {
 			get {
 				Extent source;
 				sources.TryGetValue(this,out source);
+				if (source == null) {
+					source = new Extent(new Source(0, 0, ""), new Source(0, 0, ""));
+				}
 				return source;
 			}
 			set {
-				sources[this] = value;
+				//sources[this] = value;
 			}
 		}
 		// probably buggy
