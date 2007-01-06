@@ -538,7 +538,7 @@ namespace Meta {
 			Map value;
 			Map map;
 			Statement statement;
-			if (FindStuff(out count, out key, out value, out map,out statement)) {
+			if (FindStuff(out count, out key, out value, out map, out statement)) {
 				if (value != null) {
 					return value;
 				}
@@ -551,7 +551,7 @@ namespace Meta {
 			}
 		}
 		// this is a mess
-		private bool FindStuff(out int count, out Map key, out Map value, out Map map,out Statement s) {
+		private bool FindStuff(out int count, out Map key, out Map value, out Map map, out Statement s) {
 			Expression current = this;
 			key = expression.EvaluateStructure();
 			count = 0;
@@ -626,53 +626,53 @@ namespace Meta {
 			this.expression = code.GetExpression(this);
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			int count;
-			Map key;
-			Map value;
-			Map map;
-			Statement statement;
-			if (FindStuff(out count, out key, out value, out map,out statement)) {
-				if (value != null && value.IsConstant) {
-					return delegate(Map context) {
-						return value;
-					};
-				}
-				else {
-					int index=-1;
-					Mapping mapping=statement.program.UsePerfectMap();
-					if (mapping != null && mapping.mapping.ContainsKey(key)) {
-						index = mapping.mapping[key];
-					}
-					if (index != -1) {
-						return delegate(Map context) {
-							Map selected = context;
-							for (int i = 0; i < count; i++) {
-								selected = selected.Scope;
-							}
-							Map result = selected.GetFromIndex(index);
-							if (result == null) {
-								throw new KeyNotFound(key, expression.Source.Start, null);
-							}
-							return result;
-						};
-					}
-					else {
-						return delegate(Map context) {
-							Map selected = context;
-							for (int i = 0; i < count; i++) {
-								selected = selected.Scope;
-							}
-							Map result = selected[key];
-							if (result == null) {
-								throw new KeyNotFound(key, expression.Source.Start, null);
-							}
-							return result;
-						};
-					}
-				}
-			}
-			else {
-				FindStuff(out count, out key, out value, out map,out statement);
+			//int count;
+			//Map key;
+			//Map value;
+			//Map map;
+			//Statement statement;
+			//if (FindStuff(out count, out key, out value, out map, out statement)) {
+			//    if (value != null && value.IsConstant) {
+			//        return delegate(Map context) {
+			//            return value;
+			//        };
+			//    }
+			//    else {
+			//        int index = -1;
+			//        Mapping mapping = statement.program.UsePerfectMap();
+			//        if (mapping != null && mapping.mapping.ContainsKey(key)) {
+			//            index = mapping.mapping[key];
+			//        }
+			//        if (index != -1) {
+			//            return delegate(Map context) {
+			//                Map selected = context;
+			//                for (int i = 0; i < count; i++) {
+			//                    selected = selected.Scope;
+			//                }
+			//                Map result = selected.GetFromIndex(index);
+			//                if (result == null) {
+			//                    throw new KeyNotFound(key, expression.Source.Start, null);
+			//                }
+			//                return result;
+			//            };
+			//        }
+			//        else {
+			//            return delegate(Map context) {
+			//                Map selected = context;
+			//                for (int i = 0; i < count; i++) {
+			//                    selected = selected.Scope;
+			//                }
+			//                Map result = selected[key];
+			//                if (result == null) {
+			//                    throw new KeyNotFound(key, expression.Source.Start, null);
+			//                }
+			//                return result;
+			//            };
+			//        }
+			//    }
+			//}
+			//else {
+			//    FindStuff(out count, out key, out value, out map, out statement);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
 					Map k = compiled(context);
@@ -689,7 +689,7 @@ namespace Meta {
 					}
 					return selected[k];
 				};
-			}
+			//}
 		}
 		public void MakeSearched(Map key) {
 			if (!search.ContainsKey(key)) {
@@ -698,6 +698,174 @@ namespace Meta {
 			search[key]++;
 		}
 	}
+	//public class Search : Expression {
+	//    public static Dictionary<Map, int> search = new Dictionary<Map, int>();
+	//    public override Map GetStructure() {
+	//        Map key;
+	//        int count;
+	//        Map value;
+	//        Map map;
+	//        Statement statement;
+	//        if (FindStuff(out count, out key, out value, out map,out statement)) {
+	//            if (value != null) {
+	//                return value;
+	//            }
+	//            else {
+	//                return null;
+	//            }
+	//        }
+	//        else {
+	//            return null;
+	//        }
+	//    }
+	//    // this is a mess
+	//    private bool FindStuff(out int count, out Map key, out Map value, out Map map,out Statement s) {
+	//        Expression current = this;
+	//        key = expression.EvaluateStructure();
+	//        count = 0;
+	//        int programCounter = 0;
+	//        if (key != null && key.IsConstant) {
+	//            bool hasCrossedFunction = false;
+	//            while (true) {
+	//                while (current.Statement == null) {
+	//                    if (current.IsFunction) {
+	//                        hasCrossedFunction = true;
+	//                        // TERRIBLE hack
+	//                        if (current.Parent is Call) {
+	//                        }
+	//                        else {
+	//                            count++;
+	//                        }
+	//                    }
+	//                    current = current.Parent;
+	//                    if (current == null) {
+	//                        break;
+	//                    }
+	//                }
+	//                if (current == null) {
+	//                    break;
+	//                }
+	//                Statement statement = current.Statement;
+	//                Map structure = statement.PreMap();
+	//                if (structure == null) {
+	//                    statement.Pre();
+	//                    break;
+	//                }
+	//                if (structure.ContainsKey(key)) {
+	//                    value = structure[key];
+	//                    map = structure;
+	//                    s = statement;
+	//                    return true;
+	//                }
+	//                else if (programCounter < 1 && statement is KeyStatement) {
+	//                    if (hasCrossedFunction) {
+	//                        map = statement.CurrentMap();
+	//                        if (map != null && map.IsConstant) {
+	//                            if (map.ContainsKey(key)) {
+	//                                value = map[key];
+	//                                if (value.IsConstant) {
+	//                                    s = statement;
+	//                                    return true;
+	//                                }
+	//                            }
+	//                        }
+	//                    }
+	//                }
+	//                if (hasCrossedFunction) {
+	//                    if (!statement.NeverAddsKey(key)) {
+	//                        break;
+	//                    }
+	//                }
+	//                count++;
+	//                if (current.Statement != null && current.Statement.program != null && !current.Statement.program.IsFunction) {
+	//                    programCounter++;
+	//                }
+	//                current = current.Parent;
+	//            }
+	//        }
+	//        value = null;
+	//        map = null;
+	//        s = null;
+	//        return false;
+	//    }
+	//    private Expression expression;
+	//    public Search(Map code, Expression parent)
+	//        : base(code.Source, parent) {
+	//        this.expression = code.GetExpression(this);
+	//    }
+	//    public override Compiled GetCompiled(Expression parent) {
+	//        int count;
+	//        Map key;
+	//        Map value;
+	//        Map map;
+	//        Statement statement;
+	//        if (FindStuff(out count, out key, out value, out map,out statement)) {
+	//            if (value != null && value.IsConstant) {
+	//                return delegate(Map context) {
+	//                    return value;
+	//                };
+	//            }
+	//            else {
+	//                int index=-1;
+	//                Mapping mapping=statement.program.UsePerfectMap();
+	//                if (mapping != null && mapping.mapping.ContainsKey(key)) {
+	//                    index = mapping.mapping[key];
+	//                }
+	//                if (index != -1) {
+	//                    return delegate(Map context) {
+	//                        Map selected = context;
+	//                        for (int i = 0; i < count; i++) {
+	//                            selected = selected.Scope;
+	//                        }
+	//                        Map result = selected.GetFromIndex(index);
+	//                        if (result == null) {
+	//                            throw new KeyNotFound(key, expression.Source.Start, null);
+	//                        }
+	//                        return result;
+	//                    };
+	//                }
+	//                else {
+	//                    return delegate(Map context) {
+	//                        Map selected = context;
+	//                        for (int i = 0; i < count; i++) {
+	//                            selected = selected.Scope;
+	//                        }
+	//                        Map result = selected[key];
+	//                        if (result == null) {
+	//                            throw new KeyNotFound(key, expression.Source.Start, null);
+	//                        }
+	//                        return result;
+	//                    };
+	//                }
+	//            }
+	//        }
+	//        else {
+	//            FindStuff(out count, out key, out value, out map,out statement);
+	//            Compiled compiled = expression.Compile();
+	//            return delegate(Map context) {
+	//                Map k = compiled(context);
+	//                Map selected = context;
+	//                while (!selected.ContainsKey(k)) {
+	//                    if (selected.Scope != null) {
+	//                        selected = selected.Scope;
+	//                    }
+	//                    else {
+	//                        Map m = compiled(context);
+	//                        bool b = context.ContainsKey(m);
+	//                        throw new KeyNotFound(k, Source.Start, null);
+	//                    }
+	//                }
+	//                return selected[k];
+	//            };
+	//        }
+	//    }
+	//    public void MakeSearched(Map key) {
+	//        if (!search.ContainsKey(key)) {
+	//            search[key] = 0;
+	//        }
+	//        search[key]++;
+	//    }
+	//}
 	public class FunctionArgument : DictionaryBaseMap {
 		public override Map GetFromIndex(int i) {
 			return value;
@@ -5500,11 +5668,7 @@ namespace Meta {
 			return result;
 		}
 	}
-	// why is this even needed?
 	public class LiteralExpression : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    return false;
-		//}
 		private Map literal;
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
@@ -5517,9 +5681,6 @@ namespace Meta {
 		}
 	}
 	public class LiteralStatement : Statement {
-		//public override bool ContainsSearchStatement() {
-		//    return false;
-		//}
 		private LiteralExpression program;
 		public LiteralStatement(LiteralExpression program)
 			: base(null, null, 0) {
