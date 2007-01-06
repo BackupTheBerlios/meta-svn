@@ -41,24 +41,53 @@ using System.Runtime.InteropServices;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 	public class ToMeta : Expression {
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+			Transform.GetMetaConversion(type,emitter);
+		}
 		public Expression expression;
-		public ToMeta(Expression expression,Expression parent):base(null,parent) {
+		public Type type;
+		public ToMeta(Expression expression,Type type,Map map):base(map.Source,map.Scope.GetExpression()) {
 			this.expression = expression;
 		}
 		public override Map GetStructure() {
 			return null;
 		}
 	}
-	public abstract class Expression {
-		public static Expression Optimize(Expression epression) {
+	public class ToDotNet : Expression {
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+			Transform.GetDotNetConversion(type, emitter);
+		}
+		public Expression expression;
+		public Type type;
+		public ToDotNet(Expression expression,Type type,Map map):base(map.Source,map.Scope.GetExpression()) {
+			this.expression = expression;
+		}
+		public override Map GetStructure() {
 			return null;
 		}
-		//public virtual void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
-		//    throw new Exception("not implemented");
-		//}
-		//public virtual Type GetUnconvertedType() {
-		//    return null;
-		//}
+	}
+	public class Branch : Expression {
+		public Expression condition;
+		public Expression first;
+		public Expression second;
+		public Branch(Map map, Expression condition, Expression first, Expression second):base(map) {
+			this.condition = new ToDotNet(condition, typeof(bool), null);
+			this.first = first;
+			this.second = second;
+		}
+		public override Map GetStructure() {
+			return null;
+		}
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+		}
+	}
+	// TODO: save parent
+	public abstract class Expression {
+		public Expression(Map map) {
+		}
+		public static Expression Optimize(Expression expression) {
+			return expression;
+		}
 		public static void GetCachedCompile(Emitter emitter,Compiled c) {
 			emitter.LoadField(typeof(Expression), "compiles");
 			emitter.LoadConstant(GetIndex(c));
@@ -69,8 +98,7 @@ namespace Meta {
 			return compiles.Count - 1;
 		}
 		public static List<Compiled> compiles = new List<Compiled>();
-		//public abstract bool ContainsSearchStatements();
-		public virtual void CompileIL(Emitter emitter,Expression parent,OpCode context) {
+		public virtual void Emit(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter,GetCompiled(parent));
 		}
 		public Compiled GetCompiled() {
@@ -128,7 +156,7 @@ namespace Meta {
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
 		public virtual Compiled GetCompiled(Expression parent) {
 			Emitter emitter = new Emitter(typeof(Compiled));
-			CompileIL(emitter, parent, OpCodes.Ldarg_0);
+			Emit(emitter, parent, OpCodes.Ldarg_0);
 			emitter.Return();
 			return (Compiled)emitter.GetDelegate();
 		}
@@ -137,10 +165,7 @@ namespace Meta {
 	public delegate Compiled CompiledDelegate(Expression parent);
 
 	public class LastArgument : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    return false;
-		//}
-		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 			emitter.LoadField(typeof(Map), "arguments");
 			emitter.Call(typeof(Stack<Map>), "Pop");
 		}
@@ -343,14 +368,6 @@ namespace Meta {
 		}
 	}
 	public class Call : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    foreach (Expression expression in calls) {
-		//        if (expression.ContainsSearchStatements()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public List<Expression> calls;
 		public Call(Map code, Expression parent): base(code.Source, parent) {
 			this.calls = new List<Expression>();
@@ -448,120 +465,6 @@ namespace Meta {
 			m = null;
 			return false;
 		}
-		public static bool GetStore(ILInstruction instruction,out int count) {
-			if(instruction.Code==OpCodes.Stloc) {
-				count=(int)instruction.Operand;
-			}
-			else if(instruction.Code==OpCodes.Stloc_0) {
-				count=0;
-			}
-			else if(instruction.Code==OpCodes.Stloc_1) {
-				count=1;
-			}
-			else if(instruction.Code==OpCodes.Stloc_2) {
-				count=2;
-			}
-			else if(instruction.Code==OpCodes.Stloc_3) {
-				count=3;
-			}
-			else if(instruction.Code==OpCodes.Stloc_S) {
-				count=(int)instruction.Operand;
-			}
-			else {
-				count=0;
-				return false;
-			}
-			return true;
-		}
-		public static bool GetLoad(ILInstruction instruction, out int count) {
-			if(instruction.Code==OpCodes.Ldloc) {
-				count=(int)instruction.Operand;
-			}
-			else if(instruction.Code==OpCodes.Ldloc_0) {
-				count=0;
-			}
-			else if(instruction.Code==OpCodes.Ldloc_1) {
-				count=1;
-			}
-			else if(instruction.Code==OpCodes.Ldloc_2) {
-				count=2;
-			}
-			else if(instruction.Code==OpCodes.Ldloc_3) {
-				count=3;
-			}
-			else if(instruction.Code==OpCodes.Ldloc_S) {
-				count=(int)instruction.Operand;
-			}
-			else {
-				count=0;
-				return false;
-			}
-			return true;
-		}
-		public static bool GetArgument(ILInstruction instruction, out int count) {
-			if (instruction.Code == OpCodes.Ldarg_0) {
-				count = 0;
-			}
-			else if (instruction.Code == OpCodes.Ldarg_1) {
-				count = 1;
-			}
-			else if (instruction.Code == OpCodes.Ldarg_2) {
-				count = 2;
-			}
-			else if (instruction.Code == OpCodes.Ldarg_3) {
-				count = 3;
-			}
-			else if (instruction.Code == OpCodes.Ldarg_S) {
-				count = (int)instruction.Operand;
-			}
-			else if (instruction.Code == OpCodes.Ldarg) {
-				count = (int)instruction.Operand;
-			}
-			else {
-				count = 0;
-				return false;
-			}
-			return true;
-		}
-		//public override Type GetUnconvertedType() {
-		//    List<object> arguments;
-		//    MethodBase method;
-		//    if (CallStuff(out arguments, out method)) {
-		//        MethodInfo m=method as MethodInfo;
-		//        return m.ReturnType;
-		//    }
-		//    return null;
-		//}
-		//public override void EmitUnconverted(Emitter emitter, Expression parent, OpCode context,Type t) {
-		//    List<object> arguments;
-		//    MethodBase method;
-		//    if (CallStuff(out arguments, out method)) {
-		//        if (method.IsStatic) {
-		//            List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-		//            Compiled[] args = c.ToArray();
-		//            ParameterInfo[] parameters = method.GetParameters();
-		//            MethodInfo methodInfo = (MethodInfo)method;
-		//            for (int i = 0; i < parameters.Length; i++) {
-		//                Type type = parameters[i].ParameterType;
-		//                compiles.Add(c[i]);
-		//                int index = compiles.Count - 1;
-		//                if (calls[i + 1] is Literal) {
-		//                    calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-		//                }
-		//                else {
-		//                    emitter.LoadField(typeof(Expression).GetField("compiles"));
-		//                    emitter.LoadConstant(index);
-		//                    emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
-		//                    emitter.LoadArgument(0);
-		//                    emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-		//                }
-		//                Transform.GetDotNetConversion(type, emitter);
-		//            }
-		//            emitter.Call(methodInfo);
-		//        }
-		//    }
-		//}
-
 		public override Compiled GetCompiled(Expression parent) {
 			List<object> arguments;
 			MethodBase method;
@@ -574,29 +477,21 @@ namespace Meta {
 					Emitter emitter = new Emitter(typeof(Compiled));
 					for (int i = 0; i < parameters.Length; i++) {
 						Expression e = calls[i + 1];
-						//Type unconvertedType=e.GetUnconvertedType();
-						//if (e is Call && unconvertedType != null && unconvertedType == parameters[i].ParameterType) {
-						//    Type type = parameters[i].ParameterType;
-						//    compiles.Add(c[i]);
-						//    int index = compiles.Count - 1;
-						//    e.EmitUnconverted(emitter, this, OpCodes.Ldarg_0,type);
-						//}
-						//else {
-							Type type = parameters[i].ParameterType;
-							compiles.Add(c[i]);
-							int index = compiles.Count - 1;
-							if (calls[i + 1] is Literal) {
-								calls[i + 1].CompileIL(emitter, this, OpCodes.Ldarg_0);
-							}
-							else {
-								emitter.LoadField(typeof(Expression).GetField("compiles"));
-								emitter.LoadConstant(index);
-								emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
-								emitter.LoadArgument(0);
-								emitter.Call(typeof(Compiled).GetMethod("Invoke"));
-							}
-							Transform.GetDotNetConversion(type, emitter);
-						//}
+
+						Type type = parameters[i].ParameterType;
+						compiles.Add(c[i]);
+						int index = compiles.Count - 1;
+						if (calls[i + 1] is Literal) {
+							calls[i + 1].Emit(emitter, this, OpCodes.Ldarg_0);
+						}
+						else {
+							emitter.LoadField(typeof(Expression).GetField("compiles"));
+							emitter.LoadConstant(index);
+							emitter.Call(typeof(List<Compiled>).GetMethod("get_Item"));
+							emitter.LoadArgument(0);
+							emitter.Call(typeof(Compiled).GetMethod("Invoke"));
+						}
+						Transform.GetDotNetConversion(type, emitter);
 					}
 					emitter.Call(methodInfo);
 					Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
@@ -636,9 +531,6 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class Search : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    return expression.ContainsSearchStatements();
-		//}
 		public static Dictionary<Map, int> search = new Dictionary<Map, int>();
 		public override Map GetStructure() {
 			Map key;
@@ -893,14 +785,6 @@ namespace Meta {
 				return GetCompiled()(scope);
 			}
 		}
-		//public override bool ContainsSearchStatements() {
-		//    foreach (Statement statement in statementList) {
-		//        if (statement is SearchStatement || statement.ContainsSearchStatement()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public override Map GetStructure() {
 			if (statementList.Count == 0) {
 				return new DictionaryMap();
@@ -943,7 +827,8 @@ namespace Meta {
 		private Compiled comp;
 		public override Compiled GetCompiled(Expression parent) {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
-				return s.Compile();});
+				return s.Compile();
+			});
 			bool useList = true;
 			int count = 1;
 			int listCount = 0;
@@ -1059,7 +944,6 @@ namespace Meta {
 		public readonly Compiled value;
 	}
 	public abstract class Statement {
-		//public abstract bool ContainsSearchStatement();
 		bool preEvaluated = false;
 		bool currentEvaluated = false;
 		private Map pre;
@@ -1164,9 +1048,6 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		//public override bool ContainsSearchStatement() {
-		//    return value.ContainsSearchStatements();
-		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -1176,9 +1057,6 @@ namespace Meta {
 		}
 	}
 	public class KeyStatement : Statement {
-		//public override bool ContainsSearchStatement() {
-		//    return key.ContainsSearchStatements() || value.ContainsSearchStatements();
-		//}
 		public override IEnumerable<Map> CurrentKeys() {
 			if(this.key.GetConstant()!=null && PreKeys()!=null)  {
 				List<Map> list=new List<Map>(PreKeys());
@@ -1245,9 +1123,6 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		//public override bool ContainsSearchStatement() {
-		//    return value.ContainsSearchStatements();
-		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return value.EvaluateStructure();
 		}
@@ -1272,9 +1147,6 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		//public override bool ContainsSearchStatement() {
-		//    return key.ContainsSearchStatements() || value.ContainsSearchStatements();
-		//}
 		protected override Map CurrentImplementation(Map previous) {
 			return previous;
 		}
@@ -1300,16 +1172,13 @@ namespace Meta {
 	}
 	public class Literal : Expression {
 		private int index = -1;
-		//public override bool ContainsSearchStatements() {
-		//    return literal.GetExpression() != null && literal.GetExpression().ContainsSearchStatements();
-		//}
 		public override Map GetStructure() {
 			return literal;
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public static List<Map> literals = new List<Map>();
-		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 			if (index == -1) {
 				literals.Add(literal);
 				index = literals.Count - 1;
@@ -1342,27 +1211,16 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    return false;
-		//}
 		public override Map GetStructure() {
 			return Gac.gac;
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
-		public override void CompileIL(Emitter emitter, Expression parent, OpCode context) {
+		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 			emitter.LoadField(typeof(Gac).GetField("gac"));
 		}
 	}
 	public class Select : Expression {
-		//public override bool ContainsSearchStatements() {
-		//    foreach (Expression expression in subs) {
-		//        if (expression.ContainsSearchStatements()) {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
-		//}
 		public override Map GetStructure() {
 			// maybe wrong
 			Map selected = subs[0].GetStructure();
@@ -1507,6 +1365,23 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//switch (args[0][0]) {
+			//    case Syntax.@string:
+			//    case Syntax.emptyMap:
+			//    case Syntax.negative:
+			//    case '1':
+			//    case '2':
+			//    case '3':
+			//    case '4':
+			//    case '5':
+			//    case '6':
+			//    case '7':
+			//    case '8':
+			//    case '9':
+			//    case '\'':
+			//        Console.WriteLine("whatever");
+			//        break;
+			//}
 			switch (args[0]) {
 				case "hello":
 					Console.WriteLine("x");
@@ -3236,112 +3111,112 @@ namespace Meta {
 		}
 	}
 	public abstract class NumberMap : Map {
-			public virtual NumberMap Multiply(NumberMap b) {
-				return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
+		public virtual NumberMap Multiply(NumberMap b) {
+			return new Rational((Numerator.Multiply(b.Numerator)).GetDouble(), (Denominator.Multiply(b.Denominator)).GetDouble());
+		}
+		public static NumberMap Multiply(NumberMap a, NumberMap b) {
+			return a.Multiply(b);
+		}
+		public int CompareTo(NumberMap number) {
+			return this.GetDouble().CompareTo(number.GetDouble());
+		}
+		public override bool Equals(object obj) {
+			NumberMap num = obj as NumberMap;
+			if (num != null) {
+				return num.Numerator == Numerator && num.Denominator == Denominator;
 			}
-			public static NumberMap Multiply(NumberMap a, NumberMap b) {
-				return a.Multiply(b);
+			else {
+				return base.Equals(obj);
 			}
-			public int CompareTo(NumberMap number) {
-				return this.GetDouble().CompareTo(number.GetDouble());
+		}
+		public static Map Raise(NumberMap a, NumberMap b) {
+			return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
+		}
+		public static Integer32 Zero = new Integer32(0);
+		public static Integer32 One = new Integer32(1);
+		public static Integer32 Two = new Integer32(2);
+		public static double GreatestCommonDivisor(double a, double b) {
+			if (a == b) {
+				return a;
 			}
-			public override bool Equals(object obj) {
-				NumberMap num = obj as NumberMap;
-				if (num != null) {
-					return num.Numerator == Numerator && num.Denominator == Denominator;
+			a = Math.Abs(a);
+			b = Math.Abs(b);
+			while (a != 0 && b != 0) {
+				if (a > b) {
+					a = a % b;
 				}
 				else {
-					return base.Equals(obj);
+					b = b % a;
 				}
 			}
-			public static Map Raise(NumberMap a, NumberMap b) {
-				return new Rational(Math.Pow(a.GetDouble(), b.GetDouble()));
+			if (a == 0) {
+				return b;
 			}
-			public static Integer32 Zero = new Integer32(0);
-			public static Integer32 One = new Integer32(1);
-			public static Integer32 Two = new Integer32(2);
-			public static double GreatestCommonDivisor(double a, double b) {
-				if (a == b) {
-					return a;
-				}
-				a = Math.Abs(a);
-				b = Math.Abs(b);
-				while (a != 0 && b != 0) {
-					if (a > b) {
-						a = a % b;
-					}
-					else {
-						b = b % a;
-					}
-				}
-				if (a == 0) {
-					return b;
-				}
-				else {
-					return a;
-				}
+			else {
+				return a;
 			}
+		}
 		public double Expand(NumberMap b) {
-				return Numerator.GetDouble() * (LeastCommonMultiple(this, b) / Denominator.GetDouble());
-			}
+			return Numerator.GetDouble() * (LeastCommonMultiple(this, b) / Denominator.GetDouble());
+		}
 		public static NumberMap Add(NumberMap a, NumberMap b) {
-				return a.Add(b);
-			}
+			return a.Add(b);
+		}
 		public static NumberMap Subtract(NumberMap a, NumberMap b) {
-				return a.Subtract(b);
-			}
+			return a.Subtract(b);
+		}
 		public virtual NumberMap Divide(NumberMap b) {
-				return new Rational((Numerator.Multiply(b.Denominator)).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
-			}
+			return new Rational((Numerator.Multiply(b.Denominator)).GetDouble(), Denominator.GetDouble() * b.Numerator.GetDouble());
+		}
 		public static NumberMap Divide(NumberMap a, NumberMap b) {
-				return a.Divide(b);
-			}
+			return a.Divide(b);
+		}
 		public static bool Greater(NumberMap a, NumberMap b) {
-				return a.Expand(b) > b.Expand(a);
-			}
+			return a.Expand(b) > b.Expand(a);
+		}
 		public static bool SpecialLess(Map a, Map b) {
 			return a.LessThan(b);
 		}
 		public static bool Less(Map a, Map b) {
-				return a.LessThan(b);
-			}
+			return a.LessThan(b);
+		}
 		public static bool GreaterEqual(NumberMap a, NumberMap b) {
-				return a.Expand(b) >= b.Expand(a);
-			}
+			return a.Expand(b) >= b.Expand(a);
+		}
 		public static bool LessEqual(NumberMap a, NumberMap b) {
-				return a.LessEqual(b);
-			}
+			return a.LessEqual(b);
+		}
 		public virtual bool LessEqual(NumberMap number) {
-				return Expand(number) <= number.Expand(this);
-			}
+			return Expand(number) <= number.Expand(this);
+		}
 		public static NumberMap Modulo(NumberMap a, NumberMap b) {
-				return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
-			}
-			public float GetSingle() {
-				return (float)GetDouble();
-			}
-			public abstract IntegerBase Numerator {
-				get;
-			}
-			public abstract IntegerBase Denominator {
-				get;
-			}
-			public abstract long GetInt64();
-			public abstract long GetRealInt64();
+			return new Integer32(Convert.ToInt32(a.Numerator) % Convert.ToInt32(b.Numerator));
+		}
+		public float GetSingle() {
+			return (float)GetDouble();
+		}
+		public abstract IntegerBase Numerator {
+			get;
+		}
+		public abstract IntegerBase Denominator {
+			get;
+		}
+		public abstract long GetInt64();
+		public abstract long GetRealInt64();
 		public static double LeastCommonMultiple(NumberMap a, NumberMap b) {
-				return (a.Denominator.Multiply(b.Denominator)).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
-			}
+			return (a.Denominator.Multiply(b.Denominator)).GetDouble() / GreatestCommonDivisor(a.Denominator.GetDouble(), b.Denominator.GetDouble());
+		}
 		public virtual NumberMap Subtract(NumberMap b) {
-				return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
-			}
+			return new Rational(Expand(b) - b.Expand(this), LeastCommonMultiple(this, b));
+		}
 		public override bool LessThan(Map b) {
 			return Expand(b.GetNumber()) < b.GetNumber().Expand(this);
 		}
 		public virtual NumberMap Add(NumberMap b) {
-				return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
-			}
-			public abstract double GetDouble();
-			public abstract BigInteger GetInteger();
+			return new Rational(Expand(b) + b.Expand(this), LeastCommonMultiple(this, b));
+		}
+		public abstract double GetDouble();
+		public abstract BigInteger GetInteger();
 		public NumberMap GetNum() {
 			return this;
 		}
@@ -3409,7 +3284,6 @@ namespace Meta {
 		public override NumberMap GetNumber() {
 			return this;
 		}
-
 		public override string ToString() {
 			if (Denominator.Equals(NumberMap.One)) {
 				return Numerator.ToString();
@@ -3437,7 +3311,6 @@ namespace Meta {
 		public abstract BigInteger GetBigInteger();
 	}
 	public class Integer:IntegerBase {
-
 		public override string ToString() {
 			return integer.ToString();
 		}
@@ -5256,18 +5129,152 @@ namespace Meta {
 	    }
 	}
 	public class Library {
-		public class Int32 {
-			public static int Add(int a,int b) {
+		public class Single {
+			public static float Add(float a, float b) {
 				return a + b;
 			}
-			public static bool Less(int a, int b) {
+			public static float Subtract(float a, float b) {
+				return a - b;
+			}
+			public static float Multiply(float a, float b) {
+				return a * b;
+			}
+			public static float Divide(float a, float b) {
+				return a / b;
+			}
+			public static bool Equal(float a, float b) {
+				return a == b;
+			}
+			public static bool GreaterEqual(float a, float b) {
+				return a >= b;
+			}
+			public static bool Greater(float a, float b) {
+				return a > b;
+			}
+			public static bool LessEqual(float a, float b) {
+				return a <= b;
+			}
+			public static bool Less(float a, float b) {
 				return a < b;
+			}
+		}
+		public class Double {
+			public static double Add(double a, double b) {
+				return a + b;
+			}
+			public static double Subtract(double a, double b) {
+				return a - b;
+			}
+			public static double Multiply(double a, double b) {
+				return a * b;
+			}
+			public static double Divide(double a, double b) {
+				return a / b;
+			}
+			public static bool Equal(double a, double b) {
+				return a == b;
+			}
+			public static bool GreaterEqual(double a, double b) {
+				return a >= b;
+			}
+			public static bool Greater(double a, double b) {
+				return a > b;
+			}
+			public static bool LessEqual(double a, double b) {
+				return a <= b;
+			}
+			public static bool Less(double a, double b) {
+				return a < b;
+			}
+		}
+		public class Int32 {
+			public static int Add(int a, int b) {
+				return a + b;
 			}
 			public static int Subtract(int a, int b) {
 				return a - b;
 			}
 			public static int Multiply(int a, int b) {
 				return a * b;
+			}
+			public static int Divide(int a, int b) {
+				return a / b;
+			}
+
+			public static int AddUnchecked(int a, int b) {
+				unchecked {
+					return a + b;
+				}
+			}
+			public static int SubtractUnchecked(int a, int b) {
+				unchecked {
+					return a - b;
+				}
+			}
+			public static int MultiplyUnchecked(int a, int b) {
+				unchecked {
+					return a * b;
+				}
+			}
+
+			public static bool Equal(int a, int b) {
+				return a == b;
+			}
+			public static bool GreaterEqual(int a, int b) {
+				return a >= b;
+			}
+			public static bool Greater(int a, int b) {
+				return a > b;
+			}
+			public static bool LessEqual(int a, int b) {
+				return a <= b;
+			}
+			public static bool Less(int a, int b) {
+				return a < b;
+			}
+		}
+		public class Int64 {
+			public static long Add(long a, long b) {
+				return a + b;
+			}
+			public static long Subtract(long a, long b) {
+				return a - b;
+			}
+			public static long Multiply(long a, long b) {
+				return a * b;
+			}
+			public static long Divide(long a, long b) {
+				return a / b;
+			}
+			public static long AddUnchecked(long a, long b) {
+				unchecked {
+					return a + b;
+				}
+			}
+			public static long SubtractUnchecked(long a, long b) {
+				unchecked {
+					return a - b;
+				}
+			}
+			public static long MultiplyUnchecked(long a, long b) {
+				unchecked {
+					return a * b;
+				}
+			}
+			public static bool Equal(long a, long b) {
+				return a == b;
+			}
+			public static bool GreaterEqual(long a, long b) {
+				return a >= b;
+			}
+			public static bool Greater(long a, long b) {
+				return a > b;
+			}
+			public static bool LessEqual(long a, long b) {
+				return a <= b;
+			}
+			public static bool Less(long a, long b) {
+				return a < b;
 			}
 		}
 		public static Map MergeAll(List<Map> maps) {
@@ -5303,9 +5310,9 @@ namespace Meta {
 			}
 			return Map.Empty;
 		}
-		public static Map Double(Map d) {
-			return new ObjectMap((object)(double)d.GetNumber().GetDouble());
-		}
+		//public static Map Double(Map d) {
+		//    return new ObjectMap((object)(double)d.GetNumber().GetDouble());
+		//}
 		public static void WriteLine(string s) {
 			Console.WriteLine(s);
 		}
@@ -5712,8 +5719,13 @@ namespace Meta {
 		public virtual Map CallFast() {
 			return GetExpression().CallFast(this.Scope);
 		}
+		private bool firstCall = true;
 		public virtual Map Call(Map argument) {
 			try {
+				if (firstCall) {
+					firstCall = false;
+					Expression = Expression.Optimize(GetExpression());
+				}
 				return GetExpression().Call(argument, this.Scope);
 			}
 			catch (Exception e) {

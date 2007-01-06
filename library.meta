@@ -18,10 +18,51 @@
 			};
 			int32={
 				less=Library.Int32.Less_Int32_Int32;
+				greater=Library.Int32.Greater_Int32_Int32;
+				lessEqual=Library.Int32.LessEqual_Int32_Int32;
+				greaterEqual=Library.Int32.GreaterEqual_Int32_Int32;
 				add=Library.Int32.Add_Int32_Int32;
 				subtract=Library.Int32.Subtract_Int32_Int32;
 				multiply=Library.Int32.Multiply_Int32_Int32;
+				divide=Library.Int32.Divide_Int32_Int32;
+				addUnchecked=Library.Int32.AddUnchecked_Int32_Int32;
+				subtractUnchecked=Library.Int32.SubtractUnchecked_Int32_Int32;
+				multiplyUnchecked=Library.Int32.MultiplyUnchecked_Int32_Int32;
 			};
+			int64={
+				less=Library.Int64.Less_Int64_Int64;
+				greater=Library.Int64.Greater_Int64_Int64;
+				lessEqual=Library.Int64.LessEqual_Int64_Int64;
+				greaterEqual=Library.Int64.GreaterEqual_Int64_Int64;
+				add=Library.Int64.Add_Int64_Int64;
+				subtract=Library.Int64.Subtract_Int64_Int64;
+				multiply=Library.Int64.Multiply_Int64_Int64;
+				divide=Library.Int64.Divide_Int64_Int64;
+				addUnchecked=Library.Int64.AddUnchecked_Int64_Int64;
+				subtractUnchecked=Library.Int64.SubtractUnchecked_Int64_Int64;
+				multiplyUnchecked=Library.Int64.MultiplyUnchecked_Int64_Int64;
+			};
+			float32={
+				less=Library.Single.Less_Single_Single;
+				greater=Library.Single.Greater_Single_Single;
+				lessEqual=Library.Single.LessEqual_Single_Single;
+				greaterEqual=Library.Single.GreaterEqual_Single_Single;
+				add=Library.Single.Add_Single_Single;
+				subtract=Library.Single.Subtract_Single_Single;
+				multiply=Library.Single.Multiply_Single_Single;
+				divide=Library.Single.Divide_Single_Single;
+			};
+			float64={
+				less=Library.Double.Less_Double_Double;
+				greater=Library.Double.Greater_Double_Double;
+				lessEqual=Library.Double.LessEqual_Double_Double;
+				greaterEqual=Library.Double.GreaterEqual_Double_Double;
+				add=Library.Double.Add_Double_Double;
+				subtract=Library.Double.Subtract_Double_Double;
+				multiply=Library.Double.Multiply_Double_Double;
+				divide=Library.Double.Divide_Double_Double;
+			};
+
 			
 			console={
 				writeLine=Library.WriteLine_String;
