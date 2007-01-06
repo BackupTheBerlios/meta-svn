@@ -81,11 +81,76 @@ namespace Meta {
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 		}
 	}
+	public class Constant:Expression {
+		public override Map GetStructure() {
+			return null;
+		}
+		private Map constant;
+		public Constant(Map constant)
+			: base(constant) {
+			this.constant = constant;
+		}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate {
+				return constant;
+			};
+		}
+	}
 	// TODO: save parent
 	public abstract class Expression {
-		public Expression(Map map) {
+		public delegate Expression Optimization(Expression expression);
+		public Expression(Map map):this(new Extent(new Source(0,0,""),new Source(0,0,"")),null) {
 		}
 		public static Expression Optimize(Expression expression) {
+			return Optimize(expression, ConstantSearch);
+		}
+		public static void InvokeOnChildren(object obj, Optimization optimization) {
+			foreach (FieldInfo field in obj.GetType().GetFields()) {
+				if (field.FieldType.Equals(typeof(Expression)) && field.Name != "Parent" && field.Name!="program") {
+					field.SetValue(obj, Optimize((Expression)field.GetValue(obj),optimization));
+				}
+				else if (field.FieldType.Equals(typeof(List<Expression>))) {
+					List<Expression> list = (List<Expression>)field.GetValue(obj);
+					for (int index = 0; index < list.Count; index++) {
+						list[index] = Optimize(list[index],optimization);
+						//list[index] = optimization(list[index]);
+					}
+				}
+				//else if ((field.FieldType.IsSubclassOf(typeof(Statement)) || field.FieldType.Equals(typeof(Statement))) && field.FieldType.Name!="Statement") {
+				//    InvokeOnChildren(field.GetValue(obj),optimization);
+				//}
+				else if (field.FieldType.Equals(typeof(List<Statement>))) {
+					List<Statement> list = (List<Statement>)field.GetValue(obj);
+					for (int index = 0; index < list.Count; index++) {
+						InvokeOnChildren(list[index], optimization);
+						//list[index] = Optimize(list[index], optimization);
+						//list[index] = optimization(list[index]);
+					}
+				}
+			}
+		}
+		public static Expression Optimize(Expression expression,Optimization optimization) {
+			expression = optimization(expression);
+			InvokeOnChildren(expression, optimization);
+			return expression;
+		}
+		public static Expression ConstantSearch(Expression expression) {
+			Search search = expression as Search;
+			if (search != null) {
+				int count;
+				Map key;
+				Map value;
+				Map map;
+				Statement statement;
+				if (search.FindStuff(out count, out key, out value, out map, out statement)) {
+					if (value != null && value.IsConstant) {
+						return new Constant(value);
+					}
+				}
+			}
+			return expression;
+		}
+		public static Expression FixedSearch(Expression expression){
 			return expression;
 		}
 		public static void GetCachedCompile(Emitter emitter,Compiled c) {
@@ -530,6 +595,31 @@ namespace Meta {
 	public delegate object DotNetConversion(Map map);
 	
 	public delegate Map FastCall(Map context);
+	public class FixedSearch:Expression {
+		private int count;
+		private Map key;
+		public FixedSearch(Map map,Map key,int count):base(map) {
+			this.count = count;
+			this.key = key;
+		}
+		public override Map GetStructure() {
+			return null;
+		}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate(Map context) {
+				Map selected = context;
+				for (int i = 0; i < count; i++) {
+					selected = selected.Scope;
+				}
+				Map result = selected[key];
+				if (result == null) {
+					throw new KeyNotFound(key, null, null);
+					//throw new KeyNotFound(key, expression.Source.Start, null);
+				}
+				return result;
+			};
+		}
+	}
 	public class Search : Expression {
 		public static Dictionary<Map, int> search = new Dictionary<Map, int>();
 		public override Map GetStructure() {
@@ -551,7 +641,7 @@ namespace Meta {
 			}
 		}
 		// this is a mess
-		private bool FindStuff(out int count, out Map key, out Map value, out Map map, out Statement s) {
+		public bool FindStuff(out int count, out Map key, out Map value, out Map map, out Statement s) {
 			Expression current = this;
 			key = expression.EvaluateStructure();
 			count = 0;
@@ -626,53 +716,53 @@ namespace Meta {
 			this.expression = code.GetExpression(this);
 		}
 		public override Compiled GetCompiled(Expression parent) {
-			//int count;
-			//Map key;
-			//Map value;
-			//Map map;
-			//Statement statement;
-			//if (FindStuff(out count, out key, out value, out map, out statement)) {
-			//    if (value != null && value.IsConstant) {
-			//        return delegate(Map context) {
-			//            return value;
-			//        };
-			//    }
-			//    else {
-			//        int index = -1;
-			//        Mapping mapping = statement.program.UsePerfectMap();
-			//        if (mapping != null && mapping.mapping.ContainsKey(key)) {
-			//            index = mapping.mapping[key];
-			//        }
-			//        if (index != -1) {
-			//            return delegate(Map context) {
-			//                Map selected = context;
-			//                for (int i = 0; i < count; i++) {
-			//                    selected = selected.Scope;
-			//                }
-			//                Map result = selected.GetFromIndex(index);
-			//                if (result == null) {
-			//                    throw new KeyNotFound(key, expression.Source.Start, null);
-			//                }
-			//                return result;
-			//            };
-			//        }
-			//        else {
-			//            return delegate(Map context) {
-			//                Map selected = context;
-			//                for (int i = 0; i < count; i++) {
-			//                    selected = selected.Scope;
-			//                }
-			//                Map result = selected[key];
-			//                if (result == null) {
-			//                    throw new KeyNotFound(key, expression.Source.Start, null);
-			//                }
-			//                return result;
-			//            };
-			//        }
-			//    }
-			//}
-			//else {
-			//    FindStuff(out count, out key, out value, out map, out statement);
+			int count;
+			Map key;
+			Map value;
+			Map map;
+			Statement statement;
+			if (FindStuff(out count, out key, out value, out map, out statement)) {
+			    if (value != null && value.IsConstant) {
+			        return delegate(Map context) {
+			            return value;
+			        };
+			    }
+			    else {
+			        int index = -1;
+			        Mapping mapping = statement.program.UsePerfectMap();
+			        if (mapping != null && mapping.mapping.ContainsKey(key)) {
+			            index = mapping.mapping[key];
+			        }
+			        if (index != -1) {
+			            return delegate(Map context) {
+			                Map selected = context;
+			                for (int i = 0; i < count; i++) {
+			                    selected = selected.Scope;
+			                }
+			                Map result = selected.GetFromIndex(index);
+			                if (result == null) {
+			                    throw new KeyNotFound(key, expression.Source.Start, null);
+			                }
+			                return result;
+			            };
+			        }
+			        else {
+			return delegate(Map context) {
+			    Map selected = context;
+			    for (int i = 0; i < count; i++) {
+			        selected = selected.Scope;
+			    }
+			    Map result = selected[key];
+			    if (result == null) {
+			        throw new KeyNotFound(key, expression.Source.Start, null);
+			    }
+			    return result;
+			};
+			        }
+			    }
+			}
+			else {
+			    FindStuff(out count, out key, out value, out map, out statement);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
 					Map k = compiled(context);
@@ -689,7 +779,7 @@ namespace Meta {
 					}
 					return selected[k];
 				};
-			//}
+			}
 		}
 		public void MakeSearched(Map key) {
 			if (!search.ContainsKey(key)) {
@@ -1466,7 +1556,7 @@ namespace Meta {
 				return selected;
 			};
 		}
-		private List<Expression> subs = new List<Expression>();
+		public List<Expression> subs = new List<Expression>();
 		public Select(Map code, Expression parent): base(code.Source, parent) {
 			foreach (Map m in code.Array) {
 				subs.Add(m.GetExpression(this));
