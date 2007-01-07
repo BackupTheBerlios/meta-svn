@@ -101,10 +101,15 @@ namespace Meta {
 		public delegate Expression Optimization(Expression expression);
 		public Expression(Map map):this(new Extent(new Source(0,0,""),new Source(0,0,"")),null) {
 		}
+		public static Optimization[] optimizations = new Optimization[] {
+			ConstantSearch,
+			PerfectSearch,
+			FixedSearch
+		};
 		public static Expression Optimize(Expression expression) {
-			expression=Optimize(expression, ConstantSearch);
-			expression = Optimize(expression, PerfectSearch);
-			expression = Optimize(expression, FixedSearch);
+			foreach (Optimization optimization in optimizations) {
+				expression = Optimize(expression, optimization);
+			}
 			return expression;
 		}
 		public static void InvokeOnChildren(object obj, Optimization optimization) {
@@ -796,9 +801,9 @@ namespace Meta {
 			Statement statement;
 			if (FindStuff(out count, out key, out value, out map, out statement)) {
 			    if (value != null && value.IsConstant) {
-			        return delegate(Map context) {
-			            return value;
-			        };
+					//return delegate(Map context) {
+					//    return value;
+					//};
 			    }
 			    else {
 			        int index = -1;
@@ -807,34 +812,34 @@ namespace Meta {
 			            index = mapping.mapping[key];
 			        }
 			        if (index != -1) {
-			            return delegate(Map context) {
-			                Map selected = context;
-			                for (int i = 0; i < count; i++) {
-			                    selected = selected.Scope;
-			                }
-			                Map result = selected.GetFromIndex(index);
-			                if (result == null) {
-			                    throw new KeyNotFound(key, expression.Source.Start, null);
-			                }
-			                return result;
-			            };
+						//return delegate(Map context) {
+						//    Map selected = context;
+						//    for (int i = 0; i < count; i++) {
+						//        selected = selected.Scope;
+						//    }
+						//    Map result = selected.GetFromIndex(index);
+						//    if (result == null) {
+						//        throw new KeyNotFound(key, expression.Source.Start, null);
+						//    }
+						//    return result;
+						//};
 			        }
 			        else {
-						return delegate(Map context) {
-							Map selected = context;
-							for (int i = 0; i < count; i++) {
-								selected = selected.Scope;
-							}
-							Map result = selected[key];
-							if (result == null) {
-								throw new KeyNotFound(key, expression.Source.Start, null);
-							}
-							return result;
-						};
+						//return delegate(Map context) {
+						//    Map selected = context;
+						//    for (int i = 0; i < count; i++) {
+						//        selected = selected.Scope;
+						//    }
+						//    Map result = selected[key];
+						//    if (result == null) {
+						//        throw new KeyNotFound(key, expression.Source.Start, null);
+						//    }
+						//    return result;
+						//};
 			        }
 			    }
 			}
-			else {
+			//else {
 			    FindStuff(out count, out key, out value, out map, out statement);
 				Compiled compiled = expression.Compile();
 				return delegate(Map context) {
@@ -852,7 +857,7 @@ namespace Meta {
 					}
 					return selected[k];
 				};
-			}
+			//}
 		}
 		public void MakeSearched(Map key) {
 			if (!search.ContainsKey(key)) {
