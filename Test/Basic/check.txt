@@ -78,7 +78,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"listTest"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -112,7 +112,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"inlineProgram"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hello"
@@ -199,7 +199,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"LIST"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -218,7 +218,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"scoping"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"scopingValue"
@@ -346,7 +346,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerHashTest"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				2
@@ -355,7 +355,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hashTestData"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				2
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -379,7 +379,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerIncrementTest"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		6
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -394,16 +394,16 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"mapNumbers"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"integer"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				6
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"negative"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
@@ -417,7 +417,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"fraction"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
@@ -431,7 +431,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"negativeFraction"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (EmptyMap):
 						0
@@ -455,7 +455,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalEscapeTest"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -493,7 +493,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"aMap"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"a"
@@ -532,7 +532,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"object"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"a"
@@ -550,7 +550,7 @@ Entry (KeyValuePair`2)
 				Entry (KeyValuePair`2)
 					Key (Integer32):
 						1
-					Value (PerfectMap):
+					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"x"
@@ -869,7 +869,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"x"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"a"
@@ -1341,7 +1341,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"everythingReturned"
-	Value (DictionaryMap):
+	Value (CopyMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -1360,7 +1360,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"variableAsArgument"
-	Value (DictionaryMap):
+	Value (CopyMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -1875,11 +1875,11 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"argTest"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"a"
@@ -2865,7 +2865,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (Integer32):
 		5
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -3002,7 +3002,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"firstIfBranches"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -3112,7 +3112,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"secondSwitchCases"
-	Value (ListMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (Integer32):
 				1
@@ -3205,7 +3205,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"emptyFunctionResult"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"x"
@@ -3244,7 +3244,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"x"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"aLongText"
@@ -3830,7 +3830,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"literalAsArgument"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"result"
@@ -4051,7 +4051,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"funcReturnTest"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"hello"
@@ -4118,11 +4118,11 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"deep"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"map"
-			Value (PerfectMap):
+			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"test"
@@ -4376,7 +4376,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"outerFunctionTest"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"innerFunction"
@@ -4474,7 +4474,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"copySourceData"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"x"
@@ -4502,7 +4502,7 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"characterLiterals"
-	Value (PerfectMap):
+	Value (DictionaryMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"a"

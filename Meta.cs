@@ -83,7 +83,7 @@ namespace Meta {
 	}
 	public class Constant:Expression {
 		public override Map GetStructure() {
-			return null;
+			return constant;
 		}
 		private Map constant;
 		public Constant(Map constant)
@@ -96,17 +96,45 @@ namespace Meta {
 			};
 		}
 	}
+	public class SimpleLiteral:Expression {
+		public override Map GetStructure() {
+			return null;
+		}
+		private Map literal;
+		public SimpleLiteral(Map literal):base(null) {
+			this.literal = literal;
+		}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate {
+				return literal;
+			};
+		}
+	}
 	// TODO: save parent
 	public abstract class Expression {
 		public delegate Expression Optimization(Expression expression);
 		public Expression(Map map):this(new Extent(new Source(0,0,""),new Source(0,0,"")),null) {
 		}
 		public static Optimization[] optimizations = new Optimization[] {
+			SimpleLiteral,
 			ConstantSearch,
-			PerfectSearch,
+			//PerfectSearch,
 			FixedSearch,
-			NativeCall
+			//NativeCall
 		};
+		public static Expression SimpleLiteral(Expression expression) {
+			Literal literal=expression as Literal;
+			if(literal!=null) {
+				if (literal.literal.Expression == null) {
+				//if (literal.literal.GetExpression(expression.Parent) == null) {
+					return new SimpleLiteral(literal.literal);
+				}
+				//else {
+				//    Console.WriteLine("not possible");
+				//}
+			}
+			return expression;
+		}
 		public static Expression Optimize(Expression expression) {
 			foreach (Optimization optimization in optimizations) {
 				expression = Optimize(expression, optimization);
@@ -114,6 +142,13 @@ namespace Meta {
 			return expression;
 		}
 		public static void InvokeOnChildren(object obj, Optimization optimization) {
+			Literal literal = obj as Literal;
+			if (literal!=null) {
+				Expression e=literal.literal.GetExpression((Literal)obj);
+				if (e != null) {
+					literal.literal.Expression = Optimize(e, optimization);
+				}
+			}
 			foreach (FieldInfo field in obj.GetType().GetFields()) {
 				if (field.FieldType.Equals(typeof(Expression)) && field.Name != "Parent" && field.Name!="program") {
 					field.SetValue(obj, Optimize((Expression)field.GetValue(obj),optimization));
@@ -202,6 +237,9 @@ namespace Meta {
 				Map map;
 				Statement statement;
 				if (search.FindStuff(out count, out key, out value, out map, out statement)) {
+					if(key.Equals(new StringMap("a")) && count==2) {
+						search.FindStuff(out count, out key, out value, out map, out statement);
+					}
 					return new FixedSearch(null, key, count);
 				}
 			}
@@ -284,9 +322,14 @@ namespace Meta {
 	public delegate Compiled CompiledDelegate(Expression parent);
 
 	public class LastArgument : Expression {
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-			emitter.LoadField(typeof(Map), "arguments");
-			emitter.Call(typeof(Stack<Map>), "Pop");
+		//public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+		//    emitter.LoadField(typeof(Map), "arguments");
+		//    emitter.Call(typeof(Stack<Map>), "Peek");
+		//}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate {
+				return Map.arguments.Peek();
+			};
 		}
 		public override Map GetStructure() {
 			return null;
@@ -615,7 +658,7 @@ namespace Meta {
 					emitter.Call(methodInfo);
 					Transform.GetMetaConversion(methodInfo.ReturnType, emitter);
 					emitter.Return();
-					return (Compiled) emitter.GetDelegate();
+					return (Compiled)emitter.GetDelegate();
 				}
 			}
 			//if (calls.Count == 2 && calls[0].GetConstant() != null) {
@@ -779,7 +822,7 @@ namespace Meta {
 			if (key != null && key.IsConstant) {
 				bool hasCrossedFunction = false;
 				while (true) {
-					while (current.Statement == null) {
+					while (current.Statement == null || current is Program) {
 						if (current.IsFunction) {
 							hasCrossedFunction = true;
 							// TERRIBLE hack
@@ -863,12 +906,6 @@ namespace Meta {
 				return selected[k];
 			};
 		}
-		public void MakeSearched(Map key) {
-			if (!search.ContainsKey(key)) {
-				search[key] = 0;
-			}
-			search[key]++;
-		}
 	}
 	public class FunctionArgument : DictionaryBaseMap {
 		public override Map GetFromIndex(int i) {
@@ -950,12 +987,8 @@ namespace Meta {
 		private bool _isFunctionChecked = false;
 		private bool _isFunction = false;
 		public override Map Call(Map argument, Map scope) {
-			if (comp != null) {
-				return comp(new FunctionArgument(cachedKey, argument, scope));
-			}
-			else {
-				return GetCompiled()(scope);
-			}
+			Map.arguments.Push(argument);
+			return GetCompiled()(scope);
 		}
 		public override Map GetStructure() {
 			if (statementList.Count == 0) {
@@ -1024,22 +1057,22 @@ namespace Meta {
 				}
 				useList = false;
 			}
-			if (statementList.Count == 2) {
-				KeyStatement keyStatement = statementList[0] as KeyStatement;
-				CurrentStatement currentStatement = statementList[1] as CurrentStatement;
-				if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
-					Literal literal = keyStatement.key as Literal;
-					if (literal != null && literal.GetStructure().IsConstant) {
-						Map key=literal.GetStructure();
-						cachedKey = key;
-						comp = currentStatement.value.GetCompiled(this);
-						this._isFunction = true;
-						return delegate(Map context) {
-							return comp(new FunctionArgument(key, Map.arguments.Pop(), context));
-						};
-					}
-				}
-			}
+			//if (statementList.Count == 2) {
+			//    KeyStatement keyStatement = statementList[0] as KeyStatement;
+			//    CurrentStatement currentStatement = statementList[1] as CurrentStatement;
+			//    if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
+			//        Literal literal = keyStatement.key as Literal;
+			//        if (literal != null && literal.GetStructure().IsConstant) {
+			//            Map key=literal.GetStructure();
+			//            cachedKey = key;
+			//            comp = currentStatement.value.GetCompiled(this);
+			//            this._isFunction = true;
+			//            return delegate(Map context) {
+			//                return comp(new FunctionArgument(key, Map.arguments.Peek(), context));
+			//            };
+			//        }
+			//    }
+			//}
 			Mapping mapping=UsePerfectMap();
 			return delegate(Map p) {
 				Map context;
@@ -1079,6 +1112,21 @@ namespace Meta {
 		}
 		public Program(Extent source,Expression parent):base(source,parent) {
 		}
+		//private void CheckFunction() {
+		//    if (statementList.Count == 2) {
+		//        KeyStatement keyStatement = statementList[0] as KeyStatement;
+		//        CurrentStatement currentStatement = statementList[1] as CurrentStatement;
+		//        if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
+		//            Literal literal = keyStatement.key as Literal;
+		//            if (literal != null && literal.GetStructure().IsConstant) {
+		//                Map key = literal.GetStructure();
+		//                cachedKey = key;
+		//                comp = currentStatement.value.GetCompiled(this);
+		//                this._isFunction = true;
+		//            }
+		//        }
+		//    }
+		//}
 		public Program(Map code, Expression parent) : base(code.Source, parent) {
 			int index = 0;
 			foreach (Map m in code.Array) {
@@ -1272,7 +1320,7 @@ namespace Meta {
 
 				if (value is Literal && ((Literal)value).literal.GetExpression(program)!=null) {
 					((Literal)value).literal.GetExpression(program).Statement=this;
-					((Literal)value).literal.Compile(program);
+					//((Literal)value).literal.Compile(program);
 				}
 			// we could do this, too:
 			//if (k != null && k.Equals(CodeKeys.Function)) {
@@ -1350,31 +1398,36 @@ namespace Meta {
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public static List<Map> literals = new List<Map>();
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-			if (index == -1) {
-				literals.Add(literal);
-				index = literals.Count - 1;
-			}
-			emitter.LoadField(typeof(Literal), ("literals"));
-			emitter.LoadConstant(index);
-			emitter.Call(typeof(List<Map>), "get_Item");
-			Expression expression=literal.GetExpression(parent);
-			if (expression != null) {
-				bool emit = true;
-				Literal l = expression as Literal;
-				if (l != null) {
-					Expression child = l.literal.GetExpression(expression);
-					if (child == null) {
-						emit = false;
-					}
-				}
-				if (emit) {
-					literal.Compile(parent);
-					emitter.Emit(context);
-					emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
-				}
-			}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate(Map context) {
+				return literal.Copy(context);
+			};
 		}
+		//public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+		//    if (index == -1) {
+		//        literals.Add(literal);
+		//        index = literals.Count - 1;
+		//    }
+		//    emitter.LoadField(typeof(Literal), ("literals"));
+		//    emitter.LoadConstant(index);
+		//    emitter.Call(typeof(List<Map>), "get_Item");
+		//    Expression expression=literal.GetExpression(parent);
+		//    if (expression != null) {
+		//        bool emit = true;
+		//        Literal l = expression as Literal;
+		//        if (l != null) {
+		//            Expression child = l.literal.GetExpression(expression);
+		//            if (child == null) {
+		//                emit = false;
+		//            }
+		//        }
+		//        if (emit) {
+		//            literal.Compile(parent);
+		//            emitter.Emit(context);
+		//            emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
+		//        }
+		//    }
+		//}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
 			if (literal != null) {
@@ -1407,54 +1460,6 @@ namespace Meta {
 		}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-			//if (subs.Count == 2) {
-			//    Program program = subs[0] as Program;
-			//    if (program != null) {
-			//        if (program.statementList.Count == 2) {
-			//            program.GetCompiled(parent);
-			//            KeyStatement first = program.statementList[0] as KeyStatement;
-			//            KeyStatement second = program.statementList[1] as KeyStatement;
-			//            if (first != null && second != null) {
-			//                Map firstKey=first.key.GetConstant();
-			//                Map secondKey = second.key.GetConstant();
-			//                if (firstKey != null && secondKey != null) {
-			//                    if (firstKey.Equals(Integer32.One) && secondKey.Equals(Integer32.Zero) ||
-			//                        firstKey.Equals(Integer32.Zero) && secondKey.Equals(Integer.One)) {
-			//                        if(first.value is Search && second.value is Search) {
-			//                            Compiled fComp;
-			//                            Compiled sComp;
-			//                            first.value.Statement = this.Statement;
-			//                            second.value.Statement = this.Statement;
-			//                            first.value.Parent = this;
-			//                            second.value.Parent = this;
-			//                            if(firstKey.Equals(Integer32.One)) {
-			//                                fComp = first.value.GetCompiled(this);
-			//                                sComp=second.value.GetCompiled(this);
-			//                            }
-			//                            else {
-			//                                fComp = second.value.GetCompiled(this);
-			//                                sComp = first.value.GetCompiled(this);
-			//                            }
-			//                            return delegate(Map context) {
-			//                                Map stuff = s[1](context);
-			//                                int condition = stuff.GetInt32();
-			//                                if (condition == 1) {
-			//                                    return fComp(context);
-			//                                }
-			//                                else if (condition == 0) {
-			//                                    return sComp(context);
-			//                                }
-			//                                else {
-			//                                    throw new Exception("there was an error");
-			//                                }
-			//                            };
-			//                        }
-			//                    }
-			//                }
-			//            }
-			//        }
-			//    }
-			//}
 			return delegate(Map context) {
 				Map selected = s[0](context);
 				for (int i = 1; i < s.Count; i++) {
@@ -1497,6 +1502,7 @@ namespace Meta {
 			}
 		}
 		public static Map Run(string path, Map argument) {
+			//Map.arguments.Push(Map.Empty);
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
@@ -1504,18 +1510,17 @@ namespace Meta {
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 			lib.Statement = new LiteralStatement(gac);
 			callable.GetExpression(lib).Statement = new LiteralStatement(lib);
-			//callable.Compile(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
 		public static bool profiling = false;
 		static Interpreter() {
+			//Map.arguments.Push(Map.Empty);
 			Console.WriteLine();
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			map.GetExpression(gac).Statement=new LiteralStatement(gac);
-			//map.Compile(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}
@@ -1537,6 +1542,7 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
+			//Map.arguments.Push(Map.Empty);
 			DateTime start = DateTime.Now;
 			//Fibo(new Integer32(32));
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
@@ -2277,12 +2283,18 @@ namespace Meta {
 			this.scope = scope;
 			this.copy = original;
 		}
+		private Expression expression;
 		public override Expression Expression {
 			get {
-				return copy.Expression;
+				if (expression != null) {
+					return expression;
+				}
+				else {
+					return copy.Expression;
+				}
 			}
 			set {
-				throw new Exception("not implemented");
+				expression = value;
 			}
 		}
 		public override NumberMap GetNumber() {
@@ -2312,7 +2324,8 @@ namespace Meta {
 			get {
 				int index;
 				if(!mapping.mapping.TryGetValue(key,out index)) {
-					throw new KeyDoesNotExist(key,this.Source.Start,this);
+					return null;
+					//throw new KeyDoesNotExist(key,this.Source.Start,this);
 				}
 				return values[index];
 			}
@@ -4881,21 +4894,6 @@ namespace Meta {
 					return Path.Combine(Interpreter.InstallationPath, "Test");
 				}
 			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					string fileName = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
-					string text = File.ReadAllText(fileName);
-					for (int i = 0; i < 100; i++) {
-						Parser.ParseString(text,fileName);
-						foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
-							cached.Clear();
-						}
-					}
-					return Meta.Serialization.Serialize(Parser.ParseString(text,fileName));//Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-					//return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
 			//public class Serialization : Test {
 			//    public override object GetResult(out int level) {
 			//        level = 1;
@@ -4937,6 +4935,21 @@ namespace Meta {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					string fileName = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+					string text = File.ReadAllText(fileName);
+					for (int i = 0; i < 100; i++) {
+						Parser.ParseString(text, fileName);
+						foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+							cached.Clear();
+						}
+					}
+					return Meta.Serialization.Serialize(Parser.ParseString(text, fileName));//Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+					//return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 				}
 			}
 			public class MergeSort : Test {
@@ -5855,6 +5868,10 @@ namespace Meta {
 			return null;
 		}
 		public virtual Map CallFast() {
+			if (firstCall) {
+				firstCall = false;
+				Expression = Expression.Optimize(GetExpression());
+			}
 			return GetExpression().CallFast(this.Scope);
 		}
 		private bool firstCall = true;

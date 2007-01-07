@@ -46,6 +46,7 @@
     <Compile Include="ILInstruction.cs" />
     <Compile Include="Meta.cs" />
     <Compile Include="MethodBodyReader.cs" />
+    <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OdeDotNet, Version=0.0.1.1642, Culture=neutral, PublicKeyToken=c54d8a056f43ac6a, processorArchitecture=MSIL">
