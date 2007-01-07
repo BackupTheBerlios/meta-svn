@@ -175,17 +175,6 @@ namespace Meta {
 					}
 					if (index != -1) {
 						return new PerfectSearch(count,key,index);
-						//return delegate(Map context) {
-						//    Map selected = context;
-						//    for (int i = 0; i < count; i++) {
-						//        selected = selected.Scope;
-						//    }
-						//    Map result = selected.GetFromIndex(index);
-						//    if (result == null) {
-						//        throw new KeyNotFound(key, expression.Source.Start, null);
-						//    }
-						//    return result;
-						//};
 					}
 				}
 			}
@@ -1219,8 +1208,8 @@ namespace Meta {
 		}
 		public abstract CompiledStatement Compile();
 		public Program program;
-		public readonly Expression value;
-		public readonly int Index;
+		public Expression value;
+		public int Index;
 		public Statement(Program program, Expression value, int index) {
 			this.program = program;
 			this.Index = index;
@@ -1515,7 +1504,7 @@ namespace Meta {
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 			lib.Statement = new LiteralStatement(gac);
 			callable.GetExpression(lib).Statement = new LiteralStatement(lib);
-			callable.Compile(lib);
+			//callable.Compile(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
@@ -1526,7 +1515,7 @@ namespace Meta {
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			map.GetExpression(gac).Statement=new LiteralStatement(gac);
-			map.Compile(gac);
+			//map.Compile(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}
