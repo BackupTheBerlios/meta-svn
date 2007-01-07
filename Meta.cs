@@ -118,20 +118,16 @@ namespace Meta {
 		public static Optimization[] optimizations = new Optimization[] {
 			SimpleLiteral,
 			ConstantSearch,
-			//PerfectSearch,
+			PerfectSearch,
 			FixedSearch,
-			//NativeCall
+			NativeCall
 		};
 		public static Expression SimpleLiteral(Expression expression) {
 			Literal literal=expression as Literal;
 			if(literal!=null) {
 				if (literal.literal.Expression == null) {
-				//if (literal.literal.GetExpression(expression.Parent) == null) {
 					return new SimpleLiteral(literal.literal);
 				}
-				//else {
-				//    Console.WriteLine("not possible");
-				//}
 			}
 			return expression;
 		}
@@ -157,18 +153,12 @@ namespace Meta {
 					List<Expression> list = (List<Expression>)field.GetValue(obj);
 					for (int index = 0; index < list.Count; index++) {
 						list[index] = Optimize(list[index],optimization);
-						//list[index] = optimization(list[index]);
 					}
 				}
-				//else if ((field.FieldType.IsSubclassOf(typeof(Statement)) || field.FieldType.Equals(typeof(Statement))) && field.FieldType.Name!="Statement") {
-				//    InvokeOnChildren(field.GetValue(obj),optimization);
-				//}
 				else if (field.FieldType.Equals(typeof(List<Statement>))) {
 					List<Statement> list = (List<Statement>)field.GetValue(obj);
 					for (int index = 0; index < list.Count; index++) {
 						InvokeOnChildren(list[index], optimization);
-						//list[index] = Optimize(list[index], optimization);
-						//list[index] = optimization(list[index]);
 					}
 				}
 			}
@@ -237,9 +227,6 @@ namespace Meta {
 				Map map;
 				Statement statement;
 				if (search.FindStuff(out count, out key, out value, out map, out statement)) {
-					if(key.Equals(new StringMap("a")) && count==2) {
-						search.FindStuff(out count, out key, out value, out map, out statement);
-					}
 					return new FixedSearch(null, key, count);
 				}
 			}
@@ -318,17 +305,10 @@ namespace Meta {
 			return (Compiled)emitter.GetDelegate();
 		}
 	}
-	public delegate Map StructureDelegate();
-	public delegate Compiled CompiledDelegate(Expression parent);
-
 	public class LastArgument : Expression {
-		//public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-		//    emitter.LoadField(typeof(Map), "arguments");
-		//    emitter.Call(typeof(Stack<Map>), "Peek");
-		//}
 		public override Compiled GetCompiled(Expression parent) {
 			return delegate {
-				return Map.arguments.Peek();
+				return Map.arguments.Pop();
 			};
 		}
 		public override Map GetStructure() {
@@ -336,197 +316,6 @@ namespace Meta {
 		}
 		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {
-		}
-	}
-	public class Emitter {
-		public void MarkLabel(Label label) {
-			il.MarkLabel(label);
-		}
-		public void Duplicate() {
-			il.Emit(OpCodes.Dup);
-		}
-		public void BranchTrue(Label label) {
-			il.Emit(OpCodes.Brtrue, label);
-		}
-		public void Pop() {
-			il.Emit(OpCodes.Pop);
-		}
-		public Label DefineLabel() {
-			return il.DefineLabel();
-		}
-		public void Box(Type type) {
-			il.Emit(OpCodes.Box, type);
-		}
-		public void StoreLocal(LocalBuilder local) {
-			StoreLocal(local.LocalIndex);
-		}
-		public void StoreLocal(int index) {
-			il.Emit(OpCodes.Stloc, index);
-		}
-		public void LoadLocal(LocalBuilder local) {
-			LoadLocal(local.LocalIndex);
-		}
-		public void LoadLocal(int index) {
-			il.Emit(OpCodes.Ldloc, index);
-		}
-		public void Break(Label label) {
-			il.Emit(OpCodes.Br, label);
-		}
-		public void Emit(OpCode code, int operand) {
-			il.Emit(code, operand);
-		}
-		public LocalBuilder DeclareLocal(Type type) {
-			return il.DeclareLocal(type);
-		}
-		public void Emit(OpCode code) {
-			il.Emit(code);
-		}
-		public void BreakFalse(Label label) {
-			il.Emit(OpCodes.Brfalse, label);
-		}
-		public void BreakTrue(Label label) {
-			il.Emit(OpCodes.Brtrue, label);
-		}
-		public void Return() {
-			il.Emit(OpCodes.Ret);
-		}
-		public void UnboxAny(Type type) {
-			il.Emit(OpCodes.Unbox_Any, type);
-		}
-		public void NewArray(Type type) {
-			il.Emit(OpCodes.Newarr, type);
-		}
-		public void LoadConstant(int i) {
-			il.Emit(OpCodes.Ldc_I4, i);
-		}
-		public void NewObject(Type type) {
-			NewObject(type, new Type[] { });
-		}
-		public void NewObject(Type type, params Type[] parameters) {
-			NewObject(type.GetConstructor(parameters));
-		}
-		public void NewObject(ConstructorInfo constructor) {
-			il.Emit(OpCodes.Newobj, constructor);
-		}
-		public void Emit(OpCode code, byte b) {
-			il.Emit(code, b);
-		}
-		public void CastClass(Type type) {
-			il.Emit(OpCodes.Castclass, type);
-		}
-		public void Call(Type type, string method) {
-			Call(type.GetMethod(method));
-		}
-		public void Call(Type type, string method, params Type[] parameters) {
-			Call(type.GetMethod(method,parameters));
-		}
-		public void Call(MethodInfo method) {
-			il.Emit(
-				method.IsStatic ?
-					OpCodes.Call :
-					OpCodes.Callvirt,
-				method);
-		}
-		public void LoadField(Type type, string field) {
-			LoadField(type.GetField(field));
-		}
-		public void LoadField(FieldInfo field) {
-			il.Emit(
-				field.IsStatic ?
-					OpCodes.Ldsfld :
-					OpCodes.Ldfld,
-				field);
-		}
-		public void StoreElementReference() {
-			il.Emit(OpCodes.Stelem_Ref);
-		}
-		public void LoadArgument(int index) {
-			il.Emit(OpCodes.Ldarg, index);
-		}
-		DynamicMethod dynamicMethod;
-		public ILGenerator il;
-		private StaticEmitter emitter;
-		private Type type;
-		public Emitter(Type type) {
-			this.type = type;
-			MethodInfo invoke=type.GetMethod("Invoke");
-			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
-			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
-			this.il = dynamicMethod.GetILGenerator();
-		}
-		private AssemblyBuilder ab;
-		private TypeBuilder tb;
-		const string assemblyPath = @"d:\meta\bin\Release\";
-		public Emitter(Type type,Type instance) {
-			this.type = type;
-
-			MethodInfo invoke = type.GetMethod("Invoke");
-			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
-			parameters.Insert(0, instance);
-
-			AppDomain cd = System.Threading.Thread.GetDomain();
-			AssemblyName an = new AssemblyName();
-			an.Name = "HelloClass";
-			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave,assemblyPath);
-			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
-			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
-			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, parameters.ToArray());
-			il = meth.GetILGenerator();
-			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
-		}
-		public object GetDelegate() {
-			return dynamicMethod.CreateDelegate(type);
-		}
-		public string DynamicPath {
-			get {
-				return Path.Combine(assemblyPath, "MetaDynamic.dll");
-			}
-		}
-		public string ModulePath {
-			get {
-				return Path.Combine(assemblyPath, "HelloModule.dll");
-			}
-		}
-		public object GetDelegate(object instance) {
-			Type myType = tb.CreateType();
-			ab.Save("MetaDynamic.dll");
-			Delegate del = Delegate.CreateDelegate(type, instance, myType.GetMethod("HelloWorld"));
-			ProcessStartInfo start = new ProcessStartInfo(@"C:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);
-			start.UseShellExecute = false;
-			start.RedirectStandardError = true;
-			start.RedirectStandardInput = true;
-			start.RedirectStandardOutput = true;
-			start.CreateNoWindow = true;
-			Process process=Process.Start(start);
-			StreamReader reader = process.StandardOutput;
-			Directory.SetCurrentDirectory(assemblyPath);
-			process.WaitForExit();
-			if (process.ExitCode == 1) {
-				Console.WriteLine(reader.ReadToEnd());
-				Process.Start(@"C:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
-				throw new Exception("code generation error");
-			}
-			return del;
-		}
-	}
-	public class StaticEmitter {
-		public ILGenerator il;
-		private AssemblyBuilder ab;
-		private TypeBuilder tb;
-		public StaticEmitter(Type returnType, Type[] parameters) {
-			AppDomain cd = System.Threading.Thread.GetDomain();
-			AssemblyName an = new AssemblyName();
-			an.Name = "HelloClass";
-			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
-			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
-			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
-			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
-			il = meth.GetILGenerator();
-		}
-		public void Generate() {
-			Type myType = tb.CreateType();
-			ab.Save("MetaDynamic.dll");
-			return;
 		}
 	}
 	public class Call : Expression {
@@ -688,6 +477,7 @@ namespace Meta {
 			};
 		}
 	}
+
 	public delegate Map MetaConversion(object obj);
 	public delegate object DotNetConversion(Map map);
 	
@@ -1112,21 +902,6 @@ namespace Meta {
 		}
 		public Program(Extent source,Expression parent):base(source,parent) {
 		}
-		//private void CheckFunction() {
-		//    if (statementList.Count == 2) {
-		//        KeyStatement keyStatement = statementList[0] as KeyStatement;
-		//        CurrentStatement currentStatement = statementList[1] as CurrentStatement;
-		//        if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
-		//            Literal literal = keyStatement.key as Literal;
-		//            if (literal != null && literal.GetStructure().IsConstant) {
-		//                Map key = literal.GetStructure();
-		//                cachedKey = key;
-		//                comp = currentStatement.value.GetCompiled(this);
-		//                this._isFunction = true;
-		//            }
-		//        }
-		//    }
-		//}
 		public Program(Map code, Expression parent) : base(code.Source, parent) {
 			int index = 0;
 			foreach (Map m in code.Array) {
@@ -1397,42 +1172,13 @@ namespace Meta {
 		}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public static List<Map> literals = new List<Map>();
 		public override Compiled GetCompiled(Expression parent) {
 			return delegate(Map context) {
 				return literal.Copy(context);
 			};
 		}
-		//public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-		//    if (index == -1) {
-		//        literals.Add(literal);
-		//        index = literals.Count - 1;
-		//    }
-		//    emitter.LoadField(typeof(Literal), ("literals"));
-		//    emitter.LoadConstant(index);
-		//    emitter.Call(typeof(List<Map>), "get_Item");
-		//    Expression expression=literal.GetExpression(parent);
-		//    if (expression != null) {
-		//        bool emit = true;
-		//        Literal l = expression as Literal;
-		//        if (l != null) {
-		//            Expression child = l.literal.GetExpression(expression);
-		//            if (child == null) {
-		//                emit = false;
-		//            }
-		//        }
-		//        if (emit) {
-		//            literal.Compile(parent);
-		//            emitter.Emit(context);
-		//            emitter.Call(typeof(Map).GetMethod("Copy", new Type[] { typeof(Map) }));
-		//        }
-		//    }
-		//}
 		public Literal(Map code, Expression parent): base(code.Source, parent) {
 			this.literal = code;
-			if (literal != null) {
-				literal.Source = code.Source;
-			}
 		}
 	}
 	public class Root : Expression {
@@ -1441,8 +1187,10 @@ namespace Meta {
 		}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-			emitter.LoadField(typeof(Gac).GetField("gac"));
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate {
+				return Gac.gac;
+			};
 		}
 	}
 	public class Select : Expression {
@@ -1480,6 +1228,197 @@ namespace Meta {
 			foreach (Map m in code.Array) {
 				subs.Add(m.GetExpression(this));
 			}
+		}
+	}
+	public class Emitter {
+		public void MarkLabel(Label label) {
+			il.MarkLabel(label);
+		}
+		public void Duplicate() {
+			il.Emit(OpCodes.Dup);
+		}
+		public void BranchTrue(Label label) {
+			il.Emit(OpCodes.Brtrue, label);
+		}
+		public void Pop() {
+			il.Emit(OpCodes.Pop);
+		}
+		public Label DefineLabel() {
+			return il.DefineLabel();
+		}
+		public void Box(Type type) {
+			il.Emit(OpCodes.Box, type);
+		}
+		public void StoreLocal(LocalBuilder local) {
+			StoreLocal(local.LocalIndex);
+		}
+		public void StoreLocal(int index) {
+			il.Emit(OpCodes.Stloc, index);
+		}
+		public void LoadLocal(LocalBuilder local) {
+			LoadLocal(local.LocalIndex);
+		}
+		public void LoadLocal(int index) {
+			il.Emit(OpCodes.Ldloc, index);
+		}
+		public void Break(Label label) {
+			il.Emit(OpCodes.Br, label);
+		}
+		public void Emit(OpCode code, int operand) {
+			il.Emit(code, operand);
+		}
+		public LocalBuilder DeclareLocal(Type type) {
+			return il.DeclareLocal(type);
+		}
+		public void Emit(OpCode code) {
+			il.Emit(code);
+		}
+		public void BreakFalse(Label label) {
+			il.Emit(OpCodes.Brfalse, label);
+		}
+		public void BreakTrue(Label label) {
+			il.Emit(OpCodes.Brtrue, label);
+		}
+		public void Return() {
+			il.Emit(OpCodes.Ret);
+		}
+		public void UnboxAny(Type type) {
+			il.Emit(OpCodes.Unbox_Any, type);
+		}
+		public void NewArray(Type type) {
+			il.Emit(OpCodes.Newarr, type);
+		}
+		public void LoadConstant(int i) {
+			il.Emit(OpCodes.Ldc_I4, i);
+		}
+		public void NewObject(Type type) {
+			NewObject(type, new Type[] { });
+		}
+		public void NewObject(Type type, params Type[] parameters) {
+			NewObject(type.GetConstructor(parameters));
+		}
+		public void NewObject(ConstructorInfo constructor) {
+			il.Emit(OpCodes.Newobj, constructor);
+		}
+		public void Emit(OpCode code, byte b) {
+			il.Emit(code, b);
+		}
+		public void CastClass(Type type) {
+			il.Emit(OpCodes.Castclass, type);
+		}
+		public void Call(Type type, string method) {
+			Call(type.GetMethod(method));
+		}
+		public void Call(Type type, string method, params Type[] parameters) {
+			Call(type.GetMethod(method, parameters));
+		}
+		public void Call(MethodInfo method) {
+			il.Emit(
+				method.IsStatic ?
+					OpCodes.Call :
+					OpCodes.Callvirt,
+				method);
+		}
+		public void LoadField(Type type, string field) {
+			LoadField(type.GetField(field));
+		}
+		public void LoadField(FieldInfo field) {
+			il.Emit(
+				field.IsStatic ?
+					OpCodes.Ldsfld :
+					OpCodes.Ldfld,
+				field);
+		}
+		public void StoreElementReference() {
+			il.Emit(OpCodes.Stelem_Ref);
+		}
+		public void LoadArgument(int index) {
+			il.Emit(OpCodes.Ldarg, index);
+		}
+		DynamicMethod dynamicMethod;
+		public ILGenerator il;
+		private StaticEmitter emitter;
+		private Type type;
+		public Emitter(Type type) {
+			this.type = type;
+			MethodInfo invoke = type.GetMethod("Invoke");
+			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
+			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
+			this.il = dynamicMethod.GetILGenerator();
+		}
+		private AssemblyBuilder ab;
+		private TypeBuilder tb;
+		const string assemblyPath = @"d:\meta\bin\Release\";
+		public Emitter(Type type, Type instance) {
+			this.type = type;
+
+			MethodInfo invoke = type.GetMethod("Invoke");
+			List<Type> parameters = new List<ParameterInfo>(invoke.GetParameters()).ConvertAll<Type>(delegate(ParameterInfo p) { return p.ParameterType; });
+			parameters.Insert(0, instance);
+
+			AppDomain cd = System.Threading.Thread.GetDomain();
+			AssemblyName an = new AssemblyName();
+			an.Name = "HelloClass";
+			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave, assemblyPath);
+			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
+			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
+			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, invoke.ReturnType, parameters.ToArray());
+			il = meth.GetILGenerator();
+			this.dynamicMethod = new DynamicMethod("Optimized", invoke.ReturnType, parameters.ToArray(), typeof(Map).Module);
+		}
+		public object GetDelegate() {
+			return dynamicMethod.CreateDelegate(type);
+		}
+		public string DynamicPath {
+			get {
+				return Path.Combine(assemblyPath, "MetaDynamic.dll");
+			}
+		}
+		public string ModulePath {
+			get {
+				return Path.Combine(assemblyPath, "HelloModule.dll");
+			}
+		}
+		public object GetDelegate(object instance) {
+			Type myType = tb.CreateType();
+			ab.Save("MetaDynamic.dll");
+			Delegate del = Delegate.CreateDelegate(type, instance, myType.GetMethod("HelloWorld"));
+			ProcessStartInfo start = new ProcessStartInfo(@"C:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);
+			start.UseShellExecute = false;
+			start.RedirectStandardError = true;
+			start.RedirectStandardInput = true;
+			start.RedirectStandardOutput = true;
+			start.CreateNoWindow = true;
+			Process process = Process.Start(start);
+			StreamReader reader = process.StandardOutput;
+			Directory.SetCurrentDirectory(assemblyPath);
+			process.WaitForExit();
+			if (process.ExitCode == 1) {
+				Console.WriteLine(reader.ReadToEnd());
+				Process.Start(@"C:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
+				throw new Exception("code generation error");
+			}
+			return del;
+		}
+	}
+	public class StaticEmitter {
+		public ILGenerator il;
+		private AssemblyBuilder ab;
+		private TypeBuilder tb;
+		public StaticEmitter(Type returnType, Type[] parameters) {
+			AppDomain cd = System.Threading.Thread.GetDomain();
+			AssemblyName an = new AssemblyName();
+			an.Name = "HelloClass";
+			ab = cd.DefineDynamicAssembly(an, AssemblyBuilderAccess.RunAndSave);
+			ModuleBuilder mb = ab.DefineDynamicModule("HelloModule", "HelloModule.dll", true);
+			tb = mb.DefineType("Hello", TypeAttributes.Class | TypeAttributes.Public);
+			MethodBuilder meth = tb.DefineMethod("HelloWorld", MethodAttributes.Public | MethodAttributes.Static, returnType, parameters);
+			il = meth.GetILGenerator();
+		}
+		public void Generate() {
+			Type myType = tb.CreateType();
+			ab.Save("MetaDynamic.dll");
+			return;
 		}
 	}
 	public delegate void DebugDelegate(Map context);
