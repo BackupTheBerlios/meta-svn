@@ -49,9 +49,9 @@ namespace Meta {
 		public ToMeta(Expression expression,Type type,Map map):base(map.Source,map.Scope.GetExpression()) {
 			this.expression = expression;
 		}
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 	}
 	public class ToDotNet : Expression {
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
@@ -62,9 +62,9 @@ namespace Meta {
 		public ToDotNet(Expression expression,Type type,Map map):base(map.Source,map.Scope.GetExpression()) {
 			this.expression = expression;
 		}
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 	}
 	public class Branch : Expression {
 		public Expression condition;
@@ -75,16 +75,16 @@ namespace Meta {
 			this.first = first;
 			this.second = second;
 		}
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 		}
 	}
 	public class Constant:Expression {
-		public override Map GetStructure() {
-			return constant;
-		}
+		//public override Map GetStructure() {
+		//    return constant;
+		//}
 		private Map constant;
 		public Constant(Map constant)
 			: base(constant) {
@@ -97,9 +97,9 @@ namespace Meta {
 		}
 	}
 	public class SimpleLiteral:Expression {
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		private Map literal;
 		public SimpleLiteral(Map literal):base(null) {
 			this.literal = literal;
@@ -281,12 +281,13 @@ namespace Meta {
 		}
 		public Map EvaluateStructure() {
 			if (!evaluated) {
-				structure = GetStructure();
+				structure = null;//GetStructure();
+				//structure = GetStructure();
 				evaluated = true;
 			}
 			return structure;
 		}
-		public abstract Map GetStructure();
+		//public abstract Map GetStructure();
 		public Compiled Compile() {
 			Compiled result = GetCompiled(this.Parent);
 			if (Source != null) {
@@ -311,9 +312,9 @@ namespace Meta {
 				return Map.arguments.Pop();
 			};
 		}
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		public LastArgument(Map code, Expression parent)
 			: base(code.Source, parent) {
 		}
@@ -329,42 +330,42 @@ namespace Meta {
 				calls.Add(new Literal(Map.Empty, this));
 			}
 		}
-		public override Map GetStructure() {
-			List<object> arguments;
-			MethodBase method;
-			if (CallStuff(out arguments, out method)) {
-				if (method is ConstructorInfo) {
-					Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
-					Map result = new DictionaryMap();
-					result.IsConstant=false;
-					foreach (Map key in type.Keys) {
-						Member member = type[key];
-						Map value;
-						if (member is MethodMember) {
-							value = member.Get(null);
-						}
-						else {
-							value = Map.Empty;
-						}
-						result[key] = value;
+		//public override Map GetStructure() {
+		//    List<object> arguments;
+		//    MethodBase method;
+		//    if (CallStuff(out arguments, out method)) {
+		//        if (method is ConstructorInfo) {
+		//            Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(method.DeclaringType);
+		//            Map result = new DictionaryMap();
+		//            result.IsConstant=false;
+		//            foreach (Map key in type.Keys) {
+		//                Member member = type[key];
+		//                Map value;
+		//                if (member is MethodMember) {
+		//                    value = member.Get(null);
+		//                }
+		//                else {
+		//                    value = Map.Empty;
+		//                }
+		//                result[key] = value;
 
-					}
-					return result;
-				}
-				else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
-					Map result = (Map)method.Invoke(null, arguments.ToArray());
-					result.IsConstant = false;
-					return result;
-				}
-				else if(method is MethodInfo) {
-					Type type = ((MethodInfo)method).ReturnType;
-					if (type != typeof(Map) && !type.IsSubclassOf(typeof(Map))) {
-						return GetInstanceStructure(type);
-					}
-				}
-			}
-			return null;
-		}
+		//            }
+		//            return result;
+		//        }
+		//        else if (arguments != null && method.GetCustomAttributes(typeof(CompilableAttribute), false).Length != 0) {
+		//            Map result = (Map)method.Invoke(null, arguments.ToArray());
+		//            result.IsConstant = false;
+		//            return result;
+		//        }
+		//        else if(method is MethodInfo) {
+		//            Type type = ((MethodInfo)method).ReturnType;
+		//            if (type != typeof(Map) && !type.IsSubclassOf(typeof(Map))) {
+		//                return GetInstanceStructure(type);
+		//            }
+		//        }
+		//    }
+		//    return null;
+		//}
 		public static Map GetInstanceStructure(Type t) {
 			Dictionary<Map, Member> type = ObjectMap.cache.GetMembers(t);
 			Map result = new DictionaryMap();
@@ -483,9 +484,9 @@ namespace Meta {
 	
 	public delegate Map FastCall(Map context);
 	public class PerfectSearch : Expression {
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		private int count;
 		private Map key;
 		private int index;
@@ -510,9 +511,9 @@ namespace Meta {
 		}
 	}
 	public class NativeCall : Expression {
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		private MethodBase method;
 		private List<Expression> arguments;
 		public NativeCall(MethodBase method,List<Expression> arguments)
@@ -565,9 +566,9 @@ namespace Meta {
 			this.count = count;
 			this.key = key;
 		}
-		public override Map GetStructure() {
-			return null;
-		}
+		//public override Map GetStructure() {
+		//    return null;
+		//}
 		public override Compiled GetCompiled(Expression parent) {
 			return delegate(Map context) {
 				Map selected = context;
@@ -585,24 +586,24 @@ namespace Meta {
 	}
 	public class Search : Expression {
 		public static Dictionary<Map, int> search = new Dictionary<Map, int>();
-		public override Map GetStructure() {
-			Map key;
-			int count;
-			Map value;
-			Map map;
-			Statement statement;
-			if (FindStuff(out count, out key, out value, out map, out statement)) {
-				if (value != null) {
-					return value;
-				}
-				else {
-					return null;
-				}
-			}
-			else {
-				return null;
-			}
-		}
+		//public override Map GetStructure() {
+		//    Map key;
+		//    int count;
+		//    Map value;
+		//    Map map;
+		//    Statement statement;
+		//    if (FindStuff(out count, out key, out value, out map, out statement)) {
+		//        if (value != null) {
+		//            return value;
+		//        }
+		//        else {
+		//            return null;
+		//        }
+		//    }
+		//    else {
+		//        return null;
+		//    }
+		//}
 		// this is a mess
 		public bool FindStuff(out int count, out Map key, out Map value, out Map map, out Statement s) {
 			Expression current = this;
@@ -780,14 +781,14 @@ namespace Meta {
 			Map.arguments.Push(argument);
 			return GetCompiled()(scope);
 		}
-		public override Map GetStructure() {
-			if (statementList.Count == 0) {
-				return new DictionaryMap();
-			}
-			else {
-				return statementList[statementList.Count - 1].Current();
-			}
-		}
+		//public override Map GetStructure() {
+		//    if (statementList.Count == 0) {
+		//        return new DictionaryMap();
+		//    }
+		//    else {
+		//        return statementList[statementList.Count - 1].Current();
+		//    }
+		//}
 		public Mapping UsePerfectMap() {
 			bool usePerfectMap = true;
 			List<Map> keys = new List<Map>();
@@ -893,9 +894,9 @@ namespace Meta {
 				CurrentStatement currentStatement = statementList[1] as CurrentStatement;
 				if (keyStatement != null && currentStatement != null && keyStatement.value is LastArgument) {
 					Literal literal = keyStatement.key as Literal;
-					if (literal != null && literal.GetStructure().IsConstant) {
-						return true;
-					}
+					//if (literal != null && literal.GetStructure().IsConstant) {
+					//    return true;
+					//}
 				}
 			}
 			return false;
@@ -1167,9 +1168,9 @@ namespace Meta {
 	}
 	public class Literal : Expression {
 		private int index = -1;
-		public override Map GetStructure() {
-			return literal;
-		}
+		//public override Map GetStructure() {
+		//    return literal;
+		//}
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
 		public override Compiled GetCompiled(Expression parent) {
@@ -1182,9 +1183,9 @@ namespace Meta {
 		}
 	}
 	public class Root : Expression {
-		public override Map GetStructure() {
-			return Gac.gac;
-		}
+		//public override Map GetStructure() {
+		//    return Gac.gac;
+		//}
 		public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
 		public override Compiled GetCompiled(Expression parent) {
@@ -1194,18 +1195,18 @@ namespace Meta {
 		}
 	}
 	public class Select : Expression {
-		public override Map GetStructure() {
-			// maybe wrong
-			Map selected = subs[0].GetStructure();
-			for (int i = 1; i < subs.Count; i++) {
-				Map key = subs[i].GetConstant();
-				if (selected == null || key == null || !selected.ContainsKey(key)) {
-					return null;
-				}
-				selected = selected[key];
-			}
-			return selected;
-		}
+		//public override Map GetStructure() {
+		//    // maybe wrong
+		//    Map selected = subs[0].GetStructure();
+		//    for (int i = 1; i < subs.Count; i++) {
+		//        Map key = subs[i].GetConstant();
+		//        if (selected == null || key == null || !selected.ContainsKey(key)) {
+		//            return null;
+		//        }
+		//        selected = selected[key];
+		//    }
+		//    return selected;
+		//}
 		public override Compiled GetCompiled(Expression parent) {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			return delegate(Map context) {
@@ -5602,9 +5603,9 @@ namespace Meta {
 		public LiteralExpression(Map literal, Expression parent) : base(null, parent) {
 			this.literal = literal;
 		}
-		public override Map GetStructure() {
-			return literal;
-		}
+		//public override Map GetStructure() {
+		//    return literal;
+		//}
 		public override Compiled GetCompiled(Expression parent) {
 			throw new Exception("The method or operation is not implemented.");
 		}

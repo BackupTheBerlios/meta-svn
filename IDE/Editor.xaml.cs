@@ -982,9 +982,9 @@ public partial class Editor : System.Windows.Window {
 									}
 									else if (x is LiteralExpression) {
 										LiteralExpression literal = (LiteralExpression)x;
-										Map structure=literal.GetStructure();
+										//Map structure=literal.GetStructure();
 
-										maps.Add(structure);
+										//maps.Add(structure);
 									}
 									x = x.Parent;
 								}
@@ -1504,7 +1504,8 @@ public partial class Editor : System.Windows.Window {
 				}
 			}
 			if (start != null) {
-				Map structure = start.GetStructure();
+				Map structure = null;//start.GetStructure();
+				//Map structure = start.GetStructure();
 				if (structure != null) {
 					Method method = structure as Method;
 					if (method != null) {
