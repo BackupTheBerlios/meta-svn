@@ -102,7 +102,10 @@ namespace Meta {
 		public Expression(Map map):this(new Extent(new Source(0,0,""),new Source(0,0,"")),null) {
 		}
 		public static Expression Optimize(Expression expression) {
-			return Optimize(expression, ConstantSearch);
+			expression=Optimize(expression, ConstantSearch);
+			expression = Optimize(expression, PerfectSearch);
+			expression = Optimize(expression, FixedSearch);
+			return expression;
 		}
 		public static void InvokeOnChildren(object obj, Optimization optimization) {
 			foreach (FieldInfo field in obj.GetType().GetFields()) {
@@ -130,8 +133,8 @@ namespace Meta {
 			}
 		}
 		public static Expression Optimize(Expression expression,Optimization optimization) {
-			expression = optimization(expression);
 			InvokeOnChildren(expression, optimization);
+			expression = optimization(expression);
 			return expression;
 		}
 		public static Expression ConstantSearch(Expression expression) {
@@ -150,7 +153,50 @@ namespace Meta {
 			}
 			return expression;
 		}
+		public static Expression PerfectSearch(Expression expression) {
+			Search search = expression as Search;
+			if (search != null) {
+				int count;
+				Map key;
+				Map value;
+				Map map;
+				Statement statement;
+				if (search.FindStuff(out count, out key, out value, out map, out statement)) {
+					int index = -1;
+					Mapping mapping = statement.program.UsePerfectMap();
+					if (mapping != null && mapping.mapping.ContainsKey(key)) {
+						index = mapping.mapping[key];
+					}
+					if (index != -1) {
+						return new PerfectSearch(count,key,index);
+						//return delegate(Map context) {
+						//    Map selected = context;
+						//    for (int i = 0; i < count; i++) {
+						//        selected = selected.Scope;
+						//    }
+						//    Map result = selected.GetFromIndex(index);
+						//    if (result == null) {
+						//        throw new KeyNotFound(key, expression.Source.Start, null);
+						//    }
+						//    return result;
+						//};
+					}
+				}
+			}
+			return expression;
+		}
 		public static Expression FixedSearch(Expression expression){
+			Search search = expression as Search;
+			if (search != null) {
+				int count;
+				Map key;
+				Map value;
+				Map map;
+				Statement statement;
+				if (search.FindStuff(out count, out key, out value, out map, out statement)) {
+					return new FixedSearch(null, key, count);
+				}
+			}
 			return expression;
 		}
 		public static void GetCachedCompile(Emitter emitter,Compiled c) {
@@ -595,6 +641,33 @@ namespace Meta {
 	public delegate object DotNetConversion(Map map);
 	
 	public delegate Map FastCall(Map context);
+	public class PerfectSearch : Expression {
+		public override Map GetStructure() {
+			return null;
+		}
+		private int count;
+		private Map key;
+		private int index;
+		public PerfectSearch(int count,Map key,int index):base(null) {
+			this.count = count;
+			this.key = key;
+			this.index = index;
+		}
+		public override Compiled GetCompiled(Expression parent) {
+			return delegate(Map context) {
+				Map selected = context;
+				for (int i = 0; i < count; i++) {
+					selected = selected.Scope;
+				}
+				Map result = selected.GetFromIndex(index);
+				if (result == null) {
+					throw new KeyNotFound(key, null, null);
+					//throw new KeyNotFound(key, expression.Source.Start, null);
+				}
+				return result;
+			};
+		}
+	}
 	public class FixedSearch:Expression {
 		private int count;
 		private Map key;
@@ -747,17 +820,17 @@ namespace Meta {
 			            };
 			        }
 			        else {
-			return delegate(Map context) {
-			    Map selected = context;
-			    for (int i = 0; i < count; i++) {
-			        selected = selected.Scope;
-			    }
-			    Map result = selected[key];
-			    if (result == null) {
-			        throw new KeyNotFound(key, expression.Source.Start, null);
-			    }
-			    return result;
-			};
+						return delegate(Map context) {
+							Map selected = context;
+							for (int i = 0; i < count; i++) {
+								selected = selected.Scope;
+							}
+							Map result = selected[key];
+							if (result == null) {
+								throw new KeyNotFound(key, expression.Source.Start, null);
+							}
+							return result;
+						};
 			        }
 			    }
 			}
@@ -5046,6 +5119,12 @@ namespace Meta {
 			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
 			//    }
 			//}
+			public class Fibo : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+				}
+			}
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5058,12 +5137,6 @@ namespace Meta {
 			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"slowFibo.meta"), new DictionaryMap());
 			//    }
 			//}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
 		}
 		namespace TestClasses {
 			public class MemberTest {
