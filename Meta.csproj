@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy %282%29 of snake.meta" />
+    <None Include="Copy of snake.meta" />
     <None Include="documentation.meta" />
     <None Include="fastFibo.meta" />
     <None Include="fibo.meta" />
@@ -79,6 +81,7 @@
     <None Include="libraryTest.meta" />
     <None Include="mergeSort.meta" />
     <None Include="slowFibo.meta" />
+    <None Include="snake.meta" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>

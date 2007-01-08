@@ -969,7 +969,8 @@ public partial class Editor : System.Windows.Window {
 								while (x!=null) {
 									if (x is Program) {
 										Program p = x as Program;
-										Map result=p.statementList[p.statementList.Count - 1].CurrentMap();
+										Map result = Map.Empty;//p.statementList[p.statementList.Count - 1].CurrentMap();
+										//Map result = p.statementList[p.statementList.Count - 1].CurrentMap();
 
 										// what is this?
 
@@ -1546,9 +1547,16 @@ public partial class Editor : System.Windows.Window {
 		Parser parser = new Parser(text, fileName);
 		Map map = null;
 		bool matched = Parser.Value.Match(parser, ref map);
-		LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-		LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
-		LiteralExpression directory=new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)),lib);
+		LiteralExpression gac = new LiteralExpression(Gac.gac);
+		//LiteralExpression gac = new LiteralExpression(Gac.gac, null);
+
+		// make the library a normal map, not a function
+		LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+		lib.Parent = gac;
+		//LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
+		LiteralExpression directory = new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)));
+		directory.Parent = lib;
+		//LiteralExpression directory = new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)), lib);
 		lib.Statement = new LiteralStatement(gac);
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
