@@ -103,10 +103,9 @@ namespace Meta {
 			};
 		}
 	}
-	// TODO: save parent
 	public abstract class Expression {
 		public delegate Expression Optimization(Expression expression);
-		public Expression(Map map) {//:this(new Extent(new Source(0,0,""),new Source(0,0,"")),null) {
+		public Expression(Map map) {
 			this.map = map;
 			this.Source = map.Source;
 		}
@@ -140,7 +139,7 @@ namespace Meta {
 		public static void InvokeOnChildren(object obj, Optimization optimization) {
 			Literal literal = obj as Literal;
 			if (literal!=null) {
-				Expression e=literal.literal.GetExpression((Literal)obj);
+				Expression e=literal.literal.GetExpression();
 				if (e != null) {
 					literal.literal.Expression = Optimize(e, optimization);
 				}
@@ -223,22 +222,6 @@ namespace Meta {
 			}
 			return expression;
 		}
-		//public static Expression ConstantSearch(Expression expression) {
-		//    Search search = expression as Search;
-		//    if (search != null) {
-		//        int count;
-		//        Map key;
-		//        Map value;
-		//        Map map;
-		//        Statement statement;
-		//        //if (search.FindStuff(out count, out key, out value, out map, out statement)) {
-		//        //    if (value != null && value.IsConstant) {
-		//        //        return new Constant(value);
-		//        //    }
-		//        //}
-		//    }
-		//    return expression;
-		//}
 		public static Expression PerfectSearch(Expression expression) {
 			Search search = expression as Search;
 			if (search != null) {
@@ -299,7 +282,6 @@ namespace Meta {
 		public static List<Compiled> compiles = new List<Compiled>();
 		public virtual void Emit(Emitter emitter,Expression parent,OpCode context) {
 			GetCachedCompile(emitter, GetCompiled());
-			//GetCachedCompile(emitter, GetCompiled(parent));
 		}
 
 		public Compiled compiled;
@@ -309,9 +291,6 @@ namespace Meta {
 			}
 		}
 		public Extent Source;
-		// parent should be determinded automatically
-		// should not be too difficult, actually
-		// make it a property
 		private Expression parent;
 		private Map map;
 		public Expression Parent {
@@ -327,7 +306,6 @@ namespace Meta {
 			}
 			set {
 				parent = value;
-				//throw new 
 			}
 		}
 		public Statement Statement;
@@ -339,7 +317,6 @@ namespace Meta {
 		}
 		public Compiled Compile() {
 			Compiled result = GetCompiled();
-			//Compiled result = GetCompiled(this.Parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.End)) {
 					sources[Source.End] = new List<Expression>();
@@ -349,12 +326,6 @@ namespace Meta {
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		//public Compiled GetCompiled() {
-		//    if(compiled==null) {
-		//        compiled = Compile();
-		//    }
-		//    return compiled;
-		//}
 		public virtual Compiled GetCompiled() {
 			if (compiled == null) {
 				Emitter emitter = new Emitter(typeof(Compiled));
@@ -376,16 +347,13 @@ namespace Meta {
 	}
 	public class Call : Expression {
 		public List<Expression> calls;
-		public Call(Map code)
-			: base(code) {
-		//public Call(Map code, Expression parent): base(code.Source, parent) {
+		public Call(Map code): base(code) {
 			this.calls = new List<Expression>();
 			foreach (Map m in code.Array) {
-				calls.Add(m.GetExpression(this));
+				calls.Add(m.GetExpression());
 			}
 			if (calls.Count == 1) {
 				calls.Add(new Literal(Map.Empty));
-				//calls.Add(new Literal(Map.Empty, this));
 			}
 		}
 		//implement Constant optimization for some special methods ( and implement expression for special methods, maybe)
@@ -563,7 +531,6 @@ namespace Meta {
 				Map result = selected.GetFromIndex(index);
 				if (result == null) {
 					throw new KeyNotFound(key, null, null);
-					//throw new KeyNotFound(key, expression.Source.Start, null);
 				}
 				return result;
 			};
@@ -579,14 +546,12 @@ namespace Meta {
 		}
 		public override Compiled GetCompiled() {
 			List<Compiled> c = arguments.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
-			//List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			Compiled[] args = c.ToArray();
 			ParameterInfo[] parameters = method.GetParameters();
 			MethodInfo methodInfo = (MethodInfo)method;
 			Emitter il = new Emitter(typeof(Compiled));
 			for (int i = 0; i < parameters.Length; i++) {
 				Expression e = arguments[i];
-				//Expression e = calls[i + 1];
 
 				Type type = parameters[i].ParameterType;
 				compiles.Add(c[i]);
@@ -594,9 +559,6 @@ namespace Meta {
 				if (arguments[i] is Literal) {
 					arguments[i].Emit(il, this, OpCodes.Ldarg_0);
 				}
-				//if (calls[i + 1] is Literal) {
-				//    calls[i + 1].Emit(il, this, OpCodes.Ldarg_0);
-				//}
 				else {
 					il.LoadField(typeof(Expression).GetField("compiles"));
 					il.LoadConstant(index);
@@ -610,9 +572,6 @@ namespace Meta {
 			Transform.GetMetaConversion(methodInfo.ReturnType, il);
 			il.Return();
 			return (Compiled)il.GetDelegate();
-			//}
-			//}
-			//}
 		}
 	}
 	public class FixedSearch:Expression {
@@ -631,7 +590,6 @@ namespace Meta {
 				Map result = selected[key];
 				if (result == null) {
 					throw new KeyNotFound(key, null, null);
-					//throw new KeyNotFound(key, expression.Source.Start, null);
 				}
 				return result;
 			};
@@ -713,11 +671,8 @@ namespace Meta {
 		//    return false;
 		//}
 		public Expression expression;
-		public Search(Map code)
-		//public Search(Map code, Expression parent)
-			: base(code) {
-			//: base(code.Source, parent) {
-			this.expression = code.GetExpression(this);
+		public Search(Map code) : base(code) {
+			this.expression = code.GetExpression();
 		}
 		public override Compiled GetCompiled() {
 			Compiled compiled = expression.Compile();
@@ -819,14 +774,6 @@ namespace Meta {
 			Map.arguments.Push(argument);
 			return GetCompiled()(scope);
 		}
-		//public override Map GetStructure() {
-		//    if (statementList.Count == 0) {
-		//        return new DictionaryMap();
-		//    }
-		//    else {
-		//        return statementList[statementList.Count - 1].Current();
-		//    }
-		//}
 		public Mapping UsePerfectMap() {
 			bool usePerfectMap = true;
 			List<Map> keys = new List<Map>();
@@ -939,14 +886,7 @@ namespace Meta {
 			}
 			return false;
 		}
-//        public Program(Map code)
-//            : base(code) {
-//                        //: base(source, parent) {
-////public Program(Extent source,Expression parent):base(source,parent) {
-//        }
-		public Program(Map code)
-			: base(code) {
-		//public Program(Map code, Expression parent) : base(code.Source, parent) {
+		public Program(Map code) : base(code) {
 			int index = 0;
 			foreach (Map m in code.Array) {
 				statementList.Add(m.GetStatement(this, index));
@@ -987,56 +927,6 @@ namespace Meta {
 		bool currentEvaluated = false;
 		private Map pre;
 		private Map current;
-		//public Map PreMap() {
-		//    Map s = Pre();
-		//    return s;
-		//}
-		// refactor
-		//public IEnumerable<Map> PreKeys() {
-		//    if(PreMap()!=null) {
-		//        return PreMap().Keys;
-		//    }
-		//    else {
-		//        return new List<Map>();
-		//    }
-		//}
-		//public virtual Map Pre() {
-		//    if (!preEvaluated) {
-		//        if (Previous == null) {
-		//            pre = new DictionaryMap();
-		//        }
-		//        else {
-		//            pre = Previous.Current();
-		//        }
-		//    }
-		//    preEvaluated = true;
-		//    return pre;
-		//}
-		//public Map CurrentMap() {
-		//    Map s = Current();
-		//    return s;
-		//}
-		//public Map Current() {
-		//    if (!currentEvaluated) {
-		//        Map pre = Pre();
-		//        if (pre != null) {
-		//            current = CurrentImplementation(pre);}
-		//        else {
-		//            current = null;
-		//        }
-		//    }
-		//    currentEvaluated = true;
-		//    return current;
-		//}
-		//public virtual IEnumerable<Map> CurrentKeys() {
-		//    Map m=CurrentMap();
-		//    if(m!=null) {
-		//        return m.Keys;
-		//    }
-		//    else {
-		//        return null;
-		//    }
-		//}
 		public Statement Next {
 			get {
 				if (program == null || Index >= program.statementList.Count - 1) {
@@ -1088,61 +978,20 @@ namespace Meta {
 		}
 	}
 	public class DiscardStatement : Statement {
-		//protected override Map CurrentImplementation(Map previous) {
-		//    return previous;
-		//}
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate { });
 		}
 	}
 	public class KeyStatement : Statement {
-		//public override IEnumerable<Map> CurrentKeys() {
-		//    if(this.key.GetConstant()!=null && PreKeys()!=null)  {
-		//        List<Map> list=new List<Map>(PreKeys());
-		//        list.Add(key.GetConstant());
-		//        return list;
-		//    }
-		//    return null;
-		//}
 		public static bool intellisense = false;
-		//public override bool DoesNotAddKey(Map key) {
-		//    Map k = this.key.EvaluateStructure();
-		//    if (k != null && k.IsConstant && !k.Equals(key)) {
-		//    //if (k != null && k.IsConstant && !k.Equals(key)) {
-		//        return true;
-		//    }
-		//    return false;
-		//}
-
-		//protected override Map CurrentImplementation(Map previous) {
-		//    Map k=key.GetConstant();
-		//    if (k != null) {
-		//        Map val=value.EvaluateMapStructure();
-		//        if (val == null) {
-		//            val = new DictionaryMap();
-		//            val.IsConstant=false;
-		//        }
-		//        if (value is Search || value is Call || (intellisense && (value is Literal || value is Program))) {
-		//            previous[k] = val;
-		//        }
-		//        else {
-		//            Map m=new DictionaryMap();
-		//            m.IsConstant=false;
-		//            previous[k] = m;
-		//        }
-		//        return previous;
-		//    }
-		//    return null;
-		//}
-
 		public override CompiledStatement Compile() {
 			//Map k = key.GetConstant();
 			// this should be done for all statements, not just for the key statement
 			//if (k != null && k.Equals(CodeKeys.Function)) {
 
-				if (value is Literal && ((Literal)value).literal.GetExpression(program)!=null) {
-					((Literal)value).literal.GetExpression(program).Statement=this;
+				if (value is Literal && ((Literal)value).literal.GetExpression()!=null) {
+					((Literal)value).literal.GetExpression().Statement=this;
 					//((Literal)value).literal.Compile(program);
 				}
 			// we could do this, too:
@@ -1154,17 +1003,10 @@ namespace Meta {
 			//    }
 			//}
 			Compiled s=key.Compile();
-			//try {
 			// refactor, remove key.Source.Start
-				return new CompiledStatement(key.Source.Start, value.Source.End, value.Compile(), delegate(ref Map context, Map v) {
-					context[s(context)] = v;
-				});
-			//}
-			//catch (Exception e) {
-			//    return new CompiledStatement(key.Source.Start, value.Source.End, value.Compile(), delegate(ref Map context, Map v) {
-			//        context[s(context)] = v;
-			//    });
-			//}
+			return new CompiledStatement(key.Source.Start, value.Source.End, value.Compile(), delegate(ref Map context, Map v) {
+				context[s(context)] = v;
+			});
 		}
 		public Expression key;
 		public KeyStatement(Expression key, Expression value, Program program, int index)
@@ -1174,9 +1016,6 @@ namespace Meta {
 		}
 	}
 	public class CurrentStatement : Statement {
-		//protected override Map CurrentImplementation(Map previous) {
-		//    return value.EvaluateStructure();
-		//}
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
 				if (this.Index == 0) {
@@ -1198,9 +1037,6 @@ namespace Meta {
 		}
 	}
 	public class SearchStatement : Statement {
-		//protected override Map CurrentImplementation(Map previous) {
-		//    return previous;
-		//}
 		public override CompiledStatement Compile() {
 			Compiled k = key.Compile();
 			return new CompiledStatement(key.Source.Start,value.Source.End,value.Compile(), delegate(ref Map context, Map v) {
@@ -1231,13 +1067,9 @@ namespace Meta {
 				return literal.Copy(context);
 			};
 		}
-		public Literal(Map code)
-			: base(code) {
+		public Literal(Map code) : base(code) {
 			this.literal = code;
 		}
-		//public Literal(Map code, Expression parent): base(code.Source, parent) {
-		//    this.literal = code;
-		//}
 	}
 	// derive root from Constant
 	public class Root : Expression {
@@ -1253,18 +1085,6 @@ namespace Meta {
 	}
 	// implement constant optimization for select
 	public class Select : Expression {
-		//public override Map GetStructure() {
-		//    // maybe wrong
-		//    Map selected = subs[0].GetStructure();
-		//    for (int i = 1; i < subs.Count; i++) {
-		//        Map key = subs[i].GetConstant();
-		//        if (selected == null || key == null || !selected.ContainsKey(key)) {
-		//            return null;
-		//        }
-		//        selected = selected[key];
-		//    }
-		//    return selected;
-		//}
 		public override Compiled GetCompiled() {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			return delegate(Map context) {
@@ -1284,9 +1104,8 @@ namespace Meta {
 		}
 		public List<Expression> subs = new List<Expression>();
 		public Select(Map code): base(code) {
-		//public Select(Map code, Expression parent): base(code.Source, parent) {
 			foreach (Map m in code.Array) {
-				subs.Add(m.GetExpression(this));
+				subs.Add(m.GetExpression());
 			}
 		}
 	}
@@ -1506,12 +1325,12 @@ namespace Meta {
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
 			LiteralExpression gac = new LiteralExpression(Gac.gac);
-			//LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
 			lib.Parent = gac;
-			//LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 			lib.Statement = new LiteralStatement(gac);
-			callable.GetExpression(lib).Statement = new LiteralStatement(lib);
+			callable.GetExpression().Statement = new LiteralStatement(lib);
+			callable.Expression.Parent = lib;
+			//callable.GetExpression(lib).Statement = new LiteralStatement(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
@@ -1521,8 +1340,9 @@ namespace Meta {
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac);
-			//LiteralExpression gac = new LiteralExpression(Gac.gac, null);
-			map.GetExpression(gac).Statement = new LiteralStatement(gac);
+			map.GetExpression().Statement = new LiteralStatement(gac);
+			map.Expression.Parent = gac;
+			//map.GetExpression(gac).Statement = new LiteralStatement(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}
@@ -1544,7 +1364,6 @@ namespace Meta {
 		}
 		[STAThread]
 		public static void Main(string[] args) {
-			//Map.arguments.Push(Map.Empty);
 			DateTime start = DateTime.Now;
 			//Fibo(new Integer32(32));
 			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
@@ -2252,14 +2071,6 @@ namespace Meta {
 				copy.Optimized = value;
 			}
 		}
-		//public override bool FirstCall {
-		//    get {
-		//        return copy.FirstCall||_firstCall;
-		//    }
-		//    set {
-		//        _firstCall = value;
-		//    }
-		//}
 		public override Extent Source {
 			get {
 				return copy.Source;
@@ -2348,7 +2159,6 @@ namespace Meta {
 				int index;
 				if(!mapping.mapping.TryGetValue(key,out index)) {
 					return null;
-					//throw new KeyDoesNotExist(key,this.Source.Start,this);
 				}
 				return values[index];
 			}
@@ -2391,6 +2201,7 @@ namespace Meta {
 	public abstract class DictionaryBaseMap : ScopeMap {
 		// put into Map
 		// only an abstract method so one does not forget to implement it
+		// could save some methods in derived classes
 		public override IEnumerable<Map> Array {
 			get {
 				for (int i = 1; ; i++) {
@@ -5915,10 +5726,7 @@ namespace Meta {
 			}
 		}
 		public void Compile(Expression parent) {
-			GetExpression(parent).Compile();
-		}
-		public Expression GetExpression() {
-			return GetExpression(null);
+			GetExpression().Compile();
 		}
 		public class Comparer : IEqualityComparer<Map> {
 			bool IEqualityComparer<Map>.Equals(Map x, Map y) {
@@ -5936,12 +5744,18 @@ namespace Meta {
 			set {
 			}
 		}
-		public virtual Expression GetExpression(Expression parent) {
+		public Expression GetExpression() {
 			if (Expression == null) {
-				Expression = CreateExpression(parent);
+				Expression = CreateExpression();
 			}
 			return Expression;
 		}
+		//public virtual Expression GetExpression(Expression parent) {
+		//    if (Expression == null) {
+		//        Expression = CreateExpression(parent);
+		//    }
+		//    return Expression;
+		//}
 		static Map() {
 			CodeKeys bla=new CodeKeys();
 			statements[CodeKeys.Keys] = typeof(SearchStatement);
@@ -5958,7 +5772,7 @@ namespace Meta {
 		}
 		public static Dictionary<Map, Type> expressions = new Dictionary<Map, Type>();
 		public static Dictionary<Map, Type> statements = new Dictionary<Map, Type>();
-		public Expression CreateExpression(Expression parent) {
+		public Expression CreateExpression() {
 		    if(this.Count==1) {
 				if (ContainsKey(CodeKeys.LastArgument)) {
 					return new LastArgument(this[CodeKeys.LastArgument]);
@@ -5982,8 +5796,8 @@ namespace Meta {
 			foreach(KeyValuePair<Map,Type> pair in statements) {
 			    if(ContainsKey(pair.Key)) {
 			        return (Statement)pair.Value.GetConstructors()[0].Invoke(
-			            new object[] {this[pair.Key].GetExpression(program),
-							this[CodeKeys.Value].GetExpression(program),
+			            new object[] {this[pair.Key].GetExpression(),
+							this[CodeKeys.Value].GetExpression(),
 			                program,
 			                index
 						}

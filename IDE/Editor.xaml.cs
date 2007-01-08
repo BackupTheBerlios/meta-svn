@@ -1561,7 +1561,9 @@ public partial class Editor : System.Windows.Window {
 		lib.Statement = new LiteralStatement(gac);
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
-		map.GetExpression(directory).Statement = new LiteralStatement(directory);
+		map.GetExpression().Statement = new LiteralStatement(directory);
+		map.Expression.Parent = directory;
+		//map.GetExpression(directory).Statement = new LiteralStatement(directory);
 		map.Compile(directory);
 		//map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
 		//map[CodeKeys.Function].Compile(directory);
