@@ -81,7 +81,7 @@ namespace Meta {
 		}
 	}
 	public class Constant:Expression {
-		private Map constant;
+		public Map constant;
 		public Constant(Map constant)
 			: base(constant) {
 			this.constant = constant;
@@ -106,7 +106,7 @@ namespace Meta {
 	public abstract class Expression {
 		public delegate Expression Optimization(Expression expression);
 		public Expression(Map map) {
-			this.map = map;
+			this.code = map;
 			this.Source = map.Source;
 		}
 		public static Optimization[] optimizations = new Optimization[] {
@@ -247,7 +247,15 @@ namespace Meta {
 			Call call = expression as Call;
 			if (call != null) {
 				List<object> arguments;
-				MethodBase method;
+				Constant constant = call.calls[0] as Constant;
+				if (constant != null) {
+					Method method = constant.constant as Method;
+					if (method != null) {
+						if (method.method.IsStatic && method.method.GetParameters().Length == call.calls.Count - 1) {
+							return new NativeCall(method.method, call.calls.GetRange(1, call.calls.Count - 1),call.code);
+						}
+					}
+				}
 				//if (call.CallStuff(out arguments, out method)) {
 				//    if (method.IsStatic && method.GetParameters().Length==call.calls.Count-1) {
 				//        return new NativeCall(method, call.calls.GetRange(1, call.calls.Count - 1));
@@ -292,11 +300,11 @@ namespace Meta {
 		}
 		public Extent Source;
 		private Expression parent;
-		private Map map;
+		public Map code;
 		public Expression Parent {
 			get {
 				if(parent==null) {
-					Map current = map;
+					Map current = code;
 					while (parent == null && current!=null) {
 						parent = current.GetExpression();
 						current = current.Scope;
@@ -1330,7 +1338,6 @@ namespace Meta {
 			lib.Statement = new LiteralStatement(gac);
 			callable.GetExpression().Statement = new LiteralStatement(lib);
 			callable.Expression.Parent = lib;
-			//callable.GetExpression(lib).Statement = new LiteralStatement(lib);
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
@@ -1342,7 +1349,6 @@ namespace Meta {
 			LiteralExpression gac = new LiteralExpression(Gac.gac);
 			map.GetExpression().Statement = new LiteralStatement(gac);
 			map.Expression.Parent = gac;
-			//map.GetExpression(gac).Statement = new LiteralStatement(gac);
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}

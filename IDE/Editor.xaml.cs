@@ -273,9 +273,7 @@ public partial class Editor : System.Windows.Window {
 		public virtual string Signature() {
 			if (original != null) {
 				Comments comments = Comments.GetComment(original);
-				//Comments comments = new Comments(original);
 				XmlNode node = comments.Summary;
-				//XmlNode node = comments.Summary;
 				if (node != null) {
 					foreach (XmlNode n in node.ChildNodes) {
 						if (n.Name == "see") {
@@ -1549,24 +1547,18 @@ public partial class Editor : System.Windows.Window {
 		Map map = null;
 		bool matched = Parser.Value.Match(parser, ref map);
 		LiteralExpression gac = new LiteralExpression(Gac.gac);
-		//LiteralExpression gac = new LiteralExpression(Gac.gac, null);
 
 		// make the library a normal map, not a function
 		LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
 		lib.Parent = gac;
-		//LiteralExpression lib = new LiteralExpression(Gac.gac["library"], gac);
 		LiteralExpression directory = new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)));
 		directory.Parent = lib;
-		//LiteralExpression directory = new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)), lib);
 		lib.Statement = new LiteralStatement(gac);
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
 		map.GetExpression().Statement = new LiteralStatement(directory);
 		map.Expression.Parent = directory;
-		//map.GetExpression(directory).Statement = new LiteralStatement(directory);
 		map.Compile(directory);
-		//map[CodeKeys.Function].GetExpression(directory).Statement = new LiteralStatement(directory);
-		//map[CodeKeys.Function].Compile(directory);
 		Source key = new Source(
 			parser.state.Line,
 			parser.state.Column,
