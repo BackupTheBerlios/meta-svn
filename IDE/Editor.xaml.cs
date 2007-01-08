@@ -1086,7 +1086,8 @@ public partial class Editor : System.Windows.Window {
 					for (int i = 0; i < list.Count; i++) {
 						if (list[i] is Search || list[i] is Select || list[i] is Call) {
 							intellisense.Items.Clear();
-							Map s = list[i].EvaluateStructure();
+							Map s = Map.Empty;//list[i].EvaluateStructure();
+							//Map s = list[i].EvaluateStructure();
 							List<string> keys = new List<string>();
 							if (s != null) {
 								foreach (Map m in s.Keys) {

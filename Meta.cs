@@ -86,7 +86,7 @@ namespace Meta {
 			: base(constant) {
 			this.constant = constant;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate {
 				return constant;
 			};
@@ -97,7 +97,7 @@ namespace Meta {
 		public SimpleLiteral(Map literal):base(literal) {
 			this.literal = literal;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate {
 				return literal;
 			};
@@ -298,14 +298,10 @@ namespace Meta {
 		}
 		public static List<Compiled> compiles = new List<Compiled>();
 		public virtual void Emit(Emitter emitter,Expression parent,OpCode context) {
-			GetCachedCompile(emitter,GetCompiled(parent));
+			GetCachedCompile(emitter, GetCompiled());
+			//GetCachedCompile(emitter, GetCompiled(parent));
 		}
-		public Compiled GetCompiled() {
-			if(compiled==null) {
-				compiled = Compile();
-			}
-			return compiled;
-		}
+
 		public Compiled compiled;
 		public virtual bool IsFunction {
 			get {
@@ -341,28 +337,9 @@ namespace Meta {
 		public virtual Map Call(Map argument, Map scope) {
 			return GetCompiled()(scope);
 		}
-		//public Expression(Extent source, Expression parent) {	
-		//    this.Source = source;
-		//    this.Parent = parent;
-		//}
-		private bool evaluated = false;
-		private Map structure;
-		//public Map GetConstant() {
-		//    Map s = EvaluateStructure();
-		//    return s != null && s.IsConstant ? s : null;
-		//}
-		public Map EvaluateMapStructure() {
-			return EvaluateStructure();
-		}
-		public Map EvaluateStructure() {
-			if (!evaluated) {
-				structure = null;
-				evaluated = true;
-			}
-			return structure;
-		}
 		public Compiled Compile() {
-			Compiled result = GetCompiled(this.Parent);
+			Compiled result = GetCompiled();
+			//Compiled result = GetCompiled(this.Parent);
 			if (Source != null) {
 				if (!sources.ContainsKey(Source.End)) {
 					sources[Source.End] = new List<Expression>();
@@ -372,22 +349,29 @@ namespace Meta {
 			return result;
 		}
 		public static Dictionary<Source, List<Expression>> sources = new Dictionary<Source, List<Expression>>();
-		public virtual Compiled GetCompiled(Expression parent) {
-			Emitter emitter = new Emitter(typeof(Compiled));
-			Emit(emitter, parent, OpCodes.Ldarg_0);
-			emitter.Return();
-			return (Compiled)emitter.GetDelegate();
+		//public Compiled GetCompiled() {
+		//    if(compiled==null) {
+		//        compiled = Compile();
+		//    }
+		//    return compiled;
+		//}
+		public virtual Compiled GetCompiled() {
+			if (compiled == null) {
+				Emitter emitter = new Emitter(typeof(Compiled));
+				Emit(emitter, parent, OpCodes.Ldarg_0);
+				emitter.Return();
+				compiled=(Compiled)emitter.GetDelegate();
+			}
+			return compiled;
 		}
 	}
 	public class LastArgument : Expression {
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate {
 				return Map.arguments.Pop();
 			};
 		}
-		public LastArgument(Map code)
-		//public LastArgument(Map code, Expression parent)
-			: base(code) {
+		public LastArgument(Map code): base(code) {
 		}
 	}
 	public class Call : Expression {
@@ -495,7 +479,7 @@ namespace Meta {
 		//    m = null;
 		//    return false;
 		//}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			List<object> arguments;
 			MethodBase method;
 			//if (CallStuff(out arguments, out method)) {
@@ -570,7 +554,7 @@ namespace Meta {
 			this.key = key;
 			this.index = index;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate(Map context) {
 				Map selected = context;
 				for (int i = 0; i < count; i++) {
@@ -593,7 +577,7 @@ namespace Meta {
 			this.method = method;
 			this.arguments = arguments;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			List<Compiled> c = arguments.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			//List<Compiled> c = calls.GetRange(1, calls.Count - 1).ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			Compiled[] args = c.ToArray();
@@ -638,7 +622,7 @@ namespace Meta {
 			this.count = count;
 			this.key = key;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate(Map context) {
 				Map selected = context;
 				for (int i = 0; i < count; i++) {
@@ -735,7 +719,7 @@ namespace Meta {
 			//: base(code.Source, parent) {
 			this.expression = code.GetExpression(this);
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			Compiled compiled = expression.Compile();
 			return delegate(Map context) {
 				Map k = compiled(context);
@@ -875,7 +859,7 @@ namespace Meta {
 		}
 		private Map cachedKey;
 		private Compiled comp;
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			List<CompiledStatement> list=statementList.ConvertAll<CompiledStatement>(delegate(Statement s) {
 				return s.Compile();
 			});
@@ -1242,7 +1226,7 @@ namespace Meta {
 		private int index = -1;
 		private static Dictionary<Map, Map> cached = new Dictionary<Map, Map>();
 		public Map literal;
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate(Map context) {
 				return literal.Copy(context);
 			};
@@ -1261,7 +1245,7 @@ namespace Meta {
 			: base(code) {
 		//public Root(Map code, Expression parent): base(code.Source, parent) {
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			return delegate {
 				return Gac.gac;
 			};
@@ -1281,7 +1265,7 @@ namespace Meta {
 		//    }
 		//    return selected;
 		//}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			List<Compiled> s = subs.ConvertAll<Compiled>(delegate(Expression e) { return e.Compile(); });
 			return delegate(Map context) {
 				Map selected = s[0](context);
@@ -5580,7 +5564,7 @@ namespace Meta {
 //public LiteralExpression(Map literal) : base(null, parent) {
 			this.literal = literal;
 		}
-		public override Compiled GetCompiled(Expression parent) {
+		public override Compiled GetCompiled() {
 			throw new Exception("The method or operation is not implemented.");
 		}
 	}
