@@ -9,7 +9,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Integer32):
+					Value (SmallInteger):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -23,7 +23,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Integer32):
+					Value (SmallInteger):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -37,7 +37,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"true"
-					Value (Integer32):
+					Value (SmallInteger):
 						1
 				Entry (KeyValuePair`2)
 					Key (StringMap):
@@ -47,7 +47,7 @@
 				Entry (KeyValuePair`2)
 					Key (StringMap):
 						"otherTrue"
-					Value (Integer32):
+					Value (SmallInteger):
 						1
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -56,12 +56,12 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"positiveAdd"
-			Value (Integer32):
+			Value (SmallInteger):
 				1100
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"negativeAdd"
-			Value (Integer32):
+			Value (SmallInteger):
 				-9
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -71,7 +71,7 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"differenceTest2"
-			Value (Integer32):
+			Value (SmallInteger):
 				101
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -81,12 +81,12 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"multiplyInteger"
-			Value (Integer32):
+			Value (SmallInteger):
 				19437
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"minusmultiply"
-			Value (Integer32):
+			Value (SmallInteger):
 				2
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -96,22 +96,22 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"smallerDecreasingTest"
-			Value (Integer32):
+			Value (SmallInteger):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"strictlyIncreasingTest"
-			Value (Integer32):
+			Value (SmallInteger):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"smallerTest"
-			Value (Integer32):
+			Value (SmallInteger):
 				1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"greaterTest"
-			Value (Integer32):
+			Value (SmallInteger):
 				0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -153,26 +153,26 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"containsTest"
-			Value (Integer32):
+			Value (SmallInteger):
 				1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"keysTest"
 			Value (DictionaryMap):
 				Entry (KeyValuePair`2)
-					Key (Integer32):
+					Key (SmallInteger):
 						1
 					Value (StringMap):
 						"jjqwv"
 				Entry (KeyValuePair`2)
-					Key (Integer32):
+					Key (SmallInteger):
 						2
 					Value (StringMap):
 						"oere"
 				Entry (KeyValuePair`2)
-					Key (Integer32):
+					Key (SmallInteger):
 						3
-					Value (Integer32):
+					Value (SmallInteger):
 						1
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -185,12 +185,12 @@ Entry (KeyValuePair`2)
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"true"
-							Value (Integer32):
+							Value (SmallInteger):
 								1
 						Entry (KeyValuePair`2)
 							Key (StringMap):
 								"false"
-							Value (Integer32):
+							Value (SmallInteger):
 								0
 		Entry (KeyValuePair`2)
 			Key (StringMap):
@@ -200,12 +200,12 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"sumTest"
-	Value (Integer32):
+	Value (SmallInteger):
 		21
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"lengthTest"
-	Value (Integer32):
+	Value (SmallInteger):
 		5
 Entry (KeyValuePair`2)
 	Key (StringMap):
@@ -215,5 +215,5 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"countTest"
-	Value (Integer32):
+	Value (SmallInteger):
 		4

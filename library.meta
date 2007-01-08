@@ -70,17 +70,17 @@
 			};
 			
 			rational={
-				add=NumberMap.Add_NumberMap_NumberMap;
-				floor=Library.Floor_NumberMap;
-				divide=NumberMap.Divide_NumberMap_NumberMap;
-				subtract=NumberMap.Subtract_NumberMap_NumberMap;
-				multiply=NumberMap.Multiply_NumberMap_NumberMap;
-				greater=NumberMap.Greater_NumberMap_NumberMap;
-				less=NumberMap.SpecialLess_Map_Map;
-				power=NumberMap.Raise_NumberMap_NumberMap;
+				add=Number.Add_Number_Number;
+				floor=Library.Floor_Number;
+				divide=Number.Divide_Number_Number;
+				subtract=Number.Subtract_Number_Number;
+				multiply=Number.Multiply_Number_Number;
+				greater=Number.Greater_Number_Number;
+				less=Number.SpecialLess_Map_Map;
+				power=Number.Raise_Number_Number;
 				maximum=(a)(b){0=b;1=a;}.<rational.less(a,b)>;
 				minimum=(a)(b){0=b;1=a;}.<rational.greater(a,b)>;
-				modulo=NumberMap.Modulo_NumberMap_NumberMap;
+				modulo=Number.Modulo_Number_Number;
 				opposite=(arg)rational.subtract(0,arg);
 			};
 			boolean={

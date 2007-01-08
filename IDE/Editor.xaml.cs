@@ -469,7 +469,7 @@ public partial class Editor : System.Windows.Window {
 			if (map.IsString) {
 				value.Content = map.GetString();
 			}
-			else if (map.IsNumber) {
+			else if (map.GetNumber()!=null) {
 				this.value.Content = map.GetNumber().ToString();
 			}
 			else {
@@ -533,7 +533,7 @@ public partial class Editor : System.Windows.Window {
 			if(map.IsString) {
 				label.Content = map.GetString();
 			}
-			else if (map.IsNumber) {
+			else if (map.GetNumber()!=null) {
 				label.Content = map.GetNumber().ToString();
 			}
 			else {
