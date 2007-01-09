@@ -1,8 +1,111 @@
 ﻿Entry (KeyValuePair`2)
-	Key (SmallInteger):
-		1
-	Value (PerfectMap):
-		0
+	Key (StringMap):
+		"program"
+	Value (DictionaryMap):
+		Entry (KeyValuePair`2)
+			Key (SmallInteger):
+				1
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"key"
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"literal"
+							Value (StringMap):
+								"b"
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"value"
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"lastArgument"
+							Value (SmallInteger):
+								0
+		Entry (KeyValuePair`2)
+			Key (SmallInteger):
+				2
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"current"
+					Value (SmallInteger):
+						0
+				Entry (KeyValuePair`2)
+					Key (StringMap):
+						"value"
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"call"
+							Value (ListMap):
+								Entry (KeyValuePair`2)
+									Key (SmallInteger):
+										1
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"select"
+											Value (ListMap):
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														1
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"search"
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"Meta"
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														2
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"Library"
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														3
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"MergeAll_Map"
+								Entry (KeyValuePair`2)
+									Key (SmallInteger):
+										2
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"search"
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"literal"
+													Value (StringMap):
+														"a"
+								Entry (KeyValuePair`2)
+									Key (SmallInteger):
+										3
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"search"
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"literal"
+													Value (StringMap):
+														"b"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"asdf"
@@ -60,11 +163,6 @@ Entry (KeyValuePair`2)
 												"literal"
 											Value (StringMap):
 												"asdf"
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"bitmapSize"
-	Value (SmallInteger):
-		16
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"shortFunctionTest"
@@ -196,6 +294,11 @@ Entry (KeyValuePair`2)
 																		"literal"
 																	Value (StringMap):
 																		"arg"
+Entry (KeyValuePair`2)
+	Key (SmallInteger):
+		1
+	Value (PerfectMap):
+		0
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"LIST"
@@ -365,17 +468,115 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"negativeInteger"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (EmptyMap):
-				0
-			Value (SmallInteger):
-				99
+	Value (CopyMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
-				"x"
-			Value (StringMap):
-				"hello"
+				"program"
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						1
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"key"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"literal"
+									Value (StringMap):
+										"b"
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"lastArgument"
+									Value (SmallInteger):
+										0
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						2
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"current"
+							Value (SmallInteger):
+								0
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"call"
+									Value (ListMap):
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												1
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"select"
+													Value (ListMap):
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																1
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"search"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"Meta"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																2
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"Library"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																3
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"MergeAll_Map"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												2
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"a"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												3
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"b"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"integerIncrementTest"
@@ -546,21 +747,115 @@ Entry (KeyValuePair`2)
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"b"
-			Value (DictionaryMap):
+			Value (CopyMap):
 				Entry (KeyValuePair`2)
-					Key (SmallInteger):
-						1
+					Key (StringMap):
+						"program"
 					Value (DictionaryMap):
 						Entry (KeyValuePair`2)
-							Key (StringMap):
-								"x"
-							Value (SmallInteger):
-								7
-						Entry (KeyValuePair`2)
-							Key (StringMap):
-								"z"
-							Value (SmallInteger):
+							Key (SmallInteger):
 								1
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"key"
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"literal"
+											Value (StringMap):
+												"b"
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"value"
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"lastArgument"
+											Value (SmallInteger):
+												0
+						Entry (KeyValuePair`2)
+							Key (SmallInteger):
+								2
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"current"
+									Value (SmallInteger):
+										0
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"value"
+									Value (DictionaryMap):
+										Entry (KeyValuePair`2)
+											Key (StringMap):
+												"call"
+											Value (ListMap):
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														1
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"select"
+															Value (ListMap):
+																Entry (KeyValuePair`2)
+																	Key (SmallInteger):
+																		1
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"search"
+																			Value (DictionaryMap):
+																				Entry (KeyValuePair`2)
+																					Key (StringMap):
+																						"literal"
+																					Value (StringMap):
+																						"Meta"
+																Entry (KeyValuePair`2)
+																	Key (SmallInteger):
+																		2
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"Library"
+																Entry (KeyValuePair`2)
+																	Key (SmallInteger):
+																		3
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"MergeAll_Map"
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														2
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"search"
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"a"
+												Entry (KeyValuePair`2)
+													Key (SmallInteger):
+														3
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"search"
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"b"
 		Entry (KeyValuePair`2)
 			Key (StringMap):
 				"SetA"
@@ -1888,67 +2183,8 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"TestClass"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"CallStaticEvent_Object"
-			Value (Method):
-				System.Object CallStaticEvent(System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"add_staticEvent_NormalEvent"
-			Value (Method):
-				Void add_staticEvent(Meta.Test.TestClasses.NormalEvent)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"remove_staticEvent_NormalEvent"
-			Value (Method):
-				Void remove_staticEvent(Meta.Test.TestClasses.NormalEvent)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"TestClass_staticEvent_Object"
-			Value (Method):
-				System.Object TestClass_staticEvent(System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"TakeDelegate_TestDelegate"
-			Value (Method):
-				Void TakeDelegate(TestDelegate)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"GetResultFromDelegate"
-			Value (Method):
-				System.Object GetResultFromDelegate()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"Equals_Object_Object"
-			Value (Method):
-				Boolean Equals(System.Object, System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"ReferenceEquals_Object_Object"
-			Value (Method):
-				Boolean ReferenceEquals(System.Object, System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"boolTest"
-			Value (SmallInteger):
-				1
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"del"
-			Value (EmptyMap):
-				0
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"NestedClass"
-			Value (TypeMap):
-				Meta.Test.TestClasses.TestClass+NestedClass
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"TestDelegate"
-			Value (TypeMap):
-				Meta.Test.TestClasses.TestClass+TestDelegate
+	Value (TypeMap):
+		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"nestedClassTest"
@@ -1961,97 +2197,14 @@ Entry (KeyValuePair`2)
 		Meta.Test.TestClasses.TestClass
 Entry (KeyValuePair`2)
 	Key (StringMap):
-		"boolTest"
-	Value (SmallInteger):
-		1
-Entry (KeyValuePair`2)
-	Key (StringMap):
 		"MemberTest"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"Compile_Int32"
-			Value (Method):
-				Void Compile(Int32)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"OverloadedMethod_String"
-			Value (Method):
-				System.String OverloadedMethod(System.String)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"OverloadedMethod_Int32"
-			Value (Method):
-				System.String OverloadedMethod(Int32)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"OverloadedMethod_MemberTest_Int32"
-			Value (Method):
-				System.String OverloadedMethod(Meta.Test.TestClasses.MemberTest, Int32)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"get_ClassProperty"
-			Value (Method):
-				System.String get_ClassProperty()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"set_ClassProperty_String"
-			Value (Method):
-				Void set_ClassProperty(System.String)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"Equals_Object_Object"
-			Value (Method):
-				Boolean Equals(System.Object, System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"ReferenceEquals_Object_Object"
-			Value (Method):
-				Boolean ReferenceEquals(System.Object, System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"classField"
-			Value (StringMap):
-				"a"
+	Value (TypeMap):
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"memberTest"
-	Value (DictionaryMap):
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"get_InstanceProperty"
-			Value (Method):
-				System.String get_InstanceProperty()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"set_InstanceProperty_String"
-			Value (Method):
-				Void set_InstanceProperty(System.String)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"GetType"
-			Value (Method):
-				System.Type GetType()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"ToString"
-			Value (Method):
-				System.String ToString()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"Equals_Object"
-			Value (Method):
-				Boolean Equals(System.Object)
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"GetHashCode"
-			Value (Method):
-				Int32 GetHashCode()
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"instanceField"
-			Value (StringMap):
-				"b"
+	Value (ObjectMap):
+		Meta.Test.TestClasses.MemberTest
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"stringOverload"
@@ -3229,16 +3382,118 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"stringTest"
-	Value (DictionaryMap):
-		"hellh"
+	Value (CopyMap):
+		Entry (KeyValuePair`2)
+			Key (StringMap):
+				"program"
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						1
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"key"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"literal"
+									Value (StringMap):
+										"b"
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"lastArgument"
+									Value (SmallInteger):
+										0
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						2
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"current"
+							Value (SmallInteger):
+								0
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"call"
+									Value (ListMap):
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												1
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"select"
+													Value (ListMap):
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																1
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"search"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"Meta"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																2
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"Library"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																3
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"MergeAll_Map"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												2
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"a"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												3
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"b"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"hellh"
-	Value (StringMap):
-		"hi"
-Entry (KeyValuePair`2)
-	Key (StringMap):
-		"stringStrategyHashTest"
 	Value (StringMap):
 		"hi"
 Entry (KeyValuePair`2)
@@ -4488,17 +4743,115 @@ Entry (KeyValuePair`2)
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"copiedData"
-	Value (DictionaryMap):
+	Value (CopyMap):
 		Entry (KeyValuePair`2)
 			Key (StringMap):
-				"x"
-			Value (StringMap):
-				"changed"
-		Entry (KeyValuePair`2)
-			Key (StringMap):
-				"z"
-			Value (StringMap):
-				"a"
+				"program"
+			Value (DictionaryMap):
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						1
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"key"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"literal"
+									Value (StringMap):
+										"b"
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"lastArgument"
+									Value (SmallInteger):
+										0
+				Entry (KeyValuePair`2)
+					Key (SmallInteger):
+						2
+					Value (DictionaryMap):
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"current"
+							Value (SmallInteger):
+								0
+						Entry (KeyValuePair`2)
+							Key (StringMap):
+								"value"
+							Value (DictionaryMap):
+								Entry (KeyValuePair`2)
+									Key (StringMap):
+										"call"
+									Value (ListMap):
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												1
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"select"
+													Value (ListMap):
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																1
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"search"
+																	Value (DictionaryMap):
+																		Entry (KeyValuePair`2)
+																			Key (StringMap):
+																				"literal"
+																			Value (StringMap):
+																				"Meta"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																2
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"Library"
+														Entry (KeyValuePair`2)
+															Key (SmallInteger):
+																3
+															Value (DictionaryMap):
+																Entry (KeyValuePair`2)
+																	Key (StringMap):
+																		"literal"
+																	Value (StringMap):
+																		"MergeAll_Map"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												2
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"a"
+										Entry (KeyValuePair`2)
+											Key (SmallInteger):
+												3
+											Value (DictionaryMap):
+												Entry (KeyValuePair`2)
+													Key (StringMap):
+														"search"
+													Value (DictionaryMap):
+														Entry (KeyValuePair`2)
+															Key (StringMap):
+																"literal"
+															Value (StringMap):
+																"b"
 Entry (KeyValuePair`2)
 	Key (StringMap):
 		"characterLiterals"

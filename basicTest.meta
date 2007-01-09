@@ -55,12 +55,12 @@
 		hashTest=!!"hashTestData";
 	};
 	negativeInteger=100;
-	//negativeInteger=map.merge([
-	//	negativeInteger,
-	//	{
-	//		x="hello";
-	//	}]
-	//);
+	negativeInteger=map.merge([
+		negativeInteger,
+		{
+			x="hello";
+		}]
+	);
 	integerIncrementTest=5;
 	integerIncrementTest={
 		0=integerIncrementTest;
@@ -131,12 +131,12 @@
 	a="default";
 	b=0;
 	aSet=object.SetA(0);
-	//bSet=object.SetB({
-	//	value={
-	//		x=7;
-	//		z=1;
-	//	};
-	//});
+	bSet=object.SetB({
+		value={
+			x=7;
+			z=1;
+		};
+	});
 	scopeTest="default";
 	scopeFunction=(arg){
 		scopeTest:inScope;
@@ -297,18 +297,18 @@
 	decimalTest=5;
 	fractionTest=40;
 	stringTest="hello";
-	//stringTest=map.merge([
-	//	stringTest,
-	//	{
-	//		5=stringTest.1;
-	//	}]
-	//);
+	stringTest=map.merge([
+		stringTest,
+		{
+			5=stringTest.1;
+		}]
+	);
 	hellh="hi";
 	//stringStrategyHashTest=!stringTest;
-	//x={aLongText="hello,world!";};
-	//arrayList=/.mscorlib.ArrayList(0);
-	//7=arrayList.Add_Object("hello");
-	//arrayListResult=arrayList.get_Item_Int32(0);
+	x={aLongText="hello,world!";};
+	arrayList=/.mscorlib.ArrayList(0);
+	7=arrayList.Add_Object("hello");
+	arrayListResult=arrayList.get_Item_Int32(0);
 	textBox=/."System.Windows.Forms".TextBox(0);
 	textBox.set_Text_String("Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh.");
 	lines=textBox.get_Lines(0);
@@ -364,12 +364,12 @@
 		z="a";
 	};
 	copiedData=copySourceData;
-	//copiedData=map.merge([
-	//	copiedData,
-	//	{
-	//		x="changed";
-	//	}]
-	//);
+	copiedData=map.merge([
+		copiedData,
+		{
+			x="changed";
+		}]
+	);
 	characterLiterals={
 		a='a';
 		space=' ';

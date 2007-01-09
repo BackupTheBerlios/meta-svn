@@ -2175,7 +2175,9 @@ namespace Meta {
 			return name;
 		}
 		public override Map Copy() {
+			//return CopyMap(this);
 			return new TypeMap(this.Type);
+			//return new TypeMap(this.Type);
 		}
 		private Method constructor;
 		public Method Constructor {
@@ -2447,7 +2449,8 @@ namespace Meta {
 			}
 		}
 		public override Map Copy() {
-			return this;
+			return CopyMap(copy);
+			//return this;
 		}
 		[Ignore]
 		private Map copy;
