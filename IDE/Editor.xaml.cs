@@ -962,32 +962,32 @@ public partial class Editor : System.Windows.Window {
 							}
 							Map s=new DictionaryMap();
 							List<Map> maps = new List<Map>();
-							if (start != null) {
-								Meta.Expression x = start;
-								while (x!=null) {
-									if (x is Program) {
-										Program p = x as Program;
-										Map result = Map.Empty;//p.statementList[p.statementList.Count - 1].CurrentMap();
-										//Map result = p.statementList[p.statementList.Count - 1].CurrentMap();
+							//if (start != null) {
+							//    Meta.Expression x = start;
+							//    while (x!=null) {
+							//        if (x is Program) {
+							//            Program p = x as Program;
+							//            Map result = Map.Empty;//p.statementList[p.statementList.Count - 1].CurrentMap();
+							//            //Map result = p.statementList[p.statementList.Count - 1].CurrentMap();
 
-										// what is this?
+							//            // what is this?
 
-										//if (p is Function) {
-										//    result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
-										//}
-										if (result != null) {
-											maps.Add(result);
-										}
-									}
-									else if (x is LiteralExpression) {
-										LiteralExpression literal = (LiteralExpression)x;
-										//Map structure=literal.GetStructure();
+							//            //if (p is Function) {
+							//            //    result = p.statementList[Math.Max(0,p.statementList.Count - 2)].CurrentMap();
+							//            //}
+							//            if (result != null) {
+							//                maps.Add(result);
+							//            }
+							//        }
+							//        else if (x is LiteralExpression) {
+							//            LiteralExpression literal = (LiteralExpression)x;
+							//            //Map structure=literal.GetStructure();
 
-										//maps.Add(structure);
-									}
-									x = x.Parent;
-								}
-							}
+							//            //maps.Add(structure);
+							//        }
+							//        x = x.Parent;
+							//    }
+							//}
 							Map directory = new DirectoryMap(System.IO.Path.GetDirectoryName(fileName));
 							maps.Add(directory);
 							maps.Reverse();
@@ -1477,60 +1477,60 @@ public partial class Editor : System.Windows.Window {
 			}
 			index--;
 		}
-		if (realSource != null) {
-			List<Source> sources = new List<Source>(Meta.Expression.sources.Keys);
-			sources.RemoveAll(delegate(Source s) {
-				return s.FileName != fileName;
-			});
-			sources.Sort(delegate(Source a, Source b) {
-				return a.CompareTo(b);
-			});
-			sources.Reverse();
-			Meta.Expression start = null;
-			foreach (Source source in sources) {
-				if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
-					foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
-						if (expression is Select || expression is Search) {
-							start = expression;
-							if (start.Parent is Call) {
-								start = ((Call)start.Parent).calls[0];
-							}
-							break;
-						}
-					}
-				}
-				if (start != null) {
-					break;
-				}
-			}
-			if (start != null) {
-				Map structure = null;//start.GetStructure();
-				//Map structure = start.GetStructure();
-				if (structure != null) {
-					Method method = structure as Method;
-					if (method != null) {
-						XmlNodeList parameters = Comments.GetComment(method.method).Parameters;
-						//XmlNodeList parameters = new Comments(method.method)._params;
-						string t = null;
-						string paramName;
-						ParameterInfo[] param = method.method.GetParameters();
-						if (param.Length > argIndex) {
-							paramName = param[argIndex].Name;
-							t=param[argIndex].ParameterType.Name+" "+paramName;
-							foreach(XmlNode node in parameters) {
-								if (node.Attributes["name"].Value.Equals(paramName)) {
-									t+= ":\n" + node.InnerText;
-								}
-							}
-							PositionIntellisense();
-							toolTip.Visibility = Visibility.Visible;
-							toolTip.Text = t;
-							return true;
-						}
-					}
-				}
-			}
-		}
+		//if (realSource != null) {
+		//    List<Source> sources = new List<Source>(Meta.Expression.sources.Keys);
+		//    sources.RemoveAll(delegate(Source s) {
+		//        return s.FileName != fileName;
+		//    });
+		//    sources.Sort(delegate(Source a, Source b) {
+		//        return a.CompareTo(b);
+		//    });
+		//    sources.Reverse();
+		//    Meta.Expression start = null;
+		//    foreach (Source source in sources) {
+		//        if (source.Line <= realSource.Line && source.Column <= realSource.Column) {
+		//            foreach (Meta.Expression expression in Meta.Expression.sources[source]) {
+		//                if (expression is Select || expression is Search) {
+		//                    start = expression;
+		//                    if (start.Parent is Call) {
+		//                        start = ((Call)start.Parent).calls[0];
+		//                    }
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        if (start != null) {
+		//            break;
+		//        }
+		//    }
+		//    if (start != null) {
+		//        Map structure = null;//start.GetStructure();
+		//        //Map structure = start.GetStructure();
+		//        if (structure != null) {
+		//            Method method = structure as Method;
+		//            if (method != null) {
+		//                XmlNodeList parameters = Comments.GetComment(method.method).Parameters;
+		//                //XmlNodeList parameters = new Comments(method.method)._params;
+		//                string t = null;
+		//                string paramName;
+		//                ParameterInfo[] param = method.method.GetParameters();
+		//                if (param.Length > argIndex) {
+		//                    paramName = param[argIndex].Name;
+		//                    t=param[argIndex].ParameterType.Name+" "+paramName;
+		//                    foreach(XmlNode node in parameters) {
+		//                        if (node.Attributes["name"].Value.Equals(paramName)) {
+		//                            t+= ":\n" + node.InnerText;
+		//                        }
+		//                    }
+		//                    PositionIntellisense();
+		//                    toolTip.Visibility = Visibility.Visible;
+		//                    toolTip.Text = t;
+		//                    return true;
+		//                }
+		//            }
+		//        }
+		//    }
+		//}
 		toolTip.Visibility = Visibility.Hidden;
 		return false;
 	}
@@ -1550,14 +1550,14 @@ public partial class Editor : System.Windows.Window {
 
 		// make the library a normal map, not a function
 		LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
-		lib.Parent = gac;
+		//lib.Parent = gac;
 		LiteralExpression directory = new LiteralExpression(new DirectoryMap(System.IO.Path.GetDirectoryName(fileName)));
-		directory.Parent = lib;
+		//directory.Parent = lib;
 		lib.Statement = new LiteralStatement(gac);
 		directory.Statement = new LiteralStatement(lib);
 		KeyStatement.intellisense = true;
 		map.GetExpression().Statement = new LiteralStatement(directory);
-		map.Expression.Parent = directory;
+		//map.Expression.Parent = directory;
 		map.Compile(directory);
 		Source key = new Source(
 			parser.state.Line,

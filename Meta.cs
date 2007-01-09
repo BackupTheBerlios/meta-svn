@@ -80,6 +80,26 @@ namespace Meta {
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 		}
 	}
+	public class SearchConstant : Expression {
+		public Map key;
+		public SearchConstant(Map key,Map code):base(code) {
+			this.key = key;
+		}
+		public override Compiled GetCompiled() {
+			return delegate(Map context) {
+				Map selected = context;
+				while (!selected.ContainsKey(key)) {
+					if (selected.Scope != null) {
+						selected = selected.Scope;
+					}
+					else {
+						throw new KeyNotFound(key, Source.Start, null);
+					}
+				}
+				return selected[key];
+			};
+		}
+	}
 	public class Constant:Expression {
 		public Map constant;
 		public Constant(Map constant)
@@ -92,40 +112,38 @@ namespace Meta {
 			};
 		}
 	}
-	public class SimpleLiteral:Expression {
-		private Map literal;
-		public SimpleLiteral(Map literal):base(literal) {
-			this.literal = literal;
-		}
-		public override Compiled GetCompiled() {
-			return delegate {
-				return literal;
-			};
-		}
-	}
+	//public class SimpleLiteral:Expression {
+	//    private Map literal;
+	//    public SimpleLiteral(Map literal):base(literal) {
+	//        this.literal = literal;
+	//    }
+	//    public override Compiled GetCompiled() {
+	//        return delegate {
+	//            return literal;
+	//        };
+	//    }
+	//}
 	public abstract class Expression {
+		public static List<Expression> expressions = new List<Expression>();
 		public delegate Expression Optimization(Expression expression);
 		public Expression(Map map) {
 			this.code = map;
 			this.Source = map.Source;
 		}
 		public static Optimization[] optimizations = new Optimization[] {
-			SimpleLiteral,
-			ConstantSearch,
+			ConstantLiteral,
+			SearchConstant,
+			MakeSearchConstant,
 			PerfectSearch,
 			FixedSearch,
 			NativeCall
 		};
-		public static Expression SimpleLiteral(Expression expression) {
+		public static Expression ConstantLiteral(Expression expression) {
 			Literal literal=expression as Literal;
 			if(literal!=null) {
 				if (literal.literal.Expression == null) {
-					try {
-						return new SimpleLiteral(literal.literal);
-					}
-					catch (Exception e) {
-						return new SimpleLiteral(literal.literal);
-					}
+					return new Constant(literal.literal);
+					//return new SimpleLiteral(literal.literal);
 				}
 			}
 			return expression;
@@ -167,61 +185,312 @@ namespace Meta {
 			expression = optimization(expression);
 			return expression;
 		}
-		public static Expression ConstantSearch(Expression expression) {
+		public static Expression SearchConstant(Expression expression) {
 			Search search = expression as Search;
 			if (search != null) {
 				Constant constant=search.expression as Constant;
-				//Expression current=search;
-				//while(true) {
-				//    if(current is Literal) {
-				//    // -> this is inside a function, need special handling from here on
-				//    }
-				//    current=current.Parent;
-				//    if (current == null) {
-				//        break;
-				//    }
-				//    Statement statement = current.Statement;
-				//    Map structure = statement.PreMap();
-				//    if (structure == null) {
-				//        statement.Pre();
-				//        break;
-				//    }
-				//    if (structure.ContainsKey(key)) {
-				//        value = structure[key];
-				//        map = structure;
-				//        s = statement;
-				//        return true;
-				//    }
-				//    else if (programCounter < 1 && statement is KeyStatement) {
-				//        if (hasCrossedFunction) {
-				//            map = statement.CurrentMap();
-				//            if (map != null) {
-				//                //if (map != null && map.IsConstant) {
-				//                if (map.ContainsKey(key)) {
-				//                    value = map[key];
-				//                    //if (value.IsConstant) {
-				//                    //if (value.IsConstant) {
-				//                    s = statement;
-				//                    return true;
-				//                    //}
-				//                }
-				//            }
-				//        }
-				//    }
-				//    if (hasCrossedFunction) {
-				//        if (!statement.NeverAddsKey(key)) {
-				//            break;
-				//        }
-				//    }
-				//    count++;
-				//    if (current.Statement != null && current.Statement.program != null && !current.Statement.program.IsFunction) {
-				//        programCounter++;
-				//    }
-				//    current = current.Parent;
-				//}
+				if (constant != null) {
+					return new SearchConstant(constant.constant, search.code);
+				}
 			}
 			return expression;
 		}
+		public static Expression MakeSearchConstant(Expression expression) {
+			SearchConstant search = expression as SearchConstant;
+			//if (search != null) {
+			//    Expression current = search;
+			//    Expression found = null;
+			//    while (found == null && current != null) {
+			//        while (true) {
+			//            //current = current.Parent;
+			//            if (current == null) {
+			//                break;
+			//            }
+			//            Statement statement = null;
+			//            while (current.Statement == null) {
+			//                //current = current.Parent;
+			//            }
+			//            statement = current.Statement;
+			//            for (int i = 0; i < statement.program.statementList.Count; i++) {
+			//                Statement s = statement.program.statementList[i];
+			//                //foreach (Statement s in statement.program.statementList) {
+			//                // create ConstantKeyStatement, maybe would have to work in reverse order???
+			//                // optimizations are always better than normal checking, because they are more general (???)
+			//                KeyStatement keyStatement = s as KeyStatement;
+			//                if (keyStatement != null) {
+			//                    Constant key = keyStatement.key as Constant;
+			//                    if (key != null) {
+			//                        if (key.Equals(search.key)) {
+			//                            //if (key.Equals(constant)) {
+			//                            bool optimize = true;
+			//                            for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+			//                                Statement restStatement = statement.program.statementList[rest];
+			//                                if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+			//                                    optimize = false;
+			//                                    break;
+			//                                }
+			//                                KeyStatement kStatement = restStatement as KeyStatement;
+			//                                if (kStatement != null) {
+			//                                    Constant k = kStatement.key as Constant;
+			//                                    if (k == null || k.constant.Equals(key)) {
+			//                                        optimize = false;
+			//                                        break;
+			//                                    }
+			//                                }
+			//                            }
+			//                            if (optimize) {
+			//                                found = keyStatement.value;
+			//                            }
+			//                            break;
+			//                        }
+			//                    }
+			//                    else {
+			//                        return expression;
+			//                    }
+			//                }
+			//                if (s.Equals(statement)) {
+			//                    break;
+			//                }
+			//                break;
+			//            }
+			//        }
+			//    }
+			//    Constant constantValue = found as Constant;
+			//    if (constantValue != null) {
+			//        return constantValue;
+			//    }
+			//}
+			return expression;
+		}
+		//public static Expression MakeSearchConstant(Expression expression) {
+		//    SearchConstant search = expression as SearchConstant;
+		//    if (search != null) {
+		//        Expression current = search;
+		//        Expression found = null;
+		//        while (found == null && current != null) {
+		//            while (true) {
+		//                current = current.Parent;
+		//                if (current == null) {
+		//                    break;
+		//                }
+		//                Statement statement = null;
+		//                while (current.Statement == null) {
+		//                    current = current.Parent;
+		//                }
+		//                statement = current.Statement;
+		//                for (int i = 0; i < statement.program.statementList.Count; i++) {
+		//                    Statement s = statement.program.statementList[i];
+		//                    //foreach (Statement s in statement.program.statementList) {
+		//                    // create ConstantKeyStatement, maybe would have to work in reverse order???
+		//                    // optimizations are always better than normal checking, because they are more general (???)
+		//                    KeyStatement keyStatement = s as KeyStatement;
+		//                    if (keyStatement != null) {
+		//                        Constant key = keyStatement.key as Constant;
+		//                        if (key != null) {
+		//                            if (key.Equals(search.key)) {
+		//                                //if (key.Equals(constant)) {
+		//                                bool optimize = true;
+		//                                for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+		//                                    Statement restStatement = statement.program.statementList[rest];
+		//                                    if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+		//                                        optimize = false;
+		//                                        break;
+		//                                    }
+		//                                    KeyStatement kStatement = restStatement as KeyStatement;
+		//                                    if (kStatement != null) {
+		//                                        Constant k = kStatement.key as Constant;
+		//                                        if (k == null || k.constant.Equals(key)) {
+		//                                            optimize = false;
+		//                                            break;
+		//                                        }
+		//                                    }
+		//                                }
+		//                                if (optimize) {
+		//                                    found = keyStatement.value;
+		//                                }
+		//                                break;
+		//                            }
+		//                        }
+		//                        else {
+		//                            return expression;
+		//                        }
+		//                    }
+		//                    if (s.Equals(statement)) {
+		//                        break;
+		//                    }
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        Constant constantValue = found as Constant;
+		//        if (constantValue != null) {
+		//            return constantValue;
+		//        }
+		//    }
+		//    return expression;
+		//}
+		//public static Expression MakeSearchConstant(Expression expression) {
+		//    Search search = expression as Search;
+		//    if (search != null) {
+		//        // should these things really be parsed in such a complicated manner
+		//        // or create yet another type????
+		//        // should create a type in this case, since a SearchConstant is used in several optimizations
+		//        Constant constant = search.expression as Constant;
+		//        if (constant != null) {
+		//            Expression current = search;
+		//            Expression found = null;
+		//            while (found == null && current != null) {
+		//                while (true) {
+		//                    current = current.Parent;
+		//                    if (current == null) {
+		//                        break;
+		//                    }
+		//                    Statement statement = null;
+		//                    while (current.Statement == null) {
+		//                        current = current.Parent;
+		//                    }
+		//                    statement = current.Statement;
+		//                    for (int i = 0; i < statement.program.statementList.Count; i++) {
+		//                        Statement s = statement.program.statementList[i];
+		//                        //foreach (Statement s in statement.program.statementList) {
+		//                        KeyStatement keyStatement = s as KeyStatement;
+		//                        if (keyStatement != null) {
+		//                            Constant key = keyStatement.key as Constant;
+		//                            if (key != null) {
+		//                                if (key.Equals(constant)) {
+		//                                    bool optimize = true;
+		//                                    for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+		//                                        Statement restStatement = statement.program.statementList[rest];
+		//                                        if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+		//                                            optimize = false;
+		//                                            break;
+		//                                        }
+		//                                        KeyStatement kStatement = restStatement as KeyStatement;
+		//                                        if (kStatement != null) {
+		//                                            Constant k = kStatement.key as Constant;
+		//                                            if (k == null || k.constant.Equals(key)) {
+		//                                                optimize = false;
+		//                                                break;
+		//                                            }
+		//                                        }
+		//                                    }
+		//                                    if (optimize) {
+		//                                        found = keyStatement.value;
+		//                                    }
+		//                                    break;
+		//                                }
+		//                            }
+		//                            else {
+		//                                return expression;
+		//                            }
+		//                        }
+		//                        if (s.Equals(statement)) {
+		//                            break;
+		//                        }
+		//                        break;
+		//                    }
+		//                }
+		//            }
+		//            Constant constantValue = found as Constant;
+		//            if (constantValue != null) {
+		//                return constantValue;
+		//            }
+		//        }
+		//    }
+		//    return expression;
+		//}
+		//public static Expression ConstantSearch(Expression expression) {
+		//    Search search = expression as Search;
+		//    if (search != null) {
+		//        Constant constant=search.expression as Constant;
+		//        Expression current=search;
+		//        Expression found=null;
+		//        while (true) {
+		//            current = current.Parent;
+		//            if (current == null) {
+		//                break;
+		//            }
+		//            Statement statement = current.Statement;
+		//            for (int i = 0; i < statement.program.statementList.Count;i++ ) {
+		//                Statement s = statement.program.statementList[i];
+		//                //foreach (Statement s in statement.program.statementList) {
+		//                KeyStatement keyStatement = s as KeyStatement;
+		//                if (keyStatement != null) {
+		//                    Constant key = keyStatement.key as Constant;
+		//                    if (key != null) {
+		//                        if (key.Equals(constant)) {
+		//                            bool optimize = true;
+		//                            for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+		//                                Statement restStatement = statement.program.statementList[rest];
+		//                                if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+		//                                    optimize = false;
+		//                                    break;
+		//                                }
+		//                                KeyStatement kStatement = restStatement as KeyStatement;
+		//                                if (kStatement != null) {
+		//                                    Constant k = kStatement.key as Constant;
+		//                                    if (k == null || k.constant.Equals(key)) {
+		//                                        optimize = false;
+		//                                        break;
+		//                                    }
+		//                                }
+		//                            }
+		//                            if (optimize) {
+		//                                found = keyStatement.value;
+		//                            }
+		//                            break;
+		//                        }
+		//                    }
+		//                    else {
+		//                        return expression;
+		//                    }
+		//                }
+		//                if (s.Equals(statement)) {
+		//                    break;
+		//                }
+		//                break;
+		//            }
+		//        }
+		//        Constant constantValue = found as Constant;
+		//        if (constantValue != null) {
+		//            return constantValue;
+		//        }
+		//    }
+		//    return expression;
+		//}
+		//    if (structure.ContainsKey(key)) {
+		//        value = structure[key];
+		//        map = structure;
+		//        s = statement;
+		//        return true;
+		//    }
+		//    else if (programCounter < 1 && statement is KeyStatement) {
+		//        if (hasCrossedFunction) {
+		//            map = statement.CurrentMap();
+		//            if (map != null) {
+		//                //if (map != null && map.IsConstant) {
+		//                if (map.ContainsKey(key)) {
+		//                    value = map[key];
+		//                    //if (value.IsConstant) {
+		//                    //if (value.IsConstant) {
+		//                    s = statement;
+		//                    return true;
+		//                    //}
+		//                }
+		//            }
+		//        }
+		//    }
+		//    if (hasCrossedFunction) {
+		//        if (!statement.NeverAddsKey(key)) {
+		//            break;
+		//        }
+		//    }
+		//    count++;
+		//    if (current.Statement != null && current.Statement.program != null && !current.Statement.program.IsFunction) {
+		//        programCounter++;
+		//    }
+		//    current = current.Parent;
+		//}
 		public static Expression PerfectSearch(Expression expression) {
 			Search search = expression as Search;
 			if (search != null) {
@@ -256,11 +525,6 @@ namespace Meta {
 						}
 					}
 				}
-				//if (call.CallStuff(out arguments, out method)) {
-				//    if (method.IsStatic && method.GetParameters().Length==call.calls.Count-1) {
-				//        return new NativeCall(method, call.calls.GetRange(1, call.calls.Count - 1));
-				//    }
-				//}
 			}
 			return expression;
 		}
@@ -292,30 +556,29 @@ namespace Meta {
 			GetCachedCompile(emitter, GetCompiled());
 		}
 
+		[Ignore]
 		public Compiled compiled;
-		public virtual bool IsFunction {
+		public virtual bool IsFuncltion {
 			get {
 				return false;
 			}
 		}
+		[Ignore]
 		public Extent Source;
 		private Expression parent;
+		[Ignore]
 		public Map code;
-		public Expression Parent {
-			get {
-				if(parent==null) {
-					Map current = code;
-					while (parent == null && current!=null) {
-						parent = current.GetExpression();
-						current = current.Scope;
-					}
-				}
-				return parent;
-			}
-			set {
-				parent = value;
-			}
-		}
+		// scope differs from parent, set this differently
+		//[Ignore]
+		//public Expression Parent {
+		//    get {
+		//        return parent;
+		//    }
+		//    set {
+		//        parent = value;
+		//    }
+		//}
+		[Ignore]
 		public Statement Statement;
 		public virtual Map CallFast(Map scope) {
 			return GetCompiled()(scope);
@@ -353,6 +616,8 @@ namespace Meta {
 		public LastArgument(Map code): base(code) {
 		}
 	}
+	public class IgnoreAttribute : Attribute {
+	}
 	public class Call : Expression {
 		public List<Expression> calls;
 		public Call(Map code): base(code) {
@@ -361,7 +626,8 @@ namespace Meta {
 				calls.Add(m.GetExpression());
 			}
 			if (calls.Count == 1) {
-				calls.Add(new Literal(Map.Empty));
+				calls.Add(new Literal(new DictionaryMap(CodeKeys.Literal, Map.Empty)));
+				//calls.Add(new Literal(Map.Empty));
 			}
 		}
 		//implement Constant optimization for some special methods ( and implement expression for special methods, maybe)
@@ -767,15 +1033,15 @@ namespace Meta {
 		}
 	}
 	public class Program : Expression {
-		public override bool IsFunction {
-			get {
-				if (!_isFunctionChecked) {
-					_isFunction = CheckIsFunction();
-					_isFunctionChecked = true;
-				}
-				return _isFunction;
-			}
-		}
+		//public override bool IsFunction {
+		//    get {
+		//        if (!_isFunctionChecked) {
+		//            _isFunction = CheckIsFunction();
+		//            _isFunctionChecked = true;
+		//        }
+		//        return _isFunction;
+		//    }
+		//}
 		private bool _isFunctionChecked = false;
 		private bool _isFunction = false;
 		public override Map Call(Map argument, Map scope) {
@@ -935,16 +1201,16 @@ namespace Meta {
 		bool currentEvaluated = false;
 		private Map pre;
 		private Map current;
-		public Statement Next {
-			get {
-				if (program == null || Index >= program.statementList.Count - 1) {
-					return null;
-				}
-				else {
-					return program.statementList[Index + 1];
-				}
-			}
-		}
+		//public Statement Next {
+		//    get {
+		//        if (program == null || Index >= program.statementList.Count - 1) {
+		//            return null;
+		//        }
+		//        else {
+		//            return program.statementList[Index + 1];
+		//        }
+		//    }
+		//}
 		//public virtual bool DoesNotAddKey(Map key) {
 		//    return true;
 		//}
@@ -962,19 +1228,21 @@ namespace Meta {
 		//    return true;
 		//}
 		//protected abstract Map CurrentImplementation(Map previous);
-		public Statement Previous {
-			get {
-				if (Index == 0) {
-					return null;
-				}
-				else {
-					return program.statementList[Index - 1];
-				}
-			}
-		}
+		//public Statement Previous {
+		//    get {
+		//        if (Index == 0) {
+		//            return null;
+		//        }
+		//        else {
+		//            return program.statementList[Index - 1];
+		//        }
+		//    }
+		//}
 		public abstract CompiledStatement Compile();
+		[Ignore]
 		public Program program;
 		public Expression value;
+		[Ignore]
 		public int Index;
 		public Statement(Program program, Expression value, int index) {
 			this.program = program;
@@ -989,6 +1257,23 @@ namespace Meta {
 		public DiscardStatement(Expression discard, Expression value, Program program, int index): base(program, value, index) {}
 		public override CompiledStatement Compile() {
 			return new CompiledStatement(value.Source.Start,value.Source.End,value.Compile(), delegate { });
+		}
+	}
+	public class ConstantKeyStatement : Statement {
+		public override CompiledStatement Compile() {
+			if (value is Literal && ((Literal)value).literal.GetExpression()!=null) {
+				((Literal)value).literal.GetExpression().Statement=this;
+				//((Literal)value).literal.Compile(program);
+			}
+			// refactor, remove key.Source.Start
+			return new CompiledStatement(key.Source.Start, value.Source.End, value.Compile(), delegate(ref Map context, Map v) {
+				context[key] = v;
+			});
+		}
+		public Map key;
+		public ConstantKeyStatement(Map key, Expression value, Program program, int index) : base(program, value, index) {
+			this.key = key;
+			//key.Statement = this;
 		}
 	}
 	public class KeyStatement : Statement {
@@ -1075,9 +1360,13 @@ namespace Meta {
 				return literal.Copy(context);
 			};
 		}
-		public Literal(Map code) : base(code) {
+		public Literal(Map code)
+			: base(code) {
 			this.literal = code;
 		}
+		//public Literal(Map code) : base(code) {
+		//    this.literal = code;
+		//}
 	}
 	// derive root from Constant
 	public class Root : Expression {
@@ -1334,10 +1623,13 @@ namespace Meta {
 			callable.Scope = Gac.gac["library"];
 			LiteralExpression gac = new LiteralExpression(Gac.gac);
 			LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
-			lib.Parent = gac;
+			//lib.Parent = gac;
+			// how to handle the gac, its pretty much constant, maybe a current assignment would do,
+			// assign the root to this, and the library
+			//Expression.expressions.Add(gac);
 			lib.Statement = new LiteralStatement(gac);
 			callable.GetExpression().Statement = new LiteralStatement(lib);
-			callable.Expression.Parent = lib;
+			//callable.Expression.Parent = lib;
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
@@ -1348,7 +1640,7 @@ namespace Meta {
 			map.Scope = Gac.gac;
 			LiteralExpression gac = new LiteralExpression(Gac.gac);
 			map.GetExpression().Statement = new LiteralStatement(gac);
-			map.Expression.Parent = gac;
+			//map.Expression.Parent = gac;
 			Gac.gac["library"] = map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}
@@ -1734,9 +2026,11 @@ namespace Meta {
 		public override Map Copy() {
 			return this;
 		}
+		[Ignore]
 		public MethodBase method;
 		protected object obj;
 		protected Type type;
+		[Ignore]
 		public MemberInfo original;
 		public Method(MethodBase method, object obj, Type type,MemberInfo original) {
 			this.method = method;
@@ -1757,7 +2051,7 @@ namespace Meta {
 		}
 		private List<DotNetConversion> conversions=new List<DotNetConversion>();
 		private MetaConversion metaConversion;
-		public ParameterInfo[] parameters;
+		private ParameterInfo[] parameters;
 		public override Map Call(Map argument) {
 		    return DecideCall(argument, new List<object>());
 		}
@@ -2159,6 +2453,7 @@ namespace Meta {
 		public override Map GetFromIndex(int i) {
 			return values[i];
 		}
+		[Ignore]
 		public Map[] values;
 		public override Map this[Map key] {
 			get {
@@ -2321,6 +2616,9 @@ namespace Meta {
 			return clone;
 		}
 		public override void Append(Map map) {
+			if (map.Scope == null) {
+				map.Scope = this;
+			}
 			this[ArrayCount + 1]=map;
 		}
 		public override string Serialize() {
@@ -2335,7 +2633,7 @@ namespace Meta {
 			}
 			return null;
 		}
-		public Dictionary<Map, Map> dictionary;
+		private Dictionary<Map, Map> dictionary;
 		public override Map this[Map key] {
 			get {
 				Map val;
@@ -4577,9 +4875,15 @@ namespace Meta {
 				}
 			}
 			public const char indentationChar = '\t';
-			private static bool UseToStringMethod(Type type) {
-				return (!type.IsValueType || type.IsPrimitive)
-					&& Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();
+			private static bool UseToStringMethod(Type type,object obj) {
+				if(obj is string) {
+					return true;
+				}
+				if(obj is IEnumerable) {
+					return false;
+				}
+				return (!type.IsValueType || type.IsPrimitive) && //(!type.IsSubclassOf(typeof(IEnumerable)))
+					Assembly.GetAssembly(type) != Assembly.GetExecutingAssembly();
 			}
 			private static bool UseProperty(PropertyInfo property, int level) {
 				return Assembly.GetAssembly(property.DeclaringType) != Assembly.GetExecutingAssembly();
@@ -4588,21 +4892,10 @@ namespace Meta {
 				if (obj == null) {
 					builder.Append(indent + "null\n");
 				}
-				else if (UseToStringMethod(obj.GetType())) {
+				else if (UseToStringMethod(obj.GetType(),obj)) {
 					builder.Append(indent + "\"" + obj.ToString() + "\"" + "\n");
 				}
 				else {
-					foreach (PropertyInfo property in obj.GetType().GetProperties()) {
-						if (UseProperty((PropertyInfo)property, level)) {
-							object val = property.GetValue(obj, null);
-							builder.Append(indent + property.Name);
-							if (val != null) {
-								builder.Append(" (" + val.GetType().Name + ")");
-							}
-							builder.Append(":\n");
-							Serialize(val, indent + indentationChar, builder, level);
-						}
-					}
 					string specialEnumerableSerializationText;
 					if (obj is ISerializeEnumerableSpecial && (specialEnumerableSerializationText = ((ISerializeEnumerableSpecial)obj).Serialize()) != null) {
 						builder.Append(indent + specialEnumerableSerializationText + "\n");
@@ -4613,6 +4906,55 @@ namespace Meta {
 							Serialize(entry, indent + indentationChar, builder, level);
 						}
 					}
+					else {
+						foreach (PropertyInfo property in obj.GetType().GetProperties()) {
+							if (property.GetCustomAttributes(typeof(IgnoreAttribute), false).Length == 0) {
+								//inline this
+								if (UseProperty((PropertyInfo)property, level)) {
+									//try {
+									object val = property.GetValue(obj, null);
+									builder.Append(indent + property.Name);
+									if (val != null) {
+										builder.Append(" (" + val.GetType().Name + ")");
+									}
+									builder.Append(":\n");
+									Serialize(val, indent + indentationChar, builder, level);
+									//}
+									//catch (Exception e) {
+									//    object val = property.GetValue(obj, null);
+									//    builder.Append(indent + property.Name);
+									//    if (val != null) {
+									//        builder.Append(" (" + val.GetType().Name + ")");
+									//    }
+									//    builder.Append(":\n");
+									//    Serialize(val, indent + indentationChar, builder, level);
+
+									//}
+								}
+							}
+						}
+						foreach (FieldInfo field in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)) {
+							if (field.GetCustomAttributes(typeof(IgnoreAttribute), false).Length == 0) {
+								object val = field.GetValue(obj);
+								builder.Append(indent + field.Name);
+								if (val != null) {
+									builder.Append(" (" + val.GetType().Name + ")");
+								}
+								builder.Append(":\n");
+								Serialize(val, indent + indentationChar, builder, level);
+							}
+						}
+					}
+					//string specialEnumerableSerializationText;
+					//if (obj is ISerializeEnumerableSpecial && (specialEnumerableSerializationText = ((ISerializeEnumerableSpecial)obj).Serialize()) != null) {
+					//    builder.Append(indent + specialEnumerableSerializationText + "\n");
+					//}
+					//else if (obj is System.Collections.IEnumerable) {
+					//    foreach (object entry in (System.Collections.IEnumerable)obj) {
+					//        builder.Append(indent + "Entry (" + entry.GetType().Name + ")\n");
+					//        Serialize(entry, indent + indentationChar, builder, level);
+					//    }
+					//}
 				}
 			}
 		}
@@ -4645,6 +4987,25 @@ namespace Meta {
 			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 			//    }
 			//}
+			public class BasicExpression : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					string path = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+					Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+					Map callable = Parser.Parse(path);
+					callable.Scope = Gac.gac["library"];
+					LiteralExpression gac = new LiteralExpression(Gac.gac);
+					LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+					//lib.Parent = gac;
+					lib.Statement = new LiteralStatement(gac);
+					callable.GetExpression().Statement = new LiteralStatement(lib);
+					//callable.Expression.Parent = lib;
+					Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+					return Expression.Optimize(callable.GetExpression());
+
+					//return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
@@ -4663,6 +5024,25 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
+			//public class BasicExpression : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        string path = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+			//        Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+			//        Map callable = Parser.Parse(path);
+			//        callable.Scope = Gac.gac["library"];
+			//        LiteralExpression gac = new LiteralExpression(Gac.gac);
+			//        LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+			//        lib.Parent = gac;
+			//        lib.Statement = new LiteralStatement(gac);
+			//        callable.GetExpression().Statement = new LiteralStatement(lib);
+			//        callable.Expression.Parent = lib;
+			//        Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+			//        return Expression.Optimize(callable.GetExpression());
+
+			//        //return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
 			//public class FiboFast : Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;
@@ -4946,6 +5326,9 @@ namespace Meta {
 			return DeepCopy();
 		}
 	    public override void Append(Map map){
+			if (map.Scope == null) {
+				map.Scope = this;
+			}
 	        list.Add(map);
 	    }
 	    private List<Map> list;
@@ -4964,6 +5347,9 @@ namespace Meta {
 	            return null;
 	        }
 	        set {
+				if (value.Scope == null) {
+					value.Scope = this;
+				}
                 int integer = key.GetInt32();
                 if (integer >= 1 && integer <= list.Count) {
                     list[integer - 1] = value;
