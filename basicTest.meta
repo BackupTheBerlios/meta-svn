@@ -23,7 +23,7 @@
 	&map.merge([0,["AssignedToCurrent"]]);
 	asdf="hello";
 	shortFunction=(asdf)asdf; // another comment
-	bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
+	//bitmapSize=!"System.Drawing".Bitmap_Stream(!"internet.bmp").get_Width();
 	shortFunctionTest=!"shortFunction"("hello");
 	decimal=1612345.9834;
 	listTest=[1,2,3,"hello",asdf];
@@ -55,12 +55,12 @@
 		hashTest=!!"hashTestData";
 	};
 	negativeInteger=100;
-	negativeInteger=map.merge([
-		negativeInteger,
-		{
-			x="hello";
-		}]
-	);
+	//negativeInteger=map.merge([
+	//	negativeInteger,
+	//	{
+	//		x="hello";
+	//	}]
+	//);
 	integerIncrementTest=5;
 	integerIncrementTest={
 		0=integerIncrementTest;
@@ -131,12 +131,12 @@
 	a="default";
 	b=0;
 	aSet=object.SetA(0);
-	bSet=object.SetB({
-		value={
-			x=7;
-			z=1;
-		};
-	});
+	//bSet=object.SetB({
+	//	value={
+	//		x=7;
+	//		z=1;
+	//	};
+	//});
 	scopeTest="default";
 	scopeFunction=(arg){
 		scopeTest:inScope;
@@ -183,31 +183,31 @@
 			decimalValue=5;
 		}
 	);
-	TestClass=map.merge([
-		TestClass,
-		{
-			boolTest=1;
-		}]
-	);
-	boolTest=TestClass.boolTest;
-	MemberTest=/.Meta.MemberTest;
+	//TestClass=map.merge([
+	//	TestClass,
+	//	{
+	//		boolTest=1;
+	//	}]
+	//);
+	//boolTest=TestClass.boolTest;
+	MemberTest=Meta.MemberTest;
 	memberTest=MemberTest(0);
 	stringOverload=MemberTest.OverloadedMethod_String("hello");
 	integerOverload=MemberTest.OverloadedMethod_Int32(5);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
 	memberTestOverload=MemberTest.OverloadedMethod_MemberTest_Int32(memberTest,3247);
-	MemberTest:map.merge([
-		MemberTest,
-		{
-			classField="a";
-		}]
-	);
-	memberTest:map.merge([
-		memberTest,
-		{
-			instanceField="b";
-		}]
-	);
+	//MemberTest:map.merge([
+	//	MemberTest,
+	//	{
+	//		classField="a";
+	//	}]
+	//);
+	//memberTest:map.merge([
+	//	memberTest,
+	//	{
+	//		instanceField="b";
+	//	}]
+	//);
 	Meta.MemberTest.set_ClassProperty_String(memberTest.get_InstanceProperty(0));
 	classPropertyValue=MemberTest.get_ClassProperty(0);
 	memberTest.set_InstanceProperty_String("b");
@@ -297,18 +297,18 @@
 	decimalTest=5;
 	fractionTest=40;
 	stringTest="hello";
-	stringTest=map.merge([
-		stringTest,
-		{
-			5=stringTest.1;
-		}]
-	);
+	//stringTest=map.merge([
+	//	stringTest,
+	//	{
+	//		5=stringTest.1;
+	//	}]
+	//);
 	hellh="hi";
-	stringStrategyHashTest=!stringTest;
-	x={aLongText="hello,world!";};
-	arrayList=/.mscorlib.ArrayList(0);
-	7=arrayList.Add_Object("hello");
-	arrayListResult=arrayList.get_Item_Int32(0);
+	//stringStrategyHashTest=!stringTest;
+	//x={aLongText="hello,world!";};
+	//arrayList=/.mscorlib.ArrayList(0);
+	//7=arrayList.Add_Object("hello");
+	//arrayListResult=arrayList.get_Item_Int32(0);
 	textBox=/."System.Windows.Forms".TextBox(0);
 	textBox.set_Text_String("Alle meine Entchen, schwimmen auf dem See, schwimmen auf dem See, Köpfchen in das Wasser, Schwänzchen in die Hoeh.");
 	lines=textBox.get_Lines(0);
@@ -364,12 +364,12 @@
 		z="a";
 	};
 	copiedData=copySourceData;
-	copiedData=map.merge([
-		copiedData,
-		{
-			x="changed";
-		}]
-	);
+	//copiedData=map.merge([
+	//	copiedData,
+	//	{
+	//		x="changed";
+	//	}]
+	//);
 	characterLiterals={
 		a='a';
 		space=' ';

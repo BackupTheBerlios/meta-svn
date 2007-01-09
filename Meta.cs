@@ -958,6 +958,12 @@ namespace Meta {
 						selected = selected.Scope;
 					}
 					else {
+						selected = context;
+						while (!selected.ContainsKey(k)) {
+							if (selected.Scope != null) {
+								selected = selected.Scope;
+							}
+						}
 						Map m = compiled(context);
 						bool b = context.ContainsKey(m);
 						throw new KeyNotFound(k, Source.Start, null);
@@ -1390,6 +1396,7 @@ namespace Meta {
 					Map key = s[i](context);
 					Map value = selected[key];
 					if (value == null) {
+						object x=selected[key];
 						throw new KeyDoesNotExist(key, Source != null ? Source.Start : null, selected);
 					}
 					else {
@@ -2372,6 +2379,7 @@ namespace Meta {
 	}
 	public abstract class ScopeMap : Map {
 		protected Map scope;
+		[Ignore]
 		public override Map Scope {
 			get {
 				return scope;
@@ -2384,6 +2392,12 @@ namespace Meta {
 	// ideally, would not be necessary
 	// in general, cut back on the number of map types
 	public class CopyMap : ScopeMap {
+		public override string ToString() {
+			return copy.ToString();
+		}
+		public override string Serialize() {
+			return copy.Serialize();
+		}
 		public override Expression Optimized {
 			get {
 				if (copy.Optimized != null) {
@@ -2435,6 +2449,7 @@ namespace Meta {
 		public override Map Copy() {
 			return this;
 		}
+		[Ignore]
 		private Map copy;
 		public CopyMap(Map scope, Map original) {
 			this.scope = scope;
@@ -3045,7 +3060,8 @@ namespace Meta {
 			return null;
 		}
 		public override Map Copy() {
-			return CopyMap(this);
+			return this;
+			//return CopyMap(this);
 		}
 		private Assembly assembly;
 		public Assembly Assembly {
@@ -3725,7 +3741,8 @@ namespace Meta {
 			}
 			else {
 				return Map(map, indentation);
-		}}
+			}
+		}
 		private static string Map(Map map, int indentation) {
 			string text;
 			if (indentation < 0) {
@@ -4117,12 +4134,10 @@ namespace Meta {
 							Whitespace
 						),
 						delegate(Parser parser, Map map, ref Map result) {
-							//result; = Library.Merge(result, map);
 							foreach (KeyValuePair<Map, Map> pair in map) {
 								result[pair.Key] = pair.Value;
 								pair.Value.Scope = result;
 							}
-							//result = Library.Merge(result, map);
 						}))),
 			OptionalError(Syntax.programEnd),
 			Whitespace
@@ -4938,9 +4953,12 @@ namespace Meta {
 					}
 					else {
 						foreach (PropertyInfo property in obj.GetType().GetProperties()) {
-							if (property.GetCustomAttributes(typeof(IgnoreAttribute), false).Length == 0) {
+							if (property.GetCustomAttributes(typeof(IgnoreAttribute), true).Length == 0) {
 								//inline this
 								if (UseProperty((PropertyInfo)property, level)) {
+									//if (property.Name != "Value" && property.Name != "Key") {
+									//    Console.WriteLine("hello");
+									//}
 									//try {
 									object val = property.GetValue(obj, null);
 									builder.Append(indent + property.Name);
@@ -4964,7 +4982,7 @@ namespace Meta {
 							}
 						}
 						foreach (FieldInfo field in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)) {
-							if (field.GetCustomAttributes(typeof(IgnoreAttribute), false).Length == 0) {
+							if (field.GetCustomAttributes(typeof(IgnoreAttribute), true).Length == 0) {
 								object val = field.GetValue(obj);
 								builder.Append(indent + field.Name);
 								if (val != null) {
@@ -5017,6 +5035,12 @@ namespace Meta {
 			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 			//    }
 			//}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+				}
+			}
 			public class BasicExpression : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5048,12 +5072,7 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
 				}
 			}
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
+
 			//public class BasicExpression : Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;
@@ -5339,11 +5358,14 @@ namespace Meta {
 	}
 	public class KeyDoesNotExist : ExecutionException {
 		public KeyDoesNotExist(Map key, Source source, Map map)
-			: base("Key does not exist: " + Serialization.Serialize(key) + " in " + Serialization.Serialize(map), source, map) {}
+			: base("Key does not exist: ", source, map) {
+			//: base("Key does not exist: " + Serialization.Serialize(key),source,map){
+		}// + " in " + Serialization.Serialize(map), source, map) {}
 	}
 	public class KeyNotFound : ExecutionException {
 		public KeyNotFound(Map key, Source source, Map map)
-			: base("Key not found: " + Serialization.Serialize(key), source, map) {}
+			: base("Key not found: ", source, map) { }
+			//: base("Key not found: " + Serialization.Serialize(key), source, map) {}
 	}
 	public class ListMap : ScopeMap {
 		public override Number GetNumber() {
@@ -5761,6 +5783,9 @@ namespace Meta {
 		public static Map MergeAll(Map array) {
 			Map result = new DictionaryMap();
 			foreach (Map map in array.Array) {
+				if (map is DotNetMap) {
+					Console.WriteLine("hello");
+				}
 				foreach (KeyValuePair<Map, Map> pair in map) {
 					result[pair.Key] = pair.Value;
 				}
@@ -5769,21 +5794,21 @@ namespace Meta {
 		}
 		[MergeCompile]
 		public static Map Merge(Map arg, Map map) {
-			try {
+			//try {
 				arg = arg.Copy();
 				foreach (KeyValuePair<Map, Map> pair in map) {
 					arg[pair.Key] = pair.Value;
 				}
 				return arg;
-			}
-			catch (Exception e) {
-				arg = arg.Copy();
-				foreach (KeyValuePair<Map, Map> pair in map) {
-					arg[pair.Key] = pair.Value;
-				}
-				return arg;
+			//}
+			//catch (Exception e) {
+			//    arg = arg.Copy();
+			//    foreach (KeyValuePair<Map, Map> pair in map) {
+			//        arg[pair.Key] = pair.Value;
+			//    }
+			//    return arg;
 
-			}
+			//}
 		}
 		public static Map Join(Map arg, Map map) {
 			foreach (Map m in map.Array) {
