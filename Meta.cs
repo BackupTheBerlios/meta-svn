@@ -1621,27 +1621,52 @@ namespace Meta {
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
-			LiteralExpression gac = new LiteralExpression(Gac.gac);
-			LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+			//LiteralExpression gac = new LiteralExpression(Gac.gac);
+			//LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
 			//lib.Parent = gac;
 			// how to handle the gac, its pretty much constant, maybe a current assignment would do,
 			// assign the root to this, and the library
 			//Expression.expressions.Add(gac);
-			lib.Statement = new LiteralStatement(gac);
-			callable.GetExpression().Statement = new LiteralStatement(lib);
+			//lib.Statement = new LiteralStatement(gac);
+			//callable.GetExpression().Statement = new LiteralStatement(lib);
 			//callable.Expression.Parent = lib;
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
+		//public static Map Run(string path, Map argument) {
+		//    // refactor
+		//    Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+		//    Map callable = Parser.Parse(path);
+		//    callable.Scope = Gac.gac["library"];
+		//    LiteralExpression gac = new LiteralExpression(Gac.gac);
+		//    LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+		//    //lib.Parent = gac;
+		//    // how to handle the gac, its pretty much constant, maybe a current assignment would do,
+		//    // assign the root to this, and the library
+		//    //Expression.expressions.Add(gac);
+		//    lib.Statement = new LiteralStatement(gac);
+		//    callable.GetExpression().Statement = new LiteralStatement(lib);
+		//    //callable.Expression.Parent = lib;
+		//    Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+		//    return callable.Call(argument);
+		//}
 		public static bool profiling = false;
 		static Interpreter() {
 			// refactor
+			//Map map = Parser.Parse(LibraryPath);
+			//map.Scope = Gac.gac;
+			//LiteralExpression gac = new LiteralExpression(Gac.gac);
+			//map.GetExpression().Statement = new LiteralStatement(gac);
+			////map.Expression.Parent = gac;
+			//Gac.gac["library"] = map.Call(new DictionaryMap());
+			//Gac.gac["library"].Scope = Gac.gac;
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
-			LiteralExpression gac = new LiteralExpression(Gac.gac);
-			map.GetExpression().Statement = new LiteralStatement(gac);
-			//map.Expression.Parent = gac;
-			Gac.gac["library"] = map.Call(new DictionaryMap());
+			//LiteralExpression gac = new LiteralExpression(Gac.gac);
+			//map.GetExpression().Statement = new LiteralStatement(gac);
+			////map.Expression.Parent = gac;
+			//Gac.gac["library"] = map.Call(new DictionaryMap());
+			Gac.gac["library"] = map;//map.Call(new DictionaryMap());
 			Gac.gac["library"].Scope = Gac.gac;
 		}
 		public static int Fibo(int x) {
@@ -4079,7 +4104,7 @@ namespace Meta {
 				}),
 			Whitespace
 		);
-		public static Rule MapRule = FastSequence(
+		public static Rule MapRule = Sequence(
 			Syntax.programStart,
 			Whitespace,
 			new FastAction(
@@ -4092,7 +4117,12 @@ namespace Meta {
 							Whitespace
 						),
 						delegate(Parser parser, Map map, ref Map result) {
-							result = Library.Merge(result, map);
+							//result; = Library.Merge(result, map);
+							foreach (KeyValuePair<Map, Map> pair in map) {
+								result[pair.Key] = pair.Value;
+								pair.Value.Scope = result;
+							}
+							//result = Library.Merge(result, map);
 						}))),
 			OptionalError(Syntax.programEnd),
 			Whitespace
@@ -5012,16 +5042,16 @@ namespace Meta {
 					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
 				}
 			}
-			public class Basic : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"libraryTest.meta"), new DictionaryMap());
+				}
+			}
+			public class Basic : Test {
+				public override object GetResult(out int level) {
+					level = 2;
+					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
 			//public class BasicExpression : Test {
@@ -5739,11 +5769,21 @@ namespace Meta {
 		}
 		[MergeCompile]
 		public static Map Merge(Map arg, Map map) {
-			arg=arg.Copy();
-			foreach (KeyValuePair<Map, Map> pair in map) {
-				arg[pair.Key] = pair.Value;
+			try {
+				arg = arg.Copy();
+				foreach (KeyValuePair<Map, Map> pair in map) {
+					arg[pair.Key] = pair.Value;
+				}
+				return arg;
 			}
-			return arg;
+			catch (Exception e) {
+				arg = arg.Copy();
+				foreach (KeyValuePair<Map, Map> pair in map) {
+					arg[pair.Key] = pair.Value;
+				}
+				return arg;
+
+			}
 		}
 		public static Map Join(Map arg, Map map) {
 			foreach (Map m in map.Array) {
@@ -6110,6 +6150,7 @@ namespace Meta {
 			get;
 			set;
 		}
+		[Ignore]
 		public virtual Map Scope {
 			get {
 				return null;
