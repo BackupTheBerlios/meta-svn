@@ -112,17 +112,6 @@ namespace Meta {
 			};
 		}
 	}
-	//public class SimpleLiteral:Expression {
-	//    private Map literal;
-	//    public SimpleLiteral(Map literal):base(literal) {
-	//        this.literal = literal;
-	//    }
-	//    public override Compiled GetCompiled() {
-	//        return delegate {
-	//            return literal;
-	//        };
-	//    }
-	//}
 	public abstract class Expression {
 		public static List<Expression> expressions = new List<Expression>();
 		public delegate Expression Optimization(Expression expression);
@@ -143,7 +132,6 @@ namespace Meta {
 			if(literal!=null) {
 				if (literal.literal.Expression == null) {
 					return new Constant(literal.literal);
-					//return new SimpleLiteral(literal.literal);
 				}
 			}
 			return expression;
@@ -181,7 +169,9 @@ namespace Meta {
 			}
 		}
 		public static Expression Optimize(Expression expression,Optimization optimization) {
+			expressions.Add(expression);
 			InvokeOnChildren(expression, optimization);
+			expressions.RemoveAt(expressions.Count - 1);
 			expression = optimization(expression);
 			return expression;
 		}
@@ -197,71 +187,141 @@ namespace Meta {
 		}
 		public static Expression MakeSearchConstant(Expression expression) {
 			SearchConstant search = expression as SearchConstant;
-			//if (search != null) {
-			//    Expression current = search;
-			//    Expression found = null;
-			//    while (found == null && current != null) {
-			//        while (true) {
-			//            //current = current.Parent;
-			//            if (current == null) {
-			//                break;
-			//            }
-			//            Statement statement = null;
-			//            while (current.Statement == null) {
-			//                //current = current.Parent;
-			//            }
-			//            statement = current.Statement;
-			//            for (int i = 0; i < statement.program.statementList.Count; i++) {
-			//                Statement s = statement.program.statementList[i];
-			//                //foreach (Statement s in statement.program.statementList) {
-			//                // create ConstantKeyStatement, maybe would have to work in reverse order???
-			//                // optimizations are always better than normal checking, because they are more general (???)
-			//                KeyStatement keyStatement = s as KeyStatement;
-			//                if (keyStatement != null) {
-			//                    Constant key = keyStatement.key as Constant;
-			//                    if (key != null) {
-			//                        if (key.Equals(search.key)) {
-			//                            //if (key.Equals(constant)) {
-			//                            bool optimize = true;
-			//                            for (int rest = i; rest < statement.program.statementList.Count; rest++) {
-			//                                Statement restStatement = statement.program.statementList[rest];
-			//                                if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
-			//                                    optimize = false;
-			//                                    break;
-			//                                }
-			//                                KeyStatement kStatement = restStatement as KeyStatement;
-			//                                if (kStatement != null) {
-			//                                    Constant k = kStatement.key as Constant;
-			//                                    if (k == null || k.constant.Equals(key)) {
-			//                                        optimize = false;
-			//                                        break;
-			//                                    }
-			//                                }
-			//                            }
-			//                            if (optimize) {
-			//                                found = keyStatement.value;
-			//                            }
-			//                            break;
-			//                        }
-			//                    }
-			//                    else {
-			//                        return expression;
-			//                    }
-			//                }
-			//                if (s.Equals(statement)) {
-			//                    break;
-			//                }
-			//                break;
-			//            }
-			//        }
-			//    }
-			//    Constant constantValue = found as Constant;
-			//    if (constantValue != null) {
-			//        return constantValue;
-			//    }
-			//}
+			if (search != null) {
+				Expression found = null;
+				//for(int index=expressions.Count-1;index>0;index--) {//(found == null && current != null) {
+				int index = expressions.Count - 1;
+				Expression current = search;
+				while (true) {
+						//current = current.Parent;
+						if (current == null) {
+							break;
+						}
+						Statement statement = null;
+						while (current.Statement == null) {
+							index--;
+							current=expressions[index];
+							//current = current.Parent;
+						}
+						statement = current.Statement;
+						for (int i = 0; i < statement.program.statementList.Count; i++) {
+							Statement s = statement.program.statementList[i];
+							//foreach (Statement s in statement.program.statementList) {
+							// create ConstantKeyStatement, maybe would have to work in reverse order???
+							// optimizations are always better than normal checking, because they are more general (???)
+							KeyStatement keyStatement = s as KeyStatement;
+							if (keyStatement != null) {
+								Constant key = keyStatement.key as Constant;
+								if (key != null) {
+									if (key.Equals(search.key)) {
+										//if (key.Equals(constant)) {
+										bool optimize = true;
+										for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+											Statement restStatement = statement.program.statementList[rest];
+											if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+												optimize = false;
+												break;
+											}
+											KeyStatement kStatement = restStatement as KeyStatement;
+											if (kStatement != null) {
+												Constant k = kStatement.key as Constant;
+												if (k == null || k.constant.Equals(key)) {
+													optimize = false;
+													break;
+												}
+											}
+										}
+										if (optimize) {
+											found = keyStatement.value;
+										}
+										break;
+									}
+								}
+								else {
+									return expression;
+								}
+							}
+							if (s.Equals(statement)) {
+								break;
+							}
+							break;
+						}
+					}
+				//}
+				Constant constantValue = found as Constant;
+				if (constantValue != null) {
+					return constantValue;
+				}
+			}
 			return expression;
 		}
+		//public static Expression MakeSearchConstant(Expression expression) {
+		//    SearchConstant search = expression as SearchConstant;
+		//    if (search != null) {
+		//        Expression current = search;
+		//        Expression found = null;
+		//        while (found == null && current != null) {
+		//            while (true) {
+		//                //current = current.Parent;
+		//                if (current == null) {
+		//                    break;
+		//                }
+		//                Statement statement = null;
+		//                while (current.Statement == null) {
+		//                    //current = current.Parent;
+		//                }
+		//                statement = current.Statement;
+		//                for (int i = 0; i < statement.program.statementList.Count; i++) {
+		//                    Statement s = statement.program.statementList[i];
+		//                    //foreach (Statement s in statement.program.statementList) {
+		//                    // create ConstantKeyStatement, maybe would have to work in reverse order???
+		//                    // optimizations are always better than normal checking, because they are more general (???)
+		//                    KeyStatement keyStatement = s as KeyStatement;
+		//                    if (keyStatement != null) {
+		//                        Constant key = keyStatement.key as Constant;
+		//                        if (key != null) {
+		//                            if (key.Equals(search.key)) {
+		//                                //if (key.Equals(constant)) {
+		//                                bool optimize = true;
+		//                                for (int rest = i; rest < statement.program.statementList.Count; rest++) {
+		//                                    Statement restStatement = statement.program.statementList[rest];
+		//                                    if (restStatement is CurrentStatement && rest != statement.program.statementList.Count - 1) {
+		//                                        optimize = false;
+		//                                        break;
+		//                                    }
+		//                                    KeyStatement kStatement = restStatement as KeyStatement;
+		//                                    if (kStatement != null) {
+		//                                        Constant k = kStatement.key as Constant;
+		//                                        if (k == null || k.constant.Equals(key)) {
+		//                                            optimize = false;
+		//                                            break;
+		//                                        }
+		//                                    }
+		//                                }
+		//                                if (optimize) {
+		//                                    found = keyStatement.value;
+		//                                }
+		//                                break;
+		//                            }
+		//                        }
+		//                        else {
+		//                            return expression;
+		//                        }
+		//                    }
+		//                    if (s.Equals(statement)) {
+		//                        break;
+		//                    }
+		//                    break;
+		//                }
+		//            }
+		//        }
+		//        Constant constantValue = found as Constant;
+		//        if (constantValue != null) {
+		//            return constantValue;
+		//        }
+		//    }
+		//    return expression;
+		//}
 		//public static Expression MakeSearchConstant(Expression expression) {
 		//    SearchConstant search = expression as SearchConstant;
 		//    if (search != null) {
@@ -1628,52 +1688,15 @@ namespace Meta {
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
 			Map callable = Parser.Parse(path);
 			callable.Scope = Gac.gac["library"];
-			//LiteralExpression gac = new LiteralExpression(Gac.gac);
-			//LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
-			//lib.Parent = gac;
-			// how to handle the gac, its pretty much constant, maybe a current assignment would do,
-			// assign the root to this, and the library
-			//Expression.expressions.Add(gac);
-			//lib.Statement = new LiteralStatement(gac);
-			//callable.GetExpression().Statement = new LiteralStatement(lib);
-			//callable.Expression.Parent = lib;
 			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
-		//public static Map Run(string path, Map argument) {
-		//    // refactor
-		//    Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
-		//    Map callable = Parser.Parse(path);
-		//    callable.Scope = Gac.gac["library"];
-		//    LiteralExpression gac = new LiteralExpression(Gac.gac);
-		//    LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
-		//    //lib.Parent = gac;
-		//    // how to handle the gac, its pretty much constant, maybe a current assignment would do,
-		//    // assign the root to this, and the library
-		//    //Expression.expressions.Add(gac);
-		//    lib.Statement = new LiteralStatement(gac);
-		//    callable.GetExpression().Statement = new LiteralStatement(lib);
-		//    //callable.Expression.Parent = lib;
-		//    Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
-		//    return callable.Call(argument);
-		//}
 		public static bool profiling = false;
+		private static Map library;
 		static Interpreter() {
-			// refactor
-			//Map map = Parser.Parse(LibraryPath);
-			//map.Scope = Gac.gac;
-			//LiteralExpression gac = new LiteralExpression(Gac.gac);
-			//map.GetExpression().Statement = new LiteralStatement(gac);
-			////map.Expression.Parent = gac;
-			//Gac.gac["library"] = map.Call(new DictionaryMap());
-			//Gac.gac["library"].Scope = Gac.gac;
 			Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
-			//LiteralExpression gac = new LiteralExpression(Gac.gac);
-			//map.GetExpression().Statement = new LiteralStatement(gac);
-			////map.Expression.Parent = gac;
-			//Gac.gac["library"] = map.Call(new DictionaryMap());
-			Gac.gac["library"] = map;//map.Call(new DictionaryMap());
+			Gac.gac["library"] = map;
 			Gac.gac["library"].Scope = Gac.gac;
 		}
 		public static int Fibo(int x) {
@@ -2175,9 +2198,7 @@ namespace Meta {
 			return name;
 		}
 		public override Map Copy() {
-			//return CopyMap(this);
 			return new TypeMap(this.Type);
-			//return new TypeMap(this.Type);
 		}
 		private Method constructor;
 		public Method Constructor {

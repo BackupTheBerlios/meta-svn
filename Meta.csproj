@@ -71,6 +71,8 @@
   <ItemGroup>
     <None Include="basicTest.meta" />
     <None Include="Copy %282%29 of snake.meta" />
+    <None Include="Copy %283%29 of snake.meta" />
+    <None Include="Copy %284%29 of snake.meta" />
     <None Include="Copy %285%29 of library.meta" />
     <None Include="Copy of snake.meta" />
     <None Include="documentation.meta" />
