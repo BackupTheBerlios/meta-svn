@@ -19,7 +19,6 @@
 //	CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //	SOFTWARE.
 
-using Meta;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,14 +27,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Windows;
-using java.math;
 using System.Globalization;
-using Meta.Fusion;
 using System.Collections;
-using SDILReader;
 using System.Diagnostics;
-
 using System.Runtime.InteropServices;
+using Meta.Fusion;
+using java.math;
+using Softec.SubversionSharp;
 
 
 namespace Meta {
@@ -48,23 +46,23 @@ namespace Meta {
 			this.child = child;
 		}
 	}
-	public class ToMeta : ChildExpression {
+	public class ConvertToMeta : ChildExpression {
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 			child.Emit(emitter, parent, context);
 			Transform.GetMetaConversion(type,emitter);
 		}
 		public Type type;
-		public ToMeta(Expression expression,Type type,Map map):base(map,expression) {
+		public ConvertToMeta(Expression expression,Type type,Map map):base(map,expression) {
 			this.type = type;
 		}
 	}
-	public class ToDotNet : ChildExpression {
+	public class ConvertToDotNet : ChildExpression {
 		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
 			child.Emit(emitter, parent, context);
 			Transform.GetDotNetConversion(type, emitter);
 		}
 		public Type type;
-		public ToDotNet(Expression expression,Type type,Map map):base(map,expression) {
+		public ConvertToDotNet(Expression expression,Type type,Map map):base(map,expression) {
 			this.type = type;
 		}
 	}
@@ -73,7 +71,7 @@ namespace Meta {
 		public Expression first;
 		public Expression second;
 		public Branch(Map map, Expression condition, Expression first, Expression second):base(map) {
-			this.condition = new ToDotNet(condition, typeof(bool), null);
+			this.condition = new ConvertToDotNet(condition, typeof(bool), null);
 			this.first = first;
 			this.second = second;
 		}
@@ -1715,12 +1713,19 @@ namespace Meta {
 				return Fibo(x.Subtract(SmallInteger.One)).Add(Fibo(x.Subtract(SmallInteger.Two)));
 			}
 		}
+		[DllImport("kernel32")]
+		public extern static int LoadLibrary(string lpLibFileName);
 		[STAThread]
 		public static void Main(string[] args) {
+			//const string libraryPath=@"D:\Meta\Library";
+			//if (Directory.Exists(libraryPath)) {
+			//    Directory.Delete(libraryPath, true);
+			//}
+			//Softec.SubversionSharp.SvnClient client = new SvnClient();
+			//SvnRevision revision=new SvnRevision(Svn.Revision.Head);
+			//client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
+
 			DateTime start = DateTime.Now;
-			//Fibo(new Integer32(32));
-			//Console.WriteLine((DateTime.Now - start).TotalSeconds);
-			//return;
 			if (args.Length != 0) {
 				if (args[0] == "-test") {
 					try {
@@ -5059,6 +5064,21 @@ namespace Meta {
 			//        return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
 			//    }
 			//}
+			public class Serialization : Test {
+				public override object GetResult(out int level) {
+					level = 1;
+					string fileName = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+					string text = File.ReadAllText(fileName);
+					for (int i = 0; i < 100; i++) {
+						Parser.ParseString(text, fileName);
+						foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
+							cached.Clear();
+						}
+					}
+					return Meta.Serialization.Serialize(Parser.ParseString(text, fileName));//Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+					//return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
+				}
+			}
 			public class Basic : Test {
 				public override object GetResult(out int level) {
 					level = 2;
@@ -5128,21 +5148,7 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
 				}
 			}
-			public class Serialization : Test {
-				public override object GetResult(out int level) {
-					level = 1;
-					string fileName = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
-					string text = File.ReadAllText(fileName);
-					for (int i = 0; i < 100; i++) {
-						Parser.ParseString(text, fileName);
-						foreach (Dictionary<Parser.State, Parser.CachedResult> cached in Parser.allCached) {
-							cached.Clear();
-						}
-					}
-					return Meta.Serialization.Serialize(Parser.ParseString(text, fileName));//Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-					//return Meta.Serialization.Serialize(Parser.Parse(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta")));
-				}
-			}
+
 			public class MergeSort : Test {
 				public override object GetResult(out int level) {
 					level = 2;

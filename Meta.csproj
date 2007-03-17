@@ -42,11 +42,7 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Globals.cs" />
-    <Compile Include="ILInstruction.cs" />
     <Compile Include="Meta.cs" />
-    <Compile Include="MethodBodyReader.cs" />
-    <Compile Include="Stuff.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OdeDotNet, Version=0.0.1.1642, Culture=neutral, PublicKeyToken=c54d8a056f43ac6a, processorArchitecture=MSIL">
@@ -56,6 +52,10 @@
     <Reference Include="PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="SdlDotNet, Version=4.0.4.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408" />
+    <Reference Include="SubversionSharp, Version=1.0.2572.20865, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SVN.NET\SubversionSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -70,11 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
-    <None Include="Copy %282%29 of snake.meta" />
-    <None Include="Copy %283%29 of snake.meta" />
-    <None Include="Copy %284%29 of snake.meta" />
-    <None Include="Copy %285%29 of library.meta" />
-    <None Include="Copy of snake.meta" />
     <None Include="documentation.meta" />
     <None Include="fastFibo.meta" />
     <None Include="fibo.meta" />
