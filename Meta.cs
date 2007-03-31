@@ -39,45 +39,45 @@ using Softec.SubversionSharp;
 namespace Meta {
 	public delegate Map Compiled(Map map);
 
-	public abstract class ChildExpression : Expression {
-		public Expression child;
-		public ChildExpression(Map map, Expression child)
-			: base(map) {
-			this.child = child;
-		}
-	}
-	public class ConvertToMeta : ChildExpression {
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-			child.Emit(emitter, parent, context);
-			Transform.GetMetaConversion(type,emitter);
-		}
-		public Type type;
-		public ConvertToMeta(Expression expression,Type type,Map map):base(map,expression) {
-			this.type = type;
-		}
-	}
-	public class ConvertToDotNet : ChildExpression {
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-			child.Emit(emitter, parent, context);
-			Transform.GetDotNetConversion(type, emitter);
-		}
-		public Type type;
-		public ConvertToDotNet(Expression expression,Type type,Map map):base(map,expression) {
-			this.type = type;
-		}
-	}
-	public class Branch : Expression {
-		public Expression condition;
-		public Expression first;
-		public Expression second;
-		public Branch(Map map, Expression condition, Expression first, Expression second):base(map) {
-			this.condition = new ConvertToDotNet(condition, typeof(bool), null);
-			this.first = first;
-			this.second = second;
-		}
-		public override void Emit(Emitter emitter, Expression parent, OpCode context) {
-		}
-	}
+	//public abstract class ChildExpression : Expression {
+	//    public Expression child;
+	//    public ChildExpression(Map map, Expression child)
+	//        : base(map) {
+	//        this.child = child;
+	//    }
+	//}
+	//public class ConvertToMeta : ChildExpression {
+	//    public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+	//        child.Emit(emitter, parent, context);
+	//        Transform.GetMetaConversion(type,emitter);
+	//    }
+	//    public Type type;
+	//    public ConvertToMeta(Expression expression,Type type,Map map):base(map,expression) {
+	//        this.type = type;
+	//    }
+	//}
+	//public class ConvertToDotNet : ChildExpression {
+	//    public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+	//        child.Emit(emitter, parent, context);
+	//        Transform.GetDotNetConversion(type, emitter);
+	//    }
+	//    public Type type;
+	//    public ConvertToDotNet(Expression expression,Type type,Map map):base(map,expression) {
+	//        this.type = type;
+	//    }
+	//}
+	//public class Branch : Expression {
+	//    public Expression condition;
+	//    public Expression first;
+	//    public Expression second;
+	//    public Branch(Map map, Expression condition, Expression first, Expression second):base(map) {
+	//        this.condition = new ConvertToDotNet(condition, typeof(bool), null);
+	//        this.first = first;
+	//        this.second = second;
+	//    }
+	//    public override void Emit(Emitter emitter, Expression parent, OpCode context) {
+	//    }
+	//}
 	public class SearchConstant : Expression {
 		public Map key;
 		public SearchConstant(Map key,Map code):base(code) {
@@ -135,9 +135,9 @@ namespace Meta {
 			return expression;
 		}
 		public static Expression Optimize(Expression expression) {
-			foreach (Optimization optimization in optimizations) {
-				expression = Optimize(expression, optimization);
-			}
+			//foreach (Optimization optimization in optimizations) {
+			//    expression = Optimize(expression, optimization);
+			//}
 			return expression;
 		}
 		public static void InvokeOnChildren(object obj, Optimization optimization) {
@@ -1717,13 +1717,14 @@ namespace Meta {
 		public extern static int LoadLibrary(string lpLibFileName);
 		[STAThread]
 		public static void Main(string[] args) {
-			//const string libraryPath=@"D:\Meta\Library";
-			//if (Directory.Exists(libraryPath)) {
-			//    Directory.Delete(libraryPath, true);
-			//}
-			//Softec.SubversionSharp.SvnClient client = new SvnClient();
-			//SvnRevision revision=new SvnRevision(Svn.Revision.Head);
-			//client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
+			Directory.SetCurrentDirectory(@"D:\Meta");
+			const string libraryPath = @"D:\Meta\LibraryPath";
+			if (Directory.Exists(libraryPath)) {
+				Directory.Delete(libraryPath, true);
+			}
+			Softec.SubversionSharp.SvnClient client = new SvnClient();
+			SvnRevision revision = new SvnRevision(Svn.Revision.Head);
+			client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
 
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
@@ -2274,6 +2275,21 @@ namespace Meta {
 			return this;
 		}
 	}
+	//public class MainMap : ScopeMap {
+	//    Softec.SubversionSharp.SvnClient client = new SvnClient();
+	//    //SvnRevision revision=new SvnRevision(Svn.Revision.Head);
+	//    //client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
+
+	//    public override bool ContainsKey(Map key) {
+	//        throw new Exception("The method or operation is not implemented.");
+	//    }
+	//    public override Number GetNumber() {
+	//        return null;
+	//    }
+	//    public override Map Copy() {
+	//        return this;
+	//    }
+	//}
 	public class DirectoryMap : ScopeMap {
 		public override int Count {
 			get {
@@ -5142,19 +5158,19 @@ namespace Meta {
 			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fastFibo.meta"), new DictionaryMap());
 			//    }
 			//}
-			public class Fibo : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
-				}
-			}
+			//public class Fibo : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"fibo.meta"), new DictionaryMap());
+			//    }
+			//}
 
-			public class MergeSort : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
-				}
-			}
+			//public class MergeSort : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"mergeSort.meta"), new DictionaryMap());
+			//    }
+			//}
 			//public class FiboSlow : Test {
 			//    public override object GetResult(out int level) {
 			//        level = 2;
