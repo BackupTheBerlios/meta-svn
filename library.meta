@@ -1,4 +1,17 @@
 {
+	array={
+		join=(a)(b)Meta.Library.JoinAll_Map(a,b)(a,b);
+		length=(arg)Meta.ObjectMap_Object(arg).get_ArrayCount(0);
+	};
+	boolean={
+		or=(a)(b){0=a;1=1;}.<b>;
+		and=(a)(b){1=b;0=0;}.<a>;
+		not=(arg){0=1;1=0;}.<arg>;
+	};	
+	console={
+		writeLine=(text)Meta.Library.WriteLine_String(text);
+		print=(a)console.writeLine(rational.toString(a));
+	};
 	flow={
 		branch=(condition)(then)(else)Meta.Library.IfElse_Boolean_Map_Map(condition,then,else);
 		branchMeta=(condition)(then)(else){
@@ -8,9 +21,25 @@
 		apply=(func)(array)Meta.Library.Apply_Map_Map(func,array);
 		if=(condition)(callable)flow.branch(condition,callable,()0);
 	};
-	array={
-		join=(a)(b)Meta.Library.JoinAll_Map(a,b)(a,b);
-		length=(arg)Meta.ObjectMap_Object(arg).get_ArrayCount(0);
+	float32={
+		less=(a)(b)Meta.Library.Single.Less_Single_Single(a,b);
+		greater=(a)(b)Meta.Library.Single.Greater_Single_Single(a,b);
+		lessEqual=(a)(b)Meta.Library.Single.LessEqual_Single_Single(a,b);
+		greaterEqual=(a)(b)Meta.Library.Single.GreaterEqual_Single_Single(a,b);
+		add=(a)(b)Meta.Library.Single.Add_Single_Single(a,b);
+		subtract=(a)(b)Meta.Library.Single.Subtract_Single_Single(a,b);
+		multiply=(a)(b)Meta.Library.Single.Multiply_Single_Single(a,b);
+		divide=(a)(b)Meta.Library.Single.Divide_Single_Single(a,b);
+	};
+	float64={
+		less=(a)(b)Meta.Library.Double.Less_Double_Double(a,b);
+		greater=(a)(b)Meta.Library.Double.Greater_Double_Double(a,b);
+		lessEqual=(a)(b)Meta.Library.Double.LessEqual_Double_Double(a,b);
+		greaterEqual=(a)(b)Meta.Library.Double.GreaterEqual_Double_Double(a,b);
+		add=(a)(b)Meta.Library.Double.Add_Double_Double(a,b);
+		subtract=(a)(b)Meta.Library.Double.Subtract_Double_Double(a,b);
+		multiply=(a)(b)Meta.Library.Double.Multiply_Double_Double(a,b);
+		divide=(a)(b)Meta.Library.Double.Divide_Double_Double(a,b);
 	};
 	int32={
 		less=(a)(b)Meta.Library.Int32.Less_Int32_Int32(a,b);
@@ -38,33 +67,13 @@
 		subtractUnchecked=(a)(b)Meta.Library.Int64.SubtractUnchecked_Int64_Int64(a,b);
 		multiplyUnchecked=(a)(b)Meta.Library.Int64.MultiplyUnchecked_Int64_Int64(a,b);
 	};
-	float32={
-		less=(a)(b)Meta.Library.Single.Less_Single_Single(a,b);
-		greater=(a)(b)Meta.Library.Single.Greater_Single_Single(a,b);
-		lessEqual=(a)(b)Meta.Library.Single.LessEqual_Single_Single(a,b);
-		greaterEqual=(a)(b)Meta.Library.Single.GreaterEqual_Single_Single(a,b);
-		add=(a)(b)Meta.Library.Single.Add_Single_Single(a,b);
-		subtract=(a)(b)Meta.Library.Single.Subtract_Single_Single(a,b);
-		multiply=(a)(b)Meta.Library.Single.Multiply_Single_Single(a,b);
-		divide=(a)(b)Meta.Library.Single.Divide_Single_Single(a,b);
-	};
-	float64={
-		less=(a)(b)Meta.Library.Double.Less_Double_Double(a,b);
-		greater=(a)(b)Meta.Library.Double.Greater_Double_Double(a,b);
-		lessEqual=(a)(b)Meta.Library.Double.LessEqual_Double_Double(a,b);
-		greaterEqual=(a)(b)Meta.Library.Double.GreaterEqual_Double_Double(a,b);
-		add=(a)(b)Meta.Library.Double.Add_Double_Double(a,b);
-		subtract=(a)(b)Meta.Library.Double.Subtract_Double_Double(a,b);
-		multiply=(a)(b)Meta.Library.Double.Multiply_Double_Double(a,b);
-		divide=(a)(b)Meta.Library.Double.Divide_Double_Double(a,b);
-	};
-
-	
-	console={
-		writeLine=(text)Meta.Library.WriteLine_String(text);
-		print=(a)console.writeLine(rational.toString(a));
-	};
-	
+	map={
+		toString=(map)Serialization.Serialize_Map(map);
+		merge=(a)(b)Meta.Library.MergeAll_Map(a,b);
+		count=(arg)Meta.ObjectMap_Object(arg).get_Count();
+		keys=(arg)Meta.<"DictionaryMap_IEnumerable`1">(Meta.ObjectMap_Object(arg).get_Keys());
+		equal=(a)(b)Meta.Library.Equal_Object_Object(a,b);
+	};	
 	rational={
 		add=(a)(b)Meta.Number.Add_Number_Number(a,b);
 		floor=(number)Meta.Library.Floor_Number(number);
@@ -78,17 +87,5 @@
 		minimum=(a)(b){0=b;1=a;}.<rational.greater(a,b)>;
 		modulo=(a)(b)Meta.Number.Modulo_Number_Number(a,b);
 		opposite=(arg)rational.subtract(0,arg);
-	};
-	boolean={
-		or=(a)(b){0=a;1=1;}.<b>;
-		and=(a)(b){1=b;0=0;}.<a>;
-		not=(arg){0=1;1=0;}.<arg>;
-	};
-	map={
-		toString=(map)Serialization.Serialize_Map(map);
-		merge=(a)(b)Meta.Library.MergeAll_Map(a,b);
-		count=(arg)Meta.ObjectMap_Object(arg).get_Count();
-		keys=(arg)Meta.<"DictionaryMap_IEnumerable`1">(Meta.ObjectMap_Object(arg).get_Keys());
-		equal=(a)(b)Meta.Library.Equal_Object_Object(a,b);
 	};
 }

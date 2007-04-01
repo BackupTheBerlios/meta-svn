@@ -1020,7 +1020,8 @@ public partial class Editor : System.Windows.Window {
 										original = typeMap.Type;
 									}
 								}
-								if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
+								if (k.Source != null){// && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
+								//if (k.Source != null && k.Source.Start.FileName.Equals(Interpreter.LibraryPath)) {
 									intellisenseItems.Add(new MetaItem(k));
 								}
 								else if (original != null) {

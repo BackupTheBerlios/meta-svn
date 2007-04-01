@@ -1664,6 +1664,16 @@ namespace Meta {
 	}
 	public delegate void DebugDelegate(Map context);
 	public class Interpreter {
+		public static string LibraryDirectoryPath {
+			get {
+				return @"D:\MetaLib";
+			}
+		}
+		public static string LibrarySource {
+			get {
+				return "file:///H:/Repository/Everything/MetaLibrary";
+			}
+		}
 		public static bool stopping = false;
 		public static Application Application {
 			get {
@@ -1676,11 +1686,11 @@ namespace Meta {
 		private static Application application;
 		public static DebugDelegate Breakpoint;
 		public static List<Source> breakpoints = new List<Source>();
-		public static string LibraryPath {
-			get {
-				return Path.Combine(Interpreter.InstallationPath, @"library.meta");
-			}
-		}
+		//public static string LibraryPath {
+		//    get {
+		//        return Path.Combine(Interpreter.InstallationPath, @"library.meta");
+		//    }
+		//}
 		public static Map Run(string path, Map argument) {
 			// refactor
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
@@ -1692,7 +1702,8 @@ namespace Meta {
 		public static bool profiling = false;
 		private static Map library;
 		static Interpreter() {
-			Map map = Parser.Parse(LibraryPath);
+			Map map = new DirectoryMap(LibraryDirectoryPath);
+			//Map map = Parser.Parse(LibraryPath);
 			map.Scope = Gac.gac;
 			Gac.gac["library"] = map;
 			Gac.gac["library"].Scope = Gac.gac;
@@ -1713,18 +1724,27 @@ namespace Meta {
 				return Fibo(x.Subtract(SmallInteger.One)).Add(Fibo(x.Subtract(SmallInteger.Two)));
 			}
 		}
+		public static string LibPath {
+			get {
+				return @"d:\MetaLibrary\";
+			}
+		}
 		[DllImport("kernel32")]
 		public extern static int LoadLibrary(string lpLibFileName);
 		[STAThread]
 		public static void Main(string[] args) {
-			Directory.SetCurrentDirectory(@"D:\Meta");
-			const string libraryPath = @"D:\Meta\LibraryPath";
-			if (Directory.Exists(libraryPath)) {
-				Directory.Delete(libraryPath, true);
-			}
-			Softec.SubversionSharp.SvnClient client = new SvnClient();
-			SvnRevision revision = new SvnRevision(Svn.Revision.Head);
-			client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
+			//Directory.SetCurrentDirectory(@"D:\Meta");
+			//const string libraryPath = @"D:\MetaLibrary";
+			//if (Directory.Exists(libraryPath)) {
+			//    Directory.Delete(libraryPath, true);
+			//}
+			//Softec.SubversionSharp.SvnClient client = new SvnClient();
+			//SvnRevision revision = new SvnRevision(Svn.Revision.Head);
+			//client.Update(libraryPath, revision,true);
+			//client.sta
+			//client.stat
+			//int asf=client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
+			//int asdf=client.Export("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
 
 			DateTime start = DateTime.Now;
 			if (args.Length != 0) {
@@ -2275,21 +2295,140 @@ namespace Meta {
 			return this;
 		}
 	}
-	//public class MainMap : ScopeMap {
-	//    Softec.SubversionSharp.SvnClient client = new SvnClient();
-	//    //SvnRevision revision=new SvnRevision(Svn.Revision.Head);
-	//    //client.Checkout("file:///H:/Repository/Everything/MetaLibrary", libraryPath, revision, true);
-
-	//    public override bool ContainsKey(Map key) {
-	//        throw new Exception("The method or operation is not implemented.");
+	public class Versions : DictionaryBaseMap {
+		private SvnClient client = new SvnClient();
+		public override Map this[Map key] {			get {
+				Integer keyInteger = key.GetInteger();
+				if (keyInteger != null) {
+					if (keyInteger.LessThan(Count)) {
+						string path=Path.Combine(Dir, keyInteger.ToString());
+						if (!Directory.Exists(path)) {
+							client.Export(Interpreter.LibrarySource, path, new SvnRevision(keyInteger.GetInt32()), true);
+						}
+						return new DirectoryMap(path);
+					}
+				}
+				return null;			}			set {
+				throw new Exception("not implemented");			}		}
+		public override IEnumerable<Map> Keys {
+			get {
+				for (int i = 0; i < Count; i++) {
+					yield return i;
+				}
+			}
+		}
+		public override IEnumerable<Map> Array {
+			get {
+				for (int i = 0; i < ArrayCount; i++) {
+					yield return this[i];
+				}
+			}
+		}
+		public override int ArrayCount {
+			get {
+				return Count;
+			}
+		}
+		public override int Count {
+			get {
+				return CurrentVersion.currentVersion.GetVersion();
+				//for(int i=0;i<
+			}
+		}
+		public static Versions versions = new Versions();
+		private Versions() {
+		}
+		public string Dir {
+			get {
+				return Path.Combine(Interpreter.LibPath,"Versions");
+			}
+		}
+		//public override bool ContainsKey(Map key) {
+		//}
+		//public override Number GetNumber() {
+		//    return null;
+		//}
+		public override Map Copy() {
+			return this;
+		}
+	}
+	//public abstract class DefaultMap : ScopeMap {
+	//    public override int ArrayCount {
+	//        get {
+	//            int count = 0;
+	//            foreach (Map key in Keys) {
+	//                if
+	//            }
+	//        }
 	//    }
-	//    public override Number GetNumber() {
-	//        return null;
-	//    }
-	//    public override Map Copy() {
-	//        return this;
+	//    public override int Count {
+	//        get {
+	//            return new List<Map>(Keys).Count;
+	//        }
 	//    }
 	//}
+	public class CurrentVersion : DictionaryBaseMap {
+		public override Map this[Map key] {
+			get {
+				string keyString = key.GetString();
+				if (keyString != null) {
+					string path = Path.Combine(Dir,keyString);
+					if (File.Exists(path)) {
+						return new FileMap(path);
+					}
+					else if (Directory.Exists(path)) {
+						return new DirectoryMap(path);
+					}
+					return null;
+				}
+				return null;
+			}
+			set {
+				throw new Exception("not implemented");
+			}
+		}
+		//public override int ArrayCount {
+		//    get {
+		//        return 0;
+		//    }
+		//}
+		//public override int Count {
+		//    get {
+		//        return Directory.GetFiles(Dir).Length + Directory.GetDirectories(Dir).Length;
+		//        //return Directory.GetFiles(Dir).Length + Directory.GetDirectories(Dir).Length;
+		//    }
+		//}
+		public override IEnumerable<Map> Keys {
+			get {
+				GetVersion();
+				foreach (string directory in Directory.GetDirectories(Dir)) {
+					yield return directory;
+				}
+				foreach (string file in Directory.GetFiles(Dir)) {
+					yield return file;
+				}
+			}
+		}
+		public string Dir {
+			get {
+				return Path.Combine(Interpreter.LibPath, "CurrentVersion");
+			}
+		}
+		public int GetVersion() {
+			return client.Update(Dir, new SvnRevision(Svn.Revision.Head), true);
+		}
+		Softec.SubversionSharp.SvnClient client = new SvnClient();
+		public static CurrentVersion currentVersion = new CurrentVersion();
+		//public override bool ContainsKey(Map key) {
+		//    throw new Exception("The method or operation is not implemented.");
+		//}
+		//public override Number GetNumber() {
+		//    return null;
+		//}
+		public override Map Copy() {
+			return this;
+		}
+	}
 	public class DirectoryMap : ScopeMap {
 		public override int Count {
 			get {
@@ -2301,14 +2440,21 @@ namespace Meta {
 			get {
 				if (ContainsKey(key)) {
 					string p=Path.Combine(path,key.GetString());
-					string dll = Path.Combine(path,key.GetString() + ".dll");
+					string metaPath = p + ".meta";
+					string dll = Path.Combine(path, key.GetString() + ".dll");
+					// refactor
+					if (File.Exists(metaPath)) {
+						Map file=Parser.Parse(metaPath);
+						file.Scope = this;
+						return file;
+					}
 					if (File.Exists(dll)) {
 						return new AssemblyMap(Assembly.LoadFrom(dll));
 					}
 					if (File.Exists(p)) {
 						return new FileMap(p);
 					}
-					else if (Directory.Exists(p)) {
+					if (Directory.Exists(p)) {
 						return new DirectoryMap(p);
 					}
 				}
@@ -2336,12 +2482,25 @@ namespace Meta {
 						}
 					}
 					foreach (string file in Directory.GetFiles(path)) {
-						keys.Add(Path.GetFileName(file));
+						string name;
+						const string meta=".meta";
+						if (file.EndsWith(meta)) {
+							name = file.Substring(0,file.Length - meta.Length);
+						}
+						else {
+							name = file;
+						}
+						keys.Add(Path.GetFileName(name));
 					}
 					foreach (string directory in Directory.GetDirectories(path)) {
-						keys.Add(new DirectoryInfo(directory).Name);
+						if (!new DirectoryInfo(directory).Name.StartsWith(".")) {
+							keys.Add(new DirectoryInfo(directory).Name);
+						}
 					}
 				}
+				keys.Sort(new Comparison<Map>(delegate(Map a,Map b) {
+					return a.GetString().CompareTo(b.GetString());
+				}));
 				return keys;
 			}
 		}
@@ -2585,6 +2744,14 @@ namespace Meta {
 		}
 	}
 	public abstract class DictionaryBaseMap : ScopeMap {
+		public override bool ContainsKey(Map key) {
+			return this[key] != null;
+		}
+		public override int Count {
+			get {
+				return new List<Map>(Keys).Count;
+			}
+		}
 		// put into Map
 		// only an abstract method so one does not forget to implement it
 		// could save some methods in derived classes
@@ -3797,6 +3964,9 @@ namespace Meta {
 				text = "," + Environment.NewLine;
 			}
 			foreach (KeyValuePair<Map, Map> entry in map) {
+				if (entry.Value == null) {
+					object asdf=map[entry.Key];
+				}
 				text += Entry(indentation, entry);
 			}
 			return text;
@@ -5101,31 +5271,38 @@ namespace Meta {
 					return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
 				}
 			}
-			public class BasicExpression : Test {
-				public override object GetResult(out int level) {
-					level = 2;
-					string path = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
-					Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
-					Map callable = Parser.Parse(path);
-					callable.Scope = Gac.gac["library"];
-					LiteralExpression gac = new LiteralExpression(Gac.gac);
-					LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
-					//lib.Parent = gac;
-					lib.Statement = new LiteralStatement(gac);
-					callable.GetExpression().Statement = new LiteralStatement(lib);
-					//callable.Expression.Parent = lib;
-					Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
-					return Expression.Optimize(callable.GetExpression());
+			//public class BasicExpression : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 2;
+			//        string path = Path.Combine(Interpreter.InstallationPath, @"basicTest.meta");
+			//        Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
+			//        Map callable = Parser.Parse(path);
+			//        callable.Scope = Gac.gac["library"];
+			//        LiteralExpression gac = new LiteralExpression(Gac.gac);
+			//        LiteralExpression lib = new LiteralExpression(Gac.gac["library"]);
+			//        //lib.Parent = gac;
+			//        lib.Statement = new LiteralStatement(gac);
+			//        callable.GetExpression().Statement = new LiteralStatement(lib);
+			//        //callable.Expression.Parent = lib;
+			//        Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+			//        return Expression.Optimize(callable.GetExpression());
 
-					//return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
-				}
-			}
+			//        //return Interpreter.Run(Path.Combine(Interpreter.InstallationPath, @"basicTest.meta"), new DictionaryMap(1, "first argument", 2, "second argument"));
+			//    }
+			//}
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
-					return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+					return Meta.Serialization.Serialize(new DirectoryMap(Interpreter.LibraryDirectoryPath));
+					//return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
 				}
 			}
+			//public class LibraryCode : Test {
+			//    public override object GetResult(out int level) {
+			//        level = 1;
+			//        return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
+			//    }
+			//}
 			public class Library : Test {
 				public override object GetResult(out int level) {
 					level = 2;

@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basicTest.meta" />
+    <None Include="Copy of fibo.meta" />
+    <None Include="Copy of game.meta" />
     <None Include="documentation.meta" />
     <None Include="fastFibo.meta" />
     <None Include="fibo.meta" />
