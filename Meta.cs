@@ -2367,26 +2367,30 @@ namespace Meta {
 	//        }
 	//    }
 	//}
-	public class CurrentVersion : DictionaryBaseMap {
-		public override Map this[Map key] {
-			get {
-				string keyString = key.GetString();
-				if (keyString != null) {
-					string path = Path.Combine(Dir,keyString);
-					if (File.Exists(path)) {
-						return new FileMap(path);
-					}
-					else if (Directory.Exists(path)) {
-						return new DirectoryMap(path);
-					}
-					return null;
-				}
-				return null;
-			}
-			set {
-				throw new Exception("not implemented");
-			}
+
+
+	public class CurrentVersion : DirectoryMap {
+		public CurrentVersion():base(Dir) {
 		}
+		//public override Map this[Map key] {
+		//    get {
+		//        string keyString = key.GetString();
+		//        if (keyString != null) {
+		//            string path = Path.Combine(Dir, keyString);
+		//            if (File.Exists(path)) {
+		//                return new FileMap(path);
+		//            }
+		//            else if (Directory.Exists(path)) {
+		//                return new DirectoryMap(path);
+		//            }
+		//            return null;
+		//        }
+		//        return null;
+		//    }
+		//    set {
+		//        throw new Exception("not implemented");
+		//    }
+		//}
 		//public override int ArrayCount {
 		//    get {
 		//        return 0;
@@ -2401,34 +2405,98 @@ namespace Meta {
 		public override IEnumerable<Map> Keys {
 			get {
 				GetVersion();
-				foreach (string directory in Directory.GetDirectories(Dir)) {
-					yield return directory;
-				}
-				foreach (string file in Directory.GetFiles(Dir)) {
-					yield return file;
-				}
+				return base.Keys;
+				//foreach (string directory in Directory.GetDirectories(Dir)) {
+				//    yield return directory;
+				//}
+				//foreach (string file in Directory.GetFiles(Dir)) {
+				//    yield return file;
+				//}
 			}
 		}
-		public string Dir {
+		public static string Dir {
 			get {
 				return Path.Combine(Interpreter.LibPath, "CurrentVersion");
 			}
 		}
+		private DateTime lastUpdate = DateTime.MinValue;
+		private int revision=0;
 		public int GetVersion() {
-			return client.Update(Dir, new SvnRevision(Svn.Revision.Head), true);
+			if (((TimeSpan)(DateTime.Now - lastUpdate)).TotalSeconds > 5) {
+				revision=client.Update(Dir, new SvnRevision(Svn.Revision.Head), true);
+				lastUpdate = DateTime.Now;
+			}
+			return revision;
 		}
 		Softec.SubversionSharp.SvnClient client = new SvnClient();
 		public static CurrentVersion currentVersion = new CurrentVersion();
-		//public override bool ContainsKey(Map key) {
-		//    throw new Exception("The method or operation is not implemented.");
-		//}
-		//public override Number GetNumber() {
-		//    return null;
-		//}
 		public override Map Copy() {
 			return this;
 		}
 	}
+
+	//public class CurrentVersion : DictionaryBaseMap {
+	//    public override Map this[Map key] {
+	//        get {
+	//            string keyString = key.GetString();
+	//            if (keyString != null) {
+	//                string path = Path.Combine(Dir,keyString);
+	//                if (File.Exists(path)) {
+	//                    return new FileMap(path);
+	//                }
+	//                else if (Directory.Exists(path)) {
+	//                    return new DirectoryMap(path);
+	//                }
+	//                return null;
+	//            }
+	//            return null;
+	//        }
+	//        set {
+	//            throw new Exception("not implemented");
+	//        }
+	//    }
+	//    //public override int ArrayCount {
+	//    //    get {
+	//    //        return 0;
+	//    //    }
+	//    //}
+	//    //public override int Count {
+	//    //    get {
+	//    //        return Directory.GetFiles(Dir).Length + Directory.GetDirectories(Dir).Length;
+	//    //        //return Directory.GetFiles(Dir).Length + Directory.GetDirectories(Dir).Length;
+	//    //    }
+	//    //}
+	//    public override IEnumerable<Map> Keys {
+	//        get {
+	//            GetVersion();
+	//            foreach (string directory in Directory.GetDirectories(Dir)) {
+	//                yield return directory;
+	//            }
+	//            foreach (string file in Directory.GetFiles(Dir)) {
+	//                yield return file;
+	//            }
+	//        }
+	//    }
+	//    public string Dir {
+	//        get {
+	//            return Path.Combine(Interpreter.LibPath, "CurrentVersion");
+	//        }
+	//    }
+	//    public int GetVersion() {
+	//        return client.Update(Dir, new SvnRevision(Svn.Revision.Head), true);
+	//    }
+	//    Softec.SubversionSharp.SvnClient client = new SvnClient();
+	//    public static CurrentVersion currentVersion = new CurrentVersion();
+	//    //public override bool ContainsKey(Map key) {
+	//    //    throw new Exception("The method or operation is not implemented.");
+	//    //}
+	//    //public override Number GetNumber() {
+	//    //    return null;
+	//    //}
+	//    public override Map Copy() {
+	//        return this;
+	//    }
+	//}
 	public class DirectoryMap : ScopeMap {
 		public override int Count {
 			get {
@@ -5293,7 +5361,8 @@ namespace Meta {
 			public class LibraryCode : Test {
 				public override object GetResult(out int level) {
 					level = 1;
-					return Meta.Serialization.Serialize(new DirectoryMap(Interpreter.LibraryDirectoryPath));
+					return Meta.Serialization.Serialize(CurrentVersion.currentVersion);
+					//return Meta.Serialization.Serialize(new DirectoryMap(Interpreter.LibraryDirectoryPath));
 					//return Meta.Serialization.Serialize(Parser.Parse(Interpreter.LibraryPath));
 				}
 			}
