@@ -1016,15 +1016,17 @@ namespace Meta {
 						selected = selected.Scope;
 					}
 					else {
-						selected = context;
-						while (!selected.ContainsKey(k)) {
-							if (selected.Scope != null) {
-								selected = selected.Scope;
-							}
-						}
-						Map m = compiled(context);
-						bool b = context.ContainsKey(m);
+						//selected = context;
+						//while (!selected.ContainsKey(k)) {
+						//    if (selected.Scope != null) {
+						//        selected = selected.Scope;
+						//    }
+						//}
+						//Map m = compiled(context);
+						//bool b = context.ContainsKey(m);
 						throw new KeyNotFound(k, Source.Start, null);
+					}
+					if (selected == null) {
 					}
 				}
 				return selected[k];
@@ -1664,14 +1666,15 @@ namespace Meta {
 	}
 	public delegate void DebugDelegate(Map context);
 	public class Interpreter {
-		public static string LibraryDirectoryPath {
-			get {
-				return @"D:\MetaLib";
-			}
-		}
+		//public static string LibraryDirectoryPath {
+		//    get {
+		//        return @"D:\MetaLib";
+		//    }
+		//}
 		public static string LibrarySource {
 			get {
-				return "file:///H:/Repository/Everything/MetaLibrary";
+				return "http://metarepository.googlecode.com/svn";
+				//return "file:///H:/Repository/Everything/MetaLibrary";
 			}
 		}
 		public static bool stopping = false;
@@ -1695,18 +1698,23 @@ namespace Meta {
 			// refactor
 			Directory.SetCurrentDirectory(Path.GetDirectoryName(path));
 			Map callable = Parser.Parse(path);
-			callable.Scope = Gac.gac["library"];
-			Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+			callable.Scope = Versions.versions;
+			//callable.Scope = Gac.gac["library"];
+			//callable.Scope = Gac.gac["library"];
+			//Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
 			return callable.Call(argument);
 		}
 		public static bool profiling = false;
 		private static Map library;
 		static Interpreter() {
-			Map map = new DirectoryMap(LibraryDirectoryPath);
+			//Map map = Versions.versions;//new DirectoryMap(LibraryDirectoryPath);
+			//Map map = new DirectoryMap(LibraryDirectoryPath);
 			//Map map = Parser.Parse(LibraryPath);
-			map.Scope = Gac.gac;
-			Gac.gac["library"] = map;
-			Gac.gac["library"].Scope = Gac.gac;
+			//map.Scope = CurrentVersion.currentVersion;
+			//map.Scope.Scope = Gac.gac;
+			//map.Scope = Gac.gac;
+			//Gac.gac["library"] = map;
+			//Gac.gac["library"].Scope = Gac.gac;
 		}
 		public static int Fibo(int x) {
 			if (x < 2) {
@@ -1726,7 +1734,7 @@ namespace Meta {
 		}
 		public static string LibPath {
 			get {
-				return @"d:\MetaLibrary\";
+				return @"d:\MetaCache\";
 			}
 		}
 		[DllImport("kernel32")]
@@ -1791,7 +1799,13 @@ namespace Meta {
 						}
 					}
 					else {
-						Console.WriteLine("File " + fileName + " not found.");
+						Map callable=Parser.ParseExpression(args[0],"console");
+						callable.Scope = Versions.versions;
+						//callable.Scope = Gac.gac["library"];
+						//Gac.gac.Scope = new DirectoryMap(Path.GetDirectoryName(path));
+						callable.Call(Map.Empty);
+
+						//Console.WriteLine("File " + fileName + " not found.");
 					}
 				}
 			}
@@ -2296,6 +2310,15 @@ namespace Meta {
 		}
 	}
 	public class Versions : DictionaryBaseMap {
+		public override Map Scope {
+			get {
+				return CurrentVersion.currentVersion;
+			}
+			set {
+				throw new Exception("not implemented");
+			}
+
+		}
 		private SvnClient client = new SvnClient();
 		public override Map this[Map key] {			get {
 				Integer keyInteger = key.GetInteger();
@@ -2370,27 +2393,33 @@ namespace Meta {
 
 
 	public class CurrentVersion : DirectoryMap {
+		public override Map Scope {
+			get {
+				return Gac.gac;
+				//return base.Scope;
+			}
+			set {
+				throw new Exception("not implemented");
+			}
+
+		}
 		public CurrentVersion():base(Dir) {
 		}
-		//public override Map this[Map key] {
-		//    get {
-		//        string keyString = key.GetString();
-		//        if (keyString != null) {
-		//            string path = Path.Combine(Dir, keyString);
-		//            if (File.Exists(path)) {
-		//                return new FileMap(path);
-		//            }
-		//            else if (Directory.Exists(path)) {
-		//                return new DirectoryMap(path);
-		//            }
-		//            return null;
-		//        }
-		//        return null;
-		//    }
-		//    set {
-		//        throw new Exception("not implemented");
-		//    }
-		//}
+		public override bool ContainsKey(Map key) {
+			GetVersion();
+			//object x = Keys;
+			return base.ContainsKey(key);
+		}
+		public override Map this[Map key] {
+			get {
+				GetVersion();
+				//object x = Keys;
+				return base[key];
+			}
+			set {
+				throw new Exception("not implemented");
+			}
+		}
 		//public override int ArrayCount {
 		//    get {
 		//        return 0;
@@ -2423,7 +2452,23 @@ namespace Meta {
 		private int revision=0;
 		public int GetVersion() {
 			if (((TimeSpan)(DateTime.Now - lastUpdate)).TotalSeconds > 5) {
-				revision=client.Update(Dir, new SvnRevision(Svn.Revision.Head), true);
+				SvnRevision head=new SvnRevision(Svn.Revision.Head);
+				if (Directory.Exists(Dir)) {
+				    revision = client.Update(Dir, head, true);
+				}
+				else {
+					//client.Checkout("http://www.softec.st/anonsvn/clr/trunk/SubversionSharp",
+					//               "SubversionSharp",
+					//               new SvnRevision(Svn.Revision.Head),
+					//               true); 
+					try {
+						revision = client.Checkout("http://metarepository.googlecode.com/svn", Dir, head, false);
+					}
+					catch (Exception e) {
+					}
+					//revision = client.Checkout(Interpreter.LibrarySource, Dir, head, true);
+					//revision = client.Checkout2(Interpreter.LibrarySource, Dir, head, head, true, true);
+				}
 				lastUpdate = DateTime.Now;
 			}
 			return revision;
@@ -2523,7 +2568,9 @@ namespace Meta {
 						return new FileMap(p);
 					}
 					if (Directory.Exists(p)) {
-						return new DirectoryMap(p);
+						Map dir=new DirectoryMap(p);
+						dir.Scope = this;
+						return dir;
 					}
 				}
 				return null;
@@ -5130,6 +5177,25 @@ namespace Meta {
 		}
 		public static Map Parse(string file) {
 			return ParseString(System.IO.File.ReadAllText(file), file);
+		}
+		public static Map ParseExpression(string text,string fileName) {
+			Parser parser = new Parser(text, fileName);
+			Map result = null;
+			Parser.Expression.Match(parser, ref result);
+			if (parser.state.index != parser.state.Text.Length - 1 || parser.state.Errors.Length != 0) {
+				string t = "";
+				if (parser.state.index != parser.state.Text.Length - 1) {
+					t += "Expected end of file. " + new Source(parser.state.Line, parser.state.Column, parser.state.FileName).ToString() + "\n";
+				}
+				foreach (Error error in parser.state.Errors) {
+					t += error.Text + error.Source.ToString() + "\n";
+				}
+				throw new SyntaxException(t, parser);
+			}
+			foreach (Dictionary<State, CachedResult> cached in Parser.allCached) {
+				cached.Clear();
+			}
+			return result;
 		}
 		public static Map ParseString(string text, string fileName) {
 			Parser parser = new Parser(text, fileName);
