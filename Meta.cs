@@ -33,7 +33,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Meta.Fusion;
 using java.math;
-using Softec.SubversionSharp;
 
 
 namespace Meta {
@@ -1591,7 +1590,7 @@ namespace Meta {
 		}
 		private AssemblyBuilder ab;
 		private TypeBuilder tb;
-		const string assemblyPath = @"d:\meta\bin\Release\";
+		const string assemblyPath = @"c:\meta\bin\Release\";
 		public Emitter(Type type, Type instance) {
 			this.type = type;
 
@@ -1626,21 +1625,21 @@ namespace Meta {
 			Type myType = tb.CreateType();
 			ab.Save("MetaDynamic.dll");
 			Delegate del = Delegate.CreateDelegate(type, instance, myType.GetMethod("HelloWorld"));
-			ProcessStartInfo start = new ProcessStartInfo(@"C:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);
-			start.UseShellExecute = false;
-			start.RedirectStandardError = true;
-			start.RedirectStandardInput = true;
-			start.RedirectStandardOutput = true;
-			start.CreateNoWindow = true;
-			Process process = Process.Start(start);
-			StreamReader reader = process.StandardOutput;
-			Directory.SetCurrentDirectory(assemblyPath);
-			process.WaitForExit();
-			if (process.ExitCode == 1) {
-				Console.WriteLine(reader.ReadToEnd());
-				Process.Start(@"C:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
-				throw new Exception("code generation error");
-			}
+			//ProcessStartInfo start = new ProcessStartInfo(@"c:\Programme\Microsoft Visual Studio 8\Common7\IDE\peverify.exe", DynamicPath);
+			//start.UseShellExecute = false;
+			//start.RedirectStandardError = true;
+			//start.RedirectStandardInput = true;
+			//start.RedirectStandardOutput = true;
+			//start.CreateNoWindow = true;
+			//Directory.SetCurrentDirectory(assemblyPath);
+			//Process process = Process.Start(start);
+			//StreamReader reader = process.StandardOutput;
+			//process.WaitForExit();
+			//if (process.ExitCode == 1) {
+			//    Console.WriteLine(reader.ReadToEnd());
+			//    Process.Start(@"c:\Programme\Microsoft Visual Studio 8\SDK\v2.0\Bin\ildasm.exe", ModulePath);
+			//    throw new Exception("code generation error");
+			//}
 			return del;
 		}
 	}
@@ -1668,7 +1667,7 @@ namespace Meta {
 	public class Interpreter {
 		//public static string LibraryDirectoryPath {
 		//    get {
-		//        return @"D:\MetaLib";
+		//        return @"c:\MetaLib";
 		//    }
 		//}
 		public static string LibrarySource {
@@ -1734,15 +1733,15 @@ namespace Meta {
 		}
 		public static string LibPath {
 			get {
-				return @"d:\MetaCache\";
+				return @"c:\MetaCache\";
 			}
 		}
 		[DllImport("kernel32")]
 		public extern static int LoadLibrary(string lpLibFileName);
 		[STAThread]
 		public static void Main(string[] args) {
-			//Directory.SetCurrentDirectory(@"D:\Meta");
-			//const string libraryPath = @"D:\MetaLibrary";
+			//Directory.SetCurrentDirectory(@"c:\Meta");
+			//const string libraryPath = @"c:\MetaLibrary";
 			//if (Directory.Exists(libraryPath)) {
 			//    Directory.Delete(libraryPath, true);
 			//}
@@ -1831,7 +1830,7 @@ namespace Meta {
 		}
 		public static string InstallationPath {
 			get {
-				return @"D:\Meta\";
+				return @"c:\Meta\";
 			}
 		}
 	}
@@ -2309,6 +2308,26 @@ namespace Meta {
 			return this;
 		}
 	}
+	public class Subversion {
+		private static string url;
+		//public Subversion(string url) {
+		//    this.url = url;
+		//}
+		private static int Call(string command, params string[] arguments) {
+			Process process=Process.Start("svn", command + " " + string.Join(" ",arguments));
+			process.WaitForExit();
+			return process.ExitCode;
+		}
+		public static int Update(string path) {
+			return Call("update", path);
+		}
+		public static int Checkout(string url, string path) {
+			return Call("checkout", url, path);
+		}
+		public static int Checkout(int revision,string url,string path) {
+			return Call("checkout", url,path,"-r",revision.ToString());
+		}
+	}
 	public class Versions : DictionaryBaseMap {
 		public override Map Scope {
 			get {
@@ -2319,20 +2338,26 @@ namespace Meta {
 			}
 
 		}
-		private SvnClient client = new SvnClient();
-		public override Map this[Map key] {			get {
+		public override Map this[Map key] {
+			get {
 				Integer keyInteger = key.GetInteger();
 				if (keyInteger != null) {
 					if (keyInteger.LessThan(Count)) {
 						string path=Path.Combine(Dir, keyInteger.ToString());
 						if (!Directory.Exists(path)) {
-							client.Export(Interpreter.LibrarySource, path, new SvnRevision(keyInteger.GetInt32()), true);
+							Subversion.Checkout(keyInteger.GetInt32(),Interpreter.LibrarySource, path);
+							//client.Export(Interpreter.LibrarySource, path, new SvnRevision(keyInteger.GetInt32()), true);
+							//client.Export(Interpreter.LibrarySource, path, new SvnRevision(keyInteger.GetInt32()), true);
 						}
 						return new DirectoryMap(path);
 					}
 				}
-				return null;			}			set {
-				throw new Exception("not implemented");			}		}
+				return null;
+			}
+			set {
+				throw new Exception("not implemented");
+			}
+		}
 		public override IEnumerable<Map> Keys {
 			get {
 				for (int i = 0; i < Count; i++) {
@@ -2366,37 +2391,15 @@ namespace Meta {
 				return Path.Combine(Interpreter.LibPath,"Versions");
 			}
 		}
-		//public override bool ContainsKey(Map key) {
-		//}
-		//public override Number GetNumber() {
-		//    return null;
-		//}
 		public override Map Copy() {
 			return this;
 		}
 	}
-	//public abstract class DefaultMap : ScopeMap {
-	//    public override int ArrayCount {
-	//        get {
-	//            int count = 0;
-	//            foreach (Map key in Keys) {
-	//                if
-	//            }
-	//        }
-	//    }
-	//    public override int Count {
-	//        get {
-	//            return new List<Map>(Keys).Count;
-	//        }
-	//    }
-	//}
-
 
 	public class CurrentVersion : DirectoryMap {
 		public override Map Scope {
 			get {
 				return Gac.gac;
-				//return base.Scope;
 			}
 			set {
 				throw new Exception("not implemented");
@@ -2413,7 +2416,6 @@ namespace Meta {
 		public override Map this[Map key] {
 			get {
 				GetVersion();
-				//object x = Keys;
 				return base[key];
 			}
 			set {
@@ -2449,12 +2451,13 @@ namespace Meta {
 			}
 		}
 		private DateTime lastUpdate = DateTime.MinValue;
-		private int revision=0;
+		private int revision = 0;
 		public int GetVersion() {
 			if (((TimeSpan)(DateTime.Now - lastUpdate)).TotalSeconds > 5) {
-				SvnRevision head=new SvnRevision(Svn.Revision.Head);
+				//SvnRevision head=new SvnRevision(Svn.Revision.Head);
 				if (Directory.Exists(Dir)) {
-				    revision = client.Update(Dir, head, true);
+					revision=Subversion.Update(Dir);
+					//revision = client.Update(Dir, head, true);
 				}
 				else {
 					//client.Checkout("http://www.softec.st/anonsvn/clr/trunk/SubversionSharp",
@@ -2462,7 +2465,8 @@ namespace Meta {
 					//               new SvnRevision(Svn.Revision.Head),
 					//               true); 
 					try {
-						revision = client.Checkout("http://metarepository.googlecode.com/svn", Dir, head, false);
+						revision=Subversion.Checkout("http://metarepository.googlecode.com/svn", Dir);
+						//client.Checkout("http://metarepository.googlecode.com/svn", Dir, head, false);
 					}
 					catch (Exception e) {
 					}
@@ -2472,8 +2476,8 @@ namespace Meta {
 				lastUpdate = DateTime.Now;
 			}
 			return revision;
+			//return revision;
 		}
-		Softec.SubversionSharp.SvnClient client = new SvnClient();
 		public static CurrentVersion currentVersion = new CurrentVersion();
 		public override Map Copy() {
 			return this;
